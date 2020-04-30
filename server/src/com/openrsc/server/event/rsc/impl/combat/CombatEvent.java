@@ -47,6 +47,8 @@ public class CombatEvent extends GameTickEvent {
 		killer.setLastCombatState(CombatState.LOST);
 
 		if (killed.isPlayer() && killer.isPlayer()) {
+			int skillsDist[] = {0, 0, 0, 0};
+
 			Player playerKiller = (Player) killer;
 			Player playerKilled = (Player) killed;
 
@@ -54,20 +56,21 @@ public class CombatEvent extends GameTickEvent {
 			switch (playerKiller.getCombatStyle()) {
 				case Skills.CONTROLLED_MODE:
 					for (int x = 0; x < 3; x++) {
-						playerKiller.incExp(x, exp, true);
+						skillsDist[x] = 1;
 					}
 					break;
 				case Skills.AGGRESSIVE_MODE:
-					playerKiller.incExp(Skills.STRENGTH, exp * 3, true);
+					skillsDist[Skills.STRENGTH] = 3;
 					break;
 				case Skills.ACCURATE_MODE:
-					playerKiller.incExp(Skills.ATTACK, exp * 3, true);
+					skillsDist[Skills.ATTACK] = 3;
 					break;
 				case Skills.DEFENSIVE_MODE:
-					playerKiller.incExp(Skills.DEFENSE, exp * 3, true);
+					skillsDist[Skills.DEFENSE] = 3;
 					break;
 			}
-			playerKiller.incExp(Skills.HITS, exp, true);
+			skillsDist[Skills.HITS] = 1;
+			playerKiller.incExp(skillsDist, exp, true);
 		}
 		killer.setKillType(0);
 		killed.killedBy(killer);
@@ -134,12 +137,14 @@ public class CombatEvent extends GameTickEvent {
 			}
 		}
 
+		int lastHits = target.getLevel(Skills.HITPOINTS);
 		target.getSkills().subtractLevel(Skills.HITS, damage, false);
 		target.getUpdateFlags().setDamage(new Damage(target, damage));
+
 		if (target.isNpc() && hitter.isPlayer()) {
 			Npc n = (Npc) target;
 			Player player = ((Player) hitter);
-			damage = Math.min(damage, n.getLevel(Skills.HITPOINTS));
+			damage = Math.min(damage, lastHits);
 			n.addCombatDamage(player, damage);
 		}
 

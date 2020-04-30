@@ -1448,6 +1448,25 @@ public final class Player extends Mob {
 		return new ArrayList<Double>() {{ add(finalMultiplier); add(finalEffectiveMultiplier); add(finalMinMultiplier); }};
 	}
 
+	public void incExp(final int[] skillDist, int skillXP, final boolean useFatigue) {
+		// If player was 100% fatigue, OG RSC always sent out 4 messages with melee kill,
+		// regardless if vs pvp or npc or if specific attack style was used
+		if (getWorld().getServer().getConfig().WANT_FATIGUE && useFatigue && fatigue >= this.MAX_FATIGUE) {
+			for (int i = 0; i < 4; i++) {
+				ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
+			}
+			return;
+		}
+		else {
+			int xp;
+			for (int i = 0; i < skillDist.length; i++) {
+				xp = skillXP * skillDist[i];
+				if (xp == 0) continue;
+				incExp(i, xp, useFatigue);
+			}
+		}
+	}
+
 	public void incExp(final int skill, int skillXP, final boolean useFatigue) {
 		if (isExperienceFrozen()) {
 			if (getWorld().getServer().getConfig().WANT_FATIGUE)
@@ -1478,7 +1497,7 @@ public final class Player extends Mob {
 
 		if (getLocation().onTutorialIsland()) {
 			if (getSkills().getExperience(skill) + skillXP > 200) {
-				if (skill != 3) {
+				if (skill != Skills.HITS) {
 					getSkills().setExperience(skill, 200);
 				} else {
 					getSkills().setExperience(skill, 1200);

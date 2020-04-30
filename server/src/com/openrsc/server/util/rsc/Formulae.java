@@ -468,9 +468,15 @@ public final class Formulae {
 
 	/**
 	 * Calculate how much experience a Mob gives
+	 * OG RSC FORMULA vs NPC: Math.floor((2*(att+str+def)+hits)/7) * 2 + 20
+	 * OG RSC FORMULA vs Player: Math.floor(combat_level) + 10
 	 */
-	public static int combatExperience(Mob mob) { // OG RSC FORMULA = Math.floor((2*(att+str+def)+hits)/7) * 2 + 20
-		return ((mob.getCombatLevel(true) * 2) + 20);
+	public static int combatExperience(Mob mob) {
+		if (mob.isNpc()) {
+			return (mob.getCombatLevel(true) * 2) + 20;
+		} else {
+			return mob.getCombatLevel(false) + 10;
+		}
 	}
 
 	/**
@@ -572,16 +578,19 @@ public final class Formulae {
 	/**
 	 * Calculate a mobs combat level based on their stats
 	 */
-	public static int getCombatlevel(int[] stats, boolean isForXp) {
-		return getCombatLevel(stats[Skills.ATTACK], stats[Skills.DEFENSE], stats[Skills.STRENGTH], stats[Skills.HITS], stats[Skills.MAGIC], stats[Skills.PRAYER], stats[Skills.RANGED], isForXp);
+	public static int getCombatlevel(int[] stats, boolean isSpecial) {
+		return getCombatLevel(stats[Skills.ATTACK], stats[Skills.DEFENSE], stats[Skills.STRENGTH], stats[Skills.HITS], stats[Skills.MAGIC], stats[Skills.PRAYER], stats[Skills.RANGED], isSpecial);
 	}
 
 	/**
 	 * Calculate a mobs combat level based on their stats
+	 * isSpecial considers hits as half as important in cb level calc
+	 * compared to the other melee stats, used in npc xp given
 	 */
-	public static int getCombatLevel(int att, int def, int str, int hits, int magic, int pray, int range, boolean isForXp) {
-		// OG RSC combat level to use with xp calc: (2 * (att + str + def) + hits) / 7
-		int multiplier = isForXp ? 2 : 1;
+	public static int getCombatLevel(int att, int def, int str, int hits, int magic, int pray, int range, boolean isSpecial) {
+		// OG RSC combat level to use with xp calc (for npc): (2 * (att + str + def) + hits) / 7
+		// OG RSC combat level to use with xp calc (for player) - seems to be regular well known combat level formula
+		int multiplier = isSpecial ? 2 : 1;
 		double attack = multiplier * (att + str);
 		double defense = multiplier * def + hits;
 		double mage = pray + magic;
@@ -591,9 +600,9 @@ public final class Formulae {
 		double level;
 
 		if (attack < ranged * 1.5D) {
-			level = (isForXp ? (2 * defense + 3 * ranged) / 14D : (2 * defense + 3 * ranged) / 8D) + mage;
+			level = (isSpecial ? (2 * defense + 3 * ranged) / 14D : (2 * defense + 3 * ranged) / 8D) + mage;
 		} else {
-			level = (isForXp ? (attack + defense) / 7D : (attack + defense) / 4D) + mage;
+			level = (isSpecial ? (attack + defense) / 7D : (attack + defense) / 4D) + mage;
 		}
 
 		return (int) Math.floor(level);
