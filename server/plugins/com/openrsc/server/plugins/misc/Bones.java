@@ -42,8 +42,9 @@ public class Bones implements OpInvTrigger {
 		player.message("You bury the " + item.getDef(player.getWorld()).getName().toLowerCase());
 		if (player.getCarriedItems().remove(toRemove) > -1) {
 			giveBonesExperience(player, item);
-			repeat--;
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			if (player.hasMoved()) return;
+			repeat--;
 			if (repeat > 0 && player.getCarriedItems().getInventory().countId(toRemove.getCatalogId(), Optional.of(false)) > 0) {
 				buryBones(player, item, repeat);
 			}

@@ -419,7 +419,7 @@ public abstract class Mob extends Entity {
 
 	public void setLocation(final Point point, boolean teleported) {
 		if (!teleported) {
-			hasMoved = true;
+			this.setHasMoved(true);
 		} else {
 			setTeleporting(true);
 		}
@@ -838,10 +838,6 @@ public abstract class Mob extends Entity {
 
 	public abstract void killedBy(Mob mob);
 
-	public void resetMoved() {
-		hasMoved = false;
-	}
-
 	public void resetPath() {
 		getWalkingQueue().reset();
 	}
@@ -860,6 +856,10 @@ public abstract class Mob extends Entity {
 
 	private void setLastMoved() {
 		lastMovement = System.currentTimeMillis();
+	}
+
+	public void setHasMoved(boolean moved) {
+		this.hasMoved = moved;
 	}
 
 	public void setLocation(final Point point) {

@@ -705,7 +705,7 @@ public final class GameStateUpdater {
 		 * unregistering
 		 */
 		for (Npc npc : npcs) {
-			npc.resetMoved();
+			npc.setHasMoved(false);
 			npc.resetSpriteChanged();
 			npc.getUpdateFlags().reset();
 			npc.setTeleporting(false);
@@ -719,7 +719,7 @@ public final class GameStateUpdater {
 			player.setTeleporting(false);
 			player.resetSpriteChanged();
 			player.getUpdateFlags().reset();
-			player.resetMoved();
+			player.setHasMoved(false);
 		}
 
 		final long doCleanupEnd	= System.currentTimeMillis();

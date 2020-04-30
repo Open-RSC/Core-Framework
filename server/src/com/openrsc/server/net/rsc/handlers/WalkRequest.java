@@ -64,6 +64,9 @@ public class WalkRequest implements PacketHandler {
 				return;
 			}
 		} else if (player.isBusy()) {
+			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+				player.setHasMoved(true);
+			}
 			return;
 		}
 
