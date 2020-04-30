@@ -19,7 +19,6 @@ public class Cow implements UseNpcTrigger {
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
 		npc.resetPath();
-		npc.face(player);
 		npc.setBusy(true);
 		thinkbubble(player, item);
 		if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {

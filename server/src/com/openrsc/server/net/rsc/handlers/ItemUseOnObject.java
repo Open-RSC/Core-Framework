@@ -52,7 +52,6 @@ public class ItemUseOnObject implements PacketHandler {
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
 			public void executeInternal() {
 				getPlayer().resetPath();
-				getPlayer().face(object);
 				GameObject obj = getPlayer().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (obj == null || getPlayer().isBusy() || getPlayer().isRanging()
 					|| !getPlayer().getCarriedItems().getInventory().contains(item)

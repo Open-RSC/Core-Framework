@@ -665,8 +665,6 @@ public class DwarfCannon
 			if (player.getQuestStage(this) == 3 && !player.getCache().hasKey("savedlollk")) {
 				mes(player, "you search the crate", "inside you see a dwarf child tied up", "you untie the child");
 				Npc lollk = addnpc(player.getWorld(), NpcId.LOLLK.id(), 619, 3314, 60000);
-				lollk.face(player);
-				player.face(lollk);
 				npcsay(player, lollk, "thank the heavens, you saved me", "i thought i'd be goblin lunch for sure");
 				say(player, lollk, "are you ok?");
 				npcsay(player, lollk, "i think so, i'd better run of home");

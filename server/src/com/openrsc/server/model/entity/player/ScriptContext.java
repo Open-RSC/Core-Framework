@@ -158,8 +158,6 @@ public class ScriptContext {
 		}
 
 		npc.setBusy(true);
-		npc.face(getContextPlayer());
-		getContextPlayer().face(npc);
 		this.interactingIndex = npc.getIndex();
 		this.interactingCoordinate = npc.getLocation();
 	}
@@ -174,7 +172,6 @@ public class ScriptContext {
 			oldNpc.setBusy(false);
 		}
 
-		getContextPlayer().face(player);
 		this.interactingIndex = player.getIndex();
 		this.interactingCoordinate = player.getLocation();
 	}

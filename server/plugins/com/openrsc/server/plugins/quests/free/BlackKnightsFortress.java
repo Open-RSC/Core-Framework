@@ -273,9 +273,6 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 					} else {
 						final Npc guard = ifnearvisnpc(player, NpcId.GUARD_FORTRESS.id(), 20);
 						if (guard != null) {
-							guard.resetPath();
-							guard.face(player);
-							player.face(guard);
 							npcsay(player, guard, "Heh, you can't come in here",
 								"This is a high security military installation");
 							int option = multi(player, guard, "Yes but I work here", "Oh sorry", "So who does it belong to?");
@@ -315,9 +312,6 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 					&& player.getX() <= 274) {
 					final Npc guard = ifnearvisnpc(player, NpcId.GUARD_FORTRESS.id(), 20);
 					if (guard != null) {
-						guard.resetPath();
-						guard.face(player);
-						player.face(guard);
 						npcsay(player, guard,
 							"I wouldn't go in there if I woz you",
 							"Those black knights are in an important meeting",

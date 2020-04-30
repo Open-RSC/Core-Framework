@@ -396,8 +396,6 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 			} else {
 				if (n != null) {
 					if (!n.isBusy()) {
-						n.face(player);
-						player.face(n);
 						npcsay(player, n, "Hey what are you doing?",
 							"That's my cupboard");
 						mes(player,

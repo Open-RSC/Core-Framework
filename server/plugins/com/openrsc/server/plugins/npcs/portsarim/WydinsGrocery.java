@@ -75,8 +75,6 @@ public final class WydinsGrocery extends AbstractShop implements OpBoundTrigger 
 			final Npc n = player.getWorld().getNpcById(NpcId.WYDIN.id());
 
 			if (n != null && !player.getCache().hasKey("job_wydin")) {
-				n.face(player);
-				player.face(n);
 				npcsay(player, n, "Heh you can't go in there",
 					"Only employees of the grocery store can go in");
 

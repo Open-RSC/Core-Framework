@@ -1796,10 +1796,8 @@ public final class Player extends Mob {
 		getWorld().registerItem(new GroundItem(getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
 		if ((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
 			setLocation(Point.location(120, 648), true);
-			face(120, 643);
 		} else {
 			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
-			face(getCache().getInt("death_location_x"), getCache().getInt("death_location_y") - 5);
 		}
 		ActionSender.sendWorldInfo(this);
 		ActionSender.sendEquipmentStats(this);

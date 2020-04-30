@@ -106,7 +106,6 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 					boundaryTeleport(player, Point.location(492, 563));
 					player.incExp(Skills.AGILITY, 50, true);
 					AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 300);
-					player.face(495, 563);
 					player.setBusy(false);
 				} else {
 					int slipDamage = (int) Math.round((player.getSkills().getLevel(Skills.HITS)) * 0.1D);

@@ -95,6 +95,11 @@ public class Functions {
 	 */
 	public static void thinkbubble(final Player player, final Item item) {
 		final Bubble bubble = new Bubble(player, item.getCatalogId());
+		Npc npc;
+		if ((npc = PluginTask.getContextPluginTask().getScriptContext().getInteractingNpc()) != null) {
+			npc.face(player);
+			player.face(npc);
+		}
 		player.getUpdateFlags().setActionBubble(bubble);
 	}
 
@@ -156,7 +161,8 @@ public class Functions {
 	 */
 	public static void say(final Player player, Npc npc, final String... messages) {
 		npc = npc != null ? npc : PluginTask.getContextPluginTask().getScriptContext().getInteractingNpc();
-
+		npc.face(player);
+		player.face(npc);
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (npc != null) {
@@ -425,6 +431,8 @@ public class Functions {
 		// Reset the walk action on the Npc (stop them from walking).
 		npc.resetPath();
 		player.resetPath();
+		npc.face(player);
+		player.face(npc);
 
 		// Send each message with a delay between.
 		for (final String message : messages) {

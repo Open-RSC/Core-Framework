@@ -215,6 +215,7 @@ public class CombatEvent extends GameTickEvent {
 				defenderMob.setHitsMade(0);
 				defenderMob.setSprite(4);
 				defenderMob.setCombatTimer(delayedAggro);
+				defenderMob.face(defenderMob.getX(), defenderMob.getY() - 1);
 				if(defenderMob.isPlayer()){
 					Player p1;
 					p1 = ((Player) defenderMob);
@@ -244,6 +245,7 @@ public class CombatEvent extends GameTickEvent {
 				attackerMob.setHitsMade(0);
 				attackerMob.setSprite(4);
 				attackerMob.setCombatTimer(delayedAggro);
+				attackerMob.face(attackerMob.getX(), attackerMob.getY() - 1);
 				if(attackerMob.isPlayer()){
 					Player p2;
 					p2 = ((Player) attackerMob);

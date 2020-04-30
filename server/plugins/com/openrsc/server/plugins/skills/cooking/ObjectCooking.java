@@ -25,8 +25,6 @@ public class ObjectCooking implements UseLocTrigger {
 		Npc cook = ifnearvisnpc(owner, 7, 20);
 		if (cook != null && owner.getQuestStage(Quests.COOKS_ASSISTANT) != -1
 			&& object.getID() == 119) {
-			cook.face(owner);
-			owner.face(cook);
 			npcsay(owner, cook, "Hey! Who said you could use that?");
 		} else
 			handleCooking(item, owner, object);

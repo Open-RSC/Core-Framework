@@ -51,7 +51,6 @@ public final class TeaSeller extends AbstractShop implements TakeObjTrigger {
 			if (n == null) {
 				return;
 			}
-			n.face(player);
 			npcsay(player, n, "Hey ! get your hands off that tea !",
 				"That's for display purposes only",
 				"Im not running a charity here !");
