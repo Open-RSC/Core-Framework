@@ -1,2 +1,2 @@
 ALTER TABLE `openrsc_npcdef`
-    ADD `pkBot` tinyint(1) DEFAULT 0;
+    ADD IF NOT EXISTS `pkBot` tinyint(1) DEFAULT 0;

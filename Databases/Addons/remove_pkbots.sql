@@ -1,2 +1,2 @@
 ALTER TABLE `openrsc_npcdef`
-    DROP `pkBot`;
+    DROP IF EXISTS `pkBot`;
