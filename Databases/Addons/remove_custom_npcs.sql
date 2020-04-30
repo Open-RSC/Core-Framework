@@ -1,0 +1,1 @@
+DELETE FROM `openrsc_npcdef` WHERE `openrsc_npcdef`.`id` > 793;
