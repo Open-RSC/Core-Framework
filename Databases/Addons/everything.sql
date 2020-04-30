@@ -1,41 +1,4 @@
 /*
- * New custom player tables section
- * The queries performed in the section will add new tables and drop any that already exist
- */
-
-DROP TABLE IF EXISTS `openrsc_npckills`;
-CREATE TABLE IF NOT EXISTS `openrsc_npckills`
-(
-    `ID`        int(10) NOT NULL AUTO_INCREMENT,
-    `npcID`     int(10) DEFAULT NULL,
-    `playerID`  int(10) DEFAULT NULL,
-    `killCount` int(10) DEFAULT 0,
-    PRIMARY KEY (`ID`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = latin1;
-
-DROP TABLE IF EXISTS `openrsc_bankpresets`;
-CREATE TABLE IF NOT EXISTS `openrsc_bankpresets`
-(
-    `id`        int(10)          NOT NULL AUTO_INCREMENT,
-    `playerID`  int(10) unsigned NOT NULL,
-    `slot`      int(10) unsigned NOT NULL,
-    `inventory` blob DEFAULT NULL,
-    `equipment` blob DEFAULT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
-DROP TABLE IF EXISTS `openrsc_equipped`;
-CREATE TABLE IF NOT EXISTS `openrsc_equipped`
-(
-    `playerID` int(10) UNSIGNED NOT NULL,
-    `itemID`   int(10) UNSIGNED NOT NULL
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
-
-/*
  * New custom server (non-player) tables section
  * The queries performed in the section will add new tables and drop any that already exist
  */
