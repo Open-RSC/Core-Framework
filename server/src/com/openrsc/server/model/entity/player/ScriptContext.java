@@ -41,6 +41,9 @@ public class ScriptContext {
 	}
 
 	public Player getContextPlayer() {
+		if(ownerIndex == null || getWorld() == null) {
+			return null;
+		}
 		return getWorld().getPlayer(ownerIndex);
 	}
 
