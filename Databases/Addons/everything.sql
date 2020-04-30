@@ -3,14 +3,6 @@
  * The queries performed in the section will modify existing player tables to convert the database into one compatible with custom features
  */
 
-ALTER TABLE `openrsc_players`
-    ADD IF NOT EXISTS `iron_man` tinyint(1) UNSIGNED NOT NULL DEFAULT 0;
-ALTER TABLE `openrsc_players`
-    ADD IF NOT EXISTS `iron_man` tinyint(1) UNSIGNED NOT NULL DEFAULT 0;
-ALTER TABLE `openrsc_players`
-    ADD IF NOT EXISTS `iron_man_restriction` tinyint(1) UNSIGNED NOT NULL DEFAULT 1;
-ALTER TABLE `openrsc_players`
-    ADD IF NOT EXISTS `hc_ironman_death` tinyint(1) UNSIGNED NOT NULL DEFAULT 0;
 ALTER TABLE `openrsc_curstats`
     ADD COLUMN IF NOT EXISTS `cur_runecraft` tinyint(3) UNSIGNED NOT NULL DEFAULT 1;
 ALTER TABLE `openrsc_experience`
