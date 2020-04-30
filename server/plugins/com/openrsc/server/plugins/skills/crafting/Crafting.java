@@ -52,11 +52,17 @@ public class Crafting implements UseInvTrigger,
 		ItemId.UNFIRED_BOWL.id()
 	};
 
-	final int[] amulet_moulds = {
+	final int[] gold_moulds = {
 		ItemId.RING_MOULD.id(),
 		ItemId.NECKLACE_MOULD.id(),
 		ItemId.AMULET_MOULD.id(),
 	};
+
+	final int[] silver_moulds = {
+		ItemId.HOLY_SYMBOL_MOULD.id(),
+		ItemId.UNHOLY_SYMBOL_MOULD.id(),
+	};
+
 	final int[] gems = {
 		ItemId.NOTHING.id(),
 		ItemId.SAPPHIRE.id(),
@@ -253,8 +259,8 @@ public class Crafting implements UseInvTrigger,
 				};
 			}
 		}
-		if (player.getCarriedItems().getInventory().countId(amulet_moulds[type]) < 1) {
-			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(amulet_moulds[type]).getName() + " to make a " + reply.get());
+		if (player.getCarriedItems().getInventory().countId(gold_moulds[type]) < 1) {
+			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(gold_moulds[type]).getName() + " to make a " + reply.get());
 			return;
 		}
 		player.message("What type of " + reply.get() + " would you like to make?");
@@ -321,11 +327,11 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		// Remove items
+		thinkbubble(player, item);
 		player.getCarriedItems().remove(item);
 		if (gem > 0) {
 			player.getCarriedItems().remove(new Item(gems[gem]));
 		}
-		thinkbubble(player, item);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		Item result;
@@ -347,6 +353,7 @@ public class Crafting implements UseInvTrigger,
 			item = player.getCarriedItems().getInventory().get(
 				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId())
 			);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchGoldJewelry(player, item, def, gem, gems, type, reply, repeat);
 		}
 	}
@@ -356,8 +363,8 @@ public class Crafting implements UseInvTrigger,
 
 		// select type
 		String[] options = new String[]{
-				"Holy Symbol of Saradomin",
-				"Unholy symbol of Zamorak"
+			"Holy Symbol of Saradomin",
+			"Unholy symbol of Zamorak"
 		};
 		int type = multi(player, options);
 		if (type < 0 || type > 1) {
@@ -365,47 +372,59 @@ public class Crafting implements UseInvTrigger,
 		}
 		reply.set(options[type]);
 
-		int[] moulds = {
-			ItemId.HOLY_SYMBOL_MOULD.id(),
-			ItemId.UNHOLY_SYMBOL_MOULD.id(),
-		};
 		final int[] results = {
 			ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(),
 			ItemId.UNSTRUNG_UNHOLY_SYMBOL_OF_ZAMORAK.id()
 		};
-		if (player.getCarriedItems().getInventory().countId(moulds[type]) < 1) {
-			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(moulds[type]).getName() + " to make a " + reply.get() + "!");
+		if (player.getCarriedItems().getInventory().countId(silver_moulds[type]) <= 0) {
+			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(silver_moulds[type]).getName() + " to make a " + reply.get() + "!");
 			return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Craft Silver Jewelry", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
-			@Override
-			public void action() {
-				Player owner = getOwner();
-				if (owner.getSkills().getLevel(Skills.CRAFTING) < 16) {
-					owner.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level 16 to make this");
-					interruptBatch();
-					return;
-				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to craft");
-						interruptBatch();
-						return;
-					}
-				}
-				if (owner.getCarriedItems().remove(item) > -1) {
-					thinkbubble(owner, item);
-					Item result = new Item(results[type]);
-					owner.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(getWorld()).getName());
-					owner.getCarriedItems().getInventory().add(result);
-					owner.incExp(Skills.CRAFTING, 200, true);
-				} else {
-					interruptBatch();
-				}
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+		}
+		batchSilverJewelry(player, item, results, type, reply, repeat);
+	}
+
+	private void batchSilverJewelry(Player player, Item item, int[] results, int type, AtomicReference<String> reply, int repeat) {
+		if (player.getSkills().getLevel(Skills.CRAFTING) < 16) {
+			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level 16 to make this");
+			return;
+		}
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to craft");
+				return;
 			}
-		});
+		}
+
+		if (player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) <= 0) {
+			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(silver_moulds[type]).getName() + " to make a " + reply.get() + "!");
+			return;
+		}
+
+		thinkbubble(player, item);
+		player.getCarriedItems().remove(item);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+
+		Item result = new Item(results[type]);
+		player.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(player.getWorld()).getName());
+		player.getCarriedItems().getInventory().add(result);
+		player.incExp(Skills.CRAFTING, 200, true);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			item = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId())
+			);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			batchSilverJewelry(player, item, results, type, reply, repeat);
+		}
 	}
 
 	private void doPotteryMolding(final Item item, final Player player) {
