@@ -6,6 +6,8 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
+import java.util.Optional;
+
 public class Bones implements OpInvTrigger {
 
 	private void buryBonesHelper(Player owner, Item item) {
@@ -54,7 +56,7 @@ public class Bones implements OpInvTrigger {
 				@Override
 				public void action() {
 					Item toRemove = getOwner().getCarriedItems().getInventory().get(
-						getOwner().getCarriedItems().getInventory().getLastIndexById(item.getCatalogId()));
+						getOwner().getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false)));
 					if (getOwner().getCarriedItems().remove(toRemove) > -1) {
 						buryBonesHelper(player, item);
 					} else
