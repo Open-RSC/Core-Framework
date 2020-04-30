@@ -205,8 +205,8 @@ public class CombatEvent extends GameTickEvent {
 				if (defenderMob.isPlayer()) {
 					Player player = (Player) defenderMob;
 					player.resetAll();
-				} else if(!((Npc) defenderMob).isPkBot()){
-					delayedAggro = 17000; // 17 + 3 second aggro timer for npds running
+				} else {
+					delayedAggro = 17000; // 17 + 3 second aggro timer for npcs running
 				}
 
 				defenderMob.setBusy(false);
@@ -233,8 +233,9 @@ public class CombatEvent extends GameTickEvent {
 					Player player = (Player) attackerMob;
 					player.resetAll();
 				} else {
-					if (!((Npc) attackerMob).isPkBot() && attackerMob.getCombatState() == CombatState.RUNNING)
+					if (attackerMob.getCombatState() == CombatState.RUNNING) {
 						delayedAggro = 17000; // 17 + 3 second timer for npcs running
+					}
 				}
 
 				attackerMob.setBusy(false);

@@ -31,7 +31,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
@@ -664,25 +663,6 @@ public final class Player extends Mob {
 			return true;
 		} else if (mob.isNpc()) {
 			Npc victim = (Npc) mob;
-			if(((Npc) mob).isPkBot()){
-				int myWildLvl = getLocation().wildernessLevel();
-				int victimWildLvl = victim.getLocation().wildernessLevel();
-				if (myWildLvl < 1 || victimWildLvl < 1) {
-					message("You can't attack other pkbots here. Move to the wilderness");
-					return false;
-				}
-				int combDiff = Math.abs(getCombatLevel() - victim.getCombatLevel());
-				if (combDiff > myWildLvl) {
-					message("You can only attack pkbots within " + (myWildLvl) + " levels of your own here");
-					message("Move further into the wilderness for less restrictions");
-					return false;
-				}
-				if (combDiff > victimWildLvl) {
-					message("You can only attack pkbots within " + (victimWildLvl) + " levels of your own here");
-					message("Move further into the wilderness for less restrictions");
-					return false;
-				}
-			}
 			if (!victim.getDef().isAttackable()) {
 				setSuspiciousPlayer(true, "NPC isn't attackable");
 				return false;
@@ -2250,15 +2230,6 @@ public final class Player extends Mob {
 		}
 
 		player.getUpdateFlags().setAppearanceChanged(true);
-	}
-
-	public void setSkulledOn(final PkBot n) {
-		n.addAttackedBy(this);
-		if (System.currentTimeMillis() - getSettings().lastAttackedBy(n) > 1200000) {
-			addSkull(1200000);
-			cache.store("skull_remaining", 1200000); // Saves the skull timer to the database if the player logs out before it expires
-			cache.store("last_skull", System.currentTimeMillis() - getSettings().lastAttackedBy(n)); // Sets the last time a player had a skull
-		}
 	}
 
 	public void setSpellFail() {

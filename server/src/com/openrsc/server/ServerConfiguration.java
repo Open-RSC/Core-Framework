@@ -80,7 +80,6 @@ public class ServerConfiguration {
 	public boolean DISPLAY_LOGO_SPRITE;
 	public boolean SPAWN_AUCTION_NPCS;
 	public boolean SPAWN_IRON_MAN_NPCS;
-	public boolean WANT_PK_BOTS;
 	public boolean SHOW_FLOATING_NAMETAGS;
 	public boolean WANT_CLANS;
 	public boolean WANT_KILL_FEED;
@@ -388,7 +387,6 @@ public class ServerConfiguration {
 		WANT_NEW_RARE_DROP_TABLES = tryReadBool("want_new_rare_drop_tables").orElse(false);
 		WANT_LEFTCLICK_WEBS = tryReadBool("want_leftclick_webs").orElse(false);
 		WANT_IMPROVED_PATHFINDING = tryReadBool("want_improved_pathfinding").orElse(false);
-		WANT_PK_BOTS = tryReadBool("want_pk_bots").orElse(false);
 		CAN_USE_CRACKER_ON_SELF = tryReadBool("can_use_cracker_on_self").orElse(false);
 		FIX_OVERHEAD_CHAT = tryReadBool("fix_overhead_chat").orElse(false);
 		WANT_CUSTOM_LEATHER = tryReadBool("want_custom_leather").orElse(false);

@@ -222,9 +222,6 @@ public class MySqlGameDatabase extends GameDatabase {
 					def.combatModel = result.getInt("combatModel");
 					def.combatSprite = result.getInt("combatSprite");
 					def.roundMode = result.getInt("roundMode");
-					if (server.getConfig().WANT_PK_BOTS) {
-						def.pkBot = result.getBoolean("pkBot");
-					}
 					npcs.add(def);
 				}
 			} finally {

@@ -10,7 +10,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
@@ -81,8 +80,7 @@ public final class WorldPopulator {
 				for(int i = 0; i < 1; i++)
 					world.registerNpc(new Npc(n));
 			}*/
-				Npc npc = getWorld().getServer().getEntityHandler().getNpcDef(n.id).isPkBot() ? new PkBot(getWorld(), n) : new Npc(getWorld(), n) ;
-				getWorld().registerNpc(npc);
+				getWorld().registerNpc(new Npc(getWorld(), n));
 			}
 			LOGGER.info("\t Loaded {}", box(getWorld().countNpcs()) + " NPC spawns");
 

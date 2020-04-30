@@ -25,5 +25,4 @@ public class NpcDef {
 	public int combatModel;
 	public int combatSprite;
 	public int roundMode;
-	public boolean pkBot;
 }

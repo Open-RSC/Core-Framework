@@ -2185,7 +2185,6 @@ public class EntityHandler {
 		if (Config.S_WANT_RUNECRAFTING) {
 			sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
 			npcs.add(new NPCDef("Wizard Sedridor", "An old wizard", "", 0, 0, 0, 0, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
-			loadPkBotDefinitions();
 			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63};
 			npcs.add(new NPCDef("Scot Ruth", "A smelly, dirty dwarf", "", 20, 17, 16, 20, false, sprites, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, i++));
 		}
@@ -2235,15 +2234,6 @@ public class EntityHandler {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}*/
-	}
-
-	private static void loadPkBotDefinitions() {
-		int[] sprites;
-		int i = npcs.size() - 1;
-		if (Config.S_WANT_PK_BOTS) {
-			sprites = new int[]{0, 1, 2, -1, -1, 8, 87, -1, -1, -1, -1, -1};
-			npcs.add(new NPCDef("PKBOT", "to follow", "", 30, 59, 48, 1, true, sprites, 45167296, 28067296, 33415270, 45523536, 145, 220, 6, 6, 5, true, i++));
-		}
 	}
 
 	private static void loadItemDefinitions() {

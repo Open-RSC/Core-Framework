@@ -142,21 +142,12 @@ public class MySqlQueries {
 		dropLogSelect = "SELECT * FROM `" + PREFIX + "droplogs` WHERE itemID = ? AND playerID = ?";
 		dropLogInsert = "INSERT INTO `" + PREFIX + "droplogs`(itemID, playerID, dropAmount, npcId) VALUES (?, ?, ?, ?)";
 		dropLogUpdate = "UPDATE `" + PREFIX + "droplogs` SET dropAmount = ? WHERE itemID = ? AND playerID = ?";
-		if (!server.getConfig().WANT_PK_BOTS) {
-			npcDefs = "SELECT `id`, `name`, `description`, `command`, `command2`, "
-				+ "`attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, "
-				+ "`sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, "
-				+ "`sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, "
-				+ "`camera2`, `walkModel`, `combatModel`, `combatSprite`, `roundMode` FROM `"
-				+ PREFIX + "npcdef` ORDER BY `id` ASC";
-		} else {
-			npcDefs = "SELECT `id`, `name`, `description`, `command`, `command2`, "
-				+ "`attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, "
-				+ "`sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, "
-				+ "`sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, "
-				+ "`camera2`, `walkModel`, `combatModel`, `combatSprite`, `roundMode`, `pkBot` FROM `"
-				+ PREFIX + "npcdef` ORDER BY `id` ASC";
-		}
+		npcDefs = "SELECT `id`, `name`, `description`, `command`, `command2`, "
+			+ "`attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, "
+			+ "`sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, "
+			+ "`sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, "
+			+ "`camera2`, `walkModel`, `combatModel`, `combatSprite`, `roundMode` FROM `"
+			+ PREFIX + "npcdef` ORDER BY `id` ASC";
 		npcDrops = "SELECT * FROM `" + PREFIX + "npcdrops`";
 		itemDefs = "SELECT `id`, `name`, `description`, `command`, `isFemaleOnly`, `isMembersOnly`, `isStackable`, "
 			+ "`isUntradable`, `isWearable`, `appearanceID`, `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, "

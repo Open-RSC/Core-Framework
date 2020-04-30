@@ -13,7 +13,6 @@ import com.openrsc.server.model.container.BankPreset;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.entity.update.Skull;
@@ -540,11 +539,10 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().WANT_GLOBAL_FRIEND + " 70");
 			LOGGER.info(server.getConfig().CHARACTER_CREATION_MODE + " 71");
 			LOGGER.info(server.getConfig().SKILLING_EXP_RATE + " 72");
-			LOGGER.info(server.getConfig().WANT_PK_BOTS + " 73");
-			LOGGER.info(server.getConfig().WANT_HARVESTING + " 74");
-			LOGGER.info(server.getConfig().HIDE_LOGIN_BOX_TOGGLE + " 75");
-			LOGGER.info(server.getConfig().WANT_GLOBAL_FRIEND + " 76");
-			LOGGER.info(server.getConfig().RIGHT_CLICK_TRADE + " 77");
+			LOGGER.info(server.getConfig().WANT_HARVESTING + " 73");
+			LOGGER.info(server.getConfig().HIDE_LOGIN_BOX_TOGGLE + " 74");
+			LOGGER.info(server.getConfig().WANT_GLOBAL_FRIEND + " 75");
+			LOGGER.info(server.getConfig().RIGHT_CLICK_TRADE + " 76");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -639,11 +637,10 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); //70
 		s.writeByte((byte) server.getConfig().CHARACTER_CREATION_MODE); //71
 		s.writeByte((byte) server.getConfig().SKILLING_EXP_RATE); //72
-		s.writeByte((byte) (server.getConfig().WANT_PK_BOTS ? 1 : 0)); // 73
-		s.writeByte((byte) (server.getConfig().WANT_HARVESTING ? 1 : 0)); // 74
-		s.writeByte((byte) (server.getConfig().HIDE_LOGIN_BOX_TOGGLE ? 1 : 0)); // 75
-		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); // 76
-		s.writeByte((byte) (server.getConfig().RIGHT_CLICK_TRADE ? 1 : 0)); // 77
+		s.writeByte((byte) (server.getConfig().WANT_HARVESTING ? 1 : 0)); // 73
+		s.writeByte((byte) (server.getConfig().HIDE_LOGIN_BOX_TOGGLE ? 1 : 0)); // 74
+		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); // 75
+		s.writeByte((byte) (server.getConfig().RIGHT_CLICK_TRADE ? 1 : 0)); // 76
 		return s;
 	}
 
@@ -1344,24 +1341,6 @@ public class ActionSender {
 				sendWakeUp(player, false, true);
 				sendGameSettings(player);
 				sendLoginBox(player);
-
-				for (Npc n : player.getWorld().getNpcs()) {
-					if(n instanceof PkBot) {
-						PkBot bot = (PkBot)n;
-						if (bot.getSkullType() > 0) {
-							n.getUpdateFlags().setSkull(new Skull(n, 1));
-						}
-					}
-				}
-				for (Npc n : player.getWorld().getNpcs()) {
-					if(n instanceof PkBot) {
-						PkBot bot = (PkBot)n;
-						if (bot.getWield() > 0 || bot.getWield2() > 0) {
-							n.getUpdateFlags().setWield(new Wield(n, bot.getWield(), bot.getWield2()));
-							n.getUpdateFlags().setWield2(new Wield(n, bot.getWield(), bot.getWield2()));
-						}
-					}
-				}
 
 				sendMessage(player, null, 0, MessageType.QUEST, "Welcome to " + player.getWorld().getServer().getConfig().SERVER_NAME + "!", 0);
 				if (player.isMuted()) {

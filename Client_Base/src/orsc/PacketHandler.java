@@ -902,7 +902,7 @@ public class PacketHandler {
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
-		int wantPkBots, wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
+		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
 		int globalFriendChat, wantRightClickTrade;
 
 		String logoSpriteID;
@@ -980,11 +980,10 @@ public class PacketHandler {
 			wantGlobalFriend = this.getClientStream().getUnsignedByte(); //70
 			characterCreationMode = this.getClientStream().getUnsignedByte(); //71
 			skillingExpRate = this.getClientStream().getUnsignedByte(); //72
-			wantPkBots = this.getClientStream().getUnsignedByte(); // 73
-			wantHarvesting = this.getClientStream().getUnsignedByte(); //74
-			hideLoginBox = this.getClientStream().getUnsignedByte(); // 75
-			globalFriendChat = this.getClientStream().getUnsignedByte(); // 76
-			wantRightClickTrade = this.getClientStream().getUnsignedByte(); // 77
+			wantHarvesting = this.getClientStream().getUnsignedByte(); //73
+			hideLoginBox = this.getClientStream().getUnsignedByte(); // 74
+			globalFriendChat = this.getClientStream().getUnsignedByte(); // 75
+			wantRightClickTrade = this.getClientStream().getUnsignedByte(); // 76
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1058,11 +1057,10 @@ public class PacketHandler {
 			wantGlobalFriend = packetsIncoming.getUnsignedByte(); //70
 			characterCreationMode = packetsIncoming.getUnsignedByte(); //71
 			skillingExpRate = packetsIncoming.getUnsignedByte(); //72
-			wantPkBots = packetsIncoming.getUnsignedByte(); // 73
-			wantHarvesting = packetsIncoming.getUnsignedByte(); //74
-			hideLoginBox = packetsIncoming.getUnsignedByte(); // 75
-			globalFriendChat = packetsIncoming.getUnsignedByte(); // 76
-			wantRightClickTrade = packetsIncoming.getUnsignedByte(); // 77
+			wantHarvesting = packetsIncoming.getUnsignedByte(); //73
+			hideLoginBox = packetsIncoming.getUnsignedByte(); // 74
+			globalFriendChat = packetsIncoming.getUnsignedByte(); // 75
+			wantRightClickTrade = packetsIncoming.getUnsignedByte(); // 76
 		}
 
 		if (Config.DEBUG) {
@@ -1139,7 +1137,6 @@ public class PacketHandler {
 					"\nS_WANT_GLOBAL_FRIEND" + wantGlobalFriend + // 70
 					"\nS_CHARACTER_CREATION_MODE" + characterCreationMode + // 71
 					"\nS_SKILLING_EXP_RATE" + skillingExpRate + //72
-					"\nS_WANT_PK_BOTS " + wantPkBots + // 73
 					"\nS_WANT_HARVESTING " + wantHarvesting + // 74
 					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 75
 					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 76
@@ -1221,7 +1218,6 @@ public class PacketHandler {
 		props.setProperty("S_WANT_GLOBAL_FRIEND", wantGlobalFriend == 1 ? "true" : "false"); //70
 		props.setProperty("S_CHARACTER_CREATION_MODE", Integer.toString(characterCreationMode)); //71
 		props.setProperty("S_SKILLING_EXP_RATE", Integer.toString(skillingExpRate)); //72
-		props.setProperty("S_WANT_PK_BOTS", wantPkBots == 1 ? "true" : "false"); // 73
 		props.setProperty("S_WANT_HARVESTING", wantHarvesting == 1 ? "true" : "false"); // 74
 		props.setProperty("S_HIDE_LOGIN_BOX", hideLoginBox == 1 ? "true" : "false"); // 75
 		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 76

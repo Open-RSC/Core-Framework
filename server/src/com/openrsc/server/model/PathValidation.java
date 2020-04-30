@@ -537,11 +537,6 @@ public class PathValidation {
 		if (mob.getX() == x && mob.getY() == y)
 			return false;
 
-		if(mob.isNpc()){
-			if (((Npc) mob).isPkBot())
-				return false;
-		}
-
 		ArrayList<Npc> npcsOnLoc = mob.getWorld().getNpcPositions().getOrDefault(x + "," + y,null);
 		Npc npc = npcsOnLoc != null && npcsOnLoc.size() > 0 ? npcsOnLoc.get(0) : null;
 

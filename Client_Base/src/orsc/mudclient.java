@@ -15792,9 +15792,8 @@ public final class mudclient implements Runnable {
 			System.out.println(S_WANT_CUSTOM_LANDSCAPE + " 61");
 			System.out.println(S_WANT_EQUIPMENT_TAB + " 62");
 			System.out.println(S_WANT_BANK_PRESETS + " 63");
-			System.out.println(S_WANT_PK_BOTS + " 64");
-			System.out.println(Config.S_WANT_HARVESTING + " 65");
-			System.out.println(S_RIGHT_CLICK_BANK + " 77");
+			System.out.println(Config.S_WANT_HARVESTING + " 66");
+			System.out.println(S_RIGHT_CLICK_BANK + " 67");
 		}
 		try {
 			this.loadGameConfig(false);

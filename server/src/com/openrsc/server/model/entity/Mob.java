@@ -9,7 +9,6 @@ import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.UpdateFlags;
@@ -483,11 +482,6 @@ public abstract class Mob extends Entity {
 			boolean gotUnderAttack = false;
 
 			if (this.isPlayer()) {
-				if (victim.isNpc()) {
-					if (((Npc) victim).isPkBot()) {
-						((Player) this).setSkulledOn(((PkBot) victim));
-					}
-				}
 				((Player) this).resetAll();
 				((Player) this).produceUnderAttack();
 			} else if (this.isNpc()) {
@@ -627,11 +621,6 @@ public abstract class Mob extends Entity {
 			return true;
 		} else if (mob.isNpc()) {
 			Npc victim = (Npc) mob;
-			if (((Npc) victim).isPkBot() && victim.getCombatTimer() > 3000) {
-				return true;
-			} else if (victim instanceof PkBot && ((PkBot)victim).isPkBotMelee()) {
-				return false;
-			}
 			if (!victim.getDef().isAttackable()) {
 				return false;
 			}

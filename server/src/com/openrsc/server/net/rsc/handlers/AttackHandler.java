@@ -7,7 +7,6 @@ import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
@@ -61,20 +60,6 @@ public class AttackHandler implements PacketHandler {
 				return;
 			if (n.getID() == NpcId.OGRE_TRAINING_CAMP.id() && player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
 				player.message("these ogres are for range combat training only");
-				return;
-			}
-			if (n.isPkBot() && !player.getLocation().inWilderness()) {
-				player.message("You must be in the wilderness to attack this mob");
-				player.resetPath();
-				return;
-			}
-			if (n.isPkBot() && !n.getLocation().inWilderness()) {
-				player.message("I can't get close enough");
-				player.resetPath();
-				return;
-			}
-			if (n.isPkBot() && System.currentTimeMillis() - n.getCombatTimer() < 3000 && System.currentTimeMillis() - n.getCombatTimer() != 0){
-				player.resetPath();
 				return;
 			}
 		}
@@ -134,11 +119,6 @@ public class AttackHandler implements PacketHandler {
 						if (affectedPlayer.accessingShop()) {
 							affectedPlayer.resetShop();
 						}
-					}
-					if (target.isNpc() && ((Npc) target).isPkBot()) {
-						assert target instanceof Npc;
-						Npc affectedNpc = (Npc) target;
-						getOwner().setSkulledOn((PkBot)affectedNpc);
 					}
 					if (player.getRangeEquip() > 0) {
 						getOwner().setRangeEvent(new RangeEvent(getOwner().getWorld(), getOwner(), target));

@@ -74,11 +74,6 @@ public class Npc extends Mob {
 		this(world, new NPCLoc(id, startX, startY, minX, maxX, minY, maxY));
 	}
 
-	protected Npc(final World world) {
-		// For PKbots only
-		super(world);
-	}
-
 	public Npc(final World world, final NPCLoc loc) {
 		super(world);
 
@@ -685,10 +680,6 @@ public class Npc extends Mob {
 	@Override
 	public String toString() {
 		return "[NPC:" + getDef().getName() + " @ (" + getX() + ", " + getY() + ") ]";
-	}
-
-	public boolean isPkBot() {
-		return getDef().isPkBot() && this instanceof PkBot;
 	}
 
 	public void updatePosition() {
