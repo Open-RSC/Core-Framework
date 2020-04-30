@@ -53,7 +53,8 @@ public class Bones implements OpInvTrigger {
 			player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, String.format("Bury %s", item.getDef(player.getWorld()).getName()), buryAmount, false) {
 				@Override
 				public void action() {
-					Item toRemove = new Item(item.getCatalogId(), 1, false, item.getItemId());
+					Item toRemove = getOwner().getCarriedItems().getInventory().get(
+						getOwner().getCarriedItems().getInventory().getLastIndexById(item.getCatalogId()));
 					if (getOwner().getCarriedItems().remove(toRemove) > -1) {
 						buryBonesHelper(player, item);
 					} else
