@@ -137,14 +137,16 @@ public class CombatEvent extends GameTickEvent {
 			}
 		}
 
+		int lastHits = target.getLevel(Skills.HITPOINTS);
+		target.getSkills().subtractLevel(Skills.HITS, damage, false);
+		target.getUpdateFlags().setDamage(new Damage(target, damage));
+
 		if (target.isNpc() && hitter.isPlayer()) {
 			Npc n = (Npc) target;
 			Player player = ((Player) hitter);
-			damage = Math.min(damage, n.getLevel(Skills.HITPOINTS));
+			damage = Math.min(damage, lastHits);
 			n.addCombatDamage(player, damage);
 		}
-		target.getSkills().subtractLevel(Skills.HITS, damage, false);
-		target.getUpdateFlags().setDamage(new Damage(target, damage));
 
 		String combatSound = null;
 		combatSound = damage > 0 ? "combat1b" : "combat1a";

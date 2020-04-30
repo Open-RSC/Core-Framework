@@ -123,6 +123,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			}
 		}
 
+		int lastHits = opponent.getLevel(Skills.HITPOINTS);
 		opponent.getSkills().subtractLevel(3, damage, false);
 		opponent.getUpdateFlags().setDamage(new Damage(opponent, damage));
 
@@ -132,11 +133,11 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (opponent.isNpc()) {
 				Npc npc = (Npc) opponent;
 				if (type == 1 || type == 4) {
-					damage = Math.min(damage, npc.getLevel(Skills.HITPOINTS));
+					damage = Math.min(damage, lastHits);
 					npc.addMageDamage(casterPlayer, damage);
 				}
 				else if (type == 2 || type == 5) {
-					damage = Math.min(damage, npc.getLevel(Skills.HITPOINTS));
+					damage = Math.min(damage, lastHits);
 					npc.addRangeDamage(casterPlayer, damage);
 				}
 			}
