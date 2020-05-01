@@ -7,6 +7,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class BattlestaffCrafting implements UseInvTrigger {
@@ -32,18 +34,29 @@ public class BattlestaffCrafting implements UseInvTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting level of " + combine.requiredLevel + " to make " + resultItemString(combine));
 			return;
 		}
-		if (player.getCarriedItems().remove(new Item(combine.itemID)) != -1
-			&& player.getCarriedItems().remove(new Item(combine.itemIDOther)) != -1) {
-			if (combine.messages.length > 1)
-				mes(player, combine.messages[0]);
-			else
-				player.message(combine.messages[0]);
+		item1 = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(combine.itemID, Optional.of(false))
+		);
+		item2 = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(combine.itemIDOther, Optional.of(false))
+		);
+		if (item1 == null || item2 == null) return;
 
-			give(player, combine.resultItem, 1);
-			player.incExp(Skills.CRAFTING, combine.experience, true);
+		player.getCarriedItems().remove(item1);
+		player.getCarriedItems().remove(item2);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		if (combine.messages.length > 1) {
+			mes(player, combine.messages[0]);
+		}
+		else {
+			player.message(combine.messages[0]);
+		}
 
-			if (combine.messages.length > 1)
-				player.message(combine.messages[1]);
+		give(player, combine.resultItem, 1);
+		player.incExp(Skills.CRAFTING, combine.experience, true);
+
+		if (combine.messages.length > 1) {
+			player.message(combine.messages[1]);
 		}
 	}
 
