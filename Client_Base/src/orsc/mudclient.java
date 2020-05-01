@@ -3495,7 +3495,8 @@ public final class mudclient implements Runnable {
 					var2 = 0;
 					while (this.optionsMenuCount > var2) {
 						int var3 = '\uffff';
-						if (this.mouseX < this.getSurface().stringWidth(1, this.optionsMenuText[var2]) + 9
+						if (this.mouseX < this.getSurface().stringWidth(1, this.optionsMenuText[var2])
+							+ (S_WANT_KEYBOARD_SHORTCUTS > 1 ? 24 : 9)
 							&& this.mouseY > startY + 2 + var2 * 12 && this.mouseY < startY + 2 + var2 * 12 + 12) {
 							var3 = 0xFF0000;
 						}
@@ -3509,7 +3510,8 @@ public final class mudclient implements Runnable {
 					// Click
 					boolean nullOption = true;
 					for (var2 = 0; var2 < this.optionsMenuCount; ++var2) {
-						if (this.getSurface().stringWidth(1, this.optionsMenuText[var2]) + 9 > this.mouseX
+						if (this.getSurface().stringWidth(1, this.optionsMenuText[var2])
+							+ (S_WANT_KEYBOARD_SHORTCUTS > 1 ? 24 : 9) > this.mouseX
 							&& startY + 2 + var2 * 12 < this.mouseY && startY + 2 + 12 + var2 * 12 > this.mouseY) {
 							this.packetHandler.getClientStream().newPacket(116);
 							this.packetHandler.getClientStream().bufferBits.putByte(var2);
