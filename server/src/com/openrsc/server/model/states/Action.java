@@ -23,7 +23,7 @@ public enum Action {
 	idle(EntityType.NONE, "idle"),
 	takeobj(EntityType.GROUND_ITEM, "takeobj"),
 	dropobj(EntityType.INVENTORY_ITEM,"dropobj"),
-	useobj(EntityType.INVENTORY_ITEM,"useobj"),
+	useobj(EntityType.GROUND_ITEM,"useobj"),
 	wearobj(EntityType.INVENTORY_ITEM,"wearobj"),
 	removeobj(EntityType.INVENTORY_ITEM,"removeobj"),
 	spellobj(EntityType.GROUND_ITEM,"spellobj"),

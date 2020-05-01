@@ -30,40 +30,40 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		if (myItem == null)
 			return;
 
-		final GroundItem item = player.getRegion().getItem(groundItemId, location, player);
+		final GroundItem gItem = player.getRegion().getItem(groundItemId, location, player);
 
-		if (item == null) {
+		if (gItem == null) {
 			player.setSuspiciousPlayer(true, "item use on ground item null item");
 			player.resetPath();
 			return;
 		}
 
-		if (myItem.getItemStatus().getNoted() || item.getNoted()) {
+		if (myItem.getItemStatus().getNoted() || gItem.getNoted()) {
 			player.message("Nothing interesting happens");
 			return;
 		}
 
 		boolean firemaking = myItem.getCatalogId() == ItemId.TINDERBOX.id();
 		player.setWalkToAction(new WalkToPointAction(player,
-			item.getLocation(), firemaking ? 0 : 1) {
+			gItem.getLocation(), firemaking ? 0 : 1) {
 			public void executeInternal() {
 				if (getPlayer().isBusy()
 					|| getPlayer().isRanging()
 					|| getPlayer().getRegion().getItem(groundItemId, getLocation(), getPlayer()) == null
-					|| !getPlayer().canReach(item) ) {
+					|| !getPlayer().canReach(gItem) ) {
 					return;
 				}
-				if (myItem == null || item == null)
+				if (myItem == null || gItem == null)
 					return;
 
-				if ((myItem.getDef(getPlayer().getWorld()).isMembersOnly() || item.getDef()
+				if ((myItem.getDef(getPlayer().getWorld()).isMembersOnly() || gItem.getDef()
 					.isMembersOnly())
 					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}
 
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "UseObj", new Object[]{getPlayer(), myItem, item}, this);
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "UseObj", new Object[]{getPlayer(), gItem, myItem}, this);
 			}
 		});
 
