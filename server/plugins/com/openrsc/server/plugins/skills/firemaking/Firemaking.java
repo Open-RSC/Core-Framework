@@ -105,7 +105,9 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 					}
 				);
 				player.incExp(Skills.FIREMAKING, getExp(player.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
-				firemakingWalk(player);
+				if (repeat > 1) {
+					firemakingWalk(player);
+				}
 			}
 
 			if (player.hasMoved()) return;
@@ -124,6 +126,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
+			repeat--;
 			if (repeat > 0) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				batchFiremaking(player, gItem, def, repeat);
@@ -205,6 +208,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
+			repeat--;
 			if (repeat > 0) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				batchCustomFiremaking(player, gItem, def, repeat);
