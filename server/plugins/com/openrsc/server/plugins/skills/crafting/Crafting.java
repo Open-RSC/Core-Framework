@@ -1004,28 +1004,39 @@ public class Crafting implements UseInvTrigger,
 			default:
 				return;
 		}
-		final int newId = newID;
 		int woolAmount = player.getCarriedItems().getInventory().countId(woolBall.getCatalogId());
 		int amuletAmount = player.getCarriedItems().getInventory().countId(item.getCatalogId());
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft String Amulet",
-			Math.min(woolAmount, amuletAmount), false) {
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = Math.min(woolAmount, amuletAmount);
+		}
+		batchString(player, item, woolBall, newID, repeat);
+	}
 
-			public void action() {
-				Player owner = getOwner();
-				if (owner.getCarriedItems().getInventory().countId(item.getCatalogId()) <= 0 || owner.getCarriedItems().getInventory().countId(ItemId.BALL_OF_WOOL.id()) <= 0) {
-					interruptBatch();
-					return;
-				}
-				if (owner.getCarriedItems().remove(woolBall) > -1 && owner.getCarriedItems().remove(item) > -1) {
-					owner.message("You put some string on your " + item.getDef(getWorld()).getName().toLowerCase());
-					owner.getCarriedItems().getInventory().add(new Item(newId));
-				} else {
-					interruptBatch();
-					return;
-				}
-			}
-		});
+	private void batchString(Player player, Item item, Item woolBall, int newID, int repeat) {
+		if (player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) <= 0
+				|| player.getCarriedItems().getInventory().countId(woolBall.getCatalogId(), Optional.of(false)) <= 0) {
+			return;
+		}
+		player.getCarriedItems().remove(woolBall);
+		player.getCarriedItems().remove(item);
+		player.message("You put some string on your " + item.getDef(player.getWorld()).getName().toLowerCase());
+		player.getCarriedItems().getInventory().add(new Item(newID));
+
+		// Repeat
+		if (player.hasMoved()) return;
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		repeat--;
+		if (repeat > 0) {
+			item = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+			);
+			woolBall = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(woolBall.getCatalogId(), Optional.of(false))
+			);
+			batchString(player, item, woolBall, newID, repeat);
+		}
 	}
 
 	private boolean useWater(Player player, final Item water, final Item item) {
