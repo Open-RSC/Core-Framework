@@ -174,10 +174,10 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		if (item.getCatalogId() == ItemId.SODA_ASH.id() || item.getCatalogId() == ItemId.SAND.id()) { // Soda Ash or Sand (Glass)
-			if (player.getCarriedItems().getInventory().countId(ItemId.SODA_ASH.id()) < 1) {
+			if (player.getCarriedItems().getInventory().countId(ItemId.SODA_ASH.id(), Optional.of(false)) < 1) {
 				player.playerServerMessage(MessageType.QUEST, "You need some soda ash to make glass");
 				return false;
-			} else if (player.getCarriedItems().getInventory().countId(ItemId.SAND.id()) < 1) {
+			} else if (player.getCarriedItems().getInventory().countId(ItemId.SAND.id(), Optional.of(false)) < 1) {
 				player.playerServerMessage(MessageType.QUEST, "You need some sand to make glass");
 				return false;
 			}
@@ -257,7 +257,7 @@ public class Crafting implements UseInvTrigger,
 				};
 			}
 		}
-		if (player.getCarriedItems().getInventory().countId(gold_moulds[type]) < 1) {
+		if (player.getCarriedItems().getInventory().countId(gold_moulds[type], Optional.of(false)) < 1) {
 			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(gold_moulds[type]).getName() + " to make a " + reply.get());
 			return;
 		}
@@ -282,33 +282,27 @@ public class Crafting implements UseInvTrigger,
 			return;
 		}
 
-		int retrytimes = player.getCarriedItems().getInventory().countId(item.getCatalogId());
+		int repeat = 1;
 
-		//Perfect gold bars shouldn't be batched
-		if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
-			retrytimes = 1;
-		} else {
-			if (gem != 0) {
-				retrytimes = Math.min(player.getCarriedItems().getInventory().countId(gems[gem]), retrytimes);
+		// Perfect gold bars shouldn't be batched
+		if (item.getCatalogId() != ItemId.GOLD_BAR_FAMILYCREST.id()) {
+			if (gem > 0) {
+				repeat = Math.min(
+					player.getCarriedItems().getInventory().countId(gems[gem], Optional.of(false)),
+					player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false))
+				);
 			}
-			if (retrytimes <= 0) {
-				if (gem != -1 && player.getCarriedItems().getInventory().countId(gems[gem]) < 1) {
-					player.message("You don't have a " + reply.get() + ".");
-				}
-				return;
+			else {
+				repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 			}
 		}
 
-		batchGoldJewelry(player, item, def, gem, gems, type, reply, retrytimes);
+		batchGoldJewelry(player, item, def, gem, gems, type, reply, repeat);
 	}
 
 	private void batchGoldJewelry(Player player, Item item, ItemCraftingDef def, int gem, int[] gems, int type, AtomicReference<String> reply, int repeat) {
 		if (player.getSkills().getLevel(Skills.CRAFTING) < def.getReqLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level " + def.getReqLevel() + " to make this");
-			return;
-		}
-		if (gem != 0 && player.getCarriedItems().getInventory().countId(gems[gem]) < 1) {
-			player.message("You don't have a " + reply.get() + ".");
 			return;
 		}
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
@@ -318,24 +312,40 @@ public class Crafting implements UseInvTrigger,
 				return;
 			}
 		}
-		if (player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) <= 0
-			|| (gem > 0 && player.getCarriedItems().getInventory().countId(gems[gem], Optional.of(false)) <= 0)) {
+
+		// Get last gem in inventory.
+		Item gemItem;
+		if (gem != 0) {
+			gemItem = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(gems[gem], Optional.of(false))
+			);
+			if (gemItem == null) {
+				player.message("You don't have a " + reply.get() + ".");
+				return;
+			}
+		}
+
+		// Get last gold bar in inventory.
+		Item goldBar = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		if (goldBar == null) {
 			player.message("You don't have a " + reply.get() + ".");
 			return;
 		}
 
 		// Remove items
-		thinkbubble(player, item);
-		player.getCarriedItems().remove(item);
+		thinkbubble(player, goldBar);
+		player.getCarriedItems().remove(goldBar);
 		if (gem > 0) {
 			player.getCarriedItems().remove(new Item(gems[gem]));
 		}
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		Item result;
-		if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
+		if (goldBar.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
 			result = new Item(ItemId.RUBY_RING_FAMILYCREST.id(), 1);
-		} else if (item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 1) {
+		} else if (goldBar.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 1) {
 			result = new Item(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
 		} else {
 			result = new Item(def.getItemID(), 1);
@@ -348,9 +358,6 @@ public class Crafting implements UseInvTrigger,
 		if (player.hasMoved()) return;
 		repeat--;
 		if(repeat > 0) {
-			item = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId())
-			);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchGoldJewelry(player, item, def, gem, gems, type, reply, repeat);
 		}
@@ -374,7 +381,7 @@ public class Crafting implements UseInvTrigger,
 			ItemId.UNSTRUNG_HOLY_SYMBOL_OF_SARADOMIN.id(),
 			ItemId.UNSTRUNG_UNHOLY_SYMBOL_OF_ZAMORAK.id()
 		};
-		if (player.getCarriedItems().getInventory().countId(silver_moulds[type]) <= 0) {
+		if (player.getCarriedItems().getInventory().countId(silver_moulds[type], Optional.of(false)) <= 0) {
 			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(silver_moulds[type]).getName() + " to make a " + reply.get() + "!");
 			return;
 		}
@@ -399,13 +406,21 @@ public class Crafting implements UseInvTrigger,
 			}
 		}
 
-		if (player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) <= 0) {
+		Item silverMould = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(silver_moulds[type], Optional.of(false))
+		);
+		if (silverMould == null) {
 			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(silver_moulds[type]).getName() + " to make a " + reply.get() + "!");
 			return;
 		}
 
-		thinkbubble(player, item);
-		player.getCarriedItems().remove(item);
+		Item silver = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		if (silver == null) return;
+
+		thinkbubble(player, silver);
+		player.getCarriedItems().remove(silver);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		Item result = new Item(results[type]);
@@ -417,9 +432,6 @@ public class Crafting implements UseInvTrigger,
 		if (player.hasMoved()) return;
 		repeat--;
 		if (repeat > 0) {
-			item = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId())
-			);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchSilverJewelry(player, item, results, type, reply, repeat);
 		}
@@ -469,7 +481,6 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchPotteryMoulding(Player player, Item item, int reqLvl, Item result, AtomicReference<String> msg, int exp, int repeat) {
-
 		if (player.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
 			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
 			return;
@@ -482,13 +493,14 @@ public class Crafting implements UseInvTrigger,
 			}
 		}
 
-		if (player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) <= 0) {
-			return;
-		}
+		Item softClay = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		if (softClay == null) return;
 
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
-		player.getCarriedItems().remove(item);
-		thinkbubble(player, item);
+		player.getCarriedItems().remove(softClay);
+		thinkbubble(player, softClay);
 		player.playerServerMessage(MessageType.QUEST, "you make the clay into a " + potteryItemName(result.getDef(player.getWorld()).getName()));
 		player.getCarriedItems().getInventory().add(result);
 		player.incExp(Skills.CRAFTING, exp, true);
@@ -497,9 +509,6 @@ public class Crafting implements UseInvTrigger,
 		if (player.hasMoved()) return;
 		repeat--;
 		if (repeat > 0) {
-			item = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
-			);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchPotteryMoulding(player, item, reqLvl, result, msg, exp, repeat);
 		}
@@ -556,14 +565,15 @@ public class Crafting implements UseInvTrigger,
 			}
 		}
 
-		if (player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) <= 0) {
-			return;
-		}
+		Item unfiredClay = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		if (unfiredClay == null) return;
 
-		thinkbubble(player, item);
+		thinkbubble(player, unfiredClay);
 		String potteryItem = potteryItemName(item.getDef(player.getWorld()).getName());
 		player.playerServerMessage(MessageType.QUEST, "You put the " + potteryItem + " in the oven");
-		player.getCarriedItems().remove(item);
+		player.getCarriedItems().remove(unfiredClay);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 
 		if (Formulae.crackPot(reqLvl, player.getSkills().getLevel(Skills.CRAFTING))) {
@@ -586,9 +596,6 @@ public class Crafting implements UseInvTrigger,
 		if (player.hasMoved()) return;
 		repeat--;
 		if (repeat > 0) {
-			item = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
-			);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchPotteryFiring(player, item, reqLvl, result, msg, exp, repeat);
 		}
@@ -598,21 +605,14 @@ public class Crafting implements UseInvTrigger,
 		int otherItem = item.getCatalogId() == ItemId.SAND.id() ? ItemId.SODA_ASH.id() : ItemId.SAND.id();
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
-			repeat = Math.min(player.getCarriedItems().getInventory().countId(otherItem), repeat);
+			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+			repeat = Math.min(player.getCarriedItems().getInventory().countId(otherItem, Optional.of(false)), repeat);
 		}
 
 		batchGlassMaking(player, item, otherItem, repeat);
 	}
 
 	private void batchGlassMaking(Player player, Item item, int otherItem, int repeat) {
-		thinkbubble(player, item);
-		player.playerServerMessage(MessageType.QUEST, "you heat the sand and soda ash in the furnace to make glass");
-		Inventory inventory = player.getCarriedItems().getInventory();
-		if (inventory.countId(otherItem) < 1 ||
-			inventory.countId(item.getCatalogId()) < 1) {
-			return;
-		}
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
@@ -620,8 +620,19 @@ public class Crafting implements UseInvTrigger,
 				return;
 			}
 		}
-		player.getCarriedItems().remove(new Item(otherItem));
-		player.getCarriedItems().remove(item);
+		Inventory inventory = player.getCarriedItems().getInventory();
+		Item item1 = inventory.get(
+			inventory.getLastIndexById(otherItem, Optional.of(false))
+		);
+		Item item2 = inventory.get(
+			inventory.getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		if (item1 == null || item2 == null)	return;
+
+		thinkbubble(player, item2);
+		player.playerServerMessage(MessageType.QUEST, "you heat the sand and soda ash in the furnace to make glass");
+		player.getCarriedItems().remove(item1);
+		player.getCarriedItems().remove(item2);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		inventory.add(new Item(ItemId.MOLTEN_GLASS.id(), 1));
 		inventory.add(new Item(ItemId.BUCKET.id(), 1));
@@ -631,9 +642,6 @@ public class Crafting implements UseInvTrigger,
 		if (player.hasMoved()) return;
 		repeat--;
 		if (repeat > 0) {
-			item = inventory.get(
-				inventory.getLastIndexById(item.getCatalogId(), Optional.of(false))
-			);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchGlassMaking(player, item, otherItem, repeat);
 		}
@@ -706,27 +714,27 @@ public class Crafting implements UseInvTrigger,
 			}
 		}
 
-		if (player.getCarriedItems().getInventory().countId(glass.getCatalogId(), Optional.of(false)) <= 0) {
-			return;
-		}
+		glass = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(glass.getCatalogId(), Optional.of(false))
+		);
+		if (glass == null) return;
 
 		player.getCarriedItems().remove(glass);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		String message = "You make a " + result.getDef(player.getWorld()).getName();
 
 		// Special handling for vials
+		int amount = 1;
 		if (result.getCatalogId() == ItemId.EMPTY_VIAL.id()) {
 			if (config.WANT_CUSTOM_QUESTS) {
-				int amnt = 0;
 				double breakChance = 91.66667 - getCurrentLevel(player, Skills.CRAFTING) / 1.32;
-				for (int loop = 0; loop < 6; ++loop) {
+				for (int loop = 0; loop < 5; ++loop) {
 					double hit = new Random().nextDouble() * 99;
 					if (hit > breakChance) {
-						amnt++;
+						amount++;
 					}
 				}
-				message = "You make " + amnt + " vial" + (amnt != 1 ? "s" : "");
-				result.getItemStatus().setAmount(amnt);
+				message = "You make " + amount + " vial" + (amount != 1 ? "s" : "");
 				if (player.getLocation().inBounds(418, 559, 421, 563)) {
 					try {
 						result.setNoted(player.getWorld().getServer().getDatabase(), true);
@@ -739,25 +747,16 @@ public class Crafting implements UseInvTrigger,
 
 		player.playerServerMessage(MessageType.QUEST, message);
 
-		if (!result.getDef(player.getWorld()).isStackable() && result.getAmount() > 1) {
-			int owedGlassware = result.getAmount() - 1;
-			int space = inventory.getFreeSlots();
-			while (owedGlassware > 0) {
-				if (space > 0) {
-					inventory.add(result);
-					--space;
-				} else {
-					player.getWorld().registerItem(
-						new GroundItem(player.getWorld(), result.getCatalogId(), player.getX(), player.getY(), 1, player),
-						player.getWorld().getServer().getConfig().GAME_TICK * 150); // TODO: Delay on this?
-					player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped(inventory full) "
-						+ result.getCatalogId() + " x" + "1" + " at " + player.getLocation().toString()));
-				}
-				--owedGlassware;
+		if (result.getNoted()) {
+			result.getItemStatus().setAmount(amount);
+			inventory.add(result);
+		}
+		else {
+			for (int i = 0; i < amount; i++) {
+				inventory.add(result);
 			}
 		}
 
-		inventory.add(result);
 		player.incExp(Skills.CRAFTING, exp, true);
 
 		// Repeat
@@ -765,9 +764,6 @@ public class Crafting implements UseInvTrigger,
 		repeat--;
 		if (repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-			glass = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(glass.getCatalogId(), Optional.of(false))
-			);
 			batchGlassBlowing(player, glass, result, reqLvl, exp, resultGen, repeat);
 		}
 	}
@@ -780,67 +776,72 @@ public class Crafting implements UseInvTrigger,
 					player.message("You need 90 crafting to split the scales");
 					return;
 				}
-				if (player.getCarriedItems().remove(new Item(ItemId.KING_BLACK_DRAGON_SCALE.id(),1)) > -1) {
+				if (player.getCarriedItems().remove(new Item(ItemId.KING_BLACK_DRAGON_SCALE.id(), 1)) > -1) {
 					player.message("You chip the massive scale into 5 pieces");
 					give(player, ItemId.CHIPPED_DRAGON_SCALE.id(), 5);
-					player.incExp(Skills.CRAFTING,player.getWorld().getServer().getConfig().GAME_TICK * 2,true);
+					player.incExp(Skills.CRAFTING, player.getWorld().getServer().getConfig().GAME_TICK * 2, true);
 				}
 			} else
 				player.message("Nothing interesting happens");
 			return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Cut Gem", player.getCarriedItems().getInventory().countId(gem.getCatalogId(), Optional.of(false)), false) {
-			@Override
-			public void action() {
-				Player owner = getOwner();
-				if (owner.getSkills().getLevel(Skills.CRAFTING) < gemDef.getReqLevel()) {
-					boolean pluralize = gemDef.getGemID() <= ItemId.UNCUT_DRAGONSTONE.id();
-					owner.playerServerMessage(MessageType.QUEST,
-						"you need a crafting level of " + gemDef.getReqLevel()
-							+ " to cut " + (gem.getDef(getWorld()).getName().contains("ruby") ? "rubies" : gem.getDef(getWorld()).getName().replaceFirst("(?i)uncut ", "") + (pluralize ? "s" : "")));
-					interruptBatch();
-					return;
-				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to craft");
-						interruptBatch();
-						return;
-					}
-				}
-				Item item = owner.getCarriedItems().getInventory().get(
-					owner.getCarriedItems().getInventory().getLastIndexById(gem.getCatalogId(), Optional.of(false)));
-				if (item.getItemStatus().getNoted()) return;
-				if (owner.getCarriedItems().remove(item) > -1) {
-					Item cutGem = new Item(gemDef.getGemID(), 1);
-					// Jade, Opal and red topaz fail handler - 25% chance to fail
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(gem.getCatalogId(), Optional.of(false));
+		}
+		batchGemCutting(player, gem, gemDef, repeat);
+	}
 
-					if (DataConversions.inArray(gemsThatFail, gem.getCatalogId()) &&
-						Formulae.smashGem(gem.getCatalogId(), gemDef.getReqLevel(), owner.getSkills().getLevel(Skills.CRAFTING))) {
-						owner.message("You miss hit the chisel and smash the " + cutGem.getDef(getWorld()).getName() + " to pieces!");
-						owner.getCarriedItems().getInventory().add(new Item(ItemId.CRUSHED_GEMSTONE.id()));
-
-						if (gem.getCatalogId() == ItemId.UNCUT_RED_TOPAZ.id()) {
-							owner.incExp(Skills.CRAFTING, 25, true);
-						} else if (gem.getCatalogId() == ItemId.UNCUT_JADE.id()) {
-							owner.incExp(Skills.CRAFTING, 20, true);
-						} else {
-							owner.incExp(Skills.CRAFTING, 15, true);
-						}
-					} else {
-						owner.getCarriedItems().getInventory().add(cutGem, true);
-						owner.message("You cut the " + cutGem.getDef(getWorld()).getName().toLowerCase());
-						owner.playSound("chisel");
-						owner.incExp(Skills.CRAFTING, gemDef.getExp(), true);
-					}
-				}
-				else {
-					interruptBatch();
-				}
+	private void batchGemCutting(Player player, Item gem, ItemGemDef gemDef, int repeat) {
+		if (player.getSkills().getLevel(Skills.CRAFTING) < gemDef.getReqLevel()) {
+			boolean pluralize = gemDef.getGemID() <= ItemId.UNCUT_DRAGONSTONE.id();
+			player.playerServerMessage(MessageType.QUEST,
+				"you need a crafting level of " + gemDef.getReqLevel()
+					+ " to cut " + (gem.getDef(player.getWorld()).getName().contains("ruby") ? "rubies" : gem.getDef(player.getWorld()).getName().replaceFirst("(?i)uncut ", "") + (pluralize ? "s" : "")));
+			return;
+		}
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to craft");
+				return;
 			}
-		});
+		}
+		Item item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(gem.getCatalogId(), Optional.of(false)));
+		if (item == null) return;
+
+		player.getCarriedItems().remove(item);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		Item cutGem = new Item(gemDef.getGemID(), 1);
+		// Jade, Opal and red topaz fail handler - 25% chance to fail
+
+		if (DataConversions.inArray(gemsThatFail, gem.getCatalogId()) &&
+			Formulae.smashGem(gem.getCatalogId(), gemDef.getReqLevel(), player.getSkills().getLevel(Skills.CRAFTING))) {
+			player.message("You miss hit the chisel and smash the " + cutGem.getDef(player.getWorld()).getName() + " to pieces!");
+			player.getCarriedItems().getInventory().add(new Item(ItemId.CRUSHED_GEMSTONE.id()));
+
+			if (gem.getCatalogId() == ItemId.UNCUT_RED_TOPAZ.id()) {
+				player.incExp(Skills.CRAFTING, 25, true);
+			} else if (gem.getCatalogId() == ItemId.UNCUT_JADE.id()) {
+				player.incExp(Skills.CRAFTING, 20, true);
+			} else {
+				player.incExp(Skills.CRAFTING, 15, true);
+			}
+		} else {
+			player.getCarriedItems().getInventory().add(cutGem, true);
+			player.message("You cut the " + cutGem.getDef(player.getWorld()).getName().toLowerCase());
+			player.playSound("chisel");
+			player.incExp(Skills.CRAFTING, gemDef.getExp(), true);
+		}
+
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			batchGemCutting(player, gem, gemDef, repeat);
+		}
 	}
 
 	private void makeLeather(Player player, final Item needle, final Item leather) {
@@ -849,7 +850,7 @@ public class Crafting implements UseInvTrigger,
 			return;
 		}
 
-		if (player.getCarriedItems().getInventory().countId(ItemId.THREAD.id()) < 1) {
+		if (player.getCarriedItems().getInventory().countId(ItemId.THREAD.id(), Optional.of(false)) < 1) {
 			player.message("You need some thread to make anything out of leather");
 			return;
 		}
@@ -955,11 +956,12 @@ public class Crafting implements UseInvTrigger,
 			}
 		}
 
-		if (player.getCarriedItems().getInventory().countId(leather.getCatalogId(), Optional.of(false)) <= 0) {
-			return;
-		}
+		Item item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(leather.getCatalogId(), Optional.of(false))
+		);
+		if (item == null) return;
 
-		player.getCarriedItems().remove(leather);
+		player.getCarriedItems().remove(item);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		player.message("You make some " + result.getDef(player.getWorld()).getName());
 		player.getCarriedItems().getInventory().add(result);
@@ -985,9 +987,6 @@ public class Crafting implements UseInvTrigger,
 		if (player.hasMoved()) return;
 		repeat--;
 		if (repeat > 0) {
-			leather = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(leather.getCatalogId(), Optional.of(false))
-			);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchLeather(player, leather, result, reqLvl, exp, repeat);
 		}
@@ -1023,8 +1022,8 @@ public class Crafting implements UseInvTrigger,
 			default:
 				return;
 		}
-		int woolAmount = player.getCarriedItems().getInventory().countId(woolBall.getCatalogId());
-		int amuletAmount = player.getCarriedItems().getInventory().countId(item.getCatalogId());
+		int woolAmount = player.getCarriedItems().getInventory().countId(woolBall.getCatalogId(), Optional.of(false));
+		int amuletAmount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
@@ -1034,26 +1033,25 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchString(Player player, Item item, Item woolBall, int newID, int repeat) {
-		if (player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) <= 0
-				|| player.getCarriedItems().getInventory().countId(woolBall.getCatalogId(), Optional.of(false)) <= 0) {
-			return;
-		}
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		woolBall = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(woolBall.getCatalogId(), Optional.of(false))
+		);
+		if (item == null || woolBall == null) return;
+
 		player.getCarriedItems().remove(woolBall);
 		player.getCarriedItems().remove(item);
 		player.message("You put some string on your " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getCarriedItems().getInventory().add(new Item(newID));
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
 		if (player.hasMoved()) return;
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 		repeat--;
 		if (repeat > 0) {
-			item = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
-			);
-			woolBall = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(woolBall.getCatalogId(), Optional.of(false))
-			);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			batchString(player, item, woolBall, newID, repeat);
 		}
 	}
