@@ -7,6 +7,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.handlers.SpellHandler;
 import com.openrsc.server.plugins.triggers.SpellInvTrigger;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class EnchantDragonstoneRing implements SpellInvTrigger {
@@ -21,9 +23,8 @@ public class EnchantDragonstoneRing implements SpellInvTrigger {
 		if (spellDef == null)
 			return;
 		Item item = player.getCarriedItems().getInventory().get(
-			player.getCarriedItems().getInventory().getLastIndexById(ItemId.DRAGONSTONE_RING.id()));
-		if (item.getItemStatus().getNoted()) return;
-
+			player.getCarriedItems().getInventory().getLastIndexById(ItemId.DRAGONSTONE_RING.id(), Optional.of(false)));
+		if (item == null) return;
 		if (itemID.intValue() == ItemId.DRAGONSTONE_RING.id()) {
 			player.message("What type of dragonstone ring would you like to make?");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);

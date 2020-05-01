@@ -77,8 +77,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				ItemUnIdentHerbDef herb = item.getUnIdentHerbDef(getWorld());
 				Item newItem = new Item(herb.getNewId());
 				Item i = owner.getCarriedItems().getInventory().get(
-					owner.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId()));
-				if (i.getItemStatus().getNoted()) return;
+					owner.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false)));
+				if (i == null) return;
 				Item herbToRemove = new Item(i.getCatalogId(), 1, false, i.getItemId());
 				if (owner.getCarriedItems().remove(herbToRemove) > -1) {
 					owner.getCarriedItems().getInventory().add(newItem,true);
