@@ -81,10 +81,8 @@ public class Crafting implements UseInvTrigger,
 		Inventory inventory = carriedItems.getInventory();
 		if (item1ID == ItemId.CHISEL.id()) {
 			doCutGem(player, item1, item2);
-			return;
 		} else if (item2ID == ItemId.CHISEL.id()) {
 			doCutGem(player, item2, item1);
-			return;
 		} else if (item1ID == ItemId.GLASSBLOWING_PIPE.id()) {
 			doGlassBlowing(player, item1, item2);
 		} else if (item2ID == ItemId.GLASSBLOWING_PIPE.id()) {
@@ -104,9 +102,9 @@ public class Crafting implements UseInvTrigger,
 						player.message("You need level 15 crafting to fix the teddy");
 				} else
 					player.message("You need the two teddy halves and some thread");
-			} else
+			} else {
 				makeLeather(player, item1, item2);
-			return;
+			}
 		} else if (item2ID == ItemId.NEEDLE.id()) {
 			if (item1ID == ItemId.TEDDY_HEAD.id() || item1ID == ItemId.TEDDY_BOTTOM.id()) {
 				if (inventory.hasInInventory(ItemId.TEDDY_HEAD.id())
@@ -122,9 +120,9 @@ public class Crafting implements UseInvTrigger,
 						player.message("You need level 15 crafting to fix the teddy");
 				} else
 					player.message("You need the two teddy halves and some thread");
-			} else
+			} else {
 				makeLeather(player, item2, item1);
-			return;
+			}
 		} else if (item1ID == ItemId.BALL_OF_WOOL.id()) {
 			useWool(player, item1, item2);
 		} else if (item2ID == ItemId.BALL_OF_WOOL.id()) {
@@ -144,9 +142,9 @@ public class Crafting implements UseInvTrigger,
 				player.message("It produces a small convex glass disc");
 				inventory.add(new Item(ItemId.LENS.id()));
 			}
-			return;
+		} else {
+			player.message("Nothing interesting happens");
 		}
-		player.message("Nothing interesting happens");
 	}
 
 	@Override
@@ -598,44 +596,180 @@ public class Crafting implements UseInvTrigger,
 
 	private void doGlassMaking(final Item item, final Player player) {
 		int otherItem = item.getCatalogId() == ItemId.SAND.id() ? ItemId.SODA_ASH.id() : ItemId.SAND.id();
-		int repeatTimes = player.getCarriedItems().getInventory().countId(item.getCatalogId());
-		repeatTimes = Math.min(player.getCarriedItems().getInventory().countId(otherItem), repeatTimes);
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
+			repeat = Math.min(player.getCarriedItems().getInventory().countId(otherItem), repeat);
+		}
 
+		batchGlassMaking(player, item, otherItem, repeat);
+	}
+
+	private void batchGlassMaking(Player player, Item item, int otherItem, int repeat) {
 		thinkbubble(player, item);
 		player.playerServerMessage(MessageType.QUEST, "you heat the sand and soda ash in the furnace to make glass");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft Molten Glass", repeatTimes, false) {
-			public void action() {
-				Player owner = getOwner();
-				Inventory inventory = owner.getCarriedItems().getInventory();
-				if (inventory.countId(otherItem) < 1 ||
-					inventory.countId(item.getCatalogId()) < 1) {
-					interruptBatch();
-					return;
-				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to craft");
-						interruptBatch();
-						return;
+		Inventory inventory = player.getCarriedItems().getInventory();
+		if (inventory.countId(otherItem) < 1 ||
+			inventory.countId(item.getCatalogId()) < 1) {
+			return;
+		}
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to craft");
+				return;
+			}
+		}
+		player.getCarriedItems().remove(new Item(otherItem));
+		player.getCarriedItems().remove(item);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		inventory.add(new Item(ItemId.MOLTEN_GLASS.id(), 1));
+		inventory.add(new Item(ItemId.BUCKET.id(), 1));
+		player.incExp(Skills.CRAFTING, 80, true);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			item = inventory.get(
+				inventory.getLastIndexById(item.getCatalogId(), Optional.of(false))
+			);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			batchGlassMaking(player, item, otherItem, repeat);
+		}
+	}
+
+	private void doGlassBlowing(Player player, final Item pipe, final Item glass) {
+		if (glass.getCatalogId() != ItemId.MOLTEN_GLASS.id()) {
+			return;
+		}
+		player.message("what would you like to make?");
+
+		String[] options = new String[]{
+			"Vial",
+			"orb",
+			"Beer glass"
+		};
+
+		int type = multi(player, options);
+		if (type < 0 || type > 2) {
+			return;
+		}
+
+		Item result;
+		int reqLvl, exp;
+		String resultGen;
+		switch (type) {
+			case 0:
+				result = new Item(ItemId.EMPTY_VIAL.id(), 1);
+				reqLvl = 33;
+				exp = 140;
+				resultGen = "vials";
+				break;
+			case 1:
+				result = new Item(ItemId.UNPOWERED_ORB.id(), 1);
+				reqLvl = 46;
+				exp = 210;
+				resultGen = "orbs";
+				break;
+			case 2:
+				result = new Item(ItemId.BEER_GLASS.id(), 1);
+				reqLvl = 1;
+				exp = 70;
+				// should not use this, as beer glass is made at level 1
+				resultGen = "beer glasses";
+				break;
+			default:
+				return;
+		}
+
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(glass.getCatalogId(), Optional.of(false));
+		}
+		batchGlassBlowing(player, glass, result, reqLvl, exp, resultGen, repeat);
+	}
+
+	private void batchGlassBlowing(Player player, Item glass, Item result, int reqLvl, int exp, String resultGen, int repeat) {
+		Inventory inventory = player.getCarriedItems().getInventory();
+		ServerConfiguration config = player.getWorld().getServer().getConfig();
+		if (player.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+			player.message(
+				"You need a crafting level of " + reqLvl + " to make " + resultGen);
+			return;
+		}
+		if (config.WANT_FATIGUE) {
+			if (config.STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to craft");
+				return;
+			}
+		}
+
+		if (player.getCarriedItems().getInventory().countId(glass.getCatalogId(), Optional.of(false)) <= 0) {
+			return;
+		}
+
+		player.getCarriedItems().remove(glass);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		String message = "You make a " + result.getDef(player.getWorld()).getName();
+
+		// Special handling for vials
+		if (result.getCatalogId() == ItemId.EMPTY_VIAL.id()) {
+			if (config.WANT_CUSTOM_QUESTS) {
+				int amnt = 0;
+				double breakChance = 91.66667 - getCurrentLevel(player, Skills.CRAFTING) / 1.32;
+				for (int loop = 0; loop < 6; ++loop) {
+					double hit = new Random().nextDouble() * 99;
+					if (hit > breakChance) {
+						amnt++;
 					}
 				}
-				if (owner.getCarriedItems().remove(new Item(otherItem)) > -1
-						&& owner.getCarriedItems().remove(item) > -1) {
-					inventory.add(new Item(ItemId.MOLTEN_GLASS.id(), 1));
-					inventory.add(new Item(ItemId.BUCKET.id(), 1));
-					owner.incExp(Skills.CRAFTING, 80, true);
-				} else {
-					interruptBatch();
-					return;
-				}
-
-				if (!isCompleted()) {
-					thinkbubble(owner, item);
-					owner.playerServerMessage(MessageType.QUEST, "you heat the sand and soda ash in the furnace to make glass");
+				message = "You make " + amnt + " vial" + (amnt != 1 ? "s" : "");
+				result.getItemStatus().setAmount(amnt);
+				if (player.getLocation().inBounds(418, 559, 421, 563)) {
+					try {
+						result.setNoted(player.getWorld().getServer().getDatabase(), true);
+					} catch (GameDatabaseException e) {
+						System.out.println(e.getMessage());
+					}
 				}
 			}
-		});
+		}
+
+		player.playerServerMessage(MessageType.QUEST, message);
+
+		if (!result.getDef(player.getWorld()).isStackable() && result.getAmount() > 1) {
+			int owedGlassware = result.getAmount() - 1;
+			int space = inventory.getFreeSlots();
+			while (owedGlassware > 0) {
+				if (space > 0) {
+					inventory.add(result);
+					--space;
+				} else {
+					player.getWorld().registerItem(
+						new GroundItem(player.getWorld(), result.getCatalogId(), player.getX(), player.getY(), 1, player),
+						player.getWorld().getServer().getConfig().GAME_TICK * 150); // TODO: Delay on this?
+					player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped(inventory full) "
+						+ result.getCatalogId() + " x" + "1" + " at " + player.getLocation().toString()));
+				}
+				--owedGlassware;
+			}
+		}
+
+		inventory.add(result);
+		player.incExp(Skills.CRAFTING, exp, true);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			glass = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(glass.getCatalogId(), Optional.of(false))
+			);
+			batchGlassBlowing(player, glass, result, reqLvl, exp, resultGen, repeat);
+		}
 	}
 
 	private void doCutGem(Player player, final Item chisel, final Item gem) {
@@ -704,125 +838,6 @@ public class Crafting implements UseInvTrigger,
 				}
 				else {
 					interruptBatch();
-				}
-			}
-		});
-	}
-
-	private void doGlassBlowing(Player player, final Item pipe, final Item glass) {
-		if (glass.getCatalogId() != ItemId.MOLTEN_GLASS.id()) {
-			return;
-		}
-		player.message("what would you like to make?");
-
-		String[] options = new String[]{
-				"Vial",
-				"orb",
-				"Beer glass"
-		};
-
-		int type = multi(player, options);
-		if (type < 0 || type > 2) {
-			return;
-		}
-
-		Item result;
-		int reqLvl, exp;
-		String resultGen;
-		Random numGen = new Random();
-		switch (type) {
-			case 0:
-				result = new Item(ItemId.EMPTY_VIAL.id(), 1);
-				reqLvl = 33;
-				exp = 140;
-				resultGen = "vials";
-				break;
-			case 1:
-				result = new Item(ItemId.UNPOWERED_ORB.id(), 1);
-				reqLvl = 46;
-				exp = 210;
-				resultGen = "orbs";
-				break;
-			case 2:
-				result = new Item(ItemId.BEER_GLASS.id(), 1);
-				reqLvl = 1;
-				exp = 70;
-				// should not use this, as beer glass is made at level 1
-				resultGen = "beer glasses";
-				break;
-			default:
-				return;
-		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft Glass Blowing", player.getCarriedItems().getInventory().countId(glass.getCatalogId()), false) {
-			@Override
-			public void action() {
-				final Item resultClone = new Item(result.getCatalogId(), result.getAmount());
-				Player owner = getOwner();
-				Inventory inventory = owner.getCarriedItems().getInventory();
-				ServerConfiguration config = getWorld().getServer().getConfig();
-				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
-					owner.message(
-						"You need a crafting level of " + reqLvl + " to make " + resultGen);
-					interruptBatch();
-					return;
-				}
-				if (config.WANT_FATIGUE) {
-					if (config.STOP_SKILLING_FATIGUED >= 2
-						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to craft");
-						interruptBatch();
-						return;
-					}
-				}
-				if (owner.getCarriedItems().remove(glass) > -1) {
-					String message = "You make a " + resultClone.getDef(getWorld()).getName();
-
-					//Special handling for vials
-					if (result.getCatalogId() == ItemId.EMPTY_VIAL.id()) {
-						if (config.WANT_CUSTOM_QUESTS) {
-							int amnt = 0;
-							double breakChance = 91.66667 - getCurrentLevel(owner, Skills.CRAFTING)/1.32;
-							for (int loop = 0; loop < 6; ++loop) {
-								double hit = numGen.nextDouble() * 99;
-								if (hit > breakChance) {
-									amnt++;
-								}
-							}
-							message = "You make " + amnt + " vial" + (amnt != 1 ? "s" : "");
-							resultClone.getItemStatus().setAmount(amnt);
-							if (owner.getLocation().inBounds(418, 559, 421,563)) {
-								try {
-									resultClone.setNoted(owner.getWorld().getServer().getDatabase(), true);
-								}
-								catch (GameDatabaseException e) {
-									System.out.println(e.getMessage());
-								}
-							}
-						}
-					}
-
-					owner.playerServerMessage(MessageType.QUEST, message);
-
-					if (!resultClone.getDef(owner.getWorld()).isStackable() && resultClone.getAmount() > 1) {
-						int owedVials = resultClone.getAmount() - 1;
-						int space = inventory.getFreeSlots();
-						while (owedVials > 0) {
-							if (space > 0) {
-								inventory.add(resultClone);
-								--space;
-							} else {
-								getOwner().getWorld().registerItem(
-									new GroundItem(owner.getWorld(), resultClone.getCatalogId(), owner.getX(), owner.getY(), 1, owner),
-									94000); // TODO: Delay on this?
-								owner.getWorld().getServer().getGameLogger().addQuery(new GenericLog(owner.getWorld(), owner.getUsername() + " dropped(inventory full) "
-									+ resultClone.getCatalogId() + " x" + "1" + " at " + owner.getLocation().toString()));
-							}
-							--owedVials;
-						}
-					}
-
-					inventory.add(resultClone);
-					owner.incExp(Skills.CRAFTING, exp, true);
 				}
 			}
 		});
