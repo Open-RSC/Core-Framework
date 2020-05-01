@@ -1,0 +1,1 @@
+DELETE FROM `openrsc_objects` WHERE `openrsc_objects`.`d_id` > 28945;
