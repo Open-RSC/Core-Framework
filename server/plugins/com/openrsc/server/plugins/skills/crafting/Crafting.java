@@ -462,33 +462,49 @@ public class Crafting implements UseInvTrigger,
 				return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft Clay", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
-			@Override
-			public void action() {
-				Player owner = getOwner();
-				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
-					owner.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
-					interruptBatch();
-					return;
-				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to craft");
-						interruptBatch();
-						return;
-					}
-				}
-				if (owner.getCarriedItems().remove(item) > -1) {
-					thinkbubble(owner, item);
-					owner.playerServerMessage(MessageType.QUEST, "you make the clay into a " + potteryItemName(result.getDef(getWorld()).getName()));
-					owner.getCarriedItems().getInventory().add(result);
-					owner.incExp(Skills.CRAFTING, exp, true);
-				} else {
-					interruptBatch();
-				}
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+		}
+
+		batchPotteryMoulding(player, item, reqLvl, result, msg, exp, repeat);
+	}
+
+	private void batchPotteryMoulding(Player player, Item item, int reqLvl, Item result, AtomicReference<String> msg, int exp, int repeat) {
+
+		if (player.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
+			return;
+		}
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to craft");
+				return;
 			}
-		});
+		}
+
+		if (player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) <= 0) {
+			return;
+		}
+
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		player.getCarriedItems().remove(item);
+		thinkbubble(player, item);
+		player.playerServerMessage(MessageType.QUEST, "you make the clay into a " + potteryItemName(result.getDef(player.getWorld()).getName()));
+		player.getCarriedItems().getInventory().add(result);
+		player.incExp(Skills.CRAFTING, exp, true);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			item = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+			);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			batchPotteryMoulding(player, item, reqLvl, result, msg, exp, repeat);
+		}
 	}
 
 	private void doPotteryFiring(final Item item, final Player player) {
@@ -522,51 +538,62 @@ public class Crafting implements UseInvTrigger,
 
 		final int exp = xp;
 
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+		}
+		batchPotteryFiring(player, item, reqLvl, result, msg, exp, repeat);
+	}
+
+	private void batchPotteryFiring(Player player, Item item, int reqLvl, Item result, AtomicReference<String> msg, int exp, int repeat) {
+		if (player.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
+			return;
+		}
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to craft");
+				return;
+			}
+		}
+
+		if (player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) <= 0) {
+			return;
+		}
+
 		thinkbubble(player, item);
 		String potteryItem = potteryItemName(item.getDef(player.getWorld()).getName());
 		player.playerServerMessage(MessageType.QUEST, "You put the " + potteryItem + " in the oven");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Craft Clay", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
-			@Override
-			public void action() {
-				Player owner = getOwner();
-				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
-					owner.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
-					interruptBatch();
-					return;
-				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to craft");
-						interruptBatch();
-						return;
-					}
-				}
-				thinkbubble(owner, item);
-				if (owner.getCarriedItems().remove(item) > -1) {
-					if (Formulae.crackPot(reqLvl, player.getSkills().getLevel(Skills.CRAFTING))) {
-						owner.playerServerMessage(MessageType.QUEST, "The " // TODO: Check if is authentic message
-							+ potteryItem + " cracks in the oven, you throw it away.");
-					} else {
-						owner.playerServerMessage(MessageType.QUEST, "the "
-							+ potteryItem + " hardens in the oven");
-						getWorld().getServer().getGameEventHandler().add(new SingleEvent(getWorld(), owner, owner.getWorld().getServer().getConfig().GAME_TICK * 3, "Remove Clay From Oven") {
-							@Override
-							public void action() {
-								owner.playerServerMessage(MessageType.QUEST, "You remove a "
-									+ result.getDef(getWorld()).getName().toLowerCase()
-									+ " from the oven");
-								owner.getCarriedItems().getInventory().add(result);
-								owner.incExp(Skills.CRAFTING, exp, true);
-							}
+		player.getCarriedItems().remove(item);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 
-						});
-					}
-				} else {
-					interruptBatch();
-				}
-			}
-		});
+		if (Formulae.crackPot(reqLvl, player.getSkills().getLevel(Skills.CRAFTING))) {
+			player.playerServerMessage(MessageType.QUEST, "The " // TODO: Check if is authentic message
+				+ potteryItem + " cracks in the oven, you throw it away.");
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "the "
+				+ potteryItem + " hardens in the oven");
+
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+
+			player.playerServerMessage(MessageType.QUEST, "You remove a "
+				+ result.getDef(player.getWorld()).getName().toLowerCase()
+				+ " from the oven");
+			player.getCarriedItems().getInventory().add(result);
+			player.incExp(Skills.CRAFTING, exp, true);
+		}
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			item = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+			);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			batchPotteryFiring(player, item, reqLvl, result, msg, exp, repeat);
+		}
 	}
 
 	private void doGlassMaking(final Item item, final Player player) {
