@@ -18,6 +18,8 @@ import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Firemaking implements UseObjTrigger, UseInvTrigger {
@@ -69,51 +71,64 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			return;
 		}
 
-		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
+		}
+		batchFiremaking(player, gItem, def, repeat);
+	}
+
+	private void batchFiremaking(Player player, GroundItem gItem, FiremakingDef def, int repeat) {
+		thinkbubble(player, new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Normal Firemaking Logs Lit", Formulae.getRepeatTimes(player, Skills.FIREMAKING), false) {
-			@Override
-			public void action() {
-				if (Formulae.lightLogs(getOwner().getSkills().getLevel(Skills.FIREMAKING))) {
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		if (Formulae.lightLogs(player.getSkills().getLevel(Skills.FIREMAKING))) {
+			if (!gItem.isRemoved()) {
+				player.playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
 
-					if (!gItem.isRemoved()) {
-						getOwner().getWorld().getServer().getGameEventHandler().add(
-							new SingleEvent(getOwner().getWorld(), getOwner(), getOwner().getWorld().getServer().getConfig().GAME_TICK * 2, "Light Logs") {
-								@Override
-								public void action() {
-									getOwner().playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
-									getWorld().unregisterItem(gItem);
-
-									final GameObject fire = new GameObject(getWorld(), gItem.getLocation(), 97, 0, 0);
-									getWorld().registerGameObject(fire);
-
-									getWorld().getServer().getGameEventHandler().add(
-										new SingleEvent(getWorld(), null, def.getLength(), "Light Logs Fire Removal") {
-											@Override
-											public void action() {
-												if (fire != null) {
-													getWorld().registerItem(new GroundItem(
-														getWorld(),
-														ItemId.ASHES.id(),
-														fire.getX(),
-														fire.getY(),
-														1, (Player) null));
-													getWorld().unregisterGameObject(fire);
-												}
-											}
-										}
-									);
-									getOwner().incExp(Skills.FIREMAKING, getExp(getOwner().getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
-								}
-							}
-						);
+				// Remove logs and add fire scenery.
+				player.getWorld().unregisterItem(gItem);
+				final GameObject fire = new GameObject(player.getWorld(), gItem.getLocation(), 97, 0, 0);
+				player.getWorld().registerGameObject(fire);
+				player.getWorld().getServer().getGameEventHandler().add(
+					new SingleEvent(player.getWorld(), null, def.getLength(), "Light Logs Fire Removal") {
+						@Override
+						public void action() {
+							getWorld().registerItem(new GroundItem(
+								getWorld(),
+								ItemId.ASHES.id(),
+								fire.getX(),
+								fire.getY(),
+								1, (Player) null));
+							getWorld().unregisterGameObject(fire);
+						}
 					}
-				} else {
-					getOwner().playerServerMessage(MessageType.QUEST, "You fail to light a fire");
-					getOwner().getUpdateFlags().setActionBubble(new Bubble(getOwner(), TINDERBOX));
-				}
+				);
+				player.incExp(Skills.FIREMAKING, getExp(player.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
+				firemakingWalk(player);
 			}
-		});
+
+			if (player.hasMoved()) return;
+			repeat--;
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			if (repeat > 0) {
+				// Drop new log
+				Item log = player.getCarriedItems().getInventory().get(
+					player.getCarriedItems().getInventory().getLastIndexById(gItem.getID(), Optional.of(false))
+				);
+				if (log == null) return;
+				player.getCarriedItems().remove(log);
+				gItem = new GroundItem(player.getWorld(), log.getCatalogId(), player.getX(), player.getY(),1, (Player) null);
+				player.getWorld().registerItem(gItem);
+				batchFiremaking(player, gItem, def, repeat);
+			}
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
+			if (repeat > 0) {
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				batchFiremaking(player, gItem, def, repeat);
+			}
+		}
 	}
 
 	private void handleCustomFiremaking(final GroundItem gItem, Player player) {
@@ -134,78 +149,104 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			return;
 		}
 
-		player.getUpdateFlags().setActionBubble(new Bubble(player, TINDERBOX));
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
+		}
+		batchCustomFiremaking(player, gItem, def, repeat);
+	}
+
+	private void batchCustomFiremaking(Player player, GroundItem gItem, FiremakingDef def, int repeat) {
+		thinkbubble(player, new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Firemaking Logs Lit", Formulae.getRepeatTimes(player, Skills.FIREMAKING), false) {
-			@Override
-			public void action() {
-				if (Formulae.lightCustomLogs(def, getOwner().getSkills().getLevel(Skills.FIREMAKING))) {
-					getOwner().message("The fire catches and the logs begin to burn");
-					getWorld().unregisterItem(gItem);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		if (Formulae.lightCustomLogs(def, player.getSkills().getLevel(Skills.FIREMAKING))) {
+			if (!gItem.isRemoved()) {
+				player.message("The fire catches and the logs begin to burn");
+				player.getWorld().unregisterItem(gItem);
 
-					final GameObject fire = new GameObject(getWorld(), gItem.getLocation(), 97, 0, 0);
-					getWorld().registerGameObject(fire);
+				final GameObject fire = new GameObject(player.getWorld(), gItem.getLocation(), 97, 0, 0);
+				player.getWorld().registerGameObject(fire);
 
-					getWorld().getServer().getGameEventHandler().add(
-						new SingleEvent(getWorld(), null, def.getLength(), "Firemaking Logs Lit") {
-							@Override
-							public void action() {
-								if (fire != null) {
-									getWorld().registerItem(new GroundItem(
-										player.getWorld(),
-										ItemId.ASHES.id(),
-										fire.getX(),
-										fire.getY(),
-										1, (Player) null));
-									getWorld().unregisterGameObject(fire);
-								}
+				player.getWorld().getServer().getGameEventHandler().add(
+					new SingleEvent(player.getWorld(), null, def.getLength(), "Firemaking Logs Lit") {
+						@Override
+						public void action() {
+							if (fire != null) {
+								getWorld().registerItem(new GroundItem(
+									player.getWorld(),
+									ItemId.ASHES.id(),
+									fire.getX(),
+									fire.getY(),
+									1, (Player) null));
+								getWorld().unregisterGameObject(fire);
 							}
-						});
+						}
+					});
 
-					getOwner().incExp(Skills.FIREMAKING, def.getExp(), true);
-					interruptBatch();
-
-					//Determine which direction to move
-					int xPos = getOwner().getX();
-					int yPos = getOwner().getY();
-					TileValue tile = getOwner().getWorld().getTile(xPos, yPos);
-					TileValue tileNear;
-
-					if ((tile.traversalMask & CollisionFlag.WEST_BLOCKED) == 0) {
-						tileNear = getOwner().getWorld().getTile(xPos + 1, yPos);
-						if (tileNear != null && (tileNear.traversalMask & CollisionFlag.FULL_BLOCK) == 0
-						&& getOwner().getViewArea().getGameObject(new Point(xPos + 1, yPos)) == null) {
-							getOwner().walk(getOwner().getX() + 1, getOwner().getY());
-							return;
-						}
-					} if ((tile.traversalMask & CollisionFlag.EAST_BLOCKED) == 0) {
-						tileNear = getOwner().getWorld().getTile(xPos - 1, yPos);
-						if (tileNear != null && (tileNear.traversalMask & CollisionFlag.FULL_BLOCK) == 0
-							&& getOwner().getViewArea().getGameObject(new Point(xPos - 1, yPos)) == null) {
-							getOwner().walk(getOwner().getX() - 1, getOwner().getY());
-							return;
-						}
-					} if ((tile.traversalMask & CollisionFlag.NORTH_BLOCKED) == 0) {
-						tileNear = getOwner().getWorld().getTile(xPos, yPos - 1);
-						if (tileNear != null && (tileNear.traversalMask & CollisionFlag.FULL_BLOCK) == 0
-							&& getOwner().getViewArea().getGameObject(new Point(xPos, yPos - 1)) == null) {
-							getOwner().walk(getOwner().getX(), getOwner().getY() - 1);
-							return;
-						}
-					} if ((tile.traversalMask & CollisionFlag.SOUTH_BLOCKED) == 0) {
-						tileNear = getOwner().getWorld().getTile(xPos, yPos + 1);
-						if (tileNear != null && (tileNear.traversalMask & CollisionFlag.FULL_BLOCK) == 0
-							&& getOwner().getViewArea().getGameObject(new Point(xPos, yPos + 1)) == null) {
-							getOwner().walk(getOwner().getX(), getOwner().getY() + 1);
-							return;
-						}
-					}
-				} else {
-					getOwner().playerServerMessage(MessageType.QUEST, "You fail to light a fire");
-					getOwner().getUpdateFlags().setActionBubble(new Bubble((getOwner()), TINDERBOX));
-				}
+				player.incExp(Skills.FIREMAKING, def.getExp(), true);
+				firemakingWalk(player);
 			}
-		});
+
+			if (player.hasMoved()) return;
+			repeat--;
+			if (repeat > 0) {
+				// Drop new log
+				Item log = player.getCarriedItems().getInventory().get(
+					player.getCarriedItems().getInventory().getLastIndexById(gItem.getID(), Optional.of(false))
+				);
+				if (log == null) return;
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
+				player.getCarriedItems().remove(log);
+				gItem = new GroundItem(player.getWorld(), log.getCatalogId(), player.getX(), player.getY(),1, (Player) null);
+				player.getWorld().registerItem(gItem);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				batchCustomFiremaking(player, gItem, def, repeat);
+			}
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
+			if (repeat > 0) {
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				batchCustomFiremaking(player, gItem, def, repeat);
+			}
+		}
+	}
+
+	private void firemakingWalk(Player player) {
+		int xPos = player.getX();
+		int yPos = player.getY();
+		TileValue tile = player.getWorld().getTile(xPos, yPos);
+		TileValue tileNear;
+
+		if ((tile.traversalMask & CollisionFlag.WEST_BLOCKED) == 0) {
+			tileNear = player.getWorld().getTile(xPos + 1, yPos);
+			if (tileNear != null && (tileNear.traversalMask & CollisionFlag.FULL_BLOCK) == 0
+				&& player.getViewArea().getGameObject(new Point(xPos + 1, yPos)) == null) {
+				player.walk(player.getX() + 1, player.getY());
+				return;
+			}
+		} if ((tile.traversalMask & CollisionFlag.EAST_BLOCKED) == 0) {
+			tileNear = player.getWorld().getTile(xPos - 1, yPos);
+			if (tileNear != null && (tileNear.traversalMask & CollisionFlag.FULL_BLOCK) == 0
+				&& player.getViewArea().getGameObject(new Point(xPos - 1, yPos)) == null) {
+				player.walk(player.getX() - 1, player.getY());
+				return;
+			}
+		} if ((tile.traversalMask & CollisionFlag.NORTH_BLOCKED) == 0) {
+			tileNear = player.getWorld().getTile(xPos, yPos - 1);
+			if (tileNear != null && (tileNear.traversalMask & CollisionFlag.FULL_BLOCK) == 0
+				&& player.getViewArea().getGameObject(new Point(xPos, yPos - 1)) == null) {
+				player.walk(player.getX(), player.getY() - 1);
+				return;
+			}
+		} if ((tile.traversalMask & CollisionFlag.SOUTH_BLOCKED) == 0) {
+			tileNear = player.getWorld().getTile(xPos, yPos + 1);
+			if (tileNear != null && (tileNear.traversalMask & CollisionFlag.FULL_BLOCK) == 0
+				&& player.getViewArea().getGameObject(new Point(xPos, yPos + 1)) == null) {
+				player.walk(player.getX(), player.getY() + 1);
+				return;
+			}
+		}
 	}
 
 	@Override
