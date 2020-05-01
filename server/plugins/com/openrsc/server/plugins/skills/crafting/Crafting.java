@@ -896,7 +896,7 @@ public class Crafting implements UseInvTrigger,
 				exp = 65;
 				break;
 			case 3:
-				if(!customLeather) {
+				if (!customLeather) {
 					return;
 				}
 
@@ -908,10 +908,10 @@ public class Crafting implements UseInvTrigger,
 				};
 
 				int customType = multi(player, customMenu);
-				if(customType < 0 || customType > 3)
+				if (customType < 0 || customType > 3)
 					return;
 
-				switch(customType) {
+				switch (customType) {
 					case 0:
 						result = new Item(ItemId.LEATHER_CHAPS.id(), 1);
 						reqLvl = 10;
@@ -935,43 +935,62 @@ public class Crafting implements UseInvTrigger,
 				return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Craft Leather", player.getCarriedItems().getInventory().countId(leather.getCatalogId()), false) {
-			@Override
-			public void action() {
-				Player owner = getOwner();
-				if (owner.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
-					owner.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef(player.getWorld()).getName());
-					interruptBatch();
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(leather.getCatalogId(), Optional.of(false));
+		}
+		batchLeather(player, leather, result, reqLvl, exp, repeat);
+	}
+
+	private void batchLeather(Player player, Item leather, Item result, int reqLvl, int exp, int repeat) {
+		if (player.getSkills().getLevel(Skills.CRAFTING) < reqLvl) {
+			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef(player.getWorld()).getName());
+			return;
+		}
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to craft");
+				return;
+			}
+		}
+
+		if (player.getCarriedItems().getInventory().countId(leather.getCatalogId(), Optional.of(false)) <= 0) {
+			return;
+		}
+
+		player.getCarriedItems().remove(leather);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		player.message("You make some " + result.getDef(player.getWorld()).getName());
+		player.getCarriedItems().getInventory().add(result);
+		player.incExp(Skills.CRAFTING, exp, true);
+		// A reel of thread accounts for 5 uses
+		if (!player.getCache().hasKey("part_reel_thread")) {
+			player.getCache().set("part_reel_thread", 1);
+		} else {
+			int parts = player.getCache().getInt("part_reel_thread");
+			if (parts >= 4) {
+				player.message("You use up one of your reels of thread");
+				player.getCache().remove("part_reel_thread");
+				player.getCarriedItems().remove(new Item(ItemId.THREAD.id()));
+				if(player.getCarriedItems().getInventory().countId(ItemId.THREAD.id(), Optional.of(false)) <= 0) {
 					return;
 				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to craft");
-						interruptBatch();
-						return;
-					}
-				}
-				if (owner.getCarriedItems().remove(leather) > -1) {
-					owner.message("You make some " + result.getDef(getWorld()).getName());
-					owner.getCarriedItems().getInventory().add(result);
-					owner.incExp(Skills.CRAFTING, exp, true);
-					//a reel of thread accounts for 5 uses
-					if (!owner.getCache().hasKey("part_reel_thread")) {
-						owner.getCache().set("part_reel_thread", 1);
-					} else {
-						int parts = owner.getCache().getInt("part_reel_thread");
-						if (parts >= 4) {
-							owner.message("You use up one of your reels of thread");
-							owner.getCarriedItems().remove(new Item(ItemId.THREAD.id()));
-							owner.getCache().remove("part_reel_thread");
-						} else {
-							owner.getCache().put("part_reel_thread", parts + 1);
-						}
-					}
-				}
+			} else {
+				player.getCache().put("part_reel_thread", parts + 1);
 			}
-		});
+		}
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			leather = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(leather.getCatalogId(), Optional.of(false))
+			);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			batchLeather(player, leather, result, reqLvl, exp, repeat);
+		}
 	}
 
 	private void useWool(Player player, final Item woolBall, final Item item) {
