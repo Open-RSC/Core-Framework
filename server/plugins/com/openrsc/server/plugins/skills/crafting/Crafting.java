@@ -305,13 +305,7 @@ public class Crafting implements UseInvTrigger,
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level " + def.getReqLevel() + " to make this");
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("You are too tired to craft");
-				return;
-			}
-		}
+		if (checkFatigue(player)) return;
 
 		// Get last gem in inventory.
 		Item gemItem;
@@ -398,13 +392,7 @@ public class Crafting implements UseInvTrigger,
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level 16 to make this");
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("You are too tired to craft");
-				return;
-			}
-		}
+		if (checkFatigue(player)) return;
 
 		Item silverMould = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(silver_moulds[type], Optional.of(false))
@@ -485,13 +473,7 @@ public class Crafting implements UseInvTrigger,
 			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("You are too tired to craft");
-				return;
-			}
-		}
+		if (checkFatigue(player)) return;
 
 		Item softClay = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
@@ -557,13 +539,7 @@ public class Crafting implements UseInvTrigger,
 			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("You are too tired to craft");
-				return;
-			}
-		}
+		if (checkFatigue(player)) return;
 
 		Item unfiredClay = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
@@ -613,13 +589,8 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchGlassMaking(Player player, Item item, int otherItem, int repeat) {
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("You are too tired to craft");
-				return;
-			}
-		}
+		if (checkFatigue(player)) return;
+
 		Inventory inventory = player.getCarriedItems().getInventory();
 		Item item1 = inventory.get(
 			inventory.getLastIndexById(otherItem, Optional.of(false))
@@ -706,13 +677,7 @@ public class Crafting implements UseInvTrigger,
 				"You need a crafting level of " + reqLvl + " to make " + resultGen);
 			return;
 		}
-		if (config.WANT_FATIGUE) {
-			if (config.STOP_SKILLING_FATIGUED >= 2
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("You are too tired to craft");
-				return;
-			}
-		}
+		if (checkFatigue(player)) return;
 
 		glass = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(glass.getCatalogId(), Optional.of(false))
@@ -781,8 +746,9 @@ public class Crafting implements UseInvTrigger,
 					give(player, ItemId.CHIPPED_DRAGON_SCALE.id(), 5);
 					player.incExp(Skills.CRAFTING, player.getWorld().getServer().getConfig().GAME_TICK * 2, true);
 				}
-			} else
+			} else {
 				player.message("Nothing interesting happens");
+			}
 			return;
 		}
 
@@ -801,13 +767,8 @@ public class Crafting implements UseInvTrigger,
 					+ " to cut " + (gem.getDef(player.getWorld()).getName().contains("ruby") ? "rubies" : gem.getDef(player.getWorld()).getName().replaceFirst("(?i)uncut ", "") + (pluralize ? "s" : "")));
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("You are too tired to craft");
-				return;
-			}
-		}
+		if (checkFatigue(player)) return;
+
 		Item item = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(gem.getCatalogId(), Optional.of(false)));
 		if (item == null) return;
@@ -948,13 +909,7 @@ public class Crafting implements UseInvTrigger,
 			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef(player.getWorld()).getName());
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("You are too tired to craft");
-				return;
-			}
-		}
+		if (checkFatigue(player)) return;
 
 		Item item = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(leather.getCatalogId(), Optional.of(false))
@@ -1056,20 +1011,26 @@ public class Crafting implements UseInvTrigger,
 		}
 	}
 
-	private boolean useWater(Player player, final Item water, final Item item) {
+	private boolean useWater(Player player, Item water, Item item) {
 		int jugID = Formulae.getEmptyJug(water.getCatalogId());
 		if (jugID == -1) { // This shouldn't happen
 			return false;
 		}
 		// Clay and water is not bowl of water
 		if (item.getCatalogId() == ItemId.CLAY.id() && water.getCatalogId() != ItemId.BOWL_OF_WATER.id()) {
-			if (player.getCarriedItems().remove(water) > -1
-				&& player.getCarriedItems().remove(item) > -1) {
-				player.getCarriedItems().getInventory().add(new Item(jugID));
-				player.getCarriedItems().getInventory().add(new Item(ItemId.SOFT_CLAY.id()));
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You mix the clay and water");
-				player.message("You now have some soft workable clay");
-			}
+			water = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(water.getCatalogId(), Optional.of(false))
+			);
+			item = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+			);
+			if (water == null || item == null) return false;
+			player.getCarriedItems().remove(water);
+			player.getCarriedItems().remove(item);
+			player.getCarriedItems().getInventory().add(new Item(jugID));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.SOFT_CLAY.id()));
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You mix the clay and water");
+			player.message("You now have some soft workable clay");
 		} else {
 			return false;
 		}
@@ -1082,6 +1043,16 @@ public class Crafting implements UseInvTrigger,
 			return uncapName.substring(8);
 		}
 		return uncapName;
+	}
+
+	private boolean checkFatigue(Player player) {
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE
+				&& player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+			player.message("You are too tired to craft");
+			return false;
+		}
+		return true;
 	}
 
 	@Override
