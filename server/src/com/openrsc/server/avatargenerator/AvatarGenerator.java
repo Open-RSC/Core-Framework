@@ -548,6 +548,32 @@ public final class AvatarGenerator {
 		//Female Skirt
 		animations.add(new AnimationDef("leatherskirt", "equipment", 0, 0, 0, true, false, 0)); //428
 
+		//Skill Cape Batch One
+		//animations.add(new AnimationDef("attackcape", "equipment", 0, 0, true, false, 0)); //315
+		//animations.add(new AnimationDef("cookingcape", "equipment", 0, 0, true, false, 0)); //311
+		animations.add(new AnimationDef("thievingcape", "equipment", 0, 0, 0, true, false, 0)); //429
+		animations.add(new AnimationDef("fletchingcape", "equipment", 0, 0, 0, true, false, 0)); //430
+		animations.add(new AnimationDef("miningcape", "equipment", 0, 0, 0, true, false, 0)); //431
+
+		// April Fools Items
+		animations.add(new AnimationDef("plaguemask", "equipment", 0, 0, 0, true, false, 0)); // 432
+		animations.add(new AnimationDef("rubberchicken", "equipment", 0, 0, 0, true, false, 0)); // 433
+
+		// Pickaxe
+		animations.add(new AnimationDef("pickaxe", "equipment", 16737817, 0, true, false, 0)); // bronze 434
+		animations.add(new AnimationDef("pickaxe", "equipment", 15654365, 0, true, false, 0)); // iron 435
+		animations.add(new AnimationDef("pickaxe", "equipment", 15658734, 0, true, false, 0)); // steel 436
+		animations.add(new AnimationDef("pickaxe", "equipment", 11717785, 0, true, false, 0)); // mithril 437
+		animations.add(new AnimationDef("pickaxe", "equipment", 65535, 0, true, false, 0)); // adamant 438
+		animations.add(new AnimationDef("pickaxe", "equipment", 3158064, 0, true, false, 0)); // rune 439
+
+		// More skill capes (batch 2)
+		// animations.add(new AnimationDef("fishingcape", "equipment", 0, 0, true, false, 0)); //310 - fishing cape
+		// animations.add(new AnimationDef("strengthcape", "equipment", 0, 0, true, false, 0)); //385 strength cape
+		// animations.add(new AnimationDef("smithingcape", "equipment", 0, 0, true, false, 0)); //384 smithing cape
+		animations.add(new AnimationDef("magiccape", "equipment", 0, 0, true, false, 0)); // 440
+		animations.add(new AnimationDef("craftingcape", "equipment", 0, 0, true, false, 0)); // 441
+
 		LOGGER.info("Unpacking sprite archive");
 		File workspaceFile = new File("conf" + File.separator + "server" + File.separator + "data" + File.separator + "Custom_Sprites.osar");
 		if (workspaceFile.exists()) {

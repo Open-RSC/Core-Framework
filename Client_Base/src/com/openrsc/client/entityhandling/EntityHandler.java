@@ -3724,9 +3724,16 @@ public class EntityHandler {
 		items.add(new ItemDef("Fletching cape", "The cape worn by masters of fletching", "", 99000, -1, "items:486", false, true, 2048, 0, false, false, false, 1376));
 		items.add(new ItemDef("Mining cape", "The cape worn by masters of mining", "", 99000, -1, "items:490", false, true, 2048, 0, false, false, false, 1377));
 
+		// 2020 April Fools Items
 		items.add(new ItemDef("Pestilence Mask", "You wouldn't want to be seen in this! Stay the cabbage home!", "", 0, -1, "items:555", false, true, 32, 0, false, false, true, 1378));
 		items.add(new ItemDef("Rubber Chicken Cap", "Wow. That was some very in-depth research on the 'chicken or the egg' question.", "", 0, -1, "items:548", false, true, 32, 0, false, false, true, 1379));
 
+		// Skill Cape Batch Two
+		items.add(new ItemDef("Fishing cape", "The cape worn by the best fishermen", "", 99000, -1, "items:485", false, true, 2048, 0, false, false, false, 1380));
+		items.add(new ItemDef("Strength cape", "The cape worn by only the strongest people", "", 99000, -1, "items:495", false, true, 2048, 0, false, false, false, 1381));
+		items.add(new ItemDef("Magic cape", "The cape worn by the most powerful mages", "", 99000, -1, "items:489", false, true, 2048, 0, false, false, false, 1382));
+		items.add(new ItemDef("Smithing cape", "The cape worn by master smiths", "", 99000, -1, "items:494", false, true, 2048, 0, false, false, false, 1383));
+		items.add(new ItemDef("Crafting cape", "The cape worn by master craftworkers", "", 99000, -1, "items:482", false, true, 2048, 0, false, false, false, 1384));
 	}
 
 	// Bank note items
@@ -5063,8 +5070,24 @@ public class EntityHandler {
 			animations.add(new AnimationDef("miningcape", "equipment", 0, 0, true, false, 0)); //431
 
 			// April Fools Items
-			animations.add(new AnimationDef("coronamask", "equipment", 0, 0, true, false, 0)); // 432
+			animations.add(new AnimationDef("plaguemask", "equipment", 0, 0, true, false, 0)); // 432
 			animations.add(new AnimationDef("rubberchicken", "equipment", 0, 0, true, false, 0)); // 433
+
+			// Pickaxe
+			animations.add(new AnimationDef("pickaxe", "equipment", 16737817, 0, true, false, 0)); // bronze 434
+			animations.add(new AnimationDef("pickaxe", "equipment", 15654365, 0, true, false, 0)); // iron 435
+			animations.add(new AnimationDef("pickaxe", "equipment", 15658734, 0, true, false, 0)); // steel 436
+			animations.add(new AnimationDef("pickaxe", "equipment", 11717785, 0, true, false, 0)); // mithril 437
+			animations.add(new AnimationDef("pickaxe", "equipment", 65535, 0, true, false, 0)); // adamant 438
+			animations.add(new AnimationDef("pickaxe", "equipment", 3158064, 0, true, false, 0)); // rune 439
+
+			// More skill capes (batch 2)
+			// animations.add(new AnimationDef("fishingcape", "equipment", 0, 0, true, false, 0)); //310 - fishing cape
+			// animations.add(new AnimationDef("strengthcape", "equipment", 0, 0, true, false, 0)); //385 strength cape
+			// animations.add(new AnimationDef("smithingcape", "equipment", 0, 0, true, false, 0)); //384 smithing cape
+			animations.add(new AnimationDef("magiccape", "equipment", 0, 0, true, false, 0)); // 440
+			animations.add(new AnimationDef("craftingcape", "equipment", 0, 0, true, false, 0)); // 441
+
 		}
 	}
 
