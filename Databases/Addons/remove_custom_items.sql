@@ -2,10 +2,14 @@ DELETE FROM `openrsc_itemdef` WHERE `openrsc_itemdef`.`id` > 1289;
 
 
 -- Make arrows no longer wieldable
-UPDATE `openrsc_itemdef` SET `isWearable`=0, `wearableID`=0, `wearSlot`=-1, `requiredLevel`=0, `requiredSkillId`=-1 WHERE `id` IN (
+UPDATE `openrsc_itemdef` SET `isWearable`=0, `wearableID`=0, `wearSlot`=-1, `requiredLevel`=0, `requiredSkillID`=-1 WHERE `id` IN (
     11, 190, 574, 592, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723, 786
 );
 
+-- Make pickaxes no longer wieldable.
+UPDATE `openrsc_itemdef` SET `isWearable`=0, `appearanceID`=0, `wearableID`=0, `wearSlot`=-1, `requiredLevel`=0, `requiredSkillID`=-1, `weaponAimBonus`=0, `weaponPowerBonus`=0 WHERE `id` IN (
+	156, 1258, 1259, 1260, 1261, 1262
+);
 
 -- Custom appearance sprites removal
 UPDATE `openrsc_itemdef` SET `appearanceID`=(case

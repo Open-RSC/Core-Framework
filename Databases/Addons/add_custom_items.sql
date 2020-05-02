@@ -88,13 +88,25 @@ REPLACE INTO `openrsc_itemdef` (`id`, `name`, `description`, `command`, `isFemal
 (1376, 'Fletching cape', 'The cape worn by masters of fletching', '', 0, 0, 0, 1, 1, 430, 2048, 11, 99, 9, 6, 0, 0, 0, 0, 99000, 0),
 (1377, 'Mining cape', 'The cape worn by masters of mining', '', 0, 0, 0, 1, 1, 431, 2048, 11, 99, 14, 6, 0, 0, 0, 0, 99000, 0),
 (1378, 'Pestilence Mask', 'You wouldn\'t want to be seen in this! Stay the cabbage home!', '', 0, 0, 0, 0, 1, 432, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1),
-(1379, 'Rubber Chicken Cap', 'Wow. That was some very in-depth research on the chicken or the egg question.', '', 0, 0, 0, 0, 1, 433, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1);
-
+(1379, 'Rubber Chicken Cap', 'Wow. That was some very in-depth research on the chicken or the egg question.', '', 0, 0, 0, 0, 1, 433, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1),
+(1380, 'Fishing cape', 'The cape worn by the best fishermen', '', 0, 0, 0, 1, 1, 310, 2048, 11, 99, 10, 6, 0, 0, 0, 0, 99000, 0),
+(1381, 'Strength cape', 'The cape worn by only the strongest people', '', 0, 0, 0, 1, 1, 385, 2048, 11, 99, 2, 6, 0, 0, 0, 0, 99000, 0),
+(1382, 'Magic cape', 'The cape worn by the most powerful mages', '', 0, 0, 0, 1, 1, 440, 2048, 11, 99, 6, 6, 0, 0, 0, 0, 99000, 0),
+(1383, 'Smithing cape', 'The cape worn by master smiths', '', 0, 0, 0, 1, 1, 384, 2048, 11, 99, 13, 6, 0, 0, 0, 0, 99000, 0),
+(1384, 'Crafting cape', 'The cape worn by master craftworkers', '', 0, 0, 0, 1, 1, 441, 2048, 11, 99, 12, 6, 0, 0, 0, 0, 99000, 0);
 
 -- Make arrows wieldable.
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=1000, `wearSlot`=12, `requiredLevel`=1, `requiredSkillId`=4 WHERE `id` IN (
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=1000, `wearSlot`=12, `requiredLevel`=1, `requiredSkillID`=4 WHERE `id` IN (
     11, 190, 574, 592, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723, 786
 );
+
+-- Make pickaxes wieldable.
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=4, `weaponPowerBonus`=5 WHERE `id`=156; -- Bronze
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=5, `weaponPowerBonus`=7 WHERE `id`=1258; -- Iron
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=8, `weaponPowerBonus`=11 WHERE `id`=1259; -- Steel
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=12, `weaponPowerBonus`=16 WHERE `id`=1260; -- Mithril
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=17, `weaponPowerBonus`=23 WHERE `id`=1261; -- Adamant
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=26, `weaponPowerBonus`=36 WHERE `id`=1262; -- Rune
 
 
 -- Custom appearance sprites.
@@ -201,6 +213,13 @@ UPDATE `openrsc_itemdef` SET `appearanceID`=(case
     when id=683 then 423
     when id=685 then 424
     when id=682 then 425
+	-- Pickaxes
+	when id=156 then 434
+	when id=1258 then 435
+	when id=1259 then 436
+	when id=1260 then 437
+	when id=1261 then 438
+	when id=1262 then 439
 end) WHERE `id` IN (
     -- Axes
     87, 12, 88, 203, 204, 405, 428,
@@ -225,5 +244,7 @@ end) WHERE `id` IN (
     -- Necklaces
     289, 302, 290, 303, 291, 304, 292, 305, 544, 597, 1194, 852, 721, 726, 782, 385, 1028,
     -- Battlestaves
-    684, 683, 685, 682
+    684, 683, 685, 682,
+	-- Pickaxes
+	156, 1258, 1259, 1260, 1261, 1262
 );

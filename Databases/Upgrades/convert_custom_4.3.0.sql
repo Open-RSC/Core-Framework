@@ -148,6 +148,11 @@ VALUES (1290, 'Ironman helm', 'For just a rather very independent scaper.', '', 
        (1376, 'Fletching cape', 'The cape worn by masters of fletching', '', 0, 0, 0, 1, 1, 430, 2048, 11, 99, 9, 6, 0, 0, 0, 0, 99000, 0),
        (1377, 'Mining cape', 'The cape worn by masters of mining', '', 0, 0, 0, 1, 1, 431, 2048, 11, 99, 14, 6, 0, 0, 0, 0, 99000, 0),
 	   (1378, 'Pestilence Mask', 'You wouldn\'t want to be seen in this! Stay the cabbage home!', '', 0, 0, 0, 0, 1, 432, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1),
-	   (1379, 'Rubber Chicken Cap', 'Wow. That was some very in-depth research on the chicken or the egg question.', '', 0, 0, 0, 0, 1, 433, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1);
+	   (1379, 'Rubber Chicken Cap', 'Wow. That was some very in-depth research on the chicken or the egg question.', '', 0, 0, 0, 0, 1, 433, 32, 5, 1, 1, 0, 0, 0, 0, 0, 0, 1),
+	   (1380, 'Fishing cape', 'The cape worn by the best fishermen', '', 0, 0, 0, 1, 1, 310, 2048, 11, 99, 10, 6, 0, 0, 0, 0, 99000, 0),
+	   (1381, 'Strength cape', 'The cape worn by only the strongest people', '', 0, 0, 0, 1, 1, 385, 2048, 11, 99, 2, 6, 0, 0, 0, 0, 99000, 0),
+	   (1382 'Magic cape', 'The cape worn by the most powerful mages', '', 0, 0, 0, 1, 1, 440, 2048, 11, 99, 6, 6, 0, 0, 0, 0, 99000, 0),
+	   (1383, 'Smithing cape', 'The cape worn by master smiths', '', 0, 0, 0, 1, 1, 384, 2048, 11, 99, 13, 6, 0, 0, 0, 0, 99000, 0),
+	   (1384, 'Crafting cape', 'The cape worn by master craftworkers', '', 0, 0, 0, 1, 1, 441, 2048, 11, 99, 12, 6, 0, 0, 0, 0, 99000, 0);
 
 UPDATE `openrsc_npcdef` SET command = 'trade' WHERE id = 806;
