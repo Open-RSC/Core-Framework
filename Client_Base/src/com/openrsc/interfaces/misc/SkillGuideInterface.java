@@ -269,6 +269,9 @@ public final class SkillGuideInterface {
 		}
 		if (mc.getSkillGuideChosen().equals("Strength")) {
 			skillMenuEntries.add(new SkillMenuItem(90, "", "Strength raises your max hit with melee"));
+			if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillMenuEntries.add(new SkillMenuItem(1381, "99", "Cape"));
+			}
 		}
 		if (mc.getSkillGuideChosen().equals("Hits")) {
 			skillMenuEntries.add(new SkillMenuItem(193, "", "Beer - Heals 1"));
@@ -408,6 +411,9 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(184, "1", "Wizard hats and robes"));
 				skillMenuEntries.add(new SkillMenuItem(702, "1", "Robes of Zamorak"));
 				skillMenuEntries.add(new SkillMenuItem(1215, "60", "God capes"));
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1382, "99", "Cape"));
+				}
 			} else if (curTab == 2) {
 				skillMenuEntries.add(new SkillMenuItem(101, "1", "Basic staves"));
 				skillMenuEntries.add(new SkillMenuItem(617, "30", "Battlestaves"));
@@ -545,11 +551,11 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(545, "76", "Sharks - Harpoon"));
 				skillMenuEntries.add(new SkillMenuItem(1192, "79", "Sea Turtle - Fishing Trawler"));
 				skillMenuEntries.add(new SkillMenuItem(1190, "81", "Manta Ray - Fishing Trawler"));
-			} /*else if (curTab == 1) {
+			} else if (curTab == 1) {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(2103, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1380, "99", "Cape"));
 				}
-			}*/
+			}
 		}
 		if (mc.getSkillGuideChosen().equals("Firemaking")) {
 			skillMenuEntries.add(new SkillMenuItem(14, "1", "Normal logs"));
@@ -566,6 +572,9 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(16, "1", "Leather Gloves"));
 				skillMenuEntries.add(new SkillMenuItem(17, "7", "Boots"));
 				skillMenuEntries.add(new SkillMenuItem(15, "14", "Leather Armour"));
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1384, "99", "Cape"));
+				}
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(135, "1", "Pot"));
 				skillMenuEntries.add(new SkillMenuItem(251, "4", "Pie Dish"));
@@ -633,6 +642,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(408, "85", "Runite - 8 Coal & 1 runite ore"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1365, "90", "Dragon - 1 dragon axe or 1 dragon sword"));
+					skillMenuEntries.add(new SkillMenuItem(1383, "99", "Cape"));
 				}
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(62, "1", "Bronze Daggers - 1 Bar"));
