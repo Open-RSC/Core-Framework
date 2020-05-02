@@ -1246,6 +1246,9 @@ public class SpellHandler implements PacketHandler {
 				player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
 			}
 		}
+		if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (player.getLocation().inKaramja())) {
+			player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
+		}
 		if (player.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
 			player.message("the plague sample is too delicate...");
 			player.message("it disintegrates in the crossing");

@@ -1,12 +1,11 @@
 package com.openrsc.server.plugins.misc;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
 
 public class TeleportStone implements OpInvTrigger {
 
@@ -40,6 +39,9 @@ public class TeleportStone implements OpInvTrigger {
 				mes(player, "You can't teleport while holding Ana,",
 					"It's just too difficult to concentrate.");
 				return;
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (player.getLocation().inKaramja())) {
+				player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
 			}
 			if (player.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
 				player.message("the plague sample is too delicate...");

@@ -18,8 +18,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 
 public class PiratesTreasure implements QuestInterface, OpInvTrigger,
-	TalkNpcTrigger, OpLocTrigger,
-	UseLocTrigger, TeleportTrigger {
+	TalkNpcTrigger, OpLocTrigger, UseLocTrigger {
 
 	private static final int HECTORS_CHEST_OPEN = 186;
 	private static final int HECTORS_CHEST_CLOSED = 187;
@@ -337,18 +336,6 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return (player.getY() == 548 && player.getX() > 287 && player.getX() < 291)
 			&& item.getCatalogId() == ItemId.SPADE.id();
-	}
-
-	@Override
-	public void onTeleport(Player player) {
-		if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (player.getLocation().inKaramja())) {
-			player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
-		}
-	}
-
-	@Override
-	public boolean blockTeleport(Player player) {
-		return false;
 	}
 
 	@Override

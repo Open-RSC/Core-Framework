@@ -29,8 +29,8 @@ public class Default implements DefaultHandler,
 	AttackNpcTrigger, PlayerDeathTrigger, KillNpcTrigger, PlayerLoginTrigger,
 	PlayerLogoutTrigger, SpellInvTrigger, SpellPlayerTrigger, SpellNpcTrigger,
 	SpellLocTrigger, EscapeNpcTrigger, PlayerKilledPlayerTrigger, PlayerRangePlayerTrigger,
-	PlayerRangeNpcTrigger, StartupTrigger, TalkNpcTrigger, TeleportTrigger,
-	OpBoundTrigger, WearObjTrigger, RemoveObjTrigger, WithdrawTrigger {
+	PlayerRangeNpcTrigger, StartupTrigger, TalkNpcTrigger, OpBoundTrigger,
+	WearObjTrigger, RemoveObjTrigger, WithdrawTrigger {
 
 	public static final DoorAction doors = new DoorAction();
 	private static final Ladders ladders = new Ladders();
@@ -449,17 +449,6 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public boolean blockStartup() {
-		return false;
-	}
-
-	@Override
-	public void onTeleport(Player player) {
-		// TODO: player.teleport() logic needs to be moved here. There needs to be an exception when bubble is false.
-		// No default actions
-	}
-
-	@Override
-	public boolean blockTeleport(Player player) {
 		return false;
 	}
 

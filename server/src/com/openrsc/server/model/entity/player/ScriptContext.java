@@ -1,5 +1,6 @@
 package com.openrsc.server.model.entity.player;
 
+import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -21,15 +22,17 @@ public class ScriptContext {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final World world;
+	private final PluginTask pluginTask;
 
 	private volatile Integer ownerIndex = null;
 	private volatile Action currentAction = Action.idle;
 	private volatile Integer interactingIndex = null;
 	private volatile Point interactingCoordinate = null;
 
-	public ScriptContext(final World world, final Integer playerIndex) {
+	public ScriptContext(final World world, final PluginTask pluginTask, final Integer playerIndex) {
 		this.world = world;
 		this.ownerIndex = playerIndex;
+		this.pluginTask = pluginTask;
 	}
 
 	public Action getCurrentAction() {
@@ -294,5 +297,9 @@ public class ScriptContext {
 
 	public World getWorld() {
 		return world;
+	}
+
+	public PluginTask getPluginTask() {
+		return pluginTask;
 	}
 }

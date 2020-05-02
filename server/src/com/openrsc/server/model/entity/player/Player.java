@@ -2261,9 +2261,6 @@ public final class Player extends Mob {
 	}
 
 	public void teleport(final int x, final int y, final boolean bubble) {
-		if (bubble && getWorld().getServer().getPluginHandler().handlePlugin(this, "Teleport", new Object[]{this})) {
-			return;
-		}
 		if (inCombat()) {
 			this.setLastOpponent(null);
 			combatEvent.resetCombat();
