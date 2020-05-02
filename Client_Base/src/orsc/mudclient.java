@@ -41,7 +41,6 @@ import orsc.util.StringUtil;
 import java.awt.*;
 import java.io.*;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.Map.Entry;
@@ -7685,6 +7684,8 @@ public final class mudclient implements Runnable {
 										this.packetHandler.getClientStream().finishPacket();
 										break;
 									} else {
+										this.menuCommon.addCharacterItem(j, MenuItemAction.ITEM_UNEQUIP_FROM_EQUIPMENT, "Remove",
+											"@lre@" + equippedItems[j].getName());
 										if (equippedItems[j].getCommand() != null)
 											for (int p = 0; p < equippedItems[j].getCommand().length; p++) {
 												this.menuCommon.addItem(0, equippedItems[j].getCommand()[p], p, 0, "@lre@" + equippedItems[j].getName(), j, null, MenuItemAction.ITEM_COMMAND_EQUIPTAB, 0, null, null);
@@ -12124,6 +12125,12 @@ public final class mudclient implements Runnable {
 
 					this.packetHandler.getClientStream().finishPacket();
 					this.selectedItemInventoryIndex = -1;
+					break;
+				}
+				case ITEM_UNEQUIP_FROM_EQUIPMENT: {
+					this.packetHandler.getClientStream().newPacket(Opcodes.Out.ITEM_UNEQUIP_FROM_EQUIPMENT.getOpcode());
+					this.packetHandler.getClientStream().bufferBits.putByte(indexOrX);
+					this.packetHandler.getClientStream().finishPacket();
 					break;
 				}
 				case ITEM_UNEQUIP_FROM_INVENTORY: {
