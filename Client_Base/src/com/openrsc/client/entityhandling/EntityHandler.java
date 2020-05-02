@@ -3756,7 +3756,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Strength cape", "The cape worn by only the strongest people", "", 99000, -1, "items:495", false, true, 2048, 0, false, false, false, 1381));
 		items.add(new ItemDef("Magic cape", "The cape worn by the most powerful mages", "", 99000, -1, "items:489", false, true, 2048, 0, false, false, false, 1382));
 		items.add(new ItemDef("Smithing cape", "The cape worn by master smiths", "", 99000, -1, "items:494", false, true, 2048, 0, false, false, false, 1383));
-		items.add(new ItemDef("Crafting cape", "The cape worn by master craftworkers", "", 99000, -1, "items:482", false, true, 2048, 0, false, false, false, 1384));
+		items.add(new ItemDef("Crafting cape", "The cape worn by master craftworkers", "Teleport", 99000, -1, "items:482", false, true, 2048, 0, false, false, false, 1384));
 	}
 
 	// Bank note items

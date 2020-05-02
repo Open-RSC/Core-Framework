@@ -153,6 +153,6 @@ VALUES (1290, 'Ironman helm', 'For just a rather very independent scaper.', '', 
 	   (1381, 'Strength cape', 'The cape worn by only the strongest people', '', 0, 0, 0, 1, 1, 385, 2048, 11, 99, 2, 6, 0, 0, 0, 0, 99000, 0),
 	   (1382 'Magic cape', 'The cape worn by the most powerful mages', '', 0, 0, 0, 1, 1, 440, 2048, 11, 99, 6, 6, 0, 0, 0, 0, 99000, 0),
 	   (1383, 'Smithing cape', 'The cape worn by master smiths', '', 0, 0, 0, 1, 1, 384, 2048, 11, 99, 13, 6, 0, 0, 0, 0, 99000, 0),
-	   (1384, 'Crafting cape', 'The cape worn by master craftworkers', '', 0, 0, 0, 1, 1, 441, 2048, 11, 99, 12, 6, 0, 0, 0, 0, 99000, 0);
+	   (1384, 'Crafting cape', 'The cape worn by master craftworkers', 'Teleport', 0, 0, 0, 1, 1, 441, 2048, 11, 99, 12, 6, 0, 0, 0, 0, 99000, 0);
 
 UPDATE `openrsc_npcdef` SET command = 'trade' WHERE id = 806;

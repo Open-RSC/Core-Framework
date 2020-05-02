@@ -581,7 +581,8 @@ public class DoorAction {
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
 					player.setBusy(false);
 					player.message("You need a crafting level of 40 to enter the guild");
-				} else if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.BROWN_APRON.id())) {
+				} else if (!(player.getCarriedItems().getEquipment().hasEquipped(ItemId.BROWN_APRON.id())
+					|| player.getCarriedItems().getEquipment().hasEquipped(ItemId.CRAFTING_CAPE.id()))) {
 					Npc master = player.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
 					if (master != null) {
 						npcsay(player, master, "Where's your brown apron?",
