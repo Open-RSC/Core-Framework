@@ -174,6 +174,10 @@ public class ObjectCooking implements UseLocTrigger {
 				return;
 			}
 		}
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		if (item == null) return;
 		thinkbubble(player, item);
 		player.playSound("cooking");
 		delay(timeToCook);
@@ -198,10 +202,8 @@ public class ObjectCooking implements UseLocTrigger {
 			// Repeat
 			if (player.hasMoved()) return;
 			repeat--;
-			if (repeat > 0 && player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) > 0) {
-				item = player.getCarriedItems().getInventory().get(
-					player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
-				);
+			if (repeat > 0) {
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				batchCooking(player, item, timeToCook, cookingDef, repeat);
 			}
 		}
