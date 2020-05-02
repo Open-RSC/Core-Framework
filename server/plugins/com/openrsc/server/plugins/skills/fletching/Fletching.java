@@ -287,48 +287,57 @@ public class Fletching implements UseInvTrigger {
 		}
 	}
 
-	private boolean doBowString(Player player, final Item bowString,
-								final Item bow) {
+	private void doBowString(Player player, final Item bowString, final Item bow) {
 		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
-			return true;
+			return;
 		}
 		final ItemBowStringDef stringDef = player.getWorld().getServer().getEntityHandler()
 			.getItemBowStringDef(bow.getCatalogId());
 		if (stringDef == null) {
-			return false;
+			return;
 		}
-		int bowtimes = player.getCarriedItems().getInventory().countId(bow.getCatalogId());
-		int stringtimes = player.getCarriedItems().getInventory().countId(bowString.getCatalogId());
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			int bowtimes = player.getCarriedItems().getInventory().countId(bow.getCatalogId());
+			int stringtimes = player.getCarriedItems().getInventory().countId(bowString.getCatalogId());
+			repeat = Math.min(bowtimes, stringtimes);
+		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fletching String Bow",
-			bowtimes < stringtimes ? bowtimes : stringtimes, false) {
-			@Override
-			public void action() {
-				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < stringDef.getReqLevel()) {
-					getOwner().message("You need a fletching skill of "
-						+ stringDef.getReqLevel() + " or above to do that");
-					interruptBatch();
-					return;
-				}
-				if (getOwner().getCarriedItems().getInventory().countId(bow.getCatalogId()) < 1
-						|| getOwner().getCarriedItems().getInventory().countId(bowString.getCatalogId()) < 1) {
-					interruptBatch();
-					return;
-				}
-				if (checkFatigue(player)) {
-					return;
-				}
-				if (getOwner().getCarriedItems().remove(bowString) > -1
-					&& getOwner().getCarriedItems().remove(bow) > -1) {
-					getOwner().message("You add a string to the bow");
-					getOwner().getCarriedItems().getInventory().add(new Item(stringDef.getBowID(), 1));
-					getOwner().incExp(Skills.FLETCHING, stringDef.getExp(), true);
-				} else
-					interruptBatch();
-			}
-		});
-		return true;
+		batchStringing(player, bow, bowString, stringDef, repeat);
+	}
+
+	private void batchStringing(Player player, Item bow, Item bowString, ItemBowStringDef stringDef, int repeat) {
+		if (player.getSkills().getLevel(Skills.FLETCHING) < stringDef.getReqLevel()) {
+			player.message("You need a fletching skill of "
+				+ stringDef.getReqLevel() + " or above to do that");
+			return;
+		}
+		if (checkFatigue(player)) {
+			return;
+		}
+		bow = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(bow.getCatalogId(), Optional.of(false))
+		);
+		bowString = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(bowString.getCatalogId(), Optional.of(false))
+		);
+		if (bow == null || bowString == null) return;
+
+		player.getCarriedItems().remove(bowString);
+		player.getCarriedItems().remove(bow);
+		player.message("You add a string to the bow");
+		player.getCarriedItems().getInventory().add(new Item(stringDef.getBowID(), 1));
+		player.incExp(Skills.FLETCHING, stringDef.getExp(), true);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			batchStringing(player, bow, bowString, stringDef, repeat);
+		}
 	}
 
 	private void doLogCut(final Player player, final Item knife,
@@ -344,7 +353,7 @@ public class Fletching implements UseInvTrigger {
 		player.message("What would you like to make?");
 
 		String[] options = log.getCatalogId() == ItemId.LOGS.id() ? new String[]{"Make arrow shafts",
-				"Make shortbow", "Make longbow"} : new String[]{"Make shortbow", "Make longbow"};
+			"Make shortbow", "Make longbow"} : new String[]{"Make shortbow", "Make longbow"};
 
 		int type = multi(player, options);
 		if (type < 0 || type > options.length) {
@@ -358,55 +367,60 @@ public class Fletching implements UseInvTrigger {
 		int id = ItemId.NOTHING.id();
 		String cutMessage = null;
 		switch (type) {
-		case 0:
-			id = ItemId.ARROW_SHAFTS.id();
-			amount = 10;
-			reqLvl = cutDef.getShaftLvl();
-			exp = cutDef.getShaftExp();
-			cutMessage = "You carefully cut the wood into 10 arrow shafts";
-			break;
-		case 1:
-			id = cutDef.getShortbowID();
-			amount = 1;
-			reqLvl = cutDef.getShortbowLvl();
-			exp = cutDef.getShortbowExp();
-			cutMessage = "You carefully cut the wood into a shortbow";
-			break;
-		case 2:
-			id = cutDef.getLongbowID();
-			amount = 1;
-			reqLvl = cutDef.getLongbowLvl();
-			exp = cutDef.getLongbowExp();
-			cutMessage = "You carefully cut the wood into a longbow";
-			break;
+			case 0:
+				id = ItemId.ARROW_SHAFTS.id();
+				reqLvl = cutDef.getShaftLvl();
+				exp = cutDef.getShaftExp();
+				cutMessage = "You carefully cut the wood into 10 arrow shafts";
+				break;
+			case 1:
+				id = cutDef.getShortbowID();
+				reqLvl = cutDef.getShortbowLvl();
+				exp = cutDef.getShortbowExp();
+				cutMessage = "You carefully cut the wood into a shortbow";
+				break;
+			case 2:
+				id = cutDef.getLongbowID();
+				reqLvl = cutDef.getLongbowLvl();
+				exp = cutDef.getLongbowExp();
+				cutMessage = "You carefully cut the wood into a longbow";
+				break;
 		}
-		final int requiredLvl = reqLvl;
-		final int experience = exp;
-		final int itemID = id;
-		final int amt = amount;
-		final String cutMessages = cutMessage;
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Make Bow",
-				player.getCarriedItems().getInventory().countId(log.getCatalogId()), false) {
-			@Override
-			public void action() {
-				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < requiredLvl) {
-					getOwner().message("You need a fletching skill of "
-							+ requiredLvl + " or above to do that");
-					interruptBatch();
-					return;
-				}
-				if (checkFatigue(player)) {
-					return;
-				}
-				if (getOwner().getCarriedItems().remove(log) > -1) {
-					getOwner().message(cutMessages);
-					give(getOwner(), itemID, amt);
-					getOwner().incExp(Skills.FLETCHING, experience, true);
-				} else
-					interruptBatch();
-			}
-		});
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(log.getCatalogId());
+		}
+
+		batchLogCutting(player, log, id, reqLvl, exp, cutMessage, repeat);
+	}
+
+	private void batchLogCutting(Player player, Item log, int id, int reqLvl, int exp, String cutMessage, int repeat) {
+		if (player.getSkills().getLevel(Skills.FLETCHING) < reqLvl) {
+			player.message("You need a fletching skill of " + reqLvl + " or above to do that");
+			return;
+		}
+		if (checkFatigue(player)) {
+			return;
+		}
+		log = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(log.getCatalogId(), Optional.of(false))
+		);
+		if (log == null) return;
+		if (player.getCarriedItems().remove(log) > -1) {
+			player.message(cutMessage);
+			give(player, id, id == ItemId.ARROW_SHAFTS.id() ? 10 : 1);
+			player.incExp(Skills.FLETCHING, exp, true);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		}
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			batchLogCutting(player, log, id, reqLvl, exp, cutMessage, repeat);
+		}
 	}
 
 	private boolean doPearlCut(final Player player, final Item chisel, final Item pearl) {
