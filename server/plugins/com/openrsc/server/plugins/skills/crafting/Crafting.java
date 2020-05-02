@@ -1050,9 +1050,9 @@ public class Crafting implements UseInvTrigger,
 				&& player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 			player.message("You are too tired to craft");
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	@Override
