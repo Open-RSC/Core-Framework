@@ -2397,7 +2397,7 @@ public class EntityHandler {
 		items.add(new ItemDef("mithril ore", "this needs refining", "", 162, 70, "items:70", false, false, 0, 10072780, false, false, true, 153));
 		items.add(new ItemDef("adamantite ore", "this needs refining", "", 400, 70, "items:70", false, false, 0, 11717785, false, false, true, 154));
 		items.add(new ItemDef("coal", "hmm a non-renewable energy source!", "", 45, 71, "items:71", false, false, 0, 0, false, false, true, 155));
-		items.add(new ItemDef("Bronze Pickaxe", "Used for mining", "", 1, 72, "items:72", false, false, 0, 16737817, false, false, true, 156));
+		items.add(new ItemDef("Bronze Pickaxe", "Used for mining", "", 1, 72, "items:72", false, Config.S_WANT_CUSTOM_SPRITES, Config.S_WANT_CUSTOM_SPRITES ? 16 : 0, 16737817, false, false, true, 156));
 		items.add(new ItemDef("uncut diamond", "this would be worth more cut", "", 200, 73, "items:73", false, false, 0, 0, false, false, true, 157));
 		items.add(new ItemDef("uncut ruby", "this would be worth more cut", "", 100, 73, "items:73", false, false, 0, 16724736, false, false, true, 158));
 		items.add(new ItemDef("uncut emerald", "this would be worth more cut", "", 50, 73, "items:73", false, false, 0, 3394611, false, false, true, 159));
@@ -3499,11 +3499,11 @@ public class EntityHandler {
 		items.add(new ItemDef("Dark Dagger", "An unusual looking dagger made of dark shiny obsidian", "", 91, 420, "items:420", false, true, 16, 0, true, true, false, 1255));
 		items.add(new ItemDef("Glowing Dark Dagger", "An unusual looking dagger made of dark shiny obsidian - it has an unnatural glow .", "", 91, 421, "items:421", false, true, 16, 0, true, true, false, 1256));
 		items.add(new ItemDef("Holy Force Spell", "A powerful incantation - it affects spirits of the underworld", "Cast", 1, 423, "items:423", false, false, 0, 0, true, true, false, 1257));
-		items.add(new ItemDef("Iron Pickaxe", "Used for mining", "", 140, 72, "items:72", false, false, 0, 15654365, false, false, true, 1258));
-		items.add(new ItemDef("Steel Pickaxe", "Requires level 6 mining to use", "", 500, 72, "items:72", false, false, 0, 15658734, false, false, true, 1259));
-		items.add(new ItemDef("Mithril Pickaxe", "Requires level 21 mining to use", "", 1300, 72, "items:72", false, false, 0, 10072780, false, false, true, 1260));
-		items.add(new ItemDef("Adamantite Pickaxe", "Requires level 31 mining to use", "", 3200, 72, "items:72", false, false, 0, 11717785, false, false, true, 1261));
-		items.add(new ItemDef("Rune Pickaxe", "Requires level 41 mining to use", "", 32000, 72, "items:72", false, false, 0, 65535, false, false, true, 1262));
+		items.add(new ItemDef("Iron Pickaxe", "Used for mining", "", 140, 72, "items:72", false, Config.S_WANT_CUSTOM_SPRITES, Config.S_WANT_CUSTOM_SPRITES ? 16 : 0, 15654365, false, false, true, 1258));
+		items.add(new ItemDef("Steel Pickaxe", "Requires level 6 mining to use", "", 500, 72, "items:72", false, Config.S_WANT_CUSTOM_SPRITES, Config.S_WANT_CUSTOM_SPRITES ? 16 : 0, 15658734, false, false, true, 1259));
+		items.add(new ItemDef("Mithril Pickaxe", "Requires level 21 mining to use", "", 1300, 72, "items:72", false, Config.S_WANT_CUSTOM_SPRITES, Config.S_WANT_CUSTOM_SPRITES ? 16 : 0, 10072780, false, false, true, 1260));
+		items.add(new ItemDef("Adamantite Pickaxe", "Requires level 31 mining to use", "", 3200, 72, "items:72", false, Config.S_WANT_CUSTOM_SPRITES, Config.S_WANT_CUSTOM_SPRITES ? 16 : 0, 11717785, false, false, true, 1261));
+		items.add(new ItemDef("Rune Pickaxe", "Requires level 41 mining to use", "", 32000, 72, "items:72", false, Config.S_WANT_CUSTOM_SPRITES, Config.S_WANT_CUSTOM_SPRITES ? 16 : 0, 65535, false, false, true, 1262));
 		items.add(new ItemDef("Sleeping Bag", "Not as comfy as a bed but better than nothing", "sleep", 30, 422, "items:422", false, false, 0, 0, false, false, true, 1263));
 		items.add(new ItemDef("A blue wizards hat", "An ancient wizards hat.", "", 2, 86, "items:86", false, true, 32, 255, true, true, false, 1264));
 		items.add(new ItemDef("Gilded Totem Pole", "A well crafted totem pole - given to you as a gift from Gujuo", "Inspect", 20, 403, "items:403", false, false, 0, 65280, true, true, false, 1265));
@@ -4787,7 +4787,7 @@ public class EntityHandler {
 			animations.add(new AnimationDef("hatchet", "equipment", 10072780, 0, true, false, 0));
 			animations.add(new AnimationDef("hatchet", "equipment", 11717785, 0, true, false, 0));
 			animations.add(new AnimationDef("hatchet", "equipment", 65535, 0, true, false, 0));
-			animations.add(new AnimationDef("hatchet", "equipment", 3158064, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", "equipment", 3158064, 0, true, false, 0)); // black
 
 			// Kite shields
 			animations.add(new AnimationDef("kiteshield", "equipment", 0xBB4B12, 0, true, false, 0)); //237 - bronze kite
@@ -5077,9 +5077,9 @@ public class EntityHandler {
 			animations.add(new AnimationDef("pickaxe", "equipment", 16737817, 0, true, false, 0)); // bronze 434
 			animations.add(new AnimationDef("pickaxe", "equipment", 15654365, 0, true, false, 0)); // iron 435
 			animations.add(new AnimationDef("pickaxe", "equipment", 15658734, 0, true, false, 0)); // steel 436
-			animations.add(new AnimationDef("pickaxe", "equipment", 11717785, 0, true, false, 0)); // mithril 437
-			animations.add(new AnimationDef("pickaxe", "equipment", 65535, 0, true, false, 0)); // adamant 438
-			animations.add(new AnimationDef("pickaxe", "equipment", 3158064, 0, true, false, 0)); // rune 439
+			animations.add(new AnimationDef("pickaxe", "equipment", 10072780, 0, true, false, 0)); // mithril 437
+			animations.add(new AnimationDef("pickaxe", "equipment", 11717785, 0, true, false, 0)); // adamant 438
+			animations.add(new AnimationDef("pickaxe", "equipment", 65535, 0, true, false, 0)); // rune 439
 
 			// More skill capes (batch 2)
 			// animations.add(new AnimationDef("fishingcape", "equipment", 0, 0, true, false, 0)); //310 - fishing cape
