@@ -349,7 +349,7 @@ public class NComponent {
 
 	private boolean isHovered() {
 		boolean secondaryWindow = false;
-		return false;
+		return this.isHovered;
 	}
 
 	private void setHovered(boolean isHovered) {

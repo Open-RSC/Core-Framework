@@ -17,9 +17,9 @@ public class ProgressBarInterface {
 
 	public ProgressBarInterface(final mudclient graphics) {
 		progressBarComponent = new NComponent(graphics);
-		progressBarComponent.setSize(175, 55);
+		progressBarComponent.setSize(138, 59);
 		progressBarComponent.setBackground(0xFFFFFF, 0xFFFFFF, 128);
-		progressBarComponent.setLocation((graphics.getGameWidth() - 175) / 2, graphics.getGameHeight() - 100);
+		progressBarComponent.setLocation((graphics.getGameWidth() - 138) / 2, graphics.getGameHeight() - 100);
 
 		NCustomComponent progressBarItself = new NCustomComponent(graphics) {
 			@Override
@@ -43,21 +43,23 @@ public class ProgressBarInterface {
 					percentToWidth = 0;
 
 				graphics().drawBoxAlpha(getX(), getY(), (int) percentToWidth - 2, 10, 0x0000ff, 200);
-				graphics().drawColoredString((int) (getX() + (progressBarWidth / 2)), getY() + 9, (batchTotalCount - batchCompletedCount) + "/" + batchTotalCount, 0, 0xffffff, 0);
+				int center = (batchTotalCount - batchCompletedCount) > 9 ? 13 : 7;
+				graphics().drawColoredString((int) (getX() + (progressBarWidth / 2) - center), getY() + 9, (batchTotalCount - batchCompletedCount) + "/" + batchTotalCount, 0, 0xffffff, 0);
 //
 //				graphics().drawText((batchTotalCount - batchCompletedCount) + "/" + batchTotalCount,
 //						(int) (getX() + (progressBarWidth / 2)), getY() + 9, 0, 0xffffff);
 			}
 		};
-		progressBarItself.setLocation(25, 20);
+		progressBarItself.setLocation(9, 24);
 
 		final NComponent headerComponent = new NComponent(graphics);
-		headerComponent.setSize(175, 15);
+		headerComponent.setSize(138, 19);
 		headerComponent.setBackground(0, 0, 156);
 		headerComponent.setLocation(0, 0);
 		headerComponent.setFontColor(0xFFFFFF, 0xFFFFFF);
 		headerComponent.setTextCentered(true);
-		headerComponent.setText("Batch Progress");
+		headerComponent.setText("Batching");
+		headerComponent.setTextSize(1);
 		headerComponent.setInputListener(new InputListener() {
 			@Override
 			public boolean onMouseDown(int clickX, int clickY, int mButtonDown, int mButtonClick) {
@@ -88,13 +90,13 @@ public class ProgressBarInterface {
 
 		NComponent cancelButton = new NComponent(graphics);
 		cancelButton.setTextCentered(true);
-		cancelButton.setText("Cancel Action");
-		cancelButton.setBorderColors(0xFFFFFF, 0x454545);
-		cancelButton.setBackground(0x454545, 0xFFFFFF, 128);
-		cancelButton.setFontColor(0xFFFFFF, 0xFF00000);
+		cancelButton.setText("Cancel");
+		cancelButton.setBorderColors(0xFFFFFF, 0xFFFFFF);
+		cancelButton.setBackground(0x454545, 0x454545, 128);
+		cancelButton.setFontColor(0xFFFFFF, 0xFF0000);
 		cancelButton.setTextSize(0);
-		cancelButton.setLocation(45, 35);
-		cancelButton.setSize(75, 15);
+		cancelButton.setLocation(31, 39);
+		cancelButton.setSize(75, 16);
 		cancelButton.setInputListener(new InputListener() {
 			@Override
 			public boolean onMouseDown(int clickX, int clickY, int mButtonDown, int mButtonClick) {
