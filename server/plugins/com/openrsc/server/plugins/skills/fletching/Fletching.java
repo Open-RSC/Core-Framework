@@ -211,11 +211,12 @@ public class Fletching implements UseInvTrigger {
 			player.incExp(Skills.FLETCHING, experience, true);
 		}
 
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
 		// Repeat
 		if (player.hasMoved()) return;
 		repeat--;
 		if (repeat > 0) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchFeathers(player, feathers, attachment, resultID, experience, repeat);
 		}
 	}
@@ -278,11 +279,12 @@ public class Fletching implements UseInvTrigger {
 			player.incExp(Skills.FLETCHING, headDef.getExp() * skillCapeMultiplier, true);
 		}
 
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
 		// Repeat
 		if (player.hasMoved()) return;
 		repeat--;
 		if (repeat > 0) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchArrowheads(player, headlessArrows, arrowHeads, headDef, repeat);
 		}
 	}
@@ -423,10 +425,10 @@ public class Fletching implements UseInvTrigger {
 		}
 	}
 
-	private boolean doPearlCut(final Player player, final Item chisel, final Item pearl) {
+	private void doPearlCut(final Player player, final Item chisel, final Item pearl) {
 		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
-			return true;
+			return;
 		}
 
 		int amount;
@@ -436,91 +438,104 @@ public class Fletching implements UseInvTrigger {
 			amount = 2;
 		} else {
 			player.message("Nothing interesting happens");
-			return false;
+			return;
 		}
 
 		final int amt = amount;
 		final int exp = 25;
 		final int pearlID = pearl.getCatalogId();
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Pearl Cut",
-			player.getCarriedItems().getInventory().countId(pearlID), false) {
-			@Override
-			public void action() {
-				if (getOwner().getSkills().getLevel(Skills.FLETCHING) < 34) {
-					getOwner().message("You need a fletching skill of 34 to do that");
-					interruptBatch();
-					return;
-				}
-				if (checkFatigue(player)) {
-					return;
-				}
-				if (getOwner().getCarriedItems().remove(new Item(pearlID)) > -1) {
-					getOwner().message("you chisel the pearls into small bolt tips");
-					give(getOwner(), ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amt);
-					getOwner().incExp(Skills.FLETCHING, exp, true);
-				} else interruptBatch();
-			}
-		});
-		return true;
+
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(pearlID);
+		}
+
+		batchPearlCutting(player, pearl, amount, repeat);
 	}
 
-	private boolean doBoltMake(final Player player, final Item bolts, final Item tips) {
+	private void batchPearlCutting(Player player, Item pearl, int amount, int repeat) {
+		if (player.getSkills().getLevel(Skills.FLETCHING) < 34) {
+			player.message("You need a fletching skill of 34 to do that");
+			return;
+		}
+		if (checkFatigue(player)) {
+			return;
+		}
+
+		pearl = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(pearl.getCatalogId(), Optional.of(false))
+		);
+		if (pearl == null) return;
+
+		player.getCarriedItems().remove(new Item(pearl.getCatalogId()));
+		player.message("you chisel the pearls into small bolt tips");
+		give(player, ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amount);
+		player.incExp(Skills.FLETCHING, 100, true);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			batchPearlCutting(player, pearl, amount, repeat);
+		}
+	}
+
+	private void doBoltMake(final Player player, final Item bolts, final Item tips) {
 		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
-			return true;
+			return;
 		}
 
 		if (tips.getCatalogId() != ItemId.OYSTER_PEARL_BOLT_TIPS.id()) { // not pearl tips
 			player.message("Nothing interesting happens");
-			return false;
+			return;
 		}
 
-		int bolt = bolts.getCatalogId();
-		int tip = tips.getCatalogId();
-		int amount = 10;
-		if (player.getCarriedItems().getInventory().countId(bolt) < amount)
-			amount = player.getCarriedItems().getInventory().countId(bolt);
-		if (player.getCarriedItems().getInventory().countId(tip) < amount)
-			amount = player.getCarriedItems().getInventory().countId(tip);
-		int retryTimes = 1001; // 1 + 1000 for authentic behaviour
-		boolean allowDuplicateEvents = true;
+		int repeat = 1; // 1 + 1000 for authentic behaviour
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-			retryTimes = 5;
-			allowDuplicateEvents = false;
+			repeat = 5;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player,
-			player.getWorld().getServer().getConfig().GAME_TICK, "Fletching Make Bolt",
-			retryTimes, false, allowDuplicateEvents) {
-			@Override
-			public void action() {
-				ServerConfiguration config = getWorld().getServer().getConfig();
-				Player owner = getOwner();
-				CarriedItems ci = owner.getCarriedItems();
-				for (int i = 0; i < 10; ++i) {
-					if (owner.getSkills().getLevel(Skills.FLETCHING) < 34) {
-						owner.message("You need a fletching skill of 34 to do that");
-						interruptBatch();
-						return;
-					}
-					if (ci.getInventory().countId(bolt) < 1
-						|| ci.getInventory().countId(tip) < 1) {
-						interruptBatch();
-						return;
-					}
-					if (checkFatigue(player)) {
-						return;
-					}
-					if (ci.remove(new Item(bolt)) > -1
-						&& ci.remove(new Item(tip)) > -1) {
-						//Successful bolt make
-						int skillCapeMultiplier = SkillCapes.shouldActivate(owner, ItemId.FLETCHING_CAPE) ? 2 : 1;
-						ci.getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), skillCapeMultiplier));
-						owner.incExp(Skills.FLETCHING, 25 * skillCapeMultiplier, true);
-					} else interruptBatch();
-				}
+		batchBolts(player, bolts, tips, repeat);
+	}
+
+	private void batchBolts(Player player, Item bolts, Item tips, int repeat) {
+		ServerConfiguration config = player.getWorld().getServer().getConfig();
+		CarriedItems ci = player.getCarriedItems();
+		bolts = ci.getInventory().get(
+			ci.getInventory().getLastIndexById(bolts.getCatalogId(), Optional.of(false))
+		);
+		tips = ci.getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(tips.getCatalogId(), Optional.of(false))
+		);
+		if (bolts == null || tips == null) return;
+		int loopCount = Math.min(10, bolts.getAmount());
+		loopCount = Math.min(loopCount, tips.getAmount());
+		for (int i = 0; i < loopCount; ++i) {
+			if (player.getSkills().getLevel(Skills.FLETCHING) < 34) {
+				player.message("You need a fletching skill of 34 to do that");
+				return;
 			}
-		});
-		return true;
+			if (checkFatigue(player)) {
+				return;
+			}
+			ci.remove(new Item(bolts.getCatalogId(), 1));
+			ci.remove(new Item(tips.getCatalogId(),1));
+
+			int skillCapeMultiplier = SkillCapes.shouldActivate(player, ItemId.FLETCHING_CAPE) ? 2 : 1;
+			ci.getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), skillCapeMultiplier));
+			player.incExp(Skills.FLETCHING, 25 * skillCapeMultiplier, true);
+		}
+
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			batchBolts(player, bolts, tips, repeat);
+		}
 	}
 
 	private boolean checkFatigue(Player player) {
