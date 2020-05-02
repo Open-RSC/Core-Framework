@@ -23,14 +23,13 @@ import java.util.Optional;
 
 public class Default implements DefaultHandler,
 	CatGrowthTrigger, CommandTrigger, DepositTrigger, DropObjTrigger,
-	IndirectTalkToNpcTrigger, OpInvTrigger, UseObjTrigger, UseInvTrigger,
-	UseNpcTrigger, UseLocTrigger, UsePlayerTrigger, UseBoundTrigger,
+	OpInvTrigger, UseObjTrigger, UseInvTrigger, RemoveObjTrigger, WithdrawTrigger,
+	UseNpcTrigger, UseLocTrigger, UsePlayerTrigger, UseBoundTrigger, WearObjTrigger,
 	OpNpcTrigger, OpLocTrigger, TakeObjTrigger, AttackPlayerTrigger,
 	AttackNpcTrigger, PlayerDeathTrigger, KillNpcTrigger, PlayerLoginTrigger,
 	PlayerLogoutTrigger, SpellInvTrigger, SpellPlayerTrigger, SpellNpcTrigger,
 	SpellLocTrigger, EscapeNpcTrigger, PlayerKilledPlayerTrigger, PlayerRangePlayerTrigger,
-	PlayerRangeNpcTrigger, StartupTrigger, TalkNpcTrigger, OpBoundTrigger,
-	WearObjTrigger, RemoveObjTrigger, WithdrawTrigger {
+	PlayerRangeNpcTrigger, StartupTrigger, TalkNpcTrigger, OpBoundTrigger {
 
 	public static final DoorAction doors = new DoorAction();
 	private static final Ladders ladders = new Ladders();
@@ -217,16 +216,6 @@ public class Default implements DefaultHandler,
 
 	@Override
 	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
-		return false;
-	}
-
-	@Override
-	public void onIndirectTalkToNpc(Player player, Npc n) {
-		// No default actions
-	}
-
-	@Override
-	public boolean blockIndirectTalkToNpc(Player player, Npc n) {
 		return false;
 	}
 

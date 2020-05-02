@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.IndirectTalkToNpcTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -15,23 +14,20 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class BoatFromKaramja implements
-	TalkNpcTrigger, IndirectTalkToNpcTrigger,
-	OpLocTrigger {
+public final class BoatFromKaramja implements TalkNpcTrigger, OpLocTrigger {
 
 	@Override
 	public void onTalkNpc(Player player, final Npc n) {
 		int option = multi(player, n, "Can I board this ship?",
 			"Does Karamja have any unusual customs then?");
 		if (option == 0) {
-			onIndirectTalkToNpc(player, n);
+			talkToOfficer(player, n);
 		} else if (option == 1) {
 			npcsay(player, n, "I'm not that sort of customs officer");
 		}
 	}
 
-	@Override
-	public void onIndirectTalkToNpc(Player player, final Npc n) {
+	public void talkToOfficer(Player player, final Npc n) {
 		npcsay(player, n, "You need to be searched before you can board");
 		int sub_opt = multi(player, n, "Why?",
 			"Search away I have nothing to hide",
@@ -78,7 +74,7 @@ public final class BoatFromKaramja implements
 				}
 				Npc officer = ifnearvisnpc(player, NpcId.CUSTOMS_OFFICER.id(), 4);
 				if (officer != null) {
-					officer.initializeIndirectTalkScript(player);
+					talkToOfficer(player, officer);
 				} else {
 					player.message("I need to speak to the customs officer before boarding the ship.");
 				}
@@ -88,11 +84,6 @@ public final class BoatFromKaramja implements
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		return n.getID() == NpcId.CUSTOMS_OFFICER.id();
-	}
-
-	@Override
-	public boolean blockIndirectTalkToNpc(Player player, Npc n) {
 		return n.getID() == NpcId.CUSTOMS_OFFICER.id();
 	}
 

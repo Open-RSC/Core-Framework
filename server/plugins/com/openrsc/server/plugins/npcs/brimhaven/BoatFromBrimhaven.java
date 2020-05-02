@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.IndirectTalkToNpcTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -15,23 +14,19 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class BoatFromBrimhaven implements
-	TalkNpcTrigger, IndirectTalkToNpcTrigger,
-	OpLocTrigger {
-
+public class BoatFromBrimhaven implements TalkNpcTrigger, OpLocTrigger {
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
 		int option = multi(player, n, "Can I board this ship?",
 			"Does Karamja have any unusual customs then?");
 		if (option == 0) {
-			onIndirectTalkToNpc(player, n);
+			talkToCustoms(player, n);
 		} else if (option == 1) {
 			npcsay(player, n, "I'm not that sort of customs officer");
 		}
 	}
 
-	@Override
-	public void onIndirectTalkToNpc(Player player, final Npc n) {
+	public void talkToCustoms(Player player, final Npc n) {
 		npcsay(player, n, "You need to be searched before you can board");
 		int sub_opt = multi(player, n, "Why?",
 			"Search away I have nothing to hide",
@@ -78,7 +73,7 @@ public class BoatFromBrimhaven implements
 				}
 				Npc official = ifnearvisnpc(player, NpcId.CUSTOMS_OFFICIAL.id(), 5);
 				if (official != null) {
-					official.initializeIndirectTalkScript(player);
+					talkToCustoms(player, official);
 				} else {
 					player.message("I need to speak to the customs official before boarding the ship.");
 				}
@@ -88,11 +83,6 @@ public class BoatFromBrimhaven implements
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		return n.getID() == NpcId.CUSTOMS_OFFICIAL.id();
-	}
-
-	@Override
-	public boolean blockIndirectTalkToNpc(Player player, Npc n) {
 		return n.getID() == NpcId.CUSTOMS_OFFICIAL.id();
 	}
 

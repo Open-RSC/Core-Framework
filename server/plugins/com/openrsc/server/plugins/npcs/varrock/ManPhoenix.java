@@ -6,26 +6,23 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.IndirectTalkToNpcTrigger;
-import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.*;
 
-public class ManPhoenix implements
-	TalkNpcTrigger, IndirectTalkToNpcTrigger {
+public class ManPhoenix implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		stravenDialogue(player, n, true);
 	}
 
-	@Override
-	public void onIndirectTalkToNpc(final Player player, final Npc n) {
+	public static void indirectTalkToStraven(final Player player, final Npc n) {
 		Npc man = ifnearvisnpc(player, NpcId.STRAVEN.id(), 20);
 		if (isBlackArmGang(player)) {
 			if (man != null) {
@@ -39,7 +36,7 @@ public class ManPhoenix implements
 		//any other condition inexistent, should open door
 	}
 
-	public void stravenDialogue(Player player, Npc n, final boolean directTalk) {
+	public static void stravenDialogue(Player player, Npc n, final boolean directTalk) {
 		Npc man = ifnearvisnpc(player, NpcId.STRAVEN.id(), 20);
 		if (isBlackArmGang(player)) {
 			if (man != null) {
@@ -133,7 +130,7 @@ public class ManPhoenix implements
 		}
 	}
 
-	private void memberOfPhoenixConversation(final Player player, final Npc n) {
+	private static void memberOfPhoenixConversation(final Player player, final Npc n) {
 		Menu defaultMenu = new Menu();
 		if (isPhoenixGang(player)) {
 			npcsay(player, n, "Greetings fellow gang member");
@@ -186,7 +183,7 @@ public class ManPhoenix implements
 		}
 	}
 
-	private void defaultConverstation(final Player player, final Npc n, final boolean directTalk) {
+	private static void defaultConverstation(final Player player, final Npc n, final boolean directTalk) {
 		Menu defaultMenu = new Menu();
 		if (directTalk) {
 			say(player, n, "What's through that door?");
@@ -264,11 +261,6 @@ public class ManPhoenix implements
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		return n.getID() == NpcId.STRAVEN.id();
-	}
-
-	@Override
-	public boolean blockIndirectTalkToNpc(Player player, Npc n) {
 		return n.getID() == NpcId.STRAVEN.id();
 	}
 }

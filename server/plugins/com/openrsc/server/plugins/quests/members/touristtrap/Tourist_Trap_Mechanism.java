@@ -88,7 +88,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			}
 		}
 		else if (item.getCatalogId() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.AL_SHABIM.id()) {
-			npc.initializeIndirectTalkScript(player);
+			TouristTrap.indirectTalktoAlShabim(player, npc);
 		}
 		else if (item.getCatalogId() == ItemId.TENTI_PINEAPPLE.id() && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			player.getCarriedItems().remove(new Item(ItemId.TENTI_PINEAPPLE.id()));

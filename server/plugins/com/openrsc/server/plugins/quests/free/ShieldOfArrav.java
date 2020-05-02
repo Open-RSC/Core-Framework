@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.npcs.varrock.ManPhoenix;
 import com.openrsc.server.plugins.triggers.*;
 
 import java.util.Optional;
@@ -491,7 +492,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 			if (isPhoenixGang(player)) {
 				if (player.getQuestStage(this) >= 0 && player.getQuestStage(this) < 5) {
 					if (man != null) {
-						man.initializeIndirectTalkScript(player);
+						ManPhoenix.indirectTalkToStraven(player, man);
 					}
 				} else {
 					player.message("The door is opened for you");
@@ -512,7 +513,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 				}
 			} else {
 				if (man != null) {
-					man.initializeIndirectTalkScript(player);
+					ManPhoenix.indirectTalkToStraven(player, man);
 				}
 			}
 		} else if (obj.getID() == 20 && obj.getY() == 532) {

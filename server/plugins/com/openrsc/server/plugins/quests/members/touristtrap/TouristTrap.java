@@ -21,8 +21,8 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalkToNpcTrigger, UseNpcTrigger,
-	OpLocTrigger, OpNpcTrigger, KillNpcTrigger, AttackNpcTrigger, SpellNpcTrigger, PlayerRangeNpcTrigger, OpBoundTrigger {
+public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigger, OpLocTrigger, OpNpcTrigger,
+	KillNpcTrigger, AttackNpcTrigger, SpellNpcTrigger, PlayerRangeNpcTrigger, OpBoundTrigger {
 
 	private static final Logger LOGGER = LogManager.getLogger(TouristTrap.class);
 
@@ -91,11 +91,6 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 		return inArray(n.getID(), NpcId.IRENA.id(), NpcId.MERCENARY.id(), NpcId.MERCENARY_CAPTAIN.id(), NpcId.MERCENARY_ESCAPEGATES.id(),
 				NpcId.CAPTAIN_SIAD.id(), NpcId.MINING_SLAVE.id(), NpcId.BEDABIN_NOMAD.id(), NpcId.BEDABIN_NOMAD_GUARD.id(),
 				NpcId.AL_SHABIM.id(), NpcId.MERCENARY_LIFTPLATFORM.id(), NpcId.ANA.id());
-	}
-
-	@Override
-	public boolean blockIndirectTalkToNpc(Player player, Npc n) {
-		return n.getID() == NpcId.AL_SHABIM.id();
 	}
 
 	private void irenaDialogue(Player player, Npc n, int cID) {
@@ -1540,10 +1535,10 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 		}
 	}
 
-	private void alShabimDialogue(Player player, Npc n, int cID) {
+	private static void alShabimDialogue(Player player, Npc n, int cID) {
 		if (n.getID() == NpcId.AL_SHABIM.id()) {
 			if (cID == -1) {
-				switch (player.getQuestStage(this)) {
+				switch (player.getQuestStage(Quests.TOURIST_TRAP)) {
 					case 0:
 					case 1:
 					case 2:
@@ -1587,7 +1582,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 									"Bring us back the plans inside the chest, they should be sealed.",
 									"All haste to you Effendi!");
 								give(player, ItemId.BEDOBIN_COPY_KEY.id(), 1);
-								player.updateQuestStage(this, 6);
+								player.updateQuestStage(Quests.TOURIST_TRAP, 6);
 							} else if (opt == 1) {
 								npcsay(player, n, "Very well Effendi!");
 							}
@@ -1654,7 +1649,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 							alShabimDialogue(player, n, AlShabim.HAVE_PLANS);
 							return;
 						}
-						if (player.getQuestStage(this) == 8) {
+						if (player.getQuestStage(Quests.TOURIST_TRAP) == 8) {
 							npcsay(player, n, "Hello Effendi!",
 								"Many thanks with your help previously Effendi!");
 							if (player.getCarriedItems().hasCatalogID(ItemId.TENTI_PINEAPPLE.id(), Optional.of(false))) {
@@ -1741,8 +1736,8 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 									"You have the plans and the all the items needed, ",
 									"You should be able to complete the item on your own.",
 									"Please bring me the item when it is finished.");
-								if (player.getQuestStage(this) == 6) {
-									player.updateQuestStage(this, 7);
+								if (player.getQuestStage(Quests.TOURIST_TRAP) == 6) {
+									player.updateQuestStage(Quests.TOURIST_TRAP, 7);
 								}
 							} else if (make == 1) {
 								npcsay(player, n, "As you wish effendi!",
@@ -1786,7 +1781,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 					player.message("********************************************************************");
 					player.message("*** You can now make a new weapon type: Throwing dart. ***");
 					player.message("********************************************************************");
-					player.updateQuestStage(this, 8); //>= 8 or -1 for throwing darts.
+					player.updateQuestStage(Quests.TOURIST_TRAP, 8); //>= 8 or -1 for throwing darts.
 					break;
 			}
 		}
@@ -2384,12 +2379,11 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, IndirectTalk
 		}
 	}
 
-	@Override
-	public void onIndirectTalkToNpc(Player player, final Npc n) {
+	public static void indirectTalktoAlShabim(Player player, final Npc n) {
 		if (n.getID() == NpcId.AL_SHABIM.id()) {
-			if (player.getQuestStage(this) == 6 || player.getQuestStage(this) == 7) {
+			if (player.getQuestStage(Quests.TOURIST_TRAP) == 6 || player.getQuestStage(Quests.TOURIST_TRAP) == 7) {
 				alShabimDialogue(player, n, AlShabim.HAVE_PLANS);
-			} else if (player.getQuestStage(this) > 7 || player.getQuestStage(this) == -1) {
+			} else if (player.getQuestStage(Quests.TOURIST_TRAP) > 7 || player.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				mes(player, "Al Shabim takes the technical plans off you.");
 				npcsay(player, n, "Thanks for the technical plans Effendi!",
 					"We've been lost without them!");

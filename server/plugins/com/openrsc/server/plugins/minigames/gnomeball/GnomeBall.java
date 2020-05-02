@@ -94,7 +94,7 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 				gnome_team = ifnearvisnpc(player, GnomeNpcs.GNOME_BALLER_SOUTH, 10);
 			}
 			if (gnome_team != null) {
-				gnome_team.initializeIndirectTalkScript(player);
+				GnomeNpcs.passToTeam(player, gnome_team);
 			}
 		} else if (playerZone == Zone.ZONE_1XP_OUTER || playerZone == Zone.ZONE_1XP_INNER) {
 			player.setAttribute("throwing_ball_game", true);

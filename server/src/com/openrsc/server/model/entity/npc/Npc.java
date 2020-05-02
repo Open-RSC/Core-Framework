@@ -617,17 +617,6 @@ public class Npc extends Mob {
 		});
 	}
 
-	public void initializeIndirectTalkScript(final Player player) {
-		final Npc npc = this;
-		//p.setBusyTimer(600);
-		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Indirect Talk Script") {
-			@Override
-			public void action() {
-				getWorld().getServer().getPluginHandler().handlePlugin(player, "IndirectTalkToNpc", new Object[]{player, npc});
-			}
-		});
-	}
-
 	public void remove() {
 		double respawnMult = getWorld().getServer().getConfig().NPC_RESPAWN_MULTIPLIER;
 

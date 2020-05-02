@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.*;
-import com.openrsc.server.plugins.minigames.gnomeball.GnomeField.Zone;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -15,8 +14,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRangeNpcTrigger,
-	TalkNpcTrigger, OpNpcTrigger, IndirectTalkToNpcTrigger {
+public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRangeNpcTrigger, TalkNpcTrigger, OpNpcTrigger {
 
 	private static final int[] GNOME_BALLERS_ZONE_PASS = {605, 606, 607, 608};
 	private static final int[] GNOME_BALLERS_ZONE1XP_OUTER = {603, 604};
@@ -223,42 +221,48 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
 		if (n.getID() == GNOME_BALLER_NORTH || n.getID() == GNOME_BALLER_SOUTH) {
-			Zone currentZone = GnomeField.getInstance().resolvePositionToZone(player);
-			if (currentZone == GnomeField.Zone.ZONE_NO_PASS) {
-				player.message("you can't make the pass from here");
-			}
-			else if (currentZone == GnomeField.Zone.ZONE_PASS) {
-				if (!player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
-					player.message("you need the ball first");
-				}
-				else {
-					player.setAttribute("throwing_ball_game", true);
-					player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, n, 3) {
-						@Override
-						public void doSpell() {
-						}
-					});
-					player.message("you pass the ball to the gnome");
-					player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
-					npcsay(player, n, 100, "run long..");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 8);
-					player.message("the gnome throws you a long ball");
-					give(player, ItemId.GNOME_BALL.id(), 1);
-					player.setAttribute("throwing_ball_game", false);
-				}
-			}
-			else if (command.equals("pass to")) {
-				if (!player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
-					player.message("you need the ball first");
-				} else {
-					player.message("you can't make the pass from here");
-				}
+			if(command.equalsIgnoreCase("pass to")) {
+				passToTeam(player, n);
 			}
 		} else if (DataConversions.inArray(GNOME_BALLERS_ZONE_PASS, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE2XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_INNER, n.getID())) {
 			tackleGnomeBaller(player, n);
+		}
+	}
+
+	protected static void passToTeam(Player player, Npc n) {
+		GnomeField.Zone currentZone = GnomeField.getInstance().resolvePositionToZone(player);
+		if (currentZone == GnomeField.Zone.ZONE_NO_PASS) {
+			player.message("you can't make the pass from here");
+		}
+		else if (currentZone == GnomeField.Zone.ZONE_PASS) {
+			if (!player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
+				player.message("you need the ball first");
+			}
+			else {
+				player.setAttribute("throwing_ball_game", true);
+				player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, n, 3) {
+					@Override
+					public void doSpell() {
+					}
+				});
+				player.message("you pass the ball to the gnome");
+				player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
+				npcsay(player, n, 100, "run long..");
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 8);
+				player.message("the gnome throws you a long ball");
+				give(player, ItemId.GNOME_BALL.id(), 1);
+				player.setAttribute("throwing_ball_game", false);
+			}
+		}
+		else {
+			if (!player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
+				player.message("you need the ball first");
+			} else {
+				player.message("you can't make the pass from here");
+			}
 		}
 	}
 
@@ -287,21 +291,4 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 			}
 		}
 	}
-
-	//this should only happens when player passes ball to gnome baller (team)
-	@Override
-	public void onIndirectTalkToNpc(Player player, Npc n) {
-		if (n.getID() == GNOME_BALLER_NORTH || n.getID() == GNOME_BALLER_SOUTH) {
-			//pass to -> direct use of command
-			//pass -> passing via gnome ball's shoot (requires player to be in correct position)
-			this.onOpNpc(player, n, "pass");
-		}
-	}
-
-	//work around, technically these should be on command but wasnt being triggered
-	@Override
-	public boolean blockIndirectTalkToNpc(Player player, Npc n) {
-		return n.getID() == GNOME_BALLER_NORTH || n.getID() == GNOME_BALLER_SOUTH;
-	}
-
 }
