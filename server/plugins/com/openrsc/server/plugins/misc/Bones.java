@@ -35,19 +35,22 @@ public class Bones implements OpInvTrigger {
 
 
 	private void buryBones(Player player, Item item, int repeat) {
-		player.message("You dig a hole in the ground");
 		Item toRemove = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false)));
+		if(toRemove == null) return;
+
+		player.message("You dig a hole in the ground");
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		player.message("You bury the " + item.getDef(player.getWorld()).getName().toLowerCase());
-		if (player.getCarriedItems().remove(toRemove) > -1) {
-			giveBonesExperience(player, item);
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
-			if (player.hasMoved()) return;
-			repeat--;
-			if (repeat > 0 && player.getCarriedItems().getInventory().countId(toRemove.getCatalogId(), Optional.of(false)) > 0) {
-				buryBones(player, item, repeat);
-			}
+		player.getCarriedItems().remove(toRemove);
+		giveBonesExperience(player, item);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0 && player.getCarriedItems().getInventory().countId(toRemove.getCatalogId(), Optional.of(false)) > 0) {
+			buryBones(player, item, repeat);
 		}
 	}
 
