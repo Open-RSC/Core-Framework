@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.defaults;
 
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -16,6 +15,8 @@ import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 /**
  * We do not need to block, as everything that is not handled has a default here
@@ -139,79 +140,65 @@ public class Default implements DefaultHandler,
 	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		// TODO: For runescript compatibility, all of the calls to getCurrentAction/setCurrentAction should be done in the drop handler.
 
-		final int finalAmount = item.getAmount(); // Possibly more than 1 for non-stack items, in this situation.
+		// Get the amount to drop from our temporary item construct.
+		int amountToDrop = item.getAmount();
+		batchDrop(player, item, fromInventory, amountToDrop);
+	}
 
-		// We need to figure out how many times MAX to loop the batch.
-		int slotsOccupiedByItem = player.getCarriedItems().getInventory().countSlotsOccupied(item, finalAmount);
+	private void batchDrop(Player player, Item item, Boolean fromInventory, int amountToDrop) {
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Player Batch Drop", slotsOccupiedByItem, false, true) {
-			int dropCount = 0;
+		// Grab the last item by the ID we are trying to drop.
+		if (fromInventory) {
+			item = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted()))
+			);
+		}
+		else {
+			item = player.getCarriedItems().getEquipment().get(
+				player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())
+			);
+		}
 
-			public void action() {
-				// Player doesn't have the item in their inventory.
-				if (!getOwner().getCarriedItems().getInventory().contains(item) && fromInventory) {
-					stop();
-					return;
-				}
-				// Player moved after queuing up a drop.
-				if (getOwner().hasMoved()) {
-					stop();
-					return;
-				}
-				// We've exceeded the amount we requested to drop.
-				if (dropCount >= finalAmount) {
-					stop();
-					return;
-				}
-				// We don't have any more in the inventory to drop.
-				if ((fromInventory && !getOwner().getCarriedItems().hasCatalogID(item.getCatalogId(), Optional.of(item.getNoted()))) ||
-					(!fromInventory && (getOwner().getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) == -1)) {
-					getOwner().message("You don't have the entered amount to drop");
-					stop();
-					return;
-				}
-				// Grab the last item by the ID we are trying to drop.
-				Item i = null;
-				if (fromInventory) {
-					i = getOwner().getCarriedItems().getInventory().get(
-						getOwner().getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted()))
-					);
-				}
-				else {
-					i = getOwner().getCarriedItems().getEquipment().get(
-						getOwner().getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())
-					);
-				}
-				// Set temporary amount for dropping.
-				Item toDrop = new Item(i.getCatalogId(), Math.min(finalAmount, i.getAmount()), i.getNoted(), i.getItemId());
+		if (item == null) {
+			player.message("You don't have the entered amount to drop");
+			return;
+		}
 
-				if (fromInventory) {
-					if (player.getCarriedItems().remove(toDrop) < 0) {
-						return;
-					}
-				} else {
-					int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(toDrop.getCatalogId());
-					if (slot == -1 || player.getCarriedItems().getEquipment().get(slot).getAmount() != toDrop.getAmount()) {
-						return;
-					}
-					player.getCarriedItems().getEquipment().remove(toDrop, toDrop.getAmount());
-					ActionSender.sendEquipmentStats(player);
-					if (toDrop.getDef(player.getWorld()).getWieldPosition() < 12)
-						player.updateWornItems(toDrop.getDef(player.getWorld()).getWieldPosition(), player.getSettings().getAppearance().getSprite(toDrop.getDef(player.getWorld()).getWieldPosition()));
-				}
-
-				GroundItem groundItem = new GroundItem(player.getWorld(), toDrop.getCatalogId(), player.getX(), player.getY(), toDrop.getAmount(), player, toDrop.getNoted());
-				ActionSender.sendSound(player, "dropobject");
-				player.getWorld().registerItem(groundItem, player.getWorld().getServer().getConfig().GAME_TICK * 300);
-				player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped " + toDrop.getDef(player.getWorld()).getName() + " x"
-					+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
-
-				dropCount += toDrop.getAmount();
-
-				if (finalAmount > 1)
-					getOwner().message("Dropped " + Math.min(dropCount, finalAmount) + "/" + finalAmount);
+		int removingThisIteration = 1;
+		if (fromInventory) {
+			// Stacks or notes need to check their amount compared to the amount to drop.
+			if (item.getAmount() > 1) {
+				removingThisIteration = Math.min(amountToDrop, item.getAmount());
 			}
-		});
+			player.getCarriedItems().remove(new Item(item.getCatalogId(), removingThisIteration));
+			amountToDrop -= removingThisIteration;
+		} else {
+			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId());
+			if (slot == -1) return;
+
+			// Always remove all when from equipment.
+			removingThisIteration = item.getAmount();
+			player.getCarriedItems().getEquipment().remove(item, removingThisIteration);
+			ActionSender.sendEquipmentStats(player);
+			if (item.getDef(player.getWorld()).getWieldPosition() < 12) {
+				player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(), player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()));
+			}
+			amountToDrop = 0;
+		}
+
+		GroundItem groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), removingThisIteration, player, item.getNoted());
+		ActionSender.sendSound(player, "dropobject");
+		player.getWorld().registerItem(groundItem, player.getWorld().getServer().getConfig().GAME_TICK * 300);
+		player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped " + item.getDef(player.getWorld()).getName() + " x"
+			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
+
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		if (amountToDrop > 0) {
+			batchDrop(player, item, fromInventory, amountToDrop);
+		}
 	}
 
 	@Override
