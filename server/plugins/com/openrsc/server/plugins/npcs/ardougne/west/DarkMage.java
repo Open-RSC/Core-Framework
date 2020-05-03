@@ -19,9 +19,17 @@ public class DarkMage implements TalkNpcTrigger {
 		if (n.getID() == NpcId.DARK_MAGE.id()) {
 			say(player, n, "hello there");
 			npcsay(player, n, "why do do you interupt me traveller?");
-			say(player, n, "i just wondered what you're doing?");
-			npcsay(player, n, "i experiment with dark magic",
-				"it's a dangerous craft");
+			if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 0) {
+				say(player, n, "i'm just looking around");
+				npcsay(player, n, "there's nothing to see here",
+					"just despair and death");
+				return;
+			}
+			else {
+				say(player, n, "i just wondered what you're doing?");
+				npcsay(player, n, "i experiment with dark magic",
+					"it's a dangerous craft");
+			}
 			if (player.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_IBAN_BROKEN.id(), Optional.of(false)) && player.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
 				say(player, n, "could you fix this staff?");
 				player.message("you show the mage your staff of iban");
