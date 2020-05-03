@@ -534,11 +534,11 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		return false;
 	}
 
-	private boolean doGrind(Player player, final Item mortar,
+	private void doGrind(Player player, final Item mortar,
 							final Item item) {
 		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
-			return false;
+			return;
 		}
 		int newID;
 		switch (ItemId.getById(item.getCatalogId())) {
@@ -565,24 +565,35 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			 * End of Herblaw Quest Items.
 			 */
 			default:
-				return false;
+				return;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player,
-			player.getWorld().getServer().getConfig().GAME_TICK,
-			"Herblaw Grind", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
-			@Override
-			public void action() {
-				if (getOwner().getCarriedItems().remove(item) > -1) {
-					if (item.getCatalogId() != ItemId.A_LUMP_OF_CHARCOAL.id()) {
-						getOwner().playerServerMessage(MessageType.QUEST, "You grind the " + item.getDef(getWorld()).getName()
-							+ " to dust");
-					}
-					thinkbubble(getOwner(), new Item(ItemId.PESTLE_AND_MORTAR.id()));
-					getOwner().getCarriedItems().getInventory().add(new Item(newID, 1));
 
-				}
-			}
-		});
-		return true;
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
+		}
+		batchGrind(player, item, newID, repeat);
+	}
+
+	private void batchGrind(Player player, Item item, int newID, int repeat) {
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		if (item == null) return;
+		player.getCarriedItems().remove(item);
+		if (item.getCatalogId() != ItemId.A_LUMP_OF_CHARCOAL.id()) {
+			player.playerServerMessage(MessageType.QUEST, "You grind the " + item.getDef(player.getWorld()).getName()
+				+ " to dust");
+		}
+		thinkbubble(player, new Item(ItemId.PESTLE_AND_MORTAR.id()));
+		player.getCarriedItems().getInventory().add(new Item(newID, 1));
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			batchGrind(player, item, newID, repeat);
+		}
 	}
 }
