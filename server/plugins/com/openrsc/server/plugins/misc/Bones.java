@@ -19,6 +19,7 @@ public class Bones implements OpInvTrigger {
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (command.equalsIgnoreCase("bury")) {
+
 			if (item.getNoted()) {
 				player.message("You can't bury noted bones");
 				return;

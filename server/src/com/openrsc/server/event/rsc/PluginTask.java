@@ -4,6 +4,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.ScriptContext;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.plugins.PluginInterruptedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -81,7 +82,7 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 			setThreadRunning(true);
 			setTickCompleted(false);
 		} catch (final InterruptedException ex) {
-			throw new PluginInterruptedException();
+			throw new PluginInterruptedException("pause() was interrupted", ex);
 		}
 	}
 
@@ -140,6 +141,4 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	public synchronized ScriptContext getScriptContext() {
 		return scriptContext;
 	}
-
-	public class PluginInterruptedException extends RuntimeException {}
 }

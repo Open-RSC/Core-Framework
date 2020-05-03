@@ -483,6 +483,14 @@ public class Functions {
 		return newNpc;
 	}
 
+	public static void end() {
+		throw new PluginInterruptedException("Plugin Ended");
+	}
+
+	/**
+	 * Functions below here are not in the Runescript API documentation
+	 */
+
 	/**
 	 * Checks if player has an item in bank, and returns true/false.
 	 *
@@ -497,6 +505,10 @@ public class Functions {
 	public static boolean ifbankorheld(Player player, int id) {
 		return ifbank(player, id) || ifheld(player, id);
 	}
+
+	/**
+	 * Functions below here are Runescript API added to support custom features
+	 */
 
 	private static String showbankpin(Player player) {
 		ActionSender.sendBankPinInterface(player);
@@ -630,6 +642,14 @@ public class Functions {
 
 		return player.getAttribute("bankpin", false);
 	}
+
+	public static boolean ifbatchinterrupted() {
+		return false;
+	}
+
+	/**
+	 * Functions below here are not Runescript API
+	 */
 
 	public static boolean inArray(Object o, Object... oArray) {
 		for (Object object : oArray) {
