@@ -1082,7 +1082,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Thug", "He likes hitting things", "", 19, 20, 18, 17, true, sprites, 1, 2, 255, 15523536, 155, 230, 6, 6, 5, i++));
 		sprites = new int[]{156, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Firebird", "Probably not a chicken", "", 6, 7, 5, 7, true, sprites, 0, 0, 0, 0, 70, 62, 6, 6, 5, i++));
-		sprites = new int[]{3, 59, 41, 102, 113, 74, -1, -1, -1, -1, -1, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{3, 59, 41, 102, 113, 74, -1, -1, -1, -1, -1, -384};
+		} else {
+			sprites = new int[]{3, 59, 41, 102, 113, 74, -1, -1, -1, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Achetties", "One of Asgarnia's greatest heros", "", 45, 50, 42, 48, false, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{7, 4, 44, 100, 118, -1, -1, -1, 155, -1, -1, 64};
 		npcs.add(new NPCDef("Ice queen", "The leader of the ice warriors", "", 105, 101, 104, 104, true, sprites, 6724027, 8425710, 8425710, 5623807, 150, 250, 6, 6, 5, i++));
