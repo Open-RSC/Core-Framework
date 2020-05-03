@@ -54,7 +54,7 @@ public class PluginTickEvent extends GameTickEvent {
 		}
 
 		// Wait for the plugin to get to a pause point or finish completely. This also waits for the PluginTask to start which is also intended to run plugin code on tick bounds.
-		while(!getPluginTask().isInitialized() || (getPluginTask().isThreadRunning() && getPluginTask().isTickCompleted() && !getFuture().isDone())) {
+		while((!getPluginTask().isInitialized() || (getPluginTask().isThreadRunning() && !getPluginTask().isTickCompleted())) && !getFuture().isDone()) {
 			try {
 				Thread.sleep(1);
 			} catch (final InterruptedException ex) {

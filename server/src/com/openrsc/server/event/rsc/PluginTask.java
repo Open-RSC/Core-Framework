@@ -64,6 +64,8 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 
 	public void run() {
 		setDelayTicks(0);
+		setThreadRunning(true);
+		setTickCompleted(false);
 		notifyAll();
 	}
 
