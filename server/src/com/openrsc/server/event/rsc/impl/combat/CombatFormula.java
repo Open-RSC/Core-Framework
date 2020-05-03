@@ -115,7 +115,8 @@ class CombatFormula {
 	public static int doMeleeDamage(final Mob source, final Mob victim) {
 		boolean isHit = calculateMeleeAccuracy(source, victim);
 		boolean wasHit = isHit;
-		boolean cape = false;
+		final int damage = calculateMeleeDamage(source);
+		boolean critical = false;
 		if (source instanceof Player) {
 			while(SkillCapes.shouldActivate((Player)source, ATTACK_CAPE, isHit)){
 				isHit = calculateMeleeAccuracy(source, victim);
@@ -123,13 +124,18 @@ class CombatFormula {
 			if (!wasHit && isHit)
 				((Player) source).message("Your Attack cape has prevented a zero hit");
 
-			cape = SkillCapes.shouldActivate((Player)source, STRENGTH_CAPE, isHit);
-			if (cape) {
-				((Player) source).message("Your Strength cape has granted you a critical hit");
+			final double maximum = getMeleeDamage(source);
+			if (damage >= maximum - (maximum * 0.2)) {
+				critical = SkillCapes.shouldActivate((Player) source, STRENGTH_CAPE, isHit);
+				if (critical) {
+					((Player) source).message("Your Strength cape has granted you a critical hit");
+				}
 			}
 		}
+		
 		//LOGGER.info(source + " " + (isHit ? "hit" : "missed") + " " + victim + ", Damage: " + damage);
-		return isHit ? calculateMeleeDamage(source) + (cape ? 1 : 0) : 0;
+
+		return isHit ? damage + (critical ? 1 : 0) : 0;
 	}
 
 	/**
