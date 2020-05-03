@@ -10,6 +10,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.npcs.tutorial.FishingInstructor;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -200,7 +201,7 @@ public class ObjectCooking implements UseLocTrigger {
 			}
 
 			// Repeat
-			if (player.hasMoved()) return;
+			if (ifinterrupted()) return;
 			repeat--;
 			if (repeat > 0) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
@@ -232,22 +233,34 @@ public class ObjectCooking implements UseLocTrigger {
 	}
 
 	private void cookMethod(final Player player, final int itemID, final int product, final boolean hasBubble, final String... messages) {
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Cooking on Object", player.getCarriedItems().getInventory().countId(itemID), false) {
-			@Override
-			public void action() {
-				if (player.getCarriedItems().hasCatalogID(itemID, Optional.of(false))) {
-					if (hasBubble)
-						thinkbubble(player, new Item(itemID));
-					player.playSound("cooking");
-					mes(player, messages);
-					player.getCarriedItems().remove(new Item(itemID));
-					give(player, product, 1);
-				} else {
-					player.message("You don't have all the ingredients");
-					interruptBatch();
-				}
-			}
-		});
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(itemID);
+		}
+		batchInedibleCooking(player, itemID, product, hasBubble, repeat, messages);
+	}
+
+	private void batchInedibleCooking(Player player, int itemID, int product, boolean hasBubble, int repeat, String... messages) {
+		if (player.getCarriedItems().hasCatalogID(itemID, Optional.of(false))) {
+			if (hasBubble)
+				thinkbubble(player, new Item(itemID));
+			player.playSound("cooking");
+			mes(player, messages);
+			player.getCarriedItems().remove(new Item(itemID));
+			give(player, product, 1);
+		} else {
+			player.message("You don't have all the ingredients");
+			return;
+		}
+
+		// TODO: Add back when `mes` is changed to not use a timer (if it ever is).
+		// delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		if (ifinterrupted()) return;
+		repeat--;
+		if (repeat > 0) {
+			batchInedibleCooking(player, itemID, product, hasBubble, repeat, messages);
+		}
 	}
 
 	private String cookingOnMessage(Player player, Item item, GameObject object, boolean needsOven) {
