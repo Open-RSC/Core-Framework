@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -18,19 +17,28 @@ public final class Pick implements OpLocTrigger {
 			|| /* Flax */obj.getID() == 313;
 	}
 
-	private void handleCropPickup(final Player player, int objID, String pickMessage) {
-		int delayTime = player.getWorld().getServer().getConfig().GAME_TICK;
+	private void handleCropPickup(final Player player, int objId, String pickMessage) {
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().getFreeSlots();
+		}
+		batchCropPickup(player, objId, pickMessage, repeat);
+	}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, delayTime, "Pick Vegetal", 30, true) {
-			@Override
-			public void action() {
-				getOwner().playerServerMessage(MessageType.QUEST, pickMessage);
-				give(getOwner(), objID, 1);
-				getOwner().playSound("potato");
-				if (getOwner().getCarriedItems().getInventory().full())
-					interruptBatch();
-			}
-		});
+	private void batchCropPickup(Player player, int objId, String pickMessage, int repeat) {
+		player.playerServerMessage(MessageType.QUEST, pickMessage);
+		give(player, objId, 1);
+		player.playSound("potato");
+
+		if (player.getCarriedItems().getInventory().full()) return;
+
+		if (ifinterrupted()) return;
+
+		repeat--;
+		if (repeat > 0) {
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			batchCropPickup(player, objId, pickMessage, repeat);
+		}
 	}
 
 	@Override
