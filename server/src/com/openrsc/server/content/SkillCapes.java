@@ -7,6 +7,9 @@ import com.openrsc.server.util.rsc.DataConversions;
 public class SkillCapes {
 
 	public static boolean shouldActivate(Player player, ItemId cape, boolean parameter) {
+		if (!player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES)
+			return false;
+
 		if (!player.getCarriedItems().getEquipment().hasEquipped(cape.id()))
 			return false;
 
@@ -22,6 +25,9 @@ public class SkillCapes {
 	}
 
 	public static boolean shouldActivate(Player player, ItemId cape) {
+		if (!player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES)
+			return false;
+
 		if (!player.getCarriedItems().getEquipment().hasEquipped(cape.id()))
 			return false;
 
@@ -38,6 +44,9 @@ public class SkillCapes {
 	}
 
 	public static int shouldActivateInt(Player player, ItemId cape) {
+		if (!player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES)
+			return -1;
+
 		if (!player.getCarriedItems().getEquipment().hasEquipped(cape.id()))
 			return -1;
 
@@ -45,7 +54,6 @@ public class SkillCapes {
 			case FISHING_CAPE:
 				return fishingCape();
 		}
-
 		return -1;
 	}
 
