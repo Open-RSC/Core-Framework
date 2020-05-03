@@ -12,8 +12,10 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -21,74 +23,95 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
+	private static int[] unidentifiedHerbs = {
+		ItemId.UNIDENTIFIED_GUAM_LEAF.id(),
+		ItemId.UNIDENTIFIED_MARRENTILL.id(),
+		ItemId.UNIDENTIFIED_TARROMIN.id(),
+		ItemId.UNIDENTIFIED_HARRALANDER.id(),
+		ItemId.UNIDENTIFIED_RANARR_WEED.id(),
+		ItemId.UNIDENTIFIED_IRIT_LEAF.id(),
+		ItemId.UNIDENTIFIED_AVANTOE.id(),
+		ItemId.UNIDENTIFIED_KWUARM.id(),
+		ItemId.UNIDENTIFIED_CADANTINE.id(),
+		ItemId.UNIDENTIFIED_DWARF_WEED.id(),
+		ItemId.UNIDENTIFIED_TORSTOL.id(),
+		ItemId.UNIDENTIFIED_SNAKE_WEED.id(),
+		ItemId.UNIDENTIFIED_ARDRIGAL.id(),
+		ItemId.UNIDENTIFIED_SITO_FOIL.id(),
+		ItemId.UNIDENTIFIED_VOLENCIA_MOSS.id(),
+		ItemId.UNIDENTIFIED_ROGUES_PURSE.id()
+	};
+
 	@Override
 	public void onOpInv(Player player, Integer invIndex, final Item item, String command) {
-		if (command.equalsIgnoreCase("Identify")) {
+		if (DataConversions.inArray(unidentifiedHerbs, item.getCatalogId()) && command.equalsIgnoreCase("Identify")) {
 			handleHerbIdentify(item, player);
 		}
 	}
 
-	public boolean blockOpInv(Player player, Integer invIndex, final Item i, String command) {
-		return command.equalsIgnoreCase("Identify");
+	public boolean blockOpInv(Player player, Integer invIndex, final Item item, String command) {
+		return DataConversions.inArray(unidentifiedHerbs, item.getCatalogId()) && command.equalsIgnoreCase("Identify");
 	}
 
-	private boolean handleHerbIdentify(final Item item, Player player) {
+	private void handleHerbIdentify(final Item herb, Player player) {
 		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
-			return false;
+			return;
 		}
-		ItemUnIdentHerbDef herb = item.getUnIdentHerbDef(player.getWorld());
-		if (herb == null) {
-			return false;
+		ItemUnIdentHerbDef herbDef = herb.getUnIdentHerbDef(player.getWorld());
+		if (herbDef == null) {
+			return;
 		}
-		if (player.getSkills().getLevel(Skills.HERBLAW) < herb.getLevelRequired()) {
+		if (player.getSkills().getLevel(Skills.HERBLAW) < herbDef.getLevelRequired()) {
 			player.playerServerMessage(MessageType.QUEST, "You cannot identify this herb");
 			player.playerServerMessage(MessageType.QUEST, "you need a higher herblaw level");
-			return false;
+			return;
 		}
 		if (player.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
 			player.message("You need to complete Druidic ritual quest first");
-			return false;
+			return;
 		}
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Herblaw Identify Herb", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
-			@Override
-			public void action() {
-				Player owner = getOwner();
-				if (owner.getSkills().getLevel(Skills.HERBLAW) < herb.getLevelRequired()) {
-					owner.playerServerMessage(MessageType.QUEST, "You cannot identify this herb");
-					owner.playerServerMessage(MessageType.QUEST, "you need a higher herblaw level");
-					interruptBatch();
-					return;
-				}
-				if (owner.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
-					owner.message("You need to complete Druidic ritual quest first");
-					interruptBatch();
-					return;
-				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to identify this herb");
-						interruptBatch();
-						return;
-					}
-				}
-				ItemUnIdentHerbDef herb = item.getUnIdentHerbDef(getWorld());
-				Item newItem = new Item(herb.getNewId());
-				Item i = owner.getCarriedItems().getInventory().get(
-					owner.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false)));
-				if (i == null) return;
-				Item herbToRemove = new Item(i.getCatalogId(), 1, false, i.getItemId());
-				if (owner.getCarriedItems().remove(herbToRemove) > -1) {
-					owner.getCarriedItems().getInventory().add(newItem,true);
-					owner.playerServerMessage(MessageType.QUEST, "This herb is " + newItem.getDef(getWorld()).getName());
-					owner.incExp(Skills.HERBLAW, herb.getExp(), true);
-				}
-				owner.setBusy(false);
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(herb.getCatalogId());
+		}
+		batchIdentify(player, herb, herbDef, repeat);
+	}
+
+	private void batchIdentify(Player player, Item herb, ItemUnIdentHerbDef herbDef, int repeat) {
+		if (player.getSkills().getLevel(Skills.HERBLAW) < herbDef.getLevelRequired()) {
+			player.playerServerMessage(MessageType.QUEST, "You cannot identify this herb");
+			player.playerServerMessage(MessageType.QUEST, "you need a higher herblaw level");
+			return;
+		}
+		if (player.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
+			player.message("You need to complete Druidic ritual quest first");
+			return;
+		}
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to identify this herb");
+				return;
 			}
-		});
-		return true;
+		}
+		Item newItem = new Item(herbDef.getNewId());
+		Item herbToRemove = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(herb.getCatalogId(), Optional.of(false)));
+		if (herbToRemove == null) return;
+		player.getCarriedItems().remove(herbToRemove);
+		player.getCarriedItems().getInventory().add(newItem);
+		player.playerServerMessage(MessageType.QUEST, "This herb is " + newItem.getDef(player.getWorld()).getName());
+		player.incExp(Skills.HERBLAW, herbDef.getExp(), true);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			batchIdentify(player, herb, herbDef, repeat);
+		}
 	}
 
 	@Override
@@ -281,14 +304,13 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		return false;
 	}
 
-	private boolean doHerblaw(Player player, final Item vial,
-							  final Item herb) {
+	private void doHerblaw(Player player, final Item vial, final Item herb) {
 		int vialID = vial.getCatalogId();
 		int herbID = herb.getCatalogId();
 		CarriedItems carriedItems = player.getCarriedItems();
 		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
-			return false;
+			return;
 		}
 		if (vialID == ItemId.VIAL.id() && herbID == ItemId.GROUND_BAT_BONES.id()) {
 			player.message("You mix the ground bones into the water");
@@ -297,97 +319,101 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				"It's useless...");
 			carriedItems.remove(new Item(vialID));
 			carriedItems.remove(new Item(herbID));
-			carriedItems.getInventory().add(new Item(ItemId.EMPTY_VIAL.id(), 1));
-			return false;
+			carriedItems.getInventory().add(new Item(ItemId.EMPTY_VIAL.id()));
+			return;
 		}
 		if (vialID == ItemId.VIAL.id() && herbID == ItemId.JANGERBERRIES.id()) {
 			player.message("You mix the berries into the water");
 			carriedItems.remove(new Item(vialID));
 			carriedItems.remove(new Item(herbID));
-			carriedItems.getInventory().add(new Item(ItemId.UNFINISHED_POTION.id(), 1));
-			return false;
+			carriedItems.getInventory().add(new Item(ItemId.UNFINISHED_POTION.id()));
+			return;
 		}
 		if (vialID == ItemId.VIAL.id() && herbID == ItemId.ARDRIGAL.id()) {
 			player.message("You put the ardrigal herb into the watervial.");
 			player.message("You make a solution of Ardrigal.");
 			carriedItems.remove(new Item(vialID));
 			carriedItems.remove(new Item(herbID));
-			carriedItems.getInventory().add(new Item(ItemId.ARDRIGAL_SOLUTION.id(), 1));
-			return false;
+			carriedItems.getInventory().add(new Item(ItemId.ARDRIGAL_SOLUTION.id()));
+			return;
 		}
 		if (vialID == ItemId.VIAL.id() && herbID == ItemId.SNAKE_WEED.id()) {
 			player.message("You put the Snake Weed herb into the watervial.");
 			player.message("You make a solution of Snake Weed.");
 			carriedItems.remove(new Item(vialID));
 			carriedItems.remove(new Item(herbID));
-			carriedItems.getInventory().add(new Item(ItemId.SNAKES_WEED_SOLUTION.id(), 1));
-			return false;
+			carriedItems.getInventory().add(new Item(ItemId.SNAKES_WEED_SOLUTION.id()));
+			return;
 		}
 		final ItemHerbDef herbDef = player.getWorld().getServer().getEntityHandler().getItemHerbDef(herbID);
 		if (herbDef == null) {
-			return false;
+			return;
 		}
-		int repeatTimes = 1;
-		boolean allowDuplicateEvents = true;
+		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-			repeatTimes = Math.min(player.getCarriedItems().getInventory().countId(vialID, Optional.of(false)),
+			repeat = Math.min(player.getCarriedItems().getInventory().countId(vialID, Optional.of(false)),
 				player.getCarriedItems().getInventory().countId(herbID, Optional.of(false)));
-			allowDuplicateEvents = false;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player,
-			player.getWorld().getServer().getConfig().GAME_TICK,
-			"Herblaw Make Potion", repeatTimes, false, allowDuplicateEvents) {
-			@Override
-			public void action() {
-				Player owner = getOwner();
-				CarriedItems ownerItems = owner.getCarriedItems();
-				if (owner.getSkills().getLevel(Skills.HERBLAW) < herbDef.getReqLevel()) {
-					owner.playerServerMessage(MessageType.QUEST, "you need level " + herbDef.getReqLevel()
-						+ " herblaw to make this potion");
-					interruptBatch();
-					return;
-				}
-				if (owner.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
-					owner.message("You need to complete Druidic ritual quest first");
-					interruptBatch();
-					return;
-				}
-				if (ownerItems.hasCatalogID(vialID)
-					&& ownerItems.hasCatalogID(herbID)) {
-					ownerItems.remove(new Item(vialID));
-					ownerItems.remove(new Item(herbID));
-					owner.playSound("mix");
-					owner.playerServerMessage(MessageType.QUEST, "You put the " + herb.getDef(getWorld()).getName()
-						+ " into the vial of water");
-					ownerItems.getInventory().add(
-						new Item(herbDef.getPotionId()));
-				} else {
-					interruptBatch();
-				}
-			}
-		});
-		return true;
+		batchPotionMaking(player, herb, herbDef, vial, repeat);
 	}
 
-	private boolean doHerbSecond(Player player, final Item second,
+	private void batchPotionMaking(Player player, Item herb, ItemHerbDef herbDef, Item vial, int repeat) {
+		CarriedItems ci = player.getCarriedItems();
+		if (player.getSkills().getLevel(Skills.HERBLAW) < herbDef.getReqLevel()) {
+			player.playerServerMessage(MessageType.QUEST, "you need level " + herbDef.getReqLevel()
+				+ " herblaw to make this potion");
+			return;
+		}
+		if (player.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
+			player.message("You need to complete Druidic ritual quest first");
+			return;
+		}
+
+		herb = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(herb.getCatalogId(), Optional.of(false))
+		);
+		vial = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(vial.getCatalogId(), Optional.of(false))
+		);
+		if (vial == null || herb == null) return;
+
+		ci.remove(new Item(vial.getCatalogId()));
+		ci.remove(new Item(herb.getCatalogId()));
+		player.playSound("mix");
+		player.playerServerMessage(MessageType.QUEST,
+			"You put the " + herb.getDef(player.getWorld()).getName() + " into the vial of water");
+		ci.getInventory().add(new Item(herbDef.getPotionId()));
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			batchPotionMaking(player, herb, herbDef, vial, repeat);
+		}
+	}
+
+	private void doHerbSecond(Player player, final Item second,
 								 final Item unfinished, final ItemHerbSecond def, final boolean isSwapped) {
 		int secondID = second.getCatalogId();
 		int unfinishedID = unfinished.getCatalogId();
 		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
-			return false;
+			return;
 		}
 		if (unfinishedID != def.getUnfinishedID()) {
-			return false;
+			return;
 		}
 		final AtomicReference<Item> bubbleItem = new AtomicReference<Item>();
 		bubbleItem.set(null);
+
 		// Shaman potion constraint
 		if (secondID == ItemId.JANGERBERRIES.id() && unfinishedID == ItemId.UNFINISHED_GUAM_POTION.id() &&
 			(player.getQuestStage(Quests.WATCHTOWER) >= 0 && player.getQuestStage(Quests.WATCHTOWER) < 6)) {
 			say(player, null, "Hmmm...perhaps I shouldn't try and mix these items together",
 				"It might have unpredictable results...");
-			return false;
+			return;
+
 		} else if (secondID == ItemId.JANGERBERRIES.id() && unfinishedID == ItemId.UNFINISHED_GUAM_POTION.id()) {
 			if (!isSwapped) {
 				bubbleItem.set(unfinished);
@@ -395,56 +421,59 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				bubbleItem.set(second);
 			}
 		}
-		int repeatTimes = 1;
-		boolean allowDuplicateEvents = true;
+
+		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-			repeatTimes = Math.min(player.getCarriedItems().getInventory().countId(secondID),
+			repeat = Math.min(player.getCarriedItems().getInventory().countId(secondID),
 				player.getCarriedItems().getInventory().countId(unfinishedID));
-			allowDuplicateEvents = false;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player,
-			player.getWorld().getServer().getConfig().GAME_TICK,
-			"Herblaw Make Potion", repeatTimes, false, allowDuplicateEvents) {
-			@Override
-			public void action() {
-				Player owner = getOwner();
-				if (owner.getSkills().getLevel(Skills.HERBLAW) < def.getReqLevel()) {
-					owner.playerServerMessage(MessageType.QUEST, "You need a herblaw level of "
-						+ def.getReqLevel() + " to make this potion");
-					interruptBatch();
-					return;
-				}
-				if (owner.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
-					owner.message("You need to complete Druidic ritual quest first");
-					interruptBatch();
-					return;
-				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& owner.getFatigue() >= owner.MAX_FATIGUE) {
-						owner.message("You are too tired to make this potion");
-						interruptBatch();
-						return;
-					}
-				}
-				CarriedItems carriedItems = owner.getCarriedItems();
-				if (carriedItems.hasCatalogID(secondID)
-					&& carriedItems.hasCatalogID(unfinishedID)) {
-					if (bubbleItem.get() != null) {
-						thinkbubble(owner, bubbleItem.get());
-					}
-					owner.playSound("mix");
-					owner.playerServerMessage(MessageType.QUEST, "You mix the " + second.getDef(getWorld()).getName()
-						+ " into your potion");
-					carriedItems.remove(new Item(secondID));
-					carriedItems.remove(new Item(unfinishedID));
-					carriedItems.getInventory().add(new Item(def.getPotionID(), 1));
-					owner.incExp(Skills.HERBLAW, def.getExp(), true);
-				} else
-					interruptBatch();
+		batchPotionSecondary(player, unfinished, second, def, bubbleItem, repeat);
+	}
+
+	private void batchPotionSecondary(Player player, Item unfinished, Item second, ItemHerbSecond def, AtomicReference<Item> bubbleItem, int repeat) {
+		if (player.getSkills().getLevel(Skills.HERBLAW) < def.getReqLevel()) {
+			player.playerServerMessage(MessageType.QUEST, "You need a herblaw level of "
+				+ def.getReqLevel() + " to make this potion");
+			return;
+		}
+		if (player.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
+			player.message("You need to complete Druidic ritual quest first");
+			return;
+		}
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to make this potion");
+				return;
 			}
-		});
-		return false;
+		}
+		CarriedItems carriedItems = player.getCarriedItems();
+		unfinished = carriedItems.getInventory().get(
+			carriedItems.getInventory().getLastIndexById(unfinished.getCatalogId(), Optional.of(false))
+		);
+		second = carriedItems.getInventory().get(
+			carriedItems.getInventory().getLastIndexById(second.getCatalogId(), Optional.of(false))
+		);
+		if (unfinished == null || second == null) return;
+
+		if (bubbleItem.get() != null) {
+			thinkbubble(player, bubbleItem.get());
+		}
+		player.playSound("mix");
+		player.playerServerMessage(MessageType.QUEST, "You mix the " + second.getDef(player.getWorld()).getName()
+			+ " into your potion");
+		carriedItems.remove(new Item(second.getCatalogId()));
+		carriedItems.remove(new Item(unfinished.getCatalogId()));
+		carriedItems.getInventory().add(new Item(def.getPotionID(), 1));
+		player.incExp(Skills.HERBLAW, def.getExp(), true);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+
+		// Repeat
+		if (player.hasMoved()) return;
+		repeat--;
+		if (repeat > 0) {
+			batchPotionSecondary(player, unfinished, second, def, bubbleItem, repeat);
+		}
 	}
 
 	private boolean makeLiquid(Player player, final Item ingredient,
