@@ -4,9 +4,19 @@ import io.netty.buffer.ByteBuf;
 
 public class Packet {
 	/**
+	 * Next Packet Number
+	 */
+	public static long nextPacketNumber = 0;
+
+	/**
 	 * The opcode.
 	 */
 	private final int opcode;
+
+	/**
+	 * The packet number.
+	 */
+	private final long packetNumber;
 
 	/**
 	 * The payload.
@@ -16,6 +26,7 @@ public class Packet {
 	public Packet(final int opcode, final ByteBuf payload) {
 		this.opcode = opcode;
 		this.payload = payload;
+		this.packetNumber = getNextPacketNumber();
 	}
 
 	/**
@@ -171,5 +182,13 @@ public class Packet {
 	public int getSmart08_16() {
 		int var2 = 255 & (getBuffer().getByte(getBuffer().readerIndex()) & 0xFF);
 		return var2 < 128 ? getBuffer().readUnsignedByte() : getBuffer().readShort() - '\u8000';
+	}
+
+	public long getPacketNumber() {
+		return packetNumber;
+	}
+
+	public static long getNextPacketNumber() {
+		return nextPacketNumber++;
 	}
 }

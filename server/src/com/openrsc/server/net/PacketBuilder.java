@@ -274,6 +274,7 @@ public class PacketBuilder {
 		payload.writeBytes(packet);
 
 	}
+
 	/*public void writeRSCString(String string) {
 		string = DataConversions.formatToRSCString(string);
 		byte[] data = DataConversions.stringToBytes(string);

@@ -98,8 +98,6 @@ public final class Player extends Mob {
 	public final String MEMBER_MESSAGE = "This feature is only available for members only";
 	private final Map<Integer, Integer> killCache = new HashMap<>();
 	private boolean killCacheUpdated = false;
-	private final Object incomingPacketLock = new Object();
-	private final Object outgoingPacketsLock = new Object();
 	private final Map<Integer, Integer> questStages = new ConcurrentHashMap<>();
 	private int IRON_MAN_MODE = IronmanMode.None.id();
 	private int IRON_MAN_RESTRICTION = 1;
@@ -504,7 +502,7 @@ public final class Player extends Mob {
 
 	public void write(final Packet o) {
 		if (channel != null && channel.isOpen() && isLoggedIn()) {
-			synchronized (outgoingPacketsLock) {
+			synchronized (outgoingPackets) {
 				outgoingPackets.add(o);
 			}
 		}
@@ -1882,7 +1880,7 @@ public final class Player extends Mob {
 	public void addToPacketQueue(final Packet e) {
 		ping();
 		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
-			synchronized (incomingPacketLock) {
+			synchronized (incomingPackets) {
 				incomingPackets.put(e.getID(), e);
 			}
 		}
@@ -1930,7 +1928,7 @@ public final class Player extends Mob {
 		if (!channel.isOpen() && !channel.isWritable()) {
 			return;
 		}
-		synchronized (incomingPacketLock) {
+		synchronized (incomingPackets) {
 			for (Map.Entry<Integer, Packet> packet : incomingPackets.entrySet()) {
 				PacketHandler ph = PacketHandlerLookup.get(packet.getValue().getID());
 				if (ph != null && packet.getValue().getBuffer().readableBytes() >= 0) {
@@ -1957,9 +1955,9 @@ public final class Player extends Mob {
 		if (!channel.isOpen() || !isLoggedIn() || !channel.isActive() || !channel.isWritable()) {
 			return;
 		}
-		synchronized (outgoingPacketsLock) {
+		synchronized (outgoingPackets) {
 			try {
-				for (Packet outgoing : outgoingPackets) {
+				for (final Packet outgoing : outgoingPackets) {
 					channel.writeAndFlush(outgoing);
 				}
 			} catch (Exception e) {

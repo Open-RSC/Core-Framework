@@ -12,11 +12,8 @@ import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.BankPreset;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
-import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
-import com.openrsc.server.model.entity.update.Skull;
-import com.openrsc.server.model.entity.update.Wield;
 import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
@@ -1681,7 +1678,7 @@ public class ActionSender {
 		SEND_EQUIPMENT(254),
 		SEND_EQUIPMENT_UPDATE(255);
 
-		private int opcode;
+		public int opcode;
 
 		Opcode(int i) {
 			this.opcode = i;
