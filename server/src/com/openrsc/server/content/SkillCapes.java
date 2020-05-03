@@ -28,6 +28,8 @@ public class SkillCapes {
 				return miningCape();
 			case FLETCHING_CAPE:
 				return fletchingCape();
+			case MAGIC_CAPE:
+				return magicCape();
 		}
 
 		return false;
@@ -90,6 +92,14 @@ public class SkillCapes {
 			return ItemId.RAW_SEA_TURTLE.id();
 		}
 		return -1;
+	}
+
+	private static boolean magicCape() {
+		double noRunesChance = 20;
+		if (rand1to100() <= noRunesChance) {
+			return true;
+		}
+		return false;
 	}
 
 	private static int rand1to100() {
