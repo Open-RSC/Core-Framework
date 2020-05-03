@@ -122,13 +122,13 @@ class CombatFormula {
 				isHit = calculateMeleeAccuracy(source, victim);
 			}
 			if (!wasHit && isHit)
-				((Player) source).message("Your Attack cape has prevented a zero hit");
+				((Player) source).message("@red@Your Attack cape has prevented a zero hit");
 
 			final double maximum = getMeleeDamage(source);
 			if (damage >= maximum - (maximum * 0.2)) {
 				critical = SkillCapes.shouldActivate((Player) source, STRENGTH_CAPE, isHit);
 				if (critical) {
-					((Player) source).message("Your Strength cape has granted you a critical hit");
+					((Player) source).message("@ora@Your Strength cape has granted you a critical hit");
 				}
 			}
 		}
