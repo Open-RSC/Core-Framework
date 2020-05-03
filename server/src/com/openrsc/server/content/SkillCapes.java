@@ -15,6 +15,8 @@ public class SkillCapes {
 				return attackCape(parameter);
 			case THIEVING_CAPE:
 				return thievingCape(parameter);
+			case STRENGTH_CAPE:
+				return strengthCape(parameter);
 		}
 		return false;
 	}
@@ -97,6 +99,14 @@ public class SkillCapes {
 	private static boolean magicCape() {
 		double noRunesChance = 20;
 		if (rand1to100() <= noRunesChance) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean strengthCape(boolean isHit) {
+		double hitChance = 35;
+		if (rand1to100() <= hitChance && isHit) {
 			return true;
 		}
 		return false;
