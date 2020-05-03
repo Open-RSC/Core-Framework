@@ -17,7 +17,7 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 
-public class PiratesTreasure implements QuestInterface, OpInvTrigger,
+public class PiratesTreasure implements QuestInterface,
 	TalkNpcTrigger, OpLocTrigger, UseLocTrigger {
 
 	private static final int HECTORS_CHEST_OPEN = 186;
@@ -57,7 +57,8 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return item.getCatalogId() == ItemId.BANANA.id() && obj.getID() == 182
 				|| item.getCatalogId() == ItemId.KARAMJA_RUM.id() && obj.getID() == 182
-				|| item.getCatalogId() == ItemId.CHEST_KEY.id() && obj.getID() == HECTORS_CHEST_CLOSED;
+				|| item.getCatalogId() == ItemId.CHEST_KEY.id() && obj.getID() == HECTORS_CHEST_CLOSED
+				|| item.getCatalogId() == ItemId.SPADE.id() && obj.getID() == 188;
 	}
 
 	@Override
@@ -101,6 +102,34 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 			mes(player, "You take the message from the chest");
 			mes(player, "It says dig just behind the south bench in the park");
 			player.updateQuestStage(this, 3);
+		} else if (item.getCatalogId() == ItemId.SPADE.id() && obj.getID() == 188) {
+			if (player.getQuestStage(this) != 3) {
+				mes(player, "It seems a shame to dig up these nice flowers for no reason");
+				return;
+			}
+
+			Npc wyson = ifnearvisnpc(player, NpcId.WYSON_THE_GARDENER.id(), 20);
+			boolean dig = false;
+			if (wyson != null) {
+				wyson.getUpdateFlags().setChatMessage(new ChatMessage(wyson, "Hey leave off my flowers", player));
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				wyson.setChasing(player);
+				long start = System.currentTimeMillis();
+				while (!player.inCombat()) {
+					if (System.currentTimeMillis() - start > 2000) {
+						dig = true;
+						break;
+					}
+					delay(50);
+				}
+			} else {
+				dig = true;
+			}
+			if (dig) {
+				mes(player, "You dig a hole in the ground",
+					"You find a little bag of treasure");
+				player.sendQuestComplete(this.getQuestId());
+			}
 		}
 	}
 
@@ -330,49 +359,6 @@ public class PiratesTreasure implements QuestInterface, OpInvTrigger,
 				break;
 		}
 
-	}
-
-	@Override
-	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
-		return (player.getY() == 548 && player.getX() > 287 && player.getX() < 291)
-			&& item.getCatalogId() == ItemId.SPADE.id();
-	}
-
-	@Override
-	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
-		if (player.getQuestStage(this) != 3) {
-			return;
-		}
-		/*if (player.isBusy()) {
-			return;
-		}*/
-		if ((player.getY() == 548 && player.getX() >= 287 && player.getX() <= 291)
-			&& item.getCatalogId() == ItemId.SPADE.id()) {
-			if (player.getX() == 290 || player.getX() == 289) {
-				Npc wyson = ifnearvisnpc(player, NpcId.WYSON_THE_GARDENER.id(), 20);
-				boolean dig = false;
-				if (wyson != null) {
-					wyson.getUpdateFlags().setChatMessage(new ChatMessage(wyson, "Hey leave off my flowers", player));
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-					wyson.setChasing(player);
-					long start = System.currentTimeMillis();
-					while (!player.inCombat()) {
-						if (System.currentTimeMillis() - start > 2000) {
-							dig = true;
-							break;
-						}
-						delay(50);
-					}
-				} else {
-					dig = true;
-				}
-				if (dig) {
-					mes(player, "You dig a hole in the ground",
-						"You find a little bag of treasure");
-					player.sendQuestComplete(this.getQuestId());
-				}
-			}
-		}
 	}
 
 	class Frank {

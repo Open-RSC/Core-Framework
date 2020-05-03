@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.skills.smithing;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.custom.BatchEvent;
@@ -64,7 +65,7 @@ public class Smithing implements UseLocTrigger {
 
 	private boolean allowDorics(Player player) {
 		if (player.getQuestStage(Quests.DORICS_QUEST) > -1) {
-			Npc doric = player.getWorld().getNpc(144, 323, 327, 487, 492,
+			Npc doric = player.getWorld().getNpc(NpcId.DORIC.id(), 323, 327, 487, 492,
 				true);
 			doric.getUpdateFlags().setChatMessage(new ChatMessage(doric,
 				"Heh who said you could use that?", player));

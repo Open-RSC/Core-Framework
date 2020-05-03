@@ -1,5 +1,6 @@
 package com.openrsc.server.content.minigame.fishingtrawler;
 
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
@@ -289,11 +290,11 @@ public class FishingTrawler extends DelayedEvent {
 		Npc npc = null;
 		String message = "";
 		if (currentStage == State.FIRST_SHIP) {
-			npc = getWorld().getNpc(734, shipArea.getMinX(), shipArea.getMaxX(), shipArea.getMinY(),
+			npc = getWorld().getNpc(NpcId.MURPHY_BOAT.id(), shipArea.getMinX(), shipArea.getMaxX(), shipArea.getMinY(),
 				shipArea.getMaxY());
 			message = murphys_messages_ship1[DataConversions.random(0, murphys_messages_ship1.length - 1)];
 		} else if (currentStage == State.SECOND_SHIP) {
-			npc = getWorld().getNpc(734, getShipAreaWater().getMinX(), getShipAreaWater().getMaxX(),
+			npc = getWorld().getNpc(NpcId.MURPHY_BOAT.id(), getShipAreaWater().getMinX(), getShipAreaWater().getMaxX(),
 				getShipAreaWater().getMinY(), getShipAreaWater().getMaxY());
 			message = murphys_messages_ship2[DataConversions.random(0, murphys_messages_ship2.length - 1)];
 		}

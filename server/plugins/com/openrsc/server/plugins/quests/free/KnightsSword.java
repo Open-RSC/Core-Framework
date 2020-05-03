@@ -386,7 +386,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public void onOpLoc(Player player, GameObject obj, String command) {
-		final Npc n = player.getWorld().getNpc(138, 316, 320, 2454, 2459);
+		final Npc n = player.getWorld().getNpc(NpcId.SIR_VYVIN.id(), 316, 320, 2454, 2459);
 		if ((obj.getID() == VYVINS_CUPBOARD_OPEN || obj.getID() == VYVINS_CUPBOARD_CLOSED) && obj.getY() == CUPBOARD_Y
 			&& obj.getX() == 318) {
 			if (command.equalsIgnoreCase("open")) {
