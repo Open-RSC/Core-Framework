@@ -143,54 +143,56 @@ public final class Harvesting implements OpLocTrigger {
 
 	@Override
 	public void onOpLoc(Player player, final GameObject object, String command) {
-		int retrytimes;
 		// Harvest of Xmas Tree
 		if (object.getID() == 1238) {
-			player.playerServerMessage(MessageType.QUEST, "You attempt to grab a present...");
-			retrytimes = 10;
-			player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 4, "Harvesting Xmas", retrytimes, true) {
-				@Override
-				public void action() {
-					final Item present = new Item(ItemId.PRESENT.id());
-					if (getProduce(1, 1)) {
-						//check if the tree still has gifts
-						GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-						if (obj == null) {
-							getOwner().playerServerMessage(MessageType.QUEST, "You fail to take from the tree");
-							interruptBatch();
-						} else {
-							getOwner().getCarriedItems().getInventory().add(present);
-							getOwner().playerServerMessage(MessageType.QUEST, "You get a nice looking present");
-						}
-						if (DataConversions.random(1, 1000) <= 100) {
-							obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-							int depletedId = 1239;
-							interruptBatch();
-							if (obj != null && obj.getID() == object.getID()) {
-								GameObject newObject = new GameObject(getWorld(), object.getLocation(), depletedId, object.getDirection(), object.getType());
-								getWorld().replaceGameObject(object, newObject);
-								getWorld().delayedSpawnObject(obj.getLoc(), 300 * 1000);
-							}
-						}
-					} else {
-						getOwner().playerServerMessage(MessageType.QUEST, "You fail to take from the tree");
-						if (getRepeatFor() > 1) {
-							GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-							if (checkObj == null) {
-								interruptBatch();
-							}
-						}
-					}
-					if (!isCompleted()) {
-						getOwner().playerServerMessage(MessageType.QUEST, "You attempt to grab a present...");
-					}
-
-				}
-			});
+			handleXmasHarvesting(player, object, 10);
 		} else if (command.equalsIgnoreCase("clip")) {
 			handleClipHarvesting(object, player, player.click);
 		} else {
 			handleHarvesting(object, player, player.click);
+		}
+	}
+
+	private void handleXmasHarvesting(Player player, GameObject object, int repeat) {
+		player.playerServerMessage(MessageType.QUEST, "You attempt to grab a present...");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 4);
+
+		final Item present = new Item(ItemId.PRESENT.id());
+		if (getProduce(1, 1)) {
+			//check if the tree still has gifts
+			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+			if (obj == null) {
+				player.playerServerMessage(MessageType.QUEST, "You fail to take from the tree");
+				return;
+			} else {
+				player.getCarriedItems().getInventory().add(present);
+				player.playerServerMessage(MessageType.QUEST, "You get a nice looking present");
+			}
+			if (DataConversions.random(1, 1000) <= 100) {
+				obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+				int depletedId = 1239;
+				if (obj != null && obj.getID() == object.getID()) {
+					GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), depletedId, object.getDirection(), object.getType());
+					player.getWorld().replaceGameObject(object, newObject);
+					player.getWorld().delayedSpawnObject(obj.getLoc(), 300 * 1000);
+				}
+				return;
+			}
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You fail to take from the tree");
+			if (repeat > 1) {
+				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+				if (checkObj == null) {
+					return;
+				}
+			}
+		}
+
+		// Repeat
+		if(ifinterrupted()) return;
+		repeat--;
+		if (repeat > 0) {
+			handleXmasHarvesting(player, object, repeat);
 		}
 	}
 
@@ -219,177 +221,182 @@ public final class Harvesting implements OpLocTrigger {
 			return;
 		}
 
-		thinkbubble(player, new Item(ItemId.HERB_CLIPPERS.id()));
-		player.playerServerMessage(MessageType.QUEST, "You attempt to clip from the spot...");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 4, "Harvesting", Formulae.getRepeatTimes(player, Skills.HARVESTING), true) {
-			@Override
-			public void action() {
-				// herb uses herb drop table
-				// seaweed 1/4 chance to be edible
-				int prodId = !objName.contains("herb")
-					? (objName.contains("sea weed") && DataConversions.random(1, 4) == 1 ? prodEnum.produceTable.get(1).getItemId()
-					: prodEnum.produceTable.get(0).getItemId() ) : Formulae.calculateHerbDrop();
-				int reqLevel = prodEnum.produceTable.get(0).getLevel();
-				final Item produce = new Item(prodId);
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to get produce");
-						interruptBatch();
-						return;
-					}
-				}
-				if (!objName.contains("herb") && getOwner().getSkills().getLevel(Skills.HARVESTING) < reqLevel) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You need at least level " + reqLevel
-						+ " harvesting to clip from the " + objName);
-					interruptBatch();
-					return;
-				}
-
-				if (getProduce(prodEnum.get(prodId).getLevel(), getOwner().getSkills().getLevel(Skills.HARVESTING))) {
-					//check if the object is still up
-					GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-					if (obj == null) {
-						getOwner().playerServerMessage(MessageType.QUEST, "You fail to clip the plant");
-						interruptBatch();
-					} else {
-						getOwner().getCarriedItems().getInventory().add(produce);
-						getOwner().playerServerMessage(MessageType.QUEST, "You get " + (objName.contains("herb") ? "a herb"
-							: "some " + (objName.contains(" ") ? objName.substring(objName.lastIndexOf(" ") + 1) : "produce")));
-						getOwner().incExp(Skills.HARVESTING, prodEnum.get(prodId).getXp(), true);
-					}
-					if (DataConversions.random(1, 100) <= (!objName.contains("herb") ? 20 : 10)) {
-						obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-						int depId = 1270;
-						interruptBatch();
-						if (obj != null && obj.getID() == object.getID()) {
-							GameObject newObject = new GameObject(getWorld(), object.getLocation(), depId, object.getDirection(), object.getType());
-							getWorld().replaceGameObject(object, newObject);
-							getWorld().delayedSpawnObject(obj.getLoc(), DataConversions.random(60, 240) * 1000);
-						}
-					}
-				} else {
-					getOwner().playerServerMessage(MessageType.QUEST, "You fail to clip the plant");
-					if (getRepeatFor() > 1) {
-						GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-						if (checkObj == null) {
-							interruptBatch();
-						}
-					}
-				}
-				if (!isCompleted()) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You attempt to clip from the spot...");
-					thinkbubble(getOwner(), new Item(ItemId.HERB_CLIPPERS.id()));
-				}
-			}
-		});
+		int repeat = Formulae.getRepeatTimes(player, Skills.HARVESTING);
+		batchClipping(player, object, objName, prodEnum, repeat);
 	}
 
-	private void handleHarvesting(final GameObject object, final Player player,
-								   final int click) {
-		if (!harvestingChecks(object, player)) return;
+	private void batchClipping(Player player, GameObject object, String objName, HerbsProduce prodEnum, int repeat) {
+		thinkbubble(player, new Item(ItemId.HERB_CLIPPERS.id()));
+		player.playerServerMessage(MessageType.QUEST, "You attempt to clip from the spot...");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 4);
+
+		// herb uses herb drop table
+		// seaweed 1/4 chance to be edible
+		int prodId = !objName.contains("herb")
+			? (objName.contains("sea weed") && DataConversions.random(1, 4) == 1 ? prodEnum.produceTable.get(1).getItemId()
+			: prodEnum.produceTable.get(0).getItemId() ) : Formulae.calculateHerbDrop();
+		int reqLevel = prodEnum.produceTable.get(0).getLevel();
+		final Item produce = new Item(prodId);
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.playerServerMessage(MessageType.QUEST, "You are too tired to get produce");
+				return;
+			}
+		}
+		if (!objName.contains("herb") && player.getSkills().getLevel(Skills.HARVESTING) < reqLevel) {
+			player.playerServerMessage(MessageType.QUEST, "You need at least level " + reqLevel
+				+ " harvesting to clip from the " + objName);
+			return;
+		}
+
+		if (getProduce(prodEnum.get(prodId).getLevel(), player.getSkills().getLevel(Skills.HARVESTING))) {
+			//check if the object is still up
+			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+			if (obj == null) {
+				player.playerServerMessage(MessageType.QUEST, "You fail to clip the plant");
+				return;
+			} else {
+				player.getCarriedItems().getInventory().add(produce);
+				player.playerServerMessage(MessageType.QUEST, "You get " + (objName.contains("herb") ? "a herb"
+					: "some " + (objName.contains(" ") ? objName.substring(objName.lastIndexOf(" ") + 1) : "produce")));
+				player.incExp(Skills.HARVESTING, prodEnum.get(prodId).getXp(), true);
+			}
+			if (DataConversions.random(1, 100) <= (!objName.contains("herb") ? 20 : 10)) {
+				obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+				int depId = 1270;
+				if (obj != null && obj.getID() == object.getID()) {
+					GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), depId, object.getDirection(), object.getType());
+					player.getWorld().replaceGameObject(object, newObject);
+					player.getWorld().delayedSpawnObject(obj.getLoc(), DataConversions.random(60, 240) * 1000);
+				}
+				return;
+			}
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You fail to clip the plant");
+			if (repeat > 1) {
+				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+				if (checkObj == null) {
+					return;
+				}
+			}
+		}
+
+		// Repeat
+		if (ifinterrupted()) return;
+		repeat--;
+		if (repeat > 0) {
+			batchClipping(player, object, objName, prodEnum, repeat);
+		}
+	}
+
+	private void handleHarvesting(final GameObject object, final Player player, final int click) {
+		if (!harvestingChecks(object, player)) {
+			player.message("I can't get close enough.");
+			return;
+		}
 
 		final ObjectHarvestingDef def = player.getWorld().getServer().getEntityHandler().getObjectHarvestingDef(object.getID());
 
-		final AtomicInteger evt = new AtomicInteger(checkCare(object, player));
-
 		final int toolId = getTool(player, object);
 
+		int repeat = Formulae.getRepeatTimes(player, Skills.HARVESTING);
+		batchHarvest(player, toolId, object, def, repeat);
+	}
+
+	private void batchHarvest(Player player, int toolId, GameObject object, ObjectHarvestingDef def, int repeat) {
+		final AtomicInteger evt = new AtomicInteger(checkCare(object, player));
 		if (toolId != ItemId.NOTHING.id()) thinkbubble(player, new Item(toolId));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to get some produce...");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 4, "Harvesting", Formulae.getRepeatTimes(player, Skills.HARVESTING), true) {
-			@Override
-			public void action() {
-				final Item produce = new Item(def.getProdId());
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().playerServerMessage(MessageType.QUEST, "You are too tired to get produce");
-						interruptBatch();
-						return;
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 4);
+
+		final Item produce = new Item(def.getProdId());
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.playerServerMessage(MessageType.QUEST, "You are too tired to get produce");
+				return;
+			}
+		}
+		if (player.getSkills().getLevel(Skills.HARVESTING) < def.getReqLevel()) {
+			player.playerServerMessage(MessageType.QUEST,"You need a harvesting level of " + def.getReqLevel() + " to get produce from here");
+			return;
+		}
+
+		if (toolId == ItemId.NOTHING.id() && DataConversions.random(0, 1) == 1) {
+			player.playerServerMessage(MessageType.QUEST, "You accidentally damage the produce and throw it away");
+		} else if (evt.get() == HarvestingEvents.NEGLECTED.getID()) {
+			player.playerServerMessage(MessageType.QUEST, "But the spot seems weak, you decide to wait");
+		} else if (getProduce(def.getReqLevel(), player.getSkills().getLevel(Skills.HARVESTING))) {
+			//check if the object is still up
+			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+			if (obj == null) {
+				player.playerServerMessage(MessageType.QUEST, "You fail to obtain some usable produce");
+				return;
+			} else {
+				String itemName = produce.getDef(player.getWorld()).getName().toLowerCase();
+				player.getCarriedItems().getInventory().add(produce);
+				// if player did soil (or have an active one) they get small chance for another produce
+				if (DataConversions.random(1, chanceAskSoil * 3) == 1
+					&& evt.get() == HarvestingEvents.SOIL.getID()) {
+					player.getCarriedItems().getInventory().add(produce);
+				}
+				player.playerServerMessage(MessageType.QUEST, "You get " +
+					(itemName.endsWith("s") ? "some " : (startsWithVowel(itemName) ? "an " : "a ")) + itemName);
+				player.incExp(Skills.HARVESTING, def.getExp(), true);
+			}
+			if (DataConversions.random(1, 100) <= def.getExhaust()) {
+				obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+				int depId = 1270;
+				int prodId = def.getProdId();
+				if (DataConversions.inArray(itemsFruitTree, prodId)) {
+					depId = 1252; //exhausted tree
+				} else if (DataConversions.inArray(itemsRegPalm, prodId)) {
+					depId = 1253; //exhausted palm
+				} else if (DataConversions.inArray(itemsOtherPalm, prodId)) {
+					depId = 1254; //exhausted palm2
+				} else if (prodId == ItemId.FRESH_PINEAPPLE.id()) {
+					depId = 1255; //exhausted pineapple
+				} else if (DataConversions.inArray(itemsBush, prodId)) {
+					depId = 1261; //depleted bush
+				} else if (prodId == ItemId.TOMATO.id()) {
+					depId = 1271; //depleted tomato
+				} else if (prodId == ItemId.CORN.id()) {
+					depId = 1272; //depleted corn
+				}
+				if (obj != null && obj.getID() == object.getID()) {
+					// if player did water (or have an active one) they get small chance not to deplete node
+					if (DataConversions.random(1, chanceAskWatering * 3) == 1
+						&& evt.get() == HarvestingEvents.WATER.getID()) {
+					}
+					else if (def.getRespawnTime() > 0) {
+						GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), depId, object.getDirection(), object.getType());
+						player.getWorld().replaceGameObject(object, newObject);
+						player.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
 					}
 				}
-				if (getOwner().getSkills().getLevel(Skills.HARVESTING) < def.getReqLevel()) {
-					getOwner().playerServerMessage(MessageType.QUEST,"You need a harvesting level of " + def.getReqLevel() + " to get produce from here");
-					interruptBatch();
+				return;
+			}
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You fail to obtain some usable produce");
+			if (repeat > 1) {
+				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+				if (checkObj == null) {
 					return;
 				}
-
-				if (toolId == ItemId.NOTHING.id() && DataConversions.random(0, 1) == 1) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You accidentally damage the produce and throw it away");
-				} else if (evt.get() == HarvestingEvents.NEGLECTED.getID()) {
-					getOwner().playerServerMessage(MessageType.QUEST, "But the spot seems weak, you decide to wait");
-				} else if (getProduce(def.getReqLevel(), getOwner().getSkills().getLevel(Skills.HARVESTING))) {
-					//check if the object is still up
-					GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-					if (obj == null) {
-						getOwner().playerServerMessage(MessageType.QUEST, "You fail to obtain some usable produce");
-						interruptBatch();
-					} else {
-						String itemName = produce.getDef(player.getWorld()).getName().toLowerCase();
-						getOwner().getCarriedItems().getInventory().add(produce);
-						// if player did soil (or have an active one) they get small chance for another produce
-						if (DataConversions.random(1, chanceAskSoil * 3) == 1
-							&& evt.get() == HarvestingEvents.SOIL.getID()) {
-							getOwner().getCarriedItems().getInventory().add(produce);
-						}
-						getOwner().playerServerMessage(MessageType.QUEST, "You get " +
-							(itemName.endsWith("s") ? "some " : (startsWithVowel(itemName) ? "an " : "a ")) + itemName);
-						getOwner().incExp(Skills.HARVESTING, def.getExp(), true);
-					}
-					if (DataConversions.random(1, 100) <= def.getExhaust()) {
-						obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-						int depId = 1270;
-						int prodId = def.getProdId();
-						if (DataConversions.inArray(itemsFruitTree, prodId)) {
-							depId = 1252; //exhausted tree
-						} else if (DataConversions.inArray(itemsRegPalm, prodId)) {
-							depId = 1253; //exhausted palm
-						} else if (DataConversions.inArray(itemsOtherPalm, prodId)) {
-							depId = 1254; //exhausted palm2
-						} else if (prodId == ItemId.FRESH_PINEAPPLE.id()) {
-							depId = 1255; //exhausted pineapple
-						} else if (DataConversions.inArray(itemsBush, prodId)) {
-							depId = 1261; //depleted bush
-						} else if (prodId == ItemId.TOMATO.id()) {
-							depId = 1271; //depleted tomato
-						} else if (prodId == ItemId.CORN.id()) {
-							depId = 1272; //depleted corn
-						}
-						interruptBatch();
-						if (obj != null && obj.getID() == object.getID()) {
-							// if player did water (or have an active one) they get small chance not to deplete node
-							if (DataConversions.random(1, chanceAskWatering * 3) == 1
-								&& evt.get() == HarvestingEvents.WATER.getID()) {
-							}
-							else if (def.getRespawnTime() > 0) {
-								GameObject newObject = new GameObject(getWorld(), object.getLocation(), depId, object.getDirection(), object.getType());
-								getWorld().replaceGameObject(object, newObject);
-								getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
-							}
-						}
-					}
-				} else {
-					getOwner().playerServerMessage(MessageType.QUEST, "You fail to obtain some usable produce");
-					if (getRepeatFor() > 1) {
-						GameObject checkObj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-						if (checkObj == null) {
-							interruptBatch();
-						}
-					}
-				}
-				if (!isCompleted()) {
-					GameObject obj = getOwner().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-					evt.set(checkCare(obj, getOwner()));
-					getOwner().playerServerMessage(MessageType.QUEST, "You attempt to get some produce...");
-					if (toolId != ItemId.NOTHING.id()) thinkbubble(getOwner(), new Item(toolId));
-				}
 			}
-		});
+		}
+		if (ifinterrupted()) return;
+		repeat--;
+		if (repeat > 0) {
+			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+			batchHarvest(player, toolId, obj, def, repeat);
+		}
 	}
 
 	private boolean harvestingChecks(final GameObject obj, final Player player) {
-		return !player.withinRange(obj, 1);
+		boolean canReach = player.withinRange(obj, 1);
+		return canReach;
 	}
 
 	@Override
