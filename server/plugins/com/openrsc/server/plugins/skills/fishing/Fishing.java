@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.skills.fishing;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ObjectFishDef;
 import com.openrsc.server.external.ObjectFishingDef;
@@ -173,7 +174,19 @@ public class Fishing implements OpLocTrigger {
 						}
 					} else {
 						Item fish = new Item(fishLst.get(0).getId());
+						boolean skillcape = false;
+						// Skill cape perk. Will convert a shark to either a manta ray or a turtle.
+						if (fish.getCatalogId() == ItemId.RAW_SHARK.id()) {
+							Item newFish = new Item(SkillCapes.shouldActivateInt(player, ItemId.FISHING_CAPE));
+							if (newFish.getCatalogId() != -1) {
+								fish = newFish;
+								skillcape = true;
+							}
+						}
 						player.getCarriedItems().getInventory().add(fish);
+						if (skillcape) {
+							player.playerServerMessage(MessageType.QUEST, "Because of your prowess in fishing");
+						}
 						player.playerServerMessage(MessageType.QUEST, "You catch " + (netId == ItemId.NET.id() ? "some" : "a") + " "
 							+ fish.getDef(player.getWorld()).getName().toLowerCase().replace("raw ", "") + (fish.getCatalogId() == ItemId.RAW_SHRIMP.id() ? "s" : "")
 							+ (fish.getCatalogId() == ItemId.RAW_SHARK.id() ? "!" : ""));
