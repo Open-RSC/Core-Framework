@@ -2,12 +2,13 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -93,28 +94,33 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 	@Override
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == FOUNTAIN_OF_HEROES && item.getCatalogId() == ItemId.DRAGONSTONE_AMULET.id()) {
-			player.setBusy(true);
-			player.message("You dip the amulet in the fountain");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-			player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Charge Dragonstone Ammy", player.getCarriedItems().getInventory().countId(item.getCatalogId()), false) {
+			int repeat = 1;
+			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+				repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
+			}
+			batchAmuletCharge(player, item, repeat);
+		}
+	}
 
-				@Override
-				public void action() {
-					if (!player.getCarriedItems().hasCatalogID(item.getCatalogId())) {
-						stop();
-						return;
-					}
-					if (player.getCarriedItems().remove(item) > -1) {
-						player.getCarriedItems().getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
-					} else
-						interruptBatch();
-				}
-			});
-			mes(player, "You feel more power emanating from it than before",
-				"you can now rub this amulet to teleport",
-				"Though using it to much means you will need to recharge it");
-			player.message("It now also means you can find more gems when mining");
-			player.setBusy(false);
+	private void batchAmuletCharge(Player player, Item item, int repeat) {
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		player.message("You dip the amulet in the fountain");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		player.getCarriedItems().remove(item);
+		player.getCarriedItems().getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
+
+		mes(player, "You feel more power emanating from it than before",
+			"you can now rub this amulet to teleport",
+			"Though using it to much means you will need to recharge it");
+		player.message("It now also means you can find more gems when mining");
+
+		// Repeat
+		if (ifinterrupted()) return;
+		repeat--;
+		if (repeat > 0) {
+			batchAmuletCharge(player, item, repeat);
 		}
 	}
 }
