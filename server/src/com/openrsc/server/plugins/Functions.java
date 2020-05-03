@@ -643,8 +643,13 @@ public class Functions {
 		return player.getAttribute("bankpin", false);
 	}
 
-	public static boolean ifbatchinterrupted() {
-		return false;
+	public static boolean ifinterrupted() {
+		final PluginTask contextPlugin = PluginTask.getContextPluginTask();
+		if(!contextPlugin.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			return false;
+		}
+
+		return contextPlugin.getScriptContext().getInterrupted();
 	}
 
 	/**

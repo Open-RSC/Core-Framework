@@ -67,6 +67,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				ActionSender.sendInventory(player);
 				break;
 			case 6:
+				player.interruptPlugins();
 				player.checkAndInterruptBatchEvent();
 				break;
 			case 7:

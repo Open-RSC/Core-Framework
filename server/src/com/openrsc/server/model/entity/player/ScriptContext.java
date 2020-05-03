@@ -28,6 +28,7 @@ public class ScriptContext {
 	private volatile Action currentAction = Action.idle;
 	private volatile Integer interactingIndex = null;
 	private volatile Point interactingCoordinate = null;
+	private volatile Boolean interrupted = false;
 
 	public ScriptContext(final World world, final PluginTask pluginTask, final Integer playerIndex) {
 		this.world = world;
@@ -240,6 +241,7 @@ public class ScriptContext {
 
 		if(getContextPlayer() != null) {
 			getContextPlayer().setBusy(true);
+			getContextPlayer().addOwnedPlugin(getPluginTask());
 		}
 
 		if(scriptData.length > 1) {
@@ -279,6 +281,7 @@ public class ScriptContext {
 		}
 
 		if(getContextPlayer() != null) {
+			getContextPlayer().removeOwnedPlugin(getPluginTask());
 			getContextPlayer().setBusy(false);
 		}
 
@@ -301,5 +304,13 @@ public class ScriptContext {
 
 	public PluginTask getPluginTask() {
 		return pluginTask;
+	}
+
+	public synchronized Boolean getInterrupted() {
+		return interrupted;
+	}
+
+	public synchronized void setInterrupted(final Boolean interrupted) {
+		this.interrupted = interrupted;
 	}
 }

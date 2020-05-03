@@ -16,6 +16,7 @@ import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.BatchEvent;
+import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.PlayerRemoveRequest;
@@ -120,6 +121,7 @@ public final class Player extends Mob {
 	private String currentIP = "0.0.0.0";
 	private int incorrectSleepTries = 0;
 	private volatile int questionOption;
+	private List<PluginTask> ownedPlugins = Collections.synchronizedList(new ArrayList<>());
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -609,6 +611,20 @@ public final class Player extends Mob {
 
 	public boolean castTimer() {
 		return System.currentTimeMillis() - lastSpellCast > 1250;
+	}
+
+	public boolean addOwnedPlugin(final PluginTask plugin) {
+		return ownedPlugins.add(plugin);
+	}
+
+	public boolean removeOwnedPlugin(final PluginTask plugin) {
+		return ownedPlugins.remove(plugin);
+	}
+
+	public void interruptPlugins() {
+		for (final PluginTask ownedPlugin : ownedPlugins) {
+			ownedPlugin.getScriptContext().setInterrupted(true);
+		}
 	}
 
 	public void checkAndInterruptBatchEvent() {
@@ -1970,6 +1986,7 @@ public final class Player extends Mob {
 	}
 
 	public void resetAll() {
+		interruptPlugins();
 		checkAndInterruptBatchEvent();
 		resetAllExceptTradeOrDuel(true);
 		getTrade().resetAll();
