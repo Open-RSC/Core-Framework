@@ -1,10 +1,10 @@
 package com.openrsc.server.event.rsc.impl.combat;
 
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
-import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.Random;
 
 import static com.openrsc.server.constants.ItemId.ATTACK_CAPE;
+import static com.openrsc.server.constants.ItemId.STRENGTH_CAPE;
 
 class CombatFormula {
 	/**
@@ -114,18 +115,21 @@ class CombatFormula {
 	public static int doMeleeDamage(final Mob source, final Mob victim) {
 		boolean isHit = calculateMeleeAccuracy(source, victim);
 		boolean wasHit = isHit;
+		boolean cape = false;
 		if (source instanceof Player) {
 			while(SkillCapes.shouldActivate((Player)source, ATTACK_CAPE, isHit)){
 				isHit = calculateMeleeAccuracy(source, victim);
 			}
-			if (!wasHit && isHit) {
-				((Player) source).message("Your attack cape has prevented a zero hit");
+			if (!wasHit && isHit)
+				((Player) source).message("Your Attack cape has prevented a zero hit");
+
+			cape = SkillCapes.shouldActivate((Player)source, STRENGTH_CAPE, isHit);
+			if (cape) {
+				((Player) source).message("Your Strength cape has granted you a critical hit");
 			}
 		}
-
 		//LOGGER.info(source + " " + (isHit ? "hit" : "missed") + " " + victim + ", Damage: " + damage);
-
-		return isHit ? calculateMeleeDamage(source) : 0;
+		return isHit ? calculateMeleeDamage(source) + (cape ? 1 : 0) : 0;
 	}
 
 	/**
