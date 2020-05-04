@@ -38,6 +38,8 @@ public class SkillCapes {
 				return fletchingCape();
 			case MAGIC_CAPE:
 				return magicCape();
+			case SMITHING_CAPE:
+				return smithingCape();
 		}
 
 		return false;
@@ -115,6 +117,14 @@ public class SkillCapes {
 	private static boolean strengthCape(boolean isHit) {
 		double hitChance = 35;
 		if (rand1to100() <= hitChance && isHit) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean smithingCape() {
+		double noCoalChance = 17;
+		if (rand1to100() <= noCoalChance) {
 			return true;
 		}
 		return false;
