@@ -99,7 +99,7 @@ public class CombatEvent extends GameTickEvent {
 			resetCombat();
 		} else {
 			//if(hitter.isNpc() && target.isPlayer() || target.isNpc() && hitter.isPlayer()) {
-			int damage = MeleeFormula.getDamage(hitter, target);
+			int damage = CombatFormula.doMeleeDamage(hitter, target);
 			inflictDamage(hitter, target, damage);
 			if (target.isPlayer()) {
 				if (((Player)target).getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_RECOIL.id())) {

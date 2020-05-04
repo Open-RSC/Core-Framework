@@ -13,7 +13,7 @@ import java.util.Random;
 
 import static com.openrsc.server.constants.ItemId.ATTACK_CAPE;
 
-class MeleeFormula {
+class CombatFormula {
 	/**
 	 * Logger instance
 	 */
@@ -24,22 +24,46 @@ class MeleeFormula {
 	 * {@code maximum} value. <br>
 	 * The mean (average) is maximum / 2.
 	 *
+	 * @param maxHit      The max amount of damage
+	 * @return The randomized value.
+	 */
+	private static int calculateDamage(final int maxHit) {
+		final Random r = DataConversions.getRandom();
+		final double mean = maxHit / 2;
+		double value = 0;
+		do {
+			value = Math.floor(mean + r.nextGaussian() * (maxHit / 3));
+		} while (value < 1 || value > maxHit);
+
+		return (int)value;
+	}
+
+	/**
+	 * Gets a gaussian distributed randomized value between 0 and the
+	 * {@code maximum} value. <br>
+	 * The mean (average) is maximum / 2.
+	 *
 	 * @param source      The mob doing the damage
 	 * @return The randomized value.
 	 */
-	private static int calculateDamage(final Mob source) {
+	private static int calculateMeleeDamage(final Mob source) {
 		if(source.isNpc() && source.getSkills().getLevel(Skills.STRENGTH) < 5)
 			return 0;
 
-		final Random r = DataConversions.getRandom();
-		final double maximum = getMeleeDamage(source);
-		final double mean = maximum / 2;
-		double value = 0;
-		do {
-			value = Math.floor(mean + r.nextGaussian() * (maximum / 3));
-		} while (value < 1 || value > maximum);
+		return calculateDamage(getMeleeDamage(source));
+	}
 
-		return (int)value;
+	/**
+	 * Gets a gaussian distributed randomized value between 0 and the
+	 * {@code maximum} value. <br>
+	 * The mean (average) is maximum / 2.
+	 *
+	 * @param source      The mob doing the damage
+	 * @return The randomized value.
+	 */
+	private static int calculateRangedDamage(final Mob source) {
+		return calculateDamage(getRangedDamage(source));
+
 	}
 
 	/**
@@ -70,26 +94,53 @@ class MeleeFormula {
 	}
 
 	/**
+	 * Calculates an accuracy check
+	 *
+	 * @param source             The attacking mob.
+	 * @param victim             The mob being attacked.
+	 * @return True if the attack is a hit, false if the attack is a miss
+	 */
+	private static boolean calculateRangedAccuracy(final Mob source, final Mob victim) {
+		return calculateAccuracy(getRangedAccuracy(source), getMeleeDefence(victim));
+	}
+
+	/**
 	 * Gets the damage dealt for a specific attack. Includes accuracy checks.
 	 *
 	 * @param source             The attacking mob.
 	 * @param victim             The mob being attacked.
 	 * @return The amount to hit.
 	 */
-	public static int getDamage(final Mob source, final Mob victim) {
+	public static int doMeleeDamage(final Mob source, final Mob victim) {
 		boolean isHit = calculateMeleeAccuracy(source, victim);
 		boolean wasHit = isHit;
 		if (source instanceof Player) {
 			while(SkillCapes.shouldActivate((Player)source, ATTACK_CAPE, isHit)){
 				isHit = calculateMeleeAccuracy(source, victim);
 			}
-			if (!wasHit && isHit)
+			if (!wasHit && isHit) {
 				((Player) source).message("Your attack cape has prevented a zero hit");
+			}
 		}
 
 		//LOGGER.info(source + " " + (isHit ? "hit" : "missed") + " " + victim + ", Damage: " + damage);
 
-		return isHit ? calculateDamage(source) : 0;
+		return isHit ? calculateMeleeDamage(source) : 0;
+	}
+
+	/**
+	 * Gets the damage dealt for a specific attack. Includes accuracy checks.
+	 *
+	 * @param source             The attacking mob.
+	 * @param victim             The mob being attacked.
+	 * @return The amount to hit.
+	 */
+	public static int doRangedDamage(final Mob source, final Mob victim) {
+		boolean isHit = calculateRangedAccuracy(source, victim);
+
+		//LOGGER.info(source + " " + (isHit ? "hit" : "missed") + " " + victim + ", Damage: " + damage);
+
+		return isHit ? calculateRangedDamage(source) : 0;
 	}
 
 	private static int getMeleeDamage(final Mob source) {
@@ -104,6 +155,13 @@ class MeleeFormula {
 		return (int)(strength * weaponMultiplier + 1.05D);
 	}
 
+	private static int getRangedDamage(final Mob source) {
+		final int ranged = source.getSkills().getLevel(Skills.RANGED);
+		final double weaponMultiplier = (source.getWeaponPowerPoints() * 0.00175D)+0.1D;
+
+		return (int)(ranged * weaponMultiplier + 1.05D);
+	}
+
 	private static double getMeleeDefence(final Mob defender) {
 		final int styleBonus = styleBonus(defender, 1);
 		final double prayerBonus = addPrayers(defender, Prayers.THICK_SKIN,
@@ -114,6 +172,13 @@ class MeleeFormula {
 		final double armourMultiplier = (defender.getArmourPoints() * 0.00175D)+0.1D;
 
 		return (defense * armourMultiplier) + 1.05D;
+	}
+
+	private static double getRangedAccuracy(final Mob attacker) {
+		final int ranged = attacker.getSkills().getLevel(Skills.RANGED);
+		final double weaponMultiplier = (attacker.getWeaponAimPoints() * 0.00175D)+0.1D;
+
+		return (ranged * weaponMultiplier) + 1.05D;
 	}
 
 	private static double getMeleeAccuracy(final Mob attacker) {
