@@ -26,7 +26,9 @@ public class MasterFisher implements TalkNpcTrigger {
 			} else {
 				npcsay(player, n, "Hello, welcome to the fishing guild",
 					"Please feel free to make use of any of our facilities");
-				if (getMaxLevel(player, Skills.FISHING) >= 99) {
+				if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES
+					&& getMaxLevel(player, Skills.FISHING) >= 99) {
+					
 					if (multi(player, n, "I like your cape", "Thank you") == 0) {
 						npcsay(player, n, "Huh?", "Oh it's just a Fishing cape",
 							"Looks like you're a skilled enough fisher to have one if you want",
