@@ -6,6 +6,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Refill implements UseLocTrigger {
@@ -21,8 +23,8 @@ public class Refill implements UseLocTrigger {
 
 	@Override
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
-		return (inArray(obj.getID(), VALID_OBJECTS_OTHER)
-			&& inArray(item.getCatalogId(),REFILLABLE)) || (inArray(obj.getID(), VALID_OBJECTS_WELL) && item.getCatalogId() == ItemId.BUCKET.id());
+		return item.getNoted() && ((inArray(obj.getID(), VALID_OBJECTS_OTHER)
+			&& inArray(item.getCatalogId(),REFILLABLE)) || (inArray(obj.getID(), VALID_OBJECTS_WELL) && item.getCatalogId() == ItemId.BUCKET.id()));
 	}
 
 	private String getFillString(Player player, GameObject obj, Item item) {
@@ -33,13 +35,16 @@ public class Refill implements UseLocTrigger {
 	}
 
 	private void batchRefill(Player player, Item item, int refilledId, String fillString, int repeat) {
-		if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
-			thinkbubble(player, item);
-			player.playSound("filljug");
-			player.message(fillString);
-			player.getCarriedItems().remove(new Item(item.getCatalogId()));
-			give(player, refilledId, 1);
-		} else return;
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false)));
+
+		if (item == null) return;
+
+		thinkbubble(player, item);
+		player.playSound("filljug");
+		player.message(fillString);
+		player.getCarriedItems().remove(new Item(item.getCatalogId()));
+		give(player, refilledId, 1);
 
 		if (ifinterrupted()) return;
 
@@ -58,7 +63,7 @@ public class Refill implements UseLocTrigger {
 				final int refilledID = REFILLED[i];
 				int repeat = 1;
 				if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-					repeat = player.getCarriedItems().getInventory().countId(itemID);
+					repeat = player.getCarriedItems().getInventory().countId(itemID, Optional.of(false));
 				}
 				batchRefill(player, item, refilledID, getFillString(player,obj,item), repeat);
 				break;
