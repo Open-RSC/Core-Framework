@@ -8,7 +8,7 @@ import com.openrsc.server.model.world.World;
 public abstract class DelayedEvent extends GameTickEvent {
 
 	public DelayedEvent(final World world, final Player owner, final long delayMs, final String descriptor) {
-		super(world, owner, (int)Math.ceil((double)delayMs / (double)world.getServer().getConfig().GAME_TICK), descriptor, true);
+		this(world, owner, delayMs, descriptor, true);
 	}
 
 	public DelayedEvent(final World world, final Player owner, final long delayMs, final String descriptor, boolean uniqueEvent) {
