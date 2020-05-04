@@ -28,6 +28,9 @@ class MeleeFormula {
 	 * @return The randomized value.
 	 */
 	private static int calculateDamage(final Mob source) {
+		if(source.isNpc() && source.getSkills().getLevel(Skills.STRENGTH) < 5)
+			return 0;
+
 		final Random r = DataConversions.getRandom();
 		final double maximum = getMeleeDamage(source);
 		final double mean = maximum / 2;
