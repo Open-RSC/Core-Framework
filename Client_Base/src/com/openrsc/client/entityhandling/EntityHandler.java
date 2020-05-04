@@ -1083,7 +1083,7 @@ public class EntityHandler {
 		sprites = new int[]{156, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Firebird", "Probably not a chicken", "", 6, 7, 5, 7, true, sprites, 0, 0, 0, 0, 70, 62, 6, 6, 5, i++));
 		if (Config.S_WANT_CUSTOM_SPRITES) {
-			sprites = new int[]{3, 59, 41, 102, 113, 74, -1, -1, -1, -1, -1, -384};
+			sprites = new int[]{3, 59, 41, 102, 113, 74, -1, -1, -1, -1, -1, 384};
 		} else {
 			sprites = new int[]{3, 59, 41, 102, 113, 74, -1, -1, -1, -1, -1, -1};
 		}
