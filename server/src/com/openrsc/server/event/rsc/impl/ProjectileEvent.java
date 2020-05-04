@@ -178,7 +178,9 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (opponent.isNpc() && caster.isPlayer()) {
 				Npc npc = (Npc) opponent;
 				Player player = (Player) caster;
-				npc.setChasing(player);
+				if (!(npc.isChasing() || npc.inCombat())) {
+					npc.setChasing(player);
+				}
 			}
 		}
 	}

@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.skills.fishing;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.database.GameDatabaseException;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ObjectFishDef;
 import com.openrsc.server.external.ObjectFishingDef;
 import com.openrsc.server.model.container.Item;

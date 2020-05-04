@@ -4,7 +4,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -543,14 +542,8 @@ public class DoorAction {
 						if (masterFisher != null) {
 							npcsay(player, masterFisher, "Hello only the top fishers are allowed in here");
 						}
-						player.getWorld().getServer().getGameEventHandler().add(
-							new ShortEvent(player.getWorld(), player, "Fishing Guild Door") {
-								public void action() {
-									player.setBusy(false);
-									player.message(
-										"You need a fishing level of 68 to enter");
-								}
-							});
+						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+						player.message("You need a fishing level of 68 to enter");
 					} else {
 						doDoor(obj, player);
 					}
@@ -1112,14 +1105,8 @@ public class DoorAction {
 							if (forester != null) {
 								npcsay(player, forester, "Hello only the top woodcutters are allowed in here");
 							}
-							player.getWorld().getServer().getGameEventHandler().add(
-								new ShortEvent(player.getWorld(), player, "Woodcutting Guild Door") {
-									public void action() {
-										getOwner().setBusy(false);
-										getOwner().message(
-											"You need a woodcutting level of 70 to enter");
-									}
-								});
+							delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+							player.message("You need a woodcutting level of 70 to enter");
 						} else {
 							doGate(player, obj);
 						}
@@ -1341,17 +1328,13 @@ public class DoorAction {
 		player.playSound(open ? "opendoor" : "closedoor");
 	}
 
-	private void replaceGameObject(GameObject obj, Player owner, int newID,
-								   boolean open) {
-		if (!owner.cantConsume()) {
-			owner.setConsumeTimer(2);
-			if (open) {
-				owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " swings open");
-			} else {
-				owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " creaks shut");
-			}
-			owner.playSound(open ? "opendoor" : "closedoor");
-			owner.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), newID, obj.getDirection(), obj.getType()));
+	private void replaceGameObject(GameObject obj, Player owner, int newID, boolean open) {
+		if (open) {
+			owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " swings open");
+		} else {
+			owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " creaks shut");
 		}
+		owner.playSound(open ? "opendoor" : "closedoor");
+		owner.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), newID, obj.getDirection(), obj.getType()));
 	}
 }

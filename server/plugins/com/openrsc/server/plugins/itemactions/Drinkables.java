@@ -19,11 +19,10 @@ public class Drinkables implements OpInvTrigger {
 
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
-		if (player.cantConsume() || item.getItemStatus().getNoted()) {
+		if (item.getItemStatus().getNoted()) {
 			return;
 		}
 		int id = item.getCatalogId();
-		player.setConsumeTimer(1); // drink speed is same as tick speed setting
 		if (id == ItemId.GUJUO_POTION.id())
 			handleGujouPotion(player);
 

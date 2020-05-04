@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -31,62 +30,52 @@ public class Cactus implements UseLocTrigger {
 		int[] skins = {ItemId.WATER_SKIN_MOSTLY_FULL.id(), ItemId.WATER_SKIN_MOSTLY_EMPTY.id(),
 				ItemId.WATER_SKIN_MOUTHFUL_LEFT.id(), ItemId.EMPTY_WATER_SKIN.id()};
 		thinkbubble(player, item);
-		player.setBusy(true);
-		player.getWorld().getServer().getGameEventHandler()
-
-			.add(new ShortEvent(player.getWorld(), player, "Cactus Fill Waterskin") {
-				public void action() {
-					for (int s : skins) {
-						Item toRemove = new Item(s, 1);
-						if (getOwner().getCarriedItems().remove(toRemove) > -1) {
-							boolean fail = Formulae.cutCacti();
-							if (fail) {
-								getOwner().message("You make a mistake and fail to fill your waterskin.");
-								getOwner().incExp(Skills.WOODCUT, 4, true);
-								getOwner().getCarriedItems().getInventory().add(new Item(s, 1));
-								getOwner().setBusy(false);
-								return;
-							}
-
-							getOwner().message("You collect some precious water in your waterskin.");
-
-							// Add new skin to inventory
-							int newSkin = ItemId.EMPTY_WATER_SKIN.id();
-							if (s == ItemId.WATER_SKIN_MOSTLY_FULL.id()) newSkin = ItemId.FULL_WATER_SKIN.id();
-							else newSkin = s - 1; // More full is one less id number
-							getOwner().getCarriedItems().getInventory().add(new Item(newSkin, 1));
-
-							// Add dried cacti
-							Point loc = object.getLocation();
-							final GameObject cacti = new GameObject(getOwner().getWorld(), loc, 1028, 0, 0);
-							getOwner().getWorld().registerGameObject(cacti);
-
-							// Remove healthy cacti
-							getOwner().getWorld().unregisterGameObject(object);
-							getOwner().incExp(Skills.WOODCUT, 100, true); // Woodcutting XP
-
-							// Swap cacti back after 30 seconds.
-							getOwner().getWorld().getServer().getGameEventHandler().add(
-								new SingleEvent(getOwner().getWorld(), null, 30000, "Cactus Respawn") {
-
-									@Override
-									public void action() {
-										if (cacti != null) {
-											getOwner().getWorld().registerGameObject(new GameObject(getOwner().getWorld(), loc, 35, 0, 0));
-											getOwner().getWorld().unregisterGameObject(cacti);
-										}
-									}
-								}
-							);
-						} else continue; // None of this skin in the inventory, try next.
-
-						getOwner().setBusy(false);
-						return; // Completed action
-					}
-					getOwner().message("You need to have a non-full waterskin to contain the fluid.");
-					getOwner().setBusy(false);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		for (int s : skins) {
+			Item toRemove = new Item(s, 1);
+			if (player.getCarriedItems().remove(toRemove) > -1) {
+				boolean fail = Formulae.cutCacti();
+				if (fail) {
+					player.message("You make a mistake and fail to fill your waterskin.");
+					player.incExp(Skills.WOODCUT, 4, true);
+					player.getCarriedItems().getInventory().add(new Item(s, 1));
 					return;
 				}
-			});
+
+				player.message("You collect some precious water in your waterskin.");
+
+				// Add new skin to inventory
+				int newSkin = ItemId.EMPTY_WATER_SKIN.id();
+				if (s == ItemId.WATER_SKIN_MOSTLY_FULL.id()) newSkin = ItemId.FULL_WATER_SKIN.id();
+				else newSkin = s - 1; // More full is one less id number
+				player.getCarriedItems().getInventory().add(new Item(newSkin, 1));
+
+				// Add dried cacti
+				Point loc = object.getLocation();
+				final GameObject cacti = new GameObject(player.getWorld(), loc, 1028, 0, 0);
+				player.getWorld().registerGameObject(cacti);
+
+				// Remove healthy cacti
+				player.getWorld().unregisterGameObject(object);
+				player.incExp(Skills.WOODCUT, 100, true); // Woodcutting XP
+
+				// Swap cacti back after 30 seconds.
+				player.getWorld().getServer().getGameEventHandler().add(
+					new SingleEvent(player.getWorld(), null, player.getWorld().getServer().getConfig().GAME_TICK * 50, "Cactus Respawn") {
+
+						@Override
+						public void action() {
+							if (cacti != null) {
+								player.getWorld().registerGameObject(new GameObject(player.getWorld(), loc, 35, 0, 0));
+								player.getWorld().unregisterGameObject(cacti);
+							}
+						}
+					}
+				);
+			} else continue; // None of this skin in the inventory, try next.
+
+			return; // Completed action
+		}
+		player.message("You need to have a non-full waterskin to contain the fluid.");
 	}
 }

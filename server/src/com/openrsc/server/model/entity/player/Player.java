@@ -15,7 +15,6 @@ import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.login.LoginRequest;
@@ -115,7 +114,6 @@ public final class Player extends Mob {
 	private LinkedHashSet<GameObject> localWallObjects = new LinkedHashSet<GameObject>();
 	private LinkedHashSet<GroundItem> localGroundItems = new LinkedHashSet<GroundItem>();
 	private ArrayDeque<Point> locationsToClear = new ArrayDeque<Point>();
-	private BatchEvent batchEvent = null;
 	private String currentIP = "0.0.0.0";
 	private int incorrectSleepTries = 0;
 	private volatile int questionOption;
@@ -439,18 +437,6 @@ public final class Player extends Mob {
 		cannonEvent = event;
 	}
 
-	public boolean cantConsume() {
-		return consumeTimer > 0;
-	}
-
-	public void setConsumeTimer(final int ticks) {
-		consumeTimer = getWorld().getServer().getConfig().GAME_TICK * ticks;
-	}
-
-	public void decrementConsumeTimer() {
-		consumeTimer -= getWorld().getServer().getConfig().GAME_TICK;
-	}
-
 	public long getLastSaveTime() {
 		return lastSaveTime;
 	}
@@ -622,13 +608,6 @@ public final class Player extends Mob {
 	public void interruptPlugins() {
 		for (final PluginTask ownedPlugin : ownedPlugins) {
 			ownedPlugin.getScriptContext().setInterrupted(true);
-		}
-	}
-
-	public void checkAndInterruptBatchEvent() {
-		if (batchEvent != null) {
-			batchEvent.interruptBatch();
-			batchEvent = null;
 		}
 	}
 
@@ -1985,7 +1964,6 @@ public final class Player extends Mob {
 
 	public void resetAll() {
 		interruptPlugins();
-		checkAndInterruptBatchEvent();
 		resetAllExceptTradeOrDuel(true);
 		getTrade().resetAll();
 		getDuel().resetAll();
@@ -2158,14 +2136,6 @@ public final class Player extends Mob {
 		if (shop != null) {
 			shop.addPlayer(this);
 		}
-	}
-
-	public void setBatchEvent(final BatchEvent batchEvent) {
-		if (batchEvent != null && batchEvent.getOwner() != null) {
-			batchEvent.getOwner().checkAndInterruptBatchEvent();
-			getWorld().getServer().getGameEventHandler().add(batchEvent);
-		}
-		this.batchEvent = batchEvent;
 	}
 
 	public void setCastTimer(final long timer) {

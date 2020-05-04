@@ -68,7 +68,6 @@ public class InterfaceOptionHandler implements PacketHandler {
 				break;
 			case 6:
 				player.interruptPlugins();
-				player.checkAndInterruptBatchEvent();
 				break;
 			case 7:
 				int secondary = (int) packet.readByte();
