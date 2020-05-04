@@ -22,13 +22,13 @@ public abstract class GameTickEvent implements Callable<Integer> {
 	private long ticksBeforeRun = -1;
 	private String descriptor;
 	private long lastEventDuration = 0;
-	private boolean allowDuplicateEvents = false;
+	private boolean uniqueEvent = false;
 
-	public GameTickEvent(final World world, final Mob owner, final long ticks, final String descriptor, final boolean allowDuplicateEvents) {
+	public GameTickEvent(final World world, final Mob owner, final long ticks, final String descriptor, final boolean uniqueEvent) {
 		this.world = world;
 		this.owner = owner;
 		this.descriptor = descriptor;
-		this.allowDuplicateEvents = allowDuplicateEvents;
+		this.uniqueEvent = uniqueEvent;
 		this.setDelayTicks(ticks);
 		this.resetCountdown();
 	}
@@ -134,5 +134,5 @@ public abstract class GameTickEvent implements Callable<Integer> {
 		return world;
 	}
 
-	public boolean allowsDuplicateEvents() { return allowDuplicateEvents; }
+	public boolean isUniqueEvent() { return uniqueEvent; }
 }

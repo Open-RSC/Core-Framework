@@ -476,9 +476,12 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 				doDoor(obj, player);
 				if (moveGrip) {
 					removeReturnEventIfPresent(player);
-					player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), null, 1000, "Heroes Quest Grip through door", true) {
-						@Override
-						public void action() {
+					player.getWorld().getServer().getGameEventHandler().add(
+						new SingleEvent(player.getWorld(), null,
+							player.getWorld().getServer().getConfig().GAME_TICK * 2,
+							"Heroes Quest Grip through door", true) {
+							@Override
+							public void action() {
 							grip.teleport(463, 676);
 						}
 					});
@@ -555,7 +558,9 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 							else {
 								grip.teleport(463, 673);
 								// delayed event to prevent grip being trapped if player had invoked him
-								gripReturnEvent.set(new SingleEvent(player.getWorld(), null, 60000 * 10, "Heroes Quest Delayed Return Grip", true) {
+								gripReturnEvent.set(new SingleEvent(player.getWorld(), null,
+									player.getWorld().getServer().getConfig().GAME_TICK * 1000,
+									"Heroes Quest Delayed Return Grip", true) {
 									@Override
 									public void action() {
 										if (grip != null && grip.getY() <= 675)

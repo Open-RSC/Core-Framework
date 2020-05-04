@@ -86,12 +86,8 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 						final Npc lepr = addnpc(player.getWorld(), NpcId.LEPRECHAUN.id(), 172, 661, 60000 * 3);
 						lepr.walk(173, 661);
 						try {
-							player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(),null, player.getWorld().getServer().getConfig().GAME_TICK, "Lost City Leprechaun", true) {
-								@Override
-								public void action() {
-									lepr.walk(177, 661 + DataConversions.random(0, 10) - 5);
-								}
-							});
+							delay(player.getWorld().getServer().getConfig().GAME_TICK);
+							lepr.walk(177, 661 + DataConversions.random(0, 10) - 5);
 						} catch (Exception e) {
 							LOGGER.catching(e);
 						}
