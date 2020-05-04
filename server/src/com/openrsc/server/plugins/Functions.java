@@ -362,9 +362,10 @@ public class Functions {
 	}
 
 	public static void changeloc(GameObject obj, int delay, int replaceID) {
+		// Object to replace old
 		final GameObject replaceObj = new GameObject(obj.getWorld(), obj.getLocation(), replaceID, obj.getDirection(), obj.getType());
-		delloc(obj);
-		addloc(replaceObj.getWorld(), replaceObj.getLoc(), delay);
+		addloc(replaceObj);
+		addloc(obj.getWorld(), obj.getLoc(), delay);
 	}
 
 	public static void delloc(final GameObject o) {
