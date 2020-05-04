@@ -72,10 +72,11 @@ public class SpellHandler implements PacketHandler {
 	}
 
 	public static boolean checkAndRemoveRunes(Player player, SpellDef spell) {
-		boolean skillcape = SkillCapes.shouldActivate(player, ItemId.MAGIC_CAPE);
-		if (skillcape) {
-			player.message("You manage to cast the spell without using any elemental runes");
+		if (SkillCapes.shouldActivate(player, ItemId.MAGIC_CAPE)) {
+			player.message("@blu@You manage to cast the spell without using any runes");
+			return true;
 		}
+
 		for (Entry<Integer, Integer> e : spell.getRunesRequired()) {
 			boolean skipRune = false;
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
@@ -96,12 +97,6 @@ public class SpellHandler implements PacketHandler {
 							}
 						}
 					}
-				}
-			}
-
-			if (skillcape) {
-				if (DataConversions.inArray(elementalRunes, e.getKey())) {
-					skipRune = true;
 				}
 			}
 

@@ -105,7 +105,7 @@ public class SkillCapes {
 	}
 
 	private static boolean magicCape() {
-		double noRunesChance = 20;
+		double noRunesChance = 10;
 		if (rand1to100() <= noRunesChance) {
 			return true;
 		}
