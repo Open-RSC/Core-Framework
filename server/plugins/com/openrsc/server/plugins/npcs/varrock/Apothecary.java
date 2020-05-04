@@ -73,30 +73,9 @@ public final class Apothecary implements
 					int cointimes = player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) / 5;
 					int roottimes = player.getCarriedItems().getInventory().countId(ItemId.LIMPWURT_ROOT.id());
 					int eggtimes = player.getCarriedItems().getInventory().countId(ItemId.RED_SPIDERS_EGGS.id());
-					int repeattimes = Math.min(cointimes, roottimes);
-					repeattimes = Math.min(eggtimes, repeattimes);
-					player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Apothecary Brews Potion", repeattimes, false) {
-						@Override
-						public void action() {
-							if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < 5) {
-								player.message("You don't have enough coins");
-								interruptBatch();
-								return;
-							}
-							if (player.getCarriedItems().getInventory().countId(ItemId.LIMPWURT_ROOT.id()) < 1
-								|| player.getCarriedItems().getInventory().countId(ItemId.RED_SPIDERS_EGGS.id()) < 1) {
-								player.message("You don't have all the ingredients");
-								interruptBatch();
-								return;
-							}
-							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
-							player.getCarriedItems().remove(new Item(ItemId.LIMPWURT_ROOT.id()));
-							player.getCarriedItems().remove(new Item(ItemId.RED_SPIDERS_EGGS.id()));
-							player.message("The Apothecary brews you a potion");
-							player.message("The Apothecary gives you a strength potion");
-							give(player, ItemId.FULL_STRENGTH_POTION.id(), 1);
-						}
-					});
+					int repeat = Math.min(cointimes, roottimes);
+					repeat = Math.min(eggtimes, repeat);
+					batchPotion(player, repeat);
 				}
 			} else {
 				npcsay(player, n,
@@ -158,6 +137,31 @@ public final class Apothecary implements
 					npcsay(player, n, "Ok. I need my money, the ingredients are hard to find");
 				}
 			}
+		}
+	}
+
+	private void batchPotion(Player player, int repeat) {
+		if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < 5) {
+			player.message("You don't have enough coins");
+			return;
+		}
+		if (player.getCarriedItems().getInventory().countId(ItemId.LIMPWURT_ROOT.id()) < 1
+			|| player.getCarriedItems().getInventory().countId(ItemId.RED_SPIDERS_EGGS.id()) < 1) {
+			player.message("You don't have all the ingredients");
+			return;
+		}
+		player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
+		player.getCarriedItems().remove(new Item(ItemId.LIMPWURT_ROOT.id()));
+		player.getCarriedItems().remove(new Item(ItemId.RED_SPIDERS_EGGS.id()));
+		player.message("The Apothecary brews you a potion");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		player.message("The Apothecary gives you a strength potion");
+		give(player, ItemId.FULL_STRENGTH_POTION.id(), 1);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		// Repeat
+		if (!ifinterrupted() && --repeat > 0) {
+			batchPotion(player, repeat);
 		}
 	}
 
