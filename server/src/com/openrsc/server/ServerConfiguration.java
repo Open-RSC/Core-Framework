@@ -316,8 +316,10 @@ public class ServerConfiguration {
 		RING_OF_FORGING_USES = tryReadInt("ring_of_forging_uses").orElse(75);
 		DWARVEN_RING_USES = tryReadInt("dwarven_ring_uses").orElse(29);
 		DWARVEN_RING_BONUS = tryReadInt("dwarven_ring_bonus").orElse(3);
+		/*
 		CHECK_ADMIN_IP = tryReadBool("check_admin_ip").orElse(false);
 		ADMIN_IP = tryReadString("admin_ip").orElse("127.0.0.0,10.0.0.0,172.16.0.0,192.168.0.0");
+		*/
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
@@ -459,6 +461,7 @@ public class ServerConfiguration {
 				". Should be an integer. Terminating server.");
 			System.exit(1);
 		}
+		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
 	}
 
@@ -476,6 +479,7 @@ public class ServerConfiguration {
 				". Should be a double. Terminating server.");
 			System.exit(1);
 		}
+		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
 	}
 
@@ -497,6 +501,7 @@ public class ServerConfiguration {
 				System.exit(1);
 			}
 		}
+		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
 	}
 
@@ -507,6 +512,7 @@ public class ServerConfiguration {
 		if(serverProps.keyExists(key)) {
 			return Optional.of(serverProps.getAttribute(key));
 		}
+		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
 	}
 }
