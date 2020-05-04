@@ -45,7 +45,6 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	}
 
 	public void stallThieving(Player player, GameObject object, final Stall stall) {
-		player.setBusy(true);
 		String objectName = object.getGameObjectDef().getName().toLowerCase();
 
 		if (stall.equals(Stall.BAKERS_STALL))
@@ -56,7 +55,6 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			boolean caught = (chance_player_caught > DataConversions.random(0, 100));
 			if (caught) {
 				npcsay(player, teaseller, "Oi what do you think you are doing ?", "I'm not like those stallholders in Al Kharid", "No one steals from my stall..");
-				player.setBusy(false);
 				return;
 			} else
 				player.playerServerMessage(MessageType.QUEST, "You attempt to steal a cup of tea...");
@@ -65,104 +63,94 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		else
 			player.playerServerMessage(MessageType.QUEST, "You attempt to steal some " + objectName.replaceAll("stall", "").trim() + " from the " + objectName);
 
-		player.getWorld().getServer().getGameEventHandler().add(new SingleTickEvent(player.getWorld(), player, 3, "Stall Thieving") {
-			public void action() {
-				String failNoun = stall.equals(Stall.BAKERS_STALL) ? "cake" : objectName.replaceAll("stall", "").trim();
-				if (!failNoun.endsWith("s")) {
-					failNoun += "s";
-				}
-				if (getPlayerOwner().getSkills().getLevel(Skills.THIEVING) < stall.getRequiredLevel()) {
-					getPlayerOwner().message("You are not a high enough level to steal the " + failNoun);
-					getPlayerOwner().setBusy(false);
-					return;
-				}
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 
-				Npc shopkeeper = ifnearvisnpc(getPlayerOwner(), stall.getOwnerID(), 8);
-				Npc guard = null;
-				if (stall.equals(Stall.BAKERS_STALL)) {
-					guard = ifnearvisnpc(getPlayerOwner(), 5, NpcId.GUARD_ARDOUGNE.id());
-				} else if (stall.equals(Stall.SILK_STALL) || stall.equals(Stall.FUR_STALL)) {
-					guard = ifnearvisnpc(getPlayerOwner(), 5, NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
-				} else if (stall.equals(Stall.SILVER_STALL) || stall.equals(Stall.SPICES_STALL)) {
-					guard = ifnearvisnpc(getPlayerOwner(), 5, NpcId.PALADIN.id(), NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
-				} else if (stall.equals(Stall.GEMS_STALL)) {
-					guard = ifnearvisnpc(getPlayerOwner(), 5, NpcId.HERO.id(), NpcId.PALADIN.id(), NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
-				}
+		String failNoun = stall.equals(Stall.BAKERS_STALL) ? "cake" : objectName.replaceAll("stall", "").trim();
+		if (!failNoun.endsWith("s")) {
+			failNoun += "s";
+		}
+		if (player.getSkills().getLevel(Skills.THIEVING) < stall.getRequiredLevel()) {
+			player.message("You are not a high enough level to steal the " + failNoun);
+			return;
+		}
 
-				if (shopkeeper != null) {
-					if (canBeSeen(getPlayerOwner().getWorld(), shopkeeper.getX(), shopkeeper.getY(), getPlayerOwner().getX(), getPlayerOwner().getY())) {
-						npcYell(getPlayerOwner(), shopkeeper, "Hey thats mine");
-						if (!getPlayerOwner().getCache().hasKey("stolenFrom" + stall.getOwnerID())) {
-							getPlayerOwner().getCache().store("stolenFrom" + stall.getOwnerID(), true);
-						}
-						getPlayerOwner().setBusy(false);
-						return;
-					}
-				}
-				if (guard != null) {
-					if (canBeSeen(getPlayerOwner().getWorld(), guard.getX(), guard.getY(), getPlayerOwner().getX(), getPlayerOwner().getY())) {
-						npcYell(getPlayerOwner(), guard, "Hey! Get your hands off there!");
-						getPlayerOwner().setAttribute("stolenFrom" + stall.getOwnerID(), true);
-						guard.setChasing(getPlayerOwner());
-						getPlayerOwner().setBusy(false);
-						return;
-					}
-				}
+		Npc shopkeeper = ifnearvisnpc(player, stall.getOwnerID(), 8);
+		Npc guard = null;
+		if (stall.equals(Stall.BAKERS_STALL)) {
+			guard = ifnearvisnpc(player, 5, NpcId.GUARD_ARDOUGNE.id());
+		} else if (stall.equals(Stall.SILK_STALL) || stall.equals(Stall.FUR_STALL)) {
+			guard = ifnearvisnpc(player, 5, NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
+		} else if (stall.equals(Stall.SILVER_STALL) || stall.equals(Stall.SPICES_STALL)) {
+			guard = ifnearvisnpc(player, 5, NpcId.PALADIN.id(), NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
+		} else if (stall.equals(Stall.GEMS_STALL)) {
+			guard = ifnearvisnpc(player, 5, NpcId.HERO.id(), NpcId.PALADIN.id(), NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
+		}
 
-				int random = DataConversions.random(1, 100);
-				Item selectedLoot = null;
-				for (LootItem loot : stall.lootTable) {
-					if (loot.getChance() >= random) {
-						selectedLoot = new Item(loot.getId(), loot.getAmount());
-						break;
-					}
+		if (shopkeeper != null) {
+			if (canBeSeen(player.getWorld(), shopkeeper.getX(), shopkeeper.getY(), player.getX(), player.getY())) {
+				npcYell(player, shopkeeper, "Hey thats mine");
+				if (!player.getCache().hasKey("stolenFrom" + stall.getOwnerID())) {
+					player.getCache().store("stolenFrom" + stall.getOwnerID(), true);
 				}
-				if (selectedLoot == null) {
-					selectedLoot = new Item(stall.lootTable.get(0).getId(), stall.lootTable.get(0).getAmount());
-					getPlayerOwner().setBusy(false);
-					return;
-				}
-				if (getPlayerOwner().getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE) {
-						getPlayerOwner().message("You are too tired to thieve here");
-						getPlayerOwner().setBusy(false);
-						return;
-					}
-				}
-
-				getPlayerOwner().getCarriedItems().getInventory().add(selectedLoot);
-				String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef(getPlayerOwner().getWorld()).getName().toLowerCase();
-				getPlayerOwner().message("You steal a " + stall.getLootPrefix() + loot);
-
-				getPlayerOwner().incExp(Skills.THIEVING, stall.getXp(), true);
-
-				if (stall.equals(Stall.BAKERS_STALL)) { // Cake
-					getPlayerOwner().getCache().put("cakeStolen", Instant.now().getEpochSecond());
-				} else if (stall.equals(Stall.SILK_STALL)) { // Silk
-					getPlayerOwner().getCache().put("silkStolen", Instant.now().getEpochSecond());
-				} else if (stall.equals(Stall.FUR_STALL)) { // Fur
-					getPlayerOwner().getCache().put("furStolen", Instant.now().getEpochSecond());
-				} else if (stall.equals(Stall.SILVER_STALL)) { // Silver
-					getPlayerOwner().getCache().put("silverStolen", Instant.now().getEpochSecond());
-				} else if (stall.equals(Stall.SPICES_STALL)) { // Spice
-					getPlayerOwner().getCache().put("spiceStolen", Instant.now().getEpochSecond());
-				} else if (stall.equals(Stall.GEMS_STALL)) { // Gem
-					getPlayerOwner().getCache().put("gemStolen", Instant.now().getEpochSecond());
-				}
-
-				// Replace stall with empty version
-				object.getWorld().replaceGameObject(object,
-					new GameObject(getPlayerOwner().getWorld(), object.getLocation(), 341, object.getDirection(), object.getType()));
-				object.getWorld().delayedSpawnObject(object.getLoc(), stall.getRespawnTime());
-				getPlayerOwner().setBusy(false);
 				return;
 			}
-		});
+		}
+		if (guard != null) {
+			if (canBeSeen(player.getWorld(), guard.getX(), guard.getY(), player.getX(), player.getY())) {
+				npcYell(player, guard, "Hey! Get your hands off there!");
+				player.setAttribute("stolenFrom" + stall.getOwnerID(), true);
+				guard.setChasing(player);
+				return;
+			}
+		}
+
+		int random = DataConversions.random(1, 100);
+		Item selectedLoot = null;
+		for (LootItem loot : stall.lootTable) {
+			if (loot.getChance() >= random) {
+				selectedLoot = new Item(loot.getId(), loot.getAmount());
+				break;
+			}
+		}
+		if (selectedLoot == null) {
+			selectedLoot = new Item(stall.lootTable.get(0).getId(), stall.lootTable.get(0).getAmount());
+			return;
+		}
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to thieve here");
+				return;
+			}
+		}
+
+		player.getCarriedItems().getInventory().add(selectedLoot);
+		String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef(player.getWorld()).getName().toLowerCase();
+		player.message("You steal a " + stall.getLootPrefix() + loot);
+
+		player.incExp(Skills.THIEVING, stall.getXp(), true);
+
+		if (stall.equals(Stall.BAKERS_STALL)) { // Cake
+			player.getCache().put("cakeStolen", Instant.now().getEpochSecond());
+		} else if (stall.equals(Stall.SILK_STALL)) { // Silk
+			player.getCache().put("silkStolen", Instant.now().getEpochSecond());
+		} else if (stall.equals(Stall.FUR_STALL)) { // Fur
+			player.getCache().put("furStolen", Instant.now().getEpochSecond());
+		} else if (stall.equals(Stall.SILVER_STALL)) { // Silver
+			player.getCache().put("silverStolen", Instant.now().getEpochSecond());
+		} else if (stall.equals(Stall.SPICES_STALL)) { // Spice
+			player.getCache().put("spiceStolen", Instant.now().getEpochSecond());
+		} else if (stall.equals(Stall.GEMS_STALL)) { // Gem
+			player.getCache().put("gemStolen", Instant.now().getEpochSecond());
+		}
+
+		// Replace stall with empty version
+		object.getWorld().replaceGameObject(object,
+			new GameObject(player.getWorld(), object.getLocation(), 341, object.getDirection(), object.getType()));
+		object.getWorld().delayedSpawnObject(object.getLoc(), stall.getRespawnTime());
 	}
 
 	public void handleChestThieving(Player player, GameObject obj) {
-		player.setBusy(true);
 		int reqtemp = 1;
 		int respawnTimetmep = 0;
 		ArrayList<LootItem> loottemp = new ArrayList<LootItem>();
@@ -218,14 +206,12 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		AtomicReference<GameObject> tempChest = new AtomicReference<GameObject>();
 		if (player.getSkills().getLevel(Skills.THIEVING) < req) {
 			player.message("You find nothing");
-			player.setBusy(false);
 			return;
 		}
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to thieve here");
-				player.setBusy(false);
 				return;
 			}
 		}
@@ -233,7 +219,6 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		GameObject checkObj = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 		if (checkObj == null) {
 			player.message("You find nothing");
-			player.setBusy(false);
 			return;
 		}
 
@@ -267,8 +252,6 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			mes(player, "suddenly a second magical trap triggers");
 			player.teleport(teleLoc.getX(), teleLoc.getY(), true);
 		}
-		player.setBusy(false);
-		return;
 	}
 
 	private ArrayList<LootItem> getLootAsList(LootItem... lootItem) {
@@ -345,88 +328,87 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		String thievedMobName = npc.getDef().getName().toLowerCase();
 		//gnome local, child, trainer and barman all known as gnome for the thiev messages
 		//yanille watchman known simply as watchman
-		final String thievedMobSt = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" :
+		final String thievedMobString = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" :
 			thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
-		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
-		if (player.getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
-			player.getWorld().getServer().getGameEventHandler().add(new GameTickEvent(player.getWorld(), player, 2, "Pickpocket Check") {
-				public void run() {
-					getPlayerOwner().playerServerMessage(MessageType.QUEST, "You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
-					stop();
-				}
-			});
+
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = Formulae.getRepeatTimes(player, Skills.THIEVING);
+		}
+		batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString, repeat);
+	}
+
+	private void batchPickpocket(Player player, Npc npc, Pickpocket pickpocket, ArrayList<LootItem> lootTable, String thievedMobString, int repeat) {
+		if (npc.inCombat()) {
 			return;
 		}
-		int repeatTimes = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION)
-			repeatTimes = Formulae.getRepeatTimes(player, Skills.THIEVING);
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Thieving Pickpocket", repeatTimes, true) {
-			@Override
-			public void action() {
-				if (npc.inCombat()) {
-					interruptBatch();
+		if (player.getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
+			player.playerServerMessage(MessageType.QUEST, "You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobString + "'s pocket");
+			return;
+		}
+		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobString + "'s pocket");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		boolean succeededPickpocket = succeedThieving(player, pickpocket.getRequiredLevel());
+		if (SkillCapes.shouldActivate(player, THIEVING_CAPE, succeededPickpocket)) {
+			succeededPickpocket = true;
+			thinkbubble(player, new Item(THIEVING_CAPE.id()));
+		}
+		if (succeededPickpocket) {
+			if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+					&& player.getFatigue() >= player.MAX_FATIGUE) {
+					player.message("You are too tired to pickpocket this mob");
 					return;
-				}
-				if (getOwner().getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobSt + "'s pocket");
-					interruptBatch();
-					return;
-				}
-				boolean succeededPickpocket = succeedThieving(getOwner(), pickpocket.getRequiredLevel());
-				if (SkillCapes.shouldActivate(getOwner(), THIEVING_CAPE, succeededPickpocket)) {
-					succeededPickpocket = true;
-					thinkbubble(getOwner(), new Item(THIEVING_CAPE.id()));
-				}
-				if (succeededPickpocket) {
-					if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-						if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-							&& getPlayerOwner().getFatigue() >= getPlayerOwner().MAX_FATIGUE) {
-							getPlayerOwner().message("You are too tired to pickpocket this mob");
-							interruptBatch();
-							return;
-						}
-					}
-
-					getOwner().incExp(Skills.THIEVING, pickpocket.getXp(), true);
-					Item selectedLoot = null;
-					int total = 0;
-					for (LootItem loot : lootTable) {
-						total += loot.getChance();
-					}
-					int hit = DataConversions.random(0, total);
-					total = 0;
-					for (LootItem loot : lootTable) {
-						if (loot.getChance() >= 100) {
-							getOwner().getCarriedItems().getInventory().add(new Item(loot.getId(), loot.getAmount()));
-							continue;
-						}
-						if (hit >= total && hit < (total + loot.getChance())) {
-							if (loot.getId() == -1) {
-								getOwner().playerServerMessage(MessageType.QUEST, "You find nothing to steal");
-								return;
-							}
-							selectedLoot = (new Item(loot.getId(), loot.getAmount()));
-							break;
-						}
-						total += loot.getChance();
-					}
-					getOwner().playerServerMessage(MessageType.QUEST, "You pick the " + thievedMobSt + "'s pocket");
-					if (selectedLoot != null) {
-						getOwner().getCarriedItems().getInventory().add(selectedLoot);
-					}
-				} else {
-					setDelayTicks(1);
-					getOwner().playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobSt + "'s pocket");
-					npc.getUpdateFlags()
-						.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, getOwner()));
-					interruptBatch();
-					npc.startCombat(getOwner());
-				}
-				if (!isCompleted()) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobSt + "'s pocket");
 				}
 			}
-		});
+
+			player.incExp(Skills.THIEVING, pickpocket.getXp(), true);
+			Item selectedLoot = null;
+			int total = 0;
+			for (LootItem loot : lootTable) {
+				total += loot.getChance();
+			}
+			int hit = DataConversions.random(0, total);
+			total = 0;
+			for (LootItem loot : lootTable) {
+				if (loot.getChance() >= 100) {
+					player.getCarriedItems().getInventory().add(new Item(loot.getId(), loot.getAmount()));
+					continue;
+				}
+				if (hit >= total && hit < (total + loot.getChance())) {
+					if (loot.getId() == -1) {
+						player.playerServerMessage(MessageType.QUEST, "You find nothing to steal");
+						return;
+					}
+					selectedLoot = (new Item(loot.getId(), loot.getAmount()));
+					break;
+				}
+				total += loot.getChance();
+			}
+			player.playerServerMessage(MessageType.QUEST, "You pick the " + thievedMobString + "'s pocket");
+			if (selectedLoot != null) {
+				player.getCarriedItems().getInventory().add(selectedLoot);
+			}
+		} else {
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobString + "'s pocket");
+			npc.getUpdateFlags()
+				.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
+			npc.startCombat(player);
+			return;
+		}
+
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+
+		// Repeat
+		if (!ifinterrupted() && --repeat > 0) {
+			// TODO: Walk to mob configured.
+			if (!player.withinRange(npc, 1)) {
+				player.message("The " + thievedMobString + " has moved.");
+				return;
+			}
+			batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString, repeat);
+		}
 	}
 
 	@Override
@@ -517,19 +499,6 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		return true;
 	}
 
-	/**
-	 * Nature rune chest door id (94) [3.11.2013 22:02:55] Kevin: 10gp chest
-	 * door id (93) [3.11.2013 22:05:47] Kevin: house where u can find nature
-	 * chest + 10gp chest door id (94) [3.11.2013 22:07:17] Kevin: Chaos druid
-	 * tower door id (96) [3.11.2013 22:11:49] Kevin: yanille druid door id(162)
-	 * [3.11.2013 22:15:08] Kevin: axe huts door id (100) [3.11.2013 22:17:28]
-	 * Kevin: pirate hut door id (99) [3.11.2013 22:22:29] Kevin:paladin 2nd
-	 * floor door id (97) [3.11.2013 22:23:46] Kevin: the paladin chest give all
-	 * the items it says it gie all at once [3.11.2013 22:23:58] Kevin: when you
-	 * loot the chest you get teleported at 523, 606 [3.11.2013
-	 *  @param player
-	 * @param obj
-	 */
 	@Override
 	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() >= 93 && obj.getID() <= 97 || obj.getID() >= 99 & obj.getID() <= 100 || obj.getID() == 162) {
