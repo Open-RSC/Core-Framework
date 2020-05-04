@@ -7,6 +7,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class SandPit implements UseLocTrigger {
@@ -18,25 +20,31 @@ public class SandPit implements UseLocTrigger {
 
 	@Override
 	public void onUseLoc(Player player, GameObject obj, final Item item) {
-		final int itemID = item.getCatalogId();
-		final int refilledID = ItemId.SAND.id();
 		if (item.getCatalogId() != ItemId.BUCKET.id()) {
 			player.message("Nothing interesting happens");
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Fill Bucket with Sand", player.getCarriedItems().getInventory().countId(itemID), true) {
-			@Override
-			public void action() {
-				if (getOwner().getCarriedItems().getInventory().hasInInventory(itemID)) {
-					thinkbubble(getOwner(), item);
-					delay(300);
-					getOwner().message("you fill the bucket with sand");
-					getOwner().getCarriedItems().remove(new Item(itemID));
-					getOwner().getCarriedItems().getInventory().add(new Item(refilledID));
-				} else {
-					interruptBatch();
-				}
-			}
-		});
+
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+		}
+		batchSand(player, item, repeat);
+	}
+
+	private void batchSand(Player player, Item item, int repeat) {
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		thinkbubble(player, item);
+		player.message("you fill the bucket with sand");
+		player.getCarriedItems().remove(item);
+		player.getCarriedItems().getInventory().add(new Item(ItemId.SAND.id()));
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		// Repeat
+		if (!ifinterrupted() && --repeat > 0) {
+			batchSand(player, item, repeat);
+		}
 	}
 }
