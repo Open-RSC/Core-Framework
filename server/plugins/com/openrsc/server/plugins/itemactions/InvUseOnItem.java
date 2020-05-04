@@ -2,7 +2,6 @@ package com.openrsc.server.plugins.itemactions;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
@@ -88,14 +87,10 @@ public class InvUseOnItem implements UseInvTrigger {
 			if (player.getCarriedItems().remove(new Item(ItemId.DAMP_STICKS.id())) > -1) {
 				player.message("you hold the glass to the sun");
 				player.message("above the damp sticks");
-				player.getWorld().getServer().getGameEventHandler().add(new ShortEvent(player.getWorld(), player, "Dry Sticks with Lens") {
-					public void action() {
-						getOwner().message("the glass acts like a lens");
-						getOwner().message("and drys the sticks out");
-					}
-				});
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				player.message("the glass acts like a lens");
+				player.message("and drys the sticks out");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.DRY_STICKS.id()));
-
 				return;
 			}
 		}

@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.npcs.varrock;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -150,11 +149,13 @@ public final class Apothecary implements
 			player.message("You don't have all the ingredients");
 			return;
 		}
+		player.message("You give a limpwurt root some red spiders eggs and 5 coins to the apothecary");
 		player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 		player.getCarriedItems().remove(new Item(ItemId.LIMPWURT_ROOT.id()));
 		player.getCarriedItems().remove(new Item(ItemId.RED_SPIDERS_EGGS.id()));
-		player.message("The Apothecary brews you a potion");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		player.message("The Apothecary brews up a potion");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 4);
 		player.message("The Apothecary gives you a strength potion");
 		give(player, ItemId.FULL_STRENGTH_POTION.id(), 1);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);

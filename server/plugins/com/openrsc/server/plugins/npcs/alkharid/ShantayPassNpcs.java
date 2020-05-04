@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.npcs.alkharid;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Shop;
@@ -83,11 +84,11 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 							"No, I'm having serious second thoughts now.");
 					}
 					if (menus == 0) {
-						final Npc npc = new Npc(n.getWorld(), 719, 63, 731);
+						final Npc npc = new Npc(n.getWorld(), NpcId.SHANTAY_PASS_GUARD_STANDING.id(), 63, 731);
 						npc.setShouldRespawn(false);
 						player.getWorld().registerNpc(npc);
 						player.getWorld().getServer().getGameEventHandler().add(
-							new SingleEvent(player.getWorld(), null, 60000, "Shantay Pass Talk Delay") {
+							new SingleEvent(player.getWorld(), null, player.getWorld().getServer().getConfig().GAME_TICK * 50, "Shantay Pass Talk Delay") {
 								public void action() {
 									npcsay(player, npc, "Right, time for dinner!");
 									npc.remove();

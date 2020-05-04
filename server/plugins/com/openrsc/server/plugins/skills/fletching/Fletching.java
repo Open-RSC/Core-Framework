@@ -4,7 +4,6 @@ import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.SkillCapes;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemArrowHeadDef;
 import com.openrsc.server.external.ItemBowStringDef;
 import com.openrsc.server.external.ItemDartTipDef;
@@ -12,12 +11,9 @@ import com.openrsc.server.external.ItemLogCutDef;
 import com.openrsc.server.model.container.CarriedItems;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;

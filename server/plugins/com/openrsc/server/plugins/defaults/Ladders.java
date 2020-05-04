@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.defaults;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -153,15 +152,8 @@ public class Ladders {
 							player.message("You climb up the ladder");
 						} else {
 							npcsay(player, abbot, "No I feel you are not devout enough");
-							player.getWorld().getServer().getGameEventHandler().add(
-								new ShortEvent(player.getWorld(), player, "Prayer Guild Ladder") {
-									public void action() {
-										getOwner().setBusy(false);
-										getOwner().message(
-											"You need a prayer level of 31");
-									}
-								}
-							);
+							delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+							player.message("You need a prayer level of 31");
 						}
 					} else if (op == 1) {
 						say(player, abbot, "Oh Sorry");
@@ -183,14 +175,8 @@ public class Ladders {
 					npcYell(player, dwarf,
 						"Sorry only the top miners are allowed in there");
 				}
-				player.getWorld().getServer().getGameEventHandler().add(
-					new ShortEvent(player.getWorld(), player, "Mining Guild Ladder") {
-						public void action() {
-							getOwner().setBusy(false);
-							getOwner().message(
-								"You need a mining level of 60 to enter");
-						}
-					});
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				player.message("You need a mining level of 60 to enter");
 			} else {
 				player.teleport(274, 3397, false);
 			}

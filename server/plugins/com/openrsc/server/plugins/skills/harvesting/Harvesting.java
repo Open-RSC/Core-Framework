@@ -2,7 +2,6 @@ package com.openrsc.server.plugins.skills.harvesting;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ObjectHarvestingDef;
 import com.openrsc.server.model.TimePoint;
 import com.openrsc.server.model.container.Item;
