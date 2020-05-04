@@ -5,7 +5,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.SkillCapes;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -201,6 +200,7 @@ public final class Mining implements OpLocTrigger {
 		player.playSound("mine");
 		thinkbubble(player, new Item(ItemId.IRON_PICKAXE.id()));
 		player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 
 		final Item ore = new Item(def.getOreId());
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
@@ -241,8 +241,7 @@ public final class Mining implements OpLocTrigger {
 				if (!player.getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
 					if (obj != null && obj.getID() == rock.getID() && def.getRespawnTime() > 0) {
 						GameObject newObject = new GameObject(player.getWorld(), rock.getLocation(), 98, rock.getDirection(), rock.getType());
-						player.getWorld().replaceGameObject(rock, newObject);
-						player.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
+						changeloc(rock, def.getRespawnTime() * 1000, newObject.getID());
 					}
 					return;
 				}
