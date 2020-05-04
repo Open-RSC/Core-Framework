@@ -4,7 +4,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.external.ItemSmithingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -219,49 +218,53 @@ public class Smithing implements UseLocTrigger {
 
 		if (makeCount == -1) return;
 
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Smithing", makeCount, false) {
-			@Override
-			public void action() {
-				if (getOwner().getSkills().getLevel(Skills.SMITHING) < def.getRequiredLevel()) {
-					getOwner().message("You need to be at least level "
-						+ def.getRequiredLevel() + " smithing to do that");
-					interruptBatch();
-					return;
-				}
-				if (getOwner().getCarriedItems().getInventory().countId(item.getCatalogId()) < def.getRequiredBars()) {
-					getOwner().message("You need " + def.getRequiredBars() + " bars of metal to make this item");
-					interruptBatch();
-					return;
-				}
-				if (getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-						&& getOwner().getFatigue() >= getOwner().MAX_FATIGUE) {
-						getOwner().message("You are too tired to smith");
-						interruptBatch();
-						return;
-					}
-				}
-				getOwner().playSound("anvil");
-				for (int x = 0; x < def.getRequiredBars(); x++) {
-					getOwner().getCarriedItems().remove(new Item(item.getCatalogId()));
-				}
+		batchSmithing(player, item, def, makeCount);
+	}
 
-				thinkbubble(getOwner(), item);
-				if (getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).isStackable()) {
-					getOwner().playerServerMessage(MessageType.QUEST, "You hammer the metal and make " + def.getAmount() + " "
-						+ getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
-					getOwner().getCarriedItems().getInventory().add(
-						new Item(def.getItemID(), def.getAmount()));
-				} else {
-					getOwner().playerServerMessage(MessageType.QUEST, "You hammer the metal and make a "
-						+ getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
-					for (int x = 0; x < def.getAmount(); x++) {
-						getOwner().getCarriedItems().getInventory().add(new Item(def.getItemID(), 1));
-					}
-				}
-				player.incExp(Skills.SMITHING, getSmithingExp(item.getCatalogId(), def.getRequiredBars()), true);
+	private void batchSmithing(Player player, Item item, ItemSmithingDef def, int repeat) {
+		if (player.getSkills().getLevel(Skills.SMITHING) < def.getRequiredLevel()) {
+			player.message("You need to be at least level "
+				+ def.getRequiredLevel() + " smithing to do that");
+			return;
+		}
+		if (player.getCarriedItems().getInventory().countId(item.getCatalogId()) < def.getRequiredBars()) {
+			player.message("You need " + def.getRequiredBars() + " bars of metal to make this item");
+			return;
+		}
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to smith");
+				return;
 			}
-		});
+		}
+		player.playSound("anvil");
+		for (int x = 0; x < def.getRequiredBars(); x++) {
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
+		}
+
+		thinkbubble(player, item);
+		if (player.getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).isStackable()) {
+			player.playerServerMessage(MessageType.QUEST, "You hammer the metal and make " + def.getAmount() + " "
+				+ player.getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
+			player.getCarriedItems().getInventory().add(
+				new Item(def.getItemID(), def.getAmount()));
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You hammer the metal and make a "
+				+ player.getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
+			for (int x = 0; x < def.getAmount(); x++) {
+				player.getCarriedItems().getInventory().add(new Item(def.getItemID(), 1));
+			}
+		}
+		player.incExp(Skills.SMITHING, getSmithingExp(item.getCatalogId(), def.getRequiredBars()), true);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		// Repeat
+		if (ifinterrupted()) return;
+		repeat--;
+		if (repeat > 0) {
+			batchSmithing(player, item, def, repeat);
+		}
 	}
 
 	private int firstMenu(Item item, Player player) {
