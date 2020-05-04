@@ -368,7 +368,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 			"I'd be willing to sell you a cape for 99,000 gold");
 		if (multi(player, n, "Alright then", "No thank you") == 0) {
 			if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
-				mes(player, "Achetties takes your gold");
+				mes(player, "Achetties takes your coins");
 				if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
 					mes(player, "And hands you a Strength cape");
 					give(player, ItemId.STRENGTH_CAPE.id(), 1);
@@ -377,8 +377,8 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 						"By allowing you to perform critical hits");
 				}
 			} else {
-				npcsay(player, n, "Heroes usually have more money than that",
-					"You don't have enough coins");
+				npcsay(player, n, "Heroes usually have more coins than that",
+					"You don't have enough");
 			}
 		}
 	}

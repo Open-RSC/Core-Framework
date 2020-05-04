@@ -28,14 +28,14 @@ public class MasterFisher implements TalkNpcTrigger {
 					"Please feel free to make use of any of our facilities");
 				if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES
 					&& getMaxLevel(player, Skills.FISHING) >= 99) {
-					
+
 					if (multi(player, n, "I like your cape", "Thank you") == 0) {
-						npcsay(player, n, "Huh?", "Oh it's just a Fishing cape",
-							"Looks like you're a skilled enough fisher to have one if you want",
-							"It'll cost you 99,000 coins");
+						npcsay(player, n, "Huh?", "Oh it's just me Fishing cape",
+							"Looks like you're good enough at fishing to have one if you want",
+							"It'll cost you 99,000 coins though");
 						if (multi(player, n, "Yes please", "No thank you") == 0) {
 							if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
-								mes(player, "The Master Fisher takes your gold");
+								mes(player, "The Master Fisher takes your coins");
 								if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
 									mes(player, "And hands you a Fishing cape");
 									give(player, ItemId.FISHING_CAPE.id(), 1);
@@ -43,7 +43,7 @@ public class MasterFisher implements TalkNpcTrigger {
 										"Wear this to catch manta rays and sea turtles while fishing for sharks");
 								}
 							} else {
-								npcsay(player, n, "Not enough money");
+								npcsay(player, n, "You don't have enough coins " + (player.isMale() ? "lad" : "lass"));
 							}
 						}
 					}
