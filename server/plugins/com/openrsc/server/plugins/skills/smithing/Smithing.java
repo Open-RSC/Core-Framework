@@ -260,9 +260,7 @@ public class Smithing implements UseLocTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (ifinterrupted()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			batchSmithing(player, item, def, repeat);
 		}
 	}

@@ -58,7 +58,6 @@ public class SpinningWheel implements UseLocTrigger {
 	}
 
 	private void batchSpin(Player player, Item item, String resultString, int resultCatalogID, int requiredLevel, int experience, int repeat) {
-
 		if (player.getSkills().getLevel(Skills.CRAFTING) < requiredLevel) {
 			mes(player, "You need to have a crafting of level "
 				+ requiredLevel + " or higher to make a "
@@ -72,18 +71,23 @@ public class SpinningWheel implements UseLocTrigger {
 				return;
 			}
 		}
-		if (player.getCarriedItems().remove(new Item(item.getCatalogId())) > -1) {
-			thinkbubble(player, item);
-			player.playSound("mechanical");
-			player.message(resultString);
-			player.getCarriedItems().getInventory().add(new Item(resultCatalogID, 1));
-			player.incExp(Skills.CRAFTING, experience, true);
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
-			if (player.hasMoved()) return;
-			repeat--;
-			if (repeat > 0 && player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)) > 0) {
-				batchSpin(player, item, resultString, resultCatalogID, requiredLevel, experience, repeat);
-			}
+
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		if (item == null) return;
+
+		player.getCarriedItems().remove(item);
+		thinkbubble(player, item);
+		player.playSound("mechanical");
+		player.message(resultString);
+		player.getCarriedItems().getInventory().add(new Item(resultCatalogID, 1));
+		player.incExp(Skills.CRAFTING, experience, true);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		// Repeat
+		if (!ifinterrupted() && --repeat > 0) {
+			batchSpin(player, item, resultString, resultCatalogID, requiredLevel, experience, repeat);
 		}
 	}
 }

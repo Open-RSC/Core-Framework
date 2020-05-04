@@ -189,9 +189,7 @@ public final class Harvesting implements OpLocTrigger {
 		}
 
 		// Repeat
-		if(ifinterrupted()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			handleXmasHarvesting(player, object, repeat);
 		}
 	}
@@ -283,9 +281,7 @@ public final class Harvesting implements OpLocTrigger {
 		}
 
 		// Repeat
-		if (ifinterrupted()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			batchClipping(player, object, objName, prodEnum, repeat);
 		}
 	}
@@ -386,9 +382,9 @@ public final class Harvesting implements OpLocTrigger {
 				}
 			}
 		}
-		if (ifinterrupted()) return;
-		repeat--;
-		if (repeat > 0) {
+
+		// Repeat
+		if (!ifinterrupted() && --repeat > 0) {
 			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 			batchHarvest(player, toolId, obj, def, repeat);
 		}

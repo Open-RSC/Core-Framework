@@ -205,9 +205,7 @@ public class Fishing implements OpLocTrigger {
 			}
 
 			// Repeat
-			if (player.hasMoved()) return;
-			repeat--;
-			if (repeat > 0) {
+			if (!ifinterrupted() && --repeat > 0) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				batchFishing(player, netId, def, object, command, repeat);
 			}

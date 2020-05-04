@@ -195,8 +195,7 @@ public class Default implements DefaultHandler,
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		if (amountToDrop > 0) {
+		if (!ifinterrupted() && amountToDrop > 0) {
 			batchDrop(player, item, fromInventory, amountToDrop);
 		}
 	}

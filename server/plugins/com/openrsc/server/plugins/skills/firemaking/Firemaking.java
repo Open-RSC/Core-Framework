@@ -110,10 +110,10 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 				}
 			}
 
-			if (player.hasMoved()) return;
-			repeat--;
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-			if (repeat > 0) {
+			// Repeat on success
+			if (!ifinterrupted() && --repeat > 0) {
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+
 				// Drop new log
 				Item log = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(gItem.getID(), Optional.of(false))
@@ -126,8 +126,9 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
-			repeat--;
-			if (repeat > 0) {
+
+			// Repeat on fail
+			if (!ifinterrupted() && --repeat > 0) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				batchFiremaking(player, gItem, def, repeat);
 			}
@@ -191,9 +192,8 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 				firemakingWalk(player);
 			}
 
-			if (player.hasMoved()) return;
-			repeat--;
-			if (repeat > 0) {
+			// Repeat if success
+			if (!ifinterrupted() && --repeat > 0) {
 				// Drop new log
 				Item log = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(gItem.getID(), Optional.of(false))
@@ -208,8 +208,8 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
-			repeat--;
-			if (repeat > 0) {
+
+			if (!ifinterrupted() && --repeat > 0) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				batchCustomFiremaking(player, gItem, def, repeat);
 			}

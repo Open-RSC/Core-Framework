@@ -17,26 +17,6 @@ public class SoilMound implements UseLocTrigger {
 		return obj.getID() == 1276 && item.getCatalogId() == ItemId.BUCKET.id();
 	}
 
-	private void batchFill(Player player, Item bucket, int filledId, int repeat) {
-		bucket = player.getCarriedItems().getInventory().get(
-			player.getCarriedItems().getInventory().getLastIndexById(bucket.getCatalogId(), Optional.of(false)));
-
-		if (bucket == null) return;
-
-		thinkbubble(player, bucket);
-		player.message("you fill the bucket with soil");
-		player.getCarriedItems().remove(new Item(bucket.getCatalogId()));
-		give(player, filledId, 1);
-
-		if (ifinterrupted()) return;
-
-		repeat--;
-		if (repeat > 0) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
-			batchFill(player, bucket, filledId, repeat);
-		}
-	}
-
 	@Override
 	public void onUseLoc(Player player, GameObject obj, final Item item) {
 		final int itemID = item.getCatalogId();
@@ -52,5 +32,23 @@ public class SoilMound implements UseLocTrigger {
 		}
 
 		batchFill(player, item, refilledID, repeat);
+	}
+
+	private void batchFill(Player player, Item bucket, int filledId, int repeat) {
+		bucket = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(bucket.getCatalogId(), Optional.of(false)));
+
+		if (bucket == null) return;
+
+		thinkbubble(player, bucket);
+		player.message("you fill the bucket with soil");
+		player.getCarriedItems().remove(bucket);
+		give(player, filledId, 1);
+
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		if (!ifinterrupted() && --repeat > 0) {
+			batchFill(player, bucket, filledId, repeat);
+		}
 	}
 }

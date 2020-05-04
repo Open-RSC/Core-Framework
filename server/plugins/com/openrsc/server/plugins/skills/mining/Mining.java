@@ -263,9 +263,7 @@ public final class Mining implements OpLocTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 
 		// Repeat
-		if (ifinterrupted()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			batchMining(player, rock, def, axeId, mineLvl, repeat);
 		}
 

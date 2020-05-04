@@ -136,9 +136,7 @@ public class GemMining implements OpLocTrigger {
 		}
 
 		// Repeat
-		if (ifinterrupted()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			batchMining(player, obj, axeId, mineLvl, repeat);
 		}
 	}

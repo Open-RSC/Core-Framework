@@ -349,9 +349,7 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, def.getExp(), true);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if(repeat > 0) {
+		if(!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchGoldJewelry(player, item, def, gem, gems, type, reply, repeat);
 		}
@@ -417,9 +415,7 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, 200, true);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchSilverJewelry(player, item, results, type, reply, repeat);
 		}
@@ -488,9 +484,7 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, exp, true);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchPotteryMoulding(player, item, reqLvl, result, msg, exp, repeat);
 		}
@@ -569,9 +563,7 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchPotteryFiring(player, item, reqLvl, result, msg, exp, repeat);
 		}
@@ -610,9 +602,7 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, 80, true);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchGlassMaking(player, item, otherItem, repeat);
 		}
@@ -725,9 +715,7 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, exp, true);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			batchGlassBlowing(player, glass, result, reqLvl, exp, resultGen, repeat);
 		}
@@ -797,9 +785,7 @@ public class Crafting implements UseInvTrigger,
 			player.incExp(Skills.CRAFTING, gemDef.getExp(), true);
 		}
 
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			batchGemCutting(player, gem, gemDef, repeat);
 		}
@@ -939,9 +925,7 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchLeather(player, leather, result, reqLvl, exp, repeat);
 		}
@@ -1003,10 +987,8 @@ public class Crafting implements UseInvTrigger,
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		if (!ifinterrupted() && --repeat > 0) {
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchString(player, item, woolBall, newID, repeat);
 		}
 	}

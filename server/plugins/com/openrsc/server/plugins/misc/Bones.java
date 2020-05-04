@@ -48,9 +48,7 @@ public class Bones implements OpInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0 && player.getCarriedItems().getInventory().countId(toRemove.getCatalogId(), Optional.of(false)) > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			buryBones(player, item, repeat);
 		}
 	}

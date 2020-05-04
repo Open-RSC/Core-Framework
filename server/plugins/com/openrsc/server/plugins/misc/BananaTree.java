@@ -12,6 +12,26 @@ public class BananaTree implements OpLocTrigger {
 	private final int BANANA_TREE_ID = 183;
 	private final int EMPTY_TREE_ID = 184;
 
+	@Override
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
+		return obj.getID() == BANANA_TREE_ID || obj.getID() == EMPTY_TREE_ID;
+	}
+
+	@Override
+	public void onOpLoc(Player player, GameObject obj, String command) {
+		if (obj.getID() == BANANA_TREE_ID) {
+			int repeat = 1;
+			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+				repeat = player.getCarriedItems().getInventory().getFreeSlots();
+			}
+			batchBananaPick(player, obj, repeat);
+		}
+
+		if (obj.getID() == EMPTY_TREE_ID) {
+			player.message("there are no bananas left on the tree");
+		}
+	}
+
 	private void batchBananaPick(Player player, GameObject bananaTree, int repeat) {
 		int tick = player.getWorld().getServer().getConfig().GAME_TICK;
 		int bananaCount = 1;
@@ -30,33 +50,10 @@ public class BananaTree implements OpLocTrigger {
 			player.message("you pick a banana");
 		}
 
-		if (ifinterrupted()) return;
+		delay(tick);
 
-		repeat--;
-		if (repeat > 0) {
-			delay(tick);
+		if (!ifinterrupted() && --repeat > 0) {
 			batchBananaPick(player, bananaTree, repeat);
 		}
-	}
-
-	@Override
-	public void onOpLoc(Player player, GameObject obj, String command) {
-
-		if (obj.getID() == BANANA_TREE_ID) {
-			int repeat = 1;
-			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-				repeat = player.getCarriedItems().getInventory().getFreeSlots();
-			}
-			batchBananaPick(player, obj, repeat);
-		}
-
-		if (obj.getID() == EMPTY_TREE_ID) {
-			player.message("there are no bananas left on the tree");
-		}
-	}
-
-	@Override
-	public boolean blockOpLoc(Player player, GameObject obj, String command) {
-		return obj.getID() == BANANA_TREE_ID || obj.getID() == EMPTY_TREE_ID;
 	}
 }

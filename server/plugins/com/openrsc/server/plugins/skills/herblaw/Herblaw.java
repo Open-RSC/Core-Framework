@@ -107,9 +107,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			batchIdentify(player, herb, herbDef, repeat);
 		}
 	}
@@ -386,9 +384,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			batchPotionMaking(player, herb, herbDef, vial, repeat);
 		}
 	}
@@ -469,9 +465,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			batchPotionSecondary(player, unfinished, second, def, bubbleItem, repeat);
 		}
 	}
@@ -587,12 +581,11 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		}
 		thinkbubble(player, new Item(ItemId.PESTLE_AND_MORTAR.id()));
 		player.getCarriedItems().getInventory().add(new Item(newID, 1));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchGrind(player, item, newID, repeat);
 		}
 	}

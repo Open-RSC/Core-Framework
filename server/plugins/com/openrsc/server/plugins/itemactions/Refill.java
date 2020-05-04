@@ -27,6 +27,22 @@ public class Refill implements UseLocTrigger {
 			&& inArray(item.getCatalogId(),REFILLABLE)) || (inArray(obj.getID(), VALID_OBJECTS_WELL) && item.getCatalogId() == ItemId.BUCKET.id()));
 	}
 
+	@Override
+	public void onUseLoc(Player player, GameObject obj, final Item item) {
+		for (int i = 0; i < REFILLABLE.length; i++) {
+			if (REFILLABLE[i] == item.getCatalogId()) {
+				final int itemID = item.getCatalogId();
+				final int refilledID = REFILLED[i];
+				int repeat = 1;
+				if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+					repeat = player.getCarriedItems().getInventory().countId(itemID, Optional.of(false));
+				}
+				batchRefill(player, item, refilledID, getFillString(player,obj,item), repeat);
+				break;
+			}
+		}
+	}
+
 	private String getFillString(Player player, GameObject obj, Item item) {
 		return "You fill the "
 			+ item.getDef(player.getWorld()).getName().toLowerCase()
@@ -43,31 +59,12 @@ public class Refill implements UseLocTrigger {
 		thinkbubble(player, item);
 		player.playSound("filljug");
 		player.message(fillString);
-		player.getCarriedItems().remove(new Item(item.getCatalogId()));
+		player.getCarriedItems().remove(item);
 		give(player, refilledId, 1);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
-		if (ifinterrupted()) return;
-
-		repeat--;
-		if (repeat > 0) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		if (!ifinterrupted() && --repeat > 0) {
 			batchRefill(player, item, refilledId, fillString, repeat);
-		}
-	}
-
-	@Override
-	public void onUseLoc(Player player, GameObject obj, final Item item) {
-		for (int i = 0; i < REFILLABLE.length; i++) {
-			if (REFILLABLE[i] == item.getCatalogId()) {
-				final int itemID = item.getCatalogId();
-				final int refilledID = REFILLED[i];
-				int repeat = 1;
-				if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-					repeat = player.getCarriedItems().getInventory().countId(itemID, Optional.of(false));
-				}
-				batchRefill(player, item, refilledID, getFillString(player,obj,item), repeat);
-				break;
-			}
 		}
 	}
 

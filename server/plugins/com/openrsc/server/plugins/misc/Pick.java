@@ -17,29 +17,6 @@ public final class Pick implements OpLocTrigger {
 			|| /* Flax */obj.getID() == 313;
 	}
 
-	private void handleCropPickup(final Player player, int objId, String pickMessage) {
-		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-			repeat = player.getCarriedItems().getInventory().getFreeSlots();
-		}
-		batchCropPickup(player, objId, pickMessage, repeat);
-	}
-
-	private void batchCropPickup(Player player, int objId, String pickMessage, int repeat) {
-		player.playerServerMessage(MessageType.QUEST, pickMessage);
-		give(player, objId, 1);
-		player.playSound("potato");
-
-		if (player.getCarriedItems().getInventory().full()) return;
-
-		if (ifinterrupted()) return;
-
-		repeat--;
-		if (repeat > 0) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
-			batchCropPickup(player, objId, pickMessage, repeat);
-		}
-	}
 
 	@Override
 	public void onOpLoc(final Player player, final GameObject object, final String command) {
@@ -56,6 +33,28 @@ public final class Pick implements OpLocTrigger {
 			default:
 				player.message("Nothing interesting happens");
 				break;
+		}
+	}
+
+	private void handleCropPickup(final Player player, int objId, String pickMessage) {
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().getFreeSlots();
+		}
+		batchCropPickup(player, objId, pickMessage, repeat);
+	}
+
+	private void batchCropPickup(Player player, int objId, String pickMessage, int repeat) {
+		player.playerServerMessage(MessageType.QUEST, pickMessage);
+		give(player, objId, 1);
+		player.playSound("potato");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		if (player.getCarriedItems().getInventory().full()) return;
+
+
+		if (!ifinterrupted() && --repeat > 0) {
+			batchCropPickup(player, objId, pickMessage, repeat);
 		}
 	}
 }

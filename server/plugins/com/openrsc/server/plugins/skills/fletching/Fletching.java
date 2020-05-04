@@ -73,21 +73,21 @@ public class Fletching implements UseInvTrigger {
 		int item2ID = item2.getCatalogId();
 
 		// Adding feathers to shafts / darts.
-		if (item1ID == ItemId.FEATHER.id() && DataConversions.inArray(attachmentIds, item2.getCatalogId())) {// attachFeathers(player, item1, item2)) {
+		if (item1ID == ItemId.FEATHER.id() && DataConversions.inArray(attachmentIds, item2.getCatalogId())) {
 			return true;
-		} else if (item2ID == ItemId.FEATHER.id() && DataConversions.inArray(attachmentIds, item1.getCatalogId())) {// attachFeathers(player, item2, item1)) {
+		} else if (item2ID == ItemId.FEATHER.id() && DataConversions.inArray(attachmentIds, item1.getCatalogId())) {
 			return true;
 
 		// Adding bow strings to unstrung bows.
-		} else if (item1ID == ItemId.BOW_STRING.id() && DataConversions.inArray(unstrungBows, item2.getCatalogId())) {// doBowString(player, item1, item2)) {
+		} else if (item1ID == ItemId.BOW_STRING.id() && DataConversions.inArray(unstrungBows, item2.getCatalogId())) {
 			return true;
-		} else if (item2ID == ItemId.BOW_STRING.id() && DataConversions.inArray(unstrungBows, item1.getCatalogId())) {// doBowString(player, item2, item1)) {
+		} else if (item2ID == ItemId.BOW_STRING.id() && DataConversions.inArray(unstrungBows, item1.getCatalogId())) {
 			return true;
 
 		// Add arrow heads to headless arrows.
-		} else if (item1ID == ItemId.HEADLESS_ARROWS.id() && DataConversions.inArray(arrowHeads, item2.getCatalogId())) {// doArrowHeads(player, item1, item2)) {
+		} else if (item1ID == ItemId.HEADLESS_ARROWS.id() && DataConversions.inArray(arrowHeads, item2.getCatalogId())) {
 			return true;
-		} else if (item2ID == ItemId.HEADLESS_ARROWS.id() && DataConversions.inArray(arrowHeads, item1.getCatalogId())) {// doArrowHeads(player, item2, item1)) {
+		} else if (item2ID == ItemId.HEADLESS_ARROWS.id() && DataConversions.inArray(arrowHeads, item1.getCatalogId())) {
 			return true;
 
 		// Use knife on logs.
@@ -98,16 +98,16 @@ public class Fletching implements UseInvTrigger {
 
 		// Cut oyster pearls.
 		} else if (item1ID == ItemId.CHISEL.id() && (item2.getCatalogId() == ItemId.QUEST_OYSTER_PEARLS.id()
-			|| item2.getCatalogId() == ItemId.OYSTER_PEARLS.id())) {// && doPearlCut(player, item1, item2)) {
+			|| item2.getCatalogId() == ItemId.OYSTER_PEARLS.id())) {
 			return true;
 		} else if (item2ID == ItemId.CHISEL.id() && (item1.getCatalogId() == ItemId.QUEST_OYSTER_PEARLS.id()
-			|| item1.getCatalogId() == ItemId.OYSTER_PEARLS.id())) {// && doPearlCut(player, item2, item1)) {
+			|| item1.getCatalogId() == ItemId.OYSTER_PEARLS.id())) {
 			return true;
 
 		// Add oyster pearl bolt tips to bolts.
-		} else if (item1ID == ItemId.OYSTER_PEARL_BOLT_TIPS.id() && item2ID == ItemId.CROSSBOW_BOLTS.id()) {// && doBoltMake(player, item2, item1)) {
+		} else if (item1ID == ItemId.OYSTER_PEARL_BOLT_TIPS.id() && item2ID == ItemId.CROSSBOW_BOLTS.id()) {
 			return true;
-		} else if (item2ID == ItemId.OYSTER_PEARL_BOLT_TIPS.id() && item1ID == ItemId.CROSSBOW_BOLTS.id()) {// && doBoltMake(player, item1, item2)) {
+		} else if (item2ID == ItemId.OYSTER_PEARL_BOLT_TIPS.id() && item1ID == ItemId.CROSSBOW_BOLTS.id()) {
 			return true;
 		}
 
@@ -214,9 +214,7 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			batchFeathers(player, feathers, attachment, resultID, experience, repeat);
 		}
 	}
@@ -282,9 +280,7 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			batchArrowheads(player, headlessArrows, arrowHeads, headDef, repeat);
 		}
 	}
@@ -334,9 +330,7 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			batchStringing(player, bow, bowString, stringDef, repeat);
 		}
@@ -417,9 +411,7 @@ public class Fletching implements UseInvTrigger {
 		}
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			batchLogCutting(player, log, id, reqLvl, exp, cutMessage, repeat);
 		}
@@ -474,9 +466,7 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchPearlCutting(player, pearl, amount, repeat);
 		}
@@ -531,9 +521,7 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (player.hasMoved()) return;
-		repeat--;
-		if (repeat > 0) {
+		if (!ifinterrupted() && --repeat > 0) {
 			batchBolts(player, bolts, tips, repeat);
 		}
 	}
