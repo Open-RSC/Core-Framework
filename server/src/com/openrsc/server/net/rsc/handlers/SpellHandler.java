@@ -73,7 +73,7 @@ public class SpellHandler implements PacketHandler {
 
 	public static boolean checkAndRemoveRunes(Player player, SpellDef spell) {
 		if (SkillCapes.shouldActivate(player, ItemId.MAGIC_CAPE)) {
-			player.message("@blu@You manage to cast the spell without using any runes");
+			player.message("You manage to cast the spell without using any runes");
 			return true;
 		}
 
