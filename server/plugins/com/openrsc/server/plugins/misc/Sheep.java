@@ -20,20 +20,31 @@ public class Sheep implements UseNpcTrigger {
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
 		npc.resetPath();
+
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().getFreeSlots();
+		}
+		batchShear(player, item, repeat);
+	}
+
+	private void batchShear(Player player, Item item, int repeat) {
 		thinkbubble(player, item);
 		player.message("You attempt to shear the sheep");
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Crafting Shear Wool", player.getCarriedItems().getInventory().getFreeSlots(), true) {
 
-			@Override
-			public void action() {
-				if (random(0, 4) != 0) {
-					player.message("You get some wool");
-					give(player, ItemId.WOOL.id(), 1);
-				} else {
-					player.message("The sheep manages to get away from you!");
-					interruptBatch();
-				}
-			}
-		});
+		if (random(0, 4) != 0) {
+			player.message("You get some wool");
+			give(player, ItemId.WOOL.id(), 1);
+		} else {
+			player.message("The sheep manages to get away from you!");
+			return;
+		}
+
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+
+		// Repeat
+		if (!ifinterrupted() && --repeat > 0) {
+			batchShear(player, item, repeat);
+		}
 	}
 }
