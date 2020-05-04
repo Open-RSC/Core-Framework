@@ -175,15 +175,17 @@ public class Fishing implements OpLocTrigger {
 					} else {
 						Item fish = new Item(fishLst.get(0).getId());
 						// Skill cape perk. Will convert a shark to either a manta ray or a turtle.
+						String cape = "";
 						if (fish.getCatalogId() == ItemId.RAW_SHARK.id()) {
 							Item newFish = new Item(SkillCapes.shouldActivateInt(player, ItemId.FISHING_CAPE));
 							if (newFish.getCatalogId() != -1) {
 								fish = newFish;
-								player.playerServerMessage(MessageType.QUEST, "Because of your prowess in fishing");
+								cape = "@dcy@";
+								player.playerServerMessage(MessageType.QUEST, cape + "Because of your prowess in fishing");
 							}
 						}
 						player.getCarriedItems().getInventory().add(fish);
-						player.playerServerMessage(MessageType.QUEST, "You catch " + (netId == ItemId.NET.id() ? "some" : "a") + " "
+						player.playerServerMessage(MessageType.QUEST, cape + "You catch " + (netId == ItemId.NET.id() ? "some" : "a") + " "
 							+ fish.getDef(player.getWorld()).getName().toLowerCase().replace("raw ", "") + (fish.getCatalogId() == ItemId.RAW_SHRIMP.id() ? "s" : "")
 							+ (fish.getCatalogId() == ItemId.RAW_SHARK.id() ? "!" : ""));
 						player.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
