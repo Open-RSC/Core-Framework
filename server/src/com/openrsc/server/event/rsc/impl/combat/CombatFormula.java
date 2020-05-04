@@ -143,6 +143,12 @@ class CombatFormula {
 		return isHit ? calculateRangedDamage(source) : 0;
 	}
 
+	/**
+	 * Gets the melee max hit of the attacking mob
+	 *
+	 * @param source             The attacking mob.
+	 * @return The max hit
+	 */
 	private static int getMeleeDamage(final Mob source) {
 		final int styleBonus = styleBonus(source, 2);
 		final double prayerBonus = addPrayers(source, Prayers.BURST_OF_STRENGTH,
@@ -155,6 +161,12 @@ class CombatFormula {
 		return (int)(strength * weaponMultiplier + 1.05D);
 	}
 
+	/**
+	 * Gets the ranged max hit of the attacking mob
+	 *
+	 * @param source             The attacking mob.
+	 * @return The max hit
+	 */
 	private static int getRangedDamage(final Mob source) {
 		final int ranged = source.getSkills().getLevel(Skills.RANGED);
 		final double weaponMultiplier = (source.getWeaponPowerPoints() * 0.00175D)+0.1D;
@@ -162,6 +174,12 @@ class CombatFormula {
 		return (int)(ranged * weaponMultiplier + 1.05D);
 	}
 
+	/**
+	 * Gets the melee defence of the defending mob
+	 *
+	 * @param defender             The defending mob.
+	 * @return The melee defence
+	 */
 	private static double getMeleeDefence(final Mob defender) {
 		final int styleBonus = styleBonus(defender, 1);
 		final double prayerBonus = addPrayers(defender, Prayers.THICK_SKIN,
@@ -174,6 +192,12 @@ class CombatFormula {
 		return (defense * armourMultiplier) + 1.05D;
 	}
 
+	/**
+	 * Gets the ranged accuracy of the attacking mob
+	 *
+	 * @param attacker             The attacking mob.
+	 * @return The ranged accuracy
+	 */
 	private static double getRangedAccuracy(final Mob attacker) {
 		final int ranged = attacker.getSkills().getLevel(Skills.RANGED);
 		final double weaponMultiplier = (attacker.getWeaponAimPoints() * 0.00175D)+0.1D;
@@ -181,6 +205,12 @@ class CombatFormula {
 		return (ranged * weaponMultiplier) + 1.05D;
 	}
 
+	/**
+	 * Gets the melee accuracy of the attacking mob
+	 *
+	 * @param attacker             The attacking mob.
+	 * @return The melee accuracy
+	 */
 	private static double getMeleeAccuracy(final Mob attacker) {
 		final int styleBonus = styleBonus(attacker, 0);
 		final double prayerBonus = addPrayers(attacker, Prayers.CLARITY_OF_THOUGHT,
@@ -193,11 +223,17 @@ class CombatFormula {
 		return (attack * weaponMultiplier) + 1.05D;
 	}
 
-	private static int styleBonus(final Mob mob, final int skill) {
-		if (mob.isNpc())
+	/**
+	 * Gets the amount of skill points to be added for a specific skill based on style bonus
+	 *
+	 * @param attacker             The attacking mob.
+	 * @return The amount of skill points to add for combat style
+	 */
+	private static int styleBonus(final Mob attacker, final int skill) {
+		if (attacker.isNpc())
 			return 0;
 
-		int style = mob.getCombatStyle();
+		int style = attacker.getCombatStyle();
 		if (style == Skills.CONTROLLED_MODE)
 			return 1;
 
@@ -205,6 +241,12 @@ class CombatFormula {
 			|| (skill == Skills.STRENGTH && style == Skills.AGGRESSIVE_MODE) ? 3 : 0;
 	}
 
+	/**
+	 * Get the prayer multiplier for the context mob's skill
+	 *
+	 * @param source             The context mob.
+	 * @return A multiplier to modify the context mob's relevant stat to the prayers.
+	 */
 	private static double addPrayers(final Mob source, final int prayer1, final int prayer2, final int prayer3) {
 		if (source.isPlayer()) {
 			final Player sourcePlayer = (Player) source;
