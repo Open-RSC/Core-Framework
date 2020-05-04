@@ -1328,17 +1328,13 @@ public class DoorAction {
 		player.playSound(open ? "opendoor" : "closedoor");
 	}
 
-	private void replaceGameObject(GameObject obj, Player owner, int newID,
-								   boolean open) {
-		if (!owner.cantConsume()) {
-			owner.setConsumeTimer(2);
-			if (open) {
-				owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " swings open");
-			} else {
-				owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " creaks shut");
-			}
-			owner.playSound(open ? "opendoor" : "closedoor");
-			owner.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), newID, obj.getDirection(), obj.getType()));
+	private void replaceGameObject(GameObject obj, Player owner, int newID, boolean open) {
+		if (open) {
+			owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " swings open");
+		} else {
+			owner.message("The " + (obj.getGameObjectDef().getName().equalsIgnoreCase("gate") ? "gate" : "door") + " creaks shut");
 		}
+		owner.playSound(open ? "opendoor" : "closedoor");
+		owner.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), newID, obj.getDirection(), obj.getType()));
 	}
 }

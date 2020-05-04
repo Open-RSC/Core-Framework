@@ -23,10 +23,6 @@ public class Eating implements OpInvTrigger {
 	public void onOpInv(final Player player, Integer invIndex, final Item item, final String command) {
 		if (item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id()) {
 
-			if (player.cantConsume()) {
-				return;
-			}
-
 			if (item.getItemStatus().getNoted()) {
 				return;
 			}
@@ -34,8 +30,6 @@ public class Eating implements OpInvTrigger {
 			if (player.getCarriedItems().remove(item) == -1) {
 				return;
 			}
-
-			player.setConsumeTimer(1); // eat speed is same as tick speed setting
 
 			ActionSender.sendSound(player, "eat");
 
@@ -203,7 +197,6 @@ public class Eating implements OpInvTrigger {
 				}
 				player.getSkills().setLevel(Skills.HITS, newHp);
 			}
-			delay(325);
 			if (heals && !isKebabVariant) {
 				player.playerServerMessage(MessageType.QUEST, "It heals some health");
 				if (player.getWorld().getServer().getConfig().WANT_PARTIES) {

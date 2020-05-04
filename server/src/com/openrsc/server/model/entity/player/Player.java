@@ -437,18 +437,6 @@ public final class Player extends Mob {
 		cannonEvent = event;
 	}
 
-	public boolean cantConsume() {
-		return consumeTimer > 0;
-	}
-
-	public void setConsumeTimer(final int ticks) {
-		consumeTimer = getWorld().getServer().getConfig().GAME_TICK * ticks;
-	}
-
-	public void decrementConsumeTimer() {
-		consumeTimer -= getWorld().getServer().getConfig().GAME_TICK;
-	}
-
 	public long getLastSaveTime() {
 		return lastSaveTime;
 	}
