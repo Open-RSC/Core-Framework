@@ -291,7 +291,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 			n.startCombat(player);
 		}
 		else if (n.getID() == NpcId.CITY_GUARD.id()) {
-			if (player.getCache().hasKey("city_guard_riddle")) {
+			if (player.getCache().hasKey("city_guard_riddle") && player.getCache().getBoolean("city_guard_riddle")) {
 				npcsay(player, n, "What is it ?");
 				int menu = multi(player, n,
 					"Do you have any other riddles for me ?",
@@ -343,6 +343,8 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 						"My whole is an object, that magic will make",
 						"It brings wrack and ruin to all in it's wake...",
 						"Now how long I wonder, will this riddle take ?");
+					// player got the riddle
+					player.getCache().store("city_guard_riddle", false);
 				}
 			}
 		}
@@ -363,6 +365,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 				case 7:
 				case 8:
 				case 9:
+				case 10:
 					if (player.getCache().hasKey("ogre_grew_p1")) {
 						npcsay(player, n, "What are you doing here morsel ?");
 						int menu = multi(player, n,
@@ -458,6 +461,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 				case 7:
 				case 8:
 				case 9:
+				case 10:
 					if (player.getCache().hasKey("ogre_relic_part_3")) {
 						npcsay(player, n, "It's the little rat again");
 						int menu = multi(player, n,
@@ -555,6 +559,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 				case 7:
 				case 8:
 				case 9:
+				case 10:
 					if (player.getCache().hasKey("ogre_relic_part_1")) {
 						npcsay(player, n, "The small thing returns, what do you want now ?");
 						int subMenu = multi(player, n,
@@ -791,24 +796,68 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 						}
 						break;
 					case 3:
-						npcsay(player, n, "Ah the warrior returns",
-							"Have you found a way into Gu'Tanoth yet ?");
-						say(player, n, "I can't get past the guards");
-						npcsay(player, n, "Well, ogres dislike others apart from their kind",
-							"What you need is some form of proof of friendship",
-							"Something to trick them into believing you are their friend",
-							"...Which shouldn't be too hard considering their intelligence!");
-						if (!player.getCarriedItems().hasCatalogID(ItemId.OGRE_RELIC.id(), Optional.empty())) {
-							int lostRelicMenu = multi(player, n,
-								"I have lost the relic you gave me",
-								"I will find my way in, no problem");
-							if (lostRelicMenu == 0) {
-								npcsay(player, n, "What! lost the relic ? How careless!",
-									"It's a good job I copied that design then...",
-									"You can take this copy instead, its just as good");
-								give(player, ItemId.OGRE_RELIC.id(), 1);
-							} else if (lostRelicMenu == 1) {
-								npcsay(player, n, "Yes, I'm sure you will...good luck");
+						if (!player.getCache().hasKey("has_ogre_companionship") &&
+							!player.getCache().hasKey("city_guard_riddle")) {
+							npcsay(player, n, "Ah the warrior returns",
+								"Have you found a way into Gu'Tanoth yet ?");
+							say(player, n, "I can't get past the guards");
+							npcsay(player, n, "Well, ogres dislike others apart from their kind",
+								"What you need is some form of proof of friendship",
+								"Something to trick them into believing you are their friend",
+								"...Which shouldn't be too hard considering their intelligence!");
+							if (!player.getCarriedItems().hasCatalogID(ItemId.OGRE_RELIC.id(), Optional.empty())) {
+								int lostRelicMenu = multi(player, n,
+									"I have lost the relic you gave me",
+									"I will find my way in, no problem");
+								if (lostRelicMenu == 0) {
+									npcsay(player, n, "What! lost the relic ? How careless!",
+										"It's a good job I copied that design then...",
+										"You can take this copy instead, its just as good");
+									give(player, ItemId.OGRE_RELIC.id(), 1);
+								} else if (lostRelicMenu == 1) {
+									npcsay(player, n, "Yes, I'm sure you will...good luck");
+								}
+							}
+						} else if(player.getCache().hasKey("has_ogre_companionship") &&
+							!player.getCache().hasKey("city_guard_riddle")) {
+							npcsay(player, n, "How are you doing with the ogres ?");
+							say(player, n, "I have gained entry to the city");
+							npcsay(player, n, "Already ? excellent!");
+							say(player, n, "I still can't navigate the skavid caves");
+							npcsay(player, n, "You need a map of some kind...",
+								"I bet one of the ogres has one");
+							say(player, n, "Okay thanks, I'll go and find out");
+						} else {
+							npcsay(player, n, "How is the quest going ?");
+							int puzzleMenu = multi(player, n,
+								"Some of the city guards have set me a puzzle",
+								"Can you tell me more about the city ?");
+							if (puzzleMenu == 0) {
+								npcsay(player, n, "Ummm is that so ?",
+									"I can't help you there, I never was much good at puzzles...");
+							} else if (puzzleMenu == 1) {
+								npcsay(player, n, "Yes indeed, this city is very ancient",
+									"It's not clear whether the ogres actually constructed it",
+									"Or whether they took it over from another race",
+									"What I can tell you is that the whole city is controlled",
+									"By a group of ogre shaman");
+								say(player, n, "Ogre shaman ?");
+								npcsay(player, n, "Indeed, these ogres have harnessed the black arts...",
+									"They wield great power");
+								say(player, n, "They sound nasty!");
+								npcsay(player, n, "Indeed they are, but you must confront them",
+									"To break the power of the ogres they must be beaten!");
+								int sMenu = multi(player, n, false, //do not send over
+									"But I'm scared of those shaman!", "Leave it to me, I fear no ogre");
+								if (sMenu == 0) {
+									say(player, n, "But i'm scared of those shaman!");
+									npcsay(player, n, "Scared ? to get this far and to falter now...",
+										"Perchance you are not ready for the final challenge ?");
+								} else if (sMenu == 1) {
+									say(player, n, "Leave it to me, I fear no ogre");
+									npcsay(player, n, "That's the spirit!",
+										"May your search prove fruitful!");
+								}
 							}
 						}
 						break;
@@ -919,14 +968,42 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 						}
 						break;
 					case 9:
-						npcsay(player, n, "Hello again",
-							"Did the potion work ?");
-						say(player, n, "Indeed it did!",
-							"I wiped out those ogre shaman!",
-							"I am looking for another crystal");
-						npcsay(player, n, "I am sure the cave holds the final one",
-							"Look for the source of the shaman power...");
-						say(player, n, "Okay I will go and have a look");
+						if (!player.getCache().hasKey("crystal_rock")) {
+							npcsay(player, n, "Hello again",
+								"Did the potion work ?");
+							say(player, n, "Indeed it did!",
+								"I wiped out those ogre shaman!",
+								"I am looking for another crystal");
+							npcsay(player, n, "I am sure the cave holds the final one",
+								"Look for the source of the shaman power...");
+							say(player, n, "Okay I will go and have a look");
+						} else {
+							npcsay(player, n, "Well, how did it go ?",
+								"Have you found any more crystals ?");
+							int rMenu = multi(player, n, false, //do not send over
+								"I did have the crystal but I lost it",
+								"I can't find any more crystals yet...",
+								"Yes, here it is");
+							if (rMenu == 0) {
+								say(player, n, "I did have the crystal but I lost it");
+								npcsay(player, n, "Dissappointing, dissappointing...",
+									"Well there's not much I can do...",
+									"You had better go back and search the area again");
+							} else if (rMenu == 1) {
+								say(player, n, "I can't find any more crystals yet...");
+								npcsay(player, n, "The rock of the shaman is the key",
+									"I understand their power is linked to it in some way",
+									"You may need something heavy to crack this boulder...");
+							} else if (rMenu == 2) {
+								say(player, n, "Yes, here it is!");
+								npcsay(player, n, "Wonderful!",
+									"Show it to me so I can confirm it's the real thing...");
+							}
+						}
+						break;
+					case 10:
+						npcsay(player, n, "The system is not activated yet",
+							"Throw the switch to start it...");
 						break;
 				}
 			}

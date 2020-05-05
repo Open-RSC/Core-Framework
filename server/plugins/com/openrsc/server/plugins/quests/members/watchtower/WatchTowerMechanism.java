@@ -65,6 +65,13 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 				|| (npc.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id() && item.getCatalogId() == ItemId.NIGHTSHADE.id());
 	}
 
+	private boolean hasAllCrystals(Player player) {
+		return player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL1.id(), Optional.of(false))
+			&& player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL2.id(), Optional.of(false))
+			&& player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL3.id(), Optional.of(false))
+			&& player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL4.id(), Optional.of(false));
+	}
+
 	private void lastCrystalChat(Player player, Npc n) {
 		say(player, n, "This is the last one");
 		npcsay(player, n, "Magnificent!",
@@ -97,7 +104,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 						"That's a crystal found!",
 						"You are clever",
 						"Hold onto it until you have all four...");
-					if (player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL4.id(), Optional.of(false))) {
+					if (hasAllCrystals(player)) {
 						lastCrystalChat(player, npc);
 					} else {
 						npcsay(player, npc, "Keep searching for the others",
@@ -115,7 +122,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 					npcsay(player, npc, "Superb!",
 						"Keep up the good work",
 						"Hold onto it until you have all four...");
-					if (player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL4.id(), Optional.of(false))) {
+					if (hasAllCrystals(player)) {
 						lastCrystalChat(player, npc);
 					} else {
 						npcsay(player, npc, "Keep searching for the others",
@@ -133,7 +140,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 					npcsay(player, npc, "I must say i'm impressed",
 						"May Saradomin speed you in finding them all",
 						"Hold onto it until you have all four...");
-					if (player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL4.id(), Optional.of(false))) {
+					if (hasAllCrystals(player)) {
 						lastCrystalChat(player, npc);
 					} else {
 						npcsay(player, npc, "Keep searching for the others",
@@ -147,7 +154,19 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 							"I don't need any more now...");
 						return;
 					}
-					lastCrystalChat(player, npc);
+					npcsay(player, npc, "Well done! Well done!");
+					if (hasAllCrystals(player)) {
+						lastCrystalChat(player, npc);
+					} else {
+						npcsay(player, npc, "Keep searching for the others",
+							"If you've dropped any...",
+							"Then you will need to go back to where you got it from");
+						// authentic only first time showing him without the other crystals triggered new dialogue
+						// on talk
+						if (!player.getCache().hasKey("crystal_rock")) {
+							player.getCache().store("crystal_rock", true);
+						}
+					}
 					break;
 				case OGRE_RELIC_PART_BODY:
 					say(player, npc, "I had this given to me");
@@ -220,7 +239,8 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 			}
 		}
 		else if (npc.getID() == NpcId.CITY_GUARD.id() && item.getCatalogId() == ItemId.DEATH_RUNE.id()) {
-			if (player.getCache().hasKey("city_guard_riddle") || player.getQuestStage(Quests.WATCHTOWER) == -1) {
+			if ((player.getCache().hasKey("city_guard_riddle") && player.getCache().getBoolean("city_guard_riddle"))
+				|| player.getQuestStage(Quests.WATCHTOWER) == -1) {
 				player.message("The guard is not listening to you");
 			} else {
 				player.getCarriedItems().remove(new Item(ItemId.DEATH_RUNE.id()));
@@ -228,6 +248,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 				if (player.getQuestStage(Quests.WATCHTOWER) == 3) {
 					player.updateQuestStage(Quests.WATCHTOWER, 4);
 				}
+				// player solved the riddle
 				player.getCache().store("city_guard_riddle", true);
 				say(player, npc, "I worked it out!");
 				npcsay(player, npc, "Well well.. the imp has done it!",
