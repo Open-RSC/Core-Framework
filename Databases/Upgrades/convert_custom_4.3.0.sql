@@ -1406,6 +1406,11 @@ JOIN `openrsc_reindexer` ON openrsc_equipped.id = openrsc_reindexer.old_catalogI
 SET openrsc_equipped.id = openrsc_reindexer.catalogID
 WHERE openrsc_equipped.id = openrsc_reindexer.old_catalogID;
 
+UPDATE `openrsc_auctions`
+JOIN `openrsc_reindexer` ON openrsc_auctions.itemID = openrsc_reindexer.old_catalogID
+SET openrsc_auctions.itemID = openrsc_reindexer.catalogID
+WHERE openrsc_auctions.itemID = openrsc_reindexer.old_catalogID;
+
 DROP TABLE `openrsc_reindexer`;
 
 INSERT INTO `openrsc_itemstatuses` (`catalogID`, `amount`, `playerID`)
