@@ -123,7 +123,7 @@ public class SkillCapes {
 	}
 
 	private static boolean smithingCape() {
-		double noCoalChance = 17;
+		double noCoalChance = 25;
 		if (rand1to100() <= noCoalChance) {
 			return true;
 		}

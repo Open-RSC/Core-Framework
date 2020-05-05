@@ -267,25 +267,29 @@ public class Smelting implements UseLocTrigger {
 				&& SkillCapes.shouldActivate(player, ItemId.SMITHING_CAPE)) {
 
 				skillcape = true;
-				player.message("You heat the furnace without using any coal");
+				player.message("You heat the furnace using half the usual amount of coal");
 			}
 
 			if (item.getCatalogId() == ItemId.GOLD_FAMILYCREST.id()) {
 				ci.remove(new Item(ItemId.GOLD_FAMILYCREST.id()));
 			}
 			else {
-				if (!(skillcape && smelt.getID() == ItemId.COAL.id())) {
-					for (int i = 0; i < smelt.getOreAmount(); i++) {
-						ci.remove(new Item(smelt.getID(), 1));
-					}
+				int toUse = smelt.getOreAmount();
+				if (skillcape && smelt.getID() == ItemId.COAL.id()) {
+					toUse = smelt.getOreAmount() / 2;
+				}
+				for (int i = 0; i < toUse; i++) {
+					ci.remove(new Item(smelt.getID(), 1));
 				}
 			}
 
 			if (smelt.getReqOreAmount() > 0) {
-				if (!(skillcape && smelt.getReqOreId() == ItemId.COAL.id())) {
-					for (int i = 0; i < smelt.getReqOreAmount(); i++) {
-						ci.remove(new Item(smelt.getReqOreId(), 1));
-					}
+				int toUse = smelt.getReqOreAmount();
+				if (skillcape && smelt.getReqOreId() == ItemId.COAL.id()) {
+					toUse = smelt.getReqOreAmount() / 2;
+				}
+				for (int i = 0; i < toUse; i++) {
+					ci.remove(new Item(smelt.getReqOreId(), 1));
 				}
 			}
 
