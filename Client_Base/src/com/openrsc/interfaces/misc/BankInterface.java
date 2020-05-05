@@ -377,6 +377,7 @@ public class BankInterface {
 
 	private void drawQuantityButtons(int currMouseX, int currMouseY, int relativeX, int relativeY) {
 		int itemID = selectedBankSlotItemID;
+		if (this.selectedBankSlot > currentItems.size()) return;
 		int amount = currentItems.get(this.selectedBankSlot).getAmount();
 
 		int quantityColour = 0xffffff;
