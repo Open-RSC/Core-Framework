@@ -125,7 +125,7 @@ class CombatFormula {
 
 			final double maximum = getMeleeDamage(source);
 			if (damage >= maximum - (maximum * 0.5) && SkillCapes.shouldActivate((Player) source, STRENGTH_CAPE, isHit)) {
-				damage += (maximum/2);
+				damage += (maximum*0.2);
 				((Player) source).message("@ora@Your Strength cape has granted you a critical hit");
 			}
 		}
