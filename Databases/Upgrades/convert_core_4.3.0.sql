@@ -3,6 +3,8 @@
  * The queries performed in the section will remove depreciated tables and columns
  */
 
+SELECT '1. DROP unused tables.' AS '';
+
 DROP TABLE IF EXISTS `openrsc_giveaway`;
 DROP TABLE IF EXISTS `openrsc_name_changes`;
 DROP TABLE IF EXISTS `openrsc_orders`;
@@ -10,6 +12,9 @@ DROP TABLE IF EXISTS `openrsc_achievement_task`;
 DROP TABLE IF EXISTS `openrsc_achievement_status`;
 DROP TABLE IF EXISTS `openrsc_achievement_reward`;
 DROP TABLE IF EXISTS `openrsc_achievements`;
+
+SELECT '2. DROP unused columns.' AS '';
+
 ALTER TABLE `openrsc_players`
     DROP IF EXISTS `highscoreopt`;
 ALTER TABLE `openrsc_players`
@@ -26,9 +31,12 @@ ALTER TABLE `openrsc_itemdef`
     DROP COLUMN IF EXISTS `originalItemID`;
 ALTER TABLE `openrsc_npcdef`
     DROP COLUMN IF EXISTS `pkBot`;
+
+SELECT '3. Replace columns.' AS '';
+
 ALTER TABLE `openrsc_npcdef` CHANGE `primary_id` `primary_id` INT(11) NOT NULL;
-ALTER TABLE `openrsc`.`openrsc_npcdef` DROP PRIMARY KEY, ADD PRIMARY KEY (`id`) USING BTREE;
-ALTER TABLE `openrsc_npcdef` DROP `primary_id`;
+ALTER TABLE `openrsc_npcdef` DROP PRIMARY KEY, ADD PRIMARY KEY (`id`) USING BTREE;
+ALTER TABLE `openrsc_npcdef` DROP COLUMN IF EXISTS `primary_id`;
 ALTER TABLE `openrsc_players` CHANGE `kills2` `npc_kills` INT(11) NOT NULL DEFAULT '0';
 ALTER TABLE `openrsc_itemdef` ADD `isNoteable` TINYINT(2) NOT NULL AFTER `basePrice`;
 
@@ -42,6 +50,8 @@ ALTER TABLE `openrsc_itemdef` ADD `isNoteable` TINYINT(2) NOT NULL AFTER `basePr
  * Itemdef replacement
  *  Replaces the itemdef table depending if it has not been upgraded yet
  */
+
+SELECT '4. Replace the itemdef table.' AS '';
 
 SET @DropTableIfExist =
         (
@@ -2255,6 +2265,8 @@ VALUES (1249, 'Cut reed plant', 'A narrow long tube - it might be useful for som
         1, 7, 0, 0, 0, 0, 450, 1),
        (1289, 'Scythe', 'Get another from the clothes shop if you die', '', 0, 0, 0, 1, 1, 229, 8216, 4, 1, 0,
         0, 10, 10, 0, 0, 15, 1);
+
+SELECT '5. Reindex inventory categoryIds' AS '';
 
 -- Use this file to place all items to bank and add new inventory layout.
 DROP TABLE IF EXISTS `openrsc_reindexer`;
@@ -4523,6 +4535,8 @@ VALUES (2000, 975, 1),
        (2406, 1379, 0),
        (2407, 1379, 1);
 
+SELECT '6. Create itemstatuses table.' AS '';
+
 DROP TABLE IF EXISTS `openrsc_itemstatuses`;
 CREATE TABLE IF NOT EXISTS `openrsc_itemstatuses`
 (
@@ -4537,52 +4551,64 @@ CREATE TABLE IF NOT EXISTS `openrsc_itemstatuses`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-SELECT '1. openrsc_itemstatuses created.' AS '';
+SELECT '7. Update the current bank with inventory notes' AS '';
 
 -- Update current bank stacks with inventory NOTES
 UPDATE `openrsc_bank`
     JOIN `openrsc_invitems` ON openrsc_invitems.id = openrsc_bank.id
     JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogID
 SET openrsc_bank.playerID = openrsc_bank.playerID,
-    openrsc_bank.id       = openrsc_reindexer.catalogID,
     openrsc_bank.amount   = openrsc_bank.amount + openrsc_invitems.amount
 WHERE openrsc_reindexer.noted = 1
   AND openrsc_invitems.playerID = openrsc_bank.playerID;
 
+SELECT '8. Add new stacks in the bank from inventory notes' AS '';
+
 -- Add new bank stacks for rest of inventory NOTES
 INSERT INTO `openrsc_bank` (`playerID`, `id`, `amount`)
-SELECT openrsc_invitems.playerID, openrsc_reindexer.catalogID, openrsc_invitems.amount
+SELECT openrsc_invitems.playerID, openrsc_reindexer.old_catalogID, openrsc_invitems.amount
 FROM `openrsc_invitems`
          JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogID
 WHERE openrsc_reindexer.noted = 1
   AND NOT EXISTS(
-        SELECT * FROM `openrsc_bank` WHERE openrsc_bank.id = openrsc_invitems.id
+        SELECT * FROM `openrsc_bank`
+        WHERE openrsc_bank.id = openrsc_invitems.id AND openrsc_bank.playerID = openrsc_invitems.playerID
     );
+
+SELECT '9. Update current bank stacks with inventory items' AS '';
 
 -- Update current bank stacks with inventory ITEMS
 UPDATE `openrsc_bank`
     JOIN `openrsc_invitems` ON openrsc_invitems.id = openrsc_bank.id
     JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogID
 SET openrsc_bank.playerID = openrsc_bank.playerID,
-    openrsc_bank.id       = openrsc_reindexer.catalogID,
     openrsc_bank.amount   = openrsc_bank.amount + openrsc_invitems.amount
 WHERE openrsc_reindexer.noted = 0
   AND openrsc_invitems.playerID = openrsc_bank.playerID;
 
+SELECT '10. Add new bank stacks from inventory items' AS '';
+
 -- Add new bank stacks for the rest of inventory ITEMS
 INSERT INTO `openrsc_bank` (`playerID`, `id`, `amount`)
-SELECT openrsc_invitems.playerID, openrsc_reindexer.catalogID, openrsc_invitems.amount
+SELECT openrsc_invitems.playerID, openrsc_reindexer.old_catalogID, openrsc_invitems.amount
 FROM `openrsc_invitems`
          JOIN `openrsc_reindexer`
               ON openrsc_invitems.id = openrsc_reindexer.old_catalogID
 WHERE openrsc_reindexer.noted = 0
   AND NOT EXISTS(
-        SELECT * FROM `openrsc_bank` WHERE openrsc_bank.id = openrsc_invitems.id
+        SELECT * FROM `openrsc_bank`
+        WHERE openrsc_bank.id = openrsc_invitems.id AND openrsc_bank.playerID = openrsc_invitems.playerID
     );
+
+SELECT '11. Reindex' AS '';
+
+UPDATE `openrsc_bank`
+    JOIN `openrsc_reindexer` ON openrsc_bank.id = openrsc_reindexer.old_catalogID
+SET openrsc_bank.id = openrsc_reindexer.catalogID;
 
 DROP TABLE `openrsc_reindexer`;
 
-SELECT '2. Items moved from openrsc_invitems to openrsc_bank.' AS '';
+SELECT '12. Update with new item statuses' AS '';
 
 INSERT INTO `openrsc_itemstatuses` (`catalogID`, `amount`, `playerID`)
 SELECT `id`, `amount`, `playerID`
@@ -4594,7 +4620,7 @@ UPDATE `openrsc_bank`
         AND openrsc_bank.id = openrsc_itemstatuses.catalogID
 SET openrsc_bank.id = openrsc_itemstatuses.itemID;
 
-SELECT '3. Items updated in openrsc_itemstatuses.' AS '';
+SELECT '13. Final alterations to invitems' AS '';
 
 TRUNCATE `openrsc_invitems`;
 
@@ -4607,6 +4633,8 @@ ALTER TABLE `openrsc_invitems`
 ALTER TABLE `openrsc_invitems`
     CHANGE IF EXISTS `id` `itemID` int(10) UNSIGNED NOT NULL;
 
+SELECT '14. Final alterations to bank' AS '';
+
 ALTER TABLE `openrsc_bank`
     DROP COLUMN IF EXISTS `dbid`;
 ALTER TABLE `openrsc_bank`
@@ -4614,8 +4642,12 @@ ALTER TABLE `openrsc_bank`
 ALTER TABLE `openrsc_bank`
     CHANGE IF EXISTS `id` `itemID` int(10) UNSIGNED NOT NULL;
 
+SELECT '15. Final alterations to itemstatuses' AS '';
+
 ALTER TABLE `openrsc_itemstatuses`
     DROP COLUMN IF EXISTS `playerID`;
+
+SELECT '16. Final alterations to npcdef' AS '';
 
 UPDATE `openrsc_npcdef` SET command = 'trade' WHERE id in (1, 48, 51, 55, 56, 58, 59, 69, 75, 82, 83, 84, 85, 87, 88, 101, 103, 105, 106, 112, 113, 115, 129, 130, 131, 141, 143, 145, 146, 149, 155, 156, 157, 165, 167, 168, 169, 173, 183, 185, 186, 187, 218, 220, 222, 223, 228, 230, 233, 235, 250, 260, 269, 278, 280, 282, 289, 297, 308, 325, 327, 328, 329, 330, 331, 336, 337, 371, 391, 501, 512, 514, 522, 528, 530, 532, 535, 537, 580, 581, 587, 616, 620, 661, 686, 687, 688, 689, 717, 719, 720, 773, 779, 780, 788, 793);
 UPDATE `openrsc_npcdef` SET command = 'teleport', command2 = 'trade' WHERE id = 54;
