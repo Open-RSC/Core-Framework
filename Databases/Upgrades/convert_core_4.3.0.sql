@@ -4571,7 +4571,8 @@ FROM `openrsc_invitems`
          JOIN `openrsc_reindexer` ON openrsc_invitems.id = openrsc_reindexer.old_catalogID
 WHERE openrsc_reindexer.noted = 1
   AND NOT EXISTS(
-        SELECT * FROM `openrsc_bank` WHERE openrsc_bank.id = openrsc_invitems.id
+        SELECT * FROM `openrsc_bank`
+        WHERE openrsc_bank.id = openrsc_invitems.id AND openrsc_bank.playerID = openrsc_invitems.playerID
     );
 
 SELECT '9. Update current bank stacks with inventory items' AS '';
@@ -4595,7 +4596,8 @@ FROM `openrsc_invitems`
               ON openrsc_invitems.id = openrsc_reindexer.old_catalogID
 WHERE openrsc_reindexer.noted = 0
   AND NOT EXISTS(
-        SELECT * FROM `openrsc_bank` WHERE openrsc_bank.id = openrsc_invitems.id
+        SELECT * FROM `openrsc_bank`
+        WHERE openrsc_bank.id = openrsc_invitems.id AND openrsc_bank.playerID = openrsc_invitems.playerID
     );
 
 SELECT '11. Reindex' AS '';
