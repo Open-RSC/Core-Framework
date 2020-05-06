@@ -395,8 +395,6 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			return;
 		}
 
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-
 		// Repeat
 		if (!ifinterrupted() && --repeat > 0) {
 			// TODO: Walk to mob configured.
@@ -404,6 +402,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				player.message("The " + thievedMobString + " has moved.");
 				return;
 			}
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString, repeat);
 		}
 	}
