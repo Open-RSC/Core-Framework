@@ -14,6 +14,7 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -245,13 +246,17 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 			npcsay(player, n, "Hi, I'm a little busy right now");
 		}
 		else if (n.getID() == NpcId.ACHETTIES.id()) {
+			ArrayList<String> choices = new ArrayList<>();
 			switch (player.getQuestStage(this)) {
 				case 0:
 					npcsay(player, n, "Greetings welcome to the hero's guild",
 						"Only the foremost hero's of the land can enter here");
-					int opt = multi(player, n,
-						"I'm a hero, may I apply to join?",
-						"Good for the foremost hero's of the land");
+					choices.add("I'm a hero, may I apply to join?");
+					choices.add("Good for the foremost hero's of the land");
+					if (canBuyCape(player)) {
+						choices.add("Is your cape also only for the foremost hero's of the land?");
+					}
+					int opt = multi(player, n, choices.toArray(new String[choices.size()]));
 					if (opt == 0) {
 						if ((player.getQuestStage(Quests.LOST_CITY) == -1 &&
 							(player.getQuestStage(Quests.SHIELD_OF_ARRAV) == -1 ||
@@ -286,6 +291,8 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 								"The shield of arrav, the lost city",
 								"Merlin's crystal and dragon slayer\"");
 						}
+					} else if (opt == 2) {
+						skillcape(player, n);
 					}
 					break;
 				case 1:
@@ -295,6 +302,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 					if (player.getCarriedItems().hasCatalogID(ItemId.MASTER_THIEF_ARMBAND.id(), Optional.of(false))
 						&& player.getCarriedItems().hasCatalogID(ItemId.LAVA_EEL.id(), Optional.of(false))
 						&& player.getCarriedItems().hasCatalogID(ItemId.RED_FIREBIRD_FEATHER.id(), Optional.of(false))) {
+
 						say(player, n, "I have all the things needed");
 						player.getCarriedItems().remove(new Item(ItemId.MASTER_THIEF_ARMBAND.id()));
 						player.getCarriedItems().remove(new Item(ItemId.LAVA_EEL.id()));
@@ -305,11 +313,19 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 						npcsay(player, n, "Remember you need the feather of an Entrana firebird",
 							"A master thief armband",
 							"And a cooked lava eel");
+
+						choices.add("Any hints on getting the armband?");
+						choices.add("Any hints on getting the feather?");
+						choices.add("Any hints on getting the eel?");
+
+						String capeDialog = "Any hints on getting a cape like yours?";
+						if (canBuyCape(player)) {
+							choices.add(capeDialog);
+						}
+						choices.add("I'll start looking for all those things then");
+
 						int opt2 = multi(player, n, false, //do not send over
-							"Any hints on getting the armband?",
-							"Any hints on getting the feather?",
-							"Any hints on getting the eel?",
-							"I'll start looking for all those things then");
+							choices.toArray(new String[choices.size()]));
 						if (opt2 == 0) {
 							say(player, n, "Any hints on getting the thieves armband?");
 							npcsay(player, n, "I'm sure you have relevant contacts to find out about that");
@@ -319,13 +335,50 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 						} else if (opt2 == 2) {
 							say(player, n, "Any hints on getting the eel?");
 							npcsay(player, n, "Maybe go and find someone who knows a lot about fishing?");
+						} else if (choices.get(opt2).equalsIgnoreCase(capeDialog)) {
+							say(player, n, capeDialog);
+							skillcape(player, n);
 						}
 					}
 					break;
 				case -1:
 					npcsay(player, n, "Greetings welcome to the hero's guild");
+					if (canBuyCape(player)) {
+						if (multi(player, n, "Could I get a heroic cape like yours?",
+							"Thank you") == 0) {
+
+							skillcape(player, n);
+						}
+					}
 					break;
 
+			}
+		}
+	}
+
+	private boolean canBuyCape(Player player) {
+		if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES
+			&& getMaxLevel(player, Skills.STRENGTH) >= 99) { return true; }
+		return false;
+	}
+
+	private void skillcape(Player player, Npc n) {
+		npcsay(player, n, "Yes indeed",
+			"I see that you have the strength of a hero",
+			"I'd be willing to sell you a cape for 99,000 gold");
+		if (multi(player, n, "Alright then", "No thank you") == 0) {
+			if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
+				mes(player, "Achetties takes your coins");
+				if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
+					mes(player, "And hands you a Strength cape");
+					give(player, ItemId.STRENGTH_CAPE.id(), 1);
+					npcsay(player, n, "Here you go",
+						"This cape will help increase your combat efficiency",
+						"By allowing you to perform critical hits");
+				}
+			} else {
+				npcsay(player, n, "Heroes usually have more coins than that",
+					"You don't have enough");
 			}
 		}
 	}

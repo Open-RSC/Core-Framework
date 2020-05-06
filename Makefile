@@ -65,13 +65,13 @@ import-custom:
 # Upgrades a database
 # Call via "make upgrade-authentic db=preservation"
 upgrade-authentic:
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/upgrade_core.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/convert_core_4.3.0.sql
 
 # Upgrades a database
 # Call via "make upgrade-custom db=cabbage"
 upgrade-custom:
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/upgrade_core.sql
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/upgrade_custom.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/convert_core_4.3.0.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/convert_custom_4.3.0.sql
 
 # Creates a database export of the specified database and saves to the output directory specified in the .env file.  Good for utilizing as a crontab.
 # Call via "make backup db=cabbage"

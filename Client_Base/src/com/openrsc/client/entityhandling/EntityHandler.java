@@ -518,7 +518,7 @@ public class EntityHandler {
 
 	}
 
-	private static void loadNpcDefinitionsA() {
+	private static void loadNpcDefinitions1() {
 		int i = 0;
 		int[] sprites;
 
@@ -640,7 +640,7 @@ public class EntityHandler {
 		sprites = new int[]{137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Ghost", "Ooh spooky", "", 23, 30, 25, 23, true, sprites, 0, 0, 0, 0, 201, 243, 9, 9, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
-		npcs.add(new NPCDef("Aubury", "I think he might be a shop keeper", "Teleport", shopOption, 0, 0, 3, 0, false, sprites, 1, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Aubury", "I think he might be a shop keeper", (Config.S_WANT_RUNECRAFTING ? "Teleport" : ""), (Config.S_RIGHT_CLICK_TRADE ? "Trade" : null), 0, 0, 3, 0, false, sprites, 1, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
 		npcs.add(new NPCDef("Shopkeeper", "I wonder what he's got for sale", shopOption, 0, 0, 3, 0, false, sprites, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1};
@@ -803,7 +803,11 @@ public class EntityHandler {
 			sprites = new int[]{6, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1};
 		}
 		npcs.add(new NPCDef("Head chef", "He looks after the chef's guild", "", 20, 20, 3, 20, false, sprites, 1, 16777215, 16711680, 15523536, 150, 220, 6, 6, 5, i++));
-		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		if(Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 383};
+		} else {
+			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Thurgo", "A short angry guy", "", 20, 17, 16, 20, false, sprites, 15658734, 8409200, 8409120, 13415270, 121, 176, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, 122, -1, 45, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Ice Giant", "He's got icicles in his beard", "", 67, 66, 70, 70, true, sprites, 6724027, 8425710, 8409120, 5623807, 261, 396, 6, 6, 5, i++));
@@ -997,7 +1001,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Fairy Ladder attendant", "A worker in the faerie market", "", 0, 0, 3, 0, false, sprites, 16761440, 8409120, 8409120, 15523536, 94, 143, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 85, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Jatix", "A hard working druid", shopOption, 28, 32, 30, 28, false, sprites, 11184810, 65535, 16777215, 15392466, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, 440};
+		} else {
+			sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1};
+		}
 		npcs.add(new NPCDef("Master Crafter", "The man in charge of the crafter's guild", "", 0, 0, 3, 0, false, sprites, 16753488, 16732192, 8409120, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, 49, -1, -1, -1, -1, -1, -1, -1, 63};
 		npcs.add(new NPCDef("Bandit", "He's ready for a fight", "", 32, 33, 27, 26, true, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
@@ -1035,16 +1043,7 @@ public class EntityHandler {
 		npcs.add(new NPCDef("White wolf", "A vicious mountain wolf", "", 40, 42, 44, 41, true, sprites, 0, 0, 0, 0, 260, 198, 6, 10, 30, i++));
 		sprites = new int[]{147, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Pack leader", "A vicious mountain wolf", "", 70, 72, 74, 71, true, sprites, 0, 0, 0, 0, 312, 238, 6, 10, 30, i++));
-		sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
-		npcs.add(new NPCDef("Harry", "I wonder what he's got for sale", shopOption, 0, 0, 3, 0, false, sprites, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, i++));
-		sprites = new int[]{6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Thug", "He likes hitting things", "", 19, 20, 18, 17, true, sprites, 1, 2, 255, 15523536, 155, 230, 6, 6, 5, i++));
-		sprites = new int[]{156, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Firebird", "Probably not a chicken", "", 6, 7, 5, 7, true, sprites, 0, 0, 0, 0, 70, 62, 6, 6, 5, i++));
-		sprites = new int[]{3, 59, 41, 102, 113, 74, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Achetties", "One of Asgarnia's greatest heros", "", 45, 50, 42, 48, false, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{7, 4, 44, 100, 118, -1, -1, -1, 155, -1, -1, 64};
-		npcs.add(new NPCDef("Ice queen", "The leader of the ice warriors", "", 105, 101, 104, 104, true, sprites, 6724027, 8425710, 8425710, 5623807, 150, 250, 6, 6, 5, i++));
+
 		//loadNpcDefinitionsB();
 		//`sprites1`='" + npc.sprites[0] + "',`sprites2`='" + npc.sprites[1] + "',`sprites3`='" + npc.sprites[2] + "',`sprites4`='" + npc.sprites[3] + "',`sprites5`='" + npc.sprites[4] + "',`sprites6`='" + npc.sprites[5] + "',`sprites7`='" + npc.sprites[6] + "',`sprites8`='" + npc.sprites[7] + "',`sprites9`='" + npc.sprites[8] + "',`sprites10`='" + npc.sprites[9] + "',`sprites11`='" + npc.sprites[10] + "',`sprites12`='" + npc.sprites[11] + "'
 		/*try {
@@ -1068,7 +1067,7 @@ public class EntityHandler {
 	}
 
 
-	private static void loadNpcDefinitionsB() {
+	private static void loadNpcDefinitions2() {
 		int[] sprites;
 		int i = npcs.size() - 1;
 
@@ -1077,6 +1076,20 @@ public class EntityHandler {
 		String bankerOption2 = Config.S_SPAWN_AUCTION_NPCS ? "Collect" : null; // Auction collect banker
 		String shopOption = Config.S_RIGHT_CLICK_TRADE ? "Trade" : ""; // Shop right click trade
 
+		sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
+		npcs.add(new NPCDef("Harry", "I wonder what he's got for sale", shopOption, 0, 0, 3, 0, false, sprites, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, i++));
+		sprites = new int[]{6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Thug", "He likes hitting things", "", 19, 20, 18, 17, true, sprites, 1, 2, 255, 15523536, 155, 230, 6, 6, 5, i++));
+		sprites = new int[]{156, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Firebird", "Probably not a chicken", "", 6, 7, 5, 7, true, sprites, 0, 0, 0, 0, 70, 62, 6, 6, 5, i++));
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{3, 59, 41, 102, 113, 74, -1, -1, -1, -1, -1, 384};
+		} else {
+			sprites = new int[]{3, 59, 41, 102, 113, 74, -1, -1, -1, -1, -1, -1};
+		}
+		npcs.add(new NPCDef("Achetties", "One of Asgarnia's greatest heros", "", 45, 50, 42, 48, false, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{7, 4, 44, 100, 118, -1, -1, -1, 155, -1, -1, 64};
+		npcs.add(new NPCDef("Ice queen", "The leader of the ice warriors", "", 105, 101, 104, 104, true, sprites, 6724027, 8425710, 8425710, 5623807, 150, 250, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Grubor", "A rough looking thief", "", 15, 16, 12, 18, false, sprites, 11167296, 8409120, 3, 15523536, 150, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, 51, -1, -1, -1, -1, -1, -1, 79, 67};
@@ -1307,7 +1320,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Brother Kojo", "A Peaceful monk", "", 12, 13, 15, 12, false, sprites, 16761440, 65535, 255, 15523536, 160, 220, 6, 6, 5, i++));
 		sprites = new int[]{172, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Dungeon Rat", "Overgrown vermin", "", 20, 10, 12, 22, true, sprites, 0, 0, 0, 0, 346, 136, 7, 7, 45, i++));
-		sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, 309};
+		} else {
+			sprites = new int[]{5, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Master fisher", "The man in charge of the fishing guild", "", 15, 16, 12, 18, false, sprites, 11167296, 8409120, 3, 13415270, 145, 230, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Orven", "He runs a fish exchange store", "", 30, 30, 30, 30, false, sprites, 16772761, 16711680, 14508096, 15523536, 145, 220, 6, 6, 5, i++));
@@ -1571,6 +1588,17 @@ public class EntityHandler {
 		npcs.add(new NPCDef("skeleton mage", "It rattles as it walks", "", 24, 20, 17, 23, true, sprites, 0, 0, 0, 0, 216, 234, 11, 11, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 62};
 		npcs.add(new NPCDef("controls guide", "He's ready for a fight", "", 32, 33, 27, 26, false, sprites, 16746544, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
+	}
+
+	private static void loadNPCDefinitions3() {
+		int[] sprites;
+		int i = npcs.size() - 1;
+
+		/* Configurable NPC Data */
+		String bankerOption1 = Config.S_RIGHT_CLICK_BANK ? "Bank" : ""; // Banker right click bank
+		String bankerOption2 = Config.S_SPAWN_AUCTION_NPCS ? "Collect" : null; // Auction collect banker
+		String shopOption = Config.S_RIGHT_CLICK_TRADE ? "Trade" : ""; // Shop right click trade
+
 		sprites = new int[]{3, 4, 2, -1, -1, -1, -1, 86, -1, -1, -1, -1};
 		npcs.add(new NPCDef("nurse sarah", "She's quite a looker", "", 1, 1, 5, 1, false, sprites, 15643488, 16777215, 16777215, 15523536, 140, 220, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, 62};
@@ -1601,7 +1629,11 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Head wizard", "He runs the wizards guild", "", 20, 15, 3, 10, false, sprites, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Magic store owner", "An old wizard", shopOption, 20, 15, 3, 10, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
-		sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
+		if (Config.S_WANT_CUSTOM_SPRITES) {
+			sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, 439};
+		} else {
+			sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
+		}
 		npcs.add(new NPCDef("Wizard Frumscone", "A confused looking wizard", "", 20, 15, 3, 10, false, sprites, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{135, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("target practice zombie", "The living dead", "", 23, 28, 24, 23, true, sprites, 0, 0, 0, 0, 174, 259, 12, 12, 5, i++));
@@ -2071,6 +2103,17 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Guard Dog", "He doesn't seem pleased to see me", "", 45, 47, 49, 46, false, sprites, 0, 0, 0, 0, 247, 188, 6, 10, 30, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Guard", "***EMPTY PLEASE USE OR REPLACE***", "", 10, 8, 7, 8, false, sprites, 1, 2, 3, 13415270, 155, 230, 6, 6, 5, i++));
+	}
+
+	private static void loadNpcDefinitions4() {
+		int[] sprites;
+		int i = npcs.size() - 1;
+
+		/* Configurable NPC Data */
+		String bankerOption1 = Config.S_RIGHT_CLICK_BANK ? "Bank" : ""; // Banker right click bank
+		String bankerOption2 = Config.S_SPAWN_AUCTION_NPCS ? "Collect" : null; // Auction collect banker
+		String shopOption = Config.S_RIGHT_CLICK_TRADE ? "Trade" : ""; // Shop right click trade
+
 		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Man", "A thirsty looking man", "", 11, 8, 7, 11, false, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{3, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
@@ -2218,22 +2261,6 @@ public class EntityHandler {
 			// Zenesha
 			npcs.get(331).sprites = new int[]{3, 4, -1, -1, -1, -1, 56, 247, -1, -1, -1, -1};
 		}
-		/*try {
-			PrintWriter printWriter = new PrintWriter(new FileOutputStream("NpcType.txt"), true);
-			int count = 0;
-			for(NPCDef npc : npcs) {
-				//printWriter.println("UPDATE `openrsc_npcdef` SET `name`='" + npc.getName().replace("'", "''") + "',`description`='" + npc.getDescription().replace("'", "''") + "', " + (npc.getCommand().isEmpty() ? "" : "`command`='" + npc.getCommand() + "',") + "`attack`='" + npc.getAtt() + "',`strength`='" + npc.getStr() + "',`hits`='" + npc.getHits() + "',`defense`='" + npc.getDef() + "',`combatlvl`='" + npcCombat + "',`attackable`=" + (npc.isAttackable() ? "'1'" : "'0'") + ", `sprites1`='" + npc.sprites[0] + "',`sprites2`='" + npc.sprites[1] + "',`sprites3`='" + npc.sprites[2] + "',`sprites4`='" + npc.sprites[3] + "',`sprites5`='" + npc.sprites[4] + "',`sprites6`='" + npc.sprites[5] + "',`sprites7`='" + npc.sprites[6] + "',`sprites8`='" + npc.sprites[7] + "',`sprites9`='" + npc.sprites[8] + "',`sprites10`='" + npc.sprites[9] + "',`sprites11`='" + npc.sprites[10] + "',`sprites12`='" + npc.sprites[11] + "', `hairColour`='" + npc.getHairColour() + "',`topColour`='" + npc.getTopColour() + "', `bottomColour`='" + npc.bottomColour + "',`skinColour`='" + npc.getSkinColour() + "',`camera1`='" + npc.getCamera1() + "',`camera2`='" + npc.getCamera2() + "',`walkModel`='" + npc.getWalkModel() + "',`combatModel`='" + npc.getCombatModel() + "',`combatSprite`='" + npc.getCombatSprite() + "' WHERE `id`='" + count + "';");
-				printWriter.println("NPC: " + npc.getName() + " | ID: " + count);
-				printWriter.flush();
-				printWriter.println("UPDATE `openrsc_npcdef` SET `isMembers`='?' WHERE `id`='" + count + "';");
-				printWriter.flush();
-				count++;
-			}
-			printWriter.close();
-			System.out.println("NPCS TOTAL: " + count);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}*/
 	}
 
 	private static void loadItemDefinitions() {
@@ -2397,7 +2424,7 @@ public class EntityHandler {
 		items.add(new ItemDef("mithril ore", "this needs refining", "", 162, 70, "items:70", false, false, 0, 10072780, false, false, true, 153));
 		items.add(new ItemDef("adamantite ore", "this needs refining", "", 400, 70, "items:70", false, false, 0, 11717785, false, false, true, 154));
 		items.add(new ItemDef("coal", "hmm a non-renewable energy source!", "", 45, 71, "items:71", false, false, 0, 0, false, false, true, 155));
-		items.add(new ItemDef("Bronze Pickaxe", "Used for mining", "", 1, 72, "items:72", false, false, 0, 16737817, false, false, true, 156));
+		items.add(new ItemDef("Bronze Pickaxe", "Used for mining", "", 1, 72, "items:72", false, Config.S_WANT_CUSTOM_SPRITES, Config.S_WANT_CUSTOM_SPRITES ? 16 : 0, 16737817, false, false, true, 156));
 		items.add(new ItemDef("uncut diamond", "this would be worth more cut", "", 200, 73, "items:73", false, false, 0, 0, false, false, true, 157));
 		items.add(new ItemDef("uncut ruby", "this would be worth more cut", "", 100, 73, "items:73", false, false, 0, 16724736, false, false, true, 158));
 		items.add(new ItemDef("uncut emerald", "this would be worth more cut", "", 50, 73, "items:73", false, false, 0, 3394611, false, false, true, 159));
@@ -3499,11 +3526,11 @@ public class EntityHandler {
 		items.add(new ItemDef("Dark Dagger", "An unusual looking dagger made of dark shiny obsidian", "", 91, 420, "items:420", false, true, 16, 0, true, true, false, 1255));
 		items.add(new ItemDef("Glowing Dark Dagger", "An unusual looking dagger made of dark shiny obsidian - it has an unnatural glow .", "", 91, 421, "items:421", false, true, 16, 0, true, true, false, 1256));
 		items.add(new ItemDef("Holy Force Spell", "A powerful incantation - it affects spirits of the underworld", "Cast", 1, 423, "items:423", false, false, 0, 0, true, true, false, 1257));
-		items.add(new ItemDef("Iron Pickaxe", "Used for mining", "", 140, 72, "items:72", false, false, 0, 15654365, false, false, true, 1258));
-		items.add(new ItemDef("Steel Pickaxe", "Requires level 6 mining to use", "", 500, 72, "items:72", false, false, 0, 15658734, false, false, true, 1259));
-		items.add(new ItemDef("Mithril Pickaxe", "Requires level 21 mining to use", "", 1300, 72, "items:72", false, false, 0, 10072780, false, false, true, 1260));
-		items.add(new ItemDef("Adamantite Pickaxe", "Requires level 31 mining to use", "", 3200, 72, "items:72", false, false, 0, 11717785, false, false, true, 1261));
-		items.add(new ItemDef("Rune Pickaxe", "Requires level 41 mining to use", "", 32000, 72, "items:72", false, false, 0, 65535, false, false, true, 1262));
+		items.add(new ItemDef("Iron Pickaxe", "Used for mining", "", 140, 72, "items:72", false, Config.S_WANT_CUSTOM_SPRITES, Config.S_WANT_CUSTOM_SPRITES ? 16 : 0, 15654365, false, false, true, 1258));
+		items.add(new ItemDef("Steel Pickaxe", "Requires level 6 mining to use", "", 500, 72, "items:72", false, Config.S_WANT_CUSTOM_SPRITES, Config.S_WANT_CUSTOM_SPRITES ? 16 : 0, 15658734, false, false, true, 1259));
+		items.add(new ItemDef("Mithril Pickaxe", "Requires level 21 mining to use", "", 1300, 72, "items:72", false, Config.S_WANT_CUSTOM_SPRITES, Config.S_WANT_CUSTOM_SPRITES ? 16 : 0, 10072780, false, false, true, 1260));
+		items.add(new ItemDef("Adamantite Pickaxe", "Requires level 31 mining to use", "", 3200, 72, "items:72", false, Config.S_WANT_CUSTOM_SPRITES, Config.S_WANT_CUSTOM_SPRITES ? 16 : 0, 11717785, false, false, true, 1261));
+		items.add(new ItemDef("Rune Pickaxe", "Requires level 41 mining to use", "", 32000, 72, "items:72", false, Config.S_WANT_CUSTOM_SPRITES, Config.S_WANT_CUSTOM_SPRITES ? 16 : 0, 65535, false, false, true, 1262));
 		items.add(new ItemDef("Sleeping Bag", "Not as comfy as a bed but better than nothing", "sleep", 30, 422, "items:422", false, false, 0, 0, false, false, true, 1263));
 		items.add(new ItemDef("A blue wizards hat", "An ancient wizards hat.", "", 2, 86, "items:86", false, true, 32, 255, true, true, false, 1264));
 		items.add(new ItemDef("Gilded Totem Pole", "A well crafted totem pole - given to you as a gift from Gujuo", "Inspect", 20, 403, "items:403", false, false, 0, 65280, true, true, false, 1265));
@@ -3724,9 +3751,16 @@ public class EntityHandler {
 		items.add(new ItemDef("Fletching cape", "The cape worn by masters of fletching", "", 99000, -1, "items:486", false, true, 2048, 0, false, false, false, 1376));
 		items.add(new ItemDef("Mining cape", "The cape worn by masters of mining", "", 99000, -1, "items:490", false, true, 2048, 0, false, false, false, 1377));
 
+		// 2020 April Fools Items
 		items.add(new ItemDef("Pestilence Mask", "You wouldn't want to be seen in this! Stay the cabbage home!", "", 0, -1, "items:555", false, true, 32, 0, false, false, true, 1378));
 		items.add(new ItemDef("Rubber Chicken Cap", "Wow. That was some very in-depth research on the 'chicken or the egg' question.", "", 0, -1, "items:548", false, true, 32, 0, false, false, true, 1379));
 
+		// Skill Cape Batch Two
+		items.add(new ItemDef("Fishing cape", "The cape worn by the best fishermen", "", 99000, -1, "items:485", false, true, 2048, 0, false, false, false, 1380));
+		items.add(new ItemDef("Strength cape", "The cape worn by only the strongest people", "", 99000, -1, "items:495", false, true, 2048, 0, false, false, false, 1381));
+		items.add(new ItemDef("Magic cape", "The cape worn by the most powerful mages", "", 99000, -1, "items:489", false, true, 2048, 0, false, false, false, 1382));
+		items.add(new ItemDef("Smithing cape", "The cape worn by master smiths", "", 99000, -1, "items:494", false, true, 2048, 0, false, false, false, 1383));
+		items.add(new ItemDef("Crafting cape", "The cape worn by master craftworkers", "Teleport", 99000, -1, "items:482", false, true, 2048, 0, false, false, false, 1384));
 	}
 
 	// Bank note items
@@ -4780,7 +4814,7 @@ public class EntityHandler {
 			animations.add(new AnimationDef("hatchet", "equipment", 10072780, 0, true, false, 0));
 			animations.add(new AnimationDef("hatchet", "equipment", 11717785, 0, true, false, 0));
 			animations.add(new AnimationDef("hatchet", "equipment", 65535, 0, true, false, 0));
-			animations.add(new AnimationDef("hatchet", "equipment", 3158064, 0, true, false, 0));
+			animations.add(new AnimationDef("hatchet", "equipment", 3158064, 0, true, false, 0)); // black
 
 			// Kite shields
 			animations.add(new AnimationDef("kiteshield", "equipment", 0xBB4B12, 0, true, false, 0)); //237 - bronze kite
@@ -5063,8 +5097,24 @@ public class EntityHandler {
 			animations.add(new AnimationDef("miningcape", "equipment", 0, 0, true, false, 0)); //431
 
 			// April Fools Items
-			animations.add(new AnimationDef("coronamask", "equipment", 0, 0, true, false, 0)); // 432
+			animations.add(new AnimationDef("plaguemask", "equipment", 0, 0, true, false, 0)); // 432
 			animations.add(new AnimationDef("rubberchicken", "equipment", 0, 0, true, false, 0)); // 433
+
+			// Pickaxe
+			animations.add(new AnimationDef("pickaxe", "equipment", 16737817, 0, true, false, 0)); // bronze 434
+			animations.add(new AnimationDef("pickaxe", "equipment", 15654365, 0, true, false, 0)); // iron 435
+			animations.add(new AnimationDef("pickaxe", "equipment", 15658734, 0, true, false, 0)); // steel 436
+			animations.add(new AnimationDef("pickaxe", "equipment", 10072780, 0, true, false, 0)); // mithril 437
+			animations.add(new AnimationDef("pickaxe", "equipment", 11717785, 0, true, false, 0)); // adamant 438
+			animations.add(new AnimationDef("pickaxe", "equipment", 65535, 0, true, false, 0)); // rune 439
+
+			// More skill capes (batch 2)
+			// animations.add(new AnimationDef("fishingcape", "equipment", 0, 0, true, false, 0)); //310 - fishing cape
+			// animations.add(new AnimationDef("strengthcape", "equipment", 0, 0, true, false, 0)); //385 strength cape
+			// animations.add(new AnimationDef("smithingcape", "equipment", 0, 0, true, false, 0)); //384 smithing cape
+			animations.add(new AnimationDef("magiccape", "equipment", 0, 0, true, false, 0)); // 440
+			animations.add(new AnimationDef("craftingcape", "equipment", 0, 0, true, false, 0)); // 441
+
 		}
 	}
 
@@ -7124,8 +7174,12 @@ public class EntityHandler {
 	}
 
 	public static void load(boolean loadMembers) {
-		loadNpcDefinitionsA();
-		loadNpcDefinitionsB();
+		// Each function should contain only 250 definitions,
+		// otherwise they get too big to compile.
+		loadNpcDefinitions1();
+		loadNpcDefinitions2();
+		loadNPCDefinitions3();
+		loadNpcDefinitions4();
 		loadItemDefinitions();
 		loadTextureDefinitions();
 		loadAnimationDefinitions();

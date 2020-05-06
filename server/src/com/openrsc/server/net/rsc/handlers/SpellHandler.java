@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.*;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
@@ -45,12 +46,20 @@ public class SpellHandler implements PacketHandler {
 	private static final String RING = "ring";
 	private static final String NECKLACE = "necklace";
 	private static final String DEFAULT = "";
+	private static final int[] elementalRunes = new int[4];
 
 	static {
 		staffs.put(ItemId.FIRE_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_FIRE.id()), new Item(ItemId.BATTLESTAFF_OF_FIRE.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id())}); // Fire-Rune
 		staffs.put(ItemId.WATER_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_WATER.id()), new Item(ItemId.BATTLESTAFF_OF_WATER.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_WATER.id())}); // Water-Rune
 		staffs.put(ItemId.AIR_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_AIR.id()), new Item(ItemId.BATTLESTAFF_OF_AIR.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_AIR.id())}); // Air-Rune
 		staffs.put(ItemId.EARTH_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_EARTH.id()), new Item(ItemId.BATTLESTAFF_OF_EARTH.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id())}); // Earth-Rune
+	}
+
+	static {
+		elementalRunes[0] = ItemId.AIR_RUNE.id();
+		elementalRunes[1] = ItemId.WATER_RUNE.id();
+		elementalRunes[2] = ItemId.EARTH_RUNE.id();
+		elementalRunes[3] = ItemId.FIRE_RUNE.id();
 	}
 
 	private static boolean canCast(Player player) {
@@ -63,6 +72,11 @@ public class SpellHandler implements PacketHandler {
 	}
 
 	public static boolean checkAndRemoveRunes(Player player, SpellDef spell) {
+		if (SkillCapes.shouldActivate(player, ItemId.MAGIC_CAPE)) {
+			player.message("You manage to cast the spell without using any runes");
+			return true;
+		}
+
 		for (Entry<Integer, Integer> e : spell.getRunesRequired()) {
 			boolean skipRune = false;
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {

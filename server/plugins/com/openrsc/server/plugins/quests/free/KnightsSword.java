@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -11,6 +12,7 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -78,25 +80,38 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 	}
 
 	public void dwarfDialogue(final Player player, final Npc n) {
+		ArrayList<String> choices = new ArrayList<>();
+		String goodbyeNiceDay = "Have a nice day";
+		String goodbyeNevermind = "Nevermind";
 		switch (player.getQuestStage(this)) {
 			case -1:
 				say(player, n, "Thanks for your help in getting the sword for me");
 				npcsay(player, n, "No worries mate");
+				if (canBuyCape(player)) skillcape(player, n, goodbyeNiceDay);
 				break;
 			case 0:
-				player.message("Thurgo doesn't appear to be interested in talking");
+				if (!canBuyCape(player)) {
+					player.message("Thurgo doesn't appear to be interested in talking");
+				} else {
+					npcsay(player, n, "Eh?");
+					skillcape(player, n, goodbyeNevermind);
+				}
 				break;
 			case 1:
 				say(player, n, "Hello are you are an Imcando Dwarf?");
 				npcsay(player, n, "Yeah what about it?");
+				if (canBuyCape(player)) skillcape(player, n, goodbyeNevermind);
 				break;
 			case 2:
 				if (!player.getCarriedItems().hasCatalogID(ItemId.REDBERRY_PIE.id(), Optional.of(false))) {
 					say(player, n, "Hello are you are an Imcando Dwarf?");
 					npcsay(player, n, "Yeah what about it?");
+					if (canBuyCape(player)) skillcape(player, n, goodbyeNevermind);
 				} else {
-					int option = multi(player, n, "Hello are you an Imcando Dwarf?",
-						"Would you like some redberry pie?");
+					choices.add("Hello are you an Imcando Dwarf?");
+					choices.add("Would you like some redberry pie?");
+					if (canBuyCape(player)) choices.add("What's that cape you've got on?");
+					int option = multi(player, n, choices.toArray(new String[choices.size()]));
 					if (option == 0) {
 						npcsay(player, n, "Yeah what about it?");
 						option = multi(player, n, "Would you like some redberry  Pie?",
@@ -109,6 +124,8 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 						}
 					} else if (option == 1) {
 						givePie(player, n);
+					} else if (option == 2) {
+						skillcape(player, n, "yes");
 					}
 				}
 				break;
@@ -163,6 +180,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 				} else {
 					npcsay(player, n, "Have you got a picture of the sword for me yet?");
 					say(player, n, "Sorry not yet");
+					if (canBuyCape(player)) skillcape(player, n, "I'll go get it");
 				}
 				break;
 			case 5:
@@ -171,6 +189,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 					say(player, n,
 						"Thanks for your help in getting the sword for me");
 					npcsay(player, n, "No worries mate");
+					if (canBuyCape(player)) skillcape(player, n, goodbyeNiceDay);
 					return;
 				}
 				if (ifheld(player, ItemId.IRON_BAR.id(), 2) && player.getCarriedItems().hasCatalogID(ItemId.BLURITE_ORE.id(), Optional.of(false))) {
@@ -195,8 +214,40 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 					say(player, n, "I haven't found everything yet");
 					npcsay(player, n, "Well come back when you do",
 						"Remember I need blurite ore and two iron bars");
+					if (canBuyCape(player)) skillcape(player, n, "Alright, I'll be back");
 				}
 				break;
+		}
+	}
+
+	private boolean canBuyCape(Player player) {
+		if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES
+			&& getMaxLevel(player, Skills.SMITHING) >= 99) { return true; }
+		return false;
+	}
+
+	private void skillcape(Player player, Npc n, String goodbye) {
+		if (goodbye.equalsIgnoreCase("yes")
+			|| multi(player, n, "What's that cape you've got on?", goodbye) == 0) {
+
+			npcsay(player, n, "This is the Smithing cape",
+				"Trusted only with masters of metalworking",
+				"Like me",
+				"I see that you have also mastered smithing",
+				"I will sell you a Smithing cape for 99,000 coins");
+			if (multi(player, n, "Sounds fair", "No way") == 0) {
+				if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
+					mes(player, "Thurgo takes your coins");
+					if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
+						mes(player, "And hands you a Smithing cape");
+						give(player, ItemId.SMITHING_CAPE.id(), 1);
+						npcsay(player, n, "Don't lose this",
+							"This cape will allow you save some coal while smelting");
+					}
+				} else {
+					npcsay(player, n, "Sorry mate, you don't have enough coins");
+				}
+			}
 		}
 	}
 

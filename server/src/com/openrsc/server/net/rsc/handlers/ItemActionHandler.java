@@ -34,13 +34,13 @@ public class ItemActionHandler implements PacketHandler {
 		Item tempitem = null;
 
 		//User wants to use the item from equipment tab
-		if (idx == -1)
-		{
+		if (idx == -1) {
 			idx = (int) packet.readShort();
-			if (player.getCarriedItems().getEquipment().searchEquipmentForItem(idx) != -1)
-				tempitem = new Item(idx);
+			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(idx);
+			if (slot != -1) {
+				tempitem = player.getCarriedItems().getEquipment().get(slot);
+			}
 			commandIndex = packet.readByte();
-
 		} else {
 			tempitem = player.getCarriedItems().getInventory().get(idx);
 			commandIndex = packet.readByte();
