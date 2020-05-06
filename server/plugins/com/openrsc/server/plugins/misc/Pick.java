@@ -48,12 +48,12 @@ public final class Pick implements OpLocTrigger {
 		player.playerServerMessage(MessageType.QUEST, pickMessage);
 		give(player, objId, 1);
 		player.playSound("potato");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		if (player.getCarriedItems().getInventory().full()) return;
 
 
 		if (!ifinterrupted() && --repeat > 0) {
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchCropPickup(player, objId, pickMessage, repeat);
 		}
 	}
