@@ -4,7 +4,6 @@ import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.entityhandling.instances.Item;
 import com.openrsc.client.model.Sprite;
-import org.json.JSONObject;
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -22,7 +21,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
 
 public class PacketHandler {
 
@@ -903,7 +905,7 @@ public class PacketHandler {
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
-		int globalFriendChat, wantRightClickTrade;
+		int globalFriendChat, wantRightClickTrade, customProtocol;
 
 		String logoSpriteID;
 
@@ -984,6 +986,7 @@ public class PacketHandler {
 			hideLoginBox = this.getClientStream().getUnsignedByte(); // 74
 			globalFriendChat = this.getClientStream().getUnsignedByte(); // 75
 			wantRightClickTrade = this.getClientStream().getUnsignedByte(); // 76
+			customProtocol = this.getClientStream().getUnsignedByte(); // 77
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1061,6 +1064,7 @@ public class PacketHandler {
 			hideLoginBox = packetsIncoming.getUnsignedByte(); // 74
 			globalFriendChat = packetsIncoming.getUnsignedByte(); // 75
 			wantRightClickTrade = packetsIncoming.getUnsignedByte(); // 76
+			customProtocol = packetsIncoming.getUnsignedByte(); // 77
 		}
 
 		if (Config.DEBUG) {
@@ -1140,7 +1144,8 @@ public class PacketHandler {
 					"\nS_WANT_HARVESTING " + wantHarvesting + // 74
 					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 75
 					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 76
-					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade // 77
+					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 77
+					"\nS_CUSTOM_PROTOCOL " + wantRightClickTrade // 78
 			);
 		}
 
@@ -1222,6 +1227,7 @@ public class PacketHandler {
 		props.setProperty("S_HIDE_LOGIN_BOX", hideLoginBox == 1 ? "true" : "false"); // 75
 		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 76
 		props.setProperty("S_RIGHT_CLICK_TRADE", wantRightClickTrade == 1 ? "true" : "false"); // 77
+		props.setProperty("S_CUSTOM_PROTOCOL", customProtocol == 1 ? "true" : "false"); // 78
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
@@ -1448,7 +1454,7 @@ public class PacketHandler {
 	private void updateInventoryItem() {
 		int slot = packetsIncoming.getUnsignedByte();
 		int itemID = packetsIncoming.getShort();
-		boolean noted = packetsIncoming.getShort() == 1;
+		boolean noted = packetsIncoming.getUnsignedByte() == 1;
 		int stackSize = 1;
 		if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID & 32767).isStackable() || noted) {
 			stackSize = packetsIncoming.get32();
@@ -1474,20 +1480,15 @@ public class PacketHandler {
 		}
 		mc.setInventoryItemCount(packetsIncoming.getUnsignedByte());
 		for (int i = 0; i < mc.getInventoryItemCount(); ++i) {
-			String b64item = packetsIncoming.readString();
-			String jsonString = new String(Base64.getDecoder().decode(b64item));
-			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int) itemInfo.get("id");
+			int itemID = packetsIncoming.getShort();
 			mc.setInventoryItemID(i, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
-			//int itemID = packetsIncoming.getShort();
-			if (isNote.orElse(false)) {
-				mc.getInventoryItem(i).setNoted(true);
-			} else {
-				mc.getInventoryItem(i).setNoted(false);
-			}
 			mc.setInventoryItemEquipped(i, packetsIncoming.getByte());
-			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, isNote).isStackable()) {
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
+			}
+			mc.getInventoryItem(i).setNoted(noted);
+			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, Optional.of(noted)).isStackable()) {
 				mc.setInventoryItemSize(i, packetsIncoming.get32());
 			} else {
 				mc.setInventoryItemSize(i, 1);
@@ -2035,36 +2036,26 @@ public class PacketHandler {
 		mc.setTradeRecipientConfirmItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; mc.getTradeRecipientConfirmItemsCount() > var4; ++var4) {
-			String b64item = packetsIncoming.readString();
-			String jsonString = new String(Base64.getDecoder().decode(b64item));
-			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int) itemInfo.get("id");
+			int itemID = packetsIncoming.getShort();
 			mc.setTradeRecipientConfirmItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
-			//mc.setTradeRecipientConfirmItems(var4, packetsIncoming.getShort());
-			if (isNote.orElse(false)) {
-				mc.getTradeRecipientConfirmItem(var4).setNoted(true);
-			} else {
-				mc.getTradeRecipientConfirmItem(var4).setNoted(false);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
 			}
+			mc.getTradeRecipientConfirmItem(var4).setNoted(noted);
 			mc.setTradeRecipientConfirmItemCount(var4, packetsIncoming.get32());
 		}
 
 		mc.setTradeConfirmItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; var4 < mc.getTradeConfirmItemsCount(); ++var4) {
-			String b64item = packetsIncoming.readString();
-			String jsonString = new String(Base64.getDecoder().decode(b64item));
-			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int) itemInfo.get("id");
+			int itemID = packetsIncoming.getShort();
 			mc.setTradeConfirmItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
-			//mc.setTradeConfirmItems(var4, packetsIncoming.getShort());
-			if (isNote.orElse(false)) {
-				mc.getTradeConfirmItem(var4).setNoted(true);
-			} else {
-				mc.getTradeConfirmItem(var4).setNoted(false);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
 			}
+			mc.getTradeConfirmItem(var4).setNoted(noted);
 			mc.setTradeConfirmItemsCount(var4, packetsIncoming.get32());
 		}
 	}
@@ -2073,18 +2064,13 @@ public class PacketHandler {
 		mc.setDuelOpponentItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; mc.getDuelOpponentItemsCount() > var4; ++var4) {
-			String b64item = packetsIncoming.readString();
-			String jsonString = new String(Base64.getDecoder().decode(b64item));
-			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int) itemInfo.get("id");
+			int itemID = packetsIncoming.getShort();
 			mc.setDuelOpponentItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
-			//mc.setDuelOpponentItemID(var4, packetsIncoming.getShort());
-			if (isNote.orElse(false)) {
-				mc.getDuelOpponentItem(var4).setNoted(true);
-			} else {
-				mc.getDuelOpponentItem(var4).setNoted(false);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
 			}
+			mc.getDuelOpponentItem(var4).setNoted(noted);
 			mc.setDuelOpponentItemCount(var4, packetsIncoming.get32());
 		}
 
@@ -2178,36 +2164,26 @@ public class PacketHandler {
 		mc.setDuelOpponentName(packetsIncoming.readString());
 		mc.setDuelOpponentConfirmItemsCount(packetsIncoming.getUnsignedByte());
 		for (int var4 = 0; var4 < mc.getDuelOpponentConfirmItemsCount(); ++var4) {
-			String b64item = packetsIncoming.readString();
-			String jsonString = new String(Base64.getDecoder().decode(b64item));
-			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int) itemInfo.get("id");
+			int itemID = packetsIncoming.getShort();
 			mc.setDuelOpponentConfirmItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
-			//mc.setDuelOpponentConfirmItemID(var4, packetsIncoming.getShort());
-			if (isNote.orElse(false)) {
-				mc.getDuelOpponentConfirmItem(var4).setNoted(true);
-			} else {
-				mc.getDuelOpponentConfirmItem(var4).setNoted(false);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
 			}
+			mc.getDuelOpponentConfirmItem(var4).setNoted(noted);
 			mc.setDuelOpponentConfirmItemCount(var4, packetsIncoming.get32());
 		}
 
 		mc.setDuelConfirmItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; mc.getDuelConfirmItemsCount() > var4; ++var4) {
-			String b64item = packetsIncoming.readString();
-			String jsonString = new String(Base64.getDecoder().decode(b64item));
-			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int) itemInfo.get("id");
+			int itemID = packetsIncoming.getShort();
 			mc.setDuelConfirmItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
-			//mc.setDuelConfirmItemID(var4, packetsIncoming.getShort());
-			if (isNote.orElse(false)) {
-				mc.getDuelConfirmItem(var4).setNoted(true);
-			} else {
-				mc.getDuelConfirmItem(var4).setNoted(false);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
 			}
+			mc.getDuelConfirmItem(var4).setNoted(noted);
 			mc.setDuelConfirmItemCount(var4, packetsIncoming.get32());
 		}
 
@@ -2366,36 +2342,26 @@ public class PacketHandler {
 		mc.setTradeRecipientItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; var4 < mc.getTradeRecipientItemsCount(); ++var4) {
-			String b64item = packetsIncoming.readString();
-			String jsonString = new String(Base64.getDecoder().decode(b64item));
-			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int) itemInfo.get("id");
+			int itemID = packetsIncoming.getShort();
 			mc.setTradeRecipientItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
-			//mc.setTradeRecipientItem(var4, packetsIncoming.getShort());
-			if (isNote.orElse(false)) {
-				mc.getTradeRecipientItem(var4).setNoted(true);
-			} else {
-				mc.getTradeRecipientItem(var4).setNoted(false);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
 			}
+			mc.getTradeRecipientItem(var4).setNoted(noted);
 			mc.setTradeRecipientItemCount(var4, packetsIncoming.get32());
 		}
 
 		mc.setTradeItemCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; var4 < mc.getTradeItemCount(); ++var4) {
-			String b64item = packetsIncoming.readString();
-			String jsonString = new String(Base64.getDecoder().decode(b64item));
-			JSONObject itemInfo = new JSONObject(jsonString);
-			int itemID = (int) itemInfo.get("id");
+			int itemID = packetsIncoming.getShort();
 			mc.setTradeItemID(var4, itemID);
-			Optional<Boolean> isNote = itemInfo.has("noted") ? Optional.of((boolean) itemInfo.get("noted")) : Optional.empty();
-			//mc.setTradeItemID(var4, packetsIncoming.getShort());
-			if (isNote.orElse(false)) {
-				mc.getTradeItem(var4).setNoted(true);
-			} else {
-				mc.getTradeItem(var4).setNoted(false);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
 			}
+			mc.getTradeItem(var4).setNoted(noted);
 			mc.setTradeItemSize(var4, packetsIncoming.get32());
 		}
 
