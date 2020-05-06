@@ -59,11 +59,11 @@ public final class mudclient implements Runnable {
 	static byte[][] s_kb = new byte[250][];
 	static int[] s_wb;
 	private static int FPS = 0;
-	private static ArrayList<String> messages = new ArrayList<String>();
+	private static final ArrayList<String> messages = new ArrayList<String>();
 	private static int currentChat = 0;
 	private static ClientPort clientPort;
-	private static ArrayList<String> skillNameLongArray = new ArrayList<String>();
-	private static ArrayList<String> skillNamesArray = new ArrayList<String>();
+	private static final ArrayList<String> skillNameLongArray = new ArrayList<String>();
+	private static final ArrayList<String> skillNamesArray = new ArrayList<String>();
 	private static String[] skillNameLong;
 	private static String[] skillNames;
 	public final int[] bankItemOnTab = new int[500];
@@ -309,14 +309,14 @@ public final class mudclient implements Runnable {
 	private int mouseClickXStep = 0;
 	private long lastFPSUpdate = 0;
 	private int currentFPS = 0;
-	private long[] m_F = new long[10];
+	private final long[] m_F = new long[10];
 	private double xpPerHour = 0;
 	private boolean hasGameCrashed = false;
 	private int gameState = 1;
 	private int m_b = 0;
-	private int totalAchievements = 0;
+	private final int totalAchievements = 0;
 	private int sleepModifier = 20;
-	private int[] animFrameToSprite_Walk = new int[]{0, 1, 2, 1};
+	private final int[] animFrameToSprite_Walk = new int[]{0, 1, 2, 1};
 	private int appearanceHeadGender = 1;
 	private int appearanceHeadType = 0;
 	private int autoLoginTimeout = 0;
@@ -326,7 +326,7 @@ public final class mudclient implements Runnable {
 	private int cameraAutoMoveX = 0;
 	private int cameraAutoMoveZ = 0;
 	private int characterBubbleCount = 0;
-	private int[] characterBubbleID = new int[150];
+	private final int[] characterBubbleID = new int[150];
 	private int characterDialogCount = 0;
 	private int[] characterHealthBar = new int[150];
 	private int characterHealthCount = 0;
@@ -378,7 +378,7 @@ public final class mudclient implements Runnable {
 	private int fatigueSleeping = 0;
 	private int gameHeight = 334;
 	private int gameObjectInstanceCount = 0;
-	private int[] gameObjectInstanceZ = new int[5000];
+	private final int[] gameObjectInstanceZ = new int[5000];
 	private int gameWidth = 512;
 	private int groundItemCount = 0;
 	private boolean inputX_Focused = true;
@@ -401,7 +401,7 @@ public final class mudclient implements Runnable {
 	private int m_be;
 	private int m_Ce = 0;
 	private int m_Cg;
-	private int m_cl = 30;
+	private final int m_cl = 30;
 	private int appearanceBodyGender = 1;
 	private int controlButtonAppearanceHair2;
 	private int cameraAutoMoveAmountX = 2;
@@ -411,8 +411,8 @@ public final class mudclient implements Runnable {
 	private int controlButtonAppearanceTop2;
 	private int controlButtonAppearanceGender1;
 	private int appearanceSkinColour = 0;
-	private boolean runningAsApplet = true;
-	private boolean allowDebugCommands = !runningAsApplet || true;
+	private final boolean runningAsApplet = true;
+	private final boolean allowDebugCommands = !runningAsApplet || true;
 	private int optionsMenuCount = 0;
 	private String m_ig = "";
 	private int questPoints = 0;
@@ -510,12 +510,12 @@ public final class mudclient implements Runnable {
 	private int playerLocalX;
 	private int playerLocalZ;
 	private int[] playerStatCurrent;
-	private String[] messagesArray = new String[5];
+	private final String[] messagesArray = new String[5];
 	private long[] playerStatXpGained;
 	private long[] xpGainedStartTime;
 	private long playerXpGainedTotal = 0;
-	private String[] questNames = new String[100];
-	private int[] questStages = new int[100];
+	private final String[] questNames = new String[100];
+	private final int[] questStages = new int[100];
 	private int reportAbuse_AbuseType = 0;
 	private String reportAbuse_Name = "";
 	private int reportAbuse_State = 0;
@@ -620,16 +620,16 @@ public final class mudclient implements Runnable {
 	private int questGuideProgress;
 	private String questGuideStartWho;
 	private String questGuideStartWhere;
-	private String[] questGuideStartWhos = {"Sir Amik Varze", "the Cook", "the Gypsy", "Doric", "the Priest", "the Bertender", "Veronica", "Wizard Mizgog", "Redbeard Frank", "Chancellor Hassan", "Romeo", "Fred the Farmer", "Reldo", "the Squire", "Morgan", "Hetty", "the Guildmaster", "a boy", "the Adventurers", "Achetties", "Kaqemeex", "King Arthur", "Thormac", "Dimintheis", "Kangai Mau", "a mountain dwarf", "Brother Omad", "Lucien", "Brother Kojo", "King Arthur", "Lady Servil", "Bolren", "Ceril Carnillean", "Councillor Halgrive", "Edmond", "Caroline", "Almera", "Elena", "Trufitus", "King Narnode Shareen", "Mosol Rei", "King Lathas", "Observatory Professor", "Irena", "Watchtower Wizard", "Captain Lawgof", "a Gaurd", "an Examiner", "Gertrude", "Sir Radimus Erkle", "Duke Horacio"};
-	private String[] questGuideStartWheres = {"on the first floor of the White Knight's Castle in Falador", "on the first floor of Lumbridge Castle", "in Varrock Square", "north of Falador", "in the Lumbridge church", "inside the Rusty Anchor bar in Port Sarim", "outside of Draynor Manor", "on the top floor of the Wizard's Tower", "in Port Sarim", "inside Al-Kharid palace", "in Varrock Square", "north of Lumbridge", "in the Varrock Palace Library", "on the White Knight Castle grounds in Falador", "in Draynor Village", "in Rimmington", "inside the Champion's Guild", "in Taverly", "in the Lumbridge swamp", "outside of the Heroes' Guild north of Taverly", "at the Druid's Stone Circle in Taverly", "in Camelot", "on the top floor fo the Sorcerer's Tower south of Seer's Village", "in eastern Varrock", "in The Shrimp and Parrot pub in Brimhaven", "on either side of the White Wolf Mountain passage", "in the Monastery south of East Ardougne", "in the Flying Horse Inn on the western end of East Ardougne", "inside the Clock Tower south of East Ardougne", "in Camelot", "west of Port Khazard", "in Tree Gnome Village", "south of the Ardougne Castle", "outside of the East Ardougne church", "north of the Ardougne Castle", "east of Ardougne", "northeast of Baxtorian Falls", "north of the Ardougne Castle", "north-east of Tai Bwo Wannai", "in the Grand Tree", "outside of Shilo Village in southern Karamja", "on the ground floor of Ardougne Castle", "in the Observatory reception room west of the Tree Gnome Village", "outside the Shantay Pass in the Kharidian desert", "at the top of the Watchtower north of Yanille", "far north-east of Seer's Village", "in the Sinclair Mansion north of Camelot", "in the Exam Centre south of the Digsite", "at her house west of Varrock", "inside the Legend's Guild", "inside of Lumbridge Castle"};
+	private final String[] questGuideStartWhos = {"Sir Amik Varze", "the Cook", "the Gypsy", "Doric", "the Priest", "the Bertender", "Veronica", "Wizard Mizgog", "Redbeard Frank", "Chancellor Hassan", "Romeo", "Fred the Farmer", "Reldo", "the Squire", "Morgan", "Hetty", "the Guildmaster", "a boy", "the Adventurers", "Achetties", "Kaqemeex", "King Arthur", "Thormac", "Dimintheis", "Kangai Mau", "a mountain dwarf", "Brother Omad", "Lucien", "Brother Kojo", "King Arthur", "Lady Servil", "Bolren", "Ceril Carnillean", "Councillor Halgrive", "Edmond", "Caroline", "Almera", "Elena", "Trufitus", "King Narnode Shareen", "Mosol Rei", "King Lathas", "Observatory Professor", "Irena", "Watchtower Wizard", "Captain Lawgof", "a Gaurd", "an Examiner", "Gertrude", "Sir Radimus Erkle", "Duke Horacio"};
+	private final String[] questGuideStartWheres = {"on the first floor of the White Knight's Castle in Falador", "on the first floor of Lumbridge Castle", "in Varrock Square", "north of Falador", "in the Lumbridge church", "inside the Rusty Anchor bar in Port Sarim", "outside of Draynor Manor", "on the top floor of the Wizard's Tower", "in Port Sarim", "inside Al-Kharid palace", "in Varrock Square", "north of Lumbridge", "in the Varrock Palace Library", "on the White Knight Castle grounds in Falador", "in Draynor Village", "in Rimmington", "inside the Champion's Guild", "in Taverly", "in the Lumbridge swamp", "outside of the Heroes' Guild north of Taverly", "at the Druid's Stone Circle in Taverly", "in Camelot", "on the top floor fo the Sorcerer's Tower south of Seer's Village", "in eastern Varrock", "in The Shrimp and Parrot pub in Brimhaven", "on either side of the White Wolf Mountain passage", "in the Monastery south of East Ardougne", "in the Flying Horse Inn on the western end of East Ardougne", "inside the Clock Tower south of East Ardougne", "in Camelot", "west of Port Khazard", "in Tree Gnome Village", "south of the Ardougne Castle", "outside of the East Ardougne church", "north of the Ardougne Castle", "east of Ardougne", "northeast of Baxtorian Falls", "north of the Ardougne Castle", "north-east of Tai Bwo Wannai", "in the Grand Tree", "outside of Shilo Village in southern Karamja", "on the ground floor of Ardougne Castle", "in the Observatory reception room west of the Tree Gnome Village", "outside the Shantay Pass in the Kharidian desert", "at the top of the Watchtower north of Yanille", "far north-east of Seer's Village", "in the Sinclair Mansion north of Camelot", "in the Exam Centre south of the Digsite", "at her house west of Varrock", "inside the Legend's Guild", "inside of Lumbridge Castle"};
 	private String[] questGuideRequirement;
 	private String[] questGuideReward;
-	private String[][] questGuideRequirements = {{"12 quest points"}, {"None"}, {"Ability to defeat a level 30 demon"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"A friend to assist"}, {"10 Mining", "A friend to assist"}, {"Ability to defeat a level 43 vampire"}, {"None"}, {"32 Quest Points", "33 Magic", "The ability to defeat a level 110 dragon"}, {"Ability to defeat a level 54 shapeshifter"}, {"31 Crafting", "36 Woodcutting", "Ability to defeat a level 95 monster"}, {"Completed Shield of Arrav, Dragon Slayer, Merlin's Crystal, and Lost City", "56 Quest Points", "53 Cooking", "53 Fishing", "25 Herblaw", "50 Mining"}, {"None"}, {"Ability to defeat a level 58 knight", "A friend to assist"}, {"Completed the Barbarian Bar Crawl", "31 Prayer"}, {"40 Mining", "40 Smithing", "40 Crafting", "59 Magic"}, {"21 Thieving"}, {"10 Fishing"}, {"None"}, {"42 Thieving", "35 Ranged", "Ability to defeat a level 63 monster with ranged"}, {"None"}, {"Completed Merlin's Crystal", "20 Attack", "Ability to defeat a level 146 Black Knight Titan"}, {"Ability to defeat a level 122 monster"}, {"None"}, {"None"}, {"None"}, {"None"}, {"30 Firemaking"}, {"None"}, {"Completed Plague City"}, {"Completed Druidic Ritual", "3 Herblaw"}, {"25 Agility", "Ability to defeat a level 184 monster"}, {"Completed Jungle Potion", "32 Agility", "20 Crafting", "4 Smithing", "Ability to defeat a level 83 monsters"}, {"Completed Biohazard", "25 Ranged"}, {"10 Crafting"}, {"10 Fletching", "10 Smithing", "Ability to defeat a level 47 enemy"}, {"40 Mining", "30 Agility", "15 Thieving", "14 Herblaw", "14 Magic", "Ability to defeat a level 68 ogre"}, {"None"}, {"None"}, {"Completed Druidic Ritual", "25 Thieving", "10 Agility", "10 Herblaw"}, {"None"}, {"108 Quest Points", "50 Agility", "50 Crafting", "45 Herblaw", "56 Magic", "52 Mining", "42 Prayer", "50 Smithing", "50 Strength", "50 Thieving", "50 Woodcutting", "Ability to defeat a level 172 demon"}, {"None"}};
+	private final String[][] questGuideRequirements = {{"12 quest points"}, {"None"}, {"Ability to defeat a level 30 demon"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"None"}, {"A friend to assist"}, {"10 Mining", "A friend to assist"}, {"Ability to defeat a level 43 vampire"}, {"None"}, {"32 Quest Points", "33 Magic", "The ability to defeat a level 110 dragon"}, {"Ability to defeat a level 54 shapeshifter"}, {"31 Crafting", "36 Woodcutting", "Ability to defeat a level 95 monster"}, {"Completed Shield of Arrav, Dragon Slayer, Merlin's Crystal, and Lost City", "56 Quest Points", "53 Cooking", "53 Fishing", "25 Herblaw", "50 Mining"}, {"None"}, {"Ability to defeat a level 58 knight", "A friend to assist"}, {"Completed the Barbarian Bar Crawl", "31 Prayer"}, {"40 Mining", "40 Smithing", "40 Crafting", "59 Magic"}, {"21 Thieving"}, {"10 Fishing"}, {"None"}, {"42 Thieving", "35 Ranged", "Ability to defeat a level 63 monster with ranged"}, {"None"}, {"Completed Merlin's Crystal", "20 Attack", "Ability to defeat a level 146 Black Knight Titan"}, {"Ability to defeat a level 122 monster"}, {"None"}, {"None"}, {"None"}, {"None"}, {"30 Firemaking"}, {"None"}, {"Completed Plague City"}, {"Completed Druidic Ritual", "3 Herblaw"}, {"25 Agility", "Ability to defeat a level 184 monster"}, {"Completed Jungle Potion", "32 Agility", "20 Crafting", "4 Smithing", "Ability to defeat a level 83 monsters"}, {"Completed Biohazard", "25 Ranged"}, {"10 Crafting"}, {"10 Fletching", "10 Smithing", "Ability to defeat a level 47 enemy"}, {"40 Mining", "30 Agility", "15 Thieving", "14 Herblaw", "14 Magic", "Ability to defeat a level 68 ogre"}, {"None"}, {"None"}, {"Completed Druidic Ritual", "25 Thieving", "10 Agility", "10 Herblaw"}, {"None"}, {"108 Quest Points", "50 Agility", "50 Crafting", "45 Herblaw", "56 Magic", "52 Mining", "42 Prayer", "50 Smithing", "50 Strength", "50 Thieving", "50 Woodcutting", "Ability to defeat a level 172 demon"}, {"None"}};
 	private String[][] questGuideRewards;
 	private String skillToDo;
 	private long time;
 	private long m_timer;
-	private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
+	private final ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
 	private int amountToZoom = 0;
 	private Panel panelLoginOptions;
 	private boolean worldComponentsLoaded = false;
@@ -1037,7 +1037,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putString(player);
 						this.packetHandler.getClientStream().finishPacket();
 					} else {
-						this.showMessage(false, null, "You can\'t add yourself to your own friend list.",
+						this.showMessage(false, null, "You can't add yourself to your own friend list.",
 							MessageType.GAME, 0, null);
 					}
 				}
@@ -1060,7 +1060,7 @@ public final class mudclient implements Runnable {
 					this.packetHandler.getClientStream().bufferBits.putString(player);
 					this.packetHandler.getClientStream().finishPacket();
 				} else {
-					this.showMessage(false, null, "You can\'t invite yourself to a party.",
+					this.showMessage(false, null, "You can't invite yourself to a party.",
 						MessageType.GAME, 0, null);
 				}
 			}
@@ -1116,7 +1116,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putString(player);
 						this.packetHandler.getClientStream().finishPacket();
 					} else {
-						this.showMessage(false, null, "You can\'t add yourself to your ignore list",
+						this.showMessage(false, null, "You can't add yourself to your ignore list",
 							MessageType.GAME, 0, null);
 					}
 				}
@@ -1158,7 +1158,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putString(player);
 						this.packetHandler.getClientStream().finishPacket();
 					} else {
-						this.showMessage(false, null, "You can\'t add yourself to your ignore list",
+						this.showMessage(false, null, "You can't add yourself to your ignore list",
 							MessageType.GAME, 0, null);
 					}
 				}
@@ -1459,7 +1459,7 @@ public final class mudclient implements Runnable {
 
 			this.logoutTimeout = 0;
 
-			this.showMessage(false, null, "Sorry, you can\'t logout at the moment", MessageType.GAME, 0,
+			this.showMessage(false, null, "Sorry, you can't logout at the moment", MessageType.GAME, 0,
 				null, "@cya@");
 		} catch (RuntimeException var3) {
 			throw GenUtil.makeThrowable(var3, "client.CB(" + var1 + ')');
@@ -1953,7 +1953,7 @@ public final class mudclient implements Runnable {
 				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "request to change to regular at any time.", 0, true);
 				yFromTopDistance += 73;
 				this.panelAppearance.addDecoratedBox(var6, yFromTopDistance, 215, 125);
-				String modes_ironman[] = {
+				String[] modes_ironman = {
 					"Regular", "Ironman", "Ultimate", "Hardcore"
 				};
 				this.playerMode1 = this.panelAppearance.addVerticalList(var6, yFromTopDistance + 2, modes_ironman, 4, true);
@@ -1965,7 +1965,7 @@ public final class mudclient implements Runnable {
 				yFromTopDistance += 13;
 				this.panelAppearance.addCenteredText(var6, yFromTopDistance, "experience the original 1X xp rate!", 0, true);
 				yFromTopDistance += 13;
-				String modes_xp[] = {
+				String[] modes_xp = {
 					"Yes please", "No, original"
 				};
 				this.playerMode2 = this.panelAppearance.addHorizontalList(var6, yFromTopDistance, modes_xp, 1, true);
@@ -3123,7 +3123,7 @@ public final class mudclient implements Runnable {
 				this.getSurface().drawString("Preparing to duel with: " + this.duelConfirmOpponentName, 1 + xr, yr + 10,
 					0xFFFFFF, 1);
 				this.getSurface().drawString("Your Stake", xr + 9, 27 + yr, 0xFFFFFF, 4);
-				this.getSurface().drawString("Opponent\'s Stake", 9 + xr, 120 + yr, 0xFFFFFF, 4);
+				this.getSurface().drawString("Opponent's Stake", 9 + xr, 120 + yr, 0xFFFFFF, 4);
 				this.getSurface().drawString("Duel Options", xr + 9, yr + 212, 0xFFFFFF, 4);
 				this.getSurface().drawString("Your Inventory", xr + 216, yr + 27, 0xFFFFFF, 4);
 				this.getSurface().drawString("No retreating", 1 + 8 + xr, 215 + yr + 16, 0xFFFF00, 3);
@@ -3336,7 +3336,7 @@ public final class mudclient implements Runnable {
 				this.getSurface().drawColoredStringCentered(xr + 117, "Nothing!", 0xFFFFFF, 0, 1, 42 + yr);
 			}
 
-			this.getSurface().drawColoredStringCentered(351 + xr, "Your opponent\'s stake:", 0xFFFF00, 0, 1, 30 + yr);
+			this.getSurface().drawColoredStringCentered(351 + xr, "Your opponent's stake:", 0xFFFF00, 0, 1, 30 + yr);
 
 			for (int var5 = 0; var5 < this.duelOpponentConfirmItemsCount; ++var5) {
 				item = this.getDuelOpponentConfirmItem(var5);
@@ -3381,7 +3381,7 @@ public final class mudclient implements Runnable {
 				this.getSurface().drawColoredStringCentered(xr + 234, "Weapons may be used", '\uff00', 0, 1, yr + 216);
 			}
 
-			this.getSurface().drawColoredStringCentered(xr + 234, "If you are sure click \'Accept\' to begin the duel",
+			this.getSurface().drawColoredStringCentered(xr + 234, "If you are sure click 'Accept' to begin the duel",
 				0xFFFFFF, 0, 1, yr + 230);
 			if (!this.duelConfirmed) {
 				this.getSurface().drawSprite(spriteSelect(GUIPARTS.ACCEPTBUTTON.getDef()), 83 + xr, 238 + yr);
@@ -4161,7 +4161,7 @@ public final class mudclient implements Runnable {
 
 				this.getSurface().drawString("Trading with: " + this.tradeRecipientName, xr + 1, 10 + yr, 0xFFFFFF, 1);
 				this.getSurface().drawString("Your Offer", xr + 9, yr + 27, 0xFFFFFF, 4);
-				this.getSurface().drawString("Opponent\'s Offer", xr + 9, yr + 152, 0xFFFFFF, 4);
+				this.getSurface().drawString("Opponent's Offer", xr + 9, yr + 152, 0xFFFFFF, 4);
 				this.getSurface().drawString("Your Inventory", xr + 216, yr + 27, 0xFFFFFF, 4);
 				if (!this.tradeAccepted) {
 					this.getSurface().drawSprite(spriteSelect(GUIPARTS.ACCEPTBUTTON.getDef()), xr + 217, yr + 238);
@@ -4693,7 +4693,7 @@ public final class mudclient implements Runnable {
 
 					this.getSurface().drawBoxBorder(this.halfGameWidth() - 128, 257, 229 - (isAndroid() ? 110 : 0), 42, 0xFFFFFF);
 					this.drawChatMessageTabs(5);
-					this.getSurface().drawColoredStringCentered(this.halfGameWidth(), "If you can\'t read the word",
+					this.getSurface().drawColoredStringCentered(this.halfGameWidth(), "If you can't read the word",
 						0xFFFFFF, var1 - 13, 1, 290 - (isAndroid() ? 110 : 0));
 					this.getSurface().drawColoredStringCentered(this.halfGameWidth(),
 						"@yel@click here@whi@ to get a different one", 0xFFFFFF, var1 ^ 13, 1, 305 - (isAndroid() ? 110 : 0));
@@ -6857,13 +6857,13 @@ public final class mudclient implements Runnable {
 					}
 
 					if (mouseX > x && mouseX < x + boxWidth && mouseY > y && mouseY < y + boxHeight
-						&& mouseButtonClick > 0 && ((this.showUiTab == 0 && !C_CUSTOM_UI) || C_CUSTOM_UI)) {
+						&& mouseButtonClick > 0 && (this.showUiTab == 0 || C_CUSTOM_UI)) {
 						selectedSpell = lastSelectedSpell;
 						mouseButtonClick = 0;
 					}
 
 					if (mouseX > x && mouseX < x + boxWidth && mouseY > y + 49 && mouseY < y + 69
-						&& mouseButtonClick > 0 && ((this.showUiTab == 0 && !C_CUSTOM_UI) || C_CUSTOM_UI)) {
+						&& mouseButtonClick > 0 && (this.showUiTab == 0 || C_CUSTOM_UI)) {
 						selectedSpell = -1;
 						lastSelectedSpell = -1;
 						mouseButtonClick = 0;
@@ -8338,7 +8338,7 @@ public final class mudclient implements Runnable {
 										.getRunesRequired()) {
 										if (!hasRunes(e.getKey(), e.getValue())) {
 											this.showMessage(false, null,
-												"You don\'t have all the reagents you need for this spell",
+												"You don't have all the reagents you need for this spell",
 												MessageType.GAME, 0, null);
 											k3 = -1;
 											break;
@@ -8897,7 +8897,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// sound effects
-		if (this.optionSoundDisabled) {
+		if (optionSoundDisabled) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
 				"@whi@Sound effects - @red@off", 2, null, null);
 		} else {
@@ -9262,10 +9262,10 @@ public final class mudclient implements Runnable {
 
 		// sound on/off - byte index 2
 		if (settingIndex == 2 && this.mouseButtonClick == 1) {
-			this.optionSoundDisabled = !this.optionSoundDisabled;
+			optionSoundDisabled = !optionSoundDisabled;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(2);
-			this.packetHandler.getClientStream().bufferBits.putByte(this.optionSoundDisabled ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(optionSoundDisabled ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9755,7 +9755,7 @@ public final class mudclient implements Runnable {
 
 		// sound effects - byte index 2
 		y += 15;
-		if (this.optionSoundDisabled) {
+		if (optionSoundDisabled) {
 			this.getSurface().drawString("@whi@Sound effects - @red@off", 3 + baseX, y, 0, 1);
 		} else {
 			this.getSurface().drawString("@whi@Sound effects - @gre@on", 3 + baseX, y, 0, 1);
@@ -9903,10 +9903,10 @@ public final class mudclient implements Runnable {
 		yFromTopDistance += 15;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12
 			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
-			this.optionSoundDisabled = !this.optionSoundDisabled;
+			optionSoundDisabled = !optionSoundDisabled;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(2);
-			this.packetHandler.getClientStream().bufferBits.putByte(this.optionSoundDisabled ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(optionSoundDisabled ? 1 : 0);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -11133,7 +11133,7 @@ public final class mudclient implements Runnable {
 							} else if (var11.equalsIgnoreCase("::overlay") && S_SIDE_MENU_TOGGLE) {
 								C_SIDE_MENU_OVERLAY = !C_SIDE_MENU_OVERLAY;
 							} else if (var11.startsWith("::wiki")) {
-								String args[] = var11.split(" ");
+								String[] args = var11.split(" ");
 								// args[0] should be ::wiki
 								String url;
 								if (args.length > 1) {
@@ -14299,7 +14299,7 @@ public final class mudclient implements Runnable {
 			if (this.currentViewMode != GameMode.LOGIN) {
 				if (this.combatTimeout <= 450) {
 					if (var1 < this.combatTimeout) {
-						this.showMessage(false, null, "You can\'t logout for 10 seconds after combat",
+						this.showMessage(false, null, "You can't logout for 10 seconds after combat",
 							MessageType.GAME, 0, null, "@cya@");
 					} else {
 						this.packetHandler.getClientStream().newPacket(102);
@@ -14309,7 +14309,7 @@ public final class mudclient implements Runnable {
 						// this.createLoginPanels(3845);
 					}
 				} else {
-					this.showMessage(false, null, "You can\'t logout during combat!", MessageType.GAME, 0,
+					this.showMessage(false, null, "You can't logout during combat!", MessageType.GAME, 0,
 						null, "@cya@");
 				}
 			}
@@ -14509,38 +14509,22 @@ public final class mudclient implements Runnable {
 			String msg = colour + StringUtil.formatMessage(message, sender, type, colour);
 
 			if (type == MessageType.CHAT) {
-				if (this.panelMessageTabs.controlListCurrentSize[this.panelMessageChat]
-					- 4 != this.panelMessageTabs.controlScrollAmount[this.panelMessageChat]) {
-					this.panelMessageTabs.addToList(msg, false, crownID, sender, formerName, this.panelMessageChat);
-				} else {
-					this.panelMessageTabs.addToList(msg, true, crownID, sender, formerName, this.panelMessageChat);
-				}
+				this.panelMessageTabs.addToList(msg, this.panelMessageTabs.controlListCurrentSize[this.panelMessageChat]
+					- 4 == this.panelMessageTabs.controlScrollAmount[this.panelMessageChat], crownID, sender, formerName, this.panelMessageChat);
 			}
 
 			if (type == MessageType.QUEST) {
-				if (this.panelMessageTabs.controlScrollAmount[this.panelMessageQuest] != this.panelMessageTabs.controlListCurrentSize[this.panelMessageQuest]
-					- 4) {
-					this.panelMessageTabs.addToList(msg, false, 0, null, null,
-						this.panelMessageQuest);
-				} else {
-					this.panelMessageTabs.addToList(msg, true, 0, null, null, this.panelMessageQuest);
-				}
+				this.panelMessageTabs.addToList(msg, this.panelMessageTabs.controlScrollAmount[this.panelMessageQuest] == this.panelMessageTabs.controlListCurrentSize[this.panelMessageQuest]
+						- 4, 0, null, null,
+					this.panelMessageQuest);
 			}
 			if (type == MessageType.GLOBAL_CHAT) {
-				if (this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate] != this.panelMessageTabs.controlListCurrentSize[this.panelMessagePrivate]
-					- 4) {
-					this.panelMessageTabs.addToList(msg, false, crownID, sender, formerName, this.panelMessagePrivate);
-				} else {
-					this.panelMessageTabs.addToList(msg, true, crownID, sender, formerName, this.panelMessagePrivate);
-				}
+				this.panelMessageTabs.addToList(msg, this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate] == this.panelMessageTabs.controlListCurrentSize[this.panelMessagePrivate]
+					- 4, crownID, sender, formerName, this.panelMessagePrivate);
 			}
 			if (type == MessageType.CLAN_CHAT) {
-				if (this.panelMessageTabs.controlScrollAmount[this.panelMessageClan] != this.panelMessageTabs.controlListCurrentSize[this.panelMessageClan]
-					- 4) {
-					this.panelMessageTabs.addToList(msg, false, crownID, sender, formerName, this.panelMessageClan);
-				} else {
-					this.panelMessageTabs.addToList(msg, true, crownID, sender, formerName, this.panelMessageClan);
-				}
+				this.panelMessageTabs.addToList(msg, this.panelMessageTabs.controlScrollAmount[this.panelMessageClan] == this.panelMessageTabs.controlListCurrentSize[this.panelMessageClan]
+					- 4, crownID, sender, formerName, this.panelMessageClan);
 			}
 
 			if (type == MessageType.PRIVATE_RECIEVE || type == MessageType.PRIVATE_SEND) {
@@ -14549,12 +14533,8 @@ public final class mudclient implements Runnable {
 					crown = 0;
 				}
 
-				if (this.panelMessageTabs.controlListCurrentSize[this.panelMessagePrivate]
-					- 4 != this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate]) {
-					this.panelMessageTabs.addToList(msg, false, crown, sender, formerName, this.panelMessagePrivate);
-				} else {
-					this.panelMessageTabs.addToList(msg, true, crown, sender, formerName, this.panelMessagePrivate);
-				}
+				this.panelMessageTabs.addToList(msg, this.panelMessageTabs.controlListCurrentSize[this.panelMessagePrivate]
+					- 4 == this.panelMessageTabs.controlScrollAmount[this.panelMessagePrivate], crown, sender, formerName, this.panelMessagePrivate);
 			}
 
 		} catch (RuntimeException var12) {
@@ -15224,7 +15204,7 @@ public final class mudclient implements Runnable {
 	}
 
 	public void setOptionSoundDisabled(boolean disabled) {
-		this.optionSoundDisabled = disabled;
+		optionSoundDisabled = disabled;
 	}
 
 	public void setCombatStyle(int style) {
