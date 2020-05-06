@@ -66,13 +66,33 @@ public class CombatFormula {
 	}
 
 	/**
-	 * Gets a dice roll for melee damage for a single attack
+	 * Gets a dice roll for magic damage for a single attack
 	 *
 	 * @param spellPower      The max hit of the spell
 	 * @return The randomized value.
 	 */
 	public static int calculateMagicDamage(final int spellPower) {
 		return calculateDamage(spellPower);
+	}
+
+	/**
+	 * Gets a dice roll for magic damage (god spells) for a single attack
+	 *
+	 * @param source      The player casting this spell
+	 * @return The randomized value.
+	 */
+	public static int calculateGodSpellDamage(final Player source) {
+		return calculateDamage(source.isCharged() ? 18 : 25);
+	}
+
+	/**
+	 * Gets a dice roll for magic damage (iban blast) for a single attack
+	 *
+	 * @return The randomized value.
+	 */
+	public static int calculateIbanSpellDamage() {
+		// TODO: Remove this code and roll it into calculateMagicDamage
+		return calculateDamage(25);
 	}
 
 	/**

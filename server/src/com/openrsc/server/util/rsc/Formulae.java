@@ -6,7 +6,6 @@ import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.player.Prayers;
 
 import java.security.InvalidParameterException;
 
@@ -184,60 +183,6 @@ public final class Formulae {
 			}
 		}
 		return 0.0D;
-	}
-
-	public static int calcGodSpells(Mob attacker, Mob defender, boolean iban) {
-		if (attacker.isPlayer()) {
-			Player owner = (Player) attacker;
-			int newAtt = (int) ((owner.getMagicPoints()) + owner.getSkills().getLevel(Skills.MAGIC));
-
-			int newDef = (int) ((addPrayers(defender, Prayers.THICK_SKIN, Prayers.ROCK_SKIN, Prayers.STEEL_SKIN)
-				* defender.getSkills().getLevel(Skills.DEFENSE) / 4D) + (defender.getArmourPoints() / 4D));
-			int hitChance = DataConversions.random(0, 150 + (newAtt - newDef));
-
-			if (hitChance > (defender.isNpc() ? 50 : 60)) {
-				int max;
-				if (owner.getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_IBAN.id()) && iban) {
-					max = DataConversions.random(0, 25);
-				} else {
-					if (owner.isCharged() &&
-						(owner.getCarriedItems().getEquipment().hasEquipped(ItemId.ZAMORAK_CAPE.id()) ||
-							owner.getCarriedItems().getEquipment().hasEquipped(ItemId.SARADOMIN_CAPE.id()) ||
-							owner.getCarriedItems().getEquipment().hasEquipped(ItemId.GUTHIX_CAPE.id()))) {
-						max = DataConversions.random(0, 25);
-					} else {
-						max = DataConversions.random(0, 18);
-					}
-				}
-				int maxProb = 5; // 5%
-				int nearMaxProb = 10; // 10%
-				int avProb = 80; // 80%
-				int lowHit = 5; // 5%
-
-				int shiftValue = (int) Math.round(defender.getArmourPoints() * 0.02D);
-				maxProb -= shiftValue;
-				nearMaxProb -= (int) Math.round(shiftValue * 1.5);
-				avProb -= (int) Math.round(shiftValue * 2.0);
-				lowHit += (int) Math.round(shiftValue * 3.5);
-
-				int hitRange = DataConversions.random(0, 100);
-
-				if (hitRange >= (100 - maxProb)) {
-					return max;
-				} else if (hitRange >= (100 - nearMaxProb)) {
-					return DataConversions.roundUp(Math.abs((max - (max * (DataConversions.random(0, 10) * 0.01D)))));
-				} else if (hitRange >= (100 - avProb)) {
-					int newMax = (int) DataConversions.roundUp((max - (max * 0.1D)));
-					return DataConversions
-						.roundUp(Math.abs((newMax - (newMax * (DataConversions.random(0, 50) * 0.01D)))));
-				} else {
-					int newMax = (int) DataConversions.roundUp((max - (max * 0.5D)));
-					return DataConversions
-						.roundUp(Math.abs((newMax - (newMax * (DataConversions.random(0, 95) * 0.01D)))));
-				}
-			}
-		}
-		return 0;
 	}
 
 	/**

@@ -6,8 +6,6 @@ import com.openrsc.server.util.BCrypt;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -19,7 +17,6 @@ import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Random;
@@ -234,32 +231,6 @@ public final class DataConversions {
 		return (int) ((now - time) / 86400);
 	}
 
-	public static String formatString(String str, int length) {
-		StringBuilder s = new StringBuilder();
-		for (int i = 0; i < length; i++)
-			if (i >= str.length()) {
-				s.append(" ");
-			} else {
-				char c = str.charAt(i);
-				if (c >= 'a' && c <= 'z') {
-					s.append(c);
-				} else {
-					if (c >= 'A' && c <= 'Z') {
-						s.append(c);
-					} else if (Arrays.binarySearch(special_characters, c) != -1) {
-						s.append(c);
-					} else {
-						if (c >= '0' && c <= '9') {
-							s.append(c);
-						} else {
-							s.append('_');
-						}
-					}
-				}
-			}
-		return s.toString();
-	}
-
 	public static String stripBadCharacters(String value) {
 		StringBuilder s = new StringBuilder();
 		for (int i = 0; i < value.length(); i++) {
@@ -332,64 +303,7 @@ public final class DataConversions {
 		return (int) (total / values.length);
 	}
 
-	/**
-	 * Decodes a byte array back into a string
-	 */
-	public static String byteToString(byte[] data, int offset, int length) {
-		char[] buffer = new char[100];
-		try {
-			int k = 0;
-			int l = -1;
-			for (int i1 = 0; i1 < length; i1++) {
-				int j1 = data[offset++] & 0xff;
-				int k1 = j1 >> 4 & 0xf;
-				if (l == -1) {
-					if (k1 < 13) {
-						buffer[k++] = characters[k1];
-					} else {
-						l = k1;
-					}
-				} else {
-					buffer[k++] = characters[((l << 4) + k1) - 195];
-					l = -1;
-				}
-				k1 = j1 & 0xf;
-				if (l == -1) {
-					if (k1 < 13) {
-						buffer[k++] = characters[k1];
-					} else {
-						l = k1;
-					}
-				} else {
-					buffer[k++] = characters[((l << 4) + k1) - 195];
-					l = -1;
-				}
-			}
-			boolean flag = true;
-			for (int l1 = 0; l1 < k; l1++) {
-				char c = buffer[l1];
-				if (l1 > 4 && c == '@') {
-					buffer[l1] = ' ';
-				}
-				if (c == '%') {
-					buffer[l1] = ' ';
-				}
-				if (flag && c >= 'a' && c <= 'z') {
-					buffer[l1] += '\uFFE0';
-					flag = false;
-				}
-				if (c == '.' || c == '!' || c == ':') {
-					flag = true;
-				}
-			}
-			return new String(buffer, 0, k);
-		} catch (Exception e) {
-			return ".";
-		}
-	}
-
 	public static String getEncryptedString(Packet src, int limit) {
-
 		try {
 			int count = src.getSmart08_16();// correct.
 			if (count > limit) {
@@ -426,28 +340,6 @@ public final class DataConversions {
 		return new String(dest, 0, dh);
 	}
 
-	public static String formatToRSCString(String s) {
-		char[] charArray = s.toCharArray();
-		boolean flag = true;
-		for (int l1 = 0; l1 < charArray.length; l1++) {
-			char c = charArray[l1];
-			if (l1 > 4 && c == '@') {
-				charArray[l1] = ' ';
-			}
-			if (c == '%') {
-				charArray[l1] = ' ';
-			}
-			if (flag && c >= 'a' && c <= 'z') {
-				charArray[l1] += '\uFFE0';
-				flag = false;
-			}
-			if (c == '.' || c == '!' || c == ':') {
-				flag = true;
-			}
-		}
-		return new String(charArray);
-	}
-
 	/**
 	 * returns the code used to represent the given character in our byte array
 	 * encoding methods
@@ -478,13 +370,6 @@ public final class DataConversions {
 
 	private static byte getObjectCoordOffset(int coord1, int coord2) {
 		return (byte) (coord1 - coord2);
-	}
-
-	public static byte[] getObjectPositionOffsets(Point p1, Point p2) {
-		byte[] rv = new byte[2];
-		rv[0] = getObjectCoordOffset(p1.getX(), p2.getX());
-		rv[1] = getObjectCoordOffset(p1.getY(), p2.getY());
-		return rv;
 	}
 
 	/**
@@ -536,52 +421,10 @@ public final class DataConversions {
 	}
 
 	/**
-	 * Checks if the given point is in the array
-	 */
-	public static boolean inPointArray(Point[] haystack, Point needle) {
-		for (Point option : haystack) {
-			if (needle.getX() == option.getX() && needle.getY() == option.getY()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static long IPToLong(String ip) {
-		String[] octets = ip.split("\\.");
-		long result = 0L;
-		for (int x = 0; x < 4; x++) {
-			result += Integer.parseInt(octets[x]) * Math.pow(256, 3 - x);
-		}
-		return result;
-	}
-
-	public static String IPToString(long ip) {
-		StringBuilder result = new StringBuilder("0.0.0.0");
-		for (int x = 0; x < 4; x++) {
-			int octet = (int) (ip / Math.pow(256, 3 - x));
-			ip -= octet * Math.pow(256, 3 - x);
-			if (x == 0) {
-				result = new StringBuilder(String.valueOf(octet));
-			} else {
-				result.append(".").append(octet);
-			}
-		}
-		return result.toString();
-	}
-
-	/**
 	 * returns the max of the 2 values
 	 */
 	public static int max(int i1, int i2) {
 		return i1 > i2 ? i1 : i2;
-	}
-
-	/**
-	 * Returns true percent% of the time
-	 */
-	public static boolean percentChance(int percent) {
-		return random(1, 100) <= percent;
 	}
 
 	/**
@@ -596,33 +439,6 @@ public final class DataConversions {
 	 */
 	public static int random(int low, int high) {
 		return low + rand.nextInt(high - low + 1);
-	}
-
-	/**
-	 * returns a random number within the given bounds, but allows for certain
-	 * values to be weighted
-	 */
-	static int randomWeighted(int low, int dip, int peak, int max) {
-		int total = 0;
-		int probability = 100;
-		int[] probArray = new int[max + 1];
-		for (int x = 0; x < probArray.length; x++) {
-			total += probArray[x] = probability;
-			if (x < dip || x > peak) {
-				probability -= 3;
-			} else {
-				probability += 3;
-			}
-		}
-		int hit = random(0, total);
-		total = 0;
-		for (int x = 0; x < probArray.length; x++) {
-			if (hit >= total && hit < (total + probArray[x])) {
-				return x;
-			}
-			total += probArray[x];
-		}
-		return 0;
 	}
 
 	public static double round(double value, int decimalPlace) {
@@ -643,43 +459,6 @@ public final class DataConversions {
 		byte[] buffer = new byte[in.available()];
 		in.read(buffer, 0, buffer.length);
 		return ByteBuffer.wrap(buffer);
-	}
-
-	/**
-	 * Encodes a string into a byte array
-	 */
-	public static byte[] stringToByteArray(String message) {
-		byte[] buffer = new byte[100];
-		if (message.length() > 80) {
-			message = message.substring(0, 80);
-		}
-		message = message.toLowerCase();
-		int length = 0; // what does the p.message use?
-		int j = -1;
-		for (int k = 0; k < message.length(); k++) {
-			int code = getCharCode(message.charAt(k));
-			if (code > 12) {
-				code += 195;
-			}
-			if (j == -1) {
-				if (code < 13)
-					j = code;
-				else
-					buffer[length++] = (byte) code;
-			} else if (code < 13) {
-				buffer[length++] = (byte) ((j << 4) + code);
-				j = -1;
-			} else {
-				buffer[length++] = (byte) ((j << 4) + (code >> 4));
-				j = code & 0xf;
-			}
-		}
-		if (j != -1) {
-			buffer[length++] = (byte) (j << 4);
-		}
-		byte[] string = new byte[length];
-		System.arraycopy(buffer, 0, string, 0, length);
-		return string;
 	}
 
 	public static String timeFormat(long l) {
@@ -827,27 +606,6 @@ public final class DataConversions {
 		}
 
 		return out;
-	}
-
-	public static String hmac(String hashType, String value, String key) {
-		try {
-			byte[] keyBytes = key.getBytes();
-			SecretKeySpec signingKey = new SecretKeySpec(keyBytes, "Hmac" + hashType);
-
-			Mac mac = Mac.getInstance("Hmac" + hashType);
-			mac.init(signingKey);
-
-			byte[] rawHmac = mac.doFinal(value.getBytes());
-			return new BigInteger(1, rawHmac).toString(16);
-		} catch (Exception e) {
-			LOGGER.catching(e);
-		}
-		return "";
-	}
-
-	public static int getTimeStamp() {
-		long time = System.currentTimeMillis() / 1000;
-		return (int) time;
 	}
 
 	public static String numberFormat(int i) {

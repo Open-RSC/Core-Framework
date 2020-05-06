@@ -1076,7 +1076,7 @@ public class SpellHandler implements PacketHandler {
 							int casts = getPlayer().getCache().getInt(spell.getName() + "_casts");
 							getPlayer().getCache().set(spell.getName() + "_casts", casts - 1);
 						}
-						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, Formulae.calcGodSpells(getPlayer(), affectedMob, true), 1));
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateIbanSpellDamage(), 1));
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
 					case 33: // Guthix cast
@@ -1131,7 +1131,7 @@ public class SpellHandler implements PacketHandler {
 						if (affectedMob.getRegion().getGameObject(affectedMob.getX(), affectedMob.getY(), getPlayer()) == null) {
 							godSpellObject(getPlayer(), affectedMob, spellID);
 						}
-						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, Formulae.calcGodSpells(getPlayer(), affectedMob, false), 1));
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateGodSpellDamage(getPlayer()), 1));
 
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
