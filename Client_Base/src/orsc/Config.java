@@ -137,6 +137,7 @@ public class Config {
 	public static int S_CHARACTER_CREATION_MODE = 0;
 	public static int S_SKILLING_EXP_RATE = 1;
 	public static boolean S_WANT_HARVESTING = false;
+	public static boolean S_CUSTOM_PROTOCOL = true;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

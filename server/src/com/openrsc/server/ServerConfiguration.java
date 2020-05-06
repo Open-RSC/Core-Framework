@@ -177,6 +177,7 @@ public class ServerConfiguration {
 	public boolean LENIENT_CONTACT_DETAILS;
 	//loosened checks
 	public boolean LOOSE_SHALLOW_WATER_CHECK;
+	public boolean CUSTOM_PROTOCOL;
 	public int PACKET_LIMIT;
 	private int CONNECTION_LIMIT;
 	private int CONNECTION_TIMEOUT;
@@ -316,6 +317,7 @@ public class ServerConfiguration {
 		RING_OF_FORGING_USES = tryReadInt("ring_of_forging_uses").orElse(75);
 		DWARVEN_RING_USES = tryReadInt("dwarven_ring_uses").orElse(29);
 		DWARVEN_RING_BONUS = tryReadInt("dwarven_ring_bonus").orElse(3);
+		CUSTOM_PROTOCOL = tryReadBool("custom_protocol").orElse(false);
 		/*
 		CHECK_ADMIN_IP = tryReadBool("check_admin_ip").orElse(false);
 		ADMIN_IP = tryReadString("admin_ip").orElse("127.0.0.0,10.0.0.0,172.16.0.0,192.168.0.0");

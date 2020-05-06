@@ -27,7 +27,6 @@ import io.netty.channel.ChannelFutureListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Base64;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -162,18 +161,20 @@ public class ActionSender {
 		synchronized(with.getDuel().getDuelOffer().getItems()) {
 			s.writeByte((byte) with.getDuel().getDuelOffer().getItems().size());
 			for (Item item : with.getDuel().getDuelOffer().getItems()) {
-				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
-					"'noted': " + item.getNoted() + "}").getBytes()));
-				//s.writeShort(item.getCatalogId());
+				s.writeShort(item.getCatalogId());
+				if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+					s.writeByte((byte)(item.getNoted() ? 1 : 0));
+				}
 				s.writeInt(item.getAmount());
 			}
 		}
 		synchronized(player.getDuel().getDuelOffer().getItems()) {
 			s.writeByte((byte) player.getDuel().getDuelOffer().getItems().size());
 			for (Item item : player.getDuel().getDuelOffer().getItems()) {
-				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
-					"'noted': " + item.getNoted() + "}").getBytes()));
-				//s.writeShort(item.getCatalogId());
+				s.writeShort(item.getCatalogId());
+				if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+					s.writeByte((byte)(item.getNoted() ? 1 : 0));
+				}
 				s.writeInt(item.getAmount());
 			}
 		}
@@ -230,9 +231,10 @@ public class ActionSender {
 			s.setID(Opcode.SEND_DUEL_OPPONENTS_ITEMS.opcode);
 			s.writeByte((byte) items.size());
 			for (Item item : items) {
-				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
-					"'noted': " + item.getNoted() + "}").getBytes()));
-				//s.writeShort(item.getCatalogId());
+				s.writeShort(item.getCatalogId());
+				if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+					s.writeByte((byte)(item.getNoted() ? 1 : 0));
+				}
 				s.writeInt(item.getAmount());
 			}
 
@@ -540,6 +542,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().HIDE_LOGIN_BOX_TOGGLE + " 74");
 			LOGGER.info(server.getConfig().WANT_GLOBAL_FRIEND + " 75");
 			LOGGER.info(server.getConfig().RIGHT_CLICK_TRADE + " 76");
+			LOGGER.info(server.getConfig().CUSTOM_PROTOCOL + " 77");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -638,6 +641,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().HIDE_LOGIN_BOX_TOGGLE ? 1 : 0)); // 74
 		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); // 75
 		s.writeByte((byte) (server.getConfig().RIGHT_CLICK_TRADE ? 1 : 0)); // 76
+		s.writeByte((byte) (server.getConfig().CUSTOM_PROTOCOL ? 1 : 0)); // 77
 		return s;
 	}
 
@@ -678,10 +682,11 @@ public class ActionSender {
 		s.writeByte((byte) player.getCarriedItems().getInventory().size());
 		synchronized(player.getCarriedItems().getInventory().getItems()) {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
-				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
-					"'noted': " + item.getNoted() + "}").getBytes()));
-				//s.writeShort(item.getID());
+				s.writeShort(item.getCatalogId());
 				s.writeByte((byte) (item.isWielded() ? 1 : 0));
+				if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+					s.writeByte((byte)(item.getNoted() ? 1 : 0));
+				}
 				if (item.getDef(player.getWorld()).isStackable() || item.getNoted())
 					s.writeInt(item.getAmount());
 			}
@@ -1039,16 +1044,18 @@ public class ActionSender {
 		s.writeString(with.getUsername());
 		s.writeByte((byte) with.getTrade().getTradeOffer().getItems().size());
 		for (Item item : with.getTrade().getTradeOffer().getItems()) {
-			s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
-				"'noted': " + item.getNoted() + "}").getBytes()));
-			//s.writeShort(item.getCatalogId());
+			s.writeShort(item.getCatalogId());
+			if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+				s.writeByte((byte)(item.getNoted() ? 1 : 0));
+			}
 			s.writeInt(item.getAmount());
 		}
 		s.writeByte((byte) player.getTrade().getTradeOffer().getItems().size());
 		for (Item item : player.getTrade().getTradeOffer().getItems()) {
-			s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
-				"'noted': " + item.getNoted() + "}").getBytes()));
-			//s.writeShort(item.getCatalogId());
+			s.writeShort(item.getCatalogId());
+			if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+				s.writeByte((byte)(item.getNoted() ? 1 : 0));
+			}
 			s.writeInt(item.getAmount());
 		}
 		player.write(s.toPacket());
@@ -1089,9 +1096,10 @@ public class ActionSender {
 			// Other player's items first
 			s.writeByte((byte) items.size());
 			for (Item item : items) {
-				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
-					"'noted': " + item.getNoted() + "}").getBytes()));
-				//s.writeShort(item.getCatalogId());
+				s.writeShort(item.getCatalogId());
+				if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+					s.writeByte((byte)(item.getNoted() ? 1 : 0));
+				}
 				s.writeInt(item.getAmount());
 			}
 
@@ -1099,9 +1107,10 @@ public class ActionSender {
 			items = player.getTrade().getTradeOffer().getItems();
 			s.writeByte((byte) items.size());
 			for (Item item : items) {
-				s.writeString(Base64.getEncoder().encodeToString(("{'id': " + item.getCatalogId() + "," +
-					"'noted': " + item.getNoted() + "}").getBytes()));
-				//s.writeShort(item.getCatalogId());
+				s.writeShort(item.getCatalogId());
+				if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+					s.writeByte((byte)(item.getNoted() ? 1 : 0));
+				}
 				s.writeInt(item.getAmount());
 			}
 
@@ -1133,7 +1142,7 @@ public class ActionSender {
 		s.writeByte((byte) slot);
 		if (item != null) {
 			s.writeShort(item.getCatalogId() + (item.isWielded() ? 32768 : 0));
-			s.writeShort(item.getNoted() ? 1 : 0);
+			s.writeByte(item.getNoted() ? 1 : 0);
 			if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
 				s.writeInt(item.getAmount());
 			}
