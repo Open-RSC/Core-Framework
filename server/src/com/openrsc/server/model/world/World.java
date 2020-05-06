@@ -482,7 +482,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				for (int x = o.getX(); x < o.getX() + width; ++x) {
 					for (int y = o.getY(); y < o.getY() + height; ++y) {
 						if (isProjectileClipAllowed(o)) {
-							getTile(x, y).projectileAllowed = true;
+							handleProjectileClipAllowance(x, y, dir, o.getType(), o.getGameObjectDef().getType(), -1);
 						}
 						if (o.getGameObjectDef().getType() == 1) {
 							getTile(x, y).traversalMask |= CollisionFlag.FULL_BLOCK_C;
@@ -513,7 +513,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				}
 				int x = o.getX(), y = o.getY();
 				if (isProjectileClipAllowed(o)) {
-					getTile(x, y).projectileAllowed = true;
+					handleProjectileClipAllowance(x, y, dir, o.getType(), -1, o.getDoorDef().getDoorType());
 				}
 				if (dir == 0) {
 
@@ -552,6 +552,30 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			}
 		}
 		return false;
+	}
+
+	private void handleProjectileClipAllowance(int x, int y, int dir, int type, int objectType, int doorType) {
+
+		// Always give the current tile a clip mask.
+		getTile(x, y).projectileAllowed = true;
+
+		if ((type == 0 && objectType == 1) || (type == 1 && doorType != 1)) return;
+
+		if (dir == 0 && getTile(x - 1, y) != null) {
+			getTile(x - 1, y).projectileAllowed = true;
+		}
+
+		else if (dir == 2 && getTile(x, y + 1) != null) {
+			getTile(x, y + 1).projectileAllowed = true;
+		}
+
+		else if (dir == 4 && getTile(x + 1, y) != null) {
+			getTile(x + 1, y).projectileAllowed = true;
+		}
+
+		else if (dir == 6 && getTile(x, y - 1) != null) {
+			getTile(x, y - 1).projectileAllowed = true;
+		}
 	}
 
 	public void registerItem(final GroundItem i) {

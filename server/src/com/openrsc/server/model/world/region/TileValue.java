@@ -7,5 +7,5 @@ public class TileValue {
 	public byte overlay = 0;
 	public byte verticalWallVal = 0;
 	public int elevation = 0;
-	public boolean projectileAllowed;
+	public boolean projectileAllowed = false;
 }
