@@ -1454,7 +1454,7 @@ public class PacketHandler {
 	private void updateInventoryItem() {
 		int slot = packetsIncoming.getUnsignedByte();
 		int itemID = packetsIncoming.getShort();
-		boolean noted = packetsIncoming.getShort() == 1;
+		boolean noted = packetsIncoming.getUnsignedByte() == 1;
 		int stackSize = 1;
 		if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID & 32767).isStackable() || noted) {
 			stackSize = packetsIncoming.get32();
