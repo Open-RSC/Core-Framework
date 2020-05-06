@@ -92,7 +92,8 @@ public class CombatFormula {
 	 */
 	public static int calculateIbanSpellDamage() {
 		// TODO: Remove this code and roll it into calculateMagicDamage
-		return calculateDamage(25);
+		// Source for max damage: http://web.archive.org/web/20041226185618/http://www.rsinn.com/forum/showthread.php?t=2469
+		return calculateDamage(15);
 	}
 
 	/**
