@@ -19,8 +19,6 @@ import com.openrsc.interfaces.misc.clan.Clan;
 import com.openrsc.interfaces.misc.party.Party;
 import orsc.buffers.RSBufferUtils;
 import orsc.enumerations.*;
-import orsc.graphics.gui.Menu;
-import orsc.graphics.gui.Panel;
 import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
 import orsc.graphics.three.RSModel;
@@ -38,9 +36,7 @@ import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
 
-import java.awt.*;
 import java.io.*;
-import java.net.URI;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.Map.Entry;
@@ -53,17 +49,29 @@ public final class mudclient implements Runnable {
 	public static final int spriteMedia = 2000;
 	public static final int spriteUtil = 2100;
 	public static final int spriteItem = 2150;
-	static final int spriteLogo = 3150;
 	public static final int spriteProjectile = 3160;
 	public static final int spriteTexture = 3225;
-	private static int FPS = 0;
+	static final int spriteLogo = 3150;
 	public static KillAnnouncerQueue killQueue = new KillAnnouncerQueue();
+	public static int skillCount;
+	public static HashMap<String, File> soundCache = new HashMap<String, File>();
+	public static boolean optionSoundDisabled = true;
 	static byte[][] s_kb = new byte[250][];
 	static int[] s_wb;
+	private static int FPS = 0;
 	private static ArrayList<String> messages = new ArrayList<String>();
 	private static int currentChat = 0;
 	private static ClientPort clientPort;
+	private static ArrayList<String> skillNameLongArray = new ArrayList<String>();
+	private static ArrayList<String> skillNamesArray = new ArrayList<String>();
+	private static String[] skillNameLong;
+	private static String[] skillNames;
 	public final int[] bankItemOnTab = new int[500];
+	public final int[] equipIconXLocations = new int[]{98, 98, 98, 153, 43, 98, 98, 43, 43, 153, 153};
+	public final int[] equipIconYLocations = new int[]{5, 85, 125, 85, 85, 45, 165, 165, 45, 45, 165};
+	public final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
+		"Prayer"};
+	public final int[] playerStatEquipment = new int[5];
 	private final int[] mouseClickX = new int[8192];
 	private final int[] mouseClickY = new int[8192];
 	private final int[][] animDirLayer_To_CharLayer = new int[][]{{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3, 4},
@@ -71,8 +79,6 @@ public final class mudclient implements Runnable {
 		{3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {3, 4, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5},
 		{4, 3, 2, 9, 7, 1, 6, 10, 8, 11, 0, 5}, {11, 4, 2, 9, 7, 1, 6, 10, 0, 5, 8, 3},
 		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}};
-	public final int[] equipIconXLocations = new int[]{98, 98, 98, 153, 43, 98, 98, 43, 43, 153, 153};
-	public final int[] equipIconYLocations = new int[]{5, 85, 125, 85, 85, 45, 165, 165, 45, 45, 165};
 	private final int[] animFrameToSprite_CombatA = new int[]{0, 1, 2, 1, 0, 0, 0, 0};
 	private final int[] animFrameToSprite_CombatB = new int[]{0, 0, 0, 0, 0, 1, 2, 1};
 	private final int[] bankItemID = new int[500];
@@ -96,12 +102,6 @@ public final class mudclient implements Runnable {
 	private final Item[] duelOpponent = new Item[8];
 	//private final int[] duelOpponentItemCount = new int[8];
 	private final Item[] duelOpponentConfirm = new Item[8];
-	//private final int[] duelOpponentConfirmItemCount = new int[8];
-	//private final int[] duelOpponentItemId = new int[8];
-	//private final int[] duelOpponentConfirmItem = new int[8];
-	private boolean stakeOfferEquipMode = false;
-	public final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
-		"Prayer"};
 	private final boolean[] gameObjectInstance_Arg1 = new boolean[5000];
 	private final int[] gameObjectInstanceDir = new int[5000];
 	private final int[] gameObjectInstanceID = new int[5000];
@@ -111,11 +111,6 @@ public final class mudclient implements Runnable {
 	private final int[] groundItemX = new int[5000];
 	private final int[] groundItemZ = new int[5000];
 	private final Item[] inventory = new Item[S_PLAYER_INVENTORY_SLOTS];
-	//private final int[] inventoryItemEquipped = new int[S_PLAYER_INVENTORY_SLOTS];
-	//private final int[] inventoryItemID = new int[S_PLAYER_INVENTORY_SLOTS];
-	//private final int[] inventoryItemSize = new int[S_PLAYER_INVENTORY_SLOTS];
-	public ItemDef[] equippedItems = new ItemDef[S_PLAYER_SLOT_COUNT];
-	public int[] equippedItemAmount = new int[S_PLAYER_SLOT_COUNT];
 	private final ORSCharacter[] knownPlayers = new ORSCharacter[500];
 	private final String[] optionsMenuText = new String[20];
 	private final int[] groundItemHeight = new int[5000];
@@ -135,23 +130,13 @@ public final class mudclient implements Runnable {
 		16728064, 0xFFFFFF, '\uff00', '\uffff'};
 	private final ORSCharacter[] players = new ORSCharacter[500];
 	private final ORSCharacter[] playerServer = new ORSCharacter[4000];
-	private static ArrayList<String> skillNameLongArray = new ArrayList<String>();
-	private static ArrayList<String> skillNamesArray = new ArrayList<String>();
-	private static String[] skillNameLong;
-	private static String[] skillNames;
-	public static int skillCount;
 	private final int[] playerSkinColors = new int[]{15523536, 13415270, 11766848, 10056486, 9461792};
-	private int[] playerStatBase;
-	private int[] playerExperience;
-	private boolean experienceOff = false;
-	public final int[] playerStatEquipment = new int[5];
 	private final boolean[] prayerOn = new boolean[50];
 	private final int projectileMaxRange = 40;
 	private final int[] shopItemCount = new int[256];
 	private final int[] shopCategoryID = new int[256];
 	private final int[] shopItemPrice = new int[256];
 	private final boolean[] shopItemNoted = new boolean[256];
-
 	private final int[] teleportBubbleTime = new int[50];
 	private final int[] teleportBubbleX = new int[50];
 	private final int[] teleportBubbleZ = new int[50];
@@ -174,6 +159,12 @@ public final class mudclient implements Runnable {
 	private final RSModel[] wallObjectInstanceModel = new RSModel[500];
 	private final int[] wallObjectInstanceX = new int[500];
 	private final int[] wallObjectInstanceZ = new int[500];
+	private final int[] inventorySpellList = new int[]{3, 10, 13, 21, 24, 28, 30, 42};
+	//private final int[] inventoryItemEquipped = new int[S_PLAYER_INVENTORY_SLOTS];
+	//private final int[] inventoryItemID = new int[S_PLAYER_INVENTORY_SLOTS];
+	//private final int[] inventoryItemSize = new int[S_PLAYER_INVENTORY_SLOTS];
+	public ItemDef[] equippedItems = new ItemDef[S_PLAYER_SLOT_COUNT];
+	public int[] equippedItemAmount = new int[S_PLAYER_SLOT_COUNT];
 	public Thread clientBaseThread = null;
 	public int threadState = 0;
 	public String chatMessageInput = "";
@@ -208,16 +199,12 @@ public final class mudclient implements Runnable {
 	public int bankPage = 0;
 	public int bankSelectedItemSlot = -1;
 	public int cameraRotation = 128;
-	private GameMode currentViewMode = GameMode.LOGIN;
 	public InputXAction inputX_Action = InputXAction.ACT_0;
 	public Menu menuCommon;
 	public int menuX = 0;
 	public int menuY = 0;
 	public int mouseButtonClick = 0;
 	public int mouseButtonItemCountIncrement = 0;
-	private int mouseClickCount = 0;
-	private int mouseClickXStep = 0;
-	public static HashMap<String, File> soundCache = new HashMap<String, File>();
 	public boolean authenticSettings = !(
 		isAndroid() ||
 			S_WANT_CLANS || S_WANT_KILL_FEED
@@ -245,10 +232,84 @@ public final class mudclient implements Runnable {
 	public ArrayList<String> skillGuideChosenTabs;
 	public String clanKickPlayer;
 	public String partyKickPlayer;
+	public boolean cameraAllowPitchModification = false;
+	public int cameraPitch = 912;
+	public int cameraZoom = 750;
+	public int lastSavedCameraZoom = 0;
+	public int minCameraZoom = 600;
+	public boolean doCameraZoom = false;
+	public ORSCharacter localPlayer = new ORSCharacter();
+	public MessageTab messageTabSelected = MessageTab.ALL;
+	public OnlineListInterface onlineList;
+	public AchievementGUI achievementInterface;
+	public IronManInterface ironmanInterface;
+	public AuctionHouse auctionHouse;
+	public SkillGuideInterface skillGuideInterface;
+	public QuestGuideInterface questGuideInterface;
+	public ExperienceConfigInterface experienceConfigInterface;
+	public DoSkillInterface doSkillInterface;
+	public LostOnDeathInterface lostOnDeathInterface;
+	public TerritorySignupInterface territorySignupInterface;
+	String m_p = null;
+	int clearBox = GenUtil.buildColor(181, 181, 181);
+	int selectedBox = GenUtil.buildColor(220, 220, 220);
+	int instructContactDetails;
+	int controlContactName;
+	int controlContactZipCode;
+	int controlContactCountry;
+	int controlContactEmail;
+	int finishSubmitContact;
+	int controlRecoveryInstruction;
+	int[] controlSetQuestion = new int[5];
+	int[] controlSetAnswer = new int[5];
+	int[] controlCustomQuestion = new int[5];
+	int[] controlCustomAnswer = new int[5];
+	int finishSetRecovery;
+	int qaIndex = -1;
+	boolean attemptedRecovery = false;
+	String[] jfb = new String[5];
+	int[] recoveryQAindices = {0, 1, 2, 3, 4};
+	int instructPassRecovery1;
+	int instructPassRecovery2;
+	int controlPreviousPassword;
+	int controlNewPassword;
+	int controlConfirmation;
+	int passwordRecoverSubmit;
+	int passwordRecoverCancel;
+	int[] controlPassQuestion = new int[5];
+	int[] controlPassAnswer = new int[5];
+	String[] questions = {"Where were you born?",
+		"What was your first teacher's name?",
+		"What is your father's middle name?",
+		"Who was your first best friend?",
+		"What is your favourite vacation spot?",
+		"What is your mother's middle name?",
+		"What was your first pet's name?",
+		"What was the name of your first school?",
+		"What is your mother's maiden name?",
+		"Who was your first boyfriend/girlfriend?",
+		"What was the first computer game you purchased?",
+		"Who is your favourite actor/actress?",
+		"Who is your favourite author?",
+		"Who is your favourite musician?",
+		"Who is your favourite cartoon character?",
+		"What is your favourite book?",
+		"What is your favourite food?",
+		"What is your favourite movie?"};
+	boolean drawMinimap = true;
+	//private final int[] duelOpponentConfirmItemCount = new int[8];
+	//private final int[] duelOpponentItemId = new int[8];
+	//private final int[] duelOpponentConfirmItem = new int[8];
+	private boolean stakeOfferEquipMode = false;
+	private int[] playerStatBase;
+	private int[] playerExperience;
+	private boolean experienceOff = false;
+	private GameMode currentViewMode = GameMode.LOGIN;
+	private int mouseClickCount = 0;
+	private int mouseClickXStep = 0;
 	private long lastFPSUpdate = 0;
 	private int currentFPS = 0;
 	private long[] m_F = new long[10];
-	String m_p = null;
 	private double xpPerHour = 0;
 	private boolean hasGameCrashed = false;
 	private int gameState = 1;
@@ -262,13 +323,8 @@ public final class mudclient implements Runnable {
 	private int cameraAngle = 1;
 	private int cameraPositionX = 0;
 	private int cameraPositionZ = 0;
-	public boolean cameraAllowPitchModification = false;
-	public int cameraPitch = 912;
 	private int cameraAutoMoveX = 0;
 	private int cameraAutoMoveZ = 0;
-	public int cameraZoom = 750;
-	public int lastSavedCameraZoom = 0;
-	public int minCameraZoom = 600;
 	private int characterBubbleCount = 0;
 	private int[] characterBubbleID = new int[150];
 	private int characterDialogCount = 0;
@@ -320,7 +376,6 @@ public final class mudclient implements Runnable {
 	private boolean errorLoadingMemory = false;
 	private int[] experienceArray = new int[S_PLAYER_LEVEL_LIMIT];
 	private int fatigueSleeping = 0;
-	public boolean doCameraZoom = false;
 	private int gameHeight = 334;
 	private int gameObjectInstanceCount = 0;
 	private int[] gameObjectInstanceZ = new int[5000];
@@ -341,7 +396,6 @@ public final class mudclient implements Runnable {
 	private int lastObjectAnimationNumberTorch = -1;
 	private int lastObjectAnimatonNumberClaw = -1;
 	private boolean loadingArea = false;
-	public ORSCharacter localPlayer = new ORSCharacter();
 	private int logoutTimeout = 0;
 	private int controlButtonAppearanceBottom2;
 	private int m_be;
@@ -407,7 +461,6 @@ public final class mudclient implements Runnable {
 	private int messageTabActivity_Private = 0;
 	private int messageTabActivity_Clan = 0;
 	private int messageTabActivity_Quest = 0;
-	public MessageTab messageTabSelected = MessageTab.ALL;
 	private int midRegionBaseX;
 	private int midRegionBaseZ;
 	private int minimapRandom_1 = 0;
@@ -424,7 +477,6 @@ public final class mudclient implements Runnable {
 	private int objectAnimationNumberTorch = 0;
 	private boolean optionCameraModeAuto = true;
 	private boolean optionMouseButtonOne = false;
-	public static boolean optionSoundDisabled = true;
 	private boolean clanInviteBlockSetting = false;
 	private boolean partyInviteBlockSetting = false;
 	private int controlPartyPanel;
@@ -558,21 +610,11 @@ public final class mudclient implements Runnable {
 	private int flag = 0;
 	private Timer tiktok = new Timer();
 	private NComponent mainComponent;
-	public OnlineListInterface onlineList;
 	private NCustomComponent experienceOverlay;
 	private ProgressBarInterface batchProgressBar;
 	private PartyGUI partyMenu;
 	private BankPinInterface bankPinInterface;
 	private FishingTrawlerInterface fishingTrawlerInterface;
-	public AchievementGUI achievementInterface;
-	public IronManInterface ironmanInterface;
-	public AuctionHouse auctionHouse;
-	public SkillGuideInterface skillGuideInterface;
-	public QuestGuideInterface questGuideInterface;
-	public ExperienceConfigInterface experienceConfigInterface;
-	public DoSkillInterface doSkillInterface;
-	public LostOnDeathInterface lostOnDeathInterface;
-	public TerritorySignupInterface territorySignupInterface;
 	private String skillGuideChosen;
 	private String questGuideChosen;
 	private int questGuideProgress;
@@ -590,52 +632,7 @@ public final class mudclient implements Runnable {
 	private ArrayList<XPNotification> xpNotifications = new ArrayList<XPNotification>();
 	private int amountToZoom = 0;
 	private Panel panelLoginOptions;
-	int clearBox = GenUtil.buildColor(181, 181, 181);
-	int selectedBox = GenUtil.buildColor(220, 220, 220);
-	int instructContactDetails;
-	int controlContactName;
-	int controlContactZipCode;
-	int controlContactCountry;
-	int controlContactEmail;
-	int finishSubmitContact;
-	int controlRecoveryInstruction;
-	int[] controlSetQuestion = new int[5];
-	int[] controlSetAnswer = new int[5];
-	int[] controlCustomQuestion = new int[5];
-	int[] controlCustomAnswer = new int[5];
-	int finishSetRecovery;
-	int qaIndex = -1;
-	boolean attemptedRecovery = false;
-	String[] jfb = new String[5];
-	int[] recoveryQAindices = {0, 1, 2, 3, 4};
-	private final int[] inventorySpellList = new int[]{3, 10, 13, 21, 24, 28, 30, 42};
-	int instructPassRecovery1;
-	int instructPassRecovery2;
-	int controlPreviousPassword;
-	int controlNewPassword;
-	int controlConfirmation;
-	int passwordRecoverSubmit;
-	int passwordRecoverCancel;
-	int[] controlPassQuestion = new int[5];
-	int[] controlPassAnswer = new int[5];
-	String[] questions = {"Where were you born?",
-		"What was your first teacher's name?",
-		"What is your father's middle name?",
-		"Who was your first best friend?",
-		"What is your favourite vacation spot?",
-		"What is your mother's middle name?",
-		"What was your first pet's name?",
-		"What was the name of your first school?",
-		"What is your mother's maiden name?",
-		"Who was your first boyfriend/girlfriend?",
-		"What was the first computer game you purchased?",
-		"Who is your favourite actor/actress?",
-		"Who is your favourite author?",
-		"Who is your favourite musician?",
-		"Who is your favourite cartoon character?",
-		"What is your favourite book?",
-		"What is your favourite food?",
-		"What is your favourite movie?"};
+	private boolean worldComponentsLoaded = false;
 
 	/**
 	 * Newest RSC cache: SAME VALUES.
@@ -6810,8 +6807,6 @@ public final class mudclient implements Runnable {
 		experienceConfigInterface.onRender(this.getSurface());
 	}
 
-	boolean drawMinimap = true;
-
 	private void drawUi(int var1) {
 		try {
 
@@ -11154,7 +11149,7 @@ public final class mudclient implements Runnable {
 								}
 
 								// Check if we can open the wiki, otherwise tell the player we can't.
-								if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+								/*if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 									try {
 										Desktop.getDesktop().browse(new URI(url));
 									} catch (final Exception ex) {
@@ -11164,7 +11159,7 @@ public final class mudclient implements Runnable {
 								} else {
 									showMessage(true, null, "There was a problem opening your browser",
 										MessageType.GAME, 0, null, null);
-								}
+								}*/
 							} else {
 								this.sendCommandString(var11.substring(2));
 								String putQueue = var11.substring(2);
@@ -13223,6 +13218,22 @@ public final class mudclient implements Runnable {
 		}
 	}
 
+    /*private String getMacAddress() {
+        try {
+            InetAddress a = InetAddress.getLocalHost();
+            NetworkInterface n = NetworkInterface.getByInetAddress(a);
+            byte[] m = n.getHardwareAddress();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < m.length; i++) {
+                sb.append(String.format("%02X%s", m[i], (i < m.length - 1) ? "-" : ""));
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "failed";
+    }*/
+
 	private long getUID() {
 		File uID = new File(F_CACHE_DIR + File.separator + "uid.dat");
 		try {
@@ -13248,22 +13259,6 @@ public final class mudclient implements Runnable {
 		}
 		return 0L;
 	}
-
-    /*private String getMacAddress() {
-        try {
-            InetAddress a = InetAddress.getLocalHost();
-            NetworkInterface n = NetworkInterface.getByInetAddress(a);
-            byte[] m = n.getHardwareAddress();
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < m.length; i++) {
-                sb.append(String.format("%02X%s", m[i], (i < m.length - 1) ? "-" : ""));
-            }
-            return sb.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "failed";
-    }*/
 
 	private void loadSprites() {
 		clientPort.showLoadingProgress(30, "people and monsters");
@@ -13570,7 +13565,6 @@ public final class mudclient implements Runnable {
 			ex.printStackTrace();
 		}
 	}
-
 
 	private void loadTextures() {
 		clientPort.showLoadingProgress(50, "Textures");
@@ -14037,8 +14031,6 @@ public final class mudclient implements Runnable {
 			throw GenUtil.makeThrowable(var6, "client.E(" + "dummy" + ',' + (name != null ? "{...}" : "null") + ')');
 		}
 	}
-
-	private boolean worldComponentsLoaded = false;
 
 	private void loadWorldComponents() {
 		byte sector_h = 0; // sector h
@@ -15447,12 +15439,12 @@ public final class mudclient implements Runnable {
 		this.duelConfirmOpponentName = s;
 	}
 
-	public void setRecentSkill(int stat) {
-		this.recentSkill = stat;
-	}
-
 	public int getRecentSkill() {
 		return this.recentSkill;
+	}
+
+	public void setRecentSkill(int stat) {
+		this.recentSkill = stat;
 	}
 
 	public void setPlayerStatXpGained(int stat, long exp) {
@@ -15551,22 +15543,14 @@ public final class mudclient implements Runnable {
 		return this.statFatigue;
 	}
 
-	public int getStatKills2() {
-		return this.statKills2;
-	}
-
-	public int getPetFatigue() {
-		return this.petFatigue;
-	}
-
-	public int getExpShared() {
-		return this.expShared;
-	}
-
 	public void setStatFatigue(int fatigue) {
 		if (DEBUG)
 			System.out.println("Fatigue: " + fatigue);
 		this.statFatigue = fatigue;
+	}
+
+	public int getStatKills2() {
+		return this.statKills2;
 	}
 
 	public void setStatKills2(int kills2) {
@@ -15575,10 +15559,18 @@ public final class mudclient implements Runnable {
 		this.statKills2 = kills2;
 	}
 
+	public int getPetFatigue() {
+		return this.petFatigue;
+	}
+
 	public void setPetFatigue(int petFatigue) {
 		if (DEBUG)
 			System.out.println("PetFatigue: " + petFatigue);
 		this.petFatigue = petFatigue;
+	}
+
+	public int getExpShared() {
+		return this.expShared;
 	}
 
 	public void setExpShared(int expShared2) {
@@ -16468,12 +16460,12 @@ public final class mudclient implements Runnable {
 		return gameHeight;
 	}
 
-	private int halfGameHeight() {
-		return gameHeight / 2;
-	}
-
 	public void setGameHeight(int gameHeight) {
 		this.gameHeight = gameHeight;
+	}
+
+	private int halfGameHeight() {
+		return gameHeight / 2;
 	}
 
 	private int[][] getAnimDirLayer_To_CharLayer() {

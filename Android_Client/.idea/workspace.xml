@@ -61,44 +61,6 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>setLongPressDelay</find>
-      <find>saveZoomDistance();</find>
-      <find>} else if (this.keyLeft) {</find>
-      <find>saveZoomDistance</find>
-      <find>keyup</find>
-      <find>bank</find>
-      <find>withdraw</find>
-      <find>hideIp</find>
-      <find>getMouseClick</find>
-      <find>getMouseButtonDownTime</find>
-      <find>C_SWIPE_TO_ROTATE</find>
-      <find>ANDROID_CLIENT_VERSION</find>
-      <find>showUpdateDialog</find>
-      <find>shouldUpdate</find>
-      <find>alertdialog</find>
-      <find>fv1</find>
-      <find>textview</find>
-      <find>cabbage</find>
-      <find>float</find>
-      <find>setContentView</find>
-      <find>TextProgressBar</find>
-      <find>progressBar</find>
-      <find>tv1</find>
-      <find>textView1</find>
-      <find>exoregular</find>
-      <find>config</find>
-      <find>config.txt</find>
-      <find>43594</find>
-      <find>CACHE_VERSION</find>
-      <find>audio</find>
-    </findStrings>
-    <dirStrings>
-      <dir>$PROJECT_DIR$/Open RSC Android Client</dir>
-      <dir>$PROJECT_DIR$/Open RSC Android Client/src/main/java</dir>
-    </dirStrings>
-  </component>
   <component name="GenerateSignedApkSettings">
     <option name="EXPORT_PRIVATE_KEY" value="false" />
     <option name="KEY_STORE_PATH" value="$USER_HOME$/Documents/Open RSC Android Key" />
