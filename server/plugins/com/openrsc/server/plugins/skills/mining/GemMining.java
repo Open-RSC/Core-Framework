@@ -134,8 +134,12 @@ public class GemMining implements OpLocTrigger {
 			}
 		}
 
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
+		--repeat;
+		if (((player.getWorld().getServer().getConfig().BATCH_PROGRESSION && !ifinterrupted()) && repeat > 0)
+			|| repeat > 0) {
 			batchMining(player, obj, axeId, mineLvl, repeat);
 		}
 	}
