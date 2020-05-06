@@ -41,9 +41,7 @@ public class CombatFormula {
 	}
 
 	/**
-	 * Gets a gaussian distributed randomized value between 0 and the
-	 * {@code maximum} value. <br>
-	 * The mean (average) is maximum / 2.
+	 * Gets a dice roll for melee damage for a single attack
 	 *
 	 * @param source      The mob doing the damage
 	 * @return The randomized value.
@@ -56,16 +54,25 @@ public class CombatFormula {
 	}
 
 	/**
-	 * Gets a gaussian distributed randomized value between 0 and the
-	 * {@code maximum} value. <br>
-	 * The mean (average) is maximum / 2.
+	 * Gets a dice roll for ranged damage for a single attack
 	 *
 	 * @param source      The mob doing the damage
+	 * @param arrowId	  The type of ranged ammunition
 	 * @return The randomized value.
 	 */
 	private static int calculateRangedDamage(final Mob source, final int arrowId) {
 		return calculateDamage(getRangedDamage(source, arrowId));
 
+	}
+
+	/**
+	 * Gets a dice roll for melee damage for a single attack
+	 *
+	 * @param spellPower      The max hit of the spell
+	 * @return The randomized value.
+	 */
+	public static int calculateMagicDamage(final int spellPower) {
+		return calculateDamage(spellPower);
 	}
 
 	/**

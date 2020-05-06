@@ -7,6 +7,7 @@ import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
+import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.external.ItemSmeltingDef;
 import com.openrsc.server.external.ReqOreDef;
 import com.openrsc.server.external.SpellDef;
@@ -1206,7 +1207,7 @@ public class SpellHandler implements PacketHandler {
 							|| (getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
 							max += 1;
 
-						int damage = Formulae.calcSpellHit(max, getPlayer().getMagicPoints());
+						int damage = CombatFormula.calculateMagicDamage(max);
 
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damage, 1));
 						getPlayer().setKillType(1);

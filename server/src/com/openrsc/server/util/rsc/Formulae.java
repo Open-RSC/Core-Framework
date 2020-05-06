@@ -241,17 +241,6 @@ public final class Formulae {
 	}
 
 	/**
-	 * Calculates what a spell should hit based on its strength and the magic
-	 * equipment stats of the caster
-	 */
-	public static int calcSpellHit(int spellStr, int magicEquip) {
-		int mageRatio = (int) (45D + (double) magicEquip);
-		int peak = (int) (((double) spellStr / 100D) * (double) mageRatio);
-		int dip = (int) ((peak / 3D) * 2D);
-		return DataConversions.randomWeighted(0, dip, peak, spellStr);
-	}
-
-	/**
 	 * Should the spell cast or fail?
 	 */
 	public static boolean castSpell(SpellDef def, int magicLevel, int magicEquip) {
