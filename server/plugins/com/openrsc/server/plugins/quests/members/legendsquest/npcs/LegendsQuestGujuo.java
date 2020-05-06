@@ -59,7 +59,6 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 					case 3:
 						if (player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL.id(), Optional.of(false))
 							|| player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id(), Optional.of(false))) { // GOLDEN BOWL
-							n.setBusy(true);
 							npcsay(player, n, "Greetings Bwana.",
 								"Ah I see you have the golden bowl !",
 								"Would like me to show you how to bless it?");
@@ -72,7 +71,6 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 							} else if (bowl == 1) {
 								GujuoDialogue(player, n, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
 							}
-							n.setBusy(false);
 						} else {
 							GujuoDialogue(player, n, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
 						}
@@ -627,14 +625,12 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 						"No thanks...");
 					if (opt2 == 0) {
 						npcsay(player, n, "Follow me...");
-						n.setBusy(true);
 						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo takes you out of the jungle...");
 						player.teleport(397, 865);
 						if (n != null) {
 							n.teleport(398, 865);
 							delay(player.getWorld().getServer().getConfig().GAME_TICK);
 							npcsay(player, n, "");
-							n.setBusy(false);
 						}
 						mes(player, "Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
 						if (n != null)

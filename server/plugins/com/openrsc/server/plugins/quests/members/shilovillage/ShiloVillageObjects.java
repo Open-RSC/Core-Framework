@@ -83,7 +83,6 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					return;
 				}
 			}
-			player.setBusy(true);
 			if(!player.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				//going down
 				if(obj.getY() > player.getY()) {
@@ -119,7 +118,6 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 				say(player, null, "Ooooff!");
 			}
 			player.incExp(Skills.AGILITY, 5, true);
-			player.setBusy(false);
 		}
 		else if (obj.getID() == METALLIC_DUNGEON_GATE) {
 			if (command.equalsIgnoreCase("Open")) {
@@ -406,7 +404,6 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					player.message("there isn't enough wood to complete this task.");
 				} else if (sub == 1) {
 					// WATER RAFT SCENE
-					player.setBusy(true);
 					mes(player, "You see that this table already looks very sea worthy",
 						"it takes virtually no time at all to help fix it into.");
 					mes(player, "a crude raft.");
@@ -460,7 +457,6 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					player.message("The raft soon breaks up.");
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
 					player.teleport(341, 810);
-					player.setBusy(false);
 				} else if (sub == 2) {
 					mes(player, "You happily start hacking away at the table",
 							"But realise that you won't have enough woood to properly finish the item off!");
@@ -570,7 +566,6 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			}
 		}
 		else if (obj.getID() == HILLSIDE_ENTRANCE && item.getCatalogId() == ItemId.BONE_KEY.id()) {
-			player.setBusy(true);
 			mes(player, "You try the key with the lock.");
 			mes(player, "As soon as you push the key into the lock.");
 			displayTeleportBubble(player, 350, 782, true);
@@ -578,7 +573,6 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			player.message("A shimmering light dances over the doors, before you can blink, the doors creak open.");
 			player.teleport(348, 3611);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
-			player.setBusy(false);
 			mes(player, "You feel a strange force pulling you inside.",
 				"The doors close behind you with the sound of crunching bone.",
 				"Before you stretches a winding tunnel blocked by an ancient gate.");

@@ -92,7 +92,6 @@ public class WoodcutJungle implements OpLocTrigger,
 			axeId = ItemId.MACHETTE.id();
 		}
 
-		player.setBusy(true);
 		thinkbubble(player, new Item(axeId));
 		player.playerServerMessage(MessageType.QUEST, "You swing your " + player.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree") + "...");
 		if (player.getFatigue() >= 149840) {
@@ -136,7 +135,6 @@ public class WoodcutJungle implements OpLocTrigger,
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You slip and fail to hit the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
 		}
-		player.setBusy(false);
 	}
 
 	@Override

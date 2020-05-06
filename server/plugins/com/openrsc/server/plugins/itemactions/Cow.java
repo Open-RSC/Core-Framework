@@ -19,13 +19,11 @@ public class Cow implements UseNpcTrigger {
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
 		npc.resetPath();
-		npc.setBusy(true);
 		thinkbubble(player, item);
 		if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.MILK.id()));
 		}
 		mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "You milk the cow");
-		npc.setBusy(false);
 	}
 }

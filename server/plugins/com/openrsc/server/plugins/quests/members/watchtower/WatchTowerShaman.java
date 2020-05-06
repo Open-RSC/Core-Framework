@@ -37,10 +37,8 @@ public class WatchTowerShaman implements TalkNpcTrigger, UseNpcTrigger {
 	@Override
 	public void onUseNpc(Player player, Npc n, Item item) {
 		if (n.getID() == NpcId.OGRE_SHAMAN.id() && item.getCatalogId() == ItemId.MAGIC_OGRE_POTION.id()) {
-			player.setBusy(true);
 			if (getCurrentLevel(player, Skills.MAGIC) < 14) {
 				player.message("You need a level of 14 magic first");
-				player.setBusy(false);
 				return;
 			}
 			player.message("There is a bright flash");
@@ -76,7 +74,6 @@ public class WatchTowerShaman implements TalkNpcTrigger, UseNpcTrigger {
 				player.getCache().set("shaman_count", 1);
 				say(player, null, "Thats one destroyed...");
 			}
-			player.setBusy(false);
 		} else if (n.getID() == NpcId.OGRE_SHAMAN.id() && item.getCatalogId() == ItemId.OGRE_POTION.id()) {
 			player.message("There is a small flash");
 			player.message("But the potion was ineffective");

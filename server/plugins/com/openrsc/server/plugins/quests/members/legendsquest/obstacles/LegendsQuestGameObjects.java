@@ -81,7 +81,6 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				changeloc(obj, 10000, SHALLOW_WATER);
 				return;
 			}
-			player.setBusy(true);
 			Npc echned = ifnearvisnpc(player, NpcId.ECHNED_ZEKIN.id(), 2);
 			if (echned == null) {
 				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A thick, green mist seems to emanate from the water...",
@@ -97,7 +96,6 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (echned != null) {
 				echned.initializeTalkScript(player);
 			}
-			player.setBusy(false);
 		}
 		else if (obj.getID() == CAVERNOUS_OPENING) {
 			if (command.equalsIgnoreCase("enter")) {
@@ -475,7 +473,6 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				if (menu == 0) {
 					if (getCurrentLevel(player, Skills.AGILITY) < 50) {
 						player.message("You need an agility of 50 to even attempt this.");
-						player.setBusy(false);
 						return;
 					}
 					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You try to crawl through...",

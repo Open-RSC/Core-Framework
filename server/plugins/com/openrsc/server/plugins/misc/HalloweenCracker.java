@@ -119,9 +119,6 @@ public class HalloweenCracker implements UsePlayerTrigger {
 				return;
 			}
 
-			player.setBusy(true);
-			//otherPlayer.setBusy(true);
-
 			player.getUpdateFlags().setChatMessage(new ChatMessage(player, "Trick or treat?", null));
 
 			player.face(otherPlayer);
@@ -170,9 +167,6 @@ public class HalloweenCracker implements UsePlayerTrigger {
 				otherPlayer.getCarriedItems().getInventory().add(mask);
 				player.getCarriedItems().getInventory().add(prize);
 			}
-
-			player.setBusy(false);
-			//otherPlayer.setBusy(false);
 		}
 	}
 

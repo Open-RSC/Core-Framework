@@ -434,7 +434,6 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 			player.message("you go through the door and find yourself somewhere else");
 		} else if (obj.getID() == ZANARIS_DOOR) {
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(player, this, 4, -1)) {
-				player.setBusy(true);
 				mes(player, "The world starts to shimmer",
 					"You find yourself in different surroundings");
 				if (getQuestStage(player, this) != -1) {
@@ -443,7 +442,6 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 				} else {
 					teleport(player, 126, 3518);
 				}
-				player.setBusy(false);
 			} else {
 				doDoor(obj, player);
 				player.message("you go through the door and find yourself in a shed.");

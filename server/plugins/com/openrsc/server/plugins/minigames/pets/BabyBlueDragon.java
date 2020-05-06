@@ -22,7 +22,6 @@ public class BabyBlueDragon implements UseNpcTrigger {
 		if (player.getWorld().getServer().getConfig().WANT_PETS) {
 			npc.resetPath();
 			//npc.resetRange();
-			player.setBusy(true);
 			npc.face(player);
 			player.face(npc);
 			thinkbubble(player, item);
@@ -54,11 +53,9 @@ public class BabyBlueDragon implements UseNpcTrigger {
 				player.getCarriedItems().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
 				give(player, ItemId.A_RED_CRYSTAL.id(), 1);
 				ActionSender.sendInventory(player);
-				player.setBusy(false);
 				npc.remove();
 			} else {
 				player.message("The baby blue dragon manages to get away from you!");
-				player.setBusy(false);
 			}
 		}
 	}

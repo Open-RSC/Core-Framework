@@ -51,7 +51,6 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 				}
 				return;
 			}
-			player.setBusy(true);
 			if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				choke(player);
 			}
@@ -67,17 +66,14 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 			}
 			if (!player.getCache().hasKey("dolmen_zombie")) {
 				spawnAndMoveAway(player, NpcId.NAZASTAROOL_ZOMBIE.id());
-				player.setBusy(false);
 				return;
 			}
 			if (!player.getCache().hasKey("dolmen_skeleton")) {
 				spawnAndMoveAway(player, NpcId.NAZASTAROOL_SKELETON.id());
-				player.setBusy(false);
 				return;
 			}
 			if (!player.getCache().hasKey("dolmen_ghost")) {
 				spawnAndMoveAway(player, NpcId.NAZASTAROOL_GHOST.id());
-				player.setBusy(false);
 				return;
 			}
 		}
@@ -89,7 +85,6 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 	}
 
 	private void runFromNazastarool(Player player, Npc n) {
-		player.setBusy(true);
 		player.teleport(379, 3626);
 		n.teleport(378, 3622);
 		if (n.getID() == NpcId.NAZASTAROOL_ZOMBIE.id()) {
@@ -103,7 +98,6 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 				"A grisly death is what you will meet should you return.");
 		}
 		n.remove();
-		player.setBusy(false);
 	}
 
 	// run away coords 379, 3626
@@ -146,7 +140,6 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() ==  NpcId.NAZASTAROOL_ZOMBIE.id()) {
 			n.remove();
-			player.setBusy(true);
 			if (!player.getCache().hasKey("dolmen_zombie")) {
 				player.getCache().store("dolmen_zombie", true);
 			}
@@ -157,11 +150,9 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 			player.message("soon they reform into a grisly giant skeleton.  ");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			spawnAndMoveAway(player, NpcId.NAZASTAROOL_SKELETON.id());
-			player.setBusy(false);
 		}
 		if (n.getID() == NpcId.NAZASTAROOL_SKELETON.id()) {
 			n.remove();
-			player.setBusy(true);
 			if (!player.getCache().hasKey("dolmen_skeleton")) {
 				player.getCache().store("dolmen_skeleton", true);
 			}
@@ -172,11 +163,9 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 			player.message("bones and you soon face the vengeful ghost of Nazastarool ");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			spawnAndMoveAway(player, NpcId.NAZASTAROOL_GHOST.id());
-			player.setBusy(false);
 		}
 		if (n.getID() == NpcId.NAZASTAROOL_GHOST.id()) {
 			n.remove();
-			player.setBusy(true);
 			if (!player.getCache().hasKey("dolmen_ghost")) {
 				player.getCache().store("dolmen_ghost", true);
 			}
@@ -185,7 +174,6 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 			player.message("@yel@Nazastarool: May Rashiliyias Curse be upon you!");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			player.message("You see something appear on the Dolmen");
-			player.setBusy(false);
 		}
 	}
 

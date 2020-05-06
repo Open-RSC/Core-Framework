@@ -50,8 +50,6 @@ public class ChristmasCracker implements UsePlayerTrigger {
 				return;
 			}
 
-			player.setBusy(true);
-			//otherPlayer.setBusy(true);
 			player.face(otherPlayer);
 			//otherPlayer.face(player);
 
@@ -79,9 +77,6 @@ public class ChristmasCracker implements UsePlayerTrigger {
 			}
 
 			player.getCarriedItems().remove(item);
-
-			player.setBusy(false);
-			//otherPlayer.setBusy(false);
 		}
 	}
 

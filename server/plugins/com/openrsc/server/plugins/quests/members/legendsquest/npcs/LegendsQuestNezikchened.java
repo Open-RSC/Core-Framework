@@ -124,7 +124,6 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 		if (n.getID() == NpcId.NEZIKCHENED.id()) {
 			// FIRST FIGHT.
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 3 && player.getLocation().isInsideFlameWall()) {
-				player.setBusy(true);
 				n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Ha ha ha...I shall return for you when the time is right.", player));
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 				npcWalkFromPlayer(player, n);
@@ -139,7 +138,6 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "@yel@Nezikchened : Haha hah ha ha ha ha....",
 					"The demon explodes in a powerful burst of flame that scorches you.");
 				player.updateQuestStage(Quests.LEGENDS_QUEST, 4);
-				player.setBusy(false);
 				Npc ungadulu = ifnearvisnpc(player, NpcId.UNGADULU.id(), 8);
 				if (ungadulu != null) {
 					ungadulu.initializeTalkScript(player);
@@ -147,7 +145,6 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 			}
 			// SECOND FIGHT.
 			else if (player.getQuestStage(Quests.LEGENDS_QUEST) == 7 && player.getLocation().isAroundBoulderRock()) {
-				player.setBusy(true);
 				player.updateQuestStage(Quests.LEGENDS_QUEST, 8);
 				npcsay(player, n, "Arrrgghhhhh, foul Vacu!");
 				n.resetCombatEvent();
@@ -160,7 +157,6 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 				if (n != null) {
 					n.remove();
 				}
-				player.setBusy(false);
 			}
 			// THIRD FIGHT.
 			else if (player.getQuestStage(Quests.LEGENDS_QUEST) == 8 && player.getLocation().isAroundTotemPole()) {

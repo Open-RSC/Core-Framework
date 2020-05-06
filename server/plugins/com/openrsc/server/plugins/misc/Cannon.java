@@ -125,7 +125,6 @@ public class Cannon implements OpLocTrigger,
 			}
 
 			player.resetPath();
-			player.setBusy(true);
 			player.message("you place the cannon base on the ground");
 			delay(1500);
 			player.getCarriedItems().remove(new Item(ItemId.DWARF_CANNON_BASE.id()));
@@ -144,14 +143,11 @@ public class Cannon implements OpLocTrigger,
 			player.getCache().set("cannon_x", cannonBase.getX());
 			player.getCache().set("cannon_y", cannonBase.getY());
 			player.getCache().set("cannon_stage", 1);
-
-			player.setBusy(false);
 		}
 	}
 
 	private void addCannonStand(Player player, Item item, GameObject object) {
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_STAND.id() && object.getID() == 946) {
-			player.setBusy(true);
 			player.message("you add the stand");
 			player.getCarriedItems().remove(new Item(ItemId.DWARF_CANNON_STAND.id()));
 
@@ -160,7 +156,6 @@ public class Cannon implements OpLocTrigger,
 			GameObject cannonStand = new GameObject(player.getWorld(), object.getLocation(),
 				cannonObjectIDs[1], 0, 0, player.getUsername());
 			player.getWorld().registerGameObject(cannonStand);
-			player.setBusy(false);
 		} else {
 			player.message("these parts don't seem to fit together");
 		}
@@ -168,7 +163,6 @@ public class Cannon implements OpLocTrigger,
 
 	private void addCannonBarrels(Player player, Item item, GameObject object) {
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_BARRELS.id() && object.getID() == 947) {
-			player.setBusy(true);
 			player.message("you add the barrels");
 			player.getCarriedItems().remove(new Item(ItemId.DWARF_CANNON_BARRELS.id()));
 
@@ -178,7 +172,6 @@ public class Cannon implements OpLocTrigger,
 			player.getWorld().registerGameObject(cannonBarrels);
 
 			player.getCache().set("cannon_stage", 3);
-			player.setBusy(false);
 		} else {
 			player.message("these parts don't seem to fit together");
 		}
@@ -186,7 +179,6 @@ public class Cannon implements OpLocTrigger,
 
 	private void addCannonFurnace(Player player, Item item, GameObject object) {
 		if (item.getCatalogId() == ItemId.DWARF_CANNON_FURNACE.id() && object.getID() == 948) {
-			player.setBusy(true);
 			player.message("you add the furnace");
 			player.getCarriedItems().remove(new Item(ItemId.DWARF_CANNON_FURNACE.id()));
 
@@ -195,7 +187,6 @@ public class Cannon implements OpLocTrigger,
 				cannonObjectIDs[3], 0, 0, player.getUsername());
 			player.getWorld().registerGameObject(cannonFurnace);
 			player.getCache().set("cannon_stage", 4);
-			player.setBusy(false);
 		} else {
 			player.message("these parts don't seem to fit together");
 		}

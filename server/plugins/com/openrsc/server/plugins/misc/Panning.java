@@ -41,7 +41,6 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 		if (!player.getCache().hasKey("unlocked_panning")) {
 			return false;
 		}
-		player.setBusy(true);
 		thinkbubble(player, new Item(ItemId.PANNING_TRAY.id()));
 		player.playSound("mix");
 		player.playerServerMessage(MessageType.QUEST, "You scrape the tray along the bottom");
@@ -52,7 +51,6 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 		player.getCarriedItems().remove(new Item(ItemId.PANNING_TRAY.id()));
 		player.getCarriedItems().getInventory().add(new Item(ItemId.PANNING_TRAY_FULL.id()));
 		player.incExp(Skills.MINING, 20, true);
-		player.setBusy(false);
 		return false;
 	}
 
@@ -147,7 +145,6 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 			player.playerServerMessage(MessageType.QUEST, "You search the contents of the tray");
 			say(player, null, "Err, why am I searching an empty tray ?");
 		} else if (item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id()) {
-			player.setBusy(true);
 			mes(player, "You search the contents of the tray...");
 			delay(1500);
 			int randomNumber = DataConversions.random(0, 100);
@@ -186,7 +183,6 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "The tray contains only plain mud");
 			}
-			player.setBusy(false);
 		} else if (item.getCatalogId() == ItemId.PANNING_TRAY_GOLD_NUGGET.id()) {
 			player.getCarriedItems().remove(new Item(ItemId.PANNING_TRAY_GOLD_NUGGET.id()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.PANNING_TRAY.id()));

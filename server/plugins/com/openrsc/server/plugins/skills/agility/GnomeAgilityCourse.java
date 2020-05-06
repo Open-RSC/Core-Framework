@@ -43,7 +43,6 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 			}
 		}
 		Npc gnomeTrainer;
-		player.setBusy(true);
 		switch (obj.getID()) {
 			case BALANCE_LOG:
 				player.message("you stand on the slippery log");
@@ -62,7 +61,6 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				player.message("and walk across");
 				player.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
-				player.setBusy(false);
 				return;
 			case NET:
 				gnomeTrainer = ifnearvisnpc(player, NpcId.GNOME_TRAINER_STARTINGNET.id(), 10);
@@ -75,7 +73,6 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				player.message("and pull yourself onto the platform");
 				player.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
-				player.setBusy(false);
 				return;
 			case WATCH_TOWER:
 				gnomeTrainer = ifnearvisnpc(player, NpcId.GNOME_TRAINER_PLATFORM.id(), 10);
@@ -88,7 +85,6 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				player.message("to the platform above");
 				player.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
-				player.setBusy(false);
 				return;
 			case ROPE_SWING:
 				player.message("you reach out and grab the rope swing");
@@ -99,7 +95,6 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				player.message("and swing to the oppisite platform");
 				player.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
-				player.setBusy(false);
 				return;
 			case LANDING:
 				player.message("you hang down from the tower");
@@ -109,7 +104,6 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				say(player, null, "ooof");
 				player.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
-				player.setBusy(false);
 				return;
 			case SECOND_NET:
 				gnomeTrainer = ifnearvisnpc(player, NpcId.GNOME_TRAINER_ENDINGNET.id(), 10);
@@ -124,7 +118,6 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				teleport(player, 683, 501);
 				player.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
-				player.setBusy(false);
 				return;
 			case PIPE:
 				mes(player, "you squeeze into the pipe", "and shuffle down into it");
@@ -135,7 +128,6 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				}
 				player.incExp(Skills.AGILITY, 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
-				player.setBusy(false);
 				return;
 		}
 	}

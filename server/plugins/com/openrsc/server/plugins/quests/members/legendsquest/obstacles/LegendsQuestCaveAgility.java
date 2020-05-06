@@ -28,7 +28,6 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 
 	@Override
 	public void onOpLoc(Player player, GameObject obj, String command) {
-		player.setBusy(true);
 		switch (obj.getID()) {
 			case ROCKY_WALKWAY_1:
 			case ROCKY_WALKWAY_2:
@@ -36,7 +35,6 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 			case ROCKY_WALKWAY_4:
 				if (player.getX() == obj.getX() && player.getY() == obj.getY()) {
 					player.message("You're standing there already!");
-					player.setBusy(false);
 					return;
 				}
 				if (succeed(player, 50)) {
@@ -76,7 +74,6 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 			case ROCK_HEWN_STAIRS_4:
 				if (getCurrentLevel(player, Skills.AGILITY) < 50) {
 					player.message("You need an agility level of 50 to step these stairs");
-					player.setBusy(false);
 					return;
 				}
 				if (succeed(player, 50)) {
@@ -105,7 +102,6 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 			case ROCK_HEWN_STAIRS_3:
 				if (getCurrentLevel(player, Skills.AGILITY) < 50) {
 					player.message("You need an agility level of 50 to step these stairs");
-					player.setBusy(false);
 					return;
 				}
 				if (succeed(player, 50)) {
@@ -134,7 +130,6 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 			case ROCK_HEWN_STAIRS_2:
 				if (getCurrentLevel(player, Skills.AGILITY) < 50) {
 					player.message("You need an agility level of 50 to step these stairs");
-					player.setBusy(false);
 					return;
 				}
 				if (succeed(player, 50)) {
@@ -163,7 +158,6 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 			case ROCK_HEWN_STAIRS_1:
 				if (getCurrentLevel(player, Skills.AGILITY) < 50) {
 					player.message("You need an agility level of 50 to step these stairs");
-					player.setBusy(false);
 					return;
 				}
 				if (succeed(player, 50)) {
@@ -190,7 +184,6 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 				}
 				break;
 		}
-		player.setBusy(false);
 	}
 
 	boolean succeed(Player player, int req) {

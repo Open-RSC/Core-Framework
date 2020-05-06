@@ -70,24 +70,22 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 		}
 	}
 
-	private void applyCurse(Player owner, Npc zam) {
-		owner.setBusy(true);
-		zam.getUpdateFlags().setChatMessage(new ChatMessage(zam, "A curse be upon you", owner));
+	private void applyCurse(Player player, Npc zam) {
+		zam.getUpdateFlags().setChatMessage(new ChatMessage(zam, "A curse be upon you", player));
 		delay(2200);
-		owner.message("You feel slightly weakened");
-		int dmg = (int) Math.ceil(((owner.getSkills().getMaxStat(Skills.HITS) + 20) * 0.05));
-		owner.damage(dmg);
+		player.message("You feel slightly weakened");
+		int dmg = (int) Math.ceil(((player.getSkills().getMaxStat(Skills.HITS) + 20) * 0.05));
+		player.damage(dmg);
 		int[] stats = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH};
 		for(int affectedStat : stats) {
 			/* How much to lower the stat */
-			int lowerBy = (int) Math.ceil(((owner.getSkills().getMaxStat(affectedStat) + 20) * 0.05));
+			int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) + 20) * 0.05));
 			/* New current level */
-			final int newStat = Math.max(0, owner.getSkills().getLevel(affectedStat) - lowerBy);
-			owner.getSkills().setLevel(affectedStat, newStat);
+			final int newStat = Math.max(0, player.getSkills().getLevel(affectedStat) - lowerBy);
+			player.getSkills().setLevel(affectedStat, newStat);
 		}
-		delay(owner.getWorld().getServer().getConfig().GAME_TICK);
-		zam.setChasing(owner);
-		owner.setBusy(false);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		zam.setChasing(player);
 	}
 
 	@Override

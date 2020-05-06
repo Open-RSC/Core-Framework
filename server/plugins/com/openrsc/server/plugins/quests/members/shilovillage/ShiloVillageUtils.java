@@ -310,14 +310,12 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			}
 		}
 		else if (item.getCatalogId() == ItemId.BERVIRIUS_TOMB_NOTES.id()) { // read tomb notes
-			player.setBusy(true);
 			player.message("This scroll is a collection of writings..");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			player.message("Some of them are just scraps of papyrus with what looks like random scribblings.");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			player.message("Which would you like to read?");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-			player.setBusy(false);
 			int menu = multi(player,
 				"Tattered Yellow papyrus",
 				"Decayed White papyrus",

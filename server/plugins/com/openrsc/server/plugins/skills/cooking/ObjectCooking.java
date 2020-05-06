@@ -35,7 +35,6 @@ public class ObjectCooking implements UseLocTrigger {
 		// Tutorial Meat
 		if (object.getID() == 491) {
 			if (item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()) {
-				player.setBusy(true);
 				thinkbubble(player, item);
 				player.playSound("cooking");
 				player.playerServerMessage(MessageType.QUEST, "You cook the meat on the stove...");
@@ -62,7 +61,6 @@ public class ObjectCooking implements UseLocTrigger {
 					player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BURNTMEAT.id()));
 				}
-				player.setBusy(false);
 			} else {
 				player.message("Nothing interesting happens");
 			}

@@ -37,7 +37,6 @@ public class GnomeMixing implements UseInvTrigger {
 		}
 
 		if (player.getCarriedItems().hasCatalogID(gm.itemIDOther, Optional.of(false))) {
-			player.setBusy(true);
 
 			// Remove secondary ingredient
 			if (gm.itemIDOther != ItemId.GNOME_SPICE.id())
@@ -91,7 +90,6 @@ public class GnomeMixing implements UseInvTrigger {
 			}
 
 			player.message(gm.messages[0]);
-			player.setBusy(false);
 		}
 	}
 

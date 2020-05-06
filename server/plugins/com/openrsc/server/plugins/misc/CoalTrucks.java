@@ -41,7 +41,6 @@ public class CoalTrucks implements OpLocTrigger, UseLocTrigger {
 	@Override
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == COAL_TRUCK && item.getCatalogId() == ItemId.COAL.id()) {
-			player.setBusy(true);
 			int coalAmount = player.getCarriedItems().getInventory().countId(ItemId.COAL.id());
 			for (int i = 0; i < coalAmount; i++) {
 				if (player.getCache().hasKey("coal_truck")) {
@@ -58,7 +57,6 @@ public class CoalTrucks implements OpLocTrigger, UseLocTrigger {
 				player.getCarriedItems().remove(new Item(ItemId.COAL.id()));
 				delay(50);
 			}
-			player.setBusy(false);
 		}
 	}
 }

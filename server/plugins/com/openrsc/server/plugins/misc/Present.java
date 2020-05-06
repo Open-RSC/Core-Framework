@@ -268,8 +268,6 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 				return;
 			}
 
-			player.setBusy(true);
-			//otherPlayer.setBusy(true);
 			player.face(otherPlayer);
 			otherPlayer.face(player);
 
@@ -328,9 +326,6 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 
 			otherPlayer.getCarriedItems().getInventory().add(prize);
 			player.getCarriedItems().remove(item);
-
-			player.setBusy(false);
-			//otherPlayer.setBusy(false);
 		}
 	}
 

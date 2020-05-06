@@ -91,16 +91,13 @@ public class RandomObjects implements OpLocTrigger {
 				if (object.getX() != 416 || object.getY() != 161) {
 					return;
 				}
-				player.setBusy(true);
 				player.message("You twist the stone tile to one side");
 				if (player.getQuestStage(Quests.GRAND_TREE) == -1) {
 					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 					player.message("It reveals a ladder, you climb down");
 					player.teleport(703, 3284, false);
-					player.setBusy(false);
 				} else {
 					player.message("but nothing happens");
-					player.setBusy(false);
 				}
 				break;
 			case 417: // CAVE ENTRANCE HAZEEL CULT

@@ -166,7 +166,6 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 					break;
 				case RASHILIYA_CORPSE: // COMPLETE QUEST - RASHILIYIA CORPSE
 					if (player.getQuestStage(Quests.SHILO_VILLAGE) == 8) {
-						player.setBusy(true);
 						player.message("You carefully place Rashiliyia's remains on the Dolmen.");
 						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 						player.message("You feel a strange vibration in the air.");
@@ -184,7 +183,6 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 						}
 						player.getCarriedItems().remove(new Item(ItemId.RASHILIYA_CORPSE.id()));
 						player.sendQuestComplete(Quests.SHILO_VILLAGE);
-						player.setBusy(false);
 					}
 					break;
 				default:

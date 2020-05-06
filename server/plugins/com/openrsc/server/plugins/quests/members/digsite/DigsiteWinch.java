@@ -44,7 +44,6 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 						} else {
 							if (getCurrentLevel(player, Skills.AGILITY) < 10) {
 								player.message("You need an agility level of 10 to do this");
-								player.setBusy(false);
 								return;
 							}
 							mes(player, "You try to climb down the rope",
@@ -66,7 +65,6 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 						} else {
 							if (getCurrentLevel(player, Skills.AGILITY) < 10) {
 								player.message("You need an agility level of 10 to do this");
-								player.setBusy(false);
 								return;
 							}
 							mes(player, "You try to climb down the rope",

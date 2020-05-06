@@ -91,7 +91,6 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 		else if (obj.getID() == RUINED_WALL) {
 			if (getCurrentLevel(player, Skills.AGILITY) < 50) {
 				player.message("You need an agility level of 50 to jump this wall");
-				player.setBusy(false);
 				return;
 			}
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You take a run at the wall...");

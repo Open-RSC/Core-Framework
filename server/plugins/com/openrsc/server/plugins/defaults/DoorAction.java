@@ -536,7 +536,6 @@ public class DoorAction {
 				}
 				if (player.getY() > 523) {
 					if (getCurrentLevel(player, Skills.FISHING) < 68) {
-						player.setBusy(true);
 						Npc masterFisher = player.getWorld().getNpc(NpcId.MASTER_FISHER.id(), 582, 588,
 							524, 527);
 						if (masterFisher != null) {
@@ -573,13 +572,11 @@ public class DoorAction {
 					return;
 				}
 				if (getCurrentLevel(player, Skills.CRAFTING) < 40) {
-					player.setBusy(true);
 					Npc master = player.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
 					if (master != null) {
 						npcsay(player, master, "Sorry only experienced craftsmen are allowed in here");
 					}
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
-					player.setBusy(false);
 					player.message("You need a crafting level of 40 to enter the guild");
 				} else if (!(player.getCarriedItems().getEquipment().hasEquipped(ItemId.BROWN_APRON.id())
 					|| player.getCarriedItems().getEquipment().hasEquipped(ItemId.CRAFTING_CAPE.id()))) {
@@ -1100,7 +1097,6 @@ public class DoorAction {
 				} else {
 					if (player.getWorld().getServer().getConfig().WANT_WOODCUTTING_GUILD) {
 						if (getCurrentLevel(player, Skills.WOODCUT) < 70) {
-							player.setBusy(true);
 							final Npc forester = player.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
 								468, 472);
 							if (forester != null) {

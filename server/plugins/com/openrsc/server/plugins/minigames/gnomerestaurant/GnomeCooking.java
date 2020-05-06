@@ -191,7 +191,6 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 			}
 		}
 		// NOTE: THERE ARE NO REQUIREMENT TO COOK THE DOUGH ONLY TO MOULD IT.
-		player.setBusy(true);
 		thinkbubble(player, item);
 		player.playSound("cooking");
 		if (player.getCarriedItems().remove(item) > -1) {
@@ -202,7 +201,6 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 				// Cooking Gnomebatta and Gnomebowl base
 				if (item.getCatalogId() == ItemId.GNOMEBATTA_DOUGH.id() || item.getCatalogId() == ItemId.GNOMEBOWL_DOUGH.id()) {
 					give(player, gc.cookedID, 1);
-					player.setBusy(false);
 					return;
 				}
 
@@ -236,7 +234,6 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 				resetGnomeCooking(player);
 			}
 		}
-		player.setBusy(false);
 	}
 
 	private boolean mouldDough(Item item, Player player) {
@@ -257,11 +254,9 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 			"gnomecrunchie");
 		if (menu != -1) {
 			player.setOption(-1);
-			player.setBusy(true);
 			if (menu == 0) {
 				if (player.getSkills().getLevel(Skills.COOKING) < 25) {
 					player.message("you need a cooking level of 25 to mould dough batta's");
-					player.setBusy(false);
 					return false;
 				}
 
@@ -277,7 +272,6 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 			} else if (menu == 1) {
 				if (player.getSkills().getLevel(Skills.COOKING) < 30) {
 					player.message("you need a cooking level of 30 to mould dough bowls");
-					player.setBusy(false);
 					return false;
 				}
 
@@ -293,7 +287,6 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 			} else if (menu == 2) {
 				if (player.getSkills().getLevel(Skills.COOKING) < 15) {
 					player.message("you need a cooking level of 15 to mould crunchies");
-					player.setBusy(false);
 					return false;
 				}
 
@@ -307,7 +300,6 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 				addGnomeRecipeCache(player, -1, ItemId.GIANNE_DOUGH.id());
 			}
 			player.incExp(Skills.COOKING, 100, true);
-			player.setBusy(false);
 		}
 		return true;
 

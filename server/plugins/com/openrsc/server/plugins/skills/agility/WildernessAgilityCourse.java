@@ -39,7 +39,6 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				player.message("You need an agility level of 52 to attempt balancing along the ridge");
 				return;
 			}
-			player.setBusy(true);
 			player.message("You go through the gate and try to edge over the ridge");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			teleport(player, 298, 130);
@@ -55,11 +54,9 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				teleport(player, 298, 125);
 				player.incExp(Skills.AGILITY, 50, true);
 			}
-			player.setBusy(false);
 			return;
 		} else if (obj.getID() == SECOND_GATE) {
 			player.message("You go through the gate and try to edge over the ridge");
-			player.setBusy(true);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			teleport(player, 298, 130);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
@@ -75,8 +72,6 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				teleport(player, 298, 134);
 				player.incExp(Skills.AGILITY, 50, true);
 			}
-			player.setBusy(false);
-
 			return;
 		}
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
@@ -86,7 +81,6 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				return;
 			}
 		}
-		player.setBusy(true);
 		boolean passObstacle = succeed(player);
 		switch (obj.getID()) {
 			case WILD_PIPE:
@@ -95,8 +89,6 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				teleport(player, 294, 112);
 				player.incExp(Skills.AGILITY, 50, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
-				player.setBusy(false);
-
 				return;
 			case WILD_ROPESWING:
 				player.message("You grab the rope and try and swing across");
@@ -106,7 +98,6 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 					boundaryTeleport(player, Point.location(292, 108));
 					player.incExp(Skills.AGILITY, 100, true);
 					AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
-					player.setBusy(false);
 					return;
 				} else { // 13 damage on 85hp.
 					// 11 damage on 73hp.
@@ -119,8 +110,6 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				player.message("You land painfully on the spikes");
 				say(player, null, "ouch");
 				player.damage(damage);
-				player.setBusy(false);
-
 				return;
 			case STONE:
 				player.message("you stand on the stepping stones");
@@ -133,7 +122,6 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 					teleport(player, 292, 104);
 					int lavaDamage = (int) Math.round((player.getSkills().getLevel(Skills.HITS)) * 0.21D);
 					player.damage(lavaDamage);
-					player.setBusy(false);
 					return ;
 				}
 				boundaryTeleport(player, Point.location(294, 104));
@@ -146,8 +134,6 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				boundaryTeleport(player, Point.location(297, 106));
 				player.incExp(Skills.AGILITY, 80, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
-				player.setBusy(false);
-
 				return;
 			case LEDGE:
 				player.message("you stand on the ledge");
@@ -167,7 +153,6 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 					boundaryTeleport(player, Point.location(301, 111));
 					player.incExp(Skills.AGILITY, 80, true);
 					AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
-					player.setBusy(false);
 				} else {
 					player.message("you lose your footing and fall to the level below");
 					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
@@ -176,9 +161,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 					player.message("You land painfully on the spikes");
 					say(player, null, "ouch");
 					player.damage(ledgeDamage);
-					player.setBusy(false);
 				}
-
 				return;
 			case VINE:
 				player.message("You climb up the cliff");
@@ -190,8 +173,6 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				boundaryTeleport(player, Point.location(304, 120));
 				player.incExp(Skills.AGILITY, 80, true); // COMPLETION OF THE COURSE.
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
-				player.setBusy(false);
-
 				return;
 		}
 	}

@@ -136,7 +136,6 @@ public class Ladders {
 			// Guild
 			// Ladder
 			if (!player.getCache().hasKey("prayer_guild")) {
-				player.setBusy(true);
 				Npc abbot = player.getWorld().getNpc(NpcId.ABBOT_LANGLEY.id(), 249, 252, 458, 468);
 				if (abbot != null) {
 					npcsay(player, abbot, "Only members of our order can go up there");
@@ -169,7 +168,6 @@ public class Ladders {
 			// Guild
 			// Ladder
 			if (getCurrentLevel(player, Skills.MINING) < 60) {
-				player.setBusy(true);
 				Npc dwarf = player.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 272, 277, 563, 567);
 				if (dwarf != null) {
 					npcYell(player, dwarf,
