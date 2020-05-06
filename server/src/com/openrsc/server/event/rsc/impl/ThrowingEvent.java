@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
@@ -155,9 +156,7 @@ public class ThrowingEvent extends GameTickEvent {
 					return;
 				}*/
 
-
-
-				int damage = Formulae.calcRangeHit(getPlayerOwner(), getPlayerOwner().getSkills().getLevel(Skills.RANGED), target.getArmourPoints(), throwingID);
+				int damage = CombatFormula.doRangedDamage(getPlayerOwner(), throwingID, target);
 
 				if (target.isNpc()) {
 					Npc npc = (Npc) target;

@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
@@ -17,7 +18,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 
 public class RangeEvent extends GameTickEvent {
 
@@ -244,8 +245,7 @@ public class RangeEvent extends GameTickEvent {
 					getPlayerOwner().resetRange();
 					return;
 				}
-				int damage = Formulae.calcRangeHit(getPlayerOwner(),
-					getPlayerOwner().getSkills().getLevel(Skills.RANGED), target.getArmourPoints(), arrowID);
+				int damage = CombatFormula.doRangedDamage(getPlayerOwner(), arrowID, target);
 
 				if (target.isNpc()) {
 					Npc npc = (Npc) target;

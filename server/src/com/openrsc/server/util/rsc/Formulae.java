@@ -4,15 +4,14 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.entity.Entity;
-import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 
 import java.security.InvalidParameterException;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.getMaxLevel;
 public final class Formulae {
 
 	public static final int[] arrowIDs = {ItemId.ICE_ARROWS.id(), ItemId.POISON_RUNE_ARROWS.id(),
@@ -149,123 +148,6 @@ public final class Formulae {
 	}
 
 	/**
-	 * Adds the prayers together to calculate what percentage the stat should be
-	 * increased
-	 */
-	private static double addPrayers(boolean first, boolean second, boolean third) {
-		if (third) {
-			return 1.15D;
-		}
-		if (second) {
-			return 1.1D;
-		}
-		if (first) {
-			return 1.05D;
-		}
-		return 1.0D;
-	}
-
-	/**
-	 * Returns a power to associate with each arrow
-	 */
-	private static double arrowPower(int arrowID) {
-		switch (ItemId.getById(arrowID)) {
-			case BRONZE_ARROWS:
-			case POISON_BRONZE_ARROWS:
-			case CROSSBOW_BOLTS:
-			case POISON_CROSSBOW_BOLTS:
-			case BRONZE_THROWING_DART:
-			case POISONED_BRONZE_THROWING_DART:
-				return 0;
-			case IRON_ARROWS:
-			case POISON_IRON_ARROWS:
-			case IRON_THROWING_DART:
-			case POISONED_IRON_THROWING_DART:
-				return 0.5;
-			case STEEL_ARROWS:
-			case POISON_STEEL_ARROWS:
-			case STEEL_THROWING_DART:
-			case POISONED_STEEL_THROWING_DART:
-			case BRONZE_THROWING_KNIFE:
-			case POISONED_BRONZE_THROWING_KNIFE:
-			case BRONZE_SPEAR:
-			case POISONED_BRONZE_SPEAR:
-				return 1;
-			case MITHRIL_ARROWS:
-			case POISON_MITHRIL_ARROWS:
-			case OYSTER_PEARL_BOLTS:
-			case MITHRIL_THROWING_DART:
-			case POISONED_MITHRIL_THROWING_DART:
-			case IRON_THROWING_KNIFE:
-			case POISONED_IRON_THROWING_KNIFE:
-			case IRON_SPEAR:
-			case POISONED_IRON_SPEAR:
-				return 1.5;
-			case ADAMANTITE_ARROWS:
-			case POISON_ADAMANTITE_ARROWS:
-			case ADAMANTITE_THROWING_DART:
-			case POISONED_ADAMANTITE_THROWING_DART:
-			case STEEL_THROWING_KNIFE:
-			case POISONED_STEEL_THROWING_KNIFE:
-			case STEEL_SPEAR:
-			case POISONED_STEEL_SPEAR:
-				return 1.75;
-			case BLACK_THROWING_KNIFE:
-			case POISONED_BLACK_THROWING_KNIFE:
-				return 2;
-			case RUNE_ARROWS:
-			case POISON_RUNE_ARROWS:
-			case RUNE_THROWING_DART:
-			case POISONED_RUNE_THROWING_DART:
-			case MITHRIL_THROWING_KNIFE:
-			case POISONED_MITHRIL_THROWING_KNIFE:
-			case MITHRIL_SPEAR:
-			case POISONED_MITHRIL_SPEAR:
-				return 5;
-			case ICE_ARROWS:
-			case ADAMANTITE_THROWING_KNIFE:
-			case POISONED_ADAMANTITE_THROWING_KNIFE:
-			case ADAMANTITE_SPEAR:
-			case POISONED_ADAMANTITE_SPEAR:
-				return 6;
-			case RUNE_THROWING_KNIFE:
-			case POISONED_RUNE_THROWING_KNIFE:
-			case RUNE_SPEAR:
-			case POISONED_RUNE_SPEAR:
-				return 7;
-			default:
-				return 0;
-		}
-	}
-
-	public static int bitToDoorDir(int bit) {
-		switch (bit) {
-			case 1:
-				return 0;
-			case 2:
-				return 1;
-			case 4:
-			case 8:
-				return -1;
-		}
-		return -1;
-	}
-
-	public static int bitToObjectDir(int bit) {
-		switch (bit) {
-			case 1:
-				return 6;
-			case 2:
-				return 0;
-			case 4:
-				return 2;
-			case 8:
-				return 4;
-		}
-		return -1;
-	}
-
-	/**
 	 * Decide if the food we are cooking should be burned or not Gauntlets of
 	 * Cooking. These gauntlets lowers lvl to burn of lobs, sword and shark
 	 */
@@ -303,10 +185,6 @@ public final class Formulae {
 		}
 		return 0.0D;
 	}
-	/*public static int combatExperience(Mob mob) { //"WOW" EXP FORMULA
-		double exp = Math.pow(mob.getCombatLevel(), 2) * 1.5D;
-		return (int) (mob instanceof Player ? (exp / 4D) : exp);
-	}*/
 
 	public static int calcGodSpells(Mob attacker, Mob defender, boolean iban) {
 		if (attacker.isPlayer()) {
@@ -363,41 +241,6 @@ public final class Formulae {
 	}
 
 	/**
-	 * Calculates what one mob should hit on another with range
-	 *
-	 * @param owner
-	 */
-	public static int calcRangeHit(Player owner, int rangeLvl, int armourEquip, int arrowID) {
-		int rangeEquip = getBowBonus(owner);
-
-		int armourRatio = (int) (60D + ((double) ((rangeEquip * 3D) - armourEquip) / 300D) * 40D);
-
-		if (DataConversions.random(0, 100) > armourRatio && DataConversions.random(0, 1) == 0) {
-			return 0;
-		}
-
-		int max = (int) (((double) rangeLvl * 0.15D) + 0.85D + arrowPower(arrowID));
-		int peak = (int) (((double) max / 100D) * (double) armourRatio);
-		int dip = (int) (((double) peak / 3D) * 2D);
-		return DataConversions.randomWeighted(0, dip, peak, max);
-	}
-
-	public static int calcRangeHitNpc(Mob owner, int rangeLvl, int armourEquip, int arrowID) {
-		int rangeEquip = 8;
-
-		int armourRatio = (int) (60D + ((double) ((rangeEquip * 3D) - armourEquip) / 300D) * 40D);
-
-		if (DataConversions.random(0, 100) > armourRatio && DataConversions.random(0, 1) == 0) {
-			return 0;
-		}
-
-		int max = (int) (((double) rangeLvl * 0.15D) + 0.85D + arrowPower(arrowID));
-		int peak = (int) (((double) max / 100D) * (double) armourRatio);
-		int dip = (int) (((double) peak / 3D) * 2D);
-		return DataConversions.randomWeighted(0, dip, peak, max);
-	}
-
-	/**
 	 * Calculates what a spell should hit based on its strength and the magic
 	 * equipment stats of the caster
 	 */
@@ -431,39 +274,6 @@ public final class Formulae {
 			return true;
 		}
 		return DataConversions.random(0, (levelDiff + 2) * 2) != 0;
-	}
-
-	private static int getBowBonus(Player player) {
-		switch (ItemId.getById(player.getRangeEquip())) {
-			case LONGBOW:
-				return 8;
-			case SHORTBOW:
-				return 5;
-			case OAK_LONGBOW:
-				return 13;
-			case PHOENIX_CROSSBOW:
-			case CROSSBOW:
-			case OAK_SHORTBOW:
-				return 10;
-			case WILLOW_LONGBOW:
-				return 18;
-			case WILLOW_SHORTBOW:
-				return 15;
-			case MAPLE_LONGBOW:
-				return 23;
-			case MAPLE_SHORTBOW:
-				return 20;
-			case YEW_LONGBOW:
-				return 28;
-			case YEW_SHORTBOW:
-				return 25;
-			case MAGIC_LONGBOW:
-				return 33;
-			case MAGIC_SHORTBOW:
-				return 30;
-			default:
-				return 0;
-		}
 	}
 
 	/**
@@ -513,18 +323,6 @@ public final class Formulae {
 	 */
 	public static boolean cutWeb() {
 		return DataConversions.random(0, 4) <= 1;
-	}
-
-	public static boolean doorAtFacing(Entity e, int x, int y, int dir) {
-		if (dir >= 0 && e instanceof GameObject) {
-			GameObject obj = (GameObject) e;
-			if (obj.getGameObjectDef().name.toLowerCase().contains("door")
-				|| obj.getGameObjectDef().name.toLowerCase().contains("gate")) {
-				return true;
-			}
-			return obj.getType() == 1 && obj.getDirection() == dir && obj.isOn(x, y);
-		}
-		return false;
 	}
 
 	/**
@@ -805,63 +603,6 @@ public final class Formulae {
 		return DataConversions.random(0, 6) != 0;
 	}
 
-	/**
-	 * Calculate the max hit possible with the given stats
-	 */
-	public static int maxHit(int strength, int weaponPower, boolean burst, boolean superhuman, boolean ultimate,
-							 int bonus) {
-		double newStrength = (double) ((strength * addPrayers(burst, superhuman, ultimate)) + bonus);
-
-		return (int) ((newStrength * ((((double) weaponPower * 0.00175D) + 0.1D)) + 1.05D) * 0.95D);
-
-	}
-
-	public static boolean objectAtFacing(Entity e, int x, int y, int dir) {
-		if (dir >= 0 && e instanceof GameObject) {
-			GameObject obj = (GameObject) e;
-			return obj.getType() == 0 && obj.getDirection() == dir && obj.isOn(x, y);
-		}
-		return false;
-	}
-
-	public static int offsetToPercent(int levelDiff) {
-		return levelDiff > 40 ? 60 : 20 + levelDiff;
-	}
-
-	/**
-	 * Calulates what one mob should hit on another with meelee
-	 */
-	public static double parseDouble(double number) {
-		String numberString = String.valueOf(number);
-		return Double.parseDouble(numberString.substring(0, numberString.indexOf(".") + 2));
-	}
-
-	public static int styleBonus(Mob mob, int skill) {
-		int style = mob.getCombatStyle();
-		if (style == Skills.CONTROLLED_MODE) {
-			return 1;
-		}
-		return (skill == Skills.ATTACK && style == Skills.ACCURATE_MODE)
-			|| (skill == Skills.DEFENSE && style == Skills.DEFENSIVE_MODE)
-			|| (skill == Skills.STRENGTH && style == Skills.AGGRESSIVE_MODE) ? 3 : 0;
-	}
-
-	public static int getBarIdFromItem(int itemID) {
-		if (DataConversions.inArray(BRONZE, itemID))
-			return ItemId.BRONZE_BAR.id();
-		if (DataConversions.inArray(IRON, itemID))
-			return ItemId.IRON_BAR.id();
-		if (DataConversions.inArray(STEEL, itemID))
-			return ItemId.STEEL_BAR.id();
-		if (DataConversions.inArray(MITH, itemID))
-			return ItemId.MITHRIL_BAR.id();
-		if (DataConversions.inArray(ADDY, itemID))
-			return ItemId.ADAMANTITE_BAR.id();
-		if (DataConversions.inArray(RUNE, itemID))
-			return ItemId.RUNITE_BAR.id();
-		return -1;
-	}
-
 	public static int getRepeatTimes(Player player, int skill) {
 		int maxStat = player.getSkills().getMaxStat(skill); // Number of time repeats is based on your highest level using this method
 		if (maxStat <= 10)
@@ -885,16 +626,6 @@ public final class Formulae {
 		if (maxStat <= 99)
 			return 230;
 		return 1000;
-	}
-
-	public static int getSpellMaxHit(SpellDef spell) {
-		String description = spell.getDescription();
-		description = description.replaceAll("\\D+", "");
-		try {
-			return Integer.parseInt(description);
-		} catch (Exception ignored) {
-		}
-		return 1;
 	}
 
 	/**

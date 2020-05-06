@@ -1,10 +1,11 @@
 package com.openrsc.server.event.rsc.impl.combat;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
-import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +14,7 @@ import java.util.Random;
 
 import static com.openrsc.server.constants.ItemId.ATTACK_CAPE;
 
-class CombatFormula {
+public class CombatFormula {
 	/**
 	 * Logger instance
 	 */
@@ -61,8 +62,8 @@ class CombatFormula {
 	 * @param source      The mob doing the damage
 	 * @return The randomized value.
 	 */
-	private static int calculateRangedDamage(final Mob source) {
-		return calculateDamage(getRangedDamage(source));
+	private static int calculateRangedDamage(final Mob source, final int arrowId) {
+		return calculateDamage(getRangedDamage(source, arrowId));
 
 	}
 
@@ -135,12 +136,12 @@ class CombatFormula {
 	 * @param victim             The mob being attacked.
 	 * @return The amount to hit.
 	 */
-	public static int doRangedDamage(final Mob source, final Mob victim) {
+	public static int doRangedDamage(final Mob source, final int arrowId, final Mob victim) {
 		boolean isHit = calculateRangedAccuracy(source, victim);
 
 		//LOGGER.info(source + " " + (isHit ? "hit" : "missed") + " " + victim + ", Damage: " + damage);
 
-		return isHit ? calculateRangedDamage(source) : 0;
+		return isHit ? calculateRangedDamage(source, arrowId) : 0;
 	}
 
 	/**
@@ -155,10 +156,10 @@ class CombatFormula {
 			Prayers.SUPERHUMAN_STRENGTH,
 			Prayers.ULTIMATE_STRENGTH);
 
-		final int strength = (int)((source.getSkills().getLevel(Skills.STRENGTH) * prayerBonus) + styleBonus);
-		final double weaponMultiplier = (source.getWeaponPowerPoints() * 0.00175D)+0.1D;
+		final double strength = (source.getSkills().getLevel(Skills.STRENGTH) * prayerBonus) + styleBonus;
+		final double weaponMultiplier = (source.getWeaponPowerPoints() * (1.0D/600.0D))+0.1D;
 
-		return (int)(strength * weaponMultiplier + 1.05D);
+		return (int)Math.ceil(strength * weaponMultiplier);
 	}
 
 	/**
@@ -167,11 +168,11 @@ class CombatFormula {
 	 * @param source             The attacking mob.
 	 * @return The max hit
 	 */
-	private static int getRangedDamage(final Mob source) {
+	private static int getRangedDamage(final Mob source, final int arrowId) {
 		final int ranged = source.getSkills().getLevel(Skills.RANGED);
-		final double weaponMultiplier = (source.getWeaponPowerPoints() * 0.00175D)+0.1D;
+		final double weaponMultiplier = (arrowPower(arrowId) * 0.00175D)+0.1D;
 
-		return (int)(ranged * weaponMultiplier + 1.05D);
+		return (int)Math.ceil(ranged * weaponMultiplier);
 	}
 
 	/**
@@ -186,10 +187,10 @@ class CombatFormula {
 			Prayers.ROCK_SKIN,
 			Prayers.STEEL_SKIN);
 
-		final int defense = (int)((defender.getSkills().getLevel(Skills.DEFENSE) * prayerBonus) + styleBonus);
-		final double armourMultiplier = (defender.getArmourPoints() * 0.00175D)+0.1D;
+		final double defense = (defender.getSkills().getLevel(Skills.DEFENSE) * prayerBonus) + styleBonus;
+		final double armourMultiplier = (defender.getArmourPoints() * (1.0D/600.0D))+0.1D;
 
-		return (defense * armourMultiplier) + 1.05D;
+		return defense * armourMultiplier;
 	}
 
 	/**
@@ -199,10 +200,10 @@ class CombatFormula {
 	 * @return The ranged accuracy
 	 */
 	private static double getRangedAccuracy(final Mob attacker) {
-		final int ranged = attacker.getSkills().getLevel(Skills.RANGED);
-		final double weaponMultiplier = (attacker.getWeaponAimPoints() * 0.00175D)+0.1D;
+		final double ranged = attacker.getSkills().getLevel(Skills.RANGED);
+		final double weaponMultiplier = (0 * (1.0D/600.0D))+0.1D; // ranged has no weapon aim
 
-		return (ranged * weaponMultiplier) + 1.05D;
+		return ranged * weaponMultiplier;
 	}
 
 	/**
@@ -217,10 +218,10 @@ class CombatFormula {
 			Prayers.IMPROVED_REFLEXES,
 			Prayers.INCREDIBLE_REFLEXES);
 
-		final int attack = (int)((attacker.getSkills().getLevel(Skills.ATTACK) * prayerBonus) + styleBonus);
-		final double weaponMultiplier = (attacker.getWeaponAimPoints() * 0.00175D)+0.1D;
+		final double attack = (attacker.getSkills().getLevel(Skills.ATTACK) * prayerBonus) + styleBonus;
+		final double weaponMultiplier = (attacker.getWeaponAimPoints() * (1.0D/600.0D))+0.1D;
 
-		return (attack * weaponMultiplier) + 1.05D;
+		return Math.ceil(attack * weaponMultiplier);
 	}
 
 	/**
@@ -233,7 +234,7 @@ class CombatFormula {
 		if (attacker.isNpc())
 			return 0;
 
-		int style = attacker.getCombatStyle();
+		final int style = attacker.getCombatStyle();
 		if (style == Skills.CONTROLLED_MODE)
 			return 1;
 
@@ -261,5 +262,53 @@ class CombatFormula {
 			}
 		}
 		return 1.0D;
+	}
+
+	/**
+	 * Returns a power to associate with each arrow
+	 */
+	private static int arrowPower(final int arrowId) {
+		switch (ItemId.getById(arrowId)) {
+			case BRONZE_THROWING_DART:
+				return 15;
+			case IRON_THROWING_DART:
+				return 19;
+			case STEEL_THROWING_DART:
+				return 23;
+			case MITHRIL_THROWING_DART:
+			case BRONZE_ARROWS:
+				return 27;
+			case BRONZE_THROWING_KNIFE:
+			case IRON_ARROWS:
+			case ADAMANTITE_THROWING_DART:
+				return 31;
+			case STEEL_ARROWS:
+			case IRON_THROWING_KNIFE:
+			case RUNE_THROWING_DART:
+			case BRONZE_SPEAR:
+				return 35;
+			case MITHRIL_ARROWS:
+			case STEEL_THROWING_KNIFE:
+			case BLACK_THROWING_KNIFE:
+				return 39;
+			case ADAMANTITE_ARROWS:
+			case MITHRIL_THROWING_KNIFE:
+			case IRON_SPEAR:
+				return 43;
+			case RUNE_ARROWS:
+			case ADAMANTITE_THROWING_KNIFE:
+				return 47;
+			case RUNE_THROWING_KNIFE:
+			case STEEL_SPEAR:
+				return 51;
+			case MITHRIL_SPEAR:
+				return 59;
+			case ADAMANTITE_SPEAR:
+				return 67;
+			case RUNE_SPEAR:
+				return 75;
+			default:
+				return 0;
+		}
 	}
 }
