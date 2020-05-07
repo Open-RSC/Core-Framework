@@ -331,16 +331,19 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.THIEVING);
+			npc.setBusy(true);
 		}
 		batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString, repeat);
 	}
 
 	private void batchPickpocket(Player player, Npc npc, Pickpocket pickpocket, ArrayList<LootItem> lootTable, String thievedMobString, int repeat) {
 		if (npc.inCombat()) {
+			npc.setBusy(false);
 			return;
 		}
 		if (player.getSkills().getLevel(Skills.THIEVING) < pickpocket.getRequiredLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobString + "'s pocket");
+			npc.setBusy(false);
 			return;
 		}
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobString + "'s pocket");
@@ -355,6 +358,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 					&& player.getFatigue() >= player.MAX_FATIGUE) {
 					player.message("You are too tired to pickpocket this mob");
+					npc.setBusy(false);
 					return;
 				}
 			}
@@ -375,6 +379,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				if (hit >= total && hit < (total + loot.getChance())) {
 					if (loot.getId() == -1) {
 						player.playerServerMessage(MessageType.QUEST, "You find nothing to steal");
+						npc.setBusy(false);
 						return;
 					}
 					selectedLoot = (new Item(loot.getId(), loot.getAmount()));
@@ -392,18 +397,22 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			npc.getUpdateFlags()
 				.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
 			npc.startCombat(player);
+			npc.setBusy(false);
 			return;
 		}
 
 		// Repeat
 		if (!ifinterrupted() && --repeat > 0) {
-			// TODO: Walk to mob configured.
 			if (!player.withinRange(npc, 1)) {
 				player.message("The " + thievedMobString + " has moved.");
+				npc.setBusy(false);
 				return;
 			}
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString, repeat);
+		}
+		else {
+			npc.setBusy(false);
 		}
 	}
 
