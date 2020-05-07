@@ -422,14 +422,30 @@ public class Bank {
 				ItemDefinition withdrawDef = withdrawItem.getDef(player.getWorld());
 				if (withdrawDef == null) return;
 
+				// Don't allow notes for non noteable items
+				if (wantsNotes && !withdrawDef.isNoteable()) {
+					withdrawNoted = false;
+				}
+
 				// Make sure they actually have the item in the bank
 				requestedAmount = Math.min(requestedAmount, countId(catalogID));
-				requestedAmount = Math.min(requestedAmount, player.getCarriedItems().getInventory().getFreeSlots());
-				if (requestedAmount <= 0) return;
+				int requiredSlots = player.getCarriedItems().getInventory().getRequiredSlots(
+					new Item(withdrawItem.getCatalogId(), requestedAmount, withdrawNoted)
+				);
+				int freeSpace = player.getCarriedItems().getInventory().getFreeSlots();
+				if (requiredSlots > freeSpace) {
+					if (withdrawDef.isStackable() || withdrawNoted) {
+						requestedAmount = 0;
+					}
+					else {
+						requestedAmount = freeSpace;
+					}
+				}
 
-				// Don't allow notes for non noteable items
-				if (wantsNotes && !withdrawDef.isNoteable())
-					withdrawNoted = false;
+				if (requestedAmount <= 0) {
+					player.message("You don't have room to hold everything!");
+					return;
+				}
 
 				withdrawItem = new Item(withdrawItem.getCatalogId(), requestedAmount, withdrawNoted, withdrawItem.getItemId());
 
