@@ -94,13 +94,13 @@ public class Social {
 
 	public void alertOfLogin(Player player) {
 		if (friendList.containsKey(player.getUsernameHash()) && (!player.getSettings().getPrivacySetting(1) || player.getSocial().isFriendsWith(player.getUsernameHash()))) {
-			ActionSender.sendFriendUpdate(player, player.getUsernameHash());
+			ActionSender.sendFriendUpdate(this.player, player.getUsernameHash());
 		}
 	}
 
 	public void alertOfLogout(Player player) {
 		if (friendList.containsKey(player.getUsernameHash())) {
-			ActionSender.sendFriendUpdate(player, player.getUsernameHash());
+			ActionSender.sendFriendUpdate(this.player, player.getUsernameHash());
 		}
 	}
 }
