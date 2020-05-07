@@ -8,11 +8,17 @@ public abstract class WalkToMobAction extends WalkToAction {
 
 	protected final Mob mob;
 	private final int radius;
+	private final boolean ignoreProjectileAllowed;
 
 	public WalkToMobAction(final Player owner, final Mob mob, final int radius) {
+		this(owner, mob, radius, true);
+	}
+
+	public WalkToMobAction(final Player owner, final Mob mob, final int radius, final boolean ignoreProjectileAllowed) {
 		super(owner, mob.getLocation());
 		this.mob = mob;
 		this.radius = radius;
+		this.ignoreProjectileAllowed = ignoreProjectileAllowed;
 		if (shouldExecute()) {
 			execute();
 		}
@@ -25,6 +31,6 @@ public abstract class WalkToMobAction extends WalkToAction {
 	@Override
 	public boolean shouldExecuteInternal() {
 		return getPlayer().withinRange(mob, radius)
-			&& PathValidation.checkAdjacentDistance(getPlayer().getWorld(), getPlayer().getLocation(), mob.getLocation(), true);
+			&& PathValidation.checkAdjacentDistance(getPlayer().getWorld(), getPlayer().getLocation(), mob.getLocation(), ignoreProjectileAllowed);
 	}
 }

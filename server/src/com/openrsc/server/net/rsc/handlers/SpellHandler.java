@@ -915,7 +915,7 @@ public class SpellHandler implements PacketHandler {
 			return;
 		}
 		player.setFollowing(affectedMob);
-		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4) {
+		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4, false) {
 			public void executeInternal() {
 				if (!PathValidation.checkPath(getPlayer().getWorld(), getPlayer().getLocation(), affectedMob.getLocation())) {
 					getPlayer().playerServerMessage(MessageType.QUEST, "I can't get a clear shot from here");
