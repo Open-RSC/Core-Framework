@@ -30,7 +30,7 @@ public class GemMining implements OpLocTrigger {
 
 	private void handleGemRockMining(final GameObject obj, Player player, int click) {
 		final ObjectMiningDef def = player.getWorld().getServer().getEntityHandler().getObjectMiningDef(obj.getID());
-		final int axeId = getAxe(player);
+		final int axeId = Mining.getAxe(player);
 		final int mineLvl = player.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
 		int repeat = 1;
 		int reqlvl = 1;
@@ -156,18 +156,6 @@ public class GemMining implements OpLocTrigger {
 		if (obj.getID() == GEM_ROCK && (command.equals("mine") || command.equals("prospect"))) {
 			handleGemRockMining(obj, player, player.click);
 		}
-	}
-
-	private int getAxe(Player player) {
-		int lvl = player.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
-		for (int i = 0; i < Formulae.miningAxeIDs.length; i++) {
-			if (player.getCarriedItems().getInventory().countId(Formulae.miningAxeIDs[i]) > 0) {
-				if (lvl >= Formulae.miningAxeLvls[i]) {
-					return Formulae.miningAxeIDs[i];
-				}
-			}
-		}
-		return -1;
 	}
 
 	private int calcAxeBonus(int axeId) { // No evidence wielding different pickaxes gives a bonus, only more swings

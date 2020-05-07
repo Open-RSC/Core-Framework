@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -32,6 +33,8 @@ public class RawEssence implements OpLocTrigger {
 	}
 
 	private void batchEssence(Player player, int repeat) {
+		player.playSound("mine");
+		thinkbubble(player, new Item(ItemId.IRON_PICKAXE.id()));
 		give(player, ItemId.RUNE_ESSENCE.id(), 1);
 		player.incExp(Skills.MINING, 20, true);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
