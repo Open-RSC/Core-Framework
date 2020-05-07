@@ -60,10 +60,8 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (player.isBusy()) {
-			if (player.inCombat()) {
-				player.message("You can't do that whilst you are fighting");
-			}
+		if (player.isBusy() || player.inCombat()) {
+			player.message("You can't do that whilst you are fighting");
 			return;
 		}
 
