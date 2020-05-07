@@ -32,11 +32,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -434,20 +431,18 @@ public class SpellHandler implements PacketHandler {
 				if (!checkAndRemoveRunes(player, spell)) {
 					return;
 				}
-				Iterator<Item> inventory = player.getCarriedItems().getInventory().iterator();
-				int boneCount = 0;
-				while (inventory.hasNext()) {
-					Item i = inventory.next();
-					if (i.getCatalogId() == ItemId.BONES.id() && !i.getNoted()) {
-						inventory.remove();
-						boneCount++;
-					}
-				}
+
+				int boneCount = player.getCarriedItems().getInventory().countId(ItemId.BONES.id(), Optional.of(false));
 				if (boneCount == 0) {
 					player.message("You aren't holding any bones!");
 					return;
 				}
 				for (int i = 0; i < boneCount; i++) {
+					player.getCarriedItems().remove(
+						player.getCarriedItems().getInventory().get(
+							player.getCarriedItems().getInventory().getLastIndexById(ItemId.BONES.id(), Optional.of(false))
+						)
+					);
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BANANA.id()));
 				}
 				// needs verify if default message
