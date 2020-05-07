@@ -88,5 +88,6 @@ public class Menu {
 
 	public final void handleReply(final Player player, final int i) {
 		player.setOption(i);
+		player.resetMenuHandler();
 	}
 }
