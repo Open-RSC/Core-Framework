@@ -19,7 +19,6 @@
                includeantruntime="false">
             <classpath>
                 <pathelement path="${java.class.path}/"/>
-                <pathelement location="${lib}/json-20190722.jar"/>
             </classpath>
             <compilerarg line="-Xlint:unchecked"/>
         </javac>
@@ -35,7 +34,6 @@
             <jvmarg line="-Xms312m -Dsun.java2d.opengl=true"/>
             <classpath>
                 <pathelement path="${jar}/"/>
-                <pathelement location="${lib}/json-20190722.jar"/>
             </classpath>
         </java>
     </target>
