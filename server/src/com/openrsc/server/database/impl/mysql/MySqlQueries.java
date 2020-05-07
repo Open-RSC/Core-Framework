@@ -182,7 +182,7 @@ public class MySqlQueries {
 		collectibleItems = "SELECT `claim_id`, `item_id`, `item_amount`, `playerID`, `explanation` FROM `" + PREFIX
 			+ "expired_auctions` WHERE `playerID` = ?  AND `claimed`= '0'";
 		collectItem = "UPDATE `" + PREFIX
-			+ "expired_auctions` SET `claim_time`= '?',`claimed`='1' WHERE `claim_id`=?";
+			+ "expired_auctions` SET `claim_time`=?,`claimed`='1' WHERE `claim_id`=?";
 		newAuction = "INSERT INTO `" + PREFIX + "auctions`(`itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time`) VALUES (?,?,?,?,?,?,?,?)";
 		cancelAuction = "UPDATE `" + PREFIX + "auctions` SET  `sold-out`='1', `was_cancel`='1' WHERE `auctionID`=?";
 		auctionCount = "SELECT count(*) as auction_count FROM `" + PREFIX + "auctions` WHERE `sold-out`='0'";
