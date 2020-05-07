@@ -192,10 +192,9 @@ public class Default implements DefaultHandler,
 		player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped " + item.getDef(player.getWorld()).getName() + " x"
 			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
 
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
-
 		// Repeat
 		if (!ifinterrupted() && amountToDrop > 0) {
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchDrop(player, item, fromInventory, amountToDrop);
 		}
 	}
