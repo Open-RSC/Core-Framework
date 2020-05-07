@@ -1539,7 +1539,11 @@ REPLACE INTO `openrsc_itemdef` (`id`, `name`, `description`, `command`, `isFemal
 
 -- Make arrows wieldable.
 UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=1000, `wearSlot`=12, `requiredLevel`=1, `requiredSkillID`=4 WHERE `id` IN (
-    11, 190, 574, 592, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723, 786
+    11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723
+);
+-- Make bolts wieldable
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=1001, `wearSlot`=12, `requiredLevel`=1, `requiredSkillID`=4 WHERE `id` IN (
+    190,  592, 786
 );
 
 -- Make pickaxes wieldable.
