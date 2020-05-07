@@ -264,11 +264,12 @@ public final class Mining implements OpLocTrigger {
 
 		// Repeat
 		--repeat;
-		if (((player.getWorld().getServer().getConfig().BATCH_PROGRESSION && !ifinterrupted()) && repeat > 0)
-			|| repeat > 0) {
-			batchMining(player, rock, def, axeId, mineLvl, repeat);
+		boolean customBatch = player.getWorld().getServer().getConfig().BATCH_PROGRESSION;
+		if (repeat > 0) {
+			if ((customBatch && !ifinterrupted()) || !customBatch) {
+				batchMining(player, rock, def, axeId, mineLvl, repeat);
+			}
 		}
-
 	}
 
 	@Override
