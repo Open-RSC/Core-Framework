@@ -584,7 +584,7 @@ public final class Event implements CommandTrigger {
 			String statName;
 			int level;
 			int stat;
-			Player p;
+			Player otherPlayer;
 
 			try {
 				if(args.length == 1) {
@@ -615,10 +615,10 @@ public final class Event implements CommandTrigger {
 					}
 				}
 
-				p = player;
+				otherPlayer = player;
 			}
 			catch(NumberFormatException ex) {
-				p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+				otherPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 				if (args.length < 2) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
@@ -673,17 +673,17 @@ public final class Event implements CommandTrigger {
 				}
 			}
 
-			if (p == null) {
+			if (otherPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if(!player.isAdmin() && player.getUsernameHash() != player.getUsernameHash()) {
+			if(!player.isAdmin() && otherPlayer.getUsernameHash() != player.getUsernameHash()) {
 				player.message(messagePrefix + "You can not modify other players' stats.");
 				return;
 			}
 
-			if(!player.isDefaultUser() && player.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= player.getGroupID()) {
+			if(!otherPlayer.isDefaultUser() && otherPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= otherPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not modify stats of a staff member of equal or greater rank.");
 				return;
 			}
@@ -694,32 +694,32 @@ public final class Event implements CommandTrigger {
 				if(level > player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT)
 					level = player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT;
 
-				player.getSkills().setLevelTo(stat, level);
-				player.checkEquipment();
-				player.message(messagePrefix + "You have set " + player.getUsername() + "'s " + statName + " to level " + level);
-				player.getSkills().sendUpdateAll();
+				otherPlayer.getSkills().setLevelTo(stat, level);
+				otherPlayer.checkEquipment();
+				player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s " + statName + " to level " + level);
+				otherPlayer.getSkills().sendUpdateAll();
 				if(player.getUsernameHash() != player.getUsernameHash()) {
-					player.message(messagePrefix + "Your " + statName + " has been set to level " + level + " by a staff member");
-					player.getSkills().sendUpdateAll();
+					otherPlayer.message(messagePrefix + "Your " + statName + " has been set to level " + level + " by a staff member");
+					otherPlayer.getSkills().sendUpdateAll();
 				}
 			}
 			else {
 				for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
-					player.getSkills().setLevelTo(i, level);
+					otherPlayer.getSkills().setLevelTo(i, level);
 				}
 
-				player.checkEquipment();
-				player.message(messagePrefix + "You have set " + player.getUsername() + "'s stats to level " + level);
-				player.getSkills().sendUpdateAll();
+				otherPlayer.checkEquipment();
+				player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s stats to level " + level);
+				otherPlayer.getSkills().sendUpdateAll();
 				if(player.getParty() != null){
 					player.getParty().sendParty();
 				}
-				if(player.getUsernameHash() != player.getUsernameHash()) {
-					if(player.getParty() != null){
-						player.getParty().sendParty();
+				if(otherPlayer.getUsernameHash() != player.getUsernameHash()) {
+					if(otherPlayer.getParty() != null){
+						otherPlayer.getParty().sendParty();
 					}
-					player.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
-					player.getSkills().sendUpdateAll();
+					otherPlayer.message(messagePrefix + "All of your stats have been set to level " + level + " by a staff member");
+					otherPlayer.getSkills().sendUpdateAll();
 				}
 			}
 		}
@@ -735,7 +735,7 @@ public final class Event implements CommandTrigger {
 			String statName;
 			int level;
 			int stat;
-			Player p;
+			Player otherPlayer;
 
 			try {
 				if(args.length == 1) {
@@ -766,10 +766,10 @@ public final class Event implements CommandTrigger {
 					}
 				}
 
-				p = player;
+				otherPlayer = player;
 			}
 			catch(NumberFormatException ex) {
-				p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+				otherPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 
 				if (args.length < 2) {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [level] OR ");
@@ -824,17 +824,17 @@ public final class Event implements CommandTrigger {
 				}
 			}
 
-			if (p == null) {
+			if (otherPlayer == null) {
 				player.message(messagePrefix + "Invalid name or player is not online");
 				return;
 			}
 
-			if(!player.isAdmin() && player.getUsernameHash() != player.getUsernameHash()) {
+			if(!player.isAdmin() && otherPlayer.getUsernameHash() != player.getUsernameHash()) {
 				player.message(messagePrefix + "You can not modify other players' stats.");
 				return;
 			}
 
-			if(!player.isDefaultUser() && player.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= player.getGroupID()) {
+			if(!otherPlayer.isDefaultUser() && otherPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= otherPlayer.getGroupID()) {
 				player.message(messagePrefix + "You can not modify stats of a staff member of equal or greater rank.");
 				return;
 			}
@@ -845,26 +845,26 @@ public final class Event implements CommandTrigger {
 				if(level > 255)
 					level = 255;
 
-				player.getSkills().setLevel(stat, level);
-				player.checkEquipment();
-				player.message(messagePrefix + "You have set " + player.getUsername() + "'s effective " + statName + " level " + level);
-				player.getSkills().sendUpdateAll();
-				if(player.getUsernameHash() != player.getUsernameHash()) {
-					player.message(messagePrefix + "Your effective " + statName + " level has been set to " + level + " by a staff member");
-					player.getSkills().sendUpdateAll();
+				otherPlayer.getSkills().setLevel(stat, level);
+				otherPlayer.checkEquipment();
+				player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s effective " + statName + " level " + level);
+				otherPlayer.getSkills().sendUpdateAll();
+				if(otherPlayer.getUsernameHash() != player.getUsernameHash()) {
+					otherPlayer.message(messagePrefix + "Your effective " + statName + " level has been set to " + level + " by a staff member");
+					otherPlayer.getSkills().sendUpdateAll();
 				}
 			}
 			else {
 				for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
-					player.getSkills().setLevel(i, level);
+					otherPlayer.getSkills().setLevel(i, level);
 				}
 
-				player.checkEquipment();
-				player.message(messagePrefix + "You have set " + player.getUsername() + "'s effective levels to " + level);
-				player.getSkills().sendUpdateAll();
-				if(player.getUsernameHash() != player.getUsernameHash()) {
-					player.message(messagePrefix + "All of your stats' effective levels have been set to " + level + " by a staff member");
-					player.getSkills().sendUpdateAll();
+				otherPlayer.checkEquipment();
+				player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s effective levels to " + level);
+				otherPlayer.getSkills().sendUpdateAll();
+				if(otherPlayer.getUsernameHash() != player.getUsernameHash()) {
+					otherPlayer.message(messagePrefix + "All of your stats' effective levels have been set to " + level + " by a staff member");
+					otherPlayer.getSkills().sendUpdateAll();
 				}
 			}
 		}
