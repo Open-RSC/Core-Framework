@@ -682,10 +682,7 @@ public class Inventory {
 				// Theres no stack found
 				return 1;
 			} else {
-				if (item.getAmount() > 1) {
-					return Math.min(MAX_SIZE - list.size(), item.getAmount());
-				}
-				return 1;
+				return item.getAmount();
 			}
 		}
 	}

@@ -424,6 +424,7 @@ public class Bank {
 
 				// Make sure they actually have the item in the bank
 				requestedAmount = Math.min(requestedAmount, countId(catalogID));
+				requestedAmount = Math.min(requestedAmount, player.getCarriedItems().getInventory().getFreeSlots());
 				if (requestedAmount <= 0) return;
 
 				// Don't allow notes for non noteable items
@@ -431,12 +432,6 @@ public class Bank {
 					withdrawNoted = false;
 
 				withdrawItem = new Item(withdrawItem.getCatalogId(), requestedAmount, withdrawNoted, withdrawItem.getItemId());
-
-				// Make sure they have enough space in their inventory
-				if (!player.getCarriedItems().getInventory().canHold(withdrawItem)) {
-					player.message("You don't have room to hold everything!");
-					return;
-				}
 
 				// Remove the item from the bank (or fail out).
 				if (!remove(withdrawItem)) return;
@@ -487,6 +482,12 @@ public class Bank {
 		}
 		for (; i <= requestedAmount; i++) {
 			item = new Item(item.getCatalogId(), slotAmount, item.getNoted());
+
+			// Make sure they have enough space in their inventory
+			if (!player.getCarriedItems().getInventory().canHold(item)) {
+				player.message("You don't have room to hold everything!");
+				return;
+			}
 
 			// Add the item to the inventory (or fail and place it back into the bank).
 			if (!player.getCarriedItems().getInventory().add(item, true)) {
