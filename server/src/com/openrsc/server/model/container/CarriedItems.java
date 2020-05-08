@@ -57,7 +57,7 @@ public class CarriedItems {
 			if (getInventory().hasCatalogID(catalogID, isNoted))
 				return true;
 			else
-				return getEquipment().hasCatalogID(catalogID, isNoted);
+				return getEquipment().hasCatalogID(catalogID);
 		}
 
 	}

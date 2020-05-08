@@ -623,7 +623,7 @@ public class Inventory {
 		}
 
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id, noted) != -1;
+			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id) != -1;
 		else
 			return false;
 	}

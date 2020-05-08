@@ -15,49 +15,38 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 public class Equipment {
-	//Class members-----------------------------------------------------
-	/**
-	 * The asynchronous logger
-	 */
+
 	private static final Logger LOGGER = LogManager.getLogger();
-	/**
-	 * The number of equipment slots used for each player
-	 */
 	public static final int SLOT_COUNT = 14;
-	/**
-	 * Holds the currently equipped items of the logged in player
-	 */
 	private final Item[] list = new Item[SLOT_COUNT];
-	/**
-	 * Reference back the owner of the equipment
-	 */
 	private final Player player;
 
-	//------------------------------------------------------------------
-	//Constructors------------------------------------------------------
 	public Equipment(Player player) {
 		synchronized (list) {
 			this.player = player;
-			for (int i = 0; i < SLOT_COUNT; i++)
-				list[i] = null;
+			for (int slotID = 0; slotID < SLOT_COUNT; slotID++)
+				list[slotID] = null;
 		}
 	}
 
-	//------------------------------------------------------------------
-	//Class member modifiers--------------------------------------------
-	//------------------------------------------------------------------
-	//Class members retrievers------------------------------------------
+	/** Getters and Setters */
+
 	public Item[] getList() {
 		synchronized (list) {
 			return this.list;
 		}
 	}
-	//------------------------------------------------------------------
-	//Methods that can change the contents of the list------------------
 
-	/**
-	 * Adds an item to the equipment container. Updates the database instantly.
-	 */
+	public Item getAmmoItem() {
+		synchronized (list) {
+			return list[12];
+		}
+	}
+
+	/** Primary Method Definitions */
+
+	// Equipment::add(Item)
+	// Adds an item to the equipment container. Updates the database instantly.
 	public int add(Item item) {
 		synchronized (list) {
 			try {
@@ -65,21 +54,21 @@ public class Equipment {
 				if (itemDef == null || !itemDef.isWieldable())
 					return -1;
 
-				int slot = itemDef.getWieldPosition();
+				int slotID = itemDef.getWieldPosition();
 
-				if (slot < 0 || slot >= Equipment.SLOT_COUNT)
+				if (slotID < 0 || slotID >= Equipment.SLOT_COUNT)
 					return -1;
 
-				if (list[slot] == null) {
+				if (list[slotID] == null) {
 					Item toEquip = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
-					list[slot] = toEquip;
+					list[slotID] = toEquip;
 					player.getWorld().getServer().getDatabase().equipmentAddToPlayer(player, toEquip);
-					return slot;
+					return slotID;
 				} else {
 					if (itemDef.isStackable()
-						&& list[slot].getCatalogId() == item.getCatalogId()) {
-						list[slot].changeAmount(player.getWorld().getServer().getDatabase(), item.getAmount());
-						return slot;
+						&& list[slotID].getCatalogId() == item.getCatalogId()) {
+						list[slotID].changeAmount(player.getWorld().getServer().getDatabase(), item.getAmount());
+						return slotID;
 					}
 				}
 			} catch (GameDatabaseException ex) {
@@ -89,15 +78,14 @@ public class Equipment {
 		return -1;
 	}
 
-	/**
-	 * Removes an item from the equipment container. Updates the database instantly.
-	 */
+	// Equipment::remove(Item, int)
+	// Removes an item from the equipment container. Updates the database instantly.
 	public int remove(Item item, int amount) {
 		synchronized (list) {
 			try {
 				int itemId = item.getItemId();
-				for (int i = 0; i < SLOT_COUNT; i++) {
-					Item curEquip = list[i];
+				for (int slotID = 0; slotID < SLOT_COUNT; slotID++) {
+					Item curEquip = list[slotID];
 					if (curEquip == null || curEquip.getDef(player.getWorld()) == null)
 						continue;
 					ItemDefinition curEquipDef = curEquip.getDef(player.getWorld());
@@ -108,17 +96,17 @@ public class Equipment {
 							return -1;
 
 						if (curAmount > amount) {
-							list[i].changeAmount(player.getWorld().getServer().getDatabase(), -amount);
+							list[slotID].changeAmount(player.getWorld().getServer().getDatabase(), -amount);
 						} else if (curAmount < amount) {
 							return -1;
 						} else {
-							list[i] = null;
+							list[slotID] = null;
 							player.updateWornItems(curEquipDef.getWieldPosition(),
 								player.getSettings().getAppearance().getSprite(curEquipDef.getWieldPosition()));
 							player.getWorld().getServer().getDatabase().equipmentRemoveFromPlayer(player, curEquip);
 						}
 						ActionSender.sendEquipmentStats(player);
-						return i;
+						return slotID;
 					}
 				}
 			} catch (GameDatabaseException ex) {
@@ -128,12 +116,8 @@ public class Equipment {
 		}
 	}
 
-	/**
-	 * Attempts to unequip an item
-	 *
-	 * @param request
-	 * @return
-	 */
+	// Equipment::unequipItem(UnequipRequest)
+	// Attempts to unequip an item.
 	public boolean unequipItem(UnequipRequest request) {
 		if (request.item == null || !request.item.isWieldable(player.getWorld())) {
 			return false;
@@ -207,23 +191,13 @@ public class Equipment {
 			player.playSound("click");
 		}
 
-		//Update the player's appearance
-		player.updateWornItems(request.item.getDef(player.getWorld()).getWieldPosition(),
-			player.getSettings().getAppearance().getSprite(request.item.getDef(player.getWorld()).getWieldPosition()),
-			request.item.getDef(player.getWorld()).getWearableId(), false);
-
-		//Send the new stats to client
-		ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
+		updateClient(request.item.getDef(player.getWorld()), false);
 		ActionSender.sendInventory(player);
 		return true;
 	}
 
-	/**
-	 * Attempts to equip an item
-	 *
-	 * @param request
-	 * @return
-	 */
+	// Equipment::equipItem(EquipRequest)
+	// Attempts to equip an item.
 	public boolean equipItem(EquipRequest request) {
 		//Make sure the item isn't a note
 		if (request.item.getNoted())
@@ -255,25 +229,13 @@ public class Equipment {
 		if (request.sound)
 			player.playSound("click");
 
-		updateClient(request.item.getDef(player.getWorld()));
+		updateClient(request.item.getDef(player.getWorld()), true);
 
 		return true;
 	}
 
-	public void updateClient(ItemDefinition item) {
-		// Update the look of the player
-		player.updateWornItems(item.getWieldPosition(), item.getAppearanceId(), item.getWearableId(), true);
-
-		// Send new stats / equipment to client
-		ActionSender.sendEquipmentStats(player, item.getWieldPosition());
-	}
-
-	/**
-	 * Private function used by the above function, equipItem.
-	 *
-	 * @param request
-	 * @return
-	 */
+	// Equipment::equipItemFromInventory(EquipRequest)
+	// Attempts to equip the item from the inventory tab.
 	private boolean equipItemFromInventory(EquipRequest request) {
 		synchronized (player.getCarriedItems()) {
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //on a world with equipment tab
@@ -303,12 +265,8 @@ public class Equipment {
 		return true;
 	}
 
-	/**
-	 * Private function used by the above function, equipItem
-	 *
-	 * @param request
-	 * @return
-	 */
+	// Equipment::equipItemFromBank(EquipRequest)
+	// Attempts to equip the item from the bank screen.
 	private boolean equipItemFromBank(EquipRequest request) {
 		synchronized (list) {
 			synchronized (player.getBank().getItems()) {
@@ -353,63 +311,59 @@ public class Equipment {
 		return true;
 	}
 
-	/**
-	 * Removes equipment that conflicts with an equipItem request
-	 *
-	 * @param request
-	 * @return
-	 */
+	// Equipment::unequipConflictingItems(EquipRequest)
+	// Removes equipment that conflicts with an equipItem request.
 	private boolean unequipConflictingItems(EquipRequest request) {
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //on a world with equipment tab
 			synchronized (list) {
-				//Count the number of conflicting items
+				// Count the number of conflicting items
 				int count = 0;
-				Item i;
-				for (int p = 0; p < Equipment.SLOT_COUNT; p++) {
-					i = list[p];
-					if (i != null && request.item.wieldingAffectsItem(player.getWorld(), i)) {
+				Item item;
+				for (int slotID = 0; slotID < Equipment.SLOT_COUNT; slotID++) {
+					item = list[slotID];
+					if (item != null && request.item.wieldingAffectsItem(player.getWorld(), item)) {
 						if (request.item.getDef(player.getWorld()).isStackable()) {
-							if (request.item.getCatalogId() == i.getCatalogId())
+							if (request.item.getCatalogId() == item.getCatalogId())
 								continue;
 						}
 						count++;
 					}
 				}
-				//Check they have enough space to remove the conflicting items, then do it
-				if (request.requestType == EquipRequest.RequestType.FROM_INVENTORY) { //Conflicting items should goto inventory
+				// Check they have enough space to remove the conflicting items, then do it
+				if (request.requestType == EquipRequest.RequestType.FROM_INVENTORY) {
 					if (player.getCarriedItems().getInventory().getFreeSlots() < count) {
 						player.message("You need more inventory space to equip that.");
 						return false;
 					}
-					for (int p = 0; p < Equipment.SLOT_COUNT; p++) {
-						i = list[p];
-						if (i != null && request.item.wieldingAffectsItem(player.getWorld(), i)
-						&& i.getItemId() != request.item.getItemId()) {
-							if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_EQUIPMENT, false)))
+					for (int slotID = 0; slotID < Equipment.SLOT_COUNT; slotID++) {
+						item = list[slotID];
+						if (item != null && request.item.wieldingAffectsItem(player.getWorld(), item)
+						&& item.getItemId() != request.item.getItemId()) {
+							if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_EQUIPMENT, false)))
 								return false;
 						}
 					}
-				} else { //Conflicting items should goto the bank
+				} else { // Conflicting items should goto the bank
 					synchronized (player.getBank().getItems()) {
 						if (player.getFreeBankSlots() < count) {
 							player.message("You need more bank space to equip that.");
 							return false;
 						}
-						for (int p = 0; p < Equipment.SLOT_COUNT; p++) {
-							i = list[p];
-							if (i != null && request.item.wieldingAffectsItem(player.getWorld(), i)) {
-								if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_BANK, false)))
+						for (int slotID = 0; slotID < Equipment.SLOT_COUNT; slotID++) {
+							item = list[slotID];
+							if (item != null && request.item.wieldingAffectsItem(player.getWorld(), item)) {
+								if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_BANK, false)))
 									return false;
 							}
 						}
 					}
 				}
 			}
-		} else { //on a world without equipment tab
+		} else { // on a world without equipment tab
 			synchronized (player.getCarriedItems().getInventory()) {
-				for (Item i : player.getCarriedItems().getInventory().getItems()) {
-					if (request.item.wieldingAffectsItem(player.getWorld(), i) && i.isWielded()) {
-						if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false)))
+				for (Item item : player.getCarriedItems().getInventory().getItems()) {
+					if (request.item.wieldingAffectsItem(player.getWorld(), item) && item.isWielded()) {
+						if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_INVENTORY, false)))
 							return false;
 					}
 				}
@@ -419,170 +373,56 @@ public class Equipment {
 		return true;
 	}
 
-	//------------------------------------------------------------------
-	//Methods that report equipment statistics--------------------------
-	public int getWeaponAim() {
-		int total = 1;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			synchronized (list) {
-				for (Item item : list)
-					total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponAimBonus();
-			}
-		} else {
-			synchronized (player.getCarriedItems().getInventory().getItems()) {
-				for (Item item : player.getCarriedItems().getInventory().getItems()) {
-					if (item.isWielded()) {
-						total += item.getDef(player.getWorld()).getWeaponAimBonus();
-					}
-				}
-			}
-		}
-		return total;
+	/** Equipment helper functions */
+
+	// Equipment::updateClient(ItemDefinition, boolean)
+	// Updates the player's worn items and sends a client update.
+	private void updateClient(ItemDefinition item, boolean isEquipped) {
+		// Update the look of the player
+		player.updateWornItems(item.getWieldPosition(), item.getAppearanceId(), item.getWearableId(), isEquipped);
+
+		// Send new stats / equipment to client
+		ActionSender.sendEquipmentStats(player, item.getWieldPosition());
 	}
 
-	public int getWeaponPower() {
-		int total = 1;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			synchronized (list) {
-				for (Item item : list)
-					total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponPowerBonus();
-			}
-		} else {
-			synchronized (player.getCarriedItems().getInventory().getItems()) {
-				for (Item item : player.getCarriedItems().getInventory().getItems()) {
-					if (item.isWielded()) {
-						total += item.getDef(player.getWorld()).getWeaponPowerBonus();
-					}
-				}
-			}
-		}
-		return total;
-	}
-
-	public int getArmour() {
-		int total = 1;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			synchronized (list) {
-				for (Item item : list)
-					total += item == null ? 0 : item.getDef(player.getWorld()).getArmourBonus();
-			}
-		} else {
-			synchronized (player.getCarriedItems().getInventory().getItems()) {
-				for (Item item : player.getCarriedItems().getInventory().getItems()) {
-					if (item.isWielded()) {
-						total += item.getDef(player.getWorld()).getArmourBonus();
-					}
-				}
-			}
-		}
-		return total;
-	}
-
-	public int getMagic() {
-		int total = 1;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			synchronized (list) {
-				for (Item item : list)
-					total += item == null ? 0 : item.getDef(player.getWorld()).getMagicBonus();
-			}
-		} else {
-			synchronized (player.getCarriedItems().getInventory().getItems()) {
-				for (Item item : player.getCarriedItems().getInventory().getItems()) {
-					if (item.isWielded()) {
-						total += item.getDef(player.getWorld()).getMagicBonus();
-					}
-				}
-			}
-		}
-		return total;
-	}
-
-	public int getPrayer() {
-		int total = 1;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			synchronized (list) {
-				for (Item item : list)
-					total += item == null ? 0 : item.getDef(player.getWorld()).getPrayerBonus();
-			}
-		} else {
-			synchronized (player.getCarriedItems().getInventory().getItems()) {
-				for (Item item : player.getCarriedItems().getInventory().getItems()) {
-					if (item.isWielded()) {
-						total += item.getDef(player.getWorld()).getPrayerBonus();
-					}
-				}
-			}
-		}
-		return total;
-	}
-
-	//------------------------------------------------------------------
-	public int equipCount() {
-		synchronized (list) {
-			int total = 0;
-			for (Item item : list) {
-				if (item != null)
-					total++;
-			}
-			return total;
-		}
-	}
-
+	// Equipment::searchEquipmentForItem(int)
+	// Returns the equipment slot of specified catalogId.
+	// Use only when you need the slotID.
+	// Use only with custom Equipment inventory.
 	public int searchEquipmentForItem(int id) {
 		synchronized (list) {
 			Item item;
-			for (int i = 0; i < SLOT_COUNT; i++) {
-				item = list[i];
+			for (int slotID = 0; slotID < SLOT_COUNT; slotID++) {
+				item = list[slotID];
 				if (item != null && item.getCatalogId() == id)
-					return i;
+					return slotID;
 			}
 			return -1;
 		}
 	}
 
-	public int searchEquipmentForItem(int id, boolean noted) {
-		synchronized (list) {
-			Item item;
-			for (int i = 0; i < SLOT_COUNT; i++) {
-				item = list[i];
-				if (item != null && item.getCatalogId() == id && item.getNoted() == noted)
-					return i;
-			}
-			return -1;
-		}
-	}
-
+	// Equipment::hasCatalogID(int)
+	// Returns true if equipment list contains catalogID.
+	// Use when you need an item, but not its slotID.
+	// Use only with custom Equipment inventory.
 	public boolean hasCatalogID(int catalogID) {
 		return searchEquipmentForItem(catalogID) != -1;
 	}
 
-	public boolean hasCatalogID(int catalogID, boolean noted) {
-		return searchEquipmentForItem(catalogID, noted) != -1;
-	}
-
-	public Item getAmmoItem() {
+	// Equipment::get(int)
+	// Returns the Item object held in a specified slotID.
+	// Use only with custom Equipment inventory.
+	public Item get(int slotID) {
 		synchronized (list) {
-			return list[12];
-		}
-	}
-
-	public void clearList() {
-		synchronized (list) {
-			for (int i = 0; i < list.length; i++) {
-				list[i] = null;
-			}
-		}
-	}
-
-	public Item get(int index) {
-		synchronized (list) {
-			if (index < 0 || index >= SLOT_COUNT) {
+			if (slotID < 0 || slotID >= SLOT_COUNT) {
 				return null;
 			}
-			return list[index];
+			return list[slotID];
 		}
 	}
 
+	// Equipment::hasEquipped(int)
+	// Returns true if an item is equipped (marked wielded or in Equipment inventory).
 	public boolean hasEquipped(int id) {
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id) != -1;
@@ -596,10 +436,8 @@ public class Equipment {
 		return false;
 	}
 
-	public boolean ableToEquip(int id) {
-		return this.ableToEquip(new Item(id));
-	}
-
+	// Equipment::ableToEquip(Item)
+	// Returns true if the item may be equipped to the player.
 	public boolean ableToEquip(Item item) {
 		int requiredLevel = item.getDef(player.getWorld()).getRequiredLevel();
 		int requiredSkillIndex = item.getDef(player.getWorld()).getRequiredSkillIndex();
@@ -614,21 +452,24 @@ public class Equipment {
 					(itemLower.endsWith("spear") && !player.getWorld().getServer().getConfig().STRICT_PSPEAR_CHECK))
 			);
 
+		// Spears and throwing knives
 		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
 			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
-		//staff of iban (usable)
+		// Staff of iban (usable)
 		if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 			optionalLevel = Optional.of(requiredLevel);
 			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
-		//battlestaves (incl. enchanted version)
+
+		// Battlestaves (incl. enchanted version)
 		if (itemLower.contains("battlestaff")) {
 			optionalLevel = Optional.of(requiredLevel);
 			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 		}
 
+		// Check if the skill is a high enough level
 		if (player.getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
 			if (!bypass) {
 				player.message("You are not a high enough level to use this item");
@@ -643,32 +484,44 @@ public class Equipment {
 				ableToWield = false;
 			}
 		}
+
+		// Incorrect sex for armour type
 		if (item.getDef(player.getWorld()).isFemaleOnly() && player.isMale()) {
 			player.message("It doesn't fit!");
 			player.message("Perhaps I should get someone to adjust it for me");
 			ableToWield = false;
 		}
+
+		// Rune plate mail body and top
 		if ((item.getCatalogId() == ItemId.RUNE_PLATE_MAIL_BODY.id() || item.getCatalogId() == ItemId.RUNE_PLATE_MAIL_TOP.id())
 			&& (player.getQuestStage(Quests.DRAGON_SLAYER) != -1)) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the dragon slayer quest");
 			return false;
-		} else if (item.getCatalogId() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
+		}
+
+		// Dragon sword
+		else if (item.getCatalogId() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Lost city of zanaris quest");
 			return false;
-		} else if (item.getCatalogId() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
+		}
+
+		// Dragon battle axe
+		else if (item.getCatalogId() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the Hero's guild entry quest");
 			return false;
-		} else if (item.getCatalogId() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
+		}
+
+		// Dragon square shield
+		else if (item.getCatalogId() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete the legend's guild quest");
 			return false;
 		}
-		/*
-		 * Hacky but works for god staffs and god capes.
-		 */
+
+		// God capes and staves.
 		else if (item.getCatalogId() == ItemId.STAFF_OF_GUTHIX.id() && (hasEquipped(ItemId.ZAMORAK_CAPE.id()) || hasEquipped(ItemId.SARADOMIN_CAPE.id()))) { // try to wear guthix staff
 			player.message("you may not wield this staff while wearing a cape of another god");
 			return false;
@@ -688,20 +541,26 @@ public class Equipment {
 			player.message("you may not wear this cape while wielding staffs of the other gods");
 			return false;
 		}
-		/** Quest cape 112QP TODO item id **/
+
+		// Quest cape 112QP. TODO item id
 		/*
 		else if (item.getID() == 2145 && player.getQuestPoints() < 112) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to complete all the available quests");
 			return;
-		}*/
-		/** Max skill total cape TODO item id **/
-		/*else if (item.getID() == 2146 && player.getSkills().getTotalLevel() < 1782) {
+		}
+		*/
+
+		// Max skill total cape. TODO item id
+		/*
+		else if (item.getID() == 2146 && player.getSkills().getTotalLevel() < 1782) {
 			player.message("you have not earned the right to wear this yet");
 			player.message("you need to be level 99 in all skills");
 			return;
-		}*/
-		/** iron men armours **/
+		}
+		*/
+
+		// Ironman armour.
 		else if ((item.getCatalogId() == ItemId.IRONMAN_HELM.id() || item.getCatalogId() == ItemId.IRONMAN_PLATEBODY.id()
 			|| item.getCatalogId() == ItemId.IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ironman.id())) {
 			player.message("You need to be an Iron Man to wear this");
@@ -719,14 +578,134 @@ public class Equipment {
 			player.message("you need to complete the Legends Quest");
 			return false;
 		}
-		if (!ableToWield)
-			return false;
 
-		return true;
+		return ableToWield;
 	}
 
-	/**
-	 * Enumerated list that names the equipment slots
+	/** Methods that report equipment statistics. */
+
+	// Equipment::getWeaponAim()
+	// Returns the total weapon aim from all equipment (+1 base).
+	public int getWeaponAim() {
+		int total = 1;
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			synchronized (list) {
+				for (Item item : list)
+					total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponAimBonus();
+			}
+		} else {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
+				for (Item item : player.getCarriedItems().getInventory().getItems()) {
+					if (item.isWielded()) {
+						total += item.getDef(player.getWorld()).getWeaponAimBonus();
+					}
+				}
+			}
+		}
+		return total;
+	}
+
+	// Equipment::getWeaponPower()
+	// Returns the total weapon power from all equipment (+1 base).
+	public int getWeaponPower() {
+		int total = 1;
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			synchronized (list) {
+				for (Item item : list)
+					total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponPowerBonus();
+			}
+		} else {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
+				for (Item item : player.getCarriedItems().getInventory().getItems()) {
+					if (item.isWielded()) {
+						total += item.getDef(player.getWorld()).getWeaponPowerBonus();
+					}
+				}
+			}
+		}
+		return total;
+	}
+
+	// Equipment::getArmour()
+	// Returns the total armour value from all equipment (+1 base).
+	public int getArmour() {
+		int total = 1;
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			synchronized (list) {
+				for (Item item : list)
+					total += item == null ? 0 : item.getDef(player.getWorld()).getArmourBonus();
+			}
+		} else {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
+				for (Item item : player.getCarriedItems().getInventory().getItems()) {
+					if (item.isWielded()) {
+						total += item.getDef(player.getWorld()).getArmourBonus();
+					}
+				}
+			}
+		}
+		return total;
+	}
+
+	// Equipment::getMagic()
+	// Returns the total magic power from all equipment (+1 base).
+	public int getMagic() {
+		int total = 1;
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			synchronized (list) {
+				for (Item item : list)
+					total += item == null ? 0 : item.getDef(player.getWorld()).getMagicBonus();
+			}
+		} else {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
+				for (Item item : player.getCarriedItems().getInventory().getItems()) {
+					if (item.isWielded()) {
+						total += item.getDef(player.getWorld()).getMagicBonus();
+					}
+				}
+			}
+		}
+		return total;
+	}
+
+	// Equipment::getPrayer()
+	// Returns the total prayer bonus from all equipment (+1 base).
+	public int getPrayer() {
+		int total = 1;
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			synchronized (list) {
+				for (Item item : list)
+					total += item == null ? 0 : item.getDef(player.getWorld()).getPrayerBonus();
+			}
+		} else {
+			synchronized (player.getCarriedItems().getInventory().getItems()) {
+				for (Item item : player.getCarriedItems().getInventory().getItems()) {
+					if (item.isWielded()) {
+						total += item.getDef(player.getWorld()).getPrayerBonus();
+					}
+				}
+			}
+		}
+		return total;
+	}
+
+	// Equipment::equipCount()
+	// Returns the total count of items equipped.
+	// Does not account for the quantity in the case of stacks.
+	public int equipCount() {
+		synchronized (list) {
+			int total = 0;
+			for (Item item : list) {
+				if (item != null)
+					total++;
+			}
+			return total;
+		}
+	}
+
+	/** Equipment::EquipmentSlot
+	 *  Enumerated list that names the equipment slots.
+	 *  Can be used to rename front-end equipment slotIDs to server-recognized IDs.
 	 */
 	public enum EquipmentSlot {
 		SLOT_LARGE_HELMET(0),
