@@ -759,7 +759,14 @@ public class SpellHandler implements PacketHandler {
 		Item bar = new Item(smeltingDef.getBarId());
 		if (player.getCarriedItems().remove(affectedItem) > -1) {
 			for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
-				for (int i = 0; i < reqOre.getAmount(); i++) {
+				int toUse = reqOre.getAmount();
+				if (reqOre.getId() == ItemId.COAL.id()
+					&& SkillCapes.shouldActivate(player, ItemId.SMITHING_CAPE)) {
+
+					toUse = reqOre.getAmount()/2;
+					player.message("You heat the ore using half the usual amount of coal");
+				}
+				for (int i = 0; i < toUse; i++) {
 					player.getCarriedItems().remove(new Item(reqOre.getId()));
 				}
 			}
