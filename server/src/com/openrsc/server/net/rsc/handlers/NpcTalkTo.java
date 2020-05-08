@@ -26,12 +26,8 @@ public final class NpcTalkTo implements PacketHandler {
 		if (n == null) {
 			return;
 		}
-		int radius = 1;
-		if (player.withinRange(n, 1)) {
-			radius = 0;
-		}
 		player.setFollowing(n, 0);
-		player.setWalkToAction(new WalkToMobAction(player, n, radius) {
+		player.setWalkToAction(new WalkToMobAction(player, n, 1) {
 			public void executeInternal() {
 				getPlayer().resetFollowing();
 				getPlayer().resetPath();
