@@ -2116,15 +2116,17 @@ public class PacketHandler {
 
 	private void updateExperience() {
 		int skill = packetsIncoming.getUnsignedByte();
-		updateExperienceTracker(skill, mc.getPlayerExperience(skill), mc.getPlayerStatBase(skill));
+		int oldXP = mc.getPlayerExperience(skill);
+		int oldLvl = mc.getPlayerStatBase(skill);
 		mc.setPlayerStatCurrent(skill, packetsIncoming.getUnsignedByte());
 		mc.setPlayerStatBase(skill, packetsIncoming.getUnsignedByte());
 		mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
+		updateExperienceTracker(skill, oldXP, oldLvl);
 	}
 
 	private void updateExperienceTracker(int skill, int oldXp, int oldLvl) {
 		int receivedXp = mc.getPlayerExperience(skill) - oldXp;
-		receivedXp = Math.min(receivedXp, 0);
+		receivedXp = Math.max(receivedXp, 0);
 
 		if (Config.S_EXPERIENCE_COUNTER_TOGGLE) {
 			mc.setRecentSkill(skill);
