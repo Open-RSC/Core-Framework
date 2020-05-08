@@ -252,3 +252,6 @@ end) WHERE `id` IN (
 	-- Pickaxes
 	156, 1258, 1259, 1260, 1261, 1262
 );
+
+REPLACE INTO `openrsc_grounditems` (`id`, `x`, `y`, `amount`, `respawn`, `idx`)
+VALUES (1362, 309, 3429, 1, 95, 1117);

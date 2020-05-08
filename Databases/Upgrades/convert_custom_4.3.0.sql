@@ -1868,3 +1868,16 @@ REPLACE INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`
 DELETE FROM `openrsc_npclocs` WHERE dbid = 7576;
 DELETE FROM `openrsc_npclocs` WHERE dbid = 7577;
 DELETE FROM `openrsc_npclocs` WHERE dbid = 7612;
+
+
+REPLACE INTO `openrsc_grounditems` (`id`, `x`, `y`, `amount`, `respawn`, `idx`)
+VALUES (1362, 309, 3429, 1, 95, 1117),
+       (20, 692, 686, 1, 60, 1118),
+       (20, 696, 684, 1, 60, 1119),
+       (20, 694, 684, 1, 60, 1120),
+       (20, 695, 683, 1, 60, 1121),
+       (20, 695, 681, 1, 60, 1122),
+       (20, 698, 683, 1, 60, 1123),
+       (20, 700, 681, 1, 60, 1124),
+       (412, 694, 680, 1, 60, 1125),
+       (568, 698, 687, 1, 120, 1126);
