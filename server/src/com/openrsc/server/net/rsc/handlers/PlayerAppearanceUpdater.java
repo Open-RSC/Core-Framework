@@ -48,7 +48,9 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				Item top = player.getCarriedItems().getEquipment().get(1);
 				if (top != null && top.getDef(player.getWorld()).isFemaleOnly()) {
-					player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, top, UnequipRequest.RequestType.FROM_EQUIPMENT, false));
+					if(!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, top, UnequipRequest.RequestType.FROM_EQUIPMENT, false))) {
+						player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, top, UnequipRequest.RequestType.FROM_BANK, false));
+					}
 					ActionSender.sendEquipmentStats(player, 1);
 				}
 			} else {
@@ -57,7 +59,9 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 					Item i = inv.get(slot);
 					if (i.isWieldable(player.getWorld()) && i.getDef(player.getWorld()).getWieldPosition() == 1
 						&& i.isWielded() && i.getDef(player.getWorld()).isFemaleOnly()) {
-						player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_INVENTORY, false));
+						if(!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_EQUIPMENT, false))) {
+							player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, i, UnequipRequest.RequestType.FROM_BANK, false));
+						}
 						ActionSender.sendInventoryUpdateItem(player, slot);
 						break;
 					}

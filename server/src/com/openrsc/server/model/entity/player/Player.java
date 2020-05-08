@@ -813,7 +813,10 @@ public final class Player extends Mob {
 				request.player = this;
 				request.requestType = UnequipRequest.RequestType.FROM_EQUIPMENT;
 				request.equipmentSlot = Equipment.EquipmentSlot.get(slot);
-				getCarriedItems().getEquipment().unequipItem(request);
+				if(!getCarriedItems().getEquipment().unequipItem(request)) {
+					request.requestType = UnequipRequest.RequestType.FROM_BANK;
+					getCarriedItems().getEquipment().unequipItem(request);
+				}
 				ActionSender.sendEquipmentStats(this);
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.

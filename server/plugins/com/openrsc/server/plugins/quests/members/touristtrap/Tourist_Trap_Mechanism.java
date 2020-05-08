@@ -41,7 +41,9 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		Item item = request.item;
 		Player requestPlayer = request.player;
 		if ((item.getCatalogId() == ItemId.SLAVES_ROBE_BOTTOM.id() || item.getCatalogId() == ItemId.SLAVES_ROBE_TOP.id()) && (requestPlayer.getLocation().inTouristTrapCave()) && requestPlayer.getQuestStage(Quests.TOURIST_TRAP) != -1) {
-			requestPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(requestPlayer, item, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, true));
+			if (!requestPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(requestPlayer, item, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, true))) {
+				return;
+			}
 
 			Npc n = ifnearvisnpc(requestPlayer, NpcId.MERCENARY.id(), 5);
 			if (n != null) {
