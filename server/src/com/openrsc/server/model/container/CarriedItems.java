@@ -4,62 +4,45 @@ import com.openrsc.server.model.entity.player.Player;
 
 import java.util.Optional;
 
+/** CarriedItems: A wrapper for inventory and equipment items.
+ *
+ *  This class is to be used in place of directly interacting with
+ *  the Equipment or Inventory classes. There are explicit cases in
+ *  which you would want to interact with only those classes, for
+ *  custom content. Otherwise, always use the functions here.
+ */
 public class CarriedItems {
-	//<editor-fold desc="Class Members">
-	/**
-	 * List of items in the inventory container
-	 */
-	private Inventory inventory;
 
-	/**
-	 * List of items in the equipment container
-	 *
-	 */
-	private Equipment equipment;
+	private Inventory inventory; // List of items in the inventory container
+	private Equipment equipment; // List of items in the equipment container
+	private final Player player; // Player owning the inventory/equipment
 
-	/**
-	 * Reference back to the player who owns these items
-	 */
-	private final Player player;
-	//</editor-fold>
-	//<editor-fold desc="Constructors">
 	public CarriedItems(Player player) {
 		this.player = player;
 	}
-	//</editor-fold>
-	//<editor-fold desc="Class Member 'Setters'">
+
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
 	}
-	public void setEquipment(Equipment equipment) {
-		this.equipment = equipment;
-	}
-	//</editor-fold>
-	//<editor-fold desc="Class Member 'Getters'">
+
 	public Inventory getInventory() {
 		return this.inventory;
+	}
+
+	public void setEquipment(Equipment equipment) {
+		this.equipment = equipment;
 	}
 
 	public Equipment getEquipment() {
 		return this.equipment;
 	}
-	//</editor-fold>
-	//<editor-fold desc="Class Methods">
 
-	/**
-	 * Searches both the inventory and equipment for a specific
-	 * catalog ID. Can specify if notes are allowed.
-	 * @param catalogID: item being searched for
-	 * param allowNoted: specifies if that item can be noted or not
-	 * @return BOOLEAN
+	/** CarriedItems::hasCatalogID
+	 *  Searches both the inventory and equipment for a specific
+	 *  catalog ID. Can specify if notes are allowed.
 	 */
-	//TODO: Add parameter allowNoted
 	public boolean hasCatalogID(final int catalogID) {
 		return this.hasCatalogID(catalogID, Optional.of(false));
-		/*if (getInventory().hasCatalogID(catalogID))
-			return true;
-		else
-			return getEquipment().hasCatalogID(catalogID);*/
 	}
 
 	public boolean hasCatalogID(final int catalogID, final Optional<Boolean> noted) {
@@ -79,11 +62,16 @@ public class CarriedItems {
 
 	}
 
+	/** CarriedItems::remove
+	 *  Searches and removes from the inventory the last existing
+	 *  items that matches our supplied item argument. Will first
+	 *  search the inventory, and then the equipment if not found.
+	 */
 	public int remove(Item item) {
 		return remove(item, true);
 	}
 
-	//TODO: Add parameter allowNoted
+	// TODO: Add parameter allowNoted
 	public int remove(Item item, boolean updateClient) {
 		if (item.getItemId() == -1) {
 			Item toRemove = getInventory().get(getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted())));
@@ -95,5 +83,4 @@ public class CarriedItems {
 
 		return result;
 	}
-	//</editor-fold>
 }
