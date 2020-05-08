@@ -191,7 +191,7 @@ public class Equipment {
 			player.playSound("click");
 		}
 
-		updateClient(request.item.getDef(player.getWorld()), false);
+		ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
 		ActionSender.sendInventory(player);
 		return true;
 	}
@@ -229,8 +229,9 @@ public class Equipment {
 		if (request.sound)
 			player.playSound("click");
 
-		updateClient(request.item.getDef(player.getWorld()), true);
-
+		ItemDefinition itemDef = request.item.getDef(player.getWorld());
+		player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
+		ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
 		return true;
 	}
 
@@ -306,7 +307,7 @@ public class Equipment {
 			}
 		}
 
-		//Send client bank update
+		// Send client update
 		ActionSender.showBank(player);
 		return true;
 	}
@@ -374,16 +375,6 @@ public class Equipment {
 	}
 
 	/** Equipment helper functions */
-
-	// Equipment::updateClient(ItemDefinition, boolean)
-	// Updates the player's worn items and sends a client update.
-	private void updateClient(ItemDefinition item, boolean isEquipped) {
-		// Update the look of the player
-		player.updateWornItems(item.getWieldPosition(), item.getAppearanceId(), item.getWearableId(), isEquipped);
-
-		// Send new stats / equipment to client
-		ActionSender.sendEquipmentStats(player, item.getWieldPosition());
-	}
 
 	// Equipment::searchEquipmentForItem(int)
 	// Returns the equipment slot of specified catalogId.
