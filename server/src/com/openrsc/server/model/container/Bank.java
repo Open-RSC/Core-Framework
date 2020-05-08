@@ -381,12 +381,13 @@ public class Bank {
 			synchronized (player.getCarriedItems().getEquipment().getList()) {
 				try {
 					for (int slot = 0; slot < Equipment.SLOT_COUNT; slot++) {
-						Item item = player.getCarriedItems().getEquipment().getList()[slot];
+						Item item = player.getCarriedItems().getEquipment().get(slot);
 						if (item == null || item.getCatalogId() == ItemId.NOTHING.id()) continue;
 						UnequipRequest uer = new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_BANK, false);
 						uer.equipmentSlot = Equipment.EquipmentSlot.get(slot);
-						Equipment.correctIndex(uer);
+						//Equipment.correctIndex(uer);
 						if (!player.getCarriedItems().getEquipment().unequipItem(uer)) {
+							player.message("Failed to bank: " + item.getDef(player.getWorld()).getName());
 							return;
 						}
 					}

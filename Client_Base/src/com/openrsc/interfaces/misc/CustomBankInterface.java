@@ -290,13 +290,13 @@ public final class CustomBankInterface extends BankInterface {
 		if (mc.bankPage == 0) {
 			bank.clearList(bankScroll);
 			bank.show(bankScroll);
-			bankCount = (int) ((searchList.size() - 1) / 10);
+			bankCount = (int) ((searchList.size() - 1) / 10.0);
 			for (int i = 0; i < bankCount + 1; i++) {
 				bank.setListEntry(bankScroll, i, "", 0, (String) null, (String) null);
 			}
 			bankSlotStart = bank.getScrollPosition(bankScroll) * 10;
-			if ((bankSlotStart / 10) > (bank.controlListCurrentSize[bankScroll] - 4)) {
-				bank.resetListToIndex(bankScroll, (bankSlotStart / 10) - 1);
+			if ((int)(bankSlotStart / 10.0) > (bank.controlListCurrentSize[bankScroll] - 4)) {
+				bank.resetListToIndex(bankScroll, (int)(bankSlotStart / 10.0) - 1);
 			}
 		} else {
 			bank.hide(bankScroll);
