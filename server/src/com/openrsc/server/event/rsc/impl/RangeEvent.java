@@ -284,9 +284,6 @@ public class RangeEvent extends GameTickEvent {
 						}
 					}
 				}
-				if (target.isPlayer()) {
-					((Player) target).message(getPlayerOwner().getUsername() + " is shooting at you!");
-				}
 				ActionSender.sendSound(getPlayerOwner(), "shoot");
 				if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(arrowID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
 					if (DataConversions.random(0, 100) <= 10) {
