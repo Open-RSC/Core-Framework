@@ -18,7 +18,7 @@ public class GroundItemTake implements PacketHandler {
 		player.resetAll();
 		final Point location = Point.location(packet.readShort(), packet.readShort());
 		final int id = packet.readShort();
-		final GroundItem item = player.getRegion().getItem(id, location, player);
+		final GroundItem item = player.getViewArea().getGroundItem(id, location);
 
 		if (item == null) {
 			player.resetPath();
