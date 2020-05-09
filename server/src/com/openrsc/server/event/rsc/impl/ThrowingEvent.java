@@ -92,6 +92,7 @@ public class ThrowingEvent extends GameTickEvent {
 					return;
 				}
 
+				// Authentic player always faced NW
 				getPlayerOwner().face(getPlayerOwner().getX() + 1, getPlayerOwner().getY() - 1);
 				getPlayerOwner().setAttribute("rangedTimeout", System.currentTimeMillis());
 

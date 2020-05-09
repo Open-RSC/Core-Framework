@@ -123,6 +123,10 @@ public class AttackHandler implements PacketHandler {
 							affectedPlayer.resetShop();
 						}
 					}
+
+					// Authentic player always faced NW
+					getOwner().face(getOwner().getX() + 1, getOwner().getY() - 1);
+
 					if (player.getRangeEquip() > 0) {
 						getOwner().setRangeEvent(new RangeEvent(getOwner().getWorld(), getOwner(), target));
 					} else {
