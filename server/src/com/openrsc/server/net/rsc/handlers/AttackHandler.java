@@ -15,15 +15,18 @@ import com.openrsc.server.net.rsc.PacketHandler;
 public class AttackHandler implements PacketHandler {
 	public void handlePacket(Packet packet, Player player) throws Exception {
 		int pID = packet.getID();
+
 		if (player.isBusy()) {
-			if (player.inCombat())
-				player.message("You are already busy fighting");
-
-
 			player.resetPath();
-
 			return;
 		}
+		
+		if (player.inCombat()) {
+			player.message("You are already busy fighting");
+			player.resetPath();
+			return;
+		}
+
 
 		player.resetAll();
 		Mob affectedMob = null;
