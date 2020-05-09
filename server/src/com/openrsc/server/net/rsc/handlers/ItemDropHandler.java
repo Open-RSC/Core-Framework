@@ -10,7 +10,7 @@ import java.util.Optional;
 public final class ItemDropHandler implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) throws Exception{
-		if (player.isBusy()) {
+		if (player.isBusy() || player.inCombat()) {
 			player.resetPath();
 			return;
 		}
