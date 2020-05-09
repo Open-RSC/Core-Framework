@@ -373,8 +373,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		);
 		if (vial == null || herb == null) return;
 
-		ci.remove(new Item(vial.getCatalogId()));
-		ci.remove(new Item(herb.getCatalogId()));
+		ci.remove(vial);
+		ci.remove(herb);
 		player.playSound("mix");
 		player.playerServerMessage(MessageType.QUEST,
 			"You put the " + herb.getDef(player.getWorld()).getName() + " into the vial of water");
@@ -456,8 +456,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		player.playSound("mix");
 		player.playerServerMessage(MessageType.QUEST, "You mix the " + second.getDef(player.getWorld()).getName()
 			+ " into your potion");
-		carriedItems.remove(new Item(second.getCatalogId()));
-		carriedItems.remove(new Item(unfinished.getCatalogId()));
+		carriedItems.remove(second);
+		carriedItems.remove(unfinished);
 		carriedItems.getInventory().add(new Item(def.getPotionID(), 1));
 		player.incExp(Skills.HERBLAW, def.getExp(), true);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
