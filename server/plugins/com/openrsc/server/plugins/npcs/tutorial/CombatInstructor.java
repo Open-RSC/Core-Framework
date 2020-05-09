@@ -46,6 +46,7 @@ public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackN
 				if (rat != null) {
 					npcsay(player, rat, "squeek");
 				}
+				n = ifnearvisnpc(player, n.getID(), 10);
 				npcsay(player, n, "move your mouse over a rat you will see it is level 7",
 					"You will see that it's level is written in green",
 					"If it is green this means you have a strong chance of killing it",
