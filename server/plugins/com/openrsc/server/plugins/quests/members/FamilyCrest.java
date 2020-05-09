@@ -200,13 +200,20 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 		if (player.getCarriedItems().getInventory().hasCatalogID(Gauntlets.getById(getGauntletEnchantment(player)).catalogId())
 		&& getGauntletEnchantment(player) != Gauntlets.STEEL.id()) {
 
-			if (player.getCarriedItems().getInventory().countId(ItemId.DRUNK_DRAGON.id()) >= drunkDragons
-			&& player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= goldCost) {
+			boolean hasBoughtDrinks = player.getCarriedItems().getInventory().countId(ItemId.BLURBERRY_BARMAN_DRUNK_DRAGON.id(), Optional.of(false)) >= drunkDragons;
+			boolean hasMadeDrinks = player.getCarriedItems().getInventory().countId(ItemId.DRUNK_DRAGON.id(), Optional.of(false)) >= drunkDragons;
+
+			if ((hasBoughtDrinks || hasMadeDrinks)
+				&& player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= goldCost) {
 
 				if (multi(player, npc, "You're welcome", "I've got your stuff, let's do this") == 1) {
 					for (int i = 0; i < drunkDragons; i++) {
 						mes(player, "You give a Drunk Dragon to Dimintheis");
-						player.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
+						if (hasBoughtDrinks) {
+							player.getCarriedItems().remove(new Item(ItemId.BLURBERRY_BARMAN_DRUNK_DRAGON.id()));
+						} else if (hasMadeDrinks) {
+							player.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
+						}
 					}
 					mes(player, "You give " + goldCost + " coins to Dimintheis");
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), goldCost));
