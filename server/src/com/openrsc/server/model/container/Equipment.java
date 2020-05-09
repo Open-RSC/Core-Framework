@@ -141,6 +141,9 @@ public class Equipment {
 			switch (request.requestType) {
 				case FROM_INVENTORY:
 					request.item.setWielded(player.getWorld().getServer().getDatabase(), false);
+					ItemDefinition curEquipDef = request.item.getDef(player.getWorld());
+					player.updateWornItems(curEquipDef.getWieldPosition(),
+						player.getSettings().getAppearance().getSprite(curEquipDef.getWieldPosition()));
 					break;
 				case FROM_EQUIPMENT:
 					synchronized (list) {
