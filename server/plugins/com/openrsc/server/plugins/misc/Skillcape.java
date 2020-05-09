@@ -49,7 +49,6 @@ public class Skillcape implements OpInvTrigger {
 
 	@Override
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
-		System.out.println("Ge");
 		return (item.getCatalogId() == ItemId.CRAFTING_CAPE.id()
 			&& command.equalsIgnoreCase("Teleport"));
 	}
