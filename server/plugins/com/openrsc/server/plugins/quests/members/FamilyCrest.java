@@ -200,18 +200,32 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 		if (player.getCarriedItems().getInventory().hasCatalogID(Gauntlets.getById(getGauntletEnchantment(player)).catalogId())
 		&& getGauntletEnchantment(player) != Gauntlets.STEEL.id()) {
 
-			if (player.getCarriedItems().getInventory().countId(ItemId.DRUNK_DRAGON.id()) >= drunkDragons
-			&& player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= goldCost) {
+			boolean hasBoughtDrinks = player.getCarriedItems().getInventory().countId(ItemId.BLURBERRY_BARMAN_DRUNK_DRAGON.id(), Optional.of(false)) >= drunkDragons;
+			boolean hasMadeDrinks = player.getCarriedItems().getInventory().countId(ItemId.DRUNK_DRAGON.id(), Optional.of(false)) >= drunkDragons;
+
+			if ((hasBoughtDrinks || hasMadeDrinks)
+				&& player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= goldCost) {
 
 				if (multi(player, npc, "You're welcome", "I've got your stuff, let's do this") == 1) {
 					for (int i = 0; i < drunkDragons; i++) {
-						mes(player, "You give a Drunk Dragon to Dimintheis");
-						player.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
+						mes(player, "You give a Drunk dragon to Dimintheis");
+						if (hasBoughtDrinks) {
+							player.getCarriedItems().remove(new Item(ItemId.BLURBERRY_BARMAN_DRUNK_DRAGON.id()));
+						} else if (hasMadeDrinks) {
+							player.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
+						}
 					}
 					mes(player, "You give " + goldCost + " coins to Dimintheis");
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), goldCost));
 					mes(player, "You give your gauntlets to Dimintheis");
-					player.getCarriedItems().remove(new Item(Gauntlets.getById(getGauntletEnchantment(player)).catalogId()));
+					Item itemToRemove = player.getCarriedItems().getEquipment().get(
+						player.getCarriedItems().getEquipment().searchEquipmentForItem(
+							Gauntlets.getById(getGauntletEnchantment(player)).catalogId()));
+					if (itemToRemove == null) {
+						itemToRemove = player.getCarriedItems().getInventory().get(Gauntlets.getById(getGauntletEnchantment(player)).catalogId());
+					}
+					if (itemToRemove == null) return;
+					player.getCarriedItems().remove(itemToRemove);
 					mes(player, "Dimintheis takes your gauntlets",
 					"He mutters some words that you don't understand",
 					"He hands you back a pair of steel gauntlets");
@@ -232,7 +246,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 						npcsay(player, npc, "Alright I can disenchant your gauntlets",
 							"If you do me a favor");
 						say(player, npc, "I'm all ears");
-						npcsay(player, npc, "I'm going to need " + drunkDragons + " Drunk Dragons and " + goldCost + " coins");
+						npcsay(player, npc, "I'm going to need " + drunkDragons + " Drunk dragons and " + goldCost + " coins");
 						choice = multi(player, npc, "Sure no problem",
 							"No way",
 							"How am I supposed to get a dragon drunk?");
@@ -280,7 +294,14 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 							mes(player, "Avan takes out a little hammer",
 								"He starts pounding on the gauntlets",
 								"Avan hands the gauntlets to you");
-							player.getCarriedItems().remove(new Item(ItemId.STEEL_GAUNTLETS.id()));
+							Item itemToRemove = player.getCarriedItems().getEquipment().get(
+								player.getCarriedItems().getEquipment().searchEquipmentForItem(
+									ItemId.STEEL_GAUNTLETS.id()));
+							if (itemToRemove == null) {
+								itemToRemove = player.getCarriedItems().getInventory().get(ItemId.STEEL_GAUNTLETS.id());
+							}
+							if (itemToRemove == null) return;
+							player.getCarriedItems().remove(itemToRemove);
 							player.getCarriedItems().getInventory().add(new Item(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()));
 							player.getCache().set("famcrest_gauntlets", Gauntlets.GOLDSMITHING.id());
 						} else if (menu == 1) {
@@ -436,7 +457,14 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					if (menu == 0) {
 						mes(player, "Johnathon waves his staff",
 							"The gauntlets sparkle and shimmer");
-						player.getCarriedItems().remove(new Item(ItemId.STEEL_GAUNTLETS.id()));
+						Item itemToRemove = player.getCarriedItems().getEquipment().get(
+							player.getCarriedItems().getEquipment().searchEquipmentForItem(
+								ItemId.STEEL_GAUNTLETS.id()));
+						if (itemToRemove == null) {
+							itemToRemove = player.getCarriedItems().getInventory().get(ItemId.STEEL_GAUNTLETS.id());
+						}
+						if (itemToRemove == null) return;
+						player.getCarriedItems().remove(itemToRemove);
 						player.getCarriedItems().getInventory().add(new Item(ItemId.GAUNTLETS_OF_CHAOS.id()));
 						player.getCache().set("famcrest_gauntlets", Gauntlets.CHAOS.id());
 					} else if (menu == 0) {

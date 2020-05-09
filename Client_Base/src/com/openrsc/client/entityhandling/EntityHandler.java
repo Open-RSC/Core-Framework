@@ -3126,7 +3126,7 @@ public class EntityHandler {
 		items.add(new ItemDef("vodka", "A strong spirit", "drink", 5, 191, "items:191", false, false, 0, 16755200, true, false, true, 869));
 		items.add(new ItemDef("gin", "A strong spirit", "drink", 5, 191, "items:191", false, false, 0, 16755200, true, false, true, 870));
 		items.add(new ItemDef("cream", "Fresh cream", "eat", 2, 296, "items:296", false, false, 0, 0, true, false, true, 871));
-		items.add(new ItemDef("Drunk dragon", "A warm creamy alcoholic beverage", "drink", 2, 297, "items:297", false, false, 0, 0, true, false, true, 872));
+		items.add(new ItemDef(Config.S_IMPROVED_ITEM_OBJECT_NAMES ? "Drunk dragon (Player-mixed)" : "Drunk dragon", "A warm creamy alcoholic beverage", "drink", 2, 297, "items:297", false, false, 0, 0, true, false, true, 872));
 		items.add(new ItemDef("Equa leaves", "Small sweet smelling leaves", "eat", 2, 298, "items:298", false, false, 0, 0, true, false, true, 873));
 		items.add(new ItemDef("SGG", "A short green guy..looks good", "drink", 2, 295, "items:295", false, false, 0, 0, true, false, true, 874));
 		items.add(new ItemDef("Chocolate saturday", "A warm creamy alcoholic beverage", "drink", 2, 297, "items:297", false, false, 0, 0, true, false, true, 875));

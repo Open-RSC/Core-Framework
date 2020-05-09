@@ -293,6 +293,8 @@ public class Npc extends Mob {
 			logNpcKill(owner);
 		}
 
+		owner.getWorld().getServer().getPluginHandler().handlePlugin(owner, "KillNpc", new Object[]{owner, this});
+
 		// Custom KDB Specific Rare Drop Table (RDT)
 		if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
 			if (this.getID() == NpcId.KING_BLACK_DRAGON.id()) {

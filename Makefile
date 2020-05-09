@@ -62,6 +62,11 @@ import-custom:
 	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/core.sql
 	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/custom.sql
 
+# Imports specified add-on SQL file
+# Call via "make import-addon db=cabbage name=add_custom_items.sql
+import-addon:
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/${name}
+
 # Upgrades a database
 # Call via "make upgrade-authentic db=preservation"
 upgrade-authentic:

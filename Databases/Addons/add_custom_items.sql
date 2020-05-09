@@ -212,11 +212,21 @@ UPDATE `openrsc_itemdef` SET `appearanceID`=(case
     when id=782 then 419
     when id=385 then 420
     when id=1028 then 421
+	-- Staves
+	when id=101 then 422
+	when id=102 then 423
+	when id=103 then 424
+	when id=197 then 425
     -- Battlestaves
     when id=684 then 422
     when id=683 then 423
     when id=685 then 424
     when id=682 then 425
+	-- Enchanted Battlestaves
+	when id=684 then 422
+	when id=683 then 423
+	when id=685 then 424
+	when id=682 then 425
 	-- Pickaxes
 	when id=156 then 434
 	when id=1258 then 435
@@ -247,11 +257,14 @@ end) WHERE `id` IN (
     1135, 1136, 1137, 1138, 1139, 1140,
     -- Necklaces
     289, 302, 290, 303, 291, 304, 292, 305, 544, 597, 1194, 852, 721, 726, 782, 385, 1028,
+	-- Staves
+	101, 102, 103, 197,
     -- Battlestaves
     684, 683, 685, 682,
+	-- Enchanted Battlestaves
+	684, 683, 685, 682,
 	-- Pickaxes
 	156, 1258, 1259, 1260, 1261, 1262
 );
-
 REPLACE INTO `openrsc_grounditems` (`id`, `x`, `y`, `amount`, `respawn`, `idx`)
 VALUES (1362, 309, 3429, 1, 95, 1117);

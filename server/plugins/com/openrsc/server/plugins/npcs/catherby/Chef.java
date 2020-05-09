@@ -36,7 +36,14 @@ public class Chef implements TalkNpcTrigger {
 						mes(player, "Caleb holds the gauntlets and closes his eyes",
 							"Caleb concentrates",
 							"Caleb hands the gauntlets to you");
-						player.getCarriedItems().remove(new Item(ItemId.STEEL_GAUNTLETS.id()));
+						Item itemToRemove = player.getCarriedItems().getEquipment().get(
+							player.getCarriedItems().getEquipment().searchEquipmentForItem(
+								ItemId.STEEL_GAUNTLETS.id()));
+						if (itemToRemove == null) {
+							itemToRemove = player.getCarriedItems().getInventory().get(ItemId.STEEL_GAUNTLETS.id());
+						}
+						if (itemToRemove == null) return;
+						player.getCarriedItems().remove(itemToRemove);
 						player.getCarriedItems().getInventory().add(new Item(ItemId.GAUNTLETS_OF_COOKING.id()));
 						player.getCache().set("famcrest_gauntlets", Gauntlets.COOKING.id());
 					} else if (menu == 1) {
