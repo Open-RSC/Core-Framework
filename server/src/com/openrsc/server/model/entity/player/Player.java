@@ -1786,7 +1786,7 @@ public final class Player extends Mob {
 			ActionSender.sendIronManMode(this);
 			getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this, "has died and lost the HC Iron Man Rank!"));
 		}
-		removeSkull(); // destroy
+
 		resetCombatEvent();
 		this.setLastOpponent(null);
 		getWorld().registerItem(new GroundItem(getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
@@ -1814,9 +1814,8 @@ public final class Player extends Mob {
 			}
 		}
 
-		//getUpdateFlags().setHpUpdate(new HpUpdate(this, 0));
 		getUpdateFlags().reset();
-		//getUpdateFlags().setAppearanceChanged(true);
+		removeSkull();
 	}
 
 	private int getEquippedWeaponID() {
@@ -1952,11 +1951,10 @@ public final class Player extends Mob {
 	}
 
 	public void removeSkull() {
-		if (skullEvent == null) {
-			return;
+		if (skullEvent != null) {
+			skullEvent.stop();
+			skullEvent = null;
 		}
-		skullEvent.stop();
-		skullEvent = null;
 		cache.remove("skull_remaining");
 		getUpdateFlags().setAppearanceChanged(true);
 	}
