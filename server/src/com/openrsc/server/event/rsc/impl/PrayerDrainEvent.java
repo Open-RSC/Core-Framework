@@ -6,13 +6,13 @@ import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PrayerDrainEvent extends GameTickEvent {
 
-	private ConcurrentHashMap<PrayerDef, Long> activePrayers = new ConcurrentHashMap<PrayerDef, Long>();
-	private double partialPoints = 0.0;
+	private Set<PrayerDef> activePrayers = new HashSet<PrayerDef>();
+	private int pointDrainage = 0; //how many points per tick to drain, min is 1, max 120
 
 	public PrayerDrainEvent(World world, Player owner, int delay) {
 		super(world, owner, 1, "Prayer Drain Event");
@@ -21,52 +21,47 @@ public class PrayerDrainEvent extends GameTickEvent {
 	@Override
 	public void run() {
 		refreshActivePrayers();
-		for (Entry<PrayerDef, Long> entry : activePrayers.entrySet()) {
-			PrayerDef def = entry.getKey();
-			long lastDrain = entry.getValue();
-			int drainDelay = (int) calcDrainDelay(getPlayerOwner(), def);
-			if (System.currentTimeMillis() - lastDrain >= drainDelay) {
-				entry.setValue(System.currentTimeMillis());
-				drainPrayer();
+
+		if (pointDrainage > 0) {
+			int currentPrayerStatePoints = getPlayerOwner().getPrayerStatePoints();
+			int newPrayerStatePoints;
+			int normPrayer;
+			if (currentPrayerStatePoints > pointDrainage) {
+				newPrayerStatePoints = currentPrayerStatePoints - pointDrainage;
+				getPlayerOwner().setPrayerStatePoints(newPrayerStatePoints);
+				normPrayer = (int) Math.ceil(newPrayerStatePoints / 120.0);
+				if (normPrayer < getPlayerOwner().getSkills().getLevel(Skills.PRAYER)) {
+					getPlayerOwner().getSkills().setLevel(Skills.PRAYER, normPrayer);
+				}
 			}
-		}
-		if (partialPoints >= 1.0) {
-			drainPrayer();
-			partialPoints = 0.0;
-		}
-	}
-
-	private double calcDrainDelay(Player player, PrayerDef prayerDefinition) {
-		return ((300.0 * getWorld().getServer().getConfig().GAME_TICK / prayerDefinition.getDrainRate()) * (1 + (player.getPrayerPoints() - 1) / 32.0));
-	}
-
-	private void drainPrayer() {
-		if (getPlayerOwner().getSkills().getLevel(Skills.PRAYER) > 0) {
-			getPlayerOwner().getSkills().decrementLevel(Skills.PRAYER);
-		} else {
-			getPlayerOwner().getPrayers().resetPrayers();
-			activePrayers.clear();
-			getPlayerOwner().message("You have run out of prayer points. Return to a church to recharge");
-		}
-	}
-
-	private void refreshActivePrayers() {
-		for (int x = 0; x <= 13; x++) {
-			PrayerDef prayer = getPlayerOwner().getWorld().getServer().getEntityHandler().getPrayerDef(x);
-			if (getPlayerOwner().getPrayers().isPrayerActivated(x) && !activePrayers.containsKey(prayer)) {
-				activePrayers.put(prayer, System.currentTimeMillis());
-			} else if (!getPlayerOwner().getPrayers().isPrayerActivated(x) && activePrayers.containsKey(prayer)) {
-				double timePrayerUsed = System.currentTimeMillis() - activePrayers.get(prayer);
-				double drainDelay = calcDrainDelay(getPlayerOwner(), prayer);
-				partialPoints += timePrayerUsed / drainDelay;
-				activePrayers.remove(prayer);
-			}
-			if (getPlayerOwner().getPrayers().isPrayerActivated(x) && (getPlayerOwner().getSkills().getLevel(Skills.PRAYER) < 1)) {
+			else {
+				getPlayerOwner().setPrayerStatePoints(0);
+				getPlayerOwner().getSkills().setLevel(Skills.PRAYER, 0);
 				getPlayerOwner().getPrayers().resetPrayers();
 				getPlayerOwner().message("You have run out of prayer points. Return to a church to recharge");
 				activePrayers.clear();
-				break;
 			}
 		}
+	}
+
+	private int calcPointDrain(Player player, Integer totalRate) {
+		// since event operates on basis of tick instead of ms, no need to include getConfig().GAME_TICK into equation
+		return (int)Math.ceil(totalRate * 120 / (300 * (1 + (player.getPrayerPoints() - 1) / 32.0)));
+	}
+
+	private void refreshActivePrayers() {
+		int totalRate = 0;
+		for (int x = 0; x <= 13; x++) {
+			PrayerDef prayer = getPlayerOwner().getWorld().getServer().getEntityHandler().getPrayerDef(x);
+			if (getPlayerOwner().getPrayers().isPrayerActivated(x) && !activePrayers.contains(prayer)) {
+				activePrayers.add(prayer);
+			} else if (!getPlayerOwner().getPrayers().isPrayerActivated(x) && activePrayers.contains(prayer)) {
+				activePrayers.remove(prayer);
+			}
+		}
+		for (PrayerDef def : activePrayers) {
+			totalRate += def.getDrainRate();
+		}
+		pointDrainage = calcPointDrain(getPlayerOwner(), totalRate);
 	}
 }

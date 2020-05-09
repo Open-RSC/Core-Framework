@@ -171,7 +171,7 @@ public final class Player extends Mob {
 	/**
 	 * The drain rate of the prayers currently enabled
 	 */
-	private int drainRate = 0;
+	private int drainRate = 0, prayerStatePoints = 0;
 	/**
 	 * Amount of fatigue - 0 to 150000
 	 */
@@ -1341,6 +1341,10 @@ public final class Player extends Mob {
 		getUpdateFlags().setAppearanceChanged(true);
 	}
 
+	public int getPrayerStatePoints() { return prayerStatePoints; }
+
+	public void setPrayerStatePoints(int prayerStatePoints) { this.prayerStatePoints = prayerStatePoints; }
+
 	public void handleWakeup() {
 		fatigue = sleepStateFatigue;
 		ActionSender.sendFatigue(this);
@@ -1649,6 +1653,7 @@ public final class Player extends Mob {
 				PoisonEvent poisonEvent = getAttribute("poisonEvent", null);
 				poisonEvent.setPoisonPower(getCache().getInt("poisoned"));
 			}
+			prayerStatePoints = getSkills().getLevel(Skills.PRAYER) * 120;
 			prayerDrainEvent = new PrayerDrainEvent(getWorld(), this, Integer.MAX_VALUE);
 			getWorld().getServer().getGameEventHandler().add(prayerDrainEvent);
 			getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());

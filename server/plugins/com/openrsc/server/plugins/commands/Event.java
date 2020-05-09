@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.commands;
 
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.database.struct.LinkedPlayer;
@@ -695,6 +696,10 @@ public final class Event implements CommandTrigger {
 					level = player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT;
 
 				otherPlayer.getSkills().setLevelTo(stat, level);
+				if (stat == Skills.PRAYER) {
+					otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skills.PRAYER) * 120);
+				}
+
 				otherPlayer.checkEquipment();
 				player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s " + statName + " to level " + level);
 				otherPlayer.getSkills().sendUpdateAll();
@@ -707,6 +712,7 @@ public final class Event implements CommandTrigger {
 				for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
 					otherPlayer.getSkills().setLevelTo(i, level);
 				}
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skills.PRAYER) * 120);
 
 				otherPlayer.checkEquipment();
 				player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s stats to level " + level);

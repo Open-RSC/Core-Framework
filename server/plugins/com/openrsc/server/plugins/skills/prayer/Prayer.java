@@ -14,6 +14,7 @@ public class Prayer implements OpLocTrigger {
 	public void onOpLoc(Player player, final GameObject object, String command) {
 		if (command.equalsIgnoreCase("recharge at")) {
 			int maxPray = getMaxLevel(player, Skills.PRAYER) + (object.getID() == 200 ? 2 : 0);
+			player.setPrayerStatePoints(maxPray * 120);
 			if (getCurrentLevel(player, Skills.PRAYER) == maxPray) {
 				player.playerServerMessage(MessageType.QUEST, "You already have full prayer points");
 			} else {

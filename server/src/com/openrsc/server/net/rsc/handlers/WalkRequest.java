@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.net.Packet;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
@@ -39,6 +40,11 @@ public class WalkRequest implements PacketHandler {
 					opponent.setLastOpponent(opponent.getOpponent());
 					player.setLastOpponent(player.getOpponent());
 					player.setRanAwayTimer();
+					if (player.getOpponent().isPlayer()) {
+						Player victimPlayer = ((Player) player.getOpponent());
+						victimPlayer.message("Your opponent is retreating!");
+						ActionSender.sendSound(victimPlayer, "retreat");
+					}
 					player.setLastCombatState(CombatState.RUNNING);
 					opponent.setLastCombatState(CombatState.WAITING);
 					player.resetCombatEvent();

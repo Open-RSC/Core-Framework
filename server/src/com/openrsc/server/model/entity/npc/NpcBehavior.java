@@ -290,7 +290,6 @@ public class NpcBehavior {
 			ActionSender.sendSound(victimPlayer, "retreat");
 		}
 		npc.setLastCombatState(CombatState.RUNNING);
-		npc.setLastCombatState(CombatState.RUNNING);
 		npc.getOpponent().setLastCombatState(CombatState.WAITING);
 		npc.resetCombatEvent();
 
