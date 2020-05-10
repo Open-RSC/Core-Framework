@@ -11,10 +11,9 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -1241,53 +1240,55 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 						npcsay(player, worker, "hey you, what are you up to?");
 						say(player, worker, "i'm trying to open the gate");
 						npcsay(player, worker, "i can see that, but why?");
-						Menu defaultMenu = new Menu();
-						defaultMenu.addOption(new Option("i've come to check that you're working safley") {
-							@Override
-							public void action() {
+
+						ArrayList<String> options = new ArrayList<>();
+
+						String optionCheckWorking = "i've come to check that you're working safley";
+						options.add(optionCheckWorking);
+
+						String optionQuest = "glough sent me";
+						if (player.getQuestStage(this) == 8)
+							options.add(optionQuest);
+
+						String optionJustLooking = "i just fancied looking around";
+						options.add(optionJustLooking);
+
+						String finalOptions[] = new String[options.size()];
+						int option = multi(player, worker, options.toArray(finalOptions));
+						if (option != -1) {
+							if (options.get(option).equalsIgnoreCase(optionCheckWorking)) {
 								npcsay(player, worker, "what business is that of yours?");
 								say(player, worker, "as a runescape resident i have a right to know");
 								npcsay(player, worker, "get out of here before you get a beating");
 								say(player, worker, "that's not very friendly");
 								npcsay(player, worker, "right, i'll show you friendly");
 								worker.setChasing(player);
-							}
-						});
-						if (player.getQuestStage(this) == 8) {
-							defaultMenu.addOption(new Option("glough sent me") {
-								@Override
-								public void action() {
-									npcsay(player, worker, "hmm, really, what for?");
-									say(player, worker, "your wasting my time, take me to your superior");
-									npcsay(player, worker, "ok, i can let you in but i need the password");
-									int menu = multi(player,
-										"Ka",
-										"ko",
-										"ke");
-									if (menu == 0) {
-										if (!player.getCache().hasKey("gt_shipyard_q1")) {
-											player.getCache().store("gt_shipyard_q1", true);
-										}
-										shipyardPasswordMenu2(player, worker);
-									} else if (menu == 1) {
-										shipyardPasswordMenu2(player, worker);
-									} else if (menu == 2) {
-										shipyardPasswordMenu2(player, worker);
+							} else if (options.get(option).equalsIgnoreCase(optionQuest)) {
+								npcsay(player, worker, "hmm, really, what for?");
+								say(player, worker, "your wasting my time, take me to your superior");
+								npcsay(player, worker, "ok, i can let you in but i need the password");
+								int menu = multi(player,
+									"Ka",
+									"ko",
+									"ke");
+								if (menu == 0) {
+									if (!player.getCache().hasKey("gt_shipyard_q1")) {
+										player.getCache().store("gt_shipyard_q1", true);
 									}
+									shipyardPasswordMenu2(player, worker);
+								} else if (menu == 1) {
+									shipyardPasswordMenu2(player, worker);
+								} else if (menu == 2) {
+									shipyardPasswordMenu2(player, worker);
 								}
-							});
-						}
-						defaultMenu.addOption(new Option("i just fancied looking around") {
-							@Override
-							public void action() {
+							} else if (options.get(option).equalsIgnoreCase(optionJustLooking)) {
 								npcsay(player, worker, "this isn't a museum",
 									"leave now");
 								say(player, worker, "i'll leave when i choose");
 								npcsay(player, worker, "we'll see");
 								worker.setChasing(player);
 							}
-						});
-						defaultMenu.showMenu(player);
+						}
 					} else {
 						mes(player, "the gate is locked");
 					}
