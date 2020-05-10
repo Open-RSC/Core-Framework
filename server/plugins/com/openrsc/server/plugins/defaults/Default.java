@@ -170,7 +170,7 @@ public class Default implements DefaultHandler,
 			if (item.getAmount() > 1) {
 				removingThisIteration = Math.min(amountToDrop, item.getAmount());
 			}
-			player.getCarriedItems().remove(new Item(item.getCatalogId(), removingThisIteration));
+			player.getCarriedItems().remove(new Item(item.getCatalogId(), removingThisIteration, item.getNoted()));
 			amountToDrop -= removingThisIteration;
 		} else {
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId());
