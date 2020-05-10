@@ -14,6 +14,8 @@ import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.ArrayList;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Murphy implements MiniGameInterface, TalkNpcTrigger {
@@ -93,67 +95,100 @@ public class Murphy implements MiniGameInterface, TalkNpcTrigger {
 	}
 
 	private void showStartOption(Player player, Npc n, boolean showOptionFish, boolean showOptionNotSafe, boolean showOptionHelp) {
-		Menu menu = new Menu();
+		ArrayList<String> options = new ArrayList<>();
 		if (showOptionFish) {
-			menu.addOption(new Option("what fish do you catch?") {
-				@Override
-				public void action() {
-					npcsay(player, n, "i get all sorts, anything that lies on the sea bed",
-							"you never know what you're going to get until...",
-							"...you pull up the net");
-					showStartOption(player, n, false, true, true);
-				}
-			});
+			options.add("what fish do you catch?");
 		}
 		if (showOptionNotSafe) {
-			menu.addOption(new Option("your boat doesn't look too safe") {
-				@Override
-				public void action() {
-					npcsay(player, n, "that's because it's not, the dawn thing's full of holes");
-					say(player, n, "oh, so i suppose you can't go out for a while");
-					npcsay(player, n, "oh no, i don't let a few holes stop an experienced sailor like me",
-							"i could sail these seas in a barrel",
-							"i'll be going out soon enough");
-					showStartOption(player, n, true, false, true);
-				}
-			});
+			options.add("your boat doesn't look too safe");
 		}
 		if (showOptionHelp) {
-			menu.addOption(new Option("could i help?") {
-				@Override
-				public void action() {
-					npcsay(player, n, "well of course you can",
-							"i'll warn you though, the seas are merciless",
-							"and with out fishing experience you won't catch much");
-					mes(player, "you need a fishing level of 15 or above to catch any fish on the trawler");
-					npcsay(player, n, "on occasions the net rip's, so you'll need some rope to repair it");
-					say(player, n, "rope...ok");
-					npcsay(player, n, "there's also a slight problem with leaks");
-					say(player, n, "leaks!");
-					npcsay(player, n, "nothing some swamp paste won't fix");
-					say(player, n, "swamp paste?");
-					npcsay(player, n, "oh, and one more thing...",
-							"..i hope you're a good swimmer");
-					int gooption = multi(player, n, "actually, i think i'll leave it", "i'll be fine, lets go",
-						"what's swamp paste?");
-					switch (gooption) {
-						case 0:
-							npcsay(player, n, "bloomin' land lover's");
-							break;
-						case 1:
-							letsGo(player, n);
-							break;
-						case 2:
-							npcsay(player, n, "swamp tar mixed with flour...",
-									"...which is then heated over a fire");
-							say(player, n, "where can i find swamp tar?");
-							npcsay(player, n, "unfortunately the only supply of swamp tar is in the swamps below lumbridge");
-							break;
-					}
-				}
-			});
+			options.add("could i help?");
 		}
-		menu.showMenu(player);
+
+		String[] finalOptions = new String[options.size()];
+		int option = multi(player, n, options.toArray(finalOptions));
+
+		if (option == 2) {
+			if (showOptionHelp) {
+				chatOptionHelp(player, n);
+			}
+		}
+
+		else if (option == 1) {
+			if (showOptionFish) {
+				if (showOptionNotSafe) {
+					chatOptionNotSafe(player, n);
+				}
+				else if (showOptionHelp) {
+					chatOptionHelp(player, n);
+				}
+			}
+			else if (showOptionNotSafe) {
+				if (showOptionHelp) {
+					chatOptionHelp(player, n);
+				}
+			}
+		}
+
+		else if (option == 0) {
+			if (showOptionFish) {
+				chatOptionFish(player, n);
+			}
+			else if (showOptionNotSafe) {
+				chatOptionNotSafe(player, n);
+			}
+			else if (showOptionHelp) {
+				chatOptionHelp(player, n);
+			}
+		}
+	}
+
+	private void chatOptionFish(Player player, Npc npc) {
+		npcsay(player, npc, "i get all sorts, anything that lies on the sea bed",
+			"you never know what you're going to get until...",
+			"...you pull up the net");
+		showStartOption(player, npc, false, true, true);
+	}
+
+	private void chatOptionNotSafe(Player player, Npc npc) {
+		npcsay(player, npc, "that's because it's not, the dawn thing's full of holes");
+		say(player, npc, "oh, so i suppose you can't go out for a while");
+		npcsay(player, npc, "oh no, i don't let a few holes stop an experienced sailor like me",
+			"i could sail these seas in a barrel",
+			"i'll be going out soon enough");
+		showStartOption(player, npc, true, false, true);
+	}
+
+	private void chatOptionHelp(Player player, Npc npc) {
+		npcsay(player, npc, "well of course you can",
+			"i'll warn you though, the seas are merciless",
+			"and with out fishing experience you won't catch much");
+		mes(player, "you need a fishing level of 15 or above to catch any fish on the trawler");
+		npcsay(player, npc, "on occasions the net rip's, so you'll need some rope to repair it");
+		say(player, npc, "rope...ok");
+		npcsay(player, npc, "there's also a slight problem with leaks");
+		say(player, npc, "leaks!");
+		npcsay(player, npc, "nothing some swamp paste won't fix");
+		say(player, npc, "swamp paste?");
+		npcsay(player, npc, "oh, and one more thing...",
+			"..i hope you're a good swimmer");
+		int gooption = multi(player, npc, "actually, i think i'll leave it", "i'll be fine, lets go",
+			"what's swamp paste?");
+		switch (gooption) {
+			case 0:
+				npcsay(player, npc, "bloomin' land lover's");
+				break;
+			case 1:
+				letsGo(player, npc);
+				break;
+			case 2:
+				npcsay(player, npc, "swamp tar mixed with flour...",
+					"...which is then heated over a fire");
+				say(player, npc, "where can i find swamp tar?");
+				npcsay(player, npc, "unfortunately the only supply of swamp tar is in the swamps below lumbridge");
+				break;
+		}
 	}
 
 	private void letsGo(Player player, Npc n) {
