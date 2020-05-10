@@ -1255,40 +1255,40 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 
 						String finalOptions[] = new String[options.size()];
 						int option = multi(player, worker, options.toArray(finalOptions));
-						if (option != -1) {
-							if (options.get(option).equalsIgnoreCase(optionCheckWorking)) {
-								npcsay(player, worker, "what business is that of yours?");
-								say(player, worker, "as a runescape resident i have a right to know");
-								npcsay(player, worker, "get out of here before you get a beating");
-								say(player, worker, "that's not very friendly");
-								npcsay(player, worker, "right, i'll show you friendly");
-								worker.setChasing(player);
-							} else if (options.get(option).equalsIgnoreCase(optionQuest)) {
-								npcsay(player, worker, "hmm, really, what for?");
-								say(player, worker, "your wasting my time, take me to your superior");
-								npcsay(player, worker, "ok, i can let you in but i need the password");
-								int menu = multi(player,
-									"Ka",
-									"ko",
-									"ke");
-								if (menu == 0) {
-									if (!player.getCache().hasKey("gt_shipyard_q1")) {
-										player.getCache().store("gt_shipyard_q1", true);
-									}
-									shipyardPasswordMenu2(player, worker);
-								} else if (menu == 1) {
-									shipyardPasswordMenu2(player, worker);
-								} else if (menu == 2) {
-									shipyardPasswordMenu2(player, worker);
+						if (option == -1) return;
+						if (options.get(option).equalsIgnoreCase(optionCheckWorking)) {
+							npcsay(player, worker, "what business is that of yours?");
+							say(player, worker, "as a runescape resident i have a right to know");
+							npcsay(player, worker, "get out of here before you get a beating");
+							say(player, worker, "that's not very friendly");
+							npcsay(player, worker, "right, i'll show you friendly");
+							worker.setChasing(player);
+						} else if (options.get(option).equalsIgnoreCase(optionQuest)) {
+							npcsay(player, worker, "hmm, really, what for?");
+							say(player, worker, "your wasting my time, take me to your superior");
+							npcsay(player, worker, "ok, i can let you in but i need the password");
+							int menu = multi(player,
+								"Ka",
+								"ko",
+								"ke");
+							if (menu == 0) {
+								if (!player.getCache().hasKey("gt_shipyard_q1")) {
+									player.getCache().store("gt_shipyard_q1", true);
 								}
-							} else if (options.get(option).equalsIgnoreCase(optionJustLooking)) {
-								npcsay(player, worker, "this isn't a museum",
-									"leave now");
-								say(player, worker, "i'll leave when i choose");
-								npcsay(player, worker, "we'll see");
-								worker.setChasing(player);
+								shipyardPasswordMenu2(player, worker);
+							} else if (menu == 1) {
+								shipyardPasswordMenu2(player, worker);
+							} else if (menu == 2) {
+								shipyardPasswordMenu2(player, worker);
 							}
+						} else if (options.get(option).equalsIgnoreCase(optionJustLooking)) {
+							npcsay(player, worker, "this isn't a museum",
+								"leave now");
+							say(player, worker, "i'll leave when i choose");
+							npcsay(player, worker, "we'll see");
+							worker.setChasing(player);
 						}
+
 					} else {
 						mes(player, "the gate is locked");
 					}
