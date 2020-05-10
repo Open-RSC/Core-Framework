@@ -7,19 +7,18 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
+import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public final class Development implements CommandListener, CommandExecutiveListener {
+public final class Development implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Development.class);
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
 
-	public boolean blockCommand(String cmd, String[] args, Player player) {
+	public boolean blockCommand(Player player, String cmd, String[] args) {
 		return player.isDev();
 	}
 
@@ -28,7 +27,7 @@ public final class Development implements CommandListener, CommandExecutiveListe
 	 * Development usable commands in general
 	 */
 	@Override
-	public void onCommand(String cmd, String[] args, Player player) {
+	public void onCommand(Player player, String cmd, String[] args) {
 		if(messagePrefix == null) {
 			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
 		}
@@ -398,12 +397,12 @@ public final class Development implements CommandListener, CommandExecutiveListe
 				.replaceAll("\n", "%"), true);
 		}
 		else if (cmd.equalsIgnoreCase("coords")) {
-			Player p = args.length > 0 ?
+			Player targetPlayer = args.length > 0 ?
 				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
 				player;
 
-			if(p != null)
-				player.message(messagePrefix + p.getStaffName() + " is at: " + p.getLocation());
+			if(targetPlayer != null)
+				player.message(messagePrefix + targetPlayer.getStaffName() + " is at: " + targetPlayer.getLocation());
 			else
 				player.message(messagePrefix + "Invalid name or player is not online");
 		}

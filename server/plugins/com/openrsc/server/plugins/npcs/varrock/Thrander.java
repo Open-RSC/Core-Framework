@@ -5,23 +5,21 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Thrander implements TalkToNpcListener, TalkToNpcExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
+public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.THRANDER.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
-		npcTalk(p, n, "Hello I'm Thrander the smith",
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Hello I'm Thrander the smith",
 			"I'm an expert in armour modification",
 			"Give me your armour designed for men",
 			"And I can convert it into something more comfortable for a women",
@@ -30,13 +28,13 @@ public class Thrander implements TalkToNpcListener, TalkToNpcExecutiveListener, 
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
 		return npc.getID() == NpcId.THRANDER.id() && getNewID(item) != ItemId.NOTHING.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
-		if (inArray(item.getID(), ItemId.BRONZE_PLATE_MAIL_TOP.id(), ItemId.IRON_PLATE_MAIL_TOP.id(), ItemId.STEEL_PLATE_MAIL_TOP.id(),
+	public void onUseNpc(Player player, Npc npc, Item item) {
+		if (inArray(item.getCatalogId(), ItemId.BRONZE_PLATE_MAIL_TOP.id(), ItemId.IRON_PLATE_MAIL_TOP.id(), ItemId.STEEL_PLATE_MAIL_TOP.id(),
 			ItemId.BLACK_PLATE_MAIL_TOP.id(), ItemId.MITHRIL_PLATE_MAIL_TOP.id(), ItemId.ADAMANTITE_PLATE_MAIL_TOP.id(), ItemId.RUNE_PLATE_MAIL_TOP.id(),
 			ItemId.BRONZE_PLATE_MAIL_BODY.id(), ItemId.IRON_PLATE_MAIL_BODY.id(), ItemId.STEEL_PLATE_MAIL_BODY.id(),
 			ItemId.BLACK_PLATE_MAIL_BODY.id(), ItemId.MITHRIL_PLATE_MAIL_BODY.id(), ItemId.ADAMANTITE_PLATE_MAIL_BODY.id(), ItemId.RUNE_PLATE_MAIL_BODY.id(),
@@ -49,30 +47,30 @@ public class Thrander implements TalkToNpcListener, TalkToNpcExecutiveListener, 
 			String itemLower, changedItemLower;
 			itemLower = item.getDef(player.getWorld()).getName().toLowerCase();
 			changedItemLower = changedItem.getDef(player.getWorld()).getName().toLowerCase();
-			if (removeItem(player, item.getID(), 1)) {
+			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) != -1) {
 				if (itemLower.contains("top") || itemLower.contains("body")) {
-					message(player, npc, 1300, "You give Thrander a " + itemLower,
+					mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander a " + itemLower,
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you a " + changedItemLower);
 				} else if (item.getDef(player.getWorld()).getName().toLowerCase().contains("skirt")) {
 					String metal = itemLower.substring(0, itemLower.indexOf(' '));
-					message(player, npc, 1300, "You give Thrander a " + metal + " plated skirt",
+					mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander a " + metal + " plated skirt",
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you some " + changedItemLower);
 				} else if (item.getDef(player.getWorld()).getName().toLowerCase().contains("legs")) {
 					String metal = itemLower.substring(0, itemLower.indexOf(' '));
-					message(player, npc, 1300, "You give Thrander some " + itemLower,
+					mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander some " + itemLower,
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you a " + metal + " plated skirt");
 				}
-				addItem(player, newID, 1);
+				give(player, newID, 1);
 			}
 		}
 	}
 
 	public int getNewID(Item item) {
 		int newID = ItemId.NOTHING.id();
-		switch (ItemId.getById(item.getID())) {
+		switch (ItemId.getById(item.getCatalogId())) {
 			case BRONZE_PLATE_MAIL_TOP:
 				newID = ItemId.BRONZE_PLATE_MAIL_BODY.id();
 				break;

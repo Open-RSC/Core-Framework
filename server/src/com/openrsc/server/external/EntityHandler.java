@@ -1,17 +1,19 @@
 package com.openrsc.server.external;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.database.struct.ItemDef;
+import com.openrsc.server.database.struct.NpcDef;
+import com.openrsc.server.database.struct.NpcDrop;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.util.PersistenceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
@@ -139,71 +141,60 @@ public final class EntityHandler {
 	}
 
 	protected void setupDbDefinitions() {
-		Connection connection = getServer().getDatabase().getConnection().getConnection();
-		Statement statement = null;
-		ResultSet result = null;
 		try {
-			statement = connection.createStatement();
-
 			/* LOAD NPC DEFS */
 			ArrayList<NPCDef> npcDefinitions = new ArrayList<NPCDef>();
-			result = statement.executeQuery("SELECT `id`, `name`, `description`, `command`, `command2`, "
-				+ "`attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, "
-				+ "`sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, "
-				+ "`sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, "
-				+ "`camera2`, `walkModel`, `combatModel`, `combatSprite`, `roundMode`, `pkBot` FROM `"
-				+ getServer().getConfig().MYSQL_TABLE_PREFIX + "npcdef`");
-			while (result.next()) {
+
+			NpcDef npcDefs[] = getServer().getDatabase().getNpcDefs();
+
+			for (NpcDef npc : npcDefs) {
 				NPCDef def = new NPCDef();
-				def.name = result.getString("name");
-				def.description = result.getString("description");
-				def.command1 = result.getString("command");
-				def.command2 = result.getString("command2");
-				def.attack = result.getInt("attack");
-				def.strength = result.getInt("strength");
-				def.hits = result.getInt("hits");
-				def.defense = result.getInt("defense");
-				def.ranged = result.getInt("ranged");
-				def.combatLevel = result.getInt("combatlvl");
-				def.members = result.getBoolean("isMembers");
-				def.attackable = result.getBoolean("attackable");
-				def.aggressive = result.getBoolean("aggressive");
-				def.respawnTime = result.getInt("respawnTime");
-				for (int i = 0; i < 12; i++) {
-					def.sprites[i] = result.getInt("sprites" + (i + 1));
-				}
-				def.hairColour = result.getInt("hairColour");
-				def.topColour = result.getInt("topColour");
-				def.bottomColour = result.getInt("bottomColour");
-				def.skinColour = result.getInt("skinColour");
-				def.camera1 = result.getInt("camera1");
-				def.camera2 = result.getInt("camera2");
-				def.walkModel = result.getInt("walkModel");
-				def.combatModel = result.getInt("combatModel");
-				def.combatSprite = result.getInt("combatSprite");
-				def.roundMode = result.getInt("roundMode");
-				def.pkBot = result.getBoolean("pkBot");
-
-				ArrayList<ItemDropDef> drops = new ArrayList<ItemDropDef>();
-
-				Statement dropStatement = connection.createStatement();
-				ResultSet dropResult = dropStatement
-					.executeQuery("SELECT `amount`, `id`, `weight` FROM `"
-						+ getServer().getConfig().MYSQL_TABLE_PREFIX
-						+ "npcdrops` WHERE npcdef_id = '"
-						+ result.getInt("id") + "' ORDER BY `weight` DESC");
-				while (dropResult.next()) {
-					ItemDropDef drop = new ItemDropDef(dropResult.getInt("id"),
-						dropResult.getInt("amount"),
-						dropResult.getInt("weight"));
-					drops.add(drop);
-				}
-				dropResult.close();
-				dropStatement.close();
-
-				def.drops = drops.toArray(new ItemDropDef[]{});
-
+				def.name = npc.name;
+				def.description = npc.description;
+				def.command1 = npc.command;
+				def.command2 = npc.command2;
+				def.attack = npc.attack;
+				def.strength = npc.strength;
+				def.hits = npc.hits;
+				def.defense = npc.defense;
+				def.ranged = npc.ranged;
+				def.combatLevel = npc.combatlvl;
+				def.members = npc.isMembers;
+				def.attackable = npc.attackable;
+				def.aggressive = npc.aggressive;
+				def.respawnTime = npc.respawnTime;
+				def.sprites = npc.sprites;
+				def.hairColour = npc.hairColour;
+				def.topColour = npc.topColour;
+				def.bottomColour = npc.bottomColour;
+				def.skinColour = npc.skinColour;
+				def.camera1 = npc.camera1;
+				def.camera2 = npc.camera2;
+				def.walkModel = npc.walkModel;
+				def.combatModel = npc.combatModel;
+				def.combatSprite = npc.combatSprite;
+				def.roundMode = npc.roundMode;
 				npcDefinitions.add(def);
+			}
+
+			final NpcDrop drops[] = getServer().getDatabase().getNpcDrops();
+			final HashMap<Integer, ArrayList<ItemDropDef>> list = new HashMap<>();
+
+			for(final NpcDrop drop : drops) {
+				if(!list.containsKey(drop.npcId)) {
+					list.put(drop.npcId, new ArrayList<>());
+				}
+
+				final ItemDropDef dropDef = new ItemDropDef(drop.itemId, drop.amount, drop.weight);
+				list.get(drop.npcId).add(dropDef);
+			}
+
+			final Set<Map.Entry<Integer, ArrayList<ItemDropDef>>> entrySet = list.entrySet();
+			for (Map.Entry<Integer, ArrayList<ItemDropDef>> entry : entrySet) {
+				final int npcId = entry.getKey();
+				final ArrayList<ItemDropDef> arrayList = entry.getValue();
+				final NPCDef def = npcDefinitions.get(npcId);
+				def.drops = arrayList.toArray(new ItemDropDef[]{});
 			}
 
 			LOGGER.info("\t Loaded {}", box(npcDefinitions.size()) + " NPC definitions");
@@ -215,44 +206,42 @@ public final class EntityHandler {
 			}*/
 
 			/* LOAD ITEM DEFS */
-			result = statement.executeQuery("SELECT `name`, `description`, `command`, `isFemaleOnly`, `isMembersOnly`, `isStackable`, "
-				+ "`isUntradable`, `isWearable`, `appearanceID`, `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, "
-				+ "`armourBonus`, `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `bankNoteID`, "
-				+ "originalItemID FROM `"
-				+ getServer().getConfig().MYSQL_TABLE_PREFIX
-				+ "itemdef` order by id asc");
 			ArrayList<ItemDefinition> itemDefinitions = new ArrayList<ItemDefinition>();
-			while (result.next()) {
+
+			ItemDef[] itemDefs = getServer().getDatabase().getItemDefs();
+
+			for (ItemDef item : itemDefs) {
 				ItemDefinition toAdd = new ItemDefinition(
-					result.getString("name"), result
-					.getString("description"), result
-					.getString("command").split(","), result
-					.getInt("isFemaleOnly") == 1, result
-					.getInt("isMembersOnly") == 1, result
-					.getInt("isStackable") == 1, result
-					.getInt("isUntradable") == 1, result
-					.getInt("isWearable") == 1, result
-					.getInt("appearanceID"), result
-					.getInt("wearableID"), result
-					.getInt("wearSlot"), result
-					.getInt("requiredLevel"), result
-					.getInt("requiredSkillID"), result
-					.getInt("armourBonus"), result
-					.getInt("weaponAimBonus"), result
-					.getInt("weaponPowerBonus"), result
-					.getInt("magicBonus"), result
-					.getInt("prayerBonus"), result
-					.getInt("basePrice"), result.getInt("bankNoteID"), result.getInt("originalItemID"));
+					item.id,
+					item.name,
+					item.description,
+					item.command.split(","),
+					item.isFemaleOnly,
+					item.isMembersOnly,
+					item.isStackable,
+					item.isUntradable,
+					item.isWearable,
+					item.appearanceID,
+					item.wearableID,
+					item.wearSlot,
+					item.requiredLevel,
+					item.requiredSkillID,
+					item.armourBonus,
+					item.weaponAimBonus,
+					item.weaponPowerBonus,
+					item.magicBonus,
+					item.prayerBonus,
+					item.basePrice,
+					item.isNoteable);
 
 				if (toAdd.getCommand().length == 1 && toAdd.getCommand()[0] == "") {
 					toAdd.nullCommand();
 				}
 				itemDefinitions.add(toAdd);
 			}
+
 			items = itemDefinitions.toArray(new ItemDefinition[]{});
 			LOGGER.info("\t Loaded {}", box(itemDefinitions.size()) + " item definitions");
-			result.close();
-			statement.close();
 		} catch (Exception e) {
 			LOGGER.catching(e);
 			System.exit(1);

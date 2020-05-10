@@ -5,49 +5,36 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class GroundItemTake implements PacketHandler {
 
-	private GroundItem getItem(int id, Point location, Player player) {
-		int x = location.getX();
-		int y = location.getY();
-		for (GroundItem i : player.getViewArea().getItemsInView()) {
-			if (i.getID() == id && !i.isInvisibleTo(player) && i.getX() == x && i.getY() == y) {
-				return i;
-			}
-		}
-		return null;
-	}
-
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
 		}
 		player.resetAll();
-		final Point location = Point.location(p.readShort(), p.readShort());
-		final int id = p.readShort();
-		final GroundItem item = getItem(id, location, player);
+		final Point location = Point.location(packet.readShort(), packet.readShort());
+		final int id = packet.readShort();
+		final GroundItem item = player.getViewArea().getGroundItem(id, location);
 
 		if (item == null) {
 			player.resetPath();
 			return;
 		}
-		player.setStatus(Action.TAKING_GITEM);
 
 		int distance = player.getViewArea().getGameObject(location) != null ? 1 : 0;
-		Player onTile = player.getRegion().getPlayer(location.getX(), location.getY());
+		Player onTile = player.getRegion().getPlayer(location.getX(), location.getY(), player);
 		if (onTile != null && onTile.inCombat()) {
 			distance = 1;
 		}
 		player.setWalkToAction(new WalkToPointAction(player, item.getLocation(), distance) {
 			public void executeInternal() {
 				if (getPlayer().isBusy() || getPlayer().isRanging() || item == null || item.isRemoved()
-					|| getItem(id, getLocation(), getPlayer()) == null || !getPlayer().canReach(item)
-					|| getPlayer().getStatus() != Action.TAKING_GITEM || item.getAmount() < 1) {
+					|| getPlayer().getRegion().getItem(id, getLocation(), getPlayer()) == null || !getPlayer().canReach(item)
+					|| item.getAmount() < 1) {
 					return;
 				}
 
@@ -70,7 +57,7 @@ public class GroundItemTake implements PacketHandler {
 
 				getPlayer().resetAll();
 
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "Pickup", new Object[]{getPlayer(), item}, this);
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TakeObj", new Object[]{getPlayer(), item}, this);
 			}
 		});
 	}

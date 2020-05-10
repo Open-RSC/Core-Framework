@@ -3,49 +3,47 @@ package com.openrsc.server.plugins.minigames.gnomerestaurant;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.action.PickupListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PickupExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 
-public class SwampToads implements PickupListener, PickupExecutiveListener, InvActionListener, InvActionExecutiveListener {
+public class SwampToads implements TakeObjTrigger, OpInvTrigger {
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.SWAMP_TOAD.id();
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
+		return item.getCatalogId() == ItemId.SWAMP_TOAD.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.SWAMP_TOAD.id()) {
-			message(p, 1900, "you pull the legs off the toad");
-			p.message("poor toad..at least they'll grow back");
-			p.getInventory().replace(item.getID(), ItemId.TOAD_LEGS.id());
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
+		if (item.getCatalogId() == ItemId.SWAMP_TOAD.id()) {
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "you pull the legs off the toad");
+			player.message("poor toad..at least they'll grow back");
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.TOAD_LEGS.id()));
 		}
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player player, GroundItem i) {
 		return i.getID() == ItemId.SWAMP_TOAD.id();
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player player, GroundItem i) {
 		if (i.getID() == ItemId.SWAMP_TOAD.id()) {
-			p.message("you pick up the swamp toad");
+			player.message("you pick up the swamp toad");
 			if (DataConversions.random(0, 10) >= 3) {
-				message(p, 1900, "but it jumps out of your hands..");
-				p.message("..slippery little blighters");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "but it jumps out of your hands..");
+				player.message("..slippery little blighters");
 			} else {
 				i.remove();
-				addItem(p, ItemId.SWAMP_TOAD.id(), 1);
-				p.message("you just manage to hold onto it");
+				give(player, ItemId.SWAMP_TOAD.id(), 1);
+				player.message("you just manage to hold onto it");
 			}
 		}
 	}

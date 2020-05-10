@@ -8,15 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public final class FishingTrawlerGeneralStore implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class FishingTrawlerGeneralStore extends AbstractShop {
 
 	private final Shop shop = new Shop(true, 3000, 130, 40, 3,
 		new Item(ItemId.BRONZE_PICKAXE.id(), 5), new Item(ItemId.POT.id(), 3), new Item(ItemId.JUG.id(), 2),
@@ -25,23 +21,23 @@ public final class FishingTrawlerGeneralStore implements ShopInterface,
 		new Item(ItemId.POT_OF_FLOUR.id(), 30), new Item(ItemId.BAILING_BUCKET.id(), 30), new Item(ItemId.SWAMP_PASTE.id(), 30));
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player player, final Npc n) {
 
-		npcTalk(p, n, "Can I help you at all?");
+		npcsay(player, n, "Can I help you at all?");
 
-		int option = showMenu(p, n, "Yes please. What are you selling?",
+		int option = multi(player, n, "Yes please. What are you selling?",
 				"No thanks");
 		switch (option) {
 			case 0:
-				npcTalk(p, n, "Take a look");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "Take a look");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.SHOPKEEPER_PORTKHAZARD.id();
 	}
 
@@ -55,4 +51,8 @@ public final class FishingTrawlerGeneralStore implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

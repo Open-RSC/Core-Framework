@@ -4,44 +4,39 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-public class Brimstail implements TalkToNpcExecutiveListener, TalkToNpcListener, ObjectActionExecutiveListener, ObjectActionListener {
+import static com.openrsc.server.plugins.Functions.*;
+
+public class Brimstail implements TalkNpcTrigger, OpLocTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.BRIMSTAIL.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
-		p.setBusy(true);
-		Functions.playerTalk(p, "Hello");
-		Functions.sleep(1920);
-		p.message("The gnome is chanting");
-		Functions.sleep(1920);
-		p.message("he does not respond");
-		p.setBusy(false);
+	public void onTalkNpc(Player player, final Npc n) {
+		say(player, "Hello");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		player.message("The gnome is chanting");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		player.message("he does not respond");
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 667;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
-		p.setBusy(true);
-		p.message("you enter the cave");
-		Functions.sleep(1920);
-		p.message("it leads to a ladder");
-		Functions.sleep(1920);
-		p.message("you climb down");
-		p.teleport(730, 3334, false);
-		p.setBusy(false);
+	public void onOpLoc(Player player, GameObject obj, String command) {
+		player.message("you enter the cave");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		player.message("it leads to a ladder");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		player.message("you climb down");
+		player.teleport(730, 3334, false);
 	}
 }

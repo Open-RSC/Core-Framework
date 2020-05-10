@@ -3,20 +3,22 @@ package com.openrsc.server.plugins.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+
+import java.util.ArrayList;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class KnightsSword implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener {
+public class KnightsSword implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger {
 	private static final int VYVINS_CUPBOARD_OPEN = 175;
 	private static final int VYVINS_CUPBOARD_CLOSED = 174;
 	private static final int CUPBOARD_Y = 2454;
@@ -46,104 +48,119 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.THURGO.id() || n.getID() == NpcId.SQUIRE.id()
 			|| n.getID() == NpcId.SIR_VYVIN.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.THURGO.id()) {
-			dwarfDialogue(p, n);
+			dwarfDialogue(player, n);
 		} else if (n.getID() == NpcId.SQUIRE.id()) {
-			squireDialogue(p, n, -1);
+			squireDialogue(player, n, -1);
 		} else if (n.getID() == NpcId.SIR_VYVIN.id()) {
-			vyvinDialogue(p, n);
+			vyvinDialogue(player, n);
 		}
 	}
 
-	private void vyvinDialogue(final Player p, final Npc n) {
-		playerTalk(p, n, "Hello");
-		npcTalk(p, n, "Greetings traveller");
-		int option = showMenu(p, n, "Do you have anything to trade?",
+	private void vyvinDialogue(final Player player, final Npc n) {
+		say(player, n, "Hello");
+		npcsay(player, n, "Greetings traveller");
+		int option = multi(player, n, "Do you have anything to trade?",
 			"Why are there so many knights in this city?");
 		if (option == 0) {
-			npcTalk(p, n, "No I'm sorry");
+			npcsay(player, n, "No I'm sorry");
 		} else if (option == 1) {
-			npcTalk(p, n, "We are the White Knights of Falador",
+			npcsay(player, n, "We are the White Knights of Falador",
 				"We are the most powerfull order of knights in the land",
 				"We are helping the king Vallance rule the kingdom",
 				"As he is getting old and tired");
 		}
 	}
 
-	public void dwarfDialogue(final Player p, final Npc n) {
-		switch (p.getQuestStage(this)) {
+	public void dwarfDialogue(final Player player, final Npc n) {
+		ArrayList<String> choices = new ArrayList<>();
+		String goodbyeNiceDay = "Have a nice day";
+		String goodbyeNevermind = "Nevermind";
+		switch (player.getQuestStage(this)) {
 			case -1:
-				playerTalk(p, n, "Thanks for your help in getting the sword for me");
-				npcTalk(p, n, "No worries mate");
+				say(player, n, "Thanks for your help in getting the sword for me");
+				npcsay(player, n, "No worries mate");
+				if (canBuyCape(player)) skillcape(player, n, goodbyeNiceDay);
 				break;
 			case 0:
-				p.message("Thurgo doesn't appear to be interested in talking");
+				if (!canBuyCape(player)) {
+					player.message("Thurgo doesn't appear to be interested in talking");
+				} else {
+					npcsay(player, n, "Eh?");
+					skillcape(player, n, goodbyeNevermind);
+				}
 				break;
 			case 1:
-				playerTalk(p, n, "Hello are you are an Imcando Dwarf?");
-				npcTalk(p, n, "Yeah what about it?");
+				say(player, n, "Hello are you are an Imcando Dwarf?");
+				npcsay(player, n, "Yeah what about it?");
+				if (canBuyCape(player)) skillcape(player, n, goodbyeNevermind);
 				break;
 			case 2:
-				if (!hasItem(p, ItemId.REDBERRY_PIE.id())) {
-					playerTalk(p, n, "Hello are you are an Imcando Dwarf?");
-					npcTalk(p, n, "Yeah what about it?");
+				if (!player.getCarriedItems().hasCatalogID(ItemId.REDBERRY_PIE.id(), Optional.of(false))) {
+					say(player, n, "Hello are you are an Imcando Dwarf?");
+					npcsay(player, n, "Yeah what about it?");
+					if (canBuyCape(player)) skillcape(player, n, goodbyeNevermind);
 				} else {
-					int option = showMenu(p, n, "Hello are you an Imcando Dwarf?",
-						"Would you like some redberry pie?");
+					choices.add("Hello are you an Imcando Dwarf?");
+					choices.add("Would you like some redberry pie?");
+					if (canBuyCape(player)) choices.add("What's that cape you've got on?");
+					int option = multi(player, n, choices.toArray(new String[choices.size()]));
 					if (option == 0) {
-						npcTalk(p, n, "Yeah what about it?");
-						option = showMenu(p, n, "Would you like some redberry  Pie?",
+						npcsay(player, n, "Yeah what about it?");
+						option = multi(player, n, "Would you like some redberry  Pie?",
 							"Can you make me a special sword?");
 						if (option == 0) {
-							givePie(p, n);
+							givePie(player, n);
 						} else if (option == 1) {
-							npcTalk(p, n, "no I don't do that anymore",
+							npcsay(player, n, "no I don't do that anymore",
 								"I'm getting old");
 						}
 					} else if (option == 1) {
-						givePie(p, n);
+						givePie(player, n);
+					} else if (option == 2) {
+						skillcape(player, n, "yes");
 					}
 				}
 				break;
 			case 3:
-				playerTalk(p, n, "Can you make me a special sword?");
-				npcTalk(p, n, "Well after you've brought me such a great pie",
+				say(player, n, "Can you make me a special sword?");
+				npcsay(player, n, "Well after you've brought me such a great pie",
 					"I guess I should give it a go",
 					"What sort of sword is it?");
-				playerTalk(
-					p,
+				say(
+					player,
 					n,
 					"I need you to make a sword for one of Falador's knights",
 					"He had one which was passed down through five generations",
 					"But his squire has lost it",
 					"So we need an identical one to replace it");
-				npcTalk(p,
+				npcsay(player,
 					n,
 					"A Knight's sword eh?",
 					"Well I'd need to know exactly how it looked",
 					"Before I could make a new one",
 					"All the Faladian knights used to have swords with different designs",
 					"could you bring me a picture or something?");
-				playerTalk(p, n, "I'll see if I can find one",
+				say(player, n, "I'll see if I can find one",
 					"I'll go and ask his squire");
-				p.updateQuestStage(this, 4);
+				player.updateQuestStage(this, 4);
 				break;
 			case 4:
-				if (hasItem(p, ItemId.PORTRAIT.id())) {
-					playerTalk(p, n,
+				if (player.getCarriedItems().hasCatalogID(ItemId.PORTRAIT.id(), Optional.of(false))) {
+					say(player, n,
 						"I have found a picture of the sword I would like you to make");
-					p.message("You give the portrait to Thurgo");
-					removeItem(p, ItemId.PORTRAIT.id(), 1);
-					message(p, "Thurgo studies the portrait");
-					p.updateQuestStage(this, 5);
-					npcTalk(p,
+					player.message("You give the portrait to Thurgo");
+					player.getCarriedItems().remove(new Item(ItemId.PORTRAIT.id()));
+					mes(player, "Thurgo studies the portrait");
+					player.updateQuestStage(this, 5);
+					npcsay(player,
 						n,
 						"Ok you'll need to get me some stuff for me to make this",
 						"I'll need two Iron bars to make the sword to start with",
@@ -159,107 +176,141 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 						"But there's definitly some blurite in there",
 						"You'll need a little bit of mining experience",
 						"TO be able to find it");
-					playerTalk(p, n, "Ok I'll go and find them");
+					say(player, n, "Ok I'll go and find them");
 				} else {
-					npcTalk(p, n, "Have you got a picture of the sword for me yet?");
-					playerTalk(p, n, "Sorry not yet");
+					npcsay(player, n, "Have you got a picture of the sword for me yet?");
+					say(player, n, "Sorry not yet");
+					if (canBuyCape(player)) skillcape(player, n, "I'll go get it");
 				}
 				break;
 			case 5:
 			case 6:
-				if (hasItem(p, ItemId.FALADIAN_KNIGHTS_SWORD.id())) {
-					playerTalk(p, n,
+				if (player.getCarriedItems().hasCatalogID(ItemId.FALADIAN_KNIGHTS_SWORD.id(), Optional.of(false))) {
+					say(player, n,
 						"Thanks for your help in getting the sword for me");
-					npcTalk(p, n, "No worries mate");
+					npcsay(player, n, "No worries mate");
+					if (canBuyCape(player)) skillcape(player, n, goodbyeNiceDay);
 					return;
 				}
-				if (hasItem(p, ItemId.IRON_BAR.id(), 2) && hasItem(p, ItemId.BLURITE_ORE.id())) {
-					npcTalk(p, n, "How are you doing finding sword materials?");
-					playerTalk(p, n, "I have them all");
-					message(p, "You give some blurite ore and two iron bars to Thurgo");
+				if (ifheld(player, ItemId.IRON_BAR.id(), 2) && player.getCarriedItems().hasCatalogID(ItemId.BLURITE_ORE.id(), Optional.of(false))) {
+					npcsay(player, n, "How are you doing finding sword materials?");
+					say(player, n, "I have them all");
+					mes(player, "You give some blurite ore and two iron bars to Thurgo");
 
-					removeItem(p, ItemId.IRON_BAR.id(), 1);
-					removeItem(p, ItemId.IRON_BAR.id(), 1);
-					removeItem(p, ItemId.BLURITE_ORE.id(), 1);
-					message(p, "Thurgo starts making a sword",
+					player.getCarriedItems().remove(new Item(ItemId.IRON_BAR.id()));
+					player.getCarriedItems().remove(new Item(ItemId.IRON_BAR.id()));
+					player.getCarriedItems().remove(new Item(ItemId.BLURITE_ORE.id()));
+					mes(player, "Thurgo starts making a sword",
 						"Thurgo hammers away",
 						"Thurgo hammers some more",
 						"Thurgo hands you a sword");
 
-					addItem(p, ItemId.FALADIAN_KNIGHTS_SWORD.id(), 1);
-					playerTalk(p, n, "Thank you very much");
-					npcTalk(p, n, "Just remember to call in with more pie some time");
-					p.updateQuestStage(this, 6);
+					give(player, ItemId.FALADIAN_KNIGHTS_SWORD.id(), 1);
+					say(player, n, "Thank you very much");
+					npcsay(player, n, "Just remember to call in with more pie some time");
+					player.updateQuestStage(this, 6);
 				} else {
-					npcTalk(p, n, "How are you doing finding sword materials?");
-					playerTalk(p, n, "I haven't found everything yet");
-					npcTalk(p, n, "Well come back when you do",
+					npcsay(player, n, "How are you doing finding sword materials?");
+					say(player, n, "I haven't found everything yet");
+					npcsay(player, n, "Well come back when you do",
 						"Remember I need blurite ore and two iron bars");
+					if (canBuyCape(player)) skillcape(player, n, "Alright, I'll be back");
 				}
 				break;
 		}
 	}
 
-	private void givePie(Player p, Npc n) {
-		message(p, "Thurgo's eyes light up");
-		npcTalk(p, n, "I'd never say no to a redberry pie");
-		npcTalk(p, n, "It's great stuff");
-		if (!hasItem(p, ItemId.REDBERRY_PIE.id())) { //should not happen here
-			playerTalk(p, n, "Well that's too bad, because I don't have any");
-			message(p, "Thurgo does not look impressed");
+	private boolean canBuyCape(Player player) {
+		if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES
+			&& getMaxLevel(player, Skills.SMITHING) >= 99) { return true; }
+		return false;
+	}
+
+	private void skillcape(Player player, Npc n, String goodbye) {
+		if (goodbye.equalsIgnoreCase("yes")
+			|| multi(player, n, "What's that cape you've got on?", goodbye) == 0) {
+
+			npcsay(player, n, "This is the Smithing cape",
+				"Trusted only with masters of metalworking",
+				"Like me",
+				"I see that you have also mastered smithing",
+				"I will sell you a Smithing cape for 99,000 coins");
+			if (multi(player, n, "Sounds fair", "No way") == 0) {
+				if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
+					mes(player, "Thurgo takes your coins");
+					if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
+						mes(player, "And hands you a Smithing cape");
+						give(player, ItemId.SMITHING_CAPE.id(), 1);
+						npcsay(player, n, "Don't lose this",
+							"This cape will allow you save some coal while smelting");
+					}
+				} else {
+					npcsay(player, n, "Sorry mate, you don't have enough coins");
+				}
+			}
+		}
+	}
+
+	private void givePie(Player player, Npc n) {
+		mes(player, "Thurgo's eyes light up");
+		npcsay(player, n, "I'd never say no to a redberry pie");
+		npcsay(player, n, "It's great stuff");
+		if (!player.getCarriedItems().hasCatalogID(ItemId.REDBERRY_PIE.id(), Optional.of(false))) { //should not happen here
+			say(player, n, "Well that's too bad, because I don't have any");
+			mes(player, "Thurgo does not look impressed");
 		} else {
-			message(p, "You hand over the pie");
-			removeItem(p, ItemId.REDBERRY_PIE.id(), 1);
-			p.updateQuestStage(this, 3);
-			message(p, "Thurgo eats the pie", "Thurgo pats his stomach");
-			npcTalk(p, n, "By Guthix that was good pie",
+			mes(player, "You hand over the pie");
+			player.getCarriedItems().remove(new Item(ItemId.REDBERRY_PIE.id()));
+			player.updateQuestStage(this, 3);
+			mes(player, "Thurgo eats the pie", "Thurgo pats his stomach");
+			npcsay(player, n, "By Guthix that was good pie",
 				"Anyone who makes pie like that has gotta be alright");
 		}
 	}
 
-	public void squireDialogue(final Player p, final Npc n, int cID) {
+	public void squireDialogue(final Player player, final Npc n, int cID) {
 		if (cID == -1) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case -1:
-					npcTalk(p, n, "Hello friend", "thanks for your help before",
+					npcsay(player, n, "Hello friend", "thanks for your help before",
 						"Vyvin never even realised it was a different sword");
 					break;
 				case 0:
-					npcTalk(p, n, "Hello I am the squire to Sir Vyvin");
-					int option = showMenu(p, n, "And how is life as a squire?",
+					npcsay(player, n, "Hello I am the squire to Sir Vyvin");
+					int option = multi(player, n, "And how is life as a squire?",
 						"Wouldn't you prefer to be a squire for me?");
 					if (option == 0) {
-						npcTalk(p, n, "Well Sir Vyvin is a good guy to work for",
+						npcsay(player, n, "Well Sir Vyvin is a good guy to work for",
 							"However I'm in a spot of trouble today",
 							"I've gone and lost Sir Vyvin's sword");
-						option = showMenu(p, n, "Do you know where you lost it?",
+						option = multi(player, n, "Do you know where you lost it?",
 							"I can make a new sword if you like",
 							"Is he angry?");
 						if (option == 0) {
-							npcTalk(p, n, "Well now if I knew that",
+							npcsay(player, n, "Well now if I knew that",
 								"It wouldn't be lost,now would it?");
 
-							squireDialogue(p, n, Squire.MAIN);
+							squireDialogue(player, n, Squire.MAIN);
 						} else if (option == 1) {
-							squireDialogue(p, n, Squire.NEW_SWORD);
+							squireDialogue(player, n, Squire.NEW_SWORD);
 						} else if (option == 2) {
-							squireDialogue(p, n, Squire.ANGRY);
+							squireDialogue(player, n, Squire.ANGRY);
 						}
 					} else if (option == 1) {
-						npcTalk(p, n, "No, sorry I'm loyal to Vyvin");
+						npcsay(player, n, "No, sorry I'm loyal to Vyvin");
 					}
 					break;
 				case 1:
 				case 2:
 				case 3:
-					npcTalk(p, n, "So how are you doing getting a sword?");
-					playerTalk(p, n, "I'm still looking for Imcando dwarves");
+					npcsay(player, n, "So how are you doing getting a sword?");
+					say(player, n, "I'm still looking for Imcando dwarves");
 					break;
 				case 4:
-					npcTalk(p, n, "So how are you doing getting a sword?");
-					playerTalk(p, n, "I've found an Imcando dwarf",
+					npcsay(player, n, "So how are you doing getting a sword?");
+					say(player, n, "I've found an Imcando dwarf",
 						"But he needs a picture of the sword before he can make it");
-					npcTalk(p,
+					npcsay(player,
 						n,
 						"A picture eh?",
 						"The only one I can think of is in a small portrait of Sir Vyvin's father",
@@ -267,16 +318,16 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 					break;
 				case 5:
 				case 6:
-					if (hasItem(p, ItemId.FALADIAN_KNIGHTS_SWORD.id())) {
-						playerTalk(p, n, "I have retrieved your sword for you");
-						npcTalk(p, n, "Thankyou, Thankyou",
+					if (player.getCarriedItems().hasCatalogID(ItemId.FALADIAN_KNIGHTS_SWORD.id(), Optional.of(false))) {
+						say(player, n, "I have retrieved your sword for you");
+						npcsay(player, n, "Thankyou, Thankyou",
 							"I was seriously worried I'd have to own up to Sir Vyvin");
-						p.message("You give the sword to the squire");
-						removeItem(p, ItemId.FALADIAN_KNIGHTS_SWORD.id(), 1);
-						p.sendQuestComplete(getQuestId());
+						player.message("You give the sword to the squire");
+						player.getCarriedItems().remove(new Item(ItemId.FALADIAN_KNIGHTS_SWORD.id()));
+						player.sendQuestComplete(getQuestId());
 					} else {
-						npcTalk(p, n, "So how are you doing getting a sword?");
-						playerTalk(p, n, "I've found a dwarf who will make the sword",
+						npcsay(player, n, "So how are you doing getting a sword?");
+						say(player, n, "I've found a dwarf who will make the sword",
 							"I've just got to find the materials for it now");
 					}
 					break;
@@ -284,67 +335,67 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 		}
 		switch (cID) {
 			case Squire.MAIN:
-				int option = showMenu(p, n, false, //do not send over
+				int option = multi(player, n, false, //do not send over
 					"Well do you know the vague area you lost it?",
 					"I can make a new sword if you like",
 					"Well the kingdom is fairly abundant with swords",
 					"Is he angry?");
 				if (option == 0) {
-					playerTalk(p, n, "Well do you know the vague area you lost it in?");
-					squireDialogue(p, n, Squire.LOST_IT);
+					say(player, n, "Well do you know the vague area you lost it in?");
+					squireDialogue(player, n, Squire.LOST_IT);
 				} else if (option == 1) {
-					playerTalk(p, n, "I can make a new sword if you like");
-					squireDialogue(p, n, Squire.NEW_SWORD);
+					say(player, n, "I can make a new sword if you like");
+					squireDialogue(player, n, Squire.NEW_SWORD);
 				} else if (option == 2) {
-					playerTalk(p, n, "Well the kingdom is fairly abundant with swords");
-					squireDialogue(p, n, Squire.ABUNDANT);
+					say(player, n, "Well the kingdom is fairly abundant with swords");
+					squireDialogue(player, n, Squire.ABUNDANT);
 				} else if (option == 3) {
-					playerTalk(p, n, "Is he angry?");
-					squireDialogue(p, n, Squire.ANGRY);
+					say(player, n, "Is he angry?");
+					squireDialogue(player, n, Squire.ANGRY);
 				}
 				break;
 			case Squire.LOST_IT:
-				npcTalk(p,
+				npcsay(player,
 					n,
 					"No I was carrying it for him all the way from where he had it stored in Lumbridge",
 					"It must have slipped from my pack during the trip",
 					"And you know what people are like these days",
 					"Someone will have just picked it up and kept it for themselves");
-				int option1 = showMenu(p, n, "I can make a new sword if you like",
+				int option1 = multi(player, n, "I can make a new sword if you like",
 					"Well the kingdom is fairly abundant with swords",
 					"Well I hope you find it soon");
 				if (option1 == 0) {
-					squireDialogue(p, n, Squire.NEW_SWORD);
+					squireDialogue(player, n, Squire.NEW_SWORD);
 				} else if (option1 == 1) {
-					squireDialogue(p, n, Squire.ABUNDANT);
+					squireDialogue(player, n, Squire.ABUNDANT);
 				} else if (option1 == 2) {
-					squireDialogue(p, n, Squire.FIND_IT);
+					squireDialogue(player, n, Squire.FIND_IT);
 				}
 				break;
 			case Squire.NEW_SWORD:
-				npcTalk(p, n, "Thanks for the offer",
+				npcsay(player, n, "Thanks for the offer",
 					"I'd be surprised if you could though");
-				squireDialogue(p, n, Squire.DWARF_CHAT);
+				squireDialogue(player, n, Squire.DWARF_CHAT);
 				break;
 			case Squire.ABUNDANT:
-				npcTalk(p, n, "Yes you can get bronze swords anywhere",
+				npcsay(player, n, "Yes you can get bronze swords anywhere",
 					"But this isn't any old sword");
-				squireDialogue(p, n, Squire.DWARF_CHAT);
+				squireDialogue(player, n, Squire.DWARF_CHAT);
 				break;
 			case Squire.ANGRY:
-				npcTalk(p, n, "He doesn't know yet",
+				npcsay(player, n, "He doesn't know yet",
 					"I was hoping I could think of something to do",
 					"Before he does find out",
 					"But I find myself at a loss");
-				squireDialogue(p, n, Squire.MAIN);
+				squireDialogue(player, n, Squire.MAIN);
 				break;
 			case Squire.FIND_IT:
-				npcTalk(p, n, "Yes me too",
+				npcsay(player, n, "Yes me too",
 					"I'm not looking forward to telling Vyvin I've lost it",
 					"He's going to want it for the parade next week as well");
 				break;
 			case Squire.DWARF_CHAT:
-				npcTalk(p,
+				npcsay(player,
 					n,
 					"The thing is,this sword is a family heirloom",
 					"It has been passed down through Vyvin's family for five generations",
@@ -352,11 +403,11 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 					"Who were a particularly skilled tribe of dwarven smiths",
 					"I doubt anyone could make it in the style they do");
 
-				int option11 = showMenu(p, n,
+				int option11 = multi(player, n,
 					"So would these dwarves make another one?",
 					"Well I hope you find it soon");
 				if (option11 == 0) {
-					npcTalk(p,
+					npcsay(player,
 						n,
 						"I'm not a hundred percent sure the Imcando tribe exists anymore",
 						"I should think Reldo the palace librarian in Varrock will know",
@@ -364,51 +415,49 @@ public class KnightsSword implements QuestInterface, TalkToNpcListener,
 						"I don't suppose you could try and track down the Imcando dwarves for me?",
 						"I've got so much work to do");
 
-					int option2 = showMenu(p, n, "Ok I'll give it a go",
+					int option2 = multi(player, n, "Ok I'll give it a go",
 						"No I've got lots of mining work to do");
 					if (option2 == 0) {
-						npcTalk(p, n, "Thankyou very much",
+						npcsay(player, n, "Thankyou very much",
 							"As I say the best place to start should be with Reldo");
-						p.updateQuestStage(this, 1);
+						player.updateQuestStage(this, 1);
 					}
 				} else if (option11 == 1) {
-					squireDialogue(p, n, Squire.FIND_IT);
+					squireDialogue(player, n, Squire.FIND_IT);
 				}
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return (obj.getID() == VYVINS_CUPBOARD_OPEN || obj.getID() == VYVINS_CUPBOARD_CLOSED) && obj.getY() == CUPBOARD_Y
 				&& obj.getX() == 318;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
-		final Npc n = p.getWorld().getNpc(138, 316, 320, 2454, 2459);
+	public void onOpLoc(Player player, GameObject obj, String command) {
+		final Npc n = player.getWorld().getNpc(NpcId.SIR_VYVIN.id(), 316, 320, 2454, 2459);
 		if ((obj.getID() == VYVINS_CUPBOARD_OPEN || obj.getID() == VYVINS_CUPBOARD_CLOSED) && obj.getY() == CUPBOARD_Y
 			&& obj.getX() == 318) {
 			if (command.equalsIgnoreCase("open")) {
-				openCupboard(obj, p, VYVINS_CUPBOARD_OPEN);
+				openCupboard(obj, player, VYVINS_CUPBOARD_OPEN);
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, p, VYVINS_CUPBOARD_CLOSED);
+				closeCupboard(obj, player, VYVINS_CUPBOARD_CLOSED);
 			} else {
 				if (n != null) {
 					if (!n.isBusy()) {
-						n.face(p);
-						p.face(n);
-						npcTalk(p, n, "Hey what are you doing?",
+						npcsay(player, n, "Hey what are you doing?",
 							"That's my cupboard");
-						message(p,
+						mes(player,
 							"Maybe you need to get someone to distract Sir Vyvin for you");
 					} else {
-						if (hasItem(p, ItemId.PORTRAIT.id()) || p.getQuestStage(this) < 4) {
-							p.message("There is just a load of junk in here");
+						if (player.getCarriedItems().hasCatalogID(ItemId.PORTRAIT.id(), Optional.of(false)) || player.getQuestStage(this) < 4) {
+							player.message("There is just a load of junk in here");
 							return;
 						}
-						p.message("You find a small portrait in here which you take");
-						addItem(p, ItemId.PORTRAIT.id(), 1);
+						player.message("You find a small portrait in here which you take");
+						give(player, ItemId.PORTRAIT.id(), 1);
 					}
 				}
 			}

@@ -8,47 +8,45 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
 import java.time.Instant;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SpiceMerchant implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+public class SpiceMerchant extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 15000, 100, 70, 2, new Item(ItemId.SPICE.id(), 1));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
-		if (p.getCache().hasKey("spiceStolen") && Instant.now().getEpochSecond() < p.getCache().getLong("spiceStolen") + 1200) {
-			npcTalk(p, n, "Do you really think I'm going to buy something",
+	public void onTalkNpc(Player player, Npc n) {
+		if (player.getCache().hasKey("spiceStolen") && Instant.now().getEpochSecond() < player.getCache().getLong("spiceStolen") + 1200) {
+			npcsay(player, n, "Do you really think I'm going to buy something",
 				"That you have just stolen from me",
 				"guards guards");
 
-			Npc attacker = getNearestNpc(p, NpcId.HERO.id(), 5); // Hero first
+			Npc attacker = ifnearvisnpc(player, NpcId.HERO.id(), 5); // Hero first
 			if (attacker == null)
-				attacker = getNearestNpc(p, NpcId.PALADIN.id(), 5); // Paladin second
+				attacker = ifnearvisnpc(player, NpcId.PALADIN.id(), 5); // Paladin second
 			if (attacker == null)
-				attacker = getNearestNpc(p, NpcId.KNIGHT.id(), 5); // Knight third
+				attacker = ifnearvisnpc(player, NpcId.KNIGHT.id(), 5); // Knight third
 			if (attacker == null)
-				attacker = getNearestNpc(p, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard fourth
+				attacker = ifnearvisnpc(player, NpcId.GUARD_ARDOUGNE.id(), 5); // Guard fourth
 
 			if (attacker != null)
-				attacker.setChasing(p);
+				attacker.setChasing(player);
 
 		} else {
-			npcTalk(p, n, "Get your exotic spices here",
+			npcsay(player, n, "Get your exotic spices here",
 				"rare very valuable spices here");
 			//from wiki
-			int menu = showMenu(p, n, false, "Lets have a look them then", "No thank you I'm not interested");
+			int menu = multi(player, n, false, "Lets have a look them then", "No thank you I'm not interested");
 			if (menu == 0) {
-				playerTalk(p, n, "Lets have a look then");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				say(player, n, "Lets have a look then");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			} else if (menu == 1) {
-				playerTalk(p, n, "No thank you");
+				say(player, n, "No thank you");
 			}
 		}
 	}
@@ -57,7 +55,7 @@ public class SpiceMerchant implements ShopInterface, TalkToNpcExecutiveListener,
 	// Delay player busy (3000); after stealing and Npc shout out to you.
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.SPICE_MERCHANT.id();
 	}
 
@@ -69,5 +67,10 @@ public class SpiceMerchant implements ShopInterface, TalkToNpcExecutiveListener,
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 }

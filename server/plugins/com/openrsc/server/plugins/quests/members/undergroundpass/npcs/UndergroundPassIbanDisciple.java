@@ -5,33 +5,35 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassIbanDisciple implements PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
+public class UndergroundPassIbanDisciple implements KillNpcTrigger {
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return n.getID() == NpcId.IBAN_DISCIPLE.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.IBAN_DISCIPLE.id()) {
-			n.killedBy(p);
-			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
-				message(p, "you search the diciples remains");
-				if (!hasItem(p, ItemId.STAFF_OF_IBAN.id()) && !hasItem(p, ItemId.STAFF_OF_IBAN_BROKEN.id())) {
-					p.message("and find a staff of iban");
-					addItem(p, ItemId.STAFF_OF_IBAN_BROKEN.id(), 1);
+			n.killedBy(player);
+			if (player.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
+				mes(player, "you search the diciples remains");
+				if (!player.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_IBAN.id(), Optional.empty())
+					&& !player.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_IBAN_BROKEN.id(), Optional.empty())) {
+					player.message("and find a staff of iban");
+					give(player, ItemId.STAFF_OF_IBAN_BROKEN.id(), 1);
 				} else {
-					p.message("but find nothing");
+					player.message("but find nothing");
 				}
 			} else {
-				createGroundItem(ItemId.ROBE_OF_ZAMORAK_TOP.id(), 1, p.getX(), p.getY(), p);
-				createGroundItem(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id(), 1, p.getX(), p.getY(), p);
+				addobject(ItemId.ROBE_OF_ZAMORAK_TOP.id(), 1, player.getX(), player.getY(), player);
+				addobject(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id(), 1, player.getX(), player.getY(), player);
 			}
 		}
 	}

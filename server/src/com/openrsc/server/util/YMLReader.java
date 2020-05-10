@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-// Author: Ryan
-
 public class YMLReader {
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -79,9 +77,11 @@ public class YMLReader {
 			switch (elems.length) {
 				case 2:
 					// Handle keys that have null for their attribute
+					// But we still add it to the settings anyways.
 					if (elems[1].equalsIgnoreCase("null")) {
 						LOGGER.info(fileName + ": Key \"" + elems[0] +
 							"\" has null value.");
+						settings.add(new Setting(elems[0], elems[1]));
 					}
 					// Handle normal lines
 					else {

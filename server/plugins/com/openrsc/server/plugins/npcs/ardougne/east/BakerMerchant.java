@@ -8,26 +8,23 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class BakerMerchant implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+public class BakerMerchant extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 15000, 100, 80, 2, new Item(ItemId.BREAD.id(), 10), new Item(ItemId.CAKE.id(), 3), new Item(ItemId.CHOCOLATE_SLICE.id(), 8));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
-		npcTalk(p, n, "Good day " + (p.isMale() ? "Monsieur" : "Madame"),
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Good day " + (player.isMale() ? "Monsieur" : "Madame"),
 			"Would you like ze nice freshly baked bread",
 			"Or perhaps a nice piece of cake");
-		int menu = showMenu(p, n, "Lets see what you have", "No thankyou");
+		int menu = multi(player, n, "Lets see what you have", "No thankyou");
 		if (menu == 0) {
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 	}
 
@@ -35,7 +32,7 @@ public class BakerMerchant implements ShopInterface, TalkToNpcExecutiveListener,
 	// Delay player busy (3000); after stealing and Npc shout out to you.
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.BAKER.id();
 	}
 
@@ -47,5 +44,10 @@ public class BakerMerchant implements ShopInterface, TalkToNpcExecutiveListener,
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 }

@@ -8,20 +8,16 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public final class ZaffsStaffs implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
-	
+public final class ZaffsStaffs extends AbstractShop {
+
 	private Shop shop = null;
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.ZAFF.id();
 	}
 
@@ -36,12 +32,17 @@ public final class ZaffsStaffs implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Would you like to buy or sell some staffs?");
-		int option = showMenu(p, n, "Yes please", "No, thank you");
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Would you like to buy or sell some staffs?");
+		int option = multi(player, n, "Yes please", "No, thank you");
 		if (option == 0) {
-			p.setAccessingShop(getShop(p.getWorld()));
-			ActionSender.showShop(p, getShop(p.getWorld()));
+			player.setAccessingShop(getShop(player.getWorld()));
+			ActionSender.showShop(player, getShop(player.getWorld()));
 		}
 	}
 

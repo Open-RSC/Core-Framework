@@ -37,7 +37,7 @@ public class GameEventHandler {
 
 	public void add(final GameTickEvent event) {
 		final String className = String.valueOf(event.getClass());
-		if (event.allowsDuplicateEvents() || !event.hasOwner()) {
+		if (event.isUniqueEvent() || !event.hasOwner()) {
 			final UUID uuid = UUID.randomUUID();
 			eventsToAdd.putIfAbsent(className + uuid, event);
 		} else {
@@ -69,57 +69,14 @@ public class GameEventHandler {
 		if (eventsToAdd.size() > 0) {
 			events.putAll(eventsToAdd);
 			eventsToAdd.clear();
-//			for (Iterator<Map.Entry<String, GameTickEvent>> iter = eventsToAdd.entrySet().iterator(); iter.hasNext(); ) {
-//				Map.Entry<String, GameTickEvent> e = iter.next();
-//				events.merge(e.getKey(), e.getValue(), (oldEvent, newEvent) -> newEvent);
-//				iter.remove();
-//			}
 		}
 
-		// Sorting for unused Notify and State Events
-		/*ArrayList<Callable<Integer>> notifyEvents = new ArrayList<Callable<Integer>>();
-		ArrayList<Callable<Integer>> stateEvents = new ArrayList<Callable<Integer>>();
-		ArrayList<Callable<Integer>> tickEvents = new ArrayList<Callable<Integer>>();*/
-
-//		ArrayList<Callable<Integer>> callables = new ArrayList<>();
 		try {
 			executor.invokeAll(events.values());
 		} catch (Exception e) {
 			LOGGER.catching(e);
 		}
-//		for (final Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
-//			GameTickEvent event = it.next().getValue();
-//			if (event == null || event.getOwner() != null && event.getOwner().isUnregistering()) {
-//				it.remove();
-//			}
-//
-//			callables.add(event);
-//			// Doing this in stages to ensure that GameNotifyEvents are processed before GameStateEvents and GameStateEvents before all other events
-//			/*if(event instanceof GameNotifyEvent) {
-//				notifyEvents.add(event);
-//			} else if (event instanceof GameStateEvent) {
-//				stateEvents.add(event);
-//			} else {
-//				tickEvents.add(event);
-//			}*/
-//		}
-//
-//		try {
-//			executor.invokeAll(callables);
-//			// Sorting for unused Notify and State Events
-//			/*executor.invokeAll(notifyEvents);
-//			executor.invokeAll(stateEvents);
-//			executor.invokeAll(tickEvents);*/
-//
-//			/*List<Future<Integer>> futures = executor.invokeAll(callables);
-//			for (int i = 0; i < futures.size(); i++) {
-//				Future<Integer> future = futures.get(i);
-//				final int returnCode = future.get();
-//			}*/
-//		} catch (Exception e) {
-//			LOGGER.catching(e);
-//		}
-//
+
 		eventsCounts.clear();
 		eventsDurations.clear();
 
@@ -136,21 +93,6 @@ public class GameEventHandler {
 
 			return event.shouldRemove();
 		});
-//		for (final Iterator<Map.Entry<String, GameTickEvent>> it = events.entrySet().iterator(); it.hasNext(); ) {
-//			GameTickEvent event = it.next().getValue();
-//
-//			eventsCounts.put(event.getDescriptor(),
-//				eventsCounts.containsKey(event.getDescriptor()) ?
-//					eventsCounts.get(event.getDescriptor()) + 1 :
-//					1);
-//			eventsDurations.put(event.getDescriptor(),
-//				eventsDurations.containsKey(event.getDescriptor()) ?
-//					eventsDurations.get(event.getDescriptor()) + event.getLastEventDuration() :
-//					event.getLastEventDuration());
-//
-//			if (event.shouldRemove())
-//				it.remove();
-//		}
 	}
 
 	public long runGameEvents() {

@@ -6,7 +6,7 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class Logout implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "PlayerLogout", new Object[]{player});
 		player.unregister(false, "Player logged out");
 	}

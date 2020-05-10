@@ -5,33 +5,33 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
+import java.util.Optional;
 
-public class UndergroundPassKalrag implements PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
+import static com.openrsc.server.plugins.Functions.*;
+
+public class UndergroundPassKalrag implements KillNpcTrigger {
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return n.getID() == NpcId.KALRAG.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.KALRAG.id()) {
-			n.killedBy(p);
-			message(p, "kalrag slumps to the floor",
+			n.killedBy(player);
+			mes(player, "kalrag slumps to the floor",
 				"poison flows from the corpse over the soil");
-			if (!p.getCache().hasKey("poison_on_doll") && p.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
-				if (hasItem(p, ItemId.A_DOLL_OF_IBAN.id())) {
-					message(p, "you smear the doll of iban in the poisoned blood");
-					p.message("it smells horrific");
-					p.getCache().store("poison_on_doll", true);
+			if (!player.getCache().hasKey("poison_on_doll") && player.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
+				if (player.getCarriedItems().hasCatalogID(ItemId.A_DOLL_OF_IBAN.id(), Optional.of(false))) {
+					mes(player, "you smear the doll of iban in the poisoned blood");
+					player.message("it smells horrific");
+					player.getCache().store("poison_on_doll", true);
 				} else {
-					message(p, "it quikly seeps away into the earth");
-					p.message("you dare not collect any without ibans doll");
+					mes(player, "it quikly seeps away into the earth");
+					player.message("you dare not collect any without ibans doll");
 				}
 			}
 		}

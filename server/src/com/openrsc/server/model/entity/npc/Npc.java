@@ -16,7 +16,6 @@ import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.GoldDrops;
@@ -53,15 +52,15 @@ public class Npc extends Mob {
 	/**
 	 * Holds players that did damage with combat
 	 */
-	private Map<Integer, Integer> combatDamagers = new HashMap<Integer, Integer>();
+	private Map<String, Integer> combatDamagers = new HashMap<String, Integer>();
 	/**
 	 * Holds players that did damage with mage
 	 */
-	private Map<Integer, Integer> mageDamagers = new HashMap<Integer, Integer>();
+	private Map<String, Integer> mageDamagers = new HashMap<String, Integer>();
 	/**
 	 * Holds players that did damage with range
 	 */
-	private Map<Integer, Integer> rangeDamagers = new HashMap<Integer, Integer>();
+	private Map<String, Integer> rangeDamagers = new HashMap<String, Integer>();
 
 	public Npc(final World world, final int id, final int x, final int y) {
 		this(world, new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
@@ -73,11 +72,6 @@ public class Npc extends Mob {
 
 	public Npc(final World world, final int id, final int startX, final int startY, final int minX, final int maxX, final int minY, final int maxY) {
 		this(world, new NPCLoc(id, startX, startY, minX, maxX, minY, maxY));
-	}
-
-	protected Npc(final World world) {
-		// For PKbots only
-		super(world);
 	}
 
 	public Npc(final World world, final NPCLoc loc) {
@@ -98,8 +92,8 @@ public class Npc extends Mob {
 			throw new NullPointerException("NPC definition is invalid for NPC ID: " + loc.getId() + ", coordinates: " + "("
 				+ loc.startX() + ", " + loc.startY() + ")");
 		}
-		this.setNpcBehavior(new NpcBehavior(this));
 		this.loc = loc;
+		this.setNpcBehavior(new NpcBehavior(this));
 		super.setID(loc.getId());
 		super.setLocation(Point.location(loc.startX(), loc.startY()), true);
 
@@ -120,49 +114,49 @@ public class Npc extends Mob {
 	/**
 	 * Adds combat damage done by a player
 	 *
-	 * @param p
-	 * @param damage
+	 * @param mob mob dealing damage
+	 * @param damage current attack's damage
 	 */
-	public void addCombatDamage(final Player p, final int damage) {
-		if (combatDamagers.containsKey(p.getDatabaseID())) {
-			combatDamagers.put(p.getDatabaseID(), combatDamagers.get(p.getDatabaseID()) + damage);
+	public void addCombatDamage(final Player mob, final int damage) {
+		if (combatDamagers.containsKey(mob.getUUID())) {
+			combatDamagers.put(mob.getUUID(), combatDamagers.get(mob.getUUID()) + damage);
 		} else {
-			combatDamagers.put(p.getDatabaseID(), damage);
+			combatDamagers.put(mob.getUUID(), damage);
 		}
 	}
 
 	/**
 	 * Adds mage damage done by a player
 	 *
-	 * @param p
-	 * @param damage
+	 * @param mob mob dealing damage
+	 * @param damage current attack's damage
 	 */
-	public void addMageDamage(final Player p, final int damage) {
-		if (mageDamagers.containsKey(p.getDatabaseID())) {
-			mageDamagers.put(p.getDatabaseID(), mageDamagers.get(p.getDatabaseID()) + damage);
+	public void addMageDamage(final Mob mob, final int damage) {
+		if (mageDamagers.containsKey(mob.getUUID())) {
+			mageDamagers.put(mob.getUUID(), mageDamagers.get(mob.getUUID()) + damage);
 		} else {
-			mageDamagers.put(p.getDatabaseID(), damage);
+			mageDamagers.put(mob.getUUID(), damage);
 		}
 	}
 
 	/**
 	 * Adds range damage done by a player
 	 *
-	 * @param p
-	 * @param damage
+	 * @param mob mob dealing damage
+	 * @param damage current attack's damage
 	 */
-	public void addRangeDamage(final Player p, final int damage) {
-		if (rangeDamagers.containsKey(p.getDatabaseID())) {
-			rangeDamagers.put(p.getDatabaseID(), rangeDamagers.get(p.getDatabaseID()) + damage);
+	public void addRangeDamage(final Mob mob, final int damage) {
+		if (rangeDamagers.containsKey(mob.getUUID())) {
+			rangeDamagers.put(mob.getUUID(), rangeDamagers.get(mob.getUUID()) + damage);
 		} else {
-			rangeDamagers.put(p.getDatabaseID(), damage);
+			rangeDamagers.put(mob.getUUID(), damage);
 		}
 	}
 
 	public void displayNpcTeleportBubble(final int x, final int y) {
 		for (Object o : getViewArea().getPlayersInView()) {
-			Player p = ((Player) o);
-			ActionSender.sendTeleBubble(p, x, y, false);
+			Player player = ((Player) o);
+			ActionSender.sendTeleBubble(player, x, y, false);
 		}
 		setTeleporting(true);
 	}
@@ -172,37 +166,26 @@ public class Npc extends Mob {
 	}
 
 	/**
-	 * Combat damage done by player p
+	 * Combat damage done by Mob ID
 	 *
-	 * @param p
-	 * @return
+	 * @param ID uuid of mob
+	 * @return int
 	 */
-	private int getCombatDamageDoneBy(final Player p) {
-		if (p == null) {
+	private int getCombatDamageDoneBy(final String ID) {
+		if (!combatDamagers.containsKey(ID)) {
 			return 0;
 		}
-		if (!combatDamagers.containsKey(p.getDatabaseID())) {
-			return 0;
-		}
-		int dmgDone = combatDamagers.get(p.getDatabaseID());
-		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
-	}
-
-	private int getCombatDamageDoneBy(final Npc n) {
-		if (n == null) {
-			return 0;
-		}
-		int dmgDone = combatDamagers.get(n.getID());
-		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
+		int dmgDone = combatDamagers.get(ID);
+		return Math.min(dmgDone, this.getDef().getHits());
 	}
 
 	/**
 	 * Iterates over combatDamagers map and returns the keys
 	 *
-	 * @return
+	 * @return ArrayList<String>
 	 */
-	private ArrayList<Integer> getCombatDamagers() {
-		return new ArrayList<Integer>(combatDamagers.keySet());
+	private ArrayList<String> getCombatDamagers() {
+		return new ArrayList<String>(combatDamagers.keySet());
 	}
 
 	public int getCombatStyle() {
@@ -218,65 +201,49 @@ public class Npc extends Mob {
 	}
 
 	/**
-	 * Mage damage done by player p
+	 * Mage damage done by Mob ID
 	 *
-	 * @param p
-	 * @return
+	 * @param ID uuid of mob
+	 * @return int
 	 */
-	private int getMageDamageDoneBy(final Player p) {
-		if (p == null || !mageDamagers.containsKey(p.getDatabaseID())) {
+	private int getMageDamageDoneBy(final String ID) {
+		if (!mageDamagers.containsKey(ID)) {
 			return 0;
 		}
-		int dmgDone = mageDamagers.get(p.getDatabaseID());
-		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
-	}
-
-	private int getMageDamageDoneBy(final Npc n) {
-		if (n == null || !mageDamagers.containsKey(n.getID())) {
-			return 0;
-		}
-		int dmgDone = mageDamagers.get(n.getID());
-		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
+		int dmgDone = mageDamagers.get(ID);
+		return Math.min(dmgDone, this.getDef().getHits());
 	}
 
 	/**
 	 * Iterates over mageDamagers map and returns the keys
 	 *
-	 * @return
+	 * @return ArrayList<String>
 	 */
-	private ArrayList<Integer> getMageDamagers() {
-		return new ArrayList<Integer>(mageDamagers.keySet());
+	private ArrayList<String> getMageDamagers() {
+		return new ArrayList<String>(mageDamagers.keySet());
 	}
 
 	/**
-	 * Range damage done by player p
+	 * Range damage done by Mob ID
 	 *
-	 * @param p
-	 * @return
+	 * @param ID uuid of mob
+	 * @return int
 	 */
-	private int getRangeDamageDoneBy(final Player p) {
-		if (p == null || !rangeDamagers.containsKey(p.getDatabaseID())) {
+	private int getRangeDamageDoneBy(final String ID) {
+		if (!rangeDamagers.containsKey(ID)) {
 			return 0;
 		}
-		int dmgDone = rangeDamagers.get(p.getDatabaseID());
-		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
-	}
-
-	private int getRangeDamageDoneBy(final Npc n) {
-		if (n == null || !rangeDamagers.containsKey(n.getID())) {
-			return 0;
-		}
-		int dmgDone = rangeDamagers.get(n.getID());
-		return (dmgDone > this.getDef().getHits() ? this.getDef().getHits() : dmgDone);
+		int dmgDone = rangeDamagers.get(ID);
+		return Math.min(dmgDone, this.getDef().getHits());
 	}
 
 	/**
 	 * Iterates over rangeDamagers map and returns the keys
 	 *
-	 * @return
+	 * @return ArrayList<String>
 	 */
-	private ArrayList<Integer> getRangeDamagers() {
-		return new ArrayList<Integer>(rangeDamagers.keySet());
+	private ArrayList<String> getRangeDamagers() {
+		return new ArrayList<String>(rangeDamagers.keySet());
 	}
 
 	public int getArmourPoints() {
@@ -291,386 +258,278 @@ public class Npc extends Mob {
 		return 0;
 	}
 
-	public boolean stateIsInvisible() { return false; };
-	public boolean stateIsInvulnerable() { return false; };
+	public boolean stateIsInvisible() { return false; }
+	public boolean stateIsInvulnerable() { return false; }
 
 	@Override
 	public void killedBy(Mob mob) {
-		if (!mob.isNpc()) {
-			mob = handleLootAndXpDistribution(mob);
-			this.cure();
-			Player owner = mob instanceof Player ? (Player) mob : null;
-			if (owner != null) {
-				ActionSender.sendSound(owner, "victory");
-				owner.getWorld().getServer().getAchievementSystem().checkAndIncSlayNpcTasks(owner, this);
-				owner.incKills2();
-				ActionSender.sendKills2(owner);
+		String ownerId = handleXpDistribution(mob);
 
-				//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
-				//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
-				//Also, if we don't have NPC kill logging enabled, we can't have NPC kill messages.
-				if (getWorld().getServer().getConfig().NPC_KILL_LOGGING) {
-					if (owner.getCache().hasKey("show_npc_kc") && owner.getCache().getBoolean("show_npc_kc")
-						&& getWorld().getServer().getConfig().NPC_KILL_MESSAGES) {
-							owner.addNpcKill(this,!getWorld().getServer().getConfig().NPC_KILL_MESSAGES_FILTER
-								|| getWorld().getServer().getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName()));
-					} else
-						owner.addNpcKill(this, false);
-				}
+		// Remove poison event(s)
+		this.cure();
 
-				owner = handleLootAndXpDistribution(((Player) mob));
+		Player owner = null;
+		if (getWorld().getPlayerUUID(ownerId) != null)
+			// owner is a Player
+			owner = getWorld().getPlayerUUID(ownerId);
+		else {
+			Npc npcKiller = getWorld().getNpcByUUID(ownerId);
+			if (npcKiller != null && npcKiller.relatedMob instanceof Player)
+				// owner is Npc with a related Player
+				owner = (Player) npcKiller.relatedMob;
+		}
 
-				//KDB Specific RDT
-				if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
-					if (this.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-						if (getWorld().kbdTable.rollAccess(this.getID(), Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id()))) {
-							Item kbdSpecificLoot = getWorld().kbdTable.rollItem(Functions.isWielding(owner, ItemId.RING_OF_WEALTH.id()), owner);
-							if (kbdSpecificLoot != null) {
-								GroundItem groundItem = new GroundItem(getWorld(), kbdSpecificLoot.getID(), getX(), getY(), kbdSpecificLoot.getAmount(), owner);
-								groundItem.setAttribute("npcdrop", true);
-								getWorld().registerItem(groundItem);
-								try {
-									getWorld().getServer().getDatabase().addDropLog(
-										owner, this, kbdSpecificLoot.getID(), kbdSpecificLoot.getAmount());
-								} catch (final GameDatabaseException ex) {
-									LOGGER.catching(ex);
-								}
-								if (kbdSpecificLoot.getID() == ItemId.DRAGON_2_HANDED_SWORD.id())
-									owner.message("Congratulations! You have received a dragon 2-Handed Sword!");
-							}
-						}
-					}
-				}
+		if (owner == null) return;
 
-				//Determine if the RDT is hit first
-				boolean rdtHit = false;
-				Item rare = null;
-				if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer()) {
-					if (getWorld().standardTable.rollAccess(this.getID(), Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
-						rdtHit = true;
-						rare = getWorld().standardTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
-					} else if (getWorld().gemTable.rollAccess(this.getID(), Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
-						rdtHit = true;
-						rare = getWorld().gemTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
-					}
-				}
+		ActionSender.sendSound(owner, "victory");
+		owner.getWorld().getServer().getAchievementSystem().checkAndIncSlayNpcTasks(owner, this);
+		owner.incnpc_kills();
+		ActionSender.sendnpc_kills(owner);
 
-				if (rare != null) {
-					if (!handleRingOfAvarice(owner, rare)) {
-						GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount(), owner);
-						groundItem.setAttribute("npcdrop", true);
-						getWorld().registerItem(groundItem);
-					}
-					try {
-						getWorld().getServer().getDatabase().addDropLog(
-							owner, this, rare.getID(), rare.getAmount());
-					} catch (final GameDatabaseException ex) {
-						LOGGER.catching(ex);
-					}
-				}
+		//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
+		//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
+		//Also, if we don't have NPC kill logging enabled, we can't have NPC kill messages.
+		if (getWorld().getServer().getConfig().NPC_KILL_LOGGING) {
+			logNpcKill(owner);
+		}
 
-				ItemDropDef[] drops = def.getDrops();
+		owner.getWorld().getServer().getPluginHandler().handlePlugin(owner, "KillNpc", new Object[]{owner, this});
 
-				int total = 0;
-				int weightTotal = 0;
-				for (ItemDropDef drop : drops) {
-					total += drop.getWeight();
-					weightTotal += drop.getWeight();
-					if (drop.getWeight() == 0 && drop.getID() != -1) {
-						if (!handleRingOfAvarice(owner, new Item(drop.getID(), drop.getAmount()))) {
-							GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount(), owner);
-							groundItem.setAttribute("npcdrop", true);
-							getWorld().registerItem(groundItem);
-						}
-						continue;
-					}
-
-				}
-
-				if (!rdtHit) {
-					int hit = DataConversions.random(0, total);
-					total = 0;
-
-					for (ItemDropDef drop : drops) {
-						if (drop.getID() == com.openrsc.server.constants.ItemId.UNHOLY_SYMBOL_MOULD.id()) {
-							if (owner.getQuestStage(Quests.OBSERVATORY_QUEST) > -1)
-								continue;
-
-							if (owner.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS)
-								if (owner.getCache().hasKey("want_unholy_symbol_drops") &&
-									!owner.getCache().getBoolean("want_unholy_symbol_drops"))
-									continue;
-						}
-
-						Item temp = new Item(drop.getID());
-
-						if (drop == null) {
-							continue;
-						}
-
-						int dropID = drop.getID();
-						int amount = drop.getAmount();
-						int weight = drop.getWeight();
-
-						double currentRatio = (double) weight / (double) weightTotal;
-						if (hit >= total && hit < (total + weight)) {
-							if (dropID != -1) {
-								if (getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly()
-									&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
-									continue;
-								}
-
-								if (!getWorld().getServer().getEntityHandler().getItemDef(dropID).isStackable()) {
-									try {
-										getWorld().getServer().getDatabase().addDropLog(owner, this, dropID, amount);
-									} catch (final GameDatabaseException ex) {
-										LOGGER.catching(ex);
-									}
-									GroundItem groundItem;
-
-									// We need to drop multiple counts of "1" item if it's not a stack
-									for (int count = 0; count < amount; count++) {
-
-										// Gem Drop Table + 1/128 chance to roll into very rare item
-										if (drop.getID() == com.openrsc.server.constants.ItemId.UNCUT_SAPPHIRE.id()) {
-											dropID = Formulae.calculateGemDrop((Player) mob);
-											amount = 1;
-										}
-
-										// Herb Drop Table
-										else if (drop.getID() == com.openrsc.server.constants.ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
-											dropID = Formulae.calculateHerbDrop();
-										}
-
-										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD) {
-											continue;
-										} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
-											if (!handleRingOfAvarice(owner, new Item(drop.getID(), drop.getAmount()))) {
-												groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1, owner);
-												groundItem.setAttribute("npcdrop", true);
-												getWorld().registerItem(groundItem);
-											}
-										}
-									}
-
-								} else {
-
-									// Gold Drops
-									if (drop.getID() == com.openrsc.server.constants.ItemId.COINS.id()) {
-										amount = Formulae.calculateGoldDrop(
-											GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
-										);
-										if (Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_SPLENDOR.id())) {
-											amount += Formulae.getSplendorBoost(amount);
-											((Player) mob).message("Your ring of splendor shines brightly!");
-										}
-									}
-
-									try {
-										getWorld().getServer().getDatabase().addDropLog(owner, this, dropID, amount);
-									} catch (final GameDatabaseException ex) {
-										LOGGER.catching(ex);
-									}
-
-									if (!handleRingOfAvarice(owner, new Item(drop.getID(), amount))) {
-										GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner);
-										groundItem.setAttribute("npcdrop", true);
-										getWorld().registerItem(groundItem);
-									}
-								}
-
-								// Check if we have a "valuable drop" (configurable)
-								if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() &&
-									amount > 0 &&
-									getWorld().getServer().getConfig().VALUABLE_DROP_MESSAGES &&
-									(
-										currentRatio > getWorld().getServer().getConfig().VALUABLE_DROP_RATIO ||
-											(
-												getWorld().getServer().getConfig().VALUABLE_DROP_EXTRAS &&
-													getWorld().getServer().getConfig().valuableDrops.contains(temp.getDef(getWorld()).getName())
-											)
-									)
-								) {
-									if (amount > 1) {
-										owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef(getWorld()).getName() + " (" +
-											(temp.getDef(getWorld()).getDefaultPrice() * amount) + " coins)");
-									} else {
-										owner.message("@red@Valuable drop: " + temp.getDef(getWorld()).getName() + " (" +
-											(temp.getDef(getWorld()).getDefaultPrice()) + " coins)");
-									}
-								}
-							}
-							break;
-						}
-						total += weight;
-					}
-				}
-
-				if (mob instanceof Player) {
-					for (NpcLootEvent e : deathListeners) {
-						e.onLootNpcDeath((Player) mob, this);
-					}
-				}
-				if (mob instanceof Npc) {
-					for (NpcLootEvent e : deathListeners) {
-						e.onLootNpcDeath((Npc) mob, this);
-					}
-				}
-				deathListeners.clear();
-				remove();
+		// Custom KDB Specific Rare Drop Table (RDT)
+		if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
+			if (this.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+				calculateCustomKingBlackDragonDrop(owner);
 			}
-		} else {
-			mob = handleLootAndXpDistribution(mob);
-			Npc owner = mob instanceof Npc ? (Npc) mob : null;
-			Player owner2 = mob instanceof Player ? (Player) mob : null;
-			if (owner != null) {
-				/*if(owner.getPetNpc() > 0) {
-				owner = handleLootAndXpDistributionPet((Npc) mob);
-				} else*/
-				owner = handleLootAndXpDistribution((Npc) mob);
-				//if(owner2 != null){
-				//owner2 = handleLootAndXpDistribution((Player) mob);
-				//}
+		}
 
-				//Determine if the RDT is hit first
-				boolean rdtHit = false;
-				Item rare = null;
-				if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES && mob.isPlayer() && owner.isPlayer()) {
-					if (getWorld().standardTable.rollAccess(this.getID(), Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
-						rdtHit = true;
-						rare = getWorld().standardTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
-					} else if (getWorld().gemTable.rollAccess(this.getID(), Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()))) {
-						rdtHit = true;
-						rare = getWorld().gemTable.rollItem(Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_WEALTH.id()), ((Player) mob));
-					}
-				}
+		// Custom Rare Drop Table (RDT)
+		boolean rdtHit = false;
+		if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES) {
+			rdtHit = rollForCustomRareItem(owner);
+		}
 
-				if (rare != null) {
-					if(!owner.isNpc()){
-						if (!handleRingOfAvarice((Player) mob, rare)) {
-								GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getID(), getX(), getY(), rare.getAmount());
-								groundItem.setAttribute("npcdrop", true);
-								getWorld().registerItem(groundItem);
-						}
-					}
-				}
+		ItemDropDef[] drops = def.getDrops();
+		if (drops == null) {
+			// Some enemies have no drops
+			deathListeners.clear();
+			remove();
+			return;
+		}
 
+		// Drops that always occur on every kill
+		int total = 0;
+		int weightTotal = 0;
+		for (ItemDropDef drop : drops) {
+			total = weightTotal = total + drop.getWeight();
+			if (drop.getWeight() == 0 && drop.getID() != ItemId.NOTHING.id()) {
 
-				ItemDropDef[] drops = def.getDrops();
+				// If Ring of Avarice (custom) is equipped, and the item is a stack,
+				// we will award the item with slightly different logic.
+				if (handleRingOfAvarice(owner, new Item(drop.getID(), drop.getAmount()))) continue;
 
-				int total = 0;
-				int weightTotal = 0;
-				for (ItemDropDef drop : drops) {
-					total += drop.getWeight();
-					weightTotal += drop.getWeight();
-					if (drop.getWeight() == 0 && drop.getID() != -1) {
-						if(!owner.isNpc()){
-							if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), drop.getAmount()))) {
-								GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount());
-								groundItem.setAttribute("npcdrop", true);
-								getWorld().registerItem(groundItem);
-							}
-						}
+				// Otherwise, create a normal GroundItem.
+				GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount(), owner);
+				groundItem.setAttribute("npcdrop", true);
+				getWorld().registerItem(groundItem);
+			}
+
+		}
+
+		if (!rdtHit) {
+			int hit = DataConversions.random(0, total);
+			total = 0;
+
+			// Loop on the drops from the Mob
+			for (ItemDropDef drop : drops) {
+				if (drop.getID() == com.openrsc.server.constants.ItemId.UNHOLY_SYMBOL_MOULD.id()) {
+					if (!wantUnholySymbols(owner)) {
 						continue;
 					}
 				}
 
-				if (!rdtHit) {
-					int hit = DataConversions.random(0, total);
-					total = 0;
+				int dropID = drop.getID();
+				int amount = drop.getAmount();
+				int weight = drop.getWeight();
 
-					for (ItemDropDef drop : drops) {
-
-						Item temp = new Item(drop.getID());
-
-						if (drop == null) {
-							continue;
+				// hit (% chance) is found by taking the weight of the current item
+				// and dividing it by the total weight of all drops from this mob.
+				if (hit >= total && hit < (total + weight)) {
+					if (dropID != ItemId.NOTHING.id()) {
+						if (getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly()
+							&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
+							continue; // Members only item on a free world
 						}
 
-						int dropID = drop.getID();
-						int amount = drop.getAmount();
-						int weight = drop.getWeight();
-
-						double currentRatio = (double) weight / (double) weightTotal;
-						if (hit >= total && hit < (total + weight)) {
-							if (dropID != -1) {
-								if (getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly()
-									&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
-									continue;
-								}
-
-								if (!getWorld().getServer().getEntityHandler().getItemDef(dropID).isStackable()) {
-									GroundItem groundItem;
-
-									// We need to drop multiple counts of "1" item if it's not a stack
-									for (int count = 0; count < amount; count++) {
-
-										// Gem Drop Table + 1/128 chance to roll into very rare item
-										if(!owner.isNpc()){
-											if (drop.getID() == com.openrsc.server.constants.ItemId.UNCUT_SAPPHIRE.id()) {
-												dropID = Formulae.calculateGemDrop((Player) mob);
-												amount = 1;
-											}
-										}
-
-										// Herb Drop Table
-										else if (!owner.isNpc() && drop.getID() == com.openrsc.server.constants.ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
-											dropID = Formulae.calculateHerbDrop();
-										}
-
-										if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD) {
-											continue;
-										} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
-											if(!owner.isNpc()){
-												if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), drop.getAmount()))) {
-													groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1);
-													groundItem.setAttribute("npcdrop", true);
-													getWorld().registerItem(groundItem);
-												}
-											}
-										}
-									}
-								} else {
-									// Gold Drops
-									if (drop.getID() == com.openrsc.server.constants.ItemId.COINS.id()) {
-										amount = Formulae.calculateGoldDrop(
-											GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
-										);
-										if(!owner.isNpc()){
-											if (Functions.isWielding(((Player) mob), com.openrsc.server.constants.ItemId.RING_OF_SPLENDOR.id())) {
-												amount += Formulae.getSplendorBoost(amount);
-												((Player) mob).message("Your ring of splendor shines brightly!");
-											}
-										}
-									}
-
-									if(!owner.isNpc()){
-										if (!handleRingOfAvarice((Player) mob, new Item(drop.getID(), amount))) {
-											GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount);
-												getWorld().registerItem(groundItem);
-												groundItem.setAttribute("npcdrop", true);
-										}
-									}
-								}
-							}
-							break;
+						if (getWorld().getServer().getEntityHandler().getItemDef(dropID).isStackable()) {
+							dropStackItem(dropID, amount, owner);
+						} else {
+							dropStandardItem(dropID, amount, owner);
 						}
-						total += weight;
-					}
-				}
 
-				if (mob instanceof Npc) {
-					for (NpcLootEvent e : deathListeners) {
-						e.onLootNpcDeath((Npc) mob, this);
+						if (getWorld().getServer().getConfig().VALUABLE_DROP_MESSAGES) {
+							checkValuableDrop(dropID, amount, weight, weightTotal, owner);
+						}
 					}
+					break;
 				}
-				if (mob instanceof Player) {
-					for (NpcLootEvent e : deathListeners) {
-						e.onLootNpcDeath((Player) mob, this);
-					}
+				total += weight;
+			}
+		}
+
+		for (NpcLootEvent e : deathListeners) {
+			e.onLootNpcDeath((Player) mob, this);
+		}
+
+		deathListeners.clear();
+		remove();
+	}
+
+	private void logNpcKill(Player owner) {
+		if (owner.getCache().hasKey("show_npc_kc") && owner.getCache().getBoolean("show_npc_kc")
+			&& getWorld().getServer().getConfig().NPC_KILL_MESSAGES) {
+			owner.addNpcKill(this,!getWorld().getServer().getConfig().NPC_KILL_MESSAGES_FILTER
+				|| getWorld().getServer().getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName()));
+		} else
+			owner.addNpcKill(this, false);
+	}
+
+	private void calculateCustomKingBlackDragonDrop(Player owner) {
+		boolean ringOfWealth = owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id());
+		if (getWorld().kbdTable.rollAccess(this.getID(), ringOfWealth)) {
+			Item kbdSpecificLoot = getWorld().kbdTable.rollItem(ringOfWealth, owner);
+			if (kbdSpecificLoot != null) {
+				GroundItem groundItem = new GroundItem(getWorld(), kbdSpecificLoot.getCatalogId(), getX(), getY(), kbdSpecificLoot.getAmount(), owner);
+				groundItem.setAttribute("npcdrop", true);
+				getWorld().registerItem(groundItem);
+				try {
+
+					getWorld().getServer().getDatabase().addDropLog(
+						owner, this, kbdSpecificLoot.getCatalogId(), kbdSpecificLoot.getAmount());
+				} catch (final GameDatabaseException ex) {
+					LOGGER.catching(ex);
 				}
-				deathListeners.clear();
-				remove();
+				if (kbdSpecificLoot.getCatalogId() == ItemId.DRAGON_2_HANDED_SWORD.id())
+					owner.message("Congratulations! You have received a dragon 2-Handed Sword!");
+			}
+		}
+	}
+
+	private boolean rollForCustomRareItem(Player owner) {
+		boolean ringOfWealth = owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id());
+
+		Item rare = null;
+		if (getWorld().standardTable.rollAccess(this.getID(), ringOfWealth)) {
+			rare = getWorld().standardTable.rollItem(ringOfWealth, owner);
+		} else if (getWorld().gemTable.rollAccess(this.getID(), ringOfWealth)) {
+			rare = getWorld().gemTable.rollItem(ringOfWealth, owner);
+		}
+
+		if (rare != null) {
+			if (!handleRingOfAvarice(owner, rare)) {
+				GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getCatalogId(), getX(), getY(), rare.getAmount(), owner);
+				groundItem.setAttribute("npcdrop", true);
+				getWorld().registerItem(groundItem);
+			}
+
+			try {
+				getWorld().getServer().getDatabase().addDropLog(
+					owner, this, rare.getCatalogId(), rare.getAmount());
+			} catch (final GameDatabaseException ex) {
+				LOGGER.catching(ex);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	private boolean wantUnholySymbols(Player owner) {
+		if (owner.getQuestStage(Quests.OBSERVATORY_QUEST) > -1)
+			return true; // Quest started.
+
+		if (owner.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS)
+			if (owner.getCache().hasKey("want_unholy_symbol_drops") &&
+				!owner.getCache().getBoolean("want_unholy_symbol_drops"))
+				return true; //
+		return false;
+	}
+
+	private void dropStackItem(final int dropID, int amount, Player owner) {
+		// Gold Drops
+		if (dropID == com.openrsc.server.constants.ItemId.COINS.id()) {
+			amount = Formulae.calculateGoldDrop(
+				GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
+			);
+			if (owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_SPLENDOR.id())) {
+				amount += Formulae.getSplendorBoost(amount);
+				owner.message("Your ring of splendor shines brightly!");
+			}
+		}
+
+		try {
+			getWorld().getServer().getDatabase().addDropLog(owner, this, dropID, amount);
+		} catch (final GameDatabaseException ex) {
+			LOGGER.catching(ex);
+		}
+
+		if (!handleRingOfAvarice(owner, new Item(dropID, amount))) {
+			GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner);
+			groundItem.setAttribute("npcdrop", true);
+			getWorld().registerItem(groundItem);
+		}
+	}
+
+	private void dropStandardItem(int dropID, int amount, Player owner) {
+		try {
+			getWorld().getServer().getDatabase().addDropLog(owner, this, dropID, amount);
+		} catch (final GameDatabaseException ex) {
+			LOGGER.catching(ex);
+		}
+		GroundItem groundItem;
+
+		// We need to drop multiple counts of "1" item if it's not a stack
+		for (int count = 0; count < amount; count++) {
+
+			// Gem Drop Table + 1/128 chance to roll into very rare item
+			if (dropID == com.openrsc.server.constants.ItemId.UNCUT_SAPPHIRE.id()) {
+				dropID = Formulae.calculateGemDrop(owner);
+				amount = 1;
+			}
+
+			// Herb Drop Table
+			else if (dropID == com.openrsc.server.constants.ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
+				dropID = Formulae.calculateHerbDrop();
+			}
+
+			if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD) {
+				continue; // Members item on a non-members world.
+			} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
+				groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1, owner);
+				groundItem.setAttribute("npcdrop", true);
+				getWorld().registerItem(groundItem);
+			}
+		}
+	}
+
+	private void checkValuableDrop(int dropID, int amount, int weight, int weightTotal, Player owner) {
+		// Check if we have a "valuable drop" (configurable)
+		Item temp = new Item(dropID);
+		double currentRatio = (double) weight / (double) weightTotal;
+		if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() &&
+			amount > 0 &&
+			(
+				currentRatio > getWorld().getServer().getConfig().VALUABLE_DROP_RATIO ||
+					(
+						getWorld().getServer().getConfig().VALUABLE_DROP_EXTRAS &&
+							getWorld().getServer().getConfig().valuableDrops.contains(temp.getDef(getWorld()).getName())
+					)
+			)
+		) {
+			if (amount > 1) {
+				owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef(getWorld()).getName() + " (" +
+					(temp.getDef(getWorld()).getDefaultPrice() * amount) + " coins)");
+			} else {
+				owner.message("@red@Valuable drop: " + temp.getDef(getWorld()).getName() + " (" +
+					(temp.getDef(getWorld()).getDefaultPrice()) + " coins)");
 			}
 		}
 	}
@@ -681,265 +540,81 @@ public class Npc extends Mob {
 	 * @param attacker the person that "finished off" the npc
 	 * @return the player who did the most damage / should get the loot
 	 */
-	private Mob handleLootAndXpDistribution(final Mob attacker) {
-
-		Mob playerWithMostDamage = attacker;
+	private String handleXpDistribution(final Mob attacker) {
+		final int totalCombatXP = Formulae.combatExperience(this);
+		String UUIDWithMostDamage = attacker.getUUID();
 		int currentHighestDamage = 0;
 
-		int totalCombatXP = Formulae.combatExperience(this, getDef().roundMode);
 		// Melee damagers
-		for (int playerID : getCombatDamagers()) {
-
-			final Player p = getWorld().getPlayerID(playerID);
-			if (p == null)
-				continue;
-			final int damageDoneByPlayer = getCombatDamageDoneBy(p);
+		for (String ID : getCombatDamagers()) {
+			final int damageDoneByPlayer = getCombatDamageDoneBy(ID);
 
 			if (damageDoneByPlayer > currentHighestDamage) {
-				playerWithMostDamage = p;
+				UUIDWithMostDamage = ID;
 				currentHighestDamage = damageDoneByPlayer;
 			}
 
-			// Give the player their share of the experience.
-			int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
-
-			switch (p.getCombatStyle()) {
-				case 0: //CONTROLLED
-					for (int x = 0; x < 3; x++) {
-						p.incExp(x, totalXP, true);
-					}
-					break;
-				case 1: //AGGRESSIVE
-					p.incExp(Skills.STRENGTH, totalXP * 3, true);
-					break;
-				case 2: //ACCURATE
-					p.incExp(Skills.ATTACK, totalXP * 3, true);
-					break;
-				case 3: //DEFENSIVE
-					p.incExp(Skills.DEFENSE, totalXP * 3, true);
-					break;
+			Player player = getWorld().getPlayerUUID(ID);
+			if (player != null) {
+				int skillsDist[] = {0, 0, 0, 0};
+				// Give the player their share of the experience.
+				int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
+				switch (player.getCombatStyle()) {
+					case Skills.CONTROLLED_MODE: // CONTROLLED
+						for (int x = 0; x < 3; x++) {
+							skillsDist[x] = 1;
+						}
+						break;
+					case Skills.AGGRESSIVE_MODE: // AGGRESSIVE
+						skillsDist[Skills.STRENGTH] = 3;
+						break;
+					case Skills.ACCURATE_MODE: // ACCURATE
+						skillsDist[Skills.ATTACK] = 3;
+						break;
+					case Skills.DEFENSIVE_MODE: // DEFENSIVE
+						skillsDist[Skills.DEFENSE] = 3;
+						break;
+				}
+				skillsDist[Skills.HITS] = 1;
+				player.incExp(skillsDist, totalXP, true);
 			}
-			p.incExp(Skills.HITS, totalXP, true);
 		}
 
 		// Ranged damagers
-		for (int playerID : getRangeDamagers()) {
-			int newXP = 0;
-			Player p = getWorld().getPlayerID(playerID);
-			int dmgDoneByPlayer = getRangeDamageDoneBy(p);
-			if (p == null)
-				continue;
-
-			if (dmgDoneByPlayer > currentHighestDamage) {
-				playerWithMostDamage = p;
-				currentHighestDamage = dmgDoneByPlayer;
-			}
-			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
-			p.incExp(Skills.RANGED, newXP * 4, true);
-			ActionSender.sendStat(p, Skills.RANGED);
-		}
-
-		// Magic damagers
-		for (int playerID : getMageDamagers()) {
-
-			Player p = getWorld().getPlayerID(playerID);
-
-			int dmgDoneByPlayer = getMageDamageDoneBy(p);
-			if (p == null)
-				continue;
-
-			if (dmgDoneByPlayer > currentHighestDamage) {
-				playerWithMostDamage = p;
-				currentHighestDamage = dmgDoneByPlayer;
-			}
-		}
-		//return playerWithMostDamage;
-
-		Mob npcWithMostDamage = attacker;
-		// Melee damagers
-		for (int npcID : getCombatDamagers()) {
-			int newXP = 0;
-			final Npc n = getWorld().getNpcById(npcID);
-			if (n == null)
-				continue;
-
-			final int dmgDoneByNpc = getCombatDamageDoneBy(n);
-
-			if (dmgDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = dmgDoneByNpc;
-			}
-
-		}
-
-		// Ranged damagers
-		for (int npcID : getRangeDamagers()) {
-			int newXP = 0;
-			Npc n = getWorld().getNpcById(npcID);
-			int dmgDoneByNpc = getRangeDamageDoneBy(n);
-			if (n == null)
-				continue;
-
-			if (dmgDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = dmgDoneByNpc;
-			}
-		}
-
-		// Magic damagers
-		for (int npcID : getMageDamagers()) {
-			int newXP = 0;
-			Npc n = getWorld().getNpcById(npcID);
-
-			int dmgDoneByNpc = getMageDamageDoneBy(n);
-			if (n == null)
-				continue;
-		}
-		return npcWithMostDamage;
-	}
-
-	private Player handleLootAndXpDistribution(final Player attacker) {
-
-		Player playerWithMostDamage = attacker;
-		int currentHighestDamage = 0;
-
-		int totalCombatXP = Formulae.combatExperience(this, 0);
-		// Melee damagers
-		for (int playerID : getCombatDamagers()) {
-
-			final Player p = getWorld().getPlayerID(playerID);
-			if (p == null)
-				continue;
-			final int damageDoneByPlayer = getCombatDamageDoneBy(p);
-
+		for (String ID : getRangeDamagers()) {
+			int damageDoneByPlayer = getRangeDamageDoneBy(ID);
 			if (damageDoneByPlayer > currentHighestDamage) {
-				playerWithMostDamage = p;
+				UUIDWithMostDamage = ID;
 				currentHighestDamage = damageDoneByPlayer;
 			}
 
-			// Give the player their share of the experience.
-			int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
-
-			switch (p.getCombatStyle()) {
-				case 0: //CONTROLLED
-					for (int x = 0; x < 3; x++) {
-						//p.incExp(x, totalXP, true);
-					}
-					break;
-				case 1: //AGGRESSIVE
-					//p.incExp(Skills.STRENGTH, totalXP * 3, true);
-					break;
-				case 2: //ACCURATE
-					//p.incExp(Skills.ATTACK, totalXP * 3, true);
-					break;
-				case 3: //DEFENSIVE
-					//p.incExp(Skills.DEFENSE, totalXP * 3, true);
-					break;
-			}
-			//p.incExp(Skills.HITS, totalXP, true);
-		}
-
-		// Ranged damagers
-		for (int playerID : getRangeDamagers()) {
-			int newXP = 0;
-			Player p = getWorld().getPlayerID(playerID);
-			int dmgDoneByPlayer = getRangeDamageDoneBy(p);
-			if (p == null)
-				continue;
-
-			if (dmgDoneByPlayer > currentHighestDamage) {
-				playerWithMostDamage = p;
-				currentHighestDamage = dmgDoneByPlayer;
-			}
-			newXP = (int) (((double) (totalCombatXP) / (double) (this.getDef().hits)) * (double) (dmgDoneByPlayer));
-			//p.incExp(Skills.RANGED, newXP * 4, true);
-			ActionSender.sendStat(p, Skills.RANGED);
-		}
-
-		// Magic damagers
-		for (int playerID : getMageDamagers()) {
-
-			Player p = getWorld().getPlayerID(playerID);
-
-			int dmgDoneByPlayer = getMageDamageDoneBy(p);
-			if (p == null)
-				continue;
-
-			if (dmgDoneByPlayer > currentHighestDamage) {
-				playerWithMostDamage = p;
-				currentHighestDamage = dmgDoneByPlayer;
-			}
-		}
-		return playerWithMostDamage;
-	}
-
-	private Npc handleLootAndXpDistribution(final Npc attacker) {
-		Npc npcWithMostDamage = attacker;
-		int currentHighestDamage = 0;
-
-		// Melee damagers
-		for (int npcID : getCombatDamagers()) {
-
-			final Npc n = getWorld().getNpcById(npcID);
-			if (n == null)
-				continue;
-			final int dmgDoneByNpc = getCombatDamageDoneBy(n);
-
-			if (dmgDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = dmgDoneByNpc;
-			}
-		}
-
-		// Ranged damagers
-		for (int npcID : getRangeDamagers()) {
-			int newXP = 0;
-			Npc n = getWorld().getNpcById(npcID);
-			int dmgDoneByNpc = getRangeDamageDoneBy(n);
-			if (n == null)
-				continue;
-
-			if (dmgDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = dmgDoneByNpc;
+			Player player = getWorld().getPlayerUUID(ID);
+			if (player != null) {
+				int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
+				player.incExp(Skills.RANGED, totalXP * 4, true);
+				ActionSender.sendStat(player, Skills.RANGED);
 			}
 		}
 
 		// Magic damagers
-		for (int npcID : getMageDamagers()) {
+		for (String ID : getMageDamagers()) {
+			int dmgDoneByPlayer = getMageDamageDoneBy(ID);
 
-			Npc n = getWorld().getNpcById(npcID);
-
-			int dmgDoneByNpc = getMageDamageDoneBy(n);
-			if (n == null)
-				continue;
-
-			if (dmgDoneByNpc > currentHighestDamage) {
-				npcWithMostDamage = n;
-				currentHighestDamage = dmgDoneByNpc;
+			if (dmgDoneByPlayer > currentHighestDamage) {
+				UUIDWithMostDamage = ID;
+				currentHighestDamage = dmgDoneByPlayer;
 			}
 		}
-		return npcWithMostDamage;
+		return UUIDWithMostDamage;
 	}
 
-	public void initializeTalkScript(final Player p) {
+	public void initializeTalkScript(final Player player) {
 		final Npc npc = this;
 		//p.setBusyTimer(600);
 		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Talk Script") {
 			@Override
 			public void action() {
-				getWorld().getServer().getPluginHandler().handlePlugin(npc, "TalkToNpc", new Object[]{p, npc});
-			}
-		});
-	}
-
-	public void initializeIndirectTalkScript(final Player p) {
-		final Npc npc = this;
-		//p.setBusyTimer(600);
-		getWorld().getServer().getGameEventHandler().add(new ImmediateEvent(getWorld(), "Init Indirect Talk Script") {
-			@Override
-			public void action() {
-				getWorld().getServer().getPluginHandler().handlePlugin(npc, "IndirectTalkToNpc", new Object[]{p, npc});
+				getWorld().getServer().getPluginHandler().handlePlugin(player, "TalkNpc", new Object[]{player, npc});
 			}
 		});
 	}
@@ -953,7 +628,9 @@ public class Npc extends Mob {
 		}
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			startRespawning();
+			getWorld().removeNpcPosition(this);
 			teleport(0, 0);
+			Npc n = this;
 			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC") {
 				public void run() {
 					setRespawning(false);
@@ -965,6 +642,8 @@ public class Npc extends Mob {
 					mageDamagers.clear();
 					rangeDamagers.clear();
 					combatDamagers.clear();
+
+					getWorld().setNpcPosition(n);
 				}
 			});
 			setRespawning(true);
@@ -991,11 +670,7 @@ public class Npc extends Mob {
 
 	@Override
 	public String toString() {
-		return "[NPC:" + getDef().getName() + "]";
-	}
-
-	public boolean isPkBot() {
-		return getDef().isPkBot() && this instanceof PkBot;
+		return "[NPC:" + getDef().getName() + " @ (" + getX() + ", " + getY() + ") ]";
 	}
 
 	public void updatePosition() {
@@ -1087,29 +762,32 @@ public class Npc extends Mob {
 		return this.executedAggroScript;
 	}
 
-	public static boolean handleRingOfAvarice(final Player p, final Item item) {
-		int slot = -1;
-		if (Functions.isWielding(p, ItemId.RING_OF_AVARICE.id())) {
-			ItemDefinition itemDef = p.getWorld().getServer().getEntityHandler().getItemDef(item.getID());
-			if (itemDef != null && itemDef.isStackable()) {
-				if (p.getInventory().hasInInventory(item.getID())) {
-					p.getInventory().add(item);
-					return true;
-				} else if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = p.getEquipment().hasEquipped(item.getID())) != -1) {
-					Item equipped = p.getEquipment().get(slot);
-					equipped.setAmount(equipped.getAmount() + item.getAmount());
-					p.getEquipment().equip(slot, equipped);
-					return true;
-				} else {
-					if (p.getInventory().getFreeSlots() > 0) {
-						p.getInventory().add(item);
+	public static boolean handleRingOfAvarice(final Player player, final Item item) {
+		try {
+			int slot = -1;
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_AVARICE.id())) {
+				ItemDefinition itemDef = player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId());
+				if (itemDef != null && itemDef.isStackable()) {
+					if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
+						player.getCarriedItems().getInventory().add(item);
+						return true;
+					} else if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
+						Item equipped = player.getCarriedItems().getEquipment().get(slot);
+						equipped.changeAmount(player.getWorld().getServer().getDatabase(), item.getAmount());
 						return true;
 					} else {
-						p.message("Your ring of Avarice tried to activate, but your inventory was full.");
-						return false;
+						if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
+							player.getCarriedItems().getInventory().add(item);
+							return true;
+						} else {
+							player.message("Your ring of Avarice tried to activate, but your inventory was full.");
+							return false;
+						}
 					}
 				}
 			}
+		} catch (GameDatabaseException ex) {
+			LOGGER.error(ex.getMessage());
 		}
 		return false;
 	}
@@ -1133,4 +811,5 @@ public class Npc extends Mob {
 	public void setNpcBehavior(final NpcBehavior npcBehavior) {
 		this.npcBehavior = npcBehavior;
 	}
+
 }

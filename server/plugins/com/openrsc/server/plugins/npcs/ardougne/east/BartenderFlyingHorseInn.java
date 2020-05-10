@@ -1,41 +1,41 @@
 package com.openrsc.server.plugins.npcs.ardougne.east;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
-public class BartenderFlyingHorseInn implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class BartenderFlyingHorseInn implements TalkNpcTrigger {
 
 	public final int BARTENDER = NpcId.BARTENDER_ARDOUGNE.id();
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == BARTENDER;
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == BARTENDER) {
-			npcTalk(p, n, "Would you like to buy a drink?");
-			playerTalk(p, n, "What do you serve?");
-			npcTalk(p, n, "Beer");
-			int menu = showMenu(p, n,
+			npcsay(player, n, "Would you like to buy a drink?");
+			say(player, n, "What do you serve?");
+			npcsay(player, n, "Beer");
+			int menu = multi(player, n,
 				"I'll have a beer then",
 				"I'll not have anything then");
 			if (menu == 0) {
-				npcTalk(p, n, "Ok, that'll be two coins");
-				if (hasItem(p, ItemId.COINS.id(), 2)) {
-					removeItem(p, ItemId.COINS.id(), 2);
-					addItem(p, ItemId.BEER.id(), 1);
-					p.message("You buy a pint of beer");
+				npcsay(player, n, "Ok, that'll be two coins");
+				if (ifheld(player, ItemId.COINS.id(), 2)) {
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
+					give(player, ItemId.BEER.id(), 1);
+					player.message("You buy a pint of beer");
 				} else {
-					playerTalk(p, n, "Oh dear. I don't seem to have enough money");
+					say(player, n, "Oh dear. I don't seem to have enough money");
 				}
 			}
 		}

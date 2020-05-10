@@ -2,15 +2,15 @@ package com.openrsc.server.plugins.menu;
 
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 
 import java.util.ArrayList;
+
+import static com.openrsc.server.plugins.Functions.delay;
+import static com.openrsc.server.plugins.Functions.say;
 
 /**
  * This system is for adding a new menu item on NPC under certain circumstances.
  * If this system is used, the whole starting menu needs to be done using this.
- *
- * @author n0m
  */
 public class Menu {
 
@@ -65,10 +65,7 @@ public class Menu {
 		ActionSender.sendMenu(player, option);
 		long start = System.currentTimeMillis();
 		while (System.currentTimeMillis() - start <= 19500 && player.getMenu() != null && player.getOption() == -1) {
-			if (player.getInteractingNpc() != null)
-				player.getInteractingNpc().setBusyTimer(3000);
-
-			Functions.sleep(1);
+			delay(1);
 		}
 
 		doReply(player);
@@ -83,7 +80,7 @@ public class Menu {
 		if(i >= 0 && i <= options.size()) {
 			Option option = options.get(i);
 			if (option != null) {
-				Functions.playerTalk(player, player.getInteractingNpc(), option.getOption());
+				say(player, null, option.getOption());
 				option.action();
 			}
 		}
@@ -91,5 +88,6 @@ public class Menu {
 
 	public final void handleReply(final Player player, final int i) {
 		player.setOption(i);
+		player.resetMenuHandler();
 	}
 }

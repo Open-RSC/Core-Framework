@@ -8,16 +8,14 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class StrangeBarrels implements ObjectActionListener, ObjectActionExecutiveListener {
+public class StrangeBarrels implements OpLocTrigger {
 
 	/**
-	 * @author Davve
 	 * What I have discovered from barrels is the food, potions, misc, weapon, runes, certificates and monsters.
 	 * There are 8 ways that the barrel behave - more comment below.
 	 * The barrel is smashed and then after 40 seconds it adds on a new randomized coord in the cave area.
@@ -93,7 +91,7 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 		ItemId.YEW_LOGS_CERTIFICATE.id()
 	};
 
-	//TODO CHECK IDS ON AMBIGUOUS NPCS
+	// TODO CHECK IDS ON AMBIGUOUS NPCS
 	private static final int[] MONSTER = {NpcId.CHAOS_DWARF.id(), NpcId.DARK_WARRIOR.id(), NpcId.DARKWIZARD_LVL13.id(),
 			NpcId.DEADLY_RED_SPIDER.id(), NpcId.DEATH_WING.id(), NpcId.GIANT.id(), NpcId.GIANT_BAT.id(), NpcId.MUGGER.id(),
 			NpcId.GIANT_SPIDER_LVL8.id(), NpcId.ZOMBIE_LVL24_GEN.id(), NpcId.SKELETON_LVL25.id(), NpcId.SKELETON_LVL21.id(),
@@ -101,26 +99,25 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 			NpcId.RAT_LVL8.id(), NpcId.SCORPION.id()};
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == STRANGE_BARREL;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == STRANGE_BARREL) {
-			p.setBusyTimer(600);
 			int action = DataConversions.random(0, 4);
 			if (action != 0) {
-				p.message("You smash the barrel open.");
-				removeObject(obj);
-				p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, 40000, "Smash Strange Barrel") { // 40 seconds
+				player.message("You smash the barrel open.");
+				delloc(obj);
+				player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), null, 40000, "Smash Strange Barrel") { // 40 seconds
 					public void action() {
 						int newObjectX = DataConversions.random(467, 476);
 						int newObjectY = DataConversions.random(3699, 3714);
-						if (p.getWorld().getRegionManager().getRegion(Point.location(newObjectX, newObjectY)).getGameObject(Point.location(newObjectX, newObjectY)) != null) {
-							registerObject(new GameObject(obj.getWorld(), obj.getLoc()));
+						if (player.getWorld().getRegionManager().getRegion(Point.location(newObjectX, newObjectY)).getGameObject(Point.location(newObjectX, newObjectY), player) != null) {
+							addloc(new GameObject(obj.getWorld(), obj.getLoc()));
 						} else {
-							registerObject(new GameObject(obj.getWorld(), Point.location(newObjectX, newObjectY), 1178, 0, 0));
+							addloc(new GameObject(obj.getWorld(), Point.location(newObjectX, newObjectY), 1178, 0, 0));
 						}
 					}
 				});
@@ -128,65 +125,65 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 				  Out comes a NPC only.
 				 */
 				if (action == 1) {
-					spawnMonster(p, obj.getX(), obj.getY());
+					spawnMonster(player, obj.getX(), obj.getY());
 				}
 				/*
 				  Out comes an item only.
 				 */
 				else if (action == 2) {
-					spawnItem(p, obj.getX(), obj.getY());
+					spawnItem(player, obj.getX(), obj.getY());
 				}
 				/*
 				  Out comes both a NPC and an ITEM.
 				 */
 				else if (action == 3) {
-					spawnItem(p, obj.getX(), obj.getY());
-					spawnMonster(p, obj.getX(), obj.getY());
+					spawnItem(player, obj.getX(), obj.getY());
+					spawnMonster(player, obj.getX(), obj.getY());
 				}
 				/*
 				  Smash the barrel and get randomly hit from 0-14 damage.
 				 */
 				else if (action == 4) {
-					p.message("The barrel explodes...");
-					p.message("...you take some damage...");
-					displayTeleportBubble(p, obj.getX(), obj.getY(), true);
-					p.damage(DataConversions.random(0, 14));
+					player.message("The barrel explodes...");
+					player.message("...you take some damage...");
+					displayTeleportBubble(player, obj.getX(), obj.getY(), true);
+					player.damage(DataConversions.random(0, 14));
 				}
 			} else {
 				/*
 				  Smash the barrel open but nothing happens.
 				 */
 				if (DataConversions.random(0, 1) != 1) {
-					p.message("You smash the barrel open.");
-					removeObject(obj);
-					delayedSpawnObject(obj.getWorld(), obj.getLoc(), 40000); // 40 seconds
+					player.message("You smash the barrel open.");
+					delloc(obj);
+					addloc(obj.getWorld(), obj.getLoc(), 40000); // 40 seconds
 				} else {
 					if (DataConversions.random(0, 1) != 0) {
-						p.message("You were unable to smash this barrel open.");
-						message(p, 1300, "You hit the barrel at the wrong angle.",
+						player.message("You were unable to smash this barrel open.");
+						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You hit the barrel at the wrong angle.",
 							"You're heavily jarred from the vibrations of the blow.");
 						int reduceAttack = DataConversions.random(1, 3);
-						p.message("Your attack is reduced by " + reduceAttack + ".");
-						p.getSkills().setLevel(Skills.ATTACK, p.getSkills().getLevel(Skills.ATTACK) - reduceAttack);
+						player.message("Your attack is reduced by " + reduceAttack + ".");
+						player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - reduceAttack);
 					} else {
-						p.message("You were unable to smash this barrel open.");
+						player.message("You were unable to smash this barrel open.");
 					}
 				}
 			}
 		}
 	}
 
-	private void spawnMonster(Player p, int x, int y) {
+	private void spawnMonster(Player player, int x, int y) {
 		int randomizeMonster = DataConversions.random(0, (MONSTER.length - 1));
 		int selectedMonster = MONSTER[randomizeMonster];
-		Npc monster = spawnNpc(p.getWorld(), selectedMonster, x, y, 60000 * 3); // 3 minutes
-		sleep(600);
+		Npc monster = addnpc(player.getWorld(), selectedMonster, x, y, 60000 * 3); // 3 minutes
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		if (monster != null) {
-			monster.startCombat(p);
+			monster.startCombat(player);
 		}
 	}
 
-	private void spawnItem(Player p, int x, int y) {
+	private void spawnItem(Player player, int x, int y) {
 		int randomizeReward = DataConversions.random(0, 100);
 		int[] selectItemArray = OTHER;
 		if (randomizeReward >= 0 && randomizeReward <= 14) { // 15%
@@ -205,9 +202,9 @@ public class StrangeBarrels implements ObjectActionListener, ObjectActionExecuti
 		int randomizeItem = DataConversions.random(0, (selectItemArray.length - 1));
 		int selectedItem = selectItemArray[randomizeItem];
 		if (selectedItem == 10) {
-			createGroundItem(selectedItem, 100, x, y, p);
+			addobject(selectedItem, 100, x, y, player);
 		} else {
-			createGroundItem(selectedItem, 1, x, y, p);
+			addobject(selectedItem, 1, x, y, player);
 		}
 	}
 }

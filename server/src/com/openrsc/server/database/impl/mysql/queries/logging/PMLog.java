@@ -12,7 +12,7 @@ public final class PMLog extends Query {
 	private final String sender, message, reciever;
 
 	public PMLog(World world, String sender, String message, String reciever) {
-		super("INSERT INTO `" + world.getServer().getConfig().MYSQL_TABLE_PREFIX + "private_message_logs`(`sender`, `message`, `reciever`, `time`) VALUES(?, ?, ?, ?)");
+		super("INSERT INTO `" + world.getServer().getConfig().DB_TABLE_PREFIX + "private_message_logs`(`sender`, `message`, `reciever`, `time`) VALUES(?, ?, ?, ?)");
 		this.sender = sender;
 		this.message = message;
 		this.reciever = reciever;

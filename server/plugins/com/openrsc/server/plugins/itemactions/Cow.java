@@ -5,28 +5,25 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Cow implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
+public class Cow implements UseNpcTrigger {
 
 	@Override
-	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.COW_DAIRY.id() && item.getID() == ItemId.BUCKET.id() || npc.getID() == NpcId.COW_ATTACKABLE.id() && item.getID() == ItemId.BUCKET.id();
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return npc.getID() == NpcId.COW_DAIRY.id() && item.getCatalogId() == ItemId.BUCKET.id() || npc.getID() == NpcId.COW_ATTACKABLE.id() && item.getCatalogId() == ItemId.BUCKET.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
+	public void onUseNpc(Player player, Npc npc, Item item) {
 		npc.resetPath();
-		npc.face(player);
-		npc.setBusy(true);
-		showBubble(player, item);
-		if (player.getInventory().hasInInventory(item.getID())) {
-			player.getInventory().replace(item.getID(), ItemId.MILK.id(),true);
+		thinkbubble(player, item);
+		if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.MILK.id()));
 		}
-		message(player, 3500, "You milk the cow");
-		npc.setBusy(false);
+		mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "You milk the cow");
 	}
 }

@@ -8,15 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public final class BettysMagicEmporium implements
-	ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class BettysMagicEmporium extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 6000, 100, 75, 2, new Item(ItemId.FIRE_RUNE.id(),
 		30), new Item(ItemId.WATER_RUNE.id(), 30), new Item(ItemId.AIR_RUNE.id(), 30), new Item(ItemId.EARTH_RUNE.id(),
@@ -24,7 +20,7 @@ public final class BettysMagicEmporium implements
 		30), new Item(ItemId.BLUE_WIZARDSHAT.id(), 1), new Item(ItemId.BLACK_WIZARDSHAT.id(), 1));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.BETTY.id();
 	}
 
@@ -39,18 +35,23 @@ public final class BettysMagicEmporium implements
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
+	public void onTalkNpc(final Player player, final Npc n) {
 		if (n.getID() == NpcId.BETTY.id()) {
-			npcTalk(p, n, "Welcome to the magic emporium");
-			int opt = showMenu(p, n, "Can I see your wares?",
+			npcsay(player, n, "Welcome to the magic emporium");
+			int opt = multi(player, n, "Can I see your wares?",
 				"Sorry I'm not into magic");
 			if (opt == 0) {
-				npcTalk(p, n, "Yes");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "Yes");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			}
 			if (opt == 1) {
-				npcTalk(p, n, "Send anyone my way who is");
+				npcsay(player, n, "Send anyone my way who is");
 			}
 		}
 	}

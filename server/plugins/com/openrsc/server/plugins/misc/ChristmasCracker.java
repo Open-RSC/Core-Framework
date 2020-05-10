@@ -4,15 +4,13 @@ import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnPlayerExecutiveListener;
+import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener {
+public class ChristmasCracker implements UsePlayerTrigger {
 
 	private static final int[] phatWeights = {10, 15, 20, 23, 32, 28};
 	private static final int[] phatIds = {
@@ -39,8 +37,8 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 	};
 
 	@Override
-	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		if (item.getID() == ItemId.CHRISTMAS_CRACKER.id()) {
+	public void onUsePlayer(Player player, Player otherPlayer, Item item) {
+		if (item.getCatalogId() == ItemId.CHRISTMAS_CRACKER.id()) {
 			if (otherPlayer.isIronMan(IronmanMode.Ironman.id()) || otherPlayer.isIronMan(IronmanMode.Ultimate.id())
 				|| otherPlayer.isIronMan(IronmanMode.Hardcore.id()) || otherPlayer.isIronMan(IronmanMode.Transfer.id())) {
 				player.message(otherPlayer.getUsername() + " is an Iron Man. " + (otherPlayer.isMale() ? "He" : "She") + " stands alone.");
@@ -52,16 +50,14 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 				return;
 			}
 
-			player.setBusy(true);
-			//otherPlayer.setBusy(true);
 			player.face(otherPlayer);
 			//otherPlayer.face(player);
 
-			showBubble(player, item);
+			thinkbubble(player, item);
 			player.message("You pull a christmas cracker");
 			otherPlayer.message("You pull a christmas cracker");
 
-			Functions.sleep(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 			int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);
@@ -71,24 +67,21 @@ public class ChristmasCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 			if (DataConversions.random(0, 1) == 1) {
 				otherPlayer.message("The person you pull the cracker with gets the prize");
 				player.message("You get the prize from the cracker");
-				player.getInventory().add(phat);
-				player.getInventory().add(prize);
+				player.getCarriedItems().getInventory().add(phat);
+				player.getCarriedItems().getInventory().add(prize);
 			} else {
 				player.message("The person you pull the cracker with gets the prize");
 				otherPlayer.message("You get the prize from the cracker");
-				otherPlayer.getInventory().add(phat);
-				otherPlayer.getInventory().add(prize);
+				otherPlayer.getCarriedItems().getInventory().add(phat);
+				otherPlayer.getCarriedItems().getInventory().add(prize);
 			}
 
-			player.getInventory().remove(item);
-
-			player.setBusy(false);
-			//otherPlayer.setBusy(false);
+			player.getCarriedItems().remove(item);
 		}
 	}
 
 	@Override
-	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		return item.getID() == ItemId.CHRISTMAS_CRACKER.id();
+	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
+		return item.getCatalogId() == ItemId.CHRISTMAS_CRACKER.id();
 	}
 }

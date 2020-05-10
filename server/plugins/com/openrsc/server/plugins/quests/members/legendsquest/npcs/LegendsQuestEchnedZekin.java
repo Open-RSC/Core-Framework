@@ -1,235 +1,235 @@
 package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.hasItem;
-import static com.openrsc.server.plugins.Functions.message;
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.showMenu;
-import static com.openrsc.server.plugins.Functions.sleep;
-import static com.openrsc.server.plugins.Functions.spawnNpc;
+import java.util.Optional;
 
-public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExecutiveListener {
+import static com.openrsc.server.plugins.Functions.*;
+
+public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.ECHNED_ZEKIN.id();
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		if (n.getID() == NpcId.ECHNED_ZEKIN.id()) {
-			echnedDialogue(p, n, -1);
+			echnedDialogue(player, n, -1);
 		}
 	}
 
-	private void holyForceSpell(Player p, Npc n) {
+	private void holyForceSpell(Player player, Npc n) {
 		//not sure if this line is correct
-		//message(p, n, 1300, "You quickly grab the Holy Force Spell and cast it at the Demon.");
-		message(p, "You thrust the Holy Force spell in front of the spirit.");
-		message(p, n, 1300, "A bright, holy light streams out from the paper spell.");
-		if (p.getCache().hasKey("already_cast_holy_spell")) {
-			npcTalk(p, n, "Argghhhhh...not again....!");
+		//message(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You quickly grab the Holy Force Spell and cast it at the Demon.");
+		mes(player, "You thrust the Holy Force spell in front of the spirit.");
+		mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A bright, holy light streams out from the paper spell.");
+		if (player.getCache().hasKey("already_cast_holy_spell")) {
+			npcsay(player, n, "Argghhhhh...not again....!");
 		} else {
-			npcTalk(p, n, "Argghhhhh...noooooo!");
-			p.getCache().store("already_cast_holy_spell", true);
+			npcsay(player, n, "Argghhhhh...noooooo!");
+			player.getCache().store("already_cast_holy_spell", true);
 		}
 	}
 
-	private void neziAttack(Player p, Npc n, boolean useHolySpell) {
-		if (p.getCache().hasKey("ran_from_2nd_nezi")) {
-			npcTalk(p, n, "You have returned and I am ready for you...");
+	private void neziAttack(Player player, Npc n, boolean useHolySpell) {
+		if (player.getCache().hasKey("ran_from_2nd_nezi")) {
+			npcsay(player, n, "You have returned and I am ready for you...");
 		}
-		npcTalk(p, n, "I will now reveal myself and spell out your doom.");
+		npcsay(player, n, "I will now reveal myself and spell out your doom.");
 		int formerNpcX = n.getX();
 		int formerNpcY = n.getY();
 		if (n != null)
 			n.remove();
-		Npc second_nezikchened = spawnNpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, p);
+		Npc second_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, player);
 		if (second_nezikchened != null) {
 			if (useHolySpell) {
-				holyForceSpell(p, second_nezikchened);
-				message(p, second_nezikchened, 1300, "The spirit lets out an unearthly, blood curdling scream...");
-				message(p, second_nezikchened, 600, "The spell seems to weaken the Demon.");
+				holyForceSpell(player, second_nezikchened);
+				mes(player, second_nezikchened, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The spirit lets out an unearthly, blood curdling scream...");
+				mes(player, second_nezikchened, player.getWorld().getServer().getConfig().GAME_TICK, "The spell seems to weaken the Demon.");
 				second_nezikchened.getSkills().setLevel(Skills.DEFENSE, second_nezikchened.getSkills().getLevel(Skills.DEFENSE) - 5);
 			}
-			second_nezikchened.startCombat(p);
+			second_nezikchened.startCombat(player);
 			if (useHolySpell) {
-				int newPray = (int) Math.ceil((double) p.getSkills().getLevel(Skills.PRAYER) / 2);
-				if (p.getSkills().getLevel(Skills.PRAYER) - newPray < 30) {
-					message(p, 1300, "A sense of fear comes over you ",
+				int newPray = (int) Math.ceil((double) player.getSkills().getLevel(Skills.PRAYER) / 2);
+				if (player.getSkills().getLevel(Skills.PRAYER) - newPray < 30) {
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A sense of fear comes over you ",
 						"You feel a sense of loss...");
 				} else {
-					message(p, 1300, "An intense sense of fear comes over you ",
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "An intense sense of fear comes over you ",
 						"You feel a great sense of loss...");
 				}
-				p.getSkills().setLevel(Skills.PRAYER, newPray);
+				player.getSkills().setLevel(Skills.PRAYER, newPray);
 
-				sleep(7000);
-				message(p, 1300, "The Demon takes out a dark dagger and throws it at you...");
+				delay(7000);
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Demon takes out a dark dagger and throws it at you...");
 				if (DataConversions.random(0, 1) == 1) {
-					message(p, 1300, "The dagger hits you with an agonising blow...");
-					p.damage(14);
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The dagger hits you with an agonising blow...");
+					player.damage(14);
 				} else {
-					message(p, 600, "But you neatly manage to dodge the attack.");
+					mes(player, player.getWorld().getServer().getConfig().GAME_TICK, "But you neatly manage to dodge the attack.");
 				}
 			} else {
-				message(p, 1300, "A terrible fear comes over you. ",
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A terrible fear comes over you. ",
 					"You feel a terrible sense of loss...");
-				p.getSkills().setLevel(Skills.PRAYER, 0);
+				player.getSkills().setLevel(Skills.PRAYER, 0);
 			}
 		}
 	}
 
-	private void echnedDialogue(Player p, Npc n, int cID) {
+	private void echnedDialogue(Player player, Npc n, int cID) {
 		if (n.getID() == NpcId.ECHNED_ZEKIN.id()) {
 			if (cID == -1) {
-				switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
+				switch (player.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 7:
 						/**
 						 * HAS HOLY FORCE SPELL.
 						 */
-						if (p.getCache().hasKey("gave_glowing_dagger")) {
-							neziAttack(p, n, hasItem(p, ItemId.HOLY_FORCE_SPELL.id()));
+						if (player.getCache().hasKey("gave_glowing_dagger")) {
+							neziAttack(player, n, player.getCarriedItems().hasCatalogID(ItemId.HOLY_FORCE_SPELL.id(), Optional.of(false)));
 							return;
 						}
-						if (hasItem(p, ItemId.HOLY_FORCE_SPELL.id())) {
-							npcTalk(p, n, "Something seems different about you...",
+						if (player.getCarriedItems().hasCatalogID(ItemId.HOLY_FORCE_SPELL.id(), Optional.of(false))) {
+							npcsay(player, n, "Something seems different about you...",
 								"Your sense of purpose seems not bent to my will...",
 								"Give me the dagger that you used to slay Viyeldi or taste my wrath!");
-							int forceMenu = showMenu(p, n,
+							int forceMenu = multi(player, n,
 								"I don't have the dagger.",
 								"I haven't slayed Viyeldi yet.",
 								"I have something else in mind!",
 								"I have to be going...");
 							if (forceMenu == 0) {
-								echnedDialogue(p, n, Echned.I_DONT_HAVE_THE_DAGGER);
+								echnedDialogue(player, n, Echned.I_DONT_HAVE_THE_DAGGER);
 							} else if (forceMenu == 1) {
-								echnedDialogue(p, n, Echned.I_HAVE_NOT_SLAYED_VIYELDI_YET);
+								echnedDialogue(player, n, Echned.I_HAVE_NOT_SLAYED_VIYELDI_YET);
 							} else if (forceMenu == 2) {
-								echnedDialogue(p, n, Echned.I_HAVE_SOMETHING_ELSE_IN_MIND);
+								echnedDialogue(player, n, Echned.I_HAVE_SOMETHING_ELSE_IN_MIND);
 							} else if (forceMenu == 3) {
-								echnedDialogue(p, n, Echned.I_HAVE_TO_BE_GOING);
+								echnedDialogue(player, n, Echned.I_HAVE_TO_BE_GOING);
 							}
 						}
 						/**
 						 * HAS DARK GLOWING DAGGER - KILLED VIYELDI
 						 */
-						else if (hasItem(p, ItemId.GLOWING_DARK_DAGGER.id()) && !hasItem(p, ItemId.HOLY_FORCE_SPELL.id())) {
-							npcTalk(p, n, "Aha, I see you have completed your task. ",
+						else if (player.getCarriedItems().hasCatalogID(ItemId.GLOWING_DARK_DAGGER.id(), Optional.of(false))
+						&& !player.getCarriedItems().hasCatalogID(ItemId.HOLY_FORCE_SPELL.id(), Optional.of(false))) {
+							npcsay(player, n, "Aha, I see you have completed your task. ",
 								"I'll take that dagger from you now.");
-							removeItem(p, ItemId.GLOWING_DARK_DAGGER.id(), 1);
-							if (!p.getCache().hasKey("gave_glowing_dagger")) {
-								p.getCache().store("gave_glowing_dagger", true);
+							player.getCarriedItems().remove(new Item(ItemId.GLOWING_DARK_DAGGER.id()));
+							if (!player.getCache().hasKey("gave_glowing_dagger")) {
+								player.getCache().store("gave_glowing_dagger", true);
 							}
-							message(p, n, 1300, "The formless shape of Echned Zekin takes the dagger from you.",
+							mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The formless shape of Echned Zekin takes the dagger from you.",
 								"As a ghostly hand envelopes the dagger, something seems to move",
 								"from the black weapon into the floating figure...");
-							npcTalk(p, n, "Aahhhhhhhhh! As I take the spirit of one departed,",
+							npcsay(player, n, "Aahhhhhhhhh! As I take the spirit of one departed,",
 								"I will now reveal myself and spell out your doom.");
-							message(p, n, 1300, "A terrible fear comes over you. ");
+							mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A terrible fear comes over you. ");
 							int formerNpcX = n.getX();
 							int formerNpcY = n.getY();
 							if (n != null)
 								n.remove();
-							Npc second_nezikchened = spawnNpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, p);
+							Npc second_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, player);
 							if (second_nezikchened != null) {
-								sleep(600);
-								second_nezikchened.startCombat(p);
-								p.message("You feel a terrible sense of loss...");
-								p.getSkills().setLevel(Skills.PRAYER, 0);
+								delay(player.getWorld().getServer().getConfig().GAME_TICK);
+								second_nezikchened.startCombat(player);
+								player.message("You feel a terrible sense of loss...");
+								player.getSkills().setLevel(Skills.PRAYER, 0);
 							}
 						}
 						/**
 						 * HAS THE DARK DAGGER
 						 */
-						else if (hasItem(p, ItemId.DARK_DAGGER.id()) && !hasItem(p, ItemId.GLOWING_DARK_DAGGER.id()) && !hasItem(p, ItemId.HOLY_FORCE_SPELL.id())) {
-							message(p, "The shapeless entity of Echned Zekin appears in front of you.");
-							npcTalk(p, n, "Why do you return when your task is still incomplete?");
-							message(p, "There is an undercurrent of anger in his voice.");
-							int menu = showMenu(p, n,
+						else if (player.getCarriedItems().hasCatalogID(ItemId.DARK_DAGGER.id(), Optional.of(false))
+						&& !player.getCarriedItems().hasCatalogID(ItemId.GLOWING_DARK_DAGGER.id(), Optional.of(false))
+						&& !player.getCarriedItems().hasCatalogID(ItemId.HOLY_FORCE_SPELL.id(), Optional.of(false))) {
+							mes(player, "The shapeless entity of Echned Zekin appears in front of you.");
+							npcsay(player, n, "Why do you return when your task is still incomplete?");
+							mes(player, "There is an undercurrent of anger in his voice.");
+							int menu = multi(player, n,
 								"Who am I supposed to kill again?",
 								"Er I've had second thoughts.",
 								"I have to be going...");
 							if (menu == 0) {
-								echnedDialogue(p, n, Echned.WHO_AM_I_SUPPOSED_TO_KILL_AGAIN);
+								echnedDialogue(player, n, Echned.WHO_AM_I_SUPPOSED_TO_KILL_AGAIN);
 							} else if (menu == 1) {
-								echnedDialogue(p, n, Echned.ER_IVE_HAD_SECOND_THOUGHTS);
+								echnedDialogue(player, n, Echned.ER_IVE_HAD_SECOND_THOUGHTS);
 							} else if (menu == 2) {
-								echnedDialogue(p, n, Echned.I_HAVE_TO_BE_GOING);
+								echnedDialogue(player, n, Echned.I_HAVE_TO_BE_GOING);
 							}
 						} else {
 							/**
 							 * NO DARK DAGGER - Default dialogue.
 							 */
-							message(p, n, 1300, "In a rasping, barely audible voice you hear the entity speak.");
-							npcTalk(p, n, "Who disturbs the rocks of Zekin?");
-							message(p, n, 1300, "There seems to be something slightly familiar about this presence.");
-							int menu = showMenu(p, n,
+							mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "In a rasping, barely audible voice you hear the entity speak.");
+							npcsay(player, n, "Who disturbs the rocks of Zekin?");
+							mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "There seems to be something slightly familiar about this presence.");
+							int menu = multi(player, n,
 								"Er...me?",
 								"Who's asking?");
 							if (menu == 0) {
-								npcTalk(p, n, "So, you desire the water that flows here?");
-								int opt1 = showMenu(p, n,
+								npcsay(player, n, "So, you desire the water that flows here?");
+								int opt1 = multi(player, n,
 									"Yes, I need it for my quest.",
 									"Not really, I just wondered if I could push that big rock.");
 								if (opt1 == 0) {
-									npcTalk(p, n, "The water babbles so loudly and I am already so tortured.",
+									npcsay(player, n, "The water babbles so loudly and I am already so tortured.",
 										"I cannot abide the sound so I have stoppered the streams...",
 										"Care you not for my torment and pain?");
-									int opt4 = showMenu(p, n,
+									int opt4 = multi(player, n,
 										"Why are you tortured?",
 										"What can I do about that?");
 									if (opt4 == 0) {
-										echnedDialogue(p, n, Echned.WHY_ARE_YOU_TORTURED);
+										echnedDialogue(player, n, Echned.WHY_ARE_YOU_TORTURED);
 									} else if (opt4 == 1) {
-										echnedDialogue(p, n, Echned.WHAT_CAN_I_DO_ABOUT_THAT);
+										echnedDialogue(player, n, Echned.WHAT_CAN_I_DO_ABOUT_THAT);
 									}
 								} else if (opt1 == 1) {
-									npcTalk(p, n, "The rock must remain, it stoppers the waters that babble.",
+									npcsay(player, n, "The rock must remain, it stoppers the waters that babble.",
 										"The noise troubles my soul and I seek some rest...",
 										"rest from this terrible torture...");
-									int opt2 = showMenu(p, n,
+									int opt2 = multi(player, n,
 										"Why are you tortured?",
 										"What can I do about that?");
 									if (opt2 == 0) {
-										echnedDialogue(p, n, Echned.WHY_ARE_YOU_TORTURED);
+										echnedDialogue(player, n, Echned.WHY_ARE_YOU_TORTURED);
 									} else if (opt2 == 1) {
-										echnedDialogue(p, n, Echned.WHAT_CAN_I_DO_ABOUT_THAT);
+										echnedDialogue(player, n, Echned.WHAT_CAN_I_DO_ABOUT_THAT);
 									}
 								}
 							} else if (menu == 1) {
-								message(p, n, 1300, "The hooded, headless figure faces you...it's quite unnerving..");
-								npcTalk(p, n, "I am Echned Zekin...and I seek peace from my eternal torture...");
-								int opt3 = showMenu(p, n,
+								mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The hooded, headless figure faces you...it's quite unnerving..");
+								npcsay(player, n, "I am Echned Zekin...and I seek peace from my eternal torture...");
+								int opt3 = multi(player, n,
 									"What can I do about that?",
 									"Do I know you?",
 									"Why are you tortured?");
 								if (opt3 == 0) {
-									echnedDialogue(p, n, Echned.WHAT_CAN_I_DO_ABOUT_THAT);
+									echnedDialogue(player, n, Echned.WHAT_CAN_I_DO_ABOUT_THAT);
 								} else if (opt3 == 1) {
-									npcTalk(p, n, "I am long since dead and buried, lost in the passages of time.",
+									npcsay(player, n, "I am long since dead and buried, lost in the passages of time.",
 										"Long since have my kin departed and have I been forgotten...",
 										"It is unlikely that you know me...",
 										"I am a poor tortured soul looking for rest and eternal peace...");
-									int opt5 = showMenu(p, n,
+									int opt5 = multi(player, n,
 										"Why are you tortured?",
 										"What can I do about that?");
 									if (opt5 == 0) {
-										echnedDialogue(p, n, Echned.WHY_ARE_YOU_TORTURED);
+										echnedDialogue(player, n, Echned.WHY_ARE_YOU_TORTURED);
 									} else if (opt5 == 1) {
-										echnedDialogue(p, n, Echned.WHAT_CAN_I_DO_ABOUT_THAT);
+										echnedDialogue(player, n, Echned.WHAT_CAN_I_DO_ABOUT_THAT);
 									}
 								} else if (opt3 == 2) {
-									echnedDialogue(p, n, Echned.WHY_ARE_YOU_TORTURED);
+									echnedDialogue(player, n, Echned.WHY_ARE_YOU_TORTURED);
 								}
 							}
 						}
@@ -238,24 +238,24 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 			}
 			switch (cID) {
 				case Echned.WHAT_CAN_I_DO_ABOUT_THAT:
-					npcTalk(p, n, "I was brutally murdered by a viscious man called Viyeldi",
+					npcsay(player, n, "I was brutally murdered by a viscious man called Viyeldi",
 						"I sense his presence near by, but I know that he is no longer living",
 						"My spirit burns with the need for revenge, I shall not rest while",
 						"I sense his spirit still.",
 						"If you seek the pure water, you must ensure he meets his end.",
 						"If not, you will never see the source and your journey back must ye start.",
 						"What is your answer? Will ye put an end to Viyeldi for me?");
-					int sub_menu2 = showMenu(p, n,
+					int sub_menu2 = multi(player, n,
 						"I'll do what I must to get the water.",
 						"No, I won't take someone's life for you.");
 					if (sub_menu2 == 0) {
-						echnedDialogue(p, n, Echned.I_WILL_DO_WHAT_I_MUST_TO_GET_THE_WATER);
+						echnedDialogue(player, n, Echned.I_WILL_DO_WHAT_I_MUST_TO_GET_THE_WATER);
 					} else if (sub_menu2 == 1) {
-						echnedDialogue(p, n, Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU);
+						echnedDialogue(player, n, Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU);
 					}
 					break;
 				case Echned.WHY_ARE_YOU_TORTURED:
-					npcTalk(p, n, "I was robbed of my life by a cruel man called Viyeldi",
+					npcsay(player, n, "I was robbed of my life by a cruel man called Viyeldi",
 						"And I hunger for revenge upon him....",
 						"It is long since I have walked this world looking for him",
 						"to haunt him and raise terror in his life...",
@@ -263,30 +263,30 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 						"he serves the needs of the source.",
 						"He died trying to collect the water from this stream,",
 						"and now I hang in torment for eternity.");
-					int sub_menu = showMenu(p, n,
+					int sub_menu = multi(player, n,
 						"What can I do about that?",
 						"Can't I just get some water?");
 					if (sub_menu == 0) {
-						echnedDialogue(p, n, Echned.WHAT_CAN_I_DO_ABOUT_THAT);
+						echnedDialogue(player, n, Echned.WHAT_CAN_I_DO_ABOUT_THAT);
 					} else if (sub_menu == 1) {
-						npcTalk(p, n, "Yes, you may get some water, but first you must help me.",
+						npcsay(player, n, "Yes, you may get some water, but first you must help me.",
 							"Revenge is the only thing that keeps my spirit in this place",
 							"help me take vengeance on Viyeldi and I will gladly remove",
 							"the rocks and allow you access to the water",
 							"What say you?");
-						int sub_menu3 = showMenu(p, n,
+						int sub_menu3 = multi(player, n,
 							"I'll do what I must to get the water.",
 							"No, I won't take someone's life for you.");
 						if (sub_menu3 == 0) {
-							echnedDialogue(p, n, Echned.I_WILL_DO_WHAT_I_MUST_TO_GET_THE_WATER);
+							echnedDialogue(player, n, Echned.I_WILL_DO_WHAT_I_MUST_TO_GET_THE_WATER);
 						} else if (sub_menu3 == 1) {
-							echnedDialogue(p, n, Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU);
+							echnedDialogue(player, n, Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU);
 						}
 					}
 					break;
 				case Echned.ILL_DO_IT:
-					p.message("The formless shape shimmers brightly...");
-					npcTalk(p, n, "You will benefit from this decision, the source will be",
+					player.message("The formless shape shimmers brightly...");
+					npcsay(player, n, "You will benefit from this decision, the source will be",
 						"opened to you.",
 						"Bring the dagger back to me when you have completed this task.");
 					if (n != null) {
@@ -294,7 +294,7 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 					}
 					break;
 				case Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU:
-					npcTalk(p, n, "Such noble thoughts, but Viyeldi is not alive.",
+					npcsay(player, n, "Such noble thoughts, but Viyeldi is not alive.",
 						"He is merely a vessel by which the power of the source ",
 						"protects itself. ",
 						"If that is your decision, so be it, but expect not to ",
@@ -304,143 +304,143 @@ public class LegendsQuestEchnedZekin implements TalkToNpcListener, TalkToNpcExec
 					}
 					break;
 				case Echned.I_WILL_DO_WHAT_I_MUST_TO_GET_THE_WATER:
-					message(p, n, 1300, "The shapeless spirit seems to crackle with energy.");
-					npcTalk(p, n, "You would release me from my torment and the source would",
+					mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The shapeless spirit seems to crackle with energy.");
+					npcsay(player, n, "You would release me from my torment and the source would",
 						"be available to you.",
 						"However, you must realise that this will be no easy task.");
-					if (!hasItem(p, ItemId.DARK_DAGGER.id())) {
-						npcTalk(p, n, "I will furnish you with a weapon which will help you",
+					if (!player.getCarriedItems().hasCatalogID(ItemId.DARK_DAGGER.id(), Optional.of(false))) {
+						npcsay(player, n, "I will furnish you with a weapon which will help you",
 							"to achieve your aims...",
 							"Here, take this...");
-						p.message("The spiritless body waves an arm and in front of you appears");
-						p.message("a dark black dagger made of pure obsidian.");
-						npcTalk(p, n, "To complete this task you must use this weapon on Viyeldi.");
-						addItem(p, ItemId.DARK_DAGGER.id(), 1);
-						p.message("You take the dagger and place it in your inventory.");
-						if (!p.getCache().hasKey("met_spirit")) {
-							p.getCache().store("met_spirit", true);
+						player.message("The spiritless body waves an arm and in front of you appears");
+						player.message("a dark black dagger made of pure obsidian.");
+						npcsay(player, n, "To complete this task you must use this weapon on Viyeldi.");
+						give(player, ItemId.DARK_DAGGER.id(), 1);
+						player.message("You take the dagger and place it in your inventory.");
+						if (!player.getCache().hasKey("met_spirit")) {
+							player.getCache().store("met_spirit", true);
 						}
 					}
-					npcTalk(p, n, "Use the dagger I have provided for you to complete this task.",
+					npcsay(player, n, "Use the dagger I have provided for you to complete this task.",
 						"and then bring it to me when Viyeldi is dead.");
-					int sub_menu4 = showMenu(p, n,
+					int sub_menu4 = multi(player, n,
 						"Ok, I'll do it.",
 						"I've changed my mind, I can't do it.",
 						"No, I won't take someone's life for you.");
 					if (sub_menu4 == 0) {
-						echnedDialogue(p, n, Echned.ILL_DO_IT);
+						echnedDialogue(player, n, Echned.ILL_DO_IT);
 					} else if (sub_menu4 == 1) {
-						npcTalk(p, n, "The pure water you seek will forever be out of your reach.");
-						playerTalk(p, n, "I'll do what I must to get the water.");
-						p.message("The shapeless spirit seems to crackle with energy.");
-						npcTalk(p, n, "You would release me from my torment and the source would",
+						npcsay(player, n, "The pure water you seek will forever be out of your reach.");
+						say(player, n, "I'll do what I must to get the water.");
+						player.message("The shapeless spirit seems to crackle with energy.");
+						npcsay(player, n, "You would release me from my torment and the source would",
 								"be available to you.",
 								"However, you must realise that this will be no easy task.",
 								"Use the dagger I have provided for you to complete this task.",
 								"and then bring it to me when Viyeldi is dead.");
-						int sub_menu5 = showMenu(p, n, "Ok, I'll do it.",
+						int sub_menu5 = multi(player, n, "Ok, I'll do it.",
 								"I've changed my mind, I can't do it.");
 						if (sub_menu5 == 0) {
-							echnedDialogue(p, n, Echned.ILL_DO_IT);
+							echnedDialogue(player, n, Echned.ILL_DO_IT);
 						} else if (sub_menu5 == 1) {
-							npcTalk(p, n, "The decision is yours but you will have no other way to ",
+							npcsay(player, n, "The decision is yours but you will have no other way to ",
 									"get to the source.",
 									"The pure water you seek will forever be out of your reach.");
-								int sub_menu6 = showMenu(p, n,
+								int sub_menu6 = multi(player, n,
 									"I'll do what I must to get the water.",
 									"No, I won't take someone's life for you.");
 								if (sub_menu6 == 0) {
-									echnedDialogue(p, n, Echned.I_WILL_DO_WHAT_I_MUST_TO_GET_THE_WATER);
+									echnedDialogue(player, n, Echned.I_WILL_DO_WHAT_I_MUST_TO_GET_THE_WATER);
 								} else if (sub_menu6 == 1) {
-									echnedDialogue(p, n, Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU);
+									echnedDialogue(player, n, Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU);
 								}
 						}
 					} else if (sub_menu4 == 2) {
-						echnedDialogue(p, n, Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU);
+						echnedDialogue(player, n, Echned.I_WONT_TAKE_SOMEONES_LIFE_FOR_YOU);
 					}
 					break;
 				case Echned.WHO_AM_I_SUPPOSED_TO_KILL_AGAIN:
-					npcTalk(p, n, "Avenge upon me the death of Viyeldi, the cruel.",
+					npcsay(player, n, "Avenge upon me the death of Viyeldi, the cruel.",
 						"And I will give you access to source...");
-					int new_menu = showMenu(p, n,
+					int new_menu = multi(player, n,
 						"Er I've had second thoughts.",
 						"I have to be going...");
 					if (new_menu == 0) {
-						echnedDialogue(p, n, Echned.ER_IVE_HAD_SECOND_THOUGHTS);
+						echnedDialogue(player, n, Echned.ER_IVE_HAD_SECOND_THOUGHTS);
 					} else if (new_menu == 1) {
-						echnedDialogue(p, n, Echned.I_HAVE_TO_BE_GOING);
+						echnedDialogue(player, n, Echned.I_HAVE_TO_BE_GOING);
 					}
 					break;
 				case Echned.ER_IVE_HAD_SECOND_THOUGHTS:
-					npcTalk(p, n, "It is too late for second thoughts...",
+					npcsay(player, n, "It is too late for second thoughts...",
 						"Do as you have agreed and return to me in all haste...",
 						"His presence tortures me so...");
-					int thoughts = showMenu(p, n,
+					int thoughts = multi(player, n,
 						"Who am I supposed to kill again?",
 						"I have to be going...");
 					if (thoughts == 0) {
-						echnedDialogue(p, n, Echned.WHO_AM_I_SUPPOSED_TO_KILL_AGAIN);
+						echnedDialogue(player, n, Echned.WHO_AM_I_SUPPOSED_TO_KILL_AGAIN);
 					} else if (thoughts == 1) {
-						echnedDialogue(p, n, Echned.I_HAVE_TO_BE_GOING);
+						echnedDialogue(player, n, Echned.I_HAVE_TO_BE_GOING);
 					}
 					break;
 				case Echned.I_HAVE_TO_BE_GOING:
-					npcTalk(p, n, "Return swiftly with the weapon as soon as your task is complete.");
-					p.message("The spirit slowly fades and then disapears.");
+					npcsay(player, n, "Return swiftly with the weapon as soon as your task is complete.");
+					player.message("The spirit slowly fades and then disapears.");
 					if (n != null) {
 						n.remove();
 					}
 					break;
 				case Echned.I_DONT_HAVE_THE_DAGGER:
-					message(p, n, 1300, "The spirit seems to shake with anger...");
-					npcTalk(p, n, "Bring it to me with all haste.",
+					mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The spirit seems to shake with anger...");
+					npcsay(player, n, "Bring it to me with all haste.",
 						"Or torment and pain will I bring to you...",
 						"the spirit extends a wraithlike finger which touches you.",
 						"You feel a searing pain jolt through your body...");
-					p.damage(DataConversions.random(8, 15));
-					int c_menu = showMenu(p, n,
+					player.damage(DataConversions.random(8, 15));
+					int c_menu = multi(player, n,
 						"I haven't slayed Viyeldi yet.",
 						"I have something else in mind!",
 						"I have to be going...");
 					if (c_menu == 0) {
-						echnedDialogue(p, n, Echned.I_HAVE_NOT_SLAYED_VIYELDI_YET);
+						echnedDialogue(player, n, Echned.I_HAVE_NOT_SLAYED_VIYELDI_YET);
 					} else if (c_menu == 1) {
-						echnedDialogue(p, n, Echned.I_HAVE_SOMETHING_ELSE_IN_MIND);
+						echnedDialogue(player, n, Echned.I_HAVE_SOMETHING_ELSE_IN_MIND);
 					} else if (c_menu == 2) {
-						echnedDialogue(p, n, Echned.I_HAVE_TO_BE_GOING);
+						echnedDialogue(player, n, Echned.I_HAVE_TO_BE_GOING);
 					}
 					break;
 				case Echned.I_HAVE_NOT_SLAYED_VIYELDI_YET:
-					npcTalk(p, n, "Go now and slay him, as you agreed.",
+					npcsay(player, n, "Go now and slay him, as you agreed.",
 						"If you are forfeit on this.",
 						"And I will take you as a replacement for Viyeldi !");
-					int b_menu = showMenu(p, n,
+					int b_menu = multi(player, n,
 						"I don't have the dagger.",
 						"I have something else in mind!",
 						"I have to be going...");
 					if (b_menu == 0) {
-						echnedDialogue(p, n, Echned.I_DONT_HAVE_THE_DAGGER);
+						echnedDialogue(player, n, Echned.I_DONT_HAVE_THE_DAGGER);
 					} else if (b_menu == 1) {
-						echnedDialogue(p, n, Echned.I_HAVE_SOMETHING_ELSE_IN_MIND);
+						echnedDialogue(player, n, Echned.I_HAVE_SOMETHING_ELSE_IN_MIND);
 					} else if (b_menu == 2) {
-						echnedDialogue(p, n, Echned.I_HAVE_TO_BE_GOING);
+						echnedDialogue(player, n, Echned.I_HAVE_TO_BE_GOING);
 					}
 					break;
 				case Echned.I_HAVE_SOMETHING_ELSE_IN_MIND:
-					npcTalk(p, n, "You worthless Vacu, how dare you seek to trick me.",
+					npcsay(player, n, "You worthless Vacu, how dare you seek to trick me.",
 						"Go and slay Viyeldi as you promised ",
 						"or I will layer upon you all the pain and ",
 						"torment I have endured all these long years!");
-					int a_menu = showMenu(p, n,
+					int a_menu = multi(player, n,
 						"I don't have the dagger.",
 						"I haven't slayed Viyeldi yet.",
 						"I have to be going...");
 					if (a_menu == 0) {
-						echnedDialogue(p, n, Echned.I_DONT_HAVE_THE_DAGGER);
+						echnedDialogue(player, n, Echned.I_DONT_HAVE_THE_DAGGER);
 					} else if (a_menu == 1) {
-						echnedDialogue(p, n, Echned.I_HAVE_NOT_SLAYED_VIYELDI_YET);
+						echnedDialogue(player, n, Echned.I_HAVE_NOT_SLAYED_VIYELDI_YET);
 					} else if (a_menu == 2) {
-						echnedDialogue(p, n, Echned.I_HAVE_TO_BE_GOING);
+						echnedDialogue(player, n, Echned.I_HAVE_TO_BE_GOING);
 					}
 					break;
 			}

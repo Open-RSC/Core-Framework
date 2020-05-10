@@ -11,18 +11,18 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.triggers.*;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class FamilyCrest implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, ObjectActionListener,
-	ObjectActionExecutiveListener, WallObjectActionListener,
-	WallObjectActionExecutiveListener, InvUseOnNpcListener,
-	InvUseOnNpcExecutiveListener, PlayerKilledNpcListener,
-	PlayerKilledNpcExecutiveListener {
-	
+public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	OpBoundTrigger,
+	UseNpcTrigger,
+	KillNpcTrigger {
+
 	@Override
 	public int getQuestId() {
 		return Quests.FAMILY_CREST;
@@ -44,58 +44,58 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 		player.message("@gre@You haved gained 1 quest point!");
 		player.message("Well done you have completed the family crest quest");
 	}
-	
+
 	/**
 	 * NPCS: #309 - Dimintheis - quest starter #310 - Chef - 1st son in catherby
 	 * #307 - man in alkharid #314 - wizard 3rd son.
 	 */
-	private static void dimintheisDialogue(Player p, Npc n, int cID) {
+	private static void dimintheisDialogue(Player player, Npc n, int cID) {
 		if (cID == -1) {
-			switch (p.getQuestStage(Quests.FAMILY_CREST)) {
+			switch (player.getQuestStage(Quests.FAMILY_CREST)) {
 				case 0:
-					npcTalk(p, n, "Hello, my name is Dimintheis",
+					npcsay(player, n, "Hello, my name is Dimintheis",
 						"Of the noble family of Fitzharmon");
 					//do not send over
-					int menu = showMenu(p, n, false,
+					int menu = multi(player, n, false,
 						"Why would a nobleman live in a little hut like this?",
 						"You're rich then?, can I have some money?",
 						"Hi, I am bold adventurer");
 					if (menu == 0) {
-						playerTalk(p, n, "Why would a nobleman live in a little hut like this?");
-						npcTalk(p, n, "The king has taken my estate from me",
+						say(player, n, "Why would a nobleman live in a little hut like this?");
+						npcsay(player, n, "The king has taken my estate from me",
 							"Until I can show him my family crest");
-						int first = showMenu(p, n, "Why would he do that?",
+						int first = multi(player, n, "Why would he do that?",
 							"So where is this crest?");
 						if (first == 0) {
-							dimintheisDialogue(p, n, Dimintheis.TRADITION);
+							dimintheisDialogue(player, n, Dimintheis.TRADITION);
 						} else if (first == 1) {
-							dimintheisDialogue(p, n, Dimintheis.THREE_SONS);
+							dimintheisDialogue(player, n, Dimintheis.THREE_SONS);
 						}
 					} else if (menu == 1) {
-						playerTalk(p, n, "You're rich then?", "Can I have some money?");
-						npcTalk(p, n, "Lousy beggar",
+						say(player, n, "You're rich then?", "Can I have some money?");
+						npcsay(player, n, "Lousy beggar",
 							"There's to many of your sort about these days",
 							"If I gave money to each of you who asked",
 							"I'd be living on the streets myself");
 					} else if (menu == 2) {
-						playerTalk(p, n, "Hi, I am a bold adventurer");
-						npcTalk(p, n, "An adventurer hmm?",
+						say(player, n, "Hi, I am a bold adventurer");
+						npcsay(player, n, "An adventurer hmm?",
 							"I may have an adventure for you",
 							"I desperatly need my family crest returning to me");
-						int menu2 = showMenu(p, n,
+						int menu2 = multi(player, n,
 							"Why are you so desperate for it?",
 							"So where is this crest?",
 							"I'm not interested in that adventure right now");
 						if (menu2 == 0) {
-							dimintheisDialogue(p, n, Dimintheis.TRADITION);
+							dimintheisDialogue(player, n, Dimintheis.TRADITION);
 						} else if (menu2 == 1) {
-							dimintheisDialogue(p, n, Dimintheis.THREE_SONS);
+							dimintheisDialogue(player, n, Dimintheis.THREE_SONS);
 						}
 					}
 					break;
 				case 1:
-					playerTalk(p, n, "Where did you say I could find Caleb?");
-					npcTalk(p,
+					say(player, n, "Where did you say I could find Caleb?");
+					npcsay(player,
 						n,
 						"I heard word that my son Caleb is alive trying to earn his fortune",
 						"As a great chef, far away in the lands beyond white wolf mountain");
@@ -108,37 +108,38 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				case 7:
 				case 8:
 					boolean gave_crest = false;
-					if (hasItem(p, ItemId.FAMILY_CREST.id(), 1)) {
-						playerTalk(p, n, "I have retrieved your crest");
-						p.message("You give the crest to Dimintheis");
-						removeItem(p, ItemId.FAMILY_CREST.id(), 1);
+					if (player.getCarriedItems().hasCatalogID(ItemId.FAMILY_CREST.id(), Optional.of(false))) {
+						say(player, n, "I have retrieved your crest");
+						player.message("You give the crest to Dimintheis");
+						player.getCarriedItems().remove(new Item(ItemId.FAMILY_CREST.id()));
 						gave_crest = true;
-					} else if (hasItem(p, ItemId.CREST_FRAGMENT_ONE.id()) && hasItem(p, ItemId.CREST_FRAGMENT_TWO.id())
-							&& hasItem(p, ItemId.CREST_FRAGMENT_THREE.id())) {
-						playerTalk(p, n, "I have retrieved your crest");
-						p.message("You give the parts of the crest to Dimintheis");
-						removeItem(p, ItemId.CREST_FRAGMENT_ONE.id(), 1);
-						removeItem(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
-						removeItem(p, ItemId.CREST_FRAGMENT_THREE.id(), 1);
+					} else if (player.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_ONE.id(), Optional.of(false))
+						&& player.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_TWO.id(), Optional.of(false))
+						&& player.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_THREE.id(), Optional.of(false))) {
+						say(player, n, "I have retrieved your crest");
+						player.message("You give the parts of the crest to Dimintheis");
+						player.getCarriedItems().remove(new Item(ItemId.CREST_FRAGMENT_ONE.id()));
+						player.getCarriedItems().remove(new Item(ItemId.CREST_FRAGMENT_TWO.id()));
+						player.getCarriedItems().remove(new Item(ItemId.CREST_FRAGMENT_THREE.id()));
 						gave_crest = true;
 					}
 					if (gave_crest) {
-						p.getCache().remove("north_leverA");
-						p.getCache().remove("south_lever");
-						p.getCache().remove("north_leverB");
-						npcTalk(p, n, "Thankyou for your kindness",
+						player.getCache().remove("north_leverA");
+						player.getCache().remove("south_lever");
+						player.getCache().remove("north_leverB");
+						npcsay(player, n, "Thankyou for your kindness",
 							"I cannot express my gratitude enough",
 							"You truly are a great hero");
-						p.sendQuestComplete(Quests.FAMILY_CREST);
-						npcTalk(p,
+						player.sendQuestComplete(Quests.FAMILY_CREST);
+						npcsay(player,
 							n,
 							"How can I reward you I wonder?",
 							"I suppose these gauntlets would make a good reward",
 							"If you die you will always retain these gauntlets");
-						p.message("Dimintheis gives you a pair of gauntlets");
-						addItem(p, ItemId.STEEL_GAUNTLETS.id(), 1);
-						p.getCache().set("famcrest_gauntlets", Gauntlets.STEEL.id());
-						npcTalk(p,
+						player.message("Dimintheis gives you a pair of gauntlets");
+						give(player, ItemId.STEEL_GAUNTLETS.id(), 1);
+						player.getCache().set("famcrest_gauntlets", Gauntlets.STEEL.id());
+						npcsay(player,
 							n,
 							"These gautlets can be granted extra powers",
 							"Take them to one of my boys, they can each do something to them",
@@ -146,18 +147,21 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 
 						return;
 					}
-					npcTalk(p, n, "How are you doing finding the crest");
-					playerTalk(p, n, "I don't have it yet");
+					npcsay(player, n, "How are you doing finding the crest");
+					say(player, n, "I don't have it yet");
 					break;
 				case -1:
-					npcTalk(p, n, "Thankyou for saving our family honour",
+					npcsay(player, n, "Thankyou for saving our family honour",
 						"We will never forget you");
+					if (player.getWorld().getServer().getConfig().CAN_RETRIEVE_POST_QUEST_ITEMS) {
+						disenchantGauntlets(player, n);
+					}
 					break;
 			}
 		}
 		switch (cID) {
 			case Dimintheis.THREE_SONS:
-				npcTalk(p,
+				npcsay(player,
 					n,
 					"Well my 3 sons took it with them many years ago",
 					"When they rode out to fight in the war",
@@ -166,16 +170,16 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 					"However recently I heard word that my son Caleb is alive",
 					"trying to earn his fortune",
 					"As a great chef, far away in the lands beyond white wolf mountain");
-				int menu3 = showMenu(p, n, "Ok I will help you",
+				int menu3 = multi(player, n, "Ok I will help you",
 					"I'm not interested in that adventure right now");
 				if (menu3 == 0) {
-					npcTalk(p, n, "I thank you greatly",
+					npcsay(player, n, "I thank you greatly",
 						"If you find Caleb send him my love");
-					p.updateQuestStage(Quests.FAMILY_CREST, 1); // QUEST STARTED.
+					player.updateQuestStage(Quests.FAMILY_CREST, 1); // QUEST STARTED.
 				}
 				break;
 			case Dimintheis.TRADITION:
-				npcTalk(p,
+				npcsay(player,
 					n,
 					"We have this tradition in the Varrocian arostocracy",
 					"Each noble family has an ancient crest",
@@ -184,47 +188,124 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 					"until the crest is returned",
 					"In times past when there was much infighting between the various families",
 					"Capturing a family's crest meant you captured their land");
-				playerTalk(p, n, "so where is this crest?");
-				dimintheisDialogue(p, n, Dimintheis.THREE_SONS);
+				say(player, n, "so where is this crest?");
+				dimintheisDialogue(player, n, Dimintheis.THREE_SONS);
 				break;
 		}
 	}
 
+	public static void disenchantGauntlets(Player player, Npc npc) {
+		int goldCost = 200000;
+		int drunkDragons = 3;
+		if (player.getCarriedItems().getInventory().hasCatalogID(Gauntlets.getById(getGauntletEnchantment(player)).catalogId())
+		&& getGauntletEnchantment(player) != Gauntlets.STEEL.id()) {
+
+			boolean hasBoughtDrinks = player.getCarriedItems().getInventory().countId(ItemId.BLURBERRY_BARMAN_DRUNK_DRAGON.id(), Optional.of(false)) >= drunkDragons;
+			boolean hasMadeDrinks = player.getCarriedItems().getInventory().countId(ItemId.DRUNK_DRAGON.id(), Optional.of(false)) >= drunkDragons;
+
+			if ((hasBoughtDrinks || hasMadeDrinks)
+				&& player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= goldCost) {
+
+				if (multi(player, npc, "You're welcome", "I've got your stuff, let's do this") == 1) {
+					for (int i = 0; i < drunkDragons; i++) {
+						mes(player, "You give a Drunk dragon to Dimintheis");
+						if (hasBoughtDrinks) {
+							player.getCarriedItems().remove(new Item(ItemId.BLURBERRY_BARMAN_DRUNK_DRAGON.id()));
+						} else if (hasMadeDrinks) {
+							player.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
+						}
+					}
+					mes(player, "You give " + goldCost + " coins to Dimintheis");
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), goldCost));
+					mes(player, "You give your gauntlets to Dimintheis");
+					Item itemToRemove = player.getCarriedItems().getEquipment().get(
+						player.getCarriedItems().getEquipment().searchEquipmentForItem(
+							Gauntlets.getById(getGauntletEnchantment(player)).catalogId()));
+					if (itemToRemove == null) {
+						itemToRemove = player.getCarriedItems().getInventory().get(Gauntlets.getById(getGauntletEnchantment(player)).catalogId());
+					}
+					if (itemToRemove == null) return;
+					player.getCarriedItems().remove(itemToRemove);
+					mes(player, "Dimintheis takes your gauntlets",
+					"He mutters some words that you don't understand",
+					"He hands you back a pair of steel gauntlets");
+					give(player, Gauntlets.STEEL.catalogId(), 1);
+					player.getCache().set("famcrest_gauntlets", Gauntlets.STEEL.id());
+					npcsay(player, npc, "It's done",
+						"Just don't tell my kids about this");
+				}
+
+			} else {
+				if (multi(player, npc, "You're welcome", "I may have made an error in judgement...") == 1) {
+					npcsay(player, npc, "How so?");
+					int choice = multi(player, npc, "I should have sided with the demon",
+						"While I love my enchanted gauntlets, I would like a different enchantment");
+					if (choice == 0) {
+						npcsay(player, npc, "Bit late for that now...");
+					} else if (choice == 1) {
+						npcsay(player, npc, "Alright I can disenchant your gauntlets",
+							"If you do me a favor");
+						say(player, npc, "I'm all ears");
+						npcsay(player, npc, "I'm going to need " + drunkDragons + " Drunk dragons and " + goldCost + " coins");
+						choice = multi(player, npc, "Sure no problem",
+							"No way",
+							"How am I supposed to get a dragon drunk?");
+						if (choice == 2) {
+							npcsay(player, npc, "You don't",
+								"It's a fancy-schmancy cocktail made by the little folk that live in trees");
+							multi(player, npc, "Sure I can do that",
+								"That seems like too much effort, I'll pass");
+						}
+					}
+				}
+			}
+		}
+	}
+
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.DIMINTHEIS.id() || n.getID() == NpcId.AVAN.id() || n.getID() == NpcId.JOHNATHON.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.DIMINTHEIS.id()) {
-			dimintheisDialogue(p, n, -1);
+			dimintheisDialogue(player, n, -1);
 		}
 		else if (n.getID() == NpcId.AVAN.id()) {
-			switch (p.getQuestStage(this)) {
+			switch (player.getQuestStage(this)) {
 				case -1:
-					npcTalk(p, n, "I have heard word from my father",
+					npcsay(player, n, "I have heard word from my father",
 						"Thankyou for helping to restore our family honour");
-					if (hasItem(p, ItemId.STEEL_GAUNTLETS.id()) && getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
-						playerTalk(p, n,
+					if (player.getCarriedItems().hasCatalogID(ItemId.STEEL_GAUNTLETS.id(), Optional.of(false))
+						&& getGauntletEnchantment(player) == Gauntlets.STEEL.id()) {
+						say(player, n,
 							"Your father said that you could improve these Gauntlets in some way for me");
-						npcTalk(p,
+						npcsay(player,
 							n,
 							"Indeed I can",
 							"In my quest to find the perfect gold I learned a lot",
 							"I can make it so when you're wearing these");
-						npcTalk(p, n, "You gain more experience when smithing gold");
-						int menu = showMenu(p, n,
+						npcsay(player, n, "You gain more experience when smithing gold");
+						int menu = multi(player, n,
 							"That sounds good, improve them for me",
 							"I think I'll check my other options with your brothers");
 						if (menu == 0) {
-							message(p, "Avan takes out a little hammer",
+							mes(player, "Avan takes out a little hammer",
 								"He starts pounding on the gauntlets",
 								"Avan hands the gauntlets to you");
-							p.getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_GOLDSMITHING.id());
-							p.getCache().set("famcrest_gauntlets", Gauntlets.GOLDSMITHING.id());
+							Item itemToRemove = player.getCarriedItems().getEquipment().get(
+								player.getCarriedItems().getEquipment().searchEquipmentForItem(
+									ItemId.STEEL_GAUNTLETS.id()));
+							if (itemToRemove == null) {
+								itemToRemove = player.getCarriedItems().getInventory().get(ItemId.STEEL_GAUNTLETS.id());
+							}
+							if (itemToRemove == null) return;
+							player.getCarriedItems().remove(itemToRemove);
+							player.getCarriedItems().getInventory().add(new Item(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()));
+							player.getCache().set("famcrest_gauntlets", Gauntlets.GOLDSMITHING.id());
 						} else if (menu == 1) {
-							npcTalk(p, n,
+							npcsay(player, n,
 								"Ok if you insist on getting help from the likes of them");
 						}
 					}
@@ -233,22 +314,22 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 				case 1:
 				case 2:
 				case 3:
-					npcTalk(p, n, "Can't you see I'm busy?");
+					npcsay(player, n, "Can't you see I'm busy?");
 					break;
 				case 4:
-					int menu = showMenu(p, n,
+					int menu = multi(player, n,
 						"Why are you hanging around in a scorpion pit?",
 						"I'm looking for a man named Avan");
 					if (menu == 0) {
-						npcTalk(p, n, "It's a good place to find gold");
+						npcsay(player, n, "It's a good place to find gold");
 					} else if (menu == 1) {
-						npcTalk(p, n, "I'm called Avan yes");
-						playerTalk(p, n, "You have part of a crest",
+						npcsay(player, n, "I'm called Avan yes");
+						say(player, n, "You have part of a crest",
 							"I have been sent to fetch it");
-						npcTalk(p, n,
+						npcsay(player, n,
 							"Is one of my good for nothing brothers after it again?");
-						playerTalk(p, n, "no your father would like it back");
-						npcTalk(p,
+						say(player, n, "no your father would like it back");
+						npcsay(player,
 							n,
 							"Oh Dad wants it this time",
 							"Well I'll tell you what I'll do",
@@ -259,34 +340,35 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 							"Not just any gold mind you",
 							"The gold in these rocks doesn't seem to be of the best quality",
 							"I want as good a quality as you can get");
-						playerTalk(p, n, "Any ideas where I can find that?");
-						npcTalk(p,
+						say(player, n, "Any ideas where I can find that?");
+						npcsay(player,
 							n,
 							"Well I have been looking for such gold for a while",
 							"My latest lead was a dwarf named Boot",
 							"Though he has gone back to his home in the mountain now");
-						playerTalk(p, n, "Ok I will try to get what you are after");
-						p.updateQuestStage(this, 5);
+						say(player, n, "Ok I will try to get what you are after");
+						player.updateQuestStage(this, 5);
 					}
 					break;
 				case 5:
-					npcTalk(p, n, "So how are you doing getting the jewellry?");
-					playerTalk(p, n, "I'm still after that perfect gold");
-					npcTalk(p, n,
+					npcsay(player, n, "So how are you doing getting the jewellry?");
+					say(player, n, "I'm still after that perfect gold");
+					npcsay(player, n,
 						"Well I have been looking for such gold for a while",
 						"My latest lead was a dwarf named Boot",
 						"Though he has gone back to his home in the mountain now");
 					break;
 				case 6:
-					npcTalk(p, n, "So how are you doing getting the jewellry?");
-					if (hasItem(p, ItemId.RUBY_RING_FAMILYCREST.id()) && hasItem(p, ItemId.RUBY_NECKLACE_FAMILYCREST.id())) {
-						playerTalk(p, n, "I have it");
-						npcTalk(p, n, "These are brilliant");
-						p.message("You exchange the jewellry for a piece of crest");
-						removeItem(p, ItemId.RUBY_RING_FAMILYCREST.id(), 1);
-						removeItem(p, ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
-						addItem(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
-						npcTalk(p,
+					npcsay(player, n, "So how are you doing getting the jewellry?");
+					if (player.getCarriedItems().hasCatalogID(ItemId.RUBY_RING_FAMILYCREST.id(), Optional.of(false))
+						&& player.getCarriedItems().hasCatalogID(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), Optional.of(false))) {
+						say(player, n, "I have it");
+						npcsay(player, n, "These are brilliant");
+						player.message("You exchange the jewellry for a piece of crest");
+						player.getCarriedItems().remove(new Item(ItemId.RUBY_RING_FAMILYCREST.id()));
+						player.getCarriedItems().remove(new Item(ItemId.RUBY_NECKLACE_FAMILYCREST.id()));
+						give(player, ItemId.CREST_FRAGMENT_TWO.id(), 1);
+						npcsay(player,
 							n,
 							"These are a fine piece of work",
 							"Such marvelous gold to",
@@ -296,20 +378,20 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 							"But he's not doing a very good job of it",
 							"He spends most his time recovering in an inn",
 							"on the edge of the wilderness");
-						p.updateQuestStage(this, 7);
+						player.updateQuestStage(this, 7);
 					} else {
-						playerTalk(p, n,
+						say(player, n,
 							"I have spoken to boot about the perfect gold",
 							"I haven't bought you your jewellry yet though");
-						npcTalk(p, n,
+						npcsay(player, n,
 							"Remember I want a gold ring with a red stone in",
 							"And a necklace to match");
 					}
 					break;
 				case 7:
-					playerTalk(p, n,
+					say(player, n,
 						"Where did you say I could find Johnathon again?");
-					npcTalk(p, n,
+					npcsay(player, n,
 						"I heard my brother Johnathon is now a young mage",
 						"He is hunting some demon in the wilderness",
 						"But he's not doing a very good job of it",
@@ -317,80 +399,88 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 						"on the edge of the wilderness");
 					break;
 				case 8:
-					npcTalk(p, n, "How are you doing getting the rest of the crest?");
-					if (!hasItem(p, ItemId.CREST_FRAGMENT_TWO.id())) {
-						int menu2 = showMenu(p, n,
+					npcsay(player, n, "How are you doing getting the rest of the crest?");
+					if (!player.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_TWO.id(), Optional.of(false))) {
+						int menu2 = multi(player, n,
 							"I am still working on it",
 							"I have lost the piece you gave me");
 						if (menu2 == 0) {
-							npcTalk(p, n, "Well good luck in your quest");
+							npcsay(player, n, "Well good luck in your quest");
 						} else if (menu2 == 1) {
-							npcTalk(p, n, "Ah well here is another one");
-							addItem(p, ItemId.CREST_FRAGMENT_TWO.id(), 1);
+							npcsay(player, n, "Ah well here is another one");
+							give(player, ItemId.CREST_FRAGMENT_TWO.id(), 1);
 						}
 					} else {
-						playerTalk(p, n, "I am still working on it");
-						npcTalk(p, n, "Well good luck in your quest");
+						say(player, n, "I am still working on it");
+						npcsay(player, n, "Well good luck in your quest");
 					}
 					break;
 			}
 		}
 		else if (n.getID() == NpcId.JOHNATHON.id()) {
-			if (p.getQuestStage(this) >= 0 && p.getQuestStage(this) < 7) {
-				npcTalk(p, n, "I am so very tired, leave me to rest");
-			} else if (p.getQuestStage(this) == 7) {
-				playerTalk(p, n, "Greetings, are you Johnathon Fitzharmon?");
-				npcTalk(p, n, "That is I");
-				playerTalk(p, n,
+			if (player.getQuestStage(this) >= 0 && player.getQuestStage(this) < 7) {
+				npcsay(player, n, "I am so very tired, leave me to rest");
+			} else if (player.getQuestStage(this) == 7) {
+				say(player, n, "Greetings, are you Johnathon Fitzharmon?");
+				npcsay(player, n, "That is I");
+				say(player, n,
 					"I seek your fragment of the Fitzharmon family quest");
-				npcTalk(p, n, "The poison it is too much",
+				npcsay(player, n, "The poison it is too much",
 					"arrgh my head is all of a spin");
-				p.message("Sweat is pouring down Johnathon's face");
-			} else if (p.getQuestStage(this) == 8) {
-				npcTalk(p, n,
+				player.message("Sweat is pouring down Johnathon's face");
+			} else if (player.getQuestStage(this) == 8) {
+				npcsay(player, n,
 					"I'm trying to kill the demon chronozon  that you mentioned");
-				int menu = showMenu(p, n,
+				int menu = multi(player, n,
 					"So is this Chronozon hard to defeat?",
 					"Where can I find Chronozon?", "Wish me luck");
 				if (menu == 0) {
-					DEFEAT(p, n);
+					DEFEAT(player, n);
 				} else if (menu == 1) {
-					FIND(p, n);
+					FIND(player, n);
 				} else if (menu == 2) {
-					npcTalk(p, n, "Good luck");
+					npcsay(player, n, "Good luck");
 				}
-			} else if (p.getQuestStage(this) == -1) {
-				npcTalk(p, n, "Hello again");
-				if (hasItem(p, ItemId.STEEL_GAUNTLETS.id()) && getGauntletEnchantment(p) == Gauntlets.STEEL.id()) {
-					playerTalk(p, n,
+			} else if (player.getQuestStage(this) == -1) {
+				npcsay(player, n, "Hello again");
+				if (player.getCarriedItems().hasCatalogID(ItemId.STEEL_GAUNTLETS.id(), Optional.of(false)) && getGauntletEnchantment(player) == Gauntlets.STEEL.id()) {
+					say(player, n,
 						"Your father tells me, you can improve these gauntlets a bit");
-					npcTalk(p,
+					npcsay(player,
 						n,
 						"He would be right",
 						"Though I didn't get good enough at the death spells to defeat chronozon",
 						"I am pretty good at the chaos spells",
 						"I can enchant your gauntlets so that your bolt spells are more effective");
-					int menu = showMenu(p, n, "That sounds good to me",
+					int menu = multi(player, n, "That sounds good to me",
 						"I shall see what options your brothers can offer me first");
 					if (menu == 0) {
-						message(p, "Johnathon waves his staff",
+						mes(player, "Johnathon waves his staff",
 							"The gauntlets sparkle and shimmer");
-						p.getInventory().replace(ItemId.STEEL_GAUNTLETS.id(), ItemId.GAUNTLETS_OF_CHAOS.id());
-						p.getCache().set("famcrest_gauntlets", Gauntlets.CHAOS.id());
+						Item itemToRemove = player.getCarriedItems().getEquipment().get(
+							player.getCarriedItems().getEquipment().searchEquipmentForItem(
+								ItemId.STEEL_GAUNTLETS.id()));
+						if (itemToRemove == null) {
+							itemToRemove = player.getCarriedItems().getInventory().get(ItemId.STEEL_GAUNTLETS.id());
+						}
+						if (itemToRemove == null) return;
+						player.getCarriedItems().remove(itemToRemove);
+						player.getCarriedItems().getInventory().add(new Item(ItemId.GAUNTLETS_OF_CHAOS.id()));
+						player.getCache().set("famcrest_gauntlets", Gauntlets.CHAOS.id());
 					} else if (menu == 0) {
-						npcTalk(p, n,
+						npcsay(player, n,
 							"Boring crafting and cooking enhacements knowing them");
 					}
 				} else {
-					npcTalk(p, n, "My family now considers you a hero");
+					npcsay(player, n, "My family now considers you a hero");
 				}
 			}
 		}
 	}
-	
-	public static int getGauntletEnchantment(Player p) {
+
+	public static int getGauntletEnchantment(Player player) {
 		try {
-			return p.getCache().getInt("famcrest_gauntlets");
+			return player.getCache().getInt("famcrest_gauntlets");
 		} catch (Exception e) {
 			return Gauntlets.STEEL.id();
 		}
@@ -405,90 +495,90 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	 **/
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player p) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return (obj.getID() == 88 && obj.getX() == 509 && obj.getY() == 3441) || (obj.getID() == 90 && obj.getX() == 512 && obj.getY() == 3441)
 				|| obj.getID() == 91 || obj.getID() == 92;
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		switch (obj.getID()) {
 			case 88:
-				if (p.getCache().hasKey("north_leverA")
-					&& p.getCache().hasKey("south_lever")
-					&& p.getCache().getBoolean("north_leverA")
-					&& p.getCache().getBoolean("south_lever")) {
-					p.message("The door swings open");
-					p.message("You go through the door");
-					doDoor(obj, p);
-				} else if (p.getCache().hasKey("north_leverA")
-					&& p.getCache().hasKey("north_leverB")
-					&& p.getCache().hasKey("south_lever")
-					&& p.getCache().getBoolean("north_leverA")
-					&& p.getCache().getBoolean("north_leverB")
-					&& p.getCache().getBoolean("south_lever")) {
-					p.message("The door swings open");
-					p.message("You go through the door");
-					doDoor(obj, p);
+				if (player.getCache().hasKey("north_leverA")
+					&& player.getCache().hasKey("south_lever")
+					&& player.getCache().getBoolean("north_leverA")
+					&& player.getCache().getBoolean("south_lever")) {
+					player.message("The door swings open");
+					player.message("You go through the door");
+					doDoor(obj, player);
+				} else if (player.getCache().hasKey("north_leverA")
+					&& player.getCache().hasKey("north_leverB")
+					&& player.getCache().hasKey("south_lever")
+					&& player.getCache().getBoolean("north_leverA")
+					&& player.getCache().getBoolean("north_leverB")
+					&& player.getCache().getBoolean("south_lever")) {
+					player.message("The door swings open");
+					player.message("You go through the door");
+					doDoor(obj, player);
 
 				} else {
-					p.message("The door is locked");
+					player.message("The door is locked");
 				}
 				break;
 			case 90:
-				if (p.getCache().hasKey("north_leverA")
-					&& p.getCache().hasKey("south_lever")
-					&& p.getCache().getBoolean("north_leverA")
-					&& !p.getCache().getBoolean("south_lever")) {
-					p.message("The door swings open");
-					p.message("You go through the door");
-					doDoor(obj, p);
+				if (player.getCache().hasKey("north_leverA")
+					&& player.getCache().hasKey("south_lever")
+					&& player.getCache().getBoolean("north_leverA")
+					&& !player.getCache().getBoolean("south_lever")) {
+					player.message("The door swings open");
+					player.message("You go through the door");
+					doDoor(obj, player);
 				} else if (
-					p.getCache().hasKey("north_leverA")
-						&& p.getCache().hasKey("north_leverB")
-						&& p.getCache().hasKey("south_lever")
-						&& p.getCache().getBoolean("north_leverA")
-						&& p.getCache().getBoolean("north_leverB")
-						&& !p.getCache().getBoolean("south_lever")) {
-					p.message("The door swings open");
-					p.message("You go through the door");
-					doDoor(obj, p);
+					player.getCache().hasKey("north_leverA")
+						&& player.getCache().hasKey("north_leverB")
+						&& player.getCache().hasKey("south_lever")
+						&& player.getCache().getBoolean("north_leverA")
+						&& player.getCache().getBoolean("north_leverB")
+						&& !player.getCache().getBoolean("south_lever")) {
+					player.message("The door swings open");
+					player.message("You go through the door");
+					doDoor(obj, player);
 				} else {
-					p.message("The door is locked");
+					player.message("The door is locked");
 				}
 				break;
 			case 91:
-				if (p.getCache().hasKey("north_leverA")
-					&& p.getCache().hasKey("north_leverB")
-					&& p.getCache().hasKey("south_lever")
-					&& p.getCache().getBoolean("north_leverA")
-					&& p.getCache().getBoolean("north_leverB")
-					&& !p.getCache().getBoolean("south_lever")) {
-					p.message("The door swings open");
-					p.message("You go through the door");
-					doDoor(obj, p);
-				} else if (p.getQuestStage(this) == -1) { // FREE ACCESS TO THE
+				if (player.getCache().hasKey("north_leverA")
+					&& player.getCache().hasKey("north_leverB")
+					&& player.getCache().hasKey("south_lever")
+					&& player.getCache().getBoolean("north_leverA")
+					&& player.getCache().getBoolean("north_leverB")
+					&& !player.getCache().getBoolean("south_lever")) {
+					player.message("The door swings open");
+					player.message("You go through the door");
+					doDoor(obj, player);
+				} else if (player.getQuestStage(this) == -1) { // FREE ACCESS TO THE
 					// HELLHOUND ROOM AFTER
 					// COMPLETING QUEST
-					p.message("The door swings open");
-					p.message("You go through the door");
-					doDoor(obj, p);
+					player.message("The door swings open");
+					player.message("You go through the door");
+					doDoor(obj, player);
 				} else {
-					p.message("The door is locked");
+					player.message("The door is locked");
 				}
 				break;
 			case 92:
-				if (p.getCache().hasKey("north_leverA")
-					&& (p.getCache().hasKey("north_leverB")
-					|| p.getCache().hasKey("south_lever"))
-					&& !p.getCache().getBoolean("north_leverA")
-					&& (p.getCache().getBoolean("south_lever") || p.getCache()
+				if (player.getCache().hasKey("north_leverA")
+					&& (player.getCache().hasKey("north_leverB")
+					|| player.getCache().hasKey("south_lever"))
+					&& !player.getCache().getBoolean("north_leverA")
+					&& (player.getCache().getBoolean("south_lever") || player.getCache()
 					.getBoolean("north_leverB"))) {
-					p.message("The door swings open");
-					p.message("You go through the door");
-					doDoor(obj, p);
+					player.message("The door swings open");
+					player.message("You go through the door");
+					doDoor(obj, player);
 				} else {
-					p.message("The door is locked");
+					player.message("The door is locked");
 				}
 				break;
 		}
@@ -502,21 +592,21 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	 **/
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 316 || obj.getID() == 317 || obj.getID() == 318;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (command.equalsIgnoreCase("pull") && (obj.getID() == 316 || obj.getID() == 317 || obj.getID() == 318))
-			doLever(p, obj.getID());
+			doLever(player, obj.getID());
 		else if (command.equalsIgnoreCase("inspect") && (obj.getID() == 316 || obj.getID() == 317 || obj.getID() == 318))
-			inspectLever(p, obj.getID());
+			inspectLever(player, obj.getID());
 	}
 
-	public void inspectLever(Player p, int objectID) {
-		if (p.getQuestStage(Quests.FAMILY_CREST) == -1) {
-			p.message("nothing interesting happens"); // SAID SO ON WIKI.
+	public void inspectLever(Player player, int objectID) {
+		if (player.getQuestStage(Quests.FAMILY_CREST) == -1) {
+			player.message("nothing interesting happens"); // SAID SO ON WIKI.
 			return;
 		}
 		String leverName = null;
@@ -527,19 +617,19 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 		} else if (objectID == 318) {
 			leverName = "north_leverB";
 		}
-		p.message("The lever is "
-			+ (p.getCache().hasKey(leverName) && p.getCache().getBoolean(leverName) ? "down" : "up"));
+		player.message("The lever is "
+			+ (player.getCache().hasKey(leverName) && player.getCache().getBoolean(leverName) ? "down" : "up"));
 	}
 
-	public void doLever(Player p, int objectID) {
-		if (p.getQuestStage(Quests.FAMILY_CREST) == -1) {
-			p.message("nothing interesting happens"); // SAID SO ON WIKI.
+	public void doLever(Player player, int objectID) {
+		if (player.getQuestStage(Quests.FAMILY_CREST) == -1) {
+			player.message("nothing interesting happens"); // SAID SO ON WIKI.
 			return;
 		}
-		if (!p.getCache().hasKey("north_leverA")) {
-			p.getCache().store("north_leverA", false);
-			p.getCache().store("south_lever", false);
-			p.getCache().store("north_leverB", false);
+		if (!player.getCache().hasKey("north_leverA")) {
+			player.getCache().store("north_leverA", false);
+			player.getCache().store("south_lever", false);
+			player.getCache().store("north_leverB", false);
 		}
 		String leverName = null;
 		if (objectID == 316) {
@@ -549,94 +639,94 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 		} else if (objectID == 318) {
 			leverName = "north_leverB";
 		}
-		p.getCache().store(leverName, !p.getCache().getBoolean(leverName));
-		p.message("You pull the lever "
-			+ (p.getCache().getBoolean(leverName) ? "down" : "up"));
-		p.message("you hear a clunk");
+		player.getCache().store(leverName, !player.getCache().getBoolean(leverName));
+		player.message("You pull the lever "
+			+ (player.getCache().getBoolean(leverName) ? "down" : "up"));
+		player.message("you hear a clunk");
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.JOHNATHON.id() && item.getID() == ItemId.FULL_CURE_POISON_POTION.id();
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return npc.getID() == NpcId.JOHNATHON.id() && item.getCatalogId() == ItemId.FULL_CURE_POISON_POTION.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (n.getID() == NpcId.JOHNATHON.id() && item.getID() == ItemId.FULL_CURE_POISON_POTION.id()) {
-			if (p.getQuestStage(this) == 7) {
-				message(p, "You feed your potion to Johnathon");
-				removeItem(p, ItemId.FULL_CURE_POISON_POTION.id(), 1);
-				p.updateQuestStage(this, 8);
-				npcTalk(p, n, "Wow I'm feeling a lot better now",
+	public void onUseNpc(Player player, Npc n, Item item) {
+		if (n.getID() == NpcId.JOHNATHON.id() && item.getCatalogId() == ItemId.FULL_CURE_POISON_POTION.id()) {
+			if (player.getQuestStage(this) == 7) {
+				mes(player, "You feed your potion to Johnathon");
+				player.getCarriedItems().remove(new Item(ItemId.FULL_CURE_POISON_POTION.id()));
+				player.updateQuestStage(this, 8);
+				npcsay(player, n, "Wow I'm feeling a lot better now",
 					"Thankyou, what can I do for you?");
-				playerTalk(p, n,
+				say(player, n,
 					"I'm after your part of the fitzharmon family crest");
-				npcTalk(p,
+				npcsay(player,
 					n,
 					"Ooh I don't think I have that anymore",
 					"I have been trying to slay chronozon the blood demon",
 					"and I think I dropped a lot of my things near him when he drove me away",
 					"He will have it now");
-				int menu = showMenu(p, n,
+				int menu = multi(player, n,
 					"So is this Chronozon hard to defeat?",
 					"Where can I find Chronozon?",
 					"So how did you end up getting poisoned");
 				if (menu == 0) {
-					DEFEAT(p, n);
+					DEFEAT(player, n);
 				} else if (menu == 1) {
-					FIND(p, n);
+					FIND(player, n);
 				} else if (menu == 2) {
-					POISONED(p, n);
+					POISONED(player, n);
 				}
 			} else {
-				p.message("nothing interesting happens");
+				player.message("nothing interesting happens");
 			}
 		}
 	}
 
-	private void DEFEAT(Player p, Npc n) {
-		npcTalk(p, n, "Well you will need to be a good mage",
+	private void DEFEAT(Player player, Npc n) {
+		npcsay(player, n, "Well you will need to be a good mage",
 			"And I don't seem to be able to manage it",
 			"He will need to be hit by the 4 elemental spells of death",
 			"Before he can be defeated");
-		int menu = showMenu(p, n, "Where can I find Chronozon?",
+		int menu = multi(player, n, "Where can I find Chronozon?",
 			"So how did you end up getting poisoned",
 			"I will be on my way now");
 		if (menu == 0) {
-			FIND(p, n);
+			FIND(player, n);
 		} else if (menu == 1) {
-			POISONED(p, n);
+			POISONED(player, n);
 		}
 	}
 
-	private void POISONED(Player p, Npc n) {
-		npcTalk(p, n,
+	private void POISONED(Player player, Npc n) {
+		npcsay(player, n,
 			"There are spiders towards the entrance to Chronozon's cave",
 			"I must have taken a nip from one of them");
-		int menu2 = showMenu(p, n, "So is this Chronozon hard to defeat?",
+		int menu2 = multi(player, n, "So is this Chronozon hard to defeat?",
 			"Where can I find Chronozon?", "I will be on my way now");
 		if (menu2 == 0) {
-			DEFEAT(p, n);
+			DEFEAT(player, n);
 		} else if (menu2 == 1) {
-			FIND(p, n);
+			FIND(player, n);
 		}
 	}
 
-	private void FIND(Player p, Npc n) {
-		npcTalk(p, n,
+	private void FIND(Player player, Npc n) {
+		npcsay(player, n,
 			"He is in the wilderness, somewhere below the obelisk of air");
-		int menu = showMenu(p, n, "So is this Chronozon hard to defeat?",
+		int menu = multi(player, n, "So is this Chronozon hard to defeat?",
 			"So how did you end up getting poisoned",
 			"I will be on my way now");
 		if (menu == 0) {
-			DEFEAT(p, n);
+			DEFEAT(player, n);
 		} else if (menu == 1) {
-			POISONED(p, n);
+			POISONED(player, n);
 		}
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return n.getID() == NpcId.CHRONOZON.id();
 	}
 
@@ -647,35 +737,31 @@ public class FamilyCrest implements QuestInterface, TalkToNpcListener,
 	 */
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.CHRONOZON.id()) {
 			String[] elementals = new String[]{"wind", "water", "earth",
 				"fire"};
 			boolean regenerate = false;
 			for (String s : elementals) {
-				if (!p.getAttribute("chronoz_" + s, false)) {
+				if (!player.getAttribute("chronoz_" + s, false)) {
 					regenerate = true;
 					break;
 				}
 			}
 			if (regenerate) {
 				n.getSkills().setLevel(Skills.HITS, n.getDef().hits);
-				p.message("Chronozon regenerates");
+				player.message("Chronozon regenerates");
 			} else {
-				if (p.getQuestStage(this) == 8) {
-					p.getWorld().registerItem(
-						new GroundItem(p.getWorld(), ItemId.CREST_FRAGMENT_THREE.id(), n.getX(), n.getY(), 1, p));
+				if (player.getQuestStage(this) == 8) {
+					player.getWorld().registerItem(
+						new GroundItem(player.getWorld(), ItemId.CREST_FRAGMENT_THREE.id(), n.getX(), n.getY(), 1, player));
 				}
-				n.killedBy(p);
+				n.killedBy(player);
 				n.remove();
 			}
 		}
 
 	}
-
-	/**
-	 * @author Davve
-	 */
 
 	class Dimintheis {
 		public static final int THREE_SONS = 0;

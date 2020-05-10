@@ -5,16 +5,14 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class AgilityShortcuts implements ObjectActionListener,
-	ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class AgilityShortcuts implements OpLocTrigger,
+	UseLocTrigger {
 
 	private static final int SHORTCUT_FALADOR_HANDHOLD = 693;
 	private static final int SHORTCUT_BRIMHAVEN_SWING = 694;
@@ -45,8 +43,7 @@ public class AgilityShortcuts implements ObjectActionListener,
 	private static final int ENTRANA_RUBBLE = 1286;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), SHORTCUT_YANILLE_PIPE,
 			SHORTCUT_YANILLE_PIPE_BACK,
 			SHORTCUT_YANILLE_PILE_OF_RUBBLE,
@@ -72,439 +69,415 @@ public class AgilityShortcuts implements ObjectActionListener,
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
-		p.setBusy(true);
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		switch (obj.getID()) {
 			case SHILO_VILLAGE_BRIDGE_BLOCKADE_JUMP:
-				if (getCurrentLevel(p, Skills.AGILITY) < 32) {
-					p.message("You need an agility level of 32 to climb the rocks");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 32) {
+					player.message("You need an agility level of 32 to climb the rocks");
 					return;
 				}
-				message(p, "The bridge beyond this fence looks very unsafe.");
-				message(p, "However, you could try to negotiate it if you're feeling very agile.");
-				p.message("Would you like to try?");
-				int jumpMenu = showMenu(p,
+				mes(player, "The bridge beyond this fence looks very unsafe.");
+				mes(player, "However, you could try to negotiate it if you're feeling very agile.");
+				player.message("Would you like to try?");
+				int jumpMenu = multi(player,
 					"No thanks! It looks far too dangerous!",
 					"Yes, I'm totally brave and quite agile!");
 				if (jumpMenu == 0) {
-					message(p, "You decide that common sense is the better part of valour.",
+					mes(player, "You decide that common sense is the better part of valour.",
 						"And stop yourself from being hurled to what must be an ");
-					p.message("inevitable death.");
+					player.message("inevitable death.");
 				} else if (jumpMenu == 1) {
-					message(p, "You prepare to negotiate the bridge fence...");
-					message(p, "You run and jump...");
-					if (succeed(p, 32)) {
-						p.message("...and land perfectly on the other side!");
-						if (p.getX() >= 460) { // back
-							p.teleport(458, 828);
+					mes(player, "You prepare to negotiate the bridge fence...");
+					mes(player, "You run and jump...");
+					if (succeed(player, 32)) {
+						player.message("...and land perfectly on the other side!");
+						if (player.getX() >= 460) { // back
+							player.teleport(458, 828);
 						} else {
-							p.teleport(460, 828);
+							player.teleport(460, 828);
 						}
 					} else {
-						p.message("...slip and fall incompetently into the river below!");
-						p.teleport(458, 832);
-						playerTalk(p, null, "* Ahhhhhhhhhh! *");
-						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
-						sleep(500);
-						p.teleport(458, 836);
-						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
-						sleep(1000);
-						playerTalk(p, null, "* Gulp! *");
-						sleep(1500);
-						p.teleport(459, 841);
-						playerTalk(p, null, "* Gulp! *");
-						sleep(1000);
-						p.message("You just manage to drag your pitiful frame onto the river bank.");
-						playerTalk(p, null, "* Gasp! *");
-						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
-						sleep(1000);
-						p.message("Though you nearly drowned in the river!");
+						player.message("...slip and fall incompetently into the river below!");
+						player.teleport(458, 832);
+						say(player, null, "* Ahhhhhhhhhh! *");
+						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
+						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						player.teleport(458, 836);
+						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
+						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+						say(player, null, "* Gulp! *");
+						delay(1500);
+						player.teleport(459, 841);
+						say(player, null, "* Gulp! *");
+						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+						player.message("You just manage to drag your pitiful frame onto the river bank.");
+						say(player, null, "* Gasp! *");
+						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
+						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+						player.message("Though you nearly drowned in the river!");
 					}
 				}
 				break;
 			case SHILO_VILLAGE_ROCKS_TO_BRIDGE:
-				if (getCurrentLevel(p, Skills.AGILITY) < 32) {
-					p.message("You need an agility level of 32 to climb the rocks");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 32) {
+					player.message("You need an agility level of 32 to climb the rocks");
 					return;
 				}
-				message(p, "These rocks look quite dangerous to climb.",
+				mes(player, "These rocks look quite dangerous to climb.",
 					"But you may be able to scale them.");
-				p.message("Would you like to try?");
-				int menu = showMenu(p,
+				player.message("Would you like to try?");
+				int menu = multi(player,
 					"Yes, I can easily climb this!",
 					"Nope, I'm sure I'll probably fall!");
 				if (menu == 0) {
-					if (succeed(p, 32)) {
-						message(p, "You manage to climb the rocks succesfully and pick");
+					if (succeed(player, 32)) {
+						mes(player, "You manage to climb the rocks succesfully and pick");
 						if (obj.getX() == 450) {
-							p.message("a route though the trecherous embankment to the top.");
-							p.teleport(452, 829);
+							player.message("a route though the trecherous embankment to the top.");
+							player.teleport(452, 829);
 						} else {
-							p.message("a route though the trecherous embankment to the bottom.");
-							p.teleport(449, 828);
+							player.message("a route though the trecherous embankment to the bottom.");
+							player.teleport(449, 828);
 						}
 					} else {
-						p.teleport(450, 828);
-						message(p, "You fall and hurt yourself.");
-						p.damage((getCurrentLevel(p, Skills.HITS) / 10));
-						sleep(500);
-						p.teleport(449, 828);
+						player.teleport(450, 828);
+						mes(player, "You fall and hurt yourself.");
+						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
+						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						player.teleport(449, 828);
 					}
 				} else if (menu == 1) {
-					p.message("You decide not to climb the rocks.");
+					player.message("You decide not to climb the rocks.");
 				}
 				break;
 			case SHORTCUT_FALADOR_HANDHOLD:
-				if (getCurrentLevel(p, Skills.AGILITY) < 5) {
-					p.message("You need an agility level of 5 to climb the wall");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 5) {
+					player.message("You need an agility level of 5 to climb the wall");
 					return;
 				}
-				p.message("You climb over the wall");
-				movePlayer(p, 338, 555);
-				p.incExp(Skills.AGILITY, 50, true);
+				player.message("You climb over the wall");
+				teleport(player, 338, 555);
+				player.incExp(Skills.AGILITY, 50, true);
 				break;
 			case SHORTCUT_BRIMHAVEN_SWING:
-				if (getCurrentLevel(p, Skills.AGILITY) < 10) {
-					p.message("You need an agility level of 10 to attempt to swing on this vine");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 10) {
+					player.message("You need an agility level of 10 to attempt to swing on this vine");
 					return;
 				}
-				p.message("You grab the vine and try and swing across");
-				sleep(1000);
-				movePlayer(p, 511, 669);
-				p.message("You skillfully swing across the stream");
-				playerTalk(p, null, "Aaaaahahah");
-				p.incExp(Skills.AGILITY, 20, true);
+				player.message("You grab the vine and try and swing across");
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				teleport(player, 511, 669);
+				player.message("You skillfully swing across the stream");
+				say(player, null, "Aaaaahahah");
+				player.incExp(Skills.AGILITY, 20, true);
 				break;
 			case SHORTCUT_BRIMHAVEN_BACK_SWING:
-				if (getCurrentLevel(p, Skills.AGILITY) < 10) {
-					p.message("You need an agility level of 10 to attempt to swing on this vine");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 10) {
+					player.message("You need an agility level of 10 to attempt to swing on this vine");
 					return;
 				}
-				p.message("You grab the vine and try and swing across");
-				sleep(1000);
-				movePlayer(p, 508, 668);
-				p.message("You skillfully swing across the stream");
-				playerTalk(p, null, "Aaaaahahah");
-				p.incExp(Skills.AGILITY, 20, true);
+				player.message("You grab the vine and try and swing across");
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				teleport(player, 508, 668);
+				player.message("You skillfully swing across the stream");
+				say(player, null, "Aaaaahahah");
+				player.incExp(Skills.AGILITY, 20, true);
 				break;
 			case SHORTCUT_EDGE_DUNGEON_SWING:
-				if (getCurrentLevel(p, Skills.AGILITY) < 15) {
-					p.message("You need an agility level of 15 to attempt to swing on this rope");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 15) {
+					player.message("You need an agility level of 15 to attempt to swing on this rope");
 					return;
 				}
-				sleep(1000);
-				movePlayer(p, 207, 3221);
-				p.message("You skillfully swing across the hole");
-				p.incExp(Skills.AGILITY, 40, true);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				teleport(player, 207, 3221);
+				player.message("You skillfully swing across the hole");
+				player.incExp(Skills.AGILITY, 40, true);
 				break;
 			case SHORTCUT_EDGE_DUNGEON_BACK_SWING:
-				if (getCurrentLevel(p, Skills.AGILITY) < 15) {
-					p.message("You need an agility level of 15 to attempt to swing on this rope");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 15) {
+					player.message("You need an agility level of 15 to attempt to swing on this rope");
 					return;
 				}
-				sleep(1000);
-				movePlayer(p, 206, 3225);
-				p.message("You skillfully swing across the hole");
-				p.incExp(Skills.AGILITY, 40, true);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				teleport(player, 206, 3225);
+				player.message("You skillfully swing across the hole");
+				player.incExp(Skills.AGILITY, 40, true);
 				break;
 			case SHORTCUT_WEST_COALTRUCKS_LOG:
-				if (getCurrentLevel(p, Skills.AGILITY) < 20) {
-					p.message("You need an agility level of 20 to attempt balancing along this log");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 20) {
+					player.message("You need an agility level of 20 to attempt balancing along this log");
 					return;
 				}
-				p.message("You stand on the slippery log");
+				player.message("You stand on the slippery log");
 				for (int x = 595; x >= 592; x--) {
-					movePlayer(p, x, 458);
-					sleep(650);
+					teleport(player, x, 458);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				}
-				p.message("and you walk across");
-				p.incExp(Skills.AGILITY, 34, true);
+				player.message("and you walk across");
+				player.incExp(Skills.AGILITY, 34, true);
 				break;
 			case SHORTCUT_EAST_COALTRUCKS_LOG:
-				if (getCurrentLevel(p, Skills.AGILITY) < 20) {
-					p.message("You need an agility level of 20 to attempt balancing along this log");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 20) {
+					player.message("You need an agility level of 20 to attempt balancing along this log");
 					return;
 				}
-				p.message("You stand on the slippery log");
+				player.message("You stand on the slippery log");
 				for (int x = 595; x <= 598; x++) {
-					movePlayer(p, x, 458);
-					sleep(650);
+					teleport(player, x, 458);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				}
-				p.message("and you walk across");
-				p.incExp(Skills.AGILITY, 34, true);
+				player.message("and you walk across");
+				player.incExp(Skills.AGILITY, 34, true);
 				break;
 			// CONTINUE SHORTCUTS.
 			case SHORTCUT_YANILLE_AGILITY_ROPESWING:
-				if (getCurrentLevel(p, Skills.AGILITY) < 57) {
-					p.message("You need an agility level of 57 to attempt to swing on this rope");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 57) {
+					player.message("You need an agility level of 57 to attempt to swing on this rope");
 					return;
 				}
-				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= p.MAX_FATIGUE) {
-						p.message("You are too tired to swing on the rope");
-						p.setBusy(false);
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to swing on the rope");
 						return;
 					}
 				}
-				p.message("You grab the rope and try and swing across");
-				if (!succeed(p, 57, 77)) {
-					message(p, "You miss the opposite side and fall to the level below");
-					movePlayer(p, 596, 3534);
-					p.setBusy(false);
+				player.message("You grab the rope and try and swing across");
+				if (!succeed(player, 57, 77)) {
+					mes(player, "You miss the opposite side and fall to the level below");
+					teleport(player, 596, 3534);
 					return;
 				}
-				sleep(2200);
-				movePlayer(p, 596, 3581);
-				p.message("You skillfully swing across the hole");
-				p.incExp(Skills.AGILITY, 110, true);
+				delay(2200);
+				teleport(player, 596, 3581);
+				player.message("You skillfully swing across the hole");
+				player.incExp(Skills.AGILITY, 110, true);
 				break;
 			case SHORTCUT_YANILLE_AGILITY_ROPESWING_BACK:
-				if (getCurrentLevel(p, Skills.AGILITY) < 57) {
-					p.message("You need an agility level of 57 to attempt to swing on this rope");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 57) {
+					player.message("You need an agility level of 57 to attempt to swing on this rope");
 					return;
 				}
-				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= p.MAX_FATIGUE) {
-						p.message("You are too tired to swing on the rope");
-						p.setBusy(false);
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to swing on the rope");
 						return;
 					}
 				}
-				p.message("You grab the rope and try and swing across");
-				if (!succeed(p, 57, 77)) {
-					message(p, "You miss the opposite side and fall to the level below");
-					movePlayer(p, 598, 3536);
-					p.setBusy(false);
+				player.message("You grab the rope and try and swing across");
+				if (!succeed(player, 57, 77)) {
+					mes(player, "You miss the opposite side and fall to the level below");
+					teleport(player, 598, 3536);
 					return;
 				}
-				sleep(2200);
-				movePlayer(p, 598, 3585);
-				p.message("You skillfully swing across the hole");
-				p.incExp(Skills.AGILITY, 110, true);
+				delay(2200);
+				teleport(player, 598, 3585);
+				player.message("You skillfully swing across the hole");
+				player.incExp(Skills.AGILITY, 110, true);
 				break;
 
 			case SHORTCUT_YANILLE_AGILITY_LEDGE:
-				if (getCurrentLevel(p, Skills.AGILITY) < 40) {
-					p.message("You need an agility level of 40 to attempt balancing along this log");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 40) {
+					player.message("You need an agility level of 40 to attempt balancing along this log");
 					return;
 				}
-				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= p.MAX_FATIGUE) {
-						p.message("You are too tired to balance on the ledge");
-						p.setBusy(false);
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to balance on the ledge");
 						return;
 					}
 				}
-				p.message("You put your foot on the ledge and try to edge across");
-				sleep(2200);
-				if (!succeed(p, 40, 65)) {
-					message(p, "you lose your footing and fall to the level below");
-					movePlayer(p, 603, 3520);
-					p.setBusy(false);
+				player.message("You put your foot on the ledge and try to edge across");
+				delay(2200);
+				if (!succeed(player, 40, 65)) {
+					mes(player, "you lose your footing and fall to the level below");
+					teleport(player, 603, 3520);
 					return;
 				}
-				movePlayer(p, 601, 3563);
-				p.setBusyTimer(1000);
-				p.message("You skillfully balance across the hole");
-				p.incExp(Skills.AGILITY, 90, true);
+				teleport(player, 601, 3563);
+				player.message("You skillfully balance across the hole");
+				player.incExp(Skills.AGILITY, 90, true);
 				break;
 			case SHORTCUT_YANILLE_AGILITY_LEDGE_BACK:
-				if (getCurrentLevel(p, Skills.AGILITY) < 40) {
-					p.message("You need an agility level of 40 to attempt balancing along this log");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 40) {
+					player.message("You need an agility level of 40 to attempt balancing along this log");
 					return;
 				}
-				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= p.MAX_FATIGUE) {
-						p.message("You are too tired to balance on the ledge");
-						p.setBusy(false);
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to balance on the ledge");
 						return;
 					}
 				}
-				p.message("You put your foot on the ledge and try to edge across");
-				sleep(2200);
-				if (!succeed(p, 40, 65)) {
-					message(p, "you lose your footing and fall to the level below");
-					movePlayer(p, 603, 3520);
-					p.setBusy(false);
+				player.message("You put your foot on the ledge and try to edge across");
+				delay(2200);
+				if (!succeed(player, 40, 65)) {
+					mes(player, "you lose your footing and fall to the level below");
+					teleport(player, 603, 3520);
 					return;
 				}
-				p.setBusyTimer(1000);
-				movePlayer(p, 601, 3557);
-				p.message("You skillfully balance across the hole");
-				p.incExp(Skills.AGILITY, 90, true);
+				teleport(player, 601, 3557);
+				player.message("You skillfully balance across the hole");
+				player.incExp(Skills.AGILITY, 90, true);
 				break;
 
 			case SHORTCUT_YANILLE_PILE_OF_RUBBLE:
-				if (getCurrentLevel(p, Skills.AGILITY) < 67) {
-					p.message("You need an agility level of 67 to attempt to climb down the rubble");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 67) {
+					player.message("You need an agility level of 67 to attempt to climb down the rubble");
 					return;
 				}
-				movePlayer(p, 580, 3525);
-				p.message("You climb down the pile of rubble");
+				teleport(player, 580, 3525);
+				player.message("You climb down the pile of rubble");
 				break;
 			case SHORTCUT_YANILLE_PILE_OF_RUBBLE_UP:
-				if (getCurrentLevel(p, Skills.AGILITY) < 67) {
-					p.message("You need an agility level of 67 to attempt to climb up the rubble");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 67) {
+					player.message("You need an agility level of 67 to attempt to climb up the rubble");
 					return;
 				}
-				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= p.MAX_FATIGUE) {
-						p.message("You are too tired to climb up the rubble");
-						p.setBusy(false);
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to climb up the rubble");
 						return;
 					}
 				}
-				movePlayer(p, 582, 3573);
-				p.message("You climb up the pile of rubble");
-				p.incExp(Skills.AGILITY, 54, true);
+				teleport(player, 582, 3573);
+				player.message("You climb up the pile of rubble");
+				player.incExp(Skills.AGILITY, 54, true);
 				break;
 
 			case SHORTCUT_YANILLE_PIPE:
-				if (getCurrentLevel(p, Skills.AGILITY) < 49) {
-					p.message("You need an agility level of 49 to attempt to squeeze through the pipe");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 49) {
+					player.message("You need an agility level of 49 to attempt to squeeze through the pipe");
 					return;
 				}
-				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= p.MAX_FATIGUE) {
-						p.message("You are too tired to squeeze through the pipe");
-						p.setBusy(false);
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to squeeze through the pipe");
 						return;
 					}
 				}
-				p.message("You squeeze through the pipe");
-				sleep(2200);
-				movePlayer(p, 608, 3568);
-				p.incExp(Skills.AGILITY, 30, true);
+				player.message("You squeeze through the pipe");
+				delay(2200);
+				teleport(player, 608, 3568);
+				player.incExp(Skills.AGILITY, 30, true);
 				break;
 			case SHORTCUT_YANILLE_PIPE_BACK:
-				if (getCurrentLevel(p, Skills.AGILITY) < 49) {
-					p.message("You need an agility level of 49 to attempt to squeeze through the pipe");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 49) {
+					player.message("You need an agility level of 49 to attempt to squeeze through the pipe");
 					return;
 				}
-				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= p.MAX_FATIGUE) {
-						p.message("You are too tired to squeeze through the pipe");
-						p.setBusy(false);
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to squeeze through the pipe");
 						return;
 					}
 				}
-				p.message("You squeeze through the pipe");
-				sleep(2200);
-				movePlayer(p, 605, 3568);
-				p.incExp(Skills.AGILITY, 30, true);
+				player.message("You squeeze through the pipe");
+				delay(2200);
+				teleport(player, 605, 3568);
+				player.incExp(Skills.AGILITY, 30, true);
 				break;
 			case GREW_ISLAND_ROPE_ATTACHED:
-				if (getCurrentLevel(p, Skills.AGILITY) < 30) {
-					p.message("You need an agility level of 30 to attempt to swing across the stream");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 30) {
+					player.message("You need an agility level of 30 to attempt to swing across the stream");
 					return;
 				}
-				p.message("You grab the rope and try and swing across");
-				sleep(2200);
-				movePlayer(p, 664, 755);
-				p.message("You skillfully swing across the stream");
-				p.incExp(Skills.AGILITY, 50, true);
+				player.message("You grab the rope and try and swing across");
+				delay(2200);
+				teleport(player, 664, 755);
+				player.message("You skillfully swing across the stream");
+				player.incExp(Skills.AGILITY, 50, true);
 				break;
 			case GREW_ISLAND_SWING_BACK:
-				p.message("You grab the rope and try and swing across");
-				sleep(2200);
-				movePlayer(p, 666, 755);
-				p.message("You skillfully swing across the stream");
-				p.incExp(Skills.AGILITY, 50, true);
+				player.message("You grab the rope and try and swing across");
+				delay(2200);
+				teleport(player, 666, 755);
+				player.message("You skillfully swing across the stream");
+				player.incExp(Skills.AGILITY, 50, true);
 				break;
 			case EAST_KARAMJA_LOG:
-				if (getCurrentLevel(p, Skills.AGILITY) < 32) {
-					p.message("You need an agility level of 32 to attempt balancing along this log");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 32) {
+					player.message("You need an agility level of 32 to attempt balancing along this log");
 					return;
 				}
-				p.message("You attempt to walk over the the slippery log..");
-				sleep(1900);
-				if (!succeed(p, 32)) {
-					movePlayer(p, 368, 781);
-					sleep(650);
-					p.message("@red@You fall into the stream!");
-					p.message("You lose some health");
-					movePlayer(p, 370, 776);
-					p.damage(1);
-					p.setBusy(false);
+				player.message("You attempt to walk over the the slippery log..");
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+				if (!succeed(player, 32)) {
+					teleport(player, 368, 781);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					player.message("@red@You fall into the stream!");
+					player.message("You lose some health");
+					teleport(player, 370, 776);
+					player.damage(1);
 					return;
 				}
-				if (p.getX() <= 367) {
-					movePlayer(p, 368, 781);
-					sleep(650);
-					movePlayer(p, 370, 781);
+				if (player.getX() <= 367) {
+					teleport(player, 368, 781);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					teleport(player, 370, 781);
 				} else {
-					movePlayer(p, 368, 781);
-					sleep(650);
-					movePlayer(p, 366, 781);
+					teleport(player, 368, 781);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					teleport(player, 366, 781);
 				}
-				p.message("...and make it without any problems!");
-				p.incExp(Skills.AGILITY, 10, true);
+				player.message("...and make it without any problems!");
+				player.incExp(Skills.AGILITY, 10, true);
 				break;
 			case EAST_KARAMJA_STONES:
-				p.setBusyTimer(1500);
-				if (getCurrentLevel(p, Skills.AGILITY) < 32) {
-					p.message("You need an agility level of 32 to step on these stones");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 32) {
+					player.message("You need an agility level of 32 to step on these stones");
 					return;
 				}
-				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= p.MAX_FATIGUE) {
-						p.message("You are too fatigued to continue.");
-						p.setBusy(false);
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too fatigued to continue.");
 						return;
 					}
 				}
-				p.message("You jump onto the rock");
-				if (p.getY() <= 805) {
-					movePlayer(p, 347, 806);
-					sleep(650);
-					if (!succeed(p, 32)) {
-						sleep(900);
-						movePlayer(p, 341, 809);
-						p.message("@red@!!! You Fall !!!");
-						message(p, "You get washed up on the other side of the river...",
+				player.message("You jump onto the rock");
+				if (player.getY() <= 805) {
+					teleport(player, 347, 806);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					if (!succeed(player, 32)) {
+						delay(900);
+						teleport(player, 341, 809);
+						player.message("@red@!!! You Fall !!!");
+						mes(player, "You get washed up on the other side of the river...",
 							"After being nearly half drowned");
-						p.damage((int) (p.getSkills().getLevel(Skills.HITS) / 4) + 2);
-						p.setBusy(false);
+						player.damage((int) (player.getSkills().getLevel(Skills.HITS) / 4) + 2);
 						return;
 					}
-					movePlayer(p, 346, 808);
+					teleport(player, 346, 808);
 				} else {
-					movePlayer(p, 346, 807);
-					sleep(650);
-					if (!succeed(p, 32)) {
-						sleep(900);
-						movePlayer(p, 341, 805);
-						p.message("@red@!!! You Fall !!!");
-						message(p, "You get washed up on the other side of the river...",
+					teleport(player, 346, 807);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					if (!succeed(player, 32)) {
+						delay(900);
+						teleport(player, 341, 805);
+						player.message("@red@!!! You Fall !!!");
+						mes(player, "You get washed up on the other side of the river...",
 							"After being nearly half drowned");
-						p.damage((int) (p.getSkills().getLevel(Skills.HITS) / 4) + 2);
-						p.setBusy(false);
+						player.damage((int) (player.getSkills().getLevel(Skills.HITS) / 4) + 2);
 						return;
 					}
-					movePlayer(p, 347, 805);
+					teleport(player, 347, 805);
 				}
-				p.message("And cross the water without problems.");
-				p.incExp(Skills.AGILITY, 10, true);
+				player.message("And cross the water without problems.");
+				player.incExp(Skills.AGILITY, 10, true);
+				break;
+			case YANILLE_CLIMBING_ROCKS:
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to climb up the wall");
+						return;
+					}
+				}
+				if (getCurrentLevel(player, Skills.AGILITY) < 15) {
+					player.message("You need an agility level of 15 to climb the wall");
+					return;
+				}
+				player.message("You climb over the wall");
+				teleport(player, 624, 741);
+				player.incExp(Skills.AGILITY, 40, true);
 				break;
 			case YANILLE_CLIMBING_ROCKS:
 				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
@@ -524,87 +497,74 @@ public class AgilityShortcuts implements ObjectActionListener,
 				p.incExp(Skills.AGILITY, 40, true);
 				break;
 			case YANILLE_WATCHTOWER_HANDHOLDS:
-				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= p.MAX_FATIGUE) {
-						p.message("You are too tired to climb up the wall");
-						p.setBusy(false);
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to climb up the wall");
 						return;
 					}
 				}
-				if (getCurrentLevel(p, Skills.AGILITY) < 18) {
-					p.message("You need an agility level of 18 to climb the wall");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 18) {
+					player.message("You need an agility level of 18 to climb the wall");
 					return;
 				}
-				p.message("You climb up the wall");
-				p.teleport(637, 1680);
-				p.message("And climb in through the window");
-				p.incExp(Skills.AGILITY, 50, true);
+				player.message("You climb up the wall");
+				player.teleport(637, 1680);
+				player.message("And climb in through the window");
+				player.incExp(Skills.AGILITY, 50, true);
 				break;
 
 			case TAVERLY_PIPE_RETURN:
-			if (getCurrentLevel(p, Skills.AGILITY) < 70) {
-				p.message("You need an agility level of 70 to attempt to squeeze through the pipe");
-				p.setBusy(false);
+			if (getCurrentLevel(player, Skills.AGILITY) < 70) {
+				player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
 				return;
 			}
-			if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-				if (p.getFatigue() >= p.MAX_FATIGUE) {
-					p.message("You are too tired to squeeze through the pipe");
-					p.setBusy(false);
+			if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (player.getFatigue() >= player.MAX_FATIGUE) {
+					player.message("You are too tired to squeeze through the pipe");
 					return;
 				}
 			}
-			p.message("You squeeze through the pipe");
-			movePlayer(p, 372, 3352);
-			p.incExp(Skills.AGILITY, 30, true);
-			p.setBusy(false);
+			player.message("You squeeze through the pipe");
+			teleport(player, 372, 3352);
+			player.incExp(Skills.AGILITY, 30, true);
 			break;
 
 			case TAVERLY_PIPE:
-			if (getCurrentLevel(p, Skills.AGILITY) < 70) {
-				p.message("You need an agility level of 70 to attempt to squeeze through the pipe");
-				p.setBusy(false);
+			if (getCurrentLevel(player, Skills.AGILITY) < 70) {
+				player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
 				return;
 			}
-			if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-				if (p.getFatigue() >= p.MAX_FATIGUE) {
-					p.message("You are too tired to squeeze through the pipe");
-					p.setBusy(false);
+			if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (player.getFatigue() >= player.MAX_FATIGUE) {
+					player.message("You are too tired to squeeze through the pipe");
 					return;
 				}
 			}
-			p.message("You squeeze through the pipe");
-			movePlayer(p, 375, 3352);
-			p.incExp(Skills.AGILITY, 30, true);
-			p.setBusy(false);
+			player.message("You squeeze through the pipe");
+			teleport(player, 375, 3352);
+			player.incExp(Skills.AGILITY, 30, true);
 			break;
 			case ENTRANA_RUBBLE:
-				if (getCurrentLevel(p, Skills.AGILITY) < 55) {
-					p.message("You need an agility level of 55 to climb the rubble");
-					p.setBusy(false);
+				if (getCurrentLevel(player, Skills.AGILITY) < 55) {
+					player.message("You need an agility level of 55 to climb the rubble");
 					return;
 				}
-				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= p.MAX_FATIGUE) {
-						p.message("You are too tired to climb the rubble");
-						p.setBusy(false);
+				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to climb the rubble");
 						return;
 					}
 				}
-				sleep(p.getWorld().getServer().getConfig().GAME_TICK);
-				if (p.getLocation().getY() < 550) {
-					movePlayer(p, 434, 551);
-					p.incExp(Skills.AGILITY, 15, true);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
+				if (player.getLocation().getY() < 550) {
+					teleport(player, 434, 551);
+					player.incExp(Skills.AGILITY, 15, true);
 				} else {
-					movePlayer(p, 434, 549);
-					p.incExp(Skills.AGILITY, 15, true);
+					teleport(player, 434, 549);
+					player.incExp(Skills.AGILITY, 15, true);
 				}
-				p.setBusy(false);
 				break;
 		}
-
-		p.setBusy(false);
 	}
 
 	boolean succeed(Player player, int req) {
@@ -616,19 +576,19 @@ public class AgilityShortcuts implements ObjectActionListener,
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getID() == ItemId.ROPE.id();
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
+		return obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getCatalogId() == ItemId.ROPE.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getID() == ItemId.ROPE.id()) {
-			p.message("you tie the rope to the tree");
-			removeItem(p, ItemId.ROPE.id(), 1);
-			p.getWorld().replaceGameObject(obj,
-				new GameObject(p.getWorld(), obj.getLocation(), 663, obj.getDirection(), obj
+	public void onUseLoc(Player player, GameObject obj, Item item) {
+		if (obj.getID() == GREW_ISLAND_ROPE_ATTACH && item.getCatalogId() == ItemId.ROPE.id()) {
+			player.message("you tie the rope to the tree");
+			player.getCarriedItems().remove(new Item(ItemId.ROPE.id()));
+			player.getWorld().replaceGameObject(obj,
+				new GameObject(player.getWorld(), obj.getLocation(), 663, obj.getDirection(), obj
 					.getType()));
-			p.getWorld().delayedSpawnObject(obj.getLoc(), 60000);
+			player.getWorld().delayedSpawnObject(obj.getLoc(), 60000);
 		}
 	}
 

@@ -4,9 +4,6 @@ import com.openrsc.server.model.world.World;
 
 import java.util.HashMap;
 
-/**
- * @author Kenix
- */
 public class Group {
 	public static final int OWNER = 0;
 	public static final int ADMIN = 1;

@@ -8,14 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class HeckelFunchGroceries implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class HeckelFunchGroceries extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 30000, 100, 55, 1,
 		new Item(ItemId.BRANDY.id(), 5), new Item(ItemId.GIN.id(), 5), new Item(ItemId.VODKA.id(), 5),
@@ -26,28 +23,28 @@ public final class HeckelFunchGroceries implements ShopInterface,
 		new Item(ItemId.KNIFE.id(), 5), new Item(ItemId.GNOME_COCKTAIL_GUIDE.id(), 5));
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
-		playerTalk(p, n, "hello there");
-		npcTalk(p, n, "good day to you my friend ..and a beautiful one at that",
+	public void onTalkNpc(Player player, final Npc n) {
+		say(player, n, "hello there");
+		npcsay(player, n, "good day to you my friend ..and a beautiful one at that",
 			"would you like some groceries? i have all sorts",
 			"alcohol also, if your partial to a drink");
 
-		int option = showMenu(p, n, "no thank you", "i'll have a look");
+		int option = multi(player, n, "no thank you", "i'll have a look");
 		switch (option) {
 			case 0:
-				npcTalk(p, n, "ahh well, all the best to you");
+				npcsay(player, n, "ahh well, all the best to you");
 				break;
 
 			case 1:
-				npcTalk(p, n, "there's a good human");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "there's a good human");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.HECKEL_FUNCH.id();
 	}
 
@@ -61,4 +58,8 @@ public final class HeckelFunchGroceries implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

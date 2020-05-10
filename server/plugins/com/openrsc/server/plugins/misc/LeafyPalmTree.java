@@ -3,25 +3,24 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LeafyPalmTree implements ObjectActionListener, ObjectActionExecutiveListener {
+public class LeafyPalmTree implements OpLocTrigger {
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 1176;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 1176) {
-			message(p, 1300, "You give the palm tree a good shake.");
-			message(p, 0, "A palm leaf falls down.");
-			createGroundItem(ItemId.PALM_TREE_LEAF.id(), 1, obj.getX(), obj.getY(), p);
-			replaceObjectDelayed(obj, 15000, 33);
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give the palm tree a good shake.");
+			mes(player, 0, "A palm leaf falls down.");
+			addobject(ItemId.PALM_TREE_LEAF.id(), 1, obj.getX(), obj.getY(), player);
+			changeloc(obj, 15000, 33);
 		}
 	}
 }

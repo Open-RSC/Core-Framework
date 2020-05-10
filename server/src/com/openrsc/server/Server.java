@@ -3,8 +3,9 @@ package com.openrsc.server;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
+import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
-import com.openrsc.server.database.GameLogger;
+import com.openrsc.server.database.impl.mysql.MySqlGameLogger;
 import com.openrsc.server.event.custom.MonitoringEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.SingleTickEvent;
@@ -33,7 +34,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Iterator;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -56,9 +56,9 @@ public class Server implements Runnable {
 	private final ScheduledExecutorService scheduledExecutor;
 	private final PluginHandler pluginHandler;
 	private final CombatScriptLoader combatScriptLoader;
-	private final GameLogger gameLogger;
 	private final EntityHandler entityHandler;
-	private final MySqlGameDatabase database;
+	private final MySqlGameLogger gameLogger;
+	private final GameDatabase database;
 	private final AchievementSystem achievementSystem;
 	private final Constants constants;
 	private final RSCPacketFilter packetFilter;
@@ -91,7 +91,7 @@ public class Server implements Runnable {
 		try {
 			Thread.currentThread().setName("InitThread");
 			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
-			/* Enables asynchronous, garbage-free logging. */
+			// Enables asynchronous, garbage-free logging.
 			System.setProperty("Log4jContextSelector",
 				"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
@@ -151,14 +151,23 @@ public class Server implements Runnable {
 		pluginHandler = new PluginHandler(this);
 		combatScriptLoader = new CombatScriptLoader(this);
 		constants = new Constants(this);
-		database = new MySqlGameDatabase(this);
+		switch (getConfig().DB_TYPE){
+			case MYSQL:
+				database = new MySqlGameDatabase(this);
+				break;
+			default:
+				database = null;
+				LOGGER.error("No database type");
+				System.exit(1);
+				break;
+		}
 
 		discordService = new DiscordService(this);
 		loginExecutor = new LoginExecutor(this);
 		world = new World(this);
 		gameEventHandler = new GameEventHandler(this);
 		gameUpdater = new GameStateUpdater(this);
-		gameLogger = new GameLogger(this);
+		gameLogger = new MySqlGameLogger(this, (MySqlGameDatabase)database);
 		entityHandler = new EntityHandler(this);
 		achievementSystem = new AchievementSystem(this);
 		monitoring = new MonitoringEvent(getWorld());
@@ -169,7 +178,8 @@ public class Server implements Runnable {
 		try {
 			// TODO: We need an uninitialize process. Unloads all of these classes. When this is written the initialize() method should synchronize on initialized like run does with running.
 
-			/*Used for pathfinding view debugger
+			/*
+			// Used for pathfinding view debugger
 			if (PathValidation.DEBUG) {
 				panel.setLayout(layout);
 				frame.add(panel);
@@ -316,12 +326,14 @@ public class Server implements Runnable {
 					this.lastTickDuration = bench(() -> {
 						try {
 							this.lastIncomingPacketsDuration = this.lastOutgoingPacketsDuration = 0L;
-							for (Player player : getWorld().getPlayers())
+							for (Player player : getWorld().getPlayers()) {
 								this.lastIncomingPacketsDuration += bench(player::processIncomingPackets);
+							}
 							this.lastEventsDuration = getGameEventHandler().runGameEvents();
 							this.lastGameStateDuration = getGameUpdater().doUpdates();
-							for (Player player : getWorld().getPlayers())
+							for (Player player : getWorld().getPlayers()) {
 								this.lastOutgoingPacketsDuration += bench(player::processOutgoingPackets);
+							}
 						} catch (Throwable t) {
 							LOGGER.catching(t);
 						}
@@ -363,7 +375,9 @@ public class Server implements Runnable {
 
 	private void saveAndShutdown() {
 		LOGGER.info("Saving players for shutdown...");
-		getWorld().getClanManager().saveClans();
+		if (getConfig().WANT_CLANS) {
+			getWorld().getClanManager().saveClans();
+		}
 		for (Player p : getWorld().getPlayers()) {
 			p.unregister(true, "Server shutting down.");
 		}
@@ -494,7 +508,7 @@ public class Server implements Runnable {
 		return combatScriptLoader;
 	}
 
-	public GameLogger getGameLogger() {
+	public MySqlGameLogger getGameLogger() {
 		return gameLogger;
 	}
 
@@ -502,7 +516,7 @@ public class Server implements Runnable {
 		return entityHandler;
 	}
 
-	public MySqlGameDatabase getDatabase() {
+	public GameDatabase getDatabase() {
 		return database;
 	}
 

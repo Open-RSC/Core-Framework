@@ -1,47 +1,47 @@
 package com.openrsc.server.plugins.npcs.khazard;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 
-public class Docky implements TalkToNpcExecutiveListener, TalkToNpcListener {
+public class Docky implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.DOCKY.id()) {
-			playerTalk(p, n, "hello there");
-			npcTalk(p, n, "ah hoy there, wanting",
+			say(player, n, "hello there");
+			npcsay(player, n, "ah hoy there, wanting",
 				"to travel on the beatiful",
 				"lady valentine are we");
-			int menu = showMenu(p, n, "not really, just looking around", "where are you travelling to");
+			int menu = multi(player, n, "not really, just looking around", "where are you travelling to");
 			if (menu == 0) {
-				npcTalk(p, n, "o.k land lover");
+				npcsay(player, n, "o.k land lover");
 			} else if (menu == 1) {
-				npcTalk(p, n, "we sail direct to Birmhaven port",
+				npcsay(player, n, "we sail direct to Birmhaven port",
 					"it really is a speedy crossing",
 					"so would you like to come",
 					"it cost's 30 gold coin's");
-				int travel = showMenu(p, n, false, //do not send over
+				int travel = multi(player, n, false, //do not send over
 					"no thankyou", "ok");
 				if (travel == 0) {
-					playerTalk(p, n, "no thankyou");
+					say(player, n, "no thankyou");
 				} else if (travel == 1) {
-					playerTalk(p, n, "Ok");
-					if (hasItem(p, ItemId.COINS.id(), 30)) {
-						message(p, 1900, "You pay 30 gold");
-						removeItem(p, ItemId.COINS.id(), 30);
-						message(p, 3000, "You board the ship");
-						p.teleport(467, 647);
-						sleep(2000);
-						p.message("The ship arrives at Port Birmhaven");
+					say(player, n, "Ok");
+					if (ifheld(player, ItemId.COINS.id(), 30)) {
+						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "You pay 30 gold");
+						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30));
+						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "You board the ship");
+						player.teleport(467, 647);
+						delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+						player.message("The ship arrives at Port Birmhaven");
 					} else {
-						playerTalk(p, n, "Oh dear I don't seem to have enough money");
+						say(player, n, "Oh dear I don't seem to have enough money");
 					}
 				}
 			}
@@ -49,7 +49,7 @@ public class Docky implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.DOCKY.id();
 	}
 }

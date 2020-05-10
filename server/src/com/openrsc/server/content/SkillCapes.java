@@ -7,7 +7,10 @@ import com.openrsc.server.util.rsc.DataConversions;
 public class SkillCapes {
 
 	public static boolean shouldActivate(Player player, ItemId cape, boolean parameter) {
-		if (!player.getInventory().wielding(cape.id()))
+		if (!player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES)
+			return false;
+
+		if (!player.getCarriedItems().getEquipment().hasEquipped(cape.id()))
 			return false;
 
 		switch (cape) {
@@ -15,12 +18,17 @@ public class SkillCapes {
 				return attackCape(parameter);
 			case THIEVING_CAPE:
 				return thievingCape(parameter);
+			case STRENGTH_CAPE:
+				return strengthCape(parameter);
 		}
 		return false;
 	}
 
 	public static boolean shouldActivate(Player player, ItemId cape) {
-		if (!player.getInventory().wielding(cape.id()))
+		if (!player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES)
+			return false;
+
+		if (!player.getCarriedItems().getEquipment().hasEquipped(cape.id()))
 			return false;
 
 		switch (cape) {
@@ -28,9 +36,27 @@ public class SkillCapes {
 				return miningCape();
 			case FLETCHING_CAPE:
 				return fletchingCape();
+			case MAGIC_CAPE:
+				return magicCape();
+			case SMITHING_CAPE:
+				return smithingCape();
 		}
 
 		return false;
+	}
+
+	public static int shouldActivateInt(Player player, ItemId cape) {
+		if (!player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES)
+			return -1;
+
+		if (!player.getCarriedItems().getEquipment().hasEquipped(cape.id()))
+			return -1;
+
+		switch (cape) {
+			case FISHING_CAPE:
+				return fishingCape();
+		}
+		return -1;
 	}
 
 	private static boolean attackCape(boolean isHit) {
@@ -64,6 +90,41 @@ public class SkillCapes {
 	private static boolean fletchingCape() {
 		double rerollPercent = 20;
 		if (rand1to100() <= rerollPercent) {
+			return true;
+		}
+		return false;
+	}
+
+	private static int fishingCape() {
+		double mantaHit = 5;
+		double turtleHit = 15;
+		if (rand1to100() <= mantaHit) {
+			return ItemId.RAW_MANTA_RAY.id();
+		} else if (rand1to100() <= turtleHit) {
+			return ItemId.RAW_SEA_TURTLE.id();
+		}
+		return -1;
+	}
+
+	private static boolean magicCape() {
+		double noRunesChance = 10;
+		if (rand1to100() <= noRunesChance) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean strengthCape(boolean isHit) {
+		double hitChance = 35;
+		if (rand1to100() <= hitChance && isHit) {
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean smithingCape() {
+		double noCoalChance = 25;
+		if (rand1to100() <= noCoalChance) {
 			return true;
 		}
 		return false;

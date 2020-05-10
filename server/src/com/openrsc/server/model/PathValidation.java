@@ -1,15 +1,17 @@
 package com.openrsc.server.model;
 
+import com.openrsc.server.model.entity.Mob;
+import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.util.rsc.CollisionFlag;
 
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 
-/**
- * @author Graham
- */
 public class PathValidation {
 
 	/* Used for non-walking specific pathing:
@@ -21,6 +23,7 @@ public class PathValidation {
 	 * - Dueling
 	 */
 
+	public static boolean DEBUG_DISTANCE = false;
 	public static boolean DEBUG = false;
 
 	public static boolean checkPath(World world, Point src, Point dest) {
@@ -53,114 +56,116 @@ public class PathValidation {
 
 		Point nextPoint = null;
 		while ((nextPoint = path.poll()) != null) {
-			if (!checkAdjacent(world, curPoint, nextPoint, false)) return false;
+			if (!checkAdjacentDistance(world, curPoint, nextPoint, false)) return false;
 			curPoint.x = nextPoint.x;
 			curPoint.y = nextPoint.y;
 		}
 		return true;
 	}
 
-	public static boolean checkAdjacent(World world, Point curPoint, Point nextPoint, boolean ignoreProjectileAllowed) {
+	public static boolean checkAdjacentDistance(World world, Point curPoint, Point nextPoint, boolean ignoreProjectileAllowed) {
 		int[] coords = {curPoint.getX(), curPoint.getY()};
 		int startX = curPoint.getX();
 		int startY = curPoint.getY();
 		int destX = nextPoint.getX();
 		int destY = nextPoint.getY();
 		boolean myXBlocked = false, myYBlocked = false, newXBlocked = false, newYBlocked = false;
-
 		if (startX > destX) {
 			// Check for wall on east edge of current square,
-			myXBlocked = checkBlocking(world, startX, startY, CollisionFlag.WALL_EAST, true, ignoreProjectileAllowed);
-			// Or on west edge of square we are travelling toward.
-			// newXBlocked = checkBlocking(startX - 1, startY, CollisionFlag.WALL_WEST, false);
+			myXBlocked = checkBlockingDistance(world, startX, startY, CollisionFlag.WALL_EAST, true, ignoreProjectileAllowed);
 			coords[0] = startX - 1;
 		} else if (startX < destX) {
 			// Check for wall on west edge of current square,
-			myXBlocked = checkBlocking(world, startX, startY, CollisionFlag.WALL_WEST, true, ignoreProjectileAllowed);
-			// Or on east edge of square we are travelling toward.
-			// newXBlocked = checkBlocking(startX + 1, startY, CollisionFlag.WALL_EAST, false);
+			myXBlocked = checkBlockingDistance(world, startX, startY, CollisionFlag.WALL_WEST, true, ignoreProjectileAllowed);
 			coords[0] = startX + 1;
 		}
 
 		if (startY > destY) {
 			// Check for wall on north edge of current square,
-			myYBlocked = checkBlocking(world, startX, startY, CollisionFlag.WALL_NORTH, true, ignoreProjectileAllowed);
-			// Or on south edge of square we are travelling toward.
-			// newYBlocked = checkBlocking(startX, startY - 1, CollisionFlag.WALL_SOUTH, false);
+			myYBlocked = checkBlockingDistance(world, startX, startY, CollisionFlag.WALL_NORTH, true, ignoreProjectileAllowed);
 			coords[1] = startY - 1;
 
 		} else if (startY < destY) {
 			// Check for wall on south edge of current square,
-			myYBlocked = checkBlocking(world, startX, startY, CollisionFlag.WALL_SOUTH, true, ignoreProjectileAllowed);
-			// Or on north edge of square we are travelling toward.
-			// newYBlocked = checkBlocking(startX, startY + 1, CollisionFlag.WALL_NORTH, false);
-			coords[1] = startX + 1;
+			myYBlocked = checkBlockingDistance(world, startX, startY, CollisionFlag.WALL_SOUTH, true, ignoreProjectileAllowed);
+			coords[1] = startY + 1;
 		}
 
-		if (DEBUG) System.out.println("PathValidation 0");
+		// All sides blocked
+		if (DEBUG_DISTANCE) System.out.println("PathValidation 0");
 		if (myXBlocked && myYBlocked) return false;
-		if (DEBUG) System.out.println("PathValidation 1");
+
+		// Straight west/east blocked.
+		if (DEBUG_DISTANCE) System.out.println("PathValidation 1");
 		if (myXBlocked && startY == destY) return false;
-		if (DEBUG) System.out.println("PathValidation 2");
+
+		// Straight north/south blocked.
+		if (DEBUG_DISTANCE) System.out.println("PathValidation 2");
 		if (myYBlocked && startX == destX) return false;
-		if (DEBUG) System.out.println("PathValidation 3");
-		/* if (newXBlocked && newYBlocked) return false;
-		if (DEBUG) System.out.println("PathValidation 4");
-		if (newXBlocked && startY == coords[1]) return false;
-		if (DEBUG) System.out.println("PathValidation 5");
-		if (newYBlocked && startX == coords[0]) return false;
-		if (DEBUG) System.out.println("PathValidation 6");
-		if (myXBlocked && newXBlocked) return false;
-		if (DEBUG) System.out.println("PathValidation 7");
-		if (myYBlocked && newYBlocked) return false;
-		if (DEBUG) System.out.println("PathValidation 8");*/
 
 		if (coords[0] > startX) {
-			newXBlocked = checkBlocking(world, coords[0], coords[1], CollisionFlag.WALL_EAST, false, ignoreProjectileAllowed);
+			newXBlocked = checkBlockingDistance(world, coords[0], coords[1], CollisionFlag.WALL_EAST, false, ignoreProjectileAllowed);
 		} else if (coords[0] < startX) {
-			newXBlocked = checkBlocking(world, coords[0], coords[1], CollisionFlag.WALL_WEST, false, ignoreProjectileAllowed);
+			newXBlocked = checkBlockingDistance(world, coords[0], coords[1], CollisionFlag.WALL_WEST, false, ignoreProjectileAllowed);
 		}
 
 		if (coords[1] > startY) {
-			newXBlocked = checkBlocking(world, coords[0], coords[1], CollisionFlag.WALL_NORTH, false, ignoreProjectileAllowed);
+			newYBlocked = checkBlockingDistance(world, coords[0], coords[1], CollisionFlag.WALL_NORTH, false, ignoreProjectileAllowed);
 		} else if (coords[1] < startY) {
-			newXBlocked = checkBlocking(world, coords[0], coords[1], CollisionFlag.WALL_SOUTH, false, ignoreProjectileAllowed);
+			newYBlocked = checkBlockingDistance(world, coords[0], coords[1], CollisionFlag.WALL_SOUTH, false, ignoreProjectileAllowed);
 		}
 
+		// Destination X and Y blocked.
+		if (DEBUG_DISTANCE) System.out.println("PathValidation 3");
 		if (newXBlocked && newYBlocked) return false;
-		if (DEBUG) System.out.println("PathValidation 9");
+
+		// Destination X blocked with same Y coord
+		if (DEBUG_DISTANCE) System.out.println("PathValidation 4");
 		if (newXBlocked && startY == coords[1]) return false;
-		if (DEBUG) System.out.println("PathValidation 10");
+
+		// Destination Y blocked with same X coord.
+		if (DEBUG_DISTANCE) System.out.println("PathValidation 5");
 		if (myYBlocked && startX == coords[0]) return false;
-		if (DEBUG) System.out.println("PathValidation 11");
+
+		// Start X and new X are blocked.
+		if (DEBUG_DISTANCE) System.out.println("PathValidation 6");
 		if (myXBlocked && newXBlocked) return false;
-		if (DEBUG) System.out.println("PathValidation 12");
+
+		// Start Y and new Y are blocked.
+		if (DEBUG_DISTANCE) System.out.println("PathValidation 7");
 		if (myYBlocked && newYBlocked) return false;
-		if (DEBUG) System.out.println("PathValidation 13");
 
 		// Diagonal checks
 		boolean diagonalBlocked = false;
-		if (startX + 1 == destX && startY + 1 == destY)
-			diagonalBlocked = checkBlocking(world, startX + 1, startY + 1,
+		if (startX + 1 == destX && startY + 1 == destY) {
+			if (DEBUG_DISTANCE) System.out.println("PathValidation 8");
+			diagonalBlocked = checkBlockingDistance(world, startX + 1, startY + 1,
 				CollisionFlag.WALL_NORTH + CollisionFlag.WALL_EAST, false, ignoreProjectileAllowed);
-		else if (startX + 1 == destX && startY - 1 == destY)
-			diagonalBlocked = checkBlocking(world, startX + 1, startY - 1,
+		}
+		else if (startX + 1 == destX && startY - 1 == destY) {
+			if (DEBUG_DISTANCE) System.out.println("PathValidation 9");
+			diagonalBlocked = checkBlockingDistance(world, startX + 1, startY - 1,
 				CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_EAST, false, ignoreProjectileAllowed);
-		else if (startX - 1 == destX && startY + 1 == destY)
-			diagonalBlocked = checkBlocking(world, startX - 1, startY + 1,
+		}
+		else if (startX - 1 == destX && startY + 1 == destY) {
+			if (DEBUG_DISTANCE) System.out.println("PathValidation 10");
+			diagonalBlocked = checkBlockingDistance(world, startX - 1, startY + 1,
 				CollisionFlag.WALL_NORTH + CollisionFlag.WALL_WEST, false, ignoreProjectileAllowed);
-		else if (startX - 1 == destX && startY - 1 == destY)
-			diagonalBlocked = checkBlocking(world, startX - 1, startY - 1,
+		}
+		else if (startX - 1 == destX && startY - 1 == destY) {
+			if (DEBUG_DISTANCE) System.out.println("PathValidation 11");
+			diagonalBlocked = checkBlockingDistance(world, startX - 1, startY - 1,
 				CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_WEST, false, ignoreProjectileAllowed);
+		}
 
 		if (diagonalBlocked)
 			return false;
 
-		if (DEBUG) System.out.println("PathValidation 14");
+		if (DEBUG_DISTANCE) System.out.println("PathValidation 12");
 		return true;
 	}
 
-	private static boolean checkBlocking(World world, int x, int y, int bit, boolean isCurrentTile, boolean ignoreProjectileAllowed) {
+	private static boolean checkBlockingDistance(World world, int x, int y, int bit, boolean isCurrentTile, boolean ignoreProjectileAllowed) {
 		TileValue t = world.getTile(x, y);
 		if (!ignoreProjectileAllowed && t.projectileAllowed) {
 			return false;
@@ -181,9 +186,6 @@ public class PathValidation {
 		}
 		// This tile is unwalkable
 		return !isCurrentTile && (objectValue & CollisionFlag.FULL_BLOCK_C) != 0;
-		/*if (!isCurrentTile && (objectValue & CollisionFlag.OBJECT) != 0) { // Object?
-			return true;
-		}*/
 	}
 
 	static boolean checkDiagonalPassThroughCollisions(World world, Point curPoint, Point nextPoint) {
@@ -419,6 +421,154 @@ public class PathValidation {
 
 		return false;
 
+	}
+
+	public static boolean checkAdjacent(Mob mob, Point curPoint, Point nextPoint) {
+		int[] coords = {curPoint.getX(), curPoint.getY()};
+		int startX = curPoint.getX();
+		int startY = curPoint.getY();
+		int destX = nextPoint.getX();
+		int destY = nextPoint.getY();
+		boolean myXBlocked = false, myYBlocked = false, newXBlocked = false, newYBlocked = false;
+
+		if (startX > destX) {
+			// Check for wall on east edge of current square,
+			myXBlocked = checkBlocking(mob, startX, startY, CollisionFlag.WALL_EAST, true);
+			// Or on west edge of square we are travelling toward.
+			newXBlocked = checkBlocking(mob, startX - 1, startY, CollisionFlag.WALL_WEST, false);
+			coords[0] = startX - 1;
+		} else if (startX < destX) {
+			// Check for wall on west edge of current square,
+			myXBlocked = checkBlocking(mob, startX, startY, CollisionFlag.WALL_WEST, true);
+			// Or on east edge of square we are travelling toward.
+			newXBlocked = checkBlocking(mob, startX + 1, startY, CollisionFlag.WALL_EAST, false);
+			coords[0] = startX + 1;
+		}
+
+		if (startY > destY) {
+			// Check for wall on north edge of current square,
+			myYBlocked = checkBlocking(mob, startX, startY, CollisionFlag.WALL_NORTH, true);
+			// Or on south edge of square we are travelling toward.
+			newYBlocked = checkBlocking(mob, startX, startY - 1, CollisionFlag.WALL_SOUTH, false);
+			coords[1] = startY - 1;
+
+		} else if (startY < destY) {
+			// Check for wall on south edge of current square,
+			myYBlocked = checkBlocking(mob, startX, startY, CollisionFlag.WALL_SOUTH, true);
+			// Or on north edge of square we are travelling toward.
+			newYBlocked = checkBlocking(mob, startX, startY + 1, CollisionFlag.WALL_NORTH, false);
+			coords[1] = startX + 1;
+		}
+
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 0");
+		if (myXBlocked && myYBlocked) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 1");
+		if (myXBlocked && startY == destY) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 2");
+		if (myYBlocked && startX == destX) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 3");
+		if (newXBlocked && newYBlocked) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 4");
+		if (newXBlocked && startY == coords[1]) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 5");
+		if (newYBlocked && startX == coords[0]) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 6");
+		if ((myXBlocked && newXBlocked) || (myYBlocked && newYBlocked)) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 7");
+
+		if (coords[0] > startX) {
+			newXBlocked = checkBlocking(mob, coords[0], coords[1], CollisionFlag.WALL_EAST, false);
+		} else if (coords[0] < startX) {
+			newXBlocked = checkBlocking(mob, coords[0], coords[1], CollisionFlag.WALL_WEST, false);
+		}
+
+		if (coords[1] > startY) {
+			newXBlocked = checkBlocking(mob, coords[0], coords[1], CollisionFlag.WALL_NORTH, false);
+		} else if (coords[1] < startY) {
+			newXBlocked = checkBlocking(mob, coords[0], coords[1], CollisionFlag.WALL_SOUTH, false);
+		}
+
+		if (newXBlocked && newYBlocked) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 8");
+		if (newXBlocked && startY == coords[1]) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 9");
+		if (myYBlocked && startX == coords[0]) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 10");
+		if (myXBlocked && newXBlocked) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 11");
+		if (myYBlocked && newYBlocked) return false;
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 12");
+
+		// Diagonal checks
+		boolean diagonalBlocked = false;
+		if (startX + 1 == destX && startY + 1 == destY)
+			diagonalBlocked = checkBlocking(mob, startX + 1, startY + 1,
+				CollisionFlag.WALL_NORTH + CollisionFlag.WALL_EAST, false);
+		else if (startX + 1 == destX && startY - 1 == destY)
+			diagonalBlocked = checkBlocking(mob, startX + 1, startY - 1,
+				CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_EAST, false);
+		else if (startX - 1 == destX && startY + 1 == destY)
+			diagonalBlocked = checkBlocking(mob, startX - 1, startY + 1,
+				CollisionFlag.WALL_NORTH + CollisionFlag.WALL_WEST, false);
+		else if (startX - 1 == destX && startY - 1 == destY)
+			diagonalBlocked = checkBlocking(mob, startX - 1, startY - 1,
+				CollisionFlag.WALL_SOUTH + CollisionFlag.WALL_WEST, false);
+
+		if (diagonalBlocked)
+			return false;
+
+		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 13");
+
+		// if (mob.isPlayer()) // for debugging
+		return !PathValidation.checkDiagonalPassThroughCollisions(mob.getWorld(), curPoint, nextPoint);
+		// return true; // for debugging
+
+	}
+
+	private static boolean checkBlocking(Mob mob, int x, int y, int bit, boolean isCurrentTile) {
+		TileValue t = mob.getWorld().getTile(x, y);
+		/*boolean inFisherKingdom = (mob.getLocation().inBounds(415, 976, 423, 984)
+			|| mob.getLocation().inBounds(511, 976, 519, 984));*/
+		boolean blockedPath = PathValidation.isBlocking(t.traversalMask, (byte) bit, isCurrentTile);
+		return blockedPath || isMobBlocking(mob, x, y);
+	}
+
+	private static boolean isMobBlocking(Mob mob, int x, int y) {
+		if (mob.getX() == x && mob.getY() == y)
+			return false;
+
+		ArrayList<Npc> npcsOnLoc = mob.getWorld().getNpcPositions().getOrDefault(x + "," + y,null);
+		Npc npc = npcsOnLoc != null && npcsOnLoc.size() > 0 ? npcsOnLoc.get(0) : null;
+
+		/*
+		 * NPC blocking config controlled
+		 */
+		if (npc != null) {
+			if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 0) { // No NPC blocks
+				return false;
+			} else if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 1) { // 2 * combat level + 1 blocks AND aggressive
+				if (mob.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1) && npc.getDef().isAggressive()) {
+					return true;
+				}
+			} else if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 2) { // Any aggressive NPC blocks
+				if (npc.getDef().isAggressive()) {
+					return true;
+				}
+			} else if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 3) { // Any attackable NPC blocks
+				if (npc.getDef().isAttackable()) {
+					return true;
+				}
+			} else if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 4) { // All NPCs block
+				return true;
+			}
+		}
+
+		if (mob.isNpc()) {
+			Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
+			Player player = region.getPlayer(x, y, mob);
+			return player != null;
+		}
+		return false;
 	}
 
 }

@@ -3,24 +3,22 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-public class DeadTree implements ObjectActionListener, ObjectActionExecutiveListener {
+import static com.openrsc.server.plugins.Functions.*;
+
+public class DeadTree implements OpLocTrigger {
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 88;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
-		player.setBusy(true);
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		player.message("The tree seems to lash out at you!");
-		Functions.sleep(640);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		player.damage((int) (player.getSkills().getLevel(Skills.HITS) * 0.2D));
 		player.message("You are badly scratched by the tree");
-		player.setBusy(false);
 	}
 }

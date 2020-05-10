@@ -3,6 +3,7 @@ package com.openrsc.server.event.rsc.impl;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
@@ -13,9 +14,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-/**
- * @author n0m
- */
 public class RangeEventNpc extends GameTickEvent {
 
 	private boolean deliveredFirstProjectile;
@@ -124,7 +122,7 @@ public class RangeEventNpc extends GameTickEvent {
 			} else {
 				getOwner().resetPath();
 
-				boolean canShoot = System.currentTimeMillis() - getOwner().getAttribute("rangedTimeout", 0L) > 1900;
+				boolean canShoot = System.currentTimeMillis() - getOwner().getAttribute("rangedTimeout", 0L) > getOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
 				if (canShoot) {
 					if (!PathValidation.checkPath(getWorld(), getOwner().getLocation(), target.getLocation())) {
 						getOwner().resetRange();
@@ -142,13 +140,7 @@ public class RangeEventNpc extends GameTickEvent {
 							return;
 						}
 					}
-					if (((Npc) getOwner()).isPkBot() && !target.getLocation().inWilderness()) {
-						getOwner().resetRange();
-						stop();
-						return;
-					}
-					int arrowID = -1;
-					int damage = Formulae.calcRangeHitNpc(getOwner(), getOwner().getSkills().getLevel(Skills.RANGED), target.getArmourPoints(), 11);
+					int damage = CombatFormula.doRangedDamage(getPlayerOwner(), 11, target);
 					if (Formulae.looseArrow(damage)) {
 						GroundItem arrows = getArrows(11);
 						if (arrows == null) {

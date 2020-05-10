@@ -8,14 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Gulluck implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class Gulluck extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 3000, 100, 25, 1, new Item(ItemId.BRONZE_ARROWS.id(),
 		200), new Item(ItemId.CROSSBOW_BOLTS.id(), 150), new Item(ItemId.OYSTER_PEARL_BOLTS.id(), 1), new Item(ItemId.SHORTBOW.id(),
@@ -27,20 +24,20 @@ public final class Gulluck implements ShopInterface,
 		new Item(ItemId.BLACK_2_HANDED_SWORD.id(), 1), new Item(ItemId.MITHRIL_2_HANDED_SWORD.id(), 1), new Item(ItemId.ADAMANTITE_2_HANDED_SWORD.id(), 1));
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player player, final Npc n) {
 		if (n.getID() == NpcId.GULLUCK.id()) {
-			playerTalk(p, n, "hello");
-			npcTalk(p, n, "good day brave adventurer",
+			say(player, n, "hello");
+			npcsay(player, n, "good day brave adventurer",
 				"could i interest you in my fine selection of weapons?");
 
-			int option = showMenu(p, n, "i'll take a look", "no thanks");
+			int option = multi(player, n, "i'll take a look", "no thanks");
 			switch (option) {
 				case 0:
-					p.setAccessingShop(shop);
-					ActionSender.showShop(p, shop);
+					player.setAccessingShop(shop);
+					ActionSender.showShop(player, shop);
 					break;
 				case 1:
-					npcTalk(p, n, "grrrr");
+					npcsay(player, n, "grrrr");
 					break;
 
 			}
@@ -48,7 +45,7 @@ public final class Gulluck implements ShopInterface,
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.GULLUCK.id();
 	}
 
@@ -62,4 +59,8 @@ public final class Gulluck implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

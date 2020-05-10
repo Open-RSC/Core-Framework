@@ -7,8 +7,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Used to verify save players on the Login thread
- *
- * @author Kenix
  */
 public class PlayerRemoveRequest extends LoginExecutorProcess {
 	/**

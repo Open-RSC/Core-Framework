@@ -67,7 +67,6 @@ public class Config {
 	public static int S_PLAYER_INVENTORY_SLOTS = 30;
 	public static boolean S_SPAWN_AUCTION_NPCS = false;
 	public static boolean S_SPAWN_IRON_MAN_NPCS = false;
-	public static boolean S_WANT_PK_BOTS = false;
 	public static boolean S_SHOW_FLOATING_NAMETAGS = false;
 	public static boolean S_WANT_SKILL_MENUS = false;
 	public static boolean S_WANT_QUEST_MENUS = false;
@@ -86,6 +85,7 @@ public class Config {
 	public static boolean S_WANT_CERTS_TO_BANK = false;
 	public static boolean S_WANT_CUSTOM_RANK_DISPLAY = false;
 	public static boolean S_RIGHT_CLICK_BANK = false;
+	public static boolean S_RIGHT_CLICK_TRADE = false;
 	public static boolean S_WANT_EQUIPMENT_TAB = false;
 	public static boolean S_WANT_BANK_PRESETS = false;
 	public static boolean S_WANT_LEFTCLICK_WEBS = false;
@@ -137,6 +137,7 @@ public class Config {
 	public static int S_CHARACTER_CREATION_MODE = 0;
 	public static int S_SKILLING_EXP_RATE = 1;
 	public static boolean S_WANT_HARVESTING = false;
+	public static boolean S_CUSTOM_PROTOCOL = true;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

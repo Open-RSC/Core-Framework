@@ -2,36 +2,34 @@ package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.playerTalk;
+import static com.openrsc.server.plugins.Functions.*;
 
 import com.openrsc.server.constants.NpcId;
 
-public class DigsiteGuide implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class DigsiteGuide implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.DIGSITE_GUIDE.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.DIGSITE_GUIDE.id()) {
-			playerTalk(p, n, "Hello, who are you ?");
-			npcTalk(p, n, "Hello, I am the panning guide",
+			say(player, n, "Hello, who are you ?");
+			npcsay(player, n, "Hello, I am the panning guide",
 				"I'm here to teach you how to pan for gold");
-			playerTalk(p, n, "Excellent!");
-			npcTalk(p, n, "Let me explain how panning works...",
+			say(player, n, "Excellent!");
+			npcsay(player, n, "Let me explain how panning works...",
 				"First You need a panning tray",
 				"Use the tray in the panning points in the water",
 				"Then examine your tray",
 				"If you find any gold, take it to the expert",
 				"Up in the museum storage facility",
 				"He will calculate it's value for you");
-			playerTalk(p, n, "Okay thanks");
+			say(player, n, "Okay thanks");
 		}
 	}
 }

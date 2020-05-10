@@ -1,43 +1,49 @@
 package com.openrsc.server.plugins.itemactions;
 
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SandPit implements InvUseOnObjectListener,
-InvUseOnObjectExecutiveListener {
+public class SandPit implements UseLocTrigger {
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return obj.getID() == 302 && item.getID() == ItemId.BUCKET.id();
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
+		return obj.getID() == 302 && item.getCatalogId() == ItemId.BUCKET.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, final Item item, Player player) {
-		final int itemID = item.getID();
-		final int refilledID = ItemId.SAND.id();
-		if (item.getID() != ItemId.BUCKET.id()) {
+	public void onUseLoc(Player player, GameObject obj, final Item item) {
+		if (item.getCatalogId() != ItemId.BUCKET.id()) {
 			player.message("Nothing interesting happens");
 			return;
 		}
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Fill Bucket with Sand", player.getInventory().countId(itemID), true) {
-			@Override
-			public void action() {
-				if (getOwner().getInventory().hasInInventory(itemID)) {
-					showBubble(getOwner(), item);
-					sleep(300);
-					getOwner().message("you fill the bucket with sand");
-					getOwner().getInventory().replace(itemID, refilledID,true);
-				} else {
-					interrupt();
-				}
-			}
-		});
+
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+		}
+		batchSand(player, item, repeat);
+	}
+
+	private void batchSand(Player player, Item item, int repeat) {
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		thinkbubble(player, item);
+		player.message("you fill the bucket with sand");
+		player.getCarriedItems().remove(item);
+		player.getCarriedItems().getInventory().add(new Item(ItemId.SAND.id()));
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		// Repeat
+		if (!ifinterrupted() && --repeat > 0) {
+			batchSand(player, item, repeat);
+		}
 	}
 }

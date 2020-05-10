@@ -150,9 +150,9 @@ public final class IronManInterface {
 				@Override
 				void handle() {
 					mc.packetHandler.getClientStream().newPacket(199);
-					mc.packetHandler.getClientStream().writeBuffer1.putByte(7);
-					mc.packetHandler.getClientStream().writeBuffer1.putByte(0);
-					mc.packetHandler.getClientStream().writeBuffer1.putByte(selectMode[modeID]);
+					mc.packetHandler.getClientStream().bufferBits.putByte(7);
+					mc.packetHandler.getClientStream().bufferBits.putByte(0);
+					mc.packetHandler.getClientStream().bufferBits.putByte(selectMode[modeID]);
 					mc.packetHandler.getClientStream().finishPacket();
 				}
 			});
@@ -205,9 +205,9 @@ public final class IronManInterface {
 				void handle() {
 
 					mc.packetHandler.getClientStream().newPacket(199);
-					mc.packetHandler.getClientStream().writeBuffer1.putByte(7);
-					mc.packetHandler.getClientStream().writeBuffer1.putByte(1);
-					mc.packetHandler.getClientStream().writeBuffer1.putByte(restrictionID);
+					mc.packetHandler.getClientStream().bufferBits.putByte(7);
+					mc.packetHandler.getClientStream().bufferBits.putByte(1);
+					mc.packetHandler.getClientStream().bufferBits.putByte(restrictionID);
 					mc.packetHandler.getClientStream().finishPacket();
 				}
 			});
@@ -245,8 +245,8 @@ public final class IronManInterface {
 			i = 0;
 		}
 		mc.packetHandler.getClientStream().newPacket(199);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(8);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(i);
+		mc.packetHandler.getClientStream().bufferBits.putByte(8);
+		mc.packetHandler.getClientStream().bufferBits.putByte(i);
 		mc.packetHandler.getClientStream().finishPacket();
 	}
 

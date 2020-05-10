@@ -1,7 +1,5 @@
 package com.openrsc.client.entityhandling.defs;
 
-import com.openrsc.client.entityhandling.defs.EntityDef;
-
 public class SpriteDef extends EntityDef {
 
 	private int authenticSpriteID;

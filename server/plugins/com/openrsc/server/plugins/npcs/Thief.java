@@ -3,75 +3,74 @@ package com.openrsc.server.plugins.npcs;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Thief implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class Thief implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return inArray(n.getID(),
 			NpcId.THIEF_GENERIC.id(), NpcId.THIEF_BLANKET.id(), NpcId.HEAD_THIEF.id());
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		int mood = DataConversions.getRandom().nextInt(13);
 
-		playerTalk(p, n, "Hello", "How's it going?");
+		say(player, n, "Hello", "How's it going?");
 
 		if (mood == 0)
-			npcTalk(p, n, "Get out of my way", "I'm in a hurry");
+			npcsay(player, n, "Get out of my way", "I'm in a hurry");
 		else if (mood == 1)
-			p.message("The man ignores you");
+			player.message("The man ignores you");
 		else if (mood == 2)
-			npcTalk(p, n, "No, I don't have any spare change");
+			npcsay(player, n, "No, I don't have any spare change");
 		else if (mood == 3)
-			npcTalk(p, n, "Very well, thank you");
+			npcsay(player, n, "Very well, thank you");
 		else if (mood == 4)
-			npcTalk(p, n, "I'm a little worried",
+			npcsay(player, n, "I'm a little worried",
 				"I've heard there's lots of people going about,",
 				"killing citizens at random");
 		else if (mood == 5) {
-			npcTalk(p, n, "I'm fine", "How are you?");
-			playerTalk(p, n, "Very well, thank you");
+			npcsay(player, n, "I'm fine", "How are you?");
+			say(player, n, "Very well, thank you");
 		} else if (mood == 6) {
-			npcTalk(p, n, "Who are you?");
-			playerTalk(p, n, "I am a bold adventurer");
-			npcTalk(p, n, "A very noble profession");
+			npcsay(player, n, "Who are you?");
+			say(player, n, "I am a bold adventurer");
+			npcsay(player, n, "A very noble profession");
 		} else if (mood == 7) {
-			npcTalk(p, n, "Not too bad",
+			npcsay(player, n, "Not too bad",
 				"I'm a little worried about the increase in Goblins these days");
-			playerTalk(p, n, "Don't worry. I'll kill them");
+			say(player, n, "Don't worry. I'll kill them");
 		} else if (mood == 8)
-			npcTalk(p, n, "Hello", "Nice weather we've been having");
+			npcsay(player, n, "Hello", "Nice weather we've been having");
 		else if (mood == 9)
-			npcTalk(p, n, "No, I don't want to buy anything");
+			npcsay(player, n, "No, I don't want to buy anything");
 		else if (mood == 10) {
-			npcTalk(p, n, "Are you asking for a fight?");
-			n.setChasing(p);
+			npcsay(player, n, "Are you asking for a fight?");
+			n.setChasing(player);
 		} else if (mood == 11) {
-			npcTalk(p, n, "How can I help you?");
-			int option = showMenu(p, n, "Do you wish to trade?",
+			npcsay(player, n, "How can I help you?");
+			int option = multi(player, n, "Do you wish to trade?",
 				"I'm in search of a quest",
 				"I'm in search of enemies to kill");
 			if (option == 0)
-				npcTalk(p, n, "No, I have nothing I wish to get rid of",
+				npcsay(player, n, "No, I have nothing I wish to get rid of",
 					"If you want some trading,",
 					"there are plenty of shops and market stalls around though");
 			else if (option == 1)
-				npcTalk(p, n, "I'm sorry I can't help you there");
+				npcsay(player, n, "I'm sorry I can't help you there");
 			else if (option == 2)
-				npcTalk(p, n,
+				npcsay(player, n,
 					"I've heard there are many fearsome creatures under the ground");
 		} else if (mood == 12) {
-			npcTalk(p, n, "I think we need a new king");
-			npcTalk(p, n, "The one we've got isn't very good");
+			npcsay(player, n, "I think we need a new king");
+			npcsay(player, n, "The one we've got isn't very good");
 		} else if (mood == 13) {
-			npcTalk(p, n, "That is classified information");
+			npcsay(player, n, "That is classified information");
 		}
 	}
 }

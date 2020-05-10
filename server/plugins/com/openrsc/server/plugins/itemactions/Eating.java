@@ -6,34 +6,34 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.HpUpdate;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Eating implements InvActionListener, InvActionExecutiveListener {
+public class Eating implements OpInvTrigger {
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.isEdible(p.getWorld()) || item.getID() == ItemId.ROTTEN_APPLES.id();
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
+		return item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id();
 	}
 
 	@Override
-	public void onInvAction(final Item item, final Player player, final String command) {
-		if (item.isEdible(player.getWorld()) || item.getID() == ItemId.ROTTEN_APPLES.id()) {
-			if (player.cantConsume())
-				return;
+	public void onOpInv(final Player player, Integer invIndex, final Item item, final String command) {
+		if (item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id()) {
 
-			if (player.getInventory().remove(item) == -1)
+			if (item.getItemStatus().getNoted()) {
 				return;
+			}
 
-			player.setConsumeTimer(player.getWorld().getServer().getConfig().GAME_TICK); // eat speed is same as tick speed setting
+			if (player.getCarriedItems().remove(item) == -1) {
+				return;
+			}
 
 			ActionSender.sendSound(player, "eat");
 
-			int id = item.getID();
+			int id = item.getCatalogId();
 			boolean isKebabVariant = false;
 			if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id() || id == ItemId.CABBAGE.id() || id == ItemId.RED_CABBAGE.id()) {
 				if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id()) {
@@ -64,15 +64,15 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				player.message("it tastes quite good");
 			} else if (id == ItemId.WORM_HOLE.id() || id == ItemId.GNOME_WAITER_WORM_HOLE.id()) {
 				player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
-				playerTalk(player, null, "yuck");
+				say(player, null, "yuck");
 				player.message("that was awful");
 			} else if (id == ItemId.TANGLED_TOADS_LEGS.id() || id == ItemId.GNOME_WAITER_TANGLED_TOADS_LEGS.id()) {
 				player.playerServerMessage(MessageType.QUEST, "You eat the tangled toads legs");
 				player.message("it tastes.....slimey");
 			} else if (id == ItemId.ROCK_CAKE.id()) {
 				// authentic does not send message to quest tab
-				message(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
-				playerTalk(player, null, "Ow! I nearly broke a tooth!");
+				mes(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
+				say(player, null, "Ow! I nearly broke a tooth!");
 				player.message("You feel strangely heavier and more tired");
 			} else if (id == ItemId.EQUA_LEAVES.id())
 				player.playerServerMessage(MessageType.QUEST, "You eat the leaves..chewy but tasty");
@@ -183,8 +183,8 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				player.playerServerMessage(MessageType.QUEST, message);
 			} else if (id == ItemId.ROTTEN_APPLES.id()) {
 				// authentic does not give message to quest tab
-				message(player, "you eat an apple");
-				playerTalk(player, null, "yuck");
+				mes(player, "you eat an apple");
+				say(player, null, "yuck");
 				player.message("it's rotten, you spit it out");
 			} else
 				player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
@@ -197,7 +197,6 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 				}
 				player.getSkills().setLevel(Skills.HITS, newHp);
 			}
-			sleep(325);
 			if (heals && !isKebabVariant) {
 				player.playerServerMessage(MessageType.QUEST, "It heals some health");
 				if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
@@ -266,13 +265,13 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 		player.getSkills().setLevel(Skills.HITS, newStat);
 		switch(DataConversions.random(0,2)) {
 			case 0:
-				playerTalk(player, null, "Yummmmm!");
+				say(player, null, "Yummmmm!");
 				break;
 			case 1:
-				playerTalk(player, null, "Oh, so nice!!!");
+				say(player, null, "Oh, so nice!!!");
 				break;
 			case 2:
-				playerTalk(player, null, "Lovely!");
+				say(player, null, "Lovely!");
 				break;
 		}
 	}
@@ -287,45 +286,45 @@ public class Eating implements InvActionListener, InvActionExecutiveListener {
 	private void addFoodResult(Player player, int id) {
 
 		if (id == ItemId.MEAT_PIZZA.id())
-			player.getInventory().add(new Item(ItemId.HALF_MEAT_PIZZA.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_MEAT_PIZZA.id()));
 
 		else if (id == ItemId.ANCHOVIE_PIZZA.id())
-			player.getInventory().add(new Item(ItemId.HALF_ANCHOVIE_PIZZA.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_ANCHOVIE_PIZZA.id()));
 
 		else if (id == ItemId.PINEAPPLE_PIZZA.id())
-			player.getInventory().add(new Item(ItemId.HALF_PINEAPPLE_PIZZA.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_PINEAPPLE_PIZZA.id()));
 
 		else if (id == ItemId.CAKE.id())
-			player.getInventory().add(new Item(ItemId.PARTIAL_CAKE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PARTIAL_CAKE.id()));
 
 		else if (id == ItemId.PARTIAL_CAKE.id())
-			player.getInventory().add(new Item(ItemId.SLICE_OF_CAKE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.SLICE_OF_CAKE.id()));
 
 		else if (id == ItemId.CHOCOLATE_CAKE.id())
-			player.getInventory().add(new Item(ItemId.PARTIAL_CHOCOLATE_CAKE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PARTIAL_CHOCOLATE_CAKE.id()));
 
 		else if (id == ItemId.PARTIAL_CHOCOLATE_CAKE.id())
-			player.getInventory().add(new Item(ItemId.CHOCOLATE_SLICE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.CHOCOLATE_SLICE.id()));
 
 		else if (id == ItemId.APPLE_PIE.id())
-			player.getInventory().add(new Item(ItemId.HALF_AN_APPLE_PIE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_AN_APPLE_PIE.id()));
 
 		else if (id == ItemId.HALF_AN_APPLE_PIE.id())
-			player.getInventory().add(new Item(ItemId.PIE_DISH.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 
 		else if (id == ItemId.REDBERRY_PIE.id())
-			player.getInventory().add(new Item(ItemId.HALF_A_REDBERRY_PIE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_A_REDBERRY_PIE.id()));
 
 		else if (id == ItemId.HALF_A_REDBERRY_PIE.id())
-			player.getInventory().add(new Item(ItemId.PIE_DISH.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 
 		else if (id == ItemId.MEAT_PIE.id())
-			player.getInventory().add(new Item(ItemId.HALF_A_MEAT_PIE.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HALF_A_MEAT_PIE.id()));
 
 		else if (id == ItemId.HALF_A_MEAT_PIE.id())
-			player.getInventory().add(new Item(ItemId.PIE_DISH.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 
 		else if (id == ItemId.STEW.id() || id == ItemId.CURRY.id() || id == ItemId.SPECIAL_CURRY.id())
-			player.getInventory().add(new Item(ItemId.BOWL.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BOWL.id()));
 	}
 }

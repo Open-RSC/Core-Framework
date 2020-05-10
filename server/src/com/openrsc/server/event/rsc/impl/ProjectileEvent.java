@@ -10,11 +10,7 @@ import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.Projectile;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 
-/**
- * @author n0m
- */
 public class ProjectileEvent extends SingleTickEvent {
 
 	Mob caster, opponent;
@@ -60,7 +56,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			// out on death.
 			projectileDamage();
 			if (opponent.isPlayer()) {
-				if (Functions.isWielding((Player) opponent, ItemId.RING_OF_RECOIL.id())) {
+				if (((Player) opponent).getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_RECOIL.id())) {
 					recoilDamage((Player) opponent, caster, damage);
 				} else if (opponent.getSkills().getLevel(3) > 0) {
 					if (((Player) opponent).checkRingOfLife(caster))
@@ -84,7 +80,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
 				reflectedDamage = getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
 				opponent.getCache().remove("ringofrecoil");
-				opponent.getInventory().shatter(ItemId.RING_OF_RECOIL.id());
+				opponent.getCarriedItems().getInventory().shatter(ItemId.RING_OF_RECOIL.id());
 			} else {
 				opponent.getCache().set("ringofrecoil", ringCheck + reflectedDamage);
 			}
@@ -93,7 +89,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			opponent.message("You start a new ring of recoil");
 		}
 
-		caster.getSkills().subtractLevel(3, reflectedDamage, false);
+		caster.getSkills().subtractLevel(Skills.HITS, reflectedDamage, false);
 		caster.getUpdateFlags().setDamage(new Damage(caster, reflectedDamage));
 
 		if (caster.getSkills().getLevel(Skills.HITS) <= 0) {
@@ -104,11 +100,11 @@ public class ProjectileEvent extends SingleTickEvent {
 				}
 			}
 			if (caster.isNpc()) {
-				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(caster, "PlayerKilledNpc", new Object[]{(Player) opponent, (Npc) caster})) {
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin((Player) opponent, "PlayerKilledNpc", new Object[]{(Player) opponent, (Npc) caster})) {
 					return;
 				}
 			} else if(caster.isPlayer()) {
-				if (caster.getWorld().getServer().getPluginHandler().handlePlugin(caster, "PlayerKilledPlayer", new Object[]{(Player) opponent, (Player) caster})) {
+				if (caster.getWorld().getServer().getPluginHandler().handlePlugin((Player) opponent, "PlayerKilledPlayer", new Object[]{(Player) opponent, (Player) caster})) {
 					return;
 				}
 			}
@@ -127,18 +123,23 @@ public class ProjectileEvent extends SingleTickEvent {
 			}
 		}
 
-		opponent.getSkills().subtractLevel(3, damage, false);
+		int lastHits = opponent.getLevel(Skills.HITPOINTS);
+		opponent.getSkills().subtractLevel(Skills.HITS, damage, false);
 		opponent.getUpdateFlags().setDamage(new Damage(opponent, damage));
 
 
 		if (caster.isPlayer()) {
 			Player casterPlayer = (Player) caster;
 			if (opponent.isNpc()) {
-				Npc npcc = (Npc) opponent;
-				if (type == 1 || type == 4)
-					npcc.addMageDamage(casterPlayer, damage);
-				else if (type == 2 || type == 5)
-					npcc.addRangeDamage(casterPlayer, damage);
+				Npc npc = (Npc) opponent;
+				if (type == 1 || type == 4) {
+					damage = Math.min(damage, lastHits);
+					npc.addMageDamage(casterPlayer, damage);
+				}
+				else if (type == 2 || type == 5) {
+					damage = Math.min(damage, lastHits);
+					npc.addRangeDamage(casterPlayer, damage);
+				}
 			}
 		} else if (opponent.isPlayer()) {
 			Player affectedPlayer = (Player) opponent;
@@ -177,7 +178,9 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (opponent.isNpc() && caster.isPlayer()) {
 				Npc npc = (Npc) opponent;
 				Player player = (Player) caster;
-				npc.setChasing(player);
+				if (!(npc.isChasing() || npc.inCombat())) {
+					npc.setChasing(player);
+				}
 			}
 		}
 	}

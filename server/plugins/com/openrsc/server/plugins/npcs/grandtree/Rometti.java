@@ -8,14 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Rometti implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class Rometti extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 3000, 100, 55, 1,
 		new Item(ItemId.GNOME_ROBE_PINK.id(), 5), new Item(ItemId.GNOME_ROBE_GREEN.id(), 5), new Item(ItemId.GNOME_ROBE_PURPLE.id(), 5),
@@ -27,30 +24,30 @@ public final class Rometti implements ShopInterface,
 		new Item(ItemId.BOOTS_CREAM.id(), 5), new Item(ItemId.BOOTS_BLUE.id(), 5));
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
-		playerTalk(p, n, "hello");
-		npcTalk(p, n, "hello traveller",
+	public void onTalkNpc(Player player, final Npc n) {
+		say(player, n, "hello");
+		npcsay(player, n, "hello traveller",
 			"have a look at my latest range of gnome fashion",
 			"rometti is the ultimate label in gnome high society");
-		playerTalk(p, n, "really");
-		npcTalk(p, n, "pastels are all the rage this season");
-		int option = showMenu(p, n, false, //do not send over
+		say(player, n, "really");
+		npcsay(player, n, "pastels are all the rage this season");
+		int option = multi(player, n, false, //do not send over
 			"i've no time for fashion", "ok then let's have a look");
 		switch (option) {
 			case 0:
-				playerTalk(p, n, "i've no time for fashion");
-				npcTalk(p, n, "hmm...i did wonder");
+				say(player, n, "i've no time for fashion");
+				npcsay(player, n, "hmm...i did wonder");
 				break;
 			case 1:
-				playerTalk(p, n, "ok then, let's have a look");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				say(player, n, "ok then, let's have a look");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.ROMETTI.id();
 	}
 
@@ -64,4 +61,8 @@ public final class Rometti implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

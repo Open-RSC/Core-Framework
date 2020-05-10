@@ -8,42 +8,39 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Irksol implements ShopInterface, TalkToNpcExecutiveListener,
-	TalkToNpcListener {
+public final class Irksol extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 3000, 50, 30, 2,
 		new Item(ItemId.RUBY_RING.id(), 5));
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player player, final Npc n) {
 		if (n.getID() == NpcId.IRKSOL.id()) {
-			npcTalk(p, n, "selling ruby rings",
+			npcsay(player, n, "selling ruby rings",
 				"The best deals in all the planes of existance");
-			int option = showMenu(p, n, false, //do not send over
+			int option = multi(player, n, false, //do not send over
 				"I'm interested in these deals",
 				"No thankyou");
 			switch (option) {
 				case 0:
-					playerTalk(p, n, "I'm interested in these deals");
-					npcTalk(p, n, "Take a look at these beauties");
-					p.setAccessingShop(shop);
-					ActionSender.showShop(p, shop);
+					say(player, n, "I'm interested in these deals");
+					npcsay(player, n, "Take a look at these beauties");
+					player.setAccessingShop(shop);
+					ActionSender.showShop(player, shop);
 					break;
 				case 1:
-					playerTalk(p, n, "no thankyou");
+					say(player, n, "no thankyou");
 					break;
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.IRKSOL.id();
 	}
 
@@ -57,4 +54,8 @@ public final class Irksol implements ShopInterface, TalkToNpcExecutiveListener,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

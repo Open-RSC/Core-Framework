@@ -5,16 +5,15 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToObjectAction;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class GameObjectWallAction implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		int pID = p.getID();
+		int pID = packet.getID();
 		int packetTwo = OpcodeIn.WALL_OBJECT_COMMAND1.getOpcode();
 
 		if (player.isBusy()) {
@@ -23,26 +22,28 @@ public class GameObjectWallAction implements PacketHandler {
 		}
 
 		player.resetAll();
-		final GameObject object = player.getViewArea().getWallObjectWithDir(Point.location(p.readShort(), p.readShort()), p.readByte());
+		final GameObject object = player.getViewArea().getWallObjectWithDir(Point.location(packet.readShort(), packet.readShort()), packet.readByte());
 		final int click = pID == packetTwo ? 0 : 1;
 		if (object == null) {
 			player.setSuspiciousPlayer(true, "game object wall has null object");
 			return;
 		}
-		player.setStatus(Action.USING_DOOR);
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
 			public void executeInternal() {
 				DoorDef def = object.getDoorDef();
-				if (getPlayer().isBusy() || getPlayer().isRanging() || def == null
-					|| getPlayer().getStatus() != Action.USING_DOOR) {
-					getPlayer().message("NULL");
+				if (getPlayer().isBusy() || getPlayer().isRanging() || def == null) {
+					/*getPlayer().message(
+						"Busy: " + getPlayer().isBusy() +
+						" Ranging: " + getPlayer().isRanging() +
+						" Status: " + getPlayer().getStatus()
+					);*/
 					return;
 				}
 
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
-					"WallObjectAction",
-					new Object[]{object, click, getPlayer()}, this)) {
+					"OpBound",
+					new Object[]{getPlayer(), object, click}, this)) {
 					return;
 				}
 

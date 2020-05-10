@@ -2,7 +2,7 @@ package com.openrsc.server.util.rsc;
 
 public class LoginResponse {
 	public static int SERVER_TIMEOUT = -1;
-	public static int LOGIN_INSUCCESSFUL = 0;
+	public static int LOGIN_UNSUCCESSFUL = 0;
 	public static int RECONNECT_SUCCESFUL = 1;
 	public static int UNREGONIZED_LOGIN = 2;
 	public static int INVALID_CREDENTIALS = 3;

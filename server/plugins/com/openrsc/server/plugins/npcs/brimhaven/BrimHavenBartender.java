@@ -3,27 +3,27 @@ package com.openrsc.server.plugins.npcs.brimhaven;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
-	TalkToNpcListener {
+public final class BrimHavenBartender implements
+	TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.BARTENDER_BRIMHAVEN.id();
 	}
-	
+
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
-		npcTalk(p, n, "Yohoho me hearty what would you like to drink?");
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Yohoho me hearty what would you like to drink?");
 		String[] options;
-		if (p.getCache().hasKey("barcrawl")
-			&& !p.getCache().hasKey("barfour")) {
+		if (player.getCache().hasKey("barcrawl")
+			&& !player.getCache().hasKey("barfour")) {
 			options = new String[]{"Nothing thankyou",
 				"A pint of Grog please", "A bottle of rum please",
 				"I'm doing Alfred Grimhand's barcrawl"};
@@ -31,65 +31,65 @@ public final class BrimHavenBartender implements TalkToNpcExecutiveListener,
 			options = new String[]{"Nothing thankyou",
 				"A pint of Grog please", "A bottle of rum please"};
 		}
-		int firstMenu = showMenu(p, n, options);
+		int firstMenu = multi(player, n, options);
 		if (firstMenu == 0) {// NOTHING
 		} else if (firstMenu == 1) {
-			npcTalk(p, n, "One grog coming right up", "That'll be 3 gold");
-			if (hasItem(p, ItemId.COINS.id(), 3)) {
-				p.message("You buy a pint of Grog");
-				p.getInventory().remove(ItemId.COINS.id(), 3);
-				addItem(p, ItemId.GROG.id(), 1);
+			npcsay(player, n, "One grog coming right up", "That'll be 3 gold");
+			if (ifheld(player, ItemId.COINS.id(), 3)) {
+				player.message("You buy a pint of Grog");
+				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 3));
+				give(player, ItemId.GROG.id(), 1);
 			} else {
-				playerTalk(p, n,
+				say(player, n,
 					"Oh dear. I don't seem to have enough money");
 			}
 		} else if (firstMenu == 2) {
-			npcTalk(p, n, "That'll be 27 gold");
-			if (hasItem(p, ItemId.COINS.id(), 27)) {
-				p.message("You buy a bottle of rum");
-				p.getInventory().remove(ItemId.COINS.id(), 27);
-				addItem(p, ItemId.KARAMJA_RUM.id(), 1);
+			npcsay(player, n, "That'll be 27 gold");
+			if (ifheld(player, ItemId.COINS.id(), 27)) {
+				player.message("You buy a bottle of rum");
+				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 27));
+				give(player, ItemId.KARAMJA_RUM.id(), 1);
 			} else {
-				playerTalk(p, n,
+				say(player, n,
 					"Oh dear. I don't seem to have enough money");
 			}
 		} else if (firstMenu == 3) {
-			npcTalk(p, n, "Haha time to be breaking out the old supergrog",
+			npcsay(player, n, "Haha time to be breaking out the old supergrog",
 				"That'll be 15 coins please");
-			if (hasItem(p, ItemId.COINS.id(), 15)) {
-				p.getInventory().remove(ItemId.COINS.id(), 15);
-				message(p,
+			if (ifheld(player, ItemId.COINS.id(), 15)) {
+				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 15));
+				mes(player,
 					"The bartender serves you a glass of strange thick dark liquid",
 					"You wince and drink it", "You stagger backwards");
-				drinkAle(p);
-				message(p, "You think you see 2 bartenders signing 2 barcrawl cards");
-				p.getCache().store("barfour", true);
+				drinkAle(player);
+				mes(player, "You think you see 2 bartenders signing 2 barcrawl cards");
+				player.getCache().store("barfour", true);
 			} else {
-				playerTalk(p, n, "I don't have 15 coins right now");
+				say(player, n, "I don't have 15 coins right now");
 			}
 		}
 	}
 
-	private void drinkAle(Player p) {
+	private void drinkAle(Player player) {
 		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.PRAYER, Skills.COOKING, Skills.HERBLAW};
 		for (int i = 0; i < skillIDs.length; i++) {
-			setAleEffect(p, skillIDs[i]);
+			setAleEffect(player, skillIDs[i]);
 		}
 	}
-	
-	private void setAleEffect(Player p, int skillId) {
+
+	private void setAleEffect(Player player, int skillId) {
 		int reduction, currentStat, maxStat;
-		maxStat = p.getSkills().getMaxStat(skillId);
+		maxStat = player.getSkills().getMaxStat(skillId);
 		//estimated
 		reduction = maxStat < 20 ? 5 :
-			maxStat < 40 ? 6 : 
+			maxStat < 40 ? 6 :
 			maxStat < 70 ? 7 : 8;
-		currentStat = p.getSkills().getLevel(skillId);
+		currentStat = player.getSkills().getLevel(skillId);
 		if (currentStat <= 8) {
-			p.getSkills().setLevel(skillId, Math.max(currentStat - reduction, 0));
+			player.getSkills().setLevel(skillId, Math.max(currentStat - reduction, 0));
 		}
 		else {
-			p.getSkills().setLevel(skillId, currentStat - reduction);
+			player.getSkills().setLevel(skillId, currentStat - reduction);
 		}
 	}
 }

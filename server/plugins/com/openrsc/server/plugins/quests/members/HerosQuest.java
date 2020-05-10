@@ -11,18 +11,19 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
-public class HerosQuest implements QuestInterface, TalkToNpcListener,
-	TalkToNpcExecutiveListener, PickupExecutiveListener, WallObjectActionListener, WallObjectActionExecutiveListener, InvUseOnWallObjectListener, InvUseOnWallObjectExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener, PlayerAttackNpcExecutiveListener, PlayerAttackNpcListener, PlayerRangeNpcListener, PlayerMageNpcListener, PlayerRangeNpcExecutiveListener, PlayerMageNpcExecutiveListener,
-	PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener{
+public class HerosQuest implements QuestInterface, TalkNpcTrigger,
+	OpBoundTrigger, UseBoundTrigger, OpLocTrigger, AttackNpcTrigger, PlayerRangeNpcTrigger, SpellNpcTrigger,
+	KillNpcTrigger, TakeObjTrigger {
 
 	private static final int GRIPS_CUPBOARD_OPEN = 264;
 	private static final int GRIPS_CUPBOARD_CLOSED = 263;
@@ -74,151 +75,151 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	 * 457, 377
 	 **/
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.ACHETTIES.id(), NpcId.GRUBOR.id(),
 				NpcId.TROBERT.id(), NpcId.GRIP.id()}, n.getID());
 	}
 
-	private void dutiesDialogue(Player p, Npc n) {
-		npcTalk(p, n, "You'll have various guard duty shifts",
+	private void dutiesDialogue(Player player, Npc n) {
+		npcsay(player, n, "You'll have various guard duty shifts",
 			"I may have specific tasks to give you as they come up",
 			"If anything happens to me you need to take over as head guard",
 			"You'll find Important keys to the treasure room and Pete's quarters",
 			"Inside my jacket");
-		int sub_menu2 = showMenu(p, n,
+		int sub_menu2 = multi(player, n,
 			"So can I guard the treasure room please",
 			"Well I'd better sort my new room out",
 			"Anything I can do now?");
 		if (sub_menu2 == 0) {
-			npcTalk(p, n, "Well I might post you outside it sometimes",
+			npcsay(player, n, "Well I might post you outside it sometimes",
 				"I prefer to be the only one allowed inside though",
 				"There's some pretty valuable stuff in there",
 				"Those keys stay only with the head guard and with Scarface Pete");
 		} else if (sub_menu2 == 1) {
-			npcTalk(p, n, "Yeah I'll give you time to settle in");
+			npcsay(player, n, "Yeah I'll give you time to settle in");
 		} else if (sub_menu2 == 2) {
-			if (!hasItem(p, ItemId.MISCELLANEOUS_KEY.id()) ) {
-				npcTalk(p, n, "Hmm well you could find out what this key does",
+			if (!player.getCarriedItems().hasCatalogID(ItemId.MISCELLANEOUS_KEY.id(), Optional.empty()) ) {
+				npcsay(player, n, "Hmm well you could find out what this key does",
 					"Apparantly it's to something in this building",
 					"Though I don't for the life of me know what");
-				playerTalk(p, n, "Grip hands you a key");
-				addItem(p, ItemId.MISCELLANEOUS_KEY.id(), 1);
+				say(player, n, "Grip hands you a key");
+				give(player, ItemId.MISCELLANEOUS_KEY.id(), 1);
 			} else {
-				npcTalk(p, n, "Can't think of anything right now");
+				npcsay(player, n, "Can't think of anything right now");
 			}
 		}
 	}
 
-	private void treasureRoomDialogue(Player p, Npc n) {
-		npcTalk(p, n, "Well I might post you outside it sometimes",
+	private void treasureRoomDialogue(Player player, Npc n) {
+		npcsay(player, n, "Well I might post you outside it sometimes",
 			"I prefer to be the only one allowed inside though",
 			"There's some pretty valuable stuff in there",
 			"Those keys stay only with the head guard and with Scarface Pete");
-		int sub_menu = showMenu(p, n,
+		int sub_menu = multi(player, n,
 			"So what do my duties involve?",
 			"Well I'd better sort my new room out");
 		if (sub_menu == 0) {
-			npcTalk(p, n, "You'll have various guard duty shifts",
+			npcsay(player, n, "You'll have various guard duty shifts",
 				"I may have specific tasks to give you as they come up",
 				"If anything happens to me you need to take over as head guard",
 				"You'll find Important keys to the treasure room and Pete's quarters",
 				"Inside my jacket");
-			int sub_menu2 = showMenu(p, n,
+			int sub_menu2 = multi(player, n,
 				"So can I guard the treasure room please",
 				"Well I'd better sort my new room out",
 				"Anything I can do now?");
 			if (sub_menu2 == 0) {
-				npcTalk(p, n, "Well I might post you outside it sometimes",
+				npcsay(player, n, "Well I might post you outside it sometimes",
 					"I prefer to be the only one allowed inside though",
 					"There's some pretty valuable stuff in there",
 					"Those keys stay only with the head guard and with Scarface Pete");
 			} else if (sub_menu2 == 1) {
-				npcTalk(p, n, "Yeah I'll give you time to settle in");
+				npcsay(player, n, "Yeah I'll give you time to settle in");
 			} else if (sub_menu2 == 2) {
-				if (!hasItem(p, ItemId.MISCELLANEOUS_KEY.id()) ) {
-					npcTalk(p, n, "Hmm well you could find out what this key does",
+				if (!player.getCarriedItems().hasCatalogID(ItemId.MISCELLANEOUS_KEY.id(), Optional.empty()) ) {
+					npcsay(player, n, "Hmm well you could find out what this key does",
 						"Apparantly it's to something in this building",
 						"Though I don't for the life of me know what");
-					playerTalk(p, n, "Grip hands you a key");
-					addItem(p, ItemId.MISCELLANEOUS_KEY.id(), 1);
+					say(player, n, "Grip hands you a key");
+					give(player, ItemId.MISCELLANEOUS_KEY.id(), 1);
 				} else {
-					npcTalk(p, n, "Can't think of anything right now");
+					npcsay(player, n, "Can't think of anything right now");
 				}
 			}
 		} else if (sub_menu == 1) {
-			npcTalk(p, n, "Yeah I'll give you time to settle in");
+			npcsay(player, n, "Yeah I'll give you time to settle in");
 		}
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.GRIP.id()) {
-			if (p.getCache().hasKey("talked_grip") || p.getQuestStage(this) == -1) {
-				int menu = showMenu(p, n,
+			if (player.getCache().hasKey("talked_grip") || player.getQuestStage(this) == -1) {
+				int menu = multi(player, n,
 					"So can I guard the treasure room please",
 					"So what do my duties involve?",
 					"Well I'd better sort my new room out");
 				if (menu == 0) {
-					treasureRoomDialogue(p, n);
+					treasureRoomDialogue(player, n);
 				} else if (menu == 1) {
-					dutiesDialogue(p, n);
+					dutiesDialogue(player, n);
 				} else if (menu == 2) {
-					npcTalk(p, n, "Yeah I'll give you time to settle in");
+					npcsay(player, n, "Yeah I'll give you time to settle in");
 				}
 				return;
 			}
-			playerTalk(p, n, "Hi I am Hartigen",
+			say(player, n, "Hi I am Hartigen",
 				"I've come to take the job as your deputy");
-			npcTalk(p, n, "Ah good at last, you took you're time getting here",
+			npcsay(player, n, "Ah good at last, you took you're time getting here",
 				"Now let me see",
 				"Your quarters will be that room nearest the sink",
 				"I'll get your hours of duty sorted in a bit",
 				"Oh and have you got your I.D paper",
 				"Internal security is almost as important as external security for a guard");
-			if (!hasItem(p, ItemId.ID_PAPER.id())) {
-				playerTalk(p, n, "Oh dear I don't have that with me any more");
+			if (!player.getCarriedItems().hasCatalogID(ItemId.ID_PAPER.id(), Optional.of(false))) {
+				say(player, n, "Oh dear I don't have that with me any more");
 			} else {
-				p.message("You hand your I.D paper to grip");
-				removeItem(p, ItemId.ID_PAPER.id(), 1);
-				p.getCache().store("talked_grip", true);
-				int menu = showMenu(p, n,
+				player.message("You hand your I.D paper to grip");
+				player.getCarriedItems().remove(new Item(ItemId.ID_PAPER.id()));
+				player.getCache().store("talked_grip", true);
+				int menu = multi(player, n,
 					"So can I guard the treasure room please",
 					"So what do my duties involve?",
 					"Well I'd better sort my new room out");
 				if (menu == 0) {
-					treasureRoomDialogue(p, n);
+					treasureRoomDialogue(player, n);
 				} else if (menu == 1) {
-					dutiesDialogue(p, n);
+					dutiesDialogue(player, n);
 				} else if (menu == 2) {
-					npcTalk(p, n, "Yeah I'll give you time to settle in");
+					npcsay(player, n, "Yeah I'll give you time to settle in");
 				}
 			}
 		}
 		else if (n.getID() == NpcId.TROBERT.id()) {
-			if (p.getQuestStage(this) == -1) {
+			if (player.getQuestStage(this) == -1) {
 				return;
 			}
-			if (p.getCache().hasKey("hq_impersonate")) {
-				if (hasItem(p, ItemId.ID_PAPER.id())) {
+			if (player.getCache().hasKey("hq_impersonate")) {
+				if (player.getCarriedItems().hasCatalogID(ItemId.ID_PAPER.id(), Optional.empty())) {
 					return;
 				} else {
-					playerTalk(p, n, "I have lost Hartigen's I.D paper");
-					npcTalk(p, n, "That was careless",
+					say(player, n, "I have lost Hartigen's I.D paper");
+					npcsay(player, n, "That was careless",
 						"He had a spare fortunatley",
 						"Here it is");
-					addItem(p, ItemId.ID_PAPER.id(), 1);
-					npcTalk(p, n, "Be more careful this time");
+					give(player, ItemId.ID_PAPER.id(), 1);
+					npcsay(player, n, "Be more careful this time");
 				}
 				return;
 			}
-			npcTalk(p, n, "Hi, welcome to our Brimhaven headquarters",
+			npcsay(player, n, "Hi, welcome to our Brimhaven headquarters",
 				"I'm Trobert and I'm in charge here");
-			int menu = showMenu(p, n, false, //do not send over
+			int menu = multi(player, n, false, //do not send over
 				"So can you help me get Scarface Pete's candlesticks?",
 				"pleased to meet you");
 			if (menu == 0) {
-				playerTalk(p, n, "So can you help me get Scarface Pete's candlesticks?");
-				npcTalk(p, n, "Well we have made some progress there",
+				say(player, n, "So can you help me get Scarface Pete's candlesticks?");
+				npcsay(player, n, "Well we have made some progress there",
 					"We know one of the keys to Pete's treasure room is carried by Grip the head guard",
 					"So we thought it might be good to get close to the head guard",
 					"Grip was taking on a new deputy called Hartigen",
@@ -227,117 +228,177 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 					"We managed to waylay him on the way here",
 					"We now have his i.d paper",
 					"Next we need someone to impersonate the black knight");
-				int sec_menu = showMenu(p, n,
+				int sec_menu = multi(player, n,
 					"I volunteer to undertake that mission",
 					"Well good luck then");
 				if (sec_menu == 0) {
-					npcTalk(p, n, "Well here's the I.d");
-					addItem(p, ItemId.ID_PAPER.id(), 1);
-					p.getCache().store("hq_impersonate", true);
-					npcTalk(p, n, "Take that to the guard room at Scarface Pete's mansion");
+					npcsay(player, n, "Well here's the I.d");
+					give(player, ItemId.ID_PAPER.id(), 1);
+					player.getCache().store("hq_impersonate", true);
+					npcsay(player, n, "Take that to the guard room at Scarface Pete's mansion");
 				}
 			} else if (menu == 1) {
-				playerTalk(p, n, "Pleased to meet you");
+				say(player, n, "Pleased to meet you");
 			}
 		}
 		else if (n.getID() == NpcId.GRUBOR.id()) {
-			playerTalk(p, n, "Hi");
-			npcTalk(p, n, "Hi, I'm a little busy right now");
+			say(player, n, "Hi");
+			npcsay(player, n, "Hi, I'm a little busy right now");
 		}
 		else if (n.getID() == NpcId.ACHETTIES.id()) {
-			switch (p.getQuestStage(this)) {
+			ArrayList<String> choices = new ArrayList<>();
+			switch (player.getQuestStage(this)) {
 				case 0:
-					npcTalk(p, n, "Greetings welcome to the hero's guild",
+					npcsay(player, n, "Greetings welcome to the hero's guild",
 						"Only the foremost hero's of the land can enter here");
-					int opt = showMenu(p, n,
-						"I'm a hero, may I apply to join?",
-						"Good for the foremost hero's of the land");
+					choices.add("I'm a hero, may I apply to join?");
+					choices.add("Good for the foremost hero's of the land");
+					if (canBuyCape(player)) {
+						choices.add("Is your cape also only for the foremost hero's of the land?");
+					}
+					int opt = multi(player, n, choices.toArray(new String[choices.size()]));
 					if (opt == 0) {
-						if ((p.getQuestStage(Quests.LOST_CITY) == -1 &&
-							(p.getQuestStage(Quests.SHIELD_OF_ARRAV) == -1 ||
-								p.getQuestStage(Quests.SHIELD_OF_ARRAV) == -2 ) &&
-							p.getQuestStage(Quests.MERLINS_CRYSTAL) == -1 &&
-							p.getQuestStage(Quests.DRAGON_SLAYER) == -1)
-							&& p.getQuestPoints() >= 55) {
-							npcTalk(p, n, "Ok you may begin the tasks for joining the hero's guild",
+						if ((player.getQuestStage(Quests.LOST_CITY) == -1 &&
+							(player.getQuestStage(Quests.SHIELD_OF_ARRAV) == -1 ||
+								player.getQuestStage(Quests.SHIELD_OF_ARRAV) == -2 ) &&
+							player.getQuestStage(Quests.MERLINS_CRYSTAL) == -1 &&
+							player.getQuestStage(Quests.DRAGON_SLAYER) == -1)
+							&& player.getQuestPoints() >= 55) {
+							npcsay(player, n, "Ok you may begin the tasks for joining the hero's guild",
 								"You need the feather of an Entrana firebird",
 								"A master thief armband",
 								"And a cooked lava eel");
-							p.updateQuestStage(this, 1);
-							int opt2 = showMenu(p, n, false, //do not send over
+							player.updateQuestStage(this, 1);
+							int opt2 = multi(player, n, false, //do not send over
 								"Any hints on getting the armband?",
 								"Any hints on getting the feather?",
 								"Any hints on getting the eel?",
 								"I'll start looking for all those things then");
 							if (opt2 == 0) {
-								playerTalk(p, n, "Any hints on getting the thieves armband?");
-								npcTalk(p, n, "I'm sure you have relevant contacts to find out about that");
+								say(player, n, "Any hints on getting the thieves armband?");
+								npcsay(player, n, "I'm sure you have relevant contacts to find out about that");
 							} else if (opt2 == 1) {
-								playerTalk(p, n, "Any hints on getting the feather?");
-								npcTalk(p, n, "Not really - Entrana firebirds live on Entrana");
+								say(player, n, "Any hints on getting the feather?");
+								npcsay(player, n, "Not really - Entrana firebirds live on Entrana");
 							} else if (opt2 == 2) {
-								playerTalk(p, n, "Any hints on getting the eel?");
-								npcTalk(p, n, "Maybe go and find someone who knows a lot about fishing?");
+								say(player, n, "Any hints on getting the eel?");
+								npcsay(player, n, "Maybe go and find someone who knows a lot about fishing?");
 							}
 						} else {
-							npcTalk(p, n, "You're a hero?, I've never heard of you");
-							message(p, "You need to have 55 quest points to file for an application",
+							npcsay(player, n, "You're a hero?, I've never heard of you");
+							mes(player, "You need to have 55 quest points to file for an application",
 								"You also need to have completed the following quests",
 								"The shield of arrav, the lost city",
 								"Merlin's crystal and dragon slayer\"");
 						}
+					} else if (opt == 2) {
+						skillcape(player, n);
 					}
 					break;
 				case 1:
 				case 2:
-					npcTalk(p, n, "Greetings welcome to the hero's guild",
+					npcsay(player, n, "Greetings welcome to the hero's guild",
 						"How goes thy quest?");
-					if (hasItem(p, ItemId.MASTER_THIEF_ARMBAND.id()) && hasItem(p, ItemId.LAVA_EEL.id()) && hasItem(p, ItemId.RED_FIREBIRD_FEATHER.id())) {
-						playerTalk(p, n, "I have all the things needed");
-						removeItem(p, ItemId.MASTER_THIEF_ARMBAND.id(), 1);
-						removeItem(p, ItemId.LAVA_EEL.id(), 1);
-						removeItem(p, ItemId.RED_FIREBIRD_FEATHER.id(), 1);
-						p.sendQuestComplete(Quests.HEROS_QUEST);
+					if (player.getCarriedItems().hasCatalogID(ItemId.MASTER_THIEF_ARMBAND.id(), Optional.of(false))
+						&& player.getCarriedItems().hasCatalogID(ItemId.LAVA_EEL.id(), Optional.of(false))
+						&& player.getCarriedItems().hasCatalogID(ItemId.RED_FIREBIRD_FEATHER.id(), Optional.of(false))) {
+
+						say(player, n, "I have all the things needed");
+						player.getCarriedItems().remove(new Item(ItemId.MASTER_THIEF_ARMBAND.id()));
+						player.getCarriedItems().remove(new Item(ItemId.LAVA_EEL.id()));
+						player.getCarriedItems().remove(new Item(ItemId.RED_FIREBIRD_FEATHER.id()));
+						player.sendQuestComplete(Quests.HEROS_QUEST);
 					} else {
-						playerTalk(p, n, "It's tough, I've not done it yet");
-						npcTalk(p, n, "Remember you need the feather of an Entrana firebird",
+						say(player, n, "It's tough, I've not done it yet");
+						npcsay(player, n, "Remember you need the feather of an Entrana firebird",
 							"A master thief armband",
 							"And a cooked lava eel");
-						int opt2 = showMenu(p, n, false, //do not send over
-							"Any hints on getting the armband?",
-							"Any hints on getting the feather?",
-							"Any hints on getting the eel?",
-							"I'll start looking for all those things then");
+
+						choices.add("Any hints on getting the armband?");
+						choices.add("Any hints on getting the feather?");
+						choices.add("Any hints on getting the eel?");
+
+						String capeDialog = "Any hints on getting a cape like yours?";
+						if (canBuyCape(player)) {
+							choices.add(capeDialog);
+						}
+						choices.add("I'll start looking for all those things then");
+
+						int opt2 = multi(player, n, false, //do not send over
+							choices.toArray(new String[choices.size()]));
 						if (opt2 == 0) {
-							playerTalk(p, n, "Any hints on getting the thieves armband?");
-							npcTalk(p, n, "I'm sure you have relevant contacts to find out about that");
+							say(player, n, "Any hints on getting the thieves armband?");
+							npcsay(player, n, "I'm sure you have relevant contacts to find out about that");
 						} else if (opt2 == 1) {
-							playerTalk(p, n, "Any hints on getting the feather?");
-							npcTalk(p, n, "Not really - Entrana firebirds live on Entrana");
+							say(player, n, "Any hints on getting the feather?");
+							npcsay(player, n, "Not really - Entrana firebirds live on Entrana");
 						} else if (opt2 == 2) {
-							playerTalk(p, n, "Any hints on getting the eel?");
-							npcTalk(p, n, "Maybe go and find someone who knows a lot about fishing?");
+							say(player, n, "Any hints on getting the eel?");
+							npcsay(player, n, "Maybe go and find someone who knows a lot about fishing?");
+						} else if (choices.get(opt2).equalsIgnoreCase(capeDialog)) {
+							say(player, n, capeDialog);
+							skillcape(player, n);
 						}
 					}
 					break;
 				case -1:
-					npcTalk(p, n, "Greetings welcome to the hero's guild");
+					npcsay(player, n, "Greetings welcome to the hero's guild");
+					if (canBuyCape(player)) {
+						if (multi(player, n, "Could I get a heroic cape like yours?",
+							"Thank you") == 0) {
+
+							skillcape(player, n);
+						}
+					}
 					break;
 
 			}
 		}
 	}
 
-	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
-		if (i.getID() == ItemId.RED_FIREBIRD_FEATHER.id()) {
-			if (p.getInventory().wielding(ItemId.ICE_GLOVES.id())) {
-				return false;
+	private boolean canBuyCape(Player player) {
+		if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES
+			&& getMaxLevel(player, Skills.STRENGTH) >= 99) { return true; }
+		return false;
+	}
+
+	private void skillcape(Player player, Npc n) {
+		npcsay(player, n, "Yes indeed",
+			"I see that you have the strength of a hero",
+			"I'd be willing to sell you a cape for 99,000 gold");
+		if (multi(player, n, "Alright then", "No thank you") == 0) {
+			if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
+				mes(player, "Achetties takes your coins");
+				if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
+					mes(player, "And hands you a Strength cape");
+					give(player, ItemId.STRENGTH_CAPE.id(), 1);
+					npcsay(player, n, "Here you go",
+						"This cape will help increase your combat efficiency",
+						"By allowing you to perform critical hits");
+				}
 			} else {
-				p.message("Ouch that is too hot to take");
-				p.message("I need something cold to pick it up with");
-				int damage = (int) Math.round((p.getSkills().getLevel(Skills.HITS)) * 0.15D);
-				p.damage(damage);
+				npcsay(player, n, "Heroes usually have more coins than that",
+					"You don't have enough");
+			}
+		}
+	}
+
+	@Override
+	public void onTakeObj(Player player, GroundItem i) {
+		if (i.getID() == ItemId.RED_FIREBIRD_FEATHER.id()) {
+			if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
+				player.message("Ouch that is too hot to take");
+				player.message("I need something cold to pick it up with");
+				int damage = (int) Math.round((player.getSkills().getLevel(Skills.HITS)) * 0.15D);
+				player.damage(damage);
+			}
+		}
+	}
+
+	@Override
+	public boolean blockTakeObj(Player player, GroundItem i) {
+		if (i.getID() == ItemId.RED_FIREBIRD_FEATHER.id()) {
+			if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				return true;
 			}
 		}
@@ -345,7 +406,7 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click, Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		return (obj.getID() == 78 && obj.getX() == 448 && obj.getY() == 682)
 				|| (obj.getID() == 76 && obj.getX() == 439 && obj.getY() == 694)
 				|| (obj.getID() == 75 && obj.getX() == 463 && obj.getY() == 681)
@@ -355,188 +416,191 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onWallObjectAction(GameObject obj, Integer click, Player p) {
+	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 78 && obj.getX() == 448 && obj.getY() == 682) {
-			if (p.getCache().hasKey("talked_alf") || p.getQuestStage(this) == -1) {
-				p.message("you open the door");
-				p.message("You go through the door");
-				doDoor(obj, p);
+			if (player.getCache().hasKey("talked_alf") || player.getQuestStage(this) == -1) {
+				player.message("you open the door");
+				player.message("You go through the door");
+				doDoor(obj, player);
 			} else {
-				Npc alf = getNearestNpc(p, NpcId.ALFONSE_THE_WAITER.id(), 10);
+				Npc alf = ifnearvisnpc(player, NpcId.ALFONSE_THE_WAITER.id(), 10);
 				if (alf != null) {
-					npcTalk(p, alf, "Hey you can't go through there, that's private");
+					npcsay(player, alf, "Hey you can't go through there, that's private");
 				}
 			}
 		}
 		else if (obj.getID() == 76 && obj.getX() == 439 && obj.getY() == 694) {
-			Npc grubor = getNearestNpc(p, NpcId.GRUBOR.id(), 10);
-			if (p.getQuestStage(this) == -1) {
-				npcTalk(p, grubor, "Yes? what do you want?");
-				int mem = showMenu(p, grubor, false, //do not send over
+			Npc grubor = ifnearvisnpc(player, NpcId.GRUBOR.id(), 10);
+			if (player.getQuestStage(this) == -1) {
+				npcsay(player, grubor, "Yes? what do you want?");
+				int mem = multi(player, grubor, false, //do not send over
 					"Would you like to have your windows refitting?",
 					"I want to come in",
 					"Do you want to trade?");
 				if (mem == 0) {
-					playerTalk(p, grubor, "Would you like to have your windows refitting?");
-					npcTalk(p, grubor, "Don't be daft, we don't have any windows");
+					say(player, grubor, "Would you like to have your windows refitting?");
+					npcsay(player, grubor, "Don't be daft, we don't have any windows");
 				} else if (mem == 1) {
-					playerTalk(p, grubor, "I want to come in");
-					npcTalk(p, grubor, "No, go away");
+					say(player, grubor, "I want to come in");
+					npcsay(player, grubor, "No, go away");
 				} else if (mem == 2) {
-					playerTalk(p, grubor, "Do you want to trade");
-					npcTalk(p, grubor, "No I'm busy");
+					say(player, grubor, "Do you want to trade");
+					npcsay(player, grubor, "No I'm busy");
 				}
 				return;
 			}
-			if (p.getCache().hasKey("blackarm_mission")) {
-				if (p.getCache().hasKey("talked_grubor")) {
-					p.message("you open the door");
-					p.message("You go through the door");
-					doDoor(obj, p);
+			if (player.getCache().hasKey("blackarm_mission")) {
+				if (player.getCache().hasKey("talked_grubor")) {
+					player.message("you open the door");
+					player.message("You go through the door");
+					doDoor(obj, player);
 				} else {
 					if (grubor != null) {
-						npcTalk(p, grubor, "Yes? what do you want?");
-						int menu = showMenu(p, grubor, false, //do not send over
+						npcsay(player, grubor, "Yes? what do you want?");
+						int menu = multi(player, grubor, false, //do not send over
 							"Rabbit's foot",
 							"four leaved clover",
 							"Lucky Horseshoe",
 							"Black cat");
 						if (menu == 1) {
-							playerTalk(p, grubor, "Four leaved clover");
-							npcTalk(p, grubor, "Oh you're one of the gang are you",
+							say(player, grubor, "Four leaved clover");
+							npcsay(player, grubor, "Oh you're one of the gang are you",
 								"Just a second I'll let you in");
-							p.message("You here the door being unbarred");
-							p.getCache().store("talked_grubor", true);
+							player.message("You here the door being unbarred");
+							player.getCache().store("talked_grubor", true);
 							return;
 						}
 						if (menu == 0) {
-							playerTalk(p, grubor, "Rabbit's foot");
+							say(player, grubor, "Rabbit's foot");
 						} else if (menu == 2) {
-							playerTalk(p, grubor, "Lucky Horseshoe");
+							say(player, grubor, "Lucky Horseshoe");
 						} else if (menu == 3) {
-							playerTalk(p, grubor, "Black cat");
+							say(player, grubor, "Black cat");
 						}
-						npcTalk(p, grubor, "What are you on about",
+						npcsay(player, grubor, "What are you on about",
 							"Go away");
 						return;
 					}
 				}
 			} else {
-				p.message("The door won't open");
+				player.message("The door won't open");
 			}
 		}
 		else if (obj.getID() == 75 && obj.getX() == 463 && obj.getY() == 681) {
-			Npc garv = getNearestNpc(p, NpcId.GARV.id(), 12);
-			if (p.getCache().hasKey("garv_door") || p.getQuestStage(this) == -1) {
-				p.message("you open the door");
-				p.message("You go through the door");
-				doDoor(obj, p);
+			Npc garv = ifnearvisnpc(player, NpcId.GARV.id(), 12);
+			if (player.getCache().hasKey("garv_door") || player.getQuestStage(this) == -1) {
+				player.message("you open the door");
+				player.message("You go through the door");
+				doDoor(obj, player);
 				return;
 			}
 			if (garv != null) {
-				npcTalk(p, garv, "Where do you think you're going?");
-				if (isBlackArmGang(p)) {
-					playerTalk(p, garv, "Hi, I'm Hartigen",
+				npcsay(player, garv, "Where do you think you're going?");
+				if (isBlackArmGang(player)) {
+					say(player, garv, "Hi, I'm Hartigen",
 						"I've come to work here");
-					if (p.getInventory().wielding(ItemId.BLACK_PLATE_MAIL_LEGS.id())
-							&& p.getInventory().wielding(ItemId.LARGE_BLACK_HELMET.id())&& p.getInventory().wielding(ItemId.BLACK_PLATE_MAIL_BODY.id())) {
-						npcTalk(p, garv, "So have you got your i.d paper?");
-						if (hasItem(p, ItemId.ID_PAPER.id())) {
-							npcTalk(p, garv, "You had better come in then",
+					if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_LEGS.id())
+							&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.LARGE_BLACK_HELMET.id())&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_BODY.id())) {
+						npcsay(player, garv, "So have you got your i.d paper?");
+						if (player.getCarriedItems().hasCatalogID(ItemId.ID_PAPER.id(), Optional.of(false))) {
+							npcsay(player, garv, "You had better come in then",
 								"Grip will want to talk to you");
-							p.getCache().store("garv_door", true);
+							player.getCache().store("garv_door", true);
 						} else {
-							playerTalk(p, garv, "No I must have left it in my other suit of armour");
+							say(player, garv, "No I must have left it in my other suit of armour");
 						}
 					} else {
-						npcTalk(p, garv, "Hartigen the black knight?",
+						npcsay(player, garv, "Hartigen the black knight?",
 							"I don't think so - he doesn't dress like that");
 					}
 				}
 			}
 		}
 		else if (obj.getID() == 77 && obj.getX() == 463 && obj.getY() == 676) {
-			if (p.getCache().hasKey("talked_grip") || p.getQuestStage(this) == -1) {
-				Npc grip = getNearestNpc(p, NpcId.GRIP.id(), 15);
+			if (player.getCache().hasKey("talked_grip") || player.getQuestStage(this) == -1) {
+				Npc grip = ifnearvisnpc(player, NpcId.GRIP.id(), 15);
 				// grip exits if he is not in combat and player opens from inside the room
-				boolean moveGrip = (p.getY() <= 675 && grip != null && grip.getY() <= 675 && !grip.isChasing());
-				p.message("you open the door");
-				p.message("You go through the door");
+				boolean moveGrip = (player.getY() <= 675 && grip != null && grip.getY() <= 675 && !grip.isChasing());
+				player.message("you open the door");
+				player.message("You go through the door");
 				if (moveGrip) {
 					grip.walk(463, 675);
 				}
-				doDoor(obj, p);
+				doDoor(obj, player);
 				if (moveGrip) {
-					removeReturnEventIfPresent(p);
-					p.getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, 1000, "Heroes Quest Grip through door", true) {
-						@Override
-						public void action() {
+					removeReturnEventIfPresent(player);
+					player.getWorld().getServer().getGameEventHandler().add(
+						new SingleEvent(player.getWorld(), null,
+							player.getWorld().getServer().getConfig().GAME_TICK * 2,
+							"Heroes Quest Grip through door", true) {
+							@Override
+							public void action() {
 							grip.teleport(463, 676);
 						}
 					});
 				}
 			} else {
-				p.message("You can't get through the door");
-				p.message("You need to speak to grip first");
+				player.message("You can't get through the door");
+				player.message("You need to speak to grip first");
 			}
 		}
 		else if (obj.getID() == 79) { // strange panel - 11
-			p.playSound("secretdoor");
-			p.message("You just went through a secret door");
-			doDoor(obj, p, 11);
+			player.playSound("secretdoor");
+			player.message("You just went through a secret door");
+			doDoor(obj, player, 11);
 		}
 		else if (obj.getID() == 80 && obj.getX() == 459 && obj.getY() == 674) {
-			p.message("The door is locked");
-			playerTalk(p, null, "This room isn't a lot of use on it's own",
+			player.message("The door is locked");
+			say(player, null, "This room isn't a lot of use on it's own",
 				"Maybe I can get extra help from the inside somehow",
 				"I wonder if any of the other players have found a way in");
 		}
 		else if (obj.getID() == 81 && obj.getX() == 472 && obj.getY() == 674) {
-			p.message("The door is locked");
+			player.message("The door is locked");
 		}
 	}
 
 	@Override
-	public boolean blockInvUseOnWallObject(GameObject obj, Item item, Player player) {
+	public boolean blockUseBound(Player player, GameObject obj, Item item) {
 		return obj.getID() == 80 || obj.getID() == 81;
 	}
 
 	@Override
-	public void onInvUseOnWallObject(GameObject obj, Item item, Player p) {
+	public void onUseBound(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 80) {
-			if (item.getID() == ItemId.MISCELLANEOUS_KEY.id()) {
-				showBubble(p, item);
-				p.message("You unlock the door");
-				p.message("You go through the door");
-				doDoor(obj, p);
+			if (item.getCatalogId() == ItemId.MISCELLANEOUS_KEY.id()) {
+				thinkbubble(player, item);
+				player.message("You unlock the door");
+				player.message("You go through the door");
+				doDoor(obj, player);
 			}
 		}
 		else if (obj.getID() == 81) {
-			if (item.getID() == ItemId.BUNCH_OF_KEYS.id()) {
-				p.message("You open the door");
-				p.message("You go through the door");
-				doDoor(obj, p);
+			if (item.getCatalogId() == ItemId.BUNCH_OF_KEYS.id()) {
+				player.message("You open the door");
+				player.message("You go through the door");
+				doDoor(obj, player);
 			}
 		}
 
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == GRIPS_CUPBOARD_OPEN || obj.getID() == GRIPS_CUPBOARD_CLOSED
 				|| obj.getID() == CANDLESTICK_CHEST_OPEN || obj.getID() == CANDLESTICK_CHEST_CLOSED;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
-		Npc guard = getNearestNpc(p, NpcId.GUARD_PIRATE.id(), 10);
-		Npc grip = getNearestNpc(p, NpcId.GRIP.id(), 15);
+	public void onOpLoc(Player player, GameObject obj, String command) {
+		Npc guard = ifnearvisnpc(player, NpcId.GUARD_PIRATE.id(), 10);
+		Npc grip = ifnearvisnpc(player, NpcId.GRIP.id(), 15);
 		if (obj.getID() == GRIPS_CUPBOARD_OPEN || obj.getID() == GRIPS_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open") || command.equalsIgnoreCase("search")) {
 				if (guard != null) {
-					npcTalk(p, guard, "I don't think Mr Grip will like you opening that up",
+					npcsay(player, guard, "I don't think Mr Grip will like you opening that up",
 						"That's his drinks cabinet");
-					int menu = showMenu(p, guard,
+					int menu = multi(player, guard,
 						"He won't notice me having a quick look",
 						"Ok I'll leave it");
 					if (menu == 0) {
@@ -547,123 +611,125 @@ public class HerosQuest implements QuestInterface, TalkToNpcListener,
 							else {
 								grip.teleport(463, 673);
 								// delayed event to prevent grip being trapped if player had invoked him
-								gripReturnEvent.set(new SingleEvent(p.getWorld(), null, 60000 * 10, "Heroes Quest Delayed Return Grip", true) {
+								gripReturnEvent.set(new SingleEvent(player.getWorld(), null,
+									player.getWorld().getServer().getConfig().GAME_TICK * 1000,
+									"Heroes Quest Delayed Return Grip", true) {
 									@Override
 									public void action() {
 										if (grip != null && grip.getY() <= 675)
 											grip.teleport(463, 677);
 									}
 								});
-								p.getWorld().getServer().getGameEventHandler().add(gripReturnEvent.get());
+								player.getWorld().getServer().getGameEventHandler().add(gripReturnEvent.get());
 							}
-							npcTalk(p, grip, "Hey what are you doing there",
+							npcsay(player, grip, "Hey what are you doing there",
 								"That's my drinks cabinet get away from it");
 						} else {
 							if (command.equalsIgnoreCase("open")) {
-								openCupboard(obj, p, GRIPS_CUPBOARD_OPEN);
+								openCupboard(obj, player, GRIPS_CUPBOARD_OPEN);
 							} else {
-								p.message("You find a bottle of whisky in the cupboard");
-								addItem(p, ItemId.DRAYNOR_WHISKY.id(), 1);
+								player.message("You find a bottle of whisky in the cupboard");
+								give(player, ItemId.DRAYNOR_WHISKY.id(), 1);
 							}
 						}
 					}
 				} else {
-					p.message("The guard is busy at the moment");
+					player.message("The guard is busy at the moment");
 				}
 			} else if (command.equalsIgnoreCase("close")) {
-				closeCupboard(obj, p, GRIPS_CUPBOARD_CLOSED);
+				closeCupboard(obj, player, GRIPS_CUPBOARD_CLOSED);
 			}
 		}
 		else if (obj.getID() == CANDLESTICK_CHEST_OPEN || obj.getID() == CANDLESTICK_CHEST_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
-				openGenericObject(obj, p, CANDLESTICK_CHEST_OPEN, "You open the chest");
+				openGenericObject(obj, player, CANDLESTICK_CHEST_OPEN, "You open the chest");
 			} else if (command.equalsIgnoreCase("close")) {
-				closeGenericObject(obj, p, CANDLESTICK_CHEST_CLOSED, "You close the chest");
+				closeGenericObject(obj, player, CANDLESTICK_CHEST_CLOSED, "You close the chest");
 			} else {
-				if (!hasItem(p, ItemId.CANDLESTICK.id())) {
-					addItem(p, ItemId.CANDLESTICK.id(), 2);
-					message(p, "You find two candlesticks in the chest",
+				if (!player.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.empty())) {
+					give(player, ItemId.CANDLESTICK.id(), 2);
+					mes(player, "You find two candlesticks in the chest",
 						"So that will be one for you",
 						"And one to the person who killed grip for you");
-					if (p.getQuestStage(this) == 1) {
-						p.updateQuestStage(this, 2);
+					if (player.getQuestStage(this) == 1) {
+						player.updateQuestStage(this, 2);
 					}
 				} else {
-					p.message("The chest is empty");
+					player.message("The chest is empty");
 				}
 			}
 		}
 
 	}
 
-	private void removeReturnEventIfPresent(Player p) {
+	private void removeReturnEventIfPresent(Player player) {
 		if (gripReturnEvent.get() != null) {
-			p.getWorld().getServer().getGameEventHandler().remove(gripReturnEvent.get());
+			player.getWorld().getServer().getGameEventHandler().remove(gripReturnEvent.get());
 			gripReturnEvent.set(null);
 		}
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.GRIP.id()) {
-			p.getWorld().registerItem(
-					new GroundItem(p.getWorld(), ItemId.BUNCH_OF_KEYS.id(), n.getX(), n.getY(), 1, (Player) null));
-			removeReturnEventIfPresent(p);
+			player.getWorld().registerItem(
+					new GroundItem(player.getWorld(), ItemId.BUNCH_OF_KEYS.id(), n.getX(), n.getY(), 1, (Player) null));
+			removeReturnEventIfPresent(player);
 		}
-		n.killedBy(p);
+		n.killedBy(player);
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return n.getID() == NpcId.GRIP.id();
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player player, Npc n) {
 		return n.getID() == NpcId.GRIP.id();
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
-		return n.getID() == NpcId.GRIP.id() && !p.getLocation().inHeroQuestRangeRoom();
+	public boolean blockSpellNpc(Player player, Npc n) {
+		return n.getID() == NpcId.GRIP.id() && !player.getLocation().inHeroQuestRangeRoom();
 	}
 
 	@Override
-	public boolean blockPlayerRangeNpc(Player p, Npc n) {
-		return n.getID() == NpcId.GRIP.id() && !p.getLocation().inHeroQuestRangeRoom();
+	public boolean blockPlayerRangeNpc(Player player, Npc n) {
+		return n.getID() == NpcId.GRIP.id() && !player.getLocation().inHeroQuestRangeRoom();
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.GRIP.id() && !p.getLocation().inHeroQuestRangeRoom()) {
-			playerTalk(p, null, "I can't attack the head guard here",
+	public void onSpellNpc(Player player, Npc n) {
+		if (n.getID() == NpcId.GRIP.id() && !player.getLocation().inHeroQuestRangeRoom()) {
+			say(player, null, "I can't attack the head guard here",
 					"There are too many witnesses to see me do it",
 					"I'd have the whole of Brimhaven after me",
 					"Besides if he dies I want to have the chance of being promoted");
-			p.message("Maybe you need another player's help");
+			player.message("Maybe you need another player's help");
 		}
 	}
 
 	@Override
-	public void onPlayerRangeNpc(Player p, Npc n) {
-		if (n.getID() == NpcId.GRIP.id() && !p.getLocation().inHeroQuestRangeRoom()) {
-			playerTalk(p, null, "I can't attack the head guard here",
+	public void onPlayerRangeNpc(Player player, Npc n) {
+		if (n.getID() == NpcId.GRIP.id() && !player.getLocation().inHeroQuestRangeRoom()) {
+			say(player, null, "I can't attack the head guard here",
 				"There are too many witnesses to see me do it",
 				"I'd have the whole of Brimhaven after me",
 				"Besides if he dies I want to have the chance of being promoted");
-			p.message("Maybe you need another player's help");
+			player.message("Maybe you need another player's help");
 		}
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc n) {
+	public void onAttackNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.GRIP.id()) {
-			if (!p.getLocation().inHeroQuestRangeRoom()) {
-				playerTalk(p, null, "I can't attack the head guard here",
+			if (!player.getLocation().inHeroQuestRangeRoom()) {
+				say(player, null, "I can't attack the head guard here",
 					"There are too many witnesses to see me do it",
 					"I'd have the whole of Brimhaven after me",
 					"Besides if he dies I want to have the chance of being promoted");
-				p.message("Maybe you need another player's help");
+				player.message("Maybe you need another player's help");
 			}
 		}
 

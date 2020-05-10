@@ -14,7 +14,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class WorldLoader {
-	private static final int[] ALLOWED_WALL_ID_TYPES = {5, 6, 14, 42, 128, 229, 230};
+	private static final int[] ALLOWED_WALL_ID_TYPES = {5, 6, 14, 42, 63, 128, 229, 230};
 	/**
 	 * The asynchronous logger.
 	 */

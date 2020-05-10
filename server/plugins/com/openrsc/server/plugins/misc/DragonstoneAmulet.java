@@ -2,18 +2,17 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 
 	/**
 	 * RE-CHARGE AMULET
@@ -21,62 +20,66 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 	private static int FOUNTAIN_OF_HEROES = 282;
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.CHARGED_DRAGONSTONE_AMULET.id();
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
+		return item.getCatalogId() == ItemId.CHARGED_DRAGONSTONE_AMULET.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.CHARGED_DRAGONSTONE_AMULET.id()) {
-			p.message("You rub the amulet");
-			sleep(600);
-			p.message("Where would you like to teleport to?");
-			int menu = showMenu(p, "Edgeville", "Karamja", "Draynor village", "Al Kharid", "Nowhere");
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
+		if (item.getCatalogId() == ItemId.CHARGED_DRAGONSTONE_AMULET.id()) {
+			player.message("You rub the amulet");
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			player.message("Where would you like to teleport to?");
+			int menu = multi(player, "Edgeville", "Karamja", "Draynor village", "Al Kharid", "Nowhere");
 			//if(p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
 			//	p.message("You need to stay out of combat for 10 seconds before using a teleport.");
 			//	return;
 			//}
-			if (p.getLocation().wildernessLevel() >= Constants.GLORY_TELEPORT_LIMIT || p.getLocation().isInFisherKingRealm()
-					|| p.getLocation().isInsideGrandTreeGround()
-					|| (p.getLocation().inModRoom() && !p.isAdmin())) {
-				p.message("A mysterious force blocks your teleport!");
-				p.message("You can't use this teleport after level 30 wilderness");
+			if (player.getLocation().wildernessLevel() >= Constants.GLORY_TELEPORT_LIMIT || player.getLocation().isInFisherKingRealm()
+					|| player.getLocation().isInsideGrandTreeGround()
+					|| (player.getLocation().inModRoom() && !player.isAdmin())) {
+				player.message("A mysterious force blocks your teleport!");
+				player.message("You can't use this teleport after level 30 wilderness");
 				return;
 			}
-			if (p.getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
-				message(p, "You can't teleport while holding Ana,",
+			if (player.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
+				mes(player, "You can't teleport while holding Ana,",
 					"It's just too difficult to concentrate.");
 				return;
 			}
-			if (p.getInventory().hasItemId(ItemId.PLAGUE_SAMPLE.id())) {
-				p.message("the plague sample is too delicate...");
-				p.message("it disintegrates in the crossing");
-				while (p.getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
-					p.getInventory().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
+			if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (player.getLocation().inKaramja())) {
+				player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
+			}
+			if (player.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
+				player.message("the plague sample is too delicate...");
+				player.message("it disintegrates in the crossing");
+				while (player.getCarriedItems().getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
+					player.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 				}
 			}
 			if (menu != -1) {
 				if (menu == 0) { // Edgeville
-					p.teleport(226, 447, true);
+					player.teleport(226, 447, true);
 				} else if (menu == 1) { // Karamja
-					p.teleport(360, 696, true);
+					player.teleport(360, 696, true);
 				} else if (menu == 2) { // Draynor Village
-					p.teleport(214, 632, true);
+					player.teleport(214, 632, true);
 				} else if (menu == 3) { // Al Kharid
-					p.teleport(72, 696, true);
+					player.teleport(72, 696, true);
 				} else if (menu == 4) { // nothing
-					p.message("Nothing interesting happens");
+					player.message("Nothing interesting happens");
 					return;
 				}
-				if (!p.getCache().hasKey("charged_ds_amulet")) {
-					p.getCache().set("charged_ds_amulet", 1);
+				if (!player.getCache().hasKey("charged_ds_amulet")) {
+					player.getCache().set("charged_ds_amulet", 1);
 				} else {
-					int rubs = p.getCache().getInt("charged_ds_amulet");
+					int rubs = player.getCache().getInt("charged_ds_amulet");
 					if (rubs >= 3) {
-						p.getInventory().replace(ItemId.CHARGED_DRAGONSTONE_AMULET.id(), ItemId.DRAGONSTONE_AMULET.id());
-						p.getCache().remove("charged_ds_amulet");
+						player.getCarriedItems().remove(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
+						player.getCarriedItems().getInventory().add(new Item(ItemId.DRAGONSTONE_AMULET.id()));
+						player.getCache().remove("charged_ds_amulet");
 					} else {
-						p.getCache().put("charged_ds_amulet", rubs + 1);
+						player.getCache().put("charged_ds_amulet", rubs + 1);
 					}
 				}
 			}
@@ -84,35 +87,40 @@ public class DragonstoneAmulet implements InvActionListener, InvActionExecutiveL
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player p) {
-		return obj.getID() == FOUNTAIN_OF_HEROES && item.getID() == ItemId.DRAGONSTONE_AMULET.id();
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
+		return obj.getID() == FOUNTAIN_OF_HEROES && item.getCatalogId() == ItemId.DRAGONSTONE_AMULET.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player p) {
-		if (obj.getID() == FOUNTAIN_OF_HEROES && item.getID() == ItemId.DRAGONSTONE_AMULET.id()) {
-			p.setBusy(true);
-			p.message("You dip the amulet in the fountain");
-			sleep(1000);
-			p.setBatchEvent(new BatchEvent(p.getWorld(), p, 600, "Charge Dragonstone Ammy", p.getInventory().countId(item.getID()), false) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
+		if (obj.getID() == FOUNTAIN_OF_HEROES && item.getCatalogId() == ItemId.DRAGONSTONE_AMULET.id()) {
+			int repeat = 1;
+			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+				repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
+			}
+			batchAmuletCharge(player, item, repeat);
+		}
+	}
 
-				@Override
-				public void action() {
-					if (!p.getInventory().hasItemId(item.getID())) {
-						stop();
-						return;
-					}
-					if (p.getInventory().remove(item) > -1) {
-						p.getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
-					} else
-						interrupt();
-				}
-			});
-			message(p, "You feel more power emanating from it than before",
-				"you can now rub this amulet to teleport",
-				"Though using it to much means you will need to recharge it");
-			p.message("It now also means you can find more gems when mining");
-			p.setBusy(false);
+	private void batchAmuletCharge(Player player, Item item, int repeat) {
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		player.message("You dip the amulet in the fountain");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		player.getCarriedItems().remove(item);
+		player.getCarriedItems().getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
+
+		mes(player, "You feel more power emanating from it than before",
+			"you can now rub this amulet to teleport",
+			"Though using it to much means you will need to recharge it");
+		player.message("It now also means you can find more gems when mining");
+
+		// Repeat
+		if (ifinterrupted()) return;
+		repeat--;
+		if (repeat > 0) {
+			batchAmuletCharge(player, item, repeat);
 		}
 	}
 }

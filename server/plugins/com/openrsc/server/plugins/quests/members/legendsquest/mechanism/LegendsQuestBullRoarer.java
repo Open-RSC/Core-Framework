@@ -7,80 +7,79 @@ import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecutiveListener {
+public class LegendsQuestBullRoarer implements OpInvTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(LegendsQuestBullRoarer.class);
-	private boolean inKharaziJungle(Player p) {
-		return p.getLocation().inBounds(338, 869, 477, 908);
+	private boolean inKharaziJungle(Player player) {
+		return player.getLocation().inBounds(338, 869, 477, 908);
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.BULL_ROARER.id();
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
+		return item.getCatalogId() == ItemId.BULL_ROARER.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.BULL_ROARER.id()) {
-			message(p, 1300, "You start to swing the bullroarer above your head.",
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
+		if (item.getCatalogId() == ItemId.BULL_ROARER.id()) {
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You start to swing the bullroarer above your head.",
 				"You feel a bit silly at first, but soon it makes an interesting sound.");
-			if (inKharaziJungle(p)) {
-				message(p, 1300, "You see some movement in the trees...");
-				attractNatives(p);
+			if (inKharaziJungle(player)) {
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You see some movement in the trees...");
+				attractNatives(player);
 			} else {
-				message(p, 1300, "Nothing much seems to happen though.");
-				Npc forester = getNearestNpc(p, NpcId.JUNGLE_FORESTER.id(), 10);
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Nothing much seems to happen though.");
+				Npc forester = ifnearvisnpc(player, NpcId.JUNGLE_FORESTER.id(), 10);
 				if (forester != null) {
-					npcTalk(p, forester, "You might like to use that when you get into the ",
+					npcsay(player, forester, "You might like to use that when you get into the ",
 						"Kharazi jungle, it might attract more natives...");
 				}
 			}
 		}
 	}
 
-	private void attractNatives(Player p) {
+	private void attractNatives(Player player) {
 		int controlRandom = DataConversions.getRandom().nextInt(4);
 		if (controlRandom == 0) {
-			message(p, 1300, "...but nothing else much seems to happen.");
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "...but nothing else much seems to happen.");
 		} else if (controlRandom >= 1 && controlRandom <= 2) {
-			message(p, 1300, "...and a tall, dark, charismatic looking native approaches you.");
-			Npc gujuo = getNearestNpc(p, NpcId.GUJUO.id(), 15);
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "...and a tall, dark, charismatic looking native approaches you.");
+			Npc gujuo = ifnearvisnpc(player, NpcId.GUJUO.id(), 15);
 			if (gujuo == null) {
-				gujuo = spawnNpc(p.getWorld(), NpcId.GUJUO.id(), p.getX(), p.getY());
-				delayedRemoveGujuo(p, gujuo);
+				gujuo = addnpc(player.getWorld(), NpcId.GUJUO.id(), player.getX(), player.getY());
+				delayedRemoveGujuo(player, gujuo);
 			}
 			if (gujuo != null) {
 				gujuo.resetPath();
-				gujuo.teleport(p.getX(), p.getY());
-				gujuo.initializeTalkScript(p);
-				sleep(650);
-				npcWalkFromPlayer(p, gujuo);
+				gujuo.teleport(player.getX(), player.getY());
+				gujuo.initializeTalkScript(player);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
+				npcWalkFromPlayer(player, gujuo);
 			}
 		} else if (controlRandom == 3) {
-			Npc nativeNpc = getMultipleNpcsInArea(p, 5, NpcId.OOMLIE_BIRD.id(), NpcId.KARAMJA_WOLF.id(), NpcId.JUNGLE_SPIDER.id(), NpcId.JUNGLE_SAVAGE.id());
+			Npc nativeNpc = ifnearvisnpc(player, 5, NpcId.OOMLIE_BIRD.id(), NpcId.KARAMJA_WOLF.id(), NpcId.JUNGLE_SPIDER.id(), NpcId.JUNGLE_SAVAGE.id());
 			if (nativeNpc != null) {
-				message(p, 1300, "...and a nearby " + (nativeNpc.getDef().getName().contains("bird") ? nativeNpc.getDef().getName() : "Kharazi " + nativeNpc.getDef().getName().toLowerCase()) + " takes a sudden dislike to you.");
-				nativeNpc.setChasing(p);
-				message(p, 0, "And attacks...");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "...and a nearby " + (nativeNpc.getDef().getName().contains("bird") ? nativeNpc.getDef().getName() : "Kharazi " + nativeNpc.getDef().getName().toLowerCase()) + " takes a sudden dislike to you.");
+				nativeNpc.setChasing(player);
+				mes(player, 0, "And attacks...");
 			} else {
-				attractNatives(p);
+				attractNatives(player);
 			}
 		}
 	}
 
-	private void delayedRemoveGujuo(Player p, Npc n) {
+	private void delayedRemoveGujuo(Player player, Npc n) {
 		try {
-			p.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(p.getWorld(), null, 60000 * 3, "Delayed Remove Gujuo") {
+			player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), null, 60000 * 3, "Delayed Remove Gujuo") {
 				@Override
 				public void run() {
-					if (!p.isLoggedIn() || p.isRemoved()) {
+					if (!player.isLoggedIn() || player.isRemoved()) {
 						n.remove();
 						stop();
 						return;
@@ -89,27 +88,27 @@ public class LegendsQuestBullRoarer implements InvActionListener, InvActionExecu
 						stop();
 						return;
 					}
-					if (!inKharaziJungle(p)) {
+					if (!inKharaziJungle(player)) {
 						n.remove();
 						stop();
 						return;
 					}
 					int yell = DataConversions.random(0, 3);
 					if (yell == 0) {
-						npcTalk(p, n, "I am tired Bwana, I must go and rest...");
+						npcsay(player, n, "I am tired Bwana, I must go and rest...");
 					}
 					if (yell == 1) {
-						npcTalk(p, n, "I must visit my people now...");
+						npcsay(player, n, "I must visit my people now...");
 					} else if (yell == 2) {
-						npcTalk(p, n, "I must go and hunt now Bwana..");
+						npcsay(player, n, "I must go and hunt now Bwana..");
 					} else if (yell == 3) {
-						npcTalk(p, n, "I have to collect herbs now Bwana...");
+						npcsay(player, n, "I have to collect herbs now Bwana...");
 					} else {
-						npcTalk(p, n, "I have work to do Bwana, I may see you again...");
+						npcsay(player, n, "I have work to do Bwana, I may see you again...");
 					}
-					getWorld().getServer().getGameEventHandler().add(new SingleEvent(p.getWorld(), null, 1900, "Legends Quest Gujuo Disappears") {
+					getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), null, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Legends Quest Gujuo Disappears") {
 						public void action() {
-							p.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
+							player.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
 							n.remove();
 						}
 					});

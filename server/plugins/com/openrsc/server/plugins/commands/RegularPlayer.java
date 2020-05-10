@@ -9,8 +9,7 @@ import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.action.CommandListener;
-import com.openrsc.server.plugins.listeners.executive.CommandExecutiveListener;
+import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
@@ -25,17 +24,17 @@ import java.util.Random;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
 
-public final class RegularPlayer implements CommandListener, CommandExecutiveListener {
+public final class RegularPlayer implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(RegularPlayer.class);
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
 
-	public boolean blockCommand(String cmd, String[] args, Player player) {
+	public boolean blockCommand(Player player, String cmd, String[] args) {
 		return player.getWorld().getServer().getConfig().PLAYER_COMMANDS || player.isMod();
 	}
 
-	public void onCommand(String cmd, String[] args, Player player) {
+	public void onCommand(Player player, String cmd, String[] args) {
 		if(messagePrefix == null) {
 			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
 		}
@@ -255,7 +254,7 @@ public final class RegularPlayer implements CommandListener, CommandExecutiveLis
 				sayDelay = player.getCache().getLong("say_delay");
 			}
 
-			long waitTime = 1200;
+			long waitTime = player.getWorld().getServer().getConfig().GAME_TICK * 2;
 
 			if (player.isMod()) {
 				waitTime = 0;

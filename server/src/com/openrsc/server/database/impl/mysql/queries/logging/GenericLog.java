@@ -12,7 +12,7 @@ public final class GenericLog extends Query {
 	private final String message;
 
 	public GenericLog(World world, String message) {
-		super("INSERT INTO `" + world.getServer().getConfig().MYSQL_TABLE_PREFIX + "generic_logs`(`message`, `time`) VALUES(?, ?)");
+		super("INSERT INTO `" + world.getServer().getConfig().DB_TABLE_PREFIX + "generic_logs`(`message`, `time`) VALUES(?, ?)");
 		this.message = message;
 	}
 

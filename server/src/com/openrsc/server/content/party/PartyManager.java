@@ -5,8 +5,6 @@ import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -75,7 +73,7 @@ public class PartyManager {
 		}
 	}
 
-	public void updatePartyRankPlayer(PartyPlayer cp) {
+/*	public void updatePartyRankPlayer(PartyPlayer cp) {
 		try {
 			PreparedStatement statement = cp.getPlayerReference().getWorld().getServer().getDatabase().getConnection()
 				.prepareStatement("UPDATE `" + getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "party_players` SET `rank`=? WHERE `username`=?");
@@ -88,7 +86,7 @@ public class PartyManager {
 			LOGGER.catching(e);
 		}
 
-	}
+	}*/
 
 	public void checkAndUnattachFromParty(Player player) {
 		for (Party p : parties) {

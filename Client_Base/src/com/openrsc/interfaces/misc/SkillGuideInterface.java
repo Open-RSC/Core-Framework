@@ -252,7 +252,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(593, "60", "Dragon"));
 			} else if (curTab == 1) {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(2111, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1374, "99", "Cape"));
 				}
 			}
 		}
@@ -269,6 +269,9 @@ public final class SkillGuideInterface {
 		}
 		if (mc.getSkillGuideChosen().equals("Strength")) {
 			skillMenuEntries.add(new SkillMenuItem(90, "", "Strength raises your max hit with melee"));
+			if (Config.S_WANT_CUSTOM_SPRITES) {
+				skillMenuEntries.add(new SkillMenuItem(1381, "99", "Cape"));
+			}
 		}
 		if (mc.getSkillGuideChosen().equals("Hits")) {
 			skillMenuEntries.add(new SkillMenuItem(193, "", "Beer - Heals 1"));
@@ -408,6 +411,9 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(184, "1", "Wizard hats and robes"));
 				skillMenuEntries.add(new SkillMenuItem(702, "1", "Robes of Zamorak"));
 				skillMenuEntries.add(new SkillMenuItem(1215, "60", "God capes"));
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1382, "99", "Cape"));
+				}
 			} else if (curTab == 2) {
 				skillMenuEntries.add(new SkillMenuItem(101, "1", "Basic staves"));
 				skillMenuEntries.add(new SkillMenuItem(617, "30", "Battlestaves"));
@@ -475,7 +481,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1269, "50", "Oomlie Meat Parcel"));
 				skillMenuEntries.add(new SkillMenuItem(1102, "58", "Tasty Ugthanki Kebab"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(2105, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1373, "99", "Cape"));
 				}
 			}
 		}
@@ -522,7 +528,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1070, "82", "Rune throwing dart"));
 			} else if (curTab == 3) {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(2402, "99", "Fletching Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1376, "99", "Fletching Cape"));
 				}
 			}
 		}
@@ -547,7 +553,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1190, "81", "Manta Ray - Fishing Trawler"));
 			} else if (curTab == 1) {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(2103, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1380, "99", "Cape"));
 				}
 			}
 		}
@@ -566,6 +572,9 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(16, "1", "Leather Gloves"));
 				skillMenuEntries.add(new SkillMenuItem(17, "7", "Boots"));
 				skillMenuEntries.add(new SkillMenuItem(15, "14", "Leather Armour"));
+				if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1384, "99", "Cape"));
+				}
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(135, "1", "Pot"));
 				skillMenuEntries.add(new SkillMenuItem(251, "4", "Pie Dish"));
@@ -617,7 +626,7 @@ public final class SkillGuideInterface {
 			} else if (curTab == 7) {
 				skillMenuEntries.add(new SkillMenuItem(779, "34", "Oyster Pearls"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(2355, "90", "King Black Dragon Scale"));
+					skillMenuEntries.add(new SkillMenuItem(1347, "90", "King Black Dragon Scale"));
 				}
 			}
 		}
@@ -632,7 +641,8 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(174, "70", "Adamant - 6 Coal & 1 adamantite ore"));
 				skillMenuEntries.add(new SkillMenuItem(408, "85", "Runite - 8 Coal & 1 runite ore"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(2388, "90", "Dragon - 1 dragon axe or 1 dragon sword"));
+					skillMenuEntries.add(new SkillMenuItem(1365, "90", "Dragon - 1 dragon axe or 1 dragon sword"));
+					skillMenuEntries.add(new SkillMenuItem(1383, "99", "Cape"));
 				}
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(62, "1", "Bronze Daggers - 1 Bar"));
@@ -783,7 +793,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1262, "41", "Rune Pickaxe"));
 			} else if (curTab == 2) {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(2403, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1377, "99", "Cape"));
 				}
 			}
 		}
@@ -897,7 +907,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(714, "82", "Yanille Agility Dungeon"));
 			} else if (curTab == 4) {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(2401, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1375, "99", "Cape"));
 				}
 			}
 		}
@@ -956,19 +966,19 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(18, "7", "Cabbage"));
 				skillMenuEntries.add(new SkillMenuItem(218, "9", "Garlic"));
 				skillMenuEntries.add(new SkillMenuItem(320, "12", "Tomato"));
-				skillMenuEntries.add(new SkillMenuItem(2367, "20", "Corn"));
-				skillMenuEntries.add(new SkillMenuItem(2365, "30", "Red Cabbage"));
-				skillMenuEntries.add(new SkillMenuItem(2369, "47", "White Pumpkin"));
+				skillMenuEntries.add(new SkillMenuItem(1353, "20", "Corn"));
+				skillMenuEntries.add(new SkillMenuItem(1352, "30", "Red Cabbage"));
+				skillMenuEntries.add(new SkillMenuItem(1354, "47", "White Pumpkin"));
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(855, "15", "Lemon Tree"));
 				skillMenuEntries.add(new SkillMenuItem(863, "21", "Lime Tree"));
-				skillMenuEntries.add(new SkillMenuItem(2357, "27", "Apple Tree"));
+				skillMenuEntries.add(new SkillMenuItem(1348, "27", "Apple Tree"));
 				skillMenuEntries.add(new SkillMenuItem(249, "33", "Banana Palm"));
 				skillMenuEntries.add(new SkillMenuItem(857, "39", "Orange Tree"));
-				skillMenuEntries.add(new SkillMenuItem(2359, "46", "Grapefruit Tree"));
+				skillMenuEntries.add(new SkillMenuItem(1349, "46", "Grapefruit Tree"));
 				skillMenuEntries.add(new SkillMenuItem(861, "51", "Pineapple Plant"));
-				skillMenuEntries.add(new SkillMenuItem(2361, "57", "Papaya Palm"));
-				skillMenuEntries.add(new SkillMenuItem(2363, "68", "Coconut Palm"));
+				skillMenuEntries.add(new SkillMenuItem(1350, "57", "Papaya Palm"));
+				skillMenuEntries.add(new SkillMenuItem(1351, "68", "Coconut Palm"));
 			} else if (curTab == 2) {
 				skillMenuEntries.add(new SkillMenuItem(236, "10", "Redberry Bush"));
 				skillMenuEntries.add(new SkillMenuItem(55, "22", "Cadavaberry Bush"));

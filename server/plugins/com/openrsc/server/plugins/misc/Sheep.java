@@ -1,48 +1,49 @@
 package com.openrsc.server.plugins.misc;
 
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnNpcListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.addItem;
-import static com.openrsc.server.plugins.Functions.random;
-import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class Sheep implements InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
+public class Sheep implements UseNpcTrigger {
 
 	@Override
-	public boolean blockInvUseOnNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.SHEEP.id() && item.getID() == ItemId.SHEARS.id();
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return npc.getID() == NpcId.SHEEP.id() && item.getCatalogId() == ItemId.SHEARS.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player player, Npc npc, Item item) {
+	public void onUseNpc(Player player, Npc npc, Item item) {
 		npc.resetPath();
 
-		npc.face(player);
-		player.face(npc);
-		showBubble(player, item);
-		player.message("You attempt to shear the sheep");
-		npc.setBusyTimer(1600);
-		player.setBatchEvent(new BatchEvent(player.getWorld(), player, 1200, "Crafting Shear Wool", player.getInventory().getFreeSlots(), true) {
+		int repeat = 1;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().getFreeSlots();
+		}
+		batchShear(player, item, repeat);
+	}
 
-			@Override
-			public void action() {
-				npc.setBusyTimer(1600);
-				if (random(0, 4) != 0) {
-					player.message("You get some wool");
-					addItem(player, ItemId.WOOL.id(), 1);
-				} else {
-					player.message("The sheep manages to get away from you!");
-					npc.setBusyTimer(0);
-					interrupt();
-				}
-			}
-		});
+	private void batchShear(Player player, Item item, int repeat) {
+		thinkbubble(player, item);
+		player.message("You attempt to shear the sheep");
+
+		if (random(0, 4) != 0) {
+			player.message("You get some wool");
+			give(player, ItemId.WOOL.id(), 1);
+		} else {
+			player.message("The sheep manages to get away from you!");
+			return;
+		}
+
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+
+		// Repeat
+		if (!ifinterrupted() && --repeat > 0) {
+			batchShear(player, item, repeat);
+		}
 	}
 }

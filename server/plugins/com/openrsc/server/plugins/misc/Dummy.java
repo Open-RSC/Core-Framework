@@ -3,21 +3,20 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-import static com.openrsc.server.plugins.Functions.message;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class Dummy implements ObjectActionListener, ObjectActionExecutiveListener {
+public class Dummy implements OpLocTrigger {
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 49 || obj.getID() == 562;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
-		message(player, 3200, "You swing at the dummy");
+	public void onOpLoc(Player player, GameObject obj, String command) {
+		mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "You swing at the dummy");
 		if (obj.getID() == 49) { // Dummy
 			if (player.getSkills().getLevel(Skills.ATTACK) > 7) {
 				player.message("There is only so much you can learn from hitting a dummy");

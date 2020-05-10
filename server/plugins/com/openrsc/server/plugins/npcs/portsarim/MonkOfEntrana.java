@@ -7,19 +7,15 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Arrays;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class MonkOfEntrana implements ObjectActionExecutiveListener, ObjectActionListener, TalkToNpcExecutiveListener,
-	TalkToNpcListener {
+public final class MonkOfEntrana implements OpLocTrigger,
+	TalkNpcTrigger {
 
 	private String[] blockedItems = new String[]{
 		"arrow", "axe", "staff", "bow", "mail", "plate",
@@ -34,22 +30,22 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 		return Arrays.stream(blockedItems).parallel().anyMatch(itemName::contains);
 	}
 
-	private boolean CAN_GO(Player p) {
-		synchronized(p.getInventory().getItems()) {
-			for (Item item : p.getInventory().getItems()) {
-				String name = item.getDef(p.getWorld()).getName().toLowerCase();
+	private boolean CANT_GO(Player player) {
+		synchronized(player.getCarriedItems().getInventory().getItems()) {
+			for (Item item : player.getCarriedItems().getInventory().getItems()) {
+				String name = item.getDef(player.getWorld()).getName().toLowerCase();
 				if (CHECK_ITEM(name))
 					return true;
 			}
 		}
 
-		if (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
-			for (int i = 0; i < Equipment.slots; i++) {
-				item = p.getEquipment().get(i);
+			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+				item = player.getCarriedItems().getEquipment().get(i);
 				if (item == null)
 					continue;
-				String name = item.getDef(p.getWorld()).getName().toLowerCase();
+				String name = item.getDef(player.getWorld()).getName().toLowerCase();
 				if (CHECK_ITEM(name))
 					return true;
 			}
@@ -58,73 +54,57 @@ public final class MonkOfEntrana implements ObjectActionExecutiveListener, Objec
 	}
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.MONK_OF_ENTRANA_PORTSARIM.id() || n.getID() == NpcId.MONK_OF_ENTRANA_UNRELEASED.id();
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc n) {
 		if (n.getID() == NpcId.MONK_OF_ENTRANA_PORTSARIM.id()) {
-			npcTalk(p, n, "Are you looking to take passage to our holy island?",
+			npcsay(player, n, "Are you looking to take passage to our holy island?",
 					"If so your weapons and armour must be left behind");
-				final Menu defaultMenu = new Menu();
-				defaultMenu.addOption(new Option("No I don't wish to go") {
-					@Override
-					public void action() {
-					}
-				});
-				defaultMenu.addOption(new Option("Yes, Okay I'm ready to go") {
-					@Override
-					public void action() {
-						message(p, "The monk quickly searches you");
-						if (CAN_GO(p)) {
-							npcTalk(p, n, "Sorry we cannow allow you on to our island",
-								"Make sure you are not carrying weapons or armour please");
-						} else {
-							message(p, "You board the ship");
-							p.teleport(418, 570, false);
-							sleep(2200);
-							p.message("The ship arrives at Entrana");
-						}
-					}
-				});
-				defaultMenu.showMenu(p);
+			if (multi(player, n, "No I don't wish to go",
+				"Yes, Okay I'm ready to go") == 1) {
+
+				mes(player, "The monk quickly searches you");
+				if (CANT_GO(player)) {
+					npcsay(player, n, "Sorry we cannow allow you on to our island",
+						"Make sure you are not carrying weapons or armour please");
+				} else {
+					mes(player, "You board the ship");
+					player.teleport(418, 570, false);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+					mes(player, "The ship arrives at Entrana");
+				}
+			}
 		}
 		else if (n.getID() == NpcId.MONK_OF_ENTRANA_UNRELEASED.id()) {
-			npcTalk(p, n, "Are you looking to take passage back to port sarim?");
-			final Menu defaultMenu = new Menu();
-			defaultMenu.addOption(new Option("No I don't wish to go") {
-				@Override
-				public void action() {
-				}
-			});
-			defaultMenu.addOption(new Option("Yes, Okay I'm ready to go") {
-				@Override
-				public void action() {
-					message(p, "You board the ship");
-					p.teleport(264, 660, false);
-					sleep(2200);
-					p.message("The ship arrives at Port Sarim");
-				}
-			});
-			defaultMenu.showMenu(p);
+			npcsay(player, n, "Are you looking to take passage back to port sarim?");
+			if (multi(player, n, "No I don't wish to go",
+				"Yes, Okay I'm ready to go") == 1) {
+
+				mes(player, "You board the ship");
+				player.teleport(264, 660, false);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+				mes(player, "The ship arrives at Port Sarim");
+			}
 			return;
 		}
 	}
 
 	@Override
-	public void onObjectAction(GameObject arg0, String arg1, Player p) {
-		Npc monk = getNearestNpc(p, NpcId.MONK_OF_ENTRANA_PORTSARIM.id(), 10);
+	public void onOpLoc(Player player, GameObject arg0, String arg1) {
+		Npc monk = ifnearvisnpc(player, NpcId.MONK_OF_ENTRANA_PORTSARIM.id(), 10);
 		if (monk != null) {
-			monk.initializeTalkScript(p);
+			monk.initializeTalkScript(player);
 		} else {
-			p.message("I need to speak to the monk before boarding the ship.");
+			player.message("I need to speak to the monk before boarding the ship.");
 		}
 
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject arg0, String arg1, Player arg2) {
+	public boolean blockOpLoc(Player arg2, GameObject arg0, String arg1) {
 		return (arg0.getID() == 240 && arg0.getLocation().equals(Point.location(257, 661)))
 			|| (arg0.getID() == 239 && arg0.getLocation().equals(Point.location(262, 661)))
 			|| (arg0.getID() == 239 && arg0.getLocation().equals(Point.location(264, 661)))

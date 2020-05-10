@@ -1,21 +1,19 @@
 package com.openrsc.server.database;
 
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.database.struct.FloorItem;
+import com.openrsc.server.database.struct.NpcLocation;
+import com.openrsc.server.database.struct.SceneryObject;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
@@ -34,37 +32,29 @@ public final class WorldPopulator {
 
 	@SuppressWarnings("unchecked")
 	public void populateWorld() {
-		Connection connection = getWorld().getServer().getDatabase().getConnection().getConnection();
-		Statement statement = null;
-		ResultSet result = null;
 		try {
-			statement = connection.createStatement();
-
 			/* LOAD OBJECTS */
-			result = statement.executeQuery("SELECT `x`, `y`, `id`, `direction`, `type` FROM `"
-				+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "objects`");
+			SceneryObject objects[] = getWorld().getServer().getDatabase().getObjects();
 			int countOBJ = 0;
-			while (result.next()) {
-				Point p = new Point(result.getInt("x"), result.getInt("y"));
-				if (Formulae.isP2P(false, p.getX(), p.getY())
+			for (SceneryObject object : objects) {
+				Point point = new Point(object.x, object.y);
+				if (Formulae.isP2P(false, point.getX(), point.getY())
 					&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
 					continue;
 				}
-				GameObject obj = new GameObject(getWorld(), p, result.getInt("id"),
-					result.getInt("direction"), result.getInt("type"));
+				GameObject obj = new GameObject(getWorld(), point, object.id,
+					object.direction, object.type);
 
 				getWorld().registerGameObject(obj);
 				countOBJ++;
 			}
-			result.close();
 			LOGGER.info("\t Loaded {}", box(countOBJ) + " Objects.");
 
 			/* LOAD NPC LOCS */
-			result = statement.executeQuery("SELECT `id`, `startX`, `startY`, `minX`, `maxX`, `minY`, `maxY` FROM `"
-				+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "npclocs`");
-			while (result.next()) {
+			NpcLocation[] npcLocations = getWorld().getServer().getDatabase().getNpcLocs();
+			for (NpcLocation npcLocation : npcLocations) {
 				/* Configurable NPCs */
-				int npcID = result.getInt("id");
+				int npcID = npcLocation.id;
 				if ((npcID == NpcId.AUCTIONEER.id() || npcID == NpcId.AUCTION_CLERK.id())
 					&& !getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) continue; // Auctioneers & Auction Clerks
 				else if ((npcID == NpcId.IRONMAN.id() || npcID == NpcId.ULTIMATE_IRONMAN.id() || npcID == NpcId.HARDCORE_IRONMAN.id())
@@ -72,9 +62,9 @@ public final class WorldPopulator {
 					continue; // Iron Man, Ultimate Iron Man, Hardcore Iron Man
 
 				NPCLoc n = new NPCLoc(npcID,
-					result.getInt("startX"), result.getInt("startY"),
-					result.getInt("minX"), result.getInt("maxX"),
-					result.getInt("minY"), result.getInt("maxY"));
+					npcLocation.startX, npcLocation.startY,
+					npcLocation.minX, npcLocation.maxX,
+					npcLocation.minY, npcLocation.maxY);
 
 				if (!getWorld().getServer().getConfig().MEMBER_WORLD) {
 					if (getWorld().getServer().getEntityHandler().getNpcDef(n.id).isMembers()) {
@@ -86,24 +76,22 @@ public final class WorldPopulator {
 					n = null;
 					continue;
 				}
-				/*if(!Point.inWilderness(n.startX, n.startY) && EntityHandler.getNpcDef(n.id).isAttackable() && n.id != 192 && n.id != 35 && n.id != 196 && n.id != 50 && n.id != 70 && n.id != 136 && n.id != 37) {
-					for(int i = 0; i < 1; i++)
-						world.registerNpc(new Npc(n));
-				}*/
-				Npc npc = getWorld().getServer().getEntityHandler().getNpcDef(n.id).isPkBot() ? new PkBot(getWorld(), n) : new Npc(getWorld(), n) ;
-				getWorld().registerNpc(npc);
+			/*if(!Point.inWilderness(n.startX, n.startY) && EntityHandler.getNpcDef(n.id).isAttackable() && n.id != 192 && n.id != 35 && n.id != 196 && n.id != 50 && n.id != 70 && n.id != 136 && n.id != 37) {
+				for(int i = 0; i < 1; i++)
+					world.registerNpc(new Npc(n));
+			}*/
+				getWorld().registerNpc(new Npc(getWorld(), n));
 			}
-			result.close();
 			LOGGER.info("\t Loaded {}", box(getWorld().countNpcs()) + " NPC spawns");
 
 			/* LOAD GROUND ITEMS */
-			result = statement.executeQuery("SELECT `id`, `x`, `y`, `amount`, `respawn` FROM `"
-				+ getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "grounditems`");
+			FloorItem[] groundItems = getWorld().getServer().getDatabase().getGroundItems();
 			int countGI = 0;
-			while (result.next()) {
-				ItemLoc i = new ItemLoc(result.getInt("id"),
-					result.getInt("x"), result.getInt("y"),
-					result.getInt("amount"), result.getInt("respawn"));
+			for (FloorItem groundItem : groundItems) {
+				ItemLoc i = new ItemLoc(groundItem.id,
+					groundItem.x, groundItem.y,
+					groundItem.amount, groundItem.respawn);
+
 				if (!getWorld().getServer().getConfig().MEMBER_WORLD) {
 					if (getWorld().getServer().getEntityHandler().getItemDef(i.id).isMembersOnly()) {
 						continue;
@@ -118,9 +106,15 @@ public final class WorldPopulator {
 				getWorld().registerItem(new GroundItem(getWorld(), i));
 				countGI++;
 			}
-			result.close();
-			statement.close();
 			LOGGER.info("\t Loaded {}", box(countGI) + " grounditems.");
+
+			//Load the in-use ItemID's from the database
+			Integer inUseItemIds[] = getWorld().getServer().getDatabase().getInUseItemIds();
+			for (Integer itemId : inUseItemIds)
+				getWorld().getServer().getDatabase().getItemIDList().add(itemId);
+
+			LOGGER.info("\t Loaded {}", box(getWorld().getServer().getDatabase().getItemIDList().size()) + " itemIDs.");
+
 		} catch (Exception e) {
 			LOGGER.catching(e);
 			System.exit(1);

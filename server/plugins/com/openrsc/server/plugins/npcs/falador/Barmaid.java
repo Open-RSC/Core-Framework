@@ -6,60 +6,59 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Barmaid implements TalkToNpcExecutiveListener,
-	TalkToNpcListener {
+public final class Barmaid implements
+	TalkNpcTrigger {
 	private final String notEnoughMoney = "Oh dear. I don't seem to have enough money";
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.BARMAID.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
-		if (p.getCache().hasKey("barcrawl")
-			&& !p.getCache().hasKey("barthree")) {
-			int barCrawlOpt = showMenu(p, n, false, //do not send over
+	public void onTalkNpc(Player player, final Npc n) {
+		if (player.getCache().hasKey("barcrawl")
+			&& !player.getCache().hasKey("barthree")) {
+			int barCrawlOpt = multi(player, n, false, //do not send over
 				"Hi what ales are you serving",
 				"I'm doing Alfred Grimhand's barcrawl");
 			if (barCrawlOpt == 0) {
-				NORMAL_ALES(p, n);
+				NORMAL_ALES(player, n);
 			} else if (barCrawlOpt == 1) {
-				playerTalk(p, n, "I'm doing Alfred Grimhand's barcrawl");
-				npcTalk(p,
+				say(player, n, "I'm doing Alfred Grimhand's barcrawl");
+				npcsay(player,
 					n,
 					"Hehe this'll be fun",
 					"You'll be after our off the menu hand of death cocktail then",
 					"Lots of expensive parts to the cocktail though",
 					"So it will cost you 70 coins");
-				if (hasItem(p, ItemId.COINS.id(), 70)) {
-					message(p, "You buy a hand of death cocktail");
-					p.getInventory().remove(ItemId.COINS.id(), 70);
-					message(p, "You drink the cocktail",
+				if (ifheld(player, ItemId.COINS.id(), 70)) {
+					mes(player, "You buy a hand of death cocktail");
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 70));
+					mes(player, "You drink the cocktail",
 						"You stumble around the room");
-					drinkAle(p);
-					p.damage(DataConversions.getRandom().nextInt(2) + 1);
-					message(p, "The barmaid giggles",
+					drinkAle(player);
+					player.damage(DataConversions.getRandom().nextInt(2) + 1);
+					mes(player, "The barmaid giggles",
 						"The barmaid signs your card");
-					p.getCache().store("barthree", true);
+					player.getCache().store("barthree", true);
 				} else {
-					playerTalk(p, n, "I don't have that much money on me");
+					say(player, n, "I don't have that much money on me");
 				}
 			}
 		} else {
-			NORMAL_ALES(p, n);
+			NORMAL_ALES(player, n);
 		}
 	}
 
-	private void NORMAL_ALES(Player p, Npc n) {
-		playerTalk(p, n, "Hi, what ales are you serving?");
-		npcTalk(p,
+	private void NORMAL_ALES(Player player, Npc n) {
+		say(player, n, "Hi, what ales are you serving?");
+		npcsay(player,
 			n,
 			"Well you can either have a nice Asgarnian Ale or a Wizards Mind Bomb",
 			"Or a Dwarven Stout");
@@ -67,39 +66,39 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 		String[] options = new String[]{"One Asgarnian Ale please",
 			"I'll try the mind bomb", "Can I have a Dwarven Stout?",
 			"I don't feel like any of those"};
-		int option = showMenu(p, n, options);
+		int option = multi(player, n, options);
 		switch (option) {
 			case 0:
-				npcTalk(p, n, "That'll be two gold");
+				npcsay(player, n, "That'll be two gold");
 
-				if (hasItem(p, ItemId.COINS.id(), 2)) {
-					p.message("You buy an Asgarnian Ale");
-					p.getInventory().remove(ItemId.COINS.id(), 2);
-					p.getInventory().add(new Item(ItemId.ASGARNIAN_ALE.id(), 1));
+				if (ifheld(player, ItemId.COINS.id(), 2)) {
+					player.message("You buy an Asgarnian Ale");
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.ASGARNIAN_ALE.id()));
 				} else {
-					playerTalk(p, n, notEnoughMoney);
+					say(player, n, notEnoughMoney);
 				}
 				break;
 			case 1:
-				npcTalk(p, n, "That'll be two gold");
+				npcsay(player, n, "That'll be two gold");
 
-				if (hasItem(p, ItemId.COINS.id(), 2)) {
-					p.message("You buy a pint of Wizard's Mind Bomb");
-					p.getInventory().remove(ItemId.COINS.id(), 2);
-					p.getInventory().add(new Item(ItemId.WIZARDS_MIND_BOMB.id(), 1));
+				if (ifheld(player, ItemId.COINS.id(), 2)) {
+					player.message("You buy a pint of Wizard's Mind Bomb");
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.WIZARDS_MIND_BOMB.id()));
 				} else {
-					playerTalk(p, n, notEnoughMoney);
+					say(player, n, notEnoughMoney);
 				}
 				break;
 			case 2:
-				npcTalk(p, n, "That'll be three gold");
+				npcsay(player, n, "That'll be three gold");
 
-				if (hasItem(p, ItemId.COINS.id(), 3)) {
-					p.message("You buy a pint of Dwarven Stout");
-					p.getInventory().remove(ItemId.COINS.id(), 3);
-					p.getInventory().add(new Item(ItemId.DWARVEN_STOUT.id(), 1));
+				if (ifheld(player, ItemId.COINS.id(), 3)) {
+					player.message("You buy a pint of Dwarven Stout");
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 3));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.DWARVEN_STOUT.id(), 1));
 				} else {
-					playerTalk(p, n, notEnoughMoney);
+					say(player, n, notEnoughMoney);
 				}
 				break;
 			case 3:
@@ -107,26 +106,26 @@ public final class Barmaid implements TalkToNpcExecutiveListener,
 		}
 	}
 
-	private void drinkAle(Player p) {
+	private void drinkAle(Player player) {
 		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.RANGED, Skills.FISHING};
 		for (int i = 0; i < skillIDs.length; i++) {
-			setAleEffect(p, skillIDs[i]);
+			setAleEffect(player, skillIDs[i]);
 		}
 	}
 
-	private void setAleEffect(Player p, int skillId) {
+	private void setAleEffect(Player player, int skillId) {
 		int reduction, currentStat, maxStat;
-		maxStat = p.getSkills().getMaxStat(skillId);
+		maxStat = player.getSkills().getMaxStat(skillId);
 		//estimated
 		reduction = maxStat < 15 ? 5 :
 			maxStat < 45 ? 6 :
 			maxStat < 75 ? 7 : 8;
-		currentStat = p.getSkills().getLevel(skillId);
+		currentStat = player.getSkills().getLevel(skillId);
 		if (currentStat <= 8) {
-			p.getSkills().setLevel(skillId, Math.max(currentStat - reduction, 0));
+			player.getSkills().setLevel(skillId, Math.max(currentStat - reduction, 0));
 		}
 		else {
-			p.getSkills().setLevel(skillId, currentStat - reduction);
+			player.getSkills().setLevel(skillId, currentStat - reduction);
 		}
 	}
 

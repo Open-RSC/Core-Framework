@@ -5,8 +5,6 @@ import com.openrsc.server.model.world.World;
 
 /**
  * Event which only executes once
- *
- * @author n0m
  */
 public abstract class SingleEvent extends DelayedEvent {
 

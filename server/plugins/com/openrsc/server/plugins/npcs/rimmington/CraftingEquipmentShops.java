@@ -8,15 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public final class CraftingEquipmentShops implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class CraftingEquipmentShops extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 5000, 100, 65, 2,
 		new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.RING_MOULD.id(), 4), new Item(ItemId.NECKLACE_MOULD.id(), 2),
@@ -24,7 +20,7 @@ public final class CraftingEquipmentShops implements ShopInterface,
 		new Item(ItemId.HOLY_SYMBOL_MOULD.id(), 3));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.ROMMIK.id() || n.getID() == NpcId.DOMMIK.id();
 	}
 
@@ -39,15 +35,19 @@ public final class CraftingEquipmentShops implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Would you like to buy some crafting equipment");
-		int option = showMenu(p, n, "No I've got all the crafting equipment I need", "Let's see what you've got then");
-		if (option == 0) {
-			npcTalk(p, n, "Ok fair well on your travels");
-		} else if (option == 1) {
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
-		}
+	public Shop getShop() {
+		return shop;
 	}
 
+	@Override
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Would you like to buy some crafting equipment");
+		int option = multi(player, n, "No I've got all the crafting equipment I need", "Let's see what you've got then");
+		if (option == 0) {
+			npcsay(player, n, "Ok fair well on your travels");
+		} else if (option == 1) {
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
+		}
+	}
 }

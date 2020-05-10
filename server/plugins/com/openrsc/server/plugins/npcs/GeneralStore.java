@@ -8,15 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public final class GeneralStore implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class GeneralStore extends AbstractShop {
 
 	public static Item[] shop_items = new Item[]{new Item(ItemId.POT.id(), 3),
 		new Item(ItemId.JUG.id(), 2), new Item(ItemId.SHEARS.id(), 2), new Item(ItemId.BUCKET.id(), 2),
@@ -30,7 +26,7 @@ public final class GeneralStore implements ShopInterface,
 	private Shop[] shops = null;
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		for (final Shop s : shops) {
 			if (s != null) {
 				for (final int i : s.ownerIDs) {
@@ -67,7 +63,35 @@ public final class GeneralStore implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public Shop getShop() {
+		throw new RuntimeException("Method not used.");
+	}
+
+	@Override
+	public void onTalkNpc(final Player p, final Npc n) {
+		Shop shop = getShop(n, p);
+		if (shop != null) {
+			npcsay(p, n, "Can I help you at all?");
+			int menu = multi(p, n, "Yes please, what are you selling?", "No thanks");
+			if (menu == 0) {
+				npcsay(p, n, "Take a look");
+
+				p.setAccessingShop(shop);
+				ActionSender.showShop(p, shop);
+			}
+		}
+	}
+
+	@Override
+	public void onOpNpc(Player player, Npc n, String command) {
+		Shop shop = getShop(n, player);
+		if (command.equalsIgnoreCase("Trade") && player.getWorld().getServer().getConfig().RIGHT_CLICK_TRADE) {
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
+		}
+	}
+
+	private Shop getShop(Npc n, Player player) {
 		boolean found = false;
 		Shop shp = null;
 		for (final Shop s : shops) {
@@ -81,12 +105,12 @@ public final class GeneralStore implements ShopInterface,
 			}
 		}
 		if (!found) {
-			return;
+			return null;
 		}
 
 		final Shop shap = shp;
 
-		final Point location = p.getLocation();
+		final Point location = player.getLocation();
 
 		Shop shop = shap;
 
@@ -100,19 +124,6 @@ public final class GeneralStore implements ShopInterface,
 			&& location.getY() >= 513 && location.getY() <= 518) {
 			shop = shops[1];
 		}
-
-		if (found) {
-			if (shop != null) {
-				npcTalk(p, n, "Can I help you at all?");
-				int menu = showMenu(p, n, "Yes please, what are you selling?", "No thanks");
-				if (menu == 0) {
-					npcTalk(p, n, "Take a look");
-
-					p.setAccessingShop(shop);
-					ActionSender.showShop(p, shop);
-				}
-			}
-		}
+		return shop;
 	}
-
 }

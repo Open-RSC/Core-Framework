@@ -5,97 +5,92 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.action.NpcCommandListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.NpcCommandExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
+import com.openrsc.server.plugins.triggers.OpNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, NpcCommandListener, NpcCommandExecutiveListener {
+public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Gundai.class);
 	@Override
-	public void onTalkToNpc(final Player player, final Npc n) {
-		playerTalk(player, n, "hello, what are you doing out here?");
-		npcTalk(player, n, "why i'm a banker, the only one around these dangerous parts");
-		Menu defaultMenu = new Menu();
-		defaultMenu.addOption(new Option("cool, I'd like to access my bank account please") {
-			@Override
-			public void action() {
-				if (player.isIronMan(IronmanMode.Ultimate.id())) {
-					player.message("As an Ultimate Iron Man, you cannot use the bank.");
-					return;
-				}
+	public void onTalkNpc(final Player player, final Npc n) {
+		say(player, n, "hello, what are you doing out here?");
+		npcsay(player, n, "why i'm a banker, the only one around these dangerous parts");
 
-				if(validateBankPin(player)) {
-					npcTalk(player, n, "no problem");
-					player.setAccessingBank(true);
-					ActionSender.showBank(player);
-				}
+		ArrayList<String> options = new ArrayList<>();
+
+		String optionBank = "cool, I'd like to access my bank account please";
+		options.add(optionBank);
+
+		String optionPin = "I'd like to talk about bank pin";
+		if (player.getWorld().getServer().getConfig().WANT_BANK_PINS)
+			options.add(optionPin);
+
+		String optionCollect = "I'd like to collect my items from auction";
+		if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS)
+			options.add(optionCollect);
+
+		String optionGoodbye = "Well, now i know";
+		options.add(optionGoodbye);
+
+		String finalOptions[] = new String[options.size()];
+		int option = multi(player, n, options.toArray(finalOptions));
+		if (option == -1) return;
+		if (options.get(option).equalsIgnoreCase(optionBank)) {
+			if (player.isIronMan(IronmanMode.Ultimate.id())) {
+				player.message("As an Ultimate Iron Man, you cannot use the bank.");
+				return;
 			}
-		});
-		if (player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
-			defaultMenu.addOption(new Option("I'd like to talk about bank pin") {
-				@Override
-				public void action() {
-					int menu = showMenu(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
-					if (menu == 0) {
-						setBankPin(player);
-					} else if (menu == 1) {
-						changeBankPin(player);
-					} else if (menu == 2) {
-						removeBankPin(player);
-					}
-				}
-			});
-		}
 
-		if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
-			defaultMenu.addOption(new Option("I'd like to collect my items from auction") {
-				@Override
-				public void action() {
-					if(validateBankPin(player)) {
-						player.getWorld().getMarket().addPlayerCollectItemsTask(player);
-					}
-				}
-			});
-		}
-
-		defaultMenu.addOption(new Option("Well, now i know") {
-			@Override
-			public void action() {
-				npcTalk(player, n, "knowledge is power my friend");
+			if(validatebankpin(player)) {
+				npcsay(player, n, "no problem");
+				player.setAccessingBank(true);
+				ActionSender.showBank(player);
 			}
-		});
-		defaultMenu.showMenu(player);
+		} else if (options.get(option).equalsIgnoreCase(optionPin)) {
+			int menu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
+			if (menu == 0) {
+				setbankpin(player);
+			} else if (menu == 1) {
+				changebankpin(player);
+			} else if (menu == 2) {
+				removebankpin(player);
+			}
+		} else if (options.get(option).equalsIgnoreCase(optionCollect)) {
+			if(validatebankpin(player)) {
+				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
+			}
+		} else if (options.get(option).equalsIgnoreCase(optionGoodbye)) {
+			npcsay(player, n, "knowledge is power my friend");
+		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.GUNDAI.id();
 	}
 
 	@Override
-	public void onNpcCommand(Npc n, String command, Player p) {
+	public void onOpNpc(Player player, Npc n, String command) {
 		if (n.getID() == NpcId.GUNDAI.id()) {
 			if (command.equalsIgnoreCase("Bank")) {
-				quickFeature(n, p, false);
-			} else if (p.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
-				quickFeature(n, p, true);
+				quickFeature(n, player, false);
+			} else if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
+				quickFeature(n, player, true);
 			}
 		}
 	}
 
 	@Override
-	public boolean blockNpcCommand(Npc n, String command, Player p) {
+	public boolean blockOpNpc(Player player, Npc n, String command) {
 		if (n.getID() == NpcId.GUNDAI.id() && command.equalsIgnoreCase("Bank")) {
 			return true;
 		}
-		if (n.getID() == NpcId.GUNDAI.id() && p.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
+		if (n.getID() == NpcId.GUNDAI.id() && player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
 			return true;
 		}
 		return false;
@@ -107,7 +102,7 @@ public class Gundai implements TalkToNpcExecutiveListener, TalkToNpcListener, Np
 			return;
 		}
 
-		if(validateBankPin(player)) {
+		if(validatebankpin(player)) {
 			if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && auction) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			} else {

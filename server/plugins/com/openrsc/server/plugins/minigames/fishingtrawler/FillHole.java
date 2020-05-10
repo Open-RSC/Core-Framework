@@ -1,29 +1,28 @@
 package com.openrsc.server.plugins.minigames.fishingtrawler;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.delloc;
+import static com.openrsc.server.plugins.Functions.mes;
 
-import com.openrsc.server.constants.ItemId;
-
-public class FillHole implements ObjectActionExecutiveListener, ObjectActionListener {
+public class FillHole implements OpLocTrigger {
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
-		player.setBusyTimer(650);
-		if (removeItem(player, ItemId.SWAMP_PASTE.id(), 1)) {
-			removeObject(obj);
-			message(player, 0, "you fill the hole with swamp paste");
+	public void onOpLoc(Player player, GameObject obj, String command) {
+		if (player.getCarriedItems().remove(new Item(ItemId.SWAMP_PASTE.id())) != -1) {
+			delloc(obj);
+			mes(player, 0, "you fill the hole with swamp paste");
 		} else {
-			message(player, 0, "you'll need some swamp paste to fill that");
+			mes(player, 0, "you'll need some swamp paste to fill that");
 		}
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == 1077 || obj.getID() == 1071;
 	}
 }

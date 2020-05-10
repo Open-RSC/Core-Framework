@@ -5,8 +5,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Holds all the values for appearance updates
- *
- * @author n0m
  */
 public class UpdateFlags {
 

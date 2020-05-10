@@ -1,20 +1,14 @@
 package com.openrsc.server.login;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.model.Skills;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 /**
  * Used to create a Character on the Login thread
- *
- * @author Kenix
  */
 public class CharacterCreateRequest extends LoginExecutorProcess{
 
@@ -105,13 +99,9 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				}
 			}
 
-
-			ResultSet set = getServer().getDatabase().getConnection().executeQuery("SELECT 1 FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE creation_ip='" + getIpAddress()
-				+ "' AND creation_date>'" + ((System.currentTimeMillis() / 1000) - 60) + "'"); // Checks to see if the player has been registered by the same IP address in the past 1 minute
-
 			if (getServer().getConfig().WANT_REGISTRATION_LIMIT) {
-				if (set.next()) {
-					set.close();
+				boolean recentlyRegistered = getServer().getDatabase().checkRecentlyRegistered(getIpAddress());
+				if (recentlyRegistered) {
 					LOGGER.info(getIpAddress() + " - Registration failed: Registered recently.");
 					getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 5).toPacket());
 					getChannel().close();
@@ -119,9 +109,8 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				}
 			}
 
-			set = getServer().getDatabase().getConnection().executeQuery("SELECT 1 FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE `username`='" + getUsername() + "'");
-			if (set.next()) {
-				set.close();
+			boolean usernameExists = getServer().getDatabase().playerExists(getUsername());
+			if (usernameExists) {
 				LOGGER.info(getIpAddress() + " - Registration failed: Forum Username already in use.");
 				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 2).toPacket());
 				getChannel().close();
@@ -129,62 +118,16 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			}
 
 			/* Create the game character */
-			PreparedStatement statement = getServer().getDatabase().getConnection().prepareStatement(
-				"INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "players` (`username`, email, `pass`, `creation_date`, `creation_ip`) VALUES (?, ?, ?, ?, ?)");
-			statement.setString(1, getUsername());
-			statement.setString(2, email);
-			statement.setString(3, DataConversions.hashPassword(getPassword(), null));
-			statement.setLong(4, System.currentTimeMillis() / 1000);
-			statement.setString(5, getIpAddress());
-			try{statement.executeUpdate();}
-			finally{statement.close();}
+			final int playerId = getServer().getDatabase().createPlayer(getUsername(), getEmail(),
+				DataConversions.hashPassword(getPassword(), null),
+				System.currentTimeMillis() / 1000, getIpAddress());
 
-
-			/* PlayerID of the player account */
-			statement = getServer().getDatabase().getConnection().prepareStatement("SELECT id FROM " + getServer().getConfig().MYSQL_TABLE_PREFIX + "players WHERE username=?");
-			statement.setString(1, getUsername());
-
-			set = statement.executeQuery();
-
-			if (!set.next()) {
+			if (playerId == -1) {
 				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 6).toPacket());
 				LOGGER.info(getIpAddress() + " - Registration failed: Player id not found.");
 				return;
 			}
 
-			int playerID = set.getInt("id");
-
-			statement = getServer().getDatabase().getConnection().prepareStatement("INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "curstats` (`playerID`) VALUES (?)");
-			statement.setInt(1, playerID);
-			try{statement.executeUpdate();}
-			finally{statement.close();}
-
-			statement = getServer().getDatabase().getConnection().prepareStatement("INSERT INTO `" + getServer().getConfig().MYSQL_TABLE_PREFIX + "experience` (`playerID`) VALUES (?)");
-			statement.setInt(1, playerID);
-			try{statement.executeUpdate();}
-			finally{statement.close();}
-
-			//Don't rely on the default values of the database.
-			//Update the stats based on their StatDef-----------------------------------------------
-			statement = getServer().getDatabase().getConnection().prepareStatement(getServer().getDatabase().getQueries().updateExperience);
-			statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, playerID);
-			Skills newGuy = new Skills(getServer().getWorld(), null);
-
-			for (int index = 0; index < getServer().getConstants().getSkills().getSkillsCount(); index++)
-				statement.setInt(index + 1, newGuy.getExperience(index));
-			try{statement.executeUpdate();}
-			finally{statement.close();}
-
-			statement = getServer().getDatabase().getConnection().prepareStatement(getServer().getDatabase().getQueries().updateStats);
-			statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, playerID);
-			for (int index = 0; index < getServer().getConstants().getSkills().getSkillsCount(); index++)
-				statement.setInt(index + 1, newGuy.getLevel(index));
-			try{statement.executeUpdate();}
-			finally{statement.close();}
-			//---------------------------------------------------------------------------------------
-
-			statement.close();
-			set.close();
 			LOGGER.info(getIpAddress() + " - Registration successful");
 			getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
 		} catch (Exception e) {

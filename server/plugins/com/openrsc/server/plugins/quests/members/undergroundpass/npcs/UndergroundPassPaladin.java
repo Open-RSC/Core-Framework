@@ -5,38 +5,38 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.PlayerKilledNpcListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerKilledNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassPaladin implements TalkToNpcListener,
-	TalkToNpcExecutiveListener, PlayerKilledNpcListener, PlayerKilledNpcExecutiveListener {
+public class UndergroundPassPaladin implements TalkNpcTrigger,
+	KillNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.PALADIN_UNDERGROUND_BEARD.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
-		switch (p.getQuestStage(Quests.UNDERGROUND_PASS)) {
+	public void onTalkNpc(Player player, Npc n) {
+		switch (player.getQuestStage(Quests.UNDERGROUND_PASS)) {
 			case 4:
-				playerTalk(p, n, "hello paladin");
-				if (!p.getCache().hasKey("paladin_food")) {
-					npcTalk(p, n, "you've done well to get this far traveller, here eat");
-					p.message("the paladin gives you some food");
-					addItem(p, ItemId.MEAT_PIE.id(), 2);
-					addItem(p, ItemId.STEW.id(), 1);
-					addItem(p, ItemId.BREAD.id(), 2);
-					addItem(p, ItemId.TWO_ATTACK_POTION.id(), 1);
-					addItem(p, ItemId.TWO_RESTORE_PRAYER_POTION.id(), 1);
-					p.getCache().store("paladin_food", true);
-					playerTalk(p, n, "thanks");
+				say(player, n, "hello paladin");
+				if (!player.getCache().hasKey("paladin_food")) {
+					npcsay(player, n, "you've done well to get this far traveller, here eat");
+					player.message("the paladin gives you some food");
+					give(player, ItemId.MEAT_PIE.id(), 2);
+					give(player, ItemId.STEW.id(), 1);
+					give(player, ItemId.BREAD.id(), 2);
+					give(player, ItemId.TWO_ATTACK_POTION.id(), 1);
+					give(player, ItemId.TWO_RESTORE_PRAYER_POTION.id(), 1);
+					player.getCache().store("paladin_food", true);
+					say(player, n, "thanks");
 				}
-				npcTalk(p, n, "you should leave this place now traveller",
+				npcsay(player, n, "you should leave this place now traveller",
 					"i heard the crashing of rocks further down the cavern",
 					"iban must be restless",
 					"i have no doubt that zamorak still controls these caverns",
@@ -49,40 +49,40 @@ public class UndergroundPassPaladin implements TalkToNpcListener,
 			case 7:
 			case 8:
 			case -1:
-				playerTalk(p, n, "hello");
-				npcTalk(p, n, "you again, die zamorakian scum");
-				n.startCombat(p);
+				say(player, n, "hello");
+				npcsay(player, n, "you again, die zamorakian scum");
+				n.startCombat(player);
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockPlayerKilledNpc(Player p, Npc n) {
+	public boolean blockKillNpc(Player player, Npc n) {
 		return n.getID() == NpcId.PALADIN_UNDERGROUND_BEARD.id() || n.getID() == NpcId.PALADIN_UNDERGROUND.id();
 	}
 
 	@Override
-	public void onPlayerKilledNpc(Player p, Npc n) {
+	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.PALADIN_UNDERGROUND_BEARD.id()) {
-			n.killedBy(p);
-			message(p, "the paladin slumps to the floor",
+			n.killedBy(player);
+			mes(player, "the paladin slumps to the floor",
 				"you search his body");
-			if (!hasItem(p, ItemId.COAT_OF_ARMS_RED.id())) {
-				addItem(p, ItemId.COAT_OF_ARMS_RED.id(), 1);
-				p.message("and find a paladin coat of arms");
+			if (!player.getCarriedItems().hasCatalogID(ItemId.COAT_OF_ARMS_RED.id(), Optional.empty())) {
+				give(player, ItemId.COAT_OF_ARMS_RED.id(), 1);
+				player.message("and find a paladin coat of arms");
 			} else {
-				p.message("but find nothing");
+				player.message("but find nothing");
 			}
 		}
 		else if (n.getID() == NpcId.PALADIN_UNDERGROUND.id()) {
-			n.killedBy(p);
-			message(p, "the paladin slumps to the floor",
+			n.killedBy(player);
+			mes(player, "the paladin slumps to the floor",
 				"you search his body");
-			if (!hasItem(p, ItemId.COAT_OF_ARMS_BLUE.id(), 2)) {
-				addItem(p, ItemId.COAT_OF_ARMS_BLUE.id(), 1);
-				p.message("and find a paladin coat of arms");
+			if (!ifheld(player, ItemId.COAT_OF_ARMS_BLUE.id(), 2)) {
+				give(player, ItemId.COAT_OF_ARMS_BLUE.id(), 1);
+				player.message("and find a paladin coat of arms");
 			} else {
-				p.message("but find nothing");
+				player.message("but find nothing");
 			}
 		}
 	}

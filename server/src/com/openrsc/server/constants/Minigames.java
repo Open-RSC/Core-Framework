@@ -1,9 +1,5 @@
 package com.openrsc.server.constants;
 
-/**
- * Author: Kenix
- */
-
 public final class Minigames {
 	public static final int ALFRED_GRIMHANDS_BARCRAWL = 0;
 	public static final int MAGE_ARENA = 1;

@@ -5,40 +5,43 @@ import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.handlers.SpellHandler;
-import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.action.PlayerMageItemListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerMageItemExecutiveListener;
+import com.openrsc.server.plugins.triggers.SpellInvTrigger;
 
-import static com.openrsc.server.plugins.Functions.sleep;
+import java.util.Optional;
 
-public class EnchantDragonstoneRing implements PlayerMageItemListener, PlayerMageItemExecutiveListener {
+import static com.openrsc.server.plugins.Functions.*;
+
+public class EnchantDragonstoneRing implements SpellInvTrigger {
 	@Override
-	public boolean blockPlayerMageItem(Player p, Integer itemID, Integer spellID) {
-		return (p.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
+	public boolean blockSpellInv(Player player, Integer invIndex, Integer itemID, Integer spellID) {
+		return (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
 	}
 
 	@Override
-	public void onPlayerMageItem(Player p, Integer itemID, Integer spellID) {
-		SpellDef spellDef = p.getWorld().getServer().getEntityHandler().getSpellDef(spellID.intValue());
+	public void onSpellInv(Player player, Integer invIndex, Integer itemID, Integer spellID) {
+		SpellDef spellDef = player.getWorld().getServer().getEntityHandler().getSpellDef(spellID.intValue());
 		if (spellDef == null)
 			return;
-
+		Item item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(ItemId.DRAGONSTONE_RING.id(), Optional.of(false)));
+		if (item == null) return;
 		if (itemID.intValue() == ItemId.DRAGONSTONE_RING.id()) {
-			p.message("What type of dragonstone ring would you like to make?");
-			sleep(600);
-			int choice = Functions.showMenu(p, "Ring of Wealth", "Ring of Avarice");
-			int item;
+			player.message("What type of dragonstone ring would you like to make?");
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			int choice = multi(player, "Ring of Wealth", "Ring of Avarice");
+			int i;
 			if (choice == 0) {
-				item = ItemId.RING_OF_WEALTH.id();
+				i = ItemId.RING_OF_WEALTH.id();
 			} else if (choice == 1) {
-				item = ItemId.RING_OF_AVARICE.id();
+				i = ItemId.RING_OF_AVARICE.id();
 			} else {
 				return;
 			}
-			SpellHandler.checkAndRemoveRunes(p,spellDef);
-			p.getInventory().remove(ItemId.DRAGONSTONE_RING.id(), 1, false);
-			p.getInventory().add(new Item(item));
-			SpellHandler.finalizeSpell(p, spellDef, "You succesfully enchant the ring");
+			SpellHandler.checkAndRemoveRunes(player,spellDef);
+			Item toRemove = new Item(item.getCatalogId(), 1, false, item.getItemId());
+			player.getCarriedItems().remove(toRemove);
+			player.getCarriedItems().getInventory().add(new Item(i));
+			SpellHandler.finalizeSpell(player, spellDef, "You succesfully enchant the ring");
 		}
 	}
 	/*@Override
@@ -55,7 +58,7 @@ public class EnchantDragonstoneRing implements PlayerMageItemListener, PlayerMag
 		if (itemID == ItemId.DRAGONSTONE_RING.id()) {
 			player.message("What type of dragonstone ring would you like to make?");
 			sleep(600);
-			int choice = Functions.showMenu(player, "Ring of Wealth", "Ring of Avarice");
+			int choice = showMenu(player, "Ring of Wealth", "Ring of Avarice");
 			if (choice == 0) {
 				itemID = ItemId.RING_OF_WEALTH.id();
 			} else if (choice == 1) {
@@ -65,8 +68,8 @@ public class EnchantDragonstoneRing implements PlayerMageItemListener, PlayerMag
 				return;
 			}
 			SpellHandler.checkAndRemoveRunes(player,spellDef);
-			player.getInventory().remove(ItemId.DRAGONSTONE_RING.id());
-			player.getInventory().add(new Item(itemID));
+			player.getCarriedItems().getInventory().remove(ItemId.DRAGONSTONE_RING.id());
+			player.getCarriedItems().getInventory().add(new Item(itemID));
 			SpellHandler.finalizeSpell(player, spellDef);
 		}
 	}*/

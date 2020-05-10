@@ -1,6 +1,10 @@
 package com.openrsc.server.event.rsc;
 
+import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.player.ScriptContext;
+import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.plugins.PluginInterruptedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,24 +29,34 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	private volatile boolean initialized = false;
 	private volatile boolean threadRunning = false;
 	private volatile boolean tickCompleted = false;
+	private volatile Thread pluginThread;
 
-	public PluginTask(final World world) {
-		super(world, null, 0, null, true);
+	private final ScriptContext scriptContext;
+	private final Object[] data;
+	private final Action action;
+
+	public PluginTask(final World world, final Player owner, final String pluginInterface, final Object[] data) {
+		super(world, owner, 0, null, true);
+		this.data = data;
+		this.action = Action.getActionFromPlugin(pluginInterface);
+		this.scriptContext = new ScriptContext(world, this, owner != null ? owner.getIndex() : null);
+
+		if(this.action == null) {
+			throw new IllegalArgumentException("Cannot locate action from Plugin: " + pluginInterface);
+		}
 	}
 
-	public Integer call() {
-		synchronized(this) {
-			try {
-				setInitialized(true);
-				registerPluginThread();
-				final int result = action();
-				unregisterPluginThread();
-				return result;
-			} catch (final Exception ex) {
-				LOGGER.catching(ex);
-				unregisterPluginThread();
-				return 0;
-			}
+	public synchronized Integer call() {
+		try {
+			setInitialized(true);
+			registerPluginThread();
+			final int result = action();
+			stop();
+			return result;
+		} catch(final Exception ex) {
+			LOGGER.catching(ex);
+			stop();
+			return 0;
 		}
 	}
 
@@ -50,7 +64,15 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 
 	public void run() {
 		setDelayTicks(0);
+		setThreadRunning(true);
+		setTickCompleted(false);
 		notifyAll();
+	}
+
+	@Override
+	public synchronized void stop() {
+		super.stop();
+		unregisterPluginThread();
 	}
 
 	public synchronized void pause(final int ticks) {
@@ -62,23 +84,32 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 			setThreadRunning(true);
 			setTickCompleted(false);
 		} catch (final InterruptedException ex) {
-			throw new PluginInterruptedException();
+			throw new PluginInterruptedException("pause() was interrupted", ex);
 		}
 	}
 
 	private synchronized void registerPluginThread() {
-		final String threadName = Thread.currentThread().getName();
+		pluginThread = Thread.currentThread();
+		final String threadName = getPluginThread().getName();
 		setThreadRunning(true);
 		setTickCompleted(false);
 		tasksMap.put(threadName, this);
+		getScriptContext().startScript(action, data);
 	}
 
 	private synchronized void unregisterPluginThread() {
-		// TODO: Need a way to stop the plugin Thread
-		final String threadName = Thread.currentThread().getName();
-		setThreadRunning(false);
-		setTickCompleted(false);
-		tasksMap.remove(threadName);
+		// Save the original thread to interrupt it after closing down data for the Plugin representation
+		final Thread thread = getPluginThread();
+
+		if(thread != null) {
+			setThreadRunning(false);
+			setTickCompleted(false);
+			tasksMap.remove(thread.getName());
+			pluginThread = null;
+			getScriptContext().endScript();
+
+			thread.interrupt();
+		}
 	}
 
 	public synchronized boolean isInitialized() {
@@ -105,5 +136,11 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		this.tickCompleted = tickCompleted;
 	}
 
-	public class PluginInterruptedException extends RuntimeException {}
+	public synchronized Thread getPluginThread() {
+		return pluginThread;
+	}
+
+	public synchronized ScriptContext getScriptContext() {
+		return scriptContext;
+	}
 }

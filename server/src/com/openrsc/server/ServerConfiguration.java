@@ -1,6 +1,7 @@
 package com.openrsc.server;
 
 import com.google.common.collect.ImmutableList;
+import com.openrsc.server.database.DatabaseType;
 import com.openrsc.server.util.YMLReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,8 +11,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-// Basically Rewritten by Ryan
 
 public class ServerConfiguration {
 
@@ -49,11 +48,12 @@ public class ServerConfiguration {
 	public int RESTART_DELAY;
 	public int RESTART_DELAY_2;
 	public int AGGRO_RANGE;
-	public String MYSQL_HOST;
-	public String MYSQL_DB;
-	public String MYSQL_USER;
-	public String MYSQL_PASS;
-	public String MYSQL_TABLE_PREFIX;
+	public DatabaseType DB_TYPE;
+	public String DB_HOST;
+	public String DB_NAME;
+	public String DB_USER;
+	public String DB_PASS;
+	public String DB_TABLE_PREFIX;
 	public int PLAYER_LEVEL_LIMIT;
 	public double COMBAT_EXP_RATE;
 	public double SKILLING_EXP_RATE;
@@ -80,7 +80,6 @@ public class ServerConfiguration {
 	public boolean DISPLAY_LOGO_SPRITE;
 	public boolean SPAWN_AUCTION_NPCS;
 	public boolean SPAWN_IRON_MAN_NPCS;
-	public boolean WANT_PK_BOTS;
 	public boolean SHOW_FLOATING_NAMETAGS;
 	public boolean WANT_CLANS;
 	public boolean WANT_KILL_FEED;
@@ -130,6 +129,7 @@ public class ServerConfiguration {
 	private String VALUABLE_DROP_ITEMS;
 	public boolean WANT_CUSTOM_RANK_DISPLAY;
 	public boolean RIGHT_CLICK_BANK;
+	public boolean RIGHT_CLICK_TRADE;
 	public boolean FIX_OVERHEAD_CHAT;
 	public boolean WANT_FATIGUE;
 	public int STOP_SKILLING_FATIGUED;
@@ -149,6 +149,7 @@ public class ServerConfiguration {
 	public boolean LOOTED_CHESTS_STUCK;
 	public boolean WANT_RUNECRAFTING;
 	public boolean WANT_HARVESTING;
+	public boolean WANT_CUSTOM_LEATHER;
 	public boolean WANT_DISCORD_AUCTION_UPDATES;
 	public String DISCORD_AUCTION_WEBHOOK_URL;
 	public boolean WANT_DISCORD_MONITORING_UPDATES;
@@ -176,6 +177,7 @@ public class ServerConfiguration {
 	public boolean LENIENT_CONTACT_DETAILS;
 	//loosened checks
 	public boolean LOOSE_SHALLOW_WATER_CHECK;
+	public boolean CUSTOM_PROTOCOL;
 	public int PACKET_LIMIT;
 	private int CONNECTION_LIMIT;
 	private int CONNECTION_TIMEOUT;
@@ -185,7 +187,7 @@ public class ServerConfiguration {
 	public boolean WANT_SHOW_KITTENS_CIVILLIAN;
 	public boolean WANT_BARTER_WORMBRAINS;
 	public boolean LOCKED_POST_QUEST_REGIONS_ACCESSIBLE;
-	private boolean CAN_RETRIEVE_POST_QUEST_ITEMS;
+	public boolean CAN_RETRIEVE_POST_QUEST_ITEMS;
 	public boolean CAN_USE_CRACKER_ON_SELF;
 
 	public int RING_OF_RECOIL_LIMIT;
@@ -195,9 +197,9 @@ public class ServerConfiguration {
 	public List<String> valuableDrops;
 	public boolean WANT_CUSTOM_UI;
 	public int CHARACTER_CREATION_MODE;
-	public boolean CHECK_ADMIN_IP;
-	public String ADMIN_IP;
-	public List<String> adminIp;
+	// public boolean CHECK_ADMIN_IP;
+	// public String ADMIN_IP;
+	// public List<String> adminIp;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -206,7 +208,8 @@ public class ServerConfiguration {
 
 	public String configFile;
 	private String[] deprecatedKeys = new String[]{
-		"bank_size", "want_password_massage"
+		"bank_size", "want_password_massage", "mysql_db",
+		"mysql_host", "mysql_user", "mysql_pass", "mysql_table_prefix"
 	};
 
 	/**
@@ -245,11 +248,12 @@ public class ServerConfiguration {
 		notifyDeprecated();
 
 		// Database settings
-		MYSQL_DB = tryReadString("mysql_db").orElse("openrsc");
-		MYSQL_HOST = tryReadString("mysql_host").orElse("localhost:3306");
-		MYSQL_USER = tryReadString("mysql_user").orElse("root");
-		MYSQL_PASS = tryReadString("mysql_pass").orElse("root");
-		MYSQL_TABLE_PREFIX = tryReadString("mysql_table_prefix").orElse("openrsc_");
+		DB_TYPE = DatabaseType.getByType(tryReadInt("db_type").orElse(0));
+		DB_NAME = tryReadString("db_name").orElse("openrsc");
+		DB_HOST = tryReadString("db_host").orElse("localhost:3306");
+		DB_USER = tryReadString("db_user").orElse("root");
+		DB_PASS = tryReadString("db_pass").orElse("root");
+		DB_TABLE_PREFIX = tryReadString("db_table_prefix").orElse("openrsc_");
 
 		// Discord settings
 		DISCORD_AUCTION_WEBHOOK_URL = tryReadString("discord_auction_webhook_url").orElse("null");
@@ -313,8 +317,11 @@ public class ServerConfiguration {
 		RING_OF_FORGING_USES = tryReadInt("ring_of_forging_uses").orElse(75);
 		DWARVEN_RING_USES = tryReadInt("dwarven_ring_uses").orElse(29);
 		DWARVEN_RING_BONUS = tryReadInt("dwarven_ring_bonus").orElse(3);
+		CUSTOM_PROTOCOL = tryReadBool("custom_protocol").orElse(false);
+		/*
 		CHECK_ADMIN_IP = tryReadBool("check_admin_ip").orElse(false);
 		ADMIN_IP = tryReadString("admin_ip").orElse("127.0.0.0,10.0.0.0,172.16.0.0,192.168.0.0");
+		*/
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
@@ -384,9 +391,9 @@ public class ServerConfiguration {
 		WANT_NEW_RARE_DROP_TABLES = tryReadBool("want_new_rare_drop_tables").orElse(false);
 		WANT_LEFTCLICK_WEBS = tryReadBool("want_leftclick_webs").orElse(false);
 		WANT_IMPROVED_PATHFINDING = tryReadBool("want_improved_pathfinding").orElse(false);
-		WANT_PK_BOTS = tryReadBool("want_pk_bots").orElse(false);
 		CAN_USE_CRACKER_ON_SELF = tryReadBool("can_use_cracker_on_self").orElse(false);
 		FIX_OVERHEAD_CHAT = tryReadBool("fix_overhead_chat").orElse(false);
+		WANT_CUSTOM_LEATHER = tryReadBool("want_custom_leather").orElse(false);
 
 		// Bank
 		RIGHT_CLICK_BANK = tryReadBool("right_click_bank").orElse(false);
@@ -395,6 +402,9 @@ public class ServerConfiguration {
 		WANT_BANK_NOTES = tryReadBool("want_bank_notes").orElse(false);
 		WANT_CERT_DEPOSIT = tryReadBool("want_cert_deposit").orElse(false);
 		WANT_CERTER_BANK_EXCHANGE = tryReadBool("want_certer_bank_exchange").orElse(false);
+
+		//Shop
+		RIGHT_CLICK_TRADE = tryReadBool("right_click_trade").orElse(false);
 
 		// NPC kills
 		NPC_KILL_LIST = tryReadBool("npc_kill_list").orElse(false);
@@ -425,7 +435,7 @@ public class ServerConfiguration {
 		CAN_RETRIEVE_POST_QUEST_ITEMS = tryReadBool("can_retrieve_post_quest_items").orElse(false);
 
 		valuableDrops = Arrays.asList(VALUABLE_DROP_ITEMS.split(","));
-		adminIp = Arrays.asList(ADMIN_IP.split(","));
+		// adminIp = Arrays.asList(ADMIN_IP.split(","));
 	}
 
 	// Notify the user if they have any deprecated
@@ -453,6 +463,7 @@ public class ServerConfiguration {
 				". Should be an integer. Terminating server.");
 			System.exit(1);
 		}
+		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
 	}
 
@@ -470,6 +481,7 @@ public class ServerConfiguration {
 				". Should be a double. Terminating server.");
 			System.exit(1);
 		}
+		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
 	}
 
@@ -491,6 +503,7 @@ public class ServerConfiguration {
 				System.exit(1);
 			}
 		}
+		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
 	}
 
@@ -501,6 +514,7 @@ public class ServerConfiguration {
 		if(serverProps.keyExists(key)) {
 			return Optional.of(serverProps.getAttribute(key));
 		}
+		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
 	}
 }

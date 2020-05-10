@@ -1,11 +1,11 @@
 package com.openrsc.server.content.market;
 
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.struct.AuctionItem;
+import com.openrsc.server.database.struct.ExpiredAuction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MarketDatabase {
@@ -23,24 +23,23 @@ public class MarketDatabase {
 
 	public boolean add(MarketItem item) {
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection().prepareStatement(
-				"INSERT INTO `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "auctions`(`itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time`) VALUES (?,?,?,?,?,?,?,?)");
-			statement.setInt(1, item.getItemID());
-			statement.setInt(2, item.getAmount());
-			statement.setInt(3, item.getAmountLeft());
-			statement.setInt(4, item.getPrice());
-			statement.setInt(5, item.getSeller());
-			statement.setString(6, item.getSellerName());
-			statement.setString(7, item.getBuyers());
-			statement.setLong(8, item.getTime());
-			try {statement.executeUpdate();}
-			finally {statement.close();}
+			AuctionItem auctionItem = new AuctionItem();
+			auctionItem.itemID = item.getCatalogID();
+			auctionItem.amount = item.getAmount();
+			auctionItem.amount_left = item.getAmountLeft();
+			auctionItem.price = item.getPrice();
+			auctionItem.seller = item.getSeller();
+			auctionItem.seller_username = item.getSellerName();
+			auctionItem.buyer_info = item.getBuyers();
+			auctionItem.time = item.getTime();
+
+			getMarket().getWorld().getServer().getDatabase().newAuction(auctionItem);
+
 			return true;
-		} catch (Throwable e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
+			return false;
 		}
-		return false;
 	}
 
 	public boolean addCollectableItem(String explanation, final int itemIndex, final int amount,
@@ -48,54 +47,39 @@ public class MarketDatabase {
 
 		final String finalExplanation = explanation.replaceAll("'", "");
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection().prepareStatement(
-				"INSERT INTO `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "expired_auctions`(`item_id`, `item_amount`, `time`, `playerID`, `explanation`) VALUES (?,?,?,?,?)");
-			statement.setInt(1, itemIndex);
-			statement.setInt(2, amount);
-			statement.setLong(3, System.currentTimeMillis() / 1000);
-			statement.setInt(4, playerID);
-			statement.setString(5, finalExplanation);
-			try{statement.executeUpdate();}
-			finally{statement.close();}
+			// Need to store in an array to pass to the database function;
+			ExpiredAuction[] expiredAuctions = new ExpiredAuction[1];
+
+			ExpiredAuction expiredAuction = new ExpiredAuction();
+			expiredAuction.item_id = itemIndex;
+			expiredAuction.item_amount = amount;
+			expiredAuction.time = System.currentTimeMillis() / 1000;
+			expiredAuction.playerID = playerID;
+			expiredAuction.explanation = finalExplanation;
+
+			expiredAuctions[0] = expiredAuction;
+			getMarket().getWorld().getServer().getDatabase().addExpiredAuction(expiredAuctions);
 			return true;
-		} catch (Throwable e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
+			return false;
 		}
-		return false;
 	}
 
 	public boolean cancel(MarketItem item) {
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection()
-				.prepareStatement("UPDATE `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "auctions` SET  `sold-out`='1', `was_cancel`='1' WHERE `auctionID`=?");
-			statement.setInt(1, item.getAuctionID());
-			try{statement.executeUpdate();}
-			finally{statement.close();}
+			getMarket().getWorld().getServer().getDatabase().cancelAuction(item.getAuctionID());
 			return true;
-		} catch (Throwable e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
+			return false;
 		}
-		return false;
 	}
 
 	public int getAuctionCount() {
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection()
-				.prepareStatement("SELECT count(*) as auction_count FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "auctions` WHERE `sold-out`='0'");
-			ResultSet result = statement.executeQuery();
-			try {
-				if (result.next()) {
-					int auctionCount = result.getInt("auction_count");
-					return auctionCount;
-				}
-			} finally {
-				statement.close();
-				result.close();
-			}
-		} catch (Throwable e) {
+			return getMarket().getWorld().getServer().getDatabase().auctionCount();
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
 		}
 		return 0;
@@ -103,20 +87,8 @@ public class MarketDatabase {
 
 	public int getMyAuctionsCount(int ownerID) {
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection()
-				.prepareStatement("SELECT count(*) as my_slots FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "auctions` WHERE `seller`='" + ownerID + "' AND `sold-out`='0'");
-			ResultSet result = statement.executeQuery();
-			try {
-				if (result.next()) {
-					int auctionCount = result.getInt("my_slots");
-					return auctionCount;
-				}
-			} finally {
-				statement.close();
-				result.close();
-			}
-		} catch (Throwable e) {
+			return getMarket().getWorld().getServer().getDatabase().playerAuctionCount(ownerID);
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
 		}
 		return 0;
@@ -124,112 +96,82 @@ public class MarketDatabase {
 
 	public MarketItem getAuctionItem(int auctionID) {
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection()
-				.prepareStatement("SELECT `auctionID`, `itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time` FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "auctions` WHERE `auctionID`= ? AND `sold-out` = '0'");
-			statement.setInt(1, auctionID);
-
-			ResultSet result = statement.executeQuery();
 			MarketItem retVal = null;
-			try {
-				if (result.next()) {
-					retVal = new MarketItem(result.getInt("auctionID"), result.getInt("itemID"),
-						result.getInt("amount"), result.getInt("amount_left"), result.getInt("price"),
-						result.getInt("seller"), result.getString("seller_username"), result.getString("buyer_info"), result.getLong("time"));
-				}
-			} finally {
-				statement.close();
-				result.close();
+			AuctionItem auctionItem = getMarket().getWorld().getServer().getDatabase().getAuctionItem(auctionID);
+			if (auctionItem != null) {
+				retVal = new MarketItem(auctionItem.auctionID, auctionItem.itemID, auctionItem.amount,
+					auctionItem.amount_left, auctionItem.price, auctionItem.seller, auctionItem.seller_username,
+					auctionItem.buyer_info, auctionItem.time);
 			}
-
 			return retVal;
-		} catch (SQLException e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
+			return null;
 		}
-		return null;
 	}
 
 	public ArrayList<MarketItem> getAuctionItemsOnSale() {
-		ArrayList<MarketItem> auctionItems = new ArrayList<>();
+		ArrayList<MarketItem> marketItems = new ArrayList<>();
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection()
-				.prepareStatement("SELECT `auctionID`, `itemID`, `amount`, `amount_left`, `price`, `seller`, `seller_username`, `buyer_info`, `time` FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "auctions` WHERE `sold-out`='0'");
-			ResultSet result = statement.executeQuery();
-			try {
-				while (result.next()) {
-					MarketItem auctionItem = new MarketItem(result.getInt("auctionID"), result.getInt("itemID"),
-						result.getInt("amount"), result.getInt("amount_left"), result.getInt("price"),
-						result.getInt("seller"), result.getString("seller_username"), result.getString("buyer_info"), result.getLong("time"));
-					auctionItems.add(auctionItem);
-				}
-			} finally {
-				statement.close();
-				result.close();
+			AuctionItem auctionItems[] = getMarket().getWorld().getServer().getDatabase().getAuctionItems();
+			for (AuctionItem item : auctionItems) {
+				MarketItem marketItem = new MarketItem(item.auctionID, item.itemID, item.amount, item.amount_left,
+					item.price, item.seller,item.seller_username,item.buyer_info,item.time);
+				marketItems.add(marketItem);
 			}
-		} catch (Throwable e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
 		}
-		return auctionItems;
+		return marketItems;
 	}
 
 	public boolean setSoldOut(MarketItem item) {
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection()
-				.prepareStatement("UPDATE `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "auctions` SET `amount_left`=?, `sold-out`=?, `buyer_info`=? WHERE `auctionID`=?");
-			statement.setInt(1, item.getAmountLeft());
-			statement.setInt(2, 1);
-			statement.setString(3, item.getBuyers());
-			statement.setInt(4, item.getAuctionID());
-			statement.executeUpdate();
+			AuctionItem auctionItem = new AuctionItem();
+			auctionItem.amount_left = item.getAmountLeft();
+			auctionItem.sold_out = 1;
+			auctionItem.buyer_info = item.getBuyers();
+			auctionItem.auctionID = item.getAuctionID();
+
+			getMarket().getWorld().getServer().getDatabase().setSoldOut(auctionItem);
+
 			return true;
-		} catch (Throwable e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
+			return false;
 		}
-		return false;
 	}
 
 	public boolean update(MarketItem item) {
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection().prepareStatement(
-				"UPDATE `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-					+ "auctions` SET `amount_left`=?, `price` = ?, `buyer_info`=? WHERE `auctionID`= ?");
-			statement.setInt(1, item.getAmountLeft());
-			statement.setInt(2, item.getPrice());
-			statement.setString(3, item.getBuyers());
-			statement.setInt(4, item.getAuctionID());
-			try{statement.executeUpdate();}
-			finally{statement.close();}
+			AuctionItem auctionItem = new AuctionItem();
+			auctionItem.amount_left = item.getAmountLeft();
+			auctionItem.price = item.getPrice();
+			auctionItem.buyer_info = item.getBuyers();
+			auctionItem.auctionID = item.getAuctionID();
+
+			getMarket().getWorld().getServer().getDatabase().updateAuction(auctionItem);
 			return true;
-		} catch (Throwable e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
+			return false;
 		}
-		return false;
 	}
 
-	public ArrayList<CollectableItem> getCollectableItemsFor(int player) {
-		ArrayList<CollectableItem> list = new ArrayList<>();
+	public ArrayList<CollectibleItem> getCollectibleItemsFor(int player) {
+		ArrayList<CollectibleItem> list = new ArrayList<>();
 		try {
-			PreparedStatement statement = getMarket().getWorld().getServer().getDatabase().getConnection().prepareStatement("SELECT `claim_id`, `item_id`, `item_amount`, `playerID`, `explanation` FROM `" + getMarket().getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX
-				+ "expired_auctions` WHERE `playerID` = ?  AND `claimed`= '0'");
-			statement.setInt(1, player);
-			ResultSet result = statement.executeQuery();
-			try {
-				while (result.next()) {
-					CollectableItem item = new CollectableItem();
-					item.claim_id = result.getInt("claim_id");
-					item.item_id = result.getInt("item_id");
-					item.item_amount = result.getInt("item_amount");
-					item.playerID = result.getInt("playerID");
-					item.explanation = result.getString("explanation");
-					list.add(item);
-				}
-			} finally {
-				statement.close();
-				result.close();
+			ExpiredAuction expiredAuctions[] = getMarket().getWorld().getServer().getDatabase().getCollectibleItems(player);
+			for (ExpiredAuction collectible : expiredAuctions) {
+				CollectibleItem item = new CollectibleItem();
+				item.claim_id = collectible.claim_id;
+				item.item_id = collectible.item_id;
+				item.item_amount = collectible.item_amount;
+				item.playerID = collectible.playerID;
+				item.explanation = collectible.explanation;
+				list.add(item);
 			}
-		} catch (SQLException e) {
+		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
 		}
 		return list;

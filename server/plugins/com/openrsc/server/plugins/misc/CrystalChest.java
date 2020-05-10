@@ -4,48 +4,45 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
 
-import static com.openrsc.server.plugins.Functions.removeItem;
-import static com.openrsc.server.plugins.Functions.replaceObjectDelayed;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class CrystalChest implements ObjectActionListener, ObjectActionExecutiveListener, InvUseOnObjectListener, InvUseOnObjectExecutiveListener {
+public class CrystalChest implements OpLocTrigger, UseLocTrigger {
 
 	private final int CRYSTAL_CHEST = 248;
 	private final int CRYSTAL_CHEST_OPEN = 247;
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == CRYSTAL_CHEST;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == CRYSTAL_CHEST) {
-			p.message("the chest is locked");
+			player.message("the chest is locked");
 		}
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return item.getID() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST;
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
+		return item.getCatalogId() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST;
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if (item.getID() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
+		if (item.getCatalogId() == ItemId.CRYSTAL_KEY.id() && obj.getID() == CRYSTAL_CHEST) {
 			int respawnTime = 1000;
 			player.message("you unlock the chest with your key");
-			replaceObjectDelayed(obj, respawnTime, CRYSTAL_CHEST_OPEN);
+			changeloc(obj, respawnTime, CRYSTAL_CHEST_OPEN);
 			player.message("You find some treasure in the chest");
 
-			removeItem(player, ItemId.CRYSTAL_KEY.id(), 1); // remove the crystal key.
+			player.getCarriedItems().remove(new Item(ItemId.CRYSTAL_KEY.id())); // remove the crystal key.
 			ArrayList<Item> loot = new ArrayList<Item>();
 			loot.add(new Item(ItemId.UNCUT_DRAGONSTONE.id(), 1));
 			int percent = DataConversions.random(0, 10000);
@@ -90,10 +87,10 @@ public class CrystalChest implements ObjectActionListener, ObjectActionExecutive
 			for (Item i : loot) {
 				if (i.getAmount() > 1 && !i.getDef(player.getWorld()).isStackable()) {
 					for (int x = 0; x < i.getAmount(); x++) {
-						player.getInventory().add(new Item(i.getID(), 1));
+						player.getCarriedItems().getInventory().add(new Item(i.getCatalogId(), 1));
 					}
 				} else {
-					player.getInventory().add(i);
+					player.getCarriedItems().getInventory().add(i);
 				}
 			}
 		}

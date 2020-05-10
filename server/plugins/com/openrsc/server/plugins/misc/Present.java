@@ -6,16 +6,13 @@ import com.openrsc.server.content.DropTable;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnPlayerExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class Present implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener, InvActionListener, InvActionExecutiveListener {
+public class Present implements UsePlayerTrigger, OpInvTrigger {
 
 	private static DropTable presentDrops;
 
@@ -258,8 +255,8 @@ public class Present implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveL
 	}
 
 	@Override
-	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		if (item.getID() == ItemId.PRESENT.id()) {
+	public void onUsePlayer(Player player, Player otherPlayer, Item item) {
+		if (item.getCatalogId() == ItemId.PRESENT.id()) {
 			if (otherPlayer.isIronMan(IronmanMode.Ironman.id()) || otherPlayer.isIronMan(IronmanMode.Ultimate.id())
 				|| otherPlayer.isIronMan(IronmanMode.Hardcore.id()) || otherPlayer.isIronMan(IronmanMode.Transfer.id())) {
 				player.message(otherPlayer.getUsername() + " is an Iron Man. " + (otherPlayer.isMale() ? "He" : "She") + " stands alone.");
@@ -271,28 +268,26 @@ public class Present implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveL
 				return;
 			}
 
-			player.setBusy(true);
-			//otherPlayer.setBusy(true);
 			player.face(otherPlayer);
 			otherPlayer.face(player);
 
-			showBubble(player, item);
+			thinkbubble(player, item);
 			player.message("You give a present to " + otherPlayer.getUsername());
 			otherPlayer.message(player.getUsername() + " handed you a present...");
-			Functions.sleep(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			otherPlayer.message("You unwrap the present and reach your hand inside...");
-			Functions.sleep(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 			Item prize = presentDrops.rollItem(false, otherPlayer);
 			String prizeName = prize.getDef(player.getWorld()).getName().toLowerCase();
 
 			player.message(otherPlayer.getUsername() + " got a " + prizeName + " from your present!");
 			otherPlayer.message("You take out a " + prizeName + ".");
-			Functions.sleep(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 			String playerDialogue;
 
-			if(prize.getID() == ItemId.COAL.id()) {
+			if(prize.getCatalogId() == ItemId.COAL.id()) {
 				switch(DataConversions.random(0, 8)) {
 					default:
 					case 0:
@@ -329,27 +324,24 @@ public class Present implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveL
 
 			player.getUpdateFlags().setChatMessage(new ChatMessage(player, playerDialogue, null));
 
-			otherPlayer.getInventory().add(prize);
-			player.getInventory().remove(item);
-
-			player.setBusy(false);
-			//otherPlayer.setBusy(false);
+			otherPlayer.getCarriedItems().getInventory().add(prize);
+			player.getCarriedItems().remove(item);
 		}
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		player.message("It would be selfish to keep this for myself");
 		player.message("I should give it to someone else");
 	}
 
 	@Override
-	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		return item.getID() == ItemId.PRESENT.id();
+	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
+		return item.getCatalogId() == ItemId.PRESENT.id();
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
-		return item.getID() == ItemId.PRESENT.id();
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
+		return item.getCatalogId() == ItemId.PRESENT.id();
 	}
 }

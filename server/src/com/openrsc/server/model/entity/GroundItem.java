@@ -18,6 +18,11 @@ public class GroundItem extends Entity {
 	private int amount;
 
 	/**
+	 * Is item noted?
+	 */
+	private boolean noted;
+
+	/**
 	 * Location definition of the item
 	 */
 	private ItemLoc loc = null;
@@ -29,7 +34,7 @@ public class GroundItem extends Entity {
 	/**
 	 * The time that the item was spawned
 	 */
-	private long spawnedTime = 0L;
+	private long spawnedTime;
 
 	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner) {
 		this(world, id, x, y, amount, owner, System.currentTimeMillis());
@@ -43,9 +48,18 @@ public class GroundItem extends Entity {
 		this(world, id, x, y, amount, null, spawnTime);
 	}
 
+	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner, final boolean noted) {
+		this(world, id, x, y, amount, owner, System.currentTimeMillis(), noted);
+	}
+
 	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner, final long spawnTime) {
+		this(world, id, x, y, amount, owner, spawnTime, false);
+	}
+
+	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner, final long spawnTime, final boolean noted) {
 		super(world);
 		setID(id);
+		setNoted(noted);
 		setAmount(amount);
 		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
 		spawnedTime = spawnTime;
@@ -78,10 +92,10 @@ public class GroundItem extends Entity {
 		return x == getX() && y == getY();
 	}
 
-	public boolean belongsTo(final Player p) {
-		if (p.getParty() != null) {
+	public boolean belongsTo(final Player player) {
+		if (player.getParty() != null) {
 			for (Player p2 : getWorld().getPlayers()) {
-				if (Objects.requireNonNull(p.getParty()).getPlayers().size() > 1 && p.getParty() != null && p.getParty() == p2.getParty()) {
+				if (Objects.requireNonNull(player.getParty()).getPlayers().size() > 1 && player.getParty() != null && player.getParty() == p2.getParty()) {
 					PartyPlayer p3 = p2.getParty().getLeader();
 					if (p3.getShareLoot() > 0) {
 						return true;
@@ -89,7 +103,7 @@ public class GroundItem extends Entity {
 				}
 			}
 		}
-		return p.getUsernameHash() == ownerUsernameHash || ownerUsernameHash == 0;
+		return player.getUsernameHash() == ownerUsernameHash || ownerUsernameHash == 0;
 	}
 
 	public void remove() {
@@ -104,14 +118,14 @@ public class GroundItem extends Entity {
 		super.remove();
 	}
 
-	public boolean isInvisibleTo(final Player p) {
-		if (belongsTo(p))
+	public boolean isInvisibleTo(final Player player) {
+		if (belongsTo(player))
 			return false;
 		if (getDef().isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD)
 			return true;
 		if (getDef().isUntradable())
 			return true;
-		if (!belongsTo(p) && p.getIronMan() >= IronmanMode.Ironman.id() && p.getIronMan() <= IronmanMode.Transfer.id())
+		if (!belongsTo(player) && player.getIronMan() >= IronmanMode.Ironman.id() && player.getIronMan() <= IronmanMode.Transfer.id())
 			return true;
 
 		// One minute and four seconds to show to all.
@@ -135,13 +149,19 @@ public class GroundItem extends Entity {
 		return ownerUsernameHash;
 	}
 
+	public boolean getNoted() { return noted; }
+
+	public void setNoted(final boolean noted) {
+		this.noted = noted;
+	}
+
 	public int getAmount() {
 		return amount;
 	}
 
 	public void setAmount(final int amount) {
 		if (getDef() != null) {
-			if (getDef().isStackable()) {
+			if (getDef().isStackable() || getNoted()) {
 				this.amount = amount;
 			} else {
 				this.amount = 1;

@@ -8,14 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class CassieShields implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class CassieShields extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 25000, 100, 60, 2,
 		new Item(ItemId.WOODEN_SHIELD.id(), 5), new Item(ItemId.BRONZE_SQUARE_SHIELD.id(), 3), new Item(ItemId.BRONZE_KITE_SHIELD.id(), 3),
@@ -23,7 +20,7 @@ public final class CassieShields implements ShopInterface,
 		new Item(ItemId.STEEL_KITE_SHIELD.id(), 0), new Item(ItemId.MITHRIL_SQUARE_SHIELD.id(), 0));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.CASSIE.id();
 	}
 
@@ -38,16 +35,20 @@ public final class CassieShields implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
+	public void onTalkNpc(final Player player, final Npc n) {
 		if (n.getID() == NpcId.CASSIE.id()) {
-			playerTalk(p, n, "What wares are you selling?");
-			npcTalk(p, n, "I buy and sell shields", "Do you want to trade?");
-			int option = showMenu(p, n, "Yes please", "No thank you");
+			say(player, n, "What wares are you selling?");
+			npcsay(player, n, "I buy and sell shields", "Do you want to trade?");
+			int option = multi(player, n, "Yes please", "No thank you");
 			if (option == 0) {
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			}
 		}
 	}
-
 }

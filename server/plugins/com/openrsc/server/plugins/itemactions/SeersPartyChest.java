@@ -7,15 +7,14 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Random;
 
-public class SeersPartyChest implements InvUseOnObjectExecutiveListener, InvUseOnObjectListener {
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
+public class SeersPartyChest implements UseLocTrigger {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		if(obj.getID() != 18 && obj.getID() != 17) {
 			return false;
 		}
@@ -28,8 +27,8 @@ public class SeersPartyChest implements InvUseOnObjectExecutiveListener, InvUseO
 		return true;
 	}
 
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
-		if(player.getInventory().remove(item) <= -1) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
+		if(player.getCarriedItems().remove(item) <= -1) {
 			return;
 		}
 
@@ -49,7 +48,7 @@ public class SeersPartyChest implements InvUseOnObjectExecutiveListener, InvUseO
 						continue;
 					}
 
-					player.getWorld().registerItem(new GroundItem(player.getWorld(), item.getID(), location.getX(), location.getY(), item.getAmount(), (Player) null));
+					player.getWorld().registerItem(new GroundItem(player.getWorld(), item.getCatalogId(), location.getX(), location.getY(), item.getAmount(), (Player) null));
 					break;
 				}
 

@@ -9,7 +9,7 @@ class Network_Base {
 
 	private final int writeBufferSize = 5000;
 	public int m_d = 0;
-	public RSBuffer_Bits writeBuffer1;
+	public RSBuffer_Bits bufferBits;
 	String errorCode = "";
 	boolean errorHappened = false;
 	private int packetReadAttempts = 0;
@@ -19,8 +19,8 @@ class Network_Base {
 
 	Network_Base() {
 		try {
-			this.writeBuffer1 = new RSBuffer_Bits(this.writeBufferSize);
-			this.writeBuffer1.packetEnd = 3;
+			this.bufferBits = new RSBuffer_Bits(this.writeBufferSize);
+			this.bufferBits.packetEnd = 3;
 		} catch (RuntimeException var2) {
 			throw GenUtil.makeThrowable(var2, "b.<init>()");
 		}
@@ -29,7 +29,7 @@ class Network_Base {
 	public final void flush(int minReady, boolean var2) throws IOException {
 		try {
 			if (this.errorHappened) {
-				this.writeBuffer1.packetEnd = 3;
+				this.bufferBits.packetEnd = 3;
 				this.packetStart = 0;
 				this.errorHappened = false;
 				throw new IOException(this.errorCode);
@@ -38,10 +38,10 @@ class Network_Base {
 				if (minReady <= this.readyPackets) {
 					if (this.packetStart > 0) {
 						this.readyPackets = 0;
-						this.send(this.writeBuffer1.dataBuffer, 0, this.packetStart);
+						this.send(this.bufferBits.dataBuffer, 0, this.packetStart);
 					}
 
-					this.writeBuffer1.packetEnd = 3;
+					this.bufferBits.packetEnd = 3;
 					this.packetStart = 0;
 				}
 			}
@@ -153,8 +153,8 @@ class Network_Base {
 				}
 			}
 
-			this.writeBuffer1.packetEnd = this.packetStart + 2;
-			this.writeBuffer1.putByte(opcode);
+			this.bufferBits.packetEnd = this.packetStart + 2;
+			this.bufferBits.putByte(opcode);
 		} catch (RuntimeException var5) {
 			throw GenUtil.makeThrowable(var5, "b.N(" + opcode + ',' + "dummy" + ')');
 		}
@@ -186,13 +186,13 @@ class Network_Base {
 
 	public final void finishPacket() {
 		try {
-			int packetLen = this.writeBuffer1.packetEnd - this.packetStart - 2;
+			int packetLen = this.bufferBits.packetEnd - this.packetStart - 2;
 
-			this.writeBuffer1.dataBuffer[this.packetStart] = (byte) (packetLen >> 8);
-			this.writeBuffer1.dataBuffer[this.packetStart + 1] = (byte) packetLen;
+			this.bufferBits.dataBuffer[this.packetStart] = (byte) (packetLen >> 8);
+			this.bufferBits.dataBuffer[this.packetStart + 1] = (byte) packetLen;
 
 
-			this.packetStart = this.writeBuffer1.packetEnd;
+			this.packetStart = this.bufferBits.packetEnd;
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4, "b.L(" + "dummy" + ')');
 		}

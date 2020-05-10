@@ -7,8 +7,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
@@ -16,8 +15,8 @@ import java.util.List;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class KittenToCat implements MiniGameInterface, CatGrowthListener, CatGrowthExecutiveListener, DropListener, DropExecutiveListener,
-InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnItemExecutiveListener, InvUseOnNpcListener, InvUseOnNpcExecutiveListener {
+public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObjTrigger,
+	OpInvTrigger, UseInvTrigger, UseNpcTrigger {
 
 	protected static final int BASE_FACTOR = 16;
 
@@ -37,67 +36,68 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 	}
 
 	@Override
-	public void handleReward(Player p) {
+	public void handleReward(Player player) {
 		//mini-quest complete handled already
 	}
 
 	@Override
-	public boolean blockDrop(Player p, Item i, Boolean fromInventory) {
-		return i.getID() == ItemId.KITTEN.id();
+	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
+		return item.getCatalogId() == ItemId.KITTEN.id();
 	}
 
 	@Override
-	public void onDrop(Player p, Item i, Boolean fromInventory) {
-		if (i.getID() == ItemId.KITTEN.id()) {
-			removeItem(p, ItemId.KITTEN.id(), 1);
-			message(p, 1200, "you drop the kitten");
-			message(p, 0, "it's upset and runs away");
+	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
+		if (item.getCatalogId() == ItemId.KITTEN.id()) {
+			player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "you drop the kitten");
+			mes(player, 0, "it's upset and runs away");
 		}
 
 		KittenState state = new KittenState();
-		state.saveState(p);
+		state.saveState(player);
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player p, String command) {
-		return item.getID() == ItemId.KITTEN.id();
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
+		return item.getCatalogId() == ItemId.KITTEN.id();
 	}
 
 	@Override
-	public void onInvAction(Item item, Player p, String command) {
-		if (item.getID() == ItemId.KITTEN.id()) {
-			message(p, "you softly stroke the kitten",
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
+		if (item.getCatalogId() == ItemId.KITTEN.id()) {
+			mes(player, "you softly stroke the kitten",
 				"@yel@kitten:..purr..purr..");
-			message(p, 600, "the kitten appreciates the attention");
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK, "the kitten appreciates the attention");
 
-			reduceKittensLoneliness(p);
+			reduceKittensLoneliness(player);
 		}
 	}
 
-	public void entertainCat(Item item, Player p, boolean isGrown) {
-		if (item.getID() == ItemId.BALL_OF_WOOL.id()) {
+	public void entertainCat(Item item, Player player, boolean isGrown) {
+		if (item.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
 			if (!isGrown) {
-				message(p, "your kitten plays around with the ball of wool",
+				mes(player, "your kitten plays around with the ball of wool",
 						"it seems to love pouncing on it");
 
-				reduceKittensLoneliness(p);
+				reduceKittensLoneliness(player);
 			} else {
-				message(p, "your cat plays around with the wool",
+				mes(player, "your cat plays around with the wool",
 						"it seems to be enjoying itself");
 			}
 		}
 	}
 
-	public void feedCat(Item item, Player p, boolean isGrown) {
+	public void feedCat(Item item, Player player, boolean isGrown) {
 		boolean feeded = false;
-		switch (ItemId.getById(item.getID())) {
+		switch (ItemId.getById(item.getCatalogId())) {
 		case MILK:
-			p.getInventory().replace(item.getID(), ItemId.BUCKET.id());
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
 			if(!isGrown) {
-				message(p, "you give the kitten the milk",
+				mes(player, "you give the kitten the milk",
 						"the kitten quickly laps it up then licks his paws");
 			} else {
-				message(p, "you give the cat the milk",
+				mes(player, "you give the cat the milk",
 						"the kitten quickly laps it up then licks his paws");
 			}
 			feeded = true;
@@ -113,12 +113,12 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 		case RAW_SALMON:
 		case RAW_TUNA:
 		case TUNA:
-			removeItem(p, item.getID(), 1);
+			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			if(!isGrown) {
-				message(p, "you give the kitten the " + item.getDef(p.getWorld()).getName(),
+				mes(player, "you give the kitten the " + item.getDef(player.getWorld()).getName(),
 						"the kitten quickly eats it up then licks his paws");
 			} else {
-				message(p, "you give the cat the " + item.getDef(p.getWorld()).getName(),
+				mes(player, "you give the cat the " + item.getDef(player.getWorld()).getName(),
 						"it quickly eat's them up and licks its paws");
 			}
 			feeded = true;
@@ -128,40 +128,40 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 		}
 
 		if (feeded && !isGrown)
-			reduceKittensHunger(p);
+			reduceKittensHunger(player);
 	}
 
-	private void reduceKittensLoneliness(Player p) {
+	private void reduceKittensLoneliness(Player player) {
 		KittenState state = new KittenState();
-		state.loadState(p);
+		state.loadState(player);
 		int loneliness = state.getLoneliness();
 		if (loneliness >= BASE_FACTOR) {
 			state.setLoneliness(loneliness - BASE_FACTOR);
-			state.saveState(p);
+			state.saveState(player);
 		}
 	}
 
-	private void reduceKittensHunger(Player p) {
+	private void reduceKittensHunger(Player player) {
 		KittenState state = new KittenState();
-		state.loadState(p);
+		state.loadState(player);
 		int hunger = state.getHunger();
 		if (hunger >= BASE_FACTOR) {
 			state.setHunger(hunger - BASE_FACTOR);
-			state.saveState(p);
+			state.saveState(player);
 		}
 	}
 
 	@Override
-	public boolean blockCatGrowth(Player p) {
-		return p.getInventory().hasItemId(ItemId.KITTEN.id());
+	public boolean blockCatGrowth(Player player) {
+		return player.getCarriedItems().hasCatalogID(ItemId.KITTEN.id());
 	}
 
 	@Override
-	public void onCatGrowth(Player p) {
-		if (p.getInventory().hasItemId(ItemId.KITTEN.id())) {
+	public void onCatGrowth(Player player) {
+		if (player.getCarriedItems().hasCatalogID(ItemId.KITTEN.id())) {
 			// no events in memory, check in cache
 			KittenState state = new KittenState();
-			state.loadState(p);
+			state.loadState(player);
 			int kittenHunger = state.getHunger();
 			int kittenLoneliness = state.getLoneliness();
 			int kittenEvents = state.getEvents();
@@ -194,48 +194,49 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 			}
 
 			for (String message : messages) {
-				p.message(message);
+				player.message(message);
 			}
 
 			// kitten runs off - reset counters
 			if (kittenHunger >= 4*BASE_FACTOR || kittenLoneliness >= 4*BASE_FACTOR) {
-				p.getInventory().remove(ItemId.KITTEN.id(), 1);
+				player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
 			}
 			// kitten grows to cat - replace and reset counters
 			else if (kittenEvents >= 32) {
-				p.getInventory().replace(ItemId.KITTEN.id(), ItemId.CAT.id());
+				player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.CAT.id()));
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
-				message(p, 1200, "you're kitten has grown into a healthy cat",
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "you're kitten has grown into a healthy cat",
 						"it can hunt for its self now");
 			}
 
 			state.setEvents(kittenEvents);
 			state.setHunger(kittenHunger);
 			state.setLoneliness(kittenLoneliness);
-			state.saveState(p);
+			state.saveState(player);
 		}
 	}
 
 	@Override
-	public boolean blockInvUseOnItem(Player p, Item item1, Item item2) {
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		return isFoodOnCat(item1, item2) || isBallWoolOnCat(item1, item2);
 	}
 
 	@Override
-	public void onInvUseOnItem(Player p, Item item1, Item item2) {
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (isFoodOnCat(item1, item2) || isBallWoolOnCat(item1, item2)) {
-			boolean isGrownCat = item1.getID() != ItemId.KITTEN.id() && item2.getID() != ItemId.KITTEN.id();
+			boolean isGrownCat = item1.getCatalogId() != ItemId.KITTEN.id() && item2.getCatalogId() != ItemId.KITTEN.id();
 			Item item;
 			if (isGrownCat) {
-				item = item1.getID() == ItemId.CAT.id() ? item2 : item1;
+				item = item1.getCatalogId() == ItemId.CAT.id() ? item2 : item1;
 			} else {
-				item = item1.getID() == ItemId.KITTEN.id() ? item2 : item1;
+				item = item1.getCatalogId() == ItemId.KITTEN.id() ? item2 : item1;
 			}
 			if (isBallWoolOnCat(item1, item2)) {
-				entertainCat(item, p, isGrownCat);
+				entertainCat(item, player, isGrownCat);
 			} else if (isFoodOnCat(item1, item2)) {
-				feedCat(item, p, isGrownCat);
+				feedCat(item, player, isGrownCat);
 			}
 		}
 	}
@@ -246,44 +247,42 @@ InvActionListener, InvActionExecutiveListener, InvUseOnItemListener, InvUseOnIte
 	}
 
 	private boolean isFoodOnCat(Item item1, Item item2) {
-		return ((item2.getID() == ItemId.KITTEN.id() || item2.getID() == ItemId.CAT.id()) && inArray(item1.getID(), ItemId.MILK.id(), ItemId.RAW_SHRIMP.id(), ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id(),
+		return ((item2.getCatalogId() == ItemId.KITTEN.id() || item2.getCatalogId() == ItemId.CAT.id()) && inArray(item1.getCatalogId(), ItemId.MILK.id(), ItemId.RAW_SHRIMP.id(), ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id(),
 				ItemId.SARDINE.id(), ItemId.RAW_HERRING.id(), ItemId.RAW_ANCHOVIES.id(), ItemId.RAW_TROUT.id(),
 				ItemId.TROUT.id(), ItemId.RAW_SALMON.id(), ItemId.RAW_TUNA.id(), ItemId.TUNA.id())) ||
-				((item1.getID() == ItemId.KITTEN.id() || item1.getID() == ItemId.CAT.id()) && inArray(item2.getID(), ItemId.MILK.id(), ItemId.RAW_SHRIMP.id(), ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id(),
+				((item1.getCatalogId() == ItemId.KITTEN.id() || item1.getCatalogId() == ItemId.CAT.id()) && inArray(item2.getCatalogId(), ItemId.MILK.id(), ItemId.RAW_SHRIMP.id(), ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id(),
 				ItemId.SARDINE.id(), ItemId.RAW_HERRING.id(), ItemId.RAW_ANCHOVIES.id(), ItemId.RAW_TROUT.id(),
 				ItemId.TROUT.id(), ItemId.RAW_SALMON.id(), ItemId.RAW_TUNA.id(), ItemId.TUNA.id()));
 	}
 
 	@Override
-	public boolean blockInvUseOnNpc(Player p, Npc n, Item item) {
+	public boolean blockUseNpc(Player player, Npc n, Item item) {
 		//only small rats
-		return (item.getID() == ItemId.KITTEN.id() || item.getID() == ItemId.CAT.id()) && n.getID() == NpcId.RAT_WITCHES_POTION.id();
+		return (item.getCatalogId() == ItemId.KITTEN.id() || item.getCatalogId() == ItemId.CAT.id()) && n.getID() == NpcId.RAT_WITCHES_POTION.id();
 	}
 
 	@Override
-	public void onInvUseOnNpc(Player p, Npc n, Item item) {
-		if (item.getID() == ItemId.KITTEN.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
-			p.message("it pounces on the rat...");
+	public void onUseNpc(Player player, Npc n, Item item) {
+		if (item.getCatalogId() == ItemId.KITTEN.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
+			player.message("it pounces on the rat...");
 			if (DataConversions.random(0,9) == 0) {
-				n.face(p);
-				sleep(600);
+				n.face(player);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				n.remove();
-				p.setBusyTimer(1200);
-				sleep(1200);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				//possibly non kosher
-				message(p, 1800, "...and quickly gobbles it up",
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "...and quickly gobbles it up",
 						"it returns to your satchel licking it's paws");
 
-				reduceKittensLoneliness(p);
+				reduceKittensLoneliness(player);
 			}
-		} else if (item.getID() == ItemId.CAT.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
-			p.message("the cat pounces on the rat...");
-			n.face(p);
-			sleep(600);
+		} else if (item.getCatalogId() == ItemId.CAT.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
+			player.message("the cat pounces on the rat...");
+			n.face(player);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			n.remove();
-			p.setBusyTimer(1200);
-			sleep(1200);
-			message(p, 1800, "...and quickly gobbles it up",
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "...and quickly gobbles it up",
 					"it returns to your satchel licking it's paws");
 		}
 	}

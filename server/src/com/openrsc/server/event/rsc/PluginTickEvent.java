@@ -28,18 +28,14 @@ public class PluginTickEvent extends GameTickEvent {
 		// We want to cancel this plugin event if the most recently executed walk to action is not the same as this plugin's context walk to action.
 		if (walkToAction != null && walkToAction != getPlayerOwner().getLastExecutedWalkToAction()) {
 			// If the task has not been submitted, then we just cancel this event
-			if (getFuture() == null || (!getPluginTask().isInitialized() && getFuture().cancel(false))) {
+			if (getFuture() == null || !getPluginTask().isInitialized()) {
+				if(getFuture() != null) {
+					// Do not interrupt because we will do that in stop()
+					getFuture().cancel(false);
+				}
 
 				stop();
 				return;
-				/*
-				// This will trigger PluginTask.pause()'s wait() call to generate an InterruptedException.
-				// We then throw a special PluginInterruptedException which can only be caught by PluginTask.action() or PluginTask.call().
-				// When these methods catch the exception it will return the thread which will close the PluginTask's thread down.
-				getFuture().cancel(true);
-				stop();
-				return;
-				*/
 			}
 		}
 
@@ -58,7 +54,7 @@ public class PluginTickEvent extends GameTickEvent {
 		}
 
 		// Wait for the plugin to get to a pause point or finish completely. This also waits for the PluginTask to start which is also intended to run plugin code on tick bounds.
-		while(!getPluginTask().isInitialized() || (getPluginTask().isThreadRunning() && getPluginTask().isTickCompleted() && !getFuture().isDone())) {
+		while((!getPluginTask().isInitialized() || (getPluginTask().isThreadRunning() && !getPluginTask().isTickCompleted())) && !getFuture().isDone()) {
 			try {
 				Thread.sleep(1);
 			} catch (final InterruptedException ex) {

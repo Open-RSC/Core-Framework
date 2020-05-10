@@ -2,16 +2,19 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-import orsc.Config;
-import orsc.enumerations.MessageType;
-import orsc.graphics.gui.Panel;
-import orsc.graphics.two.GraphicsController;
-import orsc.mudclient;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
+
+import com.openrsc.client.entityhandling.instances.Item;
+
+import orsc.Config;
+import orsc.enumerations.MessageType;
+import orsc.graphics.gui.Panel;
+import orsc.graphics.two.GraphicsController;
+import orsc.mudclient;
 
 public final class AuctionHouse {
 	public int auctionScrollHandle;
@@ -168,8 +171,8 @@ public final class AuctionHouse {
 
 	private void auctionClose() {
 		mc.packetHandler.getClientStream().newPacket(199);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(4);
+		mc.packetHandler.getClientStream().bufferBits.putByte(10);
+		mc.packetHandler.getClientStream().bufferBits.putByte(4);
 		mc.packetHandler.getClientStream().finishPacket();
 		resetAllVariables();
 		setVisible(false);
@@ -177,8 +180,8 @@ public final class AuctionHouse {
 
 	private void sendRefreshList() {
 		mc.packetHandler.getClientStream().newPacket(199);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(3);
+		mc.packetHandler.getClientStream().bufferBits.putByte(10);
+		mc.packetHandler.getClientStream().bufferBits.putByte(3);
 		mc.packetHandler.getClientStream().finishPacket();
 	}
 
@@ -210,12 +213,14 @@ public final class AuctionHouse {
 			});
 		} else if (newAuctionItem != null) {
 			ItemDef def = EntityHandler.getItemDef(newAuctionItem.getItemID());
-			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), x + 40, y + 55, 48, 32,
-				def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1);
-			if (def.getNotedFormOf() >= 0) {
-				ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-				mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef), x + 47,
-					y + 59, 33, 23, originalDef.getPictureMask(), 0, originalDef.getBlueMask(), false, 0, 1);
+			if (newAuctionItem.getNoted()) {
+				mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), x + 40, y + 55, 48, 32,
+					EntityHandler.noteDef.getPictureMask(), 0, EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), x + 47,
+					y + 59, 33, 23, def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1);
+			} else {
+				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), x + 40, y + 55, 48, 32,
+					def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1);
 			}
 			//graphics.drawString("Fee: +" + (int) getFee() + "gp", x + 6, y + 101, 0xffffff, 0);
 		}
@@ -275,24 +280,26 @@ public final class AuctionHouse {
 						graphics.drawBoxAlpha(drawX, drawY, boxWidth, boxHeight, 0xff, 160);
 					}
 					graphics.drawBoxBorder(drawX, boxWidth + 1, drawY, boxHeight + 1, 0);
-					if (inventorySlot < mc.getInventoryItemCount() && mc.getInventoryItems()[inventorySlot] != -1) {
-						ItemDef def = EntityHandler.getItemDef(mc.getInventoryItems()[inventorySlot]);
-
-						mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48,
-							32, def.getPictureMask(), 0, def.getBlueMask(),false, 0, 1);
-						if (def.getNotedFormOf() >= 0) {
-							ItemDef originalDef = EntityHandler.getItemDef(def.getNotedFormOf());
-							mc.getSurface().drawSpriteClipping(mc.spriteSelect(originalDef), drawX + 7,
-								drawY + 4, 33, 23, originalDef.getPictureMask(), 0, originalDef.getBlueMask(), false, 0, 1);
+					if (inventorySlot < mc.getInventoryItemCount() && mc.getInventoryItemID(inventorySlot) != -1) {
+						Item item = mc.getInventoryItem(inventorySlot);
+						ItemDef def = item.getItemDef();
+						if (item.getNoted()) {
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), drawX,
+								drawY, 48, 32, EntityHandler.noteDef.getPictureMask(), 0, EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX + 7, drawY + 4, 33,
+								23, def.getPictureMask(), 0, def.getBlueMask(),false, 0, 1);
+						} else {
+							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48,
+								32, def.getPictureMask(), 0, def.getBlueMask(),false, 0, 1);
 						}
-						graphics.drawString(String.valueOf(mc.getInventoryItemsCount()[inventorySlot]), drawX + 1,
+						graphics.drawString(String.valueOf(mc.getInventoryItemAmount(inventorySlot)), drawX + 1,
 							drawY + 10, 65280, 1);
 					}
 					if (mc.getMouseX() > drawX && mc.getMouseX() < drawX + boxWidth && mc.getMouseY() > drawY
 						&& mc.getMouseY() < drawY + boxHeight) {
 						graphics.drawBoxAlpha(drawX, drawY, boxWidth, boxHeight, i7, 160);
 						if (mc.getMouseClick() == 1) {
-							int itemID = mc.getInventoryItems()[inventorySlot];
+							int itemID = mc.getInventoryItemID(inventorySlot);
 							int amount = mc.getInventoryCount(itemID);
 							if (itemID == 10 || EntityHandler.getItemDef(itemID).quest) {
 								mc.showMessage(false, null, "This object cannot be added to auction", MessageType.GAME,
@@ -422,9 +429,9 @@ public final class AuctionHouse {
 
 	private void sendCancelAuction(int auctionID) {
 		mc.packetHandler.getClientStream().newPacket(199);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(2);
-		mc.packetHandler.getClientStream().writeBuffer1.putInt(auctionID);
+		mc.packetHandler.getClientStream().bufferBits.putByte(10);
+		mc.packetHandler.getClientStream().bufferBits.putByte(2);
+		mc.packetHandler.getClientStream().bufferBits.putInt(auctionID);
 		mc.packetHandler.getClientStream().finishPacket();
 		selectedCancelAuction = -1;
 	}
@@ -438,11 +445,11 @@ public final class AuctionHouse {
 				newAuctionItem.setPrice(1);
 			}
 			mc.packetHandler.getClientStream().newPacket(199);
-			mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
-			mc.packetHandler.getClientStream().writeBuffer1.putByte(1);
-			mc.packetHandler.getClientStream().writeBuffer1.putInt(newAuctionItem.getItemID());
-			mc.packetHandler.getClientStream().writeBuffer1.putInt(newAuctionItem.getAmount());
-			mc.packetHandler.getClientStream().writeBuffer1.putInt(newAuctionItem.getPrice());
+			mc.packetHandler.getClientStream().bufferBits.putByte(10);
+			mc.packetHandler.getClientStream().bufferBits.putByte(1);
+			mc.packetHandler.getClientStream().bufferBits.putInt(newAuctionItem.getItemID());
+			mc.packetHandler.getClientStream().bufferBits.putInt(newAuctionItem.getAmount());
+			mc.packetHandler.getClientStream().bufferBits.putInt(newAuctionItem.getPrice());
 			mc.packetHandler.getClientStream().finishPacket();
 
 			myAuctions.setText(textField_amount, "");
@@ -962,19 +969,19 @@ public final class AuctionHouse {
 	private void sendModCancelAuction(int auctionID) {
 		selectedAuction = -1;
 		mc.packetHandler.getClientStream().newPacket(199);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(5);
-		mc.packetHandler.getClientStream().writeBuffer1.putInt(auctionID);
+		mc.packetHandler.getClientStream().bufferBits.putByte(10);
+		mc.packetHandler.getClientStream().bufferBits.putByte(5);
+		mc.packetHandler.getClientStream().bufferBits.putInt(auctionID);
 		mc.packetHandler.getClientStream().finishPacket();
 	}
 
 	private void sendAuctionBuy(AuctionItem ahItem) {
 		int t = Integer.parseInt(auctionMenu.getControlText(textField_buyAmount));
 		mc.packetHandler.getClientStream().newPacket(199);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(10);
-		mc.packetHandler.getClientStream().writeBuffer1.putByte(0);
-		mc.packetHandler.getClientStream().writeBuffer1.putInt(ahItem.getAuctionID());
-		mc.packetHandler.getClientStream().writeBuffer1.putInt(t);
+		mc.packetHandler.getClientStream().bufferBits.putByte(10);
+		mc.packetHandler.getClientStream().bufferBits.putByte(0);
+		mc.packetHandler.getClientStream().bufferBits.putInt(ahItem.getAuctionID());
+		mc.packetHandler.getClientStream().bufferBits.putInt(t);
 		mc.packetHandler.getClientStream().finishPacket();
 		if (t >= ahItem.getAmount() || ahItem.getAmount() <= 1 || ahItem.getSeller().equals(mc.getLocalPlayer().displayName)) {
 			selectedAuction = -1;
@@ -1104,14 +1111,16 @@ abstract class ButtonHandler {
 
 class AuctionItem {
 
-	private int auctionID, itemID, amount, price;
+	private int auctionID, price;
 	private String seller;
 	private int hoursLeft;
+	private final Item item;
 
 	AuctionItem(int auctionID, int itemID, int amount, int price, String seller2, int hoursLeft) {
+		this.item = new Item();
+		this.item.setItemDef(itemID);
+		this.item.setAmount(amount);
 		this.auctionID = auctionID;
-		this.itemID = itemID;
-		this.amount = amount;
 		this.price = price;
 		this.seller = seller2;
 		this.hoursLeft = hoursLeft;
@@ -1126,19 +1135,19 @@ class AuctionItem {
 	}
 
 	public int getItemID() {
-		return itemID;
+		return this.item.getItemDef().id;
 	}
 
 	public void setItemID(int itemID) {
-		this.itemID = itemID;
+		this.item.setItemDef(itemID);
 	}
 
 	public int getAmount() {
-		return amount;
+		return this.item.getAmount();
 	}
 
 	public void setAmount(int amount) {
-		this.amount = amount;
+		this.item.setAmount(amount);
 	}
 
 	int getPrice() {
@@ -1163,5 +1172,13 @@ class AuctionItem {
 
 	public void setHoursLeft(int hoursLeft) {
 		this.hoursLeft = hoursLeft;
+	}
+
+	public boolean getNoted() {
+		return this.item.getNoted();
+	}
+
+	public void setNoted(boolean noted) {
+		this.item.setNoted(noted);
 	}
 }

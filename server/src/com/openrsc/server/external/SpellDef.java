@@ -31,6 +31,13 @@ public final class SpellDef extends EntityDef {
 
 	/**
 	 * The type of the spell
+	 * 0 - Teleport
+	 * 1 -
+	 * 2 - Curse, strike, bolt, blast, god spell
+	 * 3 - Enchant, alchemy, telegrab, superheat
+	 * 4 -
+	 * 5 - Charge orb
+	 * 6 - Transmute (bones to bananas), Charge (God spell)
 	 */
 	private int type;
 

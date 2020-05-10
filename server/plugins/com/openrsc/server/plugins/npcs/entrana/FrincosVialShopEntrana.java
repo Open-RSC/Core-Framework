@@ -8,34 +8,30 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class FrincosVialShopEntrana implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public class FrincosVialShopEntrana extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2,
 		new Item(ItemId.EMPTY_VIAL.id(), 50), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3), new Item(ItemId.EYE_OF_NEWT.id(), 50));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
-		npcTalk(p, n, "Hello how can I help you?");
-		int menu = showMenu(p, n,
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Hello how can I help you?");
+		int menu = multi(player, n,
 			"What are you selling?",
 			"You can't, I'm beyond help",
 			"I'm okay, thankyou");
 		if (menu == 0) {
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.FRINCOS.id();
 	}
 
@@ -47,5 +43,10 @@ public class FrincosVialShopEntrana implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 }

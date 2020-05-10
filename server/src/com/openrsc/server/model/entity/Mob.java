@@ -7,12 +7,11 @@ import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.UpdateFlags;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -34,9 +33,8 @@ public abstract class Mob extends Entity {
 	private final Skills skills = new Skills(this.getWorld(), this);
 	private final WalkingQueue walkingQueue = new WalkingQueue(this);
 	private int killType = 0;
-	private int combatStyle = 0;
+	private int combatStyle = com.openrsc.server.constants.Skills.CONTROLLED_MODE;
 	private int poisonDamage = 0;
-	private Action status = Action.IDLE;
 	private RangeEventNpc rangeEventNpc;
 	private long lastRun = 0;
 	private boolean teleporting;
@@ -45,10 +43,6 @@ public abstract class Mob extends Entity {
 	 * next update tick.
 	 */
 	protected boolean unregistering;
-	/**
-	 * Time in MS when we are freed from the 'busy' mode.
-	 */
-	private volatile long busyTimer;
 	/**
 	 * The combat event instance.
 	 */
@@ -98,6 +92,10 @@ public abstract class Mob extends Entity {
 	 * Who we are currently following (if anyone)
 	 */
 	private Mob following;
+	/**
+	 * The related mob (owner, in the case of pets)
+	 */
+	public Mob relatedMob;
 	/**
 	 * How many times we have hit our opponent
 	 */
@@ -419,22 +417,21 @@ public abstract class Mob extends Entity {
 		resetPath();
 	}
 
-	public void setLocation(final Point p, boolean teleported) {
+	public void setLocation(final Point point, boolean teleported) {
 		if (!teleported) {
-			face(p);
-			hasMoved = true;
+			this.setHasMoved(true);
 		} else {
 			setTeleporting(true);
 		}
 
 		setLastMoved();
 		setWarnedToMove(false);
-		super.setLocation(p);
+		super.setLocation(point);
 	}
 
 	public void updatePosition() {
 		final long now = System.currentTimeMillis();
-		final boolean doWalk = getWorld().getServer().getConfig().WANT_CUSTOM_WALK_SPEED ? now >= lastMovementTime + getWalkingTick() : true;
+		final boolean doWalk = !getWorld().getServer().getConfig().WANT_CUSTOM_WALK_SPEED || now >= lastMovementTime + getWalkingTick();
 
 		if(doWalk) {
 			getWalkingQueue().processNextMovement();
@@ -481,19 +478,13 @@ public abstract class Mob extends Entity {
 	 */
 	public void startCombat(final Mob victim) {
 		synchronized (victim) {
+			if (this.inCombat() || victim.inCombat()) return;
 			boolean gotUnderAttack = false;
 
 			if (this.isPlayer()) {
-				if (victim.isNpc()) {
-					if (((Npc) victim).isPkBot()) {
-						((Player) this).setSkulledOn(((PkBot) victim));
-					}
-				}
 				((Player) this).resetAll();
-				((Player) this).setStatus(Action.FIGHTING_MOB);
 				((Player) this).produceUnderAttack();
 			} else if (this.isNpc()) {
-				((Npc) this).setStatus(Action.FIGHTING_MOB);
 				((Npc) this).produceUnderAttack();
 			} else {
 				if (!this.isNpc()) {
@@ -529,7 +520,6 @@ public abstract class Mob extends Entity {
 					((Player) this).setSkulledOn(playerVictim);
 				}
 				playerVictim.resetAll();
-				playerVictim.setStatus(Action.FIGHTING_MOB);
 				gotUnderAttack = true;
 				playerVictim.releaseUnderAttack();
 
@@ -549,7 +539,6 @@ public abstract class Mob extends Entity {
 
 			if (victim.isNpc()) {
 				Npc npcVictim = (Npc) victim;
-				npcVictim.setStatus(Action.FIGHTING_MOB);
 				gotUnderAttack = true;
 				npcVictim.releaseUnderAttack();
 			} else {
@@ -562,11 +551,11 @@ public abstract class Mob extends Entity {
 				}
 			}
 
-			if(this.isNpc() && ((Npc) this).isPkBot()){
-				setLocation(victim.getLocation(), true);
-			} else {
-				setLocation(victim.getLocation(), false);
-			}
+			if (this.isNpc())
+				getWorld().removeNpcPosition((Npc) this);
+			setLocation(victim.getLocation(), false);
+			if (this.isNpc())
+				getWorld().setNpcPosition((Npc) this);
 
 			setBusy(true);
 			setSprite(ourSprite);
@@ -632,11 +621,6 @@ public abstract class Mob extends Entity {
 			return true;
 		} else if (mob.isNpc()) {
 			Npc victim = (Npc) mob;
-			if (((Npc) victim).isPkBot() && victim.getCombatTimer() > 3000) {
-				return true;
-			} else if (victim instanceof PkBot && ((PkBot)victim).isPkBotMelee()) {
-				return false;
-			}
 			if (!victim.getDef().isAttackable()) {
 				return false;
 			}
@@ -650,7 +634,6 @@ public abstract class Mob extends Entity {
 			rangeEventNpc.stop();
 			rangeEventNpc = null;
 		}
-		setStatus(Action.IDLE);
 	}
 
 	public void setRangeEventNpc(RangeEventNpc event) {
@@ -658,7 +641,6 @@ public abstract class Mob extends Entity {
 			rangeEventNpc.stop();
 		}
 		rangeEventNpc = event;
-		setStatus(Action.RANGING_MOB);
 		getWorld().getServer().getGameEventHandler().add(rangeEventNpc);
 	}
 
@@ -683,18 +665,16 @@ public abstract class Mob extends Entity {
 		final int newHp = skills.getLevel(com.openrsc.server.constants.Skills.HITS) - damage;
 		if (newHp <= 0) {
 			if (this.isPlayer()) {
-				((Player) this).setStatus(Action.DIED_FROM_DAMAGE);
 				killedBy(combatWith);
 			} else {
-				((Npc) this).setStatus(Action.DIED_FROM_DAMAGE);
 				killedBy(combatWith);
 			}
 		} else {
 			skills.setLevel(3, newHp);
 		}
 		if (this.isPlayer()) {
-			Player p = (Player) this;
-			ActionSender.sendStat(p, 3);
+			Player player = (Player) this;
+			ActionSender.sendStat(player, 3);
 		}
 		getUpdateFlags().setDamage(new Damage(this, damage));
 	}
@@ -711,12 +691,12 @@ public abstract class Mob extends Entity {
 	/**
 	 * SETTERS/GETTERS
 	 */
-	public boolean finishedPath() {
-		return getWalkingQueue().finished();
+	public int getLevel(int skillID) {
+		return skills.getLevel(skillID);
 	}
 
-	public void setStatus(final Action a) {
-		status = a;
+	public boolean finishedPath() {
+		return getWalkingQueue().finished();
 	}
 
 	public RangeEventNpc getRangeEventNpc() {
@@ -840,20 +820,8 @@ public abstract class Mob extends Entity {
 		return (mobSprite == 8 || mobSprite == 9) && combatWith != null;
 	}
 
-	public long getLastRun() {
-		return lastRun;
-	}
-
-	public void setLastRun(final long lastRun) {
-		this.lastRun = lastRun;
-	}
-
-	public void setBusyTimer(final int i) {
-		this.busyTimer = System.currentTimeMillis() + i;
-	}
-
 	public synchronized boolean isBusy() {
-		return busyTimer - System.currentTimeMillis() > 0 || busy.get();
+		return busy.get();
 	}
 
 	public synchronized void setBusy(final boolean busy) {
@@ -869,10 +837,6 @@ public abstract class Mob extends Entity {
 	}
 
 	public abstract void killedBy(Mob mob);
-
-	public void resetMoved() {
-		hasMoved = false;
-	}
 
 	public void resetPath() {
 		getWalkingQueue().reset();
@@ -894,8 +858,12 @@ public abstract class Mob extends Entity {
 		lastMovement = System.currentTimeMillis();
 	}
 
-	public void setLocation(final Point p) {
-		setLocation(p, false);
+	public void setHasMoved(boolean moved) {
+		this.hasMoved = moved;
+	}
+
+	public void setLocation(final Point point) {
+		setLocation(point, false);
 	}
 
 	public void setWarnedToMove(final boolean moved) {
@@ -922,12 +890,12 @@ public abstract class Mob extends Entity {
 		return skills;
 	}
 
-	public int getCombatLevel(final int roundMode) {
-		return getSkills().getCombatLevel(roundMode);
+	public int getCombatLevel(final boolean isSpecial) {
+		return getSkills().getCombatLevel(isSpecial);
 	}
 
 	public int getCombatLevel() {
-		return getSkills().getCombatLevel(null);
+		return getSkills().getCombatLevel(false);
 	}
 
 	public boolean isTeleporting() {
@@ -960,5 +928,48 @@ public abstract class Mob extends Entity {
 
 	public void setPoisonDamage(int poisonDamage) {
 		this.poisonDamage = poisonDamage;
+	}
+
+	/**
+	 * Function used to drop an item after walking completes.
+	 */
+	protected Item dropItemEvent = null;
+	protected int dropItemIndex = -1;
+
+	public void setDropItemEvent(int index, Item item) {
+		this.dropItemIndex = index;
+		this.dropItemEvent = item;
+	}
+
+	public Item getDropItemEvent() {
+		return this.dropItemEvent;
+	}
+
+	public void runDropEvent(boolean fromInventory) {
+		// TODO: Allow npcs to use this code for drop parties?
+		if (!this.isPlayer()) return; // We can only run Plugins on Players.
+		final Player player = (Player) this;
+		final Item item = player.getDropItemEvent();
+		final int index = dropItemIndex;
+		this.setDropItemEvent(-1, null);
+		if (item == null) return;
+
+		getWorld().getServer().getPluginHandler().handlePlugin(player, "DropObj", new Object[]{player, index, item, fromInventory});
+	}
+
+	protected Player talkToNpcEvent = null;
+
+	public void setTalkToNpcEvent(Player player) {
+		this.talkToNpcEvent = player;
+	}
+
+	public Player getTalkToNpcEvent() {
+		return this.talkToNpcEvent;
+	}
+
+	public void runTalkToNpcEvent() {
+		Player player = getTalkToNpcEvent();
+		setTalkToNpcEvent(null);
+		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "TalkNpc", new Object[]{player, this});
 	}
 }

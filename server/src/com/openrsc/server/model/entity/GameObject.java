@@ -6,6 +6,8 @@ import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.world.World;
 
+import java.util.ArrayList;
+
 public class GameObject extends Entity {
 	/**
 	 * The direction the object points in
@@ -103,6 +105,37 @@ public class GameObject extends Entity {
 			}
 		}
 		return new Point[]{Point.location(minX, minY), Point.location(maxX, maxY)};
+	}
+
+	// Takes an array of two Points and extrapolates all points in covered square.
+	private ArrayList<Point> extrapolateAllCoveredCoordinates(Point[] bounds) {
+		ArrayList<Point> extrapolated = new ArrayList<>();
+		int xValues = Math.abs(bounds[0].getX() - bounds[1].getX()) + 1;
+		int yValues = Math.abs(bounds[0].getY() - bounds[1].getY()) + 1;
+		int smallerX = Math.min(bounds[0].getX(), bounds[1].getX());
+		int smallerY = Math.min(bounds[0].getY(), bounds[1].getY());
+		for (int x = 0; x < xValues; x++) {
+			for (int y = 0; y < yValues; y++) {
+				extrapolated.add(new Point(smallerX + x, smallerY + y));
+			}
+		}
+		return extrapolated;
+	}
+
+	// Returns the closest point to supplied Point argument.
+	public Point closestBound(Point point) {
+		ArrayList<Point> objectPoints = extrapolateAllCoveredCoordinates(getObjectBoundary());
+		if (objectPoints.size() == 0) return null;
+		Point closest = objectPoints.get(objectPoints.size() - 1);
+		int closestTotal = Math.abs(closest.getX() - point.getX()) + Math.abs(closest.getY() - point.getY());
+		for (Point objectPoint : objectPoints) {
+			int current = Math.abs(objectPoint.getX() - point.getX()) + Math.abs(objectPoint.getY() - point.getY());
+			if (current < closestTotal) {
+				closestTotal = current;
+				closest = objectPoint;
+			}
+		}
+		return closest;
 	}
 
 	public boolean isOn(final int x, final int y) {

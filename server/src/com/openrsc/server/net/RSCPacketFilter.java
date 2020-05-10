@@ -11,10 +11,6 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/****
- * Author: Kenix
- */
-
 public class RSCPacketFilter {
 	/**
 	 * The asynchronous Logger

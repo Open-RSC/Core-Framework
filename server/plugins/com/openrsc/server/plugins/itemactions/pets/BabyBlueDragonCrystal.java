@@ -3,25 +3,24 @@ package com.openrsc.server.plugins.itemactions.pets;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.action.PlayerLoginListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.PlayerLoginExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.PlayerLoginTrigger;
 
-public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecutiveListener, PlayerLoginListener, PlayerLoginExecutiveListener {
+public class BabyBlueDragonCrystal implements OpInvTrigger {
+//public class BabyBlueDragonCrystal implements OpInvTrigger, PlayerLoginTrigger {
 
 	protected Player petOwnerA;
 
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return command.equalsIgnoreCase("inspect");
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		//if (getConfig().DEBUG)
 		System.out.println("Pet item clicked");
-		int id = item.getID();
+		int id = item.getCatalogId();
 
 		if (id == ItemId.A_RED_CRYSTAL.id())
 			if (player.getWorld().getServer().getConfig().WANT_PETS)
@@ -34,9 +33,9 @@ public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecut
 		if (player.getWorld().getServer().getConfig().DEBUG)
 		System.out.println("Pet spawn attempt");
 		if (player.getWorld().getServer().getConfig().WANT_PETS){
-			if (player.getInventory().hasItemId(ItemId.A_RED_CRYSTAL.id())) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.A_RED_CRYSTAL.id())) {
 				if (command.equalsIgnoreCase("inspect")) {
-					if (player.getInventory().hasItemId(ItemId.A_GLOWING_RED_CRYSTAL.id())) {
+					if (player.getCarriedItems().hasCatalogID(ItemId.A_GLOWING_RED_CRYSTAL.id())) {
 
 						player.message("You may only summon one pet at a time!");
 						return;
@@ -50,13 +49,13 @@ public class BabyBlueDragonCrystal implements InvActionListener, InvActionExecut
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public void onPlayerLogin(Player player) {
-		if (player.getInventory().hasItemId(ItemId.A_GLOWING_RED_CRYSTAL.id())) {
-			if (player.getInventory().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id())) != -1) {
-				player.getInventory().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
-				player.getInventory().add(new Item(ItemId.A_RED_CRYSTAL.id()));
+		if (player.getCarriedItems().hasCatalogID(ItemId.A_GLOWING_RED_CRYSTAL.id())) {
+			if (player.getCarriedItems().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id())) != -1) {
+				player.getCarriedItems().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.A_RED_CRYSTAL.id()));
 			}
 		}
-	}
+	}*/
 }

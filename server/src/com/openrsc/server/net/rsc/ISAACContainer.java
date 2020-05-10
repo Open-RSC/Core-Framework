@@ -2,9 +2,6 @@ package com.openrsc.server.net.rsc;
 
 import com.openrsc.server.util.rsc.ISAACCipher;
 
-/**
- * @author n0m
- */
 public class ISAACContainer {
 
 	private ISAACCipher inCipher;

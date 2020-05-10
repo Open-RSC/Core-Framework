@@ -7,14 +7,13 @@ import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassAgilityObstacles implements ObjectActionListener, ObjectActionExecutiveListener {
+public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 
 	public static final int[] LEDGES = {862, 864, 863, 872, 865, 866};
 	public static final int NORTH_STONE_STEP = 889;
@@ -24,96 +23,96 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 	public static final int[] STONE_REMAINING_BRIDGES = {893, 907, 905, 909, 903, 901, 895, 899, 897};
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), LEDGES) || inArray(obj.getID(), STONE_JUMP_BRIDGES) || inArray(obj.getID(), STONE_REMAINING_BRIDGES)
 				|| obj.getID() == FIRST_REMAINING_BRIDGE || obj.getID() == NORTH_STONE_STEP || obj.getID() == SOUTH_STONE_STEP;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), LEDGES)) {
-			message(p, "you climb the ledge");
-			if (succeed(p, 1)) {
+			mes(player, "you climb the ledge");
+			if (succeed(player, 1)) {
 				switch (obj.getID()) {
 					case 862:
-						p.teleport(730, 3494);
+						player.teleport(730, 3494);
 						break;
 					case 864:
-						p.teleport((p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) || (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) ? 751 : 734, 3496);
+						player.teleport((player.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) || (player.getQuestStage(Quests.UNDERGROUND_PASS) == -1) ? 751 : 734, 3496);
 						break;
 					case 863:
-						p.teleport(763, 3442);
+						player.teleport(763, 3442);
 						break;
 					case 872:
-						p.teleport((p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) || (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) ? 765 : 748, 3497);
+						player.teleport((player.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) || (player.getQuestStage(Quests.UNDERGROUND_PASS) == -1) ? 765 : 748, 3497);
 						break;
 					case 865:
-						p.teleport(728, 3499);
+						player.teleport(728, 3499);
 						break;
 					case 866:
-						p.teleport((p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) || (p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) ? 755 : 738, 3501);
+						player.teleport((player.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) || (player.getQuestStage(Quests.UNDERGROUND_PASS) == -1) ? 755 : 738, 3501);
 						break;
 				}
-				p.message("you drop down to the cave floor");
+				player.message("you drop down to the cave floor");
 			} else {
-				p.message("but you loose your footing");
-				p.damage(2);
-				playerTalk(p, null, "aargh");
+				player.message("but you loose your footing");
+				player.damage(2);
+				say(player, null, "aargh");
 			}
 		}
 		else if (obj.getID() == NORTH_STONE_STEP) {
-			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
-				failBlackAreaObstacle(p, obj); // fail directly, to get stage 5.
+			if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
+				failBlackAreaObstacle(player, obj); // fail directly, to get stage 5.
 			} else {
-				message(p, "you walk down the stone steps");
-				p.teleport(766, 585);
+				mes(player, "you walk down the stone steps");
+				player.teleport(766, 585);
 
 			}
 		}
 		else if (obj.getID() == SOUTH_STONE_STEP) {
-			message(p, "you walk down the steps",
+			mes(player, "you walk down the steps",
 				"they lead to a ladder, you climb down");
-			p.teleport(739, 667);
+			player.teleport(739, 667);
 		}
 		else if (obj.getID() == FIRST_REMAINING_BRIDGE) {
-			message(p, "you attempt to walk over the remaining bridge..");
-			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
-				failBlackAreaObstacle(p, obj); // fail directly, to get stage 5.
+			mes(player, "you attempt to walk over the remaining bridge..");
+			if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
+				failBlackAreaObstacle(player, obj); // fail directly, to get stage 5.
 			} else {
-				if (succeed(p, 1)) {
-					if (obj.getX() == p.getX() + 1) {
-						p.teleport(776, obj.getY());
+				if (succeed(player, 1)) {
+					if (obj.getX() == player.getX() + 1) {
+						player.teleport(776, obj.getY());
 					} else {
-						p.teleport(773, obj.getY());
+						player.teleport(773, obj.getY());
 					}
-					p.message("..you manage to cross safley");
+					player.message("..you manage to cross safley");
 				} else {
-					failBlackAreaObstacle(p, obj);
+					failBlackAreaObstacle(player, obj);
 				}
 			}
 		}
 		else if (inArray(obj.getID(), STONE_REMAINING_BRIDGES) || inArray(obj.getID(), STONE_JUMP_BRIDGES)) {
 			if (inArray(obj.getID(), STONE_JUMP_BRIDGES)) {
-				message(p, "you attempt to jump across the gap..");
+				mes(player, "you attempt to jump across the gap..");
 			} else {
-				message(p, "you attempt to walk over the remaining bridge..");
+				mes(player, "you attempt to walk over the remaining bridge..");
 			}
-			if (succeed(p, 1)) {
-				if (obj.getX() == p.getX() + 1) {
-					p.teleport(obj.getX() + 3, obj.getY());
-				} else if (obj.getX() == p.getX() - 3) {
-					p.teleport(obj.getX() - 1, obj.getY());
-				} else if (obj.getY() == p.getY() + 1) {
-					p.teleport(obj.getX(), obj.getY() + 3);
-				} else if (obj.getY() == p.getY() - 3) {
-					p.teleport(obj.getX(), obj.getY() - 1);
+			if (succeed(player, 1)) {
+				if (obj.getX() == player.getX() + 1) {
+					player.teleport(obj.getX() + 3, obj.getY());
+				} else if (obj.getX() == player.getX() - 3) {
+					player.teleport(obj.getX() - 1, obj.getY());
+				} else if (obj.getY() == player.getY() + 1) {
+					player.teleport(obj.getX(), obj.getY() + 3);
+				} else if (obj.getY() == player.getY() - 3) {
+					player.teleport(obj.getX(), obj.getY() - 1);
 				}
-				p.message("..you manage to cross safley");
+				player.message("..you manage to cross safley");
 			} else {
-				failBlackAreaObstacle(p, obj);
+				failBlackAreaObstacle(player, obj);
 			}
-			p.getWorld().getServer().getGameEventHandler()
-				.add(new UndergroundPassMessages(p.getWorld(), p, DataConversions.random(3000, 15000)));
+			player.getWorld().getServer().getGameEventHandler()
+				.add(new UndergroundPassMessages(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * DataConversions.random(5, 25)));
 		}
 	}
 
@@ -121,99 +120,99 @@ public class UndergroundPassAgilityObstacles implements ObjectActionListener, Ob
 		return Formulae.calcProductionSuccessful(req, player.getSkills().getLevel(Skills.AGILITY), false, req + 70);
 	}
 
-	private void failBlackAreaObstacle(Player p, GameObject obj) {
-		p.message("..but you slip and tumble into the darkness");
-		fallTeleportLocation(p, obj);
-		p.damage(((int) getCurrentLevel(p, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.
-		playerTalk(p, null, "ouch!");
-		if (p.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
-			if (p.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
-				p.updateQuestStage(Quests.UNDERGROUND_PASS, 5);
+	private void failBlackAreaObstacle(Player player, GameObject obj) {
+		player.message("..but you slip and tumble into the darkness");
+		fallTeleportLocation(player, obj);
+		player.damage(((int) getCurrentLevel(player, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.
+		say(player, null, "ouch!");
+		if (player.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
+			if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
+				player.updateQuestStage(Quests.UNDERGROUND_PASS, 5);
 			}
 			//only on "first-time" fail at stages 5, 8
-			Npc koftik = getNearestNpc(p, NpcId.KOFTIK_RECOVERED.id(), 10);
+			Npc koftik = ifnearvisnpc(player, NpcId.KOFTIK_RECOVERED.id(), 10);
 			if (koftik != null &&
-					(!p.getCache().hasKey("advised_koftik") || !p.getCache().getBoolean("advised_koftik")) ) {
-				npcTalk(p, koftik, "traveller is that you?.. my friend on a mission");
-				playerTalk(p, koftik, "koftik, you're still here, you should leave");
-				npcTalk(p, koftik, "leave?...leave?..this is my home now",
+					(!player.getCache().hasKey("advised_koftik") || !player.getCache().getBoolean("advised_koftik")) ) {
+				npcsay(player, koftik, "traveller is that you?.. my friend on a mission");
+				say(player, koftik, "koftik, you're still here, you should leave");
+				npcsay(player, koftik, "leave?...leave?..this is my home now",
 					"home with my lord, he talks to me, he's my friend");
-				p.message("koftik seems to be in a weak state of mind");
-				playerTalk(p, koftik, "koftik you really should leave these caverns");
-				npcTalk(p, koftik, "not now, we're all the same down here",
+				player.message("koftik seems to be in a weak state of mind");
+				say(player, koftik, "koftik you really should leave these caverns");
+				npcsay(player, koftik, "not now, we're all the same down here",
 					"now there's just you and those dwarfs to be converted");
-				playerTalk(p, koftik, "dwarfs?");
-				npcTalk(p, koftik, "foolish dwarfs, still believing that they can resist",
+				say(player, koftik, "dwarfs?");
+				npcsay(player, koftik, "foolish dwarfs, still believing that they can resist",
 					"no one resists iban, go traveller",
 					"the dwarfs to the south, they're not safe in the south",
 					"we'll show them, go slay them m'lord",
 					"he'll be so proud, that's all i want");
-				playerTalk(p, koftik, "i'll pray for you");
-				p.getCache().store("advised_koftik", true);
+				say(player, koftik, "i'll pray for you");
+				player.getCache().store("advised_koftik", true);
 			}
 		}
 	}
 
-	private void fallTeleportLocation(Player p, GameObject obj) {
+	private void fallTeleportLocation(Player player, GameObject obj) {
 		switch (obj.getID()) {
 			case NORTH_STONE_STEP:
 			case FIRST_REMAINING_BRIDGE:
-				p.teleport(738, 584);
+				player.teleport(738, 584);
 				break;
 			case 898:
-				p.teleport(756, 591);
+				player.teleport(756, 591);
 				break;
 			case 893:
-				p.teleport(753, 608);
+				player.teleport(753, 608);
 				break;
 			case 892:
-				p.teleport(734, 596);
+				player.teleport(734, 596);
 				break;
 			case 896:
-				p.teleport(734, 610);
+				player.teleport(734, 610);
 				break;
 			case 910:
-				p.teleport(734, 662);
+				player.teleport(734, 662);
 				break;
 			case 907:
-				p.teleport(733, 646);
+				player.teleport(733, 646);
 				break;
 			case 906:
-				p.teleport(731, 639);
+				player.teleport(731, 639);
 				break;
 			case 905:
 			case 904:
-				p.teleport(742, 630);
+				player.teleport(742, 630);
 				break;
 			case 908:
-				p.teleport(760, 638);
+				player.teleport(760, 638);
 				break;
 			case 909:
-				p.teleport(745, 656);
+				player.teleport(745, 656);
 				break;
 			case 902:
-				p.teleport(759, 664);
+				player.teleport(759, 664);
 				break;
 			case 903:
-				p.teleport(761, 613);
+				player.teleport(761, 613);
 				break;
 			case 901:
-				p.teleport(727, 617);
+				player.teleport(727, 617);
 				break;
 			case 895:
-				p.teleport(727, 618);
+				player.teleport(727, 618);
 				break;
 			case 899:
-				p.teleport(734, 619);
+				player.teleport(734, 619);
 				break;
 			case 900:
-				p.teleport(734, 666);
+				player.teleport(734, 666);
 				break;
 			case 894:
-				p.teleport(763, 613);
+				player.teleport(763, 613);
 				break;
 			case 897:
-				p.teleport(753, 585);
+				player.teleport(753, 585);
 				break;
 		}
 	}

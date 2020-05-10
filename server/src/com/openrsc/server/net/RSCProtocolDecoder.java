@@ -10,9 +10,6 @@ import io.netty.util.AttributeMap;
 
 import java.util.List;
 
-/**
- * @author Imposter
- */
 public final class RSCProtocolDecoder extends ByteToMessageDecoder implements AttributeMap {
 
 	@Override
@@ -25,8 +22,8 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 				length -= 1;
 				ByteBuf data = Unpooled.buffer(length);
 				buffer.readBytes(data, length);
-				Packet p = new Packet(opcode, data);
-				out.add(p);
+				Packet packet = new Packet(opcode, data);
+				out.add(packet);
 			} else {
 				buffer.resetReaderIndex();
 			}

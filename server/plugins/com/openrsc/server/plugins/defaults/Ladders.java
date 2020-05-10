@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.defaults;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.event.ShortEvent;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,6 +11,8 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -28,13 +29,12 @@ public class Ladders {
 	}
 
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		player.setBusyTimer(650);
 		if (obj.getID() == 487 && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.message(player.MEMBER_MESSAGE);
 			return;
 		} else if (obj.getID() == 79 && obj.getX() == 243 && obj.getY() == 95) {
 			player.message("Are you sure you want to go down to this lair?");
-			int menu = showMenu(player, "Yes I take the risk!", "No stay up here.");
+			int menu = multi(player, "Yes I take the risk!", "No stay up here.");
 			if (menu == 0) {
 				player.message("You climb down the manhole and land in a water lair");
 				player.teleport(98, 2931);
@@ -76,21 +76,21 @@ public class Ladders {
 		} else if (obj.getID() == 487) {
 			player.message("You pull the lever");
 			player.teleport(567, 3330);
-			sleep(600);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			if (player.getX() == 567 && player.getY() == 3330) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
 		} else if (obj.getID() == 488) {
 			player.message("You pull the lever");
 			player.teleport(282, 3019);
-			sleep(600);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			if (player.getX() == 282 && player.getY() == 3019) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
 		} else if (obj.getID() == 349) {
 			player.playerServerMessage(MessageType.QUEST, "You pull the lever");
 			player.teleport(621, 596);
-			sleep(600);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			if (player.getX() == 621 && player.getY() == 596) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
@@ -101,7 +101,7 @@ public class Ladders {
 			if (!skip) {
 				player.playerServerMessage(MessageType.QUEST, "warning pulling this lever will teleport you deep into the wilderness");
 				player.playerServerMessage(MessageType.QUEST, "Are you sure you wish to pull it?");
-				int menu = showMenu(player, "Yes I'm brave", "Eeep the wilderness no thankyou", "Yes please, don't show this message again");
+				int menu = multi(player, "Yes I'm brave", "Eeep the wilderness no thankyou", "Yes please, don't show this message again");
 				if (menu == 0 || menu == 2) {
 					if (menu == 2) player.getCache().store("hide_wild_lever_warn", true);
 					teleport = true;
@@ -111,22 +111,22 @@ public class Ladders {
 				player.message("you pull the lever");
 				player.teleport(180, 128);
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
-				sleep(600);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				if (player.getX() == 180 && player.getY() == 128) {
 					displayTeleportBubble(player, player.getX(), player.getY(), false);
 				}
 			}
 		} else if (obj.getID() == 776) {
-			if (hasItem(player, ItemId.PARAMAYA_REST_TICKET.id())) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.PARAMAYA_REST_TICKET.id(), Optional.of(false))) {
 				player.message("The barman takes your ticket and allows you up to");
 				player.message("the dormitory.");
 				player.teleport(395, 2713);
 				player.message("You climb up the ladder");
 			} else {
-				Npc kaleb = getNearestNpc(player, NpcId.KALEB.id(), 10);
+				Npc kaleb = ifnearvisnpc(player, NpcId.KALEB.id(), 10);
 				if (kaleb != null) {
 					player.message("You need a ticket to access the dormitory");
-					npcTalk(player, kaleb, "You can buy a ticket to the dormitory from me.",
+					npcsay(player, kaleb, "You can buy a ticket to the dormitory from me.",
 						"And have a lovely nights rest.");
 				} else {
 					player.message("Kaleb is busy at the moment.");
@@ -136,34 +136,26 @@ public class Ladders {
 			// Guild
 			// Ladder
 			if (!player.getCache().hasKey("prayer_guild")) {
-				player.setBusy(true);
 				Npc abbot = player.getWorld().getNpc(NpcId.ABBOT_LANGLEY.id(), 249, 252, 458, 468);
 				if (abbot != null) {
-					npcTalk(player, abbot, "Only members of our order can go up there");
-					int op = showMenu(player, abbot, false, "Well can i join your order?",
+					npcsay(player, abbot, "Only members of our order can go up there");
+					int op = multi(player, abbot, false, "Well can i join your order?",
 						"Oh sorry");
 					if (op == 0) {
-						playerTalk(player, abbot, "Well can I join your order?");
+						say(player, abbot, "Well can I join your order?");
 						if (getCurrentLevel(player, Skills.PRAYER) >= 31) {
-							npcTalk(player, abbot, "Ok I see you are someone suitable for our order",
+							npcsay(player, abbot, "Ok I see you are someone suitable for our order",
 								"You may join");
 							player.getCache().set("prayer_guild", 1);
 							player.teleport(251, 1411, false);
 							player.message("You climb up the ladder");
 						} else {
-							npcTalk(player, abbot, "No I feel you are not devout enough");
-							player.getWorld().getServer().getGameEventHandler().add(
-								new ShortEvent(player.getWorld(), player, "Prayer Guild Ladder") {
-									public void action() {
-										getOwner().setBusy(false);
-										getOwner().message(
-											"You need a prayer level of 31");
-									}
-								}
-							);
+							npcsay(player, abbot, "No I feel you are not devout enough");
+							delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+							player.message("You need a prayer level of 31");
 						}
 					} else if (op == 1) {
-						playerTalk(player, abbot, "Oh Sorry");
+						say(player, abbot, "Oh Sorry");
 					}
 				} else {
 					player.message("Abbot Langley is busy at the moment.");
@@ -176,39 +168,32 @@ public class Ladders {
 			// Guild
 			// Ladder
 			if (getCurrentLevel(player, Skills.MINING) < 60) {
-				player.setBusy(true);
 				Npc dwarf = player.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 272, 277, 563, 567);
 				if (dwarf != null) {
 					npcYell(player, dwarf,
 						"Sorry only the top miners are allowed in there");
 				}
-				player.getWorld().getServer().getGameEventHandler().add(
-					new ShortEvent(player.getWorld(), player, "Mining Guild Ladder") {
-						public void action() {
-							getOwner().setBusy(false);
-							getOwner().message(
-								"You need a mining level of 60 to enter");
-						}
-					});
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				player.message("You need a mining level of 60 to enter");
 			} else {
 				player.teleport(274, 3397, false);
 			}
 		} else if (obj.getID() == 223 && obj.getX() == 312 && obj.getY() == 3348) { // ladder to black hole
-			if (!hasItem(player, ItemId.DISK_OF_RETURNING.id())) {
-				message(player, "you seem to be missing a disk to use the ladder");
+			if (!player.getCarriedItems().hasCatalogID(ItemId.DISK_OF_RETURNING.id(), Optional.of(false))) {
+				mes(player, "you seem to be missing a disk to use the ladder");
 			} else {
-				message(player, 1200, "You climb down the ladder");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You climb down the ladder");
 				int offX = DataConversions.random(0,4) - 2;
 				int offY = DataConversions.random(0,4) - 2;
 				player.teleport(305 + offX, 3300 + offY);
 				ActionSender.sendPlayerOnBlackHole(player);
 			}
 		} else if (obj.getID() == 342 && obj.getX() == 611 && obj.getY() == 601) {
-			Npc paladinGuard = getNearestNpc(player, NpcId.PALADIN.id(), 4);
+			Npc paladinGuard = ifnearvisnpc(player, NpcId.PALADIN.id(), 4);
 			if (paladinGuard != null) {
 				npcYell(player, paladinGuard, "Stop right there");
 				paladinGuard.setChasing(player);
-				sleep(1000);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				if (player.inCombat()) {
 					return;
 				}
@@ -221,11 +206,11 @@ public class Ladders {
 		} else if (obj.getID() == 249 && obj.getX() == 98 && obj.getY() == 3537) { // lost city (Zanaris) ladder
 			Npc ladderAttendant = player.getWorld().getNpc(NpcId.FAIRY_LADDER_ATTENDANT.id(), 99, 99, 3537, 3537);
 			if (ladderAttendant != null) {
-				npcTalk(player, ladderAttendant, "This ladder leaves Zanaris",
+				npcsay(player, ladderAttendant, "This ladder leaves Zanaris",
 					"It leads to near Al Kharid in your mortal realm",
 					"You won't be able to return this way",
 					"Are you sure you have sampled your fill of delights from our market?");
-				int m = showMenu(player, ladderAttendant, "I think I'll stay down here a bit longer", "Yes, I'm ready to leave");
+				int m = multi(player, ladderAttendant, "I think I'll stay down here a bit longer", "Yes, I'm ready to leave");
 				if (m == 1) {
 					player.message("You climb up the ladder");
 					player.teleport(98, 706, false);

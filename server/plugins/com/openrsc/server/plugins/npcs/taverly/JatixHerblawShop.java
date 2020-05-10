@@ -8,21 +8,17 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class JatixHerblawShop implements ShopInterface,
-	TalkToNpcListener, TalkToNpcExecutiveListener {
+public class JatixHerblawShop extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 10000, 100, 70, 2,
 		new Item(ItemId.EMPTY_VIAL.id(), 50), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3), new Item(ItemId.EYE_OF_NEWT.id(), 50));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.JATIX.id();
 	}
 
@@ -37,17 +33,21 @@ public class JatixHerblawShop implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Hello how can I help you?");
-		final int option = showMenu(p, n, new String[]{
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Hello how can I help you?");
+		final int option = multi(player, n,
 			"What are you selling?", "You can't, I'm beyond help",
-			"I'm okay, thankyou"});
+			"I'm okay, thankyou");
 
 		if (option == 0) {
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 
 	}
-
 }

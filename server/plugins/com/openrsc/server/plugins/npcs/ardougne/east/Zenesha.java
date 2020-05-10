@@ -8,33 +8,31 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Zenesha implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+public class Zenesha extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(ItemId.BRONZE_PLATE_MAIL_TOP.id(), 3), new Item(ItemId.IRON_PLATE_MAIL_TOP.id(), 1), new Item(ItemId.STEEL_PLATE_MAIL_TOP.id(), 1), new Item(ItemId.BLACK_PLATE_MAIL_TOP.id(), 1), new Item(ItemId.MITHRIL_PLATE_MAIL_TOP.id(), 1));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 
-		npcTalk(p, n, "hello I sell plate mail tops");
-		int menu = showMenu(p, n, false, "I'm not intersted", "I may be intersted");
+		npcsay(player, n, "hello I sell plate mail tops");
+		int menu = multi(player, n, false, "I'm not intersted", "I may be intersted");
 		if (menu == 0) {
-			playerTalk(p, n, "I'm not interested");
+			say(player, n, "I'm not interested");
 		} else if (menu == 1) {
-			playerTalk(p, n, "I may be interested");
-			npcTalk(p, n, "Look at these fine samples then");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			say(player, n, "I may be interested");
+			npcsay(player, n, "Look at these fine samples then");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.ZENESHA.id();
 	}
 
@@ -47,4 +45,10 @@ public class Zenesha implements ShopInterface, TalkToNpcExecutiveListener, TalkT
 	public boolean isMembers() {
 		return true;
 	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
+
 }

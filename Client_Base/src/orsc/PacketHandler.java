@@ -2,8 +2,8 @@ package orsc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
+import com.openrsc.client.entityhandling.instances.Item;
 import com.openrsc.client.model.Sprite;
-import com.openrsc.interfaces.misc.CustomBankInterface;
 import orsc.buffers.RSBufferUtils;
 import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.MessageType;
@@ -21,12 +21,92 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
+
 public class PacketHandler {
 
 	private final RSBuffer_Bits packetsIncoming = new RSBuffer_Bits(30000);
 	private Network_Socket clientStream;
 	private mudclient mc;
+
+	private static final Map<Integer, String> incomingOpcodeMap = new HashMap<Integer, String>() {{
+		put(4, "CLOSE_CONNECTION_NOTIFY");
+		put(5, "QUEST_STATUS");
+		put(6, "UPDATE_STAKED_ITEMS_OPPONENT");
+		put(15, "UPDATE_TRADE_ACCEPTANCE");
+		put(20, "SHOW_CONFIRM_TRADE");
+		put(25, "FLOOR_SET");
+		put(30, "SYNC_DUEL_SETTINGS");
+		put(33, "UPDATE_XP");
+		put(36, "DISPLAY_TELEPORT_TELEGRAB_BUBBLE");
+		put(42, "OPEN_BANK");
+		put(48, "SCENERY_HANDLER");
+		put(51, "PRIVACY_SETTINGS");
+		put(52, "UPDATE_SYSTEM_UPDATE_TIMER");
+		put(53, "SET_INVENTORY");
+		put(59, "SHOW_APPEARANCE_CHANGE");
+		put(79, "NPC_COORDS");
+		put(83, "DISPLAY_DEATH_SCREEN");
+		put(84, "WAKE_UP");
+		put(87, "SEND_PM");
+		put(89, "SHOW_DIALOGUE_SERVER_MESSAGE_NOT_TOP");
+		put(90, "SET_INVENTORY_SLOT");
+		put(91, "BOUNDARY_HANDLER");
+		put(92, "INITIATE_TRADE");
+		put(97, "UPDATE_ITEMS_TRADED_TO_YOU");
+		put(99, "GROUNDITEM_HANDLER");
+		put(101, "SHOW_SHOP");
+		put(104, "UPDATE_NPC");
+		put(109, "SET_IGNORE");
+		put(111, "COMPLETED_TUTORIAL");
+		put(114, "SET_FATIGUE");
+		put(117, "FALL_ASLEEP");
+		put(120, "RECEIVE_PM");
+		put(123, "REMOVE_INVENTORY_SLOT");
+		put(128, "CONCLUDE_TRADE");
+		put(131, "SEND_MESSAGE");
+		put(137, "EXIT_SHOP");
+		put(149, "UPDATE_FRIEND");
+		put(153, "SET_EQUIP_STATS");
+		put(156, "SET_STATS");
+		put(159, "UPDATE_STAT");
+		put(162, "UPDATE_TRADE_RECIPIENT_ACCEPTANCE");
+		put(165, "CLOSE_CONNECTION");
+		put(172, "SHOW_CONFIRM_DUEL");
+		put(176, "SHOW_DIALOGUE_DUEL");
+		put(182, "SHOW_WELCOME");
+		put(183, "DENY_LOGOUT");
+		put(191, "PLAYER_COORDS");
+		put(194, "INCORRECT_SLEEPWORD");
+		put(203, "CLOSE_BANK");
+		put(204, "PLAY_SOUND");
+		put(206, "SET_PRAYERS");
+		put(210, "UPDATE_DUEL_ACCEPTANCE");
+		put(211, "UPDATE_ENTITIES");
+		put(213, "NO_OP_WHILE_WAITING_FOR_NEW_APPEARANCE");
+		put(222, "SHOW_DIALOGUE_SERVER_MESSAGE_TOP");
+		put(225, "CANCEL_DUEL_DIALOGUE");
+		put(234, "UPDATE_PLAYERS");
+		put(237, "UPDATE_IGNORE_BECAUSE_OF_NAME_CHANGE");
+		put(240, "GAME_SETTINGS");
+		put(244, "SET_FATIGUE_SLEEPING");
+		put(245, "SHOW_DIALOGUE_MENU");
+		put(249, "UPDATE_BANK_ITEMS_DISPLAY");
+		put(252, "DISABLE_OPTION_MENU");
+		put(253, "UPDATE_DUEL_OPPONENT_ACCEPTANCE");
+
+		// CUSTOM
+		put(19, "SEND_SERVER_CONFIGS");
+		put(113, "SEND_IRONMAN");
+		put(115, "SEND_ON_BLACK_HOLE");
+		put(135, "BANK_PIN_INTERFACE");
+		put(136, "ONLINE_LIST");
+		put(147, "SEND_KILLS2");
+	}};
+
 
 	public PacketHandler(mudclient mc) {
 		this.mc = mc;
@@ -74,7 +154,8 @@ public class PacketHandler {
 	private void handlePacket1(int opcode, int length) {
 		try {
 			if (Config.DEBUG) {
-				System.out.println("Frame: " + mc.getFrameCounter() + ", Opcode: " + opcode + ", Length: " + length);
+				System.out.println("Frame: " + mc.getFrameCounter()
+					+ ", Opcode: " + incomingOpcodeMap.get(opcode) + " (" + opcode + "), Length: " + length);
 			}
 
 			// Unhandled Opcodes Received...
@@ -164,7 +245,7 @@ public class PacketHandler {
 			else if (opcode == 109) updateIgnoreList();
 
 				// Chat Blocking Settings
-			else if (opcode == 158) updateChatBlockSettings();
+			else if (opcode == 51) updateChatBlockSettings();
 
 				// Receive Private Message
 			else if (opcode == 120) receivePrivateMessage();
@@ -194,7 +275,7 @@ public class PacketHandler {
 			else if (opcode == 48) showGameObjects(length);
 
 				// Inventory items
-			else if (opcode == 53) updateInventoryItems();
+			else if (opcode == 53) updateInventory();
 
 				//All Equipment sent
 			else if (opcode == 254) updateEquipment();
@@ -262,7 +343,7 @@ public class PacketHandler {
 				mc.updateQuestCommandOptions();
 			}
 
-				// Show Bank
+			// Show Bank
 			else if (opcode == 42) showBank();
 
 				// Update Experience
@@ -284,7 +365,7 @@ public class PacketHandler {
 			else if (opcode == 249) updateBank();
 
 				// Update Inventory
-			else if (opcode == 90) updateInventory();
+			else if (opcode == 90) updateInventoryItem();
 
 				// Experience Updates & Notification
 			else if (opcode == 159) updateExperience();
@@ -348,7 +429,7 @@ public class PacketHandler {
 			else if (opcode == 253) duelOpponentDecision();
 
 				// Drop Item
-			else if (opcode == 123) dropItem();
+			else if (opcode == 123) removeItem();
 
 				// Open Duel Dialog
 			else if (opcode == 176) beginDuelOptions();
@@ -513,7 +594,7 @@ public class PacketHandler {
 		mc.getOnlineList().reset();
 		int onlinePlayerCount = packetsIncoming.getShort();
 		for (int i = 0; i < onlinePlayerCount; i++) {
-			mc.getOnlineList().addOnlineUser(packetsIncoming.readString(), packetsIncoming.get32());
+			mc.getOnlineList().addOnlineUser(packetsIncoming.readString(), packetsIncoming.get32(), i == (onlinePlayerCount - 1));
 		}
 		mc.getOnlineList().setVisible(true);
 	}
@@ -823,8 +904,8 @@ public class PacketHandler {
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
-		int wantPkBots, wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
-		int globalFriendChat;
+		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
+		int globalFriendChat, wantRightClickTrade, customProtocol;
 
 		String logoSpriteID;
 
@@ -901,10 +982,11 @@ public class PacketHandler {
 			wantGlobalFriend = this.getClientStream().getUnsignedByte(); //70
 			characterCreationMode = this.getClientStream().getUnsignedByte(); //71
 			skillingExpRate = this.getClientStream().getUnsignedByte(); //72
-			wantPkBots = this.getClientStream().getUnsignedByte(); // 73
-			wantHarvesting = this.getClientStream().getUnsignedByte(); //74
-			hideLoginBox = this.getClientStream().getUnsignedByte(); // 75
-			globalFriendChat = this.getClientStream().getUnsignedByte(); // 76
+			wantHarvesting = this.getClientStream().getUnsignedByte(); //73
+			hideLoginBox = this.getClientStream().getUnsignedByte(); // 74
+			globalFriendChat = this.getClientStream().getUnsignedByte(); // 75
+			wantRightClickTrade = this.getClientStream().getUnsignedByte(); // 76
+			customProtocol = this.getClientStream().getUnsignedByte(); // 77
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -978,10 +1060,11 @@ public class PacketHandler {
 			wantGlobalFriend = packetsIncoming.getUnsignedByte(); //70
 			characterCreationMode = packetsIncoming.getUnsignedByte(); //71
 			skillingExpRate = packetsIncoming.getUnsignedByte(); //72
-			wantPkBots = packetsIncoming.getUnsignedByte(); // 73
-			wantHarvesting = packetsIncoming.getUnsignedByte(); //74
-			hideLoginBox = packetsIncoming.getUnsignedByte(); // 75
-			globalFriendChat = packetsIncoming.getUnsignedByte(); // 76
+			wantHarvesting = packetsIncoming.getUnsignedByte(); //73
+			hideLoginBox = packetsIncoming.getUnsignedByte(); // 74
+			globalFriendChat = packetsIncoming.getUnsignedByte(); // 75
+			wantRightClickTrade = packetsIncoming.getUnsignedByte(); // 76
+			customProtocol = packetsIncoming.getUnsignedByte(); // 77
 		}
 
 		if (Config.DEBUG) {
@@ -1058,11 +1141,12 @@ public class PacketHandler {
 					"\nS_WANT_GLOBAL_FRIEND" + wantGlobalFriend + // 70
 					"\nS_CHARACTER_CREATION_MODE" + characterCreationMode + // 71
 					"\nS_SKILLING_EXP_RATE" + skillingExpRate + //72
-					"\nS_WANT_PK_BOTS " + wantPkBots + // 73
-					"\nS_WANT_HARVESTING " + wantHarvesting  + // 74
+					"\nS_WANT_HARVESTING " + wantHarvesting + // 74
 					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 75
-					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat // 76
-					);
+					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 76
+					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 77
+					"\nS_CUSTOM_PROTOCOL " + wantRightClickTrade // 78
+			);
 		}
 
 		props.setProperty("SERVER_IP", ClientPort.loadIP()); // 0
@@ -1139,10 +1223,11 @@ public class PacketHandler {
 		props.setProperty("S_WANT_GLOBAL_FRIEND", wantGlobalFriend == 1 ? "true" : "false"); //70
 		props.setProperty("S_CHARACTER_CREATION_MODE", Integer.toString(characterCreationMode)); //71
 		props.setProperty("S_SKILLING_EXP_RATE", Integer.toString(skillingExpRate)); //72
-		props.setProperty("S_WANT_PK_BOTS", wantPkBots == 1 ? "true" : "false"); // 73
 		props.setProperty("S_WANT_HARVESTING", wantHarvesting == 1 ? "true" : "false"); // 74
 		props.setProperty("S_HIDE_LOGIN_BOX", hideLoginBox == 1 ? "true" : "false"); // 75
 		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 76
+		props.setProperty("S_RIGHT_CLICK_TRADE", wantRightClickTrade == 1 ? "true" : "false"); // 77
+		props.setProperty("S_CUSTOM_PROTOCOL", customProtocol == 1 ? "true" : "false"); // 78
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
@@ -1357,19 +1442,53 @@ public class PacketHandler {
 		}
 	}
 
-	private void updateInventoryItems() {
-		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++)
-		{
-			mc.setInventoryItemID(i, 0);
-			mc.setInventoryItemEquipped(i, 0);
-			mc.setInventoryItemSize(i, 0);
+	private void removeItem() {
+		int slot = packetsIncoming.getUnsignedByte();
+		mc.setInventoryItemCount(mc.getInventoryItemCount() - 1);
+
+		for (int index = slot; mc.getInventoryItemCount() > index; ++index) {
+			mc.setInventoryItem(index, mc.getInventoryItem(index + 1).clone());
+		}
+	}
+
+	private void updateInventoryItem() {
+		int slot = packetsIncoming.getUnsignedByte();
+		int itemID = packetsIncoming.getShort();
+		boolean noted = packetsIncoming.getUnsignedByte() == 1;
+		int stackSize = 1;
+		if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID & 32767).isStackable() || noted) {
+			stackSize = packetsIncoming.get32();
+		}
+		mc.setInventoryItemID(slot, FastMath.bitwiseAnd(itemID, 32767));
+		mc.setInventoryItemEquipped(slot, itemID / '\u8000');
+		mc.getInventoryItem(slot).setNoted(noted);
+		mc.setInventoryItemSize(slot, stackSize);
+		if (slot >= mc.getInventoryItemCount()) {
+			mc.setInventoryItemCount(1 + slot);
+		}
+	}
+
+	private void updateInventory() {
+		for (int i = 0; i < Config.S_PLAYER_INVENTORY_SLOTS; i++) {
+			Item item = mc.getInventoryItem(i);
+			item.setItemDef(null);
+			item.setAmount(0);
+			item.setEquipped(false);
+			item.setNoted(false);
+			item.setCharges(0);
+			item.setDurability(0);
 		}
 		mc.setInventoryItemCount(packetsIncoming.getUnsignedByte());
 		for (int i = 0; i < mc.getInventoryItemCount(); ++i) {
 			int itemID = packetsIncoming.getShort();
 			mc.setInventoryItemID(i, itemID);
 			mc.setInventoryItemEquipped(i, packetsIncoming.getByte());
-			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID).isStackable()) {
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
+			}
+			mc.getInventoryItem(i).setNoted(noted);
+			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, Optional.of(noted)).isStackable()) {
 				mc.setInventoryItemSize(i, packetsIncoming.get32());
 			} else {
 				mc.setInventoryItemSize(i, 1);
@@ -1410,8 +1529,7 @@ public class PacketHandler {
 		int equipslot = 0;
 		int itemID = 0;
 
-		for (int i = 0; i < Config.S_PLAYER_SLOT_COUNT; i++)
-		{
+		for (int i = 0; i < Config.S_PLAYER_SLOT_COUNT; i++) {
 			mc.equippedItems[i] = null;
 			mc.equippedItemAmount[i] = 0;
 		}
@@ -1709,76 +1827,78 @@ public class PacketHandler {
 			int x = mc.getLocalPlayerX() + packetsIncoming.get16_V2() >> 3;
 			int z = mc.getLocalPlayerZ() + packetsIncoming.get16_V2() >> 3;
 
-			int count = 0;
-			for (int j = 0; j < mc.getGroundItemCount(); ++j) {
-				int var10 = (mc.getGroundItemX(j) >> 3) - x;
-				int var11 = (mc.getGroundItemZ(j) >> 3) - z;
-				if (var10 != 0 || var11 != 0) {
-					if (count != j) {
-						mc.setGroundItemX(count, mc.getGroundItemX(j));
-						mc.setGroundItemZ(count, mc.getGroundItemZ(j));
-						mc.setGroundItemID(count, mc.getGroundItemID(j));
-						mc.setGroundItemHeight(count, mc.getGroundItemHeight(j));
+			int newIndex = 0;
+			for (int oldIndex = 0; oldIndex < mc.getGroundItemCount(); ++oldIndex) {
+				int offsetX = (mc.getGroundItemX(oldIndex) >> 3) - x;
+				int offsetY = (mc.getGroundItemZ(oldIndex) >> 3) - z;
+				if (offsetX != 0 || offsetY != 0) {
+					if (newIndex != oldIndex) {
+						mc.setGroundItemX(newIndex, mc.getGroundItemX(oldIndex));
+						mc.setGroundItemZ(newIndex, mc.getGroundItemZ(oldIndex));
+						mc.setGroundItemID(newIndex, mc.getGroundItemID(oldIndex));
+						mc.setGroundItemHeight(newIndex, mc.getGroundItemHeight(oldIndex));
+						if (Config.S_WANT_BANK_NOTES)
+							mc.setGroundItemNoted(newIndex, mc.getGroundItemNoted(oldIndex));
 					}
 
-					++count;
+					++newIndex;
 				}
 			}
 
-			mc.setGroundItemCount(count);
+			mc.setGroundItemCount(newIndex);
 
 			// Game Object Counts
-			count = 0;
-			for (int j = 0; j < mc.getGameObjectInstanceCount(); ++j) {
-				int var10 = (mc.getGameObjectInstanceX(j) >> 3) - x;
-				int var11 = (mc.getGameObjectInstanceZ(j) >> 3) - z;
+			newIndex = 0;
+			for (int oldIndex = 0; oldIndex < mc.getGameObjectInstanceCount(); ++oldIndex) {
+				int var10 = (mc.getGameObjectInstanceX(oldIndex) >> 3) - x;
+				int var11 = (mc.getGameObjectInstanceZ(oldIndex) >> 3) - z;
 				if (var10 == 0 && var11 == 0) {
-					mc.getScene().removeModel(mc.getGameObjectInstanceModel(j));
+					mc.getScene().removeModel(mc.getGameObjectInstanceModel(oldIndex));
 					mc.getWorld().removeGameObject_CollisonFlags(
-						mc.getGameObjectInstanceID(j),
-						mc.getGameObjectInstanceX(j),
-						mc.getGameObjectInstanceZ(j));
+						mc.getGameObjectInstanceID(oldIndex),
+						mc.getGameObjectInstanceX(oldIndex),
+						mc.getGameObjectInstanceZ(oldIndex));
 				} else {
-					if (j != count) {
-						mc.setGameObjectInstanceModel(count, mc.getGameObjectInstanceModel(j));
-						mc.setGameObjectInstanceX(count, mc.getGameObjectInstanceX(j));
-						mc.setGameObjectInstanceZ(count, mc.getGameObjectInstanceZ(j));
-						mc.setGameObjectInstanceID(count, mc.getGameObjectInstanceID(j));
-						mc.setGameObjectInstanceDir(count, mc.getGameObjectInstanceDir(j));
+					if (oldIndex != newIndex) {
+						mc.setGameObjectInstanceModel(newIndex, mc.getGameObjectInstanceModel(oldIndex));
+						mc.setGameObjectInstanceX(newIndex, mc.getGameObjectInstanceX(oldIndex));
+						mc.setGameObjectInstanceZ(newIndex, mc.getGameObjectInstanceZ(oldIndex));
+						mc.setGameObjectInstanceID(newIndex, mc.getGameObjectInstanceID(oldIndex));
+						mc.setGameObjectInstanceDir(newIndex, mc.getGameObjectInstanceDir(oldIndex));
 					}
 
-					++count;
+					++newIndex;
 				}
 			}
 
-			mc.setGameObjectInstanceCount(count);
+			mc.setGameObjectInstanceCount(newIndex);
 
 			// Wall Object Counts
-			count = 0;
-			for (int n = 0; mc.getWallObjectInstanceCount() > n; ++n) {
-				int wallX = (mc.getWallObjectInstanceX(n) >> 3) - x;
-				int wallZ = (mc.getWallObjectInstanceZ(n) >> 3) - z;
+			newIndex = 0;
+			for (int oldIndex = 0; mc.getWallObjectInstanceCount() > oldIndex; ++oldIndex) {
+				int wallX = (mc.getWallObjectInstanceX(oldIndex) >> 3) - x;
+				int wallZ = (mc.getWallObjectInstanceZ(oldIndex) >> 3) - z;
 				if (wallX == 0 && wallZ == 0) {
-					mc.getScene().removeModel(mc.getWallObjectInstanceModel(n));
+					mc.getScene().removeModel(mc.getWallObjectInstanceModel(oldIndex));
 					mc.getWorld().removeWallObject_CollisionFlags(true,
-						mc.getWallObjectInstanceDir(n),
-						mc.getWallObjectInstanceZ(n),
-						mc.getWallObjectInstanceX(n),
-						mc.getWallObjectInstanceID(n));
+						mc.getWallObjectInstanceDir(oldIndex),
+						mc.getWallObjectInstanceZ(oldIndex),
+						mc.getWallObjectInstanceX(oldIndex),
+						mc.getWallObjectInstanceID(oldIndex));
 				} else {
-					if (n != count) {
-						mc.setWallObjectInstanceModel(count, mc.getWallObjectInstanceModel(n));
-						mc.setWallObjectInstanceX(count, mc.getWallObjectInstanceX(n));
-						mc.setWallObjectInstanceZ(count, mc.getWallObjectInstanceZ(n));
-						mc.setWallObjectInstanceDir(count, mc.getWallObjectInstanceDir(n));
-						mc.setWallObjectInstanceID(count, mc.getWallObjectInstanceID(n));
+					if (oldIndex != newIndex) {
+						mc.setWallObjectInstanceModel(newIndex, mc.getWallObjectInstanceModel(oldIndex));
+						mc.setWallObjectInstanceX(newIndex, mc.getWallObjectInstanceX(oldIndex));
+						mc.setWallObjectInstanceZ(newIndex, mc.getWallObjectInstanceZ(oldIndex));
+						mc.setWallObjectInstanceDir(newIndex, mc.getWallObjectInstanceDir(oldIndex));
+						mc.setWallObjectInstanceID(newIndex, mc.getWallObjectInstanceID(oldIndex));
 					}
 
-					++count;
+					++newIndex;
 				}
 			}
 
-			mc.setWallObjectInstanceCount(count);
+			mc.setWallObjectInstanceCount(newIndex);
 		}
 	}
 
@@ -1916,23 +2036,41 @@ public class PacketHandler {
 		mc.setTradeRecipientConfirmItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; mc.getTradeRecipientConfirmItemsCount() > var4; ++var4) {
-			mc.setTradeRecipientConfirmItems(var4, packetsIncoming.getShort());
+			int itemID = packetsIncoming.getShort();
+			mc.setTradeRecipientConfirmItemID(var4, itemID);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
+			}
+			mc.getTradeRecipientConfirmItem(var4).setNoted(noted);
 			mc.setTradeRecipientConfirmItemCount(var4, packetsIncoming.get32());
 		}
 
 		mc.setTradeConfirmItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; var4 < mc.getTradeConfirmItemsCount(); ++var4) {
-			mc.setTradeConfirmItems(var4, packetsIncoming.getShort());
-			mc.setTradeConfirmItemsCount1(var4, packetsIncoming.get32());
+			int itemID = packetsIncoming.getShort();
+			mc.setTradeConfirmItemID(var4, itemID);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
+			}
+			mc.getTradeConfirmItem(var4).setNoted(noted);
+			mc.setTradeConfirmItemsCount(var4, packetsIncoming.get32());
 		}
 	}
 
 	private void showDuelItems() {
-		mc.setDuelOffsetOpponentItemCount(packetsIncoming.getUnsignedByte());
+		mc.setDuelOpponentItemsCount(packetsIncoming.getUnsignedByte());
 
-		for (int var4 = 0; mc.getDuelOffsetOpponentItemCount() > var4; ++var4) {
-			mc.setDuelOpponentItemId(var4, packetsIncoming.getShort());
+		for (int var4 = 0; mc.getDuelOpponentItemsCount() > var4; ++var4) {
+			int itemID = packetsIncoming.getShort();
+			mc.setDuelOpponentItemID(var4, itemID);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
+			}
+			mc.getDuelOpponentItem(var4).setNoted(noted);
 			mc.setDuelOpponentItemCount(var4, packetsIncoming.get32());
 		}
 
@@ -1973,43 +2111,33 @@ public class PacketHandler {
 		int slot = packetsIncoming.getUnsignedByte();
 		int item = packetsIncoming.getShort();
 		int itemCount = packetsIncoming.get32();
-
 		mc.getBank().updateBank(slot, item, itemCount);
-	}
-
-	private void updateInventory() {
-		int slot = packetsIncoming.getUnsignedByte();
-		int itemID = packetsIncoming.getShort();
-		int stackSize = 1;
-		if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID & 32767).isStackable()) {
-			stackSize = packetsIncoming.get32();
-		}
-		mc.setInventoryItemID(slot, FastMath.bitwiseAnd(itemID, 32767));
-		mc.setInventoryItemEquipped(slot, itemID / '\u8000');
-		mc.setInventoryItemSize(slot, stackSize);
-		if (slot >= mc.getInventoryItemCount()) {
-			mc.setInventoryItemCount(1 + slot);
-		}
 	}
 
 	private void updateExperience() {
 		int skill = packetsIncoming.getUnsignedByte();
-		mc.setRecentSkill(skill);
-		int oldXp = mc.getPlayerExperience(skill);
+		int oldXP = mc.getPlayerExperience(skill);
 		int oldLvl = mc.getPlayerStatBase(skill);
 		mc.setPlayerStatCurrent(skill, packetsIncoming.getUnsignedByte());
 		mc.setPlayerStatBase(skill, packetsIncoming.getUnsignedByte());
 		mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
+		updateExperienceTracker(skill, oldXP, oldLvl);
+	}
 
+	private void updateExperienceTracker(int skill, int oldXp, int oldLvl) {
 		int receivedXp = mc.getPlayerExperience(skill) - oldXp;
-		receivedXp = receivedXp < 0 ? 0 : receivedXp;
-		mc.setPlayerStatXpGained(skill, mc.getPlayerStatXpGained(skill) + receivedXp);
-		if (mc.getXpGainedStartTime(skill) == 0) {
-			mc.setXpGainedStartTime(skill, System.currentTimeMillis());
-		}
-		mc.setPlayerXpGainedTotal(mc.getPlayerXpGainedTotal() + (long) receivedXp);
-		if (mc.totalXpGainedStartTime == 0) {
-			mc.totalXpGainedStartTime = System.currentTimeMillis();
+		receivedXp = Math.max(receivedXp, 0);
+
+		if (Config.S_EXPERIENCE_COUNTER_TOGGLE) {
+			mc.setRecentSkill(skill);
+			mc.setPlayerStatXpGained(skill, mc.getPlayerStatXpGained(skill) + receivedXp);
+			if (mc.getXpGainedStartTime(skill) == 0) {
+				mc.setXpGainedStartTime(skill, System.currentTimeMillis());
+			}
+			mc.setPlayerXpGainedTotal(mc.getPlayerXpGainedTotal() + (long) receivedXp);
+			if (mc.totalXpGainedStartTime == 0) {
+				mc.totalXpGainedStartTime = System.currentTimeMillis();
+			}
 		}
 
 		if (Config.S_EXPERIENCE_DROPS_TOGGLE && Config.C_EXPERIENCE_DROPS) {
@@ -2036,17 +2164,29 @@ public class PacketHandler {
 		mc.setShowDialogDuelConfirm(true);
 		mc.setShowDialogDuel(false);
 		mc.setDuelOpponentName(packetsIncoming.readString());
-		mc.setDuelOpponentItemsCount(packetsIncoming.getUnsignedByte());
-		for (int var4 = 0; var4 < mc.getDuelOpponentItemsCount(); ++var4) {
-			mc.setDuelOpponentItems(var4, packetsIncoming.getShort());
-			mc.setDuelOpponentItemCounts(var4, packetsIncoming.get32());
+		mc.setDuelOpponentConfirmItemsCount(packetsIncoming.getUnsignedByte());
+		for (int var4 = 0; var4 < mc.getDuelOpponentConfirmItemsCount(); ++var4) {
+			int itemID = packetsIncoming.getShort();
+			mc.setDuelOpponentConfirmItemID(var4, itemID);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
+			}
+			mc.getDuelOpponentConfirmItem(var4).setNoted(noted);
+			mc.setDuelOpponentConfirmItemCount(var4, packetsIncoming.get32());
 		}
 
-		mc.setDuelItemsCount(packetsIncoming.getUnsignedByte());
+		mc.setDuelConfirmItemsCount(packetsIncoming.getUnsignedByte());
 
-		for (int var4 = 0; mc.getDuelItemsCount() > var4; ++var4) {
-			mc.setDuelItems(var4, packetsIncoming.getShort());
-			mc.setDuelItemCounts(var4, packetsIncoming.get32());
+		for (int var4 = 0; mc.getDuelConfirmItemsCount() > var4; ++var4) {
+			int itemID = packetsIncoming.getShort();
+			mc.setDuelConfirmItemID(var4, itemID);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
+			}
+			mc.getDuelConfirmItem(var4).setNoted(noted);
+			mc.setDuelConfirmItemCount(var4, packetsIncoming.get32());
 		}
 
 		mc.setDuelOptionRetreat(packetsIncoming.getUnsignedByte());
@@ -2123,17 +2263,6 @@ public class PacketHandler {
 		}
 	}
 
-	private void dropItem() {
-		int slot = packetsIncoming.getUnsignedByte();
-		mc.setInventoryItemCount(mc.getInventoryItemCount() - 1);
-
-		for (int index = slot; mc.getInventoryItemCount() > index; ++index) {
-			mc.setInventoryItemID(index, mc.getInventoryItemID(index + 1));
-			mc.setInventoryItemSize(index, mc.getInventoryItemSize(index + 1));
-			mc.setInventoryItemEquipped(index, mc.getInventoryItemEquippedID(index + 1));
-		}
-	}
-
 	private void beginDuelOptions() {
 		int var4 = packetsIncoming.getShort();
 		if (null != mc.getPlayerFromServer(var4)) {
@@ -2147,8 +2276,8 @@ public class PacketHandler {
 		mc.setDuelSettingsRetreat(false);
 		mc.setShowDialogDuel(true);
 		mc.setDuelSettingsMagic(false);
-		mc.setDuelOffsetOpponentItemCount(0);
-		mc.setDuelOfferItemCount(0);
+		mc.setDuelOpponentItemsCount(0);
+		mc.setDuelOfferItemsCount(0);
 	}
 
 	private void showShopDialog() {
@@ -2160,44 +2289,52 @@ public class PacketHandler {
 		mc.setShopPriceMultiplier(packetsIncoming.getUnsignedByte());
 
 		for (int i = 0; i < 40; ++i) {
-			mc.setShopItemID(i, -1);
+			mc.setShopCategoryID(i, -1);
 		}
 
 		for (int i = 0; shopItemCount > i; ++i) {
-			mc.setShopItemID(i, packetsIncoming.getShort());
+			mc.setShopCategoryID(i, packetsIncoming.getShort());
 			mc.setShopItemCount(i, packetsIncoming.getShort());
 			mc.setShopItemPrice(i, packetsIncoming.getShort());
 		}
 
-		if (shopType == 1) {
-			int var6 = 39;
+		// Check through player's inventory items if this is a general store.
+		int lastAvailableShopSlotIndex = 39;
+		for (int inventoryIndex = 0; inventoryIndex < mc.getInventoryItemCount()
+			&& shopItemCount <= lastAvailableShopSlotIndex; ++inventoryIndex) {
 
-			for (int inventoryIndex = 0; inventoryIndex < mc.getInventoryItemCount()
-				&& shopItemCount <= var6; ++inventoryIndex) {
-				boolean var25 = false;
+			// Only show player items if they are in a general store, or it's a note in a specialty store.
+			if (!(shopType == 1
+				|| (mc.getInventoryItem(inventoryIndex).getNoted() && mc.shopContains(mc.getInventoryItemID(inventoryIndex)))))
+				continue;
 
-				for (int var9 = 0; var9 < 40; ++var9) {
-					if (mc.getInventoryItemID(inventoryIndex) == mc.getShopItemID(var9)) {
-						var25 = true;
-						break;
-					}
+			boolean foundEquivalentShopItem = false;
+			for (int currentShopSlot = 0; currentShopSlot < 40; ++currentShopSlot) {
+
+				// Can only match if category matches and not noted.
+				if (mc.getInventoryItemID(inventoryIndex) == mc.getShopCategoryID(currentShopSlot)
+					&& mc.getInventoryItem(inventoryIndex).getNoted() == mc.getShopItemNoted(currentShopSlot)) {
+					foundEquivalentShopItem = true;
+					break;
 				}
+			}
 
-				if (mc.getInventoryItemID(inventoryIndex) == 10) {
-					var25 = true;
-				}
+			if (mc.getInventoryItemID(inventoryIndex) == 10) {
+				continue;
+			}
 
-				if (!var25) {
-					mc.setShopItemID(var6, FastMath.bitwiseAnd(32767, mc.getInventoryItemID(inventoryIndex)));
-					mc.setShopItemCount(var6, 0);
-					mc.setShopItemPrice(var6, 0);
-					--var6;
-				}
+			// If we have not found an inventory item in the shop stock, add the item to the end of the shop.
+			if (!foundEquivalentShopItem) {
+				mc.setShopCategoryID(lastAvailableShopSlotIndex, FastMath.bitwiseAnd(32767, mc.getInventoryItemID(inventoryIndex)));
+				mc.setShopItemCount(lastAvailableShopSlotIndex, 0);
+				mc.setShopItemPrice(lastAvailableShopSlotIndex, 0);
+				mc.setShopItemNoted(lastAvailableShopSlotIndex, mc.getInventoryItem(inventoryIndex).getNoted());
+				--lastAvailableShopSlotIndex;
 			}
 		}
 
 		if (mc.getShopSelectedItemIndex() >= 0 && 40 > mc.getShopSelectedItemIndex()
-			&& mc.getShopSelectedItemType() != mc.getShopItemID(mc.getShopSelectedItemIndex())) {
+			&& mc.getShopSelectedItemType() != mc.getShopCategoryID(mc.getShopSelectedItemIndex())) {
 			mc.setShopSelectedItemIndex(-1);
 			mc.setShopSelectedItemType(-2);
 		}
@@ -2207,14 +2344,26 @@ public class PacketHandler {
 		mc.setTradeRecipientItemsCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; var4 < mc.getTradeRecipientItemsCount(); ++var4) {
-			mc.setTradeRecipientItem(var4, packetsIncoming.getShort());
+			int itemID = packetsIncoming.getShort();
+			mc.setTradeRecipientItemID(var4, itemID);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
+			}
+			mc.getTradeRecipientItem(var4).setNoted(noted);
 			mc.setTradeRecipientItemCount(var4, packetsIncoming.get32());
 		}
 
 		mc.setTradeItemCount(packetsIncoming.getUnsignedByte());
 
 		for (int var4 = 0; var4 < mc.getTradeItemCount(); ++var4) {
-			mc.setTradeItemID(var4, packetsIncoming.getShort());
+			int itemID = packetsIncoming.getShort();
+			mc.setTradeItemID(var4, itemID);
+			boolean noted = false;
+			if (Config.S_CUSTOM_PROTOCOL) {
+				noted = packetsIncoming.getByte() == 1;
+			}
+			mc.getTradeItem(var4).setNoted(noted);
 			mc.setTradeItemSize(var4, packetsIncoming.get32());
 		}
 
@@ -2417,42 +2566,61 @@ public class PacketHandler {
 
 	private void drawGroundItems(int length) {
 		while (length > packetsIncoming.packetEnd) {
+
+			boolean groundItemNoted = false;
+
+			// Ground items that are in range
 			if (packetsIncoming.getUnsignedByte() != 255) {
 				--packetsIncoming.packetEnd;
 				int groundItemID = packetsIncoming.getShort();
-				int var19 = mc.getLocalPlayerX() + packetsIncoming.getByte();
-				int var6 = mc.getLocalPlayerZ() + packetsIncoming.getByte();
+				int groundItemX = mc.getLocalPlayerX() + packetsIncoming.getByte();
+				int groundItemY = mc.getLocalPlayerZ() + packetsIncoming.getByte();
+				if (Config.S_WANT_BANK_NOTES)
+					groundItemNoted = packetsIncoming.getByte() == 1;
+
+				// Currently visible ground items
 				if ((groundItemID & 32768) != 0) {
 					groundItemID &= 32767;
-					int var7 = 0;
 
-					for (int dir = 0; dir < mc.getGroundItemCount(); ++dir) {
-						if (mc.getGroundItemX(dir) == var19 && mc.getGroundItemZ(dir) == var6
-							&& mc.getGroundItemID(dir) == groundItemID) {
+					// Loop through the ground items and check if they need to be reindexed.
+					int newIndex = 0;
+					for (int oldIndex = 0; oldIndex < mc.getGroundItemCount(); ++oldIndex) {
+
+						// No need to reindex if X, Y, and ID are the same.
+						if (mc.getGroundItemX(oldIndex) == groundItemX && mc.getGroundItemZ(oldIndex) == groundItemY
+							&& mc.getGroundItemID(oldIndex) == groundItemID) {
 							groundItemID = -123;
 						} else {
-							if (var7 != dir) {
-								mc.setGroundItemX(var7, mc.getGroundItemX(dir));
-								mc.setGroundItemZ(var7, mc.getGroundItemZ(dir));
-								mc.setGroundItemID(var7, mc.getGroundItemID(dir));
-								mc.setGroundItemHeight(var7, mc.getGroundItemHeight(dir));
+							if (newIndex != oldIndex) {
+								mc.setGroundItemX(newIndex, mc.getGroundItemX(oldIndex));
+								mc.setGroundItemZ(newIndex, mc.getGroundItemZ(oldIndex));
+								mc.setGroundItemID(newIndex, mc.getGroundItemID(oldIndex));
+								mc.setGroundItemHeight(newIndex, mc.getGroundItemHeight(oldIndex));
+								if (Config.S_WANT_BANK_NOTES)
+									mc.setGroundItemNoted(newIndex, mc.getGroundItemNoted(oldIndex));
 							}
 
-							++var7;
+							++newIndex;
 						}
 					}
 
-					mc.setGroundItemCount(var7);
+					// After the above loop, we now have our new count of ground items.
+					mc.setGroundItemCount(newIndex);
 
+				// Currently invisible ground items
 				} else {
-					mc.setGroundItemX(mc.getGroundItemCount(), var19);
-					mc.setGroundItemZ(mc.getGroundItemCount(), var6);
+					mc.setGroundItemX(mc.getGroundItemCount(), groundItemX);
+					mc.setGroundItemZ(mc.getGroundItemCount(), groundItemY);
 					mc.setGroundItemID(mc.getGroundItemCount(), groundItemID);
 					mc.setGroundItemHeight(mc.getGroundItemCount(), 0);
+					if (Config.S_WANT_BANK_NOTES) {
+						mc.setGroundItemNoted(mc.getGroundItemCount(), groundItemNoted);
+					}
 
 					for (int var7 = 0; mc.getGameObjectInstanceCount() > var7; ++var7) {
-						if (mc.getGameObjectInstanceX(var7) == var19
-							&& mc.getGameObjectInstanceZ(var7) == var6) {
+						if (mc.getGameObjectInstanceX(var7) == groundItemX
+							&& mc.getGameObjectInstanceZ(var7) == groundItemY) {
+							// Ground item is on a game object
 							mc.setGroundItemHeight(mc.getGroundItemCount(),
 								com.openrsc.client.entityhandling.EntityHandler.getObjectDef(
 									mc.getGameObjectInstanceID(var7)).getGroundItemVar());
@@ -2463,58 +2631,69 @@ public class PacketHandler {
 					mc.setGroundItemCount(mc.getGroundItemCount() + 1);
 				}
 
+			// Ground items that are not in range.
 			} else {
-				int var4 = 0;
+				int newIndex = 0;
 				int offsetX = mc.getLocalPlayerX() + packetsIncoming.getByte() >> 3;
 				int offsetY = mc.getLocalPlayerZ() + packetsIncoming.getByte() >> 3;
 
-				for (int index = 0; mc.getGroundItemCount() > index; ++index) {
-					int tileX = (mc.getGroundItemX(index) >> 3) - offsetX;
-					int tileY = (mc.getGroundItemZ(index) >> 3) - offsetY;
+				if (Config.S_WANT_BANK_NOTES)
+					groundItemNoted = packetsIncoming.getByte() == 1;
+
+				for (int oldIndex = 0; mc.getGroundItemCount() > oldIndex; ++oldIndex) {
+					int tileX = (mc.getGroundItemX(oldIndex) >> 3) - offsetX;
+					int tileY = (mc.getGroundItemZ(oldIndex) >> 3) - offsetY;
 					if (tileX != 0 || tileY != 0) {
-						if (var4 != index) {
-							mc.setGroundItemX(var4, mc.getGroundItemX(index));
-							mc.setGroundItemZ(var4, mc.getGroundItemZ(index));
-							mc.setGroundItemID(var4, mc.getGroundItemID(index));
-							mc.setGroundItemHeight(var4, mc.getGroundItemHeight(index));
+						if (newIndex != oldIndex) {
+							mc.setGroundItemX(newIndex, mc.getGroundItemX(oldIndex));
+							mc.setGroundItemZ(newIndex, mc.getGroundItemZ(oldIndex));
+							mc.setGroundItemID(newIndex, mc.getGroundItemID(oldIndex));
+							mc.setGroundItemHeight(newIndex, mc.getGroundItemHeight(oldIndex));
+							if (Config.S_WANT_BANK_NOTES)
+								mc.setGroundItemNoted(newIndex, mc.getGroundItemNoted(oldIndex));
 						}
-						++var4;
+						++newIndex;
 					}
 				}
 
-				mc.setGroundItemCount(var4);
+				mc.setGroundItemCount(newIndex);
 			}
 		}
 	}
+
 	private void updatePreset() {
 		int slot = packetsIncoming.getShort();
 		int itemID, amount;
 		ItemDef item;
-		CustomBankInterface.Item[] inventoryItems = new CustomBankInterface.Item[Config.S_PLAYER_INVENTORY_SLOTS];
-		CustomBankInterface.Item[] equipmentItems = new CustomBankInterface.Item[Config.S_PLAYER_SLOT_COUNT];
+		Item[] inventoryItems = new Item[Config.S_PLAYER_INVENTORY_SLOTS];
+		Item[] equipmentItems = new Item[Config.S_PLAYER_SLOT_COUNT];
 		byte[] itemBytes = new byte[2];
 		for (int i = 0; i < inventoryItems.length; i++) {
 			itemBytes[0] = packetsIncoming.getByte();
 			if (itemBytes[0] == -1)
 				continue;
 			itemBytes[1] = packetsIncoming.getByte();
-			itemID = (((int)itemBytes[0] << 8)&0xFF00) | (int)itemBytes[1] & 0xFF;
+			itemID = (((int) itemBytes[0] << 8) & 0xFF00) | (int) itemBytes[1] & 0xFF;
 			item = EntityHandler.getItemDef(itemID);
+			boolean noted = packetsIncoming.getByte() == 1;
 			if (item != null) {
-				if (item.isStackable())
+				if (item.isStackable() || noted)
 					amount = packetsIncoming.get32();
 				else
 					amount = 1;
-				inventoryItems[i] = new CustomBankInterface.Item(itemID,amount);
+				inventoryItems[i] = new Item();
+				inventoryItems[i].setItemDef(itemID);
+				inventoryItems[i].setAmount(amount);
+				inventoryItems[i].setNoted(noted);
 			}
 		}
 		//The server uses 2 more slots than the client
-		for (int i = 0; i < equipmentItems.length+2; i++) {
+		for (int i = 0; i < equipmentItems.length + 2; i++) {
 			itemBytes[0] = packetsIncoming.getByte();
 			if (itemBytes[0] == -1)
 				continue;
 			itemBytes[1] = packetsIncoming.getByte();
-			itemID = (((int)itemBytes[0] << 8)&0xFF00) | (int)itemBytes[1] & 0xFF;
+			itemID = (((int) itemBytes[0] << 8) & 0xFF00) | (int) itemBytes[1] & 0xFF;
 			item = EntityHandler.getItemDef(itemID);
 			if (item != null) {
 				if (item.isStackable())
@@ -2530,7 +2709,9 @@ public class PacketHandler {
 					equipslot = 2;
 				else if (equipslot > 7)
 					equipslot -= 3;
-				equipmentItems[equipslot] = new CustomBankInterface.Item(itemID,amount);
+				equipmentItems[equipslot] = new Item();
+				equipmentItems[equipslot].setItemDef(itemID);
+				equipmentItems[equipslot].setAmount(amount);
 			}
 		}
 		mc.getBank().updatePreset(slot, inventoryItems, equipmentItems);

@@ -1,17 +1,16 @@
 package com.openrsc.server.plugins.itemactions;
 
-import com.openrsc.server.event.custom.BatchEvent;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Refill implements InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener {
+public class Refill implements UseLocTrigger {
 
 	final int[] VALID_OBJECTS_WELL = {2, 466, 814};
 	final int[] VALID_OBJECTS_OTHER = {48, 26, 86, 1130};
@@ -23,38 +22,49 @@ public class Refill implements InvUseOnObjectListener,
 	};
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return (inArray(obj.getID(), VALID_OBJECTS_OTHER)
-			&& inArray(item.getID(),REFILLABLE)) || (inArray(obj.getID(), VALID_OBJECTS_WELL) && item.getID() == ItemId.BUCKET.id());
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
+		return item.getNoted() && ((inArray(obj.getID(), VALID_OBJECTS_OTHER)
+			&& inArray(item.getCatalogId(),REFILLABLE)) || (inArray(obj.getID(), VALID_OBJECTS_WELL) && item.getCatalogId() == ItemId.BUCKET.id()));
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, final Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, final Item item) {
 		for (int i = 0; i < REFILLABLE.length; i++) {
-			if (REFILLABLE[i] == item.getID()) {
-				final int itemID = item.getID();
+			if (REFILLABLE[i] == item.getCatalogId()) {
+				final int itemID = item.getCatalogId();
 				final int refilledID = REFILLED[i];
-				player.setBatchEvent(new BatchEvent(player.getWorld(), player, 600, "Refill Water Jug", player.getInventory().countId(itemID), false) {
-					@Override
-					public void action() {
-						if (getOwner().getInventory().hasInInventory(itemID)) {
-							showBubble(getOwner(), item);
-							getOwner().playSound("filljug");
-							sleep(300);
-							getOwner().message(
-								"You fill the "
-								+ item.getDef(getWorld()).getName().toLowerCase()
-								+ " from the "
-								+ obj.getGameObjectDef().getName().toLowerCase()
-							);
-							getOwner().getInventory().replace(itemID, refilledID,true);
-						} else {
-							interrupt();
-						}
-					}
-				});
+				int repeat = 1;
+				if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+					repeat = player.getCarriedItems().getInventory().countId(itemID, Optional.of(false));
+				}
+				batchRefill(player, item, refilledID, getFillString(player,obj,item), repeat);
 				break;
 			}
+		}
+	}
+
+	private String getFillString(Player player, GameObject obj, Item item) {
+		return "You fill the "
+			+ item.getDef(player.getWorld()).getName().toLowerCase()
+			+ " from the "
+			+ obj.getGameObjectDef().getName().toLowerCase();
+	}
+
+	private void batchRefill(Player player, Item item, int refilledId, String fillString, int repeat) {
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false)));
+
+		if (item == null) return;
+
+		thinkbubble(player, item);
+		player.playSound("filljug");
+		player.message(fillString);
+		player.getCarriedItems().remove(item);
+		give(player, refilledId, 1);
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+
+		if (!ifinterrupted() && --repeat > 0) {
+			batchRefill(player, item, refilledId, fillString, repeat);
 		}
 	}
 

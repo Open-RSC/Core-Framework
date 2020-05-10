@@ -3,56 +3,59 @@ package com.openrsc.server.plugins.npcs.varrock;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
-public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
+public class King implements TalkNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.KING.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
-		if (hasItem(p, ItemId.CERTIFICATE.id())) {
-			playerTalk(p, n, "Your majesty", "I have come to claim the reward",
+	public void onTalkNpc(Player player, Npc n) {
+		if (player.getCarriedItems().hasCatalogID(ItemId.CERTIFICATE.id(), Optional.of(false))) {
+			say(player, n, "Your majesty", "I have come to claim the reward",
 				"For the return of the shield of Arrav");
-			if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5) {
-				message(p, "You show the certificate to the king");
-				npcTalk(p, n, "My goodness",
+			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5) {
+				mes(player, "You show the certificate to the king");
+				npcsay(player, n, "My goodness",
 					"This is the claim for a reward put out by my father",
 					"I never thought I'd see anyone claim this reward",
 					"I see you are claiming half the reward",
 					"So that would come to 600 gold coins");
-				message(p, "You hand over a certificate",
+				mes(player, "You hand over a certificate",
 					"The king gives you 600 coins");
-				removeItem(p, ItemId.CERTIFICATE.id(), 1);
-				p.sendQuestComplete(Quests.SHIELD_OF_ARRAV);
-				if (isBlackArmGang(p))
-					p.updateQuestStage(Quests.SHIELD_OF_ARRAV, -2);
+				player.getCarriedItems().remove(new Item(ItemId.CERTIFICATE.id()));
+				player.sendQuestComplete(Quests.SHIELD_OF_ARRAV);
+				if (isBlackArmGang(player))
+					player.updateQuestStage(Quests.SHIELD_OF_ARRAV, -2);
 				return;
-			} else if (p.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 0) {
-				npcTalk(p, n, "The name on this certificate isn't yours!",
+			} else if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 0) {
+				npcsay(player, n, "The name on this certificate isn't yours!",
 					"I can't give you the reward",
 					"Unless you do the quest yourself");
 			} else {
-				npcTalk(p, n, "You have already claimed the reward",
+				npcsay(player, n, "You have already claimed the reward",
 					"You can't claim it twice");
-				message(p, "Why don't you give this certificate",
+				mes(player, "Why don't you give this certificate",
 					"To whoever helped you get the shield");
 			}
 			return;
-		} else if (hasItem(p, ItemId.BROKEN_SHIELD_ARRAV_1.id()) && hasItem(p, ItemId.BROKEN_SHIELD_ARRAV_2.id())) {
-			playerTalk(p, n, "Your majesty",
+		} else if (player.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_1.id(), Optional.of(false))
+			&& player.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_2.id(), Optional.of(false))) {
+			say(player, n, "Your majesty",
 				"I have recovered the shield of Arrav",
 				"I would like to claim the reward");
-			npcTalk(p, n, "The shield of Arrav, eh?",
+			npcsay(player, n, "The shield of Arrav, eh?",
 				"Yes, I do recall my father putting a reward out for that",
 				"Very well",
 				"Go get the authenticity of the shield verified",
@@ -60,10 +63,10 @@ public class King implements TalkToNpcListener, TalkToNpcExecutiveListener {
 				"And I will grant you your reward");
 			return;
 		}
-		playerTalk(p, n, "Greetings, your majesty");
-		npcTalk(p, n, "Do you have anything of import to say?");
-		playerTalk(p, n, "Not really");
-		npcTalk(p, n, "You will have to excuse me then", "I am very busy",
+		say(player, n, "Greetings, your majesty");
+		npcsay(player, n, "Do you have anything of import to say?");
+		say(player, n, "Not really");
+		npcsay(player, n, "You will have to excuse me then", "I am very busy",
 			"I have a kingdom to run");
 	}
 }

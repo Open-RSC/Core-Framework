@@ -1,13 +1,13 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.constants.Constants;
-import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.*;
+import com.openrsc.server.content.SkillCapes;
+import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.rsc.impl.CustomProjectileEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
+import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.external.ItemSmeltingDef;
 import com.openrsc.server.external.ReqOreDef;
 import com.openrsc.server.external.SpellDef;
@@ -20,25 +20,20 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
-import com.openrsc.server.model.states.Action;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -49,12 +44,20 @@ public class SpellHandler implements PacketHandler {
 	private static final String RING = "ring";
 	private static final String NECKLACE = "necklace";
 	private static final String DEFAULT = "";
+	private static final int[] elementalRunes = new int[4];
 
 	static {
-		staffs.put(com.openrsc.server.constants.ItemId.FIRE_RUNE.id(), new Item[]{new Item(com.openrsc.server.constants.ItemId.STAFF_OF_FIRE.id()), new Item(com.openrsc.server.constants.ItemId.BATTLESTAFF_OF_FIRE.id()), new Item(com.openrsc.server.constants.ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id())}); // Fire-Rune
-		staffs.put(com.openrsc.server.constants.ItemId.WATER_RUNE.id(), new Item[]{new Item(com.openrsc.server.constants.ItemId.STAFF_OF_WATER.id()), new Item(com.openrsc.server.constants.ItemId.BATTLESTAFF_OF_WATER.id()), new Item(com.openrsc.server.constants.ItemId.ENCHANTED_BATTLESTAFF_OF_WATER.id())}); // Water-Rune
-		staffs.put(com.openrsc.server.constants.ItemId.AIR_RUNE.id(), new Item[]{new Item(com.openrsc.server.constants.ItemId.STAFF_OF_AIR.id()), new Item(com.openrsc.server.constants.ItemId.BATTLESTAFF_OF_AIR.id()), new Item(com.openrsc.server.constants.ItemId.ENCHANTED_BATTLESTAFF_OF_AIR.id())}); // Air-Rune
-		staffs.put(com.openrsc.server.constants.ItemId.EARTH_RUNE.id(), new Item[]{new Item(com.openrsc.server.constants.ItemId.STAFF_OF_EARTH.id()), new Item(com.openrsc.server.constants.ItemId.BATTLESTAFF_OF_EARTH.id()), new Item(com.openrsc.server.constants.ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id())}); // Earth-Rune
+		staffs.put(ItemId.FIRE_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_FIRE.id()), new Item(ItemId.BATTLESTAFF_OF_FIRE.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id())}); // Fire-Rune
+		staffs.put(ItemId.WATER_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_WATER.id()), new Item(ItemId.BATTLESTAFF_OF_WATER.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_WATER.id())}); // Water-Rune
+		staffs.put(ItemId.AIR_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_AIR.id()), new Item(ItemId.BATTLESTAFF_OF_AIR.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_AIR.id())}); // Air-Rune
+		staffs.put(ItemId.EARTH_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_EARTH.id()), new Item(ItemId.BATTLESTAFF_OF_EARTH.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id())}); // Earth-Rune
+	}
+
+	static {
+		elementalRunes[0] = ItemId.AIR_RUNE.id();
+		elementalRunes[1] = ItemId.WATER_RUNE.id();
+		elementalRunes[2] = ItemId.EARTH_RUNE.id();
+		elementalRunes[3] = ItemId.FIRE_RUNE.id();
 	}
 
 	private static boolean canCast(Player player) {
@@ -67,19 +70,24 @@ public class SpellHandler implements PacketHandler {
 	}
 
 	public static boolean checkAndRemoveRunes(Player player, SpellDef spell) {
+		if (SkillCapes.shouldActivate(player, ItemId.MAGIC_CAPE)) {
+			player.message("You manage to cast the spell without using any runes");
+			return true;
+		}
+
 		for (Entry<Integer, Integer> e : spell.getRunesRequired()) {
 			boolean skipRune = false;
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				for (Item staff : getStaffs(e.getKey())) {
-					if (player.getEquipment().hasEquipped(staff.getID()) != -1) {
+					if (player.getCarriedItems().getEquipment().searchEquipmentForItem(staff.getCatalogId()) != -1) {
 						skipRune = true;
 					}
 				}
 			} else {
 				for (Item staff : getStaffs(e.getKey())) {
-					synchronized(player.getInventory().getItems()) {
-						if (player.getInventory().contains(staff)) {
-							for (Item item : player.getInventory().getItems()) {
+					synchronized (player.getCarriedItems().getInventory().getItems()) {
+						if (player.getCarriedItems().getInventory().contains(staff)) {
+							for (Item item : player.getCarriedItems().getInventory().getItems()) {
 								if (item.equals(staff) && item.isWielded()) {
 									skipRune = true;
 									break;
@@ -93,35 +101,13 @@ public class SpellHandler implements PacketHandler {
 			if (skipRune) {
 				continue;
 			}
-			if (player.getInventory().countId(e.getKey()) < e.getValue()) {
+			if (player.getCarriedItems().getInventory().countId(e.getKey()) < e.getValue()) {
 				player.setSuspiciousPlayer(true, "player not all reagents for spell");
 				player.message("You don't have all the reagents you need for this spell");
 				return false;
 			}
-			player.getInventory().remove(e.getKey(), e.getValue());
+			player.getCarriedItems().remove(new Item(e.getKey(), e.getValue()));
 		}
-		/*
-		for (Entry<Integer, Integer> e : spell.getRunesRequired()) {
-			boolean skipRune = false;
-			for (Item staff : getStaffs(e.getKey())) {
-				if (player.getInventory().contains(staff)) {
-					for (Item item : player.getInventory().getItems()) {
-						if (item.equals(staff) && item.isWielded()) {
-							skipRune = true;
-							break;
-						}
-					}
-				}
-			}
-			if (skipRune) {
-				continue;
-			}
-			player.getInventory().remove(e.getKey(), e.getValue());
-		}
-
-		 */
-
-
 		return true;
 	}
 
@@ -133,7 +119,7 @@ public class SpellHandler implements PacketHandler {
 		return items;
 	}
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
 		if ((player.isBusy() && !player.inCombat()) || player.isRanging()) {
 			return;
@@ -141,7 +127,7 @@ public class SpellHandler implements PacketHandler {
 		if (!canCast(player)) {
 			return;
 		}
-		int pID = p.getID();
+		int pID = packet.getID();
 		int CAST_ON_SELF = OpcodeIn.CAST_ON_SELF.getOpcode();
 		int CAST_ON_PLAYER = OpcodeIn.PLAYER_CAST_SPELL.getOpcode();
 		int CAST_ON_NPC = OpcodeIn.NPC_CAST_SPELL.getOpcode();
@@ -152,7 +138,7 @@ public class SpellHandler implements PacketHandler {
 		int CAST_ON_LAND = OpcodeIn.CAST_ON_LAND.getOpcode();
 
 		player.resetAllExceptDueling();
-		int idx = p.readShort();
+		int idx = packet.readShort();
 		if (idx < 0 || idx >= 49) {
 			player.setSuspiciousPlayer(true, "idx < 0 or idx >= 49");
 			return;
@@ -168,215 +154,202 @@ public class SpellHandler implements PacketHandler {
 		// GenericLog(player.getUsername() + " tried to cast spell 49 at " +
 		// player.getLocation()));
 
-		if (player.getSkills().getLevel(com.openrsc.server.constants.Skills.MAGIC) < spell.getReqLevel()) {
+		// Check player's magic level prior to allowing cast.
+		if (player.getSkills().getLevel(Skills.MAGIC) < spell.getReqLevel()) {
 			player.setSuspiciousPlayer(true, "player magic ability not high enough");
 			player.message("Your magic ability is not high enough for this spell.");
 			player.resetPath();
 			return;
 		}
+
+		// Ensure player is allowed to teleport.
 		if (pID == CAST_ON_SELF && spell.getSpellType() == 0 && !canTeleport(player, spell, idx)) {
-			// pre-teleport checks with self teleporting spell
 			return;
 		}
-		if (!Formulae.castSpell(spell, player.getSkills().getLevel(com.openrsc.server.constants.Skills.MAGIC), player.getMagicPoints())) {
+
+		// You can't cast on things other than your opponent, while in a duel.
+		if (pID != CAST_ON_PLAYER && player.getDuel().isDuelActive()) {
+			player.message("You can't do that during a duel!");
+			return;
+		}
+
+		// Check for failed spell.
+		if (!Formulae.castSpell(spell, player.getSkills().getLevel(Skills.MAGIC), player.getMagicPoints())) {
 			player.message("The spell fails! You may try again in 20 seconds");
 			player.playSound("spellfail");
 			player.setSpellFail();
 			player.resetPath();
 			return;
 		}
-		if (pID == CAST_ON_SELF) { // Cast on self!
-			if (player.getDuel().isDuelActive()) {
-				player.message("You can't do that during a duel!");
-				return;
-			}
+
+		// Cast on self
+		if (pID == CAST_ON_SELF) {
 			if (spell.getSpellType() == 0) {
 				handleTeleport(player, spell, idx);
 				return;
 			}
 			handleGroundCast(player, spell, idx);
-		} else if (pID == CAST_ON_PLAYER) { // Cast on player
+		}
+
+		// Cast on player
+		else if (pID == CAST_ON_PLAYER) {
 			if (spell.getSpellType() == 1 || spell.getSpellType() == 2) {
-				Player affectedPlayer = player.getWorld().getPlayer(p.readShort());
-
-				if (player.getDuel().isDuelActive() && player.getDuel().getDuelSetting(1)) {
-					player.message("Magic cannot be used during this duel!");
-					return;
-				}
-				if (affectedPlayer == null) { // This shouldn't happen
+				Player affectedPlayer = player.getWorld().getPlayer(packet.readShort());
+				if (affectedPlayer == null) {
 					player.resetPath();
 					return;
 				}
 
-				if (affectedPlayer.getLocation().inBounds(220, 108, 225, 111)) { // mage arena block real rsc.
-					player.message("Here kolodion protects all from your attack");
-					player.resetPath();
-					return;
-				}
+				if (checkCastOnPlayer(player, affectedPlayer, idx)) return;
 
-				if (player.withinRange(affectedPlayer, 4)) {
-					player.resetPath();
-				}
-				if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "PlayerMage",
-					new Object[]{player, affectedPlayer, idx})) {
-					return;
-				}
 				handleMobCast(player, affectedPlayer, idx);
 			}
-		} else if (pID == CAST_ON_NPC) { // Cast on npc
-			if (player.getDuel().isDuelActive()) {
-				player.message("You can't do that during a duel!");
-				return;
-			}
+		}
+
+		// Cast on Npc
+		else if (pID == CAST_ON_NPC) {
 			if (spell.getSpellType() == 2) {
-				Npc affectedNpc = player.getWorld().getNpc(p.readShort());
-				if (affectedNpc == null) { // This shouldn't happen
+				Npc affectedNpc = player.getWorld().getNpc(packet.readShort());
+				if (affectedNpc == null) {
 					player.resetPath();
 					return;
 				}
-				if (affectedNpc.getID() == com.openrsc.server.constants.NpcId.DELRITH.id()) {
-					player.message("Delrith can not be attacked without the Silverlight sword");
-					return;
-				}
 
-				if (affectedNpc.getID() == com.openrsc.server.constants.NpcId.LUCIEN_EDGE.id() && (player.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1
-					|| player.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2)) {
-					player.message("You have already completed this quest");
-					return;
-				}
-				if (affectedNpc.getID() == com.openrsc.server.constants.NpcId.LUCIEN_EDGE.id() && !player.getInventory().wielding(com.openrsc.server.constants.ItemId.PENDANT_OF_ARMADYL.id())) {
-					npcTalk(player, affectedNpc, "I'm sure you don't want to attack me really",
-						"I am your friend");
-					message(player, "You decide you don't want to attack Lucien really",
-						"He is your friend");
-					return;
-				}
-
-				if (player.withinRange(affectedNpc, 4)) {
-					player.resetPath();
-				}
-				if (affectedNpc.getID() == com.openrsc.server.constants.NpcId.CHRONOZON.id()) {
-					/** FAMILY CREST CHRONOZ **/
-					if (spell.getName().contains("blast")) {
-						String elementalType = spell.getName().split(" ")[0].toLowerCase();
-						player.message("chronozon weakens");
-						if (!player.getAttribute("chronoz_" + elementalType, false)) {
-							player.setAttribute("chronoz_" + elementalType, true);
-						}
-					}
-				}
-
-				if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "PlayerMageNpc",
-					new Object[]{player, affectedNpc})) {
-					return;
-				}
+				if (checkCastOnNpc(player, affectedNpc, spell)) return;
 
 				handleMobCast(player, affectedNpc, idx);
 			}
-		} else if (pID == CAST_ON_INV_ITEM) { // Cast on inventory item
-			if (player.getDuel().isDuelActive()) {
-				player.message("You can't do that during a duel!");
-				return;
-			}
+		}
+
+		// Cast on Inventory Item
+		else if (pID == CAST_ON_INV_ITEM) {
 			if (spell.getSpellType() == 3) {
-				Item item = player.getInventory().get(p.readShort());
-				if (item == null) { // This shoudln't happen
+				int invIndex = packet.readShort();
+				Item item = player.getCarriedItems().getInventory().get(invIndex);
+				if (item == null) {
 					player.resetPath();
 					return;
 				}
-				if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "PlayerMageItem",
-					new Object[]{player, (Integer)item.getID(), (Integer)idx})) {
+
+				// Swap these lines to allow alchemy on notes.
+				/*if ((idx == 10 || idx == 28) && item.getNoted()) {*/
+				if (item.getNoted()) {
+					player.message("Nothing interesting happens");
+					return;
+				}
+
+				// Attempt to find a spell in a plugin, otherwise use this file.
+				if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellInv",
+						new Object[]{player, invIndex, item.getCatalogId(), idx})) {
 					return;
 				}
 				handleItemCast(player, spell, idx, item);
 			}
-		} else if (pID == CAST_ON_DOOR) { // Cast on door - type 4
-			if (player.getDuel().isDuelActive()) {
-				player.message("You can't do that during a duel!");
-				return;
-			}
+		}
+
+		// Cast on door
+		else if (pID == CAST_ON_DOOR) {
 			player.message("@or1@This type of spell is not yet implemented.");
-		} else if (pID == CAST_ON_GAME_OBJECT) { // Cast on game object - type 5
-			if (player.getDuel().isDuelActive()) {
-				player.message("You can't do that during a duel!");
-				return;
-			}
-			int objectX = p.readShort();
-			int objectY = p.readShort();
+		}
+
+		// Cast on game object
+		else if (pID == CAST_ON_GAME_OBJECT) {
+			int objectX = packet.readShort();
+			int objectY = packet.readShort();
 			GameObject gameObject = player.getViewArea().getGameObject(Point.location(objectX, objectY));
 			if (gameObject == null) {
 				return;
 			}
 
-			if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "PlayerMageObject",
+			if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellLoc",
 				new Object[]{player, gameObject, spell})) {
 				return;
 			}
 
-			int chargedOrb = com.openrsc.server.constants.ItemId.NOTHING.id();
-			switch (idx) {
-				case 40:
-					if (gameObject.getID() == 303) {
-						chargedOrb = com.openrsc.server.constants.ItemId.AIR_ORB.id();
-					} else {
-						player.playerServerMessage(MessageType.QUEST, "This spell can only be used on air obelisks");
-					}
-					break;
-				case 29:
-					if (gameObject.getID() == 300) {
-						chargedOrb = com.openrsc.server.constants.ItemId.WATER_ORB.id();
-					} else {
-						player.playerServerMessage(MessageType.QUEST, "This spell can only be used on water obelisks");
-					}
-					break;
-				case 36:
-					if (gameObject.getID() == 304) {
-						chargedOrb = com.openrsc.server.constants.ItemId.EARTH_ORB.id();
-					} else {
-						player.playerServerMessage(MessageType.QUEST, "This spell can only be used on earth obelisks");
-					}
-					break;
-				case 38:
-					if (gameObject.getID() == 301) {
-						chargedOrb = com.openrsc.server.constants.ItemId.FIRE_ORB.id();
-					} else {
-						player.playerServerMessage(MessageType.QUEST, "This spell can only be used on fire obelisks");
-					}
-					break;
-			}
-			if (chargedOrb == com.openrsc.server.constants.ItemId.NOTHING.id()) {
-				return;
-			}
+			handleChargeOrb(player, gameObject, idx, spell);
+		}
 
-			if (!checkAndRemoveRunes(player, spell)) {
-				return;
-			}
-			player.getInventory().add(new Item(chargedOrb));
-			player.lastCast = System.currentTimeMillis();
-			player.playSound("spellok");
-			player.playerServerMessage(MessageType.QUEST, "You succesfully charge the orb");
-			player.incExp(com.openrsc.server.constants.Skills.MAGIC, spell.getExp(), true);
-			player.setCastTimer();
-		} else if (pID == CAST_ON_GROUNDITEM) { // Cast on ground items
-			if (player.getDuel().isDuelActive()) {
-				player.message("You can't do that during a duel!");
-				return;
-			}
-			Point location = Point.location(p.readShort(), p.readShort());
-			int itemId = p.readShort();
+		// Cast on ground item
+		else if (pID == CAST_ON_GROUNDITEM) {
+			Point location = Point.location(packet.readShort(), packet.readShort());
+			int itemId = packet.readShort();
 			GroundItem affectedItem = player.getViewArea().getGroundItem(itemId, location);
 			if (affectedItem == null) {
 				return;
 			}
 			handleItemCast(player, spell, idx, affectedItem);
-		} else if (pID == CAST_ON_LAND) {
-			if (player.getDuel().isDuelActive()) {
-				player.message("You can't do that during a duel!");
-				return;
-			}
+		}
+
+		// Cast on location
+		else if (pID == CAST_ON_LAND) {
 			handleGroundCast(player, spell, idx);
 		}
-		return;
+	}
+
+	private boolean checkCastOnPlayer(Player player, Player affectedPlayer, int idx) {
+
+		// Duel with "No Magic" selected.
+		if (player.getDuel().isDuelActive() && player.getDuel().getDuelSetting(1)) {
+			player.message("Magic cannot be used during this duel!");
+			return true;
+		}
+
+		// Mage Arena block (authentic)
+		if (affectedPlayer.getLocation().inBounds(220, 108, 225, 111)) {
+			player.message("Here kolodion protects all from your attack");
+			player.resetPath();
+			return true;
+		}
+
+		// Stop the player if they are close enough to their opponent.
+		if (player.withinRange(affectedPlayer, 4)) {
+			player.resetPath();
+		}
+
+		return player.getWorld().getServer().getPluginHandler()
+				.handlePlugin(player, "SpellPlayer", new Object[]{player, affectedPlayer, idx});
+	}
+
+	private boolean checkCastOnNpc(Player player, Npc affectedNpc, SpellDef spell) {
+
+		// Demon Slayer
+		if (affectedNpc.getID() == NpcId.DELRITH.id()) {
+			player.message("Delrith can not be attacked without the Silverlight sword");
+			return true;
+		}
+
+		// Temple of Ikov
+		if (affectedNpc.getID() == NpcId.LUCIEN_EDGE.id() && (player.getQuestStage(Quests.TEMPLE_OF_IKOV) == -1
+				|| player.getQuestStage(Quests.TEMPLE_OF_IKOV) == -2)) {
+			player.message("You have already completed this quest");
+			return true;
+		}
+		if (affectedNpc.getID() == NpcId.LUCIEN_EDGE.id() && !player.getCarriedItems().getEquipment().hasEquipped(ItemId.PENDANT_OF_ARMADYL.id())) {
+			npcsay(player, affectedNpc, "I'm sure you don't want to attack me really",
+					"I am your friend");
+			mes(player, "You decide you don't want to attack Lucien really",
+					"He is your friend");
+			return true;
+		}
+
+		// Stop movement if the player is within range.
+		if (player.withinRange(affectedNpc, 4)) {
+			player.resetPath();
+		}
+
+		// Family Crest
+		if (affectedNpc.getID() == NpcId.CHRONOZON.id()) {
+			if (spell.getName().contains("blast")) {
+				String elementalType = spell.getName().split(" ")[0].toLowerCase();
+				player.message("chronozon weakens");
+				if (!player.getAttribute("chronoz_" + elementalType, false)) {
+					player.setAttribute("chronoz_" + elementalType, true);
+				}
+			}
+		}
+
+		return player.getWorld().getServer().getPluginHandler()
+				.handlePlugin(player, "SpellNpc", new Object[]{player, affectedNpc});
 	}
 
 	private void finalizeSpellNoMessage(Player player, SpellDef spell) {
@@ -390,7 +363,7 @@ public class SpellHandler implements PacketHandler {
 		if (message != null) {
 			player.playerServerMessage(MessageType.QUEST, message.trim().isEmpty() ? "Cast spell successfully" : message);
 		}
-		player.incExp(com.openrsc.server.constants.Skills.MAGIC, spell.getExp(), true);
+		player.incExp(Skills.MAGIC, spell.getExp(), true);
 		player.setCastTimer();
 	}
 
@@ -458,21 +431,19 @@ public class SpellHandler implements PacketHandler {
 				if (!checkAndRemoveRunes(player, spell)) {
 					return;
 				}
-				Iterator<Item> inventory = player.getInventory().iterator();
-				int boneCount = 0;
-				while (inventory.hasNext()) {
-					Item i = inventory.next();
-					if (i.getID() == com.openrsc.server.constants.ItemId.BONES.id()) {
-						inventory.remove();
-						boneCount++;
-					}
-				}
+
+				int boneCount = player.getCarriedItems().getInventory().countId(ItemId.BONES.id(), Optional.of(false));
 				if (boneCount == 0) {
 					player.message("You aren't holding any bones!");
 					return;
 				}
 				for (int i = 0; i < boneCount; i++) {
-					player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.BANANA.id()));
+					player.getCarriedItems().remove(
+						player.getCarriedItems().getInventory().get(
+							player.getCarriedItems().getInventory().getLastIndexById(ItemId.BONES.id(), Optional.of(false))
+						)
+					);
+					player.getCarriedItems().getInventory().add(new Item(ItemId.BANANA.id()));
 				}
 				// needs verify if default message
 				finalizeSpell(player, spell, DEFAULT);
@@ -513,248 +484,304 @@ public class SpellHandler implements PacketHandler {
 	}
 
 	private void handleItemCast(Player player, SpellDef spell, int id, Item affectedItem) {
-		String jewelryType = "";
 		switch (id) {
-			case 3: // Enchant lvl-1 Sapphire amulet
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.SAPPHIRE_AMULET.id()
-				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
-					&& (affectedItem.getID() == com.openrsc.server.constants.ItemId.SAPPHIRE_RING.id() || affectedItem.getID() == com.openrsc.server.constants.ItemId.OPAL_RING.id()))) {
-					if (!checkAndRemoveRunes(player, spell)) {
-						return;
-					}
-					int itemID = 0;
-					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getID())) {
-						case SAPPHIRE_AMULET:
-							itemID = com.openrsc.server.constants.ItemId.SAPPHIRE_AMULET_OF_MAGIC.id();
-							jewelryType = AMULET;
-							break;
-						case SAPPHIRE_RING:
-							itemID = com.openrsc.server.constants.ItemId.RING_OF_RECOIL.id();
-							jewelryType = RING;
-							break;
-						case SAPPHIRE_NECKLACE:
-							jewelryType = NECKLACE;
-							break;
-						case OPAL_RING:
-							itemID = com.openrsc.server.constants.ItemId.DWARVEN_RING.id();
-							jewelryType = RING;
-							break;
-					}
-					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(itemID));
-					finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
-				} else
-					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted sapphire " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? " rings/amulets or opal rings" : "amulets"));
-				break;
-			case 10: // Low level alchemy
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.COINS.id()) {
-					player.playerServerMessage(MessageType.QUEST, "That's already made of gold!");
-					return;
-				}
-				if (affectedItem.getDef(player.getWorld()).getOriginalItemID() != com.openrsc.server.constants.ItemId.NOTHING.id()) {
-					player.message("You can't alch noted items");
-					return;
-				}
-				if (!checkAndRemoveRunes(player, spell)) {
-					return;
-				}
-				// ana in barrel kept but xp allowed
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) {
-					player.message("@gre@Ana: Don't you start casting spells on me!");
-					finalizeSpellNoMessage(player, spell);
-				} else {
-					if (player.getInventory().remove(affectedItem.getID(), 1) > -1) {
-						int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.4D);
-						player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 40%
-					}
-					finalizeSpell(player, spell, "Alchemy spell successful");
-				}
 
+			// Enchant lvl-1 Sapphire amulet
+			case 3:
+				enchantTierOneJewelry(player, affectedItem, spell);
 				break;
-			case 13: // Enchant lvl-2 emerald amulet
-			if (affectedItem.getID() == com.openrsc.server.constants.ItemId.EMERALD_AMULET.id()
-				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.EMERALD_RING.id())) {
-				if (!checkAndRemoveRunes(player, spell)) {
-					return;
-				}
-				int itemID = 0;
-				switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getID())) {
-					case EMERALD_AMULET:
-						itemID = com.openrsc.server.constants.ItemId.EMERALD_AMULET_OF_PROTECTION.id();
-						jewelryType = AMULET;
-						break;
-					case EMERALD_RING:
-						itemID = com.openrsc.server.constants.ItemId.RING_OF_SPLENDOR.id();
-						jewelryType = RING;
-						break;
-					case EMERALD_NECKLACE:
-						jewelryType = NECKLACE;
-						break;
-				}
-				player.getInventory().remove(affectedItem);
-				player.getInventory().add(new Item(itemID));
-				finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
-			} else
-				player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted emerald " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
-			break;
-			case 21: // Superheat item
-				ItemSmeltingDef smeltingDef = affectedItem.getSmeltingDef(player.getWorld());
-				if (smeltingDef == null || affectedItem.getID() == com.openrsc.server.constants.ItemId.COAL.id()) {
-					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on ore");
-					return;
-				}
-				for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
-					if (player.getInventory().countId(reqOre.getId()) < reqOre.getAmount()) {
-						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.IRON_ORE.id()) {
-							smeltingDef = player.getWorld().getServer().getEntityHandler().getItemSmeltingDef(9999);
-							break;
-						}
-						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.TIN_ORE.id() || affectedItem.getID() == com.openrsc.server.constants.ItemId.COPPER_ORE.id()) {
-							player.playerServerMessage(MessageType.QUEST, "You also need some " + (affectedItem.getID() == com.openrsc.server.constants.ItemId.TIN_ORE.id() ? "copper" : "tin")
-								+ " to make bronze");
-							return;
-						}
-						player.playerServerMessage(MessageType.QUEST, "You need " + reqOre.getAmount() + " heaps of "
-							+ player.getWorld().getServer().getEntityHandler().getItemDef(reqOre.getId()).getName().toLowerCase() + " to smelt "
-							+ affectedItem.getDef(player.getWorld()).getName().toLowerCase().replaceAll("ore", ""));
-						return;
-					}
-				}
 
-				if (player.getSkills().getLevel(com.openrsc.server.constants.Skills.SMITHING) < smeltingDef.getReqLevel()) {
-					player.playerServerMessage(MessageType.QUEST, "You need to be at least level-" + smeltingDef.getReqLevel() + " smithing to smelt "
-						+ player.getWorld().getServer().getEntityHandler().getItemDef(smeltingDef.barId).getName().toLowerCase().replaceAll("bar", ""));
-					return;
-				}
-				if (!checkAndRemoveRunes(player, spell)) {
-					return;
-				}
-				Item bar = new Item(smeltingDef.getBarId());
-				if (player.getInventory().remove(affectedItem) > -1) {
-					for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
-						for (int i = 0; i < reqOre.getAmount(); i++) {
-							player.getInventory().remove(new Item(reqOre.getId()));
-						}
-					}
-					player.playerServerMessage(MessageType.QUEST, "You make a bar of " + bar.getDef(player.getWorld()).getName().replace("bar", "").toLowerCase());
-					player.getInventory().add(bar);
-					player.incExp(com.openrsc.server.constants.Skills.SMITHING, smeltingDef.getExp(), true);
-				}
-				finalizeSpellNoMessage(player, spell);
+			// Low level alchemy
+			case 10:
+				lowLevelAlchemy(player, affectedItem, spell);
 				break;
-			case 24: // Enchant lvl-3 ruby amulet
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.RUBY_AMULET.id()
-					|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.RUBY_RING.id())) {
-					if (!checkAndRemoveRunes(player, spell)) {
-						return;
-					}
-					int itemID = 0;
-					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getID())) {
-						case RUBY_AMULET:
-							itemID = com.openrsc.server.constants.ItemId.RUBY_AMULET_OF_STRENGTH.id();
-							jewelryType = AMULET;
-							break;
-						case RUBY_RING:
-							itemID = com.openrsc.server.constants.ItemId.RING_OF_FORGING.id();
-							jewelryType = RING;
-							break;
-						case RUBY_NECKLACE:
-							jewelryType = NECKLACE;
-							break;
-					}
-					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(itemID));
-					finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
-				} else
-					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted ruby " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+
+			// Enchant lvl-2 emerald amulet
+			case 13:
+				enchantTierTwoJewelry(player, affectedItem, spell);
 				break;
-			case 28: // High level alchemy
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.COINS.id()) {
-					player.playerServerMessage(MessageType.QUEST, "That's already made of gold!");
-					return;
-				}
-				if (affectedItem.getDef(player.getWorld()).getOriginalItemID() != com.openrsc.server.constants.ItemId.NOTHING.id()) {
-					player.message("You can't alch noted items");
-					return;
-				}
-				if (!checkAndRemoveRunes(player, spell)) {
-					return;
-				}
-				// ana in barrel kept but xp allowed
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) {
-					player.message("@gre@Ana: Don't you start casting spells on me!");
-					finalizeSpellNoMessage(player, spell);
-				} else {
-					if (player.getInventory().remove(affectedItem.getID(), 1) > -1) {
-						int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.6D);
-						player.getInventory().add(new Item(com.openrsc.server.constants.ItemId.COINS.id(), value)); // 60%
-					}
-					finalizeSpell(player, spell, "Alchemy spell successful");
-				}
+
+			// Superheat item
+			case 21:
+				superheatItem(player, affectedItem, spell);
 				break;
-			case 30: // Enchant lvl-4 diamond amulet
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.DIAMOND_AMULET.id()
-						|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.DIAMOND_RING.id())){
-					if (!checkAndRemoveRunes(player, spell)) {
-						return;
-					}
-					int itemID = 0;
-					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getID())) {
-						case DIAMOND_AMULET:
-							itemID = com.openrsc.server.constants.ItemId.DIAMOND_AMULET_OF_POWER.id();
-							jewelryType = AMULET;
-							break;
-						case DIAMOND_RING:
-							itemID = com.openrsc.server.constants.ItemId.RING_OF_LIFE.id();
-							jewelryType = RING;
-							break;
-						case DIAMOND_NECKLACE:
-							jewelryType = NECKLACE;
-							break;
-					}
-					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(itemID));
-					finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
-				} else
-					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted diamond " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+
+			// Enchant lvl-3 ruby amulet
+			case 24:
+				enchantTierThreeJewelry(player, affectedItem, spell);
 				break;
-			case 42: // Enchant lvl-5 dragonstone amulet
-				if (affectedItem.getID() == com.openrsc.server.constants.ItemId.UNENCHANTED_DRAGONSTONE_AMULET.id()
-					|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getID() == com.openrsc.server.constants.ItemId.DRAGONSTONE_RING.id())) {
-					int itemID = 0;
-					switch(com.openrsc.server.constants.ItemId.getById(affectedItem.getID())) {
-						case UNENCHANTED_DRAGONSTONE_AMULET:
-							itemID = com.openrsc.server.constants.ItemId.DRAGONSTONE_AMULET.id();
-							jewelryType = AMULET;
-							break;
-						case DRAGONSTONE_NECKLACE:
-							jewelryType = NECKLACE;
-							break;
-					}
-					if (!checkAndRemoveRunes(player, spell)) {
-						return;
-					}
-					player.getInventory().remove(affectedItem);
-					player.getInventory().add(new Item(itemID));
-					finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
-				} else
-					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted dragonstone " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+
+			// High level alchemy
+			case 28:
+				highLevelAlchemy(player, affectedItem, spell);
+				break;
+
+			// Enchant lvl-4 diamond amulet
+			case 30:
+				enchantTierFourJewelry(player, affectedItem, spell);
+				break;
+
+			// Enchant lvl-5 dragonstone amulet
+			case 42:
+				enchantTierFiveJewelry(player, affectedItem, spell);
 				break;
 
 		}
 		if (affectedItem.isWielded()) {
-			player.getInventory().unwieldItem(affectedItem, false);
+			player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 		}
 
 	}
 
+	private void enchantTierOneJewelry(Player player, Item affectedItem, SpellDef spell) {
+		if (affectedItem.getCatalogId() == ItemId.SAPPHIRE_AMULET.id()
+				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
+				&& (affectedItem.getCatalogId() == ItemId.SAPPHIRE_RING.id() || affectedItem.getCatalogId() == ItemId.OPAL_RING.id()))) {
+			if (!checkAndRemoveRunes(player, spell)) {
+				return;
+			}
+			int itemID = 0;
+			String jewelryType = "";
+			switch(ItemId.getById(affectedItem.getCatalogId())) {
+				case SAPPHIRE_AMULET:
+					itemID = ItemId.SAPPHIRE_AMULET_OF_MAGIC.id();
+					jewelryType = AMULET;
+					break;
+				case SAPPHIRE_RING:
+					itemID = ItemId.RING_OF_RECOIL.id();
+					jewelryType = RING;
+					break;
+				case SAPPHIRE_NECKLACE:
+					jewelryType = NECKLACE;
+					break;
+				case OPAL_RING:
+					itemID = ItemId.DWARVEN_RING.id();
+					jewelryType = RING;
+					break;
+			}
+			player.getCarriedItems().remove(affectedItem);
+			player.getCarriedItems().getInventory().add(new Item(itemID));
+			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
+		} else
+			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted sapphire " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? " rings/amulets or opal rings" : "amulets"));
+	}
+
+	private void enchantTierTwoJewelry(Player player, Item affectedItem, SpellDef spell) {
+		if (affectedItem.getCatalogId() == ItemId.EMERALD_AMULET.id()
+				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.EMERALD_RING.id())) {
+			if (!checkAndRemoveRunes(player, spell)) {
+				return;
+			}
+			int itemID = 0;
+			String jewelryType = "";
+			switch(ItemId.getById(affectedItem.getCatalogId())) {
+				case EMERALD_AMULET:
+					itemID = ItemId.EMERALD_AMULET_OF_PROTECTION.id();
+					jewelryType = AMULET;
+					break;
+				case EMERALD_RING:
+					itemID = ItemId.RING_OF_SPLENDOR.id();
+					jewelryType = RING;
+					break;
+				case EMERALD_NECKLACE:
+					jewelryType = NECKLACE;
+					break;
+			}
+			player.getCarriedItems().remove(affectedItem);
+			player.getCarriedItems().getInventory().add(new Item(itemID));
+			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
+		} else
+			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted emerald " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+	}
+
+	private void enchantTierThreeJewelry(Player player, Item affectedItem, SpellDef spell) {
+		if (affectedItem.getCatalogId() == ItemId.RUBY_AMULET.id()
+				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.RUBY_RING.id())) {
+			if (!checkAndRemoveRunes(player, spell)) {
+				return;
+			}
+			int itemID = 0;
+			String jewelryType = "";
+			switch(ItemId.getById(affectedItem.getCatalogId())) {
+				case RUBY_AMULET:
+					itemID = ItemId.RUBY_AMULET_OF_STRENGTH.id();
+					jewelryType = AMULET;
+					break;
+				case RUBY_RING:
+					itemID = ItemId.RING_OF_FORGING.id();
+					jewelryType = RING;
+					break;
+				case RUBY_NECKLACE:
+					jewelryType = NECKLACE;
+					break;
+			}
+			player.getCarriedItems().remove(affectedItem);
+			player.getCarriedItems().getInventory().add(new Item(itemID));
+			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
+		} else
+			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted ruby " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+	}
+
+	private void enchantTierFourJewelry(Player player, Item affectedItem, SpellDef spell) {
+		if (affectedItem.getCatalogId() == ItemId.DIAMOND_AMULET.id()
+				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.DIAMOND_RING.id())){
+			if (!checkAndRemoveRunes(player, spell)) {
+				return;
+			}
+			int itemID = 0;
+			String jewelryType = "";
+			switch(ItemId.getById(affectedItem.getCatalogId())) {
+				case DIAMOND_AMULET:
+					itemID = ItemId.DIAMOND_AMULET_OF_POWER.id();
+					jewelryType = AMULET;
+					break;
+				case DIAMOND_RING:
+					itemID = ItemId.RING_OF_LIFE.id();
+					jewelryType = RING;
+					break;
+				case DIAMOND_NECKLACE:
+					jewelryType = NECKLACE;
+					break;
+			}
+			player.getCarriedItems().remove(affectedItem);
+			player.getCarriedItems().getInventory().add(new Item(itemID));
+			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
+		} else
+			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted diamond " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+	}
+
+	private void enchantTierFiveJewelry(Player player, Item affectedItem, SpellDef spell) {
+		if (affectedItem.getCatalogId() == ItemId.UNENCHANTED_DRAGONSTONE_AMULET.id()
+				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.DRAGONSTONE_RING.id())) {
+			int itemID = 0;
+			String jewelryType = "";
+			switch(ItemId.getById(affectedItem.getCatalogId())) {
+				case UNENCHANTED_DRAGONSTONE_AMULET:
+					itemID = ItemId.DRAGONSTONE_AMULET.id();
+					jewelryType = AMULET;
+					break;
+				case DRAGONSTONE_NECKLACE:
+					jewelryType = NECKLACE;
+					break;
+			}
+			if (!checkAndRemoveRunes(player, spell)) {
+				return;
+			}
+			player.getCarriedItems().remove(affectedItem);
+			player.getCarriedItems().getInventory().add(new Item(itemID));
+			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
+		} else
+			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted dragonstone " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+	}
+
+	private void lowLevelAlchemy(Player player, Item affectedItem, SpellDef spell) {
+		if (affectedItem.getCatalogId() == ItemId.COINS.id()) {
+			player.playerServerMessage(MessageType.QUEST, "That's already made of gold!");
+			return;
+		}
+		if (affectedItem.getNoted()) {
+			player.message("You can't alch noted items");
+			return;
+		}
+		if (!checkAndRemoveRunes(player, spell)) {
+			return;
+		}
+		// ana in barrel kept but xp allowed
+		if (affectedItem.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
+			player.message("@gre@Ana: Don't you start casting spells on me!");
+			finalizeSpellNoMessage(player, spell);
+		} else {
+			if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId())) > -1) {
+				int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.4D);
+				player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), value)); // 40%
+			}
+			finalizeSpell(player, spell, "Alchemy spell successful");
+		}
+	}
+
+	private void highLevelAlchemy(Player player, Item affectedItem, SpellDef spell) {
+		if (affectedItem.getCatalogId() == ItemId.COINS.id()) {
+			player.playerServerMessage(MessageType.QUEST, "That's already made of gold!");
+			return;
+		}
+		if (affectedItem.getNoted()) {
+			player.message("You can't alch noted items");
+			return;
+		}
+		if (!checkAndRemoveRunes(player, spell)) {
+			return;
+		}
+		// ana in barrel kept but xp allowed
+		if (affectedItem.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
+			player.message("@gre@Ana: Don't you start casting spells on me!");
+			finalizeSpellNoMessage(player, spell);
+		} else {
+			if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId())) > -1) {
+				int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.6D);
+				player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), value)); // 60%
+			}
+			finalizeSpell(player, spell, "Alchemy spell successful");
+		}
+	}
+
+	private void superheatItem(Player player, Item affectedItem, SpellDef spell) {
+		ItemSmeltingDef smeltingDef = affectedItem.getSmeltingDef(player.getWorld());
+		if (smeltingDef == null || affectedItem.getCatalogId() == ItemId.COAL.id()) {
+			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on ore");
+			return;
+		}
+		for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
+			if (player.getCarriedItems().getInventory().countId(reqOre.getId()) < reqOre.getAmount()) {
+				if (affectedItem.getCatalogId() == ItemId.IRON_ORE.id()) {
+					smeltingDef = player.getWorld().getServer().getEntityHandler().getItemSmeltingDef(9999);
+					break;
+				}
+				if (affectedItem.getCatalogId() == ItemId.TIN_ORE.id() || affectedItem.getCatalogId() == ItemId.COPPER_ORE.id()) {
+					player.playerServerMessage(MessageType.QUEST, "You also need some " + (affectedItem.getCatalogId() == ItemId.TIN_ORE.id() ? "copper" : "tin")
+							+ " to make bronze");
+					return;
+				}
+				player.playerServerMessage(MessageType.QUEST, "You need " + reqOre.getAmount() + " heaps of "
+						+ player.getWorld().getServer().getEntityHandler().getItemDef(reqOre.getId()).getName().toLowerCase() + " to smelt "
+						+ affectedItem.getDef(player.getWorld()).getName().toLowerCase().replaceAll("ore", ""));
+				return;
+			}
+		}
+
+		if (player.getSkills().getLevel(Skills.SMITHING) < smeltingDef.getReqLevel()) {
+			player.playerServerMessage(MessageType.QUEST, "You need to be at least level-" + smeltingDef.getReqLevel() + " smithing to smelt "
+					+ player.getWorld().getServer().getEntityHandler().getItemDef(smeltingDef.barId).getName().toLowerCase().replaceAll("bar", ""));
+			return;
+		}
+		if (!checkAndRemoveRunes(player, spell)) {
+			return;
+		}
+		Item bar = new Item(smeltingDef.getBarId());
+		if (player.getCarriedItems().remove(affectedItem) > -1) {
+			for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
+				int toUse = reqOre.getAmount();
+				if (reqOre.getId() == ItemId.COAL.id()
+					&& SkillCapes.shouldActivate(player, ItemId.SMITHING_CAPE)) {
+
+					toUse = reqOre.getAmount()/2;
+					player.message("You heat the ore using half the usual amount of coal");
+				}
+				for (int i = 0; i < toUse; i++) {
+					player.getCarriedItems().remove(new Item(reqOre.getId()));
+				}
+			}
+			player.playerServerMessage(MessageType.QUEST, "You make a bar of " + bar.getDef(player.getWorld()).getName().replace("bar", "").toLowerCase());
+			player.getCarriedItems().getInventory().add(bar);
+			player.incExp(Skills.SMITHING, smeltingDef.getExp(), true);
+		}
+		finalizeSpellNoMessage(player, spell);
+	}
+
 	private void handleItemCast(Player player, final SpellDef spell, final int id, final GroundItem affectedItem) {
-		player.setStatus(Action.CASTING_GITEM);
 		player.setWalkToAction(new WalkToPointAction(player, affectedItem.getLocation(), 4) {
 			public void executeInternal() {
 				getPlayer().resetPath();
-				if (!canCast(getPlayer()) || getPlayer().getViewArea().getGroundItem(affectedItem.getID(), getLocation()) == null
-					|| getPlayer().getStatus() != Action.CASTING_GITEM || affectedItem.isRemoved()) {
+				if (!canCast(getPlayer()) || getPlayer().getViewArea().getGroundItem(affectedItem.getID(), getLocation()) == null || affectedItem.isRemoved()) {
 					return;
 				}
 				if (!PathValidation.checkPath(getPlayer().getWorld(), getPlayer().getLocation(), affectedItem.getLocation())) {
@@ -769,35 +796,35 @@ public class SpellHandler implements PacketHandler {
 						// same case with ana
 						int[] ungrabbableArr = {
 							//scythe
-							com.openrsc.server.constants.ItemId.SCYTHE.id(),
+							ItemId.SCYTHE.id(),
 							//bunny ears
-							com.openrsc.server.constants.ItemId.BUNNY_EARS.id(),
+							ItemId.BUNNY_EARS.id(),
 							//orbs
-							com.openrsc.server.constants.ItemId.ORB_OF_LIGHT_WHITE.id(), com.openrsc.server.constants.ItemId.ORB_OF_LIGHT_BLUE.id(), com.openrsc.server.constants.ItemId.ORB_OF_LIGHT_PINK.id(), com.openrsc.server.constants.ItemId.ORB_OF_LIGHT_YELLOW.id(),
+							ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(), ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id(),
 							//cat (underground pass)
-							com.openrsc.server.constants.ItemId.KARDIA_CAT.id(),
+							ItemId.KARDIA_CAT.id(),
 							//god capes
-							com.openrsc.server.constants.ItemId.ZAMORAK_CAPE.id(), com.openrsc.server.constants.ItemId.SARADOMIN_CAPE.id(), com.openrsc.server.constants.ItemId.GUTHIX_CAPE.id(),
+							ItemId.ZAMORAK_CAPE.id(), ItemId.SARADOMIN_CAPE.id(), ItemId.GUTHIX_CAPE.id(),
 							//holy grail
-							com.openrsc.server.constants.ItemId.HOLY_GRAIL.id(),
+							ItemId.HOLY_GRAIL.id(),
 							//large cogs
-							com.openrsc.server.constants.ItemId.LARGE_COG_BLUE.id(), com.openrsc.server.constants.ItemId.LARGE_COG_BLACK.id(), com.openrsc.server.constants.ItemId.LARGE_COG_RED.id(), com.openrsc.server.constants.ItemId.LARGE_COG_PURPLE.id(),
+							ItemId.LARGE_COG_BLUE.id(), ItemId.LARGE_COG_BLACK.id(), ItemId.LARGE_COG_RED.id(), ItemId.LARGE_COG_PURPLE.id(),
 							//staff of armadyl,
-							com.openrsc.server.constants.ItemId.STAFF_OF_ARMADYL.id(),
+							ItemId.STAFF_OF_ARMADYL.id(),
 							//ice arrows
-							com.openrsc.server.constants.ItemId.ICE_ARROWS.id(),
+							ItemId.ICE_ARROWS.id(),
 							//Firebird Feather
-							com.openrsc.server.constants.ItemId.RED_FIREBIRD_FEATHER.id(),
+							ItemId.RED_FIREBIRD_FEATHER.id(),
 							//Ball of Witch's House
-							com.openrsc.server.constants.ItemId.BALL.id(),
+							ItemId.BALL.id(),
 							//skull of restless ghost
-							com.openrsc.server.constants.ItemId.QUEST_SKULL.id()
+							ItemId.QUEST_SKULL.id()
 						};
 						List<Integer> ungrabbables = new ArrayList<Integer>();
 						for (int item : ungrabbableArr) {
 							ungrabbables.add(item);
 						}
-						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.PRESENT.id()) {
+						if (affectedItem.getID() == ItemId.PRESENT.id()) {
 							return;
 						} else if (ungrabbables.contains(affectedItem.getID())) { // list of ungrabbable items sharing this message
 							getPlayer().playerServerMessage(MessageType.QUEST, "I can't use telekinetic grab on this object");
@@ -812,20 +839,20 @@ public class SpellHandler implements PacketHandler {
 							getPlayer().message("You can't cast this spell within the vicinity of the party hall");
 							return;
 						}
-						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.A_BLUE_WIZARDS_HAT.id()) {
+						if (affectedItem.getID() == ItemId.A_BLUE_WIZARDS_HAT.id()) {
 							getPlayer().message("The spell fizzles as the magical hat resists your spell.");
 							return;
 						}
-						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.GERTRUDES_CAT.id()) {
+						if (affectedItem.getID() == ItemId.GERTRUDES_CAT.id()) {
 							getPlayer().message("I can't use telekinetic grab on the cat");
 							return;
 						}
-						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) {
+						if (affectedItem.getID() == ItemId.ANA_IN_A_BARREL.id()) {
 							getPlayer().message("I can't use telekinetic grab on Ana");
 							return;
 						}
 						//coin respawn in Rashiliyia's Tomb can't be telegrabbed
-						if (affectedItem.getID() == com.openrsc.server.constants.ItemId.COINS.id() && affectedItem.getLocation().equals(new Point(358, 3626))) {
+						if (affectedItem.getID() == ItemId.COINS.id() && affectedItem.getLocation().equals(new Point(358, 3626))) {
 							getPlayer().message("The coins turn to dust in your inventory...");
 							return;
 						}
@@ -849,8 +876,8 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 						ActionSender.sendTeleBubble(getPlayer(), getLocation().getX(), getLocation().getY(), true);
-						for (Player p : getPlayer().getViewArea().getPlayersInView()) {
-							ActionSender.sendTeleBubble(p, getLocation().getX(), getLocation().getY(), true);
+						for (Player player : getPlayer().getViewArea().getPlayersInView()) {
+							ActionSender.sendTeleBubble(player, getLocation().getX(), getLocation().getY(), true);
 						}
 
 						getPlayer().getWorld().unregisterItem(affectedItem);
@@ -864,7 +891,7 @@ public class SpellHandler implements PacketHandler {
 						if (affectedItem.getOwnerUsernameHash() == 0 || affectedItem.getAttribute("npcdrop", false)) {
 							item.setAttribute("npcdrop", true);
 						}
-						getPlayer().getInventory().add(item);
+						getPlayer().getCarriedItems().getInventory().add(item);
 						break;
 				}
 			}
@@ -885,18 +912,17 @@ public class SpellHandler implements PacketHandler {
 		}
 		if (affectedMob.isPlayer()) {
 			Player other = (Player) affectedMob;
-			if (player.getLocation().inWilderness() && System.currentTimeMillis() - other.getLastRun() < 1000) {
+			if (player.getLocation().inWilderness() && System.currentTimeMillis() - other.getRanAwayTimer() < 1000) {
 				player.resetPath();
 				return;
 			}
 		}
-		if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getLastRun() < 3000) {
+		if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getRanAwayTimer() < 3000) {
 			player.resetPath();
 			return;
 		}
 		player.setFollowing(affectedMob);
-		player.setStatus(Action.CASTING_MOB);
-		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4) {
+		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4, false) {
 			public void executeInternal() {
 				if (!PathValidation.checkPath(getPlayer().getWorld(), getPlayer().getLocation(), affectedMob.getLocation())) {
 					getPlayer().playerServerMessage(MessageType.QUEST, "I can't get a clear shot from here");
@@ -906,7 +932,7 @@ public class SpellHandler implements PacketHandler {
 				getPlayer().resetFollowing();
 				getPlayer().resetPath();
 				SpellDef spell = getPlayer().getWorld().getServer().getEntityHandler().getSpellDef(spellID);
-				if (!canCast(getPlayer()) || affectedMob.getSkills().getLevel(com.openrsc.server.constants.Skills.HITS) <= 0 || getPlayer().getStatus() != Action.CASTING_MOB) {
+				if (!canCast(getPlayer()) || affectedMob.getSkills().getLevel(Skills.HITS) <= 0) {
 					getPlayer().resetPath();
 					return;
 				}
@@ -921,27 +947,27 @@ public class SpellHandler implements PacketHandler {
 				}
 				if (affectedMob.isNpc()) {
 					Npc n = (Npc) affectedMob;
-					if (n.getID() == com.openrsc.server.constants.NpcId.DRAGON.id() || n.getID() == com.openrsc.server.constants.NpcId.KING_BLACK_DRAGON.id()) {
+					if (n.getID() == NpcId.DRAGON.id() || n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
 						getPlayer().playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
 						int percentage = 20;
 						int fireDamage;
-						if (getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
-							if (n.getID() == com.openrsc.server.constants.NpcId.DRAGON.id()) {
+						if (getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+							if (n.getID() == NpcId.DRAGON.id()) {
 								percentage = 10;
-							} else if (n.getID() == com.openrsc.server.constants.NpcId.KING_BLACK_DRAGON.id()) {
+							} else if (n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
 								percentage = 4;
 							} else {
 								percentage = 0;
 							}
 							getPlayer().playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 						}
-						fireDamage = (int) Math.floor(getCurrentLevel(getPlayer(), com.openrsc.server.constants.Skills.HITS) * percentage / 100.0);
+						fireDamage = (int) Math.floor(getCurrentLevel(getPlayer(), Skills.HITS) * percentage / 100.0);
 						getPlayer().damage(fireDamage);
 
 						//reduce ranged level (case for KBD)
-						if (n.getID() == com.openrsc.server.constants.NpcId.KING_BLACK_DRAGON.id()) {
-							int newLevel = getCurrentLevel(getPlayer(), com.openrsc.server.constants.Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayer());
-							getPlayer().getSkills().setLevel(com.openrsc.server.constants.Skills.RANGED, newLevel);
+						if (n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+							int newLevel = getCurrentLevel(getPlayer(), Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayer());
+							getPlayer().getSkills().setLevel(Skills.RANGED, newLevel);
 						}
 					}
 
@@ -1035,7 +1061,7 @@ public class SpellHandler implements PacketHandler {
 							getPlayer().message("you need to complete underground pass quest to cast this spell");
 							return;
 						}
-						if (!getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_IBAN.id())) {
+						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_IBAN.id())) {
 							getPlayer().message("you need the staff of iban to cast this spell");
 							return;
 						}
@@ -1052,21 +1078,21 @@ public class SpellHandler implements PacketHandler {
 							int casts = getPlayer().getCache().getInt(spell.getName() + "_casts");
 							getPlayer().getCache().set(spell.getName() + "_casts", casts - 1);
 						}
-						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, Formulae.calcGodSpells(getPlayer(), affectedMob, true), 1));
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateIbanSpellDamage(), 1));
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
 					case 33: // Guthix cast
 					case 34: // Saradomin cast
 					case 35: // Zamorak cast
-						if (!getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_GUTHIX.id()) && spellID == 33) {
+						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_GUTHIX.id()) && spellID == 33) {
 							getPlayer().message("you must weild the staff of guthix to cast this spell");
 							return;
 						}
-						if (!getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_SARADOMIN.id()) && spellID == 34) {
+						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_SARADOMIN.id()) && spellID == 34) {
 							getPlayer().message("you must weild the staff of saradomin to cast this spell");
 							return;
 						}
-						if (!getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.STAFF_OF_ZAMORAK.id()) && spellID == 35) {
+						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_ZAMORAK.id()) && spellID == 35) {
 							getPlayer().message("you must weild the staff of zamorak to cast this spell");
 							return;
 						}
@@ -1104,10 +1130,10 @@ public class SpellHandler implements PacketHandler {
 								getPlayer().getCache().set(spell.getName() + "_casts", 1);
 							}
 						}
-						if (affectedMob.getRegion().getGameObject(affectedMob.getX(), affectedMob.getY()) == null) {
+						if (affectedMob.getRegion().getGameObject(affectedMob.getX(), affectedMob.getY(), getPlayer()) == null) {
 							godSpellObject(getPlayer(), affectedMob, spellID);
 						}
-						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, Formulae.calcGodSpells(getPlayer(), affectedMob, false), 1));
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateGodSpellDamage(getPlayer()), 1));
 
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
@@ -1147,10 +1173,10 @@ public class SpellHandler implements PacketHandler {
 							// Deal first damage
 							getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, firstDamage, 1));
 							// Deal Second Damage
-							getPlayer().getWorld().getServer().getGameEventHandler().add(new MiniEvent(getPlayer().getWorld(), getPlayer(), 600, "Salarin the Twisted Strike") {
+							getPlayer().getWorld().getServer().getGameEventHandler().add(new MiniEvent(getPlayer().getWorld(), getPlayer(), getPlayer().getWorld().getServer().getConfig().GAME_TICK, "Salarin the Twisted Strike") {
 								@Override
 								public void action() {
-									affectedMob.getSkills().subtractLevel(3, secondAdditionalDamage, false);
+									affectedMob.getSkills().subtractLevel(Skills.HITS, secondAdditionalDamage, false);
 									affectedMob.getUpdateFlags().setDamage(new Damage(affectedMob, secondAdditionalDamage));
 									if (affectedMob.isPlayer()) {
 										if (getPlayer().getWorld().getServer().getConfig().WANT_PARTIES) {
@@ -1159,7 +1185,7 @@ public class SpellHandler implements PacketHandler {
 											}
 										}
 									}
-									if (affectedMob.getSkills().getLevel(com.openrsc.server.constants.Skills.HITS) <= 0) {
+									if (affectedMob.getSkills().getLevel(Skills.HITS) <= 0) {
 										affectedMob.killedBy(getPlayer());
 									}
 
@@ -1180,15 +1206,12 @@ public class SpellHandler implements PacketHandler {
 						}
 
 						if (getPlayer().getMagicPoints() > 30
-							|| (getPlayer().getInventory().wielding(com.openrsc.server.constants.ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
+							|| (getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
 							max += 1;
 
-						int damage = Formulae.calcSpellHit(max, getPlayer().getMagicPoints());
+						int damage = CombatFormula.calculateMagicDamage(max);
 
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damage, 1));
-						if (((Npc) affectedMob).isNpc() && ((Npc) affectedMob).isPkBot()) {
-								getPlayer().setSkulledOn(((PkBot) affectedMob));
-							}
 						getPlayer().setKillType(1);
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
@@ -1210,8 +1233,8 @@ public class SpellHandler implements PacketHandler {
 		//	player.message("You need to stay out of combat for 10 seconds before using a teleport.");
 		//	return;
 		//}
-		else if (player.getInventory().countId(com.openrsc.server.constants.ItemId.ANA_IN_A_BARREL.id()) > 0) {
-			message(player, "You can't teleport while holding Ana,",
+		else if (player.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
+			mes(player, "You can't teleport while holding Ana,",
 				"It's just too difficult to concentrate.");
 			canTeleport = false;
 		}
@@ -1236,15 +1259,18 @@ public class SpellHandler implements PacketHandler {
 			return;
 		}
 		if (player.getLocation().inKaramja() || player.getLocation().inBrimhaven()) {
-			while (player.getInventory().countId(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()) > 0) {
-				player.getInventory().remove(new Item(com.openrsc.server.constants.ItemId.KARAMJA_RUM.id()));
+			while (player.getCarriedItems().getInventory().countId(ItemId.KARAMJA_RUM.id()) > 0) {
+				player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
 			}
 		}
-		if (player.getInventory().hasItemId(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id())) {
+		if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (player.getLocation().inKaramja())) {
+			player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
+		}
+		if (player.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
 			player.message("the plague sample is too delicate...");
 			player.message("it disintegrates in the crossing");
-			while (player.getInventory().countId(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()) > 0) {
-				player.getInventory().remove(new Item(com.openrsc.server.constants.ItemId.PLAGUE_SAMPLE.id()));
+			while (player.getCarriedItems().getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
+				player.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 			}
 		}
 		switch (id) {
@@ -1270,6 +1296,53 @@ public class SpellHandler implements PacketHandler {
 				break;
 		}
 		finalizeSpellNoMessage(player, spell);
+	}
+
+	private void handleChargeOrb(Player player, GameObject gameObject, int idx, SpellDef spell) {
+		int chargedOrb = ItemId.NOTHING.id();
+		switch (idx) {
+			case 40:
+				if (gameObject.getID() == 303) {
+					chargedOrb = ItemId.AIR_ORB.id();
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on air obelisks");
+				}
+				break;
+			case 29:
+				if (gameObject.getID() == 300) {
+					chargedOrb = ItemId.WATER_ORB.id();
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on water obelisks");
+				}
+				break;
+			case 36:
+				if (gameObject.getID() == 304) {
+					chargedOrb = ItemId.EARTH_ORB.id();
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on earth obelisks");
+				}
+				break;
+			case 38:
+				if (gameObject.getID() == 301) {
+					chargedOrb = ItemId.FIRE_ORB.id();
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on fire obelisks");
+				}
+				break;
+		}
+		if (chargedOrb == ItemId.NOTHING.id()) {
+			return;
+		}
+
+		if (!checkAndRemoveRunes(player, spell)) {
+			return;
+		}
+		player.getCarriedItems().getInventory().add(new Item(chargedOrb));
+		player.lastCast = System.currentTimeMillis();
+		player.playSound("spellok");
+		player.playerServerMessage(MessageType.QUEST, "You succesfully charge the orb");
+		player.incExp(Skills.MAGIC, spell.getExp(), true);
+		player.setCastTimer();
 	}
 
 }

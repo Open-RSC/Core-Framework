@@ -6,7 +6,6 @@ import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
@@ -15,16 +14,14 @@ public class ItemUseOnObject implements PacketHandler {
 
 	private void handleDoor(final Player player, final Point location,
 							final GameObject object, final int dir, final Item item) {
-		player.setStatus(Action.USING_Item_ON_DOOR);
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
 			public void executeInternal() {
 				getPlayer().resetPath();
 				GameObject obj = getPlayer().getViewArea().getWallObjectWithDir(
 					object.getLocation(), object.getDirection());
 				if (getPlayer().isBusy() || getPlayer().isRanging()
-					|| !getPlayer().getInventory().hasItemId(item.getID()) || obj == null
-					|| !obj.equals(object)
-					|| getPlayer().getStatus() != Action.USING_Item_ON_DOOR) {
+					|| !getPlayer().getCarriedItems().hasCatalogID(item.getCatalogId()) || obj == null
+					|| !obj.equals(object)) {
 					return;
 				}
 				getPlayer().resetAll();
@@ -36,8 +33,8 @@ public class ItemUseOnObject implements PacketHandler {
 				}
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
-					"InvUseOnWallObject",
-					new Object[]{object, item, getPlayer()}, this))
+					"UseBound",
+					new Object[]{getPlayer(), object, item}, this))
 					return;
 			}
 		});
@@ -45,23 +42,20 @@ public class ItemUseOnObject implements PacketHandler {
 
 	private void handleObject(final Player player, final Point location,
 							  final GameObject object, final Item item) {
-		player.setStatus(Action.USING_Item_ON_OBJECT);
 		if ((object.getID() == 226 || object.getID() == 232) && player.withinRange(object, 2)) {
 			player.resetPath();
 			player.resetAll();
 			if (player.getWorld().getServer().getPluginHandler().handlePlugin(
-				player, "InvUseOnObject", new Object[]{object, item, player}))
+				player, "UseLoc", new Object[]{player, object, item}))
 				return;
 		}
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
 			public void executeInternal() {
 				getPlayer().resetPath();
-				getPlayer().face(object);
 				GameObject obj = getPlayer().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (obj == null || getPlayer().isBusy() || getPlayer().isRanging()
-					|| !getPlayer().getInventory().contains(item)
-					|| !getPlayer().atObject(object) || obj == null
-					|| getPlayer().getStatus() != Action.USING_Item_ON_OBJECT) {
+					|| !getPlayer().getCarriedItems().getInventory().contains(item)
+					|| !getPlayer().atObject(object) || obj == null) {
 					return;
 				}
 				getPlayer().resetAll();
@@ -73,16 +67,16 @@ public class ItemUseOnObject implements PacketHandler {
 				}
 
 				if (getPlayer().getWorld().getServer().getPluginHandler()
-					.handlePlugin(getPlayer(), "InvUseOnObject",
-						new Object[]{(GameObject) object, item, getPlayer()}, this))
+					.handlePlugin(getPlayer(), "UseLoc",
+						new Object[]{getPlayer(), (GameObject) object, item}, this))
 					return;
 			}
 		});
 	}
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		int pID = p.getID();
+		int pID = packet.getID();
 		if (player.isBusy()) {
 			player.resetPath();// sendSound
 			return;
@@ -94,44 +88,44 @@ public class ItemUseOnObject implements PacketHandler {
 		int packetTwo = OpcodeIn.OBJECT_USE_ITEM.getOpcode();
 
 		if (pID == packetOne) { // Use Item on Door
-			object = player.getViewArea().getWallObjectWithDir(Point.location(p.readShort(), p.readShort()), p.readByte());
+			object = player.getViewArea().getWallObjectWithDir(Point.location(packet.readShort(), packet.readShort()), packet.readByte());
 			if (object == null) {
 				player.setSuspiciousPlayer(true, "item on null door");
 				player.resetPath();
 				return;
 			}
 			int dir = object.getDirection();
-			int slotID = p.readShort();
+			int slotID = packet.readShort();
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && slotID == -1)
 			{
 				//they used the item from their equipment slot
-				int itemID = p.readShort();
-				int realSlot = player.getEquipment().hasEquipped(itemID);
+				int itemID = packet.readShort();
+				int realSlot = player.getCarriedItems().getEquipment().searchEquipmentForItem(itemID);
 				if (realSlot == -1)
 					return;
-				item = player.getEquipment().get(realSlot);
+				item = player.getCarriedItems().getEquipment().get(realSlot);
 				if (item == null)
 					return;
 			} else
-				item = player.getInventory().get(slotID);
-			if (object == null || object.getType() == 0 || item == null) { // This
+				item = player.getCarriedItems().getInventory().get(slotID);
+			if (object.getType() == 0 || item == null || item.getItemStatus().getNoted()) { // This
 				player.setSuspiciousPlayer(true, "item on null equipment slot or something");
 				return;
 			}
 			handleDoor(player, object.getLocation(), object, dir, item);
 		} else if (pID == packetTwo) { // Use Item on GameObject
-			object = player.getViewArea().getGameObject(Point.location(p.readShort(), p.readShort()));
+			object = player.getViewArea().getGameObject(Point.location(packet.readShort(), packet.readShort()));
 			if (object == null) {
 				player.setSuspiciousPlayer(true, "item on null GameObject");
 				player.resetPath();
 				return;
 			}
-			int slotID = p.readShort();
+			int slotID = packet.readShort();
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && slotID > Inventory.MAX_SIZE) {
-				item = player.getEquipment().get(slotID - Inventory.MAX_SIZE);
+				item = player.getCarriedItems().getEquipment().get(slotID - Inventory.MAX_SIZE);
 			} else
-				item = player.getInventory().get(slotID);
-			if (object == null || object.getType() == 1 || item == null) { // This
+				item = player.getCarriedItems().getInventory().get(slotID);
+			if (object.getType() == 1 || item == null || item.getItemStatus().getNoted()) { // This
 				player.setSuspiciousPlayer(true, "null item or object");
 				return;
 			}

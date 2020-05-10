@@ -7,29 +7,30 @@ import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.PkBot;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class AttackHandler implements PacketHandler {
-	public void handlePacket(Packet p, Player player) throws Exception {
-		int pID = p.getID();
+	public void handlePacket(Packet packet, Player player) throws Exception {
+		int pID = packet.getID();
+
 		if (player.isBusy()) {
-			if (player.inCombat())
-				player.message("You are already busy fighting");
-
-
 			player.resetPath();
-
+			return;
+		}
+		
+		if (player.inCombat()) {
+			player.message("You are already busy fighting");
+			player.resetPath();
 			return;
 		}
 
+
 		player.resetAll();
 		Mob affectedMob = null;
-		int serverIndex = p.readShort();
+		int serverIndex = packet.readShort();
 		int packetOne = OpcodeIn.PLAYER_ATTACK.getOpcode();
 		int packetTwo = OpcodeIn.NPC_ATTACK1.getOpcode();
 
@@ -51,8 +52,8 @@ public class AttackHandler implements PacketHandler {
 			}
 			assert affectedMob instanceof Player;
 			Player pl = (Player) affectedMob;
-			if (pl.getLocation().inWilderness() && System.currentTimeMillis() - pl.getLastRun() < 3000) {
-				//player.resetPath();
+			if (pl.getLocation().inWilderness() && System.currentTimeMillis() - pl.getRanAwayTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5) {
+				player.resetPath();
 				return;
 			}
 		}
@@ -64,27 +65,14 @@ public class AttackHandler implements PacketHandler {
 				player.message("these ogres are for range combat training only");
 				return;
 			}
-			if (n.isPkBot() && !player.getLocation().inWilderness()) {
-				player.message("You must be in the wilderness to attack this mob");
-				player.resetPath();
-				return;
-			}
-			if (n.isPkBot() && !n.getLocation().inWilderness()) {
-				player.message("I can't get close enough");
-				player.resetPath();
-				return;
-			}
-			if (n.isPkBot() && System.currentTimeMillis() - n.getCombatTimer() < 3000 && System.currentTimeMillis() - n.getCombatTimer() != 0){
-				player.resetPath();
-				return;
-			}
 		}
 
-		player.setStatus(Action.ATTACKING_MOB);
 		if (player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
-			if (affectedMob.isNpc())
+			//if (affectedMob.isNpc()) {
 				player.setFollowing(affectedMob, 0);
-			player.setWalkToAction(new WalkToMobAction(player, affectedMob, affectedMob.isNpc() ? 1 : 2) {
+			//}
+
+			player.setWalkToAction(new WalkToMobAction(player, affectedMob, 1) {
 				public void executeInternal() {
 					getPlayer().resetPath();
 					getPlayer().resetFollowing();
@@ -94,24 +82,23 @@ public class AttackHandler implements PacketHandler {
 						return;
 					}
 					if (getPlayer().isBusy() || mob.isBusy() || !getPlayer().canReach(mob)
-						|| !getPlayer().checkAttack(mob, false) || getPlayer().getStatus() != Action.ATTACKING_MOB) {
+						|| !getPlayer().checkAttack(mob, false)) {
 						return;
 					}
 					if (mob.isNpc()) {
-						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "PlayerAttackNpc", new Object[]{getPlayer(), (Npc) mob}, this)) {
+						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "AttackNpc", new Object[]{getPlayer(), (Npc) mob}, this)) {
 							return;
 						}
 					}
 					if (mob.isPlayer()) {
-						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "PlayerAttack", new Object[]{getPlayer(), mob}, this)) {
+						if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "AttackPlayer", new Object[]{getPlayer(), mob}, this)) {
 							return;
 						}
 					}
 				}
 			});
 		} else {
-			if (player.isBusy() || !player.checkAttack(affectedMob, true)
-				|| player.getStatus() != Action.ATTACKING_MOB) {
+			if (player.isBusy() || !player.checkAttack(affectedMob, true)) {
 				return;
 			}
 			final Mob target = affectedMob;
@@ -121,7 +108,6 @@ public class AttackHandler implements PacketHandler {
 			player.getWorld().getServer().getGameEventHandler().add(new MiniEvent(player.getWorld(), player, "Handle Attack") {
 				@Override
 				public void action() {
-					getOwner().setStatus(Action.RANGING_MOB);
 					if (target.isPlayer()) {
 						assert target instanceof Player;
 						Player affectedPlayer = (Player) target;
@@ -137,11 +123,10 @@ public class AttackHandler implements PacketHandler {
 							affectedPlayer.resetShop();
 						}
 					}
-					if (target.isNpc() && ((Npc) target).isPkBot()) {
-						assert target instanceof Npc;
-						Npc affectedNpc = (Npc) target;
-						getOwner().setSkulledOn((PkBot)affectedNpc);
-					}
+
+					// Authentic player always faced NW
+					getOwner().face(getOwner().getX() + 1, getOwner().getY() - 1);
+
 					if (player.getRangeEquip() > 0) {
 						getOwner().setRangeEvent(new RangeEvent(getOwner().getWorld(), getOwner(), target));
 					} else {

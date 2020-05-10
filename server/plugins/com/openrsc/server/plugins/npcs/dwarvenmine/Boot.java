@@ -4,50 +4,49 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
+import java.util.ArrayList;
 
-public class Boot implements TalkToNpcExecutiveListener, TalkToNpcListener {
+import static com.openrsc.server.plugins.Functions.*;
+
+public class Boot implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Hello tall person");
-		Menu defaultMenu = new Menu();
-		if (p.getQuestStage(Quests.FAMILY_CREST) == 5) {
-			defaultMenu.addOption(new Option("Hello I'm in search of very high quality gold") {
-				@Override
-				public void action() {
-					npcTalk(p, n, "Hmm well the best gold I know of",
-						"is east of the great city of Ardougne",
-						"In some certain rocks underground there",
-						"Its not the easiest of rocks to get to though I've heard");
-					p.updateQuestStage(Quests.FAMILY_CREST, 6);
-					// THEY MUST TALK TO THIS DWARF AND GET STAGE 6 OTHERWISE THEY WON'T BE ABLE TO MINE THE GOLD IN THE DUNGEON.
-				}
-			});
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Hello tall person");
+		ArrayList<String> options = new ArrayList<>();
+		if (player.getQuestStage(Quests.FAMILY_CREST) == 5) {
+			options.add("Hello I'm in search of very high quality gold");
 		}
-		defaultMenu.addOption(new Option("Hello short person") {
-			@Override
-			public void action() {
-				//NOTHING
+		options.add("Hello short person");
+		options.add("Why are you called boot?");
+		String[] finalOptions = new String[options.size()];
+		int option = multi(player, n, options.toArray(finalOptions));
+
+		if (player.getQuestStage(Quests.FAMILY_CREST) == 5) {
+			if (option == 0) {
+				npcsay(player, n, "Hmm well the best gold I know of",
+					"is east of the great city of Ardougne",
+					"In some certain rocks underground there",
+					"Its not the easiest of rocks to get to though I've heard");
+				player.updateQuestStage(Quests.FAMILY_CREST, 6);
 			}
-		});
-		defaultMenu.addOption(new Option("Why are you called boot?") {
-			@Override
-			public void action() {
-				npcTalk(p, n, "Because when I was a very young dwarf",
+			else if (option == 2) {
+				npcsay(player, n, "Because when I was a very young dwarf",
 					"I used to sleep in a large boot");
 			}
-		});
-		defaultMenu.showMenu(p);
+		}
+		else {
+			if (option == 1) {
+				npcsay(player, n, "Because when I was a very young dwarf",
+					"I used to sleep in a large boot");
+			}
+		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.BOOT_THE_DWARF.id();
 	}
 

@@ -4,17 +4,13 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.entity.Entity;
-import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.player.Prayers;
 
 import java.security.InvalidParameterException;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getMaxLevel;
-
 public final class Formulae {
 
 	public static final int[] arrowIDs = {ItemId.ICE_ARROWS.id(), ItemId.POISON_RUNE_ARROWS.id(),
@@ -128,9 +124,7 @@ public final class Formulae {
 			if (deltaY == 0) {
 				return 2; // West
 			}
-			if (deltaY < 0) {
-				return 3; // South-West
-			}
+			return 3; // South-West
 		}
 		if (deltaX > 0) {
 			if (deltaY < 0) {
@@ -139,136 +133,16 @@ public final class Formulae {
 			if (deltaY == 0) {
 				return 6; // East
 			}
-			if (deltaY > 0) {
-				return 7; // North-East
-			}
+			return 7; // North-East
 		}
-		if (deltaX == 0) {
-			if (deltaY > 0) {
-				return 0; // North
-			}
-			if (deltaY < 0) {
-				return 4; // South
-			}
-		}
-		return -1;
-	}
 
-	/**
-	 * Adds the prayers together to calculate what percentage the stat should be
-	 * increased
-	 */
-	private static double addPrayers(boolean first, boolean second, boolean third) {
-		if (third) {
-			return 1.15D;
+		if (deltaY > 0) {
+			return 0; // North
 		}
-		if (second) {
-			return 1.1D;
+		if (deltaY < 0) {
+			return 4; // South
 		}
-		if (first) {
-			return 1.05D;
-		}
-		return 1.0D;
-	}
 
-	/**
-	 * Returns a power to associate with each arrow
-	 */
-	private static double arrowPower(int arrowID) {
-		switch (ItemId.getById(arrowID)) {
-			case BRONZE_ARROWS:
-			case POISON_BRONZE_ARROWS:
-			case CROSSBOW_BOLTS:
-			case POISON_CROSSBOW_BOLTS:
-			case BRONZE_THROWING_DART:
-			case POISONED_BRONZE_THROWING_DART:
-				return 0;
-			case IRON_ARROWS:
-			case POISON_IRON_ARROWS:
-			case IRON_THROWING_DART:
-			case POISONED_IRON_THROWING_DART:
-				return 0.5;
-			case STEEL_ARROWS:
-			case POISON_STEEL_ARROWS:
-			case STEEL_THROWING_DART:
-			case POISONED_STEEL_THROWING_DART:
-			case BRONZE_THROWING_KNIFE:
-			case POISONED_BRONZE_THROWING_KNIFE:
-			case BRONZE_SPEAR:
-			case POISONED_BRONZE_SPEAR:
-				return 1;
-			case MITHRIL_ARROWS:
-			case POISON_MITHRIL_ARROWS:
-			case OYSTER_PEARL_BOLTS:
-			case MITHRIL_THROWING_DART:
-			case POISONED_MITHRIL_THROWING_DART:
-			case IRON_THROWING_KNIFE:
-			case POISONED_IRON_THROWING_KNIFE:
-			case IRON_SPEAR:
-			case POISONED_IRON_SPEAR:
-				return 1.5;
-			case ADAMANTITE_ARROWS:
-			case POISON_ADAMANTITE_ARROWS:
-			case ADAMANTITE_THROWING_DART:
-			case POISONED_ADAMANTITE_THROWING_DART:
-			case STEEL_THROWING_KNIFE:
-			case POISONED_STEEL_THROWING_KNIFE:
-			case STEEL_SPEAR:
-			case POISONED_STEEL_SPEAR:
-				return 1.75;
-			case BLACK_THROWING_KNIFE:
-			case POISONED_BLACK_THROWING_KNIFE:
-				return 2;
-			case RUNE_ARROWS:
-			case POISON_RUNE_ARROWS:
-			case RUNE_THROWING_DART:
-			case POISONED_RUNE_THROWING_DART:
-			case MITHRIL_THROWING_KNIFE:
-			case POISONED_MITHRIL_THROWING_KNIFE:
-			case MITHRIL_SPEAR:
-			case POISONED_MITHRIL_SPEAR:
-				return 5;
-			case ICE_ARROWS:
-			case ADAMANTITE_THROWING_KNIFE:
-			case POISONED_ADAMANTITE_THROWING_KNIFE:
-			case ADAMANTITE_SPEAR:
-			case POISONED_ADAMANTITE_SPEAR:
-				return 6;
-			case RUNE_THROWING_KNIFE:
-			case POISONED_RUNE_THROWING_KNIFE:
-			case RUNE_SPEAR:
-			case POISONED_RUNE_SPEAR:
-				return 7;
-			default:
-				return 0;
-		}
-	}
-
-	public static int bitToDoorDir(int bit) {
-		switch (bit) {
-			case 1:
-				return 0;
-			case 2:
-				return 1;
-			case 4:
-				return -1;
-			case 8:
-				return -1;
-		}
-		return -1;
-	}
-
-	public static int bitToObjectDir(int bit) {
-		switch (bit) {
-			case 1:
-				return 6;
-			case 2:
-				return 0;
-			case 4:
-				return 2;
-			case 8:
-				return 4;
-		}
 		return -1;
 	}
 
@@ -276,18 +150,18 @@ public final class Formulae {
 	 * Decide if the food we are cooking should be burned or not Gauntlets of
 	 * Cooking. These gauntlets lowers lvl to burn of lobs, sword and shark
 	 */
-	public static boolean burnFood(Player p, int foodId, int cookingLevel) {
+	public static boolean burnFood(Player player, int foodId, int cookingLevel) {
 		//gauntlets of cooking effective on lobsters, swordfish and shark
 		//chef: Wearing them means you will burn your lobsters, swordfish and shark less
-		int bonusLevel = p.getInventory().wielding(ItemId.GAUNTLETS_OF_COOKING.id()) ?
+		int bonusLevel = player.getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_COOKING.id()) ?
 			(foodId == ItemId.RAW_SWORDFISH.id() ? 6 :
 				foodId == ItemId.RAW_LOBSTER.id() || foodId == ItemId.RAW_SHARK.id() ? 11 : 0) : 0;
 		int effectiveLevel = cookingLevel + bonusLevel;
-		int levelReq = p.getWorld().getServer().getEntityHandler().getItemCookingDef(foodId).getReqLevel();
+		int levelReq = player.getWorld().getServer().getEntityHandler().getItemCookingDef(foodId).getReqLevel();
 		//if not on def file from cooking training table, level stop failing
 		//is usually 35 since player can cook item
-		int levelStopFail = p.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId) != null ?
-			p.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId).getReqLevel() : levelReq + 35;
+		int levelStopFail = player.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId) != null ?
+			player.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId).getReqLevel() : levelReq + 35;
 		return !Formulae.calcProductionSuccessful(levelReq, effectiveLevel, true, levelStopFail);
 	}
 
@@ -309,110 +183,6 @@ public final class Formulae {
 			}
 		}
 		return 0.0D;
-	}
-	/*public static int combatExperience(Mob mob) { //"WOW" EXP FORMULA
-		double exp = Math.pow(mob.getCombatLevel(), 2) * 1.5D;
-		return (int) (mob instanceof Player ? (exp / 4D) : exp);
-	}*/
-
-	public static int calcGodSpells(Mob attacker, Mob defender, boolean iban) {
-		if (attacker.isPlayer()) {
-			Player owner = (Player) attacker;
-			int newAtt = (int) ((owner.getMagicPoints()) + owner.getSkills().getLevel(Skills.MAGIC));
-
-			int newDef = (int) ((addPrayers(defender, Prayers.THICK_SKIN, Prayers.ROCK_SKIN, Prayers.STEEL_SKIN)
-				* defender.getSkills().getLevel(Skills.DEFENSE) / 4D) + (defender.getArmourPoints() / 4D));
-			int hitChance = DataConversions.random(0, 150 + (newAtt - newDef));
-
-			if (hitChance > (defender.isNpc() ? 50 : 60)) {
-				int max;
-				if (owner.getInventory().wielding(ItemId.STAFF_OF_IBAN.id()) && iban) {
-					max = DataConversions.random(0, 25);
-				} else {
-					if (owner.isCharged() &&
-						(owner.getInventory().wielding(ItemId.ZAMORAK_CAPE.id()) ||
-							owner.getInventory().wielding(ItemId.SARADOMIN_CAPE.id()) ||
-							owner.getInventory().wielding(ItemId.GUTHIX_CAPE.id()))) {
-						max = DataConversions.random(0, 25);
-					} else {
-						max = DataConversions.random(0, 18);
-					}
-				}
-				int maxProb = 5; // 5%
-				int nearMaxProb = 10; // 10%
-				int avProb = 80; // 80%
-				int lowHit = 5; // 5%
-
-				int shiftValue = (int) Math.round(defender.getArmourPoints() * 0.02D);
-				maxProb -= shiftValue;
-				nearMaxProb -= (int) Math.round(shiftValue * 1.5);
-				avProb -= (int) Math.round(shiftValue * 2.0);
-				lowHit += (int) Math.round(shiftValue * 3.5);
-
-				int hitRange = DataConversions.random(0, 100);
-
-				if (hitRange >= (100 - maxProb)) {
-					return max;
-				} else if (hitRange >= (100 - nearMaxProb)) {
-					return DataConversions.roundUp(Math.abs((max - (max * (DataConversions.random(0, 10) * 0.01D)))));
-				} else if (hitRange >= (100 - avProb)) {
-					int newMax = (int) DataConversions.roundUp((max - (max * 0.1D)));
-					return DataConversions
-						.roundUp(Math.abs((newMax - (newMax * (DataConversions.random(0, 50) * 0.01D)))));
-				} else {
-					int newMax = (int) DataConversions.roundUp((max - (max * 0.5D)));
-					return DataConversions
-						.roundUp(Math.abs((newMax - (newMax * (DataConversions.random(0, 95) * 0.01D)))));
-				}
-			}
-		}
-		return 0;
-	}
-
-	/**
-	 * Calculates what one mob should hit on another with range
-	 *
-	 * @param owner
-	 */
-	public static int calcRangeHit(Player owner, int rangeLvl, int armourEquip, int arrowID) {
-		int rangeEquip = getBowBonus(owner);
-
-		int armourRatio = (int) (60D + ((double) ((rangeEquip * 3D) - armourEquip) / 300D) * 40D);
-
-		if (DataConversions.random(0, 100) > armourRatio && DataConversions.random(0, 1) == 0) {
-			return 0;
-		}
-
-		int max = (int) (((double) rangeLvl * 0.15D) + 0.85D + arrowPower(arrowID));
-		int peak = (int) (((double) max / 100D) * (double) armourRatio);
-		int dip = (int) (((double) peak / 3D) * 2D);
-		return DataConversions.randomWeighted(0, dip, peak, max);
-	}
-
-	public static int calcRangeHitNpc(Mob owner, int rangeLvl, int armourEquip, int arrowID) {
-		int rangeEquip = 8;
-
-		int armourRatio = (int) (60D + ((double) ((rangeEquip * 3D) - armourEquip) / 300D) * 40D);
-
-		if (DataConversions.random(0, 100) > armourRatio && DataConversions.random(0, 1) == 0) {
-			return 0;
-		}
-
-		int max = (int) (((double) rangeLvl * 0.15D) + 0.85D + arrowPower(arrowID));
-		int peak = (int) (((double) max / 100D) * (double) armourRatio);
-		int dip = (int) (((double) peak / 3D) * 2D);
-		return DataConversions.randomWeighted(0, dip, peak, max);
-	}
-
-	/**
-	 * Calculates what a spell should hit based on its strength and the magic
-	 * equipment stats of the caster
-	 */
-	public static int calcSpellHit(int spellStr, int magicEquip) {
-		int mageRatio = (int) (45D + (double) magicEquip);
-		int peak = (int) (((double) spellStr / 100D) * (double) mageRatio);
-		int dip = (int) ((peak / 3D) * 2D);
-		return DataConversions.randomWeighted(0, dip, peak, spellStr);
 	}
 
 	/**
@@ -440,47 +210,31 @@ public final class Formulae {
 		return DataConversions.random(0, (levelDiff + 2) * 2) != 0;
 	}
 
-	private static int getBowBonus(Player player) {
-		switch (ItemId.getById(player.getRangeEquip())) {
-			case PHOENIX_CROSSBOW:
-				return 10;
-			case CROSSBOW:
-				return 10;
-			case LONGBOW:
-				return 8;
-			case SHORTBOW:
-				return 5;
-
-			case OAK_LONGBOW:
-				return 13;
-			case OAK_SHORTBOW:
-				return 10;
-			case WILLOW_LONGBOW:
-				return 18;
-			case WILLOW_SHORTBOW:
-				return 15;
-			case MAPLE_LONGBOW:
-				return 23;
-			case MAPLE_SHORTBOW:
-				return 20;
-			case YEW_LONGBOW:
-				return 28;
-			case YEW_SHORTBOW:
-				return 25;
-			case MAGIC_LONGBOW:
-				return 33;
-			case MAGIC_SHORTBOW:
-				return 30;
-			default:
-				return 0;
+	/**
+	 * Calculate how much experience a Mob gives
+	 * OG RSC FORMULA vs NPC: Math.floor((2*(att+str+def)+hits)/7) * 2 + 20
+	 * OG RSC FORMULA vs Player: Math.floor(combat_level) + 10
+	 */
+	public static int combatExperience(Mob mob) {
+		if (mob.isNpc()) {
+			return (mob.getCombatLevel(true) * 2) + 20;
+		} else {
+			return mob.getCombatLevel(false) + 10;
 		}
 	}
 
 	/**
-	 * Calculate how much experience a Mob gives
+	 * Calculate experience done on a per hit & damage made
+	 * OG RSC only gave if attacker is on Ranged and Mob was Player
+	 * Best found fit through points: Math.round((27 * damage - 3) / 5.0)
 	 */
-	public static int combatExperience(Mob mob, int roundMode) { // OPEN RSC FORMULA + PECULIARITIES OF ORIGINAL RSC
-		return ((mob.getCombatLevel(roundMode) * 2) + 20);
+	public static int rangedHitExperience(Mob mob, int damageMade) {
+		// ranged vs npc is not per hit but per mob kill, see combatExperience
+		if (mob.isNpc() || damageMade < 1) {
+			return 0;
+		} else {
+			return (int)Math.round((27 * damageMade - 3) / 5.0);
+		}
 	}
 
 	/**
@@ -519,24 +273,12 @@ public final class Formulae {
 		return DataConversions.random(0, 4) <= 1;
 	}
 
-	public static boolean doorAtFacing(Entity e, int x, int y, int dir) {
-		if (dir >= 0 && e instanceof GameObject) {
-			GameObject obj = (GameObject) e;
-			if (obj.getGameObjectDef().name.toLowerCase().contains("door")
-				|| obj.getGameObjectDef().name.toLowerCase().contains("gate")) {
-				return true;
-			}
-			return obj.getType() == 1 && obj.getDirection() == dir && obj.isOn(x, y);
-		}
-		return false;
-	}
-
 	/**
 	 * Decide if we fall off the obstacle or not
 	 */
 	// TODO: This should be moved to the appropriate plugin class.
-	public static boolean failCalculation(Player p, int skill, int reqLevel) {
-		int levelDiff = p.getSkills().getMaxStat(skill) - reqLevel;
+	public static boolean failCalculation(Player player, int skill, int reqLevel) {
+		int levelDiff = player.getSkills().getMaxStat(skill) - reqLevel;
 		if (levelDiff < 0) {
 			return false;
 		}
@@ -582,37 +324,34 @@ public final class Formulae {
 	/**
 	 * Calculate a mobs combat level based on their stats
 	 */
-	public static int getCombatlevel(int[] stats, Integer roundMode) {
-		return getCombatLevel(stats[Skills.ATTACK], stats[Skills.DEFENSE], stats[Skills.STRENGTH], stats[Skills.HITS], stats[Skills.MAGIC], stats[Skills.PRAYER], stats[Skills.RANGED], roundMode);
+	public static int getCombatlevel(int[] stats, boolean isSpecial) {
+		return getCombatLevel(stats[Skills.ATTACK], stats[Skills.DEFENSE], stats[Skills.STRENGTH], stats[Skills.HITS], stats[Skills.MAGIC], stats[Skills.PRAYER], stats[Skills.RANGED], isSpecial);
 	}
 
 	/**
 	 * Calculate a mobs combat level based on their stats
+	 * isSpecial considers hits as half as important in cb level calc
+	 * compared to the other melee stats, used in npc xp given
 	 */
-	public static int getCombatLevel(int att, int def, int str, int hits, int magic, int pray, int range, Integer roundMode) {
-		double attack = att + str;
-		double defense = def + hits;
+	public static int getCombatLevel(int att, int def, int str, int hits, int magic, int pray, int range, boolean isSpecial) {
+		// OG RSC combat level to use with xp calc (for npc): (2 * (att + str + def) + hits) / 7
+		// OG RSC combat level to use with xp calc (for player) - seems to be regular well known combat level formula
+		int multiplier = isSpecial ? 2 : 1;
+		double attack = multiplier * (att + str);
+		double defense = multiplier * def + hits;
 		double mage = pray + magic;
 		mage /= 8D;
+		double ranged = multiplier * range;
 
 		double level;
 
-		if (attack < ((double) range * 1.5D)) {
-			level = ((defense / 4D) + ((double) range * 0.375D) + mage);
+		if (attack < ranged * 1.5D) {
+			level = (isSpecial ? (2 * defense + 3 * ranged) / 14D : (2 * defense + 3 * ranged) / 8D) + mage;
 		} else {
-			level = ((attack / 4D) + (defense / 4D) + mage);
+			level = (isSpecial ? (attack + defense) / 7D : (attack + defense) / 4D) + mage;
 		}
 
-		switch (roundMode != null ? roundMode : 9999) {
-			case -1:
-				return (int) Math.floor(level);
-			case 0:
-				return (int) Math.round(level);
-			case 1:
-				return (int) Math.ceil(level);
-			default:
-				return (int) level;
-		}
+		return (int) Math.floor(level);
 	}
 
 	/**
@@ -777,10 +516,10 @@ public final class Formulae {
 		return Formulae.calcProductionSuccessful(levelReq, firemakingLvl, true, levelStopFail);
 	}
 
-	public static int getLevelsToReduceAttackKBD(Player p) {
+	public static int getLevelsToReduceAttackKBD(Player player) {
 		int levels = 0;
-		int currLvl = getCurrentLevel(p, Skills.RANGED);
-		int maxLvl = getMaxLevel(p, Skills.RANGED);
+		int currLvl = getCurrentLevel(player, Skills.RANGED);
+		int maxLvl = getMaxLevel(player, Skills.RANGED);
 		int ratio = currLvl * 100 / maxLvl;
 		if (currLvl <= 3) {
 			return 0;
@@ -812,63 +551,8 @@ public final class Formulae {
 		return DataConversions.random(0, 6) != 0;
 	}
 
-	/**
-	 * Calculate the max hit possible with the given stats
-	 */
-	public static int maxHit(int strength, int weaponPower, boolean burst, boolean superhuman, boolean ultimate,
-							 int bonus) {
-		double newStrength = (double) ((strength * addPrayers(burst, superhuman, ultimate)) + bonus);
-
-		return (int) ((newStrength * ((((double) weaponPower * 0.00175D) + 0.1D)) + 1.05D) * 0.95D);
-
-	}
-
-	public static boolean objectAtFacing(Entity e, int x, int y, int dir) {
-		if (dir >= 0 && e instanceof GameObject) {
-			GameObject obj = (GameObject) e;
-			return obj.getType() == 0 && obj.getDirection() == dir && obj.isOn(x, y);
-		}
-		return false;
-	}
-
-	public static int offsetToPercent(int levelDiff) {
-		return levelDiff > 40 ? 60 : 20 + levelDiff;
-	}
-
-	/**
-	 * Calulates what one mob should hit on another with meelee
-	 */
-	public static double parseDouble(double number) {
-		String numberString = String.valueOf(number);
-		return Double.valueOf(numberString.substring(0, numberString.indexOf(".") + 2));
-	}
-
-	public static int styleBonus(Mob mob, int skill) {
-		int style = mob.getCombatStyle();
-		if (style == 0) {
-			return 1;
-		}
-		return (skill == 0 && style == 2) || (skill == 1 && style == 3) || (skill == 2 && style == 1) ? 3 : 0;
-	}
-
-	public static int getBarIdFromItem(int itemID) {
-		if (DataConversions.inArray(BRONZE, itemID))
-			return ItemId.BRONZE_BAR.id();
-		if (DataConversions.inArray(IRON, itemID))
-			return ItemId.IRON_BAR.id();
-		if (DataConversions.inArray(STEEL, itemID))
-			return ItemId.STEEL_BAR.id();
-		if (DataConversions.inArray(MITH, itemID))
-			return ItemId.MITHRIL_BAR.id();
-		if (DataConversions.inArray(ADDY, itemID))
-			return ItemId.ADAMANTITE_BAR.id();
-		if (DataConversions.inArray(RUNE, itemID))
-			return ItemId.RUNITE_BAR.id();
-		return -1;
-	}
-
-	public static int getRepeatTimes(Player p, int skill) {
-		int maxStat = p.getSkills().getMaxStat(skill); // Number of time repeats is based on your highest level using this method
+	public static int getRepeatTimes(Player player, int skill) {
+		int maxStat = player.getSkills().getMaxStat(skill); // Number of time repeats is based on your highest level using this method
 		if (maxStat <= 10)
 			return 40;
 		if (maxStat <= 19)
@@ -890,16 +574,6 @@ public final class Formulae {
 		if (maxStat <= 99)
 			return 230;
 		return 1000;
-	}
-
-	public static int getSpellMaxHit(SpellDef spell) {
-		String description = spell.getDescription();
-		description = description.replaceAll("\\D+", "");
-		try {
-			return Integer.parseInt(description);
-		} catch (Exception ignored) {
-		}
-		return 1;
 	}
 
 	/**
@@ -945,18 +619,17 @@ public final class Formulae {
 
 	public static int getSplendorBoost(int amount) {
 		int boost = amount * 9;
-		return boost > 1000 ? 1000 : boost;
+		return Math.min(boost, 1000);
 	}
 
-	public static int calculateGemDrop(Player p) throws InvalidParameterException {
+	public static int calculateGemDrop(Player player) throws InvalidParameterException {
 		int roll1 = weightedRandomChoice(gemDropIDs, gemDropWeights, ItemId.NOTHING.id());
 		if (roll1 != ItemId.NOTHING_REROLL.id())
 			return roll1;
-		int roll2 = calculateRareDrop(p);
-		return roll2;
+		return calculateRareDrop(player);
 	}
 
-	public static int calculateRareDrop(Player p) throws InvalidParameterException {
+	public static int calculateRareDrop(Player player) throws InvalidParameterException {
 		return weightedRandomChoice(rareDropIDs, rareDropWeights, ItemId.NOTHING.id());
 	}
 

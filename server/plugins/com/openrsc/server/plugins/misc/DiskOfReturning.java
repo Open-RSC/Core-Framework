@@ -3,22 +3,21 @@ package com.openrsc.server.plugins.misc;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
-public class DiskOfReturning implements InvActionListener, InvActionExecutiveListener {
+public class DiskOfReturning implements OpInvTrigger {
 
-	public boolean insideMines(Player p) {
-		return ((p.getX() >= 250 && p.getX() <= 315) && (p.getY() >= 3325 && p.getY() <= 3400));
+	public boolean insideMines(Player player) {
+		return ((player.getX() >= 250 && player.getX() <= 315) && (player.getY() >= 3325 && player.getY() <= 3400));
 	}
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
-		if(item.getID() == ItemId.DISK_OF_RETURNING.id()) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
+		if(item.getCatalogId() == ItemId.DISK_OF_RETURNING.id()) {
 			if (player.getLocation().onBlackHole()) {
 				player.message("You spin your disk of returning");
 				player.teleport(311, 3348, true);
-				player.getInventory().remove(ItemId.DISK_OF_RETURNING.id(), 1);
+				player.getCarriedItems().remove(new Item(ItemId.DISK_OF_RETURNING.id()));
 			} else {
 				player.message("The disk will only work from in Thordur's black hole");
 			}
@@ -26,7 +25,7 @@ public class DiskOfReturning implements InvActionListener, InvActionExecutiveLis
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
-		return item.getID() == ItemId.DISK_OF_RETURNING.id();
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
+		return item.getCatalogId() == ItemId.DISK_OF_RETURNING.id();
 	}
 }

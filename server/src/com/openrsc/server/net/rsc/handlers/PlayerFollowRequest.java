@@ -6,9 +6,9 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class PlayerFollowRequest implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		Player affectedPlayer = player.getWorld().getPlayer(p.readShort());
+		Player affectedPlayer = player.getWorld().getPlayer(packet.readShort());
 		if (affectedPlayer == null) {
 			player.setSuspiciousPlayer(true, "tried following null player");
 			return;
@@ -17,7 +17,7 @@ public final class PlayerFollowRequest implements PacketHandler {
 			player.resetPath();
 			return;
 		}
-		if (System.currentTimeMillis() - player.getLastRun() < 3000)
+		if (System.currentTimeMillis() - player.getRanAwayTimer() < 3000)
 			return;
 		player.resetAll();
 		player.setFollowing(affectedPlayer, 1);

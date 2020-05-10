@@ -9,26 +9,18 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.action.WallObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.WallObjectActionExecutiveListener;
-
-import java.util.Collection;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
-	ObjectActionListener, ObjectActionExecutiveListener,
-	TalkToNpcExecutiveListener, InvUseOnObjectListener,
-	InvUseOnObjectExecutiveListener, WallObjectActionExecutiveListener,
-	WallObjectActionListener {
+public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
+	OpLocTrigger,
+	UseLocTrigger,
+	OpBoundTrigger {
 	/**
 	 * GameObjects associated with this quest;
 	 */
@@ -49,58 +41,58 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	public String getQuestName() {
 		return "Black knight's fortress";
 	}
-	
+
 	@Override
 	public boolean isMembers() {
 		return false;
 	}
-	
+
 	@Override
-	public void handleReward(Player p) {
-		p.message("Sir Amik hands you 2500 coins");
-		addItem(p, ItemId.COINS.id(), 2500);
-		p.message("Well done. You have completed the Black Knights Fortress quest");
-		incQuestReward(p, p.getWorld().getServer().getConstants().getQuests().questData.get(Quests.BLACK_KNIGHTS_FORTRESS), true);
-		p.message("@gre@You haved gained 3 quest points!");
+	public void handleReward(Player player) {
+		player.message("Sir Amik hands you 2500 coins");
+		give(player, ItemId.COINS.id(), 2500);
+		player.message("Well done. You have completed the Black Knights Fortress quest");
+		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.BLACK_KNIGHTS_FORTRESS), true);
+		player.message("@gre@You haved gained 3 quest points!");
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
+	public void onTalkNpc(Player player, final Npc n) {
 		if (n.getID() == NpcId.SIR_AMIK_VARZE.id()) {
-			handleSirAmikVarze(p, n);
+			handleSirAmikVarze(player, n);
 		}
 	}
 
-	private void handleSirAmikVarze(final Player p, final Npc n) {
-		switch (p.getQuestStage(this)) {
+	private void handleSirAmikVarze(final Player player, final Npc n) {
+		switch (player.getQuestStage(this)) {
 			case 0:
-				npcTalk(p, n, "I am the leader of the white knights of Falador",
+				npcsay(player, n, "I am the leader of the white knights of Falador",
 					"Why do you seek my audience?");
-				int menu = showMenu(p, n, "I seek a quest",
+				int menu = multi(player, n, "I seek a quest",
 					"I don't I'm just looking around");
 				if (menu == 0) {
-					if (p.getQuestPoints() < 12) {
-						npcTalk(p, n,
+					if (player.getQuestPoints() < 12) {
+						npcsay(player, n,
 							"Well I do have a task, but it is very dangerous",
 							"and it's critical to us that no mistakes are made",
 							"I couldn't possibly let an unexperienced quester like yourself go");
-						p.message("You need 12 quest points to start this quest");
+						player.message("You need 12 quest points to start this quest");
 						return;
 					}
-					npcTalk(p, n, "Well I need some spy work doing",
+					npcsay(player, n, "Well I need some spy work doing",
 						"It's quite dangerous",
 						"You will need to go into the Black Knight's fortress");
-					int sub_menu = showMenu(p, n, "I laugh in the face of danger",
+					int sub_menu = multi(player, n, "I laugh in the face of danger",
 						"I go and cower in a corner at the first sign of danger");
 					if (sub_menu == 0) {
-						npcTalk(p, n,
+						npcsay(player, n,
 							"Well that's good",
 							"Don't get too overconfident though",
 							"You've come along just right actually",
 							"All of my knights are known to the black knights already",
 							"Subtlety isn't exactly our strong point");
-						playerTalk(p, n, "So, what needs doing?");
-						npcTalk(p, n,
+						say(player, n, "So, what needs doing?");
+						npcsay(player, n,
 							"Well the black knights have started making strange threats to us",
 							"Demanding large amounts of money and land",
 							"And threataning to invade Falador if we don't pay",
@@ -109,18 +101,18 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 							"What I want you to do is get inside their fortress",
 							"Find out what their secret weapon is",
 							"And then sabotage it", "You will be well paid");
-						playerTalk(p, n, "Ok I'll give it a try");
-						p.updateQuestStage(getQuestId(), 1);
+						say(player, n, "Ok I'll give it a try");
+						player.updateQuestStage(getQuestId(), 1);
 					} else if (sub_menu == 1) {
-						npcTalk(p, n, "Er", "well",
+						npcsay(player, n, "Er", "well",
 							"spy work does involve a little hiding in corners I suppose");
-						int sub = showMenu(p, n,
+						int sub = multi(player, n,
 							"Oh I suppose I'll give it a go then",
 							"No I'm not convinced");
 
 						if (sub == 0) {
-							playerTalk(p, n, "So, what needs doing?");
-							npcTalk(p, n,
+							say(player, n, "So, what needs doing?");
+							npcsay(player, n,
 								"Well the black knights have started making strange threats to us",
 								"Demanding large amounts of money and land",
 								"And threataning to invade Falador if we don't pay",
@@ -129,113 +121,110 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 								"What I want you to do is get inside their fortress",
 								"Find out what their secret weapon is",
 								"And then sabotage it", "You will be well paid");
-							playerTalk(p, n, "Ok I'll give it a try");
-							p.updateQuestStage(getQuestId(), 1);
+							say(player, n, "Ok I'll give it a try");
+							player.updateQuestStage(getQuestId(), 1);
 						}
 					}
 				} else if (menu == 1) {
-					npcTalk(p, n, "Ok, don't break anything");
+					npcsay(player, n, "Ok, don't break anything");
 				}
 				break;
 
 			case 1:
-				npcTalk(p, n, "How's the mission going?");
-				playerTalk(p, n,
+				npcsay(player, n, "How's the mission going?");
+				say(player, n,
 					"I haven't managed to find what the secret weapon is yet.");
 				break;
 			case 2:
-				npcTalk(p, n, "How's the mission going?");
+				npcsay(player, n, "How's the mission going?");
 
-				playerTalk(p, n,
+				say(player, n,
 					"I have found out what the Black Knights' secret weapon is.",
 					"It's a potion of invincibility.");
 
-				npcTalk(p, n,
+				npcsay(player, n,
 					"That is bad news.",
 					"If you can sabotage it somehow, you will be paid well.");
 
 				break;
 			case 3:
-				playerTalk(p, n,
+				say(player, n,
 					"I have ruined the black knight's invincibility potion.",
 					"That should put a stop to your problem.");
 
-				npcTalk(p, n,
+				npcsay(player, n,
 					"Yes we have just recieved a message from the black knights.",
 					"Saying they withdraw their demands.",
 					"Which confirms your story");
 
-				playerTalk(p, n, "You said you were going to pay me");
-				npcTalk(p, n, "Yes that's right");
-				p.sendQuestComplete(Quests.BLACK_KNIGHTS_FORTRESS);
+				say(player, n, "You said you were going to pay me");
+				npcsay(player, n, "Yes that's right");
+				player.sendQuestComplete(Quests.BLACK_KNIGHTS_FORTRESS);
 				break;
 
 			case -1:
-				playerTalk(p, n, "Hello Sir Amik");
-				npcTalk(p, n, "Hello friend");
+				say(player, n, "Hello Sir Amik");
+				npcsay(player, n, "Hello friend");
 				break;
 		}
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		switch (obj.getID()) {
 			case HOLE:
-				if (item.getID() == ItemId.CABBAGE.id() && player.getQuestStage(this) == 2) {
-					if (removeItem(player, ItemId.CABBAGE.id(), 1)) {
-						message(player,
+				if (item.getCatalogId() == ItemId.CABBAGE.id() && player.getQuestStage(this) == 2) {
+					if (player.getCarriedItems().remove(new Item(ItemId.CABBAGE.id())) != -1) {
+						mes(player,
 							"You drop a cabbage down the hole.",
 							"The cabbage lands in the cauldron below.",
 							"The mixture in the cauldron starts to froth and bubble.",
 							"You hear the witch groan in dismay.");
-						playerTalk(player, null,
+						say(player, null,
 							"Right I think that's successfully sabotaged the secret weapon.");
 						player.updateQuestStage(this, 3);
 					}
-				} else if (item.getID() == ItemId.SPECIAL_DEFENSE_CABBAGE.id() && player.getQuestStage(this) == 2) {
-					message(player,
+				} else if (item.getCatalogId() == ItemId.SPECIAL_DEFENSE_CABBAGE.id() && player.getQuestStage(this) == 2) {
+					mes(player,
 						"This is the wrong sort of cabbage!",
 						"You are meant to be hindering the witch.",
 						"Not helping her.");
 				} else {
-					playerTalk(player, null, "Why would I want to do that?");
+					say(player, null, "Why would I want to do that?");
 				}
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.SIR_AMIK_VARZE.id();
 	}
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item,
-									   Player player) {
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return obj.getID() == HOLE;
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command,
-									 Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == LISTEN_GRILL;
 	}
 
 	@Override
-	public void onObjectAction(final GameObject obj, String command,
-							   final Player player) {
+	public void onOpLoc(final Player player, final GameObject obj, String command) {
 		switch (obj.getID()) {
 			case LISTEN_GRILL:
 				if (player.getQuestStage(this) == 1) {
-					Npc blackKnight = getNearestNpc(player, NpcId.BLACK_KNIGHT_FORTRESS.id(), 20);
-					Npc witch = getNearestNpc(player, NpcId.WITCH_FORTRESS.id(), 20);
-					Npc greldo = getNearestNpc(player, NpcId.GRELDO.id(), 20);
+					Npc blackKnight = ifnearvisnpc(player, NpcId.BLACK_KNIGHT_FORTRESS.id(), 20);
+					Npc witch = ifnearvisnpc(player, NpcId.WITCH_FORTRESS.id(), 20);
+					Npc greldo = ifnearvisnpc(player, NpcId.GRELDO.id(), 20);
 					if (witch == null || blackKnight == null || greldo == null) {
 						return;
 					}
-					npcTalk(player, blackKnight,
+					npcsay(player, blackKnight,
 						"So how's the secret weapon coming along?");
-					npcTalk(player,
+					npcsay(player,
 						witch,
 						"The invincibility potion is almost ready",
 						"It's taken me five years but it's almost ready",
@@ -249,7 +238,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 						"Now remember Greldo only a Draynor Manor cabbage will do",
 						"Don't get lazy and bring any old cabbage",
 						"That would entirely wreck the potion");
-					npcTalk(player, greldo, "Yeth Mithreth");
+					npcsay(player, greldo, "Yeth Mithreth");
 					player.updateQuestStage(this, 2);
 				} else {
 					player.message("I can't hear much right now");
@@ -259,8 +248,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public boolean blockWallObjectAction(GameObject obj, Integer click,
-										 Player player) {
+	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 38 && obj.getLocation().equals(DOOR_LOCATION)) {
 			return true;
 		}
@@ -274,47 +262,43 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 	}
 
 	@Override
-	public void onWallObjectAction(final GameObject obj, Integer click,
-								   final Player player) {
+	public void onOpBound(final Player player, final GameObject obj, Integer click) {
 		switch (obj.getID()) {
 			case DOOR_ENTRANCE:
 				if (obj.getLocation().equals(DOOR_LOCATION) && player.getX() <= 270) {
-					if (player.getInventory().wielding(ItemId.IRON_CHAIN_MAIL_BODY.id())
-						&& player.getInventory().wielding(ItemId.MEDIUM_BRONZE_HELMET.id())) {
+					if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.IRON_CHAIN_MAIL_BODY.id())
+						&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.MEDIUM_BRONZE_HELMET.id())) {
 						doDoor(obj, player);
 						player.teleport(271, 441, false);
 					} else {
-						final Npc guard = getNearestNpc(player, NpcId.GUARD_FORTRESS.id(), 20);
+						final Npc guard = ifnearvisnpc(player, NpcId.GUARD_FORTRESS.id(), 20);
 						if (guard != null) {
-							guard.resetPath();
-							guard.face(player);
-							player.face(guard);
-							npcTalk(player, guard, "Heh, you can't come in here",
+							npcsay(player, guard, "Heh, you can't come in here",
 								"This is a high security military installation");
-							int option = showMenu(player, guard, "Yes but I work here", "Oh sorry", "So who does it belong to?");
+							int option = multi(player, guard, "Yes but I work here", "Oh sorry", "So who does it belong to?");
 							if (option == 0) {
-								npcTalk(player,
+								npcsay(player,
 									guard,
 									"Well this is the guards entrance",
 									"And I might be new here",
 									"But I can tell you're not a guard",
 									"You're not even wearing proper guards uniform");
-								int sub_menu = showMenu(player, guard, "Pleaasse let me in",
+								int sub_menu = multi(player, guard, "Pleaasse let me in",
 									"So what is this uniform?");
 								if (sub_menu == 0) {
-									npcTalk(player, guard,
+									npcsay(player, guard,
 										"Go away, you're getting annoying");
 								} else if (sub_menu == 1) {
-									npcTalk(player,
+									npcsay(player,
 										guard,
 										"Well you can see me wearing it",
 										"It's iron chain mail and a medium bronze helmet");
 								}
 							} else if (option == 1) {
-								npcTalk(player, guard,
+								npcsay(player, guard,
 									"Don't let it happen again");
 							} else if (option == 2) {
-								npcTalk(player, guard,
+								npcsay(player, guard,
 									"This fortress belongs to the order of black knights known as the Kinshra");
 							}
 						}
@@ -326,19 +310,16 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 			case 39:
 				if (obj.getLocation().equals(DOOR2_LOCATION)
 					&& player.getX() <= 274) {
-					final Npc guard = getNearestNpc(player, NpcId.GUARD_FORTRESS.id(), 20);
+					final Npc guard = ifnearvisnpc(player, NpcId.GUARD_FORTRESS.id(), 20);
 					if (guard != null) {
-						guard.resetPath();
-						guard.face(player);
-						player.face(guard);
-						npcTalk(player, guard,
+						npcsay(player, guard,
 							"I wouldn't go in there if I woz you",
 							"Those black knights are in an important meeting",
 							"They said they'd kill anyone who went in there");
-						int option = showMenu(player, guard, "Ok I won't", "I don't care I'm going in anyway");
+						int option = multi(player, guard, "Ok I won't", "I don't care I'm going in anyway");
 						if (option == 1) {
 							doDoor(obj, player);
-							Npc n = Functions.getNearestNpc(player, NpcId.BLACK_KNIGHT.id(), 7);
+							Npc n = ifnearvisnpc(player, NpcId.BLACK_KNIGHT.id(), 7);
 							if (!n.isChasing()) {
 								n.setChasing(player);
 								new AggroEvent(n.getWorld(), n, player);
@@ -352,20 +333,15 @@ public class BlackKnightsFortress implements QuestInterface, TalkToNpcListener,
 			case 40:
 				if (obj.getLocation().equals(DOOR3_LOCATION)
 						&& player.getY() <= 442) {
-					Collection<Npc> npcs = Functions.getNpcsInArea(player, 5, NpcId.BLACK_KNIGHT.id());
+					Npc npc = ifnearvisnpc(player, 5, NpcId.BLACK_KNIGHT.id());
 					int countNotAbleChase = 0;
-					if (npcs.size() == 0) {
+					if (npc == null) {
 						doDoor(obj, player);
 					} else {
-						for (Npc n : npcs) {
-							if (!n.isChasing()) {
-								n.setChasing(player);
-								new AggroEvent(n.getWorld(), n, player);
-							} else {
-								countNotAbleChase++;
-							}
-						}
-						if (countNotAbleChase >= npcs.size()) {
+						if (!npc.isChasing()) {
+							npc.setChasing(player);
+							new AggroEvent(npc.getWorld(), npc, player);
+						} else {
 							doDoor(obj, player);
 						}
 					}

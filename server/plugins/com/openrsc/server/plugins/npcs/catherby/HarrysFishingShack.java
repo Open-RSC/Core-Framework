@@ -8,14 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class HarrysFishingShack implements ShopInterface,
-	TalkToNpcListener, TalkToNpcExecutiveListener {
+public class HarrysFishingShack extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2, new Item(ItemId.NET.id(), 3),
 		new Item(ItemId.FISHING_ROD.id(), 3), new Item(ItemId.HARPOON.id(), 2), new Item(ItemId.LOBSTER_POT.id(), 2),
@@ -26,7 +23,7 @@ public class HarrysFishingShack implements ShopInterface,
 		new Item(ItemId.RAW_SHARK.id(), 0));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.HARRY.id();
 	}
 
@@ -41,17 +38,21 @@ public class HarrysFishingShack implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Welcome you can buy fishing equipment at my store",
-			"We'll also buy fish that you catch off you");
-		final int option = showMenu(p, n, false, "Let's see what you've got then", "Sorry, I'm not interested");
-		if (option == 0) {
-			playerTalk(p, n, "Let's see what you've got then");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
-		} else if (option == 1) {
-			playerTalk(p, n, "Sorry,I'm not interested");
-		}
+	public Shop getShop() {
+		return shop;
 	}
 
+	@Override
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Welcome you can buy fishing equipment at my store",
+			"We'll also buy fish that you catch off you");
+		final int option = multi(player, n, false, "Let's see what you've got then", "Sorry, I'm not interested");
+		if (option == 0) {
+			say(player, n, "Let's see what you've got then");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
+		} else if (option == 1) {
+			say(player, n, "Sorry,I'm not interested");
+		}
+	}
 }

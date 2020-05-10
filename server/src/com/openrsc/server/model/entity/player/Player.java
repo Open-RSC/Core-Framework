@@ -3,6 +3,7 @@ package com.openrsc.server.model.entity.player;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -10,8 +11,11 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyInvite;
 import com.openrsc.server.content.party.PartyPlayer;
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
+import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.event.custom.BatchEvent;
+import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.PlayerRemoveRequest;
@@ -19,27 +23,23 @@ import com.openrsc.server.login.PlayerSaveRequest;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
+import com.openrsc.server.model.container.CarriedItems;
 import com.openrsc.server.model.container.Equipment;
-import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.entity.npc.PkBot;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.net.rsc.PacketHandlerLookup;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
-import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -82,14 +82,13 @@ public final class Player extends Mob {
 	private boolean sleeping = false;
 	private int activity = 0;
 	private int kills = 0;
-	private int kills2 = 0;
+	private int npc_kills = 0;
 	private int expShared = 0;
 	private int deaths = 0;
 	private int npcDeaths = 0;
 	private volatile WalkToAction walkToAction;
 	private volatile WalkToAction lastExecutedWalkToAction;
 	private Trade trade;
-	private int databaseID;
 	private Clan clan;
 	private Party party;
 	private ClanInvite activeClanInvitation;
@@ -98,13 +97,10 @@ public final class Player extends Mob {
 	public final String MEMBER_MESSAGE = "This feature is only available for members only";
 	private final Map<Integer, Integer> killCache = new HashMap<>();
 	private boolean killCacheUpdated = false;
-	private final Object incomingPacketLock = new Object();
-	private final Object outgoingPacketsLock = new Object();
 	private final Map<Integer, Integer> questStages = new ConcurrentHashMap<>();
 	private int IRON_MAN_MODE = IronmanMode.None.id();
 	private int IRON_MAN_RESTRICTION = 1;
 	private int IRON_MAN_HC_DEATH = 0;
-	public int lastMineTry = -1;
 	public int click = -1;
 	private FireCannonEvent cannonEvent = null;
 	private long consumeTimer = 0;
@@ -118,11 +114,16 @@ public final class Player extends Mob {
 	private LinkedHashSet<GameObject> localWallObjects = new LinkedHashSet<GameObject>();
 	private LinkedHashSet<GroundItem> localGroundItems = new LinkedHashSet<GroundItem>();
 	private ArrayDeque<Point> locationsToClear = new ArrayDeque<Point>();
-	private BatchEvent batchEvent = null;
 	private String currentIP = "0.0.0.0";
 	private int incorrectSleepTries = 0;
 	private volatile int questionOption;
+	private List<PluginTask> ownedPlugins = Collections.synchronizedList(new ArrayList<>());
 
+	/**
+	 * An atomic reference to the players carried items.
+	 * Multiple threads access this and it never changes.
+	 */
+	private final AtomicReference<CarriedItems> carriedItems = new AtomicReference<>();
 	/**
 	 * Players cache is used to store various objects into database
 	 */
@@ -170,7 +171,7 @@ public final class Player extends Mob {
 	/**
 	 * The drain rate of the prayers currently enabled
 	 */
-	private int drainRate = 0;
+	private int drainRate = 0, prayerStatePoints = 0;
 	/**
 	 * Amount of fatigue - 0 to 150000
 	 */
@@ -183,19 +184,6 @@ public final class Player extends Mob {
 	 * Is the player accessing their bank?
 	 */
 	private boolean inBank = false;
-	/**
-	 * The npc we are currently interacting with
-	 */
-	private Npc interactingNpc = null;
-	/**
-	 * Atomic reference to the inventory, multiple threads use this instance and
-	 * it is never changed during session.
-	 */
-	private AtomicReference<Inventory> inventory = new AtomicReference<Inventory>();
-	/**
-	 * Equipped items
-	 */
-	private AtomicReference<Equipment> equipment = new AtomicReference<Equipment>();
 	/**
 	 * Channel
 	 */
@@ -292,10 +280,7 @@ public final class Player extends Mob {
 	 * Player sleep word
 	 */
 	private String sleepword;
-	/**
-	 * The current status of the player
-	 */
-	private volatile Action status = Action.IDLE;
+
 	/**
 	 * If the player has been sending suspicious packets
 	 */
@@ -323,14 +308,14 @@ public final class Player extends Mob {
 	/*public void unwieldMembersItems() {
 		if (!getServer().getConfig().MEMBER_WORLD) {
 			boolean found = false;
-			for (Item i : getInventory().getItems()) {
+			for (Item i : getCarriedItems().getInventory().getItems()) {
 
 				if (i.isWielded() && i.getDef().isMembersOnly()) {
-					getInventory().unwieldItem(i, true);
+					getCarriedItems().getInventory().unwieldItem(i, true);
 					found = true;
 				}
 				if (i.getID() == 2109 && i.isWielded()) {
-					getInventory().unwieldItem(i, true);
+					getCarriedItems().getInventory().unwieldItem(i, true);
 				}
 			}
 			if (found) {
@@ -371,6 +356,7 @@ public final class Player extends Mob {
 
 		setBusy(true);
 
+		carriedItems.set(new CarriedItems(this));
 		trade = new Trade(this);
 		duel = new Duel(this);
 		playerSettings = new PlayerSettings(this);
@@ -451,14 +437,6 @@ public final class Player extends Mob {
 		cannonEvent = event;
 	}
 
-	public boolean cantConsume() {
-		return consumeTimer - System.currentTimeMillis() > 0;
-	}
-
-	public void setConsumeTimer(final long l) {
-		consumeTimer = System.currentTimeMillis() + l;
-	}
-
 	public long getLastSaveTime() {
 		return lastSaveTime;
 	}
@@ -483,24 +461,24 @@ public final class Player extends Mob {
 		this.lastCommand = newTime;
 	}
 
-	public boolean requiresAppearanceUpdateFor(final Player p) {
+	public boolean requiresAppearanceUpdateFor(final Player player) {
 		for (Entry<Long, Integer> entry : knownPlayersAppearanceIDs.entrySet()) {
-			if (entry.getKey() == p.getUsernameHash()) {
-				if (entry.getValue() != p.getAppearanceID()) {
-					knownPlayersAppearanceIDs.put(p.getUsernameHash(), p.getAppearanceID());
+			if (entry.getKey() == player.getUsernameHash()) {
+				if (entry.getValue() != player.getAppearanceID()) {
+					knownPlayersAppearanceIDs.put(player.getUsernameHash(), player.getAppearanceID());
 					return true;
 				}
 				return false;
 			}
 		}
-		knownPlayersAppearanceIDs.put(p.getUsernameHash(), p.getAppearanceID());
+		knownPlayersAppearanceIDs.put(player.getUsernameHash(), player.getAppearanceID());
 		return true;
 	}
 
-	public boolean requiresAppearanceUpdateForPeek(final Player p) {
+	public boolean requiresAppearanceUpdateForPeek(final Player player) {
 		for (Entry<Long, Integer> entry : knownPlayersAppearanceIDs.entrySet())
-			if (entry.getKey() == p.getUsernameHash())
-				return entry.getValue() != p.getAppearanceID();
+			if (entry.getKey() == player.getUsernameHash())
+				return entry.getValue() != player.getAppearanceID();
 		return true;
 	}
 
@@ -510,7 +488,7 @@ public final class Player extends Mob {
 
 	public void write(final Packet o) {
 		if (channel != null && channel.isOpen() && isLoggedIn()) {
-			synchronized (outgoingPacketsLock) {
+			synchronized (outgoingPackets) {
 				outgoingPackets.add(o);
 			}
 		}
@@ -619,10 +597,17 @@ public final class Player extends Mob {
 		return System.currentTimeMillis() - lastSpellCast > 1250;
 	}
 
-	public void checkAndInterruptBatchEvent() {
-		if (batchEvent != null) {
-			batchEvent.interrupt();
-			batchEvent = null;
+	public boolean addOwnedPlugin(final PluginTask plugin) {
+		return ownedPlugins.add(plugin);
+	}
+
+	public boolean removeOwnedPlugin(final PluginTask plugin) {
+		return ownedPlugins.remove(plugin);
+	}
+
+	public void interruptPlugins() {
+		for (final PluginTask ownedPlugin : ownedPlugins) {
+			ownedPlugin.getScriptContext().setInterrupted(true);
 		}
 	}
 
@@ -671,25 +656,6 @@ public final class Player extends Mob {
 			return true;
 		} else if (mob.isNpc()) {
 			Npc victim = (Npc) mob;
-			if(((Npc) mob).isPkBot()){
-				int myWildLvl = getLocation().wildernessLevel();
-				int victimWildLvl = victim.getLocation().wildernessLevel();
-				if (myWildLvl < 1 || victimWildLvl < 1) {
-					message("You can't attack other pkbots here. Move to the wilderness");
-					return false;
-				}
-				int combDiff = Math.abs(getCombatLevel() - victim.getCombatLevel());
-				if (combDiff > myWildLvl) {
-					message("You can only attack pkbots within " + (myWildLvl) + " levels of your own here");
-					message("Move further into the wilderness for less restrictions");
-					return false;
-				}
-				if (combDiff > victimWildLvl) {
-					message("You can only attack pkbots within " + (victimWildLvl) + " levels of your own here");
-					message("Move further into the wilderness for less restrictions");
-					return false;
-				}
-			}
 			if (!victim.getDef().isAttackable()) {
 				setSuspiciousPlayer(true, "NPC isn't attackable");
 				return false;
@@ -707,12 +673,15 @@ public final class Player extends Mob {
 	}
 
 	public int combatStyleToIndex() {
-		if (getCombatStyle() == 1)
-			return 2;
-		if (getCombatStyle() == 2)
-			return 0;
-		if (getCombatStyle() == 3)
-			return 1;
+		if (getCombatStyle() == Skills.AGGRESSIVE_MODE) {
+			return Skills.STRENGTH;
+		}
+		if (getCombatStyle() == Skills.ACCURATE_MODE) {
+			return Skills.ATTACK;
+		}
+		if (getCombatStyle() == Skills.DEFENSIVE_MODE) {
+			return Skills.DEFENSE;
+		}
 		return -1;
 	}
 
@@ -784,15 +753,15 @@ public final class Player extends Mob {
 	@Override
 	public boolean equals(final Object o) {
 		if (o instanceof Player) {
-			Player p = (Player) o;
-			return usernameHash == p.getUsernameHash();
+			Player player = (Player) o;
+			return usernameHash == player.getUsernameHash();
 		}
 		return false;
 	}
 
 	public void checkEquipment2() {
-		for (int slot = 0; slot < Equipment.slots; slot++) {
-			Item item = getEquipment().get(slot);
+		for (int slot = 0; slot < Equipment.SLOT_COUNT; slot++) {
+			Item item = getCarriedItems().getEquipment().get(slot);
 			if (item == null)
 				continue;
 			int requiredLevel = item.getDef(getWorld()).getRequiredLevel();
@@ -812,7 +781,7 @@ public final class Player extends Mob {
 				optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.AGILITY);
 			}
 			//staff of iban (usable)
-			if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
+			if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 				optionalLevel = Optional.of(requiredLevel);
 				optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.AGILITY);
 			}
@@ -838,12 +807,22 @@ public final class Player extends Mob {
 			}
 
 			if (unWield) {
-				getInventory().unwieldItem(item, false);
+				UnequipRequest request = new UnequipRequest();
+				request.item = item;
+				request.sound = false;
+				request.player = this;
+				request.requestType = UnequipRequest.RequestType.FROM_EQUIPMENT;
+				request.equipmentSlot = Equipment.EquipmentSlot.get(slot);
+				if(!getCarriedItems().getEquipment().unequipItem(request)) {
+					request.requestType = UnequipRequest.RequestType.FROM_BANK;
+					getCarriedItems().getEquipment().unequipItem(request);
+				}
 				ActionSender.sendEquipmentStats(this);
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.
-				if (getEquipment().get(slot) != null) {
-					getWorld().getServer().getPluginHandler().handlePlugin(this, "Drop", new Object[]{this, item, false});
+				if (getCarriedItems().getEquipment().get(slot) != null) {
+					// TODO: Second argument to the plugin should NOT be null here as the Equipped Equipment for Cabbage server should still have an inventory index.
+					getWorld().getServer().getPluginHandler().handlePlugin(this, "DropObj", new Object[]{this, null, item, false});
 				}
 			}
 
@@ -855,7 +834,7 @@ public final class Player extends Mob {
 			checkEquipment2();
 			return;
 		}
-		ListIterator<Item> iterator = getInventory().iterator();
+		ListIterator<Item> iterator = getCarriedItems().getInventory().iterator();
 		for (int slot = 0; iterator.hasNext(); slot++) {
 			Item item = iterator.next();
 			if (item.isWielded()) {
@@ -876,7 +855,7 @@ public final class Player extends Mob {
 					optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 				}
 				//staff of iban (usable)
-				if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
+				if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 					optionalLevel = Optional.of(requiredLevel);
 					optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
 				}
@@ -902,7 +881,12 @@ public final class Player extends Mob {
 				}
 
 				if (unWield) {
-					item.setWielded(false);
+					try {
+						item.setWielded(getWorld().getServer().getDatabase(), false);
+					}
+					catch (GameDatabaseException e) {
+						LOGGER.error(e);
+					}
 					updateWornItems(item.getDef(getWorld()).getWieldPosition(),
 						getSettings().getAppearance().getSprite(item.getDef(getWorld()).getWieldPosition()),
 						item.getDef(getWorld()).getWearableId(), false);
@@ -1045,30 +1029,6 @@ public final class Player extends Mob {
 		return incorrectSleepTries;
 	}
 
-	public Npc getInteractingNpc() {
-		return interactingNpc;
-	}
-
-	public void setInteractingNpc(final Npc interactingNpc) {
-		this.interactingNpc = interactingNpc;
-	}
-
-	public synchronized Inventory getInventory() {
-		return inventory.get();
-	}
-
-	public synchronized Equipment getEquipment() {
-		return equipment.get();
-	}
-
-	public synchronized void setInventory(final Inventory i) {
-		inventory.set(i);
-	}
-
-	public synchronized void setEquipment(final Equipment e) {
-		equipment.set(e);
-	}
-
 	public String getLastIP() {
 		return lastIP;
 	}
@@ -1087,22 +1047,6 @@ public final class Player extends Mob {
 
 	public long getLastPing() {
 		return lastPing;
-	}
-
-	public int getMagicPoints() {
-		int points = 1;
-		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			points = getEquipment().getMagic();
-		} else {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
-					if (item.isWielded()) {
-						points += item.getDef(getWorld()).getMagicBonus();
-					}
-				}
-			}
-		}
-		return Math.max(points, 1);
 	}
 
 	public Menu getMenu() {
@@ -1147,6 +1091,9 @@ public final class Player extends Mob {
 
 	public synchronized void setOption(final int option) {
 		this.questionOption = option;
+		if(this.questionOption == -1) {
+			this.menuHandler = null;
+		}
 	}
 
 	public int getOwner() {
@@ -1155,23 +1102,6 @@ public final class Player extends Mob {
 
 	public String getPassword() {
 		return password;
-	}
-
-	public int getPrayerPoints() {
-		int points = 1;
-		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			points = getEquipment().getPrayer();
-		} else {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
-					if (item.isWielded()) {
-						points += item.getDef(getWorld()).getPrayerBonus();
-					}
-				}
-			}
-		}
-
-		return Math.max(points, 1);
 	}
 
 	public int getQuestPoints() {
@@ -1212,19 +1142,19 @@ public final class Player extends Mob {
 	public int getRangeEquip() {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item item;
-			for (int i = 0; i < Equipment.slots; i++) {
-				item = getEquipment().get(i);
-				if (item != null && (DataConversions.inArray(Formulae.bowIDs, item.getID())
-					|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
-					return item.getID();
+			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+				item = getCarriedItems().getEquipment().get(i);
+				if (item != null && (DataConversions.inArray(Formulae.bowIDs, item.getCatalogId())
+					|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
+					return item.getCatalogId();
 				}
 			}
 		} else {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
-					if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getID())
-						|| DataConversions.inArray(Formulae.xbowIDs, item.getID()))) {
-						return item.getID();
+			synchronized(getCarriedItems().getInventory().getItems()) {
+				for (Item item : getCarriedItems().getInventory().getItems()) {
+					if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getCatalogId())
+						|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
+						return item.getCatalogId();
 					}
 				}
 			}
@@ -1234,17 +1164,18 @@ public final class Player extends Mob {
 
 	public int getThrowingEquip() {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			for (int i = 0; i < Equipment.slots; i++) {
-				Item item = getEquipment().get(i);
-				if (item != null && DataConversions.inArray(Formulae.throwingIDs, item.getID())) {
-					return item.getID();
+			Item item;
+			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+				item = getCarriedItems().getEquipment().get(i);
+				if (item != null && DataConversions.inArray(Formulae.throwingIDs, item.getCatalogId())) {
+					return item.getCatalogId();
 				}
 			}
 		} else {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
+			synchronized(getCarriedItems().getInventory().getItems()) {
+				for (Item item : getCarriedItems().getInventory().getItems()) {
 					if (item.isWielded() && (DataConversions.inArray(Formulae.throwingIDs, getEquippedWeaponID()) && item.getDef(getWorld()).getWieldPosition() == 4)) {
-						return item.getID();
+						return item.getCatalogId();
 					}
 				}
 			}
@@ -1262,7 +1193,6 @@ public final class Player extends Mob {
 			rangeEvent.stop();
 		}
 		rangeEvent = event;
-		setStatus(Action.RANGING_MOB);
 		getWorld().getServer().getGameEventHandler().add(rangeEvent);
 	}
 
@@ -1275,7 +1205,6 @@ public final class Player extends Mob {
 			throwingEvent.stop();
 		}
 		throwingEvent = event;
-		setStatus(Action.RANGING_MOB);
 		getWorld().getServer().getGameEventHandler().add(throwingEvent);
 	}
 
@@ -1354,15 +1283,7 @@ public final class Player extends Mob {
 	}
 
 	public int getSpellWait() {
-		return DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D);
-	}
-
-	public synchronized Action getStatus() {
-		return status;
-	}
-
-	public synchronized void setStatus(Action a) {
-		status = a;
+		return Math.min(DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D), 20);
 	}
 
 	public String getUsername() {
@@ -1385,56 +1306,30 @@ public final class Player extends Mob {
 
 	@Override
 	public int getArmourPoints() {
-		int points = 1;
-		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
-					if (item.isWielded()) {
-						points += item.getDef(getWorld()).getArmourBonus();
-					}
-				}
-			}
-		} else {
-			points = getEquipment().getArmour();
-		}
-
-		return Math.max(points, 1);
+		//Currently the only thing that affects armour is the equipment
+		return Math.max(getCarriedItems().getEquipment().getArmour(), 1);
 	}
 
 	@Override
 	public int getWeaponAimPoints() {
-		int points = 1;
-		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
-					if (item.isWielded()) {
-						points += item.getDef(getWorld()).getWeaponAimBonus();
-					}
-				}
-			}
-		} else {
-			points = this.getEquipment().getWeaponAim();
-		}
-
-
-		return Math.max(points, 1);
+		//Currently the only thing that affects weapon aim is the equipment
+		return Math.max(getCarriedItems().getEquipment().getWeaponAim(), 1);
 	}
 
 	@Override
 	public int getWeaponPowerPoints() {
-		int points = 1;
-		if (!getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			synchronized(getInventory().getItems()) {
-				for (Item item : getInventory().getItems()) {
-					if (item.isWielded()) {
-						points += item.getDef(getWorld()).getWeaponPowerBonus();
-					}
-				}
-			}
-		} else {
-			points = this.getEquipment().getWeaponPower();
-		}
-		return Math.max(points, 1);
+		//Currently the only thing that affects weapon power is the equipment
+		return Math.max(getCarriedItems().getEquipment().getWeaponPower(), 1);
+	}
+
+	public int getPrayerPoints() {
+		//Currently the only thing that affects prayer is the equipment
+		return Math.max(getCarriedItems().getEquipment().getPrayer(), 1);
+	}
+
+	public int getMagicPoints() {
+		//Currently the only thing that affects prayer is the equipment
+		return Math.max(getCarriedItems().getEquipment().getMagic(), 1);
 	}
 
 	public int[] getWornItems() {
@@ -1445,6 +1340,10 @@ public final class Player extends Mob {
 		wornItems = worn;
 		getUpdateFlags().setAppearanceChanged(true);
 	}
+
+	public int getPrayerStatePoints() { return prayerStatePoints; }
+
+	public void setPrayerStatePoints(int prayerStatePoints) { this.prayerStatePoints = prayerStatePoints; }
 
 	public void handleWakeup() {
 		fatigue = sleepStateFatigue;
@@ -1529,6 +1428,25 @@ public final class Player extends Mob {
 		return new ArrayList<Double>() {{ add(finalMultiplier); add(finalEffectiveMultiplier); add(finalMinMultiplier); }};
 	}
 
+	public void incExp(final int[] skillDist, int skillXP, final boolean useFatigue) {
+		// If player was 100% fatigue, OG RSC always sent out 4 messages with melee kill,
+		// regardless if vs pvp or npc or if specific attack style was used
+		if (getWorld().getServer().getConfig().WANT_FATIGUE && useFatigue && fatigue >= this.MAX_FATIGUE) {
+			for (int i = 0; i < 4; i++) {
+				ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
+			}
+			return;
+		}
+		else {
+			int xp;
+			for (int i = 0; i < skillDist.length; i++) {
+				xp = skillXP * skillDist[i];
+				if (xp == 0) continue;
+				incExp(i, xp, useFatigue);
+			}
+		}
+	}
+
 	public void incExp(final int skill, int skillXP, final boolean useFatigue) {
 		if (isExperienceFrozen()) {
 			if (getWorld().getServer().getConfig().WANT_FATIGUE)
@@ -1559,7 +1477,7 @@ public final class Player extends Mob {
 
 		if (getLocation().onTutorialIsland()) {
 			if (getSkills().getExperience(skill) + skillXP > 200) {
-				if (skill != 3) {
+				if (skill != Skills.HITS) {
 					getSkills().setExperience(skill, 200);
 				} else {
 					getSkills().setExperience(skill, 1200);
@@ -1574,14 +1492,14 @@ public final class Player extends Mob {
 					// apply combined multiplier
 					skillXP *= multipliers.get(0);
 					double ratio;
-					for (PartyPlayer p : this.getParty().getPlayers()) {
-						if (p.getPlayerReference().getFatigue() < p.getPlayerReference().MAX_FATIGUE) {
-							ratio = p.getPlayerReference().isOneXp() ? (multipliers.get(2) / multipliers.get(0)) : 1.0;
-							if (p.getPlayerReference().getUsername() != this.getUsername()) {
-								p.getPlayerReference().setFatigue(p.getPlayerReference().getFatigue() + (int)(ratio * skillXP) * 4);
+					for (PartyPlayer player : this.getParty().getPlayers()) {
+						if (player.getPlayerReference().getFatigue() < player.getPlayerReference().MAX_FATIGUE) {
+							ratio = player.getPlayerReference().isOneXp() ? (multipliers.get(2) / multipliers.get(0)) : 1.0;
+							if (player.getPlayerReference().getUsername() != this.getUsername()) {
+								player.getPlayerReference().setFatigue(player.getPlayerReference().getFatigue() + (int)(ratio * skillXP) * 4);
 								ActionSender.sendFatigue(this);
 							}
-							p.getPlayerReference().getSkills().addExperience(skill, (int) (ratio * skillXP) / p.getPartyMembersNotTired() - 1);
+							player.getPlayerReference().getSkills().addExperience(skill, (int) (ratio * skillXP) / player.getPartyMembersNotTired() - 1);
 						}
 					}
 					int p11 = partyLeader.getPartyMembersNotTired() - 1;
@@ -1735,6 +1653,7 @@ public final class Player extends Mob {
 				PoisonEvent poisonEvent = getAttribute("poisonEvent", null);
 				poisonEvent.setPoisonPower(getCache().getInt("poisoned"));
 			}
+			prayerStatePoints = getSkills().getLevel(Skills.PRAYER) * 120;
 			prayerDrainEvent = new PrayerDrainEvent(getWorld(), this, Integer.MAX_VALUE);
 			getWorld().getServer().getGameEventHandler().add(prayerDrainEvent);
 			getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());
@@ -1865,23 +1784,21 @@ public final class Player extends Mob {
 			getDuel().dropOnDeath();
 		} else {
 			if (!hasElevatedPriveledges())
-				getInventory().dropOnDeath(mob);
+				getCarriedItems().getInventory().dropOnDeath(mob);
 		}
 		if (isIronMan(IronmanMode.Hardcore.id())) {
 			updateHCIronman(IronmanMode.Ironman.id());
 			ActionSender.sendIronManMode(this);
 			getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this, "has died and lost the HC Iron Man Rank!"));
 		}
-		removeSkull(); // destroy
+
 		resetCombatEvent();
 		this.setLastOpponent(null);
 		getWorld().registerItem(new GroundItem(getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
 		if ((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
 			setLocation(Point.location(120, 648), true);
-			face(120, 643);
 		} else {
 			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
-			face(getCache().getInt("death_location_x"), getCache().getInt("death_location_y") - 5);
 		}
 		ActionSender.sendWorldInfo(this);
 		ActionSender.sendEquipmentStats(this);
@@ -1902,21 +1819,20 @@ public final class Player extends Mob {
 			}
 		}
 
-		//getUpdateFlags().setHpUpdate(new HpUpdate(this, 0));
 		getUpdateFlags().reset();
-		//getUpdateFlags().setAppearanceChanged(true);
+		removeSkull();
 	}
 
 	private int getEquippedWeaponID() {
 		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			Item i = getEquipment().get(4);
+			Item i = getCarriedItems().getEquipment().get(4);
 			if (i != null)
-				return i.getID();
+				return i.getCatalogId();
 		} else {
-			synchronized(getInventory().getItems()) {
-				for (Item i : getInventory().getItems()) {
+			synchronized(getCarriedItems().getInventory().getItems()) {
+				for (Item i : getCarriedItems().getInventory().getItems()) {
 					if (i.isWielded() && (i.getDef(getWorld()).getWieldPosition() == 4))
-						return i.getID();
+						return i.getCatalogId();
 				}
 			}
 		}
@@ -1950,7 +1866,7 @@ public final class Player extends Mob {
 	public void addToPacketQueue(final Packet e) {
 		ping();
 		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
-			synchronized (incomingPacketLock) {
+			synchronized (incomingPackets) {
 				incomingPackets.put(e.getID(), e);
 			}
 		}
@@ -1974,9 +1890,9 @@ public final class Player extends Mob {
 					+ " actions with mouse still. Mouse was last moved " + String.format("%.02f", minutesFlagged)
 					+ " mins ago";
 
-				for (Player p : getWorld().getPlayers()) {
-					if (p.isMod()) {
-						p.message("@red@Server@whi@: " + string);
+				for (Player player : getWorld().getPlayers()) {
+					if (player.isMod()) {
+						player.message("@red@Server@whi@: " + string);
 					}
 				}
 				setSuspiciousPlayer(true, "mouse movement check");
@@ -1998,14 +1914,14 @@ public final class Player extends Mob {
 		if (!channel.isOpen() && !channel.isWritable()) {
 			return;
 		}
-		synchronized (incomingPacketLock) {
-			for (Map.Entry<Integer, Packet> p : incomingPackets.entrySet()) {
-				PacketHandler ph = PacketHandlerLookup.get(p.getValue().getID());
-				if (ph != null && p.getValue().getBuffer().readableBytes() >= 0) {
+		synchronized (incomingPackets) {
+			for (Map.Entry<Integer, Packet> packet : incomingPackets.entrySet()) {
+				PacketHandler ph = PacketHandlerLookup.get(packet.getValue().getID());
+				if (ph != null && packet.getValue().getBuffer().readableBytes() >= 0) {
 					try {
 						/*if (!(ph instanceof Ping) && !(ph instanceof WalkRequest))
 							LOGGER.info("Handling Packet (CLASS: " + ph + "): " + this.username + " (ID: " + this.owner + ")");*/
-						ph.handlePacket(p.getValue(), this);
+						ph.handlePacket(packet.getValue(), this);
 					} catch (Exception e) {
 						LOGGER.catching(e);
 						unregister(false, "Malformed packet!");
@@ -2025,9 +1941,9 @@ public final class Player extends Mob {
 		if (!channel.isOpen() || !isLoggedIn() || !channel.isActive() || !channel.isWritable()) {
 			return;
 		}
-		synchronized (outgoingPacketsLock) {
+		synchronized (outgoingPackets) {
 			try {
-				for (Packet outgoing : outgoingPackets) {
+				for (final Packet outgoing : outgoingPackets) {
 					channel.writeAndFlush(outgoing);
 				}
 			} catch (Exception e) {
@@ -2040,11 +1956,10 @@ public final class Player extends Mob {
 	}
 
 	public void removeSkull() {
-		if (skullEvent == null) {
-			return;
+		if (skullEvent != null) {
+			skullEvent.stop();
+			skullEvent = null;
 		}
-		skullEvent.stop();
-		skullEvent = null;
 		cache.remove("skull_remaining");
 		getUpdateFlags().setAppearanceChanged(true);
 	}
@@ -2054,10 +1969,11 @@ public final class Player extends Mob {
 	}
 
 	public void resetAll() {
-		checkAndInterruptBatchEvent();
+		interruptPlugins();
 		resetAllExceptTradeOrDuel(true);
 		getTrade().resetAll();
 		getDuel().resetAll();
+		dropItemEvent = null;
 	}
 
 	public void resetAllExceptBank() {
@@ -2093,8 +2009,6 @@ public final class Player extends Mob {
 		if (isRanging()) {
 			resetRange();
 		}
-		setInteractingNpc(null);
-		setStatus(Action.IDLE);
 	}
 
 	public void resetAllExceptTrading() {
@@ -2123,7 +2037,6 @@ public final class Player extends Mob {
 			throwingEvent.stop();
 			throwingEvent = null;
 		}
-		setStatus(Action.IDLE);
 	}
 
 	public void resetShop() {
@@ -2139,12 +2052,15 @@ public final class Player extends Mob {
 	}
 
 	public void save() {
-		getWorld().getServer().getLoginExecutor().add(new PlayerSaveRequest(getWorld().getServer(), this));
+		save(false);
+	}
+
+	public void save(boolean logout) {
+		getWorld().getServer().getLoginExecutor().add(new PlayerSaveRequest(getWorld().getServer(), this, logout));
 	}
 
 	public void logout() {
 		ActionSender.sendLogoutRequestConfirm(this);
-		setLoggedIn(false);
 
 		FishingTrawler trawlerInstance = getWorld().getFishingTrawler(this);
 
@@ -2172,7 +2088,12 @@ public final class Player extends Mob {
 		getCache().set("gnomeball_goals", getAttribute("gnomeball_goals", 0));
 		getCache().set("gnomeball_npc", getAttribute("gnomeball_npc", 0));
 
-		save();
+		save(true);
+	}
+
+	public void logoutSaveSuccess() {
+
+		setLoggedIn(false);
 
 		/* IP Tracking in wilderness removal */
 		/*if(player.getLocation().inWilderness())
@@ -2221,14 +2142,6 @@ public final class Player extends Mob {
 		if (shop != null) {
 			shop.addPlayer(this);
 		}
-	}
-
-	public void setBatchEvent(final BatchEvent batchEvent) {
-		if (batchEvent != null && batchEvent.getOwner() != null) {
-			batchEvent.getOwner().checkAndInterruptBatchEvent();
-			getWorld().getServer().getGameEventHandler().add(batchEvent);
-		}
-		this.batchEvent = batchEvent;
 	}
 
 	public void setCastTimer(final long timer) {
@@ -2308,21 +2221,12 @@ public final class Player extends Mob {
 		player.getUpdateFlags().setAppearanceChanged(true);
 	}
 
-	public void setSkulledOn(final PkBot n) {
-		n.addAttackedBy(this);
-		if (System.currentTimeMillis() - getSettings().lastAttackedBy(n) > 1200000) {
-			addSkull(1200000);
-			cache.store("skull_remaining", 1200000); // Saves the skull timer to the database if the player logs out before it expires
-			cache.store("last_skull", System.currentTimeMillis() - getSettings().lastAttackedBy(n)); // Sets the last time a player had a skull
-		}
-	}
-
 	public void setSpellFail() {
 		lastSpellCast = System.currentTimeMillis() + 20000;
 	}
 
 	public void startSleepEvent(final boolean bed) {
-		DelayedEvent sleepEvent = new DelayedEvent(getWorld(), this, 600, "Start Sleep Event") {
+		DelayedEvent sleepEvent = new DelayedEvent(getWorld(), this, getWorld().getServer().getConfig().GAME_TICK, "Start Sleep Event") {
 			@Override
 			public void run() {
 				if (getOwner().isRemoved() || sleepStateFatigue == 0 || !sleeping) {
@@ -2348,18 +2252,15 @@ public final class Player extends Mob {
 	}
 
 	public void teleport(final int x, final int y, final boolean bubble) {
-		if (bubble && getWorld().getServer().getPluginHandler().handlePlugin(this, "Teleport", new Object[]{this})) {
-			return;
-		}
 		if (inCombat()) {
 			this.setLastOpponent(null);
 			combatEvent.resetCombat();
 		}
 
 		if (bubble) {
-			for (Player p : getViewArea().getPlayersInView()) {
-				if (!isInvisibleTo(p)) {
-					ActionSender.sendTeleBubble(p, getX(), getY(), false);
+			for (Player player : getViewArea().getPlayersInView()) {
+				if (!isInvisibleTo(player)) {
+					ActionSender.sendTeleBubble(player, getX(), getY(), false);
 				}
 			}
 			ActionSender.sendTeleBubble(this, getX(), getY(), false);
@@ -2371,7 +2272,7 @@ public final class Player extends Mob {
 	}
 
 	@Override
-	public void setLocation(final Point p, final boolean teleported) {
+	public void setLocation(final Point point, final boolean teleported) {
 		if (teleported || getSkullType() == 2 || getSkullType() == 0) {
 			// Inappropriate place for this to be getting set at for skulls, to me.
 			getUpdateFlags().setAppearanceChanged(true);
@@ -2379,7 +2280,7 @@ public final class Player extends Mob {
 				setTeleporting(true);
 		}
 
-		super.setLocation(p, teleported);
+		super.setLocation(point, teleported);
 
 	}
 
@@ -2450,8 +2351,8 @@ public final class Player extends Mob {
 		return npcDeaths;
 	}
 
-	public int getKills2() {
-		return kills2;
+	public int getnpc_kills() {
+		return npc_kills;
 	}
 
 	public int getExpShared() {
@@ -2466,9 +2367,9 @@ public final class Player extends Mob {
 		this.npcDeaths = i;
 	}
 
-	public void setKills2(final int i) {
-		this.kills2 = i;
-		ActionSender.sendKills2(this);
+	public void setnpc_kills(final int i) {
+		this.npc_kills = i;
+		ActionSender.sendnpc_kills(this);
 	}
 
 	public synchronized WalkToAction getLastExecutedWalkToAction() {
@@ -2496,8 +2397,8 @@ public final class Player extends Mob {
 		kills++;
 	}
 
-	public void incKills2() {
-		kills2++;
+	public void incnpc_kills() {
+		npc_kills++;
 	}
 
 	public void addKill(final boolean add) {
@@ -2869,11 +2770,11 @@ public final class Player extends Mob {
 	}*/
 
 	public int getDatabaseID() {
-		return databaseID;
+		return super.getID();
 	}
 
 	public void setDatabaseID(final int i) {
-		this.databaseID = i;
+		super.setID(i);
 	}
 
 	public Party getParty() {
@@ -3123,7 +3024,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean groundItemTake(final GroundItem item) {
-		Item itemFinal = new Item(item.getID(), item.getAmount());
+		Item itemFinal = new Item(item.getID(), item.getAmount(), item.getNoted());
 		if (item.getOwnerUsernameHash() == 0 || item.getAttribute("npcdrop", false)) {
 			itemFinal.setAttribute("npcdrop", true);
 		}
@@ -3133,13 +3034,13 @@ public final class Player extends Mob {
 			return false;
 		}
 
-		if (!this.getInventory().canHold(itemFinal)) {
+		if (!getCarriedItems().getInventory().canHold(itemFinal)) {
 			return false;
 		}
 
 		getWorld().unregisterItem(item);
 		this.playSound("takeobject");
-		this.getInventory().add(itemFinal);
+		getCarriedItems().getInventory().add(itemFinal);
 		getWorld().getServer().getGameLogger().addQuery(new GenericLog(this.getWorld(), this.getUsername() + " picked up " + item.getDef().getName() + " x"
 			+ item.getAmount() + " at " + this.getLocation().toString()));
 
@@ -3147,7 +3048,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean checkRingOfLife(final Mob hitter) {
-		if (this.isPlayer() && Functions.isWielding(this, ItemId.RING_OF_LIFE.id())
+		if (this.isPlayer() && getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_LIFE.id())
 			&& (!this.getLocation().inWilderness()
 			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
 			if (((float) this.getSkills().getLevel(3)) / ((float) this.getSkills().getMaxStat(3)) <= 0.1f) {
@@ -3161,10 +3062,17 @@ public final class Player extends Mob {
 				}
 				this.teleport(120, 648, false);
 				this.message("Your ring of Life shines brightly");
-				this.getInventory().shatter(ItemId.RING_OF_LIFE.id());
+				getCarriedItems().getInventory().shatter(ItemId.RING_OF_LIFE.id());
 				return true;
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Return a synchronized access to the player's carried Items
+	 */
+	public synchronized CarriedItems getCarriedItems() {
+		return this.carriedItems.get();
 	}
 }

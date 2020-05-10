@@ -4,14 +4,13 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
-public class RuneTalisman implements InvActionListener, InvActionExecutiveListener {
+public class RuneTalisman implements OpInvTrigger {
 
 	@Override
-	public void onInvAction(Item item, Player player, String command) {
-		switch(ItemId.getById(item.getID())) {
+	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
+		switch(ItemId.getById(item.getCatalogId())) {
 			case AIR_TALISMAN:
 			case MIND_TALISMAN:
 			case WATER_TALISMAN:
@@ -34,7 +33,7 @@ public class RuneTalisman implements InvActionListener, InvActionExecutiveListen
 					playerX = player.getX();
 					playerY = player.getY();
 
-					switch (ItemId.getById(item.getID())) {
+					switch (ItemId.getById(item.getCatalogId())) {
 						case AIR_TALISMAN:
 							altarX = 306;
 							altarY = 593;
@@ -104,12 +103,12 @@ public class RuneTalisman implements InvActionListener, InvActionExecutiveListen
 	}
 
 	@Override
-	public boolean blockInvAction(Item item, Player player, String command) {
-		return item.getID() == ItemId.AIR_TALISMAN.id() || item.getID() == ItemId.MIND_TALISMAN.id() ||
-			item.getID() == ItemId.WATER_TALISMAN.id() || item.getID() == ItemId.EARTH_TALISMAN.id() ||
-			item.getID() == ItemId.FIRE_TALISMAN.id() || item.getID() == ItemId.BODY_TALISMAN.id() ||
-			item.getID() == ItemId.COSMIC_TALISMAN.id() || item.getID() == ItemId.CHAOS_TALISMAN.id() ||
-			item.getID() == ItemId.NATURE_TALISMAN.id() || item.getID() == ItemId.LAW_TALISMAN.id() ||
-			item.getID() == ItemId.DEATH_TALISMAN.id() || item.getID() == ItemId.BLOOD_TALISMAN.id();
+	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
+		return item.getCatalogId() == ItemId.AIR_TALISMAN.id() || item.getCatalogId() == ItemId.MIND_TALISMAN.id() ||
+			item.getCatalogId() == ItemId.WATER_TALISMAN.id() || item.getCatalogId() == ItemId.EARTH_TALISMAN.id() ||
+			item.getCatalogId() == ItemId.FIRE_TALISMAN.id() || item.getCatalogId() == ItemId.BODY_TALISMAN.id() ||
+			item.getCatalogId() == ItemId.COSMIC_TALISMAN.id() || item.getCatalogId() == ItemId.CHAOS_TALISMAN.id() ||
+			item.getCatalogId() == ItemId.NATURE_TALISMAN.id() || item.getCatalogId() == ItemId.LAW_TALISMAN.id() ||
+			item.getCatalogId() == ItemId.DEATH_TALISMAN.id() || item.getCatalogId() == ItemId.BLOOD_TALISMAN.id();
 	}
 }

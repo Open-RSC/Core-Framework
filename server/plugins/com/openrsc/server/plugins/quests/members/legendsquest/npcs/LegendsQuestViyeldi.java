@@ -3,33 +3,33 @@ package com.openrsc.server.plugins.quests.members.legendsquest.npcs;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.*;
-import com.openrsc.server.plugins.listeners.executive.*;
+import com.openrsc.server.plugins.triggers.*;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiveListener, PickupListener, PickupExecutiveListener, PlayerAttackNpcListener, PlayerAttackNpcExecutiveListener, PlayerMageNpcListener, PlayerMageNpcExecutiveListener, PlayerRangeNpcListener, PlayerRangeNpcExecutiveListener {
+public class LegendsQuestViyeldi implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger, SpellNpcTrigger, PlayerRangeNpcTrigger {
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.VIYELDI.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.VIYELDI.id()) {
-			switch (p.getQuestStage(Quests.LEGENDS_QUEST)) {
+			switch (player.getQuestStage(Quests.LEGENDS_QUEST)) {
 				case 7:
-					message(p, n, 1300, "The headless, spirit of Viyeldi animates and walks towards you.");
-					if (!p.getCache().hasKey("killed_viyeldi")) {
-						message(p, n, 1300, "And starts talking to you in a shrill, excited voice...");
-						npcTalk(p, n, "Beware adventurer, lest thee loses they head in search of source.",
+					mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The headless, spirit of Viyeldi animates and walks towards you.");
+					if (!player.getCache().hasKey("killed_viyeldi")) {
+						mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "And starts talking to you in a shrill, excited voice...");
+						npcsay(player, n, "Beware adventurer, lest thee loses they head in search of source.",
 							"Bravery has thee been tested and not found wanting..");
-						message(p, n, 1300, "The spirit wavers slightly and then stands proud...");
-						npcTalk(p, n, "But perilous danger waits for thee,",
+						mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The spirit wavers slightly and then stands proud...");
+						npcsay(player, n, "But perilous danger waits for thee,",
 							"Tojalon, Senay and Devere makes three,",
 							"None hold malice but will test your might,",
 							"Pray that you do not lose this fight,",
@@ -38,9 +38,9 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiv
 							"Through dragons eye will you gain new heart,",
 							"To see the source and then depart.");
 					} else {
-						p.message("Viyeldi falls silent...");
-						sleep(7000);
-						p.message("...and the clothes slump to the floor.");
+						player.message("Viyeldi falls silent...");
+						delay(7000);
+						player.message("...and the clothes slump to the floor.");
 						if (n != null)
 							n.remove();
 					}
@@ -50,86 +50,87 @@ public class LegendsQuestViyeldi implements TalkToNpcListener, TalkToNpcExecutiv
 	}
 
 	@Override
-	public boolean blockPickup(Player p, GroundItem i) {
+	public boolean blockTakeObj(Player player, GroundItem i) {
 		return i.getID() == ItemId.A_BLUE_WIZARDS_HAT.id() && i.getX() == 426 && i.getY() == 3708;
 	}
 
 	@Override
-	public void onPickup(Player p, GroundItem i) {
+	public void onTakeObj(Player player, GroundItem i) {
 		if (i.getID() == ItemId.A_BLUE_WIZARDS_HAT.id() && i.getX() == 426 && i.getY() == 3708) {
-			p.teleport(i.getX(), i.getY());
-			message(p, 1300, "Your hand passes through the hat as if it wasn't there.");
-			if (p.getQuestStage(Quests.LEGENDS_QUEST) >= 8) {
+			player.teleport(i.getX(), i.getY());
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Your hand passes through the hat as if it wasn't there.");
+			if (player.getQuestStage(Quests.LEGENDS_QUEST) >= 8) {
 				return;
 			}
-			p.teleport(i.getX(), i.getY() - 1);
-			message(p, 1300, "Instantly the clothes begin to animate and then walk towards you.");
-			Npc n = getNearestNpc(p, NpcId.VIYELDI.id(), 3);
+			player.teleport(i.getX(), i.getY() - 1);
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Instantly the clothes begin to animate and then walk towards you.");
+			Npc n = ifnearvisnpc(player, NpcId.VIYELDI.id(), 3);
 			if (n == null)
-				n = spawnNpc(p.getWorld(), NpcId.VIYELDI.id(), i.getX(), i.getY(), 60000);
+				n = addnpc(player.getWorld(), NpcId.VIYELDI.id(), i.getX(), i.getY(), 60000);
 			if (n != null) {
-				n.initializeTalkScript(p);
+				n.initializeTalkScript(player);
 			}
 		}
 	}
 
 	@Override
-	public boolean blockPlayerAttackNpc(Player p, Npc n) {
+	public boolean blockAttackNpc(Player player, Npc n) {
 		return n.getID() == NpcId.VIYELDI.id();
 	}
 
 	@Override
-	public void onPlayerAttackNpc(Player p, Npc n) {
+	public void onAttackNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.VIYELDI.id()) {
-			attackViyeldi(p, n);
+			attackViyeldi(player, n);
 		}
 	}
 
-	private void attackViyeldi(Player p, Npc n) {
+	private void attackViyeldi(Player player, Npc n) {
 		if (n.getID() == NpcId.VIYELDI.id()) {
-			if (!p.getInventory().wielding(ItemId.DARK_DAGGER.id())) {
-				message(p, n, 1300, "Your attack passes straight through Viyeldi.");
-				npcTalk(p, n, "Take challenge with me is useless for I am impervious to your attack",
+			if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.DARK_DAGGER.id())) {
+				mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Your attack passes straight through Viyeldi.");
+				npcsay(player, n, "Take challenge with me is useless for I am impervious to your attack",
 					"Take your fight to someone else, and maybe then get back on track.");
 			} else {
-				p.getInventory().replace(ItemId.DARK_DAGGER.id(), ItemId.GLOWING_DARK_DAGGER.id());
-				message(p, n, 1300, "You thrust the Dark Dagger at Viyeldi...");
-				npcTalk(p, n, "So, you have fallen for the foul one's trick...");
-				message(p, n, 1300, "You hit Viyeldi squarely with the Dagger .");
-				npcTalk(p, n, "AhhhhhhhhHH! The Pain!");
-				message(p, n, 1300, "You see a flash as something travels from Viyeldi into the dagger.");
-				message(p, n, 0, "The dagger seems to glow as Viyeldi crumpels to the floor.");
+				player.getCarriedItems().remove(new Item(ItemId.DARK_DAGGER.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.GLOWING_DARK_DAGGER.id()));
+				mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You thrust the Dark Dagger at Viyeldi...");
+				npcsay(player, n, "So, you have fallen for the foul one's trick...");
+				mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You hit Viyeldi squarely with the Dagger .");
+				npcsay(player, n, "AhhhhhhhhHH! The Pain!");
+				mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You see a flash as something travels from Viyeldi into the dagger.");
+				mes(player, n, 0, "The dagger seems to glow as Viyeldi crumpels to the floor.");
 				if (n != null) {
 					n.remove();
 				}
-				if (!p.getCache().hasKey("killed_viyeldi")) {
-					p.getCache().store("killed_viyeldi", true);
+				if (!player.getCache().hasKey("killed_viyeldi")) {
+					player.getCache().store("killed_viyeldi", true);
 				}
 			}
 		}
 	}
 
 	@Override
-	public boolean blockPlayerMageNpc(Player p, Npc n) {
+	public boolean blockSpellNpc(Player player, Npc n) {
 		return n.getID() == NpcId.VIYELDI.id();
 	}
 
 	@Override
-	public void onPlayerMageNpc(Player p, Npc n) {
+	public void onSpellNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.VIYELDI.id()) {
-			attackViyeldi(p, n);
+			attackViyeldi(player, n);
 		}
 	}
 
 	@Override
-	public boolean blockPlayerRangeNpc(Player p, Npc n) {
+	public boolean blockPlayerRangeNpc(Player player, Npc n) {
 		return n.getID() == NpcId.VIYELDI.id();
 	}
 
 	@Override
-	public void onPlayerRangeNpc(Player p, Npc n) {
+	public void onPlayerRangeNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.VIYELDI.id()) {
-			attackViyeldi(p, n);
+			attackViyeldi(player, n);
 		}
 	}
 }

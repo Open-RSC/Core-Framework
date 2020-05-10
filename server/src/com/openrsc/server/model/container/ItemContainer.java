@@ -27,17 +27,17 @@ public class ItemContainer {
 				return;
 			}
 
-			if (item.getDef(player.getWorld()).isStackable() || alwaysStack) {
+			if (item.getDef(player.getWorld()).isStackable() || alwaysStack || item.getNoted()) {
 				for (int index = 0; index < list.size(); index++) {
 					Item existingStack = list.get(index);
 					if (item.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
-						existingStack.setAmount(existingStack.getAmount() + item.getAmount());
+						existingStack.getItemStatus().setAmount(existingStack.getAmount() + item.getAmount());
 						fireItemChanged(index);
 						return;
 					}
 				}
-			} else if (item.getAmount() > 1 && !item.getDef(player.getWorld()).isStackable()) {
-				item.setAmount(1);
+			} else if (item.getAmount() > 1 && !item.getDef(player.getWorld()).isStackable() && !item.getNoted()) {
+				item.getItemStatus().setAmount(1);
 			}
 
 			list.add(item);
@@ -66,7 +66,7 @@ public class ItemContainer {
 	public int countId(int id) {
 		synchronized (list) {
 			for (Item i : list) {
-				if (i.getID() == id) {
+				if (i.getCatalogId() == id) {
 					return i.getAmount();
 				}
 			}
@@ -103,7 +103,7 @@ public class ItemContainer {
 	public int getFirstIndexById(int id) {
 		synchronized (list) {
 			for (int index = 0; index < list.size(); index++) {
-				if (list.get(index).getID() == id) {
+				if (list.get(index).getCatalogId() == id) {
 					return index;
 				}
 			}
@@ -140,7 +140,7 @@ public class ItemContainer {
 	public boolean hasItemId(int id) {
 		synchronized (list) {
 			for (Item i : list) {
-				if (i.getID() == id)
+				if (i.getCatalogId() == id)
 					return true;
 			}
 
@@ -160,7 +160,7 @@ public class ItemContainer {
 			if (item == null) {
 				return;
 			}
-			remove(item.getID(), item.getAmount());
+			remove(item.getCatalogId(), item.getAmount());
 		}
 	}
 
@@ -169,9 +169,9 @@ public class ItemContainer {
 			Iterator<Item> iterator = list.iterator();
 			for (int index = 0; iterator.hasNext(); index++) {
 				Item i = iterator.next();
-				if (id == i.getID() && amount <= i.getAmount()) {
+				if (id == i.getCatalogId() && amount <= i.getAmount()) {
 					if (amount < i.getAmount()) {
-						i.setAmount(i.getAmount() - amount);
+						i.getItemStatus().setAmount(i.getAmount() - amount);
 					} else {
 						iterator.remove();
 					}
@@ -184,7 +184,7 @@ public class ItemContainer {
 	}
 
 	public int remove(Item item) {
-		return remove(item.getID(), item.getAmount());
+		return remove(item.getCatalogId(), item.getAmount());
 	}
 
 	public int size() {

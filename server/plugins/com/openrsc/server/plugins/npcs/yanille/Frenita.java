@@ -8,15 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public final class Frenita implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class Frenita extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 3000, 100, 55, 1,
 		new Item(ItemId.PIE_DISH.id(), 5), new Item(ItemId.COOKING_APPLE.id(), 2), new Item(ItemId.CAKE_TIN.id(), 2),
@@ -25,22 +21,22 @@ public final class Frenita implements ShopInterface,
 		new Item(ItemId.POT_OF_FLOUR.id(), 8));
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
-		npcTalk(p, n, "Would you like to buy some cooking equipment");
+	public void onTalkNpc(Player player, final Npc n) {
+		npcsay(player, n, "Would you like to buy some cooking equipment");
 
-		int option = showMenu(p, n, "Yes please", "No thankyou");
+		int option = multi(player, n, "Yes please", "No thankyou");
 		switch (option) {
 
 			case 0:
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 		}
 
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.FRENITA.id();
 	}
 
@@ -54,4 +50,8 @@ public final class Frenita implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

@@ -8,16 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class FishingGuildGeneralShop implements
-	ShopInterface, TalkToNpcListener, TalkToNpcExecutiveListener {
-
+public class FishingGuildGeneralShop extends AbstractShop {
 	private final Shop shop = new Shop(true, 15000, 100, 70, 2,
 		new Item(ItemId.FISHING_BAIT.id(), 200), new Item(ItemId.FEATHER.id(), 200), new Item(ItemId.RAW_COD.id(), 0),
 		new Item(ItemId.RAW_MACKEREL.id(), 0), new Item(ItemId.RAW_BASS.id(), 0), new Item(ItemId.RAW_TUNA.id(), 0),
@@ -26,7 +21,7 @@ public class FishingGuildGeneralShop implements
 		new Item(ItemId.LOBSTER.id(), 0));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.SHOPKEEPER_FISHING_GUILD.id();
 	}
 
@@ -41,15 +36,19 @@ public class FishingGuildGeneralShop implements
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Would you like to buy some fishing equipment",
-			"Or sell some fish");
-		final int option = showMenu(p, n, "Yes please",
-			"No thankyou");
-		if (option == 0) {
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
-		}
+	public Shop getShop() {
+		return shop;
 	}
 
+	@Override
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Would you like to buy some fishing equipment",
+			"Or sell some fish");
+		final int option = multi(player, n, "Yes please",
+			"No thankyou");
+		if (option == 0) {
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
+		}
+	}
 }

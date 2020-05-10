@@ -8,15 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public final class MagicStoreOwner implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class MagicStoreOwner extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 3000, 100, 75, 2,
 		new Item(ItemId.FIRE_RUNE.id(), 50), new Item(ItemId.WATER_RUNE.id(), 50), new Item(ItemId.AIR_RUNE.id(), 50),
@@ -25,21 +21,21 @@ public final class MagicStoreOwner implements ShopInterface,
 		new Item(ItemId.STAFF_OF_WATER.id(), 2), new Item(ItemId.STAFF_OF_EARTH.id(), 2), new Item(ItemId.STAFF_OF_FIRE.id(), 2));
 
 	@Override
-	public void onTalkToNpc(Player p, final Npc n) {
-		npcTalk(p, n, "Welcome to the magic guild store",
+	public void onTalkNpc(Player player, final Npc n) {
+		npcsay(player, n, "Welcome to the magic guild store",
 			"would you like to buy some magic supplies?");
 
-		int option = showMenu(p, n, "Yes please", "No thankyou");
+		int option = multi(player, n, "Yes please", "No thankyou");
 		switch (option) {
 			case 0:
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 				break;
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.MAGIC_STORE_OWNER.id();
 	}
 
@@ -53,4 +49,8 @@ public final class MagicStoreOwner implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

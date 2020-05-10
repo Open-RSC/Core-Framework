@@ -12,7 +12,7 @@ public final class EventLog extends Query {
 	private final String message;
 
 	public EventLog(World world, String message) {
-		super("INSERT INTO `" + world.getServer().getConfig().MYSQL_TABLE_PREFIX + "event_logs`(`message`, `time`) VALUES(?, ?)");
+		super("INSERT INTO `" + world.getServer().getConfig().DB_TABLE_PREFIX + "event_logs`(`message`, `time`) VALUES(?, ?)");
 		this.message = message;
 	}
 

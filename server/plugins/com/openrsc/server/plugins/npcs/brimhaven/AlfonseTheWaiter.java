@@ -9,50 +9,48 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 
-public class AlfonseTheWaiter implements ShopInterface, TalkToNpcExecutiveListener, TalkToNpcListener {
+public class AlfonseTheWaiter extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 10000, 110, 75, 2,
 		new Item(ItemId.HERRING.id(), 5), new Item(ItemId.COD.id(), 5),
 		new Item(ItemId.TUNA.id(), 5), new Item(ItemId.LOBSTER.id(), 3), new Item(ItemId.SWORDFISH.id(), 2));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.ALFONSE_THE_WAITER.id()) {
-			npcTalk(p, n, "Welcome to the shrimp and parrot",
+			npcsay(player, n, "Welcome to the shrimp and parrot",
 				"Would you like to order sir?");
 			int menu;
-			if (isBlackArmGang(p) || (p.getQuestStage(Quests.HEROS_QUEST) != 1 && p.getQuestStage(Quests.HEROS_QUEST) != 2 && !p.getCache().hasKey("pheonix_mission") && !p.getCache().hasKey("pheonix_alf"))) {
-				menu = showMenu(p, n,
+			if (isBlackArmGang(player) || (player.getQuestStage(Quests.HEROS_QUEST) != 1 && player.getQuestStage(Quests.HEROS_QUEST) != 2 && !player.getCache().hasKey("pheonix_mission") && !player.getCache().hasKey("pheonix_alf"))) {
+				menu = multi(player, n,
 					"Yes please",
 					"No thankyou");
 			} else {
-				menu = showMenu(p, n,
+				menu = multi(player, n,
 					"Yes please",
 					"No thankyou",
 					"Do you sell Gherkins?");
 			}
 			if (menu == 0) {
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			} else if (menu == 2) {
-				npcTalk(p, n, "Hmm ask Charlie the cook round the back",
+				npcsay(player, n, "Hmm ask Charlie the cook round the back",
 					"He may have some Gherkins for you");
-				message(p, "Alfonse winks");
-				p.getCache().store("talked_alf", true);
-				p.getCache().remove("pheonix_alf");
+				mes(player, "Alfonse winks");
+				player.getCache().store("talked_alf", true);
+				player.getCache().remove("pheonix_alf");
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.ALFONSE_THE_WAITER.id();
 	}
 
@@ -66,4 +64,8 @@ public class AlfonseTheWaiter implements ShopInterface, TalkToNpcExecutiveListen
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

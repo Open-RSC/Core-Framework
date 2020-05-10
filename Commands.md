@@ -2,6 +2,9 @@ OpenRSC Commands
 ------------------------
 Admin Commands
 ------------------------
+- beastmode
+  - Usage: `::beastmode`
+  - Completes required quests and stats, then sets the player to wield top tier items. Items vary based on if custom sprites are enabled on the server.
 - fillbank
   - Usage: `::fillbank`
   - Adds 50 of every item in the game to the admin's bank.

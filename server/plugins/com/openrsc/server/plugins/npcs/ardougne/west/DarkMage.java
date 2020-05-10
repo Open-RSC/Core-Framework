@@ -3,51 +3,59 @@ package com.openrsc.server.plugins.npcs.ardougne.west;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DarkMage implements TalkToNpcExecutiveListener, TalkToNpcListener {
+public class DarkMage implements TalkNpcTrigger {
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.DARK_MAGE.id()) {
-			playerTalk(p, n, "hello there");
-			npcTalk(p, n, "why do do you interupt me traveller?");
-			playerTalk(p, n, "i just wondered what you're doing?");
-			npcTalk(p, n, "i experiment with dark magic",
+			say(player, n, "hello there");
+			npcsay(player, n, "why do do you interupt me traveller?");
+			if (player.getQuestStage(Quests.UNDERGROUND_PASS) != -1) {
+				say(player, n, "i'm just looking around");
+				npcsay(player, n, "there's nothing to see here",
+					"just despair and death");
+				return;
+			}
+			say(player, n, "i just wondered what you're doing?");
+			npcsay(player, n, "i experiment with dark magic",
 				"it's a dangerous craft");
-			if (hasItem(p, ItemId.STAFF_OF_IBAN_BROKEN.id()) && p.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
-				playerTalk(p, n, "could you fix this staff?");
-				p.message("you show the mage your staff of iban");
-				npcTalk(p, n, "almighty zamorak! the staff of iban!");
-				playerTalk(p, n, "can you fix it?");
-				npcTalk(p, n, "this truly is dangerous magic traveller",
+			if (player.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_IBAN_BROKEN.id(), Optional.of(false))) {
+				say(player, n, "could you fix this staff?");
+				player.message("you show the mage your staff of iban");
+				npcsay(player, n, "almighty zamorak! the staff of iban!");
+				say(player, n, "can you fix it?");
+				npcsay(player, n, "this truly is dangerous magic traveller",
 					"i can fix it, but it will cost you",
 					"the process could kill me");
-				playerTalk(p, n, "how much?");
-				npcTalk(p, n, "200,000 gold pieces, not a penny less");
-				int menu = showMenu(p, n,
+				say(player, n, "how much?");
+				npcsay(player, n, "200,000 gold pieces, not a penny less");
+				int menu = multi(player, n,
 					"no chance, that's ridiculous",
 					"ok then");
 				if (menu == 0) {
-					npcTalk(p, n, "fine by me");
+					npcsay(player, n, "fine by me");
 				} else if (menu == 1) {
-					if (!hasItem(p, ItemId.COINS.id(), 200000)) {
-						p.message("you don't have enough money");
-						playerTalk(p, n, "oops, i'm a bit short");
+					if (!ifheld(player, ItemId.COINS.id(), 200000)) {
+						player.message("you don't have enough money");
+						say(player, n, "oops, i'm a bit short");
 					} else {
-						message(p, "you give the mage 200,000 coins",
+						mes(player, "you give the mage 200,000 coins",
 							"and the staff of iban");
-						removeItem(p, ItemId.COINS.id(), 200000);
-						removeItem(p, ItemId.STAFF_OF_IBAN_BROKEN.id(), 1);
-						p.message("the mage fixes the staff and returns it to you");
-						addItem(p, ItemId.STAFF_OF_IBAN.id(), 1);
-						playerTalk(p, n, "thanks mage");
-						npcTalk(p, n, "you be carefull with that thing");
+						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 200000));
+						player.getCarriedItems().remove(new Item(ItemId.STAFF_OF_IBAN_BROKEN.id()));
+						player.message("the mage fixes the staff and returns it to you");
+						give(player, ItemId.STAFF_OF_IBAN.id(), 1);
+						say(player, n, "thanks mage");
+						npcsay(player, n, "you be carefull with that thing");
 					}
 				}
 			}
@@ -55,7 +63,7 @@ public class DarkMage implements TalkToNpcExecutiveListener, TalkToNpcListener {
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.DARK_MAGE.id();
 	}
 

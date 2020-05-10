@@ -1,85 +1,83 @@
 package com.openrsc.server.plugins.npcs.shilo;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-
-public class CartDriver implements TalkToNpcListener, TalkToNpcExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
+public class CartDriver implements TalkNpcTrigger, OpLocTrigger {
 
 	public static final int TRAVEL_CART = 768;
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.CART_DRIVER_SHILO.id();
 	}
 
-	private void cartRide(Player p, Npc n) {
-		npcTalk(p, n, "I am offering a cart ride to Brimhaven if you're interested!",
+	private void cartRide(Player player, Npc n) {
+		npcsay(player, n, "I am offering a cart ride to Brimhaven if you're interested!",
 			"It will cost 500 Gold");
-		int menu = showMenu(p, n, false, //do not send over
+		int menu = multi(player, n, false, //do not send over
 			"Yes, that sounds great!",
 			"No thanks.");
 		if (menu == 0) {
-			playerTalk(p, n, "Yes please, I'd like to go to Brimhaven!");
-			if (hasItem(p, ItemId.COINS.id(), 500)) {
-				npcTalk(p, n, "Great!",
+			say(player, n, "Yes please, I'd like to go to Brimhaven!");
+			if (ifheld(player, ItemId.COINS.id(), 500)) {
+				npcsay(player, n, "Great!",
 					"Just hop into the cart then and we'll go!");
-				removeItem(p, ItemId.COINS.id(), 500);
-				message(p, 1000, "You Hop into the cart and the driver urges the horses on.");
-				p.teleport(468, 662);
-				message(p, 1200, "You take a taxing journey through the jungle to Brimhaven.");
-				message(p, 1200, "You feel fatigued from the journey, but at least");
-				message(p, 1200, "you didn't have to walk all that distance.");
+				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 500));
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You Hop into the cart and the driver urges the horses on.");
+				player.teleport(468, 662);
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You take a taxing journey through the jungle to Brimhaven.");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You feel fatigued from the journey, but at least");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "you didn't have to walk all that distance.");
 			} else {
-				npcTalk(p, n, "Sorry, but it looks as if you don't have enough money.",
+				npcsay(player, n, "Sorry, but it looks as if you don't have enough money.",
 					"Come back and see me when you have enough for the ride.");
 			}
 		} else if (menu == 1) {
-			playerTalk(p, n, "No thanks.");
-			npcTalk(p, n, "Ok Bwana, let me know if you change your mind.");
+			say(player, n, "No thanks.");
+			npcsay(player, n, "Ok Bwana, let me know if you change your mind.");
 		}
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.CART_DRIVER_SHILO.id()) {
-			playerTalk(p, n, "Hello!");
-			npcTalk(p, n, "Hello Bwana!");
-			cartRide(p, n);
+			say(player, n, "Hello!");
+			npcsay(player, n, "Hello Bwana!");
+			cartRide(player, n);
 		}
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player p) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getID() == TRAVEL_CART;
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player p) {
+	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == TRAVEL_CART) {
 			if (command.equalsIgnoreCase("Board")) {
-				p.message("This looks like a sturdy travelling cart.");
-				Npc driver = getNearestNpc(p, NpcId.CART_DRIVER_SHILO.id(), 10);
+				player.message("This looks like a sturdy travelling cart.");
+				Npc driver = ifnearvisnpc(player, NpcId.CART_DRIVER_SHILO.id(), 10);
 				if (driver != null) {
-					driver.teleport(p.getX(), p.getY());
-					sleep(600); // 1 tick.
-					npcWalkFromPlayer(p, driver);
-					p.message("A nearby man walks over to you.");
-					cartRide(p, driver);
+					driver.teleport(player.getX(), player.getY());
+					delay(player.getWorld().getServer().getConfig().GAME_TICK); // 1 tick.
+					npcWalkFromPlayer(player, driver);
+					player.message("A nearby man walks over to you.");
+					cartRide(player, driver);
 				} else {
-					p.message("The cart driver is currently busy.");
+					player.message("The cart driver is currently busy.");
 				}
 			} else if (command.equalsIgnoreCase("Look")) {
-				p.message("A sturdy travelling cart built for long trips through jungle areas.");
+				player.message("A sturdy travelling cart built for long trips through jungle areas.");
 			}
 		}
 	}

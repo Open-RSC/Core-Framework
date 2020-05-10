@@ -8,14 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class ChampionsGuild implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public final class ChampionsGuild extends AbstractShop {
 
 	private final Shop scavvosShop = new Shop(false, 300000, 100, 60, 2,
 		new Item(ItemId.RUNE_SKIRT.id(), 1), new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id(), 1), new Item(ItemId.RUNE_MACE.id(), 1),
@@ -26,7 +23,7 @@ public final class ChampionsGuild implements ShopInterface,
 		1));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.SCAVVO.id() || n.getID() == NpcId.VALAINE.id();
 	}
 
@@ -41,31 +38,35 @@ public final class ChampionsGuild implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
+	public Shop getShop() {
+		return valsShop;
+	}
+
+	@Override
+	public void onTalkNpc(final Player player, final Npc n) {
 		switch (NpcId.getById(n.getID())) {
 			case SCAVVO:
-				npcTalk(p, n, "Ello matey", "Want to buy some exciting new toys?");
-				int options = showMenu(p, n, "No, toys are for kids", "Lets have a look then", "Ooh goody goody toys");
+				npcsay(player, n, "Ello matey", "Want to buy some exciting new toys?");
+				int options = multi(player, n, "No, toys are for kids", "Lets have a look then", "Ooh goody goody toys");
 				if (options == 1 || options == 2) {
-					p.setAccessingShop(scavvosShop);
-					ActionSender.showShop(p, scavvosShop);
+					player.setAccessingShop(scavvosShop);
+					ActionSender.showShop(player, scavvosShop);
 				}
 				break;
 			case VALAINE:
-				npcTalk(p, n, "Hello there.",
+				npcsay(player, n, "Hello there.",
 					"Want to have a look at what we're selling today?");
 
-				int opt = showMenu(p, n, false, //do not send over
+				int opt = multi(player, n, false, //do not send over
 						"Yes please", "No thank you");
 				if (opt == 0) {
-					playerTalk(p, n, "Yes please.");
-					p.setAccessingShop(valsShop);
-					ActionSender.showShop(p, valsShop);
+					say(player, n, "Yes please.");
+					player.setAccessingShop(valsShop);
+					ActionSender.showShop(player, valsShop);
 				}
 				break;
 			default:
 				break;
 		}
 	}
-
 }

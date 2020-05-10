@@ -3,213 +3,73 @@ package com.openrsc.server.model.container;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.impl.mysql.queries.logging.DeathLog;
+import com.openrsc.server.database.struct.PlayerInventory;
 import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
+import com.openrsc.server.model.struct.EquipRequest;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.database.impl.mysql.queries.logging.DeathLog;
-import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
 public class Inventory {
-
+	//Class members--------------------------------------------------
 	/**
-	 * The maximum size of an inventory
+	 * The asynchronous logger
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
+	/**
+	 * The number of inventory slots per player
 	 */
 	public static final int MAX_SIZE = 30;
 
 	// TODO: Use an ItemContainer rather than a list here.
+	/**
+	 * Holds all items in the logged-in users inventory
+	 */
 	private List<Item> list = Collections.synchronizedList(new ArrayList<>());
 
+	/**
+	 * Reference back to the player who owns this inventory
+	 */
 	private Player player;
 
-	public Inventory(Player player) {
+	//----------------------------------------------------------------
+	//Constructors----------------------------------------------------
+	public Inventory(Player player, PlayerInventory[] inventory) {
 		this.player = player;
-	}
-
-	public Inventory() {
-	}
-
-	public void add(Item item) {
-		add(item, true);
-	}
-
-	public void add(Item itemToAdd, boolean sendInventory) {
-		synchronized (list) {
-			if (itemToAdd.getAmount() <= 0) {
-				return;
-			}
-			// TODO Achievement gather item task?? keep or remove.
-
-			StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-			for (int i = 0; i < stackTrace.length; i++) {
-				if (stackTrace[i].toString().contains("com.openrsc.server.plugins.")) {
-					player.getWorld().getServer().getAchievementSystem().checkAndIncGatherItemTasks(player, itemToAdd);
-				}
-			}
-
-			if (itemToAdd.getAttribute("npcdrop", false)) {
-				player.getWorld().getServer().getAchievementSystem().checkAndIncGatherItemTasks(player, itemToAdd);
-			}
-
-			if (itemToAdd.getDef(player.getWorld()).isStackable()) {
-				for (int index = 0; index < list.size(); index++) {
-					Item existingStack = list.get(index);
-					if (itemToAdd.equals(existingStack) && existingStack.getAmount() < Integer.MAX_VALUE) {
-						existingStack.setAmount(existingStack.getAmount() + itemToAdd.getAmount());
-						if (sendInventory)
-							ActionSender.sendInventoryUpdateItem(player, index);
-						return;
+		for (int i = 0; i < inventory.length; i++) {
+			Item item = new Item(inventory[i].itemId, inventory[i].item.getItemStatus());
+			ItemDefinition itemDef = item.getDef(player.getWorld());
+			if (item.isWieldable(player.getWorld()) && inventory[i].item.isWielded()) {
+				if (itemDef != null) {
+					if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+						item.getItemStatus().setWielded(true);
+						player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
 					}
 				}
-			} else if (itemToAdd.getAmount() > 1 && !itemToAdd.getDef(player.getWorld()).isStackable()) {
-				itemToAdd.setAmount(1);
 			}
-
-			if (this.full()) {
-				if (player.getWorld().getServer().getConfig().MESSAGE_FULL_INVENTORY) {
-					player.message("Your Inventory is full, the " + itemToAdd.getDef(player.getWorld()).getName() + " drops to the ground!");
-				}
-				player.getWorld().registerItem(
-					new GroundItem(player.getWorld(), itemToAdd.getID(), player.getX(), player.getY(), itemToAdd.getAmount(), player),
-					94000);
-				player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped(inventory full) "
-					+ itemToAdd.getID() + " x" + itemToAdd.getAmount() + " at " + player.getLocation().toString()));
-				return;
-			}
-			list.add(itemToAdd);
-			if (sendInventory)
-				ActionSender.sendInventory(player);
+			list.add(item);
 		}
 	}
+	//----------------------------------------------------------------
+	//Class member modifiers------------------------------------------
 
-	public boolean canHold(Item item) {
-		synchronized (list) {
-			return (MAX_SIZE - list.size()) >= getRequiredSlots(item);
-		}
-	}
-
-	public boolean canHold(Item item, int addition) {
-		synchronized (list) {
-			return (MAX_SIZE - list.size() + addition) >= getRequiredSlots(item);
-		}
-	}
-
-	public boolean contains(Item i) {
-		//synchronized (list) {
-		//	return list.contains(i);
-		//}
-		return hasItemId(i.getID());
-	}
-
-	public int countId(long id) {
-		synchronized (list) {
-			int temp = 0;
-			for (Item i : list) {
-				if (i.getID() == id) {
-					temp += i.getAmount();
-				}
-			}
-			return temp;
-		}
-	}
-
-	public boolean full() {
-		synchronized (list) {
-			return list.size() >= MAX_SIZE;
-		}
-	}
-
-	public Item get(int index) {
-		synchronized (list) {
-			if (index < 0 || index >= list.size()) {
-				return null;
-			}
-			return list.get(index);
-		}
-	}
-
-	public Item get(Item item) {
-		synchronized (list) {
-			for (int index = list.size() - 1; index >= 0; index--) {
-				if (list.get(index).equals(item)) {
-					return list.get(index);
-				}
-			}
-		}
-		return null;
-	}
-
-	public int getFreedSlots(Item item) {
-		return (item.getDef(player.getWorld()).isStackable() && countId(item.getID()) > item.getAmount() ? 0 : 1);
-	}
-
-	public int getFreedSlots(List<Item> items) {
-		int freedSlots = 0;
-		for (Item item : items) {
-			freedSlots += getFreedSlots(item);
-		}
-		return freedSlots;
-	}
-
+	//----------------------------------------------------------------
+	//Class member retrievers-----------------------------------------
 	public List<Item> getItems() {
 		// TODO: This should be made private and all calls converted to use API on ItemContainer. This could stay public, IF we copy the list to a new list before returning.
 		synchronized (list) {
 			return list;
 		}
-	}
-
-	public int getLastIndexById(int id) {
-		synchronized (list) {
-			for (int index = list.size() - 1; index >= 0; index--) {
-				if (list.get(index).getID() == id) {
-					return index;
-				}
-			}
-		}
-		return -1;
-	}
-
-	public int getRequiredSlots(Item item) {
-		synchronized (list) {
-			return (item.getDef(player.getWorld()).isStackable() && list.contains(item) ? 0 : 1);
-		}
-	}
-
-	public int getRequiredSlots(List<Item> items) {
-		int requiredSlots = 0;
-		for (Item item : items) {
-			requiredSlots += getRequiredSlots(item);
-		}
-		return requiredSlots;
-	}
-
-	public boolean hasInInventory(int id) {
-		synchronized (list) {
-			for (Item i : list) {
-				if (i.getID() == id)
-					return true;
-			}
-		}
-		return false;
-	}
-	public boolean hasItemId(int id) {
-		synchronized (list) {
-			for (Item i : list) {
-				if (i.getID() == id)
-					return true;
-			}
-		}
-
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-			return player.getEquipment().hasEquipped(id) != -1;
-		else
-			return false;
 	}
 
 	public ListIterator<Item> iterator() {
@@ -218,136 +78,225 @@ public class Inventory {
 		}
 	}
 
-	public void remove(int index) {
-		synchronized (list) {
-			Item item = get(index);
-			if (item == null) {
-				return;
-			}
-			remove(item.getID(), item.getAmount(), true);
-		}
+	//----------------------------------------------------------------
+	//Methods that can change the contents of list--------------------
+	public Boolean add(Item item) {
+		return add(item, true);
 	}
 
-	public int remove(int id, int amount, boolean sendInventory) {
+	public Boolean add(Item itemToAdd, boolean sendInventory) {
 		synchronized (list) {
-			int size = list.size();
-			ListIterator<Item> iterator = list.listIterator(size);
+			try {
 
-			for (int index = size - 1; iterator.hasPrevious(); index--) {
-				Item i = iterator.previous();
-				if (id == i.getID() && i != null) {
+				// Confirm we aren't attempting to add 0 or less of the item.
+				if (itemToAdd.getAmount() <= 0) {
+					return false;
+				}
 
-					/* Stack Items */
-					if (i.getDef(player.getWorld()).isStackable() && amount < i.getAmount()) {
-						// More than we need to remove, keep item in inventory.
-						i.setAmount(i.getAmount() - amount);
+				// Confirm the ItemDef exists.
+				ItemDefinition itemDef = itemToAdd.getDef(player.getWorld());
+				if (itemDef == null)
+					return false;
+
+				// Confirm an existing stack to add the item to, if item is stackable.
+				Item existingStack = null;
+				int index = -1;
+				if (itemDef.isStackable() || itemToAdd.getNoted()) {
+					for (Item inventoryItem : list) {
+						++index;
+						//Check for matching catalogID
+						if (inventoryItem.getCatalogId() != itemToAdd.getCatalogId())
+							continue;
+
+						//Check for matching noted status
+						if (itemToAdd.getNoted() != inventoryItem.getNoted())
+							continue;
+
+						//Make sure there's room in the stack
+						if (inventoryItem.getAmount() == Integer.MAX_VALUE)
+							continue;
+
+						existingStack = inventoryItem;
+						break;
+					}
+				}
+
+				// There is no existing stack in the inventory (or the item is not a STACK)
+				if (existingStack == null) {
+
+					// TODO: Durability
+					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), itemToAdd.getNoted());
+
+					// Make sure they have room in the inventory
+					if (list.size() >= MAX_SIZE) {
+						if (player.getWorld().getServer().getConfig().MESSAGE_FULL_INVENTORY) {
+							player.message("Your Inventory is full, the " + itemToAdd.getDef(player.getWorld()).getName() + " drops to the ground!");
+						}
+						player.getWorld().registerItem(
+							new GroundItem(player.getWorld(), itemToAdd.getCatalogId(), player.getX(), player.getY(),
+								itemToAdd.getAmount(), player, itemToAdd.getNoted()),
+								player.getWorld().getServer().getConfig().GAME_TICK * 150);
+
+						return false;
+					}
+
+					// Update the server inventory
+					list.add(itemToAdd);
+
+					// Update the Database - Add to the last slot and create a new itemID
+					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size() - 1);
+
+					//Update the client
+					if (sendInventory)
+						ActionSender.sendInventoryUpdateItem(player, list.size() - 1);
+
+				// There is an existing stack in the inventory on which to add this item.
+				} else {
+
+					// Determine if the existing stack will overflow.
+					int remainingSize = Integer.MAX_VALUE - existingStack.getAmount();
+
+					// The added items will not overflow the stack, add them to it normally.
+					if (remainingSize >= itemToAdd.getAmount()) {
+
+						// Update the Database and Server Inventory
+						existingStack.changeAmount(player.getWorld().getServer().getDatabase(), itemToAdd.getAmount());
+
+						//Update the Client
+						if (sendInventory)
+							ActionSender.sendInventoryUpdateItem(player, index);
+
+					// The added items will overflow the stack, create a second stack to hold the remainder.
+					} else {
+
+						// Determine how much is left over
+						// TODO: Durability
+						itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount() - remainingSize);
+
+						// Make sure they have room in the inventory for the second stack.
+						if (list.size() >= MAX_SIZE) {
+							if (player.getWorld().getServer().getConfig().MESSAGE_FULL_INVENTORY) {
+								player.message("Your Inventory is full, the " + itemToAdd.getDef(player.getWorld()).getName() + " drops to the ground!");
+							}
+							player.getWorld().registerItem(
+								new GroundItem(player.getWorld(), itemToAdd.getCatalogId(), player.getX(), player.getY(),
+									itemToAdd.getAmount(), player, itemToAdd.getNoted()),
+									player.getWorld().getServer().getConfig().GAME_TICK * 150);
+							return false;
+						}
+
+						// Update the existing stack amount to max value
+						existingStack.setAmount(player.getWorld().getServer().getDatabase(), Integer.MAX_VALUE);
+
+						// Update the server inventory
+						list.add(itemToAdd);
+
+						// Update the Database - Add new stack to the last slot and create a new itemID
+						player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
+
+						// Update the Client - Both stacks
 						ActionSender.sendInventoryUpdateItem(player, index);
-					} else if (i.getDef(player.getWorld()).isStackable() && amount > i.getAmount()) {
-						// Not enough, do not remove.
-						return -1;
-					} else if (i.getDef(player.getWorld()).isStackable() && amount == i.getAmount()) {
-						// Exact amount, remove all.
-						if (i.isWielded()) {
-							unwieldItem(i, false);
-						}
-						iterator.remove();
-						//ActionSender.sendRemoveItem(player, index);
-					}
-
-					/* Non-stack items */
-					else {
-						// Remove 1.
-						if (i.isWielded()) {
-							unwieldItem(i, false);
-						}
-						iterator.remove();
-						//ActionSender.sendRemoveItem(player, index);
-
-						amount -= 1;
-						if (amount > 0)
-							return remove(id, amount, sendInventory);
-					}
-					if (sendInventory) ActionSender.sendInventory(player);
-					return index;
-				}
-			}
-		}
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-			return player.getEquipment().remove(id, amount);
-		else
-			return -1;
-	}
-
-	public int remove(int id, int amount) {
-		return remove(id, amount, true);
-	}
-
-	public int remove(Item item, boolean updatePlayer) {
-		return remove(item.getID(), item.getAmount(), updatePlayer);
-	}
-
-	public int remove(Item item) {
-		return remove(item.getID(), item.getAmount(), true);
-	}
-
-	public int size() {
-		synchronized (list) {
-			return list.size();
-		}
-	}
-
-	public void sort() {
-		synchronized (list) {
-			Collections.sort(list);
-		}
-	}
-
-	public boolean wielding(int id) {
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			if (player.getEquipment().hasEquipped(id) != -1)
-				return true;
-		} else {
-			synchronized (list) {
-				for (Item i : list) {
-					if (i.getID() == id && i.isWielded()) {
-						return true;
+						ActionSender.sendInventoryUpdateItem(player, list.size() - 1);
 					}
 				}
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
+				return false;
+			}
+			return true;
+		}
+	}
+
+	public int remove(Item item, boolean sendInventory) {
+		synchronized (list) {
+			try {
+				// Confirm items exist in the inventory
+				if (list.isEmpty())
+					return -1;
+
+				int catalogId = item.getCatalogId();
+				int amount = item.getAmount();
+				int itemID = item.getItemId();
+
+				int size = list.size();
+				ListIterator<Item> iterator = list.listIterator(size);
+				for (int index = size - 1; iterator.hasPrevious(); index--) {
+					Item inventoryItem = iterator.previous();
+					// Loop until we have the correct item.
+					if (inventoryItem.getItemId() != itemID)
+						continue;
+					// Confirm itemDef exists.
+					ItemDefinition inventoryDef = inventoryItem.getDef(player.getWorld());
+					if (inventoryDef == null)
+						continue;
+
+					if (inventoryDef.isStackable() || inventoryItem.getNoted()) {
+
+						// Make sure there's enough in the stack
+						if (inventoryItem.getAmount() < amount)
+							return -1;
+
+						// If we remove the entire stack, remove the item status.
+						if (inventoryItem.getAmount() == amount) {
+
+							// Update the Server
+							iterator.remove();
+
+							// Update the Database - Remove item status
+							player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
+
+							// Update the client
+							if (sendInventory)
+								ActionSender.sendRemoveItem(player, index);
+
+						// Removing only part of the stack
+						} else {
+
+							// Update the Database and Server Bank
+							inventoryItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
+
+							// Update the client
+							if (sendInventory)
+								ActionSender.sendInventoryUpdateItem(player, index);
+						}
+
+					// Non-stacking items
+					} else {
+
+						// TODO: There needs to be a check here if the noted version should be allowed
+
+						// Unequip if necessary (only non-stacking items equip currently)
+						if (inventoryItem.isWielded())
+							player.getCarriedItems().getEquipment().unequipItem(
+								new UnequipRequest(player, inventoryItem, UnequipRequest.RequestType.FROM_INVENTORY, false)
+							);
+
+						// Update the Server Bank
+						iterator.remove();
+
+						// Update the Database
+						player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
+
+						// Update the client
+						if (sendInventory)
+							ActionSender.sendRemoveItem(player, index);
+					}
+
+					return inventoryItem.getItemId();
+				}
+				System.out.println("Item not found: " + item.getItemId() + " for player " + player.getUsername());
+			} catch (GameDatabaseException ex) {
+				LOGGER.error(ex.getMessage());
 			}
 		}
-		return false;
+		return -1;
 	}
 
-	public void replace(int i, int j) { this.replace(i, j, true); }
-	public void replace(int i, int j, boolean sendInventory) {
-        Item old = new Item(i);
-        Item newitem = new Item(j);
-        if (old.getDef(player.getWorld()) != null && newitem.getDef(player.getWorld()) != null
-            && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
-            && old.getDef(player.getWorld()).isWieldable() && newitem.getDef(player.getWorld()).isWieldable()
-        && Functions.isWielding(player, i)) {
-            newitem.setWielded(false);
-            player.getEquipment().equip(old.getDef(player.getWorld()).getWieldPosition(), null);
-            player.getEquipment().equip(newitem.getDef(player.getWorld()).getWieldPosition(), newitem);
-            player.updateWornItems(old.getDef(player.getWorld()).getWieldPosition(),
-                player.getSettings().getAppearance().getSprite(old.getDef(player.getWorld()).getWieldPosition()),
-                old.getDef(player.getWorld()).getWearableId(), false);
-            player.updateWornItems(newitem.getDef(player.getWorld()).getWieldPosition(),
-                newitem.getDef(player.getWorld()).getAppearanceId(), newitem.getDef(player.getWorld()).getWearableId(), true);
-            ActionSender.sendEquipmentStats(player);
-        } else {
-            remove(i, 1, false);
-            add(new Item(j), false);
-            if (sendInventory)
-				ActionSender.sendInventory(player);
-        }
-    }
+	public void replace(Item itemToReplace, Item newItem, boolean sendInventory) {
 
-
-	public int getFreeSlots() {
-		return MAX_SIZE - size();
 	}
 
+	// Used in custom bank interface to swap items.
 	public void swap(int slot, int to) {
 		if (slot <= 0 && to <= 0 && to == slot) {
 			return;
@@ -365,6 +314,7 @@ public class Inventory {
 		}
 	}
 
+	// Used in custom bank interface to insert items.
 	public boolean insert(int slot, int to) {
 		if (slot < 0 || to < 0 || to == slot) {
 			return false;
@@ -409,57 +359,21 @@ public class Inventory {
 		return true;
 	}
 
-	public boolean unwieldItem(Item affectedItem, boolean sound) {
-
-		if (affectedItem == null || !affectedItem.isWieldable(player.getWorld())) {
-			return false;
-		}
-
-		//If inventory doesn't have the item
-		if (!Functions.isWielding(player, affectedItem.getID())) {
-			return false;
-		}
-
-		//Can't unequip something if inventory is full
-		if (player.getInventory().full() && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			player.message("You need more inventory space to unequip that.");
-			return false;
-		}
-
-		affectedItem.setWielded(false);
-		if (sound) {
-			player.playSound("click");
-		}
-		player.updateWornItems(affectedItem.getDef(player.getWorld()).getWieldPosition(),
-			player.getSettings().getAppearance().getSprite(affectedItem.getDef(player.getWorld()).getWieldPosition()),
-			affectedItem.getDef(player.getWorld()).getWearableId(), false);
-
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			if (player.getEquipment().hasEquipped(affectedItem.getID()) != -1) {
-				player.getEquipment().equip(affectedItem.getDef(player.getWorld()).getWieldPosition(),null);
-				add(affectedItem, false);
-			}
-		}
-		ActionSender.sendInventory(player);
-		ActionSender.sendEquipmentStats(player, affectedItem.getDef(player.getWorld()).getWieldPosition());
-		return true;
-	}
-
 	public void shatter(int itemID) {
 		if (player.getWorld().getServer().getEntityHandler().getItemDef(itemID) == null) {
 			return;
 		}
 		boolean shattered = false;
-		int index = -1;
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
-		&& (index = player.getEquipment().hasEquipped(itemID)) != -1) {
-			player.getEquipment().equip(index, null);
+			&& (player.getCarriedItems().getEquipment().searchEquipmentForItem(itemID)) != -1) {
+			Item item = player.getCarriedItems().getEquipment().get(itemID);
+			player.getCarriedItems().getEquipment().remove(item, 1);
 			shattered = true;
 		} else {
-			for (int i = 0; i < player.getInventory().size(); i++) {
-				Item item = player.getInventory().get(i);
-				if (item != null && item.getID() == itemID) {
-					player.getInventory().remove(i);
+			for (int i = 0; i < player.getCarriedItems().getInventory().size(); i++) {
+				Item item = player.getCarriedItems().getInventory().get(i);
+				if (item != null && item.getCatalogId() == itemID) {
+					player.getCarriedItems().remove(new Item(i));
 					shattered = true;
 					break;
 				}
@@ -471,222 +385,45 @@ public class Inventory {
 			ActionSender.sendEquipmentStats(player, player.getWorld().getServer().getEntityHandler().getItemDef(itemID).getWieldPosition());
 		}
 	}
-
-	public boolean wieldItem(Item item, boolean sound) {
-
-		int requiredLevel = item.getDef(player.getWorld()).getRequiredLevel();
-		int requiredSkillIndex = item.getDef(player.getWorld()).getRequiredSkillIndex();
-		String itemLower = item.getDef(player.getWorld()).getName().toLowerCase();
-		Optional<Integer> optionalLevel = Optional.empty();
-		Optional<Integer> optionalSkillIndex = Optional.empty();
-		boolean ableToWield = true;
-		boolean bypass = !player.getWorld().getServer().getConfig().STRICT_CHECK_ALL &&
-			(itemLower.startsWith("poisoned") &&
-				((itemLower.endsWith("throwing dart") && !player.getWorld().getServer().getConfig().STRICT_PDART_CHECK) ||
-					(itemLower.endsWith("throwing knife") && !player.getWorld().getServer().getConfig().STRICT_PKNIFE_CHECK) ||
-					(itemLower.endsWith("spear") && !player.getWorld().getServer().getConfig().STRICT_PSPEAR_CHECK))
-			);
-
-		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
-			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
-		}
-		//staff of iban (usable)
-		if (item.getID() == ItemId.STAFF_OF_IBAN.id()) {
-			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
-		}
-		//battlestaves (incl. enchanted version)
-		if (itemLower.contains("battlestaff")) {
-			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
-		}
-
-		if (player.getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
-			if (!bypass) {
-				player.message("You are not a high enough level to use this item");
-				player.message("You need to have a " + player.getWorld().getServer().getConstants().getSkills().getSkillName(requiredSkillIndex) + " level of " + requiredLevel);
-				ableToWield = false;
-			}
-		}
-		if (optionalSkillIndex.isPresent() && player.getSkills().getMaxStat(optionalSkillIndex.get()) < optionalLevel.get()) {
-			if (!bypass) {
-				player.message("You are not a high enough level to use this item");
-				player.message("You need to have a " + player.getWorld().getServer().getConstants().getSkills().getSkillName(optionalSkillIndex.get()) + " level of " + optionalLevel.get());
-				ableToWield = false;
-			}
-		}
-		if (item.getDef(player.getWorld()).isFemaleOnly() && player.isMale()) {
-			player.message("It doesn't fit!");
-			player.message("Perhaps I should get someone to adjust it for me");
-			ableToWield = false;
-		}
-		if ((item.getID() == ItemId.RUNE_PLATE_MAIL_BODY.id() || item.getID() == ItemId.RUNE_PLATE_MAIL_TOP.id())
-			&& (player.getQuestStage(Quests.DRAGON_SLAYER) != -1)) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to complete the dragon slayer quest");
-			return false;
-		} else if (item.getID() == ItemId.DRAGON_SWORD.id() && player.getQuestStage(Quests.LOST_CITY) != -1) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to complete the Lost city of zanaris quest");
-			return false;
-		} else if (item.getID() == ItemId.DRAGON_AXE.id() && player.getQuestStage(Quests.HEROS_QUEST) != -1) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to complete the Hero's guild entry quest");
-			return false;
-		} else if (item.getID() == ItemId.DRAGON_SQUARE_SHIELD.id() && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to complete the legend's guild quest");
-			return false;
-		}
-		/*
-		 * Hacky but works for god staffs and god capes.
-		 */
-		else if (item.getID() == ItemId.STAFF_OF_GUTHIX.id() && (wielding(ItemId.ZAMORAK_CAPE.id()) || wielding(ItemId.SARADOMIN_CAPE.id()))) { // try to wear guthix staff
-			player.message("you may not wield this staff while wearing a cape of another god");
-			return false;
-		} else if (item.getID() == ItemId.STAFF_OF_SARADOMIN.id() && (wielding(ItemId.ZAMORAK_CAPE.id()) || wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear sara staff
-			player.message("you may not wield this staff while wearing a cape of another god");
-			return false;
-		} else if (item.getID() == ItemId.STAFF_OF_ZAMORAK.id() && (wielding(ItemId.SARADOMIN_CAPE.id()) || wielding(ItemId.GUTHIX_CAPE.id()))) { // try to wear zamorak staff
-			player.message("you may not wield this staff while wearing a cape of another god");
-			return false;
-		} else if (item.getID() == ItemId.GUTHIX_CAPE.id() && (wielding(ItemId.STAFF_OF_ZAMORAK.id()) || wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear guthix cape
-			player.message("you may not wear this cape while wielding staffs of the other gods");
-			return false;
-		} else if (item.getID() == ItemId.SARADOMIN_CAPE.id() && (wielding(ItemId.STAFF_OF_ZAMORAK.id()) || wielding(ItemId.STAFF_OF_GUTHIX.id()))) { // try to wear sara cape
-			player.message("you may not wear this cape while wielding staffs of the other gods");
-			return false;
-		} else if (item.getID() == ItemId.ZAMORAK_CAPE.id() && (wielding(ItemId.STAFF_OF_GUTHIX.id()) || wielding(ItemId.STAFF_OF_SARADOMIN.id()))) { // try to wear zamorak cape
-			player.message("you may not wear this cape while wielding staffs of the other gods");
-			return false;
-		}
-		/** Quest cape 112QP TODO item id **/
-		/*
-		else if (item.getID() == 2145 && player.getQuestPoints() < 112) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to complete all the available quests");
-			return;
-		}*/
-		/** Max skill total cape TODO item id **/
-		/*else if (item.getID() == 2146 && player.getSkills().getTotalLevel() < 1782) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to be level 99 in all skills");
-			return;
-		}*/
-		/** iron men armours **/
-		else if ((item.getID() == ItemId.IRONMAN_HELM.id() || item.getID() == ItemId.IRONMAN_PLATEBODY.id()
-			|| item.getID() == ItemId.IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ironman.id())) {
-			player.message("You need to be an Iron Man to wear this");
-			return false;
-		} else if ((item.getID() == ItemId.ULTIMATE_IRONMAN_HELM.id() || item.getID() == ItemId.ULTIMATE_IRONMAN_PLATEBODY.id()
-			|| item.getID() == ItemId.ULTIMATE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Ultimate.id())) {
-			player.message("You need to be an Ultimate Iron Man to wear this");
-			return false;
-		} else if ((item.getID() == ItemId.HARDCORE_IRONMAN_HELM.id() || item.getID() == ItemId.HARDCORE_IRONMAN_PLATEBODY.id()
-			|| item.getID() == ItemId.HARDCORE_IRONMAN_PLATELEGS.id()) && !player.isIronMan(IronmanMode.Hardcore.id())) {
-			player.message("You need to be a Hardcore Iron Man to wear this");
-			return false;
-		} else if (item.getID() == 2254 && player.getQuestStage(Quests.LEGENDS_QUEST) != -1) {
-			player.message("you have not earned the right to wear this yet");
-			player.message("you need to complete the Legends Quest");
-			return false;
-		}
-		if (!ableToWield)
-			return false;
-
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			//Do an inventory count check
-			int count = 0;
-			Item i;
-			for (int p = 0; p < Equipment.slots; p++) {
-				i = player.getEquipment().get(p);
-				if (i != null && item.wieldingAffectsItem(player.getWorld(), i)) {
-					if (item.getDef(player.getWorld()).isStackable()) {
-						if (item.getID() == i.getID())
-							continue;
-					}
-					count++;
-				}
-			}
-			if (player.getInventory().getFreeSlots() - count + 1 < 0) {
-				player.message("You need more inventory space to equip that.");
-				return false;
-			}
-
-			player.getInventory().remove(item);
-			for (int p = 0; p < Equipment.slots; p++) {
-				i = player.getEquipment().get(p);
-				if (i != null && item.wieldingAffectsItem(player.getWorld(), i)) {
-					if (item.getDef(player.getWorld()).isStackable()) {
-						if (item.getID() == i.getID()) {
-							i.setAmount(i.getAmount() + item.getAmount());
-							ActionSender.updateEquipmentSlot(player, i.getDef(player.getWorld()).getWieldPosition());
-							return true;
-						}
-					}
-					unwieldItem(i, false);
-				}
-			}
-		} else {
-			List<Item> items = getItems();
-			synchronized(items) {
-				for (Item i : items) {
-					if (item.wieldingAffectsItem(player.getWorld(), i) && i.isWielded()) {
-						unwieldItem(i, false);
-					}
-				}
-			}
-		}
-
-		if (sound)
-			player.playSound("click");
-
-		item.setWielded(true);
-		player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(), item.getDef(player.getWorld()).getAppearanceId(),
-				item.getDef(player.getWorld()).getWearableId(), true);
-
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			item.setWielded(false);
-			player.getEquipment().equip(item.getDef(player.getWorld()).getWieldPosition(),item);
-		}
-
-		ActionSender.sendInventory(player);
-		ActionSender.sendEquipmentStats(player, item.getDef(player.getWorld()).getWieldPosition());
-		return true;
-	}
-
 	public void dropOnDeath(Mob opponent) {
-		// temporary map to sort - ideally should be comparator for item
+
+		// deathItemsMap: Compiles a list of Value : Items
+		// Stacks receive a value of -1, as they are always removed.
 		TreeMap<Integer, ArrayList<Item>> deathItemsMap = new TreeMap<>(Collections.reverseOrder());
+
+		// A list of all the items a player has prior to death.
 		ArrayList<Item> deathItemsList = new ArrayList<>();
-		ArrayList<Item> oldEquippedList = new ArrayList<>();
+		// A list of all items equipped prior to death.
+		ArrayList<Integer> oldEquippedList = new ArrayList<>();
 		Integer key;
 		ArrayList<Item> value;
 		ItemDefinition def;
 
+		// Add equipment items and values to deathItemsMap (only if config is enabled).
 		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			for (int i = 0; i < Equipment.slots; i++) {
-				Item equipped = player.getEquipment().get(i);
+			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+				Item equipped = player.getCarriedItems().getEquipment().get(i);
 				if (equipped != null) {
-					def = equipped.getDef(player.getWorld());
-					// stackable always lost
-					key = def.isStackable() ? -1 : def.getDefaultPrice();
-					value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
-					oldEquippedList.add(equipped);
-					value.add(equipped);
-					deathItemsMap.put(key, value);
+					/*
 					player.updateWornItems(equipped.getDef(player.getWorld()).getWieldPosition(),
+
 						player.getSettings().getAppearance().getSprite(equipped.getDef(player.getWorld()).getWieldPosition()),
 						equipped.getDef(player.getWorld()).getWearableId(), false);
-					player.getEquipment().equip(i,null);
+					player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, equipped, UnequipRequest.RequestType.FROM_EQUIPMENT, false));
+					 */
+					def = equipped.getDef(player.getWorld());
+					key = def.isStackable() || equipped.getNoted() ? -1 : def.getDefaultPrice(); // Stacks are always lost.
+					value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
+					value.add(equipped);
+					deathItemsMap.put(key, value);
 				}
 			}
 		}
-		for (Item invItem : list) {
+
+		// Add inventory items and values to deathItemsMap
+		for (Item invItem : getItems()) {
 			def = invItem.getDef(player.getWorld());
-			// stackable always lost
-			key = def.isStackable() ? -1 : def.getDefaultPrice();
+			key = def.isStackable() || invItem.getNoted() ? -1 : def.getDefaultPrice(); // Stacks are always lost.
 			value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
 			value.add(invItem);
 			deathItemsMap.put(key, value);
@@ -718,21 +455,29 @@ public class Inventory {
 				player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
 					player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),
 					item.getDef(player.getWorld()).getWearableId(), false);
-				item.setWielded(false);
+				try {
+					item.setWielded(player.getWorld().getServer().getDatabase(), false);
+				}
+				catch (GameDatabaseException e) {
+					LOGGER.error(e);
+				}
 			}
-			iterator.remove();
+			player.getCarriedItems().remove(item, false);
 
 			log.addDroppedItem(item);
+			Player dropOwner;
+			GroundItem groundItem;
 			if (item.getDef(player.getWorld()).isUntradable()) {
-				player.getWorld().registerItem(new GroundItem(player.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), player));
+				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), player, item.getNoted());
 			} else {
-				Player dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
-				GroundItem groundItem = new GroundItem(player.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), dropOwner);
+				dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
+				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), dropOwner, item.getNoted());
 				if (dropOwner.getIronMan() != IronmanMode.None.id()) {
 					groundItem.setAttribute("playerKill", true);
 				}
-				player.getWorld().registerItem(groundItem, 644000); // 10m 44s
 			}
+			player.getWorld().registerItem(groundItem, player.getWorld().getServer().getConfig().GAME_TICK * 1000);
+
 		}
 
 		//check for fam crest gloves in bank, if not present there give player
@@ -757,17 +502,10 @@ public class Inventory {
 				fam_gloves = ItemId.STEEL_GAUNTLETS.id();
 				break;
 		}
-		//Add the remaining items to the players inventory
-		list.clear();
-		for (Item returnItem : deathItemsList) {
-			add(returnItem, false);
-			if (oldEquippedList.contains(returnItem)) {
-				wieldItem(returnItem, false);
-			}
-		}
+
 		if (player.getQuestStage(Quests.FAMILY_CREST) == -1 && !player.getBank().hasItemId(fam_gloves)
-		&& !player.getInventory().hasItemId(fam_gloves)) {
-			add(new Item(fam_gloves, 1));
+			&& !player.getCarriedItems().hasCatalogID(fam_gloves)) {
+			add(new Item(fam_gloves, 1), false);
 		}
 		ActionSender.sendInventory(player);
 		ActionSender.sendEquipmentStats(player);
@@ -775,6 +513,211 @@ public class Inventory {
 		log.build();
 		player.getWorld().getServer().getGameLogger().addQuery(log);
 	}
+	//----------------------------------------------------------------
+    //Methods that search the list------------------------------------
+	public Item get(int index) {
+		synchronized (list) {
+			if (index < 0 || index >= list.size()) {
+				return null;
+			}
+			return list.get(index);
+		}
+	}
 
-	public List getList() { return list;}
+	public Item get(Item item) {
+		synchronized (list) {
+			for (int index = list.size() - 1; index >= 0; index--) {
+				if (list.get(index).equals(item)) {
+					return list.get(index);
+				}
+			}
+		}
+		return null;
+	}
+
+	public boolean contains(Item i) {
+		//synchronized (list) {
+		//	return list.contains(i);
+		//}
+		return hasCatalogID(i.getCatalogId());
+	}
+
+	public int countId(long id) {
+		return countId(id, Optional.empty());
+	}
+
+	public int countId(long id, Optional<Boolean> noted) {
+		synchronized (list) {
+			int temp = 0;
+			for (Item i : list) {
+				if (i.getCatalogId() == id && (!noted.isPresent() || (i.getNoted() == noted.get()))) {
+					temp += i.getAmount();
+				}
+			}
+			return temp;
+		}
+	}
+
+	public int countSlotsOccupied(Item item, int totalAmount) {
+		synchronized (list) {
+			int slots = 0;
+			int amountFound = 0;
+			for (int x = list.size() - 1; x >= 0; x--) {
+				if (amountFound >= totalAmount) break;
+				Item i = list.get(x);
+				if (i.getCatalogId() == item.getCatalogId() && i.getItemStatus().getNoted() == item.getItemStatus().getNoted()) {
+					slots++;
+					amountFound += i.getAmount();
+				}
+			}
+			return slots;
+		}
+	}
+
+	public int getLastIndexById(int id) {
+		return getLastIndexById(id, Optional.empty());
+	}
+
+	public int getLastIndexById(int id, Optional<Boolean> wantNoted) {
+		synchronized (list) {
+			for (int index = list.size() - 1; index >= 0; index--) {
+				Item item = list.get(index);
+				if (item.getCatalogId() == id && (!wantNoted.isPresent() || item.getNoted() == wantNoted.get())) {
+					return index;
+				}
+			}
+		}
+		return -1;
+	}
+
+	public boolean hasInInventory(int id) {
+		synchronized (list) {
+			for (Item i : list) {
+				if (i.getCatalogId() == id)
+					return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean hasCatalogID(int id) {
+		synchronized (list) {
+			for (Item i : list) {
+				if (i.getCatalogId() == id)
+					return true;
+			}
+		}
+
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
+			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id) != -1;
+		else
+			return false;
+	}
+
+	public boolean hasCatalogID(int id, boolean noted) {
+		synchronized (list) {
+			for (Item i : list) {
+				if (i.getCatalogId() == id && i.getNoted() == noted)
+					return true;
+			}
+		}
+
+		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
+			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id) != -1;
+		else
+			return false;
+	}
+	//----------------------------------------------------------------
+	//Methods that check the list-------------------------------------
+	public boolean canHold(Item item) {
+		synchronized (list) {
+			return (MAX_SIZE - list.size()) >= getRequiredSlots(item);
+		}
+	}
+
+	public boolean canHold(Item item, int addition) {
+		synchronized (list) {
+			return (MAX_SIZE - list.size() + addition) >= getRequiredSlots(item);
+		}
+	}
+
+	public boolean full() {
+		synchronized (list) {
+			return list.size() >= MAX_SIZE;
+		}
+	}
+
+	public int getFreedSlots(Item item) {
+		return (item.getDef(player.getWorld()).isStackable() && countId(item.getCatalogId()) > item.getAmount() ? 0 : 1);
+	}
+
+	public int getFreedSlots(List<Item> items) {
+		int freedSlots = 0;
+		for (Item item : items) {
+			freedSlots += getFreedSlots(item);
+		}
+		return freedSlots;
+	}
+
+	public int getRequiredSlots(Item item) {
+		synchronized(list) {
+			// Check item definition
+			ItemDefinition itemDef = item.getDef(player.getWorld());
+			if (itemDef == null)
+				return Integer.MAX_VALUE;
+
+			// Check if the item is a stackable
+			if (itemDef.isStackable() || item.getNoted()) {
+				// Check if there's a stack that can be added to
+				for (Item inventoryItem : list) {
+					// Check for matching catalogID
+					if (inventoryItem.getCatalogId() != item.getCatalogId())
+						continue;
+
+					// Check for matching noted status
+					if (inventoryItem.getNoted() != item.getNoted())
+						continue;
+
+					// Make sure there's room in the stack
+					if (inventoryItem.getAmount() == Integer.MAX_VALUE)
+						continue;
+
+					// Check if all of the stack can fit in the existing stack
+					int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
+					return remainingSize < item.getAmount() ? 1 : 0;
+				}
+
+				// Theres no stack found
+				return 1;
+			} else {
+				return item.getAmount();
+			}
+		}
+	}
+
+	public int getRequiredSlots(List<Item> items) {
+		int requiredSlots = 0;
+		for (Item item : items) {
+			requiredSlots += getRequiredSlots(item);
+		}
+		return requiredSlots;
+	}
+
+	public int size() {
+		synchronized (list) {
+			return list.size();
+		}
+	}
+
+	public int getFreeSlots() {
+		return MAX_SIZE - size();
+	}
+	//----------------------------------------------------------------
+	//Various methods-------------------------------------------------
+	public void sort() {
+		synchronized (list) {
+			Collections.sort(list);
+		}
+	}
+	//----------------------------------------------------------------
 }

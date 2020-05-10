@@ -4,41 +4,39 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.listeners.action.InvUseOnObjectListener;
-import com.openrsc.server.plugins.listeners.action.ObjectActionListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnObjectExecutiveListener;
-import com.openrsc.server.plugins.listeners.executive.ObjectActionExecutiveListener;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Hopper implements InvUseOnObjectListener, InvUseOnObjectExecutiveListener, ObjectActionListener, ObjectActionExecutiveListener {
+public class Hopper implements UseLocTrigger, OpLocTrigger {
 
 	@Override
-	public boolean blockInvUseOnObject(GameObject obj, Item item, Player player) {
-		return (obj.getID() == 52 || obj.getID() == 173 || obj.getID() == 246) && item.getID() == ItemId.GRAIN.id();
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
+		return (obj.getID() == 52 || obj.getID() == 173 || obj.getID() == 246) && item.getCatalogId() == ItemId.GRAIN.id();
 	}
 
 	@Override
-	public void onInvUseOnObject(GameObject obj, Item item, Player player) {
+	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getAttribute("contains_item", null) != null) {
 			player.message("There is already grain in the hopper");
 			return;
 		}
-		showBubble(player, item);
-		obj.setAttribute("contains_item", item.getID());
-		removeItem(player, item);
+		thinkbubble(player, item);
+		obj.setAttribute("contains_item", item.getCatalogId());
+		player.getCarriedItems().remove(item);
 		player.message("You put the grain in the hopper");
 	}
 
 	@Override
-	public boolean blockObjectAction(GameObject obj, String command, Player player) {
+	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return obj.getGameObjectDef() != null && obj.getGameObjectDef().getName().toLowerCase().equals("hopper") && command.equals("operate");
 	}
 
 	@Override
-	public void onObjectAction(GameObject obj, String command, Player player) {
-		message(player, 500, "You operate the hopper");
+	public void onOpLoc(Player player, GameObject obj, String command) {
+		mes(player, player.getWorld().getServer().getConfig().GAME_TICK, "You operate the hopper");
 		player.playSound("mechanical");
 		int contains = obj.getAttribute("contains_item", -1);
 		if (contains != ItemId.GRAIN.id()) {
@@ -54,9 +52,9 @@ public class Hopper implements InvUseOnObjectListener, InvUseOnObjectExecutiveLi
 		}
 
 		if (obj.getID() == 246) {
-			createGroundItem(player.getWorld(), ItemId.FLOUR.id(), 1, 162, 3533);
+			addobject(player.getWorld(), ItemId.FLOUR.id(), 1, 162, 3533);
 		} else {
-			createGroundItem(player.getWorld(), ItemId.FLOUR.id(), 1, obj.getX(), Formulae.getNewY(Formulae.getNewY(obj.getY(), false), false) + offY);
+			addobject(player.getWorld(), ItemId.FLOUR.id(), 1, obj.getX(), Formulae.getNewY(Formulae.getNewY(obj.getY(), false), false) + offY);
 		}
 		obj.removeAttribute("contains_item");
 	}

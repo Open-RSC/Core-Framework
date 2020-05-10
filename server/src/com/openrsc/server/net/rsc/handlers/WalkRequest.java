@@ -7,17 +7,17 @@ import com.openrsc.server.model.Path.PathType;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.net.Packet;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
 public class WalkRequest implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		int packetOpcode = p.getID();
+		int packetOpcode = packet.getID();
 		if (player.inCombat()) {
 			if (packetOpcode == OpcodeIn.WALK_TO_POINT.getOpcode()) {
 				Mob opponent = player.getOpponent();
@@ -40,7 +40,11 @@ public class WalkRequest implements PacketHandler {
 					opponent.setLastOpponent(opponent.getOpponent());
 					player.setLastOpponent(player.getOpponent());
 					player.setRanAwayTimer();
-					player.setLastRun(System.currentTimeMillis());
+					if (player.getOpponent().isPlayer()) {
+						Player victimPlayer = ((Player) player.getOpponent());
+						victimPlayer.message("Your opponent is retreating!");
+						ActionSender.sendSound(victimPlayer, "retreat");
+					}
 					player.setLastCombatState(CombatState.RUNNING);
 					opponent.setLastCombatState(CombatState.WAITING);
 					player.resetCombatEvent();
@@ -66,28 +70,29 @@ public class WalkRequest implements PacketHandler {
 				return;
 			}
 		} else if (player.isBusy()) {
+			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+				player.interruptPlugins();
+			}
 			return;
 		}
 
 		player.resetAll();
 		player.resetPath();
 
-		int firstStepX = p.readAnotherShort();
-		int firstStepY = p.readAnotherShort();
+		int firstStepX = packet.readAnotherShort();
+		int firstStepY = packet.readAnotherShort();
 		PathType pathType = packetOpcode == OpcodeIn.WALK_TO_POINT.getOpcode() ? PathType.WALK_TO_POINT : PathType.WALK_TO_ENTITY;
 		Path path = new Path(player, pathType);
 		{
 			path.addStep(firstStepX, firstStepY);
-			int numWaypoints = p.getReadableBytes() / 2;
+			int numWaypoints = packet.getReadableBytes() / 2;
 			for (int stepCount = 0; stepCount < numWaypoints; stepCount++) {
-				int stepDiffX = p.readByte();
-				int stepDiffY = p.readByte();
+				int stepDiffX = packet.readByte();
+				int stepDiffY = packet.readByte();
 				path.addStep(firstStepX + stepDiffX, firstStepY + stepDiffY);
 			}
 			path.finish();
 		}
 		player.getWalkingQueue().setPath(path);
-
-		player.setStatus(Action.IDLE);
 	}
 }

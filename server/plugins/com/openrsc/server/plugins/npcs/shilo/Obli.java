@@ -8,15 +8,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class Obli implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public class Obli extends AbstractShop {
 
 	private final Shop shop = new Shop(true, 15000, 150, 50, 2,
 		new Item(ItemId.TINDERBOX.id(), 2), new Item(ItemId.EMPTY_VIAL.id(), 20), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3),
@@ -29,24 +25,24 @@ public class Obli implements ShopInterface,
 		new Item(ItemId.MACHETTE.id(), 50));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.OBLI.id()) {
-			npcTalk(p, n, "Welcome to Obli's General Store Bwana!",
+			npcsay(player, n, "Welcome to Obli's General Store Bwana!",
 				"Would you like to see my items?");
-			int menu = showMenu(p, n,
+			int menu = multi(player, n,
 				"Yes please!",
 				"No, but thanks for the offer.");
 			if (menu == 0) {
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			} else if (menu == 1) {
-				npcTalk(p, n, "That's fine and thanks for your interest.");
+				npcsay(player, n, "That's fine and thanks for your interest.");
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.OBLI.id();
 	}
 
@@ -60,4 +56,8 @@ public class Obli implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

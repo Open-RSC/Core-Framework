@@ -4,15 +4,13 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.plugins.listeners.action.InvUseOnPlayerListener;
-import com.openrsc.server.plugins.listeners.executive.InvUseOnPlayerExecutiveListener;
+import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.plugins.Functions.showBubble;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerExecutiveListener {
+public class HalloweenCracker implements UsePlayerTrigger {
 
 	private static final int[] holidayWeights = {9, 10, 8, 5, 9, 10, 8, 5, 64, 64, 64};
 	private static final int[] holidayIds = {
@@ -109,8 +107,8 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 
 
 	@Override
-	public void onInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		if (item.getID() == ItemId.HALLOWEEN_CRACKER.id()) {
+	public void onUsePlayer(Player player, Player otherPlayer, Item item) {
+		if (item.getCatalogId() == ItemId.HALLOWEEN_CRACKER.id()) {
 			if (otherPlayer.isIronMan(1) || otherPlayer.isIronMan(2) || otherPlayer.isIronMan(3)) {
 				player.message(otherPlayer.getUsername() + " is an Iron Man. " + (otherPlayer.isMale() ? "He" : "She") + " stands alone.");
 				return;
@@ -121,23 +119,20 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 				return;
 			}
 
-			player.setBusy(true);
-			//otherPlayer.setBusy(true);
-
 			player.getUpdateFlags().setChatMessage(new ChatMessage(player, "Trick or treat?", null));
 
 			player.face(otherPlayer);
 			otherPlayer.face(player);
 
-			player.getInventory().remove(item);
+			player.getCarriedItems().remove(item);
 
-			Functions.sleep(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
-			showBubble(player, item);
+			thinkbubble(player, item);
 			player.message("You pull the cracker with " + otherPlayer.getUsername() + "...");
 			otherPlayer.message(player.getUsername() + " is pulling a cracker with you...");
 
-			Functions.sleep(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 			int holidayId = Formulae.weightedRandomChoice(holidayIds, holidayWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);
@@ -163,23 +158,20 @@ public class HalloweenCracker implements InvUseOnPlayerListener, InvUseOnPlayerE
 				player.message("Out comes a " + mask.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				otherPlayer.message("You got the " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				player.message(otherPlayer.getUsername() + " got the " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
-				player.getInventory().add(mask);
-				otherPlayer.getInventory().add(prize);
+				player.getCarriedItems().getInventory().add(mask);
+				otherPlayer.getCarriedItems().getInventory().add(prize);
 			} else {
 				otherPlayer.message("Out comes a " + mask.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				otherPlayer.message(player.getUsername() + " got the " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
 				player.message("You got a " + prize.getDef(player.getWorld()).getName().toLowerCase() + "!");
-				otherPlayer.getInventory().add(mask);
-				player.getInventory().add(prize);
+				otherPlayer.getCarriedItems().getInventory().add(mask);
+				player.getCarriedItems().getInventory().add(prize);
 			}
-
-			player.setBusy(false);
-			//otherPlayer.setBusy(false);
 		}
 	}
 
 	@Override
-	public boolean blockInvUseOnPlayer(Player player, Player otherPlayer, Item item) {
-		return item.getID() == ItemId.HALLOWEEN_CRACKER.id();
+	public boolean blockUsePlayer(Player player, Player otherPlayer, Item item) {
+		return item.getCatalogId() == ItemId.HALLOWEEN_CRACKER.id();
 	}
 }

@@ -8,36 +8,32 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
+import static com.openrsc.server.plugins.Functions.*;
 
-public class GrudsHerblawStall implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+public class GrudsHerblawStall extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 3000, 100, 70, 2,
 		new Item(ItemId.EMPTY_VIAL.id(), 50), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3), new Item(ItemId.EYE_OF_NEWT.id(), 50));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
-		npcTalk(p, n, "Does The little creature want to buy sumfin'");
-		int menu = showMenu(p, n,
+	public void onTalkNpc(Player player, Npc n) {
+		npcsay(player, n, "Does The little creature want to buy sumfin'");
+		int menu = multi(player, n,
 			"Yes I do",
 			"No I don't");
 		if (menu == 0) {
-			npcTalk(p, n, "Welcome to Grud's herblaw stall");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			npcsay(player, n, "Welcome to Grud's herblaw stall");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (menu == 1) {
-			npcTalk(p, n, "Suit yourself");
+			npcsay(player, n, "Suit yourself");
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.OGRE_MERCHANT.id();
 	}
 
@@ -50,5 +46,10 @@ public class GrudsHerblawStall implements ShopInterface,
 	@Override
 	public boolean isMembers() {
 		return true;
+	}
+
+	@Override
+	public Shop getShop() {
+		return shop;
 	}
 }

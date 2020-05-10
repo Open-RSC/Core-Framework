@@ -9,15 +9,14 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+
+import java.util.ArrayList;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Murphy implements MiniGameInterface, TalkToNpcListener, TalkToNpcExecutiveListener {
+public class Murphy implements MiniGameInterface, TalkNpcTrigger {
 
 	/**
 	 * IMPORTANT NOTES:
@@ -46,179 +45,212 @@ public class Murphy implements MiniGameInterface, TalkToNpcListener, TalkToNpcEx
 	}
 
 	@Override
-	public void handleReward(Player p) {
+	public void handleReward(Player player) {
 		//mini-game complete handled already
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.MURPHY_LAND.id() || n.getID() == NpcId.MURPHY_BOAT.id() || n.getID() == NpcId.MURPHY_UNRELEASED.id();
 	}
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.MURPHY_LAND.id()) { // Murphy on land
-			if (p.isIronMan(IronmanMode.Ironman.id()) || p.isIronMan(IronmanMode.Ultimate.id())
-				|| p.isIronMan(IronmanMode.Hardcore.id()) || p.isIronMan(IronmanMode.Transfer.id())) {
-				p.message("As an Iron Man, you cannot use the Trawler.");
+			if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+				|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
+				player.message("As an Iron Man, you cannot use the Trawler.");
 				return;
 			}
-			if (!p.getCache().hasKey("fishingtrawler")) {
-				playerTalk(p, n, "good day to you sir");
-				npcTalk(p, n, "well hello my brave adventurer");
-				playerTalk(p, n, "what are you up to?");
-				npcTalk(p, n, "getting ready to go fishing of course",
+			if (!player.getCache().hasKey("fishingtrawler")) {
+				say(player, n, "good day to you sir");
+				npcsay(player, n, "well hello my brave adventurer");
+				say(player, n, "what are you up to?");
+				npcsay(player, n, "getting ready to go fishing of course",
 						"there's no time to waste",
 						"i've got all the supplies i need from the shop at the end of the pier",
 						"they sell good rope, although their bailing buckets aren't too effective");
-				showStartOption(p, n, true, true, true);
+				showStartOption(player, n, true, true, true);
 			} else {
-				playerTalk(p, n, "hello again murphy");
-				npcTalk(p, n, "good day to you land lover");
-				if (p.getCache().hasKey("fishing_trawler_reward")) {
-					npcTalk(p, n, "It looks like your net is full from last trip");
+				say(player, n, "hello again murphy");
+				npcsay(player, n, "good day to you land lover");
+				if (player.getCache().hasKey("fishing_trawler_reward")) {
+					npcsay(player, n, "It looks like your net is full from last trip");
 					return;
 				}
-				npcTalk(p, n, "fancy hitting the high seas again?");
-				int option = showMenu(p, n, "no thanks, i still feel ill from last time", "yes, lets do it");
+				npcsay(player, n, "fancy hitting the high seas again?");
+				int option = multi(player, n, "no thanks, i still feel ill from last time", "yes, lets do it");
 				if (option == 0) {
-					npcTalk(p, n, "hah..softy");
+					npcsay(player, n, "hah..softy");
 				} else if (option == 1) {
-					letsGo(p, n);
+					letsGo(player, n);
 				}
 			}
 		} else if (n.getID() == NpcId.MURPHY_BOAT.id()) { // Murphy on the boat.
-			onship(n, p);
+			onship(n, player);
 		} else if (n.getID() == NpcId.MURPHY_UNRELEASED.id()) { // Another murphy potentially non existent
 		}
 	}
 
-	private void showStartOption(Player p, Npc n, boolean showOptionFish, boolean showOptionNotSafe, boolean showOptionHelp) {
-		Menu menu = new Menu();
+	private void showStartOption(Player player, Npc n, boolean showOptionFish, boolean showOptionNotSafe, boolean showOptionHelp) {
+		ArrayList<String> options = new ArrayList<>();
 		if (showOptionFish) {
-			menu.addOption(new Option("what fish do you catch?") {
-				@Override
-				public void action() {
-					npcTalk(p, n, "i get all sorts, anything that lies on the sea bed",
-							"you never know what you're going to get until...",
-							"...you pull up the net");
-					showStartOption(p, n, false, true, true);
-				}
-			});
+			options.add("what fish do you catch?");
 		}
 		if (showOptionNotSafe) {
-			menu.addOption(new Option("your boat doesn't look too safe") {
-				@Override
-				public void action() {
-					npcTalk(p, n, "that's because it's not, the dawn thing's full of holes");
-					playerTalk(p, n, "oh, so i suppose you can't go out for a while");
-					npcTalk(p, n, "oh no, i don't let a few holes stop an experienced sailor like me",
-							"i could sail these seas in a barrel",
-							"i'll be going out soon enough");
-					showStartOption(p, n, true, false, true);
-				}
-			});
+			options.add("your boat doesn't look too safe");
 		}
 		if (showOptionHelp) {
-			menu.addOption(new Option("could i help?") {
-				@Override
-				public void action() {
-					npcTalk(p, n, "well of course you can",
-							"i'll warn you though, the seas are merciless",
-							"and with out fishing experience you won't catch much");
-					message(p, "you need a fishing level of 15 or above to catch any fish on the trawler");
-					npcTalk(p, n, "on occasions the net rip's, so you'll need some rope to repair it");
-					playerTalk(p, n, "rope...ok");
-					npcTalk(p, n, "there's also a slight problem with leaks");
-					playerTalk(p, n, "leaks!");
-					npcTalk(p, n, "nothing some swamp paste won't fix");
-					playerTalk(p, n, "swamp paste?");
-					npcTalk(p, n, "oh, and one more thing...",
-							"..i hope you're a good swimmer");
-					int gooption = showMenu(p, n, "actually, i think i'll leave it", "i'll be fine, lets go",
-						"what's swamp paste?");
-					switch (gooption) {
-						case 0:
-							npcTalk(p, n, "bloomin' land lover's");
-							break;
-						case 1:
-							letsGo(p, n);
-							break;
-						case 2:
-							npcTalk(p, n, "swamp tar mixed with flour...",
-									"...which is then heated over a fire");
-							playerTalk(p, n, "where can i find swamp tar?");
-							npcTalk(p, n, "unfortunately the only supply of swamp tar is in the swamps below lumbridge");
-							break;
-					}
-				}
-			});
+			options.add("could i help?");
 		}
-		menu.showMenu(p);
+
+		String[] finalOptions = new String[options.size()];
+		int option = multi(player, n, options.toArray(finalOptions));
+
+		if (option == 2) {
+			if (showOptionHelp) {
+				chatOptionHelp(player, n);
+			}
+		}
+
+		else if (option == 1) {
+			if (showOptionFish) {
+				if (showOptionNotSafe) {
+					chatOptionNotSafe(player, n);
+				}
+				else if (showOptionHelp) {
+					chatOptionHelp(player, n);
+				}
+			}
+			else if (showOptionNotSafe) {
+				if (showOptionHelp) {
+					chatOptionHelp(player, n);
+				}
+			}
+		}
+
+		else if (option == 0) {
+			if (showOptionFish) {
+				chatOptionFish(player, n);
+			}
+			else if (showOptionNotSafe) {
+				chatOptionNotSafe(player, n);
+			}
+			else if (showOptionHelp) {
+				chatOptionHelp(player, n);
+			}
+		}
 	}
 
-	private void letsGo(Player p, Npc n) {
-		npcTalk(p, n, "would you like to sail east or west?");
-		int choice = showMenu(p, n, false, //do not send over
+	private void chatOptionFish(Player player, Npc npc) {
+		npcsay(player, npc, "i get all sorts, anything that lies on the sea bed",
+			"you never know what you're going to get until...",
+			"...you pull up the net");
+		showStartOption(player, npc, false, true, true);
+	}
+
+	private void chatOptionNotSafe(Player player, Npc npc) {
+		npcsay(player, npc, "that's because it's not, the dawn thing's full of holes");
+		say(player, npc, "oh, so i suppose you can't go out for a while");
+		npcsay(player, npc, "oh no, i don't let a few holes stop an experienced sailor like me",
+			"i could sail these seas in a barrel",
+			"i'll be going out soon enough");
+		showStartOption(player, npc, true, false, true);
+	}
+
+	private void chatOptionHelp(Player player, Npc npc) {
+		npcsay(player, npc, "well of course you can",
+			"i'll warn you though, the seas are merciless",
+			"and with out fishing experience you won't catch much");
+		mes(player, "you need a fishing level of 15 or above to catch any fish on the trawler");
+		npcsay(player, npc, "on occasions the net rip's, so you'll need some rope to repair it");
+		say(player, npc, "rope...ok");
+		npcsay(player, npc, "there's also a slight problem with leaks");
+		say(player, npc, "leaks!");
+		npcsay(player, npc, "nothing some swamp paste won't fix");
+		say(player, npc, "swamp paste?");
+		npcsay(player, npc, "oh, and one more thing...",
+			"..i hope you're a good swimmer");
+		int gooption = multi(player, npc, "actually, i think i'll leave it", "i'll be fine, lets go",
+			"what's swamp paste?");
+		switch (gooption) {
+			case 0:
+				npcsay(player, npc, "bloomin' land lover's");
+				break;
+			case 1:
+				letsGo(player, npc);
+				break;
+			case 2:
+				npcsay(player, npc, "swamp tar mixed with flour...",
+					"...which is then heated over a fire");
+				say(player, npc, "where can i find swamp tar?");
+				npcsay(player, npc, "unfortunately the only supply of swamp tar is in the swamps below lumbridge");
+				break;
+		}
+	}
+
+	private void letsGo(Player player, Npc n) {
+		npcsay(player, n, "would you like to sail east or west?");
+		int choice = multi(player, n, false, //do not send over
 				"east please", "west please");
 		FishingTrawler instance = null;
 		if (choice == 0 || choice == 1) {
 			if (choice == 0) {
-				instance = p.getWorld().getFishingTrawler(TrawlerBoat.EAST);
+				instance = player.getWorld().getFishingTrawler(TrawlerBoat.EAST);
 			} else if (choice == 1) {
-				instance = p.getWorld().getFishingTrawler(TrawlerBoat.WEST);
+				instance = player.getWorld().getFishingTrawler(TrawlerBoat.WEST);
 			}
 			if (instance != null && instance.isAvailable()) {
-				npcTalk(p, n, "good stuff, jump aboard",
+				npcsay(player, n, "good stuff, jump aboard",
 						"ok m hearty, keep your eys pealed",
 						"i need you to clog up those holes quick time");
-				playerTalk(p, n, "i'm ready and waiting");
-				if (!p.getCache().hasKey("fishingtrawler")) {
-					p.getCache().store("fishingtrawler", true);
+				say(player, n, "i'm ready and waiting");
+				if (!player.getCache().hasKey("fishingtrawler")) {
+					player.getCache().store("fishingtrawler", true);
 				}
-				instance.addPlayer(p);
+				instance.addPlayer(player);
 			} else {
-				npcTalk(p, n, "sorry m hearty it appeears the boat is in the middle of a game");
-				p.message("The boat should be available in a couple of minutes");
+				npcsay(player, n, "sorry m hearty it appeears the boat is in the middle of a game");
+				player.message("The boat should be available in a couple of minutes");
 			}
 		}
 	}
 
-	private void onship(Npc n, Player p) {
-		npcTalk(p, n, "whoooahh sailor");
-		int option = showMenu(p, n, "i've had enough,  take me back", "how you doing murphy?");
+	private void onship(Npc n, Player player) {
+		npcsay(player, n, "whoooahh sailor");
+		int option = multi(player, n, "i've had enough,  take me back", "how you doing murphy?");
 		if (option == 0) {
-			npcTalk(p, n, "haa .. the soft land lovers lost there see legs have they?");
-			playerTalk(p, n, "something like that");
-			npcTalk(p, n, "we're too far out now, it'd be dangerous");
-			option = showMenu(p, n, false, //do not send over
+			npcsay(player, n, "haa .. the soft land lovers lost there see legs have they?");
+			say(player, n, "something like that");
+			npcsay(player, n, "we're too far out now, it'd be dangerous");
+			option = multi(player, n, false, //do not send over
 					"I insist murphy, take me back", "Ok then murphy, just keep us afloat");
 			if (option == 0) {
-				playerTalk(p, n, "i insist murphy, take me back");
-				npcTalk(p, n, "ok, ok, i'll try, but don't say i didn't warn you");
-				message(p, 1900, "murphy sharply turns the large ship", "the boats gone under", "you're lost at sea!");
-				if (p.getWorld().getFishingTrawler(p) != null) {
-					p.getWorld().getFishingTrawler(p).quitPlayer(p);
+				say(player, n, "i insist murphy, take me back");
+				npcsay(player, n, "ok, ok, i'll try, but don't say i didn't warn you");
+				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "murphy sharply turns the large ship", "the boats gone under", "you're lost at sea!");
+				if (player.getWorld().getFishingTrawler(player) != null) {
+					player.getWorld().getFishingTrawler(player).quitPlayer(player);
 				}
 				else {
-					p.teleport(302, 759, false);
-					ActionSender.hideFishingTrawlerInterface(p);
+					player.teleport(302, 759, false);
+					ActionSender.hideFishingTrawlerInterface(player);
 				}
 			} else if (option == 1) {
-				playerTalk(p, n, "ok then murphy, just keep us afloat");
-				npcTalk(p, n, "that's the attitude sailor");
+				say(player, n, "ok then murphy, just keep us afloat");
+				npcsay(player, n, "that's the attitude sailor");
 			}
 		}
 		if (option == 1) {
 			int rnd = DataConversions.random(0,2);
 			if (rnd == 0) {
-				npcTalk(p, n, "don't bail..it's a waste of time",
+				npcsay(player, n, "don't bail..it's a waste of time",
 						"just fill those holes");
 			} else if (rnd == 1) {
-				npcTalk(p, n, "it's a fierce sea today traveller",
+				npcsay(player, n, "it's a fierce sea today traveller",
 						"you best hold on tight");
 			} else if (rnd == 2) {
-				npcTalk(p, n, "get those fishey's");
+				npcsay(player, n, "get those fishey's");
 			}
 		}
 	}

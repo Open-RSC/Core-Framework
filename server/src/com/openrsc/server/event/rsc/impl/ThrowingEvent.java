@@ -1,7 +1,10 @@
 package com.openrsc.server.event.rsc.impl;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GroundItem;
@@ -13,10 +16,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
-
-/**
- * @author Davve
- */
 
 public class ThrowingEvent extends GameTickEvent {
 
@@ -45,18 +44,18 @@ public class ThrowingEvent extends GameTickEvent {
 
 	private boolean canReach(Mob mob) {
 		int radius = 3;
-		if (getPlayerOwner().getThrowingEquip() == 1013
-			|| getPlayerOwner().getThrowingEquip() == 1015
-			|| getPlayerOwner().getThrowingEquip() == 1024
-			|| getPlayerOwner().getThrowingEquip() == 1068
-			|| getPlayerOwner().getThrowingEquip() == 1069
-			|| getPlayerOwner().getThrowingEquip() == 1070
-			|| getPlayerOwner().getThrowingEquip() == 1122
-			|| getPlayerOwner().getThrowingEquip() == 1123
-			|| getPlayerOwner().getThrowingEquip() == 1124
-			|| getPlayerOwner().getThrowingEquip() == 1125
-			|| getPlayerOwner().getThrowingEquip() == 1126
-			|| getPlayerOwner().getThrowingEquip() == 1127) { // throwing darts.
+		if (getPlayerOwner().getThrowingEquip() == ItemId.BRONZE_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.IRON_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.STEEL_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.MITHRIL_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.ADAMANTITE_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.RUNE_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.POISONED_BRONZE_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.POISONED_IRON_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.POISONED_STEEL_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.POISONED_MITHRIL_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.POISONED_ADAMANTITE_THROWING_DART.id()
+			|| getPlayerOwner().getThrowingEquip() == ItemId.POISONED_RUNE_THROWING_DART.id()) { // throwing darts.
 			radius = 4;
 		}
 		return getPlayerOwner().withinRange(mob, radius);
@@ -84,7 +83,7 @@ public class ThrowingEvent extends GameTickEvent {
 		} else {
 			getPlayerOwner().resetPath();
 
-			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > 1900;
+			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
 			if (canShoot) {
 				if (!PathValidation.checkPath(getWorld(), getPlayerOwner().getLocation(), target.getLocation())) {
 					getPlayerOwner().message("I can't get a clear shot from here");
@@ -93,7 +92,8 @@ public class ThrowingEvent extends GameTickEvent {
 					return;
 				}
 
-				getPlayerOwner().face(target);
+				// Authentic player always faced NW
+				getPlayerOwner().face(getPlayerOwner().getX() + 1, getPlayerOwner().getY() - 1);
 				getPlayerOwner().setAttribute("rangedTimeout", System.currentTimeMillis());
 
 				if (target.isPlayer()) {
@@ -105,13 +105,13 @@ public class ThrowingEvent extends GameTickEvent {
 				}
 
 				if (target.isNpc()) {
-					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getOwner(), "PlayerRangeNpc", new Object[]{getOwner(), (Npc)target})) {
+					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(), "PlayerRangeNpc", new Object[]{getOwner(), (Npc)target})) {
 						getPlayerOwner().resetRange();
 						stop();
 						return;
 					}
 				} else if(target.isPlayer()) {
-					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getOwner(), "PlayerRangePlayer", new Object[]{getOwner(), (Player)target})) {
+					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(), "PlayerRangePlayer", new Object[]{getOwner(), (Player)target})) {
 						getPlayerOwner().resetRange();
 						stop();
 						return;
@@ -127,38 +127,25 @@ public class ThrowingEvent extends GameTickEvent {
 				Item rangeType;
 				int slot;
 				if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-					slot = getPlayerOwner().getEquipment().hasEquipped(throwingID);
+					slot = getPlayerOwner().getCarriedItems().getEquipment().searchEquipmentForItem(throwingID);
 					if (slot < 0)
 						return;
-					rangeType = getPlayerOwner().getEquipment().get(slot);
+					rangeType = getPlayerOwner().getCarriedItems().getEquipment().get(slot);
 					if (rangeType == null)
 						return;
-					rangeType.setAmount(rangeType.getAmount()-1);
-					if (rangeType.getAmount() <= 0) {
-						getPlayerOwner().updateWornItems(rangeType.getDef(getWorld()).getWieldPosition(), getPlayerOwner().getSettings().getAppearance().getSprite(rangeType.getDef(getWorld()).getWieldPosition()));
-						rangeType = null;
-					}
-					getPlayerOwner().getEquipment().equip(slot, rangeType);
 
-					ActionSender.sendEquipmentStats(getPlayerOwner());
-
-
+					getPlayerOwner().getCarriedItems().getEquipment().remove(rangeType, 1);
 				} else {
-					slot = getPlayerOwner().getInventory().getLastIndexById(throwingID);
+					slot = getPlayerOwner().getCarriedItems().getInventory().getLastIndexById(throwingID);
 					if (slot < 0) {
 						return;
 					}
-					rangeType = getPlayerOwner().getInventory().get(slot);
+					rangeType = getPlayerOwner().getCarriedItems().getInventory().get(slot);
 					if (rangeType == null) { // This shouldn't happen
 						return;
 					}
-					int newAmount = rangeType.getAmount() - 1;
-					if (newAmount <= 0) {
-						getPlayerOwner().getInventory().remove(slot);
-					} else {
-						rangeType.setAmount(newAmount);
-						ActionSender.sendInventory(getPlayerOwner());
-					}
+					Item toRemove = new Item(rangeType.getCatalogId(), 1, false, rangeType.getItemId());
+					getPlayerOwner().getCarriedItems().remove(toRemove);
 				}
 
 				/*if (!getPlayerOwner().getLocation().isMembersWild()) {
@@ -170,18 +157,16 @@ public class ThrowingEvent extends GameTickEvent {
 					return;
 				}*/
 
-
-
-				int damage = Formulae.calcRangeHit(getPlayerOwner(), getPlayerOwner().getSkills().getLevel(Skills.RANGED), target.getArmourPoints(), throwingID);
+				int damage = CombatFormula.doRangedDamage(getPlayerOwner(), throwingID, target);
 
 				if (target.isNpc()) {
 					Npc npc = (Npc) target;
-					if (damage > 1 && npc.getID() == 477)
+					if (damage > 1 && npc.getID() == NpcId.KING_BLACK_DRAGON.id())
 						damage = damage / 2;
-					if (npc.getID() == 196) {
+					if (npc.getID() == NpcId.DRAGON.id()) {
 						getPlayerOwner().message("The dragon breathes fire at you");
 						int maxHit = 65;
-						if (getPlayerOwner().getInventory().wielding(420)) {
+						if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
 							maxHit = 10;
 							getPlayerOwner().message("Your shield prevents some of the damage from the flames");
 						}

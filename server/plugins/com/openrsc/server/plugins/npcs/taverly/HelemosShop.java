@@ -8,19 +8,16 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class HelemosShop implements ShopInterface,
-	TalkToNpcListener, TalkToNpcExecutiveListener {
+public class HelemosShop extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 60000, 100, 55, 3, new Item(ItemId.DRAGON_AXE.id(), 1));
 
 	@Override
-	public boolean blockTalkToNpc(final Player p, final Npc n) {
+	public boolean blockTalkNpc(final Player player, final Npc n) {
 		return n.getID() == NpcId.HELEMOS.id();
 	}
 
@@ -35,18 +32,23 @@ public class HelemosShop implements ShopInterface,
 	}
 
 	@Override
-	public void onTalkToNpc(final Player p, final Npc n) {
-		npcTalk(p, n, "Welcome to the hero's guild");
-		final int option = showMenu(p, n, false, //do not send over
+	public Shop getShop() {
+		return shop;
+	}
+
+	@Override
+	public void onTalkNpc(final Player player, final Npc n) {
+		npcsay(player, n, "Welcome to the hero's guild");
+		final int option = multi(player, n, false, //do not send over
 			"So do you sell anything here?", "So what can I do here?");
 		if (option == 0) {
-			playerTalk(p, n, "So do you sell anything here?");
-			npcTalk(p, n, "Why yes we do run an exclusive shop for our members");
-			p.setAccessingShop(shop);
-			ActionSender.showShop(p, shop);
+			say(player, n, "So do you sell anything here?");
+			npcsay(player, n, "Why yes we do run an exclusive shop for our members");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
 		} else if (option == 1) {
-			playerTalk(p, n, "so what can I do here?");
-			npcTalk(p, n, "Look around there are all sorts of things to keep our members entertained");
+			say(player, n, "so what can I do here?");
+			npcsay(player, n, "Look around there are all sorts of things to keep our members entertained");
 		}
 	}
 }

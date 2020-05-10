@@ -6,9 +6,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 
-/**
- * @author n0m
- */
 public class ElvargPrayerDrain implements OnCombatStartScript {
 
 	@Override

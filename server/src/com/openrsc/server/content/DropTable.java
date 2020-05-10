@@ -2,6 +2,7 @@ package com.openrsc.server.content;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -41,7 +42,7 @@ public class DropTable {
 		accessors.add(new Accessor(id, numerator, denominator));
 	}
 
-	public Item rollItem(boolean ringOfWealth, Player p) {
+	public Item rollItem(boolean ringOfWealth, Mob owner) {
 		DropTable rollTable = ringOfWealth ? modifyTable(this) : this;
 
 		int hit = DataConversions.random(1, rollTable.totalWeight);
@@ -52,11 +53,11 @@ public class DropTable {
 				if (drop.type == dropType.NOTHING)
 					return null;
 				else if (drop.type == dropType.ITEM) {
-					if (ringOfWealth && p != null)
-						p.playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
+					if (ringOfWealth && owner != null && owner instanceof Player)
+						((Player) owner).playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
 					return new Item(drop.id, drop.amount);
 				} else if (drop.type == dropType.TABLE) {
-					return drop.table.rollItem(ringOfWealth, p);
+					return drop.table.rollItem(ringOfWealth, owner);
 				}
 			}
 		}

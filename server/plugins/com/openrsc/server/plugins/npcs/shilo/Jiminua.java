@@ -8,15 +8,10 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.ShopInterface;
-import com.openrsc.server.plugins.listeners.action.TalkToNpcListener;
-import com.openrsc.server.plugins.listeners.executive.TalkToNpcExecutiveListener;
+import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.npcTalk;
-import static com.openrsc.server.plugins.Functions.showMenu;
-
-public class Jiminua implements ShopInterface,
-	TalkToNpcExecutiveListener, TalkToNpcListener {
+import static com.openrsc.server.plugins.Functions.*;
+public class Jiminua extends AbstractShop {
 
 	private final Shop shop = new Shop(true, 15000, 150, 50, 2,
 		new Item(ItemId.TINDERBOX.id(), 2), new Item(ItemId.EMPTY_VIAL.id(), 10), new Item(ItemId.PESTLE_AND_MORTAR.id(), 3),
@@ -29,22 +24,22 @@ public class Jiminua implements ShopInterface,
 		new Item(ItemId.MACHETTE.id(), 50));
 
 	@Override
-	public void onTalkToNpc(Player p, Npc n) {
+	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.JIMINUA.id()) {
-			npcTalk(p, n, "Welcome to the Jungle Store, Can I help you at all?");
-			int menu = showMenu(p, n,
+			npcsay(player, n, "Welcome to the Jungle Store, Can I help you at all?");
+			int menu = multi(player, n,
 				"Yes please. What are you selling?",
 				"No thanks");
 			if (menu == 0) {
-				npcTalk(p, n, "Take yourself a good look");
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				npcsay(player, n, "Take yourself a good look");
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			}
 		}
 	}
 
 	@Override
-	public boolean blockTalkToNpc(Player p, Npc n) {
+	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.JIMINUA.id();
 	}
 
@@ -58,4 +53,8 @@ public class Jiminua implements ShopInterface,
 		return true;
 	}
 
+	@Override
+	public Shop getShop() {
+		return shop;
+	}
 }

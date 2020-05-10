@@ -9,19 +9,12 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.entity.update.Damage;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-/***
- *
- * @author n0m
- *
- */
 public class CombatEvent extends GameTickEvent {
 
 	private final Mob attackerMob, defenderMob;
@@ -41,11 +34,11 @@ public class CombatEvent extends GameTickEvent {
 
 	private static void onDeath(Mob killed, Mob killer) {
 		if (killer.isPlayer() && killed.isNpc()) {
-			if (killed.getWorld().getServer().getPluginHandler().handlePlugin(killer, "PlayerKilledNpc", new Object[]{((Player) killer), ((Npc) killed)})) {
+			if (killed.getWorld().getServer().getPluginHandler().handlePlugin((Player)killer, "PlayerKilledNpc", new Object[]{((Player) killer), ((Npc) killed)})) {
 				return;
 			}
 		} else if(killer.isPlayer() && killed.isPlayer()) {
-			if (killed.getWorld().getServer().getPluginHandler().handlePlugin(killer, "PlayerKilledPlayer", new Object[]{((Player) killer), ((Player) killed)})) {
+			if (killed.getWorld().getServer().getPluginHandler().handlePlugin((Player)killer, "PlayerKilledPlayer", new Object[]{((Player) killer), ((Player) killed)})) {
 				return;
 			}
 		}
@@ -54,27 +47,30 @@ public class CombatEvent extends GameTickEvent {
 		killer.setLastCombatState(CombatState.LOST);
 
 		if (killed.isPlayer() && killer.isPlayer()) {
+			int skillsDist[] = {0, 0, 0, 0};
+
 			Player playerKiller = (Player) killer;
 			Player playerKilled = (Player) killed;
 
-			int exp = Formulae.combatExperience(playerKilled, 0);
+			int exp = Formulae.combatExperience(playerKilled);
 			switch (playerKiller.getCombatStyle()) {
-				case 0:
+				case Skills.CONTROLLED_MODE:
 					for (int x = 0; x < 3; x++) {
-						playerKiller.incExp(x, exp, true);
+						skillsDist[x] = 1;
 					}
 					break;
-				case 1:
-					playerKiller.incExp(Skills.STRENGTH, exp * 3, true);
+				case Skills.AGGRESSIVE_MODE:
+					skillsDist[Skills.STRENGTH] = 3;
 					break;
-				case 2:
-					playerKiller.incExp(Skills.ATTACK, exp * 3, true);
+				case Skills.ACCURATE_MODE:
+					skillsDist[Skills.ATTACK] = 3;
 					break;
-				case 3:
-					playerKiller.incExp(Skills.DEFENSE, exp * 3, true);
+				case Skills.DEFENSIVE_MODE:
+					skillsDist[Skills.DEFENSE] = 3;
 					break;
 			}
-			playerKiller.incExp(Skills.HITS, exp, true);
+			skillsDist[Skills.HITS] = 1;
+			playerKiller.incExp(skillsDist, exp, true);
 		}
 		killer.setKillType(0);
 		killed.killedBy(killer);
@@ -103,10 +99,10 @@ public class CombatEvent extends GameTickEvent {
 			resetCombat();
 		} else {
 			//if(hitter.isNpc() && target.isPlayer() || target.isNpc() && hitter.isPlayer()) {
-			int damage = MeleeFormula.getDamage(hitter, target);
+			int damage = CombatFormula.doMeleeDamage(hitter, target);
 			inflictDamage(hitter, target, damage);
 			if (target.isPlayer()) {
-				if (Functions.isWielding((Player) target, ItemId.RING_OF_RECOIL.id())) {
+				if (((Player)target).getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_RECOIL.id())) {
 					int reflectedDamage = damage/10 + ((damage > 0) ? 1 : 0);
 					if (reflectedDamage == 0)
 						return;
@@ -116,7 +112,7 @@ public class CombatEvent extends GameTickEvent {
 						if (getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
 							reflectedDamage = getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
 							((Player) target).getCache().remove("ringofrecoil");
-							((Player) target).getInventory().shatter(ItemId.RING_OF_RECOIL.id());
+							((Player) target).getCarriedItems().getInventory().shatter(ItemId.RING_OF_RECOIL.id());
 						} else {
 							((Player) target).getCache().set("ringofrecoil", ringCheck + reflectedDamage);
 						}
@@ -141,12 +137,15 @@ public class CombatEvent extends GameTickEvent {
 			}
 		}
 
+		int lastHits = target.getLevel(Skills.HITPOINTS);
 		target.getSkills().subtractLevel(Skills.HITS, damage, false);
 		target.getUpdateFlags().setDamage(new Damage(target, damage));
+
 		if (target.isNpc() && hitter.isPlayer()) {
 			Npc n = (Npc) target;
-			Player p = ((Player) hitter);
-			n.addCombatDamage(p, damage);
+			Player player = ((Player) hitter);
+			damage = Math.min(damage, lastHits);
+			n.addCombatDamage(player, damage);
 		}
 
 		String combatSound = null;
@@ -205,10 +204,9 @@ public class CombatEvent extends GameTickEvent {
 				int delayedAggro = 0;
 				if (defenderMob.isPlayer()) {
 					Player player = (Player) defenderMob;
-					player.setStatus(Action.IDLE);
 					player.resetAll();
-				} else if(!((Npc) defenderMob).isPkBot()){
-					delayedAggro = 17000; // 17 + 3 second aggro timer for npds running
+				} else {
+					delayedAggro = 17000; // 17 + 3 second aggro timer for npcs running
 				}
 
 				defenderMob.setBusy(false);
@@ -217,12 +215,13 @@ public class CombatEvent extends GameTickEvent {
 				defenderMob.setHitsMade(0);
 				defenderMob.setSprite(4);
 				defenderMob.setCombatTimer(delayedAggro);
+				defenderMob.face(defenderMob.getX(), defenderMob.getY() - 1);
 				if(defenderMob.isPlayer()){
 					Player p1;
 					p1 = ((Player) defenderMob);
 					if (p1.getParty() != null){
-						for (Player p : getWorld().getPlayers()) {
-							if(p1.getParty() == p.getParty()){
+						for (Player player : getWorld().getPlayers()) {
+							if(p1.getParty() == player.getParty()){
 								//ActionSender.sendParty(p);
 							}
 						}
@@ -233,11 +232,11 @@ public class CombatEvent extends GameTickEvent {
 				int delayedAggro = 0;
 				if (attackerMob.isPlayer()) {
 					Player player = (Player) attackerMob;
-					player.setStatus(Action.IDLE);
 					player.resetAll();
 				} else {
-					if (!((Npc) attackerMob).isPkBot() && attackerMob.getCombatState() == CombatState.RUNNING)
+					if (attackerMob.getCombatState() == CombatState.RUNNING) {
 						delayedAggro = 17000; // 17 + 3 second timer for npcs running
+					}
 				}
 
 				attackerMob.setBusy(false);
@@ -246,12 +245,13 @@ public class CombatEvent extends GameTickEvent {
 				attackerMob.setHitsMade(0);
 				attackerMob.setSprite(4);
 				attackerMob.setCombatTimer(delayedAggro);
+				attackerMob.face(attackerMob.getX(), attackerMob.getY() - 1);
 				if(attackerMob.isPlayer()){
 					Player p2;
 					p2 = ((Player) attackerMob);
 					if (p2.getParty() != null){
-						for (Player p : getWorld().getPlayers()) {
-							if(p2.getParty() == p.getParty()){
+						for (Player player : getWorld().getPlayers()) {
+							if(p2.getParty() == player.getParty()){
 								//ActionSender.sendParty(p);
 							}
 						}

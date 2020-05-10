@@ -4,10 +4,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
-
-/**
- * @author n0m
- */
 public class PacketBuilder {
 
 	/**
@@ -278,6 +274,7 @@ public class PacketBuilder {
 		payload.writeBytes(packet);
 
 	}
+
 	/*public void writeRSCString(String string) {
 		string = DataConversions.formatToRSCString(string);
 		byte[] data = DataConversions.stringToBytes(string);

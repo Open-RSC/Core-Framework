@@ -1,13 +1,11 @@
 package com.openrsc.server.model.entity.player;
 
+import com.openrsc.server.database.impl.mysql.queries.logging.DeathLog;
 import com.openrsc.server.model.container.ContainerListener;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.container.ItemContainer;
 import com.openrsc.server.model.entity.GroundItem;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.plugins.Functions;
-import com.openrsc.server.database.impl.mysql.queries.logging.DeathLog;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -134,7 +132,6 @@ public class Duel implements ContainerListener {
 
 		if (isDuelActive()) {
 			ActionSender.sendDuelWindowClose(player);
-			player.setStatus(Action.IDLE);
 		}
 
 		setDuelActive(false);
@@ -161,23 +158,22 @@ public class Duel implements ContainerListener {
 		Player duelOpponent = getDuelRecipient();
 		synchronized(getDuelOffer().getItems()) {
 			for (Item item : getDuelOffer().getItems()) {
-				Item affectedItem = player.getInventory().get(item);
+				Item affectedItem = player.getCarriedItems().getInventory().get(item);
 				if (affectedItem == null) {
-					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && item.getAmount() == 1 && Functions.isWielding(player, item.getID())) {
+					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && item.getAmount() == 1 && player.getCarriedItems().getEquipment().hasEquipped(item.getCatalogId())) {
 						player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
 							player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),
 							item.getDef(player.getWorld()).getWearableId(), false);
-						player.getEquipment().equip(item.getDef(player.getWorld()).getWieldPosition(), null);
+						player.getCarriedItems().getEquipment().remove(item, item.getAmount());
 						log.addDroppedItem(item);
-						player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
+						player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
 					}
-					LOGGER.info("Missing staked item [" + item.getID() + ", " + item.getAmount()
+					LOGGER.info("Missing staked item [" + item.getCatalogId() + ", " + item.getAmount()
 						+ "] from = " + player.getUsername() + "; to = " + duelRecipient.getUsername() + ";");
-					continue;
 				} else {
-					player.getInventory().remove(item);
+					player.getCarriedItems().remove(new Item(item.getCatalogId(), item.getAmount(), item.getNoted(), affectedItem.getItemId()));
 					log.addDroppedItem(item);
-					player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getID(), player.getX(), player.getY(), item.getAmount(), duelOpponent));
+					player.getWorld().registerItem(new GroundItem(duelOpponent.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), duelOpponent, item.getNoted()));
 				}
 			}
 		}

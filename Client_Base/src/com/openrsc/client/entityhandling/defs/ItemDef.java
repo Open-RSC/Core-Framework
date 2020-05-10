@@ -3,7 +3,7 @@ package com.openrsc.client.entityhandling.defs;
 public class ItemDef extends EntityDef {
 	public String[] command;
 	public int basePrice;
-	public int authenticSpriteID;
+	public int spriteID;
 	public String spriteLocation;
 	public boolean stackable;
 	public boolean wieldable;
@@ -12,22 +12,26 @@ public class ItemDef extends EntityDef {
 	private int blueMask;
 	public boolean quest;
 	public boolean membersItem;
+	public boolean noteable;
+	public boolean hasNoteType;
 
+	@Deprecated
 	private int isNotedFormOf = -1;
-	private int notedFormID = -1;
+	@Deprecated
+	public int notedFormID = -1;
 
-	public ItemDef(String name, String description, int authenticSpriteID, String spriteLocation,int id) {
+	public ItemDef(String name, String description, int spriteID, String spriteLocation,int id) {
 		super(name,description,id);
-		this.authenticSpriteID = authenticSpriteID;
+		this.spriteID = spriteID;
 		this.spriteLocation = spriteLocation;
 	}
 
-	public ItemDef(String name, String description, String command, int basePrice, int authenticSpriteID, boolean stackable,
+	/*public ItemDef(String name, String description, String command, int basePrice, int spriteID, boolean stackable,
 				   boolean wieldable, int wearableID, int pictureMask, boolean membersItem, boolean quest, int id) {
 		super(name, description, id);
 		this.command = command.split(",");
 		this.basePrice = basePrice;
-		this.authenticSpriteID = authenticSpriteID;
+		this.spriteID = spriteID;
 		this.stackable = stackable;
 		this.wieldable = wieldable;
 		this.wearableID = wearableID;
@@ -38,15 +42,37 @@ public class ItemDef extends EntityDef {
 		this.id = id;
 		if (this.command.length == 1 && this.command[0] == "")
 			this.command = null;
+
+		this.notedItem = this.description.equalsIgnoreCase("Swap this note at any bank for the equivalent item.");
+		this.hasNoteType = calcHasNoteType();
+	}*/
+
+	public ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
+				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, boolean membersItem,
+				   boolean quest, boolean noteable, int id) {
+		this(name, description, command, basePrice, spriteID, spriteLocation,
+			stackable, wieldable, wearableID, pictureMask, 0, membersItem,
+			quest, noteable, id);
 	}
 
-	public ItemDef(String name, String description, String command, int basePrice, int authenticSpriteID, String spriteLocation,
+	public ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
+				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, int blueMask, boolean membersItem,
+				   boolean quest, boolean noteable, int id) {
+		this(name, description, command, basePrice, spriteID, spriteLocation,
+			stackable, wieldable, wearableID, pictureMask, blueMask, membersItem,
+			quest, noteable, -1, -1, id);
+	}
+
+	/*ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
 				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, boolean membersItem,
 				   boolean quest, int notedForm, int notedFormOf, int id) {
+		this(name, description, command, basePrice, spriteID, spriteLocation,
+		stackable, wieldable, wearableID, pictureMask, 0, membersItem,
+		quest, notedForm, notedFormOf, id);
 		super(name, description, id);
 		this.command = command.split(",");
 		this.basePrice = basePrice;
-		this.authenticSpriteID = authenticSpriteID;
+		this.spriteID = spriteID;
 		this.stackable = stackable;
 		this.wieldable = wieldable;
 		this.wearableID = wearableID;
@@ -61,15 +87,15 @@ public class ItemDef extends EntityDef {
 
 		if (this.command.length == 1 && this.command[0] == "")
 			this.command = null;
-	}
+	}*/
 
-	public ItemDef(String name, String description, String command, int basePrice, int authenticSpriteID, String spriteLocation,
+	ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
 				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, int blueMask, boolean membersItem,
-				   boolean quest, int notedForm, int notedFormOf, int id) {
+				   boolean quest, boolean noteable, int notedForm, int notedFormOf, int id) {
 		super(name, description, id);
 		this.command = command.split(",");
 		this.basePrice = basePrice;
-		this.authenticSpriteID = authenticSpriteID;
+		this.spriteID = spriteID;
 		this.stackable = stackable;
 		this.wieldable = wieldable;
 		this.wearableID = wearableID;
@@ -77,6 +103,7 @@ public class ItemDef extends EntityDef {
 		this.blueMask = blueMask;
 		this.membersItem = membersItem;
 		this.quest = quest;
+		this.noteable = noteable;
 		this.id = id;
 		this.notedFormID = notedForm;
 		this.isNotedFormOf = notedFormOf;
@@ -84,9 +111,28 @@ public class ItemDef extends EntityDef {
 
 		if (this.command.length == 1 && this.command[0] == "")
 			this.command = null;
+
+		this.hasNoteType = calcHasNoteType();
 	}
 
-	public ItemDef(int i, ItemDef item) {
+	public static ItemDef asNote(ItemDef item) {
+		if (item.hasNoteType) {
+			return new ItemDef(item.name, "Swap this note at any bank for the equivalent item.", "", item.basePrice, item.spriteID, item.spriteLocation, /*438, "items:438",*/ /*item.spriteID, item.spriteLocation,*/
+				true, false, 0, item.getPictureMask(), item.getBlueMask(), item.membersItem,
+				item.quest, false, -1, item.id, item.id);
+		} else {
+			return item;
+		}
+		/*if (item.hasNoteType) {
+			item.description = "Swap this note at any bank for the equivalent item.";
+			item.stackable = true;
+			item.wieldable = false;
+			item.notedItem = true;
+		}
+		return item;*/
+	}
+
+	/*public ItemDef(int i, ItemDef item) {
 		super(item.name, "Swap this note at any bank for the equivalent item.", i);
 		this.command = item.command;
 		this.basePrice = item.basePrice;
@@ -101,14 +147,14 @@ public class ItemDef extends EntityDef {
 		this.id = i;
 		if (this.command.length == 1 && this.command[0] == "")
 			this.command = null;
-	}
+	}*/
 
 	public String[] getCommand() {
 		return command;
 	}
 
-	public int getAuthenticSpriteID() {
-		return authenticSpriteID;
+	public int getSpriteID() {
+		return spriteID;
 	}
 
 	public String getSpriteLocation() { return this.spriteLocation; }
@@ -129,23 +175,17 @@ public class ItemDef extends EntityDef {
 
 	public int getBlueMask() { return blueMask; }
 
-	public int getNoteItem() {
-		return -1;
+	public boolean calcHasNoteType() {
+		return !stackable && (!quest || noteable);
 	}
 
+	@Deprecated
 	public int getNotedFormOf() {
-		return isNotedFormOf;
+		return this.isNotedFormOf;
 	}
 
-	private void setNotedFormOf(int notedFormOf) {
-		this.isNotedFormOf = notedFormOf;
-	}
-
+	@Deprecated
 	public int getNotedForm() {
-		return notedFormID;
-	}
-
-	public void setNotedForm(int id) {
-		this.notedFormID = id;
+		return this.notedFormID;
 	}
 }

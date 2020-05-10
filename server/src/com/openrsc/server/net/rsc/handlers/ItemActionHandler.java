@@ -4,36 +4,46 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ItemActionHandler implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
-		int idx = (int) p.readShort();
-		int amount = p.readInt();
+	public void handlePacket(Packet packet, Player player) throws Exception {
+		int idx = (int) packet.readShort();
+		int amount = packet.readInt();
 		int commandIndex;
 
-		if (player == null || player.getInventory() == null) {
+		if (player == null || player.getCarriedItems().getInventory() == null) {
 			return;
 		}
 
-		if (idx < -1 || idx >= player.getInventory().size()) {
-			player.setSuspiciousPlayer(true, "item idx < -1 or idx >= inv size");
+		if (idx < -1) {
+			player.setSuspiciousPlayer(true, "item idx < -1");
 			return;
+		}
+
+		if (idx >= player.getCarriedItems().getInventory().size()) {
+			player.setSuspiciousPlayer(true, "idx >= inv size");
 		}
 		Item tempitem = null;
 
 		//User wants to use the item from equipment tab
-		if (idx == -1)
-		{
-			idx = (int) p.readShort();
-			if (player.getEquipment().hasEquipped(idx) != -1)
-				tempitem = new Item(idx);
-			commandIndex = p.readByte();
-
+		if (idx == -1) {
+			idx = (int) packet.readShort();
+			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(idx);
+			if (slot != -1) {
+				tempitem = player.getCarriedItems().getEquipment().get(slot);
+			}
+			commandIndex = packet.readByte();
 		} else {
-			tempitem = player.getInventory().get(idx);
-			commandIndex = p.readByte();
+			tempitem = player.getCarriedItems().getInventory().get(idx);
+			commandIndex = packet.readByte();
 		}
 
 		final Item item = tempitem;
@@ -43,17 +53,16 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		item.setAmount(amount);
+		item.setAmount(player.getWorld().getServer().getDatabase(), amount);
 
 		if (item.getDef(player.getWorld()).isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			player.message("You need to be a member to use this object");
 			return;
 		}
 
-		if (player.isBusy()) {
-			if (player.inCombat()) {
-				player.message("You can't do that whilst you are fighting");
-			}
+		if (player.isBusy()) return;
+		if (player.inCombat()) {
+			player.message("You can't do that whilst you are fighting");
 			return;
 		}
 
@@ -61,6 +70,6 @@ public class ItemActionHandler implements PacketHandler {
 
 		final String command = item.getDef(player.getWorld()).getCommand()[commandIndex];
 
-		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "InvAction", new Object[]{item, player, command});
+		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "OpInv", new Object[]{player, idx, item, command});
 	}
 }

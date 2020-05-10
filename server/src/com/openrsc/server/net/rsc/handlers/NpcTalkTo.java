@@ -4,7 +4,6 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.Packet;
@@ -12,29 +11,31 @@ import com.openrsc.server.net.rsc.PacketHandler;
 
 public final class NpcTalkTo implements PacketHandler {
 
-	public void handlePacket(Packet p, Player player) throws Exception {
+	public void handlePacket(Packet packet, Player player) throws Exception {
 
 		if (player.isBusy()) {
-			if (player.inCombat()) {
-				player.message("You can't do that whilst you are fighting");
-			}
 			player.resetPath();
 			return;
 		}
+
+		if (player.inCombat()) {
+			player.message("You can't do that whilst you are fighting");
+			player.resetPath();
+			return;
+		}
+
 		player.resetAll();
-		final Npc n = player.getWorld().getNpc(p.readShort());
+		final Npc n = player.getWorld().getNpc(packet.readShort());
 
 		if (n == null) {
 			return;
 		}
 		player.setFollowing(n, 0);
-		player.setStatus(Action.TALKING_MOB);
 		player.setWalkToAction(new WalkToMobAction(player, n, 1) {
 			public void executeInternal() {
 				getPlayer().resetFollowing();
 				getPlayer().resetPath();
-				if (getPlayer().isBusy() || getPlayer().isRanging() || !getPlayer().canReach(n)
-					|| getPlayer().getStatus() != Action.TALKING_MOB) {
+				if (getPlayer().isBusy() || getPlayer().isRanging() || !getPlayer().canReach(n)) {
 					return;
 				}
 				getPlayer().resetAll();
@@ -54,19 +55,15 @@ public final class NpcTalkTo implements PacketHandler {
 								continue;
 							Point destination = canWalk(getPlayer().getWorld(), getPlayer().getX() - x, getPlayer().getY() - y);
 							if (destination != null && destination.inBounds(n.getLoc().minX, n.getLoc().minY, n.getLoc().maxY, n.getLoc().maxY)) {
-								n.teleport(destination.getX(), destination.getY());
-								break;
+								n.walk(destination.getX(), destination.getY());
+								n.setTalkToNpcEvent(getPlayer());
+								return;
 							}
 						}
 					}
 				}
 
-				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkToNpc", new Object[]{getPlayer(), n}, this)) {
-					getPlayer().face(n);
-					n.face(getPlayer());
-					getPlayer().setInteractingNpc(n);
-					return;
-				}
+				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkNpc", new Object[]{getPlayer(), n});
 			}
 
 			private Point canWalk(World world, int x, int y) {
@@ -119,14 +116,14 @@ public final class NpcTalkTo implements PacketHandler {
 
 			private boolean checkBlocking(World world, int x, int y, int bit) {
 				TileValue t = world.getTile(x, y);
-				Point p = new Point(x, y);
+				Point point = new Point(x, y);
 				for (Npc n : n.getViewArea().getNpcsInView()) {
-					if (n.getLocation().equals(p)) {
+					if (n.getLocation().equals(point)) {
 						return true;
 					}
 				}
 				for (Player areaPlayer : n.getViewArea().getPlayersInView()) {
-					if (areaPlayer.getLocation().equals(p)) {
+					if (areaPlayer.getLocation().equals(point)) {
 						return true;
 					}
 				}
