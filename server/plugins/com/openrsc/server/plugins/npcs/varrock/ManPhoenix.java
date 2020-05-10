@@ -6,10 +6,9 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -126,65 +125,64 @@ public class ManPhoenix implements TalkNpcTrigger {
 			|| player.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0 || player.getQuestStage(Quests.HEROS_QUEST) == -1) {
 			memberOfPhoenixConversation(player, n);
 		} else if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) <= 3) {
-			defaultConverstation(player, n, directTalk);
+			defaultConversation(player, n, directTalk);
 		}
 	}
 
 	private static void memberOfPhoenixConversation(final Player player, final Npc n) {
-		Menu defaultMenu = new Menu();
 		if (isPhoenixGang(player)) {
 			npcsay(player, n, "Greetings fellow gang member");
-			defaultMenu.addOption(new Option(
-				"I've heard you've got some cool treasures in this place") {
-				public void action() {
-					npcsay(player, n,
-						"Oh yeah, we've all stolen some stuff in our time",
-						"The candlesticks down here",
-						"Were quite a challenge to get out the palace");
-					say(player, n, "And the shield of Arrav",
-						"I heard you got that");
-					npcsay(player, n, "hmm", "That was a while ago",
-						"We don't even have all the shield anymore",
-						"About 5 years ago",
-						"We had a massive fight in our gang",
-						"The shield got broken in half during the fight",
-						"Shortly after the fight", "Some gang members decided",
-						"They didn't want to be part of our gang anymore",
-						"So they split off to form their own gang",
-						"The black arm gang", "On their way out",
-						"They looted what treasures they could from us",
-						"Which included one of the halves of the shield",
-						"We've been rivals with the black arms ever since");
-				}
-			});
-			defaultMenu.addOption(new Option(
-				"Any suggestions for where I can go thieving?") {
-				public void action() {
-					npcsay(player, n, "You can always try the market",
-						"Lots of opportunity there");
-				}
-			});
-			defaultMenu.addOption(new Option("Where's the Blackarm gang hideout?") {
-				public void action() {
-					say(player, n, "I wanna go sabotage em");
-					npcsay(player, n, "That would be a little tricky",
-						"Their security is pretty good",
-						"Not as good as ours obviously", "But still good",
-						"If you really want to go there",
-						"It is in the alleyway",
-						"To the west as you come in the south gate",
-						"One of our operatives is often near the alley",
-						"A red haired tramp",
-						"He may be able to give you some ideas");
-					say(player, n, "Thanks for the help");
-				}
-			});
-			defaultMenu.showMenu(player);
+
+			ArrayList<String> options = new ArrayList<>();
+			options.add("I've heard you've got some cool treasures in this place");
+			options.add("Any suggestions for where I can go thieving?");
+			options.add("Where's the Blackarm gang hideout?");
+			String[] finalOptions = new String[options.size()];
+			int option = multi(player, n, options.toArray(finalOptions));
+
+			if (option == 0) {
+				npcsay(player, n,
+					"Oh yeah, we've all stolen some stuff in our time",
+					"The candlesticks down here",
+					"Were quite a challenge to get out the palace");
+				say(player, n, "And the shield of Arrav",
+					"I heard you got that");
+				npcsay(player, n, "hmm", "That was a while ago",
+					"We don't even have all the shield anymore",
+					"About 5 years ago",
+					"We had a massive fight in our gang",
+					"The shield got broken in half during the fight",
+					"Shortly after the fight", "Some gang members decided",
+					"They didn't want to be part of our gang anymore",
+					"So they split off to form their own gang",
+					"The black arm gang", "On their way out",
+					"They looted what treasures they could from us",
+					"Which included one of the halves of the shield",
+					"We've been rivals with the black arms ever since");
+			}
+
+			else if (option == 1) {
+				npcsay(player, n, "You can always try the market",
+					"Lots of opportunity there");
+			}
+
+			else if (option == 2) {
+				say(player, n, "I wanna go sabotage em");
+				npcsay(player, n, "That would be a little tricky",
+					"Their security is pretty good",
+					"Not as good as ours obviously", "But still good",
+					"If you really want to go there",
+					"It is in the alleyway",
+					"To the west as you come in the south gate",
+					"One of our operatives is often near the alley",
+					"A red haired tramp",
+					"He may be able to give you some ideas");
+				say(player, n, "Thanks for the help");
+			}
 		}
 	}
 
-	private static void defaultConverstation(final Player player, final Npc n, final boolean directTalk) {
-		Menu defaultMenu = new Menu();
+	private static void defaultConversation(final Player player, final Npc n, final boolean directTalk) {
 		if (directTalk) {
 			say(player, n, "What's through that door?");
 		}
@@ -192,71 +190,85 @@ public class ManPhoenix implements TalkNpcTrigger {
 			n,
 			"Heh you can't go in there",
 			"Only authorised personnel of the VTAM corporation are allowed beyond this point");
+
+		ArrayList<String> options = new ArrayList<>();
 		if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 3) {
-			defaultMenu.addOption(new Option("I know who you are") {
-				public void action() {
-					npcsay(player, n, "I see", "Carry on");
-					say(player, n,
-						"This is the headquarters of the Phoenix Gang",
-						"The most powerful crime gang this city has seen");
-					npcsay(player, n, "And supposing we were this crime gang",
-						"What would you want with us?");
-					new Menu().addOptions(
-						new Option("I'd like to offer you my services") {
-							public void action() {
-								npcsay(player,
-									n,
-									"You mean you'd like to join the phoenix gang?",
-									"Well the phoenix gang doesn't let people join just like that",
-									"You can't be too careful, you understand",
-									"Generally someone has to prove their loyalty before they can join");
-								say(player, n,
-									"How would I go about this?");
-								npcsay(player,
-									n,
-									"Let me think",
-									"I have an idea",
-									"A rival gang of ours",
-									"Called the black arm gang",
-									"Is meant to be meeting their contact from Port Sarim today",
-									"In the blue moon inn",
-									"By the south entrance to this city",
-									"The name of the contact is Jonny the beard",
-									"Kill him and bring back his intelligence report");
-								if (player.getCache().hasKey("arrav_mission") && ((player.getCache().getInt("arrav_mission") & 2) != PHOENIX_MISSION)) {
-									player.getCache().set("arrav_mission", ANY_MISSION);
-								} else if (!player.getCache().hasKey("arrav_mission")) {
-									player.getCache().set("arrav_mission", PHOENIX_MISSION);
-								}
-								say(player, n, "Ok, I'll get on it");
-							}
-						},
-						new Option(
-							"I want nothing. I was just making sure you were them") {
-							@Override
-							public void action() {
-								npcsay(player, n, "Well stop wasting my time");
-							}
-
-						}).showMenu(player);
-
-				}
-			});
+			options.add("I know who you are");
 		}
-		defaultMenu.addOption(new Option(
-			"How do I get a job with the VTAM corporation?") {
-			public void action() {
+		options.add("How do I get a job with the VTAM corporation?");
+		options.add("Why not?");
+		String[] finalOptions = new String[options.size()];
+		int option = multi(player, n, options.toArray(finalOptions));
+
+		if (option == 2) {
+			npcsay(player, n, "Sorry that is classified information");
+		}
+
+		else if (option == 1) {
+			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 3) {
 				npcsay(player, n, "Get a copy of the Varrock Herald",
 					"If we have any positions right now",
 					"They'll be advertised in there");
 			}
-		});
-		defaultMenu.addOption(new Option("Why not?") {
-			public void action() {
+
+			else {
 				npcsay(player, n, "Sorry that is classified information");
 			}
-		});
-		defaultMenu.showMenu(player);
+		}
+
+		else if (option == 0) {
+			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 3) {
+				npcsay(player, n, "I see", "Carry on");
+				say(player, n,
+					"This is the headquarters of the Phoenix Gang",
+					"The most powerful crime gang this city has seen");
+				npcsay(player, n, "And supposing we were this crime gang",
+					"What would you want with us?");
+				option = multi(player, n,
+					"I'd like to offer you my services",
+					"I want nothing. I was just making sure you were them"
+				);
+				if (option == 0) {
+					npcsay(player,
+						n,
+						"You mean you'd like to join the phoenix gang?",
+						"Well the phoenix gang doesn't let people join just like that",
+						"You can't be too careful, you understand",
+						"Generally someone has to prove their loyalty before they can join");
+					say(player, n,
+						"How would I go about this?");
+					npcsay(player,
+						n,
+						"Let me think",
+						"I have an idea",
+						"A rival gang of ours",
+						"Called the black arm gang",
+						"Is meant to be meeting their contact from Port Sarim today",
+						"In the blue moon inn",
+						"By the south entrance to this city",
+						"The name of the contact is Jonny the beard",
+						"Kill him and bring back his intelligence report");
+					if (player.getCache().hasKey("arrav_mission") && ((player.getCache().getInt("arrav_mission") & 2) != PHOENIX_MISSION)) {
+						player.getCache().set("arrav_mission", ANY_MISSION);
+					}
+
+					else if (!player.getCache().hasKey("arrav_mission")) {
+						player.getCache().set("arrav_mission", PHOENIX_MISSION);
+					}
+					say(player, n, "Ok, I'll get on it");
+				}
+
+				else if (option == 1) {
+					npcsay(player, n, "Well stop wasting my time");
+				}
+			}
+
+			else {
+				npcsay(player, n, "Get a copy of the Varrock Herald",
+					"If we have any positions right now",
+					"They'll be advertised in there");
+			}
+		}
 	}
 
 	@Override
