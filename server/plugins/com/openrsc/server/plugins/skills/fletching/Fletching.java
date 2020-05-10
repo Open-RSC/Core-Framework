@@ -11,6 +11,7 @@ import com.openrsc.server.external.ItemLogCutDef;
 import com.openrsc.server.model.container.CarriedItems;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -206,6 +207,8 @@ public class Fletching implements UseInvTrigger {
 			ci.getInventory().add(new Item(resultID));
 			player.incExp(Skills.FLETCHING, experience, true);
 		}
+
+		ActionSender.sendInventory(player);
 
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
