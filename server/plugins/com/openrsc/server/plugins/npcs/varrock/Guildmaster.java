@@ -6,8 +6,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.plugins.Functions.multi;
-import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Guildmaster implements TalkNpcTrigger {
 
@@ -18,8 +17,10 @@ public class Guildmaster implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
+
 		int option = multi(player, n, "What is this place?",
 			"Do you know where I could get a rune plate mail body?");
+
 		if (option == 0) {
 			npcsay(player,
 				n,
@@ -29,7 +30,9 @@ public class Guildmaster implements TalkNpcTrigger {
 				"As the number of quests in the world rises",
 				"So will the requirements to get in here",
 				"But so will the rewards");
+
 		} else if (option == 1) {
+
 			npcsay(player,
 				n,
 				"I have a friend called Oziach who lives by the cliffs",
