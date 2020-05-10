@@ -95,8 +95,11 @@ public final class CustomBankInterface extends BankInterface {
 				default:
 					break;
 			}
-			hotkey = -1;
 		}
+
+		if (hotkey == 27) bankClose();
+
+		hotkey = -1;
 
 
 		mc.getSurface().drawBox(x, y, width, 21, 192);
@@ -1174,8 +1177,12 @@ public final class CustomBankInterface extends BankInterface {
 	}
 
 
-	public boolean keyDown(int key) {
+	public void keyDown(int key) {
 		if (mc.inputX_Action == InputXAction.ACT_0) {
+			if (key == 27 && !bank.focusOn(-1)) {
+				resetVar();
+				return;
+			}
 			if (bank.focusOn(bankSearch)) {
 				if (mc.bankPage != 0)
 					mc.bankPage = 0;
@@ -1185,15 +1192,13 @@ public final class CustomBankInterface extends BankInterface {
 			}
 		}
 
-		return true;
+		return;
 	}
 
 	private void resetVar() {
-		//bank.resetList(this.bankScroll);
 		bank.clearList(this.bankSearch);
 		bank.setText(this.bankSearch, "");
 		bank.setFocus(-1);
-		//mc.bankPage = 0;
 	}
 
 	public enum BankTabShow {
