@@ -6,10 +6,8 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -68,24 +66,20 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 				return;
 			}
 		}
-		Menu defaultMenu = new Menu();
-		defaultMenu.addOption(new Option("Have you any interesting news?") {
-			@Override
-			public void action() {
-				npcsay(player, n, "No, I'm only interested in old stuff");
-			}
-		});
-		defaultMenu.addOption(new Option(
-			"Do you know where I could find any treasure?") {
-			@Override
-			public void action() {
-				npcsay(player, n, "This museum is full of treasures");
-				say(player, n, "No, I meant treasures for me");
-				npcsay(player, n, "Any treasures this museum knows about",
-					"It aquires");
-			}
-		});
-		defaultMenu.showMenu(player);
+
+		int option = multi(player, n, "Have you any interesting news?",
+			"Do you know where I could find any treasure?");
+
+		if (option == 0) {
+			npcsay(player, n, "No, I'm only interested in old stuff");
+		}
+
+		else if (option == 1) {
+			npcsay(player, n, "This museum is full of treasures");
+			say(player, n, "No, I meant treasures for me");
+			npcsay(player, n, "Any treasures this museum knows about",
+				"It aquires");
+		}
 	}
 
 	@Override
