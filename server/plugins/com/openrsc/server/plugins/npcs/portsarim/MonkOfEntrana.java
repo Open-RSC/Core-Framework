@@ -9,8 +9,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
 
 import java.util.Arrays;
 
@@ -32,7 +30,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 		return Arrays.stream(blockedItems).parallel().anyMatch(itemName::contains);
 	}
 
-	private boolean CAN_GO(Player player) {
+	private boolean CANT_GO(Player player) {
 		synchronized(player.getCarriedItems().getInventory().getItems()) {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
 				String name = item.getDef(player.getWorld()).getName().toLowerCase();
@@ -65,47 +63,31 @@ public final class MonkOfEntrana implements OpLocTrigger,
 		if (n.getID() == NpcId.MONK_OF_ENTRANA_PORTSARIM.id()) {
 			npcsay(player, n, "Are you looking to take passage to our holy island?",
 					"If so your weapons and armour must be left behind");
-				final Menu defaultMenu = new Menu();
-				defaultMenu.addOption(new Option("No I don't wish to go") {
-					@Override
-					public void action() {
-					}
-				});
-				defaultMenu.addOption(new Option("Yes, Okay I'm ready to go") {
-					@Override
-					public void action() {
-						mes(player, "The monk quickly searches you");
-						if (CAN_GO(player)) {
-							npcsay(player, n, "Sorry we cannow allow you on to our island",
-								"Make sure you are not carrying weapons or armour please");
-						} else {
-							mes(player, "You board the ship");
-							player.teleport(418, 570, false);
-							delay(2200);
-							player.message("The ship arrives at Entrana");
-						}
-					}
-				});
-				defaultMenu.showMenu(player);
+			if (multi(player, n, "No I don't wish to go",
+				"Yes, Okay I'm ready to go") == 1) {
+
+				mes(player, "The monk quickly searches you");
+				if (CANT_GO(player)) {
+					npcsay(player, n, "Sorry we cannow allow you on to our island",
+						"Make sure you are not carrying weapons or armour please");
+				} else {
+					mes(player, "You board the ship");
+					player.teleport(418, 570, false);
+					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+					mes(player, "The ship arrives at Entrana");
+				}
+			}
 		}
 		else if (n.getID() == NpcId.MONK_OF_ENTRANA_UNRELEASED.id()) {
 			npcsay(player, n, "Are you looking to take passage back to port sarim?");
-			final Menu defaultMenu = new Menu();
-			defaultMenu.addOption(new Option("No I don't wish to go") {
-				@Override
-				public void action() {
-				}
-			});
-			defaultMenu.addOption(new Option("Yes, Okay I'm ready to go") {
-				@Override
-				public void action() {
-					mes(player, "You board the ship");
-					player.teleport(264, 660, false);
-					delay(2200);
-					player.message("The ship arrives at Port Sarim");
-				}
-			});
-			defaultMenu.showMenu(player);
+			if (multi(player, n, "No I don't wish to go",
+				"Yes, Okay I'm ready to go") == 1) {
+
+				mes(player, "You board the ship");
+				player.teleport(264, 660, false);
+				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+				mes(player, "The ship arrives at Port Sarim");
+			}
 			return;
 		}
 	}
