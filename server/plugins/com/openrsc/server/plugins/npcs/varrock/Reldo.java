@@ -5,8 +5,8 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
+
+import java.util.ArrayList;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -16,13 +16,8 @@ public final class Reldo implements TalkNpcTrigger {
 		return n.getID() == NpcId.RELDO.id();
 	}
 
-	/**
-	 * Man, this is the whole reldo with shield of arrav. dont tell me that this
-	 * is bad choice.
-	 */
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
-		Menu defaultMenu = new Menu();
 		if (player.getCache().hasKey("read_arrav")
 			&& player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1 || player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 2) {
 			say(player, n, "OK I've read the book",
@@ -37,73 +32,103 @@ public final class Reldo implements TalkNpcTrigger {
 			}
 			return;
 		}
+
 		say(player, n, "Hello");
 		npcsay(player, n, "Hello stranger");
+
+		ArrayList<String> options = new ArrayList<>();
 		if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
-			defaultMenu.addOption(new Option("I'm in search of a quest") {
-				@Override
-				public void action() {
-					npcsay(player, n, "I don't think there's any here");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
-					npcsay(player, n, "Let me think actually",
-						"If you look in a book",
-						"called the shield of Arrav",
-						"You'll find a quest in there",
-						"I'm not sure where the book is mind you",
-						"I'm sure it's somewhere in here");
-					say(player, n, "Thankyou");
-					player.updateQuestStage(Quests.SHIELD_OF_ARRAV, 1);
-				}
-			});
+			options.add("I'm in search of a quest");
 		}
-		defaultMenu.addOption(new Option("Do you have anything to trade?") {
-			@Override
-			public void action() {
-				npcsay(player, n, "No, sorry. I'm not the trading type");
-				say(player, n, "ah well");
+		options.add("Do you have anything to trade?");
+		options.add("What do you do?");
+		if (player.getQuestStage(Quests.THE_KNIGHTS_SWORD) == 1) {
+			options.add("What do you know about the Imcando dwarves?");
+		}
+		String[] finalOptions = new String[options.size()];
+		int option = multi(player, n, options.toArray(finalOptions));
+
+		if (option == 3) {
+			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0
+				&& player.getQuestStage(Quests.THE_KNIGHTS_SWORD) == 1) {
+				knightsSwordDialog(player, n);
 			}
-		});
-		defaultMenu.addOption(new Option("What do you do?") {
-			@Override
-			public void action() {
+		}
+
+		else if (option == 2) {
+			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
 				npcsay(player, n, "I'm the palace librarian");
 				say(player, n, "Ah that's why you're in the library then");
 				npcsay(player, n, "Yes",
 					"Though I might be in here even if I didn't work here",
 					"I like reading");
 			}
-		});
-		if (player.getQuestStage(Quests.THE_KNIGHTS_SWORD) == 1) {
-			defaultMenu.addOption(new Option(
-				"What do you know about the Imcando dwarves?") {
-				@Override
-				public void action() {
-					npcsay(player,
-						n,
-						"The Imcando Dwarves, you say?",
-						"They were the world's most skilled smiths about a hundred years ago",
-						"They used secret knowledge",
-						"Which they passed down from generation to generation",
-						"Unfortunatly about a century ago the once thriving race",
-						"Was wiped out during the barbarian invasions of that time");
-					say(player, n, "So are there any Imcando left at all?");
-					npcsay(player,
-						n,
-						"A few of them survived",
-						"But with the bulk of their population destroyed",
-						"Their numbers have dwindled even further",
-						"Last I knew there were a couple living in Asgarnia",
-						"Near the cliffs on the Asgarnian southern peninsula",
-						"They tend to keep to themselves",
-						"They don't tend to tell people that they're the descendants of the Imcando",
-						"Which is why people think that the tribe has died out totally",
-						"you may have more luck talking to them if you bring them some red berry pie",
-						"They really like red berry pie");
-					player.updateQuestStage(Quests.THE_KNIGHTS_SWORD, 2);
-				}
-			});
+			else if (player.getQuestStage(Quests.THE_KNIGHTS_SWORD) == 1) {
+				knightsSwordDialog(player, n);
+			}
 		}
 
-		defaultMenu.showMenu(player);
+		else if (option == 1) {
+			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
+				npcsay(player, n, "No, sorry. I'm not the trading type");
+				say(player, n, "ah well");
+			}
+			else {
+				npcsay(player, n, "I'm the palace librarian");
+				say(player, n, "Ah that's why you're in the library then");
+				npcsay(player, n, "Yes",
+					"Though I might be in here even if I didn't work here",
+					"I like reading");
+			}
+		}
+
+		else if (option == 0) {
+			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
+				shieldOfArravDialog(player, n);
+			}
+
+			else {
+				npcsay(player, n, "No, sorry. I'm not the trading type");
+				say(player, n, "ah well");
+			}
+		}
+	}
+
+	private void knightsSwordDialog(Player player, Npc n) {
+		npcsay(player,
+			n,
+			"The Imcando Dwarves, you say?",
+			"They were the world's most skilled smiths about a hundred years ago",
+			"They used secret knowledge",
+			"Which they passed down from generation to generation",
+			"Unfortunatly about a century ago the once thriving race",
+			"Was wiped out during the barbarian invasions of that time");
+		say(player, n, "So are there any Imcando left at all?");
+		npcsay(player,
+			n,
+			"A few of them survived",
+			"But with the bulk of their population destroyed",
+			"Their numbers have dwindled even further",
+			"Last I knew there were a couple living in Asgarnia",
+			"Near the cliffs on the Asgarnian southern peninsula",
+			"They tend to keep to themselves",
+			"They don't tend to tell people that they're the descendants of the Imcando",
+			"Which is why people think that the tribe has died out totally",
+			"you may have more luck talking to them if you bring them some red berry pie",
+			"They really like red berry pie");
+		player.updateQuestStage(Quests.THE_KNIGHTS_SWORD, 2);
+	}
+
+	private void shieldOfArravDialog(Player player, Npc n) {
+		npcsay(player, n, "I don't think there's any here");
+		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		npcsay(player, n, "Let me think actually",
+			"If you look in a book",
+			"called the shield of Arrav",
+			"You'll find a quest in there",
+			"I'm not sure where the book is mind you",
+			"I'm sure it's somewhere in here");
+		say(player, n, "Thankyou");
+		player.updateQuestStage(Quests.SHIELD_OF_ARRAV, 1);
 	}
 }
