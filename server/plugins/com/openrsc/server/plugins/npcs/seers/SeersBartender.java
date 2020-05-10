@@ -7,8 +7,8 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
+
+import java.util.ArrayList;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -23,117 +23,98 @@ public final class SeersBartender implements
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		npcsay(player, n, "Good morning, what would you like?");
-		Menu defaultMenu = new Menu();
-		defaultMenu.addOption(new Option("What do you have?") {
-			@Override
-			public void action() {
-				npcsay(player, n, "Well we have beer",
-					"Or if you want some food, we have our home made stew and meat pies");
-				Menu def = new Menu();
-				def.addOption(new Option("Beer please") {
-					@Override
-					public void action() {
-						npcsay(player, n, "one beer coming up",
-							"Ok, that'll be two coins");
-						if (ifheld(player, ItemId.COINS.id(), 2)) {
-							player.message("You buy a pint of beer");
-							give(player, ItemId.BEER.id(), 1);
-							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
-						} else {
-							say(player, n,
-								"Oh dear. I don't seem to have enough money");
-						}
 
-					}
-				});
-				def.addOption(new Option("I'll try the meat pie") {
-					@Override
-					public void action() {
-						npcsay(player, n, "Ok, that'll be 16 gold");
-						if (ifheld(player, ItemId.COINS.id(), 16)) {
-							player.message("You buy a nice hot meat pie");
-							give(player, ItemId.MEAT_PIE.id(), 1);
-							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 16));
-						} else {
-							say(player, n,
-								"Oh dear. I don't seem to have enough money");
-						}
-
-					}
-				});
-				def.addOption(new Option("Could I have some stew please") {
-					@Override
-					public void action() {
-						npcsay(player, n,
-							"A bowl of stew, that'll be 20 gold please");
-						if (ifheld(player, ItemId.COINS.id(), 20)) {
-							player.message("You buy a bowl of home made stew");
-							give(player, ItemId.STEW.id(), 1);
-							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
-						} else {
-							say(player, n,
-								"Oh dear. I don't seem to have enough money");
-						}
-
-					}
-				});
-				def.addOption(new Option(
-					"I don't really want anything thanks") {
-					@Override
-					public void action() {
-					}
-				});
-				def.showMenu(player);
-			}
-		});
-		defaultMenu.addOption(new Option("Beer please") {
-			@Override
-			public void action() {
-				npcsay(player, n, "one beer coming up",
-					"Ok, that'll be two coins");
-				if (ifheld(player, ItemId.COINS.id(), 2)) {
-					player.message("You buy a pint of beer");
-					give(player, ItemId.BEER.id(), 1);
-					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
-				} else {
-					say(player, n,
-						"Oh dear. I don't seem to have enough money");
-				}
-			}
-		});
+		ArrayList<String> options = new ArrayList<>();
+		options.add("What do you have?");
+		options.add("Beer please");
 		if (player.getCache().hasKey("barcrawl")
 			&& !player.getCache().hasKey("barfive")) {
-			defaultMenu.addOption(new Option(
-				"I'm doing Alfred Grimhand's barcrawl") {
-				@Override
-				public void action() {
-					npcsay(player,
-						n,
-						"Oh you're a barbarian then",
-						"Now which of these was the barrels contained the liverbane ale?",
-						"That'll be 18 coins please");
-					if (ifheld(player, ItemId.COINS.id(), 18)) {
-						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 18));
-						mes(player,
-							"The bartender gives you a glass of liverbane ale",
-							"You gulp it down",
-							"The room seems to be swaying");
-						drinkAle(player);
-						mes(player, "The bartender scrawls his signiture on your card");
-						player.getCache().store("barfive", true);
-					} else {
-						say(player, n, "Sorry I don't have 18 coins");
-					}
-				}
-			});
+			options.add("I'm doing Alfred Grimhand's barcrawl");
 		}
-		defaultMenu.addOption(new Option(
-			"I don't really want anything thanks") {
-			@Override
-			public void action() {
+		options.add("I don't really want anything thanks");
+		String[] finalOptions = new String[options.size()];
+		int option = multi(player, n, options.toArray(finalOptions));
+
+		if (option == 2) {
+			if (player.getCache().hasKey("barcrawl")
+				&& !player.getCache().hasKey("barfive")) {
+				npcsay(player,
+					n,
+					"Oh you're a barbarian then",
+					"Now which of these was the barrels contained the liverbane ale?",
+					"That'll be 18 coins please");
+				if (ifheld(player, ItemId.COINS.id(), 18)) {
+					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 18));
+					mes(player,
+						"The bartender gives you a glass of liverbane ale",
+						"You gulp it down",
+						"The room seems to be swaying");
+					drinkAle(player);
+					mes(player, "The bartender scrawls his signiture on your card");
+					player.getCache().store("barfive", true);
+				} else {
+					say(player, n, "Sorry I don't have 18 coins");
+				}
 			}
-		});
-		defaultMenu.showMenu(player);
+		}
+		else if (option == 1) {
+			beerOrderDialog(player, n);
+		}
+		else if (option == 0) {
+			barMenuDialog(player, n);
+		}
+	}
+
+	private void barMenuDialog(Player player, Npc n) {
+		npcsay(player, n, "Well we have beer",
+			"Or if you want some food, we have our home made stew and meat pies");
+
+		int option = multi(player, n,
+			"Beer please",
+			"I'll try the meat pie",
+			"Could I have some stew please",
+			"I don't really want anything thanks"
+		);
+
+		if (option == 0) {
+			beerOrderDialog(player, n);
+		}
+		else if (option == 1) {
+			npcsay(player, n, "Ok, that'll be 16 gold");
+			if (ifheld(player, ItemId.COINS.id(), 16)) {
+				player.message("You buy a nice hot meat pie");
+				give(player, ItemId.MEAT_PIE.id(), 1);
+				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 16));
+			} else {
+				say(player, n,
+					"Oh dear. I don't seem to have enough money");
+			}
+		}
+		else if (option == 2) {
+			npcsay(player, n,
+				"A bowl of stew, that'll be 20 gold please");
+			if (ifheld(player, ItemId.COINS.id(), 20)) {
+				player.message("You buy a bowl of home made stew");
+				give(player, ItemId.STEW.id(), 1);
+				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
+			} else {
+				say(player, n,
+					"Oh dear. I don't seem to have enough money");
+			}
+		}
+	}
+
+	private void beerOrderDialog(Player player, Npc n) {
+		npcsay(player, n, "one beer coming up",
+			"Ok, that'll be two coins");
+		if (ifheld(player, ItemId.COINS.id(), 2)) {
+			player.message("You buy a pint of beer");
+			give(player, ItemId.BEER.id(), 1);
+			player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 2));
+		} else {
+			say(player, n,
+				"Oh dear. I don't seem to have enough money");
+		}
 	}
 
 	private void drinkAle(Player player) {

@@ -12,7 +12,6 @@ import static com.openrsc.server.plugins.Functions.say;
  * This system is for adding a new menu item on NPC under certain circumstances.
  * If this system is used, the whole starting menu needs to be done using this.
  */
-@Deprecated
 public class Menu {
 
 	private ArrayList<Option> options = new ArrayList<Option>();
