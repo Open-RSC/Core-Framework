@@ -20,7 +20,7 @@ public class AttackHandler implements PacketHandler {
 			player.resetPath();
 			return;
 		}
-		
+
 		if (player.inCombat()) {
 			player.message("You are already busy fighting");
 			player.resetPath();
@@ -52,7 +52,8 @@ public class AttackHandler implements PacketHandler {
 			}
 			assert affectedMob instanceof Player;
 			Player pl = (Player) affectedMob;
-			if (pl.getLocation().inWilderness() && System.currentTimeMillis() - pl.getRanAwayTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5) {
+			if (pl.getLocation().inWilderness()
+				&& System.currentTimeMillis() - pl.getCombatTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5) {
 				player.resetPath();
 				return;
 			}
@@ -68,10 +69,7 @@ public class AttackHandler implements PacketHandler {
 		}
 
 		if (player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
-			//if (affectedMob.isNpc()) {
-				player.setFollowing(affectedMob, 0);
-			//}
-
+			player.setFollowing(affectedMob, 0);
 			player.setWalkToAction(new WalkToMobAction(player, affectedMob, 1) {
 				public void executeInternal() {
 					getPlayer().resetPath();
