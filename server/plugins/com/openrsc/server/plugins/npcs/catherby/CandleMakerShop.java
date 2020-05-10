@@ -10,8 +10,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.AbstractShop;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
+
+import java.util.ArrayList;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -54,36 +54,37 @@ public class CandleMakerShop extends AbstractShop {
 			}
 			return;
 		}
-		Menu defaultMenu = new Menu();
+
+		ArrayList<String> options = new ArrayList<>();
+
 		npcsay(player, n, "Hi would you be interested in some of my fine candles");
+
+		String questOption = "Have you got any black candles?";
 		if (player.getQuestStage(Quests.MERLINS_CRYSTAL) == 3) {
-			defaultMenu.addOption(new Option("Have you got any black candles?") {
-				@Override
-				public void action() {
-					npcsay(player, n, "Black candles hmm?",
-						"It's very bad luck to make black candles");
-					say(player, n, "I can pay well for one");
-					npcsay(player, n, "I still dunno",
-						"Tell you what, I'll supply with you with a black candle",
-						"If you can bring me a bucket full of wax");
-					player.getCache().store("candlemaker", true);
-				}
-			});
-
+			options.add(questOption);
 		}
-		defaultMenu.addOption(new Option("Yes please") {
-			@Override
-			public void action() {
-				player.setAccessingShop(shop);
-				ActionSender.showShop(player, shop);
-			}
-		});
-		defaultMenu.addOption(new Option("No thankyou") {
-			@Override
-			public void action() {
 
-			}
-		});
-		defaultMenu.showMenu(player);
+		String optionYes = "Yes please";
+		options.add(optionYes);
+
+		options.add("No thankyou");
+
+		String[] finalOptions = new String[options.size()];
+		int option = multi(player, n, options.toArray(finalOptions));
+
+		if (options.get(option).equalsIgnoreCase(questOption)) {
+			npcsay(player, n, "Black candles hmm?",
+				"It's very bad luck to make black candles");
+			say(player, n, "I can pay well for one");
+			npcsay(player, n, "I still dunno",
+				"Tell you what, I'll supply with you with a black candle",
+				"If you can bring me a bucket full of wax");
+			player.getCache().store("candlemaker", true);
+		}
+
+		else if (options.get(option).equalsIgnoreCase(optionYes)) {
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
+		}
 	}
 }
