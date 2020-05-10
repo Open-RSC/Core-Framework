@@ -1446,8 +1446,11 @@ public class PacketHandler {
 		int slot = packetsIncoming.getUnsignedByte();
 		mc.setInventoryItemCount(mc.getInventoryItemCount() - 1);
 
-		for (int index = slot; mc.getInventoryItemCount() > index; ++index) {
+		for (int index = slot; index < mc.getInventoryItemCount(); ++index) {
 			mc.setInventoryItem(index, mc.getInventoryItem(index + 1).clone());
+		}
+		if (mc.getInventoryItemCount() < mc.getInventory().length) {
+			mc.setInventoryItem(mc.getInventoryItemCount(), new Item());
 		}
 	}
 
