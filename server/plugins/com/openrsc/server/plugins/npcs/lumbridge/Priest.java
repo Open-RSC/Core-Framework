@@ -9,6 +9,7 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.plugins.menu.Option;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -56,88 +57,80 @@ public class Priest implements TalkNpcTrigger {
 			return;
 		}
 		npcsay(player, n, "Welcome to the church of holy Saradomin");
-		Menu defaultMenu = new Menu();
-		defaultMenu.addOption(new Option("Who's Saradomin?") {
-			@Override
-			public void action() {
-				npcsay(player,
-					n,
-					"Surely you have heard of the God, Saradomin?",
-					"He who creates the forces of goodness and purity in this world?",
-					"I cannot believe your ignorance!",
-					"This is the God with more followers than any other!",
-					"At least in these parts!",
-					"He who along with his brothers Guthix and Zamorak created this world");
-				new Menu().addOptions(new Option("Oh that Saradomin") {
-					@Override
-					public void action() {
-						npcsay(player, n, "There is only one Saradomin");
-					}
-				}, new Option("Oh sorry I'm not from this world") {
-					@Override
-					public void action() {
-						npcsay(player, n, "That's strange",
-							"I thought things not from this world were all slime and tenticles");
-						new Menu()
-							.addOptions(
-								new Option(
-									"You don't understand. This is a computer game") {
-									@Override
-									public void action() {
-										npcsay(player, n,
-											"I beg your pardon?");
-										say(player, n, "Never mind");
-									}
-								},
-								new Option(
-									"I am - do you like my disguise?") {
-									@Override
-									public void action() {
-										npcsay(player, n,
-											"Aargh begone foul creature from another dimension");
-										say(player, n,
-											"Ok, Ok, It was a joke");
-									}
-								}).showMenu(player);
-					}
-				}).showMenu(player);
-			}
-		});
-		defaultMenu.addOption(new Option("Nice place you've got here") {
-			@Override
-			public void action() {
-				npcsay(player, n, "It is, isn't it?", "It was built 230 years ago");
-			}
-		});
+
+		ArrayList<String> options = new ArrayList<>();
+		options.add("Who's Saradomin?");
+		options.add("Nice place you've got here");
 		if (player.getQuestStage(Quests.THE_RESTLESS_GHOST) <= 0) {
-			defaultMenu.addOption(new Option("I'm looking for a quest") {
-				@Override
-				public void action() {
-					if (player.getQuestStage(Quests.THE_RESTLESS_GHOST) == 0) {
-						npcsay(player, n,
-							"That's lucky, I need someone to do a quest for me");
-						say(player, n, "Ok I'll help");
-						npcsay(player,
-							n,
-							"Ok the problem is, there is a ghost in the church graveyard",
-							"I would like you to get rid of it",
-							"If you need any help",
-							"My friend father Urhney is an expert on ghosts",
-							"I believe he is currently living as a hermit",
-							"He has a little shack somewhere in the swamps south of here",
-							"I'm sure if you told him that I sent you he'd be willing to help",
-							"My name is father Aereck by the way",
-							"Be careful going through the swamps",
-							"I have heard they can be quite dangerous");
-						player.updateQuestStage(Quests.THE_RESTLESS_GHOST, 1);
-					} else {
-						npcsay(player, n, "Sorry I only had the one quest");
-					}
+			options.add("I'm looking for a quest");
+		}
+		String[] finalOptions = new String[options.size()];
+		int option = multi(player, n, options.toArray(finalOptions));
+
+		if (option == 0) {
+			npcsay(player,
+				n,
+				"Surely you have heard of the God, Saradomin?",
+				"He who creates the forces of goodness and purity in this world?",
+				"I cannot believe your ignorance!",
+				"This is the God with more followers than any other!",
+				"At least in these parts!",
+				"He who along with his brothers Guthix and Zamorak created this world");
+			option = multi(player, n,
+				"Oh that Saradomin",
+				"Oh sorry I'm not from this world"
+			);
+
+			if (option == 0) {
+				npcsay(player, n, "There is only one Saradomin");
+			}
+			else if (option == 1) {
+				npcsay(player, n, "That's strange",
+					"I thought things not from this world were all slime and tenticles");
+				option = multi(player, n,
+					"You don't understand. This is a computer game",
+					"I am - do you like my disguise?"
+				);
+				if (option == 0) {
+					npcsay(player, n,
+						"I beg your pardon?");
+					say(player, n, "Never mind");
 				}
-			});
+				else if (option == 1) {
+					npcsay(player, n,
+						"Aargh begone foul creature from another dimension");
+					say(player, n,
+						"Ok, Ok, It was a joke");
+				}
+			}
 		}
 
-		defaultMenu.showMenu(player);
+		else if (option == 1) {
+			npcsay(player, n, "It is, isn't it?", "It was built 230 years ago");
+		}
+
+		else if (option == 2 && player.getQuestStage(Quests.THE_RESTLESS_GHOST) <= 0) {
+			if (player.getQuestStage(Quests.THE_RESTLESS_GHOST) == 0) {
+				npcsay(player, n,
+					"That's lucky, I need someone to do a quest for me");
+				say(player, n, "Ok I'll help");
+				npcsay(player,
+					n,
+					"Ok the problem is, there is a ghost in the church graveyard",
+					"I would like you to get rid of it",
+					"If you need any help",
+					"My friend father Urhney is an expert on ghosts",
+					"I believe he is currently living as a hermit",
+					"He has a little shack somewhere in the swamps south of here",
+					"I'm sure if you told him that I sent you he'd be willing to help",
+					"My name is father Aereck by the way",
+					"Be careful going through the swamps",
+					"I have heard they can be quite dangerous");
+				player.updateQuestStage(Quests.THE_RESTLESS_GHOST, 1);
+			} else {
+				npcsay(player, n, "Sorry I only had the one quest");
+			}
+		}
 	}
 
 	@Override
