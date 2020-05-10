@@ -12,6 +12,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class Equipment {
@@ -210,10 +211,6 @@ public class Equipment {
 		if (!ableToEquip(request.item))
 			return false;
 
-		//Check for and remove conflicting items
-		if (!unequipConflictingItems(request))
-			return false;
-
 		//Logic changes depending on where the item is being equipped from
 		switch (request.requestType) {
 			case FROM_INVENTORY:
@@ -248,14 +245,39 @@ public class Equipment {
 				if (itemDef == null)
 					return false;
 
-				//Attempt to remove the item from their inventory
-				if (player.getCarriedItems().remove(request.item) == -1)
+				ArrayList<Item> items = gatherConflictingItems(request);
+
+				// We don't have enough space, even with the item we
+				// will equip removed from the inventory.
+				if (player.getCarriedItems().getInventory().getFreeSlots() + 1 < items.size()) {
+					player.message("You need more inventory space to equip that.");
+					return false;
+				}
+
+				// Grab the item we will be removing from the inventory
+				Item toEquip = player.getCarriedItems().getInventory().get(
+					player.getCarriedItems().getInventory().getLastIndexById(
+						request.item.getCatalogId()
+					)
+				);
+				if (toEquip == null)
 					return false;
 
-				add(request.item);
+				// Remove the items from their containers.
+				for (Item item : items) {
+					remove(item, item.getAmount()); // Remove from equipment
+				}
+				player.getCarriedItems().remove(toEquip); // Remove from inventory
+
+				for (Item item : items) {
+					player.getCarriedItems().getInventory().add( // Add to inventory
+						new Item(item.getCatalogId(), item.getAmount()));
+				}
+				add(new Item(toEquip.getCatalogId(), toEquip.getAmount())); // Add to equipment
 
 			} else { //On a world without equipment tab
 				try {
+					unequipConflictingItems(request);
 					request.item.setWielded(player.getWorld().getServer().getDatabase(), true);
 				}
 				catch (GameDatabaseException e) {
@@ -283,14 +305,32 @@ public class Equipment {
 				if (itemDef == null)
 					return false;
 
+				ArrayList<Item> items = gatherConflictingItems(request);
+
+				// We don't have enough space, even with the item we
+				// will equip removed from the inventory.
+				if (player.getFreeBankSlots() < items.size()) {
+					player.message("You need more bank space to equip that.");
+					return false;
+				}
+
 				int originalAmount = player.getBank().countId(request.item.getCatalogId());
 				Item toEquip = player.getBank().get(
 					player.getBank().getFirstIndexById(request.item.getCatalogId())
 				);
+				if (toEquip == null) {
+					return false;
+				}
+
+				for (Item item : items) {
+					remove(item, item.getAmount()); // Remove from equipment
+				}
 
 				if (!itemDef.isStackable()) {
-					if (!player.getBank().remove(toEquip.getCatalogId(), 1))
-						return false;
+					player.getBank().remove(toEquip.getCatalogId(), 1);
+					for (Item item : items) {
+						player.getBank().add(new Item(item.getCatalogId(), item.getAmount()));
+					}
 
 					if (originalAmount > 1) {
 						add(new Item(toEquip.getCatalogId(), 1));
@@ -298,8 +338,10 @@ public class Equipment {
 						add(request.item);
 					}
 				} else {
-					if (!player.getBank().remove(toEquip.getCatalogId(), request.item.getAmount()))
-						return false;
+					player.getBank().remove(toEquip.getCatalogId(), request.item.getAmount());
+					for (Item item : items) {
+						player.getBank().add(new Item(item.getCatalogId(), item.getAmount()));
+					}
 
 					if (originalAmount > request.item.getAmount()) {
 						add(new Item(request.item.getCatalogId(), request.item.getAmount()));
@@ -315,65 +357,33 @@ public class Equipment {
 		return true;
 	}
 
+	private ArrayList<Item> gatherConflictingItems(EquipRequest request) {
+		// Gather conflicting equipment
+		ArrayList<Item> items = new ArrayList<>();
+		for (int slotID = 0; slotID < Equipment.SLOT_COUNT; slotID++) {
+			Item item = list[slotID];
+			if (item != null && request.item.wieldingAffectsItem(player.getWorld(), item)) {
+				if (request.item.getDef(player.getWorld()).isStackable()) {
+					if (request.item.getCatalogId() == item.getCatalogId())
+						continue;
+				}
+				items.add(item);
+			}
+		}
+		return items;
+	}
+
 	// Equipment::unequipConflictingItems(EquipRequest)
 	// Removes equipment that conflicts with an equipItem request.
 	private boolean unequipConflictingItems(EquipRequest request) {
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //on a world with equipment tab
-			synchronized (list) {
-				// Count the number of conflicting items
-				int count = 0;
-				Item item;
-				for (int slotID = 0; slotID < Equipment.SLOT_COUNT; slotID++) {
-					item = list[slotID];
-					if (item != null && request.item.wieldingAffectsItem(player.getWorld(), item)) {
-						if (request.item.getDef(player.getWorld()).isStackable()) {
-							if (request.item.getCatalogId() == item.getCatalogId())
-								continue;
-						}
-						count++;
-					}
-				}
-				// Check they have enough space to remove the conflicting items, then do it
-				if (request.requestType == EquipRequest.RequestType.FROM_INVENTORY) {
-					if (player.getCarriedItems().getInventory().getFreeSlots() < count) {
-						player.message("You need more inventory space to equip that.");
+		synchronized (player.getCarriedItems().getInventory()) {
+			for (Item item : player.getCarriedItems().getInventory().getItems()) {
+				if (request.item.wieldingAffectsItem(player.getWorld(), item) && item.isWielded()) {
+					if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_INVENTORY, false)))
 						return false;
-					}
-					for (int slotID = 0; slotID < Equipment.SLOT_COUNT; slotID++) {
-						item = list[slotID];
-						if (item != null && request.item.wieldingAffectsItem(player.getWorld(), item)
-						&& item.getItemId() != request.item.getItemId()) {
-							if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_EQUIPMENT, false)))
-								return false;
-						}
-					}
-				} else { // Conflicting items should goto the bank
-					synchronized (player.getBank().getItems()) {
-						if (player.getFreeBankSlots() < count) {
-							player.message("You need more bank space to equip that.");
-							return false;
-						}
-						for (int slotID = 0; slotID < Equipment.SLOT_COUNT; slotID++) {
-							item = list[slotID];
-							if (item != null && request.item.wieldingAffectsItem(player.getWorld(), item)) {
-								if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_BANK, false)))
-									return false;
-							}
-						}
-					}
-				}
-			}
-		} else { // on a world without equipment tab
-			synchronized (player.getCarriedItems().getInventory()) {
-				for (Item item : player.getCarriedItems().getInventory().getItems()) {
-					if (request.item.wieldingAffectsItem(player.getWorld(), item) && item.isWielded()) {
-						if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_INVENTORY, false)))
-							return false;
-					}
 				}
 			}
 		}
-
 		return true;
 	}
 
