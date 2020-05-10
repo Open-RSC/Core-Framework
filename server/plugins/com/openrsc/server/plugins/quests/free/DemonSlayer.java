@@ -158,7 +158,7 @@ public class DemonSlayer implements QuestInterface,
 				say(player, n, "What about the king?");
 				captainRovinDialogue(player, n, CaptainRovin.KING);
 			} else {
-				if (choices.get(choice).equalsIgnoreCase("Attack Skillcape")) {
+				if (choice != -1 && choices.get(choice).equalsIgnoreCase("Attack Skillcape")) {
 					if (getMaxLevel(player, Skills.ATTACK) >= 99) {
 						npcsay(player, n, "I see you too are a master of attack",
 							"You are worthy to wield the Attack Skillcape",

@@ -72,19 +72,19 @@ public class CandleMakerShop extends AbstractShop {
 		String[] finalOptions = new String[options.size()];
 		int option = multi(player, n, options.toArray(finalOptions));
 
-		if (options.get(option).equalsIgnoreCase(questOption)) {
-			npcsay(player, n, "Black candles hmm?",
-				"It's very bad luck to make black candles");
-			say(player, n, "I can pay well for one");
-			npcsay(player, n, "I still dunno",
-				"Tell you what, I'll supply with you with a black candle",
-				"If you can bring me a bucket full of wax");
-			player.getCache().store("candlemaker", true);
-		}
-
-		else if (options.get(option).equalsIgnoreCase(optionYes)) {
-			player.setAccessingShop(shop);
-			ActionSender.showShop(player, shop);
+		if (option != -1) {
+			if (options.get(option).equalsIgnoreCase(questOption)) {
+				npcsay(player, n, "Black candles hmm?",
+					"It's very bad luck to make black candles");
+				say(player, n, "I can pay well for one");
+				npcsay(player, n, "I still dunno",
+					"Tell you what, I'll supply with you with a black candle",
+					"If you can bring me a bucket full of wax");
+				player.getCache().store("candlemaker", true);
+			} else if (options.get(option).equalsIgnoreCase(optionYes)) {
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
+			}
 		}
 	}
 }
