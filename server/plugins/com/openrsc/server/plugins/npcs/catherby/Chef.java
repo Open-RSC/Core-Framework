@@ -8,8 +8,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
-import com.openrsc.server.plugins.menu.Menu;
-import com.openrsc.server.plugins.menu.Option;
 
 import java.util.Optional;
 
@@ -172,24 +170,24 @@ public class Chef implements TalkNpcTrigger {
 			say(player, n, "I have been sent by your father",
 				"He wants me to retrieve the Fitzharmon family crest");
 			npcsay(player, n, "Ah, yes hmm well I do have a bit of it yes");
-			new Menu().addOptions(
-				new Option("Err what happened to the rest of crest?") {
-					public void action() {
-						npcsay(player, n, "Well we had a bit of a fight over it",
-							"We all wanted to be the heir of our fathers lands",
-							"we each ended up with a piece of the crest",
-							"none of us wanted to give their piece of the crest up to any of the others",
-							"And none of us wanted to face our father",
-							"coming home without a complete crest");
-						say(player, n, "So can I have your bit?");
-						HAVE_YOUR_BIT(player, n);
-					}
-				},
-				new Option("So can I have your bit?") {
-					public void action() {
-						HAVE_YOUR_BIT(player, n);
-					}
-				}).showMenu(player);
+			option = multi(player, n,
+				"Err what happened to the rest of crest?",
+				"So can I have your bit?"
+			);
+
+			if (option == 0) {
+				npcsay(player, n, "Well we had a bit of a fight over it",
+					"We all wanted to be the heir of our fathers lands",
+					"we each ended up with a piece of the crest",
+					"none of us wanted to give their piece of the crest up to any of the others",
+					"And none of us wanted to face our father",
+					"coming home without a complete crest");
+				say(player, n, "So can I have your bit?");
+				HAVE_YOUR_BIT(player, n);
+			}
+			else if (option == 1) {
+				HAVE_YOUR_BIT(player, n);
+			}
 		} else if (option == 1) {
 			say(player, n, "Nothing I will be on my way");
 		} else if (option == 2) {
