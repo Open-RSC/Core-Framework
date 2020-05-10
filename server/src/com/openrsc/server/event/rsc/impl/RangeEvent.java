@@ -272,6 +272,8 @@ public class RangeEvent extends GameTickEvent {
 							getPlayerOwner().getSkills().setLevel(Skills.RANGED, newLevel);
 						}
 					}
+				} else if(target.isPlayer() && damage > 0) {
+					getPlayerOwner().incExp(Skills.RANGED, Formulae.rangedHitExperience(target, damage), true);
 				}
 				if (Formulae.looseArrow(damage)) {
 					GroundItem arrows = getArrows(arrowID);
