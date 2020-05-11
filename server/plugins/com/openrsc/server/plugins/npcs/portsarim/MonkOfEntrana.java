@@ -23,18 +23,27 @@ public final class MonkOfEntrana implements OpLocTrigger,
 		"shield", "spear", "2-handed", "long", "short",
 		"amulet", "ring", "cape", "gauntlet", "boot",
 		"necklace", "silverlight", "excalibur", "dagger",
-		"throwing"
+		"throwing", "sword"
 	};
 
-	private boolean CHECK_ITEM(String itemName) {
-		return Arrays.stream(blockedItems).parallel().anyMatch(itemName::contains);
+	private String[] exceptions = new String[]{ "fish", "pick" };
+
+	private boolean BLOCK_ITEM(String itemName) {
+		// Checks to see if the item is in the blocked list
+		boolean blocked = Arrays.stream(blockedItems).parallel().anyMatch(itemName::contains);
+		// If it is, checks to see if it is on the exception list
+		// If it isn't, we block the item.
+		if (blocked && !Arrays.stream(exceptions).parallel().anyMatch(itemName::contains)) {
+			return true;
+		}
+		return false;
 	}
 
 	private boolean CANT_GO(Player player) {
 		synchronized(player.getCarriedItems().getInventory().getItems()) {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
 				String name = item.getDef(player.getWorld()).getName().toLowerCase();
-				if (CHECK_ITEM(name))
+				if (BLOCK_ITEM(name))
 					return true;
 			}
 		}
@@ -46,7 +55,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 				if (item == null)
 					continue;
 				String name = item.getDef(player.getWorld()).getName().toLowerCase();
-				if (CHECK_ITEM(name))
+				if (BLOCK_ITEM(name))
 					return true;
 			}
 		}
