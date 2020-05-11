@@ -148,7 +148,7 @@ public class ObjectCooking implements UseLocTrigger {
 			int repeat = 1;
 			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 				repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
-				startBatchProgressBar(timeToCook, repeat);
+				startBatchProgressBar(repeat);
 			}
 
 			batchCooking(player, item, timeToCook, cookingDef, repeat);
@@ -232,7 +232,7 @@ public class ObjectCooking implements UseLocTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(itemID);
-			startBatchProgressBar(player.getWorld().getServer().getConfig().GAME_TICK, repeat);
+			startBatchProgressBar(repeat);
 		}
 		batchInedibleCooking(player, itemID, product, hasBubble, repeat, messages);
 	}

@@ -1321,14 +1321,14 @@ public class Functions {
 	 * @param delay The interval between actions
 	 * @param totalBatch The total repetitions of a task
 	 */
-	public static void startBatchProgressBar(int delay, int totalBatch) {
+	public static void startBatchProgressBar(int totalBatch) {
 		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
 		if (player == null) return;
 		BatchBar batchBar = PluginTask.getContextPluginTask().getScriptContext().getBatchBar();
 		if (!player.getWorld().getServer().getConfig().BATCH_PROGRESSION) return;
 		if (batchBar == null) return;
 
-		batchBar.initialize(delay, totalBatch);
+		batchBar.initialize(totalBatch);
 		batchBar.start();
 	}
 

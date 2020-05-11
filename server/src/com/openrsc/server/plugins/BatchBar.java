@@ -21,12 +21,11 @@ public class BatchBar {
 
 	/**
 	 * Creates a new batch bar. Call start() to send to client
-	 * @param delay The interval between actions.
 	 * @param totalBatch The total repetitions of a task
 	 */
-	public void initialize(int delay, int totalBatch) {
+	public void initialize(int totalBatch) {
 		this.current = 0;
-		this.delay = delay;
+		this.delay = getPlayer().getWorld().getServer().getConfig().GAME_TICK * 2;
 		this.totalBatch = totalBatch;
 	}
 
@@ -38,7 +37,8 @@ public class BatchBar {
 	}
 
 	/**
-	 * Stops displaying the batch bar to the client
+	 * Stops displaying the batch bar to the client.
+	 * Gives it 2 ticks to close
 	 */
 	public void stop() {
 		getPlayer().getWorld().getServer().getGameEventHandler().add(
