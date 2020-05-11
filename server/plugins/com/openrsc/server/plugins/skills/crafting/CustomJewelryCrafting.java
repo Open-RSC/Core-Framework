@@ -128,6 +128,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 			} else {
 				repeat = player.getCarriedItems().getInventory().countId(ItemId.GOLD_BAR.id(), Optional.of(false));
 			}
+			startBatchProgressBar(repeat);
 		}
 
 		batchGoldCrafting(player, item, def, gem, repeat);
@@ -180,6 +181,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		player.incExp(Skills.CRAFTING, def.getExp(), true);
 
 		// Repeat
+		updateBatchBar();
 		if(!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchGoldCrafting(player, item, def, gem, repeat);
@@ -219,6 +221,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+			startBatchProgressBar(repeat);
 		}
 		batchSilverCrafting(player, item, results[mould], repeat);
 	}
@@ -247,6 +250,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		player.incExp(Skills.CRAFTING, 200, true);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchSilverCrafting(player, item, resultId, repeat);
