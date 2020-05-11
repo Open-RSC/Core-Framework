@@ -23,8 +23,8 @@ import static com.openrsc.server.plugins.Functions.*;
  */
 
 public class Default implements DefaultHandler,
-	CatGrowthTrigger, CommandTrigger, DepositTrigger, DropObjTrigger,
-	OpInvTrigger, UseObjTrigger, UseInvTrigger, RemoveObjTrigger, WithdrawTrigger,
+	CatGrowthTrigger, CommandTrigger, DropObjTrigger,
+	OpInvTrigger, UseObjTrigger, UseInvTrigger, RemoveObjTrigger,
 	UseNpcTrigger, UseLocTrigger, UsePlayerTrigger, UseBoundTrigger, WearObjTrigger,
 	OpNpcTrigger, OpLocTrigger, TakeObjTrigger, AttackPlayerTrigger,
 	AttackNpcTrigger, PlayerDeathTrigger, KillNpcTrigger, PlayerLoginTrigger,
@@ -446,25 +446,4 @@ public class Default implements DefaultHandler,
 		return false;
 	}
 
-	@Override
-	public void onWithdraw(Player player, Integer catalogID, Integer amount, Boolean wantsNotes) {
-		amount = Math.min(player.getBank().countId(catalogID), amount);
-		player.getBank().withdrawItemToInventory(catalogID, amount, wantsNotes);
-	}
-
-	@Override
-	public boolean blockWithdraw(Player player, Integer catalogID, Integer amount, Boolean wantsNotes) {
-		return false;
-	}
-
-	@Override
-	public void onDeposit(Player player, Integer catalogID, Integer amount) {
-		amount = Math.min(player.getCarriedItems().getInventory().countId(catalogID), amount);
-		player.getBank().depositItemFromInventory(catalogID, amount, true);
-	}
-
-	@Override
-	public boolean blockDeposit(Player player, Integer catalogID, Integer amount) {
-		return false;
-	}
 }

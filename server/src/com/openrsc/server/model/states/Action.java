@@ -51,14 +51,12 @@ public enum Action {
 	// Not fully authentic Actions here
 	catgrowth(EntityType.NONE, "catgrowth"),
 	command(EntityType.NONE, "command"),
-	deposit(EntityType.NONE, "deposit"),
 	playerdeath(EntityType.NONE, "playerdeath"),
 	playerkilledplayer(EntityType.PLAYER, "playerkilledplayer"),
 	playerlogin(EntityType.NONE, "playerlogin"),
 	playerlogout(EntityType.NONE, "playerlogout"),
 	playerrangenpc(EntityType.NPC, "playerrangenpc"),
 	playerrangeplayer(EntityType.PLAYER, "playerrangeplayer"),
-	withdraw(EntityType.NONE, "withdraw"),
 	startup(EntityType.NONE, "startup"),
 	trade(EntityType.NONE, "opnpc");
 

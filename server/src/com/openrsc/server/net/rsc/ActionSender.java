@@ -386,11 +386,11 @@ public class ActionSender {
 	 */
 	public static void sendFriendUpdate(Player player, long usernameHash) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		int arg = 0;
+		int onlineStatus = 0;
 		String username = DataConversions.hashToUsername(usernameHash);
 
 		if (usernameHash == Long.MIN_VALUE && player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
-			arg = 6;
+			onlineStatus = 6;
 			username = "Global$";
 		}
 
@@ -402,20 +402,19 @@ public class ActionSender {
 					player.isMod()
 				)
 		) {
-			arg |= 4 | 2; // 4 for is online and 2 for on same world. 1 would be if the User's name changed from original
+			onlineStatus |= 4 | 2; // 4 for is online and 2 for on same world. 1 would be if the User's name changed from original
 		}
 
 		s.setID(Opcode.SEND_FRIEND_UPDATE.opcode);
 
 		s.writeString(username);
 
-		// if(usernameChanged)
-		//s.writeString(username);
-		s.writeByte(10); // Is this meant to be a null string?
+		// TODO: Allow name changes to fill this variable.
+		s.writeString("");
 
-		s.writeByte(arg);
+		s.writeByte(onlineStatus);
 
-		if ((arg & 4) != 0)
+		if ((onlineStatus & 4) != 0)
 			s.writeString("OpenRSC");
 
 		player.write(s.toPacket());
@@ -543,6 +542,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().WANT_GLOBAL_FRIEND + " 75");
 			LOGGER.info(server.getConfig().RIGHT_CLICK_TRADE + " 76");
 			LOGGER.info(server.getConfig().CUSTOM_PROTOCOL + " 77");
+			LOGGER.info(server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR + " 78");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		ConnectionAttachment attachment = new ConnectionAttachment();
@@ -642,6 +642,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); // 75
 		s.writeByte((byte) (server.getConfig().RIGHT_CLICK_TRADE ? 1 : 0)); // 76
 		s.writeByte((byte) (server.getConfig().CUSTOM_PROTOCOL ? 1 : 0)); // 77
+		s.writeByte((byte) (server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR ? 1 : 0)); // 78
 		return s;
 	}
 

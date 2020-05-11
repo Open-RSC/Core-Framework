@@ -185,7 +185,7 @@ public class ServerConfiguration {
 	//quest-minigame related
 	private boolean WANT_GIANNE_BADGE;
 	private boolean WANT_BLURBERRY_BADGE;
-	public boolean WANT_SHOW_KITTENS_CIVILLIAN;
+	public boolean WANT_EXTENDED_CATS_BEHAVIOR;
 	public boolean WANT_BARTER_WORMBRAINS;
 	public boolean LOCKED_POST_QUEST_REGIONS_ACCESSIBLE;
 	public boolean CAN_RETRIEVE_POST_QUEST_ITEMS;
@@ -431,7 +431,7 @@ public class ServerConfiguration {
 		// Custom quests and minigames
 		WANT_GIANNE_BADGE = tryReadBool("want_gianne_badge").orElse(false);
 		WANT_BLURBERRY_BADGE = tryReadBool("want_blurberry_badge").orElse(false);
-		WANT_SHOW_KITTENS_CIVILLIAN = tryReadBool("want_show_kittens_civillian").orElse(false);
+		WANT_EXTENDED_CATS_BEHAVIOR = tryReadBool("want_extended_cats_behavior").orElse(false);
 		WANT_BARTER_WORMBRAINS = tryReadBool("want_barter_wormbrains").orElse(false);
 		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = tryReadBool("locked_post_quest_regions_accessible").orElse(false);
 		CAN_RETRIEVE_POST_QUEST_ITEMS = tryReadBool("can_retrieve_post_quest_items").orElse(false);
