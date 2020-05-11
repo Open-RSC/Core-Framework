@@ -23,6 +23,7 @@ public class BananaTree implements OpLocTrigger {
 			int repeat = 1;
 			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 				repeat = player.getCarriedItems().getInventory().getFreeSlots();
+				startBatchProgressBar(repeat);
 			}
 			batchBananaPick(player, obj, repeat);
 		}
@@ -52,6 +53,7 @@ public class BananaTree implements OpLocTrigger {
 
 		delay(tick);
 
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			batchBananaPick(player, bananaTree, repeat);
 		}
