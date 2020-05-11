@@ -1199,6 +1199,7 @@ public final class CustomBankInterface extends BankInterface {
 		bank.clearList(this.bankSearch);
 		bank.setText(this.bankSearch, "");
 		bank.setFocus(-1);
+		swapNoteMode = false;
 	}
 
 	public enum BankTabShow {
