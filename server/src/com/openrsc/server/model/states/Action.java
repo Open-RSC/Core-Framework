@@ -39,7 +39,8 @@ public enum Action {
 	playerlogout(EntityType.NONE, "playerlogout"),
 	playerrangenpc(EntityType.NPC, "playerrangenpc"),
 	playerrangeplayer(EntityType.PLAYER, "playerrangeplayer"),
-	startup(EntityType.NONE, "startup");
+	startup(EntityType.NONE, "startup"),
+	trade(EntityType.NONE, "opnpc");
 
 	public static Action getActionFromPlugin(final String pluginInterface) {
 		for (Action action : Action.values()) {
