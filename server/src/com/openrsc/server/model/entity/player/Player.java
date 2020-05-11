@@ -31,7 +31,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
@@ -2297,7 +2296,7 @@ public final class Player extends Mob {
 
 	@Override
 	public String toString() {
-		return "[Player:" + username + "]";
+		return "[Player:" + getIndex() + ":" + username + " @ (" + getX() + ", " + getY() + ")]";
 	}
 
 	public boolean tradeDuelThrottling() {

@@ -673,7 +673,7 @@ public class Npc extends Mob {
 
 	@Override
 	public String toString() {
-		return "[NPC:" + getDef().getName() + " @ (" + getX() + ", " + getY() + ") ]";
+		return "[NPC:" + getIndex() + ":" + getDef().getName() + " @ (" + getX() + ", " + getY() + ")]";
 	}
 
 	public void updatePosition() {

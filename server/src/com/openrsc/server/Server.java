@@ -308,7 +308,7 @@ public class Server implements Runnable {
 	}
 
 
-	public static long bench(Runnable r) {
+	public static long bench(final Runnable r) {
 		long start = System.currentTimeMillis();
 		r.run();
 		return System.currentTimeMillis() - start;
@@ -329,12 +329,12 @@ public class Server implements Runnable {
 							for (Player player : getWorld().getPlayers()) {
 								this.lastIncomingPacketsDuration += bench(player::processIncomingPackets);
 							}
-							this.lastEventsDuration = getGameEventHandler().runGameEvents();
 							this.lastGameStateDuration = getGameUpdater().doUpdates();
+							this.lastEventsDuration = getGameEventHandler().runGameEvents();
 							for (Player player : getWorld().getPlayers()) {
 								this.lastOutgoingPacketsDuration += bench(player::processOutgoingPackets);
 							}
-						} catch (Throwable t) {
+						} catch (final Throwable t) {
 							LOGGER.catching(t);
 						}
 					});
