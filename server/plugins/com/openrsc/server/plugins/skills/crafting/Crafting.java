@@ -48,18 +48,18 @@ public class Crafting implements UseInvTrigger,
 		ItemId.UNFIRED_BOWL.id()
 	};
 
-	final int[] gold_moulds = {
+	final static int[] gold_moulds = {
 		ItemId.RING_MOULD.id(),
 		ItemId.NECKLACE_MOULD.id(),
 		ItemId.AMULET_MOULD.id(),
 	};
 
-	final int[] silver_moulds = {
+	final static int[] silver_moulds = {
 		ItemId.HOLY_SYMBOL_MOULD.id(),
 		ItemId.UNHOLY_SYMBOL_MOULD.id(),
 	};
 
-	final int[] gems = {
+	final static int[] gems = {
 		ItemId.NOTHING.id(),
 		ItemId.SAPPHIRE.id(),
 		ItemId.EMERALD.id(),
@@ -183,9 +183,21 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private boolean craftingTypeChecks(final GameObject obj, final Item item, final Player player) {
-		return ((obj.getID() == 118 || obj.getID() == 813) && DataConversions.inArray(itemsFurnance, item.getCatalogId()))
-				|| (obj.getID() == 178 && DataConversions.inArray(itemsOven, item.getCatalogId()))
-				|| (obj.getID() == 179 && item.getCatalogId() == ItemId.SOFT_CLAY.id());
+		boolean furnace = obj.getID() == 118 || obj.getID() == 813;
+		boolean furnaceItem = DataConversions.inArray(itemsFurnance, item.getCatalogId());
+		boolean jewelryBar = item.getCatalogId() == ItemId.SILVER_BAR.id() || item.getCatalogId() == ItemId.GOLD_BAR.id();
+		boolean wantBetterJewelryCrafting = player.getWorld().getServer().getConfig().WANT_BETTER_JEWELRY_CRAFTING;
+		boolean potteryOven = obj.getID() == 178;
+		boolean potteryItem = DataConversions.inArray(itemsOven, item.getCatalogId());
+		boolean spinningWheel = obj.getID() == 179;
+		boolean softClay = item.getCatalogId() == ItemId.SOFT_CLAY.id();
+
+		// Checks to make sure you're using the right item with the right object.
+		// If WANT_BETTER_JEWELRY_CRAFTING is true, we'll disallow jewelry crafting so it
+		// can be handled in the custom class.
+		return (furnace && furnaceItem && !(jewelryBar && wantBetterJewelryCrafting))
+			|| (potteryOven && potteryItem)
+			|| (spinningWheel && softClay);
 	}
 
 	private void beginCrafting(final Item item, final Player player) {
@@ -281,15 +293,16 @@ public class Crafting implements UseInvTrigger,
 		int repeat = 1;
 
 		// Perfect gold bars shouldn't be batched
-		if (item.getCatalogId() != ItemId.GOLD_BAR_FAMILYCREST.id()) {
-			if (gem > 0) {
-				repeat = Math.min(
-					player.getCarriedItems().getInventory().countId(gems[gem], Optional.of(false)),
-					player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false))
-				);
-			}
-			else {
-				repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			if (item.getCatalogId() != ItemId.GOLD_BAR_FAMILYCREST.id()) {
+				if (gem > 0) {
+					repeat = Math.min(
+						player.getCarriedItems().getInventory().countId(gems[gem], Optional.of(false)),
+						player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false))
+					);
+				} else {
+					repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+				}
 			}
 		}
 
