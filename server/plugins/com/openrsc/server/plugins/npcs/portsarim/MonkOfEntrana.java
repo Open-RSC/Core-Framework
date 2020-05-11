@@ -26,9 +26,9 @@ public final class MonkOfEntrana implements OpLocTrigger,
 		"throwing", "sword"
 	};
 
-	private String[] exceptions = new String[]{ "fish", "pick" };
+	private String[] exceptions = new String[]{ "fish", "pickaxe" };
 
-	private boolean BLOCK_ITEM(String itemName) {
+	private boolean BLOCK_ITEM(String itemName, boolean equipmentTab) {
 		// Checks to see if the item is in the blocked list
 		boolean blocked = Arrays.stream(blockedItems).parallel().anyMatch(itemName::contains);
 		// If it is, checks to see if it is on the exception list
@@ -36,26 +36,31 @@ public final class MonkOfEntrana implements OpLocTrigger,
 		if (blocked && !Arrays.stream(exceptions).parallel().anyMatch(itemName::contains)) {
 			return true;
 		}
+		// Block item if it is a pickaxe that isn't bronze.
+		if (equipmentTab && itemName.contains("pickaxe") && !itemName.contains("bronze")) {
+			return true;
+		}
 		return false;
 	}
 
 	private boolean CANT_GO(Player player) {
+		boolean equipmentTab = player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB;
 		synchronized(player.getCarriedItems().getInventory().getItems()) {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
 				String name = item.getDef(player.getWorld()).getName().toLowerCase();
-				if (BLOCK_ITEM(name))
+				if (BLOCK_ITEM(name, equipmentTab))
 					return true;
 			}
 		}
 
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (equipmentTab) {
 			Item item;
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				item = player.getCarriedItems().getEquipment().get(i);
 				if (item == null)
 					continue;
 				String name = item.getDef(player.getWorld()).getName().toLowerCase();
-				if (BLOCK_ITEM(name))
+				if (BLOCK_ITEM(name, true))
 					return true;
 			}
 		}
