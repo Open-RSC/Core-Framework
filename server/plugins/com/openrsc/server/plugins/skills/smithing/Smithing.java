@@ -218,6 +218,8 @@ public class Smithing implements UseLocTrigger {
 
 		if (makeCount == -1) return;
 
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) { startBatchProgressBar(makeCount); }
+
 		batchSmithing(player, item, def, makeCount);
 	}
 
@@ -260,6 +262,7 @@ public class Smithing implements UseLocTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			batchSmithing(player, item, def, repeat);
 		}
