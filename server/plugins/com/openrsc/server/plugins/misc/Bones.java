@@ -28,6 +28,7 @@ public class Bones implements OpInvTrigger {
 			int buryAmount = 1;
 			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 				buryAmount = item.getAmount();
+				startBatchProgressBar(buryAmount);
 			}
 
 			buryBones(player, item, buryAmount);
@@ -48,6 +49,7 @@ public class Bones implements OpInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			buryBones(player, item, repeat);
 		}
