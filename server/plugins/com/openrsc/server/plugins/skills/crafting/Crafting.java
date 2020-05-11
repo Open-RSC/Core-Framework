@@ -304,6 +304,7 @@ public class Crafting implements UseInvTrigger,
 					repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 				}
 			}
+			startBatchProgressBar(repeat);
 		}
 
 		batchGoldJewelry(player, item, def, gem, gems, type, reply, repeat);
@@ -358,6 +359,7 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, def.getExp(), true);
 
 		// Repeat
+		updateBatchBar();
 		if(!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchGoldJewelry(player, item, def, gem, gems, type, reply, repeat);
@@ -390,6 +392,7 @@ public class Crafting implements UseInvTrigger,
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+			startBatchProgressBar(repeat);
 		}
 		batchSilverJewelry(player, item, results, type, reply, repeat);
 	}
@@ -424,6 +427,7 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, 200, true);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchSilverJewelry(player, item, results, type, reply, repeat);
@@ -468,6 +472,7 @@ public class Crafting implements UseInvTrigger,
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+			startBatchProgressBar(repeat);
 		}
 
 		batchPotteryMoulding(player, item, reqLvl, result, msg, exp, repeat);
@@ -493,6 +498,7 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, exp, true);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchPotteryMoulding(player, item, reqLvl, result, msg, exp, repeat);
@@ -533,6 +539,7 @@ public class Crafting implements UseInvTrigger,
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+			startBatchProgressBar(repeat);
 		}
 		batchPotteryFiring(player, item, reqLvl, result, msg, exp, repeat);
 	}
@@ -572,6 +579,7 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchPotteryFiring(player, item, reqLvl, result, msg, exp, repeat);
@@ -584,6 +592,7 @@ public class Crafting implements UseInvTrigger,
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 			repeat = Math.min(player.getCarriedItems().getInventory().countId(otherItem, Optional.of(false)), repeat);
+			startBatchProgressBar(repeat);
 		}
 
 		batchGlassMaking(player, item, otherItem, repeat);
@@ -611,6 +620,7 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, 80, true);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchGlassMaking(player, item, otherItem, repeat);
@@ -664,6 +674,7 @@ public class Crafting implements UseInvTrigger,
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(glass.getCatalogId(), Optional.of(false));
+			startBatchProgressBar(repeat);
 		}
 		batchGlassBlowing(player, glass, result, reqLvl, exp, resultGen, repeat);
 	}
@@ -724,6 +735,7 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, exp, true);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			batchGlassBlowing(player, glass, result, reqLvl, exp, resultGen, repeat);
@@ -752,6 +764,7 @@ public class Crafting implements UseInvTrigger,
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(gem.getCatalogId(), Optional.of(false));
+			startBatchProgressBar(repeat);
 		}
 		batchGemCutting(player, gem, gemDef, repeat);
 	}
@@ -794,6 +807,7 @@ public class Crafting implements UseInvTrigger,
 			player.incExp(Skills.CRAFTING, gemDef.getExp(), true);
 		}
 
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			batchGemCutting(player, gem, gemDef, repeat);
@@ -895,6 +909,7 @@ public class Crafting implements UseInvTrigger,
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(leather.getCatalogId(), Optional.of(false));
+			startBatchProgressBar(repeat);
 		}
 		batchLeather(player, leather, result, reqLvl, exp, repeat);
 	}
@@ -934,6 +949,7 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchLeather(player, leather, result, reqLvl, exp, repeat);
@@ -976,6 +992,7 @@ public class Crafting implements UseInvTrigger,
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = Math.min(woolAmount, amuletAmount);
+			startBatchProgressBar(repeat);
 		}
 		batchString(player, item, woolBall, newID, repeat);
 	}
@@ -996,6 +1013,7 @@ public class Crafting implements UseInvTrigger,
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchString(player, item, woolBall, newID, repeat);
