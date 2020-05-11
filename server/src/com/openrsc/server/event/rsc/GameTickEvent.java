@@ -34,7 +34,7 @@ public abstract class GameTickEvent implements Callable<Integer> {
 	}
 
 	public GameTickEvent(final World world, final Mob owner, final long ticks, final String descriptor) {
-		this(world, owner, ticks, descriptor, false);
+		this(world, owner, ticks, descriptor, true);
 	}
 
 	public abstract void run();

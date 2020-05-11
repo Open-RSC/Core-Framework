@@ -3579,7 +3579,7 @@ public class EntityHandler {
 				printWriter.flush();
 			}
 			else if(item.id >= 0) {
-				printWriter.println("UPDATE `openrsc_itemdef` SET `name`='" + item.getName().replace("'", "''") + "',`description`='" + item.getDescription().replace("'", "''") + "', " + (item.getCommand().isEmpty() ? "" : "`command`='" + item.getCommand() + "',") + "`isStackable`=" + (item.isStackable() ? "'1'" : "'0'") + ",`isUntradable`=" + (item.quest ? "'1'" : "'0'") + ",`isWearable`=" + (item.isWieldable() ? "'1'" : "'0'") + ",`wearableID`='" + item.wearableID + "',`basePrice`='" + item.getBasePrice() + "',`isMembersOnly`=" + (item.membersItem ? "'1'" : "'0'") + " WHERE id='" + item.id + "';");
+				printWriter.println("UPDATE `openrsc_itemdef` SET `name`='" + item.getName().replace("'", "''") + "',`description`='" + item.getDescription().replace("'", "''") + "', " + (item.getCommand().isEmpty() ? "" : "`command`='" + item.getCommand() + "',") + "`isStackable`=" + (item.isStackable() ? "'1'" : "'0'") + ",`isUntradable`=" + (item.untradeable ? "'1'" : "'0'") + ",`isWearable`=" + (item.isWieldable() ? "'1'" : "'0'") + ",`wearableID`='" + item.wearableID + "',`basePrice`='" + item.getBasePrice() + "',`isMembersOnly`=" + (item.membersItem ? "'1'" : "'0'") + " WHERE id='" + item.id + "';");
 				printWriter.flush();
 			}
 			else {
@@ -6382,7 +6382,7 @@ public class EntityHandler {
 					item.command = null;
 					item.wieldable = false;
 					item.wearableID = 0;
-					item.quest = true;
+					item.untradeable = true;
 				}
 			}
 		}

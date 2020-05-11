@@ -111,6 +111,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		case RAW_TROUT:
 		case TROUT:
 		case RAW_SALMON:
+		case SALMON:
 		case RAW_TUNA:
 		case TUNA:
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));

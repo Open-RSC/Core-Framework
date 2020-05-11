@@ -10406,7 +10406,7 @@ public final class mudclient implements Runnable {
 				andStakeSuccess = true;
 			}
 
-			if (EntityHandler.getItemDef(andStakeInvID).quest && !localPlayer.isAdmin()) {
+			if (EntityHandler.getItemDef(andStakeInvID).untradeable && !localPlayer.isAdmin()) {
 				andStakeSuccess = true;
 				this.showMessage(false, null, "This object cannot be added to a duel offer", MessageType.GAME,
 					0, null);
@@ -16065,7 +16065,7 @@ public final class mudclient implements Runnable {
 				offerSuccess = true;
 			}
 
-			if (def.quest && !localPlayer.isAdmin()) {
+			if (def.untradeable && !localPlayer.isAdmin()) {
 				offerSuccess = true;
 				this.showMessage(false, null, "This object cannot be traded with other players",
 					MessageType.GAME, 0, null);
