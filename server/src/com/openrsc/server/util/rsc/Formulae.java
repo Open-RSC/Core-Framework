@@ -224,6 +224,34 @@ public final class Formulae {
 	}
 
 	/**
+	 * Calculate experience done on a per hit & damage made
+	 * OG RSC only gave if attacker is on Ranged and Mob was Player
+	 * Best found fit through points: Math.round((27 * damage - 3) / 5.0)
+	 * However, RSC+ client show not a constant, doing average of averages
+	 * seems fit 16/3. Since server does not keep track of /3 has to be simulated
+	 * by roll.
+	 */
+	public static int rangedHitExperience(Mob mob, int damageMade) {
+		// ranged vs npc is not per hit but per mob kill, see combatExperience
+		if (mob.isNpc()) {
+			return 0;
+		} else {
+			int totalXP = 16 * damageMade;
+			int baseXP = totalXP / 3;
+			int remainder = totalXP % 12;
+			int sendXP;
+			if (remainder == 0) {
+				sendXP = baseXP;
+			} else if (remainder <= 6) {
+				sendXP = baseXP + (DataConversions.random(0,2) == 0 ? 1 : 0);
+			} else {
+				sendXP = baseXP + (DataConversions.random(0,2) == 0 ? 2 : 3);
+			}
+			return sendXP;
+		}
+	}
+
+	/**
 	 * Should the pot crack?
 	 */
 	public static boolean crackPot(int requiredLvl, int craftingLvl) {

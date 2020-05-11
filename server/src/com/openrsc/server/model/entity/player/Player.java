@@ -625,8 +625,7 @@ public final class Player extends Mob {
 				}
 			}
 			if (!missile) {
-				if (System.currentTimeMillis() - mob.getCombatTimer() < (mob.getCombatState() == CombatState.RUNNING
-					|| mob.getCombatState() == CombatState.WAITING ? 3000 : 500)) {
+				if (System.currentTimeMillis() - mob.getCombatTimer() < getWorld().getServer().getConfig().GAME_TICK * 5) {
 					return false;
 				}
 			}

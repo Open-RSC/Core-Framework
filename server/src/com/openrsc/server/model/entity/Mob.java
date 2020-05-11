@@ -551,11 +551,13 @@ public abstract class Mob extends Entity {
 				}
 			}
 
-			if (this.isNpc())
+			if (this.isNpc()) {
 				getWorld().removeNpcPosition((Npc) this);
+			}
 			setLocation(victim.getLocation(), false);
-			if (this.isNpc())
+			if (this.isNpc()) {
 				getWorld().setNpcPosition((Npc) this);
+			}
 
 			setBusy(true);
 			setSprite(ourSprite);
@@ -589,8 +591,7 @@ public abstract class Mob extends Entity {
 				}
 			}*/
 			if (!missile) {
-				if (System.currentTimeMillis() - mob.getCombatTimer() < (mob.getCombatState() == CombatState.RUNNING
-					|| mob.getCombatState() == CombatState.WAITING ? 3000 : 500)) {
+				if (System.currentTimeMillis() - mob.getCombatTimer() < getWorld().getServer().getConfig().GAME_TICK * 5) {
 					return false;
 				}
 			}
@@ -735,12 +736,8 @@ public abstract class Mob extends Entity {
 		combatTimer = System.currentTimeMillis() + delay;
 	}
 
-	public long getRanAwayTimer() {
-		return ranAwayTimer;
-	}
-
-	public void setRanAwayTimer() {
-		ranAwayTimer = System.currentTimeMillis();
+	public void setCombatTimer() {
+		combatTimer = System.currentTimeMillis();
 	}
 
 	public GameTickEvent getFollowEvent() {
@@ -844,10 +841,6 @@ public abstract class Mob extends Entity {
 
 	public void resetSpriteChanged() {
 		spriteChanged = false;
-	}
-
-	public void setCombatTimer() {
-		combatTimer = System.currentTimeMillis();
 	}
 
 	public void setLastCombatState(final CombatState lastCombatState) {
