@@ -554,13 +554,13 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 		if (item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
 			&& obj.getY() == 532) {
 			thinkbubble(player, item);
+			mes(player, "You unlock the door");
 			if (player.getY() <= 531) {
 				doDoor(obj, player);
-				player.teleport(player.getX(), player.getY() + 1, false);
 			} else {
 				doDoor(obj, player);
-				player.teleport(player.getX(), player.getY() - 1, false);
 			}
+			mes(player, "You go through the door");
 		}
 
 	}
