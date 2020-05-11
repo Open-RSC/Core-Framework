@@ -301,7 +301,7 @@ public final class AuctionHouse {
 						if (mc.getMouseClick() == 1) {
 							int itemID = mc.getInventoryItemID(inventorySlot);
 							int amount = mc.getInventoryCount(itemID);
-							if (itemID == 10 || EntityHandler.getItemDef(itemID).quest) {
+							if (itemID == 10 || EntityHandler.getItemDef(itemID).untradeable) {
 								mc.showMessage(false, null, "This object cannot be added to auction", MessageType.GAME,
 									0, null);
 								return;
