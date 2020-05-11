@@ -3,8 +3,8 @@ package orsc.graphics.gui;
 public class SocialLists {
 	public static int friendListCount = 0;
 	public static String[] friendList = new String[200];
-	public static int[] friendListArg = new int[200];
-	public static String[] friendListArgS = new String[200];
+	public static int[] friendListOnlineStatus = new int[200];
+	public static String[] friendListWorld = new String[200];
 	public static String[] friendListOld = new String[200];
 
 	public static int ignoreListCount = 0;

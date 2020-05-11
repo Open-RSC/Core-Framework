@@ -753,47 +753,47 @@ public class PacketHandler {
 	private void sendConnectionMessage() {
 		String currentName = packetsIncoming.readString();
 		String formerName = packetsIncoming.readString();
-		int arg = packetsIncoming.getUnsignedByte();
-		boolean rename = (arg & 1) != 0;
-		boolean online = (4 & arg) != 0;
-		String var9 = null;
+		int onlineStatus = packetsIncoming.getUnsignedByte();
+		boolean rename = (onlineStatus & 1) != 0;
+		boolean online = (4 & onlineStatus) != 0;
+		String world = null;
 		if (online) {
-			var9 = packetsIncoming.readString();
+			world = packetsIncoming.readString();
 		}
 		for (int i = 0; i < SocialLists.friendListCount; ++i) {
 			if (!rename) {
 				if (SocialLists.friendList[i].equals(currentName)) {
-					if (SocialLists.friendListArgS[i] == null && online) {
+					if (SocialLists.friendListWorld[i] == null && online) {
 						mc.showMessage(false, null, currentName + " has logged in",
 							MessageType.FRIEND_STATUS, 0, null);
 					}
 
-					if (null != SocialLists.friendListArgS[i] && !online) {
+					if (null != SocialLists.friendListWorld[i] && !online) {
 						mc.showMessage(false, null, currentName + " has logged out",
 							MessageType.FRIEND_STATUS, 0, null);
 					}
 
 					SocialLists.friendListOld[i] = formerName;
-					SocialLists.friendListArgS[i] = var9;
-					SocialLists.friendListArg[i] = arg;
+					SocialLists.friendListWorld[i] = world;
+					SocialLists.friendListOnlineStatus[i] = onlineStatus;
 					mc.sortOnlineFriendsList();
 					return;
 				}
 			} else if (SocialLists.friendList[i].equals(formerName)) {
-				if (SocialLists.friendListArgS[i] == null && online) {
+				if (SocialLists.friendListWorld[i] == null && online) {
 					mc.showMessage(false, null, currentName + " has logged in",
 						MessageType.FRIEND_STATUS, 0, null);
 				}
 
-				if (SocialLists.friendListArgS[i] != null && !online) {
+				if (SocialLists.friendListWorld[i] != null && !online) {
 					mc.showMessage(false, null, currentName + " has logged out",
 						MessageType.FRIEND_STATUS, 0, null);
 				}
 
 				SocialLists.friendList[i] = currentName;
 				SocialLists.friendListOld[i] = formerName;
-				SocialLists.friendListArgS[i] = var9;
-				SocialLists.friendListArg[i] = arg;
+				SocialLists.friendListWorld[i] = world;
+				SocialLists.friendListOnlineStatus[i] = onlineStatus;
 				mc.sortOnlineFriendsList();
 				return;
 			}
@@ -807,8 +807,8 @@ public class PacketHandler {
 
 		SocialLists.friendList[SocialLists.friendListCount] = currentName;
 		SocialLists.friendListOld[SocialLists.friendListCount] = formerName;
-		SocialLists.friendListArgS[SocialLists.friendListCount] = var9;
-		SocialLists.friendListArg[SocialLists.friendListCount] = arg;
+		SocialLists.friendListWorld[SocialLists.friendListCount] = world;
+		SocialLists.friendListOnlineStatus[SocialLists.friendListCount] = onlineStatus;
 		++SocialLists.friendListCount;
 		mc.sortOnlineFriendsList();
 	}

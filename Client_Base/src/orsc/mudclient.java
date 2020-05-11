@@ -2299,13 +2299,13 @@ public final class mudclient implements Runnable {
 						if (this.m_wk >= 0) {
 							String var10 = "";
 							var5 = this.m_wk;
-							if ((4 & SocialLists.friendListArg[var5]) == 0) {
+							if ((4 & SocialLists.friendListOnlineStatus[var5]) == 0) {
 								var9 = SocialLists.friendList[var5];
 								var10 = " is offline";
 							} else {
 								var9 = "Click to message " + SocialLists.friendList[var5];
-								if (SocialLists.friendListArgS[var5] != null) {
-									var10 = " on " + SocialLists.friendListArgS[var5];
+								if (SocialLists.friendListWorld[var5] != null) {
+									var10 = " on " + SocialLists.friendListWorld[var5];
 								}
 							}
 
@@ -5767,7 +5767,7 @@ public final class mudclient implements Runnable {
 				for (int i = 0; i < SocialLists.friendListCount; ++i) {
 					if (otherKey.equals(StringUtil.displayNameToKey(SocialLists.friendList[i]))) {
 						isOnFriendList = true;
-						if ((4 & SocialLists.friendListArg[i]) != 0) {
+						if ((4 & SocialLists.friendListOnlineStatus[i]) != 0) {
 							isOnline = true;
 						}
 						break;
@@ -7822,8 +7822,8 @@ public final class mudclient implements Runnable {
 			// friend tab
 			if (this.panelSocialTab == 0) {
 				for (index = 0; index < SocialLists.friendListCount; ++index) {
-					if ((SocialLists.friendListArg[index] & 2) == 0) {
-						if ((SocialLists.friendListArg[index] & 4) == 0) {
+					if ((SocialLists.friendListOnlineStatus[index] & 2) == 0) {
+						if ((SocialLists.friendListOnlineStatus[index] & 4) == 0) {
 							colorKey = "@red@";
 						} else {
 							colorKey = "@yel@";
@@ -8084,7 +8084,7 @@ public final class mudclient implements Runnable {
 						if (index >= 0 && this.mouseX < maxWidth) {
 							if (this.mouseX > minWidth) { // Remove Friend
 								this.removeFriend(SocialLists.friendList[index], (byte) 69);
-							} else if ((SocialLists.friendListArg[index] & 4) != 0) { // Message Friend
+							} else if ((SocialLists.friendListOnlineStatus[index] & 4) != 0) { // Message Friend
 								this.panelSocialPopup_Mode = SocialPopupMode.MESSAGE_FRIEND;
 								this.chatMessageTarget = SocialLists.friendList[index];
 								this.chatMessageInputCommit = "";
@@ -8139,7 +8139,7 @@ public final class mudclient implements Runnable {
 								for (int i = 0; i < SocialLists.friendListCount; ++i) {
 									if (StringUtil.displayNameToKey(clan.username[index]).equals(StringUtil.displayNameToKey(SocialLists.friendList[i]))) {
 										isOnFriendList = true;
-										if ((4 & SocialLists.friendListArg[i]) != 0) {
+										if ((4 & SocialLists.friendListOnlineStatus[i]) != 0) {
 											isOnline = true;
 										}
 										break;
@@ -8472,7 +8472,7 @@ public final class mudclient implements Runnable {
 				if (null != var16) {
 					for (int var17 = 0; var17 < SocialLists.friendListCount; ++var17) {
 						if (var16.equals(StringUtil.displayNameToKey(SocialLists.friendList[var17]))
-							&& (SocialLists.friendListArg[var17] & 2) != 0) {
+							&& (SocialLists.friendListOnlineStatus[var17] & 2) != 0) {
 							var15 = '\uff00';
 							break;
 						}
@@ -13986,8 +13986,8 @@ public final class mudclient implements Runnable {
 						for (int var5 = var4; var5 < SocialLists.friendListCount; ++var5) {
 							SocialLists.friendList[var5] = SocialLists.friendList[1 + var5];
 							SocialLists.friendListOld[var5] = SocialLists.friendListOld[1 + var5];
-							SocialLists.friendListArgS[var5] = SocialLists.friendListArgS[1 + var5];
-							SocialLists.friendListArg[var5] = SocialLists.friendListArg[var5 + 1];
+							SocialLists.friendListWorld[var5] = SocialLists.friendListWorld[1 + var5];
+							SocialLists.friendListOnlineStatus[var5] = SocialLists.friendListOnlineStatus[var5 + 1];
 						}
 
 						this.packetHandler.getClientStream().newPacket(167);
@@ -14553,11 +14553,11 @@ public final class mudclient implements Runnable {
 				loopModified = false;
 				for (int i = 0; i < SocialLists.friendListCount - 1; ++i) {
 					// If we aren't online and the next is cycle down.
-					if ((SocialLists.friendListArg[i] & 2) == 0 && (SocialLists.friendListArg[i + 1] & 2) != 0
-						|| (4 & SocialLists.friendListArg[i]) == 0 && (SocialLists.friendListArg[1 + i] & 4) != 0) {
-						String tmpS = SocialLists.friendListArgS[i];
-						SocialLists.friendListArgS[i] = SocialLists.friendListArgS[i + 1];
-						SocialLists.friendListArgS[i + 1] = tmpS;
+					if ((SocialLists.friendListOnlineStatus[i] & 2) == 0 && (SocialLists.friendListOnlineStatus[i + 1] & 2) != 0
+						|| (4 & SocialLists.friendListOnlineStatus[i]) == 0 && (SocialLists.friendListOnlineStatus[1 + i] & 4) != 0) {
+						String tmpS = SocialLists.friendListWorld[i];
+						SocialLists.friendListWorld[i] = SocialLists.friendListWorld[i + 1];
+						SocialLists.friendListWorld[i + 1] = tmpS;
 
 						tmpS = SocialLists.friendList[i];
 						SocialLists.friendList[i] = SocialLists.friendList[1 + i];
@@ -14567,9 +14567,9 @@ public final class mudclient implements Runnable {
 						SocialLists.friendListOld[i] = SocialLists.friendListOld[i + 1];
 						SocialLists.friendListOld[i + 1] = tmpS;
 
-						int tmpInt = SocialLists.friendListArg[i];
-						SocialLists.friendListArg[i] = SocialLists.friendListArg[i + 1];
-						SocialLists.friendListArg[i + 1] = tmpInt;
+						int tmpInt = SocialLists.friendListOnlineStatus[i];
+						SocialLists.friendListOnlineStatus[i] = SocialLists.friendListOnlineStatus[i + 1];
+						SocialLists.friendListOnlineStatus[i + 1] = tmpInt;
 
 						loopModified = true;
 					}
