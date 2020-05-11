@@ -35,7 +35,9 @@ public class Bank {
 	 * Attempts to add the item to the player's Bank.
 	 * Updates the database.
 	 */
-	public boolean add(Item itemToAdd) {
+	public boolean add(Item itemToAdd) { return add(itemToAdd, true); }
+
+	public boolean add(Item itemToAdd, boolean updateClient) {
 		synchronized(list) {
 			try {
 				// Check bounds of amount
@@ -78,7 +80,9 @@ public class Bank {
 					player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
 
 					// Update the client bank
-					ActionSender.updateBankItem(player, list.size() - 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
+					if (updateClient) {
+						ActionSender.updateBankItem(player, list.size() - 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
+					}
 
 				// A stack exists of this item in the bank already.
 				} else {
@@ -93,7 +97,9 @@ public class Bank {
 						existingStack.changeAmount(player.getWorld().getServer().getDatabase(), itemToAdd.getAmount());
 
 						// Update the client bank
-						ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), existingStack.getAmount());
+						if (updateClient) {
+							ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), existingStack.getAmount());
+						}
 
 					// In the second case, we must made a new stack as well as updating the old one. (First is full.)
 					} else {
@@ -111,8 +117,10 @@ public class Bank {
 						player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
 
 						// Update the client - both stacks
-						ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), Integer.MAX_VALUE);
-						ActionSender.updateBankItem(player, list.size()-1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
+						if (updateClient) {
+							ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), Integer.MAX_VALUE);
+							ActionSender.updateBankItem(player, list.size() - 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
+						}
 					}
 				}
 			} catch (GameDatabaseException ex) {
@@ -124,10 +132,18 @@ public class Bank {
 	}
 
 	public boolean remove(Item item) {
-		return remove(item.getCatalogId(), item.getAmount());
+		return remove(item, true);
+	}
+
+	public boolean remove(Item item, boolean updateClient) {
+		return remove(item.getCatalogId(), item.getAmount(), updateClient);
 	}
 
 	public boolean remove(int catalogID, int amount) {
+		return remove(catalogID, amount, true);
+	}
+
+	public boolean remove(int catalogID, int amount, boolean updateClient) {
 		synchronized(list) {
 			try {
 				int bankIndex = getFirstIndexById(catalogID);
@@ -150,8 +166,9 @@ public class Bank {
 					player.getWorld().getServer().getDatabase().bankRemoveFromPlayer(player, bankItem);
 
 					// Update the Client
-					// TODO: need a parameter for flagging to update the client or not
-					ActionSender.updateBankItem(player, bankIndex, 0, 0);
+					if (updateClient) {
+						ActionSender.updateBankItem(player, bankIndex, 0, 0);
+					}
 
 				// We are removing only some of the total held in the bank
 				} else {
@@ -160,8 +177,9 @@ public class Bank {
 					bankItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
 
 					// Update the Client
-					// TODO: Need a new parameter for the function that flags if should update the client
-					ActionSender.updateBankItem(player, bankIndex, bankItem.getCatalogId(), bankItem.getAmount());
+					if (updateClient) {
+						ActionSender.updateBankItem(player, bankIndex, bankItem.getCatalogId(), bankItem.getAmount());
+					}
 				}
 
 				return true;

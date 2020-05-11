@@ -133,7 +133,7 @@ public class Certer implements TalkNpcTrigger {
 					+ bankItem.getAmount() + " "
 					+ bankItem.getDef(player.getWorld()).getName()
 					+ " is added to your bank");
-				player.getBank().add(bankItem);
+				player.getBank().add(bankItem, false);
 			}
 		} else {
 			certAmount += 1;
@@ -181,8 +181,8 @@ public class Certer implements TalkNpcTrigger {
 				player.message("You don't have any " + names[index] + " to cert");
 				return;
 			}
-			// TODO: itemId is wrong here?
-			if (!player.getBank().remove(new Item(itemID, itemAmount))) {
+
+			if (!player.getBank().remove(new Item(itemID, itemAmount), false)) {
 				player.message("You exchange the " + certerDef.getType() + ", "
 					+ itemAmount + " "
 					+ player.getWorld().getServer().getEntityHandler().getItemDef(itemID).getName()
