@@ -67,6 +67,14 @@ public class RangeEvent extends GameTickEvent {
 		super(world, owner, 1, "Range Event");
 		this.target = victim;
 		this.deliveredFirstProjectile = false;
+		long diff = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L);
+		boolean canShoot = diff >= getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
+		if (!canShoot) {
+			long delay = diff / getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK;
+			if (delay > 0) {
+				setDelayTicks(delay);
+			}
+		}
 	}
 
 	public boolean equals(Object o) {
@@ -102,203 +110,203 @@ public class RangeEvent extends GameTickEvent {
 				getPlayerOwner().resetRange();
 				stop();
 			}
-		} else {
-			getPlayerOwner().resetPath();
+			return;
+		}
 
-			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
-			if (canShoot) {
-				if (!PathValidation.checkPath(getPlayerOwner().getWorld(), getPlayerOwner().getLocation(), target.getLocation())) {
-					getPlayerOwner().message("I can't get a clear shot from here");
+		setDelayTicks(3);
+
+		getPlayerOwner().resetPath();
+		if (!PathValidation.checkPath(getPlayerOwner().getWorld(), getPlayerOwner().getLocation(), target.getLocation())) {
+			getPlayerOwner().message("I can't get a clear shot from here");
+			getPlayerOwner().resetRange();
+			stop();
+			return;
+		}
+
+		// Authentic player always faced NW
+		getPlayerOwner().face(getPlayerOwner().getX() + 1, getPlayerOwner().getY() - 1);
+		getPlayerOwner().setAttribute("rangedTimeout", System.currentTimeMillis());
+
+		if (target.isPlayer()) {
+			Player playerTarget = (Player) target;
+			if (playerTarget.getPrayers().isPrayerActivated(Prayers.PROTECT_FROM_MISSILES)) {
+				getPlayerOwner().message("Player has a protection from missiles prayer active!");
+				return;
+			}
+		}
+
+		if (target.isNpc()) {
+			if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(),"PlayerRangeNpc", new Object[]{getOwner(), (Npc)target})) {
+				getPlayerOwner().resetRange();
+				stop();
+				return;
+			}
+		} else if(target.isPlayer()) {
+			if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(),"PlayerRangePlayer", new Object[]{getOwner(), (Player)target})) {
+				getPlayerOwner().resetRange();
+				stop();
+				return;
+			}
+		}
+		boolean xbow = DataConversions.inArray(Formulae.xbowIDs, bowID);
+		int arrowID = -1;
+		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
+		{
+			Item ammo = getPlayerOwner().getCarriedItems().getEquipment().getAmmoItem();
+			if (ammo == null || ammo.getDef(getOwner().getWorld()) == null)
+			{
+				getPlayerOwner().message("you don't have any ammo equipped");
+				getPlayerOwner().resetRange();
+				return;
+			}
+			if (xbow && ammo.getDef(getOwner().getWorld()).getWearableId() == 1000) {
+				getPlayerOwner().message("You can't fire arrows with a crossbow");
+				getPlayerOwner().resetRange();
+				return;
+			} else if (!xbow && ammo.getDef(getOwner().getWorld()).getWearableId() == 1001) {
+				getPlayerOwner().message("You can't fire bolts with a bow");
+				getPlayerOwner().resetRange();
+				return;
+			}
+			arrowID = ammo.getCatalogId();
+			boolean canFire = false;
+			int[][] allowed = xbow ? allowedBolts : allowedArrows;
+			for (int[] arrow : allowed) {
+				if (arrow[0] == bowID) {
+					for (int arrows : arrow)
+						if (arrows == arrowID) {
+							canFire = true;
+							break;
+						}
+				}
+				if (canFire)
+					break;
+			}
+			if (!canFire) {
+				getPlayerOwner().message("Your ammo is too powerful for your bow");
+				getPlayerOwner().resetRange();
+				return;
+			}
+			getPlayerOwner().getCarriedItems().getEquipment().remove(ammo, 1);
+			ActionSender.updateEquipmentSlot(getPlayerOwner(), 12);
+		} else {
+			for (int aID : (xbow ? Formulae.boltIDs : Formulae.arrowIDs)) {
+				int slot = getPlayerOwner().getCarriedItems().getInventory().getLastIndexById(aID);
+				if (slot < 0) {
+					continue;
+				}
+				Item arrow = getPlayerOwner().getCarriedItems().getInventory().get(slot);
+				if (arrow == null) { // This shouldn't happen
+					continue;
+				}
+				arrowID = aID;
+				if (!getWorld().getServer().getConfig().MEMBER_WORLD) {
+					if (arrowID != 11 && arrowID != 190) {
+						getPlayerOwner().message("You don't have enough ammo in your quiver");
+						getPlayerOwner().resetRange();
+						stop();
+						return;
+					}
+
+				}
+				//if (arrowID != 11 && arrowID != 190) {
+				/*if (!getPlayerOwner().getLocation().isMembersWild()) {
+					getPlayerOwner().message("Members content can only be used in wild levels: "
+							+ World.membersWildStart + " - " + World.membersWildMax);
+					getPlayerOwner().message("You can not use this type of arrows in wilderness.");
 					getPlayerOwner().resetRange();
 					stop();
 					return;
-				}
+				}*/
+				//}
 
-				// Authentic player always faced NW
-				getPlayerOwner().face(getPlayerOwner().getX() + 1, getPlayerOwner().getY() - 1);
-				getPlayerOwner().setAttribute("rangedTimeout", System.currentTimeMillis());
+				int newAmount = arrow.getAmount() - 1;
+				if (!xbow && arrowID > 0) {
+					int temp = -1;
 
-				if (target.isPlayer()) {
-					Player playerTarget = (Player) target;
-					if (playerTarget.getPrayers().isPrayerActivated(Prayers.PROTECT_FROM_MISSILES)) {
-						getPlayerOwner().message("Player has a protection from missiles prayer active!");
-						return;
-					}
-				}
+					for (int i = 0; i < allowedArrows.length; i++)
+						if (allowedArrows[i][0] == getPlayerOwner().getRangeEquip())
+							temp = i;
 
-				if (target.isNpc()) {
-					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(),"PlayerRangeNpc", new Object[]{getOwner(), (Npc)target})) {
-						getPlayerOwner().resetRange();
-						stop();
-						return;
-					}
-				} else if(target.isPlayer()) {
-					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(),"PlayerRangePlayer", new Object[]{getOwner(), (Player)target})) {
-						getPlayerOwner().resetRange();
-						stop();
-						return;
-					}
-				}
-				boolean xbow = DataConversions.inArray(Formulae.xbowIDs, bowID);
-				int arrowID = -1;
-				if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-				{
-					Item ammo = getPlayerOwner().getCarriedItems().getEquipment().getAmmoItem();
-					if (ammo == null || ammo.getDef(getOwner().getWorld()) == null)
-					{
-						getPlayerOwner().message("you don't have any ammo equipped");
-						getPlayerOwner().resetRange();
-						return;
-					}
-					if (xbow && ammo.getDef(getOwner().getWorld()).getWearableId() == 1000) {
-						getPlayerOwner().message("You can't fire arrows with a crossbow");
-						getPlayerOwner().resetRange();
-						return;
-					} else if (!xbow && ammo.getDef(getOwner().getWorld()).getWearableId() == 1001) {
-						getPlayerOwner().message("You can't fire bolts with a bow");
-						getPlayerOwner().resetRange();
-						return;
-					}
-					arrowID = ammo.getCatalogId();
 					boolean canFire = false;
-					int[][] allowed = xbow ? allowedBolts : allowedArrows;
-					for (int[] arrow : allowed) {
-						if (arrow[0] == bowID) {
-							for (int arrows : arrow)
-								if (arrows == arrowID) {
-									canFire = true;
-									break;
-								}
-						}
-						if (canFire)
-							break;
-					}
+					for (int i = 0; i < allowedArrows[temp].length; i++)
+						if (allowedArrows[temp][i] == aID)
+							canFire = true;
+
 					if (!canFire) {
-						getPlayerOwner().message("Your ammo is too powerful for your bow");
+						getPlayerOwner().message("Your arrows are too powerful for your Bow.");
 						getPlayerOwner().resetRange();
 						return;
 					}
-					getPlayerOwner().getCarriedItems().getEquipment().remove(ammo, 1);
-					ActionSender.updateEquipmentSlot(getPlayerOwner(), 12);
-				} else {
-					for (int aID : (xbow ? Formulae.boltIDs : Formulae.arrowIDs)) {
-						int slot = getPlayerOwner().getCarriedItems().getInventory().getLastIndexById(aID);
-						if (slot < 0) {
-							continue;
-						}
-						Item arrow = getPlayerOwner().getCarriedItems().getInventory().get(slot);
-						if (arrow == null) { // This shouldn't happen
-							continue;
-						}
-						arrowID = aID;
-						if (!getWorld().getServer().getConfig().MEMBER_WORLD) {
-							if (arrowID != 11 && arrowID != 190) {
-								getPlayerOwner().message("You don't have enough ammo in your quiver");
-								getPlayerOwner().resetRange();
-								stop();
-								return;
-							}
-
-						}
-						//if (arrowID != 11 && arrowID != 190) {
-						/*if (!getPlayerOwner().getLocation().isMembersWild()) {
-							getPlayerOwner().message("Members content can only be used in wild levels: "
-									+ World.membersWildStart + " - " + World.membersWildMax);
-							getPlayerOwner().message("You can not use this type of arrows in wilderness.");
-							getPlayerOwner().resetRange();
-							stop();
-							return;
-						}*/
-						//}
-
-						int newAmount = arrow.getAmount() - 1;
-						if (!xbow && arrowID > 0) {
-							int temp = -1;
-
-							for (int i = 0; i < allowedArrows.length; i++)
-								if (allowedArrows[i][0] == getPlayerOwner().getRangeEquip())
-									temp = i;
-
-							boolean canFire = false;
-							for (int i = 0; i < allowedArrows[temp].length; i++)
-								if (allowedArrows[temp][i] == aID)
-									canFire = true;
-
-							if (!canFire) {
-								getPlayerOwner().message("Your arrows are too powerful for your Bow.");
-								getPlayerOwner().resetRange();
-								return;
-							}
-						}
-						Item toRemove = new Item(arrow.getCatalogId(), 1, false, arrow.getItemId());
-						getPlayerOwner().getCarriedItems().remove(toRemove);
-						break;
-					}
 				}
-
-				if (arrowID < 0) {
-					getPlayerOwner().message("I've run out of ammo!");
-					if (getPlayerOwner().getCache().hasKey("shot_ice")) {
-						getPlayerOwner().getCache().remove("shot_ice");
-					}
-					ActionSender.sendSound(getPlayerOwner(), "outofammo");
-					getPlayerOwner().resetRange();
-					return;
-				}
-				int damage = CombatFormula.doRangedDamage(getPlayerOwner(), arrowID, target);
-
-				if (target.isNpc()) {
-					Npc npc = (Npc) target;
-					if (!deliveredFirstProjectile && (npc.getID() == NpcId.DRAGON.id() || npc.getID() == NpcId.KING_BLACK_DRAGON.id())) {
-						getPlayerOwner().playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
-						int percentage = 20;
-						int fireDamage;
-						if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
-							if (npc.getID() == NpcId.DRAGON.id()) {
-								percentage = 10;
-							} else if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-								percentage = 4;
-							} else {
-								percentage = 0;
-							}
-							getPlayerOwner().playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
-						}
-						fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skills.HITS) * percentage / 100.0);
-						getPlayerOwner().damage(fireDamage);
-
-						//reduce ranged level (case for KBD)
-						if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-							int newLevel = getCurrentLevel(getPlayerOwner(), Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
-							getPlayerOwner().getSkills().setLevel(Skills.RANGED, newLevel);
-						}
-					}
-				} else if(target.isPlayer() && damage > 0) {
-					getPlayerOwner().incExp(Skills.RANGED, Formulae.rangedHitExperience(target, damage), true);
-				}
-				if (Formulae.looseArrow(damage)) {
-					GroundItem arrows = getArrows(arrowID);
-					if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(arrowID, 1))) {
-						if (arrows == null) {
-							getWorld().registerItem(
-								new GroundItem(getPlayerOwner().getWorld(), arrowID, target.getX(), target.getY(), 1, getPlayerOwner()));
-						} else {
-							arrows.setAmount(arrows.getAmount() + 1);
-						}
-					}
-				}
-				ActionSender.sendSound(getPlayerOwner(), "shoot");
-				if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(arrowID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
-					if (DataConversions.random(0, 100) <= 10) {
-						target.setPoisonDamage(target.getSkills().getMaxStat(Skills.HITS));
-						target.startPoisonEvent();
-					}
-				}
-				getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
-				getOwner().setKillType(2);
-				deliveredFirstProjectile = true;
+				Item toRemove = new Item(arrow.getCatalogId(), 1, false, arrow.getItemId());
+				getPlayerOwner().getCarriedItems().remove(toRemove);
+				break;
 			}
 		}
+
+		if (arrowID < 0) {
+			getPlayerOwner().message("I've run out of ammo!");
+			if (getPlayerOwner().getCache().hasKey("shot_ice")) {
+				getPlayerOwner().getCache().remove("shot_ice");
+			}
+			ActionSender.sendSound(getPlayerOwner(), "outofammo");
+			getPlayerOwner().resetRange();
+			return;
+		}
+		int damage = CombatFormula.doRangedDamage(getPlayerOwner(), arrowID, target);
+
+		if (target.isNpc()) {
+			Npc npc = (Npc) target;
+			if (!deliveredFirstProjectile && (npc.getID() == NpcId.DRAGON.id() || npc.getID() == NpcId.KING_BLACK_DRAGON.id())) {
+				getPlayerOwner().playerServerMessage(MessageType.QUEST, "The dragon breathes fire at you");
+				int percentage = 20;
+				int fireDamage;
+				if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+					if (npc.getID() == NpcId.DRAGON.id()) {
+						percentage = 10;
+					} else if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+						percentage = 4;
+					} else {
+						percentage = 0;
+					}
+					getPlayerOwner().playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
+				}
+				fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skills.HITS) * percentage / 100.0);
+				getPlayerOwner().damage(fireDamage);
+
+				//reduce ranged level (case for KBD)
+				if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+					int newLevel = getCurrentLevel(getPlayerOwner(), Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
+					getPlayerOwner().getSkills().setLevel(Skills.RANGED, newLevel);
+				}
+			}
+		} else if(target.isPlayer() && damage > 0) {
+			getPlayerOwner().incExp(Skills.RANGED, Formulae.rangedHitExperience(target, damage), true);
+		}
+		if (Formulae.looseArrow(damage)) {
+			GroundItem arrows = getArrows(arrowID);
+			if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(arrowID, 1))) {
+				if (arrows == null) {
+					getWorld().registerItem(
+						new GroundItem(getPlayerOwner().getWorld(), arrowID, target.getX(), target.getY(), 1, getPlayerOwner()));
+				} else {
+					arrows.setAmount(arrows.getAmount() + 1);
+				}
+			}
+		}
+		ActionSender.sendSound(getPlayerOwner(), "shoot");
+		if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(arrowID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
+			if (DataConversions.random(0, 100) <= 10) {
+				target.setPoisonDamage(target.getSkills().getMaxStat(Skills.HITS));
+				target.startPoisonEvent();
+			}
+		}
+		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
+		getOwner().setKillType(2);
+		deliveredFirstProjectile = true;
 	}
+
 
 	private boolean canReach(Mob mob) {
 		int radius = 5;

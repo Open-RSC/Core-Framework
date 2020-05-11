@@ -24,6 +24,15 @@ public class ThrowingEvent extends GameTickEvent {
 	public ThrowingEvent(World world, Player owner, Mob victim) {
 		super(world, owner, 1, "Throwing Event");
 		this.target = victim;
+
+		long diff = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L);
+		boolean canShoot = diff >= getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
+		if (!canShoot) {
+			long delay = diff / getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK;
+			if (delay > 0) {
+				setDelayTicks(delay);
+			}
+		}
 	}
 
 	public boolean equals(Object o) {
@@ -80,120 +89,119 @@ public class ThrowingEvent extends GameTickEvent {
 				getPlayerOwner().resetRange();
 				stop();
 			}
-		} else {
-			getPlayerOwner().resetPath();
+			return;
+		}
 
-			boolean canShoot = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L) > getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
-			if (canShoot) {
-				if (!PathValidation.checkPath(getWorld(), getPlayerOwner().getLocation(), target.getLocation())) {
-					getPlayerOwner().message("I can't get a clear shot from here");
-					getPlayerOwner().resetRange();
-					stop();
-					return;
-				}
+		setDelayTicks(3);
 
-				// Authentic player always faced NW
-				getPlayerOwner().face(getPlayerOwner().getX() + 1, getPlayerOwner().getY() - 1);
-				getPlayerOwner().setAttribute("rangedTimeout", System.currentTimeMillis());
+		getPlayerOwner().resetPath();
+		if (!PathValidation.checkPath(getWorld(), getPlayerOwner().getLocation(), target.getLocation())) {
+			getPlayerOwner().message("I can't get a clear shot from here");
+			getPlayerOwner().resetRange();
+			stop();
+			return;
+		}
 
-				if (target.isPlayer()) {
-					Player playerTarget = (Player) target;
-					if (playerTarget.getPrayers().isPrayerActivated(Prayers.PROTECT_FROM_MISSILES)) {
-						getPlayerOwner().message("Player has a protection from missiles prayer active!");
-						return;
-					}
-				}
+		// Authentic player always faced NW
+		getPlayerOwner().face(getPlayerOwner().getX() + 1, getPlayerOwner().getY() - 1);
+		getPlayerOwner().setAttribute("rangedTimeout", System.currentTimeMillis());
 
-				if (target.isNpc()) {
-					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(), "PlayerRangeNpc", new Object[]{getOwner(), (Npc)target})) {
-						getPlayerOwner().resetRange();
-						stop();
-						return;
-					}
-				} else if(target.isPlayer()) {
-					if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(), "PlayerRangePlayer", new Object[]{getOwner(), (Player)target})) {
-						getPlayerOwner().resetRange();
-						stop();
-						return;
-					}
-				}
-
-				if (throwingID < 0) {
-					getPlayerOwner().message("I've run out of ammo!");
-					getPlayerOwner().resetRange();
-					stop();
-					return;
-				}
-				Item rangeType;
-				int slot;
-				if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-					slot = getPlayerOwner().getCarriedItems().getEquipment().searchEquipmentForItem(throwingID);
-					if (slot < 0)
-						return;
-					rangeType = getPlayerOwner().getCarriedItems().getEquipment().get(slot);
-					if (rangeType == null)
-						return;
-
-					getPlayerOwner().getCarriedItems().getEquipment().remove(rangeType, 1);
-				} else {
-					slot = getPlayerOwner().getCarriedItems().getInventory().getLastIndexById(throwingID);
-					if (slot < 0) {
-						return;
-					}
-					rangeType = getPlayerOwner().getCarriedItems().getInventory().get(slot);
-					if (rangeType == null) { // This shouldn't happen
-						return;
-					}
-					Item toRemove = new Item(rangeType.getCatalogId(), 1, false, rangeType.getItemId());
-					getPlayerOwner().getCarriedItems().remove(toRemove);
-				}
-
-				/*if (!getPlayerOwner().getLocation().isMembersWild()) {
-					getPlayerOwner().message("Members content can only be used in wild levels: "
-							+ World.membersWildStart + " - " + World.membersWildMax);
-					getPlayerOwner().message("You can not use this type of ranged in wilderness");
-					getPlayerOwner().resetRange();
-					stop();
-					return;
-				}*/
-
-				int damage = CombatFormula.doRangedDamage(getPlayerOwner(), throwingID, target);
-
-				if (target.isNpc()) {
-					Npc npc = (Npc) target;
-					if (damage > 1 && npc.getID() == NpcId.KING_BLACK_DRAGON.id())
-						damage = damage / 2;
-					if (npc.getID() == NpcId.DRAGON.id()) {
-						getPlayerOwner().message("The dragon breathes fire at you");
-						int maxHit = 65;
-						if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
-							maxHit = 10;
-							getPlayerOwner().message("Your shield prevents some of the damage from the flames");
-						}
-						getPlayerOwner().damage(DataConversions.random(0, maxHit));
-					}
-				}
-
-				if (Formulae.looseArrow(damage)) {
-					GroundItem knivesOrDarts = getFloorItem(throwingID);
-					if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(throwingID, 1))) {
-						if (knivesOrDarts == null) {
-							getWorld().registerItem(new GroundItem(getPlayerOwner().getWorld(), throwingID, target.getX(), target.getY(), 1, getPlayerOwner()));
-						} else {
-							knivesOrDarts.setAmount(knivesOrDarts.getAmount() + 1);
-						}
-					}
-				}
-				ActionSender.sendSound(getPlayerOwner(), "shoot");
-				if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(throwingID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
-					if (DataConversions.random(0, 100) <= 10) {
-						target.setPoisonDamage(target.getSkills().getMaxStat(Skills.HITS));
-						target.startPoisonEvent();
-					}
-				}
-				getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
-				getOwner().setKillType(2);
+		if (target.isPlayer()) {
+			Player playerTarget = (Player) target;
+			if (playerTarget.getPrayers().isPrayerActivated(Prayers.PROTECT_FROM_MISSILES)) {
+				getPlayerOwner().message("Player has a protection from missiles prayer active!");
+				return;
 			}
 		}
+
+		if (target.isNpc()) {
+			if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(), "PlayerRangeNpc", new Object[]{getOwner(), (Npc)target})) {
+				getPlayerOwner().resetRange();
+				stop();
+				return;
+			}
+		} else if(target.isPlayer()) {
+			if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(), "PlayerRangePlayer", new Object[]{getOwner(), (Player)target})) {
+				getPlayerOwner().resetRange();
+				stop();
+				return;
+			}
+		}
+
+		if (throwingID < 0) {
+			getPlayerOwner().message("I've run out of ammo!");
+			getPlayerOwner().resetRange();
+			stop();
+			return;
+		}
+		Item rangeType;
+		int slot;
+		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			slot = getPlayerOwner().getCarriedItems().getEquipment().searchEquipmentForItem(throwingID);
+			if (slot < 0)
+				return;
+			rangeType = getPlayerOwner().getCarriedItems().getEquipment().get(slot);
+			if (rangeType == null)
+				return;
+
+			getPlayerOwner().getCarriedItems().getEquipment().remove(rangeType, 1);
+		} else {
+			slot = getPlayerOwner().getCarriedItems().getInventory().getLastIndexById(throwingID);
+			if (slot < 0) {
+				return;
+			}
+			rangeType = getPlayerOwner().getCarriedItems().getInventory().get(slot);
+			if (rangeType == null) { // This shouldn't happen
+				return;
+			}
+			Item toRemove = new Item(rangeType.getCatalogId(), 1, false, rangeType.getItemId());
+			getPlayerOwner().getCarriedItems().remove(toRemove);
+		}
+
+		/*if (!getPlayerOwner().getLocation().isMembersWild()) {
+			getPlayerOwner().message("Members content can only be used in wild levels: "
+					+ World.membersWildStart + " - " + World.membersWildMax);
+			getPlayerOwner().message("You can not use this type of ranged in wilderness");
+			getPlayerOwner().resetRange();
+			stop();
+			return;
+		}*/
+
+		int damage = CombatFormula.doRangedDamage(getPlayerOwner(), throwingID, target);
+
+		if (target.isNpc()) {
+			Npc npc = (Npc) target;
+			if (damage > 1 && npc.getID() == NpcId.KING_BLACK_DRAGON.id())
+				damage = damage / 2;
+			if (npc.getID() == NpcId.DRAGON.id()) {
+				getPlayerOwner().message("The dragon breathes fire at you");
+				int maxHit = 65;
+				if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.ANTI_DRAGON_BREATH_SHIELD.id())) {
+					maxHit = 10;
+					getPlayerOwner().message("Your shield prevents some of the damage from the flames");
+				}
+				getPlayerOwner().damage(DataConversions.random(0, maxHit));
+			}
+		}
+
+		if (Formulae.looseArrow(damage)) {
+			GroundItem knivesOrDarts = getFloorItem(throwingID);
+			if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(throwingID, 1))) {
+				if (knivesOrDarts == null) {
+					getWorld().registerItem(new GroundItem(getPlayerOwner().getWorld(), throwingID, target.getX(), target.getY(), 1, getPlayerOwner()));
+				} else {
+					knivesOrDarts.setAmount(knivesOrDarts.getAmount() + 1);
+				}
+			}
+		}
+		ActionSender.sendSound(getPlayerOwner(), "shoot");
+		if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(throwingID).getName().toLowerCase().contains("poison") && target.isPlayer()) {
+			if (DataConversions.random(0, 100) <= 10) {
+				target.setPoisonDamage(target.getSkills().getMaxStat(Skills.HITS));
+				target.startPoisonEvent();
+			}
+		}
+		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
+		getOwner().setKillType(2);
 	}
 }
