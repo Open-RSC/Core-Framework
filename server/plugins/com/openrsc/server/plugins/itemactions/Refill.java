@@ -23,7 +23,7 @@ public class Refill implements UseLocTrigger {
 
 	@Override
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
-		return item.getNoted() && ((inArray(obj.getID(), VALID_OBJECTS_OTHER)
+		return !item.getNoted() && ((inArray(obj.getID(), VALID_OBJECTS_OTHER)
 			&& inArray(item.getCatalogId(),REFILLABLE)) || (inArray(obj.getID(), VALID_OBJECTS_WELL) && item.getCatalogId() == ItemId.BUCKET.id()));
 	}
 
