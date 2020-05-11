@@ -27,6 +27,7 @@ public class RawEssence implements OpLocTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().getFreeSlots();
+			startBatchProgressBar(repeat);
 		}
 
 		batchEssence(player, repeat);
@@ -40,6 +41,7 @@ public class RawEssence implements OpLocTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			batchEssence(player, repeat);
 		}
