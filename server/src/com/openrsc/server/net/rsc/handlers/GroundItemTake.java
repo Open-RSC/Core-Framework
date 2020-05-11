@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.entity.GroundItem;
@@ -25,9 +26,12 @@ public class GroundItemTake implements PacketHandler {
 			return;
 		}
 
-		int distance = player.getViewArea().getGameObject(location) != null ? 1 : 0;
-		Player onTile = player.getRegion().getPlayer(location.getX(), location.getY(), player);
+		int distance = item.getRegion().getGameObject(location, player) != null ? 1 : 0;
+		Player onTile = item.getRegion().getPlayer(location.getX(), location.getY(), player);
 		if (onTile != null && onTile.inCombat()) {
+			distance = 1;
+		}
+		if (PathValidation.isMobBlocking(player, location.getX(), location.getY())) {
 			distance = 1;
 		}
 		player.setWalkToAction(new WalkToPointAction(player, item.getLocation(), distance) {
