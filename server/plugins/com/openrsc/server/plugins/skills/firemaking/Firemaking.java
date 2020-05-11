@@ -72,7 +72,6 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
-			startBatchProgressBar(player.getWorld().getServer().getConfig().GAME_TICK * 2, repeat);
 		}
 		batchFiremaking(player, gItem, def, repeat);
 
@@ -111,7 +110,6 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			}
 
 			// Repeat on success
-			updateBatchBar();
 			if (!ifinterrupted() && --repeat > 0) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
@@ -129,7 +127,6 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
 
 			// Repeat on fail
-			updateBatchBar();
 			if (!ifinterrupted() && --repeat > 0) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				batchFiremaking(player, gItem, def, repeat);
@@ -158,7 +155,6 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
-			startBatchProgressBar(player.getWorld().getServer().getConfig().GAME_TICK * 2, repeat);
 		}
 		batchCustomFiremaking(player, gItem, def, repeat);
 	}
@@ -196,7 +192,6 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			}
 
 			// Repeat if success
-			updateBatchBar();
 			if (!ifinterrupted() && --repeat > 0) {
 				// Drop new log
 				Item log = player.getCarriedItems().getInventory().get(
@@ -212,8 +207,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
-
-			updateBatchBar();
+			
 			if (!ifinterrupted() && --repeat > 0) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				batchCustomFiremaking(player, gItem, def, repeat);
