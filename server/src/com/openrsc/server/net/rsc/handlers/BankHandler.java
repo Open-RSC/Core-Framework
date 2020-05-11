@@ -54,13 +54,17 @@ public final class BankHandler implements PacketHandler {
 				if (player.getWorld().getServer().getConfig().WANT_BANK_NOTES)
 					wantsNotes = packet.readByte() == 1;
 
-				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Withdraw", new Object[]{player, catalogID, amount, wantsNotes});
+				amount = Math.min(player.getBank().countId(catalogID), amount);
+				player.getBank().withdrawItemToInventory(catalogID, amount, wantsNotes);
+				//player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Withdraw", new Object[]{player, catalogID, amount, wantsNotes});
 				break;
 			case BANK_DEPOSIT:
 				catalogID = packet.readShort();
 				amount = packet.readInt();
 
-				player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, catalogID, amount});
+				amount = Math.min(player.getCarriedItems().getInventory().countId(catalogID), amount);
+				player.getBank().depositItemFromInventory(catalogID, amount, true);
+				//player.getWorld().getServer().getPluginHandler().handlePlugin(player, "Deposit", new Object[]{player, catalogID, amount});
 				break;
 			case BANK_DEPOSIT_ALL_FROM_INVENTORY:
 				player.getBank().depositAllFromInventory();
