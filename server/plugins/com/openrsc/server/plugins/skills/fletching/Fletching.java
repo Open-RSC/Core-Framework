@@ -11,7 +11,6 @@ import com.openrsc.server.external.ItemLogCutDef;
 import com.openrsc.server.model.container.CarriedItems;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -176,6 +175,7 @@ public class Fletching implements UseInvTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = 5;
+			startBatchProgressBar(repeat);
 		}
 
 		batchFeathers(player, feathers, attachment, resultID, experience, repeat);
@@ -211,6 +211,7 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			batchFeathers(player, feathers, attachment, resultID, experience, repeat);
 		}
@@ -239,6 +240,7 @@ public class Fletching implements UseInvTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = 5;
+			startBatchProgressBar(repeat);
 		}
 
 		batchArrowheads(player, headlessArrows, arrowHeads, headDef, repeat);
@@ -277,6 +279,7 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			batchArrowheads(player, headlessArrows, arrowHeads, headDef, repeat);
 		}
@@ -297,6 +300,7 @@ public class Fletching implements UseInvTrigger {
 			int bowtimes = player.getCarriedItems().getInventory().countId(bow.getCatalogId());
 			int stringtimes = player.getCarriedItems().getInventory().countId(bowString.getCatalogId());
 			repeat = Math.min(bowtimes, stringtimes);
+			startBatchProgressBar(repeat);
 		}
 
 		batchStringing(player, bow, bowString, stringDef, repeat);
@@ -327,6 +331,7 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			batchStringing(player, bow, bowString, stringDef, repeat);
@@ -383,6 +388,7 @@ public class Fletching implements UseInvTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(log.getCatalogId());
+			startBatchProgressBar(repeat);
 		}
 
 		batchLogCutting(player, log, id, reqLvl, exp, cutMessage, repeat);
@@ -408,6 +414,7 @@ public class Fletching implements UseInvTrigger {
 		}
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			batchLogCutting(player, log, id, reqLvl, exp, cutMessage, repeat);
@@ -437,6 +444,7 @@ public class Fletching implements UseInvTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(pearlID);
+			startBatchProgressBar(repeat);
 		}
 
 		batchPearlCutting(player, pearl, amount, repeat);
@@ -463,6 +471,7 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchPearlCutting(player, pearl, amount, repeat);
@@ -483,6 +492,7 @@ public class Fletching implements UseInvTrigger {
 		int repeat = 1; // 1 + 1000 for authentic behaviour
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = 5;
+			startBatchProgressBar(repeat);
 		}
 		batchBolts(player, bolts, tips, repeat);
 	}
@@ -518,6 +528,7 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			batchBolts(player, bolts, tips, repeat);
 		}
