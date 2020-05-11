@@ -161,9 +161,12 @@ public class Functions {
 	 */
 	public static void say(final Player player, Npc npc, final String... messages) {
 		npc = npc != null ? npc : PluginTask.getContextPluginTask().getScriptContext().getInteractingNpc();
-		npc.face(player);
-		if (!player.inCombat())
+		if(npc != null) {
+			npc.face(player);
+		}
+		if (npc != null && !player.inCombat()) {
 			player.face(npc);
+		}
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (npc != null) {
@@ -434,8 +437,9 @@ public class Functions {
 		npc.resetPath();
 		player.resetPath();
 		npc.face(player);
-		if (!player.inCombat())
+		if (!player.inCombat()) {
 			player.face(npc);
+		}
 
 		// Send each message with a delay between.
 		for (final String message : messages) {
