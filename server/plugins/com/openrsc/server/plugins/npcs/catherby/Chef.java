@@ -38,7 +38,9 @@ public class Chef implements TalkNpcTrigger {
 							player.getCarriedItems().getEquipment().searchEquipmentForItem(
 								ItemId.STEEL_GAUNTLETS.id()));
 						if (itemToRemove == null) {
-							itemToRemove = player.getCarriedItems().getInventory().get(ItemId.STEEL_GAUNTLETS.id());
+							itemToRemove = player.getCarriedItems().getInventory().get(
+								player.getCarriedItems().getInventory().getLastIndexById(
+									ItemId.STEEL_GAUNTLETS.id(), Optional.of(false)));
 						}
 						if (itemToRemove == null) return;
 						player.getCarriedItems().remove(itemToRemove);

@@ -105,13 +105,12 @@ UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=1001, `wearSlot`=12, `
 );
 
 -- Make pickaxes wieldable.
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=4, `weaponPowerBonus`=5 WHERE `id`=156; -- Bronze
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=5, `weaponPowerBonus`=7 WHERE `id`=1258; -- Iron
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=8, `weaponPowerBonus`=11 WHERE `id`=1259; -- Steel
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=12, `weaponPowerBonus`=16 WHERE `id`=1260; -- Mithril
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=17, `weaponPowerBonus`=23 WHERE `id`=1261; -- Adamant
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=26, `weaponPowerBonus`=36 WHERE `id`=1262; -- Rune
-
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=0, `weaponPowerBonus`=0 WHERE `id`=156; -- Bronze
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=7, `weaponPowerBonus`=5 WHERE `id`=1258; -- Iron
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=5, `requiredSkillID`=0, `weaponAimBonus`=11, `weaponPowerBonus`=8 WHERE `id`=1259; -- Steel
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=20, `requiredSkillID`=0, `weaponAimBonus`=16, `weaponPowerBonus`=12 WHERE `id`=1260; -- Mithril
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=30, `requiredSkillID`=0, `weaponAimBonus`=23, `weaponPowerBonus`=17 WHERE `id`=1261; -- Adamant
+UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=40, `requiredSkillID`=0, `weaponAimBonus`=36, `weaponPowerBonus`=26 WHERE `id`=1262; -- Rune
 
 -- Custom appearance sprites.
 UPDATE `openrsc_itemdef` SET `appearanceID`=(case
@@ -218,10 +217,10 @@ UPDATE `openrsc_itemdef` SET `appearanceID`=(case
 	when id=103 then 424
 	when id=197 then 425
     -- Battlestaves
-    when id=684 then 422
-    when id=683 then 423
-    when id=685 then 424
-    when id=682 then 425
+    when id=617 then 422
+    when id=616 then 423
+    when id=618 then 424
+    when id=615 then 425
 	-- Enchanted Battlestaves
 	when id=684 then 422
 	when id=683 then 423
@@ -260,7 +259,7 @@ end) WHERE `id` IN (
 	-- Staves
 	101, 102, 103, 197,
     -- Battlestaves
-    684, 683, 685, 682,
+    617, 616, 618, 615,
 	-- Enchanted Battlestaves
 	684, 683, 685, 682,
 	-- Pickaxes

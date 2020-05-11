@@ -92,7 +92,9 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		int gem = -1;
 		if (gems.length <= 1) { // If they don't have a gem, we do gold crafting
 			gem = 0;
-		} else { // If they have one gem or more, create a list to select the type of item to make.
+		} else if (gems.length == 2) { // If they have only one gem, default to that.
+			gem = gems[1];
+		} else { // If they have more than one gem, ask which one they'd like to use.
 			ArrayList<String> options = new ArrayList<>();
 			// Gold will always be on the list, so we don't have to check the first slot of array
 			options.add("Gold");

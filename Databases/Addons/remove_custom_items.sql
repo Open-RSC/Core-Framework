@@ -110,11 +110,21 @@ UPDATE `openrsc_itemdef` SET `appearanceID`=(case
     when id=782 then 80
     when id=385 then 80
     when id=1028 then 80
+	-- Staves
+	when id=101 then 123
+	when id=102 then 123
+	when id=103 then 123
+	when id=197 then 123
     -- Battlestaves
-    when id=684 then 123
-    when id=683 then 123
-    when id=685 then 123
-    when id=682 then 123
+    when id=617 then 123
+    when id=616 then 123
+    when id=618 then 123
+    when id=615 then 123
+	-- Enchanted Battlestaves
+	when id=684 then 123
+	when id=683 then 123
+	when id=685 then 123
+	when id=682 then 123
 end) WHERE `id` IN (
     -- Axes
     87, 12, 88, 203, 204, 405, 428,
@@ -138,6 +148,10 @@ end) WHERE `id` IN (
     1135, 1136, 1137, 1138, 1139, 1140,
     -- Necklaces
     289, 302, 290, 303, 291, 304, 292, 305, 544, 597, 1194, 852, 721, 726, 782, 385, 1028,
+	-- Staves
+	101, 102, 103, 197,
     -- Battlestaves
-    684, 683, 685, 682
+    617, 616, 618, 615,
+	-- Enchanted Battlestaves
+	684, 683, 685, 682
 );

@@ -222,7 +222,9 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 						player.getCarriedItems().getEquipment().searchEquipmentForItem(
 							Gauntlets.getById(getGauntletEnchantment(player)).catalogId()));
 					if (itemToRemove == null) {
-						itemToRemove = player.getCarriedItems().getInventory().get(Gauntlets.getById(getGauntletEnchantment(player)).catalogId());
+						itemToRemove = player.getCarriedItems().getInventory().get(
+							player.getCarriedItems().getInventory().getLastIndexById(
+								Gauntlets.getById(getGauntletEnchantment(player)).catalogId(), Optional.of(false)));
 					}
 					if (itemToRemove == null) return;
 					player.getCarriedItems().remove(itemToRemove);
@@ -298,7 +300,9 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 								player.getCarriedItems().getEquipment().searchEquipmentForItem(
 									ItemId.STEEL_GAUNTLETS.id()));
 							if (itemToRemove == null) {
-								itemToRemove = player.getCarriedItems().getInventory().get(ItemId.STEEL_GAUNTLETS.id());
+								itemToRemove = player.getCarriedItems().getInventory().get(
+									player.getCarriedItems().getInventory().getLastIndexById(
+										ItemId.STEEL_GAUNTLETS.id(), Optional.of(false)));
 							}
 							if (itemToRemove == null) return;
 							player.getCarriedItems().remove(itemToRemove);
@@ -461,7 +465,9 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 							player.getCarriedItems().getEquipment().searchEquipmentForItem(
 								ItemId.STEEL_GAUNTLETS.id()));
 						if (itemToRemove == null) {
-							itemToRemove = player.getCarriedItems().getInventory().get(ItemId.STEEL_GAUNTLETS.id());
+							itemToRemove = player.getCarriedItems().getInventory().get(
+								player.getCarriedItems().getInventory().getLastIndexById(
+									ItemId.STEEL_GAUNTLETS.id(), Optional.of(false)));
 						}
 						if (itemToRemove == null) return;
 						player.getCarriedItems().remove(itemToRemove);
