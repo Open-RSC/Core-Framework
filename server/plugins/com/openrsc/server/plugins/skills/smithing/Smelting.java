@@ -34,6 +34,7 @@ public class Smelting implements UseLocTrigger {
 					int repeat = 1;
 					if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 						repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
+						startBatchProgressBar(repeat);
 					}
 					handleCannonBallSmelting(player, repeat);
 				} else { // No mould
@@ -120,6 +121,7 @@ public class Smelting implements UseLocTrigger {
 		player.message("it's very heavy");
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			player.message("you repeat the process");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
