@@ -218,12 +218,11 @@ public class Smithing implements UseLocTrigger {
 
 		if (makeCount == -1) return;
 
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) { startBatchProgressBar(makeCount); }
-
-		batchSmithing(player, item, def, makeCount);
+		startbatch(makeCount);
+		batchSmithing(player, item, def);
 	}
 
-	private void batchSmithing(Player player, Item item, ItemSmithingDef def, int repeat) {
+	private void batchSmithing(Player player, Item item, ItemSmithingDef def) {
 		if (player.getSkills().getLevel(Skills.SMITHING) < def.getRequiredLevel()) {
 			player.message("You need to be at least level "
 				+ def.getRequiredLevel() + " smithing to do that");
@@ -262,9 +261,8 @@ public class Smithing implements UseLocTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		updateBatchBar();
-		if (!ifinterrupted() && --repeat > 0) {
-			batchSmithing(player, item, def, repeat);
+		if (!ifinterrupted() && updatebatch()) {
+			batchSmithing(player, item, def);
 		}
 	}
 

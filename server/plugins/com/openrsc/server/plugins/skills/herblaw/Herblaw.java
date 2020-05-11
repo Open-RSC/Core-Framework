@@ -73,12 +73,12 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(herb.getCatalogId());
-			startBatchProgressBar(repeat);
+			startbatch(repeat);
 		}
-		batchIdentify(player, herb, herbDef, repeat);
+		batchIdentify(player, herb, herbDef);
 	}
 
-	private void batchIdentify(Player player, Item herb, ItemUnIdentHerbDef herbDef, int repeat) {
+	private void batchIdentify(Player player, Item herb, ItemUnIdentHerbDef herbDef) {
 		if (player.getSkills().getLevel(Skills.HERBLAW) < herbDef.getLevelRequired()) {
 			player.playerServerMessage(MessageType.QUEST, "You cannot identify this herb");
 			player.playerServerMessage(MessageType.QUEST, "you need a higher herblaw level");
@@ -106,9 +106,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		// Repeat
-		updateBatchBar();
-		if (!ifinterrupted() && --repeat > 0) {
-			batchIdentify(player, herb, herbDef, repeat);
+		if (!ifinterrupted() && updatebatch()) {
+			batchIdentify(player, herb, herbDef);
 		}
 	}
 
@@ -351,12 +350,12 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = Math.min(player.getCarriedItems().getInventory().countId(vialID, Optional.of(false)),
 				player.getCarriedItems().getInventory().countId(herbID, Optional.of(false)));
-			startBatchProgressBar(repeat);
 		}
-		batchPotionMaking(player, herb, herbDef, vial, repeat);
+		startbatch(repeat);
+		batchPotionMaking(player, herb, herbDef, vial);
 	}
 
-	private void batchPotionMaking(Player player, Item herb, ItemHerbDef herbDef, Item vial, int repeat) {
+	private void batchPotionMaking(Player player, Item herb, ItemHerbDef herbDef, Item vial) {
 		CarriedItems ci = player.getCarriedItems();
 		if (player.getSkills().getLevel(Skills.HERBLAW) < herbDef.getReqLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "you need level " + herbDef.getReqLevel()
@@ -385,9 +384,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		// Repeat
-		startBatchProgressBar(repeat);
-		if (!ifinterrupted() && --repeat > 0) {
-			batchPotionMaking(player, herb, herbDef, vial, repeat);
+		if (!ifinterrupted() && updatebatch()) {
+			batchPotionMaking(player, herb, herbDef, vial);
 		}
 	}
 
@@ -424,12 +422,13 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = Math.min(player.getCarriedItems().getInventory().countId(secondID),
 				player.getCarriedItems().getInventory().countId(unfinishedID));
-			startBatchProgressBar(repeat);
 		}
-		batchPotionSecondary(player, unfinished, second, def, bubbleItem, repeat);
+
+		startbatch(repeat);
+		batchPotionSecondary(player, unfinished, second, def, bubbleItem);
 	}
 
-	private void batchPotionSecondary(Player player, Item unfinished, Item second, ItemHerbSecond def, AtomicReference<Item> bubbleItem, int repeat) {
+	private void batchPotionSecondary(Player player, Item unfinished, Item second, ItemHerbSecond def, AtomicReference<Item> bubbleItem) {
 		if (player.getSkills().getLevel(Skills.HERBLAW) < def.getReqLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "You need a herblaw level of "
 				+ def.getReqLevel() + " to make this potion");
@@ -468,9 +467,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		// Repeat
-		updateBatchBar();
-		if (!ifinterrupted() && --repeat > 0) {
-			batchPotionSecondary(player, unfinished, second, def, bubbleItem, repeat);
+		if (!ifinterrupted() && updatebatch()) {
+			batchPotionSecondary(player, unfinished, second, def, bubbleItem);
 		}
 	}
 
@@ -569,12 +567,13 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
-			startBatchProgressBar(repeat);
 		}
-		batchGrind(player, item, newID, repeat);
+
+		startbatch(repeat);
+		batchGrind(player, item, newID);
 	}
 
-	private void batchGrind(Player player, Item item, int newID, int repeat) {
+	private void batchGrind(Player player, Item item, int newID) {
 		item = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
 		);
@@ -589,10 +588,9 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		updateBatchBar();
-		if (!ifinterrupted() && --repeat > 0) {
+		if (!ifinterrupted() && updatebatch()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
-			batchGrind(player, item, newID, repeat);
+			batchGrind(player, item, newID);
 		}
 	}
 }

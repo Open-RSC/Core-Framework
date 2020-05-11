@@ -23,12 +23,13 @@ public class Sheep implements UseNpcTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().getFreeSlots();
-			startBatchProgressBar(repeat);
 		}
-		batchShear(player, item, repeat);
+
+		startbatch(repeat);
+		batchShear(player, item);
 	}
 
-	private void batchShear(Player player, Item item, int repeat) {
+	private void batchShear(Player player, Item item) {
 		thinkbubble(player, item);
 		player.message("You attempt to shear the sheep");
 
@@ -43,9 +44,8 @@ public class Sheep implements UseNpcTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		// Repeat
-		updateBatchBar();
-		if (!ifinterrupted() && --repeat > 0) {
-			batchShear(player, item, repeat);
+		if (!ifinterrupted() && updatebatch()) {
+			batchShear(player, item);
 		}
 	}
 }

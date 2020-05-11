@@ -1,0 +1,82 @@
+package com.openrsc.server.plugins;
+
+import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
+
+public class Batch {
+
+	private Player player;
+	private int current;
+	private int totalBatch;
+	private int delay;
+	private boolean showingBar = false;
+
+	/**
+	 * Creates a new instance of a Batch bar.
+	 * @param player The player the bar belongs to
+	 */
+	public Batch(Player player) {
+		this.player = player;
+	}
+
+	/**
+	 * Creates a new batch bar. Call start() to send to client
+	 * @param totalBatch The total repetitions of a task
+	 */
+	public void initialize(int totalBatch) {
+		this.current = 0;
+		this.delay = getPlayer().getWorld().getServer().getConfig().GAME_TICK * 3;
+		this.totalBatch = totalBatch;
+	}
+
+	/**
+	 * Displays the batch bar to the client
+	 */
+	public void start() {
+		if (wantBatching()) {
+			ActionSender.sendProgressBar(getPlayer(), getDelay(), getTotalBatch());
+			this.showingBar = true;
+		}
+	}
+
+	/**
+	 * Stops displaying the batch bar to the client.
+	 * Gives it 3 ticks to close
+	 */
+	public void stop() {
+		if (wantBatching()) {
+			getPlayer().getWorld().getServer().getGameEventHandler().add(
+				new SingleEvent(getPlayer().getWorld(), null, getDelay(), "Close Batch Bar") {
+					@Override
+					public void action() {
+						ActionSender.sendRemoveProgressBar(getPlayer());
+					}
+				}
+			);
+			this.showingBar = false;
+		}
+	}
+
+	/**
+	 * Increments the current batch's progress by 1.
+	 * @return Returns false when the batch is complete
+	 */
+	public boolean update() {
+		incrementBatch();
+		if (wantBatching()) ActionSender.sendUpdateProgressBar(getPlayer(), getCurrentBatchProgress());
+		if (getCurrentBatchProgress() == getTotalBatch()) {
+			stop();
+			return false;
+		}
+		return true;
+	}
+
+	private Player getPlayer() { return player; }
+	private int getDelay() { return delay; }
+	private int getTotalBatch() { return totalBatch; }
+	private void incrementBatch() { current++; }
+	private int getCurrentBatchProgress() { return current; }
+	private boolean wantBatching() { return getPlayer().getWorld().getServer().getConfig().BATCH_PROGRESSION; }
+	public boolean isShowingBar() { return showingBar; }
+}

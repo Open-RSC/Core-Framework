@@ -1317,30 +1317,30 @@ public class Functions {
 	}
 
 	/**
-	 * Start showing the batch bar to the client.
-	 * @param delay The interval between actions
+	 * Starts a batch and, if enabled, shows a batch bar to the client
 	 * @param totalBatch The total repetitions of a task
 	 */
-	public static void startBatchProgressBar(int totalBatch) {
+	public static void startbatch(int totalBatch) {
 		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
 		if (player == null) return;
-		BatchBar batchBar = PluginTask.getContextPluginTask().getScriptContext().getBatchBar();
-		if (!player.getWorld().getServer().getConfig().BATCH_PROGRESSION) return;
-		if (batchBar == null) return;
+		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		if (batch == null) return;
 
-		batchBar.initialize(totalBatch);
-		batchBar.start();
+		batch.initialize(totalBatch);
+		batch.start();
 	}
 
-
-	public static void updateBatchBar() {
+	/**
+	 * Increments the current batch progress by 1
+	 * @return Returns false if batch is completed
+	 */
+	public static boolean updatebatch() {
 		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
-		if (player == null) return;
-		BatchBar batchBar = PluginTask.getContextPluginTask().getScriptContext().getBatchBar();
-		if (!player.getWorld().getServer().getConfig().BATCH_PROGRESSION) return;
-		if (batchBar == null) return;
+		if (player == null) return false;
+		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		if (batch == null) return false;
 
-		batchBar.update();
+		return batch.update();
 	}
 
 	public static void boundaryTeleport(Player player, Point location) {

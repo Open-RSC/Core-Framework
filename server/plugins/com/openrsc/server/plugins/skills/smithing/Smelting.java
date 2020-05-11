@@ -34,9 +34,10 @@ public class Smelting implements UseLocTrigger {
 					int repeat = 1;
 					if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 						repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
-						startBatchProgressBar(repeat);
 					}
-					handleCannonBallSmelting(player, repeat);
+
+					startbatch(repeat);
+					handleCannonBallSmelting(player);
 				} else { // No mould
 					player.message("you heat the steel bar");
 				}
@@ -71,7 +72,7 @@ public class Smelting implements UseLocTrigger {
 		}
 	}
 
-	private void handleCannonBallSmelting(Player player, int repeat) {
+	private void handleCannonBallSmelting(Player player) {
 		if (getCurrentLevel(player, Skills.SMITHING) < 30) {
 			player.message("You need at least level 30 smithing to make cannon balls");
 			return;
@@ -121,11 +122,10 @@ public class Smelting implements UseLocTrigger {
 		player.message("it's very heavy");
 
 		// Repeat
-		updateBatchBar();
-		if (!ifinterrupted() && --repeat > 0) {
+		if (!ifinterrupted() && updatebatch()) {
 			player.message("you repeat the process");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
-			handleCannonBallSmelting(player, repeat);
+			handleCannonBallSmelting(player);
 		}
 	}
 

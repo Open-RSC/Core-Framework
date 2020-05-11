@@ -26,14 +26,15 @@ public class ProgressBarInterface {
 			public void render() {
 				float progressBarWidth = 120;
 
-				float elapsedTime = (System.currentTimeMillis() - batchStartTime);
-				float timeLeftPercentage = (elapsedTime / batchActionDelay);
+				// float elapsedTime = (System.currentTimeMillis() - batchStartTime);
+				// float timeLeftPercentage = (elapsedTime / batchActionDelay);
+
+				// if (timeLeftPercentage <= 0) {
+				//	timeLeftPercentage = 0;
+				// }
 
 				float percentDone = (float)batchCompletedCount / (float)batchTotalCount;
 
-				if (timeLeftPercentage <= 0) {
-					timeLeftPercentage = 0;
-				}
 				float percentToWidth = (percentDone * progressBarWidth);
 
 				graphics().drawBoxAlpha(getX() - 2, getY() - 2, (int) progressBarWidth + 4, 10 + 4, 0, 128);
@@ -44,7 +45,7 @@ public class ProgressBarInterface {
 				else if (percentToWidth < 0)
 					percentToWidth = 0;
 
-				graphics().drawBoxAlpha(getX(), getY(), (int) percentToWidth - 2, 10, 0x0000ff, 200);
+				graphics().drawBoxAlpha(getX(), getY(), (int) percentToWidth - 1, 10, 0x0000ff, 200);
 				int center = (batchTotalCount - batchCompletedCount) > 9 ? 13 : 7;
 				graphics().drawColoredString((int) (getX() + (progressBarWidth / 2) - center), getY() + 9, (batchCompletedCount) + "/" + batchTotalCount, 0, 0xffffff, 0);
 //

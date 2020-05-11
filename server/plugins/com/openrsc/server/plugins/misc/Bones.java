@@ -28,15 +28,15 @@ public class Bones implements OpInvTrigger {
 			int buryAmount = 1;
 			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 				buryAmount = item.getAmount();
-				startBatchProgressBar(buryAmount);
 			}
 
-			buryBones(player, item, buryAmount);
+			startbatch(buryAmount);
+			buryBones(player, item);
 		}
 	}
 
 
-	private void buryBones(Player player, Item item, int repeat) {
+	private void buryBones(Player player, Item item) {
 		Item toRemove = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false)));
 		if(toRemove == null) return;
@@ -49,9 +49,8 @@ public class Bones implements OpInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		updateBatchBar();
-		if (!ifinterrupted() && --repeat > 0) {
-			buryBones(player, item, repeat);
+		if (!ifinterrupted() && updatebatch()) {
+			buryBones(player, item);
 		}
 	}
 

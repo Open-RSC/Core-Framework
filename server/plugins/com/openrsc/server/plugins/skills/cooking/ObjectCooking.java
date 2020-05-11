@@ -148,14 +148,14 @@ public class ObjectCooking implements UseLocTrigger {
 			int repeat = 1;
 			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 				repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
-				startBatchProgressBar(repeat);
 			}
 
-			batchCooking(player, item, timeToCook, cookingDef, repeat);
+			startbatch(repeat);
+			batchCooking(player, item, timeToCook, cookingDef);
 		}
 	}
 
-	private void batchCooking(Player player, Item item, int timeToCook, ItemCookingDef cookingDef, int repeat) {
+	private void batchCooking(Player player, Item item, int timeToCook, ItemCookingDef cookingDef) {
 		if (player.getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
 			String itemName = item.getDef(player.getWorld()).getName().toLowerCase();
 			itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
@@ -196,12 +196,11 @@ public class ObjectCooking implements UseLocTrigger {
 				}
 			}
 
-			updateBatchBar();
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 			// Repeat
-			if (!ifinterrupted() && --repeat > 0) {
-				batchCooking(player, item, timeToCook, cookingDef, repeat);
+			if (!ifinterrupted() && updatebatch()) {
+				batchCooking(player, item, timeToCook, cookingDef);
 			}
 		}
 	}
@@ -232,12 +231,13 @@ public class ObjectCooking implements UseLocTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(itemID);
-			startBatchProgressBar(repeat);
 		}
-		batchInedibleCooking(player, itemID, product, hasBubble, repeat, messages);
+
+		startbatch(repeat);
+		batchInedibleCooking(player, itemID, product, hasBubble, messages);
 	}
 
-	private void batchInedibleCooking(Player player, int itemID, int product, boolean hasBubble, int repeat, String... messages) {
+	private void batchInedibleCooking(Player player, int itemID, int product, boolean hasBubble, String... messages) {
 		if (player.getCarriedItems().hasCatalogID(itemID, Optional.of(false))) {
 			if (hasBubble)
 				thinkbubble(player, new Item(itemID));
@@ -252,9 +252,8 @@ public class ObjectCooking implements UseLocTrigger {
 
 		// TODO: Add back when `mes` is changed to not use a timer (if it ever is).
 		// delay(player.getWorld().getServer().getConfig().GAME_TICK);
-		updateBatchBar();
-		if (!ifinterrupted() && --repeat > 0) {
-			batchInedibleCooking(player, itemID, product, hasBubble, repeat, messages);
+		if (!ifinterrupted() && updatebatch()) {
+			batchInedibleCooking(player, itemID, product, hasBubble, messages);
 		}
 	}
 
