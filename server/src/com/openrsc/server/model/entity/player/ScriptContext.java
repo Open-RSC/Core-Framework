@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.states.EntityType;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.plugins.BatchBar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,6 +30,7 @@ public class ScriptContext {
 	private volatile Integer interactingIndex = null;
 	private volatile Point interactingCoordinate = null;
 	private volatile Boolean interrupted = false;
+	private volatile BatchBar batchBar = null;
 
 	public ScriptContext(final World world, final PluginTask pluginTask, final Integer playerIndex) {
 		this.world = world;
@@ -149,6 +151,15 @@ public class ScriptContext {
 		}
 
 		return getContextPlayer().getCarriedItems().getInventory().get(interactingIndex);
+	}
+
+	public BatchBar getBatchBar() {
+		final Player player = getContextPlayer();
+		if (player == null) return null;
+
+		if (batchBar == null)
+			batchBar = new BatchBar(player);
+		return batchBar;
 	}
 
 	public void setInteractingNpc(final Npc npc) {
@@ -297,6 +308,11 @@ public class ScriptContext {
 		this.currentAction = Action.idle;
 		this.interactingIndex = null;
 		this.interactingCoordinate = null;
+
+		if (getBatchBar() != null) {
+			this.batchBar.stop();
+			this.batchBar = null;
+		}
 	}
 
 	private void setCurrentAction(final Action currentAction) {
