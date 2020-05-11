@@ -15776,6 +15776,7 @@ public final class mudclient implements Runnable {
 			System.out.println(Config.S_WANT_HARVESTING + " 66");
 			System.out.println(S_RIGHT_CLICK_BANK + " 67");
 			System.out.println(S_CUSTOM_PROTOCOL + " 68");
+			System.out.println(S_WANT_EXTENDED_CATS_BEHAVIOR + " 69");
 		}
 		try {
 			this.loadGameConfig(false);

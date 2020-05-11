@@ -905,7 +905,7 @@ public class PacketHandler {
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
-		int globalFriendChat, wantRightClickTrade, customProtocol;
+		int globalFriendChat, wantRightClickTrade, customProtocol, wantExtendedCatsBehavior;
 
 		String logoSpriteID;
 
@@ -987,6 +987,7 @@ public class PacketHandler {
 			globalFriendChat = this.getClientStream().getUnsignedByte(); // 75
 			wantRightClickTrade = this.getClientStream().getUnsignedByte(); // 76
 			customProtocol = this.getClientStream().getUnsignedByte(); // 77
+			wantExtendedCatsBehavior = this.getClientStream().getUnsignedByte(); // 78
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1065,6 +1066,7 @@ public class PacketHandler {
 			globalFriendChat = packetsIncoming.getUnsignedByte(); // 75
 			wantRightClickTrade = packetsIncoming.getUnsignedByte(); // 76
 			customProtocol = packetsIncoming.getUnsignedByte(); // 77
+			wantExtendedCatsBehavior = packetsIncoming.getUnsignedByte(); // 78
 		}
 
 		if (Config.DEBUG) {
@@ -1145,7 +1147,8 @@ public class PacketHandler {
 					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 75
 					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 76
 					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 77
-					"\nS_CUSTOM_PROTOCOL " + wantRightClickTrade // 78
+					"\nS_CUSTOM_PROTOCOL " + customProtocol + // 78
+					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior // 79
 			);
 		}
 
@@ -1228,6 +1231,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 76
 		props.setProperty("S_RIGHT_CLICK_TRADE", wantRightClickTrade == 1 ? "true" : "false"); // 77
 		props.setProperty("S_CUSTOM_PROTOCOL", customProtocol == 1 ? "true" : "false"); // 78
+		props.setProperty("S_WANT_EXTENDED_CATS_BEHAVIOR", wantExtendedCatsBehavior == 1 ? "true" : "false"); // 79
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
