@@ -27,6 +27,7 @@ public class SandPit implements UseLocTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+			startBatchProgressBar(repeat);
 		}
 		batchSand(player, item, repeat);
 	}
@@ -42,6 +43,7 @@ public class SandPit implements UseLocTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
+		updateBatchBar();
 		if (!ifinterrupted() && --repeat > 0) {
 			batchSand(player, item, repeat);
 		}
