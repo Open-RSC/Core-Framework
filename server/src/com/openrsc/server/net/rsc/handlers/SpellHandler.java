@@ -925,6 +925,10 @@ public class SpellHandler implements PacketHandler {
 				return;
 			}
 		}
+
+		// Do not cast if the mob is too far away and we are already in a fight.
+		if (!player.withinRange(affectedMob) && player.inCombat()) return;
+
 		player.setFollowing(affectedMob);
 		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4, false) {
 			public void executeInternal() {
