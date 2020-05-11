@@ -82,6 +82,10 @@ public class Equipment {
 	// Equipment::remove(Item, int)
 	// Removes an item from the equipment container. Updates the database instantly.
 	public int remove(Item item, int amount) {
+		return remove(item, amount, true);
+	}
+
+	public int remove(Item item, int amount, boolean updateClient) {
 		synchronized (list) {
 			try {
 				int itemId = item.getItemId();
@@ -106,7 +110,9 @@ public class Equipment {
 								player.getSettings().getAppearance().getSprite(curEquipDef.getWieldPosition()));
 							player.getWorld().getServer().getDatabase().equipmentRemoveFromPlayer(player, curEquip);
 						}
-						ActionSender.sendEquipmentStats(player);
+						if (updateClient) {
+							ActionSender.sendEquipmentStats(player);
+						}
 						return slotID;
 					}
 				}
@@ -120,6 +126,10 @@ public class Equipment {
 	// Equipment::unequipItem(UnequipRequest)
 	// Attempts to unequip an item.
 	public boolean unequipItem(UnequipRequest request) {
+		return unequipItem(request, true);
+	}
+
+	public boolean unequipItem(UnequipRequest request, boolean updateClient) {
 		if (request.item == null || !request.item.isWieldable(player.getWorld())) {
 			return false;
 		}
@@ -157,7 +167,7 @@ public class Equipment {
 							if (remove(request.item, request.item.getAmount()) == -1)
 								return false;
 							request.item.setWielded(player.getWorld().getServer().getDatabase(), false);
-							player.getCarriedItems().getInventory().add(request.item, true);
+							player.getCarriedItems().getInventory().add(request.item, updateClient);
 
 						}
 					}
@@ -173,8 +183,10 @@ public class Equipment {
 							if (remove(request.item, request.item.getAmount()) == -1)
 								return false;
 							request.item.setWielded(player.getWorld().getServer().getDatabase(), false);
-							player.getBank().add(request.item);
-							ActionSender.showBank(player);
+							player.getBank().add(request.item, updateClient);
+							if (updateClient) {
+								ActionSender.showBank(player);
+							}
 						}
 					}
 					break;
@@ -195,14 +207,19 @@ public class Equipment {
 			player.playSound("click");
 		}
 
-		ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
-		ActionSender.sendInventory(player);
+		if (updateClient) {
+			ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
+			ActionSender.sendInventory(player);
+		}
 		return true;
 	}
 
 	// Equipment::equipItem(EquipRequest)
 	// Attempts to equip an item.
 	public boolean equipItem(EquipRequest request) {
+		return equipItem(request, true);
+	}
+	public boolean equipItem(EquipRequest request, boolean updateClient) {
 		//Make sure the item isn't a note
 		if (request.item.getNoted())
 			return false;
@@ -214,11 +231,11 @@ public class Equipment {
 		//Logic changes depending on where the item is being equipped from
 		switch (request.requestType) {
 			case FROM_INVENTORY:
-				if (!equipItemFromInventory(request))
+				if (!equipItemFromInventory(request, updateClient))
 					return false;
 				break;
 			case FROM_BANK:
-				if (!equipItemFromBank(request))
+				if (!equipItemFromBank(request, updateClient))
 					return false;
 				break;
 			default:
@@ -231,13 +248,15 @@ public class Equipment {
 
 		ItemDefinition itemDef = request.item.getDef(player.getWorld());
 		player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
-		ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
+		if (updateClient) {
+			ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
+		}
 		return true;
 	}
 
 	// Equipment::equipItemFromInventory(EquipRequest)
 	// Attempts to equip the item from the inventory tab.
-	private boolean equipItemFromInventory(EquipRequest request) {
+	private boolean equipItemFromInventory(EquipRequest request, boolean updateClient) {
 		synchronized (player.getCarriedItems()) {
 			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //on a world with equipment tab
 
@@ -265,13 +284,13 @@ public class Equipment {
 
 				// Remove the items from their containers.
 				for (Item item : items) {
-					remove(item, item.getAmount()); // Remove from equipment
+					remove(item, item.getAmount(), updateClient); // Remove from equipment
 				}
-				player.getCarriedItems().remove(toEquip); // Remove from inventory
+				player.getCarriedItems().remove(toEquip, updateClient); // Remove from inventory
 
 				for (Item item : items) {
 					player.getCarriedItems().getInventory().add( // Add to inventory
-						new Item(item.getCatalogId(), item.getAmount()));
+						new Item(item.getCatalogId(), item.getAmount()), updateClient);
 				}
 				add(new Item(toEquip.getCatalogId(), toEquip.getAmount())); // Add to equipment
 
@@ -286,14 +305,16 @@ public class Equipment {
 			}
 
 		}
-		//Update the inventory
-		ActionSender.sendInventory(player);
+		// Update the inventory
+		if (updateClient) {
+			ActionSender.sendInventory(player);
+		}
 		return true;
 	}
 
 	// Equipment::equipItemFromBank(EquipRequest)
 	// Attempts to equip the item from the bank screen.
-	private boolean equipItemFromBank(EquipRequest request) {
+	private boolean equipItemFromBank(EquipRequest request, boolean updateClient) {
 		synchronized (list) {
 			synchronized (player.getBank().getItems()) {
 				if (!request.player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
@@ -323,13 +344,13 @@ public class Equipment {
 				}
 
 				for (Item item : items) {
-					remove(item, item.getAmount()); // Remove from equipment
+					remove(item, item.getAmount(), updateClient); // Remove from equipment
 				}
 
 				if (!itemDef.isStackable()) {
-					player.getBank().remove(toEquip.getCatalogId(), 1);
+					player.getBank().remove(toEquip.getCatalogId(), 1, updateClient);
 					for (Item item : items) {
-						player.getBank().add(new Item(item.getCatalogId(), item.getAmount()));
+						player.getBank().add(new Item(item.getCatalogId(), item.getAmount()), updateClient);
 					}
 
 					if (originalAmount > 1) {
@@ -338,9 +359,9 @@ public class Equipment {
 						add(request.item);
 					}
 				} else {
-					player.getBank().remove(toEquip.getCatalogId(), request.item.getAmount());
+					player.getBank().remove(toEquip.getCatalogId(), request.item.getAmount(), updateClient);
 					for (Item item : items) {
-						player.getBank().add(new Item(item.getCatalogId(), item.getAmount()));
+						player.getBank().add(new Item(item.getCatalogId(), item.getAmount()), updateClient);
 					}
 
 					if (originalAmount > request.item.getAmount()) {
@@ -353,7 +374,9 @@ public class Equipment {
 		}
 
 		// Send client update
-		ActionSender.showBank(player);
+		if (updateClient) {
+			ActionSender.showBank(player);
+		}
 		return true;
 	}
 

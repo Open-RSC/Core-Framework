@@ -425,6 +425,10 @@ public class Bank {
 	 * only one time.
 	 */
 	public void withdrawItemToInventory(final Integer catalogID, Integer requestedAmount, final Boolean wantsNotes) {
+		withdrawItemToInventory(catalogID, requestedAmount, wantsNotes, true);
+	}
+
+	public void withdrawItemToInventory(final Integer catalogID, Integer requestedAmount, final Boolean wantsNotes, boolean updateClient) {
 
 		// Flag for if the item is withdrawn as a note
 		boolean withdrawNoted = wantsNotes;
@@ -469,10 +473,9 @@ public class Bank {
 				withdrawItem = new Item(withdrawItem.getCatalogId(), requestedAmount, withdrawNoted, withdrawItem.getItemId());
 
 				// Remove the item from the bank (or fail out).
-				if (!remove(withdrawItem)) return;
+				if (!remove(withdrawItem, updateClient)) return;
 
-				addToInventory(withdrawItem, withdrawDef, requestedAmount);
-
+				addToInventory(withdrawItem, withdrawDef, requestedAmount, updateClient);
 			}
 		}
 	}
@@ -498,7 +501,7 @@ public class Bank {
 				}
 
 				// Attempt to add the item to the bank (or fail out).
-				if (!add(new Item(depositItem.getCatalogId(), requestedAmount))) return;
+				if (!add(new Item(depositItem.getCatalogId(), requestedAmount), updateClient)) return;
 
 				// Check the item definition
 				ItemDefinition depositDef = depositItem.getDef(player.getWorld());
@@ -509,7 +512,7 @@ public class Bank {
 	}
 
 	// Add the items to the inventory one slot at a time.
-	private void addToInventory(Item item, ItemDefinition def, int requestedAmount) {
+	private void addToInventory(Item item, ItemDefinition def, int requestedAmount, boolean updateClient) {
 		int i = 1;
 		int slotAmount = 1;
 		if(def.isStackable() || item.getNoted()) {
@@ -525,13 +528,17 @@ public class Bank {
 			}
 
 			// Add the item to the inventory (or fail and place it back into the bank).
-			if (!player.getCarriedItems().getInventory().add(item, true)) {
+			if (!player.getCarriedItems().getInventory().add(item, updateClient)) {
 				add(item);
-				ActionSender.sendInventory(player);
+				if (updateClient) {
+					ActionSender.sendInventory(player);
+				}
 				return;
 			}
 		}
-		ActionSender.sendInventory(player);
+		if (updateClient) {
+			ActionSender.sendInventory(player);
+		}
 	}
 
 	// Remove the items from the inventory one slot at a time.
