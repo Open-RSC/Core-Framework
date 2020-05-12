@@ -265,8 +265,6 @@ public final class Mining implements OpLocTrigger {
 			}
 		}
 
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
-
 		// Repeat
 		updatebatch();
 		boolean customBatch = player.getWorld().getServer().getConfig().BATCH_PROGRESSION;
