@@ -65,7 +65,8 @@ public class Refill implements UseLocTrigger {
 		give(player, refilledId, 1);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchRefill(player, item, refilledId, fillString);
 		}
 	}

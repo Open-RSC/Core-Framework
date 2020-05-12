@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.skills.mining;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -87,12 +88,14 @@ public class GemMining implements OpLocTrigger {
 		}
 
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, com.openrsc.server.constants.Skills.MINING);
+			repeat = Formulae.getRepeatTimes(player, Skills.MINING);
 		}
-		batchMining(player, obj, axeId, mineLvl, repeat);
+
+		startbatch(repeat);
+		batchMining(player, obj, axeId, mineLvl);
 	}
 
-	private void batchMining(Player player, GameObject obj, int axeId, int mineLvl, int repeat) {
+	private void batchMining(Player player, GameObject obj, int axeId, int mineLvl) {
 		player.playSound("mine");
 		thinkbubble(player, new Item(ItemId.IRON_PICKAXE.id()));
 		player.playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
@@ -126,7 +129,7 @@ public class GemMining implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
-			if (repeat > 1) {
+			if (!ifbatchcompleted()) {
 				GameObject checkObj = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 				if (checkObj == null) {
 					return;
@@ -137,11 +140,11 @@ public class GemMining implements OpLocTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		--repeat;
+		updatebatch();
 		boolean customBatch = player.getWorld().getServer().getConfig().BATCH_PROGRESSION;
-		if (repeat > 0) {
+		if (!ifbatchcompleted()) {
 			if ((customBatch && !ifinterrupted()) || !customBatch) {
-				batchMining(player, obj, axeId, mineLvl, repeat);
+				batchMining(player, obj, axeId, mineLvl);
 			}
 		}
 	}

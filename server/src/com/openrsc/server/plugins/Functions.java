@@ -1334,13 +1334,21 @@ public class Functions {
 	 * Increments the current batch progress by 1
 	 * @return Returns false if batch is completed
 	 */
-	public static boolean updatebatch() {
+	public static void updatebatch() {
 		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
-		if (player == null) return false;
+		if (player == null) return;
 		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
-		if (batch == null) return false;
+		if (batch == null) return;
 
-		return batch.update();
+		batch.update();
+	}
+
+	public static boolean ifbatchcompleted() {
+		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return true;
+		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		if (batch == null) return true;
+		return batch.isCompleted();
 	}
 
 	public static void boundaryTeleport(Player player, Point location) {

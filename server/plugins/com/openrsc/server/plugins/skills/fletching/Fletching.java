@@ -211,7 +211,8 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchFeathers(player, feathers, attachment, resultID, experience);
 		}
 	}
@@ -278,7 +279,8 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchArrowheads(player, headlessArrows, arrowHeads, headDef);
 		}
 	}
@@ -329,7 +331,8 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			batchStringing(player, bow, bowString, stringDef);
 		}
@@ -411,7 +414,8 @@ public class Fletching implements UseInvTrigger {
 		}
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			batchLogCutting(player, log, id, reqLvl, exp, cutMessage);
 		}
@@ -467,7 +471,8 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchPearlCutting(player, pearl, amount);
 		}
@@ -523,7 +528,8 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchBolts(player, bolts, tips);
 		}
 	}

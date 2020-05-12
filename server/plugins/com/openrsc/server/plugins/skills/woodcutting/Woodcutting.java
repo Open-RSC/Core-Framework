@@ -68,10 +68,12 @@ public class Woodcutting implements OpLocTrigger {
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.WOODCUT);
 		}
-		batchWoodcutting(player, object, def, axeId, repeat);
+
+		startbatch(repeat);
+		batchWoodcutting(player, object, def, axeId);
 	}
 
-	private void batchWoodcutting(Player player, GameObject object, ObjectWoodcuttingDef def, int axeId, int repeat) {
+	private void batchWoodcutting(Player player, GameObject object, ObjectWoodcuttingDef def, int axeId) {
 		player.playerServerMessage(MessageType.QUEST, "You swing your " + player.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the tree...");
 		thinkbubble(player, new Item(axeId));
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
@@ -116,7 +118,7 @@ public class Woodcutting implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You slip and fail to hit the tree");
-			if (repeat > 1) {
+			if (!ifbatchcompleted()) {
 				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (checkObj == null) {
 					return;
@@ -125,9 +127,10 @@ public class Woodcutting implements OpLocTrigger {
 		}
 
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
-			batchWoodcutting(player, object, def, axeId, repeat);
+			batchWoodcutting(player, object, def, axeId);
 		}
 	}
 

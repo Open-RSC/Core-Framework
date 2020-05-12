@@ -44,7 +44,8 @@ public class Sheep implements UseNpcTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchShear(player, item);
 		}
 	}

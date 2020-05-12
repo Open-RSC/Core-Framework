@@ -199,7 +199,8 @@ public class ObjectCooking implements UseLocTrigger {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 			// Repeat
-			if (!ifinterrupted() && updatebatch()) {
+			updatebatch();
+			if (!ifinterrupted() && !ifbatchcompleted()) {
 				batchCooking(player, item, timeToCook, cookingDef);
 			}
 		}
@@ -252,7 +253,8 @@ public class ObjectCooking implements UseLocTrigger {
 
 		// TODO: Add back when `mes` is changed to not use a timer (if it ever is).
 		// delay(player.getWorld().getServer().getConfig().GAME_TICK);
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchInedibleCooking(player, itemID, product, hasBubble, messages);
 		}
 	}

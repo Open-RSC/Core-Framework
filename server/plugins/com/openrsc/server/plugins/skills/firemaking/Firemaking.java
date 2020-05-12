@@ -73,11 +73,13 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
 		}
-		batchFiremaking(player, gItem, def, repeat);
+
+		startbatch(repeat);
+		batchFiremaking(player, gItem, def);
 
 	}
 
-	private void batchFiremaking(Player player, GroundItem gItem, FiremakingDef def, int repeat) {
+	private void batchFiremaking(Player player, GroundItem gItem, FiremakingDef def) {
 		thinkbubble(player, new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
@@ -104,13 +106,14 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 					}
 				);
 				player.incExp(Skills.FIREMAKING, getExp(player.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
-				if (repeat > 1) {
+				if (!ifbatchcompleted()) {
 					firemakingWalk(player);
 				}
 			}
 
 			// Repeat on success
-			if (!ifinterrupted() && --repeat > 0) {
+			updatebatch();
+			if (!ifinterrupted() && !ifbatchcompleted()) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 				// Drop new log
@@ -121,15 +124,16 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 				player.getCarriedItems().remove(log);
 				gItem = new GroundItem(player.getWorld(), log.getCatalogId(), player.getX(), player.getY(),1, (Player) null);
 				player.getWorld().registerItem(gItem);
-				batchFiremaking(player, gItem, def, repeat);
+				batchFiremaking(player, gItem, def);
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
 
 			// Repeat on fail
-			if (!ifinterrupted() && --repeat > 0) {
+			updatebatch();
+			if (!ifinterrupted() && !ifbatchcompleted()) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-				batchFiremaking(player, gItem, def, repeat);
+				batchFiremaking(player, gItem, def);
 			}
 		}
 	}
@@ -156,10 +160,12 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
 		}
-		batchCustomFiremaking(player, gItem, def, repeat);
+
+		startbatch(repeat);
+		batchCustomFiremaking(player, gItem, def);
 	}
 
-	private void batchCustomFiremaking(Player player, GroundItem gItem, FiremakingDef def, int repeat) {
+	private void batchCustomFiremaking(Player player, GroundItem gItem, FiremakingDef def) {
 		thinkbubble(player, new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
@@ -192,7 +198,8 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			}
 
 			// Repeat if success
-			if (!ifinterrupted() && --repeat > 0) {
+			updatebatch();
+			if (!ifinterrupted() && !ifbatchcompleted()) {
 				// Drop new log
 				Item log = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(gItem.getID(), Optional.of(false))
@@ -203,14 +210,15 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 				gItem = new GroundItem(player.getWorld(), log.getCatalogId(), player.getX(), player.getY(),1, (Player) null);
 				player.getWorld().registerItem(gItem);
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-				batchCustomFiremaking(player, gItem, def, repeat);
+				batchCustomFiremaking(player, gItem, def);
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
-			
-			if (!ifinterrupted() && --repeat > 0) {
+
+			updatebatch();
+			if (!ifinterrupted() && !ifbatchcompleted()) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-				batchCustomFiremaking(player, gItem, def, repeat);
+				batchCustomFiremaking(player, gItem, def);
 			}
 		}
 	}

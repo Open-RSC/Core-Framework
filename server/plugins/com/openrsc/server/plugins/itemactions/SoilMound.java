@@ -48,7 +48,8 @@ public class SoilMound implements UseLocTrigger {
 
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchFill(player, bucket, filledId);
 		}
 	}

@@ -102,10 +102,12 @@ public class Fishing implements OpLocTrigger {
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.FISHING);
 		}
-		batchFishing(player, netId, def, object, command, repeat);
+
+		startbatch(repeat);
+		batchFishing(player, netId, def, object, command);
 	}
 
-	private void batchFishing(Player player, int netId, ObjectFishingDef def, GameObject object, String command, int repeat) {
+	private void batchFishing(Player player, int netId, ObjectFishingDef def, GameObject object, String command) {
 		player.playSound("fish");
 		player.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
 		thinkbubble(player, new Item(netId));
@@ -206,7 +208,7 @@ public class Fishing implements OpLocTrigger {
 				if (object.getID() == 493 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41) {
 					player.message("keep trying, you'll catch something soon");
 				}
-				if (object.getID() != 493 && repeat > 1) {
+				if (object.getID() != 493 && !ifbatchcompleted()) {
 					GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 					if (checkObj == null) {
 						return;
@@ -215,9 +217,10 @@ public class Fishing implements OpLocTrigger {
 			}
 
 			// Repeat
-			if (!ifinterrupted() && --repeat > 0) {
+			updatebatch();
+			if (!ifinterrupted() && !ifbatchcompleted()) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				batchFishing(player, netId, def, object, command, repeat);
+				batchFishing(player, netId, def, object, command);
 			}
 		} catch (GameDatabaseException ex) {
 			LOGGER.error(ex.getMessage());

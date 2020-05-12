@@ -181,7 +181,8 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		player.incExp(Skills.CRAFTING, def.getExp(), true);
 
 		// Repeat
-		if(!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchGoldCrafting(player, item, def, gem);
 		}
@@ -250,7 +251,8 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		player.incExp(Skills.CRAFTING, 200, true);
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchSilverCrafting(player, item, resultId);
 		}

@@ -54,7 +54,8 @@ public class BananaTree implements OpLocTrigger {
 
 		delay(tick);
 
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchBananaPick(player, bananaTree);
 		}
 	}

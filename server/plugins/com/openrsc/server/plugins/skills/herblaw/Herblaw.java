@@ -106,7 +106,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchIdentify(player, herb, herbDef);
 		}
 	}
@@ -384,7 +385,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchPotionMaking(player, herb, herbDef, vial);
 		}
 	}
@@ -467,7 +469,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchPotionSecondary(player, unfinished, second, def, bubbleItem);
 		}
 	}
@@ -588,7 +591,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			batchGrind(player, item, newID);
 		}

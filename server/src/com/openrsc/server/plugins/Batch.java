@@ -11,6 +11,7 @@ public class Batch {
 	private int totalBatch;
 	private int delay;
 	private boolean showingBar = false;
+	private boolean completed;
 
 	/**
 	 * Creates a new instance of a Batch bar.
@@ -28,6 +29,7 @@ public class Batch {
 		this.current = 0;
 		this.delay = getPlayer().getWorld().getServer().getConfig().GAME_TICK * 3;
 		this.totalBatch = totalBatch;
+		this.completed = false;
 	}
 
 	/**
@@ -56,20 +58,19 @@ public class Batch {
 			);
 			this.showingBar = false;
 		}
+		this.completed = true;
 	}
 
 	/**
 	 * Increments the current batch's progress by 1.
 	 * @return Returns false when the batch is complete
 	 */
-	public boolean update() {
+	public void update() {
 		incrementBatch();
 		if (wantBatching()) ActionSender.sendUpdateProgressBar(getPlayer(), getCurrentBatchProgress());
 		if (getCurrentBatchProgress() == getTotalBatch()) {
 			stop();
-			return false;
 		}
-		return true;
 	}
 
 	private Player getPlayer() { return player; }
@@ -79,4 +80,5 @@ public class Batch {
 	private int getCurrentBatchProgress() { return current; }
 	private boolean wantBatching() { return getPlayer().getWorld().getServer().getConfig().BATCH_PROGRESSION; }
 	public boolean isShowingBar() { return showingBar; }
+	public boolean isCompleted() { return completed; }
 }

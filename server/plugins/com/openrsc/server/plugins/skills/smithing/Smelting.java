@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -87,7 +86,8 @@ public class Smelting implements UseLocTrigger {
 		}
 
 		thinkbubble(player, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
-		int messagedelay = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 200 : 1700;
+		int tick = player.getWorld().getServer().getConfig().GAME_TICK;
+		int messagedelay = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? tick : (tick * 2);
 		mes(player, messagedelay, "you heat the steel bar into a liquid state",
 			"and pour it into your cannon ball mould",
 			"you then leave it to cool for a short while");
@@ -111,9 +111,9 @@ public class Smelting implements UseLocTrigger {
 			}
 		}
 		player.incExp(Skills.SMITHING, 100, true);
-		player.getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id()),false);
+		player.getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id()));
 		if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DWARVEN_RING.id())) {
-			player.getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), player.getWorld().getServer().getConfig().DWARVEN_RING_BONUS),false);
+			player.getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), player.getWorld().getServer().getConfig().DWARVEN_RING_BONUS));
 			int charges;
 			if (player.getCache().hasKey("dwarvenring")) {
 				charges = player.getCache().getInt("dwarvenring") + 1;
@@ -127,7 +127,6 @@ public class Smelting implements UseLocTrigger {
 				player.getCache().put("dwarvenring", 1);
 
 		}
-		ActionSender.sendInventory(player);
 		player.message("it's very heavy");
 
 		// Repeat
@@ -232,10 +231,10 @@ public class Smelting implements UseLocTrigger {
 		}
 
 		startbatch(repeat);
-		batchSmelt(player, item, smelt, repeat);
+		batchSmelt(player, item, smelt);
 	}
 
-	private void batchSmelt(Player player, Item item, Smelt smelt, int repeat) {
+	private void batchSmelt(Player player, Item item, Smelt smelt) {
 		CarriedItems ci = player.getCarriedItems();
 		item = ci.getInventory().get(
 			ci.getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
@@ -367,7 +366,7 @@ public class Smelting implements UseLocTrigger {
 					String formattedName = item.getDef(player.getWorld()).getName().toUpperCase().replaceAll(" ", "_");
 					smelt = Smelt.valueOf(formattedName);
 				}
-				batchSmelt(player, item, smelt, repeat);
+				batchSmelt(player, item, smelt);
 			}
 		}
 	}
