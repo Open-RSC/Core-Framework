@@ -9,12 +9,12 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.CarriedItems;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -81,13 +81,6 @@ public class Smelting implements UseLocTrigger {
 			player.message("You need to complete the dwarf cannon quest");
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("You are too tired to smelt cannon ball");
-				return;
-			}
-		}
 		if (player.getCarriedItems().getInventory().countId(ItemId.STEEL_BAR.id()) < 1) {
 			player.message("You have no steel bars left");
 			return;
@@ -95,13 +88,29 @@ public class Smelting implements UseLocTrigger {
 
 		thinkbubble(player, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
 		int messagedelay = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 200 : 1700;
-		int delay = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? 7200: 2100;
 		mes(player, messagedelay, "you heat the steel bar into a liquid state",
 			"and pour it into your cannon ball mould",
 			"you then leave it to cool for a short while");
 
-		player.incExp(Skills.SMITHING, 100, true);
 		player.getCarriedItems().remove(new Item(ItemId.STEEL_BAR.id()));
+		// If you are fatigued, you should still make the cannonball, it just
+		// falls to the floor.
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("you are too tired to lift the ammo");
+				player.getWorld().registerItem(new GroundItem(
+					player.getWorld(),
+					ItemId.MULTI_CANNON_BALL.id(),
+					player.getX(),
+					player.getY(),
+					1,
+					player
+				));
+				return;
+			}
+		}
+		player.incExp(Skills.SMITHING, 100, true);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id()),false);
 		if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DWARVEN_RING.id())) {
 			player.getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), player.getWorld().getServer().getConfig().DWARVEN_RING_BONUS),false);
@@ -122,7 +131,8 @@ public class Smelting implements UseLocTrigger {
 		player.message("it's very heavy");
 
 		// Repeat
-		if (!ifinterrupted() && updatebatch()) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			player.message("you repeat the process");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 			handleCannonBallSmelting(player);
@@ -207,8 +217,21 @@ public class Smelting implements UseLocTrigger {
 
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, Skills.SMITHING);
+			// repeat = Formulae.getRepeatTimes(player, Skills.SMITHING);
+			int carriedOre = player.getCarriedItems().getInventory().countId(
+				smelt.getID(), Optional.of(false));
+			if (smelt.getReqOreId() == -1) {
+				repeat = carriedOre;
+			} else {
+				repeat = Math.min(
+					carriedOre,
+					player.getCarriedItems().getInventory().countId(
+						smelt.getReqOreId(), Optional.of(false)) / smelt.requestedOreAmount
+				);
+			}
 		}
+
+		startbatch(repeat);
 		batchSmelt(player, item, smelt, repeat);
 	}
 
@@ -333,7 +356,8 @@ public class Smelting implements UseLocTrigger {
 			}
 
 			// Repeat
-			if (!ifinterrupted() && --repeat > 0) {
+			updatebatch();
+			if (!ifinterrupted() && !ifbatchcompleted()) {
 				if (item.getCatalogId() == Smelt.IRON_ORE.getID()
 					&& getCurrentLevel(player, Skills.SMITHING) >= 30
 					&& ci.getInventory().countId(Smelt.COAL.getID()) >= 2) {
