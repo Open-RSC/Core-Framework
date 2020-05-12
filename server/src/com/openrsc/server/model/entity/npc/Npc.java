@@ -639,7 +639,6 @@ public class Npc extends Mob {
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			startRespawning();
 			getWorld().removeNpcPosition(this);
-			teleport(0, 0);
 			Npc n = this;
 			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC") {
 				public void run() {
@@ -743,7 +742,7 @@ public class Npc extends Mob {
 		return true;
 	}
 
-	boolean isRespawning() {
+	public boolean isRespawning() {
 		return isRespawning;
 	}
 
