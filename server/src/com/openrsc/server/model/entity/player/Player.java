@@ -130,11 +130,11 @@ public final class Player extends Mob {
 	/**
 	 * Received packets from this player yet to be processed.
 	 */
-	private final LinkedHashMap<Integer, Packet> incomingPackets = new LinkedHashMap<Integer, Packet>();
+	private final LinkedList<Packet> incomingPackets = new LinkedList<>();
 	/**
 	 * Outgoing packets from this player yet to be processed.
 	 */
-	private final ArrayList<Packet> outgoingPackets = new ArrayList<Packet>();
+	private final ArrayList<Packet> outgoingPackets = new ArrayList<>();
 	/**
 	 * Added by Zerratar: Correct sleepword we are looking for! Case SenSitIvE
 	 */
@@ -1865,7 +1865,7 @@ public final class Player extends Mob {
 		ping();
 		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
 			synchronized (incomingPackets) {
-				incomingPackets.put(e.getID(), e);
+				incomingPackets.add(e);
 			}
 		}
 	}
@@ -1913,18 +1913,20 @@ public final class Player extends Mob {
 			return;
 		}
 		synchronized (incomingPackets) {
-			for (Map.Entry<Integer, Packet> packet : incomingPackets.entrySet()) {
-				PacketHandler ph = PacketHandlerLookup.get(packet.getValue().getID());
-				if (ph != null && packet.getValue().getBuffer().readableBytes() >= 0) {
+			Packet packet = incomingPackets.poll();
+			while (packet != null) {
+				PacketHandler ph = PacketHandlerLookup.get(packet.getID());
+				if (ph != null && packet.getBuffer().readableBytes() >= 0) {
 					try {
 						/*if (!(ph instanceof Ping) && !(ph instanceof WalkRequest))
 							LOGGER.info("Handling Packet (CLASS: " + ph + "): " + this.username + " (ID: " + this.owner + ")");*/
-						ph.handlePacket(packet.getValue(), this);
+						ph.handlePacket(packet, this);
 					} catch (Exception e) {
 						LOGGER.catching(e);
 						unregister(false, "Malformed packet!");
 					}
 				}
+				packet = incomingPackets.poll();
 			}
 			incomingPackets.clear();
 		}
