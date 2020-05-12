@@ -263,6 +263,7 @@ public class Npc extends Mob {
 
 	@Override
 	public void killedBy(Mob mob) {
+		if (this.getID() == NpcId.RAT_TUTORIAL.id()) return;
 		String ownerId = handleXpDistribution(mob);
 
 		// Remove poison event(s)
