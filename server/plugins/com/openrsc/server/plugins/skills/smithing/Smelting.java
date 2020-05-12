@@ -80,6 +80,13 @@ public class Smelting implements UseLocTrigger {
 			player.message("You need to complete the dwarf cannon quest");
 			return;
 		}
+		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to smelt a cannon ball");
+				return;
+			}
+		}
 		if (player.getCarriedItems().getInventory().countId(ItemId.STEEL_BAR.id()) < 1) {
 			player.message("You have no steel bars left");
 			return;
@@ -96,7 +103,7 @@ public class Smelting implements UseLocTrigger {
 		// If you are fatigued, you should still make the cannonball, it just
 		// falls to the floor.
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED == 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("you are too tired to lift the ammo");
 				player.getWorld().registerItem(new GroundItem(
