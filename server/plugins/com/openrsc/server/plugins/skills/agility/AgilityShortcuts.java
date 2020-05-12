@@ -479,23 +479,6 @@ public class AgilityShortcuts implements OpLocTrigger,
 				teleport(player, 624, 741);
 				player.incExp(Skills.AGILITY, 40, true);
 				break;
-			case YANILLE_CLIMBING_ROCKS:
-				if (p.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (p.getFatigue() >= p.MAX_FATIGUE) {
-						p.message("You are too tired to climb up the wall");
-						p.setBusy(false);
-						return;
-					}
-				}
-				if (getCurrentLevel(p, Skills.AGILITY) < 15) {
-					p.message("You need an agility level of 15 to climb the wall");
-					p.setBusy(false);
-					return;
-				}
-				p.message("You climb over the wall");
-				movePlayer(p, 624, 741);
-				p.incExp(Skills.AGILITY, 40, true);
-				break;
 			case YANILLE_WATCHTOWER_HANDHOLDS:
 				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
