@@ -113,117 +113,108 @@ public class Fishing implements OpLocTrigger {
 		thinkbubble(player, new Item(netId));
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 
-		try {
-			if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
-				player.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel(player.getWorld()) + " "
-					+ fishingRequirementString(object, command) + " "
-					+ (!command.contains("cage") ? "these fish"
-					: player.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
-					.substring(4) + "s"));
+		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
+			player.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel(player.getWorld()) + " "
+				+ fishingRequirementString(object, command) + " "
+				+ (!command.contains("cage") ? "these fish"
+				: player.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
+				.substring(4) + "s"));
+			return;
+		}
+		final int baitId = def.getBaitId();
+		if (baitId >= 0) {
+			if (player.getCarriedItems().getInventory().countId(baitId) <= 0) {
+				player.playerServerMessage(MessageType.QUEST, "You don't have any " + player.getWorld().getServer().getEntityHandler().getItemDef(baitId).getName().toLowerCase()
+					+ " left");
 				return;
 			}
-			final int baitId = def.getBaitId();
-			if (baitId >= 0) {
-				if (player.getCarriedItems().getInventory().countId(baitId) <= 0) {
-					player.playerServerMessage(MessageType.QUEST, "You don't have any " + player.getWorld().getServer().getEntityHandler().getItemDef(baitId).getName().toLowerCase()
-						+ " left");
-					return;
-				}
-			}
+		}
 
-			if (checkFatigue(player)) return;
+		if (checkFatigue(player)) return;
 
-			List<ObjectFishDef> fishLst = new ArrayList<ObjectFishDef>();
-			ObjectFishDef aFishDef = getFish(def, player.getSkills().getLevel(Skills.FISHING));
-			if (aFishDef != null) fishLst.add(aFishDef);
-			if (fishLst.size() > 0) {
-				//check if the spot is still active
-				GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-				if (obj == null) {
-					player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
-					return;
-				} else {
-					if (baitId >= 0) {
-						int idx = player.getCarriedItems().getInventory().getLastIndexById(baitId);
-						Item bait = player.getCarriedItems().getInventory().get(idx);
-						int newCount = bait.getAmount() - 1;
-						if (newCount <= 0) {
-							player.getCarriedItems().remove(new Item(idx));
-						} else {
-							bait.changeAmount(player.getWorld().getServer().getDatabase(),-1);
-						}
-						ActionSender.sendInventory(player);
-					}
-					if (netId == ItemId.BIG_NET.id()) {
-						//big net spot may get 4 items but 1 already gotten
-						int max = bigNetRand() - 1;
-						for (int i = 0; i < max; i++) {
-							aFishDef = getFish(def, player.getSkills().getLevel(Skills.FISHING));
-							if (aFishDef != null) fishLst.add(aFishDef);
-						}
-						if (DataConversions.random(0, 200) == 100) {
-							player.playerServerMessage(MessageType.QUEST, "You catch a casket");
-							player.incExp(Skills.FISHING, 40, true);
-							give(player, ItemId.CASKET.id(), 1);
-						}
-						for (Iterator<ObjectFishDef> iter = fishLst.iterator(); iter.hasNext();) {
-							ObjectFishDef fishDef = iter.next();
-							Item fish = new Item(fishDef.getId());
-							player.getCarriedItems().getInventory().add(fish);
-							player.playerServerMessage(MessageType.QUEST, "You catch " + (fish.getCatalogId() == ItemId.BOOTS.id() || fish.getCatalogId() == ItemId.SEAWEED.id() || fish.getCatalogId() == ItemId.LEATHER_GLOVES.id() ? "some" : fish.getCatalogId() == ItemId.OYSTER.id() ? "an" : "a") + " "
-								+ fish.getDef(player.getWorld()).getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getCatalogId() == ItemId.OYSTER.id() ? " shell" : ""));
-							player.incExp(Skills.FISHING, fishDef.getExp(), true);
-						}
-					} else {
-						Item fish = new Item(fishLst.get(0).getId());
-						// Skill cape perk. Will convert a shark to either a manta ray or a turtle.
-						String capeColor = "";
-						if (fish.getCatalogId() == ItemId.RAW_SHARK.id()) {
-							Item newFish = new Item(SkillCapes.shouldActivateInt(player, ItemId.FISHING_CAPE));
-							if (newFish.getCatalogId() != -1) {
-								fish = newFish;
-								capeColor = "@dcy@";
-								player.playerServerMessage(MessageType.QUEST, capeColor + "Because of your prowess in fishing");
-							}
-						}
-						player.getCarriedItems().getInventory().add(fish);
-						player.playerServerMessage(MessageType.QUEST, capeColor + "You catch " + (netId == ItemId.NET.id() ? "some" : "a") + " "
-							+ fish.getDef(player.getWorld()).getName().toLowerCase().replace("raw ", "") + (fish.getCatalogId() == ItemId.RAW_SHRIMP.id() ? "s" : "")
-							+ (fish.getCatalogId() == ItemId.RAW_SHARK.id() ? "!" : ""));
-						player.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
-						if (object.getID() == 493 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41)
-							player.getCache().set("tutorial", 42);
-					}
-				}
-				if (player.getWorld().getServer().getConfig().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 1000) <= def.getDepletion()) {
-					obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-					if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
-						GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), 668, object.getDirection(), object.getType());
-						player.getWorld().replaceGameObject(object, newObject);
-						player.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000, true);
-					}
-				}
-			} else {
+		List<ObjectFishDef> fishLst = new ArrayList<ObjectFishDef>();
+		ObjectFishDef aFishDef = getFish(def, player.getSkills().getLevel(Skills.FISHING));
+		if (aFishDef != null) fishLst.add(aFishDef);
+		if (fishLst.size() > 0) {
+			//check if the spot is still active
+			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+			if (obj == null) {
 				player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
-				if (object.getID() == 493 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41) {
-					player.message("keep trying, you'll catch something soon");
+				return;
+			} else {
+				if (baitId >= 0) {
+					int idx = player.getCarriedItems().getInventory().getLastIndexById(baitId);
+					Item bait = player.getCarriedItems().getInventory().get(idx);
+					if (bait == null) return;
+					player.getCarriedItems().remove(new Item(bait.getCatalogId(), 1, false, bait.getItemId()));
 				}
-				if (object.getID() != 493 && !ifbatchcompleted()) {
-					GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-					if (checkObj == null) {
-						return;
+				if (netId == ItemId.BIG_NET.id()) {
+					//big net spot may get 4 items but 1 already gotten
+					int max = bigNetRand() - 1;
+					for (int i = 0; i < max; i++) {
+						aFishDef = getFish(def, player.getSkills().getLevel(Skills.FISHING));
+						if (aFishDef != null) fishLst.add(aFishDef);
 					}
+					if (DataConversions.random(0, 200) == 100) {
+						player.playerServerMessage(MessageType.QUEST, "You catch a casket");
+						player.incExp(Skills.FISHING, 40, true);
+						give(player, ItemId.CASKET.id(), 1);
+					}
+					for (Iterator<ObjectFishDef> iter = fishLst.iterator(); iter.hasNext();) {
+						ObjectFishDef fishDef = iter.next();
+						Item fish = new Item(fishDef.getId());
+						player.getCarriedItems().getInventory().add(fish);
+						player.playerServerMessage(MessageType.QUEST, "You catch " + (fish.getCatalogId() == ItemId.BOOTS.id() || fish.getCatalogId() == ItemId.SEAWEED.id() || fish.getCatalogId() == ItemId.LEATHER_GLOVES.id() ? "some" : fish.getCatalogId() == ItemId.OYSTER.id() ? "an" : "a") + " "
+							+ fish.getDef(player.getWorld()).getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getCatalogId() == ItemId.OYSTER.id() ? " shell" : ""));
+						player.incExp(Skills.FISHING, fishDef.getExp(), true);
+					}
+				} else {
+					Item fish = new Item(fishLst.get(0).getId());
+					// Skill cape perk. Will convert a shark to either a manta ray or a turtle.
+					String capeColor = "";
+					if (fish.getCatalogId() == ItemId.RAW_SHARK.id()) {
+						Item newFish = new Item(SkillCapes.shouldActivateInt(player, ItemId.FISHING_CAPE));
+						if (newFish.getCatalogId() != -1) {
+							fish = newFish;
+							capeColor = "@dcy@";
+							player.playerServerMessage(MessageType.QUEST, capeColor + "Because of your prowess in fishing");
+						}
+					}
+					player.getCarriedItems().getInventory().add(fish);
+					player.playerServerMessage(MessageType.QUEST, capeColor + "You catch " + (netId == ItemId.NET.id() ? "some" : "a") + " "
+						+ fish.getDef(player.getWorld()).getName().toLowerCase().replace("raw ", "") + (fish.getCatalogId() == ItemId.RAW_SHRIMP.id() ? "s" : "")
+						+ (fish.getCatalogId() == ItemId.RAW_SHARK.id() ? "!" : ""));
+					player.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
+					if (object.getID() == 493 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41)
+						player.getCache().set("tutorial", 42);
 				}
 			}
-
-			// Repeat
-			updatebatch();
-			if (!ifinterrupted() && !ifbatchcompleted()) {
-				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				batchFishing(player, netId, def, object, command);
+			if (player.getWorld().getServer().getConfig().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 1000) <= def.getDepletion()) {
+				obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+				if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+					GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), 668, object.getDirection(), object.getType());
+					player.getWorld().replaceGameObject(object, newObject);
+					player.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000, true);
+				}
 			}
-		} catch (GameDatabaseException ex) {
-			LOGGER.error(ex.getMessage());
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
+			if (object.getID() == 493 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41) {
+				player.message("keep trying, you'll catch something soon");
+			}
+			if (object.getID() != 493 && !ifbatchcompleted()) {
+				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+				if (checkObj == null) {
+					return;
+				}
+			}
+		}
+
+		// Repeat
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
+			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			batchFishing(player, netId, def, object, command);
 		}
 	}
 
