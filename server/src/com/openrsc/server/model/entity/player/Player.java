@@ -136,6 +136,10 @@ public final class Player extends Mob {
 	 */
 	private final ArrayList<Packet> outgoingPackets = new ArrayList<>();
 	/**
+	 * Current active packets - used on packets that should be rated to 1-per-player.
+	 */
+	private final ArrayList<Integer> activePackets = new ArrayList<>();
+	/**
 	 * Added by Zerratar: Correct sleepword we are looking for! Case SenSitIvE
 	 */
 	private String correctSleepword = "";
@@ -1861,9 +1865,13 @@ public final class Player extends Mob {
 
 	public void addToPacketQueue(final Packet e) {
 		ping();
+		if (e.getID() == 90 && activePackets.contains(e.getID())) {
+			return;
+		}
 		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
 			synchronized (incomingPackets) {
 				incomingPackets.add(e);
+				activePackets.add(e.getID());
 			}
 		}
 	}
@@ -1913,6 +1921,7 @@ public final class Player extends Mob {
 		synchronized (incomingPackets) {
 			Packet packet = incomingPackets.poll();
 			while (packet != null) {
+				activePackets.remove(activePackets.indexOf(packet.getID()));
 				final PacketHandler ph = PacketHandlerLookup.get(packet.getID());
 				if (ph != null && packet.getBuffer().readableBytes() >= 0) {
 					try {
