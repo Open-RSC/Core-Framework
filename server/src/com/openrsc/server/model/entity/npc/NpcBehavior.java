@@ -66,11 +66,64 @@ public class NpcBehavior {
 			return;
 		}
 
+		// Check if NPC will aggro
+		if (System.currentTimeMillis() - npc.getCombatTimer() > npc.getWorld().getServer().getConfig().GAME_TICK * 5) {
+			if ((npc.getDef().isAggressive() && !draynorManorSkeleton) || npc.getLocation().inWilderness() || (blackKnightsFortress)) {
+
+				// We loop through all players in view.
+				for (Player player : npc.getViewArea().getPlayersInView()) {
+
+					int range = npc.getWorld().getServer().getConfig().AGGRO_RANGE;
+					switch (NpcId.getById(npc.getID())) {
+						case BANDIT_AGGRESSIVE:
+							range = 2;
+							break;
+						case BLACK_KNIGHT:
+							range = 10;
+					}
+
+					if (player != npc.getLastOpponent() && (!canAggro(player) || !player.withinRange(npc, range))) {
+						continue; // Can't aggro or is not in range.
+					}
+
+					state = State.AGGRO;
+					target = player;
+
+					// Remove the opponent if the player has not been engaged in > 10 seconds
+					if (npc.getLastOpponent() == player && (player.getLastOpponent() != npc || expiredLastTargetCombatTimer())) {
+						npc.setLastOpponent(null);
+						setRoaming();
+
+						// AggroEvent, as NPC should target this player.
+					} else {
+						new AggroEvent(npc.getWorld(), npc, player);
+						return;
+					}
+				}
+			}
+		}
+
+		// Check for tackle
+		if (System.currentTimeMillis() - lastTackleAttempt > npc.getWorld().getServer().getConfig().GAME_TICK * 5 &&
+			npc.getDef().getName().toLowerCase().equals("gnome baller")
+			&& !(npc.getID() == NpcId.GNOME_BALLER_TEAMNORTH.id() || npc.getID() == NpcId.GNOME_BALLER_TEAMSOUTH.id())) {
+			for (Player player : npc.getViewArea().getPlayersInView()) {
+				int range = 1;
+				if (!player.withinRange(npc, range) || !player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))
+					|| !inArray(player.getAttribute("gnomeball_npc", -1), -1, 0))
+					continue; // Not in range, does not have a gnome ball or a gnome baller already has ball.
+
+				//set tackle
+				state = State.TACKLE;
+				target = player;
+			}
+		}
+
 		// If NPC has not moved in 3 seconds, and is out of combat 3 seconds
 		// and are finished our previous path.
 		target = null;
-		if (System.currentTimeMillis() - lastMovement > 3000
-			&& System.currentTimeMillis() - npc.getCombatTimer() > 3000
+		if (System.currentTimeMillis() - lastMovement > npc.getWorld().getServer().getConfig().GAME_TICK * 5
+			&& System.currentTimeMillis() - npc.getCombatTimer() > npc.getWorld().getServer().getConfig().GAME_TICK * 5
 			&& npc.finishedPath()) {
 			lastMovement = System.currentTimeMillis();
 			lastTarget = null;
@@ -88,60 +141,6 @@ public class NpcBehavior {
 				Point point = npc.walkablePoint(Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
 					Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
 				npc.walk(point.getX(), point.getY());
-			}
-		}
-
-		// NPC can aggro a target
-		else if (System.currentTimeMillis() - npc.getCombatTimer() > 3000) {
-			if ((npc.getDef().isAggressive() && !draynorManorSkeleton)
-				|| npc.getLocation().inWilderness()
-				|| (blackKnightsFortress)) {
-
-				// We loop through all players in view.
-				for (Player player : npc.getViewArea().getPlayersInView()) {
-
-					int range = npc.getWorld().getServer().getConfig().AGGRO_RANGE;
-					switch (NpcId.getById(npc.getID())) {
-						case BANDIT_AGGRESSIVE:
-							range = 2;
-							break;
-						case BLACK_KNIGHT:
-							range = 10;
-					}
-
-					if (!canAggro(player) || !player.withinRange(npc, range))
-						continue; // Can't aggro or is not in range.
-
-					state = State.AGGRO;
-					target = player;
-
-					// Remove the opponent if the player has not been engaged in > 10 seconds
-					if (npc.getLastOpponent() == player && (player.getLastOpponent() != npc || expiredLastTargetCombatTimer())) {
-						npc.setLastOpponent(null);
-						setRoaming();
-
-					// AggroEvent, as NPC should target this player.
-					} else {
-						new AggroEvent(npc.getWorld(), npc, player);
-					}
-
-					break;
-				}
-			}
-		}
-
-		else if (System.currentTimeMillis() - lastTackleAttempt > 3000 &&
-			npc.getDef().getName().toLowerCase().equals("gnome baller")
-			&& !(npc.getID() == NpcId.GNOME_BALLER_TEAMNORTH.id() || npc.getID() == NpcId.GNOME_BALLER_TEAMSOUTH.id())) {
-			for (Player player : npc.getViewArea().getPlayersInView()) {
-				int range = 1;
-				if (!player.withinRange(npc, range) || !player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))
-					|| !inArray(player.getAttribute("gnomeball_npc", -1), -1, 0))
-					continue; // Not in range, does not have a gnome ball or a gnome baller already has ball.
-
-				//set tackle
-				state = State.TACKLE;
-				target = player;
 			}
 		}
 	}
@@ -282,7 +281,7 @@ public class NpcBehavior {
 		state = State.RETREAT;
 		npc.getOpponent().setLastOpponent(npc);
 		npc.setLastOpponent(npc.getOpponent());
-		npc.setRanAwayTimer();
+		npc.setCombatTimer();
 		if (npc.getOpponent().isPlayer()) {
 			Player victimPlayer = ((Player) npc.getOpponent());
 			victimPlayer.resetAll();
@@ -321,8 +320,7 @@ public class NpcBehavior {
 
 		boolean playerOccupied = player.inCombat();
 		boolean playerCombatTimeout = System.currentTimeMillis()
-			- player.getCombatTimer() < (player.getCombatState() == CombatState.RUNNING
-			|| player.getCombatState() == CombatState.WAITING ? 3000 : 1500);
+			- player.getCombatTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5;
 
 		boolean shouldAttack = (npc.getDef().isAggressive() && (player.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
 			|| (player.getLocation().inWilderness() && npc.getLocation().inWilderness())))
@@ -371,14 +369,11 @@ public class NpcBehavior {
 	}
 
 	private boolean checkTargetCombatTimer() {
-		return (System.currentTimeMillis() - target.getCombatTimer()
-			< (target.getCombatState() == CombatState.RUNNING
-			|| target.getCombatState() == CombatState.WAITING ? 3000 : 1500)
-		);
+		return (System.currentTimeMillis() - target.getCombatTimer() < target.getWorld().getServer().getConfig().GAME_TICK * 5);
 	}
 
 	private boolean expiredLastTargetCombatTimer() {
-		return (System.currentTimeMillis() - npc.getLastOpponent().getRanAwayTimer() > 10000);
+		return (System.currentTimeMillis() - npc.getLastOpponent().getCombatTimer() > 10000);
 	}
 
 	public Mob getChaseTarget() {

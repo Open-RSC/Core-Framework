@@ -910,17 +910,25 @@ public class SpellHandler implements PacketHandler {
 			player.resetPath();
 			return;
 		}
+		int timeToAllowAttacks = player.getWorld().getServer().getConfig().GAME_TICK * 5;
 		if (affectedMob.isPlayer()) {
 			Player other = (Player) affectedMob;
-			if (player.getLocation().inWilderness() && System.currentTimeMillis() - other.getRanAwayTimer() < 1000) {
+			if (player.getLocation().inWilderness() && System.currentTimeMillis() - other.getCombatTimer() < timeToAllowAttacks) {
+				player.resetPath();
+				// Effectively remove the attack timer from the player casted on
+				// Authentic: see ticket #2579
+				player.setCombatTimer(-timeToAllowAttacks);
+				return;
+			}
+			if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getCombatTimer() < timeToAllowAttacks) {
 				player.resetPath();
 				return;
 			}
 		}
-		if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getRanAwayTimer() < 3000) {
-			player.resetPath();
-			return;
-		}
+
+		// Do not cast if the mob is too far away and we are already in a fight.
+		if (!player.withinRange(affectedMob) && player.inCombat()) return;
+
 		player.setFollowing(affectedMob);
 		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4, false) {
 			public void executeInternal() {

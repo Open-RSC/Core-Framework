@@ -21,7 +21,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 		if (affectedPlayer == null || item == null || item.getItemStatus().getNoted()) {
 			return;
 		}
-		if (System.currentTimeMillis() - affectedPlayer.getRanAwayTimer() < 2000) {
+		if (System.currentTimeMillis() - affectedPlayer.getCombatTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5) {
 			player.resetPath();
 			return;
 		}

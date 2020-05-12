@@ -272,6 +272,15 @@ public class ScriptContext {
 					break;
 			}
 		}
+
+		if(action == Action.talknpc) {
+			final Player contextPlayer = getContextPlayer();
+			final Npc contextNpc = getInteractingNpc();
+			if(contextPlayer != null && contextNpc != null) {
+				contextPlayer.face(contextNpc);
+				contextNpc.face(contextPlayer);
+			}
+		}
 	}
 
 	public void endScript() {

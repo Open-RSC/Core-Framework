@@ -104,7 +104,7 @@ public class CombatFormula {
 	 * @return True if the attack is a hit, false if the attack is a miss
 	 */
 	private static boolean calculateAccuracy(final double accuracy, final double defence) {
-		final int odds = (int)Math.min(212.0D, 255.0D * accuracy / (defence * 4));
+		final int odds = (int)Math.min(212.0D, 255.0D * accuracy / (defence * 4.0D));
 		final int roll = DataConversions.random(0, 255);
 
 		//LOGGER.info(source + " has " + odds + "/256 to hit " + victim + ", rolled " + roll);

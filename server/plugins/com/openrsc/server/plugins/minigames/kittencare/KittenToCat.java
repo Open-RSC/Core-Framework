@@ -59,7 +59,8 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 
 	@Override
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
-		return item.getCatalogId() == ItemId.KITTEN.id();
+		return item.getCatalogId() == ItemId.KITTEN.id()
+			|| (item.getCatalogId() == ItemId.CAT.id() && player.getWorld().getServer().getConfig().WANT_EXTENDED_CATS_BEHAVIOR);
 	}
 
 	@Override
@@ -70,6 +71,10 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 			mes(player, player.getWorld().getServer().getConfig().GAME_TICK, "the kitten appreciates the attention");
 
 			reduceKittensLoneliness(player);
+		} else if (item.getCatalogId() == ItemId.CAT.id() && player.getWorld().getServer().getConfig().WANT_EXTENDED_CATS_BEHAVIOR) {
+			mes(player, "you softly stroke the cat",
+				"@yel@cat:..purr..purr..");
+			mes(player, player.getWorld().getServer().getConfig().GAME_TICK, "it appreciates the attention");
 		}
 	}
 
@@ -111,6 +116,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		case RAW_TROUT:
 		case TROUT:
 		case RAW_SALMON:
+		case SALMON:
 		case RAW_TUNA:
 		case TUNA:
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));
@@ -252,7 +258,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 				ItemId.TROUT.id(), ItemId.RAW_SALMON.id(), ItemId.RAW_TUNA.id(), ItemId.TUNA.id())) ||
 				((item1.getCatalogId() == ItemId.KITTEN.id() || item1.getCatalogId() == ItemId.CAT.id()) && inArray(item2.getCatalogId(), ItemId.MILK.id(), ItemId.RAW_SHRIMP.id(), ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id(),
 				ItemId.SARDINE.id(), ItemId.RAW_HERRING.id(), ItemId.RAW_ANCHOVIES.id(), ItemId.RAW_TROUT.id(),
-				ItemId.TROUT.id(), ItemId.RAW_SALMON.id(), ItemId.RAW_TUNA.id(), ItemId.TUNA.id()));
+				ItemId.TROUT.id(), ItemId.RAW_SALMON.id(), ItemId.SALMON.id(), ItemId.RAW_TUNA.id(), ItemId.TUNA.id()));
 	}
 
 	@Override

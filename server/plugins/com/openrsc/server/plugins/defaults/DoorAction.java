@@ -870,12 +870,6 @@ public class DoorAction {
 				keyItem = ItemId.CLOSET_KEY.id();
 				showsBubble = true;
 				break;
-			/* Shield of Arrav - Phoenix Door */
-			case 20:
-				keyItem = ItemId.PHOENIX_GANG_WEAPON_KEY.id();
-				showsBubble = true;
-				break;
-			/* End of shield of arrav */
 
 			case 69: // Witches house
 				keyItem = ItemId.FRONT_DOOR_KEY.id();

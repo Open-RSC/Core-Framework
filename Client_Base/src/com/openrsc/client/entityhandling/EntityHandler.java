@@ -3373,7 +3373,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Specimen jar", "a jar for holding soil samples", "", 1, 378, "items:378", false, false, 0, 4194304, true, true, true, 1116));
 		items.add(new ItemDef("Rock Sample", "A rock sample", "", 1, 379, "items:379", false, false, 0, 4194304, true, true, false, 1117));
 		items.add(new ItemDef("gold Nuggets", "Real gold pieces!", "", 1, 380, "items:380", true, false, 0, 4194304, true, true, false, 1118));
-		items.add(new ItemDef("cat", "looks like a healthy one", "stroke", 1, 381, "items:381", false, false, 0, 4194304, true, false, false, 1119));
+		items.add(new ItemDef("cat", "looks like a healthy one", (Config.S_WANT_EXTENDED_CATS_BEHAVIOR ? "stroke" : ""), 1, 381, "items:381", false, false, 0, 4194304, true, false, false, 1119));
 		items.add(new ItemDef("Scrumpled piece of paper", "A piece of paper with barely legible writing - looks like a recipe!", "Read", 10, 218, "items:218", false, false, 0, 16317080, true, false, true, 1120));
 		items.add(new ItemDef("Digsite info", "IAN ONLY", "read", 63, 382, "items:382", false, false, 0, 0, true, true, false, 1121));
 		items.add(new ItemDef("Poisoned Bronze Throwing Dart", "A venomous throwing dart with a bronze tip.", "", 2, 384, "items:384", true, true, 16, 16737817, true, false, false, 1122));
@@ -3579,7 +3579,7 @@ public class EntityHandler {
 				printWriter.flush();
 			}
 			else if(item.id >= 0) {
-				printWriter.println("UPDATE `openrsc_itemdef` SET `name`='" + item.getName().replace("'", "''") + "',`description`='" + item.getDescription().replace("'", "''") + "', " + (item.getCommand().isEmpty() ? "" : "`command`='" + item.getCommand() + "',") + "`isStackable`=" + (item.isStackable() ? "'1'" : "'0'") + ",`isUntradable`=" + (item.quest ? "'1'" : "'0'") + ",`isWearable`=" + (item.isWieldable() ? "'1'" : "'0'") + ",`wearableID`='" + item.wearableID + "',`basePrice`='" + item.getBasePrice() + "',`isMembersOnly`=" + (item.membersItem ? "'1'" : "'0'") + " WHERE id='" + item.id + "';");
+				printWriter.println("UPDATE `openrsc_itemdef` SET `name`='" + item.getName().replace("'", "''") + "',`description`='" + item.getDescription().replace("'", "''") + "', " + (item.getCommand().isEmpty() ? "" : "`command`='" + item.getCommand() + "',") + "`isStackable`=" + (item.isStackable() ? "'1'" : "'0'") + ",`isUntradable`=" + (item.untradeable ? "'1'" : "'0'") + ",`isWearable`=" + (item.isWieldable() ? "'1'" : "'0'") + ",`wearableID`='" + item.wearableID + "',`basePrice`='" + item.getBasePrice() + "',`isMembersOnly`=" + (item.membersItem ? "'1'" : "'0'") + " WHERE id='" + item.id + "';");
 				printWriter.flush();
 			}
 			else {
@@ -6382,7 +6382,7 @@ public class EntityHandler {
 					item.command = null;
 					item.wieldable = false;
 					item.wearableID = 0;
-					item.quest = true;
+					item.untradeable = true;
 				}
 			}
 		}

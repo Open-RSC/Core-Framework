@@ -419,9 +419,9 @@ public final class CustomBankInterface extends BankInterface {
 
 					} else if (mc.getMouseX() <= x + 6 || mc.getMouseX() >= x + 496 || mc.getMouseY() <= y + 57 ||
 						(mc.getMouseY() >= y + 193 && mc.getMouseY() <= y + 227) || mc.getMouseY() >= y + 329) {
-						drawString(Integer.toString(bankItems.size()), x + 7, y + 15, 0, 0xFFFFFF);
-						mc.getSurface().drawLineVert(x + 9 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 6, 0xFFFFFF, 10);
-						drawString(Integer.toString(mc.bankItemsMax), x + 13 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 15, 1, 0xFFFFFF);
+						drawString(Integer.toString(bankItems.size()), x + 7, y + 15, 1, 0xFFFFFF);
+						mc.getSurface().drawLineVert(x + 13 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 6, 0xFFFFFF, 10);
+						drawString(Integer.toString(mc.bankItemsMax), x + 17 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 15, 1, 0xFFFFFF);
 					}
 
 					bankSlotStart++;
@@ -676,15 +676,6 @@ public final class CustomBankInterface extends BankInterface {
 						}
 
 					}
-
-					// Bank size hover
-					else if (mc.getMouseX() <= x + 6 || mc.getMouseX() >= x + 496 || mc.getMouseY() <= y + 57 ||
-						(mc.getMouseY() >= y + 193 && mc.getMouseY() <= y + 227) || mc.getMouseY() >= y + 329) {
-						drawString(Integer.toString(bankItems.size()), x + 7, y + 15, 1, 0xFFFFFF);
-						mc.getSurface().drawLineVert(x + 9 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 6, 0xFFFFFF, 10);
-						drawString(Integer.toString(mc.bankItemsMax), x + 13 + (mc.getSurface().stringWidth(0, "" + bankItems.size())), y + 15, 1, 0xFFFFFF);
-					}
-
 					inventorySlot++;
 				}
 			}
@@ -1199,6 +1190,7 @@ public final class CustomBankInterface extends BankInterface {
 		bank.clearList(this.bankSearch);
 		bank.setText(this.bankSearch, "");
 		bank.setFocus(-1);
+		swapNoteMode = false;
 	}
 
 	public enum BankTabShow {

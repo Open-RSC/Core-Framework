@@ -150,6 +150,7 @@ public class ServerConfiguration {
 	public boolean WANT_RUNECRAFTING;
 	public boolean WANT_HARVESTING;
 	public boolean WANT_CUSTOM_LEATHER;
+	public boolean WANT_BETTER_JEWELRY_CRAFTING;
 	public boolean WANT_DISCORD_AUCTION_UPDATES;
 	public String DISCORD_AUCTION_WEBHOOK_URL;
 	public boolean WANT_DISCORD_MONITORING_UPDATES;
@@ -184,7 +185,7 @@ public class ServerConfiguration {
 	//quest-minigame related
 	private boolean WANT_GIANNE_BADGE;
 	private boolean WANT_BLURBERRY_BADGE;
-	public boolean WANT_SHOW_KITTENS_CIVILLIAN;
+	public boolean WANT_EXTENDED_CATS_BEHAVIOR;
 	public boolean WANT_BARTER_WORMBRAINS;
 	public boolean LOCKED_POST_QUEST_REGIONS_ACCESSIBLE;
 	public boolean CAN_RETRIEVE_POST_QUEST_ITEMS;
@@ -394,6 +395,7 @@ public class ServerConfiguration {
 		CAN_USE_CRACKER_ON_SELF = tryReadBool("can_use_cracker_on_self").orElse(false);
 		FIX_OVERHEAD_CHAT = tryReadBool("fix_overhead_chat").orElse(false);
 		WANT_CUSTOM_LEATHER = tryReadBool("want_custom_leather").orElse(false);
+		WANT_BETTER_JEWELRY_CRAFTING = tryReadBool("want_better_jewelry_crafting").orElse(false);
 
 		// Bank
 		RIGHT_CLICK_BANK = tryReadBool("right_click_bank").orElse(false);
@@ -429,7 +431,7 @@ public class ServerConfiguration {
 		// Custom quests and minigames
 		WANT_GIANNE_BADGE = tryReadBool("want_gianne_badge").orElse(false);
 		WANT_BLURBERRY_BADGE = tryReadBool("want_blurberry_badge").orElse(false);
-		WANT_SHOW_KITTENS_CIVILLIAN = tryReadBool("want_show_kittens_civillian").orElse(false);
+		WANT_EXTENDED_CATS_BEHAVIOR = tryReadBool("want_extended_cats_behavior").orElse(false);
 		WANT_BARTER_WORMBRAINS = tryReadBool("want_barter_wormbrains").orElse(false);
 		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = tryReadBool("locked_post_quest_regions_accessible").orElse(false);
 		CAN_RETRIEVE_POST_QUEST_ITEMS = tryReadBool("can_retrieve_post_quest_items").orElse(false);

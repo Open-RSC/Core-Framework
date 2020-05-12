@@ -17,7 +17,7 @@ public final class PlayerFollowRequest implements PacketHandler {
 			player.resetPath();
 			return;
 		}
-		if (System.currentTimeMillis() - player.getRanAwayTimer() < 3000)
+		if (System.currentTimeMillis() - player.getCombatTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5)
 			return;
 		player.resetAll();
 		player.setFollowing(affectedPlayer, 1);

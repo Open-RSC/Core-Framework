@@ -533,7 +533,7 @@ public class PathValidation {
 		return blockedPath || isMobBlocking(mob, x, y);
 	}
 
-	private static boolean isMobBlocking(Mob mob, int x, int y) {
+	public static boolean isMobBlocking(Mob mob, int x, int y) {
 		if (mob.getX() == x && mob.getY() == y)
 			return false;
 

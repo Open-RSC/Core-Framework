@@ -31,7 +31,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
-import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
@@ -131,11 +130,11 @@ public final class Player extends Mob {
 	/**
 	 * Received packets from this player yet to be processed.
 	 */
-	private final LinkedHashMap<Integer, Packet> incomingPackets = new LinkedHashMap<Integer, Packet>();
+	private final LinkedList<Packet> incomingPackets = new LinkedList<>();
 	/**
 	 * Outgoing packets from this player yet to be processed.
 	 */
-	private final ArrayList<Packet> outgoingPackets = new ArrayList<Packet>();
+	private final ArrayList<Packet> outgoingPackets = new ArrayList<>();
 	/**
 	 * Added by Zerratar: Correct sleepword we are looking for! Case SenSitIvE
 	 */
@@ -625,8 +624,7 @@ public final class Player extends Mob {
 				}
 			}
 			if (!missile) {
-				if (System.currentTimeMillis() - mob.getCombatTimer() < (mob.getCombatState() == CombatState.RUNNING
-					|| mob.getCombatState() == CombatState.WAITING ? 3000 : 500)) {
+				if (System.currentTimeMillis() - mob.getCombatTimer() < getWorld().getServer().getConfig().GAME_TICK * 5) {
 					return false;
 				}
 			}
@@ -1867,7 +1865,7 @@ public final class Player extends Mob {
 		ping();
 		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
 			synchronized (incomingPackets) {
-				incomingPackets.put(e.getID(), e);
+				incomingPackets.add(e);
 			}
 		}
 	}
@@ -1915,19 +1913,21 @@ public final class Player extends Mob {
 			return;
 		}
 		synchronized (incomingPackets) {
-			for (Map.Entry<Integer, Packet> packet : incomingPackets.entrySet()) {
-				PacketHandler ph = PacketHandlerLookup.get(packet.getValue().getID());
-				if (ph != null && packet.getValue().getBuffer().readableBytes() >= 0) {
+			Packet packet = incomingPackets.poll();
+			while (packet != null) {
+				final PacketHandler ph = PacketHandlerLookup.get(packet.getID());
+				if (ph != null && packet.getBuffer().readableBytes() >= 0) {
 					try {
-						/*if (!(ph instanceof Ping) && !(ph instanceof WalkRequest))
-							LOGGER.info("Handling Packet (CLASS: " + ph + "): " + this.username + " (ID: " + this.owner + ")");*/
-						ph.handlePacket(packet.getValue(), this);
-					} catch (Exception e) {
+						ph.handlePacket(packet, this);
+					} catch (final Exception e) {
 						LOGGER.catching(e);
 						unregister(false, "Malformed packet!");
 					}
 				}
-			}
+
+				packet = incomingPackets.poll();
+			};
+
 			incomingPackets.clear();
 		}
 	}
@@ -2298,7 +2298,7 @@ public final class Player extends Mob {
 
 	@Override
 	public String toString() {
-		return "[Player:" + username + "]";
+		return "[Player:" + getIndex() + ":" + username + " @ (" + getX() + ", " + getY() + ")]";
 	}
 
 	public boolean tradeDuelThrottling() {

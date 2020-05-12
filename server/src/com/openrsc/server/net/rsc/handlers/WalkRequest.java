@@ -39,7 +39,7 @@ public class WalkRequest implements PacketHandler {
 
 					opponent.setLastOpponent(opponent.getOpponent());
 					player.setLastOpponent(player.getOpponent());
-					player.setRanAwayTimer();
+					player.setCombatTimer();
 					if (player.getOpponent().isPlayer()) {
 						Player victimPlayer = ((Player) player.getOpponent());
 						victimPlayer.message("Your opponent is retreating!");

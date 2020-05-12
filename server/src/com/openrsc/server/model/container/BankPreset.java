@@ -3,13 +3,14 @@ package com.openrsc.server.model.container;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.struct.EquipRequest;
+import com.openrsc.server.model.struct.UnequipRequest;
+import com.openrsc.server.net.rsc.ActionSender;
+import org.apache.commons.collections4.IterableMap;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.openrsc.server.model.struct.EquipRequest.RequestType.FROM_BANK;
 
@@ -94,15 +95,36 @@ public class BankPreset {
 	}
 
 	public void attemptPresetLoadout() {
-
-		// Deposit current items
 		int slotsNeeded = 0;
-		for (Item item : player.getCarriedItems().getInventory().getItems()) {
-			if (player.getBank().countId(item.getCatalogId()) == 0) slotsNeeded++;
+
+		// Subtract those in the preset that we already have held.
+		for (int slotID = 0; slotID < equipment.length; slotID++) {
+			Item itemNeeded = equipment[slotID];
+			Item itemHeld = player.getCarriedItems().getEquipment().get(slotID);
+			if (itemHeld == null || itemHeld.getCatalogId() == ItemId.NOTHING.id()) continue;
+			// If we don't have the preset item equipped
+			if (!player.getCarriedItems().getEquipment().hasEquipped(itemNeeded.getCatalogId())) {
+				// And we do have another item equipped in that slot
+				if (itemHeld != null) {
+					// And we don't have that catalogId in the bank... we need a slot.
+					if (player.getBank().countId(itemHeld.getCatalogId()) == 0) {
+						slotsNeeded++;
+					}
+				}
+			}
 		}
-		for (Item item : player.getCarriedItems().getEquipment().getList()) {
-			if (item == null) continue;
-			if (player.getBank().countId(item.getCatalogId()) == 0) slotsNeeded++;
+
+		ArrayList<Item> items = new ArrayList<>();
+		for (int slotID = 0; slotID < inventory.length; slotID++) {
+			Item itemHeld = player.getCarriedItems().getInventory().get(slotID);
+			if (itemHeld == null || itemHeld.getCatalogId() == ItemId.NOTHING.id()) continue;
+
+			// We don't have that catalogId in the bank.
+			if (player.getBank().countId(itemHeld.getCatalogId()) == 0
+				&& !items.contains(itemHeld.getCatalogId())) {
+				slotsNeeded++;
+			}
+			items.add(itemHeld);
 		}
 
 		if (slotsNeeded + player.getBank().size() > player.getBankSize()) {
@@ -110,29 +132,73 @@ public class BankPreset {
 			return;
 		}
 
-		player.getBank().depositAllFromInventory();
-		player.getBank().depositAllFromEquipment();
-
-		// Withdraw and equip equipment items if in bank, else disregard item.
-		for (Item item : equipment) {
-			if (item.getCatalogId() == ItemId.NOTHING.id()) continue;
-			if (player.getBank().countId(item.getCatalogId()) == 0) {
-				player.message("Could not withdraw item: " + item.getDef(player.getWorld()).getName());
-				continue;
+		// Withdraw and equip equipment items if not already equipped.
+		for (int slotID = 0; slotID < equipment.length; slotID++) {
+			Item itemNeeded = equipment[slotID];
+			Item itemHeld = player.getCarriedItems().getEquipment().get(slotID);
+			int neededCatalogId = -1;
+			int heldCatalogId = -1;
+			if (itemNeeded != null) {
+				neededCatalogId = itemNeeded.getCatalogId();
 			}
-			player.getCarriedItems().getEquipment().equipItem(
-				new EquipRequest(player, item, FROM_BANK, false)
-			);
+			if (itemHeld != null) {
+				heldCatalogId = itemHeld.getCatalogId();
+			}
+
+			if (heldCatalogId == neededCatalogId) continue;
+
+			// We are not holding the item we need, so deposit it.
+			if (heldCatalogId != ItemId.NOTHING.id()) {
+				UnequipRequest uer = new UnequipRequest(player, itemHeld, UnequipRequest.RequestType.FROM_BANK, false);
+				uer.equipmentSlot = Equipment.EquipmentSlot.get(slotID);
+				if (!player.getCarriedItems().getEquipment().unequipItem(uer, false)) {
+					player.message("Could not deposit item: " + itemHeld.getDef(player.getWorld()).getName());
+					return;
+				}
+			}
+
+			if (neededCatalogId == ItemId.NOTHING.id()) continue;
+
+			// Fail out if we don't have the item we need.
+			if (player.getBank().countId(neededCatalogId) == 0) {
+				player.message("Could not withdraw item: " + itemNeeded.getDef(player.getWorld()).getName());
+				return;
+			}
+
+			// Add item to equipment if it's not "nothing".
+			if (itemNeeded.getCatalogId() != ItemId.NOTHING.id()) {
+				EquipRequest er = new EquipRequest(player, itemNeeded, FROM_BANK, false);
+				player.getCarriedItems().getEquipment().equipItem(er, false);
+			}
 		}
 
-		// Withdraw inventory items if in bank, else withdraw all possible.
-		for (Item item : inventory) {
-			if (item.getCatalogId() == ItemId.NOTHING.id()) continue;
-			if (player.getBank().countId(item.getCatalogId()) == 0) {
-				player.message("Could not withdraw item: " + item.getDef(player.getWorld()).getName());
-				continue;
-			}
-			player.getBank().withdrawItemToInventory(item.getCatalogId(), item.getAmount(), item.getNoted());
+		// Deposit all held items in inventory.
+		for (Item item : items) {
+			player.getBank().depositItemFromInventory(item.getCatalogId(), item.getAmount(), false);
 		}
+
+		for (int slotID = 0; slotID < inventory.length; slotID++) {
+			Item itemNeeded = inventory[slotID];
+
+			int neededCatalogId = -1;
+			if (itemNeeded != null) {
+				neededCatalogId = itemNeeded.getCatalogId();
+			}
+
+			if (neededCatalogId == ItemId.NOTHING.id()) continue;
+
+			// We do not have any of the item we need, fail out
+			if (player.getBank().countId(neededCatalogId) == 0) {
+				player.message("Could not withdraw item: " + itemNeeded.getDef(player.getWorld()).getName());
+				return;
+			}
+
+			player.getBank().withdrawItemToInventory(itemNeeded.getCatalogId(), itemNeeded.getAmount(), itemNeeded.getNoted(), false);
+		}
+
+		ActionSender.sendInventory(player);
+		ActionSender.sendEquipment(player);
+		ActionSender.sendEquipmentStats(player);
+		player.resetBank();
  	}
 }

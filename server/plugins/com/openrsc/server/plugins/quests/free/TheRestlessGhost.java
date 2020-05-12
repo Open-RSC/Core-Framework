@@ -349,7 +349,6 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 
 	@Override
 	public void onTakeObj(Player player, GroundItem i) {
-		Npc skeleton = ifnearvisnpc(player, NpcId.SKELETON_RESTLESS.id(), 10);
 		if (i.getID() == ItemId.QUEST_SKULL.id()) {
 			// spawn-place
 			if (i.getX() == 218 && i.getY() == 3521) {
@@ -360,6 +359,7 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 					player.getCache().store("tried_grab_skull", true);
 					player.getWorld().unregisterItem(i);
 					give(player, ItemId.QUEST_SKULL.id(), 1);
+					Npc skeleton = ifnearvisnpc(player, NpcId.SKELETON_RESTLESS.id(), 10);
 					if (skeleton == null) {
 						//spawn skeleton and give message
 						player.message("Out of nowhere a skeleton appears");

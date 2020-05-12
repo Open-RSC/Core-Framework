@@ -208,8 +208,6 @@ public class Fletching implements UseInvTrigger {
 			player.incExp(Skills.FLETCHING, experience, true);
 		}
 
-		ActionSender.sendInventory(player);
-
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
