@@ -1913,21 +1913,20 @@ public final class Player extends Mob {
 			return;
 		}
 		synchronized (incomingPackets) {
-			Packet packet;
-			do {
-				packet = incomingPackets.poll();
+			Packet packet = incomingPackets.poll();
+			while (packet != null) {
 				final PacketHandler ph = PacketHandlerLookup.get(packet.getID());
 				if (ph != null && packet.getBuffer().readableBytes() >= 0) {
 					try {
-						/*if (!(ph instanceof Ping) && !(ph instanceof WalkRequest))
-							LOGGER.info("Handling Packet (CLASS: " + ph + "): " + this.username + " (ID: " + this.owner + ")");*/
 						ph.handlePacket(packet, this);
 					} catch (final Exception e) {
 						LOGGER.catching(e);
 						unregister(false, "Malformed packet!");
 					}
 				}
-			} while (packet != null);
+
+				packet = incomingPackets.poll();
+			};
 
 			incomingPackets.clear();
 		}
