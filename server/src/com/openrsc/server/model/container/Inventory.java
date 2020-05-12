@@ -472,9 +472,7 @@ public class Inventory {
 			} else {
 				dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
 				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), dropOwner, item.getNoted());
-				if (dropOwner.getIronMan() != IronmanMode.None.id()) {
-					groundItem.setAttribute("playerKill", true);
-				}
+				groundItem.setAttribute("playerKill", true);
 			}
 			player.getWorld().registerItem(groundItem, player.getWorld().getServer().getConfig().GAME_TICK * 1000);
 
