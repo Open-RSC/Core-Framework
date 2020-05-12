@@ -144,6 +144,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 						player.getCarriedItems().getInventory().getLastIndexById(categoryID, Optional.of(false))
 					);
 				}
+				if (toSell == null) return;
 				ticker = Math.min(ticker, amount);
 				if (player.getCarriedItems().remove(new Item(toSell.getCatalogId(), ticker, toSell.getNoted(), toSell.getItemId())) == -1) {
 					/* Break, player doesn't have anything. */
@@ -160,9 +161,6 @@ public final class InterfaceShopHandler implements PacketHandler {
 				}
 
 				shop.addShopItem(new Item(categoryID, ticker));
-
-    			// TODO: Does the authentic code send an update per item?
-    			ActionSender.sendInventory(player);
 			}
 
 			player.playSound("coins");
