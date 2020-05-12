@@ -1475,10 +1475,8 @@ public final class Player extends Mob {
 
 		if (getLocation().onTutorialIsland()) {
 			if (getSkills().getExperience(skill) + skillXP > 200) {
-				if (skill != Skills.HITS) {
+				if (skill == Skills.FISHING) {
 					getSkills().setExperience(skill, 200);
-				} else {
-					getSkills().setExperience(skill, 1200);
 				}
 			}
 		}
