@@ -327,14 +327,12 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 	public void onKillNpc(Player player, Npc n) {
 		n.resetCombatEvent();
 		if (n.getID() >= NpcId.SHAPESHIFTER_WOLF.id()) {
-			n.killedBy(player);
 			player.message("You finally kill the shapeshifter once and for all");
 			if (!player.getCache().hasKey("shapeshifter")) {
 				player.getCache().store("shapeshifter", true);
 			}
 			return;
 		}
-		n.killedBy(player);
 		Npc nextShape = addnpc(player.getWorld(), n.getID() + 1, n.getX(), n.getY(), 300000);
 
 		player.message("The shapeshifer turns into a "

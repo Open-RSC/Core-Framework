@@ -1161,7 +1161,6 @@ public class DemonSlayer implements QuestInterface,
 				if (choice != -1) {
 					if (choice == 3) {
 						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Delrith is sucked back into the dark demension from which he came");
-						n.killedBy(player);
 						n.remove();
 						if (player.getQuestStage(Quests.DEMON_SLAYER) != -1) {
 							//remove flags in case they are present with drop trick

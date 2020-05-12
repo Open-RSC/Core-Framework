@@ -21,7 +21,6 @@ public class UndergroundPassKalrag implements KillNpcTrigger {
 	@Override
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.KALRAG.id()) {
-			n.killedBy(player);
 			mes(player, "kalrag slumps to the floor",
 				"poison flows from the corpse over the soil");
 			if (!player.getCache().hasKey("poison_on_doll") && player.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {

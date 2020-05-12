@@ -74,8 +74,6 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public void onKillNpc(Player player, Npc n) {
-		n.killedBy(player);
-		n.remove();
 		if (n.getID() ==  NpcId.KHAZARD_OGRE.id()) {
 			if (!player.getCache().hasKey("killed_ogre")) {
 				player.getCache().store("killed_ogre", true);

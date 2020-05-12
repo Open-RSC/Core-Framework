@@ -676,7 +676,6 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 					new GroundItem(player.getWorld(), ItemId.BUNCH_OF_KEYS.id(), n.getX(), n.getY(), 1, (Player) null));
 			removeReturnEventIfPresent(player);
 		}
-		n.killedBy(player);
 	}
 
 	@Override

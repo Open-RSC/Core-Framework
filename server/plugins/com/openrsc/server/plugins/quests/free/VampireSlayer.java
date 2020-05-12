@@ -265,12 +265,14 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 				if (item == null) return;
 				player.getCarriedItems().remove(item);
 				player.message("You hammer the stake in to the vampires chest!");
+				n.remove();
+
 				// Completed Vampire Slayer Quest.
 				if (player.getQuestStage(this) == 2) {
 					player.sendQuestComplete(Quests.VAMPIRE_SLAYER);
 				}
 			} else {
-				n.getSkills().setLevel(Skills.HITS, 35);
+				n.getSkills().setLevel(Skills.HITS, 25);
 				player.message("The vampire seems to regenerate");
 			}
 		}

@@ -977,8 +977,6 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.KHAZARD_WARLORD.id()) {
-			n.resetCombatEvent();
-			n.killedBy(player);
 			if (player.getQuestStage(getQuestId()) == 6) {
 				mes(player,
 					"As he falls to the ground...",

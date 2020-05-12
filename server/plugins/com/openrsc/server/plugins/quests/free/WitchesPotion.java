@@ -185,9 +185,6 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 	public void onKillNpc(Player player, Npc n) {
 		if (player.getQuestStage(this) >= 1) {
 			player.getWorld().registerItem(new GroundItem(player.getWorld(), ItemId.RATS_TAIL.id(), n.getX(), n.getY(), 1, player));
-			n.killedBy(player);
-		} else {
-			n.killedBy(player);
 		}
 	}
 
