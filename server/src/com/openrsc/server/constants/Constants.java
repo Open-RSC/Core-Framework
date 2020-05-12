@@ -82,7 +82,8 @@ public final class Constants {
 	 */
 	public static final String[] objectsProjectileClipAllowed = {"gravestone", "sign", "broken pillar", "bone",
 		"animalskull", "skull", "egg", "eggs", "ladder", "torch", "rock", "treestump", "railing",
-		"railings", "gate", "fence", "table", "smashed chair", "smashed table", "longtable", "fence", "chair"};
+		"railings", "gate", "fence", "table", "smashed chair", "smashed table", "longtable", "fence",
+		"wooden gate", "metal gate", "chair"};
 	/**
 	 * Maximum world height
 	 */
