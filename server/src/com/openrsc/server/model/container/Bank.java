@@ -334,7 +334,7 @@ public class Bank {
 				return false;
 			}
 			// we reset the item in the from slot
-			Item from = list.get(slot);
+			Item from = get(slot);
 			Item[] array = list.toArray(new Item[list.size()]);
 			if (slot >= array.length || from == null || to >= array.length) {
 				return false;
@@ -438,7 +438,7 @@ public class Bank {
 				// Check if the bank is empty
 				if (list.isEmpty()) return;
 
-				Item withdrawItem = list.get(getFirstIndexById(catalogID));
+				Item withdrawItem = get(getFirstIndexById(catalogID));
 				if (withdrawItem == null) return;
 
 				// Check the item definition

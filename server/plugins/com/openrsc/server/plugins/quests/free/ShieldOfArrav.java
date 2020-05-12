@@ -461,7 +461,6 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	@Override
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.JONNY_THE_BEARD.id()) {
-			n.killedBy(player);
 			if (player.getCache().hasKey("arrav_mission") && (player.getCache().getInt("arrav_mission") & 2) == PHOENIX_MISSION) {
 				player.getCache().set("arrav_gang", PHOENIX_GANG);
 				player.updateQuestStage(Quests.SHIELD_OF_ARRAV, 4);

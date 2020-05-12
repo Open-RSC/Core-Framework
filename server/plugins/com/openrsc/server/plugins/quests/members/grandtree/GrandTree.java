@@ -1480,7 +1480,6 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.SHIPYARD_FOREMAN_HUT.id()) {
 			if (player.getQuestStage(this) == 9) {
-				n.killedBy(player);
 				mes(player, "you kill the foreman",
 					"inside his pocket you find an invoice..",
 					"it seems to be an order for timber");
@@ -1490,7 +1489,6 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 		}
 		else if (n.getID() == NpcId.BLACK_DEMON_GRANDTREE.id()) {
 			if (player.getQuestStage(this) == 14) {
-				n.killedBy(player);
 				mes(player, "the beast slumps to the floor",
 					"glough has fled");
 				player.updateQuestStage(this, 15);

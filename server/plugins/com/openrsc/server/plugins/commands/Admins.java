@@ -817,7 +817,10 @@ public final class Admins implements CommandTrigger {
 				}
 				for (Item item : bisList) {
 					player.getCarriedItems().getInventory().add(item);
-					player.getCarriedItems().getEquipment().equipItem(new EquipRequest(player, item, RequestType.FROM_INVENTORY, false));
+					Item getItem = player.getCarriedItems().getInventory().get(
+						player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId())
+					);
+					player.getCarriedItems().getEquipment().equipItem(new EquipRequest(player, getItem, RequestType.FROM_INVENTORY, false));
 				}
 				player.playSound("click");
 			}

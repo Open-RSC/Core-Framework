@@ -1199,7 +1199,6 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.ALOMONE.id()) {
 			if (player.getCache().hasKey("good_side")) {
-				n.killedBy(player);
 				if (!player.getCarriedItems().hasCatalogID(ItemId.CARNILLEAN_ARMOUR.id(), Optional.empty())) {
 					mes(player, "you have killed alomone",
 						"lying behind his corpse",
@@ -1210,8 +1209,6 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 						player.updateQuestStage(this, 4);
 					}
 				}
-			} else {
-				n.killedBy(player);
 			}
 		}
 	}

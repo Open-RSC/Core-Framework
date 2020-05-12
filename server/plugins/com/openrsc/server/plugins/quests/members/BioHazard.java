@@ -1178,8 +1178,6 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 					mes(player, 0, "and find a key");
 					n.remove();
 				}
-			} else {
-				n.killedBy(player);
 			}
 		}
 	}

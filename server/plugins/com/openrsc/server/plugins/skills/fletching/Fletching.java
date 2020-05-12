@@ -11,7 +11,6 @@ import com.openrsc.server.external.ItemLogCutDef;
 import com.openrsc.server.model.container.CarriedItems;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -178,10 +177,11 @@ public class Fletching implements UseInvTrigger {
 			repeat = 5;
 		}
 
-		batchFeathers(player, feathers, attachment, resultID, experience, repeat);
+		startbatch(repeat);
+		batchFeathers(player, feathers, attachment, resultID, experience);
 	}
 
-	private void batchFeathers(Player player, Item feathers, Item attachment, int resultID, int experience, int repeat) {
+	private void batchFeathers(Player player, Item feathers, Item attachment, int resultID, int experience) {
 		player.message("You attach feathers to some of your "
 			+ attachment.getDef(player.getWorld()).getName());
 
@@ -211,8 +211,9 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
-			batchFeathers(player, feathers, attachment, resultID, experience, repeat);
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
+			batchFeathers(player, feathers, attachment, resultID, experience);
 		}
 	}
 
@@ -241,10 +242,11 @@ public class Fletching implements UseInvTrigger {
 			repeat = 5;
 		}
 
-		batchArrowheads(player, headlessArrows, arrowHeads, headDef, repeat);
+		startbatch(repeat);
+		batchArrowheads(player, headlessArrows, arrowHeads, headDef);
 	}
 
-	private void batchArrowheads(Player player, Item headlessArrows, Item arrowHeads, ItemArrowHeadDef headDef, int repeat) {
+	private void batchArrowheads(Player player, Item headlessArrows, Item arrowHeads, ItemArrowHeadDef headDef) {
 		ServerConfiguration config = player.getWorld().getServer().getConfig();
 		CarriedItems ci = player.getCarriedItems();
 		headlessArrows = ci.getInventory().get(
@@ -277,8 +279,9 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
-			batchArrowheads(player, headlessArrows, arrowHeads, headDef, repeat);
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
+			batchArrowheads(player, headlessArrows, arrowHeads, headDef);
 		}
 	}
 
@@ -299,10 +302,11 @@ public class Fletching implements UseInvTrigger {
 			repeat = Math.min(bowtimes, stringtimes);
 		}
 
-		batchStringing(player, bow, bowString, stringDef, repeat);
+		startbatch(repeat);
+		batchStringing(player, bow, bowString, stringDef);
 	}
 
-	private void batchStringing(Player player, Item bow, Item bowString, ItemBowStringDef stringDef, int repeat) {
+	private void batchStringing(Player player, Item bow, Item bowString, ItemBowStringDef stringDef) {
 		if (player.getSkills().getLevel(Skills.FLETCHING) < stringDef.getReqLevel()) {
 			player.message("You need a fletching skill of "
 				+ stringDef.getReqLevel() + " or above to do that");
@@ -327,9 +331,10 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-			batchStringing(player, bow, bowString, stringDef, repeat);
+			batchStringing(player, bow, bowString, stringDef);
 		}
 	}
 
@@ -385,10 +390,11 @@ public class Fletching implements UseInvTrigger {
 			repeat = player.getCarriedItems().getInventory().countId(log.getCatalogId());
 		}
 
-		batchLogCutting(player, log, id, reqLvl, exp, cutMessage, repeat);
+		startbatch(repeat);
+		batchLogCutting(player, log, id, reqLvl, exp, cutMessage);
 	}
 
-	private void batchLogCutting(Player player, Item log, int id, int reqLvl, int exp, String cutMessage, int repeat) {
+	private void batchLogCutting(Player player, Item log, int id, int reqLvl, int exp, String cutMessage) {
 		if (player.getSkills().getLevel(Skills.FLETCHING) < reqLvl) {
 			player.message("You need a fletching skill of " + reqLvl + " or above to do that");
 			return;
@@ -408,9 +414,10 @@ public class Fletching implements UseInvTrigger {
 		}
 
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-			batchLogCutting(player, log, id, reqLvl, exp, cutMessage, repeat);
+			batchLogCutting(player, log, id, reqLvl, exp, cutMessage);
 		}
 	}
 
@@ -439,10 +446,11 @@ public class Fletching implements UseInvTrigger {
 			repeat = player.getCarriedItems().getInventory().countId(pearlID);
 		}
 
-		batchPearlCutting(player, pearl, amount, repeat);
+		startbatch(repeat);
+		batchPearlCutting(player, pearl, amount);
 	}
 
-	private void batchPearlCutting(Player player, Item pearl, int amount, int repeat) {
+	private void batchPearlCutting(Player player, Item pearl, int amount) {
 		if (player.getSkills().getLevel(Skills.FLETCHING) < 34) {
 			player.message("You need a fletching skill of 34 to do that");
 			return;
@@ -463,9 +471,10 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
-			batchPearlCutting(player, pearl, amount, repeat);
+			batchPearlCutting(player, pearl, amount);
 		}
 	}
 
@@ -484,10 +493,11 @@ public class Fletching implements UseInvTrigger {
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = 5;
 		}
-		batchBolts(player, bolts, tips, repeat);
+		startbatch(repeat);
+		batchBolts(player, bolts, tips);
 	}
 
-	private void batchBolts(Player player, Item bolts, Item tips, int repeat) {
+	private void batchBolts(Player player, Item bolts, Item tips) {
 		ServerConfiguration config = player.getWorld().getServer().getConfig();
 		CarriedItems ci = player.getCarriedItems();
 		bolts = ci.getInventory().get(
@@ -518,8 +528,9 @@ public class Fletching implements UseInvTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
-			batchBolts(player, bolts, tips, repeat);
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
+			batchBolts(player, bolts, tips);
 		}
 	}
 

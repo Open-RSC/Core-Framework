@@ -24,7 +24,9 @@ public class BananaTree implements OpLocTrigger {
 			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 				repeat = player.getCarriedItems().getInventory().getFreeSlots();
 			}
-			batchBananaPick(player, obj, repeat);
+
+			startbatch(repeat);
+			batchBananaPick(player, obj);
 		}
 
 		if (obj.getID() == EMPTY_TREE_ID) {
@@ -32,7 +34,7 @@ public class BananaTree implements OpLocTrigger {
 		}
 	}
 
-	private void batchBananaPick(Player player, GameObject bananaTree, int repeat) {
+	private void batchBananaPick(Player player, GameObject bananaTree) {
 		int tick = player.getWorld().getServer().getConfig().GAME_TICK;
 		int bananaCount = 1;
 		if (player.getCache().hasKey("banana_pick"))
@@ -52,8 +54,9 @@ public class BananaTree implements OpLocTrigger {
 
 		delay(tick);
 
-		if (!ifinterrupted() && --repeat > 0) {
-			batchBananaPick(player, bananaTree, repeat);
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
+			batchBananaPick(player, bananaTree);
 		}
 	}
 }

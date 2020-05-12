@@ -22,7 +22,6 @@ public class WatchTowerGorad implements TalkNpcTrigger,
 	@Override
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.GORAD.id()) {
-			n.killedBy(player);
 			player.message("Gorad has gone");
 			player.message("He's dropped a tooth, I'll keep that!");
 			give(player, ItemId.OGRE_TOOTH.id(), 1);

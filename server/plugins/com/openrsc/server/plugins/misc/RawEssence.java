@@ -29,10 +29,11 @@ public class RawEssence implements OpLocTrigger {
 			repeat = player.getCarriedItems().getInventory().getFreeSlots();
 		}
 
-		batchEssence(player, repeat);
+		startbatch(repeat);
+		batchEssence(player);
 	}
 
-	private void batchEssence(Player player, int repeat) {
+	private void batchEssence(Player player) {
 		player.playSound("mine");
 		thinkbubble(player, new Item(ItemId.IRON_PICKAXE.id()));
 		give(player, ItemId.RUNE_ESSENCE.id(), 1);
@@ -40,8 +41,9 @@ public class RawEssence implements OpLocTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
-			batchEssence(player, repeat);
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
+			batchEssence(player);
 		}
 	}
 }

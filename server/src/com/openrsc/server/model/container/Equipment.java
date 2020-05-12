@@ -276,7 +276,7 @@ public class Equipment {
 				// Grab the item we will be removing from the inventory
 				Item toEquip = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(
-						request.item.getCatalogId()
+						request.item.getCatalogId(), Optional.of(false)
 					)
 				);
 				if (toEquip == null)

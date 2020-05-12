@@ -172,7 +172,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			}
 		} else if (option == 1) {
 			player.message("You kill Mordred");
-			n.killedBy(player);
+			n.remove();
 		} else if (option == 2) {
 			player.message("Morgan Le Faye vanishes");
 		}

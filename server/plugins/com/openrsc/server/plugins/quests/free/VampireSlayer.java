@@ -257,17 +257,22 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.STAKE.id()) && player.getCarriedItems().hasCatalogID(ItemId.HAMMER.id())) {
 				Item item = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(ItemId.STAKE.id(), Optional.of(false)));
+				if (item == null) {
+					item = player.getCarriedItems().getEquipment().get(
+						player.getCarriedItems().getEquipment().searchEquipmentForItem(ItemId.STAKE.id())
+					);
+				}
 				if (item == null) return;
 				player.getCarriedItems().remove(item);
 				player.message("You hammer the stake in to the vampires chest!");
-				n.killedBy(player);
 				n.remove();
+
 				// Completed Vampire Slayer Quest.
 				if (player.getQuestStage(this) == 2) {
 					player.sendQuestComplete(Quests.VAMPIRE_SLAYER);
 				}
 			} else {
-				n.getSkills().setLevel(Skills.HITS, 35);
+				n.getSkills().setLevel(Skills.HITS, 25);
 				player.message("The vampire seems to regenerate");
 			}
 		}

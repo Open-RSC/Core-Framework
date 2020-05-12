@@ -1316,6 +1316,41 @@ public class Functions {
 		return false;
 	}
 
+	/**
+	 * Starts a batch and, if enabled, shows a batch bar to the client
+	 * @param totalBatch The total repetitions of a task
+	 */
+	public static void startbatch(int totalBatch) {
+		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return;
+		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		if (batch == null) return;
+
+		batch.initialize(totalBatch);
+		batch.start();
+	}
+
+	/**
+	 * Increments the current batch progress by 1
+	 * @return Returns false if batch is completed
+	 */
+	public static void updatebatch() {
+		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return;
+		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		if (batch == null) return;
+
+		batch.update();
+	}
+
+	public static boolean ifbatchcompleted() {
+		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return true;
+		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		if (batch == null) return true;
+		return batch.isCompleted();
+	}
+
 	public static void boundaryTeleport(Player player, Point location) {
 		player.setLocation(location);
 	}

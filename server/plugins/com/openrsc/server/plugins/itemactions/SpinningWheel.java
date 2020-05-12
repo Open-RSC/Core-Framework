@@ -54,10 +54,12 @@ public class SpinningWheel implements UseLocTrigger {
 		}
 
 		String resultString = "You " + verb + " the " + consumedItem + " into a " + producedItem;
-		batchSpin(player, item, resultString, produceID, requiredLevel, experience, repeat);
+
+		startbatch(repeat);
+		batchSpin(player, item, resultString, produceID, requiredLevel, experience);
 	}
 
-	private void batchSpin(Player player, Item item, String resultString, int resultCatalogID, int requiredLevel, int experience, int repeat) {
+	private void batchSpin(Player player, Item item, String resultString, int resultCatalogID, int requiredLevel, int experience) {
 		if (player.getSkills().getLevel(Skills.CRAFTING) < requiredLevel) {
 			mes(player, "You need to have a crafting of level "
 				+ requiredLevel + " or higher to make a "
@@ -86,8 +88,9 @@ public class SpinningWheel implements UseLocTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
-			batchSpin(player, item, resultString, resultCatalogID, requiredLevel, experience, repeat);
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
+			batchSpin(player, item, resultString, resultCatalogID, requiredLevel, experience);
 		}
 	}
 }

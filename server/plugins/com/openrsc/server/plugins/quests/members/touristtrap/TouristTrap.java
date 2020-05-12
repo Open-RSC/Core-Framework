@@ -2649,7 +2649,6 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			if (player.getQuestStage(this) == 1 && !player.getCache().hasKey("first_kill_captn")) {
 				player.getCache().store("first_kill_captn", true);
 			}
-			n.killedBy(player);
 			if (!player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 				give(player, ItemId.METAL_KEY.id(), 1);
 				mes(player, "The mercenary captain drops a metal key on the floor.",

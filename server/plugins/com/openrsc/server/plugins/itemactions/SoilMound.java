@@ -31,10 +31,11 @@ public class SoilMound implements UseLocTrigger {
 			repeat = player.getCarriedItems().getInventory().countId(itemID, Optional.of(false));
 		}
 
-		batchFill(player, item, refilledID, repeat);
+		startbatch(repeat);
+		batchFill(player, item, refilledID);
 	}
 
-	private void batchFill(Player player, Item bucket, int filledId, int repeat) {
+	private void batchFill(Player player, Item bucket, int filledId) {
 		bucket = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(bucket.getCatalogId(), Optional.of(false)));
 
@@ -47,8 +48,9 @@ public class SoilMound implements UseLocTrigger {
 
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
-		if (!ifinterrupted() && --repeat > 0) {
-			batchFill(player, bucket, filledId, repeat);
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
+			batchFill(player, bucket, filledId);
 		}
 	}
 }
