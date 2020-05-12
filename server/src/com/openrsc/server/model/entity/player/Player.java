@@ -35,6 +35,7 @@ import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.net.rsc.PacketHandlerLookup;
 import com.openrsc.server.plugins.QuestInterface;
@@ -1865,7 +1866,7 @@ public final class Player extends Mob {
 
 	public void addToPacketQueue(final Packet e) {
 		ping();
-		if (e.getID() == 90 && activePackets.contains(e.getID())) {
+		if ((e.getID() == OpcodeIn.ITEM_COMMAND.getOpcode() || e.getID() == OpcodeIn.NPC_TALK_TO.getOpcode()) && activePackets.contains(e.getID())) {
 			return;
 		}
 		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {

@@ -30,6 +30,7 @@ public final class NpcTalkTo implements PacketHandler {
 		if (n == null) {
 			return;
 		}
+
 		player.setFollowing(n, 0);
 		player.setWalkToAction(new WalkToMobAction(player, n, 1) {
 			public void executeInternal() {
@@ -40,7 +41,7 @@ public final class NpcTalkTo implements PacketHandler {
 				}
 				getPlayer().resetAll();
 
-				if (n.isBusy()) {
+				if (n.isBusy() || System.currentTimeMillis() - n.getCombatTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5) {
 					getPlayer().message(n.getDef().getName() + " is busy at the moment");
 					return;
 				}
