@@ -818,9 +818,9 @@ public final class Player extends Mob {
 				request.equipmentSlot = Equipment.EquipmentSlot.get(slot);
 				if(!getCarriedItems().getEquipment().unequipItem(request)) {
 					request.requestType = UnequipRequest.RequestType.FROM_BANK;
-					getCarriedItems().getEquipment().unequipItem(request);
+					getCarriedItems().getEquipment().unequipItem(request, false);
 				}
-				ActionSender.sendEquipmentStats(this);
+
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.
 				if (getCarriedItems().getEquipment().get(slot) != null) {
@@ -884,20 +884,14 @@ public final class Player extends Mob {
 				}
 
 				if (unWield) {
-					try {
-						item.setWielded(getWorld().getServer().getDatabase(), false);
-					}
-					catch (GameDatabaseException e) {
-						LOGGER.error(e);
-					}
-					updateWornItems(item.getDef(getWorld()).getWieldPosition(),
-						getSettings().getAppearance().getSprite(item.getDef(getWorld()).getWieldPosition()),
-						item.getDef(getWorld()).getWearableId(), false);
-					ActionSender.sendInventoryUpdateItem(this, slot);
+					UnequipRequest.RequestType type = getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
+						? UnequipRequest.RequestType.FROM_EQUIPMENT : UnequipRequest.RequestType.FROM_INVENTORY;
+					getCarriedItems().getEquipment().unequipItem(
+						new UnequipRequest(this, item, type, true)
+					);
 				}
 			}
 		}
-		ActionSender.sendEquipmentStats(this);
 	}
 
 	public int getBankSize() {

@@ -219,23 +219,6 @@ public class PlayerDuelHandler implements PacketHandler {
 						ActionSender.sendSound(player, "click");
 						ActionSender.sendInventory(player);
 						ActionSender.sendEquipmentStats(player);
-
-						synchronized(affectedPlayer.getCarriedItems().getInventory().getItems()) {
-							try {
-								for (Item item : affectedPlayer.getCarriedItems().getInventory().getItems()) {
-									if (item.isWielded()) {
-										item.setWielded(affectedPlayer.getWorld().getServer().getDatabase(), false);
-										affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, item, UnequipRequest.RequestType.FROM_INVENTORY, false));
-									}
-								}
-							}
-							catch (GameDatabaseException e) {
-								System.out.println(e.getMessage());
-							}
-						}
-						ActionSender.sendSound(affectedPlayer, "click");
-						ActionSender.sendInventory(affectedPlayer);
-						ActionSender.sendEquipmentStats(affectedPlayer);
 					}
 				}
 

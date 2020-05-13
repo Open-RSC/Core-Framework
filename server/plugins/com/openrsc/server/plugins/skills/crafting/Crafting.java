@@ -714,11 +714,7 @@ public class Crafting implements UseInvTrigger,
 				}
 				message = "You make " + amount + " vial" + (amount != 1 ? "s" : "");
 				if (player.getLocation().inBounds(418, 559, 421, 563)) {
-					try {
-						result.setNoted(player.getWorld().getServer().getDatabase(), true);
-					} catch (GameDatabaseException e) {
-						System.out.println(e.getMessage());
-					}
+					result.getItemStatus().setNoted(true);
 				}
 			}
 		}
