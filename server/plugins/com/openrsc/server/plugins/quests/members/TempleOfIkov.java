@@ -608,7 +608,6 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.THE_FIRE_WARRIOR_OF_LESARKUS.id()) {
-			n.killedBy(player);
 			if (!player.getCache().hasKey("killedLesarkus")) {
 				player.getCache().store("killedLesarkus", true);
 			}

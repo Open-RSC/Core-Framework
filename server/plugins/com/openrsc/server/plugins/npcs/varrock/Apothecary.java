@@ -74,7 +74,8 @@ public final class Apothecary implements
 					int eggtimes = player.getCarriedItems().getInventory().countId(ItemId.RED_SPIDERS_EGGS.id());
 					int repeat = Math.min(cointimes, roottimes);
 					repeat = Math.min(eggtimes, repeat);
-					batchPotion(player, repeat);
+					startbatch(repeat);
+					batchPotion(player);
 				}
 			} else {
 				npcsay(player, n,
@@ -139,7 +140,7 @@ public final class Apothecary implements
 		}
 	}
 
-	private void batchPotion(Player player, int repeat) {
+	private void batchPotion(Player player) {
 		if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < 5) {
 			player.message("You don't have enough coins");
 			return;
@@ -161,8 +162,9 @@ public final class Apothecary implements
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
-			batchPotion(player, repeat);
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
+			batchPotion(player);
 		}
 	}
 

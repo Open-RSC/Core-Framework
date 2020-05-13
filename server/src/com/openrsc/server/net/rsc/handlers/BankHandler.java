@@ -51,6 +51,8 @@ public final class BankHandler implements PacketHandler {
 				catalogID = packet.readShort();
 				amount = packet.readInt();
 
+				if (catalogID == ItemId.NOTHING.id()) return;
+
 				if (player.getWorld().getServer().getConfig().WANT_BANK_NOTES)
 					wantsNotes = packet.readByte() == 1;
 
@@ -60,6 +62,8 @@ public final class BankHandler implements PacketHandler {
 			case BANK_DEPOSIT:
 				catalogID = packet.readShort();
 				amount = packet.readInt();
+
+				if (catalogID == ItemId.NOTHING.id()) return;
 
 				amount = Math.min(player.getCarriedItems().getInventory().countId(catalogID), amount);
 				player.getBank().depositItemFromInventory(catalogID, amount, true);

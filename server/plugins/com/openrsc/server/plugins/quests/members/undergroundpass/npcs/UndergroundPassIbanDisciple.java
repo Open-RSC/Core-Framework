@@ -21,7 +21,6 @@ public class UndergroundPassIbanDisciple implements KillNpcTrigger {
 	@Override
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.IBAN_DISCIPLE.id()) {
-			n.killedBy(player);
 			if (player.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
 				mes(player, "you search the diciples remains");
 				if (!player.getCarriedItems().hasCatalogID(ItemId.STAFF_OF_IBAN.id(), Optional.empty())

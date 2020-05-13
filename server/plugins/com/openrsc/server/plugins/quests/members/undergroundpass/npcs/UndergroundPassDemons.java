@@ -20,7 +20,6 @@ public class UndergroundPassDemons implements KillNpcTrigger {
 	@Override
 	public void onKillNpc(Player player, Npc n) {
 		if (inArray(n.getID(), NpcId.OTHAINIAN.id(), NpcId.DOOMION.id(), NpcId.HOLTHION.id())) {
-			n.killedBy(player);
 			if (!player.getCache().hasKey("doll_of_iban") && player.getQuestStage(Quests.UNDERGROUND_PASS) != 6) {
 				player.message("the demon slumps to the floor");
 				teleportPlayer(player, n);

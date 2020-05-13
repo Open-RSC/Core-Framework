@@ -130,11 +130,12 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 			}
 		}
 
-		batchGoldCrafting(player, item, def, gem, repeat);
+		startbatch(repeat);
+		batchGoldCrafting(player, item, def, gem);
 
 	}
 
-	private void batchGoldCrafting(Player player, Item item, ItemCraftingDef def, int gem, int repeat) {
+	private void batchGoldCrafting(Player player, Item item, ItemCraftingDef def, int gem) {
 		if (player.getSkills().getLevel(Skills.CRAFTING) < def.getReqLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level " + def.getReqLevel() + " to make this");
 			return;
@@ -180,9 +181,10 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		player.incExp(Skills.CRAFTING, def.getExp(), true);
 
 		// Repeat
-		if(!ifinterrupted() && --repeat > 0) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
-			batchGoldCrafting(player, item, def, gem, repeat);
+			batchGoldCrafting(player, item, def, gem);
 		}
 	}
 
@@ -220,10 +222,12 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 		}
-		batchSilverCrafting(player, item, results[mould], repeat);
+
+		startbatch(repeat);
+		batchSilverCrafting(player, item, results[mould]);
 	}
 
-	private void batchSilverCrafting(Player player, Item item, int resultId, int repeat) {
+	private void batchSilverCrafting(Player player, Item item, int resultId) {
 		if (player.getSkills().getLevel(Skills.CRAFTING) < 16) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level 16 to make this");
 			return;
@@ -247,9 +251,10 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		player.incExp(Skills.CRAFTING, 200, true);
 
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
-			batchSilverCrafting(player, item, resultId, repeat);
+			batchSilverCrafting(player, item, resultId);
 		}
 	}
 

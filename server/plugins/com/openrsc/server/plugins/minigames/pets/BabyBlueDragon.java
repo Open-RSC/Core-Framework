@@ -52,7 +52,6 @@ public class BabyBlueDragon implements UseNpcTrigger {
 				player.message("You catch the baby blue dragon in the crystal.");
 				player.getCarriedItems().remove(new Item(ItemId.A_GLOWING_RED_CRYSTAL.id()));
 				give(player, ItemId.A_RED_CRYSTAL.id(), 1);
-				ActionSender.sendInventory(player);
 				npc.remove();
 			} else {
 				player.message("The baby blue dragon manages to get away from you!");

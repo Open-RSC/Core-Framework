@@ -64,7 +64,6 @@ public class UndergroundPassPaladin implements TalkNpcTrigger,
 	@Override
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.PALADIN_UNDERGROUND_BEARD.id()) {
-			n.killedBy(player);
 			mes(player, "the paladin slumps to the floor",
 				"you search his body");
 			if (!player.getCarriedItems().hasCatalogID(ItemId.COAT_OF_ARMS_RED.id(), Optional.empty())) {
@@ -75,7 +74,6 @@ public class UndergroundPassPaladin implements TalkNpcTrigger,
 			}
 		}
 		else if (n.getID() == NpcId.PALADIN_UNDERGROUND.id()) {
-			n.killedBy(player);
 			mes(player, "the paladin slumps to the floor",
 				"you search his body");
 			if (!ifheld(player, ItemId.COAT_OF_ARMS_BLUE.id(), 2)) {

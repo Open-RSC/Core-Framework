@@ -206,7 +206,8 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			return;
 		}
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+			// On OG thieving chests not thievable on 100% fatigue
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to thieve here");
 				return;
@@ -333,10 +334,12 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			repeat = Formulae.getRepeatTimes(player, Skills.THIEVING);
 			npc.setBusy(true);
 		}
-		batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString, repeat);
+
+		startbatch(repeat);
+		batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString);
 	}
 
-	private void batchPickpocket(Player player, Npc npc, Pickpocket pickpocket, ArrayList<LootItem> lootTable, String thievedMobString, int repeat) {
+	private void batchPickpocket(Player player, Npc npc, Pickpocket pickpocket, ArrayList<LootItem> lootTable, String thievedMobString) {
 		if (npc.inCombat()) {
 			npc.setBusy(false);
 			return;
@@ -402,14 +405,15 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		}
 
 		// Repeat
-		if (!ifinterrupted() && --repeat > 0) {
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
 			if (!player.withinRange(npc, 1)) {
 				player.message("The " + thievedMobString + " has moved.");
 				npc.setBusy(false);
 				return;
 			}
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
-			batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString, repeat);
+			batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString);
 		}
 		else {
 			npc.setBusy(false);

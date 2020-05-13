@@ -75,6 +75,7 @@ public class CarriedItems {
 	public int remove(Item item, boolean updateClient) {
 		if (item.getItemId() == -1) {
 			Item toRemove = getInventory().get(getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted())));
+			if (toRemove == null) return -1;
 			item = new Item(toRemove.getCatalogId(), item.getAmount(), toRemove.getNoted(), toRemove.getItemId());
 		}
 		int result = getInventory().remove(item, updateClient);

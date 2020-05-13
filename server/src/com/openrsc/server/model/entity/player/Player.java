@@ -35,6 +35,7 @@ import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.net.rsc.PacketHandlerLookup;
 import com.openrsc.server.plugins.QuestInterface;
@@ -135,6 +136,10 @@ public final class Player extends Mob {
 	 * Outgoing packets from this player yet to be processed.
 	 */
 	private final ArrayList<Packet> outgoingPackets = new ArrayList<>();
+	/**
+	 * Current active packets - used on packets that should be rated to 1-per-player.
+	 */
+	private final ArrayList<Integer> activePackets = new ArrayList<>();
 	/**
 	 * Added by Zerratar: Correct sleepword we are looking for! Case SenSitIvE
 	 */
@@ -813,9 +818,9 @@ public final class Player extends Mob {
 				request.equipmentSlot = Equipment.EquipmentSlot.get(slot);
 				if(!getCarriedItems().getEquipment().unequipItem(request)) {
 					request.requestType = UnequipRequest.RequestType.FROM_BANK;
-					getCarriedItems().getEquipment().unequipItem(request);
+					getCarriedItems().getEquipment().unequipItem(request, false);
 				}
-				ActionSender.sendEquipmentStats(this);
+
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.
 				if (getCarriedItems().getEquipment().get(slot) != null) {
@@ -879,20 +884,14 @@ public final class Player extends Mob {
 				}
 
 				if (unWield) {
-					try {
-						item.setWielded(getWorld().getServer().getDatabase(), false);
-					}
-					catch (GameDatabaseException e) {
-						LOGGER.error(e);
-					}
-					updateWornItems(item.getDef(getWorld()).getWieldPosition(),
-						getSettings().getAppearance().getSprite(item.getDef(getWorld()).getWieldPosition()),
-						item.getDef(getWorld()).getWearableId(), false);
-					ActionSender.sendInventoryUpdateItem(this, slot);
+					UnequipRequest.RequestType type = getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
+						? UnequipRequest.RequestType.FROM_EQUIPMENT : UnequipRequest.RequestType.FROM_INVENTORY;
+					getCarriedItems().getEquipment().unequipItem(
+						new UnequipRequest(this, item, type, true)
+					);
 				}
 			}
 		}
-		ActionSender.sendEquipmentStats(this);
 	}
 
 	public int getBankSize() {
@@ -1475,10 +1474,8 @@ public final class Player extends Mob {
 
 		if (getLocation().onTutorialIsland()) {
 			if (getSkills().getExperience(skill) + skillXP > 200) {
-				if (skill != Skills.HITS) {
+				if (skill == Skills.FISHING) {
 					getSkills().setExperience(skill, 200);
-				} else {
-					getSkills().setExperience(skill, 1200);
 				}
 			}
 		}
@@ -1863,9 +1860,13 @@ public final class Player extends Mob {
 
 	public void addToPacketQueue(final Packet e) {
 		ping();
+		if ((e.getID() == OpcodeIn.ITEM_COMMAND.getOpcode() || e.getID() == OpcodeIn.NPC_TALK_TO.getOpcode()) && activePackets.contains(e.getID())) {
+			return;
+		}
 		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
 			synchronized (incomingPackets) {
 				incomingPackets.add(e);
+				activePackets.add(e.getID());
 			}
 		}
 	}
@@ -1915,6 +1916,7 @@ public final class Player extends Mob {
 		synchronized (incomingPackets) {
 			Packet packet = incomingPackets.poll();
 			while (packet != null) {
+				activePackets.remove(activePackets.indexOf(packet.getID()));
 				final PacketHandler ph = PacketHandlerLookup.get(packet.getID());
 				if (ph != null && packet.getBuffer().readableBytes() >= 0) {
 					try {

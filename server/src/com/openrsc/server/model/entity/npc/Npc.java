@@ -39,6 +39,15 @@ public class Npc extends Mob {
 	private boolean executedAggroScript = false;
 	private NpcBehavior npcBehavior;
 	private ArrayList<NpcLootEvent> deathListeners = new ArrayList<NpcLootEvent>(1); // TODO: Should use a more generic class. Maybe PlayerKilledNpcListener, but that is in plugins jar.
+	private static int[] removeHandledInPlugin = {
+		NpcId.RAT_TUTORIAL.id(),
+		NpcId.DELRITH.id(),
+		NpcId.COUNT_DRAYNOR.id(),
+		NpcId.CHRONOZON.id(),
+		NpcId.SIR_MORDRED.id(),
+		NpcId.LUCIEN_EDGE.id(),
+		NpcId.BLACK_KNIGHT_TITAN.id()
+	};
 
 	/**
 	 * The definition of this npc
@@ -263,23 +272,26 @@ public class Npc extends Mob {
 
 	@Override
 	public void killedBy(Mob mob) {
-		String ownerId = handleXpDistribution(mob);
-
-		// Remove poison event(s)
-		this.cure();
-
-		Player owner = null;
-		if (getWorld().getPlayerUUID(ownerId) != null)
-			// owner is a Player
-			owner = getWorld().getPlayerUUID(ownerId);
-		else {
-			Npc npcKiller = getWorld().getNpcByUUID(ownerId);
+		Player owner = getWorld().getPlayerUUID(mob.getUUID());
+		if (owner == null) {
+			Npc npcKiller = getWorld().getNpcByUUID(mob.getUUID());
 			if (npcKiller != null && npcKiller.relatedMob instanceof Player)
 				// owner is Npc with a related Player
 				owner = (Player) npcKiller.relatedMob;
 		}
 
 		if (owner == null) return;
+
+		owner.getWorld().getServer().getPluginHandler().handlePlugin(owner, "KillNpc", new Object[]{owner, this});
+		for (int npcId : removeHandledInPlugin) {
+			if (this.getID() == npcId) return;
+		}
+
+		String ownerId = handleXpDistribution(mob);
+		owner = getWorld().getPlayerUUID(ownerId);
+
+		// Remove poison event(s)
+		this.cure();
 
 		ActionSender.sendSound(owner, "victory");
 		owner.getWorld().getServer().getAchievementSystem().checkAndIncSlayNpcTasks(owner, this);
@@ -292,8 +304,6 @@ public class Npc extends Mob {
 		if (getWorld().getServer().getConfig().NPC_KILL_LOGGING) {
 			logNpcKill(owner);
 		}
-
-		owner.getWorld().getServer().getPluginHandler().handlePlugin(owner, "KillNpc", new Object[]{owner, this});
 
 		// Custom KDB Specific Rare Drop Table (RDT)
 		if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
@@ -629,7 +639,6 @@ public class Npc extends Mob {
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			startRespawning();
 			getWorld().removeNpcPosition(this);
-			teleport(0, 0);
 			Npc n = this;
 			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC") {
 				public void run() {
@@ -733,7 +742,7 @@ public class Npc extends Mob {
 		return true;
 	}
 
-	boolean isRespawning() {
+	public boolean isRespawning() {
 		return isRespawning;
 	}
 

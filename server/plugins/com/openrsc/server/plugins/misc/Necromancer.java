@@ -51,7 +51,6 @@ public class Necromancer implements AttackNpcTrigger, KillNpcTrigger, SpellNpcTr
 
 	private void necromancerOnKilledMethod(Player player, Npc n) {
 		if (n.getID() == NpcId.NECROMANCER.id()) {
-			n.killedBy(player);
 			player.getCache().remove("necroSpawn");
 			player.getCache().remove("killedZomb");
 			Npc newZombie = player.getWorld().registerNpc(new Npc(n.getWorld(), NpcId.ZOMBIE_INVOKED.id(), player.getX(), player.getY()));
@@ -59,7 +58,6 @@ public class Necromancer implements AttackNpcTrigger, KillNpcTrigger, SpellNpcTr
 			newZombie.setChasing(player);
 		}
 		if (n.getID() == NpcId.ZOMBIE_INVOKED.id()) {
-			n.killedBy(player);
 			if (player.getCache().hasKey("killedZomb") && player.getCache().getInt("killedZomb") != 0) {
 				int delete = player.getCache().getInt("killedZomb");
 				player.getCache().set("killedZomb", delete - 1);

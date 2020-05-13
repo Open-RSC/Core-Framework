@@ -762,7 +762,6 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					player.getWorld().registerItem(
 						new GroundItem(player.getWorld(), ItemId.CREST_FRAGMENT_THREE.id(), n.getX(), n.getY(), 1, player));
 				}
-				n.killedBy(player);
 				n.remove();
 			}
 		}
