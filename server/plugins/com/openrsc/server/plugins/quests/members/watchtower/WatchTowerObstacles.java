@@ -392,6 +392,15 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 				"This hole must lead to somewhere...");
 		}
 		else if (obj.getID() == SKAVID_HOLE) {
+			if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if ((player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+					&& player.getFatigue() >= player.MAX_FATIGUE) ||
+					(player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED == 1
+					&& player.getFatigue() >= 0.95*player.MAX_FATIGUE)) {
+					player.message("You are too tired to enter this tunnel");
+					return;
+				}
+			}
 			player.playerServerMessage(MessageType.QUEST, "You enter the tunnel");
 			player.message("So that's how the skavids are getting into yanille!");
 			player.teleport(609, 742);

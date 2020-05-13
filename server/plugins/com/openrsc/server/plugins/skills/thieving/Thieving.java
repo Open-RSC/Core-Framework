@@ -206,7 +206,8 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			return;
 		}
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+			// On OG thieving chests not thievable on 100% fatigue
+			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to thieve here");
 				return;
