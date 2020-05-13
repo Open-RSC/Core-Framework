@@ -172,7 +172,7 @@ public class ThrowingEvent extends GameTickEvent {
 			return;
 		}*/
 
-		int damage = CombatFormula.doRangedDamage(getPlayerOwner(), throwingID, target);
+		int damage = CombatFormula.doRangedDamage(getPlayerOwner(), throwingID, throwingID, target);
 
 		if (target.isNpc()) {
 			Npc npc = (Npc) target;

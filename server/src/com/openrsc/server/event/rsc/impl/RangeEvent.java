@@ -254,7 +254,7 @@ public class RangeEvent extends GameTickEvent {
 			getPlayerOwner().resetRange();
 			return;
 		}
-		int damage = CombatFormula.doRangedDamage(getPlayerOwner(), arrowID, target);
+		int damage = CombatFormula.doRangedDamage(getPlayerOwner(), bowID, arrowID, target);
 
 		if (target.isNpc()) {
 			Npc npc = (Npc) target;
