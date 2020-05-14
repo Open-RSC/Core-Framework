@@ -117,6 +117,8 @@ public final class InterfaceShopHandler implements PacketHandler {
 			// TODO: How to handle this case?
 			if (amount < 0) return;
 
+			amount = Math.min(amount, player.getCarriedItems().getInventory().countId(categoryID, Optional.empty()));
+
 			int totalMoney = 0;
 			int totalSold = 0;
 			int ticker = 1;
