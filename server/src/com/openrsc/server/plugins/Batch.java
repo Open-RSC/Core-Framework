@@ -36,7 +36,7 @@ public class Batch {
 	 * Displays the batch bar to the client
 	 */
 	public void start() {
-		if (wantBatching()) {
+		if (wantBatching() && getTotalBatch() > 1) {
 			ActionSender.sendProgressBar(getPlayer(), getDelay(), getTotalBatch());
 			this.showingBar = true;
 		}
@@ -47,7 +47,7 @@ public class Batch {
 	 * Gives it 3 ticks to close
 	 */
 	public void stop() {
-		if (wantBatching()) {
+		if (wantBatching() && isShowingBar()) {
 			getPlayer().getWorld().getServer().getGameEventHandler().add(
 				new SingleEvent(getPlayer().getWorld(), null, getDelay(), "Close Batch Bar") {
 					@Override
@@ -67,7 +67,7 @@ public class Batch {
 	 */
 	public void update() {
 		incrementBatch();
-		if (wantBatching()) ActionSender.sendUpdateProgressBar(getPlayer(), getCurrentBatchProgress());
+		if (wantBatching() && isShowingBar()) ActionSender.sendUpdateProgressBar(getPlayer(), getCurrentBatchProgress());
 		if (getCurrentBatchProgress() == getTotalBatch()) {
 			stop();
 		}
