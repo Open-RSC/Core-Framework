@@ -1966,7 +1966,7 @@ public class PacketHandler {
 		mc.setOptionHideFog(packetsIncoming.getUnsignedByte() == 1); // 27
 		mc.setGroundItemsToggle(packetsIncoming.getUnsignedByte()); // 28
 		mc.setOptionAutoMessageSwitch(packetsIncoming.getUnsignedByte() == 1); // 29
-		mc.setOptionHideSideMenu(packetsIncoming.getUnsignedByte() == 1); // 30
+		mc.setOptionSideMenu(packetsIncoming.getUnsignedByte() == 1); // 30
 		mc.setOptionHideKillFeed(packetsIncoming.getUnsignedByte() == 1); // 31
 		mc.setFightModeSelectorToggle(packetsIncoming.getUnsignedByte()); // 32
 		mc.setExperienceCounterToggle(packetsIncoming.getUnsignedByte()); // 33

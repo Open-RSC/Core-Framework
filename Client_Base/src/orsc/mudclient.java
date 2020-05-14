@@ -16943,7 +16943,9 @@ public final class mudclient implements Runnable {
 		C_MESSAGE_TAB_SWITCH = b;
 	}
 
-	public void setOptionHideSideMenu(boolean b) {
+	public boolean getOptionSideMenu() { return C_SIDE_MENU_OVERLAY; };
+
+	public void setOptionSideMenu(boolean b) {
 		C_SIDE_MENU_OVERLAY = b;
 	}
 
