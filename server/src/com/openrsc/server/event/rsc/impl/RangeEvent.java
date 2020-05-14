@@ -64,7 +64,7 @@ public class RangeEvent extends GameTickEvent {
 	private Mob target;
 
 	public RangeEvent(World world, Player owner, Mob victim) {
-		super(world, owner, 1, "Range Event");
+		super(world, owner, 1, "Range Event", false);
 		this.target = victim;
 		this.deliveredFirstProjectile = false;
 		long diff = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L);
@@ -94,6 +94,7 @@ public class RangeEvent extends GameTickEvent {
 	}
 
 	public void run() {
+		if (!running) return;
 		int bowID = getPlayerOwner().getRangeEquip();
 		if (!getPlayerOwner().loggedIn() || getPlayerOwner().inCombat()
 			|| (target.isPlayer() && !((Player) target).loggedIn())
