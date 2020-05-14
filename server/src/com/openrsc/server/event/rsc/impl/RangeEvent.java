@@ -71,9 +71,7 @@ public class RangeEvent extends GameTickEvent {
 		boolean canShoot = diff >= getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
 		if (!canShoot) {
 			long delay = diff / getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK;
-			if (delay > 0) {
-				setDelayTicks(delay);
-			}
+			setDelayTicks(Math.max(2, delay));
 		}
 	}
 
