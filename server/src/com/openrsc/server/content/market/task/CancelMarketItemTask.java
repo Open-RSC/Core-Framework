@@ -35,7 +35,7 @@ public class CancelMarketItemTask extends MarketTask {
 				}
 			} else if (!owner.getBank().full()) {
 				if (owner.getWorld().getMarket().getMarketDatabase().cancel(item)) {
-					owner.getBank().add(new Item(itemIndex, amount));
+					owner.getBank().add(new Item(itemIndex, amount), false);
 					ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ The item has been canceled and returned to your bank. % Talk with a Banker to collect your item(s).", false);
 					updateDiscord = true;
 				}
