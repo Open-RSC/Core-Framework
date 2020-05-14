@@ -24,12 +24,12 @@ public class DropTable {
 	}
 
 	public void addEmptyDrop(int weight) {
-		drops.add(new Drop(ItemId.NOTHING.id(), 0, weight, dropType.NOTHING));
+		drops.add(new Drop(ItemId.NOTHING.id(), 0, weight, false, dropType.NOTHING));
 		this.totalWeight += weight;
 	}
 
-	public void addItemDrop(int itemID, int amount, int weight) {
-		drops.add(new Drop(itemID, amount, weight, dropType.ITEM));
+	public void addItemDrop(int itemID, int amount, int weight, boolean noted) {
+		drops.add(new Drop(itemID, amount, weight, noted, dropType.ITEM));
 		this.totalWeight += weight;
 	}
 
@@ -55,7 +55,7 @@ public class DropTable {
 				else if (drop.type == dropType.ITEM) {
 					if (ringOfWealth && owner != null && owner instanceof Player)
 						((Player) owner).playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
-					return new Item(drop.id, drop.amount);
+					return new Item(drop.id, drop.amount, drop.noted);
 				} else if (drop.type == dropType.TABLE) {
 					return drop.table.rollItem(ringOfWealth, owner);
 				}
@@ -71,7 +71,7 @@ public class DropTable {
 			if (drop.type == dropType.NOTHING)
 				continue;
 			else if (drop.type == dropType.ITEM) {
-				modifiedTable.addItemDrop(drop.id, drop.amount, drop.weight);
+				modifiedTable.addItemDrop(drop.id, drop.amount, drop.weight, drop.noted);
 			} else if (drop.type == dropType.TABLE) {
 				modifiedTable.addTableDrop(drop.table, drop.weight);
 			}
@@ -119,11 +119,13 @@ public class DropTable {
 		int id;
 		int amount;
 		int weight;
+		boolean noted;
 
-		private Drop(int itemID, int amount, int weight, dropType type) {
+		private Drop(int itemID, int amount, int weight, boolean noted, dropType type) {
 			this.id = itemID;
 			this.amount = amount;
 			this.weight = weight;
+			this.noted = noted;
 			this.type = type;
 		}
 

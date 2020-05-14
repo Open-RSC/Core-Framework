@@ -436,7 +436,7 @@ public class Npc extends Mob {
 
 		if (rare != null) {
 			if (!handleRingOfAvarice(owner, rare)) {
-				GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getCatalogId(), getX(), getY(), rare.getAmount(), owner);
+				GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getCatalogId(), getX(), getY(), rare.getAmount(), owner, rare.getNoted());
 				groundItem.setAttribute("npcdrop", true);
 				getWorld().registerItem(groundItem);
 			}

@@ -918,44 +918,44 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		//KBD Specific table
 		kbdTable.addAccessor(NpcId.KING_BLACK_DRAGON.id(), 1673, 51200);
 		kbdTable.addEmptyDrop(1273);
-		kbdTable.addItemDrop(ItemId.DRAGON_2_HANDED_SWORD.id(), 1, 25);
-		kbdTable.addItemDrop(ItemId.KING_BLACK_DRAGON_SCALE.id(), 1, 2048);
+		kbdTable.addItemDrop(ItemId.DRAGON_2_HANDED_SWORD.id(), 1, 25, false);
+		kbdTable.addItemDrop(ItemId.KING_BLACK_DRAGON_SCALE.id(), 1, 2048, false);
 
 		//ITEMS
 		gemTable.addEmptyDrop(45);
-		gemTable.addItemDrop(ItemId.FEATHER.id(), 1, 18);
-		gemTable.addItemDrop(ItemId.UNCUT_SAPPHIRE.id(), 1, 32);
-		gemTable.addItemDrop(ItemId.UNCUT_EMERALD.id(), 1, 16);
-		gemTable.addItemDrop(ItemId.UNCUT_RUBY.id(), 1, 8);
-		gemTable.addItemDrop(ItemId.UNCUT_DIAMOND.id(), 1, 4);
-		gemTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 2);
-		gemTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 2);
+		gemTable.addItemDrop(ItemId.FEATHER.id(), 1, 18, false);
+		gemTable.addItemDrop(ItemId.UNCUT_SAPPHIRE.id(), 1, 32, false);
+		gemTable.addItemDrop(ItemId.UNCUT_EMERALD.id(), 1, 16, false);
+		gemTable.addItemDrop(ItemId.UNCUT_RUBY.id(), 1, 8, false);
+		gemTable.addItemDrop(ItemId.UNCUT_DIAMOND.id(), 1, 4, false);
+		gemTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 2, false);
+		gemTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 2, false);
 		gemTable.addTableDrop(ultraTable, 1);
 
-		standardTable.addItemDrop(ItemId.NATURE_RUNE.id(),50,3);
-		standardTable.addItemDrop(ItemId.LAW_RUNE.id(),40,2);
-		standardTable.addItemDrop(ItemId.DEATH_RUNE.id(),50,2);
-		standardTable.addItemDrop(ItemId.STEEL_ARROWS.id(),150,2);
-		standardTable.addItemDrop(ItemId.RUNE_ARROWS.id(),40,2);
-		standardTable.addItemDrop(ItemId.FIRE_RUNE.id(),150,2);
-		standardTable.addItemDrop(ItemId.IRON_ARROWS.id(),200,1);
-		standardTable.addItemDrop(ItemId.RUNE_2_HANDED_SWORD.id(),1,3);
-		standardTable.addItemDrop(ItemId.RUNE_BATTLE_AXE.id(),1,2);
-		standardTable.addItemDrop(ItemId.RUNE_SQUARE_SHIELD.id(),1,2);
-		standardTable.addItemDrop(ItemId.RUNE_KITE_SHIELD.id(),1,1);
-		standardTable.addItemDrop(ItemId.DRAGON_MEDIUM_HELMET.id(),1,1);
-		standardTable.addItemDrop(ItemId.COINS.id(),3000,22);
-		standardTable.addItemDrop(ItemId.RUNITE_BAR.id(),1,5);
-		standardTable.addItemDrop(ItemId.DRAGONSTONE.id(),1,2);
-		standardTable.addItemDrop(1624,100,2); //noted silver ore
-		standardTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 20);
-		standardTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 19);
+		standardTable.addItemDrop(ItemId.NATURE_RUNE.id(),50,3, false);
+		standardTable.addItemDrop(ItemId.LAW_RUNE.id(),40,2, false);
+		standardTable.addItemDrop(ItemId.DEATH_RUNE.id(),50,2, false);
+		standardTable.addItemDrop(ItemId.STEEL_ARROWS.id(),150,2, false);
+		standardTable.addItemDrop(ItemId.RUNE_ARROWS.id(),40,2, false);
+		standardTable.addItemDrop(ItemId.FIRE_RUNE.id(),150,2, false);
+		standardTable.addItemDrop(ItemId.IRON_ARROWS.id(),200,1, false);
+		standardTable.addItemDrop(ItemId.RUNE_2_HANDED_SWORD.id(),1,3, false);
+		standardTable.addItemDrop(ItemId.RUNE_BATTLE_AXE.id(),1,2, false);
+		standardTable.addItemDrop(ItemId.RUNE_SQUARE_SHIELD.id(),1,2, false);
+		standardTable.addItemDrop(ItemId.RUNE_KITE_SHIELD.id(),1,1, false);
+		standardTable.addItemDrop(ItemId.DRAGON_MEDIUM_HELMET.id(),1,1, false);
+		standardTable.addItemDrop(ItemId.COINS.id(),3000,22, false);
+		standardTable.addItemDrop(ItemId.RUNITE_BAR.id(),1,5, false);
+		standardTable.addItemDrop(ItemId.DRAGONSTONE.id(),1,2, false);
+		standardTable.addItemDrop(ItemId.SILVER.id(),100,2, true); //noted silver ore
+		standardTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 20, false);
+		standardTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 19, false);
 		standardTable.addTableDrop(gemTable, 20);
 		standardTable.addTableDrop(ultraTable, 15);
 
 		ultraTable.addEmptyDrop(105);
-		ultraTable.addItemDrop(ItemId.COAL.id(), 1, 19);
-		ultraTable.addItemDrop(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1, 4);
+		ultraTable.addItemDrop(ItemId.COAL.id(), 1, 19, false);
+		ultraTable.addItemDrop(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1, 4, false);
 
 		//MOBS
 		gemTable.addAccessor(NpcId.LESSER_DEMON.id(),3,256);
