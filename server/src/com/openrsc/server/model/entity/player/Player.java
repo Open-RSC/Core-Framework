@@ -610,6 +610,7 @@ public final class Player extends Mob {
 	}
 
 	public void interruptPlugins() {
+		if (ownedPlugins == null || ownedPlugins.size() == 0) return;
 		for (final PluginTask ownedPlugin : ownedPlugins) {
 			ownedPlugin.getScriptContext().setInterrupted(true);
 		}

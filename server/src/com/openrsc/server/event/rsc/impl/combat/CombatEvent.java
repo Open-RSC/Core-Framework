@@ -270,6 +270,8 @@ public class CombatEvent extends GameTickEvent {
 		}
 		boolean bothLoggedIn = (attackerMob.isPlayer() && ((Player) attackerMob).loggedIn())
 			|| (defenderMob.isPlayer() && ((Player) defenderMob).loggedIn());
+		boolean respawning = (attackerMob.isNpc() && ((Npc)attackerMob).isRespawning())
+			|| (defenderMob.isNpc() && ((Npc)defenderMob).isRespawning());
 		return bothLoggedIn && !removed && nextToVictim && running;
 	}
 
