@@ -655,7 +655,6 @@ public class Functions {
 		if(!contextPlugin.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			return false;
 		}
-
 		return contextPlugin.getScriptContext().getInterrupted();
 	}
 
@@ -1348,6 +1347,9 @@ public class Functions {
 		if (player == null) return true;
 		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
 		if (batch == null) return true;
+		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION && player.inCombat()) {
+			return true;
+		}
 		return batch.isCompleted();
 	}
 
