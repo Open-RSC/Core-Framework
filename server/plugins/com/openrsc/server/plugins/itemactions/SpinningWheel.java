@@ -6,7 +6,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
-import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Optional;
 
@@ -50,7 +49,7 @@ public class SpinningWheel implements UseLocTrigger {
 		}
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, Skills.CRAFTING);
+			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 		}
 
 		String resultString = "You " + verb + " the " + consumedItem + " into a " + producedItem;
