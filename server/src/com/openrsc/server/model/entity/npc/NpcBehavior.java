@@ -198,7 +198,7 @@ public class NpcBehavior {
 		target = npc.getOpponent();
 
 		// No target, return to roaming.
-		if (target == null || npc.isRemoved() || target.isRemoved()) {
+		if (target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved()) {
 			setRoaming();
 		}
 
