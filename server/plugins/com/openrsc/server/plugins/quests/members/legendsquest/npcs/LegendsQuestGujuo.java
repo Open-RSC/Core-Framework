@@ -930,11 +930,11 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 						npcsay(player, n, "Very well Bwana...");
 						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Gujuo places the bowl on the floor in front of you,");
 						mes(player, "and leads you into a deep meditation...");
-						npcsay(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 5, "Ohhhhhmmmmmm");
+						npcsay(player, n, "Ohhhhhmmmmmm");
 						say(player, n, "Oooooommmmmmmmmm");
-						npcsay(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 5, "Ohhhhhmmmmmm");
+						npcsay(player, n, "Ohhhhhmmmmmm");
 						say(player, n, "Oooooohhhhmmmmmmmmmm");
-						npcsay(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 5, "Ohhhhhmmmmmm");
+						npcsay(player, n, "Ohhhhhmmmmmm");
 						if (Formulae.failCalculation(player, Skills.PRAYER, 42)) {
 							mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A totally peacefull aura surrounds you and you ",
 								"bring down the blessings of your god on the bowl.");

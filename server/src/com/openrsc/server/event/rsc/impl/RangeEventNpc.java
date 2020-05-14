@@ -140,7 +140,7 @@ public class RangeEventNpc extends GameTickEvent {
 							return;
 						}
 					}
-					int damage = CombatFormula.doRangedDamage(getPlayerOwner(), 11, target);
+					int damage = CombatFormula.doRangedDamage(getPlayerOwner(), ItemId.LONGBOW.id(), ItemId.BRONZE_ARROWS.id(), target);
 					if (Formulae.looseArrow(damage)) {
 						GroundItem arrows = getArrows(11);
 						if (arrows == null) {

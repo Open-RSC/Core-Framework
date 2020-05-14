@@ -62,7 +62,7 @@ public class NpcBehavior {
 		if (npc.inCombat()) {
 			state = State.COMBAT;
 			return;
-		} else if (npc.isBusy()) {
+		} else if (npc.isBusy() || npc.isRespawning()) {
 			return;
 		}
 

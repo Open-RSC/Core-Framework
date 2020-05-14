@@ -46,7 +46,7 @@ public class ItemActionHandler implements PacketHandler {
 			commandIndex = packet.readByte();
 		}
 
-		final Item item = tempitem;
+		final Item item = amount > 1 ? new Item(tempitem.getCatalogId(), amount) : tempitem;
 		if (item == null || item.getDef(player.getWorld()).getCommand() == null
 		|| commandIndex < 0 || commandIndex >= item.getDef(player.getWorld()).getCommand().length) {
 			player.setSuspiciousPlayer(true, "item action item null or null item def");

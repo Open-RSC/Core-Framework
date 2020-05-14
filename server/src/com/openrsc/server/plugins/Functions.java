@@ -183,12 +183,13 @@ public class Functions {
 				}
 				player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
 			}
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * calcDelay(message));
 		}
 	}
 
 	public static void say(final Player player, final String message) {
 		player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, player));
+		delay(player.getWorld().getServer().getConfig().GAME_TICK * calcDelay(message));
 	}
 
 	public static int multi(final Player player, final String... options) {
@@ -426,12 +427,11 @@ public class Functions {
 
 	/**
 	 * Npc chat method
-	 *
-	 * @param player
+	 *  @param player
 	 * @param npc
 	 * @param messages - String array of npc dialogue lines.
 	 */
-	public static void npcsay(final Player player, final Npc npc, final int delay, final String... messages) {
+	public static void npcsay(final Player player, final Npc npc, final String... messages) {
 
 		// Reset the walk action on the Npc (stop them from walking).
 		npc.resetPath();
@@ -450,12 +450,8 @@ public class Functions {
 				npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
 			}
 
-			delay(delay);
+			delay(player.getWorld().getServer().getConfig().GAME_TICK * calcDelay(message));
 		}
-	}
-
-	public static void npcsay(final Player player, final Npc npc, final String... messages) {
-		npcsay(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 3, messages);
 	}
 
 	public static void npcattack(Npc npc, Player player) {
@@ -659,8 +655,47 @@ public class Functions {
 	}
 
 	/**
+	 * Starts a batch and, if enabled, shows a batch bar to the client
+	 * @param totalBatch The total repetitions of a task
+	 */
+	public static void startbatch(int totalBatch) {
+		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return;
+		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		if (batch == null) return;
+
+		batch.initialize(totalBatch);
+		batch.start();
+	}
+
+	/**
+	 * Increments the current batch progress by 1
+	 * @return Returns false if batch is completed
+	 */
+	public static void updatebatch() {
+		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return;
+		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		if (batch == null) return;
+
+		batch.update();
+	}
+
+	public static boolean ifbatchcompleted() {
+		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return true;
+		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		if (batch == null) return true;
+		return batch.isCompleted();
+	}
+
+	/**
 	 * Functions below here are not Runescript API
 	 */
+
+	public static int calcDelay(final String message) {
+		return message.length() >= 65 ? 4 : 3;
+	}
 
 	public static boolean inArray(Object o, Object... oArray) {
 		for (Object object : oArray) {
@@ -1313,44 +1348,6 @@ public class Functions {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Starts a batch and, if enabled, shows a batch bar to the client
-	 * @param totalBatch The total repetitions of a task
-	 */
-	public static void startbatch(int totalBatch) {
-		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
-		if (player == null) return;
-		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
-		if (batch == null) return;
-
-		batch.initialize(totalBatch);
-		batch.start();
-	}
-
-	/**
-	 * Increments the current batch progress by 1
-	 * @return Returns false if batch is completed
-	 */
-	public static void updatebatch() {
-		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
-		if (player == null) return;
-		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
-		if (batch == null) return;
-
-		batch.update();
-	}
-
-	public static boolean ifbatchcompleted() {
-		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
-		if (player == null) return true;
-		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
-		if (batch == null) return true;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION && player.inCombat()) {
-			return true;
-		}
-		return batch.isCompleted();
 	}
 
 	public static void boundaryTeleport(Player player, Point location) {
