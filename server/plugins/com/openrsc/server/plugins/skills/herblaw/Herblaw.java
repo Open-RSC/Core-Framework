@@ -73,8 +73,9 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		int repeat = 1;
 		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(herb.getCatalogId());
-			startbatch(repeat);
 		}
+
+		startbatch(repeat);
 		batchIdentify(player, herb, herbDef);
 	}
 
