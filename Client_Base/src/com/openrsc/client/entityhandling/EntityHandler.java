@@ -69,18 +69,10 @@ public class EntityHandler {
 			noted = true;
 		}
 
-		return findItem(newId, Optional.of(noted));
+		return findItem(newId, noted);
 	}
 
-	public static ItemDef getItemDef(int id, int noted) {
-		if (id < 0) {
-			return null;
-		}
-
-		return findItem(id, Optional.of(noted == 1));
-	}
-
-	public static ItemDef getItemDef(int id, Optional<Boolean> isNote) {
+	public static ItemDef getItemDef(int id, boolean isNote) {
 		if (id < 0) {
 			return null;
 		}
@@ -88,13 +80,14 @@ public class EntityHandler {
 		return findItem(id, isNote);
 	}
 
-	public static ItemDef findItem(int id, Optional<Boolean> isNote) {
+	public static ItemDef findItem(int id, boolean isNote) {
 		ItemDef res = null;
 		for (Iterator<ItemDef> iter = items.iterator(); iter.hasNext(); ) {
 			ItemDef it = iter.next();
-			if ((!isNote.isPresent() || !isNote.get()) && it.id == id) {
+			if (it.id != id) continue;
+			if (!isNote) {
 				return it;
-			} else if ((!isNote.isPresent() || isNote.get()) && (it.id == id || it.getNotedForm() == id)) {
+			} else{
 				return ItemDef.asNote(it);
 			}
 		}

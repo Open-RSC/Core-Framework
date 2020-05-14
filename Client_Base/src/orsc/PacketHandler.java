@@ -23,7 +23,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 
 public class PacketHandler {
@@ -1495,7 +1494,7 @@ public class PacketHandler {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getInventoryItem(i).setNoted(noted);
-			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, Optional.of(noted)).isStackable()) {
+			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, noted).isStackable()) {
 				mc.setInventoryItemSize(i, packetsIncoming.get32());
 			} else {
 				mc.setInventoryItemSize(i, 1);
