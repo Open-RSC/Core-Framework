@@ -640,13 +640,13 @@ public class Npc extends Mob {
 			startRespawning();
 			getWorld().removeNpcPosition(this);
 			Npc n = this;
+			teleport(loc.startX, loc.startY);
 			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC") {
 				public void run() {
 					// Take 4 ticks away from the current time to get a 1 tick pause while the npc spawns,
 					// before it is allowed to attack (if aggressive).
 					setCombatTimer(-getWorld().getServer().getConfig().GAME_TICK * 4);
 					setRespawning(false);
-					teleport(loc.startX, loc.startY);
 					getSkills().normalize();
 					tryResyncHitEvent();
 
