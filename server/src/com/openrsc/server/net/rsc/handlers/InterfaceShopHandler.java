@@ -148,6 +148,9 @@ public final class InterfaceShopHandler implements PacketHandler {
 				}
 				if (toSell == null) return;
 				ticker = Math.min(ticker, amount);
+				if (ticker > toSell.getAmount()) {
+					ticker = toSell.getAmount();
+				}
 				if (player.getCarriedItems().remove(new Item(toSell.getCatalogId(), ticker, toSell.getNoted(), toSell.getItemId())) == -1) {
 					/* Break, player doesn't have anything. */
 					player.message("You don't have that many items");
