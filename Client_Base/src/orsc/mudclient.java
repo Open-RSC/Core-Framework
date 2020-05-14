@@ -5212,7 +5212,6 @@ public final class mudclient implements Runnable {
 
 					if (isAndroid() && Config.S_WANT_PLAYER_COMMANDS) { // on screen buttons for various player chat commands
 						if (osConfig.F_SHOWING_KEYBOARD) {
-							C_SIDE_MENU_OVERLAY = false;
 							int uiX = 5;
 							int uiY = 5;
 							int uiWidth = 60;
@@ -16851,7 +16850,7 @@ public final class mudclient implements Runnable {
 			panelMessageTabs.scrollMethodList(panelMessageClan, x);
 	}
 
-	private boolean isShowDialogBank() {
+	public boolean isShowDialogBank() {
 		return showDialogBank;
 	}
 
