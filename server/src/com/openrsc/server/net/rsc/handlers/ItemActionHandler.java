@@ -64,7 +64,7 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		player.resetAll();
+		player.resetAll(false);
 
 		final String command = item.getDef(player.getWorld()).getCommand()[commandIndex];
 
