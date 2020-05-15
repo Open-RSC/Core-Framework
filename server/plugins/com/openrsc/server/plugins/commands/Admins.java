@@ -121,7 +121,7 @@ public final class Admins implements CommandTrigger {
 			}, "cleanregions");
 			player.message(messagePrefix + "Cleaned " + count1 + " regions.");
 		} else if (cmd.equalsIgnoreCase("holidaydrop")) {
-			if (args.length < 2) {
+			if (args.length < 3) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [hours] [minute] [item_id] ...");
 				return;
 			}
