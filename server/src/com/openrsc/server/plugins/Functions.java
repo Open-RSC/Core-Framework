@@ -661,11 +661,11 @@ public class Functions {
 	public static void startbatch(int totalBatch) {
 		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
 		if (player == null) return;
-		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
-		if (batch == null) return;
-
+		Batch batch = new Batch(player);
 		batch.initialize(totalBatch);
 		batch.start();
+		
+		PluginTask.getContextPluginTask().getScriptContext().setBatch(batch);
 	}
 
 	/**
