@@ -58,6 +58,10 @@ public class ScriptContext {
 			return null;
 		}
 
+		if(getCurrentAction().getEntityType() != EntityType.NPC) {
+			return null;
+		}
+
 		if(interactingIndex == null) {
 			return null;
 		}
