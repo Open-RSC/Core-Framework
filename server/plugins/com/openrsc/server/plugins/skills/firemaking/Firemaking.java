@@ -106,14 +106,12 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 					}
 				);
 				player.incExp(Skills.FIREMAKING, getExp(player.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
-				if (!ifbatchcompleted()) {
-					firemakingWalk(player);
-				}
 			}
 
 			// Repeat on success
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
+				firemakingWalk(player);
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
 				// Drop new log
@@ -122,8 +120,12 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 				);
 				if (log == null) return;
 				player.getCarriedItems().remove(log);
-				gItem = new GroundItem(player.getWorld(), log.getCatalogId(), player.getX(), player.getY(),1, (Player) null);
+				gItem = new GroundItem(player.getWorld(), log.getCatalogId(), player.getX(), player.getY(),1, player);
 				player.getWorld().registerItem(gItem);
+				if (player.getViewArea().getGameObject(gItem.getLocation()) != null) {
+					player.playerServerMessage(MessageType.QUEST, "You can't light a fire here");
+					return;
+				}
 				batchFiremaking(player, gItem, def);
 			}
 		} else {
@@ -207,9 +209,13 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 				if (log == null) return;
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				player.getCarriedItems().remove(log);
-				gItem = new GroundItem(player.getWorld(), log.getCatalogId(), player.getX(), player.getY(),1, (Player) null);
+				gItem = new GroundItem(player.getWorld(), log.getCatalogId(), player.getX(), player.getY(),1, player);
 				player.getWorld().registerItem(gItem);
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				if (player.getViewArea().getGameObject(gItem.getLocation()) != null) {
+					player.playerServerMessage(MessageType.QUEST, "You can't light a fire here");
+					return;
+				}
 				batchCustomFiremaking(player, gItem, def);
 			}
 		} else {
