@@ -1247,6 +1247,7 @@ public class DoorAction {
 					Npc n = ifnearvisnpc(player, NpcId.GNOME_GUARD.id(), 15);
 					if (n == null) {
 						n = addnpc(player.getWorld(), NpcId.GNOME_GUARD.id(), 705, 530, 30000);
+						n.setBusy(true);
 						spawned = true;
 					}
 					npcsay(player, n, "halt human");
@@ -1260,6 +1261,7 @@ public class DoorAction {
 					npcsay(player, n, "maybe, but that's the orders, I'm sorry");
 					mes(player, "the gnome refuses to open the gate");
 					if (spawned) {
+						n.setBusy(false);
 						n.remove();
 					}
 					return;
