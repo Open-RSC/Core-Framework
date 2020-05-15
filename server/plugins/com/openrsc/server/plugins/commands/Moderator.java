@@ -39,7 +39,7 @@ public final class Moderator implements CommandTrigger {
 				newStr.append(arg).append(" ");
 			}
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
-			newStr.insert(0, player.getStaffName() + ": ");
+			newStr.insert(0, player.getStaffName() + ": @yel@");
 			for (Player playerToUpdate : player.getWorld().getPlayers()) {
 				ActionSender.sendMessage(playerToUpdate, player, 1, MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon());
 			}
