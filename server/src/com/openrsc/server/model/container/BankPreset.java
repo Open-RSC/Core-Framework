@@ -114,7 +114,7 @@ public class BankPreset {
 			}
 		}
 
-		ArrayList<Item> items = new ArrayList<>();
+		ArrayList<Integer> items = new ArrayList<>();
 		for (int slotID = 0; slotID < inventory.length; slotID++) {
 			Item itemHeld = player.getCarriedItems().getInventory().get(slotID);
 			if (itemHeld == null || itemHeld.getCatalogId() == ItemId.NOTHING.id()) continue;
@@ -124,7 +124,7 @@ public class BankPreset {
 				&& !items.contains(itemHeld.getCatalogId())) {
 				slotsNeeded++;
 			}
-			items.add(itemHeld);
+			items.add(itemHeld.getCatalogId());
 		}
 
 		if (slotsNeeded + player.getBank().size() > player.getBankSize()) {
@@ -173,7 +173,11 @@ public class BankPreset {
 		}
 
 		// Deposit all held items in inventory.
-		for (Item item : items) {
+		for (Integer catalogId : items) {
+			Item item = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(catalogId)
+			);
+			if (item == null) continue;
 			player.getBank().depositItemFromInventory(item.getCatalogId(), item.getAmount(), false);
 		}
 
