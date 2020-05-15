@@ -178,7 +178,7 @@ public final class Event implements CommandTrigger {
 			targetPlayer.teleport(teleportTo.getX(), teleportTo.getY(), true);
 
 			player.message(messagePrefix + "You have teleported " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation);
-			if(targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+			if(targetPlayer.getUsernameHash() != player.getUsernameHash() && targetPlayer.getLocation() != originalLocation) {
 				targetPlayer.message(messagePrefix + "You have been teleported to " + targetPlayer.getLocation() + " from " + originalLocation);
 			}
 
