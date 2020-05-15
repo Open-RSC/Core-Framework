@@ -58,10 +58,6 @@ public class ScriptContext {
 			return null;
 		}
 
-		if(getCurrentAction().getEntityType() != EntityType.NPC) {
-			return null;
-		}
-
 		if(interactingIndex == null) {
 			return null;
 		}
@@ -323,7 +319,7 @@ public class ScriptContext {
 		}
 	}
 
-	private void setCurrentAction(final Action currentAction) {
+	public void setCurrentAction(final Action currentAction) {
 		this.currentAction = currentAction;
 	}
 
