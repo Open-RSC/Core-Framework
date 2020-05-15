@@ -25,6 +25,7 @@ import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.model.struct.EquipRequest;
 import com.openrsc.server.model.struct.EquipRequest.RequestType;
+import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -743,13 +744,13 @@ public final class Admins implements CommandTrigger {
 				player.message(messagePrefix + "A staff member has added to your bank " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
 			}
 		} else if (cmd.equals("fillbank")) {
-			for (int i = 0; i < 1289; i++) {
-				player.getBank().add(new Item(i, 50));
+			for (int i = 0; i < player.getBankSize() - player.getBank().size(); i++) {
+				player.getBank().add(new Item(i, 50), false);
 			}
 			player.message("Added bank items.");
 		} else if (cmd.equals("unfillbank")) {
 			for (int i = 0; i < 1289; i++) {
-				player.getBank().remove(new Item(i, 50));
+				player.getBank().remove(new Item(i, 50), false);
 			}
 			player.message("Removed bank items.");
 		} else if (cmd.equalsIgnoreCase("quickauction")) {
@@ -1014,39 +1015,24 @@ public final class Admins implements CommandTrigger {
 				return;
 			}
 
+			while (player.getCarriedItems().getInventory().size() > 0) {
+				Item item = player.getCarriedItems().getInventory().get(0);
+				player.getCarriedItems().remove(item);
+			}
+
 			if (targetPlayer.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 				int wearableId;
 				for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 					Item equipped = targetPlayer.getCarriedItems().getEquipment().get(i);
 					if (equipped == null)
 						continue;
-					wearableId = targetPlayer.getCarriedItems().getEquipment().get(i).getDef(targetPlayer.getWorld()).getWearableId();
-					targetPlayer.getCarriedItems().getEquipment().remove(equipped, equipped.getAmount());
-					targetPlayer.updateWornItems(i, targetPlayer.getSettings().getAppearance().getSprite(i),
-							wearableId, false);
+					targetPlayer.getCarriedItems().getEquipment().unequipItem(
+						new UnequipRequest(targetPlayer, equipped, UnequipRequest.RequestType.FROM_EQUIPMENT, false), true
+					);
+					player.getCarriedItems().remove(new Item(equipped.getCatalogId(), equipped.getAmount()));
 				}
 			}
 
-			ListIterator<Item> iterator = targetPlayer.getCarriedItems().getInventory().iterator();
-
-			for (; iterator.hasNext(); ) {
-				Item i = iterator.next();
-				if (i.isWielded()) {
-					try {
-						i.setWielded(player.getWorld().getServer().getDatabase(), false);
-						;
-						targetPlayer.updateWornItems(i.getDef(targetPlayer.getWorld()).getWieldPosition(), i.getDef(targetPlayer.getWorld()).getAppearanceId(),
-							i.getDef(targetPlayer.getWorld()).getWearableId(), false);
-					}
-					catch (GameDatabaseException e) {
-						LOGGER.error(e);
-					}
-				}
-				iterator.remove();
-			}
-
-			ActionSender.sendInventory(targetPlayer);
-			ActionSender.sendEquipmentStats(targetPlayer);
 			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
 				targetPlayer.message(messagePrefix + "Your inventory has been wiped by an admin");
 			}
@@ -1069,9 +1055,12 @@ public final class Admins implements CommandTrigger {
 				return;
 			}
 
-			synchronized(targetPlayer.getBank().getItems()) {
-				targetPlayer.getBank().getItems().clear();
+
+			while (targetPlayer.getBank().size() > 0) {
+				Item item = targetPlayer.getBank().get(0);
+				targetPlayer.getBank().remove(item, false);
 			}
+
 			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
 				targetPlayer.message(messagePrefix + "Your bank has been wiped by an admin");
 			}
