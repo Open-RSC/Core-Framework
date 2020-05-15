@@ -1990,6 +1990,7 @@ public final class Admins implements CommandTrigger {
 
 			player.message(messagePrefix + "You have spawned " + player.getWorld().getServer().getEntityHandler().getNpcDef(id).getName() + ", radius: " + radius + " for " + time + " minutes");
 		} else if (cmd.equalsIgnoreCase("holidayevent") || cmd.equalsIgnoreCase("toggleholiday")) {
+			if (!player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) return;
 			GameObjectLoc[] locs = new GameObjectLoc[]{
 				new GameObjectLoc(1238, new Point(127, 648), 1, 0),
 				new GameObjectLoc(1238, new Point(123, 656), 2, 0),
@@ -2013,28 +2014,38 @@ public final class Admins implements CommandTrigger {
 
 			final GameObject existingObject = player.getViewArea().getGameObject(locs[0].getLocation());
 
-			if (existingObject != null && existingObject.getType() != 1 && (existingObject.getID() != 1238 && existingObject.getID() != 1239)) {
-				player.message(messagePrefix + "Could not enable christmas trees because object exists: " + existingObject.getGameObjectDef().getName());
-				return;
-			}
+			// Remove trees
+			if (existingObject != null && existingObject.getID() == 1238) {
 
-			boolean remove = existingObject != null && existingObject.getType() != 1 && (existingObject.getID() == 1238 || existingObject.getID() == 1239);
+				for (int i = 0; i < locs.length; i++) {
+					GameObjectLoc loc = locs[i];
+					GameObject object = player.getViewArea().getGameObject(loc.getLocation());
 
-			for (int i = 0; i < locs.length; i++) {
-				GameObjectLoc loc = locs[i];
-				GameObject object = player.getViewArea().getGameObject(loc.getLocation());
-
-				if (object != null) {
-					player.getWorld().unregisterGameObject(object);
+					if (object != null) {
+						player.getWorld().unregisterGameObject(object);
+					}
 				}
 
-				if (!remove) {
+				player.playerServerMessage(MessageType.QUEST, messagePrefix + "Christmas trees have been disabled.");
+			}
+
+			// Spawn trees
+			else {
+
+				for (int i = 0; i < locs.length; i++) {
+					GameObjectLoc loc = locs[i];
+					GameObject object = player.getViewArea().getGameObject(loc.getLocation());
+
+					if (object != null) {
+						player.getWorld().unregisterGameObject(object);
+					}
+
 					GameObject newObject = new GameObject(player.getWorld(), loc);
 					player.getWorld().registerGameObject(newObject);
 				}
-			}
 
-			player.playerServerMessage(MessageType.QUEST, messagePrefix + "Christmas trees have been " + (remove ? "disabled" : "enabled") + ".");
+				player.playerServerMessage(MessageType.QUEST, messagePrefix + "Christmas trees have been enabled.");
+			}
 		}
 	}
 }
