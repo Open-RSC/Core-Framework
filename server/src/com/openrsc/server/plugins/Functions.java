@@ -15,6 +15,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Bubble;
 import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -399,6 +400,7 @@ public class Functions {
 		}
 
 		if(closestNpc != null) {
+			PluginTask.getContextPluginTask().getScriptContext().setCurrentAction(Action.talknpc);
 			PluginTask.getContextPluginTask().getScriptContext().setInteractingNpc(closestNpc);
 		}
 
@@ -419,6 +421,7 @@ public class Functions {
 		}
 
 		if(closestNpc != null) {
+			PluginTask.getContextPluginTask().getScriptContext().setCurrentAction(Action.talknpc);
 			PluginTask.getContextPluginTask().getScriptContext().setInteractingNpc(closestNpc);
 		}
 
@@ -661,11 +664,11 @@ public class Functions {
 	public static void startbatch(int totalBatch) {
 		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
 		if (player == null) return;
-		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
-		if (batch == null) return;
-
+		Batch batch = new Batch(player);
 		batch.initialize(totalBatch);
 		batch.start();
+
+		PluginTask.getContextPluginTask().getScriptContext().setBatch(batch);
 	}
 
 	/**
