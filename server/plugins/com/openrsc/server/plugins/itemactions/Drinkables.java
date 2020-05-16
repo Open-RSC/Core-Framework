@@ -344,7 +344,6 @@ public class Drinkables implements OpInvTrigger {
 		if (newPrayer > player.getSkills().getMaxStat(Skills.PRAYER)) {
 			newPrayer = player.getSkills().getMaxStat(Skills.PRAYER);
 		}
-		player.setPrayerStatePoints(newPrayer * 120);
 		player.getSkills().setLevel(Skills.PRAYER, newPrayer);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 		if (left <= 0) {
