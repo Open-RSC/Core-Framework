@@ -98,7 +98,7 @@ public class AttackHandler implements PacketHandler {
 				}
 			});
 		} else {
-			if (player.isBusy() || !player.checkAttack(affectedMob, true)) {
+			if (!player.checkAttack(affectedMob, true)) {
 				return;
 			}
 			final Mob target = affectedMob;
@@ -108,6 +108,7 @@ public class AttackHandler implements PacketHandler {
 			player.getWorld().getServer().getGameEventHandler().add(new MiniEvent(player.getWorld(), player, "Handle Attack") {
 				@Override
 				public void action() {
+					if(getOwner().isBusy() || getOwner().inCombat()) return;
 					if (target.isPlayer()) {
 						assert target instanceof Player;
 						Player affectedPlayer = (Player) target;
