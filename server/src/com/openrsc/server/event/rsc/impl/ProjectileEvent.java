@@ -141,15 +141,19 @@ public class ProjectileEvent extends SingleTickEvent {
 					npc.addRangeDamage(casterPlayer, damage);
 				}
 			}
-		} else if (opponent.isPlayer()) {
+		}
+
+		// Update party menu with new HITS stat.
+		if (opponent.isPlayer()) {
 			Player affectedPlayer = (Player) opponent;
-			ActionSender.sendStat(affectedPlayer, 3);
+			ActionSender.sendStat(affectedPlayer, Skills.HITS);
 			if (affectedPlayer.getWorld().getServer().getConfig().WANT_PARTIES) {
 				if (affectedPlayer.getParty() != null) {
 					affectedPlayer.getParty().sendParty();
 				}
 			}
 		}
+
 		if (opponent.getSkills().getLevel(Skills.HITS) <= 0) {
 			if (caster.isPlayer()) {
 				Player player = (Player) caster;
@@ -178,7 +182,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (opponent.isNpc() && caster.isPlayer()) {
 				Npc npc = (Npc) opponent;
 				Player player = (Player) caster;
-				if (!(npc.isChasing() || npc.inCombat())) {
+				if (!npc.isChasing() && !npc.inCombat()) {
 					npc.setChasing(player);
 				}
 			}
