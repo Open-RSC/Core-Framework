@@ -130,7 +130,7 @@ public class NpcBehavior {
 			int rand = DataConversions.random(0, 1);
 
 			// NPC is not busy, and we rolled to move (50% chance)
-			if (!npc.isBusy() && rand == 1 && !npc.isRemoved() && !npc.getLocation().equals(new Point(0, 0))) {
+			if (!npc.isBusy() && rand == 1 && !npc.isRemoved() && !npc.isRespawning()) {
 				//Plagued sheep shouldn't roam
 				if (npc.getID() == NpcId.FIRST_PLAGUE_SHEEP.id() ||
 					npc.getID() == NpcId.SECOND_PLAGUE_SHEEP.id() ||
