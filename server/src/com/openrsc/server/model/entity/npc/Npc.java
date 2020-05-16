@@ -637,12 +637,17 @@ public class Npc extends Mob {
 			getCombatEvent().resetCombat();
 		}
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
+			super.remove();
 			startRespawning();
 			getWorld().removeNpcPosition(this);
 			Npc n = this;
 			teleport(loc.startX, loc.startY);
+			setRespawning(true);
 			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC", false) {
 				public void run() {
+					n.setRemoved(false);
+					n.getRegion().addEntity(n);
+
 					// Take 4 ticks away from the current time to get a 1 tick pause while the npc spawns,
 					// before it is allowed to attack (if aggressive).
 					setCombatTimer(-getWorld().getServer().getConfig().GAME_TICK * 4);
@@ -659,7 +664,6 @@ public class Npc extends Mob {
 					getWorld().setNpcPosition(n);
 				}
 			});
-			setRespawning(true);
 		} else if (!shouldRespawn) {
 			setUnregistering(true);
 		}
