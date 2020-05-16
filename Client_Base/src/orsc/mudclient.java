@@ -9593,7 +9593,7 @@ public final class mudclient implements Runnable {
 		if (S_WANT_PLAYER_COMMANDS && !this.insideTutorial) {
 			yFromTopDistance += 25;
 			if (this.mouseX > var6 && this.mouseX < var6 + var5
-				&& yFromTopDistance - 6 < this.mouseY && this.mouseY < yFromTopDistance + 9 && this.mouseButtonClick == 1) {
+				&& yFromTopDistance - 18 < this.mouseY && this.mouseY < yFromTopDistance + 7 && this.mouseButtonClick == 1) {
 				this.sendCommandString("onlinelist");
 			}
 		}

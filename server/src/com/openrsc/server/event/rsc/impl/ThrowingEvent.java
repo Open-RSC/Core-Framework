@@ -218,8 +218,8 @@ public class ThrowingEvent extends GameTickEvent {
 				target.startPoisonEvent();
 			}
 		}
-		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
 		getOwner().setKillType(2);
+		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
 		deliveredFirstProjectile = true;
 	}
 }

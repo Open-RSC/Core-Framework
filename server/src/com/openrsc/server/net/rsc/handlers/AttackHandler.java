@@ -61,6 +61,7 @@ public class AttackHandler implements PacketHandler {
 		}
 		if (affectedMob.isNpc()) {
 			Npc n = (Npc) affectedMob;
+			if (n.isRespawning()) return;
 			if (n.getX() == 0 && n.getY() == 0)
 				return;
 			if (n.getID() == NpcId.OGRE_TRAINING_CAMP.id() && player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
@@ -97,7 +98,7 @@ public class AttackHandler implements PacketHandler {
 				}
 			});
 		} else {
-			if (player.isBusy() || !player.checkAttack(affectedMob, true)) {
+			if (!player.checkAttack(affectedMob, true)) {
 				return;
 			}
 			final Mob target = affectedMob;
@@ -107,6 +108,7 @@ public class AttackHandler implements PacketHandler {
 			player.getWorld().getServer().getGameEventHandler().add(new MiniEvent(player.getWorld(), player, "Handle Attack") {
 				@Override
 				public void action() {
+					if(getOwner().isBusy() || getOwner().inCombat()) return;
 					if (target.isPlayer()) {
 						assert target instanceof Player;
 						Player affectedPlayer = (Player) target;

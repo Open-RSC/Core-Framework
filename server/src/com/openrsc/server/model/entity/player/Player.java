@@ -11,7 +11,6 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyInvite;
 import com.openrsc.server.content.party.PartyPlayer;
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.event.DelayedEvent;
@@ -1976,8 +1975,12 @@ public final class Player extends Mob {
 	}
 
 	public void resetAll() {
+		resetAll(true);
+	}
+
+	public void resetAll(boolean resetWalk) {
 		interruptPlugins();
-		resetAllExceptTradeOrDuel(true);
+		resetAllExceptTradeOrDuel(true, resetWalk);
 		getTrade().resetAll();
 		getDuel().resetAll();
 		dropItemEvent = null;
@@ -1995,9 +1998,13 @@ public final class Player extends Mob {
 	}
 
 	private void resetAllExceptTradeOrDuel(boolean resetBank) {
+		resetAllExceptTradeOrDuel(resetBank, true);
+	}
+
+	private void resetAllExceptTradeOrDuel(boolean resetBank, boolean resetWalk) {
 		resetCannonEvent();
 		setAttribute("bank_pin_entered", "cancel");
-		setWalkToAction(null);
+		if (resetWalk) setWalkToAction(null);
 		if (getMenu() != null) {
 			menu = null;
 		}

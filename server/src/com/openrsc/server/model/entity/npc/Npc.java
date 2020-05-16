@@ -454,13 +454,13 @@ public class Npc extends Mob {
 
 	private boolean wantUnholySymbols(Player owner) {
 		if (owner.getQuestStage(Quests.OBSERVATORY_QUEST) > -1)
-			return true; // Quest started.
+			return false; // Quest started.
 
 		if (owner.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS)
 			if (owner.getCache().hasKey("want_unholy_symbol_drops") &&
 				!owner.getCache().getBoolean("want_unholy_symbol_drops"))
-				return true; //
-		return false;
+				return false; //
+		return true;
 	}
 
 	private void dropStackItem(final int dropID, int amount, Player owner) {
@@ -637,12 +637,17 @@ public class Npc extends Mob {
 			getCombatEvent().resetCombat();
 		}
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
+			super.remove();
 			startRespawning();
 			getWorld().removeNpcPosition(this);
 			Npc n = this;
 			teleport(loc.startX, loc.startY);
-			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC") {
+			setRespawning(true);
+			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC", false) {
 				public void run() {
+					n.setRemoved(false);
+					n.getRegion().addEntity(n);
+
 					// Take 4 ticks away from the current time to get a 1 tick pause while the npc spawns,
 					// before it is allowed to attack (if aggressive).
 					setCombatTimer(-getWorld().getServer().getConfig().GAME_TICK * 4);
@@ -655,10 +660,10 @@ public class Npc extends Mob {
 					rangeDamagers.clear();
 					combatDamagers.clear();
 
+					teleport(loc.startX, loc.startY);
 					getWorld().setNpcPosition(n);
 				}
 			});
-			setRespawning(true);
 		} else if (!shouldRespawn) {
 			setUnregistering(true);
 		}

@@ -348,10 +348,14 @@ public class Fletching implements UseInvTrigger {
 		if (cutDef == null) {
 			return;
 		}
+
+		boolean logConfig = player.getWorld().getServer().getConfig().MORE_SHAFTS_PER_BETTER_LOG;
+
 		player.message("What would you like to make?");
 
-		String[] options = log.getCatalogId() == ItemId.LOGS.id() ? new String[]{"Make arrow shafts",
-			"Make shortbow", "Make longbow"} : new String[]{"Make shortbow", "Make longbow"};
+		String[] options = logConfig ? new String[]{"Make arrow shafts", "Make shortbow", "Make longbow"} :
+			(log.getCatalogId() == ItemId.LOGS.id() ? new String[]{"Make arrow shafts",
+			"Make shortbow", "Make longbow"} : new String[]{"Make shortbow", "Make longbow"});
 
 		int type = multi(player, options);
 		if (type < 0 || type > options.length) {
@@ -369,7 +373,8 @@ public class Fletching implements UseInvTrigger {
 				id = ItemId.ARROW_SHAFTS.id();
 				reqLvl = cutDef.getShaftLvl();
 				exp = cutDef.getShaftExp();
-				cutMessage = "You carefully cut the wood into 10 arrow shafts";
+				cutMessage = "You carefully cut the wood into " + getNumberOfShafts(player, log.getCatalogId())
+					+ " arrow shafts";
 				break;
 			case 1:
 				id = cutDef.getShortbowID();
@@ -408,7 +413,7 @@ public class Fletching implements UseInvTrigger {
 		if (log == null) return;
 		if (player.getCarriedItems().remove(log) > -1) {
 			player.message(cutMessage);
-			give(player, id, id == ItemId.ARROW_SHAFTS.id() ? 10 : 1);
+			give(player, id, id == ItemId.ARROW_SHAFTS.id() ? getNumberOfShafts(player, log.getCatalogId()) : 1);
 			player.incExp(Skills.FLETCHING, exp, true);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		}
@@ -419,6 +424,17 @@ public class Fletching implements UseInvTrigger {
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			batchLogCutting(player, log, id, reqLvl, exp, cutMessage);
 		}
+	}
+
+	private int getNumberOfShafts(final Player player, final int logId) {
+
+		if (!player.getWorld().getServer().getConfig().MORE_SHAFTS_PER_BETTER_LOG) return 10;
+		for (int i = 0; i < logIds.length; ++i) {
+			if (logId == logIds[i]) {
+				return 10 + (i * 5);
+			}
+		}
+		return 10;
 	}
 
 	private void doPearlCut(final Player player, final Item chisel, final Item pearl) {

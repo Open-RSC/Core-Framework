@@ -731,6 +731,11 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 			playerData.headSprite,
 			playerData.bodySprite
 		);
+		if (!pa.isValid()) {
+			pa = new PlayerAppearance(
+				0, 0, 0, 0, 1, 2
+			);
+		}
 
 		player.getSettings().setAppearance(pa);
 		player.setMale(playerData.male);

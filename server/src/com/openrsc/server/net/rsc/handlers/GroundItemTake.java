@@ -16,6 +16,10 @@ public class GroundItemTake implements PacketHandler {
 			player.resetPath();
 			return;
 		}
+		if (player.inCombat()) {
+			player.message("You can't do that whilst you are fighting");
+			return;
+		}
 		player.resetAll();
 		final Point location = Point.location(packet.readShort(), packet.readShort());
 		final int id = packet.readShort();
