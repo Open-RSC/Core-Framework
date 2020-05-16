@@ -61,6 +61,7 @@ public class AttackHandler implements PacketHandler {
 		}
 		if (affectedMob.isNpc()) {
 			Npc n = (Npc) affectedMob;
+			if (n.isRespawning()) return;
 			if (n.getX() == 0 && n.getY() == 0)
 				return;
 			if (n.getID() == NpcId.OGRE_TRAINING_CAMP.id() && player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
