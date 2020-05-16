@@ -655,6 +655,7 @@ public class Npc extends Mob {
 					rangeDamagers.clear();
 					combatDamagers.clear();
 
+					teleport(loc.startX, loc.startY);
 					getWorld().setNpcPosition(n);
 				}
 			});
