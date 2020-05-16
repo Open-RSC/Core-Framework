@@ -106,8 +106,12 @@ public class Equipment {
 							return -1;
 						} else {
 							list[slotID] = null;
+							int wieldPosition = curEquipDef.getWieldPosition();
+							// We subtract 5 from the wield position if it is using a custom positional slot.
+							// See: Equipment::correctIndex
+							wieldPosition = wieldPosition > 4 ? wieldPosition - 5 : wieldPosition;
 							player.updateWornItems(curEquipDef.getWieldPosition(),
-								player.getSettings().getAppearance().getSprite(curEquipDef.getWieldPosition()));
+								player.getSettings().getAppearance().getSprite(wieldPosition));
 							player.getWorld().getServer().getDatabase().equipmentRemoveFromPlayer(player, curEquip);
 						}
 						if (updateClient) {
