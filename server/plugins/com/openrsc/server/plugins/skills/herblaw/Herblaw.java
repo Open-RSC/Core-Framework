@@ -587,7 +587,9 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You grind the " + item.getDef(player.getWorld()).getName()
 				+ " to dust");
 		}
-		thinkbubble(player, new Item(ItemId.PESTLE_AND_MORTAR.id()));
+		if (item.getCatalogId() != ItemId.UNICORN_HORN.id()) {
+			thinkbubble(player, new Item(ItemId.PESTLE_AND_MORTAR.id()));
+		}
 		player.getCarriedItems().getInventory().add(new Item(newID, 1));
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
