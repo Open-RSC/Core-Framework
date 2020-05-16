@@ -17,6 +17,7 @@ public class GroundItemTake implements PacketHandler {
 			return;
 		}
 		if (player.inCombat()) {
+			player.message("You can't do that whilst you are fighting");
 			return;
 		}
 		player.resetAll();
