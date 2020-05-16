@@ -733,7 +733,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		);
 		if (!pa.isValid()) {
 			pa = new PlayerAppearance(
-				0, 0, 0, 0, 0, 0
+				0, 0, 0, 0, 1, 2
 			);
 		}
 
