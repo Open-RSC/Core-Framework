@@ -15,11 +15,13 @@ public final class NpcCommand implements PacketHandler {
 		int serverIndex = packet.readShort();
 		if (player == null) return;
 		if (player.isBusy()) {
-			if (player.inCombat()) {
-				player.message("You can't do that whilst you are fighting");
-			}
 			return;
 		}
+		if (player.inCombat()) {
+			player.message("You can't do that whilst you are fighting");
+			return;
+		}
+
 		final boolean click = pID == OpcodeIn.NPC_COMMAND1.getOpcode();
 		player.click = click ? 0 : 1;
 		final Npc affectedNpc = player.getWorld().getNpc(serverIndex);
