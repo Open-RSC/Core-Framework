@@ -22,10 +22,10 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 					case 2:
 					case 3:
 						npcsay(player, n, "Please run for your life...");
-						mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman seems to be fighting an inner battle.");
+						mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman seems to be fighting an inner battle.");
 						npcsay(player, n, "Go...go now...!");
 						n = changenpc(n, NpcId.EVIL_UNGADULU.id(), true);
-						mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman seems to change in front of your eyes...");
+						mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman seems to change in front of your eyes...");
 						evilUngadulu(player, n);
 						break;
 					case 4:
@@ -128,11 +128,11 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 						break;
 					case 8:
 						if (!player.getCache().hasKey("crafted_totem_pole")) {
-							mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You approach Ungadulu...");
+							mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You approach Ungadulu...");
 							npcsay(player, n, "Blessings on you Bwana.",
 								"Did you use the spell and kill the spirit?",
 								"Do you have the sacred water yet?");
-							mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman looks so excited about seeing you that he is about to burst.");
+							mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman looks so excited about seeing you that he is about to burst.");
 							int f_menu = multi(player, n,
 								"Yes, I've killed the Spirit.",
 								"Yes, I've got the water.",
@@ -298,10 +298,10 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 					break;
 				case Ungadulu.I_HAVE_KILLED_VIYELDI:
 					npcsay(player, n, "Why on earth did you do that?");
-					mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman screams at you...");
+					mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman screams at you...");
 					say(player, n, "A spirit called Echned Zekin said I had to avenge his spirit",
 						"by killing Viyeldi if I wanted to get the pure water.");
-					mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman puts his head in his hands.");
+					mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman puts his head in his hands.");
 					npcsay(player, n, "Bwana, you have been tricked by a spirit !",
 						"And you have done the worst thing imaginable.",
 						"Viyeldi was the sorcerer who controlled the Hero's who protect.",
@@ -323,7 +323,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 							npcsay(player, n, "I am not sure at this time Bwana.",
 									"Give me a few moments to think.",
 									"Hmmm....");
-							mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman looks as if he's thinking very deeply.",
+							mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman looks as if he's thinking very deeply.",
 									"The wizened old Shaman hands over a piece of paper.");
 							npcsay(player, n, "Take this spell and pray that you can defeat",
 									"this evil spirit before it's too late.");
@@ -442,7 +442,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 							"Use those first and then come back to me if you need any more.");
 						player.message("Ungadulu goes back to his studies.");
 					} else {
-						mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Ungadulu gives you some more seeds..");
+						mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Ungadulu gives you some more seeds..");
 						give(player, ItemId.GERMINATED_YOMMI_TREE_SEED.id(), 3);
 						npcsay(player, n, "Take more care of these this time around.");
 					}
@@ -481,7 +481,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 							"the cave entrance that you came in.");
 					} else {
 						npcsay(player, n, "Well, the way you came, but here...");
-						mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman scrawls a some strange markings onto a piece of paper.");
+						mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman scrawls a some strange markings onto a piece of paper.");
 						give(player, ItemId.MAGICAL_FIRE_PASS.id(), 1);
 						player.message("He hands the paper to you...");
 						npcsay(player, n, "This will allow you to pass the fire without harm in future.");
@@ -522,7 +522,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 							"by doing this..however, you must know that it is a difficult task.",
 							"the Yommi tree is difficult to grow. You must have a natural ability",
 							"with such things to have a chance...");
-						mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman holds out his gnarly old hand and reveals three largish green seeds.");
+						mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman holds out his gnarly old hand and reveals three largish green seeds.");
 						npcsay(player, n, "Here you go...",
 							"Accept these with my gratitude...",
 							"You'll need to soak them in pure water before planting them.",
@@ -647,14 +647,14 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 
 	private static void evilUngadulu(Player player, Npc n) {
 		npcsay(player, n, "Ha Ha ha Vacu...now you will be my pawn...");
-		mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman starts an incantation...");
+		mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman starts an incantation...");
 		npcsay(player, n, "Iles Resti Yam Darkus Spiritus Possesi Yanai..");
-		mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You feel a strange power coming over you...");
+		mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You feel a strange power coming over you...");
 		player.damage(5);
 		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 5);
 		player.getSkills().setLevel(Skills.DEFENSE, player.getSkills().getLevel(Skills.DEFENSE) - 5);
 		player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) - 5);
-		mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman seems to get stronger...",
+		mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman seems to get stronger...",
 			"The Shaman seems to return to normal...");
 		n = changenpc(n, NpcId.UNGADULU.id(), true);
 		npcsay(player, n, "Run, run away...",
@@ -772,7 +772,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 			player.getSkills().setLevel(Skills.ATTACK, 0);
 			player.getSkills().setLevel(Skills.STRENGTH, 0);
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) >= 9 || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman casts a debilitating spell on you..",
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman casts a debilitating spell on you..",
 					"You're sent reeling backwards through the flames..");
 				player.teleport(454, 3702);
 				player.damage(5);
@@ -801,7 +801,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 			player.getSkills().setLevel(Skills.ATTACK, 0);
 			player.getSkills().setLevel(Skills.STRENGTH, 0);
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) >= 9 || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman casts a debilitating spell on you..",
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman casts a debilitating spell on you..",
 					"You're sent reeling backwards through the flames..");
 				player.teleport(454, 3702);
 				player.damage(5);
@@ -867,7 +867,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
 		if (npc.getID() == NpcId.UNGADULU.id() && item.getCatalogId() == ItemId.DARK_DAGGER.id()) { // NOT KILLED VIEYLDY - dark dagger
-			mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You hand the dagger over to the Shaman.",
+			mes(npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You hand the dagger over to the Shaman.",
 				"The Shaman's face turns pale...");
 			if (player.getCache().hasKey("killed_viyeldi")) {
 				npcsay(player, npc, "Oh dear Bwana, I sense something terrible has happened.",
@@ -887,7 +887,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 							"can defeat this spirit before it's too late.");
 					} else {
 						give(player, ItemId.HOLY_FORCE_SPELL.id(), 1);
-						mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The wizened old Shaman hands over a piece of paper.");
+						mes(npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The wizened old Shaman hands over a piece of paper.");
 						npcsay(player, npc, "Take this spell and pray that you can defeat",
 							"this evil spirit before it's too late.",
 							"The spell will force the spirit to reveal its true self.",
@@ -908,13 +908,13 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 				"a normal creature.");
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			give(player, ItemId.HOLY_FORCE_SPELL.id(), 1);
-			mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman takes the dagger and gives you a folded piece of paper.");
+			mes(npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman takes the dagger and gives you a folded piece of paper.");
 			npcsay(player, npc, "Use this spell on the Spirit.",
 				"It will force the spirit to show it's true self.",
 				"And it will also be vulerable to normal attacks.");
 		}
 		else if (npc.getID() == NpcId.UNGADULU.id() && item.getCatalogId() == ItemId.GLOWING_DARK_DAGGER.id()) { // KILLED VIYELDI - glowing dark dagger
-			mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You hand the dagger over to the Shaman.",
+			mes(npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You hand the dagger over to the Shaman.",
 				"The Shaman's face turns pale...");
 			npcsay(player, npc, "Oh dear Bwana.",
 				"Poor Viyeldi's spirit is trapped inside this weapon.",
@@ -924,14 +924,14 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 				"Here, you take this spell...");
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			give(player, ItemId.HOLY_FORCE_SPELL.id(), 1);
-			mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman takes the dagger and gives you a folded piece of paper.");
+			mes(npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Shaman takes the dagger and gives you a folded piece of paper.");
 			npcsay(player, npc, "Use this spell on the Spirit.",
 				"It will force the spirit to show it's true self.",
 				"And it will also be vulerable to normal attacks.");
 		}
 		else if (npc.getID() == NpcId.UNGADULU.id() && item.getCatalogId() == ItemId.BOOKING_OF_BINDING.id()) {
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 3) {
-				mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 3, "You open the book of binding in front of Ungadulu.",
+				mes(npc, player.getWorld().getServer().getConfig().GAME_TICK * 3, "You open the book of binding in front of Ungadulu.",
 					"A blinding light fills the room...",
 					"A supernatural light falls on Ungadulu...",
 					"And a mighty demon forms in front of you...");
@@ -940,7 +940,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 					npcsay(player, nez, "Curse you foul intruder...your faith will help you little here.");
 					nez.startCombat(player);
 					player.getSkills().setLevel(Skills.PRAYER, (int) Math.ceil((double) player.getSkills().getLevel(Skills.PRAYER) / 4));
-					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A sense of hopelessness fills your body...");
+					mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "A sense of hopelessness fills your body...");
 					npcsay(player, nez, "'Ere near to death ye comes now that ye has meddled in my dealings..");
 					if (player.getCache().hasKey("holy_water_neiz")) {
 						player.message("The holy water starts smoking on the Demons skin...");

@@ -178,9 +178,9 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 						return;
 					}
 				}
-				thinkbubble(player, new Item(ItemId.ROCK_PICK.id()));
+				thinkbubble(new Item(ItemId.ROCK_PICK.id()));
 				player.incExp(Skills.MINING, 70, true);
-				mes(player, "You dig through the earth");
+				mes("You dig through the earth");
 				delay(1500);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL2_ITEMS.length - 1));
 				int selectedItem = DIGSITE_LEVEL2_ITEMS[randomize];
@@ -195,9 +195,9 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 	private void trowelOnSite(Player player, Item item, GameObject obj) {
 		if (item.getCatalogId() == ItemId.TROWEL.id() && inArray(obj.getID(), SOIL)) {
 			if (getTrainingAreas(player)) {
-				thinkbubble(player, new Item(ItemId.TROWEL.id()));
+				thinkbubble(new Item(ItemId.TROWEL.id()));
 				player.incExp(Skills.MINING, 50, true);
-				mes(player, "You dig with the trowel...");
+				mes("You dig with the trowel...");
 				delay(1500);
 				int randomize = DataConversions.random(0, (TRAINING_AREA_ITEMS.length - 1));
 				int selectedItem = TRAINING_AREA_ITEMS[randomize];
@@ -241,9 +241,9 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 						return;
 					}
 				}
-				thinkbubble(player, new Item(ItemId.TROWEL.id()));
+				thinkbubble(new Item(ItemId.TROWEL.id()));
 				player.incExp(Skills.MINING, 60, true);
-				mes(player, "You dig through the earth");
+				mes("You dig through the earth");
 				delay(1500);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL1_ITEMS.length - 1));
 				int selectedItem = DIGSITE_LEVEL1_ITEMS[randomize];
@@ -301,9 +301,9 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 					}
 					return;
 				}
-				thinkbubble(player, new Item(ItemId.TROWEL.id()));
+				thinkbubble(new Item(ItemId.TROWEL.id()));
 				player.incExp(Skills.MINING, 80, true);
-				mes(player, "You dig through the earth");
+				mes("You dig through the earth");
 				delay(1500);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL3_ITEMS.length - 1));
 				int selectedItem = DIGSITE_LEVEL3_ITEMS[randomize];

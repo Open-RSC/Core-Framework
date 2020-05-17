@@ -44,13 +44,13 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 			teleport(player, 298, 130);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			if (failRate == 1) {
-				mes(player, "you lose your footing and fall into the wolf pit");
+				mes("you lose your footing and fall into the wolf pit");
 				teleport(player, 300, 129);
 			} else if (failRate == 2) {
-				mes(player, "you lose your footing and fall into the wolf pit");
+				mes("you lose your footing and fall into the wolf pit");
 				teleport(player, 296, 129);
 			} else {
-				mes(player, "You skillfully balance across the ridge");
+				mes("You skillfully balance across the ridge");
 				teleport(player, 298, 125);
 				player.incExp(Skills.AGILITY, 50, true);
 			}
@@ -61,14 +61,14 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 			teleport(player, 298, 130);
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 			if (failRate == 1) {
-				mes(player, "you lose your footing and fall into the wolf pit");
+				mes("you lose your footing and fall into the wolf pit");
 				teleport(player, 300, 129);
 
 			} else if (failRate == 2) {
-				mes(player, "you lose your footing and fall into the wolf pit");
+				mes("you lose your footing and fall into the wolf pit");
 				teleport(player, 296, 129);
 			} else {
-				mes(player, "You skillfully balance across the ridge");
+				mes("You skillfully balance across the ridge");
 				teleport(player, 298, 134);
 				player.incExp(Skills.AGILITY, 50, true);
 			}
@@ -94,7 +94,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				player.message("You grab the rope and try and swing across");
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 				if (passObstacle) {
-					mes(player, "You skillfully swing across the hole");
+					mes("You skillfully swing across the hole");
 					boundaryTeleport(player, Point.location(292, 108));
 					player.incExp(Skills.AGILITY, 100, true);
 					AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);

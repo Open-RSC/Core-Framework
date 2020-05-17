@@ -286,7 +286,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 							}
 						} else {
 							npcsay(player, n, "You're a hero?, I've never heard of you");
-							mes(player, "You need to have 55 quest points to file for an application",
+							mes("You need to have 55 quest points to file for an application",
 								"You also need to have completed the following quests",
 								"The shield of arrav, the lost city",
 								"Merlin's crystal and dragon slayer\"");
@@ -368,9 +368,9 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 			"I'd be willing to sell you a cape for 99,000 gold");
 		if (multi(player, n, "Alright then", "No thank you") == 0) {
 			if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
-				mes(player, "Achetties takes your coins");
+				mes("Achetties takes your coins");
 				if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
-					mes(player, "And hands you a Strength cape");
+					mes("And hands you a Strength cape");
 					give(player, ItemId.STRENGTH_CAPE.id(), 1);
 					npcsay(player, n, "Here you go",
 						"This cape will help increase your combat efficiency",
@@ -569,7 +569,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	public void onUseBound(Player player, GameObject obj, Item item) {
 		if (obj.getID() == 80) {
 			if (item.getCatalogId() == ItemId.MISCELLANEOUS_KEY.id()) {
-				thinkbubble(player, item);
+				thinkbubble(item);
 				player.message("You unlock the door");
 				player.message("You go through the door");
 				doDoor(obj, player);
@@ -648,7 +648,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 			} else {
 				if (!player.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.empty())) {
 					give(player, ItemId.CANDLESTICK.id(), 2);
-					mes(player, "You find two candlesticks in the chest",
+					mes("You find two candlesticks in the chest",
 						"So that will be one for you",
 						"And one to the person who killed grip for you");
 					if (player.getQuestStage(this) == 1) {

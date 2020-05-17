@@ -62,7 +62,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				npcsay(player, n, "you return young conjurer..", "..you obviously have a taste for the darkside of magic",
 					"let us continue with the battle...now");
 				if (cantGo(player)) {
-					mes(player, "You cannot enter the arena...", "...while carrying weapons or armour");
+					mes("You cannot enter the arena...", "...while carrying weapons or armour");
 					return;
 				}
 				teleport(player, 229, 130);
@@ -169,7 +169,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 			"before i can accept you in, we must duel",
 			"you may not take armour or weapons into the arena");
 		if (cantGo(player)) {
-			mes(player, "You cannot enter the arena...", "...while carrying weapons or armour");
+			mes("You cannot enter the arena...", "...while carrying weapons or armour");
 		}
 		else {
 			int choice = multi(player, n, "ok let's fight", "no thanks");
@@ -369,25 +369,25 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 			n.remove();
 
 			if (n.getID() == NpcId.KOLODION_HUMAN.id()) {
-				mes(player, "kolodion slumps to the floor..");
-				mes(player, "..his body begins to grow and he changes form", "He becomes an intimidating ogre");
+				mes("kolodion slumps to the floor..");
+				mes("..his body begins to grow and he changes form", "He becomes an intimidating ogre");
 				spawnKolodion(player, NpcId.KOLODION_OGRE.id());
 			} else if (n.getID() == NpcId.KOLODION_OGRE.id()) {
-				mes(player, "kolodion slumps to the floor once more..",
+				mes("kolodion slumps to the floor once more..",
 					"..but again his body begins to grow and he changes form", "He becomes an enormous spider");
 				spawnKolodion(player, NpcId.KOLODION_SPIDER.id());
 			} else if (n.getID() == NpcId.KOLODION_SPIDER.id()) {
-				mes(player, "kolodion again slumps to the floor..",
+				mes("kolodion again slumps to the floor..",
 					"..but again his body begins to grow as he changes form", "He becomes an ethereal being");
 				spawnKolodion(player, NpcId.KOLODION_SOULESS.id());
 			} else if (n.getID() == NpcId.KOLODION_SOULESS.id()) {
-				mes(player, "kolodion again slumps to the floor..motionless",
+				mes("kolodion again slumps to the floor..motionless",
 					"..but again his body begins to grow as he changes form", "...larger this time",
 					"He becomes a vicious demon");
 				spawnKolodion(player, NpcId.KOLODION_DEMON.id());
 			} else if (n.getID() == NpcId.KOLODION_DEMON.id()) {
-				mes(player, "kolodion again slumps to the floor..motionless", "..he slowly rises to his feet in his true form");
-				mes(player, "@yel@Kolodion: \"well done young adventurer\"",
+				mes("kolodion again slumps to the floor..motionless", "..he slowly rises to his feet in his true form");
+				mes("@yel@Kolodion: \"well done young adventurer\"",
 					"@yel@Kolodion: \"you truly are a worthy battle mage\"");
 				player.message("kolodion teleports you to his cave");
 				player.teleport(446, 3370);
@@ -486,11 +486,11 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				}
 			} else {
 				if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 4) {
-					mes(player, "the barrier is checking your person for weapons");
+					mes("the barrier is checking your person for weapons");
 					if (!cantGo(player)) {
 						teleport(player, 228, 120);
 					} else {
-						mes(player, "You cannot enter the arena...", "...while carrying weapons or armour");
+						mes("You cannot enter the arena...", "...while carrying weapons or armour");
 					}
 				} else {
 					player.message("you cannot enter without the permission of kolodion");
@@ -498,18 +498,18 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 			}
 		} else if (obj.getID() == SARADOMIN_STONE) {
 			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 3) {
-				mes(player, "you kneel and chant to saradomin");
+				mes("you kneel and chant to saradomin");
 				if (!alreadyHasCape(player)) {
-					mes(player, "you feel a rush of energy charge through your veins",
+					mes("you feel a rush of energy charge through your veins",
 						"...and a cape appears before you");
 					give(player, ItemId.SARADOMIN_CAPE.id(), 1);
 				} else {
-					mes(player, "but there is no response");
+					mes("but there is no response");
 				}
 			}
 			// first time
 			else if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") == 2) {
-				mes(player, "you kneel and begin to chant to saradomin",
+				mes("you kneel and begin to chant to saradomin",
 						"you feel a rush of energy charge through your veins");
 				ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
 				give(player, ItemId.SARADOMIN_CAPE.id(), 1);
@@ -518,18 +518,18 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 			}
 		} else if (obj.getID() == GUTHIX_STONE) {
 			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 3) {
-				mes(player, "you kneel and chant to guthix");
+				mes("you kneel and chant to guthix");
 				if (!alreadyHasCape(player)) {
-					mes(player, "you feel a rush of energy charge through your veins",
+					mes("you feel a rush of energy charge through your veins",
 						"...and a cape appears before you");
 					give(player, ItemId.GUTHIX_CAPE.id(), 1);
 				} else {
-					mes(player, "but there is no response");
+					mes("but there is no response");
 				}
 			}
 			// first time
 			else if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") == 2) {
-				mes(player, "you kneel and begin to chant to guthix",
+				mes("you kneel and begin to chant to guthix",
 						"you feel a rush of energy charge through your veins");
 				ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
 				give(player, ItemId.GUTHIX_CAPE.id(), 1);
@@ -538,18 +538,18 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 			}
 		} else if (obj.getID() == ZAMORAK_STONE) {
 			if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") >= 3) {
-				mes(player, "you kneel and chant to zamorak");
+				mes("you kneel and chant to zamorak");
 				if (!alreadyHasCape(player)) {
-					mes(player, "you feel a rush of energy charge through your veins",
+					mes("you feel a rush of energy charge through your veins",
 						"...and a cape appears before you");
 					give(player, ItemId.ZAMORAK_CAPE.id(), 1);
 				} else {
-					mes(player, "but there is no response");
+					mes("but there is no response");
 				}
 			}
 			// first time
 			else if (player.getCache().hasKey("mage_arena") && player.getCache().getInt("mage_arena") == 2) {
-				mes(player, "you kneel and begin to chant to zamorak",
+				mes("you kneel and begin to chant to zamorak",
 						"you feel a rush of energy charge through your veins");
 				ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
 				give(player, ItemId.ZAMORAK_CAPE.id(), 1);

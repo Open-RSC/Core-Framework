@@ -143,13 +143,13 @@ public class JungleForester implements TalkNpcTrigger, UseNpcTrigger {
 						"Have you seen any natives in the jungle?",
 						"Ok thanks");
 					if (option == 0) {
-						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The forester looks very interested..");
+						mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "The forester looks very interested..");
 						npcsay(player, n, "Oh, well, that sounds quite good actually...",
 							"Sorry if I sounded rude before, it just didn't seem like a good idea to me.",
 							"I guess I just wouldn't want to do it myself.",
 							"But a map of that area would certainly be a big task.",
 							"And it would certainly be very useful...");
-						mes(player, 300, "The forester looks very thoughtfull");
+						mes(300, "The forester looks very thoughtfull");
 						npcsay(player, n, "Hey, if you manage to complete it, be sure to let me take a look!",
 							"Well, best of luck with it, I'm sure you're going to need it.");
 						int opt2 = multi(player, n,
@@ -177,10 +177,10 @@ public class JungleForester implements TalkNpcTrigger, UseNpcTrigger {
 					break;
 				case JungleForesterNPC_LegendsQuest.MAKE_A_COPY:
 					npcsay(player, n, "Many thanks friend.");
-					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Jungle Forester takes out some parchment and some charcoal.",
+					mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Jungle Forester takes out some parchment and some charcoal.",
 						"He studiously renders another copy of your map.");
 					npcsay(player, n, "Many thanks friend.");
-					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "He takes out a strange looking object and hands it to you.");
+					mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "He takes out a strange looking object and hands it to you.");
 					npcsay(player, n, "Here, I won't be needing this any longer, and it may help you.",
 						"Whenever I've used it before, it attracted the attention of jungle natives.");
 					give(player, ItemId.BULL_ROARER.id(), 1);
@@ -312,7 +312,7 @@ public class JungleForester implements TalkNpcTrigger, UseNpcTrigger {
 				LegendsQuest_jungleForesterDialogue(player, n, JungleForesterNPC_LegendsQuest.MAKE_A_COPY);
 			} else if (menu == 1) {
 				npcsay(player, n, "Well, I can offer you this?");
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Jungle Forester takes out a strange looking object.",
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Jungle Forester takes out a strange looking object.",
 					"It looks like a wooden pole, with string attached to one end.");
 				player.message("And at the other end of the string is shaped piece of wood.");
 				npcsay(player, n, "If you swing this above your head, it makes a strange sound.",

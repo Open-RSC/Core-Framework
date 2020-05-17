@@ -247,10 +247,10 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 				player.getCarriedItems().remove(new Item(ItemId.KEY.id()));
 				openChest(obj, 2000, TOBAN_CHEST_OPEN);
 				if (player.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.empty())) {
-					mes(player, "You have already got the stolen gold");
+					mes("You have already got the stolen gold");
 				} else {
 					player.message("You find a stash of gold inside");
-					mes(player, "You take the gold");
+					mes("You take the gold");
 					give(player, ItemId.STOLEN_GOLD.id(), 1);
 				}
 				player.message("The chest springs shut");

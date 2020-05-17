@@ -32,7 +32,7 @@ public class BrotherJered implements
 				if (sub_option == 0) {
 					player.getCarriedItems().remove(new Item(ItemId.UNBLESSED_HOLY_SYMBOL.id()));
 					say(player, n, "Yes Please");
-					mes(player, "You give Jered the symbol",
+					mes("You give Jered the symbol",
 							"Jered closes his eyes and places his hand on the symbol",
 							"He softly chants",
 							"Jered passes you the holy symbol");

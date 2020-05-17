@@ -113,7 +113,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				boolean isFirstTime = !player.getCache().hasKey("tried_ana_barrel");
 				if (player.getCache().hasKey("ana_lift") || player.getCache().hasKey("ana_cart")
 					|| player.getCache().hasKey("ana_in_cart")) {
-					mes(player, "Oh, here's Ana, the guards must have discovered her.",
+					mes("Oh, here's Ana, the guards must have discovered her.",
 						"And sent her back to the mines...");
 				}
 				if (isFirstTime) {
@@ -127,7 +127,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 						"Harumph!");
 				}
 				say(player, npc, "Shush...It's for your own good!");
-				mes(player, "You manage to squeeze Ana into the barrel,",
+				mes("You manage to squeeze Ana into the barrel,",
 					"despite her many complaints.");
 				player.getCarriedItems().remove(new Item(ItemId.MINING_BARREL.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.ANA_IN_A_BARREL.id()));
@@ -146,11 +146,11 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 	private void makeDartTip(Player player, GameObject obj) {
 		if (obj.getID() == 1006) {
 			if (!player.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
-				mes(player, "This anvil is experimental...",
+				mes("This anvil is experimental...",
 					"You need detailed plans of the item you want to make in order to use it.");
 				return;
 			}
-			mes(player, "Do you want to follow the technical plans ?");
+			mes("Do you want to follow the technical plans ?");
 			int menu = multi(player, "Yes. I'd like to try.", "No, not just yet.");
 			if (menu == 0) {
 				if (!player.getCarriedItems().hasCatalogID(ItemId.HAMMER.id(), Optional.of(false))) {
@@ -161,20 +161,20 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 					player.message("You need level 20 in smithing before you can attempt this.");
 					return;
 				}
-				mes(player, "You begin experimenting in forging the weapon...",
+				mes("You begin experimenting in forging the weapon...",
 					"You follow the plans carefully.",
 					"And after a long time of careful work.");
 				player.getCarriedItems().remove(new Item(ItemId.BRONZE_BAR.id()));
 				if (succeedRate(player)) {
-					mes(player, "You finally manage to forge a sharp, pointed...",
+					mes("You finally manage to forge a sharp, pointed...",
 						"... dart tip...");
 					if (!player.getCarriedItems().hasCatalogID(ItemId.PROTOTYPE_DART_TIP.id(), Optional.of(false))) {
 						give(player, ItemId.PROTOTYPE_DART_TIP.id(), 1);
 					}
-					mes(player, "You study the technical plans even more...",
+					mes("You study the technical plans even more...",
 						"You need to attach feathers to the tip to complete the weapon.");
 				} else {
-					mes(player, "You waste the bronze bar through an unlucky accident.");
+					mes("You waste the bronze bar through an unlucky accident.");
 				}
 			} else if (menu == 1) {
 				player.message("You decide not follow the technical plans.");
@@ -192,17 +192,17 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				player.message("You need a fletching level of at least 10 to complete this.");
 				return;
 			}
-			mes(player, "You try to attach feathers to the bronze dart tip.",
+			mes("You try to attach feathers to the bronze dart tip.",
 				"Following the plans is tricky, but you persevere.");
 			player.getCarriedItems().remove(new Item(ItemId.FEATHER.id(), 10));
 			if (succeedRate(player)) {
-				mes(player, "You succesfully attach the feathers to the dart tip.");
+				mes("You succesfully attach the feathers to the dart tip.");
 				player.getCarriedItems().remove(new Item(ItemId.PROTOTYPE_DART_TIP.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.PROTOTYPE_THROWING_DART.id()));
 				//kosher: dependent on fletching level!
 				player.incExp(Skills.FLETCHING, getMaxLevel(player, Skills.FLETCHING) * 50, true);
 			} else {
-				mes(player, "An unlucky accident causes you to waste the feathers.",
+				mes("An unlucky accident causes you to waste the feathers.",
 					"But you feel that you're close to making this item though.");
 			}
 		}
@@ -229,16 +229,16 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		if (obj.getID() == DISTURBED_SAND1) {
 			if (command.equals("look")) {
 				if (player.getQuestStage(Quests.TOURIST_TRAP) <= 0) {
-					mes(player, "You see some footsteps in the sand.");
+					mes("You see some footsteps in the sand.");
 				} else {
-					mes(player, "This looks like some disturbed sand.",
+					mes("This looks like some disturbed sand.",
 						"footsteps seem to be heading of towards the south west.");
 				}
 			} else if (command.equals("search")) {
 				if (player.getQuestStage(Quests.TOURIST_TRAP) <= 0) {
-					mes(player, "You just see some footsteps in the sand.");
+					mes("You just see some footsteps in the sand.");
 				} else {
-					mes(player, "You search the footsteps more closely.",
+					mes("You search the footsteps more closely.",
 						"You can see that there are five sets of footprints.",
 						"One set of footprints seems lighter than the others.",
 						"The four other footsteps were made by heavier people with boots.");
@@ -249,17 +249,17 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		else if (obj.getID() == DISTURBED_SAND2) {
 			if (command.equals("look")) {
 				if (player.getQuestStage(Quests.TOURIST_TRAP) <= 0) {
-					mes(player, "You just see some footsteps in the sand.");
+					mes("You just see some footsteps in the sand.");
 				} else {
-					mes(player, "You find footsteps heading south.",
+					mes("You find footsteps heading south.",
 						"And this time evidence of a struggle...",
 						"The footsteps head off due south.");
 				}
 			} else if (command.equals("search")) {
 				if (player.getQuestStage(Quests.TOURIST_TRAP) <= 0) {
-					mes(player, "You just see some footsteps in the sand!");
+					mes("You just see some footsteps in the sand!");
 				} else {
-					mes(player, "You search the area thoroughly...",
+					mes("You search the area thoroughly...",
 						"You notice something colourful in the sand.",
 						"You dig around and find a piece of red silk scarf.",
 						"It looks as if Ana has been this way!");
@@ -274,7 +274,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				failCaveAnaInBarrel(player, null);
 				return;
 			}
-			mes(player, "You walk into the dark of the cavern...");
+			mes("You walk into the dark of the cavern...");
 			player.message("And emerge in a different part of this huge underground complex.");
 			player.teleport(84, 3640);
 		}
@@ -285,14 +285,14 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				npcsay(player, n, "Hey, you're no slave!");
 				npcsay(player, n, "What are you doing down here?");
 				n.setChasing(player);
-				mes(player, "More guards rush to catch you.",
+				mes("More guards rush to catch you.",
 					"You are roughed up a bit by the guards as you're manhandlded to a cell.");
 				npcsay(player, n, "Into the cell you go! I hope this teaches you a lesson.");
 				player.teleport(89, 801);
 				return;
 			}
 			if (player.getQuestStage(Quests.TOURIST_TRAP) >= 9 || player.getQuestStage(Quests.TOURIST_TRAP) == -1) {
-				mes(player, "You walk into the dark of the cavern...");
+				mes("You walk into the dark of the cavern...");
 				player.message("And emerge in a different part of this huge underground complex.");
 				player.teleport(76, 3640);
 				return;
@@ -348,7 +348,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 					player.message("You can only manage one of these at a time.");
 					return;
 				}
-				mes(player, "You find the barrel with ana in it.",
+				mes("You find the barrel with ana in it.",
 					"@gre@Ana: Let me out of here, I feel sick!");
 				give(player, ItemId.ANA_IN_A_BARREL.id(), 1);
 				player.getCache().remove("ana_is_up");
@@ -407,7 +407,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		else if (obj.getID() == LIFT_UP) {
 			player.message("You pull on the winch");
 			if (player.getCache().hasKey("ana_lift")) {
-				mes(player, "You see a barrel coming to the surface.",
+				mes("You see a barrel coming to the surface.",
 					"Before too long you haul it onto the side.",
 					"The barrel seems quite heavy and you hear a muffled sound coming from inside.");
 				player.message("@gre@Ana: Get me OUT OF HERE!");
@@ -422,12 +422,12 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		else if (obj.getID() == MINING_CART_ABOVE) {
 			player.message("You search the mine cart.");
 			if (player.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
-				mes(player, "There should be enough space for Ana (in the barrel) to go on here.");
+				mes("There should be enough space for Ana (in the barrel) to go on here.");
 			}
 			if (player.getCache().hasKey("ana_in_cart")) {
-				mes(player, "You can see the barrel with Ana in it on the cart already.");
+				mes("You can see the barrel with Ana in it on the cart already.");
 			}
-			mes(player, "There is space on the cart for you get on, would you like to try?");
+			mes("There is space on the cart for you get on, would you like to try?");
 			int menu = multi(player,
 				"Yes, I'll get on.",
 				"No, I've got other plans.",
@@ -435,13 +435,13 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			if (menu == 0) {
 				player.message("You decide to climb onto the cart.");
 				if (player.getCache().hasKey("ana_in_cart")) {
-					mes(player, "You hear Ana starting to bang on the barrel for her to be let out.");
-					mes(player, "@gre@Ana: Get me out of here, I'm suffocating!",
+					mes("You hear Ana starting to bang on the barrel for her to be let out.");
+					mes("@gre@Ana: Get me out of here, I'm suffocating!",
 						"@gre@Ana: It smells like dwarven underwear in here!");
 				}
 				player.teleport(86, 808);
 				if (player.getCache().hasKey("rescue")) {
-					mes(player, "As soon as you get on the cart, it starts to move.",
+					mes("As soon as you get on the cart, it starts to move.",
 						"Before too long you are past the gates.",
 						"You jump off the cart taking Ana with you.");
 					player.teleport(106, 806);
@@ -475,7 +475,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 
 	private void getOutWithAnaInCart(Player player, Npc n, int cID) {
 		if (cID == -1) {
-			mes(player, "The cart driver seems to be festidiously cleaning his cart.",
+			mes("The cart driver seems to be festidiously cleaning his cart.",
 				"It doesn't look as if he wants to be disturbed.");
 			int menu = multi(player, n, false, //do not send over
 				"Hello.",
@@ -506,7 +506,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		}
 		switch (cID) {
 			case CartDriver.PSSST:
-				mes(player, "The cart driver completely ignores you.");
+				mes("The cart driver completely ignores you.");
 				int pst = multi(player, n,
 					"Psssst...",
 					"Psssssst...",
@@ -520,7 +520,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				}
 				break;
 			case CartDriver.PSSST2:
-				mes(player, "The driver completely ignores you.");
+				mes("The driver completely ignores you.");
 				int m = multi(player, n,
 					"Psssssst...",
 					"Pssst...",
@@ -534,7 +534,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				}
 				break;
 			case CartDriver.PSSST3:
-				mes(player, "The driver completely ignores you.");
+				mes("The driver completely ignores you.");
 				int me = multi(player, n,
 					"Psssst...",
 					"Pssst...",
@@ -548,7 +548,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				}
 				break;
 			case CartDriver.PSSSTFINAL:
-				mes(player, "The cart driver turns around quickly to face you.");
+				mes("The cart driver turns around quickly to face you.");
 				npcsay(player, n, "What!",
 					"Can't you see I'm busy?");
 				int shh = multi(player, n,
@@ -566,9 +566,9 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				player.message("The cart driver goes back to his work.");
 				break;
 			case CartDriver.NICECART:
-				mes(player, "The cart driver looks around at you and tries to weigh you up.");
+				mes("The cart driver looks around at you and tries to weigh you up.");
 				npcsay(player, n, "Hmmm.");
-				mes(player, "He tuts to himself and starts checking the wheels.");
+				mes("He tuts to himself and starts checking the wheels.");
 				npcsay(player, n, "Tut !");
 				int tut = multi(player, n,
 					"I wonder if you could help me?",
@@ -583,14 +583,14 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				}
 				break;
 			case CartDriver.WAGON:
-				mes(player, "The cart driver smirks a little.",
+				mes("The cart driver smirks a little.",
 					"He starts checking the steering on the cart.");
 				int menu = multi(player, n, false, //do not send over
 					"'One good turn deserves another'",
 					"Can you get me the heck out of here please?");
 				if (menu == 0) {
 					say(player, n, "'One good turn deserves another.");
-					mes(player, "The cart driver smiles a bit and then turns to you.");
+					mes("The cart driver smiles a bit and then turns to you.");
 					npcsay(player, n, "Are you trying to get me fired?");
 					int menu2 = multi(player, n,
 						"No",
@@ -606,7 +606,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 						driverCallGuards(player, n);
 					} else if (menu2 == 2) {
 						npcsay(player, n, "Ha ha ha! You're funny!");
-						mes(player, "The cart driver checks that the guards aren't watching him.");
+						mes("The cart driver checks that the guards aren't watching him.");
 						npcsay(player, n, "What're you in fer?");
 						int menu3 = multi(player, n,
 							"Oh, I'm not supposed to be here at all actually.",
@@ -622,9 +622,9 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 							npcsay(player, n, "Hmm, well, I wonder what the guards are gonna say about that!");
 							driverCallGuards(player, n);
 						} else if (menu3 == 2) {
-							mes(player, "The cart driver laughs at your pun...");
+							mes("The cart driver laughs at your pun...");
 							npcsay(player, n, "Ha ha ha, oh Stoppit!");
-							mes(player, "The cart driver seems much happier now.");
+							mes("The cart driver seems much happier now.");
 							npcsay(player, n, "What can I do for you anyway?");
 							int menu4 = multi(player, n, false, //do not send over
 								"Can you smuggle me out on your cart?",
@@ -632,7 +632,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 								"Well, you see, it's like this...");
 							if (menu4 == 0) {
 								say(player, n, "Can you smuggle me out on your cart?");
-								mes(player, "The cart driver points at a nearby guard.");
+								mes("The cart driver points at a nearby guard.");
 								npcsay(player, n, "Ask that man over there if it's OK and I'll consider it!",
 									"Ha ha ha!");
 								player.message("The cart driver goes back to his work, laughing to himself.");
@@ -651,13 +651,13 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 								if (menu5 == 0) {
 									player.message("The cart driver seems visibly shaken...");
 									npcsay(player, n, "Oh, right..yes...yess, Ok...");
-									mes(player, "The cart driver quickly starts preparing the cart.");
+									mes("The cart driver quickly starts preparing the cart.");
 									int menu6 = multi(player, n,
 										"Good luck!",
 										"You can't leave me here, I'll get killed!");
 									if (menu6 == 0) {
 										npcsay(player, n, "Yeah, you too!");
-										mes(player, "The cart sets off at a hectic pace.",
+										mes("The cart sets off at a hectic pace.",
 											"The guards at the gate get suspiscious and search the cart.",
 											"They find Ana in the Barrel and take her back into the mine.");
 										if (player.getCache().hasKey("ana_in_cart")) {
@@ -719,7 +719,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				} else if (help == 1) {
 					npcsay(player, n, "Are you saying I don't know anything about carts?",
 						"Why you cheeky little....");
-					mes(player, "The cart driver seems mortally offended...",
+					mes("The cart driver seems mortally offended...",
 						"his temper explodes as he shouts the guards.");
 					driverCallGuards(player, n);
 				}
@@ -727,7 +727,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			case CartDriver.WONDERIF:
 				npcsay(player, n, "Sorry friend, I'm busy, go bug the guards,",
 					"I'm sure they'll give ya the time of day.");
-				mes(player, "The cart driver chuckles to himself.");
+				mes("The cart driver chuckles to himself.");
 				int ok = multi(player, n,
 					"Can I help you at all?",
 					"Can you get me the heck out of here please?");
@@ -739,7 +739,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				break;
 			case CartDriver.HECKOUT:
 				npcsay(player, n, "No way, and if you bug me again, I'm gonna call the guards.");
-				mes(player, "The cart driver goes back to his work.");
+				mes("The cart driver goes back to his work.");
 				break;
 		}
 
@@ -749,7 +749,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		int succeed = DataConversions.random(0, 1);
 		npcsay(player, n, "Guards! Guards!");
 		if (succeed == 0) {
-			mes(player, "Some guards notice you and come over.");
+			mes("Some guards notice you and come over.");
 			Npc mercenary = ifnearvisnpc(player, NpcId.MERCENARY.id(), 15);
 			if (mercenary != null) {
 				mercenary = addnpc(player.getWorld(), NpcId.MERCENARY.id(), player.getX(), player.getY(), 60000);
@@ -757,13 +757,13 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			}
 			npcsay(player, mercenary, "Oi, what are you two doing?");
 			mercenary.startCombat(player);
-			mes(player, "The Guards search you!",
+			mes("The Guards search you!",
 				"More guards rush to catch you.",
 				"You are roughed up a bit by the guards as you're manhandlded to a cell.");
 			npcsay(player, mercenary, "Into the cell you go! I hope this teaches you a lesson.");
 			player.teleport(89, 801);
 		} else {
-			mes(player, "You quickly slope away and hide from the guards.");
+			mes("You quickly slope away and hide from the guards.");
 		}
 	}
 
@@ -806,7 +806,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			npcsay(player, n, "'Cor! This barrel is really heavy!",
 				"Have you been mining lead?",
 				"Har, har har!");
-			mes(player, "@gre@Ana: How rude! Why I ought to teach you a lesson.");
+			mes("@gre@Ana: How rude! Why I ought to teach you a lesson.");
 			npcsay(player, n, "What was that!");
 			player.message("The guards kick the barrel open.!");
 			Npc ana = addnpc(player.getWorld(), NpcId.ANA.id(), player.getX(), player.getY(), 30000);
@@ -816,7 +816,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			if (ana != null) {
 				ana.remove();
 			}
-			mes(player, "@yel@Guards: Into the cell you go!",
+			mes("@yel@Guards: Into the cell you go!",
 				"@yel@I hope this teaches you a lesson.");
 			if (n != null) {
 				n.remove();
@@ -832,7 +832,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		if (menu == 0) {
 			player.message("The guard comes over and helps you. He takes one end of the barrel.");
 			npcsay(player, n, "Blimey! This is heavy!");
-			mes(player, "@gre@Ana in a barrel: Why you cheeky....!",
+			mes("@gre@Ana in a barrel: Why you cheeky....!",
 				"The guard looks around suprised at Ana's outburst.");
 			npcsay(player, n, "What was that?");
 			say(player, n, "Oh, it was nothing.");
@@ -843,7 +843,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				"I said you were very gregarious!",
 				"Oh, nothing.");
 			if (opt == 0) {
-				mes(player, "@gre@Ana in a barrel: You creep!");
+				mes("@gre@Ana in a barrel: You creep!");
 				npcsay(player, n, "Oh, right, how very nice of you to say so.");
 				player.message("The guard seems flattered.");
 				npcsay(player, n, "Anyway, let's get this barrel up to the surface, plenty more work to you to do!");
@@ -885,7 +885,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			}
 		}
 		else if (obj.getID() == MINING_CART && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
-			mes(player, "You carefully place Ana in the barrel into the mine cart.",
+			mes("You carefully place Ana in the barrel into the mine cart.",
 				"Soon the cart moves out of sight and then it returns.");
 			player.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 			if (!player.getCache().hasKey("ana_cart")) {
@@ -899,7 +899,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			}
 		}
 		else if (obj.getID() == MINING_CART_ABOVE && item.getCatalogId() == ItemId.ANA_IN_A_BARREL.id()) {
-			mes(player, "You place Ana (In the barrel) carefully on the cart.",
+			mes("You place Ana (In the barrel) carefully on the cart.",
 				"This was the last barrel to go on the cart,",
 				"but the cart driver doesn't seem to be in any rush to get going.",
 				"And the desert heat will soon get to Ana.");
@@ -957,7 +957,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				"Erm, no I've had second thoughts.");
 			if (menu == 0) {
 				if (outsideCamp(player)) {
-					mes(player, "@gre@Ana: You can't drop me here!",
+					mes("@gre@Ana: You can't drop me here!",
 						"@gre@Ana: I'll die in the desert on my own!",
 						"@gre@Ana: Take me back to the Shantay pass.");
 					return;
@@ -968,12 +968,12 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 					//mercenary does not get placed in jail if player is there
 					diffX = -8;
 				}
-				mes(player, "You drop the barrel to the floor and Ana gets out.");
+				mes("You drop the barrel to the floor and Ana gets out.");
 				player.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 				Npc Ana = addnpc(player.getWorld(), NpcId.ANA.id(), player.getX(), player.getY(), 20000);
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				npcsay(player, Ana, "How dare you put me in that barrel you barbarian!");
-				mes(player, "Ana's outburst attracts the guards, they come running over.");
+				mes("Ana's outburst attracts the guards, they come running over.");
 				Npc guard = ifnearvisnpc(player, NpcId.MERCENARY.id(), 15);
 				if (guard == null || guard.inCombat()) {
 					guard = addnpc(player.getWorld(), NpcId.MERCENARY.id(), player.getX() + diffX, player.getY(), 30000);
@@ -982,10 +982,10 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				npcsay(player, guard, "Hey! What's going on here then?");
 				if (diffX == 0)
 					guard.startCombat(player);
-				mes(player, "The guards drag Ana away and then throw you into a cell.");
+				mes("The guards drag Ana away and then throw you into a cell.");
 				player.teleport(75, 3626);
 			} else if (menu == 1) {
-				mes(player, "You think twice about dropping the barrel to the floor.");
+				mes("You think twice about dropping the barrel to the floor.");
 			}
 		}
 	}

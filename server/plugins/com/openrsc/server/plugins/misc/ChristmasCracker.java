@@ -53,7 +53,7 @@ public class ChristmasCracker implements UsePlayerTrigger {
 			player.face(otherPlayer);
 			//otherPlayer.face(player);
 
-			thinkbubble(player, item);
+			thinkbubble(item);
 			player.message("You pull a christmas cracker");
 			otherPlayer.message("You pull a christmas cracker");
 

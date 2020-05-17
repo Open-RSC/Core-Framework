@@ -28,7 +28,7 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 	@Override
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		// simple random for the moment
-		mes(player, 0, "You pour some of the sacred water into the enchanted vial.",
+		mes(0, "You pour some of the sacred water into the enchanted vial.",
 				"You now have a vial of holy water.");
 		player.getCarriedItems().remove(new Item(ItemId.ENCHANTED_VIAL.id()));
 		player.getCarriedItems().getInventory().add(new Item(ItemId.HOLY_WATER_VIAL.id()));

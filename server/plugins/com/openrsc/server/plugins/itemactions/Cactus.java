@@ -29,7 +29,7 @@ public class Cactus implements UseLocTrigger {
 		player.message("You use your woodcutting skill to extract some water from the cactus.");
 		int[] skins = {ItemId.WATER_SKIN_MOSTLY_FULL.id(), ItemId.WATER_SKIN_MOSTLY_EMPTY.id(),
 				ItemId.WATER_SKIN_MOUTHFUL_LEFT.id(), ItemId.EMPTY_WATER_SKIN.id()};
-		thinkbubble(player, item);
+		thinkbubble(item);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 		for (int s : skins) {
 			Item toRemove = new Item(s, 1);

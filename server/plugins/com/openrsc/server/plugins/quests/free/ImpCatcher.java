@@ -65,14 +65,14 @@ public class ImpCatcher implements QuestInterface, TalkNpcTrigger {
 					say(player, n, "I've got all four beads",
 						"It was hard work I can tell you");
 					npcsay(player, n, "Give them here and I'll sort out a reward");
-					mes(player, "You give four coloured beads to Wizard Mizgog");
+					mes("You give four coloured beads to Wizard Mizgog");
 					player.getCarriedItems().remove(new Item(ItemId.RED_BEAD.id()));
 					player.getCarriedItems().remove(new Item(ItemId.YELLOW_BEAD.id()));
 					player.getCarriedItems().remove(new Item(ItemId.BLACK_BEAD.id()));
 					player.getCarriedItems().remove(new Item(ItemId.WHITE_BEAD.id()));
 					npcsay(player, n, "Here's you're reward then",
 						"An Amulet of accuracy");
-					mes(player, "The Wizard hands you an amulet");
+					mes("The Wizard hands you an amulet");
 					give(player, ItemId.AMULET_OF_ACCURACY.id(), 1);
 					player.sendQuestComplete(Quests.IMP_CATCHER);
 				} else if (player.getCarriedItems().hasCatalogID(ItemId.RED_BEAD.id(), Optional.of(false))

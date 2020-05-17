@@ -339,7 +339,7 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		// Remove items
-		thinkbubble(player, goldBar);
+		thinkbubble(goldBar);
 		player.getCarriedItems().remove(goldBar);
 		if (gem > 0) {
 			player.getCarriedItems().remove(new Item(gems[gem]));
@@ -418,7 +418,7 @@ public class Crafting implements UseInvTrigger,
 		);
 		if (silver == null) return;
 
-		thinkbubble(player, silver);
+		thinkbubble(silver);
 		player.getCarriedItems().remove(silver);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 
@@ -493,7 +493,7 @@ public class Crafting implements UseInvTrigger,
 
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);
 		player.getCarriedItems().remove(softClay);
-		thinkbubble(player, softClay);
+		thinkbubble(softClay);
 		player.playerServerMessage(MessageType.QUEST, "you make the clay into a " + potteryItemName(result.getDef(player.getWorld()).getName()));
 		player.getCarriedItems().getInventory().add(result);
 		player.incExp(Skills.CRAFTING, exp, true);
@@ -558,7 +558,7 @@ public class Crafting implements UseInvTrigger,
 		);
 		if (unfiredClay == null) return;
 
-		thinkbubble(player, unfiredClay);
+		thinkbubble(unfiredClay);
 		String potteryItem = potteryItemName(item.getDef(player.getWorld()).getName());
 		player.playerServerMessage(MessageType.QUEST, "You put the " + potteryItem + " in the oven");
 		player.getCarriedItems().remove(unfiredClay);
@@ -612,7 +612,7 @@ public class Crafting implements UseInvTrigger,
 		);
 		if (item1 == null || item2 == null)	return;
 
-		thinkbubble(player, item2);
+		thinkbubble(item2);
 		player.playerServerMessage(MessageType.QUEST, "you heat the sand and soda ash in the furnace to make glass");
 		player.getCarriedItems().remove(item1);
 		player.getCarriedItems().remove(item2);
@@ -1040,7 +1040,7 @@ public class Crafting implements UseInvTrigger,
 			player.getCarriedItems().remove(item);
 			player.getCarriedItems().getInventory().add(new Item(jugID));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.SOFT_CLAY.id()));
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You mix the clay and water");
+			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You mix the clay and water");
 			player.message("You now have some soft workable clay");
 		} else {
 			return false;

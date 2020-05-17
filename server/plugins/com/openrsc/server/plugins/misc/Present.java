@@ -271,7 +271,7 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 			player.face(otherPlayer);
 			otherPlayer.face(player);
 
-			thinkbubble(player, item);
+			thinkbubble(item);
 			player.message("You give a present to " + otherPlayer.getUsername());
 			otherPlayer.message(player.getUsername() + " handed you a present...");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);

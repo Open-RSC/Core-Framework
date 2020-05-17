@@ -76,7 +76,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 						"i told Kennith to hide until i returned but i was washed up here",
 						"please go back and get my boy",
 						"you can send help for me later", "traveler wait!");
-					mes(player, "kent reaches behind your neck", "slooop",
+					mes("kent reaches behind your neck", "slooop",
 						"he pulls a sea slug from under your top");
 					//kent drops slug at 511, 636 and stays for about 12s
 					createGroundItemDelayedRemove(new GroundItem(player.getWorld(), ItemId.SEASLUG.id(), 511, 636, 1, player), 12000);
@@ -138,7 +138,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 					break;
 				case 6:
 				case -1:
-					mes(player, "He doesn't seem interested in talking");
+					mes("He doesn't seem interested in talking");
 			}
 		}
 		else if (n.getID() == NpcId.BAILEY.id()) {
@@ -177,7 +177,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 							"i figured that out when i tried to cook them");
 						if (!player.getCarriedItems().hasCatalogID(ItemId.UNLIT_TORCH.id(), Optional.of(false))) {
 							npcsay(player, n, "here");
-							mes(player, "bailey gives you a torch");
+							mes("bailey gives you a torch");
 							give(player, ItemId.UNLIT_TORCH.id(), 1);
 							npcsay(player,
 								n,
@@ -371,7 +371,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 							npcsay(player, n, "okay then", "i'll wait here for you");
 						} else if (boatMenu == 1) {
 							npcsay(player, n, "hold on tight");
-							mes(player, "you board the small row boat",
+							mes("you board the small row boat",
 								"you arrive at the fishing platform");
 							player.teleport(495, 618, false);
 						}
@@ -397,9 +397,9 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 							say(player, n, "will you take me back there?");
 							npcsay(player, n, "of course m'hearty",
 								"if that's what you want");
-							mes(player, "you board the small row boat");
+							mes("you board the small row boat");
 							checkTorchCrossing(player);
-							mes(player, "you arrive at the fishing platform");
+							mes("you arrive at the fishing platform");
 							player.teleport(495, 618, false);
 						} else if (goMenu == 1) {
 							say(player, n, "i'm keeping away from there");
@@ -416,7 +416,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 							npcsay(player, n, "okay, you're the boss");
 						} else if (goBack == 1) {
 							npcsay(player, n, "okay m'hearty jump on");
-							mes(player, "you arrive back on shore");
+							mes("you arrive back on shore");
 							player.teleport(515, 613, false);
 						}
 					}
@@ -431,7 +431,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 						npcsay(player, n,
 							"that's a worry, no ones heard from him on shore",
 							"come on, we better go look for him");
-						mes(player, "you board the row boat",
+						mes("you board the row boat",
 							"you arrive on a small island");
 						player.teleport(512, 639, false);
 					} else if (player.getLocation().inArdougne()) {
@@ -445,9 +445,9 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 							say(player, n, "will you take me back there?");
 							npcsay(player, n, "of course m'hearty",
 								"if that's what you want");
-							mes(player, "you board the small row boat");
+							mes("you board the small row boat");
 							checkTorchCrossing(player);
-							mes(player, "you arrive at the fishing platform");
+							mes("you arrive at the fishing platform");
 							player.teleport(495, 618, false);
 						} else if (goMenu == 1) {
 							say(player, n, "i'm keeping away from there");
@@ -471,7 +471,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 							npcsay(player, n, "okay, you're the boss");
 						} else if (goBack == 1) {
 							npcsay(player, n, "okay m'hearty jump on");
-							mes(player, "you arrive back on shore");
+							mes("you arrive back on shore");
 							player.teleport(515, 613, false);
 						}
 					} else if (player.getLocation().inArdougne()) {
@@ -485,9 +485,9 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 							say(player, n, "will you take me back there?");
 							npcsay(player, n, "of course m'hearty",
 								"if that's what you want");
-							mes(player, "you board the small row boat");
+							mes("you board the small row boat");
 							checkTorchCrossing(player);
-							mes(player, "you arrive at the fishing platform");
+							mes("you arrive at the fishing platform");
 							player.teleport(495, 618, false);
 						} else if (goMenu == 1) {
 							say(player, n, "i'm keeping away from there");
@@ -497,7 +497,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 						say(player, n, "we had better get back to the platform",
 							"and see what's going on");
 						npcsay(player, n, "you're right", "it all sounds pretty creepy");
-						mes(player, "you arrive back at the fishing platform");
+						mes("you arrive back at the fishing platform");
 						player.teleport(495, 618, false);
 					}
 					break;
@@ -521,9 +521,9 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 							say(player, n, "will you take me back there?");
 							npcsay(player, n, "of course m'hearty",
 								"if that's what you want");
-							mes(player, "you board the small row boat");
+							mes("you board the small row boat");
 							checkTorchCrossing(player);
-							mes(player, "you arrive at the fishing platform");
+							mes("you arrive at the fishing platform");
 							player.teleport(495, 618, false);
 						} else if (goMenu == 1) {
 							say(player, n, "i'm keeping away from there");
@@ -547,9 +547,9 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 						}
 						if (goMenu == 1) {
 							npcsay(player, n, "hold on tight");
-							mes(player, "you board the small row boat");
+							mes("you board the small row boat");
 							checkTorchCrossing(player);
-							mes(player, "you arrive at the fishing platform");
+							mes("you arrive at the fishing platform");
 							player.teleport(495, 618, false);
 						}
 					} else {
@@ -563,7 +563,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 							npcsay(player, n, "okay, you're the boss");
 						} else if (goBack == 1) {
 							npcsay(player, n, "okay m'hearty jump on");
-							mes(player, "you arrive back on shore");
+							mes("you arrive back on shore");
 							player.teleport(515, 613, false);
 						}
 					}
@@ -576,7 +576,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 		if (player.getCarriedItems().hasCatalogID(ItemId.LIT_TORCH.id(), Optional.of(false))) {
 			player.getCarriedItems().remove(new Item(ItemId.LIT_TORCH.id()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.UNLIT_TORCH.id()));
-			mes(player, "your torch goes out on the crossing");
+			mes("your torch goes out on the crossing");
 		}
 	}
 
@@ -606,7 +606,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 458) {
 			if (player.getQuestStage(getQuestId()) < 5) {
-				mes(player, "You climb up the ladder");
+				mes("You climb up the ladder");
 				player.teleport(494, 1561, false);
 				return;
 			}
@@ -619,7 +619,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 					player.damage(damage);
 					say(player, null, "ouch");
 				} else {
-					mes(player, "You climb up the ladder");
+					mes("You climb up the ladder");
 					player.teleport(494, 1561, false);
 					player.message("the fishermen seem afraid of your torch");
 				}
@@ -627,7 +627,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 453) {
 			if (player.getQuestStage(getQuestId()) == 5) {
-				mes(player, "you rotate the crane around", "to the far platform");
+				mes("you rotate the crane around", "to the far platform");
 				GameObject firstRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 5, 0);
 				player.getWorld().replaceGameObject(obj, firstRotation);
@@ -644,14 +644,14 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 				GameObject fourthRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 4, 0);
 				player.getWorld().replaceGameObject(obj, fourthRotation);
-				mes(player, "he climbs onto the fishing net",
+				mes("he climbs onto the fishing net",
 					"you rotate the crane back around",
 					"and lower kennith to the row boat waiting below");
 				player.updateQuestStage(getQuestId(), 6);
 				player.getCache().remove("loose_panel");
 				player.getCache().remove("lit_torch");
 			} else if (player.getQuestStage(getQuestId()) > 0 && player.getQuestStage(getQuestId()) < 5) {
-				mes(player, "you rotate the crane around");
+				mes("you rotate the crane around");
 			} else {
 				player.message("Nothing interesting happens");
 			}
@@ -667,12 +667,12 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 124) {
 			if (player.getQuestStage(getQuestId()) == 5) {
-				mes(player, "you kick the loose panel",
+				mes("you kick the loose panel",
 					"the wood is rotten and crumbles away",
 					"leaving an opening big enough for kennith to climb through");
 				player.getCache().store("loose_panel", true);
 			} else {
-				mes(player, "you kick the loose panal",
+				mes("you kick the loose panal",
 					"nothing interesting happens");
 			}
 		}

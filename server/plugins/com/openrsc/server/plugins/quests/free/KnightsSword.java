@@ -158,7 +158,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 						"I have found a picture of the sword I would like you to make");
 					player.message("You give the portrait to Thurgo");
 					player.getCarriedItems().remove(new Item(ItemId.PORTRAIT.id()));
-					mes(player, "Thurgo studies the portrait");
+					mes("Thurgo studies the portrait");
 					player.updateQuestStage(this, 5);
 					npcsay(player,
 						n,
@@ -195,12 +195,12 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 				if (ifheld(player, ItemId.IRON_BAR.id(), 2) && player.getCarriedItems().hasCatalogID(ItemId.BLURITE_ORE.id(), Optional.of(false))) {
 					npcsay(player, n, "How are you doing finding sword materials?");
 					say(player, n, "I have them all");
-					mes(player, "You give some blurite ore and two iron bars to Thurgo");
+					mes("You give some blurite ore and two iron bars to Thurgo");
 
 					player.getCarriedItems().remove(new Item(ItemId.IRON_BAR.id()));
 					player.getCarriedItems().remove(new Item(ItemId.IRON_BAR.id()));
 					player.getCarriedItems().remove(new Item(ItemId.BLURITE_ORE.id()));
-					mes(player, "Thurgo starts making a sword",
+					mes("Thurgo starts making a sword",
 						"Thurgo hammers away",
 						"Thurgo hammers some more",
 						"Thurgo hands you a sword");
@@ -237,9 +237,9 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 				"I will sell you a Smithing cape for 99,000 coins");
 			if (multi(player, n, "Sounds fair", "No way") == 0) {
 				if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
-					mes(player, "Thurgo takes your coins");
+					mes("Thurgo takes your coins");
 					if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
-						mes(player, "And hands you a Smithing cape");
+						mes("And hands you a Smithing cape");
 						give(player, ItemId.SMITHING_CAPE.id(), 1);
 						npcsay(player, n, "Don't lose this",
 							"This cape will allow you save some coal while smelting");
@@ -252,17 +252,17 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 	}
 
 	private void givePie(Player player, Npc n) {
-		mes(player, "Thurgo's eyes light up");
+		mes("Thurgo's eyes light up");
 		npcsay(player, n, "I'd never say no to a redberry pie");
 		npcsay(player, n, "It's great stuff");
 		if (!player.getCarriedItems().hasCatalogID(ItemId.REDBERRY_PIE.id(), Optional.of(false))) { //should not happen here
 			say(player, n, "Well that's too bad, because I don't have any");
-			mes(player, "Thurgo does not look impressed");
+			mes("Thurgo does not look impressed");
 		} else {
-			mes(player, "You hand over the pie");
+			mes("You hand over the pie");
 			player.getCarriedItems().remove(new Item(ItemId.REDBERRY_PIE.id()));
 			player.updateQuestStage(this, 3);
-			mes(player, "Thurgo eats the pie", "Thurgo pats his stomach");
+			mes("Thurgo eats the pie", "Thurgo pats his stomach");
 			npcsay(player, n, "By Guthix that was good pie",
 				"Anyone who makes pie like that has gotta be alright");
 		}
@@ -449,8 +449,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 					if (!n.isBusy()) {
 						npcsay(player, n, "Hey what are you doing?",
 							"That's my cupboard");
-						mes(player,
-							"Maybe you need to get someone to distract Sir Vyvin for you");
+						mes("Maybe you need to get someone to distract Sir Vyvin for you");
 					} else {
 						if (player.getCarriedItems().hasCatalogID(ItemId.PORTRAIT.id(), Optional.of(false)) || player.getQuestStage(this) < 4) {
 							player.message("There is just a load of junk in here");

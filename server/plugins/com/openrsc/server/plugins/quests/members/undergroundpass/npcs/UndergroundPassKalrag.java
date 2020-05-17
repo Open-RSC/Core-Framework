@@ -21,15 +21,15 @@ public class UndergroundPassKalrag implements KillNpcTrigger {
 	@Override
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.KALRAG.id()) {
-			mes(player, "kalrag slumps to the floor",
+			mes("kalrag slumps to the floor",
 				"poison flows from the corpse over the soil");
 			if (!player.getCache().hasKey("poison_on_doll") && player.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				if (player.getCarriedItems().hasCatalogID(ItemId.A_DOLL_OF_IBAN.id(), Optional.of(false))) {
-					mes(player, "you smear the doll of iban in the poisoned blood");
+					mes("you smear the doll of iban in the poisoned blood");
 					player.message("it smells horrific");
 					player.getCache().store("poison_on_doll", true);
 				} else {
-					mes(player, "it quikly seeps away into the earth");
+					mes("it quikly seeps away into the earth");
 					player.message("you dare not collect any without ibans doll");
 				}
 			}

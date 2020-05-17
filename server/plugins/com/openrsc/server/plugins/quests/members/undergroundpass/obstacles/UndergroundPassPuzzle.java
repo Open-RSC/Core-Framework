@@ -42,7 +42,7 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 			player.walkToEntity(689, 3452);
 		}
 		else if (obj.getID() == LEVER) {
-			mes(player, "you pull on the lever",
+			mes("you pull on the lever",
 				"you hear a loud mechanical churning");
 			GameObject cage_closed = new GameObject(player.getWorld(), Point.location(690, 3449), CAGE, 6, 0);
 			GameObject cage_open = new GameObject(player.getWorld(), Point.location(690, 3449), CAGE + 1, 6, 0);
@@ -55,11 +55,11 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 	}
 
 	private void trap(Player player, GameObject obj) {
-		mes(player, "you step onto the metal grill");
+		mes("you step onto the metal grill");
 		player.message("it's a trap");
 		player.teleport(711, 3464);
 		delay(1600);
-		mes(player, "you fall onto a pit of spikes");
+		mes("you fall onto a pit of spikes");
 		player.teleport(679, 3448);
 		player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.2D));
 		player.message("you crawl out of the pit");

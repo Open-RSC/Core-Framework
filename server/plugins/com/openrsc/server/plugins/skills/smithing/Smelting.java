@@ -92,10 +92,10 @@ public class Smelting implements UseLocTrigger {
 			return;
 		}
 
-		thinkbubble(player, new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
+		thinkbubble(new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
 		int tick = player.getWorld().getServer().getConfig().GAME_TICK;
 		int messagedelay = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? tick : (tick * 2);
-		mes(player, messagedelay, "you heat the steel bar into a liquid state",
+		mes(messagedelay, "you heat the steel bar into a liquid state",
 			"and pour it into your cannon ball mould",
 			"you then leave it to cool for a short while");
 
@@ -182,7 +182,7 @@ public class Smelting implements UseLocTrigger {
 			}
 		}
 
-		thinkbubble(player, item);
+		thinkbubble(item);
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
@@ -290,7 +290,7 @@ public class Smelting implements UseLocTrigger {
 				return;
 			}
 		}
-		thinkbubble(player, item);
+		thinkbubble(item);
 		if (ci.getInventory().countId(item.getCatalogId()) > 0) {
 			boolean skillcape = false;
 			if ((smelt.getID() == ItemId.COAL.id()

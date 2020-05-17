@@ -84,22 +84,22 @@ public class ManPhoenix implements TalkNpcTrigger {
 				"Ah well",
 				"Have this spare");
 			give(player, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
-			mes(player, "Straven hands you a key");
+			mes("Straven hands you a key");
 		} else if ((player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(player))
 			|| (player.getCache().hasKey("arrav_mission") && (player.getCache().getInt("arrav_mission") & 2) == PHOENIX_MISSION)) {
 			npcsay(player, n, "Hows your little mission going?");
 			if (player.getCarriedItems().hasCatalogID(ItemId.SCROLL.id())) {
 				say(player, n, "I have the intelligence report");
 				npcsay(player, n, "Lets see it then");
-				mes(player, "You hand over the report");
+				mes("You hand over the report");
 				player.getCarriedItems().remove(new Item(ItemId.SCROLL.id()));
-				mes(player, "The man reads the report");
+				mes("The man reads the report");
 				npcsay(player, n, "Yes this is very good",
 					"Ok you can join the phoenix gang",
 					"I am Straven, one of the gang leaders");
 				say(player, n, "Nice to meet you");
 				npcsay(player, n, "Here is a key");
-				mes(player, "Straven hands you a key");
+				mes("Straven hands you a key");
 				give(player, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
 				npcsay(player, n, "It will let you enter our weapon supply area",
 					"Round the front of this building");

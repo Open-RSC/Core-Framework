@@ -44,7 +44,7 @@ public class IronMan implements
 		if (n.getID() == IRON_MAN || n.getID() == ULTIMATE_IRON_MAN || n.getID() == HARDCORE_IRON_MAN) {
 			if (player.getAttribute("ironman_delete", false)) {
 				if (player.getCache().hasKey("bank_pin")) {
-					mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Enter your Bank PIN to downgrade your Iron Man status.");
+					mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Enter your Bank PIN to downgrade your Iron Man status.");
 
 					if (!validatebankpin(player)) {
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
@@ -64,7 +64,7 @@ public class IronMan implements
 				}
 				return;
 			} else if (player.getAttribute("ironman_pin", false)) {
-				mes(player, n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You'll need to set a Bank PIN for that.");
+				mes(n, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You'll need to set a Bank PIN for that.");
 				int menu = multi(player,
 					"Okay, let me set a PIN.",
 					"No, I don't want a Bank PIN.");

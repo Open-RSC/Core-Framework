@@ -28,13 +28,13 @@ public class LegendsQuestBullRoarer implements OpInvTrigger {
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.BULL_ROARER.id()) {
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You start to swing the bullroarer above your head.",
+			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You start to swing the bullroarer above your head.",
 				"You feel a bit silly at first, but soon it makes an interesting sound.");
 			if (inKharaziJungle(player)) {
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You see some movement in the trees...");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You see some movement in the trees...");
 				attractNatives(player);
 			} else {
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Nothing much seems to happen though.");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "Nothing much seems to happen though.");
 				Npc forester = ifnearvisnpc(player, NpcId.JUNGLE_FORESTER.id(), 10);
 				if (forester != null) {
 					npcsay(player, forester, "You might like to use that when you get into the ",
@@ -47,9 +47,9 @@ public class LegendsQuestBullRoarer implements OpInvTrigger {
 	private void attractNatives(Player player) {
 		int controlRandom = DataConversions.getRandom().nextInt(4);
 		if (controlRandom == 0) {
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "...but nothing else much seems to happen.");
+			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "...but nothing else much seems to happen.");
 		} else if (controlRandom >= 1 && controlRandom <= 2) {
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "...and a tall, dark, charismatic looking native approaches you.");
+			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "...and a tall, dark, charismatic looking native approaches you.");
 			Npc gujuo = ifnearvisnpc(player, NpcId.GUJUO.id(), 15);
 			if (gujuo == null) {
 				gujuo = addnpc(player.getWorld(), NpcId.GUJUO.id(), player.getX(), player.getY());
@@ -65,9 +65,9 @@ public class LegendsQuestBullRoarer implements OpInvTrigger {
 		} else if (controlRandom == 3) {
 			Npc nativeNpc = ifnearvisnpc(player, 5, NpcId.OOMLIE_BIRD.id(), NpcId.KARAMJA_WOLF.id(), NpcId.JUNGLE_SPIDER.id(), NpcId.JUNGLE_SAVAGE.id());
 			if (nativeNpc != null) {
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "...and a nearby " + (nativeNpc.getDef().getName().contains("bird") ? nativeNpc.getDef().getName() : "Kharazi " + nativeNpc.getDef().getName().toLowerCase()) + " takes a sudden dislike to you.");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "...and a nearby " + (nativeNpc.getDef().getName().contains("bird") ? nativeNpc.getDef().getName() : "Kharazi " + nativeNpc.getDef().getName().toLowerCase()) + " takes a sudden dislike to you.");
 				nativeNpc.setChasing(player);
-				mes(player, 0, "And attacks...");
+				mes(0, "And attacks...");
 			} else {
 				attractNatives(player);
 			}

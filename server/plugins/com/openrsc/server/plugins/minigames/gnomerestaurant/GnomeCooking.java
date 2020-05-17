@@ -191,10 +191,10 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 			}
 		}
 		// NOTE: THERE ARE NO REQUIREMENT TO COOK THE DOUGH ONLY TO MOULD IT.
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.playSound("cooking");
 		if (player.getCarriedItems().remove(item) > -1) {
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, gc.messages[0]);
+			mes(player.getWorld().getServer().getConfig().GAME_TICK * 5, gc.messages[0]);
 			if (!burnFood(player, item.getCatalogId(), player.getSkills().getLevel(Skills.COOKING))) {
 				player.message(gc.messages[1]);
 
@@ -243,7 +243,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 			|| player.getCarriedItems().hasCatalogID(ItemId.GNOMEBATTA.id(), Optional.of(false))
 			|| player.getCarriedItems().hasCatalogID(ItemId.GNOMEBOWL.id(), Optional.of(false))
 			|| player.getCarriedItems().hasCatalogID(ItemId.GNOMECRUNCHIE.id(), Optional.of(false))) {
-			mes(player, "you need to finish, eat or drop the unfinished dish you hold");
+			mes("you need to finish, eat or drop the unfinished dish you hold");
 			player.message("before you can make another - giannes rules");
 			return false;
 		}
@@ -260,9 +260,9 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 					return false;
 				}
 
-				thinkbubble(player, item);
+				thinkbubble(item);
 				player.getCarriedItems().remove(new Item(item.getCatalogId()));
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into a gnomebatta");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into a gnomebatta");
 				player.message("You manage to make some gnome batta dough");
 				give(player, ItemId.GNOMEBATTA_DOUGH.id(), 1);
 
@@ -275,9 +275,9 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 					return false;
 				}
 
-				thinkbubble(player, item);
+				thinkbubble(item);
 				player.getCarriedItems().remove(new Item(item.getCatalogId()));
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into a gnome bowl");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into a gnome bowl");
 				player.message("You manage to make some gnome bowl dough");
 				give(player, ItemId.GNOMEBOWL_DOUGH.id(), 1);
 
@@ -290,9 +290,9 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 					return false;
 				}
 
-				thinkbubble(player, item);
+				thinkbubble(item);
 				player.getCarriedItems().remove(new Item(item.getCatalogId()));
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into gnome crunchies");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 5, "you attempt to mould the dough into gnome crunchies");
 				player.message("You manage to make some gnome crunchies dough");
 				give(player, ItemId.GNOMECRUNCHIE_DOUGH.id(), 1);
 

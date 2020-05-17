@@ -98,7 +98,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			if (cID == -1) {
 				switch (player.getQuestStage(this)) {
 					case 0:
-						mes(player, "Irena seems to be very upset and cries as you start to approach her.");
+						mes("Irena seems to be very upset and cries as you start to approach her.");
 						npcsay(player, n, "Boo hoo, oh dear, my only daughter....");
 						int menu = multi(player, n,
 							"What's the matter?",
@@ -158,7 +158,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 								"*Sob*");
 						} else {
 							npcsay(player, n, "Hey, great you've found Ana!");
-							mes(player, "You show Irena the barrel with Ana in it.");
+							mes("You show Irena the barrel with Ana in it.");
 							player.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 							player.updateQuestStage(this, 10);
 							Npc Ana = addnpc(player.getWorld(), NpcId.ANA.id(), player.getX(), player.getY(), 60000);
@@ -173,7 +173,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 									"Oh! I nearly forgot, here's a key I found in the tunnels.",
 									"It might be of some use to you, not sure what it opens.");
 								give(player, ItemId.WROUGHT_IRON_KEY.id(), 1);
-								mes(player, "Ana spots Irena and waves...");
+								mes("Ana spots Irena and waves...");
 								npcsay(player, Ana, "Hi Mum!",
 									"Sorry, I have to go now!");
 								Ana.remove();
@@ -291,7 +291,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		if (lastRewardMenu == 0) {
 			questData[Quests.MAPIDX_SKILL] = Skills.FLETCHING;
 			incQuestReward(player, questData, false);
-			mes(player, "You advance your stat in Fletching.");
+			mes("You advance your stat in Fletching.");
 			player.sendQuestComplete(Quests.TOURIST_TRAP);
 			if (player.getCache().hasKey("advanced1")) {
 				player.getCache().remove("advanced1");
@@ -299,7 +299,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		} else if (lastRewardMenu == 1) {
 			questData[Quests.MAPIDX_SKILL] = Skills.AGILITY;
 			incQuestReward(player, questData, false);
-			mes(player, "You advance your stat in Agility.");
+			mes("You advance your stat in Agility.");
 			player.sendQuestComplete(Quests.TOURIST_TRAP);
 			if (player.getCache().hasKey("advanced1")) {
 				player.getCache().remove("advanced1");
@@ -307,7 +307,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		} else if (lastRewardMenu == 2) {
 			questData[Quests.MAPIDX_SKILL] = Skills.SMITHING;
 			incQuestReward(player, questData, false);
-			mes(player, "You advance your stat in Smithing.");
+			mes("You advance your stat in Smithing.");
 			player.sendQuestComplete(Quests.TOURIST_TRAP);
 			if (player.getCache().hasKey("advanced1")) {
 				player.getCache().remove("advanced1");
@@ -315,7 +315,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		} else if (lastRewardMenu == 3) {
 			questData[Quests.MAPIDX_SKILL] = Skills.THIEVING;
 			incQuestReward(player, questData, false);
-			mes(player, "You advance your stat in Thieving.");
+			mes("You advance your stat in Thieving.");
 			player.sendQuestComplete(Quests.TOURIST_TRAP);
 			if (player.getCache().hasKey("advanced1")) {
 				player.getCache().remove("advanced1");
@@ -337,7 +337,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		if (rewardMenu == 0) {
 			questData[Quests.MAPIDX_SKILL] = Skills.FLETCHING;
 			incQuestReward(player, questData, false);
-			mes(player, "You advance your stat in Fletching.",
+			mes("You advance your stat in Fletching.",
 				"Ok, now choose your second skil.");
 			if (!player.getCache().hasKey("advanced1")) {
 				player.getCache().store("advanced1", true);
@@ -346,7 +346,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		} else if (rewardMenu == 1) {
 			questData[Quests.MAPIDX_SKILL] = Skills.AGILITY;
 			incQuestReward(player, questData, false);
-			mes(player, "You advance your stat in Agility.",
+			mes("You advance your stat in Agility.",
 				"Ok, now choose your second skil.");
 			if (!player.getCache().hasKey("advanced1")) {
 				player.getCache().store("advanced1", true);
@@ -355,7 +355,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		} else if (rewardMenu == 2) {
 			questData[Quests.MAPIDX_SKILL] = Skills.SMITHING;
 			incQuestReward(player, questData, false);
-			mes(player, "You advance your stat in Smithing.",
+			mes("You advance your stat in Smithing.",
 				"Ok, now choose your second skil.");
 			if (!player.getCache().hasKey("advanced1")) {
 				player.getCache().store("advanced1", true);
@@ -364,7 +364,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		} else if (rewardMenu == 3) {
 			questData[Quests.MAPIDX_SKILL] = Skills.THIEVING;
 			incQuestReward(player, questData, false);
-			mes(player, "You advance your stat in Thieving.",
+			mes("You advance your stat in Thieving.",
 				"Ok, now choose your second skil.");
 			if (!player.getCache().hasKey("advanced1")) {
 				player.getCache().store("advanced1", true);
@@ -423,7 +423,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 										completed = true;
 									} else {
 										npcsay(player, n, "You don't have the gold and now we're gonna teach you a lesson.");
-										mes(player, "The Guards search you!");
+										mes("The Guards search you!");
 										mercenaryDialogue(player, n, Mercenary.LEAVE_DESERT);
 										completed = true;
 									}
@@ -435,14 +435,14 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 										completed = true;
 									} else {
 										npcsay(player, n, "You don't have the gold and now we're gonna teach you a lesson.");
-										mes(player, "The Guards search you!");
+										mes("The Guards search you!");
 										mercenaryDialogue(player, n, Mercenary.LEAVE_DESERT);
 										completed = true;
 									}
 								} else if (opts == 2) {
 									say(player, n, "You can whistle for your money, I'll take you all on.");
 									npcsay(player, n, "Ok, that's it, we're gonna teach you a lesson.");
-									mes(player, "The Guards search you!");
+									mes("The Guards search you!");
 									mercenaryDialogue(player, n, Mercenary.LEAVE_DESERT);
 									completed = true;
 								}
@@ -451,7 +451,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 								npcsay(player, n, "Well, I guess congratulations are in order.");
 								say(player, n, "Thanks!");
 								npcsay(player, n, "And we'll only charge the paltry sum of..erm...");
-								mes(player, "The guards starts to do some mental calculations...",
+								mes("The guards starts to do some mental calculations...",
 									"You can see his brow furrow and he starts to sweat profusely");
 								switch (player.getCache().getInt("mercenary_bet")) {
 									case 5:
@@ -519,17 +519,17 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				case Mercenary.LEAVE_DESERT:
 					npcsay(player, n, "Guards, guards!");
 					n.setChasing(player);
-					mes(player, "Nearby guards quickly grab you and rough you up a bit.");
+					mes("Nearby guards quickly grab you and rough you up a bit.");
 					npcsay(player, n, "Let's see how good you are with desert survival techniques!");
-					mes(player, "You're bundled into the back of a cart and blindfolded...");
-					mes(player, "Sometime later you wake up in the desert.");
+					mes("You're bundled into the back of a cart and blindfolded...");
+					mes("Sometime later you wake up in the desert.");
 					if (player.getCarriedItems().hasCatalogID(ItemId.BOWL_OF_WATER.id(), Optional.of(false))) {
 						npcsay(player, n, "You won't be needing that water any more!");
-						mes(player, "The guards throw your water away...");
+						mes("The guards throw your water away...");
 						player.getCarriedItems().remove(new Item(ItemId.BOWL_OF_WATER.id()));
 					}
 					player.teleport(121, 803);
-					mes(player, "The guards move off in the cart leaving you stranded in the desert.");
+					mes("The guards move off in the cart leaving you stranded in the desert.");
 					break;
 				case Mercenary.PLACE_START:
 					npcsay(player, n, "It's none of your business now get lost.");
@@ -563,9 +563,9 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						"Most prisoners will end their days here, surrounded by desert.");
 					say(player, n, "So you could almost say that they got their... 'just desserts'");
 					npcsay(player, n, "You could say that...");
-					mes(player, "There is an awkward pause");
+					mes("There is an awkward pause");
 					npcsay(player, n, "But it wouldn't be very funny.");
-					mes(player, "There is another awkward pause.");
+					mes("There is another awkward pause.");
 					say(player, n, "When they talk about the silence of the desert,",
 						"this must be what they mean.");
 					player.message("The guard starts losing interest in the conversation.");
@@ -637,14 +637,14 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						"Ok thanks.");
 					if (sixthMenu == 0) {
 						npcsay(player, n, "Heh?");
-						mes(player, "The guard looks at you with a confused stare...");
+						mes("The guard looks at you with a confused stare...");
 						int seventhMenu = multi(player, n, false, //do not send over
 							"It doesn't sound as if you respect your Captain much.",
 							"Ok thanks.");
 						if (seventhMenu == 0) {
 							say(player, n, "It doesn't sound is if you respect your Captain much.");
 							npcsay(player, n, "Well, to be honest.");
-							mes(player, "The guard looks around conspiratorially.");
+							mes("The guard looks around conspiratorially.");
 							npcsay(player, n, "We think he's not exactly as brave as he makes out.",
 								"But we have to follow his orders.",
 								"If someone called him a coward, ",
@@ -736,9 +736,9 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					break;
 				case Mercenary.GUARDING_SECOND:
 					npcsay(player, n, "Well, if you have to know, we're making sure that no prisoners get out.");
-					mes(player, "The guard gives you a disaproving look.");
+					mes("The guard gives you a disaproving look.");
 					npcsay(player, n, "And to make sure that unauthorised people don't get in.");
-					mes(player, "The guard looks around nervously.");
+					mes("The guard looks around nervously.");
 					npcsay(player, n, "You'd better go now before the Captain orders us to kill you.");
 					int gmenu = multi(player, n, false, //do not send over
 						"Does the Captain order you to kill a lot of people?",
@@ -883,7 +883,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 								"I'm lost, can you help me?",
 								"What are you guarding?");
 							if (thirdMenu == 0) {
-								mes(player, "The captain smiles broadly and with a sickening voice says.");
+								mes("The captain smiles broadly and with a sickening voice says.");
 								npcsay(player, n, "We are not a charity effendi,",
 									"Be off with you before I have your head removed from your body.");
 								int lostMenu = multi(player, n,
@@ -901,7 +901,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						} else if (menu == 2) {
 							npcsay(player, n, "I will not tolerate such insults..",
 								"Guards, kill " + (player.isMale() ? "him." : "her."));
-							mes(player, "The captain marches away in disgust leaving his guards to tackle you.");
+							mes("The captain marches away in disgust leaving his guards to tackle you.");
 							captainWantToThrowPlayer(player, n);
 						}
 						break;
@@ -997,7 +997,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 								npcsay(player, n, "Oh, a special relationship with the guards heh?",
 									"How very nice of them.",
 									"Maybe you could persuade them to let me out of here?");
-								mes(player, "The slave swaggers of with a sarcastic smirk on his face.");
+								mes("The slave swaggers of with a sarcastic smirk on his face.");
 							}
 						}
 						break;
@@ -1035,11 +1035,11 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 								}
 								npcsay(player, npcN, "Hey! You're no slave!");
 								npcN.startCombat(player);
-								mes(player, "The Guards search you!");
+								mes("The Guards search you!");
 								if (player.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))) {
 									player.getCarriedItems().remove(new Item(ItemId.CELL_DOOR_KEY.id()));
 								}
-								mes(player, "Some guards rush to help their comrade.",
+								mes("Some guards rush to help their comrade.",
 									"You are roughed up a bit by the guards as you're manhandlded into a cell.");
 								npcsay(player, npcN, "Into the cell you go! I hope this teaches you a lesson.");
 								if (player.getQuestStage(this) >= 9) {
@@ -1083,7 +1083,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							"I've only seen slaves and guards go down there,",
 							"I never see the slaves come back up.",
 							"At least up here you have a nice view and a bit of sun.");
-						mes(player, "The slave smiles at you happily and then goes back to his work.");
+						mes("The slave smiles at you happily and then goes back to his work.");
 					} else if (thirdMenu == 1) {
 						npcsay(player, n, "Yes, it is actually.",
 							"I have all the details figured out except for one.");
@@ -1092,7 +1092,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							"Oh, that's a shame.");
 						if (four == 0) {
 							say(player, n, "What's that then?");
-							mes(player, "The slave shakes his arms and the chains rattle loudly.");
+							mes("The slave shakes his arms and the chains rattle loudly.");
 							npcsay(player, n, "These bracelets, I can't seem to get them off.",
 								"If I could get them off, I'd be able to climb my way",
 								"out of here.");
@@ -1126,7 +1126,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					break;
 				case Slave.UNDOTHEM:
 					npcsay(player, n, "Really, that would be great...");
-					mes(player, "The slave looks at you strangely.");
+					mes("The slave looks at you strangely.");
 					npcsay(player, n, "Hang on a minute...I suppose you want something for doing this?",
 						"The last time I did a trade in this place,",
 						"I nearly lost the shirt from my back!");
@@ -1135,7 +1135,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						"That sounds awful.");
 					if (trade == 0) {
 						say(player, n, "It's funny you should say that actually.");
-						mes(player, "The slave looks at you blankly.");
+						mes("The slave looks at you blankly.");
 						npcsay(player, n, "Yeah, go on!");
 						say(player, n, "If I can get the chains off, you have to give me something, ok?");
 						npcsay(player, n, "Sure, what do you want?");
@@ -1164,25 +1164,25 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					break;
 				case Slave.GIVEITAGO:
 					npcsay(player, n, "Great!");
-					mes(player, "You use some nearby bits of wood and wire to try and pick the lock.");
+					mes("You use some nearby bits of wood and wire to try and pick the lock.");
 					int attempt1 = DataConversions.random(0, 1);
 					//failed attempt 1
 					if (attempt1 == 0) {
-						mes(player, "You fail!", "You didn't manage to pick the lock this time, would you like another go?");
+						mes("You fail!", "You didn't manage to pick the lock this time, would you like another go?");
 						int anotherGo = multi(player, "Yeah, I'll give it another go.", "I'll try something different instead.");
 						if (anotherGo == 0) {
-							mes(player, "You use some nearby bits of wood and wire to try and pick the lock.");
+							mes("You use some nearby bits of wood and wire to try and pick the lock.");
 							int attempt2 = DataConversions.random(0, 1);
 							//failed attempt 2
 							if (attempt2 == 0) {
-								mes(player, "You fail!");
+								mes("You fail!");
 								Npc mercenary = ifnearvisnpc(player, NpcId.MERCENARY.id(), 15);
 								if (mercenary != null) {
-									mes(player, "A nearby guard spots you!");
+									mes("A nearby guard spots you!");
 									npcsay(player, n, "Oh oh!");
 									npcsay(player, mercenary, "Oi, what are you two doing?");
 									mercenary.setChasing(player);
-									mes(player, "The Guards search you!",
+									mes("The Guards search you!",
 										"More guards rush to catch you.",
 										"You are roughed up a bit by the guards as you're manhandlded to a cell.");
 									npcsay(player, mercenary, "Into the cell you go! I hope this teaches you a lesson.");
@@ -1192,7 +1192,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 								succeedFreeSlave(player, n);
 							}
 						} else if (anotherGo == 1) {
-							mes(player, "You decide to try something else.");
+							mes("You decide to try something else.");
 							npcsay(player, n, "Are you givin in already?");
 							say(player, n, "I just want to try something else.");
 							npcsay(player, n, "Ok, if you want to try again, let me know.");
@@ -1207,7 +1207,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	}
 
 	private void succeedFreeSlave(Player player, Npc n) {
-		mes(player, "You hear a satisfying 'click' as you tumble the lock mechanism.");
+		mes("You hear a satisfying 'click' as you tumble the lock mechanism.");
 		npcsay(player, n, "Great! You did it!");
 
 		necessaryStuffSlave(player, n);
@@ -1218,9 +1218,9 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			&& player.getCarriedItems().hasCatalogID(ItemId.DESERT_ROBE.id(), Optional.of(false))
 			&& player.getCarriedItems().hasCatalogID(ItemId.DESERT_BOOTS.id(), Optional.of(false))) {
 			npcsay(player, n, "Great! You have the Desert Clothes!");
-			mes(player, "The slave starts getting undressed right in front of you.");
+			mes("The slave starts getting undressed right in front of you.");
 			npcsay(player, n, "Ok, here's the clothes, I won't need them anymore.");
-			mes(player, "The slave gives you his dirty, flea infested robe.",
+			mes("The slave gives you his dirty, flea infested robe.",
 				"The slave gives you his muddy, sweat soaked shirt.");
 			player.getCarriedItems().remove(new Item(ItemId.DESERT_ROBE.id()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.SLAVES_ROBE_BOTTOM.id()));
@@ -1281,7 +1281,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							"What are you doing down here?");
 						n.setChasing(player);
 						if (player.getQuestStage(this) != -1) {
-							mes(player, "More guards rush to catch you.",
+							mes("More guards rush to catch you.",
 								"You are roughed up a bit by the guards as you're manhandlded to a cell.");
 							npcsay(player, n, "Into the cell you go! I hope this teaches you a lesson.");
 							player.teleport(89, 801);
@@ -1304,7 +1304,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						npcsay(player, n, "Ok...so move along and get on with your work.");
 					} else if (mama == 1) {
 						npcsay(player, n, "Oh, so you want to work in another area of the mine heh?");
-						mes(player, "The guard seems quite pleased with his rhetorical question.");
+						mes("The guard seems quite pleased with his rhetorical question.");
 						npcsay(player, n, "Well, I can understand that, a change is as good as a rest they say.");
 						int menu = multi(player, n,
 							"Huh, fat chance of a rest for me.",
@@ -1405,13 +1405,13 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			switch (cID) {
 				case BedabinNomad.BUCKETOFWATER:
 					if (ifheld(player, ItemId.COINS.id(), 20)) {
-						mes(player, "You hand over 20 gold pieces.");
+						mes("You hand over 20 gold pieces.");
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
 						npcsay(player, n, "Very well Effendi!");
-						mes(player, "You recieve a bucket of water.");
+						mes("You recieve a bucket of water.");
 						give(player, ItemId.BUCKET_OF_WATER.id(), 1);
 					} else {
-						mes(player, "Sorry Effendi, you don't seem to have the money.");
+						mes("Sorry Effendi, you don't seem to have the money.");
 					}
 					npcsay(player, n, "How can I help you?");
 					int newMenu = multi(player, n,
@@ -1435,13 +1435,13 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					break;
 				case BedabinNomad.FULLWATERSKIN:
 					if (ifheld(player, ItemId.COINS.id(), 25)) {
-						mes(player, "You hand over 25 gold pieces.");
+						mes("You hand over 25 gold pieces.");
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 25));
 						npcsay(player, n, "Very well Effendi!");
-						mes(player, "You recieve a full waterskin.");
+						mes("You recieve a full waterskin.");
 						give(player, ItemId.FULL_WATER_SKIN.id(), 1);
 					} else {
-						mes(player, "Sorry Effendi, you don't seem to have the money.");
+						mes("Sorry Effendi, you don't seem to have the money.");
 					}
 					npcsay(player, n, "How can I help you?");
 					int option = multi(player, n,
@@ -1464,13 +1464,13 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					break;
 				case BedabinNomad.JUGOFWATER:
 					if (ifheld(player, ItemId.COINS.id(), 5)) {
-						mes(player, "You hand over 5 gold pieces.");
+						mes("You hand over 5 gold pieces.");
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 						npcsay(player, n, "Very well Effendi!");
-						mes(player, "You recieve a jug full or water.");
+						mes("You recieve a jug full or water.");
 						give(player, ItemId.JUG_OF_WATER.id(), 1);
 					} else {
-						mes(player, "Sorry Effendi, you don't seem to have the money.");
+						mes("Sorry Effendi, you don't seem to have the money.");
 					}
 					npcsay(player, n, "How can I help you?");
 					int optiony = multi(player, n,
@@ -1756,17 +1756,17 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					break;
 				case AlShabim.MADE_WEAPON:
 					npcsay(player, n, "Wonderful, I see you have made the new weapon!");
-					mes(player, "You show Al Shabim the prototype dart.");
+					mes("You show Al Shabim the prototype dart.");
 					player.getCarriedItems().remove(new Item(ItemId.PROTOTYPE_THROWING_DART.id()));
 					npcsay(player, n, "This is truly fantastic Effendi!");
 					if (player.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
 						npcsay(player, n, "We will take the technical plans for the weapon as well.");
 						player.getCarriedItems().remove(new Item(ItemId.TECHNICAL_PLANS.id()));
-						mes(player, "You hand over the technical plans for the weapon.");
+						mes("You hand over the technical plans for the weapon.");
 					}
 					npcsay(player, n, "We are forever grateful for this gift.",
 						"My advisors have discovered some secrets which we will share with you.");
-					mes(player, "Al Shabim's advisors show you some advanced techniques for making the new weapon.");
+					mes("Al Shabim's advisors show you some advanced techniques for making the new weapon.");
 					npcsay(player, n, "Oh, and here is your pineapple!");
 					give(player, ItemId.TENTI_PINEAPPLE.id(), 1);
 					npcsay(player, n, "Please accept this selection of six bronze throwing darts",
@@ -1805,9 +1805,9 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					case 10:
 					case -1:
 						if (obj != null) {
-							mes(player, "The captains spots you before you manage to open the chest...");
+							mes("The captains spots you before you manage to open the chest...");
 						} else {
-							mes(player, "The captain looks up from his work as you address him.");
+							mes("The captain looks up from his work as you address him.");
 						}
 						if (player.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false)) || player.getQuestStage(this) >= 8 || player.getQuestStage(this) == -1) {
 							npcsay(player, n, "I don't have time to talk to you.",
@@ -1869,7 +1869,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					captainSiadDialogue(player, n, Siad.PUNISHED, null);
 					break;
 				case Siad.PUNISHED:
-					mes(player, "The Guards search you!");
+					mes("The Guards search you!");
 					int rand = DataConversions.random(0, 3);
 					if (player.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false)) && rand == 0) {
 						player.message("The guards find the cell door key and remove it!");
@@ -1879,10 +1879,10 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						player.message("The guards find the main gate key and remove it!");
 						player.getCarriedItems().remove(new Item(ItemId.METAL_KEY.id()));
 					}
-					mes(player, "Some guards rush to help the captain.",
+					mes("Some guards rush to help the captain.",
 						"You are roughed up a bit by the guards as you're manhandlded into a cell.");
 					player.damage(7);
-					mes(player, "@yel@Guards: Into the cell you go! I hope this teaches you a lesson.");
+					mes("@yel@Guards: Into the cell you go! I hope this teaches you a lesson.");
 					player.teleport(89, 801);
 					break;
 				case Siad.TWOMINUTES:
@@ -1910,7 +1910,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							captainSiadDialogue(player, n, Siad.SERVICE, null);
 						}
 					} else {
-						mes(player, "The captain seems distracted with what you just said.",
+						mes("The captain seems distracted with what you just said.",
 							"The captain looks out of the window to see if there are any prisoners escaping.");
 						if (!player.getCache().hasKey("tourist_chest")) {
 							player.getCache().store("tourist_chest", true); // if don't have the key, remove the cache.
@@ -1947,7 +1947,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					}
 					break;
 				case Siad.LONELY:
-					mes(player, "The captain gives you a puzzled look.");
+					mes("The captain gives you a puzzled look.");
 					npcsay(player, n, "Well, I most certainly am not lonely!",
 						"I'm an incredibly busy man you know!",
 						"Now, get to the point, what do you want?");
@@ -1967,7 +1967,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					captainSiadDialogue(player, n, Siad.PUNISHED, null);
 					break;
 				case Siad.SUCCEED:
-					mes(player, "The captain seems distracted with what you just said.",
+					mes("The captain seems distracted with what you just said.",
 						"The captain looks out of the window for the dragon.");
 					if (!player.getCache().hasKey("tourist_chest")) {
 						player.getCache().store("tourist_chest", true); // if don't have the key, remove the cache.
@@ -1995,7 +1995,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 									npcsay(player, n, "That's the most ridiculous thing I've heard.",
 										"Who are you? Where do you come from?",
 										"It doesn't matter...");
-									mes(player, "The Captain shouts the guards...");
+									mes("The Captain shouts the guards...");
 									npcsay(player, n, "Guards!",
 										"Show this person out!");
 									captainSiadDialogue(player, n, Siad.PUNISHED, null);
@@ -2027,7 +2027,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							}
 						}
 					} else {
-						mes(player, "The captain seems distracted with what you just said.",
+						mes("The captain seems distracted with what you just said.",
 							"The captain looks out of the window to see if is a fire.");
 						if (!player.getCache().hasKey("tourist_chest")) {
 							player.getCache().store("tourist_chest", true); // if don't have the key, remove the cache.
@@ -2068,7 +2068,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							npcsay(player, n, "Oh yes? Really?");
 							player.message("The Captain looks flattered.");
 							npcsay(player, n, "Well, you know, I was quite the catch in my day you know!");
-							mes(player, "The captain starts rambling on about his days as a salty sea dog.",
+							mes("The captain starts rambling on about his days as a salty sea dog.",
 								"He looks quite distracted...");
 							if (!player.getCache().hasKey("tourist_chest")) {
 								player.getCache().store("tourist_chest", true); // if don't have the key, remove the cache.
@@ -2107,12 +2107,12 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				}
 				npcsay(player, npcN, "Hey! You're no slave!");
 				npcN.startCombat(player);
-				mes(player, "The Guards search you!");
+				mes("The Guards search you!");
 				if (player.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))) {
-					mes(player, "The guards find the cell door key and remove it!");
+					mes("The guards find the cell door key and remove it!");
 					player.getCarriedItems().remove(new Item(ItemId.CELL_DOOR_KEY.id()));
 				}
-				mes(player, "Some guards rush to help their comrade.",
+				mes("Some guards rush to help their comrade.",
 					"You are roughed up a bit by the guards as you're manhandlded into a cell.");
 				npcsay(player, npcN, "Into the cell you go! I hope this teaches you a lesson.");
 				player.teleport(75, 3625);
@@ -2288,7 +2288,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						npcsay(player, guard, "Guards! Guards!");
 						guard.startCombat(player);
 						npcsay(player, n, "Oopps! See ya!");
-						mes(player, "Some guards rush to help their comrade.",
+						mes("Some guards rush to help their comrade.",
 							"You are roughed up a bit by the guards as you're manhandlded into a cell.");
 						npcsay(player, guard, "Into the cell you go! I hope this teaches you a lesson.");
 						player.teleport(75, 3625);
@@ -2307,7 +2307,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						"Guards! Guards!");
 					guard.startCombat(player);
 					npcsay(player, n, "Oopps! See ya!");
-					mes(player, "The Guards search you!",
+					mes("The Guards search you!",
 						"Some guards rush to help their comrade.",
 						"You are roughed up a bit by the guards as you're manhandlded into a cell.");
 					npcsay(player, guard, "Into the cell you go! I hope this teaches you a lesson.");
@@ -2367,9 +2367,9 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				npcsay(player, n, "Well...I guess that's Ok, get on your way though.");
 			} else if (menu == 1) {
 				npcsay(player, n, "Why you ungrateful whelp...I'll teach you some manners.");
-				mes(player, "The guard shouts for help.");
+				mes("The guard shouts for help.");
 				n.startCombat(player);
-				mes(player, "Other guards start arriving.");
+				mes("Other guards start arriving.");
 				npcsay(player, n, "Get " + (player.isMale() ? "him" : "her") + " men!");
 				player.message("The guards rough you up a bit and then drag you to a cell.");
 				player.teleport(76, 3625);
@@ -2384,7 +2384,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			if (player.getQuestStage(Quests.TOURIST_TRAP) == 6 || player.getQuestStage(Quests.TOURIST_TRAP) == 7) {
 				alShabimDialogue(player, n, AlShabim.HAVE_PLANS);
 			} else if (player.getQuestStage(Quests.TOURIST_TRAP) > 7 || player.getQuestStage(Quests.TOURIST_TRAP) == -1) {
-				mes(player, "Al Shabim takes the technical plans off you.");
+				mes("Al Shabim takes the technical plans off you.");
 				npcsay(player, n, "Thanks for the technical plans Effendi!",
 					"We've been lost without them!");
 			}
@@ -2405,8 +2405,8 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					player.teleport(62, 732);
 				} else {
 					if (player.getQuestStage(this) == 9) {
-						mes(player, "Ana looks out of the barrel...");
-						mes(player, "@gre@Ana: Hey great, we're at the Shantay Pass!");
+						mes("Ana looks out of the barrel...");
+						mes("@gre@Ana: Hey great, we're at the Shantay Pass!");
 						player.getCarriedItems().remove(new Item(ItemId.ANA_IN_A_BARREL.id()));
 						player.updateQuestStage(this, 10);
 						Npc Ana = addnpc(player.getWorld(), NpcId.ANA.id(), player.getX(), player.getY(), 60000);
@@ -2419,7 +2419,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 								"Oh! I nearly forgot, here's a key I found in the tunnels.",
 								"It might be of some use to you, not sure what it opens.");
 							give(player, ItemId.WROUGHT_IRON_KEY.id(), 1);
-							mes(player, "Ana spots Irena and waves...");
+							mes("Ana spots Irena and waves...");
 							npcsay(player, Ana, "Hi Mum!",
 								"Sorry, I have to go now!");
 							Ana.remove();
@@ -2435,7 +2435,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					}
 				}
 			} else if (command.equals("look")) {
-				mes(player, "You look at the huge Stone Gate.",
+				mes("You look at the huge Stone Gate.",
 					"On the gate is a large poster, it reads.",
 					"@gre@The Desert is a VERY Dangerous place...do not enter if you are scared of dying.",
 					"@gre@Beware of high temperatures, sand storms, robbers, and slavers...",
@@ -2451,7 +2451,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				} else if (!player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 					player.message("This gate is locked, you'll need a key to open it.");
 				} else {
-					mes(player, "You use the metal key to unlock the gates.",
+					mes("You use the metal key to unlock the gates.",
 						"You manage to sneak past the guards!.");
 					doGate(player, obj);
 					player.message("The gate swings open.");
@@ -2480,7 +2480,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 								player.message("More guards come to arrest you.");
 								n.startCombat(player);
 								npcsay(player, n, "Right, you're going in the cell!");
-								mes(player, "You're outnumbered by all the guards.",
+								mes("You're outnumbered by all the guards.",
 									"They man-handle you into a cell.");
 								player.teleport(89, 801);
 							}
@@ -2488,7 +2488,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					}
 				}
 			} else if (command.equals("search")) {
-				mes(player, "You search the gate.",
+				mes("You search the gate.",
 					"Inside the compound you can see that there are lots of slaves mining away.",
 					"They all seem to be dressed in dirty disgusting desert rags.",
 					"And equiped only with a mining pick.",
@@ -2505,23 +2505,23 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			player.teleport(93, 799);
 		} else if (obj.getID() == WOODEN_DOORS) {
 			if (command.equals("open")) {
-				mes(player, "You push the door.");
+				mes("You push the door.");
 				say(player, null, "Ugh!");
 				if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) {
-					mes(player, "The door opens with some effort ");
+					mes("The door opens with some effort ");
 					if (obj.getX() == 81 && obj.getY() == 3633) {
 						player.teleport(82, 802);
 						return;
 					}
 					player.teleport(82, 3630);
-					mes(player, "The huge doors open into a dark, dank and smelly tunnel.",
+					mes("The huge doors open into a dark, dank and smelly tunnel.",
 						"The associated smells of a hundred sweaty miners greets your nostrils.",
 						"And your ears ring with the 'CLANG CLANG CLANG' as metal hits rock.");
 				} else {
 					Npc n = addnpc(player.getWorld(), NpcId.DRAFT_MERCENARY_GUARD.id(), player.getX(), player.getY(), 60000);
 					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 					npcsay(player, n, "Oi You!");
-					mes(player, "A guard notices you and approaches...");
+					mes("A guard notices you and approaches...");
 					n.startCombat(player);
 					npcsay(player, n, "Hey, you're no slave, where do you think you're going!");
 					npcsay(player, n, "Guards, guards!");
@@ -2529,7 +2529,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						player.message("No other guards come to the rescue.");
 						return;
 					}
-					mes(player, "The Guards search you!");
+					mes("The Guards search you!");
 					int rand = DataConversions.random(0, 3);
 					if (player.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false)) && rand == 0) {
 						player.message("The guards find the cell door key and remove it!");
@@ -2539,7 +2539,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						player.message("The guards find the main gate key and remove it!");
 						player.getCarriedItems().remove(new Item(ItemId.METAL_KEY.id()));
 					}
-					mes(player, "More guards rush to catch you.",
+					mes("More guards rush to catch you.",
 						"You are roughed up a bit by the guards as you're manhandlded to a cell.");
 					if (n != null) {
 						npcsay(player, n, "Into the cell you go! I hope this teaches you a lesson.");
@@ -2550,30 +2550,30 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				if (obj.getX() == 81 && obj.getY() == 3633) {
 					player.message("Nothing much seems to happen.");
 				} else {
-					mes(player, "You watch the doors for some time.",
+					mes("You watch the doors for some time.",
 						"You notice that only slaves seem to go down there.",
 						"You might be able to sneak down if you pass as a slave.");
 				}
 			}
 		} else if (obj.getID() == DESK) {
-			mes(player, "You search the captains desk while he's not looking.");
+			mes("You search the captains desk while he's not looking.");
 			if (player.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))
 				&& player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false)) &&
 				((player.getQuestStage(this) >= 0 && player.getQuestStage(this) <= 9) || player.getCarriedItems().hasCatalogID(ItemId.WROUGHT_IRON_KEY.id(), Optional.of(false)))) {
-				mes(player, "...but you find nothing of interest.");
+				mes("...but you find nothing of interest.");
 				return;
 			}
 			if (!player.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))) {
-				mes(player, "You find a cell door key.");
+				mes("You find a cell door key.");
 				give(player, ItemId.CELL_DOOR_KEY.id(), 1);
 			}
 			if (!player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
-				mes(player, "You find a large metalic key.");
+				mes("You find a large metalic key.");
 				give(player, ItemId.METAL_KEY.id(), 1);
 			}
 			//only after player has past to stage of wrought iron key
 			if (!(player.getQuestStage(this) >= 0 && player.getQuestStage(this) <= 9) && !player.getCarriedItems().hasCatalogID(ItemId.WROUGHT_IRON_KEY.id(), Optional.of(false))) {
-				mes(player, "You find a large wrought iron key.");
+				mes("You find a large wrought iron key.");
 				give(player, ItemId.WROUGHT_IRON_KEY.id(), 1);
 			}
 		} else if (obj.getID() == BOOKCASE) {
@@ -2589,7 +2589,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			if (player.getCache().hasKey("tourist_chest") || player.getQuestStage(this) == -1) {
 				if (player.getCarriedItems().hasCatalogID(ItemId.BEDOBIN_COPY_KEY.id(), Optional.of(false))) {
 					if (!player.getCarriedItems().hasCatalogID(ItemId.TECHNICAL_PLANS.id(), Optional.of(false))) {
-						mes(player, "While the Captain's distracted, you quickly unlock the chest.",
+						mes("While the Captain's distracted, you quickly unlock the chest.",
 							"You use the Bedobin Copy Key to open the chest.",
 							"You open the chest and take out the plans.");
 						give(player, ItemId.TECHNICAL_PLANS.id(), 1);
@@ -2631,7 +2631,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
 		if (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && command.equalsIgnoreCase("watch")) {
-			mes(player, "You watch the Mercenary Captain for some time.",
+			mes("You watch the Mercenary Captain for some time.",
 				"He has a large metal key attached to his belt.",
 				"You notice that he usually gets his men to do his dirty work.");
 		}
@@ -2651,7 +2651,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			}
 			if (!player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 				give(player, ItemId.METAL_KEY.id(), 1);
-				mes(player, "The mercenary captain drops a metal key on the floor.",
+				mes("The mercenary captain drops a metal key on the floor.",
 					"You quickly grab the key and add it to your inventory.");
 			}
 		}
@@ -2719,21 +2719,21 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				affectedmob.startCombat(player);
 				if (affectedmob.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 					player.message("More guards rush to catch you.");
-					mes(player, "You are roughed up a bit by the guards as you're manhandlded to a cell.");
+					mes("You are roughed up a bit by the guards as you're manhandlded to a cell.");
 					npcsay(player, affectedmob, "Into the cell you go! I hope this teaches you a lesson.");
 					player.teleport(89, 801);
 				} else {
 					npcsay(player, affectedmob, "Guards, guards!");
-					mes(player, "Nearby guards quickly grab you and rough you up a bit.");
+					mes("Nearby guards quickly grab you and rough you up a bit.");
 					npcsay(player, affectedmob, "Let's see how good you are with desert survival techniques!");
-					mes(player, "You're bundled into the back of a cart and blindfolded...",
+					mes("You're bundled into the back of a cart and blindfolded...",
 						"Sometime later you wake up in the desert.");
 					if (player.getCarriedItems().hasCatalogID(ItemId.BOWL_OF_WATER.id(), Optional.of(false))) {
 						npcsay(player, affectedmob, "You won't be needing that water any more!");
-						mes(player, "The guards throw your water away...");
+						mes("The guards throw your water away...");
 						player.getCarriedItems().remove(new Item(ItemId.BOWL_OF_WATER.id()));
 					}
-					mes(player, "The guards move off in the cart leaving you stranded in the desert.");
+					mes("The guards move off in the cart leaving you stranded in the desert.");
 					player.teleport(121, 743);
 				}
 			} else if (menu == 1) {
@@ -2779,9 +2779,9 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					"You're in serious trouble now!",
 					"Ok men, we need to teach this " + (player.isMale() ? "man" : "woman") + " a thing or two",
 					"about desert survival techniques.");
-				mes(player, "The guards grab you and beat you up.");
+				mes("The guards grab you and beat you up.");
 				player.damage(7);
-				mes(player, "You're grabed and manhandled onto a cart.",
+				mes("You're grabed and manhandled onto a cart.",
 					"Sometime later you're dumped in the middle of the desert.",
 					"The guards move off in the cart leaving you stranded in the desert.");
 				int random = DataConversions.getRandom().nextInt(2);
@@ -2813,14 +2813,14 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			if (ana != null) {
 				ana.remove();
 			}
-			mes(player, "@gre@Ana: Hey, watch it with the hands buster.",
+			mes("@gre@Ana: Hey, watch it with the hands buster.",
 				"@gre@Ana: These are the upper market slaves clothes doncha know!");
 			npcsay(player, n, "Right, we'd better teach you a lesson as well!");
-			mes(player, "The guards rough you up a bit.");
+			mes("The guards rough you up a bit.");
 			npcsay(player, n, "Right lads, stuff " + (player.isMale() ? "him" : "her") + " in the mining cell!",
 				"Specially for our most honoured guests.");
 			player.message("The guards drag you away to a cell.");
-			mes(player, "@yel@Guards: There you go, we hope you 'dig' you're stay here.",
+			mes("@yel@Guards: There you go, we hope you 'dig' you're stay here.",
 				"@yel@Guards: Har! Har! Har!");
 			if (n != null) {
 				n.remove();
@@ -2831,11 +2831,11 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 
 	private void failWindowAnaInBarrel(Player player, Npc n) {
 		if (player.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
-			mes(player, "You focus all of your strength on the bar. Your muscles ripple!",
+			mes("You focus all of your strength on the bar. Your muscles ripple!",
 				"You manage to bend the bars on the window .",
 				"You'll never get Ana in the Barrel through the window.",
 				"The barrel is just too big.");
-			mes(player, "@gre@Ana: Don't think for one minute ...",
+			mes("@gre@Ana: Don't think for one minute ...",
 				"@gre@Ana: you're gonna get me through that window!");
 		}
 	}
@@ -2851,7 +2851,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	@Override
 	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == WINDOW && (obj.getX() == 90 || obj.getX() == 89) && obj.getY() == 802) {
-			mes(player, "You search the window.",
+			mes("You search the window.",
 				"After some time you find that one of the bars looks weak,  ",
 				"you may be able to bend one of the bars. ",
 				"Would you like to try ?");
@@ -2861,7 +2861,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			if (menu == 0) {
 				attemptBendBar(player);
 			} else if (menu == 1) {
-				mes(player, "You decide to stay in the cell.",
+				mes("You decide to stay in the cell.",
 					"Maybe they'll let you out soon?");
 			}
 		} else if (obj.getID() == JAIL_DOOR && obj.getX() == 88 && obj.getY() == 801) {
@@ -2869,7 +2869,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				player.message("You unlock the door and walk through.");
 				doDoor(obj, player);
 			} else {
-				mes(player, "You need a key to unlock this door,",
+				mes("You need a key to unlock this door,",
 					"And you don't seem to have one that fits.");
 			}
 		} else if (obj.getID() == TENT_DOOR_1) {
@@ -2935,7 +2935,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					player.message("You use the wrought iron key to unlock the gate.");
 					player.teleport(player.getX(), player.getY() - 1);
 				} else {
-					mes(player, "You need a key to unlock this door,",
+					mes("You need a key to unlock this door,",
 						"And you don't seem to have one that fits.");
 				}
 			} else {
@@ -2946,25 +2946,25 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	}
 
 	private void attemptBendBar(Player player) {
-		mes(player, "You focus all of your strength on the bar. Your muscles ripple!");
+		mes("You focus all of your strength on the bar. Your muscles ripple!");
 		if (player.getX() <= 89) {
 			int attempt = DataConversions.random(0, 1);
 			if (attempt == 0) { //fail-cell
-				mes(player, "You find it hard to bend the bar, perhaps you should try again?");
+				mes("You find it hard to bend the bar, perhaps you should try again?");
 				int stay = multi(player,
 					"Yes, I'll try to bend the bar again.",
 					"No, I'm going to give up.");
 				if (stay == 0) {
 					attemptBendBar(player);
 				} else if (stay == 1) {
-					mes(player, "You decide to stay in the cell.",
+					mes("You decide to stay in the cell.",
 						"Maybe they'll let you out soon?");
 				}
 			} else { //success-cell
 				if (player.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) {
 					failWindowAnaInBarrel(player, null);
 				} else {
-					mes(player, "You manage to bend the bar and climb out of the window.");
+					mes("You manage to bend the bar and climb out of the window.");
 					player.incExp(Skills.STRENGTH, 40, true);
 					player.teleport(90, 802);
 					player.message("You land near some rough rocks, which you may be able to climb.");
@@ -2973,21 +2973,21 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		} else {
 			int attempt = DataConversions.random(0, 1);
 			if (attempt == 0) { //fail-hill
-				mes(player, "You find it hard to bend the bar, perhaps you should try again?");
+				mes("You find it hard to bend the bar, perhaps you should try again?");
 				int stay = multi(player,
 					"Yes, I'll try to bend the bar again.",
 					"No, I'm going to give up.");
 				if (stay == 0) {
 					attemptBendBar(player);
 				} else if (stay == 1) {
-					mes(player, "You decide to stay in the cell.",
+					mes("You decide to stay in the cell.",
 						"Maybe they'll let you out soon?");
 				}
 			} else { //success-hill
 				if (player.getCarriedItems().hasCatalogID(ItemId.ANA_IN_A_BARREL.id(), Optional.of(false))) { //from the hill outside the window (fail-safe)
 					failWindowAnaInBarrel(player, null);
 				} else {
-					mes(player, "You manage to bend the bar !");
+					mes("You manage to bend the bar !");
 					player.incExp(Skills.STRENGTH, 40, true);
 					player.teleport(89, 802);
 					player.message("You climb back inside the cell.");

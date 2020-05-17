@@ -72,7 +72,7 @@ public class CooksAssistant implements QuestInterface, TalkNpcTrigger {
 							"I now have everything you need for your cake",
 							"Milk, flour, and an egg!");
 						npcsay(player, n, "I am saved thankyou!");
-						mes(player, "You give some milk, an egg and some flour to the cook");
+						mes("You give some milk, an egg and some flour to the cook");
 						player.getCarriedItems().remove(new Item(ItemId.EGG.id()));
 						player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
 						player.getCarriedItems().remove(new Item(ItemId.MILK.id()));

@@ -136,7 +136,7 @@ public class InvCooking implements UseInvTrigger {
 			}
 
 			if (combine.messages.length > 1)
-				mes(player, combine.messages[0]);
+				mes(combine.messages[0]);
 			else
 				player.message(combine.messages[0]);
 

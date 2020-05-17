@@ -32,7 +32,7 @@ public class UndergroundPassSmearDollOfIban implements UseInvTrigger {
 			}
 		}
 		else if (compareItemsIds(item1, item2, ItemId.IBANS_CONSCIENCE.id(), ItemId.A_DOLL_OF_IBAN.id())) {
-			mes(player, "you crumble the doves skeleton into dust");
+			mes("you crumble the doves skeleton into dust");
 			player.message("and rub it into the doll");
 			player.getCarriedItems().remove(new Item(ItemId.IBANS_CONSCIENCE.id()));
 			if (!player.getCache().hasKey("cons_on_doll") && player.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
@@ -40,7 +40,7 @@ public class UndergroundPassSmearDollOfIban implements UseInvTrigger {
 			}
 		}
 		else if (compareItemsIds(item1, item2, ItemId.IBANS_SHADOW.id(), ItemId.A_DOLL_OF_IBAN.id())) {
-			mes(player, "you pour the strange liquid over the doll");
+			mes("you pour the strange liquid over the doll");
 			player.message("it seeps into the cotton");
 			player.getCarriedItems().remove(new Item(ItemId.IBANS_SHADOW.id()));
 			if (!player.getCache().hasKey("shadow_on_doll") && player.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {

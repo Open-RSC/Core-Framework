@@ -82,7 +82,7 @@ public class GemMining implements OpLocTrigger {
 		}
 
 		if (axeId < 0 || reqlvl > mineLvl) {
-			mes(player, "You need a pickaxe to mine this rock",
+			mes("You need a pickaxe to mine this rock",
 				"You do not have a pickaxe which you have the mining level to use");
 			return;
 		}
@@ -97,7 +97,7 @@ public class GemMining implements OpLocTrigger {
 
 	private void batchMining(Player player, GameObject obj, int axeId, int mineLvl) {
 		player.playSound("mine");
-		thinkbubble(player, new Item(ItemId.IRON_PICKAXE.id()));
+		thinkbubble(new Item(ItemId.IRON_PICKAXE.id()));
 		player.playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {

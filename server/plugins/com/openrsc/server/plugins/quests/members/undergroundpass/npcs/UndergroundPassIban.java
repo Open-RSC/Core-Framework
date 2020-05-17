@@ -39,24 +39,24 @@ public class UndergroundPassIban implements UseLocTrigger {
 					return;
 				}
 				else {
-					mes(player, "you throw the doll of iban into the pit");
+					mes("you throw the doll of iban into the pit");
 					player.getCarriedItems().remove(new Item(ItemId.A_DOLL_OF_IBAN.id()));
 					defeated = true;
 					player.setAttribute("iban_bubble_show", true);
 					npcsay(player, iban, "what's happening?, it's dark here...so dark",
 						"im falling into the dark, what have you done?");
-					mes(player, "iban falls to his knees clutching his throat");
+					mes("iban falls to his knees clutching his throat");
 					npcsay(player, iban, "noooooooo!");
 					player.message("iban slumps motionless to the floor");
 					iban.remove();
 				}
 				if (defeated) {
-					mes(player, "a roar comes from the pit of the damned",
+					mes("a roar comes from the pit of the damned",
 							"the infamous iban has finally gone to rest");
 						player.message("amongst ibans remains you find his staff..");
-						mes(player, "...and some runes");
+						mes("...and some runes");
 						player.message("suddenly around you rocks crash to the floor..");
-						mes(player, "...as the ground begins to shake",
+						mes("...as the ground begins to shake",
 							"the temple walls begin to collapse in",
 							"and you're thrown from the temple platform");
 						give(player, ItemId.STAFF_OF_IBAN.id(), 1);

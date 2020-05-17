@@ -87,7 +87,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 				return;
 			}
 			if (command.equalsIgnoreCase("Look")) {
-				mes(player, "The Dolmen is intricately decorated with the family",
+				mes("The Dolmen is intricately decorated with the family",
 					"symbol of two crossed palm trees .");
 				if (player.getQuestStage(Quests.SHILO_VILLAGE) == 8) {
 					player.message("There is nothing on the Dolmen.");
@@ -103,34 +103,34 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 					player.message("You can see that there are some items on the Dolmen.");
 				}
 			} else if (command.equalsIgnoreCase("Search")) {
-				mes(player, "The Dolmen is intricately decorated with the symbol of");
-				mes(player, "two crossed palm trees. It might be the family crest?");
+				mes("The Dolmen is intricately decorated with the symbol of");
+				mes("two crossed palm trees. It might be the family crest?");
 				if (player.getCarriedItems().hasCatalogID( ItemId.SWORD_POMMEL.id(), Optional.empty())
 					&& player.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) {
-					mes(player, "There is nothing on the Dolmen.");
+					mes("There is nothing on the Dolmen.");
 				} else if (player.getCarriedItems().hasCatalogID(ItemId.SWORD_POMMEL.id(), Optional.empty())
 					|| player.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) {
-					mes(player, "You can see an item on the Dolmen");
+					mes("You can see an item on the Dolmen");
 				} else {
-					mes(player, "You can see that there are some items on the Dolmen.");
+					mes("You can see that there are some items on the Dolmen.");
 				}
 				if (!player.getCarriedItems().hasCatalogID(ItemId.SWORD_POMMEL.id(), Optional.empty())
 					&& !player.getCarriedItems().hasCatalogID(ItemId.BONE_BEADS.id(), Optional.empty())) { // SWORD POMMEL
-					mes(player, "You find a rusty sword with an ivory pommel.");
+					mes("You find a rusty sword with an ivory pommel.");
 					player.message("You take the pommel and place it into your inventory.");
 					give(player, ItemId.SWORD_POMMEL.id(), 1);
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
 				}
 				if (!player.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) { // crystal
-					mes(player, "You find a Crystal Sphere ");
+					mes("You find a Crystal Sphere ");
 					give(player, ItemId.LOCATING_CRYSTAL.id(), 1);
 				}
-				mes(player, "You find some writing on the dolmen,");
+				mes("You find some writing on the dolmen,");
 				if (!player.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.empty()) && player.getCache().hasKey("dropped_writing")) {
-					mes(player, "You would need some Papyrus and Charcoal");
+					mes("You would need some Papyrus and Charcoal");
 					player.message("to take more notes from this Dolmen!");
 				} else if (!player.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.empty()) && !player.getCache().hasKey("dropped_writing")) {
-					mes(player, "you grab some nearby scraps of delicate paper together ",
+					mes("you grab some nearby scraps of delicate paper together ",
 						"and copy the text as best you can and collect");
 					player.message("them together as a scroll");
 					give(player, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
@@ -152,12 +152,12 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 					if (player.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.of(false))) {
 						player.message("You already have Bervirius Tomb Notes in your inventory.");
 					} else {
-						mes(player, "You try to take some new notes on the delicate papyrus.");
+						mes("You try to take some new notes on the delicate papyrus.");
 						if (!player.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) {
 							player.message("You need some charcoal to make notes.");
 							return;
 						}
-						mes(player, "You use the charcoal and the Papyrus to make some new notes.");
+						mes("You use the charcoal and the Papyrus to make some new notes.");
 						player.message("You collect the notes together as a scroll.");
 						player.getCarriedItems().remove(new Item(ItemId.PAPYRUS.id()));
 						player.getCarriedItems().remove(new Item(ItemId.A_LUMP_OF_CHARCOAL.id()));
@@ -178,7 +178,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 								"My hatred and bitterness corrupted me.",
 								"I tried too destroy all life...now I am released.",
 								"And am grateful to contemplate eternal rest...");
-							mes(player, "Without warning the spirit of Rashiliyia disapears.");
+							mes("Without warning the spirit of Rashiliyia disapears.");
 							rash.remove();
 						}
 						player.getCarriedItems().remove(new Item(ItemId.RASHILIYA_CORPSE.id()));

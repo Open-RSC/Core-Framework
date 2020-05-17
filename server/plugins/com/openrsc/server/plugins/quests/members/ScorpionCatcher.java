@@ -91,7 +91,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 							npcsay(player, n, "Many greetings");
 							say(player, n, "Where did you say that scorpion was again?");
 							npcsay(player, n, "Let me look into my looking glass");
-							mes(player, "The seer produces a small mirror",
+							mes("The seer produces a small mirror",
 								"The seer gazes into the mirror",
 								"The seer smoothes his hair with his hand");
 							npcsay(player, n,
@@ -142,7 +142,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 				say(player, n, "I'm looking for some lesser kharid scorpions",
 					"They belong to Thormac the sorceror");
 				npcsay(player, n, "Let me look into my looking glass");
-				mes(player, "The seer produces a small mirror",
+				mes("The seer produces a small mirror",
 					"The seer gazes into the mirror",
 					"The seer smoothes his hair with his hand");
 				npcsay(player, n,
@@ -196,8 +196,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 			choice = multi(player, n, "Yes please",
 				"No it's too dangerous for me");
 			if (choice == 0) {
-				mes(player,
-					"Velrak reaches inside his boot and passes you a key");
+				mes("Velrak reaches inside his boot and passes you a key");
 				give(player, ItemId.DUSTY_KEY.id(), 1);
 			}
 
@@ -343,7 +342,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 			npcsay(player, n, "Well I have a scorpion cage here",
 				"Which you can use to catch them in");
 			give(player, ItemId.SCORPION_CAGE_NONE.id(), 1);
-			mes(player, "Thormac gives you a cage");
+			mes("Thormac gives you a cage");
 			npcsay(player, n,
 				"If you go up to the village of seers to the north of here",
 				"One of them will be able to tell you where the scorpions are now");
@@ -524,7 +523,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 		 * Velrak cell door
 		 */
 		if (obj.getID() == 83 && obj.getY() == 3428 && item.getCatalogId() == ItemId.JAIL_KEYS.id()) {
-			thinkbubble(player, item);
+			thinkbubble(item);
 			doDoor(obj, player);
 		}
 		/*
@@ -532,14 +531,14 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 		 * anything important at all - replicated it anyway.
 		 */
 		if (obj.getID() == 83 && obj.getY() == 3425 && item.getCatalogId() == ItemId.JAIL_KEYS.id()) {
-			thinkbubble(player, item);
+			thinkbubble(item);
 			doDoor(obj, player);
 		}
 		/*
 		 * Dusty key door into blue dragons lair in Taverly dungeon
 		 */
 		if (obj.getID() == 84 && obj.getY() == 3353 && item.getCatalogId() == ItemId.DUSTY_KEY.id()) {
-			thinkbubble(player, item);
+			thinkbubble(item);
 			doDoor(obj, player);
 		}
 	}

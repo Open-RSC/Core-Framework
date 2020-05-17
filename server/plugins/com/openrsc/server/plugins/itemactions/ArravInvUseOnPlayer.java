@@ -45,8 +45,8 @@ public class ArravInvUseOnPlayer implements UsePlayerTrigger {
 			otherPlayer.resetPath();
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			give(otherPlayer, item.getCatalogId(), 1);
-			mes(player, 0, "You give the " + item.getDef(player.getWorld()).getName() + " to " + otherPlayer.getUsername());
-			mes(otherPlayer, 0, player.getUsername() + " has given you a " + item.getDef(player.getWorld()).getName());
+			mes(0, "You give the " + item.getDef(player.getWorld()).getName() + " to " + otherPlayer.getUsername());
+			otherPlayer.message(player.getUsername() + " has given you a " + item.getDef(player.getWorld()).getName());
 		}
 	}
 }

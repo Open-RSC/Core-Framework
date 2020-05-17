@@ -91,10 +91,11 @@ public class Functions {
 	/**
 	 * Displays item bubble above players head.
 	 *
-	 * @param player
 	 * @param item
 	 */
-	public static void thinkbubble(final Player player, final Item item) {
+	public static void thinkbubble(final Item item) {
+		final Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return;
 		final Bubble bubble = new Bubble(player, item.getCatalogId());
 		Npc npc;
 		if ((npc = PluginTask.getContextPluginTask().getScriptContext().getInteractingNpc()) != null) {
@@ -116,14 +117,15 @@ public class Functions {
 	/**
 	 * Displays server message(s) with 2.2 second delay.
 	 *
-	 * @param player
 	 * @param messages
 	 */
-	public static void mes(final Player player, int delay, final String... messages) {
-		mes(player, null, delay, messages);
+	public static void mes(int delay, final String... messages) {
+		mes(null, delay, messages);
 	}
 
-	public static void mes(final Player player, final Npc npc, int delay, final String... messages) {
+	public static void mes(final Npc npc, int delay, final String... messages) {
+		final Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return;
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				if (npc != null) {
@@ -141,10 +143,11 @@ public class Functions {
 	/**
 	 * Displays server message(s) with 2.2 second delay.
 	 *
-	 * @param player
 	 * @param messages
 	 */
-	public static void mes(final Player player, final String... messages) {
+	public static void mes(final String... messages) {
+		final Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return;
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
 				player.message("@que@" + message);

@@ -3,13 +3,11 @@ package com.openrsc.server.plugins.skills.fishing;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.SkillCapes;
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ObjectFishDef;
 import com.openrsc.server.external.ObjectFishingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -63,7 +61,7 @@ public class Fishing implements OpLocTrigger {
 		if (checkFatigue(player)) return;
 
 		if (object.getID() == 493 && player.getSkills().getExperience(Skills.FISHING) >= 200) {
-			mes(player, "that's enough fishing for now",
+			mes("that's enough fishing for now",
 				"go through the next door to continue the tutorial");
 			return;
 		}
@@ -110,7 +108,7 @@ public class Fishing implements OpLocTrigger {
 	private void batchFishing(Player player, int netId, ObjectFishingDef def, GameObject object, String command) {
 		player.playSound("fish");
 		player.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
-		thinkbubble(player, new Item(netId));
+		thinkbubble(new Item(netId));
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 
 		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {

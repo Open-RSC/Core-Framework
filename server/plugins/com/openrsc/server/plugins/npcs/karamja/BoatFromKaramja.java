@@ -38,7 +38,7 @@ public final class BoatFromKaramja implements TalkNpcTrigger, OpLocTrigger {
 		} else if (sub_opt == 1) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id(), Optional.of(false))) {
 				npcsay(player, n, "Aha trying to smuggle rum are we?");
-				mes(player, "The customs officer confiscates your rum");
+				mes("The customs officer confiscates your rum");
 				player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
 			} else {
 				npcsay(player,
@@ -49,7 +49,7 @@ public final class BoatFromKaramja implements TalkNpcTrigger, OpLocTrigger {
 				if (pay_opt == 0) {
 					if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30)) != -1) {
 						say(player, n, "Ok");
-						mes(player, "You pay 30 gold", "You board the ship");
+						mes("You pay 30 gold", "You board the ship");
 						teleport(player, 269, 648);
 						player.message("The ship arrives at Port Sarim");
 					} else { // not enough money

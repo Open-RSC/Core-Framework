@@ -325,7 +325,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 				// castle.
 				player.teleport(490, 651, false);
 			} else {
-				mes(player, "The whistle makes no noise",
+				mes("The whistle makes no noise",
 					"It will not work in this location");
 			}
 		}
@@ -388,7 +388,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onTakeObj(Player player, GroundItem i) {
 		if (i.getID() == ItemId.HOLY_GRAIL.id() && i.getX() == 418 && i.getY() == 1924) {
-			mes(player, "You feel that the grail shouldn't be moved",
+			mes("You feel that the grail shouldn't be moved",
 				"You must complete some task here before you are worthy");
 		}
 	}
@@ -407,7 +407,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 408) {
 			if (player.getQuestStage(this) == 4) {
-				mes(player, "You hear muffled noises from the sack");
+				mes("You hear muffled noises from the sack");
 				player.message("You open the sack");
 				Npc percival = addnpc(player.getWorld(), NpcId.SIR_PERCIVAL.id(), 328, 446, 120000);
 				npcsay(player, percival, "Wow thankyou",
@@ -468,7 +468,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 		say(player, percival,
 			"Well I do have the means to get us there - a magic whistle");
 		if (player.getCarriedItems().hasCatalogID(ItemId.MAGIC_WHISTLE.id(), Optional.of(false))) {
-			mes(player, "You give a whistle to Sir Percival",
+			mes("You give a whistle to Sir Percival",
 				"You tell sir Percival what to do with the whistle");
 			player.getCarriedItems().remove(new Item(ItemId.MAGIC_WHISTLE.id()));
 			npcsay(player, percival, "Ok I will see you there then");

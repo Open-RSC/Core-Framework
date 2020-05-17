@@ -68,7 +68,7 @@ public class Bartender implements TalkNpcTrigger {
 				"Ok one black skull ale coming up, 8 coins please");
 			if (ifheld(player, ItemId.COINS.id(), 8)) {
 				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 8));
-				mes(player, "You buy a black skull ale",
+				mes("You buy a black skull ale",
 					"You drink your black skull ale",
 					"Your vision blurs",
 					"The bartender signs your card");

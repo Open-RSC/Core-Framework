@@ -38,13 +38,13 @@ public final class Barmaid implements
 					"Lots of expensive parts to the cocktail though",
 					"So it will cost you 70 coins");
 				if (ifheld(player, ItemId.COINS.id(), 70)) {
-					mes(player, "You buy a hand of death cocktail");
+					mes("You buy a hand of death cocktail");
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 70));
-					mes(player, "You drink the cocktail",
+					mes("You drink the cocktail",
 						"You stumble around the room");
 					drinkAle(player);
 					player.damage(DataConversions.getRandom().nextInt(2) + 1);
-					mes(player, "The barmaid giggles",
+					mes("The barmaid giggles",
 						"The barmaid signs your card");
 					player.getCache().store("barthree", true);
 				} else {

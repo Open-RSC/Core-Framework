@@ -41,7 +41,7 @@ public class SoilMound implements UseLocTrigger {
 
 		if (bucket == null) return;
 
-		thinkbubble(player, bucket);
+		thinkbubble(bucket);
 		player.message("you fill the bucket with soil");
 		player.getCarriedItems().remove(bucket);
 		give(player, filledId, 1);

@@ -34,14 +34,14 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 	@Override
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == LADDER) {
-			mes(player, "you climb the ladder");
+			mes("you climb the ladder");
 			player.message("it leads to some stairs, you walk up...");
 			player.teleport(782, 3549);
 		}
 		else if (obj.getID() == TOMB_OF_IBAN) {
-			mes(player, "you try to open the door of the tomb");
+			mes("you try to open the door of the tomb");
 			player.message("but the door refuses to open");
-			mes(player, "you hear a noise from below");
+			mes("you hear a noise from below");
 			player.message("@red@leave me be");
 			GameObject claws_of_iban = new GameObject(player.getWorld(), Point.location(player.getX(), player.getY()), 879, 0, 0);
 			addloc(claws_of_iban);
@@ -60,7 +60,7 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 			}
 		}
 		else if (obj.getID() == PILE_OF_MUD) {
-			mes(player, "you climb the pile of mud");
+			mes("you climb the pile of mud");
 			player.message("it leads to an old stair way");
 			player.teleport(773, 3417);
 		}
@@ -82,18 +82,18 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 				player.getCarriedItems().remove(new Item(ItemId.DWARF_BREW.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
 			} else {
-				mes(player, "you consider pouring the brew over the grave");
+				mes("you consider pouring the brew over the grave");
 				player.message("but it seems such a waste");
 			}
 		}
 		else if (obj.getID() == TOMB_OF_IBAN && item.getCatalogId() == ItemId.TINDERBOX.id()) {
-			mes(player, "you try to set alight to the tomb");
+			mes("you try to set alight to the tomb");
 			if (player.getCache().hasKey("brew_on_tomb") && !player.getCache().hasKey("ash_on_doll")) {
-				mes(player, "it bursts into flames");
+				mes("it bursts into flames");
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 97, obj.getDirection(), obj
 					.getType()));
 				addloc(obj.getWorld(), obj.getLoc(), 10000);
-				mes(player, "you search through the remains");
+				mes("you search through the remains");
 				if (!player.getCarriedItems().hasCatalogID(ItemId.IBANS_ASHES.id(), Optional.of(false))) {
 					player.message("and find the ashes of ibans corpse");
 					addobject(ItemId.IBANS_ASHES.id(), 1, 726, 654, player);
@@ -115,9 +115,9 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 	@Override
 	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == SPIDER_NEST_RAILING) {
-			mes(player, "you search the bars");
+			mes("you search the bars");
 			if (player.getCache().hasKey("doll_of_iban") || player.getQuestStage(Quests.UNDERGROUND_PASS) >= 7 || player.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
-				mes(player, "there's a gap big enough to squeeze through");
+				mes("there's a gap big enough to squeeze through");
 				player.message("would you like to try");
 				int menu = multi(player,
 					"nope",

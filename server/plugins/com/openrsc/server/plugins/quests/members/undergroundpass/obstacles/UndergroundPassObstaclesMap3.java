@@ -42,9 +42,9 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 		if (inArray(obj.getID(), CAGES)) {
 			if (obj.getID() == CAGES[1]) {
 				player.message("the man seems to be entranced");
-				mes(player, "the cage is locked");
+				mes("the cage is locked");
 				delay(1600);
-				mes(player, "you search through the bottom of the cage");
+				mes("you search through the bottom of the cage");
 				if (!player.getCache().hasKey("cons_on_doll")) {
 					player.message("but the souless bieng bites into your arm");
 					if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())) {
@@ -68,9 +68,9 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 			}
 			else if (obj.getID() == CAGES[0]) {
 				player.message("the man seems to be entranced");
-				mes(player, "the cage is locked");
+				mes("the cage is locked");
 				delay(1600);
-				mes(player, "you search through the bottom of the cage");
+				mes("you search through the bottom of the cage");
 				player.message("but the souless bieng bites into your arm");
 				if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())) {
 					player.message("klanks gaunlett protects you");
@@ -83,11 +83,11 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 			}
 		}
 		else if (obj.getID() == DEMONS_CHEST_CLOSED) {
-			mes(player, "you attempt to open the chest");
+			mes("you attempt to open the chest");
 			if (player.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_OTHAINIAN.id(), Optional.of(false))
 				&& player.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_DOOMION.id(), Optional.of(false))
 				&& player.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_HOLTHION.id(), Optional.of(false)) && !player.getCache().hasKey("shadow_on_doll")) {
-				mes(player, "the three amulets glow red in your satchel");
+				mes("the three amulets glow red in your satchel");
 				player.getCarriedItems().remove(new Item(ItemId.AMULET_OF_OTHAINIAN.id()));
 				player.getCarriedItems().remove(new Item(ItemId.AMULET_OF_DOOMION.id()));
 				player.getCarriedItems().remove(new Item(ItemId.AMULET_OF_HOLTHION.id()));
@@ -105,7 +105,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 			if (player.getX() <= 792) {
 				if (player.getQuestStage(Quests.UNDERGROUND_PASS) == -1 &&
 					!player.getWorld().getServer().getConfig().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
-					mes(player, "the temple is in ruins...");
+					mes("the temple is in ruins...");
 					player.message("...you cannot enter");
 					return;
 				}
@@ -116,7 +116,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 					player.teleport(792, 3469);
 					delay(player.getWorld().getServer().getConfig().GAME_TICK);
 					player.teleport(795, 3469);
-					mes(player, "you pull open the large doors");
+					mes("you pull open the large doors");
 					player.message("and walk into the temple");
 					if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 7 || (player.getCache().hasKey("poison_on_doll") && player.getCache().hasKey("cons_on_doll")
 						&& player.getCache().hasKey("ash_on_doll") && player.getCache().hasKey("shadow_on_doll"))) {
@@ -124,18 +124,18 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 							player.updateQuestStage(Quests.UNDERGROUND_PASS, 7);
 						}
 						player.message("Iban seems to sense danger");
-						mes(player, "@yel@Iban: who dares bring the witches magic into my temple");
-						mes(player, "his eyes fixate on you as he raises his arm");
-						mes(player, "@yel@Iban: an imposter dares desecrate this sacred place..",
+						mes("@yel@Iban: who dares bring the witches magic into my temple");
+						mes("his eyes fixate on you as he raises his arm");
+						mes("@yel@Iban: an imposter dares desecrate this sacred place..",
 							"@yel@Iban: ..home to the only true child of zamorak",
 							"@yel@Iban: join the damned, mortal");
 						player.message("iban raises his staff to the air");
-						mes(player, "a blast of energy comes from ibans staff");
+						mes("a blast of energy comes from ibans staff");
 						player.message("you are hit by ibans magic bolt");
 						displayTeleportBubble(player, player.getX() + 1, player.getY(), true);
 						player.damage(((int) getCurrentLevel(player, Skills.HITS) / 7) + 1);
 						say(player, null, "aarrgh");
-						mes(player, "@yel@Iban:die foolish mortal");
+						mes("@yel@Iban:die foolish mortal");
 						long start = System.currentTimeMillis();
 						Area area = Areas.getArea("ibans_room");
 						try {
@@ -177,7 +177,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 						player.message("inside iban stands preaching at the alter");
 					}
 				} else {
-					mes(player, "The door refuses to open");
+					mes("The door refuses to open");
 					player.message("only followers of zamorak may enter");
 				}
 			} else {

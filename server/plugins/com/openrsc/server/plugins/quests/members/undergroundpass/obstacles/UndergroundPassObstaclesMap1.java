@@ -92,17 +92,17 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 				case 7:
 				case 8:
 				case -1:
-					mes(player, "you cautiously enter the cave");
+					mes("you cautiously enter the cave");
 					player.teleport(673, 3420);
 					break;
 			}
 		}
 		else if (obj.getID() == CRUMBLED_ROCK) {
-			mes(player, "you climb the rock pile");
+			mes("you climb the rock pile");
 			player.teleport(713, 581);
 		}
 		else if (inArray(obj.getID(), READ_ROCKS)) {
-			mes(player, "the writing seems to have been scracthed...",
+			mes("the writing seems to have been scracthed...",
 				"..into the rock with bare hands, it reads..");
 			if (obj.getID() == 832) {
 				ActionSender.sendBox(player, "@red@All those who thirst for knowledge%@red@Bow down to the lord.% %@red@All you that crave eternal life%@red@Come and meet your God.% %@red@For no man nor beast can cast a spell%@red@Against the wake of eternal hell.", true);
@@ -124,7 +124,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			doRock(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 42) + 1, true, -1);
 		}
 		else if (obj.getID() == FIRST_SWAMP) {
-			mes(player, "you try to cross but you're unable to",
+			mes("you try to cross but you're unable to",
 				"the swamp seems to cling to your legs");
 			player.message("you slowly feel yourself being dragged below");
 			say(player, null, "gulp!");
@@ -147,23 +147,23 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			say(player, null, "aargh");
 			player.damage((int) (getCurrentLevel(player, Skills.HITS) / 42) + 1);
 			player.teleport(690, 3461);
-			mes(player, "you tumble deep into the cravass",
+			mes("you tumble deep into the cravass",
 				"and land battered and bruised at the base");
 		}
 		else if (inArray(obj.getID(), FAIL_SWAMP_ROCKS)) {
 			doRock(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 42) + 1, true, -1);
 		}
 		else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_1) {
-			mes(player, "you climb up the mud pile");
+			mes("you climb up the mud pile");
 			player.teleport(685, 3420);
-			mes(player, "it leads into darkness, the stench is almost unbearable",
+			mes("it leads into darkness, the stench is almost unbearable",
 				"you surface by the swamp, covered in muck");
 		}
 		else if (inArray(obj.getID(), MAIN_LEDGE)) {
 			doLedge(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 42) + 1);
 		}
 		else if (obj.getID() == LEVER) {
-			mes(player, "you pull back on the old lever",
+			mes("you pull back on the old lever",
 				"the bridge slowly lowers");
 			GameObject bridge_open = new GameObject(obj.getWorld(), Point.location(704, 3417), 727, 2, 0);
 			GameObject bridge_closed = new GameObject(obj.getWorld(), Point.location(704, 3417), 726, 2, 0);
@@ -177,7 +177,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			player.message("you cross the bridge");
 		}
 		else if (obj.getID() == BLESSED_SPIDER_SWAMP_OBJ) {
-			mes(player, "you step in rancid swamp",
+			mes("you step in rancid swamp",
 				"it clings to your feet, you cannot cross");
 		}
 		else if (obj.getID() == CLEAR_ROCKS) {
@@ -185,7 +185,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 				player.teleport(695, 3435);
 				return;
 			}
-			mes(player, "you move the rocks from your path");
+			mes("you move the rocks from your path");
 			player.message("you hear a strange mechanical sound");
 			obj.getWorld().replaceGameObject(obj,
 				new GameObject(obj.getWorld(), obj.getLocation(), CLEAR_ROCKS + 1, obj.getDirection(), obj
@@ -193,11 +193,11 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			obj.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 			player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.2D));
 			say(player, null, "aaarrghhh");
-			mes(player, "You've triggered a trap");
+			mes("You've triggered a trap");
 		}
 		else if (inArray(obj.getID(), SPEAR_ROCKS)) {
 			if (cmd.equalsIgnoreCase("step over")) {
-				mes(player, "you step over the rock");
+				mes("you step over the rock");
 				player.message("you feel a thread tug at your boot");
 				player.message("it's a trap");
 				player.teleport(obj.getX(), obj.getY());
@@ -208,12 +208,12 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 6) + 1);
 				say(player, null, "aaarghh");
 			} else {
-				mes(player, "you search the rock",
+				mes("you search the rock",
 					"you find a trip wire");
 				player.message("do you wish to disarm the trap?");
 				int menu = multi(player, "yes, i'll have a go", "no chance");
 				if (menu == 0) {
-					mes(player, "you carefully try and diconnect the trip wire");
+					mes("you carefully try and diconnect the trip wire");
 					if (succeed(player, 1)) {
 						player.message("you manage to delay the trap..");
 						player.message("...long enough to cross the rocks");

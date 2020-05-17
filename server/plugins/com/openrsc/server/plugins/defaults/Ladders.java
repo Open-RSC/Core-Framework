@@ -180,9 +180,9 @@ public class Ladders {
 			}
 		} else if (obj.getID() == 223 && obj.getX() == 312 && obj.getY() == 3348) { // ladder to black hole
 			if (!player.getCarriedItems().hasCatalogID(ItemId.DISK_OF_RETURNING.id(), Optional.of(false))) {
-				mes(player, "you seem to be missing a disk to use the ladder");
+				mes("you seem to be missing a disk to use the ladder");
 			} else {
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You climb down the ladder");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You climb down the ladder");
 				int offX = DataConversions.random(0,4) - 2;
 				int offY = DataConversions.random(0,4) - 2;
 				player.teleport(305 + offX, 3300 + offY);

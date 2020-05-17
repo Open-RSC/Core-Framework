@@ -37,7 +37,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 			if (player.getX() == 763 && player.getY() == 3463) {
 				player.message("you can't reach the grill from here");
 			} else {
-				mes(player, "you tie the rope to the grill...");
+				mes("you tie the rope to the grill...");
 				player.message("..and poke it through to the otherside");
 				if (!player.getCache().hasKey("rope_wall_grill")) {
 					player.getCache().store("rope_wall_grill", true);
@@ -57,7 +57,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 			}
 		}
 		else if (obj.getID() == BOULDER && item.getCatalogId() == ItemId.RAILING.id()) {
-			mes(player, "you use the pole as leverage...",
+			mes("you use the pole as leverage...",
 				"..and tip the bolder onto its side");
 			delloc(obj);
 			addloc(obj.getWorld(), obj.getLoc(), 5000);
@@ -67,7 +67,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 			}
 		}
 		else if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && inArray(item.getCatalogId(), ITEMS_TO_FLAMES)) {
-			mes(player, "you throw the " + item.getDef(player.getWorld()).getName().toLowerCase() + " into the flames");
+			mes("you throw the " + item.getDef(player.getWorld()).getName().toLowerCase() + " into the flames");
 			if (!atQuestStages(player, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				if (!player.getCache().hasKey("flames_of_zamorak1") && item.getCatalogId() == ItemId.UNDERGROUND_PASS_UNICORN_HORN.id()) {
 					player.getCache().store("flames_of_zamorak1", true);
@@ -90,7 +90,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 			player.message("you hear a howl in the distance");
 		}
 		else if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
-			mes(player, "you hold the staff above the well");
+			mes("you hold the staff above the well");
 			displayTeleportBubble(player, player.getX(), player.getY(), true);
 			player.message("and feel the power of zamorak flow through you");
 			player.getCache().set("Iban blast_casts", 25);

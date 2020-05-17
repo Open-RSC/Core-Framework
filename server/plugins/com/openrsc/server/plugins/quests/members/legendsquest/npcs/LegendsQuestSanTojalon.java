@@ -47,7 +47,7 @@ public class LegendsQuestSanTojalon implements AttackNpcTrigger, KillNpcTrigger,
 			if (player.getCache().hasKey("viyeldi_companions") && player.getCache().getInt("viyeldi_companions") == 1) {
 				player.getCache().set("viyeldi_companions", 2);
 			}
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A nerve tingling scream echoes around you as you slay the dead Hero.",
+			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "A nerve tingling scream echoes around you as you slay the dead Hero.",
 				"@yel@San Tojalon: Ahhhggggh",
 				"@yel@San Tojalon: Forever must I live in this torment till this beast is slain...");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
@@ -67,7 +67,7 @@ public class LegendsQuestSanTojalon implements AttackNpcTrigger, KillNpcTrigger,
 				player.message("Your opponent is retreating");
 				npcsay(player, n, "");
 				n.remove();
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A piece of crystal forms in midair and falls to the floor.",
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "A piece of crystal forms in midair and falls to the floor.",
 					"You place the crystal in your inventory.");
 				give(player, ItemId.A_CHUNK_OF_CRYSTAL.id(), 1);
 			}
@@ -107,7 +107,7 @@ public class LegendsQuestSanTojalon implements AttackNpcTrigger, KillNpcTrigger,
 	public void onEscapeNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.SAN_TOJALON.id() && player.getQuestStage(Quests.LEGENDS_QUEST) == 8 && player.getCache().hasKey("viyeldi_companions")) {
 			n.remove();
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "As you try to make your escape,",
+			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "As you try to make your escape,",
 				"the Viyeldi fighter is recalled by the demon...",
 				"@yel@Nezikchened : Ha, ha ha!",
 				"@yel@Nezikchened : Run then fetid worm...and never touch my totem again...");

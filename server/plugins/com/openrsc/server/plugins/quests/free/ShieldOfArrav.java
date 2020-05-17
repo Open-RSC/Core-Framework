@@ -104,7 +104,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 				if (player.getQuestStage(this) == 1) {
 					say(player, null, "Aha the shield of Arrav");
 					say(player, null, "That was what I was looking for");
-					mes(player, "You take the book from the bookcase");
+					mes("You take the book from the bookcase");
 					give(player, ItemId.BOOK.id(), 1);
 					if (!player.getCache().hasKey("read_arrav")) {
 						player.getCache().store("read_arrav", true);
@@ -122,14 +122,14 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 				} else {
 					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))
 							|| player.getCarriedItems().getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))) {
-							mes(player, "You search the chest", "The chest is empty");
+							mes("You search the chest", "The chest is empty");
 							return;
 					} else if (isPhoenixGang(player)) {
-						mes(player, "You search the chest",
+						mes("You search the chest",
 							"You find half a shield which you take");
 						give(player, ItemId.BROKEN_SHIELD_ARRAV_1.id(), 1);
 					} else {
-						mes(player, "You search the chest", "The chest is empty");
+						mes("You search the chest", "The chest is empty");
 					}
 				}
 				break;
@@ -142,14 +142,14 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 				} else {
 					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))
 						|| player.getCarriedItems().getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))) {
-						mes(player, "You search the cupboard", "The cupboard is empty");
+						mes("You search the cupboard", "The cupboard is empty");
 						return;
 					} else if (isBlackArmGang(player)) {
-						mes(player, "You search the cupboard",
+						mes("You search the cupboard",
 							"You find half a shield which you take");
 						give(player, ItemId.BROKEN_SHIELD_ARRAV_2.id(), 1);
 					} else {
-						mes(player, "You search the cupboard", "The cupboard is empty");
+						mes("You search the cupboard", "The cupboard is empty");
 					}
 				}
 				break;
@@ -437,8 +437,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		switch (ItemId.getById(item.getCatalogId())) {
 			case BOOK:
-				mes(player,
-					"The shield of Arrav",
+				mes("The shield of Arrav",
 					"By A.R.Wright",
 					"Arrav is probably the best known hero of the 4th age.",
 					"One surviving artifact from the 4th age is a fabulous shield.",
@@ -552,14 +551,14 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	public void onUseBound(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.PHOENIX_GANG_WEAPON_KEY.id() && obj.getID() == 20
 			&& obj.getY() == 532) {
-			thinkbubble(player, item);
-			mes(player, "You unlock the door");
+			thinkbubble(item);
+			mes("You unlock the door");
 			if (player.getY() <= 531) {
 				doDoor(obj, player);
 			} else {
 				doDoor(obj, player);
 			}
-			mes(player, "You go through the door");
+			mes("You go through the door");
 		}
 
 	}

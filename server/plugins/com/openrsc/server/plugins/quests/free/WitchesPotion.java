@@ -101,8 +101,7 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 						player.getCarriedItems().remove(new Item(ItemId.EYE_OF_NEWT.id()));
 						player.getCarriedItems().remove(new Item(ItemId.BURNTMEAT.id()));
 						player.getCarriedItems().remove(new Item(ItemId.ONION.id()));
-						mes(player,
-							"Hetty put's all the ingredients in her cauldron",
+						mes("Hetty put's all the ingredients in her cauldron",
 							"Hetty closes her eyes and begins to chant");
 						npcsay(player, n, "Ok drink from the cauldron");
 						delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
@@ -159,7 +158,7 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 				say(player, null, "I'd rather not",
 					"It doesn't look very tasty");
 			} else {
-				mes(player, "You drink from the cauldron",
+				mes("You drink from the cauldron",
 					"You feel yourself imbued with power");
 				player.sendQuestComplete(Quests.WITCHS_POTION);
 			}

@@ -136,7 +136,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 						"Oh for one of Trudi's hangover cures");
 					if (player.getCarriedItems().hasCatalogID(ItemId.HANGOVER_CURE.id(), Optional.of(false))) {
 						say(player, n, "Try this");
-						mes(player, "You give Bravek the hangover cure",
+						mes("You give Bravek the hangover cure",
 							"Bravek gulps down the foul looking liquid");
 						player.getCarriedItems().remove(new Item(ItemId.HANGOVER_CURE.id()));
 						npcsay(player,
@@ -431,7 +431,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 						"but i need some dwellberries to finish it");
 					if (player.getCarriedItems().hasCatalogID(ItemId.DWELLBERRIES.id(), Optional.of(false))) {
 						say(player, n, "yes I've got some here");
-						mes(player, "you give the dwellberries to alrena",
+						mes("you give the dwellberries to alrena",
 							"alrena crushes the berries into a smooth paste",
 							"she then smears the paste over a strange mask");
 						player.getCarriedItems().remove(new Item(ItemId.DWELLBERRIES.id()));
@@ -631,7 +631,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 				case 4:
 					say(player, n,
 						"I've tied the other end of this rope to the grill");
-					mes(player, "Edmond gets a good grip on the rope",
+					mes("Edmond gets a good grip on the rope",
 						"together you tug the rope",
 						"you hear a clunk as you both fly backwards");
 					npcsay(player, n, "that's done the job",
@@ -776,14 +776,14 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 			if (item.getCatalogId() == ItemId.BUCKET_OF_WATER.id()) {
 				if (player.getQuestStage(getQuestId()) == 2) {
 					if (BUCKETS_USED >= 3) {
-						mes(player, "you poor the water onto the soil",
+						mes("you poor the water onto the soil",
 							"the soil softens slightly",
 							"the soil is soft enough to dig into");
 						if (!player.getCache().hasKey("soil_soften")) {
 							player.getCache().store("soil_soften", true);
 						}
 					} else {
-						mes(player, "you poor the water onto the soil",
+						mes("you poor the water onto the soil",
 							"the soil softens slightly");
 					}
 					player.getCarriedItems().remove(new Item(ItemId.BUCKET_OF_WATER.id()));
@@ -796,7 +796,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 			if (item.getCatalogId() == ItemId.SPADE.id()) {
 				if (player.getCache().hasKey("soil_soften") || player.getQuestStage(getQuestId()) >= 3
 					|| player.getQuestStage(getQuestId()) == -1) {
-					mes(player, "you dig deep into the soft soil",
+					mes("you dig deep into the soft soil",
 						"Suddenly it crumbles away", "you fall through",
 						"and land in the sewer");
 					player.teleport(621, 3414, false);
@@ -808,7 +808,7 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 						player.updateQuestStage(getQuestId(), 3);
 					}
 				} else {
-					mes(player, "you dig the soil", "The ground is rather hard");
+					mes("you dig the soil", "The ground is rather hard");
 				}
 			}
 		}

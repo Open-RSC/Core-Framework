@@ -31,9 +31,9 @@ public class MasterCrafter implements TalkNpcTrigger {
 						"Would you like to buy a Crafting cape for 99,000 coins?");
 					if (multi(player, n, "Yes please", "No thank you") == 0) {
 						if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
-							mes(player, "The Master Crafter takes your coins");
+							mes("The Master Crafter takes your coins");
 							if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
-								mes(player, "And hands you a Crafting cape");
+								mes("And hands you a Crafting cape");
 								give(player, ItemId.CRAFTING_CAPE.id(), 1);
 								npcsay(player, n, "There you are",
 									"This cape will allow you to teleport to this guild as much as you like",

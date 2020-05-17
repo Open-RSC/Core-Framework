@@ -16,7 +16,7 @@ public class Dummy implements OpLocTrigger {
 
 	@Override
 	public void onOpLoc(Player player, GameObject obj, String command) {
-		mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "You swing at the dummy");
+		mes(player.getWorld().getServer().getConfig().GAME_TICK * 5, "You swing at the dummy");
 		if (obj.getID() == 49) { // Dummy
 			if (player.getSkills().getLevel(Skills.ATTACK) > 7) {
 				player.message("There is only so much you can learn from hitting a dummy");

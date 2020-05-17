@@ -18,7 +18,7 @@ public class MonkHealer implements TalkNpcTrigger {
 		if (option == 0) {
 			say(player, n, "Can you heal me?", "I'm injured");
 			npcsay(player, n, "Ok");
-			mes(player, "The monk places his hands on your head", "You feel a little better");
+			mes("The monk places his hands on your head", "You feel a little better");
 			int newHp = getCurrentLevel(player, Skills.HITS) + 5;
 			if (newHp > getMaxLevel(player, Skills.HITS)) {
 				newHp = getMaxLevel(player, Skills.HITS);

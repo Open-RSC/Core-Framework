@@ -167,7 +167,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		}
 
 		// Remove items
-		thinkbubble(player, goldBar);
+		thinkbubble(goldBar);
 		player.getCarriedItems().remove(goldBar);
 		if (gem > 0) {
 			player.getCarriedItems().remove(new Item(Crafting.gems[gem]));
@@ -241,7 +241,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		if (silver == null) return;
 
 		// Remove silver bar
-		thinkbubble(player, silver);
+		thinkbubble(silver);
 		player.getCarriedItems().remove(silver);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 

@@ -35,9 +35,9 @@ public class MasterFisher implements TalkNpcTrigger {
 							"It'll cost you 99,000 coins though");
 						if (multi(player, n, "Yes please", "No thank you") == 0) {
 							if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
-								mes(player, "The Master Fisher takes your coins");
+								mes("The Master Fisher takes your coins");
 								if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
-									mes(player, "And hands you a Fishing cape");
+									mes("And hands you a Fishing cape");
 									give(player, ItemId.FISHING_CAPE.id(), 1);
 									npcsay(player, n, "There",
 										"Wear this to catch manta rays and sea turtles while fishing for sharks");

@@ -35,7 +35,7 @@ public class MiningInstructor implements TalkNpcTrigger {
 				"Ok you need to get that tin out of the rock",
 				"First of all you need a pick",
 				"And here we have a pick");
-			mes(player, "The instructor somehow produces a large pickaxe from inside his jacket",
+			mes("The instructor somehow produces a large pickaxe from inside his jacket",
 					"The instructor gives you the pickaxe");
 			give(player, ItemId.BRONZE_PICKAXE.id(), 1); // Add a bronze pickaxe to the players inventory
 			npcsay(player, n, "Now hit those rocks");
@@ -43,7 +43,7 @@ public class MiningInstructor implements TalkNpcTrigger {
 		} else if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 51) {
 			if (!player.getCarriedItems().hasCatalogID(ItemId.BRONZE_PICKAXE.id(), Optional.of(false))) {
 				say(player, n, "I have lost my pickaxe");
-				mes(player, "The instructor somehow produces a large pickaxe from inside his jacket",
+				mes("The instructor somehow produces a large pickaxe from inside his jacket",
 					"The instructor gives you the pickaxe");
 				give(player, ItemId.BRONZE_PICKAXE.id(), 1); // Add a bronze pickaxe to the players inventory
 			}

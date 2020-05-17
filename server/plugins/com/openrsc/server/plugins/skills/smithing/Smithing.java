@@ -147,7 +147,7 @@ public class Smithing implements UseLocTrigger {
 				|| player.getCarriedItems().getInventory().countId(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) < 1) {
 			player.message("You need the two shield halves to repair the shield.");
 		} else {
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You set to work trying to fix the ancient shield.",
+			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You set to work trying to fix the ancient shield.",
 					"You hammer long and hard and use all of your skill.",
 					"Eventually, it is ready...",
 					"You have repaired the Dragon Square Shield.");
@@ -164,7 +164,7 @@ public class Smithing implements UseLocTrigger {
 			return;
 		}*/
 		if (goldOption == 0) {
-			mes(player, "You hammer the metal...");
+			mes("You hammer the metal...");
 			if (player.getCarriedItems().getInventory().countId(ItemId.GOLD_BAR.id()) < 2) {
 				player.message("You need two bars of gold to make this item.");
 			} else {
@@ -244,7 +244,7 @@ public class Smithing implements UseLocTrigger {
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 		}
 
-		thinkbubble(player, item);
+		thinkbubble(item);
 		if (player.getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).isStackable()) {
 			player.playerServerMessage(MessageType.QUEST, "You hammer the metal and make " + def.getAmount() + " "
 				+ player.getWorld().getServer().getEntityHandler().getItemDef(def.getItemID()).getName().toLowerCase());
@@ -381,7 +381,7 @@ public class Smithing implements UseLocTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You need 1 bar of metal to make this item");
 			return;
 		}
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.getCarriedItems().remove(new Item(ItemId.STEEL_BAR.id()));
 		player.playerServerMessage(MessageType.QUEST, "You hammer the metal and make some nails");
 		player.getCarriedItems().getInventory().add(new Item(ItemId.NAILS.id(), 2));
@@ -403,7 +403,7 @@ public class Smithing implements UseLocTrigger {
 			return;
 		}
 		if (bronzeWireOption == 0) {
-			thinkbubble(player, item);
+			thinkbubble(item);
 			player.getCarriedItems().remove(new Item(ItemId.BRONZE_BAR.id()));
 			player.playerServerMessage(MessageType.QUEST, "You hammer the Bronze Bar and make some bronze wire");
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BRONZE_WIRE.id(), 1));

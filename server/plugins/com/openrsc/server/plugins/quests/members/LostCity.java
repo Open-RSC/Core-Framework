@@ -100,8 +100,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 			case 245:
 				if (atQuestStages(player, this, 4, 3, 2, -1)) {
 					if (getCurrentLevel(player, Skills.WOODCUT) < 36) {
-						mes(player,
-							"You are not a high enough woodcutting level to chop down this tree",
+						mes("You are not a high enough woodcutting level to chop down this tree",
 							"You need a woodcutting level of 36");
 						return;
 					}
@@ -115,7 +114,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					 * anymore
 					 */
 					if (atQuestStages(player, this, 4, -1)) {
-						mes(player, "You cut a branch from the Dramen tree");
+						mes("You cut a branch from the Dramen tree");
 						give(player, ItemId.DRAMEN_BRANCH.id(), 1);
 						return;
 					}
@@ -410,13 +409,12 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (player.getCarriedItems().hasCatalogID(ItemId.DRAMEN_BRANCH.id(), Optional.of(false))) {
 			if (getCurrentLevel(player, Skills.CRAFTING) < 31) {
-				mes(player,
-					"You are not a high enough crafting level to craft this staff",
+				mes("You are not a high enough crafting level to craft this staff",
 					"You need a crafting level of 31");
 				return;
 			}
 			player.getCarriedItems().remove(new Item(ItemId.DRAMEN_BRANCH.id()));
-			mes(player, "you carve the branch into a staff");
+			mes("you carve the branch into a staff");
 			give(player, ItemId.DRAMEN_STAFF.id(), 1);
 		}
 	}
@@ -434,7 +432,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 			player.message("you go through the door and find yourself somewhere else");
 		} else if (obj.getID() == ZANARIS_DOOR) {
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(player, this, 4, -1)) {
-				mes(player, "The world starts to shimmer",
+				mes("The world starts to shimmer",
 					"You find yourself in different surroundings");
 				if (getQuestStage(player, this) != -1) {
 					teleport(player, 126, 3518);

@@ -60,7 +60,7 @@ public class SpinningWheel implements UseLocTrigger {
 
 	private void batchSpin(Player player, Item item, String resultString, int resultCatalogID, int requiredLevel, int experience) {
 		if (player.getSkills().getLevel(Skills.CRAFTING) < requiredLevel) {
-			mes(player, "You need to have a crafting of level "
+			mes("You need to have a crafting of level "
 				+ requiredLevel + " or higher to make a "
 				+ new Item(resultCatalogID).getDef(player.getWorld()).getName().toLowerCase());
 			return;
@@ -79,7 +79,7 @@ public class SpinningWheel implements UseLocTrigger {
 		if (item == null) return;
 
 		player.getCarriedItems().remove(item);
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.playSound("mechanical");
 		player.message(resultString);
 		player.getCarriedItems().getInventory().add(new Item(resultCatalogID, 1));

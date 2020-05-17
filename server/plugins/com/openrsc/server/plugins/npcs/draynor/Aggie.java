@@ -108,8 +108,7 @@ public final class Aggie implements TalkNpcTrigger {
 						say(player, n, "Yes please, mix me some skin paste");
 						npcsay(player, n,
 							"That should be simple, hand the things to Aggie then");
-						mes(player,
-							"You hand ash, flour, water and redberries to Aggie",
+						mes("You hand ash, flour, water and redberries to Aggie",
 							"She tips it into a cauldron and mutters some words");
 						player.getCarriedItems().remove(new Item(ItemId.ASHES.id()));
 						if (player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id())) == -1) {
@@ -121,7 +120,7 @@ public final class Aggie implements TalkNpcTrigger {
 						player.getCarriedItems().remove(new Item(ItemId.REDBERRIES.id()));
 						npcsay(player, n,
 							"Tourniquet, Fenderbaum, Tottenham, MonsterMunch, MarbleArch");
-						mes(player, "Aggie hands you the skin paste");
+						mes("Aggie hands you the skin paste");
 						give(player, ItemId.PASTE.id(), 1);
 						npcsay(player, n, "There you go dearie, your skin potion",
 							"That will make you look good at the Varrock dances");
@@ -153,13 +152,12 @@ public final class Aggie implements TalkNpcTrigger {
 			case Aggie.MADWITCH:
 				npcsay(player, n, "Oh, you like to call a witch names, do you?");
 				if (ifheld(player, ItemId.COINS.id(), 20)) {
-					mes(player,
-						"Aggie waves her hands about, and you seem to be 20 coins poorer");
+					mes("Aggie waves her hands about, and you seem to be 20 coins poorer");
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
 					npcsay(player, n,
 						"Thats a fine for insulting a witch, you should learn some respect");
 				} else if (player.getCarriedItems().hasCatalogID(ItemId.POT_OF_FLOUR.id(), Optional.of(false))) {
-					mes(player, "Aggie waves her hands near you, and you seem to have lost some flour");
+					mes("Aggie waves her hands near you, and you seem to have lost some flour");
 					player.getCarriedItems().remove(new Item(ItemId.POT_OF_FLOUR.id()));
 					npcsay(player, n, "Thankyou for your kind present of flour",
 						"I am sure you never meant to insult me");
@@ -201,15 +199,15 @@ public final class Aggie implements TalkNpcTrigger {
 					"I can do without dye at that price");
 				if (menu4 == 0) {
 					if (!ifheld(player, ItemId.ONION.id(), 2)) {
-						mes(player, "You don't have enough onions to make the yellow dye!");
+						mes("You don't have enough onions to make the yellow dye!");
 					} else if (!ifheld(player, ItemId.COINS.id(), 5)) {
-						mes(player, "You don't have enough coins to pay for the dye!");
+						mes("You don't have enough coins to pay for the dye!");
 					} else {
 						say(player, n, "Okay, make me some yellow dye please");
-						mes(player, "You hand the onions and payment to Aggie");
+						mes("You hand the onions and payment to Aggie");
 						player.getCarriedItems().remove(new Item(ItemId.ONION.id(), 2));
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
-						mes(player, "she takes a yellow bottle from nowhere and hands it to you");
+						mes("she takes a yellow bottle from nowhere and hands it to you");
 						give(player, ItemId.YELLOWDYE.id(), 1);
 					}
 				} else if (menu4 == 1) {
@@ -228,15 +226,15 @@ public final class Aggie implements TalkNpcTrigger {
 					"I can do without dye at that price");
 				if (menu3 == 0) {
 					if (!ifheld(player, ItemId.REDBERRIES.id(), 3)) {
-						mes(player, "You don't have enough berries to make the red dye!");
+						mes("You don't have enough berries to make the red dye!");
 					} else if (!ifheld(player, ItemId.COINS.id(), 5)) {
-						mes(player, "You don't have enough coins to pay for the dye!");
+						mes("You don't have enough coins to pay for the dye!");
 					} else {
 						say(player, n, "Okay, make me some red dye please");
-						mes(player, "You hand the berries and payment to Aggie");
+						mes("You hand the berries and payment to Aggie");
 						player.getCarriedItems().remove(new Item(ItemId.REDBERRIES.id(), 3));
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
-						mes(player, "she takes a red bottle from nowhere and hands it to you");
+						mes("she takes a red bottle from nowhere and hands it to you");
 						give(player, ItemId.REDDYE.id(), 1);
 					}
 				} else if (menu3 == 1) {
@@ -255,16 +253,15 @@ public final class Aggie implements TalkNpcTrigger {
 					"I can do without dye at that price");
 				if (menu6 == 0) {
 					if (!ifheld(player, ItemId.WOAD_LEAF.id(), 2)) {
-						mes(player, "You don't have enough woad leaves to make the blue dye!");
+						mes("You don't have enough woad leaves to make the blue dye!");
 					} else if (!ifheld(player, ItemId.COINS.id(), 5)) {
-						mes(player, "You don't have enough coins to pay for the dye!");
+						mes("You don't have enough coins to pay for the dye!");
 					} else {
 						say(player, n, "Okay, make me some blue dye please");
-						mes(player, "You hand the woad leaves and payment to Aggie");
+						mes("You hand the woad leaves and payment to Aggie");
 						player.getCarriedItems().remove(new Item(ItemId.WOAD_LEAF.id(), 2));
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
-						mes(player,
-							"she takes a blue bottle from nowhere and hands it to you");
+						mes("she takes a blue bottle from nowhere and hands it to you");
 						give(player, ItemId.BLUEDYE.id(), 1);
 					}
 				} else if (menu6 == 1) {

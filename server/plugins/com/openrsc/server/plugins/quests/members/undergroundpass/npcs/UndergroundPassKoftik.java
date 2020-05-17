@@ -164,7 +164,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
 						npcsay(player, n, "well..maybe?");
 					} else if (menu == 1) {
 						say(player, n, "what does it say?");
-						mes(player, "@red@it seems to be written by the adventurer Randas, it reads...",
+						mes("@red@it seems to be written by the adventurer Randas, it reads...",
 							"@red@It began as a whisper in my ears. Dismissing the sounds...",
 							"@red@..as the whistling of the wind, I steeled myself against...",
 							"@red@..these forces and continued on my way",
@@ -288,7 +288,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
 						"reserrect the well of voyage",
 						"follow me, i'll lead you out");
 					say(player, n, "at last!, i've had enough of caves");
-					mes(player, "koftik leads you back up through the winding caverns");
+					mes("koftik leads you back up through the winding caverns");
 					player.teleport(714, 581);
 					player.message("and back to the cave entrance");
 					break;

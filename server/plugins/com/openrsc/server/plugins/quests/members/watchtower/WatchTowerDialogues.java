@@ -189,7 +189,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 						player.message("It seems the skavid understood you");
 					} else {
 						npcsay(player, n, "???");
-						mes(player, "It seems that was the wrong reply");
+						mes("It seems that was the wrong reply");
 					}
 				}
 			} else {

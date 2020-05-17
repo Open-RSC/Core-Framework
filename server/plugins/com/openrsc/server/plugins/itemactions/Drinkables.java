@@ -399,7 +399,7 @@ public class Drinkables implements OpInvTrigger {
 			player.message("It tastes sort of strange...like fried oranges...");
 			say(player, null, ".....!.....");
 			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You feel somehow different...");
+			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You feel somehow different...");
 			say(player, null, "Let's just hope that this isn't a placibo!");
 		} else if (drink == 1) {
 			player.message("You decide against drinking the potion...");
@@ -476,7 +476,7 @@ public class Drinkables implements OpInvTrigger {
 
 	private void handleBadWine(Player player, Item item) {
 		player.message("You drink the bad wine");
-		thinkbubble(player, item);
+		thinkbubble(item);
 
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.JUG.id()));
@@ -487,7 +487,7 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void handleWine(Player player, Item item) {
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.playerServerMessage(MessageType.QUEST, "You drink the wine");
 		player.playerServerMessage(MessageType.QUEST, "It makes you feel a bit dizzy");
 		player.getCarriedItems().remove(item);
@@ -509,7 +509,7 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void handleChocolatyMilk(Player player, Item item) {
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.message("You drink the chocolaty milk");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
@@ -523,7 +523,7 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void handleGlassMilk(Player player, Item item) {
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.message("You drink the cold milk");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEVERAGE_GLASS.id()));
@@ -537,7 +537,7 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void handleTea(Player player, Item item) {
-		thinkbubble(player, item);
+		thinkbubble(item);
 		// authentic does not send to quest tab
 		player.message("You drink the cup of tea");
 		player.getCarriedItems().remove(item);
@@ -561,7 +561,7 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void handleBeer(Player player, Item item) {
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.playerServerMessage(MessageType.QUEST, "You drink the beer");
 		player.playerServerMessage(MessageType.QUEST, "You feel slightly reinvigorated");
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
@@ -581,7 +581,7 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void handleGreenmansAle(Player player, Item item) {
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.playerServerMessage(MessageType.QUEST, "You drink the greenmans ale");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
@@ -596,7 +596,7 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void handleWizardsMindBomb(Player player, Item item) {
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.playerServerMessage(MessageType.QUEST, "you drink the Wizard's Mind Bomb");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
@@ -618,7 +618,7 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void handleDwarvenStout(Player player, Item item) {
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.playerServerMessage(MessageType.QUEST, "You drink the Dwarven Stout");
 		player.playerServerMessage(MessageType.QUEST, "It tastes foul");
 		player.getCarriedItems().remove(item);
@@ -638,7 +638,7 @@ public class Drinkables implements OpInvTrigger {
 
 	private void handleAsgarnianAle(Player player, Item item) {
 		player.playerServerMessage(MessageType.QUEST, "You drink the Ale");
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
@@ -661,7 +661,7 @@ public class Drinkables implements OpInvTrigger {
 		player.playerServerMessage(MessageType.QUEST, "You drink the Dragon bitter");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
-		thinkbubble(player, item);
+		thinkbubble(item);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 		player.playerServerMessage(MessageType.QUEST, "You feel slightly reinvigorated");
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
@@ -673,7 +673,7 @@ public class Drinkables implements OpInvTrigger {
 
 	private void handleGrog(Player player, Item item) {
 		player.playerServerMessage(MessageType.QUEST, "You drink the Grog");
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);

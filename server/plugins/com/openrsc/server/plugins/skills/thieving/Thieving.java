@@ -228,7 +228,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
 		player.message("You disable the trap");
 
-		mes(player, "You open the chest");
+		mes("You open the chest");
 		if (!makeChestStuck && tempChest.get() != null) {
 			openChest(tempChest.get());
 		} else {
@@ -242,12 +242,12 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			}
 		}
 		player.incExp(Skills.THIEVING, xp, true);
-		mes(player, "You find treasure inside!");
+		mes("You find treasure inside!");
 		if (!makeChestStuck) {
 			changeloc(obj, respawnTime, 340);
 		}
 		if (teleLoc != null) {
-			mes(player, "suddenly a second magical trap triggers");
+			mes("suddenly a second magical trap triggers");
 			player.teleport(teleLoc.getX(), teleLoc.getY(), true);
 		}
 	}
@@ -354,7 +354,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		boolean succeededPickpocket = succeedThieving(player, pickpocket.getRequiredLevel());
 		if (SkillCapes.shouldActivate(player, THIEVING_CAPE, succeededPickpocket)) {
 			succeededPickpocket = true;
-			thinkbubble(player, new Item(THIEVING_CAPE.id()));
+			thinkbubble(new Item(THIEVING_CAPE.id()));
 		}
 		if (succeededPickpocket) {
 			if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
@@ -461,9 +461,9 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You manage to pick the lock");
 
 				openChest(obj);
-				mes(player, "You open the chest");
+				mes("You open the chest");
 
-				mes(player, "You find a treasure inside!");
+				mes("You find a treasure inside!");
 
 				player.incExp(Skills.THIEVING, 600, true);
 				give(player, ItemId.COINS.id(), 20);

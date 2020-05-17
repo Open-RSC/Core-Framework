@@ -176,13 +176,13 @@ public class DoorAction {
 				break;
 
 			case 154: // Grand Tree: main door (outside)
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "you open the door");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 3, "you open the door");
 				player.teleport(703, 455);
 				player.message("and walk through");
 				break;
 
 			case 153: // Grand Tree: main door (inside)
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "you open the door");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 3, "you open the door");
 				player.teleport(416, 165);
 				player.message("and walk through");
 				break;
@@ -277,7 +277,7 @@ public class DoorAction {
 					player.message("You go through the door");
 					doDoor(obj, player);
 				} else {
-					mes(player, "The door doesn't open",
+					mes("The door doesn't open",
 						"No one seems to be in");
 				}
 				break;
@@ -287,7 +287,7 @@ public class DoorAction {
 					player.message("You go through the door");
 					doDoor(obj, player);
 				} else {
-					mes(player, "The fire warrior's eyes glow",
+					mes("The fire warrior's eyes glow",
 						"The fire warrior glares at the door",
 						"The door handle is too hot to handle");
 				}
@@ -316,7 +316,7 @@ public class DoorAction {
 					player.message("You go through the door");
 					doDoor(obj, player);
 				} else {
-					mes(player, "As you reach to open the door",
+					mes("As you reach to open the door",
 						"A great terror comes over you",
 						"You decide you'll not open this door today");
 				}
@@ -680,8 +680,7 @@ public class DoorAction {
 					if (champy != null) {
 						npcsay(player, champy,
 							"You have not proven yourself worthy to enter here yet");
-						mes(player,
-							"The door won't open - you need at least 32 quest points");
+						mes("The door won't open - you need at least 32 quest points");
 					}
 					return;
 				}
@@ -745,7 +744,7 @@ public class DoorAction {
 
 			case 138: // Biohazard
 				if (!player.getCache().hasKey("rotten_apples") && player.getQuestStage(Quests.BIOHAZARD) == 4) {
-					mes(player, "the door is locked",
+					mes("the door is locked",
 						"inside you can hear the mourners eating",
 						"you need to distract them from their stew");
 				} else if (player.getCache().hasKey("rotten_apples") || player.getQuestStage(Quests.BIOHAZARD) == 5) {
@@ -939,7 +938,7 @@ public class DoorAction {
 				return;
 			}
 			if (showsBubble) {
-				thinkbubble(player, item);
+				thinkbubble(item);
 			}
 			player.message("you unlock the door");
 			doDoor(obj, player);
@@ -1122,7 +1121,7 @@ public class DoorAction {
 					return;
 				}
 				if (player.getX() >= 394) {
-					mes(player, "The gate opens smoothly");
+					mes("The gate opens smoothly");
 					player.teleport(381, 851);
 					player.message("You make your way out of Shilo Village.");
 				} else {
@@ -1140,7 +1139,7 @@ public class DoorAction {
 					player.message("the village.");
 					return;
 				}
-				mes(player, "The gate feels very cold to your touch!");
+				mes("The gate feels very cold to your touch!");
 				player.message("Are you sure you want to go through?");
 				int menu = multi(player,
 					"Yes, I am fearless!",
@@ -1148,18 +1147,18 @@ public class DoorAction {
 				if (menu == 0) {
 					changeloc(obj, 3000, 612);
 					if (player.getX() >= 388) {
-						mes(player, "The gates open very slowly.");
+						mes("The gates open very slowly.");
 						player.teleport(387, 852);
 						player.message("You manage to drag your battered body back through the gates.");
 					} else {
-						mes(player, "The gates open very slowly...");
+						mes("The gates open very slowly...");
 						player.teleport(389, 852);
-						mes(player, "As soon as the gates open, the Zombies grab you and start dragging you inside!");
+						mes("As soon as the gates open, the Zombies grab you and start dragging you inside!");
 						player.teleport(391, 852);
 						say(player, null, "Oh no, I'm done for!");
 					}
 				} else if (menu == 1) {
-					mes(player, "You drag your quivering body  away from the gates.");
+					mes("You drag your quivering body  away from the gates.");
 					player.message("You look around, but you don't think anyone saw you.");
 				}
 				return;
@@ -1259,7 +1258,7 @@ public class DoorAction {
 						"you could be a spy");
 					say(player, n, "that's ridiculous");
 					npcsay(player, n, "maybe, but that's the orders, I'm sorry");
-					mes(player, "the gnome refuses to open the gate");
+					mes("the gnome refuses to open the gate");
 					if (spawned) {
 						n.setBusy(false);
 						n.remove();

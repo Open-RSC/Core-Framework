@@ -42,7 +42,7 @@ public class AlfonseTheWaiter extends AbstractShop {
 			} else if (menu == 2) {
 				npcsay(player, n, "Hmm ask Charlie the cook round the back",
 					"He may have some Gherkins for you");
-				mes(player, "Alfonse winks");
+				mes("Alfonse winks");
 				player.getCache().store("talked_alf", true);
 				player.getCache().remove("pheonix_alf");
 			}

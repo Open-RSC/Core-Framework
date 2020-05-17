@@ -35,21 +35,21 @@ public class ObjectCooking implements UseLocTrigger {
 		// Tutorial Meat
 		if (object.getID() == 491) {
 			if (item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()) {
-				thinkbubble(player, item);
+				thinkbubble(item);
 				player.playSound("cooking");
 				player.playerServerMessage(MessageType.QUEST, "You cook the meat on the stove...");
 				if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 25) {
 					player.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
 					player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BURNTMEAT.id()));
-					mes(player, "sometimes you will burn food",
+					mes("sometimes you will burn food",
 						"As your cooking level increases this will happen less",
 						"Now speak to the cooking instructor again");
 					player.getCache().set("tutorial", 30);
 				} else if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 30) {
 					final ItemCookingDef cookingDef = item.getCookingDef(player.getWorld());
 					player.playerServerMessage(MessageType.QUEST, "The meat is now nicely cooked");
-					mes(player, "Now speak to the cooking instructor again");
+					mes("Now speak to the cooking instructor again");
 					player.incExp(Skills.COOKING, cookingDef.getExp(), true);
 					player.getCache().set("tutorial", 31);
 					player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
@@ -70,19 +70,19 @@ public class ObjectCooking implements UseLocTrigger {
 		// Raw Oomlie Meat (Always burn)
 		else if (item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT.id()) {
 			if (object.getID() == 97 || object.getID() == 274)
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You cook the meat on the fire...");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You cook the meat on the fire...");
 			else
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You cook the meat on the stove...");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You cook the meat on the stove...");
 			player.getCarriedItems().remove(new Item(ItemId.RAW_OOMLIE_MEAT.id()));
 			give(player, ItemId.BURNTMEAT.id(), 1);
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "This meat is too delicate to cook like this.");
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Perhaps you can wrap something around it to protect it from the heat.");
+			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "This meat is too delicate to cook like this.");
+			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "Perhaps you can wrap something around it to protect it from the heat.");
 		}
 
 		// Poison (Hazeel Cult)
 		else if (item.getCatalogId() == ItemId.POISON.id() && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
 			if (player.getQuestStage(Quests.THE_HAZEEL_CULT) == 3 && player.getCache().hasKey("evil_side")) {
-				mes(player, "you poor the poison into the hot pot",
+				mes("you poor the poison into the hot pot",
 					"the poison desolves into the soup");
 				player.getCarriedItems().remove(new Item(ItemId.POISON.id()));
 				player.updateQuestStage(Quests.THE_HAZEEL_CULT, 4);
@@ -96,8 +96,8 @@ public class ObjectCooking implements UseLocTrigger {
 				+ object.getGameObjectDef().getName().toLowerCase(), "The seaweed burns to ashes");
 		} else if (item.getCatalogId() == ItemId.COOKEDMEAT.id()) { // Cooked meat to get burnt meat
 			if (player.getQuestStage(Quests.WITCHS_POTION) != -1) {
-				thinkbubble(player, item);
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, cookingOnMessage(player, item, object, false));
+				thinkbubble(item);
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 3, cookingOnMessage(player, item, object, false));
 				player.getCarriedItems().remove(new Item(ItemId.COOKEDMEAT.id()));
 				give(player, ItemId.BURNTMEAT.id(), 1);
 				player.playerServerMessage(MessageType.QUEST, "you burn the meat");
@@ -175,7 +175,7 @@ public class ObjectCooking implements UseLocTrigger {
 			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
 		);
 		if (item == null) return;
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.playSound("cooking");
 		delay(timeToCook);
 		if (player.getCarriedItems().remove(item) > -1) {
@@ -241,9 +241,9 @@ public class ObjectCooking implements UseLocTrigger {
 	private void batchInedibleCooking(Player player, int itemID, int product, boolean hasBubble, String... messages) {
 		if (player.getCarriedItems().hasCatalogID(itemID, Optional.of(false))) {
 			if (hasBubble)
-				thinkbubble(player, new Item(itemID));
+				thinkbubble(new Item(itemID));
 			player.playSound("cooking");
-			mes(player, messages);
+			mes(messages);
 			player.getCarriedItems().remove(new Item(itemID));
 			give(player, product, 1);
 		} else {

@@ -80,15 +80,15 @@ public final class MonkOfEntrana implements OpLocTrigger,
 			if (multi(player, n, "No I don't wish to go",
 				"Yes, Okay I'm ready to go") == 1) {
 
-				mes(player, "The monk quickly searches you");
+				mes("The monk quickly searches you");
 				if (CANT_GO(player)) {
 					npcsay(player, n, "Sorry we cannow allow you on to our island",
 						"Make sure you are not carrying weapons or armour please");
 				} else {
-					mes(player, "You board the ship");
+					mes("You board the ship");
 					player.teleport(418, 570, false);
 					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
-					mes(player, "The ship arrives at Entrana");
+					mes("The ship arrives at Entrana");
 				}
 			}
 		}
@@ -97,10 +97,10 @@ public final class MonkOfEntrana implements OpLocTrigger,
 			if (multi(player, n, "No I don't wish to go",
 				"Yes, Okay I'm ready to go") == 1) {
 
-				mes(player, "You board the ship");
+				mes("You board the ship");
 				player.teleport(264, 660, false);
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
-				mes(player, "The ship arrives at Port Sarim");
+				mes("The ship arrives at Port Sarim");
 			}
 			return;
 		}

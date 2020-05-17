@@ -34,9 +34,9 @@ public class WizardFrumscone implements TalkNpcTrigger {
 						"It will only cost you 99,000 coins.");
 					if (multi(player, n, "I am ready", "I am not ready") == 0) {
 						if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
-							mes(player, "Wizard Frumscone takes your coins");
+							mes("Wizard Frumscone takes your coins");
 							if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
-								mes(player, "And hands you a Magic cape");
+								mes("And hands you a Magic cape");
 								give(player, ItemId.MAGIC_CAPE.id(), 1);
 								npcsay(player, n, "You have now been bestowed with great power",
 									"This cape will allow you to cast some spells without using runes");

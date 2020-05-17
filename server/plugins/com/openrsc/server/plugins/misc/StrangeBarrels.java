@@ -160,7 +160,7 @@ public class StrangeBarrels implements OpLocTrigger {
 				} else {
 					if (DataConversions.random(0, 1) != 0) {
 						player.message("You were unable to smash this barrel open.");
-						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You hit the barrel at the wrong angle.",
+						mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You hit the barrel at the wrong angle.",
 							"You're heavily jarred from the vibrations of the blow.");
 						int reduceAttack = DataConversions.random(1, 3);
 						player.message("Your attack is reduced by " + reduceAttack + ".");

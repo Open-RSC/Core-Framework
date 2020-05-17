@@ -128,7 +128,7 @@ public class HalloweenCracker implements UsePlayerTrigger {
 
 			delay(player.getWorld().getServer().getConfig().GAME_TICK);
 
-			thinkbubble(player, item);
+			thinkbubble(item);
 			player.message("You pull the cracker with " + otherPlayer.getUsername() + "...");
 			otherPlayer.message(player.getUsername() + " is pulling a cracker with you...");
 

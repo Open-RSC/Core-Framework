@@ -33,7 +33,7 @@ public class FairyLunderwin implements TalkNpcTrigger {
 					say(player, n, "Yes, I will sell you all my cabbages");
 					while (player.getCarriedItems().hasCatalogID(ItemId.CABBAGE.id(), Optional.of(false))
 						|| player.getCarriedItems().hasCatalogID(ItemId.SPECIAL_DEFENSE_CABBAGE.id(), Optional.of(false))) {
-						mes(player, 60, "You sell a cabbage");
+						mes(60, "You sell a cabbage");
 						if (player.getCarriedItems().hasCatalogID(ItemId.CABBAGE.id(), Optional.of(false))) {
 							player.getCarriedItems().remove(new Item(ItemId.CABBAGE.id(), 1));
 						} else if (player.getCarriedItems().hasCatalogID(ItemId.SPECIAL_DEFENSE_CABBAGE.id(), Optional.of(false))) {

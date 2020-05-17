@@ -120,7 +120,7 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
 				return;
 			case PIPE:
-				mes(player, "you squeeze into the pipe", "and shuffle down into it");
+				mes("you squeeze into the pipe", "and shuffle down into it");
 				teleport(player, 683, 494);
 				gnomeTrainer = ifnearvisnpc(player, NpcId.GNOME_TRAINER_ENTRANCE.id(), 10);
 				if (gnomeTrainer != null && !AgilityUtils.hasDoneObstacle(player, PIPE, obstacles)) {

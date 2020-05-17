@@ -121,7 +121,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 								"you'll find him in the chapel",
 								"take this poisoned animal feed",
 								"give it to the four sheep and they'll peacefully fall asleep");
-							mes(player, "The councillor gives you some sheep poison");
+							mes("The councillor gives you some sheep poison");
 							give(player, ItemId.POISONED_ANIMAL_FEED.id(), 1);
 							player.updateQuestStage(getQuestId(), 1);
 						} else if (menu2 == 1) {
@@ -138,7 +138,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 						"every second counts");
 					if (!player.getCarriedItems().hasCatalogID(ItemId.POISONED_ANIMAL_FEED.id(), Optional.empty())) {
 						say(player, n, "Some more sheep poison might be useful");
-						mes(player, "The councillor gives you some more sheep poison");
+						mes("The councillor gives you some more sheep poison");
 						give(player, ItemId.POISONED_ANIMAL_FEED.id(), 1);
 					}
 					break;
@@ -161,9 +161,9 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 						player.sendQuestComplete(Quests.SHEEP_HERDER);
 						give(player, ItemId.COINS.id(), 3100);
 						npcsay(player, n, "here take one hundred coins to cover the price of your protective clothing");
-						mes(player, "halgrive gives you 100 coins");
+						mes("halgrive gives you 100 coins");
 						npcsay(player, n, "and another three thousand for your efforts");
-						mes(player, "halgrive gives you another 3000 coins");
+						mes("halgrive gives you another 3000 coins");
 					} else {
 						say(player, n, "erm not quite");
 						npcsay(player, n, "not quite's not good enough",
@@ -203,7 +203,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 					player.teleport(588, 540, false);
 				}
 			} else {
-				mes(player, "this is a restricted area",
+				mes("this is a restricted area",
 					"you cannot enter without protective clothing");
 			}
 		}
@@ -648,7 +648,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 
 					}
 				} else {
-					mes(player, "this sheep has the plague",
+					mes("this sheep has the plague",
 						"you better not touch it");
 				}
 			}
@@ -656,38 +656,34 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 				if (plagueSheep.getLocation().inBounds(589, 543, 592, 548)) {
 					if (plagueSheep.getID() == NpcId.FIRST_PLAGUE_SHEEP.id()) {
 						if (player.getCache().hasKey("plagueremain1st")) {
-							mes(player,
-								"You have already disposed of this sheep",
+							mes("You have already disposed of this sheep",
 								"Find a different sheep");
 							return;
 						}
 					} else if (plagueSheep.getID() == NpcId.SECOND_PLAGUE_SHEEP.id()) {
 						if (player.getCache().hasKey("plagueremain2nd")) {
-							mes(player,
-								"You have already disposed of this sheep",
+							mes("You have already disposed of this sheep",
 								"Find a different sheep");
 							return;
 						}
 					} else if (plagueSheep.getID() == NpcId.THIRD_PLAGUE_SHEEP.id()) {
 						if (player.getCache().hasKey("plagueremain3th")) {
-							mes(player,
-								"You have already disposed of this sheep",
+							mes("You have already disposed of this sheep",
 								"Find a different sheep");
 							return;
 						}
 					} else if (plagueSheep.getID() == NpcId.FOURTH_PLAGUE_SHEEP.id()) {
 						if (player.getCache().hasKey("plagueremain4th")) {
-							mes(player,
-								"You have already disposed of this sheep",
+							mes("You have already disposed of this sheep",
 								"Find a different sheep");
 							return;
 						}
 					}
-					mes(player, "you give the sheep poisoned sheep feed");
+					mes("you give the sheep poisoned sheep feed");
 					player.message("the sheep collapses to the floor and dies");
 					plagueSheep.remove();
 				} else {
-					mes(player, "you can't kill the sheep out here",
+					mes("you can't kill the sheep out here",
 						"you might spread the plague");
 				}
 			}
@@ -710,7 +706,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 							player.getCache().store("plagueremain1st", true);
 							player.getCarriedItems().remove(new Item(ItemId.PLAGUED_SHEEP_REMAINS_1.id()));
 						} else {
-							mes(player, "You need to kill this sheep yourself");
+							mes("You need to kill this sheep yourself");
 							return;
 						}
 					} else if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_2.id()) {
@@ -718,7 +714,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 							player.getCache().store("plagueremain2nd", true);
 							player.getCarriedItems().remove(new Item(ItemId.PLAGUED_SHEEP_REMAINS_2.id()));
 						} else {
-							mes(player, "You need to kill this sheep yourself");
+							mes("You need to kill this sheep yourself");
 							return;
 						}
 					} else if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_3.id()) {
@@ -726,7 +722,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 							player.getCache().store("plagueremain3th", true);
 							player.getCarriedItems().remove(new Item(ItemId.PLAGUED_SHEEP_REMAINS_3.id()));
 						} else {
-							mes(player, "You need to kill this sheep yourself");
+							mes("You need to kill this sheep yourself");
 							return;
 						}
 					} else if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_4.id()) {
@@ -734,17 +730,17 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 							player.getCache().store("plagueremain4th", true);
 							player.getCarriedItems().remove(new Item(ItemId.PLAGUED_SHEEP_REMAINS_4.id()));
 						} else {
-							mes(player, "You need to kill this sheep yourself");
+							mes("You need to kill this sheep yourself");
 							return;
 						}
 					}
-					mes(player, "you put the sheep remains in the furnace",
+					mes("you put the sheep remains in the furnace",
 						"the remains burn to dust");
 				} else {
-					mes(player, "You have already completed this quest");
+					mes("You have already completed this quest");
 				}
 			} else {
-				mes(player, "Nothing interesting happens");
+				mes("Nothing interesting happens");
 			}
 		}
 	}

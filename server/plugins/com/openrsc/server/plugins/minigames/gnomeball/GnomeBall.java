@@ -103,12 +103,12 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 				@Override
 				public void doSpell() {
 					//logic to try to score from 1xp
-					thinkbubble(player, new Item(ItemId.GNOME_BALL.id()));
-					mes(player, "you throw the ball at the goal");
+					thinkbubble(new Item(ItemId.GNOME_BALL.id()));
+					mes("you throw the ball at the goal");
 					player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
 					int random = DataConversions.random(0, 4);
 					if (random < 2 + (playerZone == Zone.ZONE_1XP_INNER ? 2 : 0)) {
-						mes(player, "it flys through the net...",
+						mes("it flys through the net...",
 								"into the hands of the goal catcher");
 						Npc cheerleader = ifnearvisnpc(player, GnomeNpcs.CHEERLEADER, 10);
 						if (cheerleader != null) {
@@ -117,9 +117,9 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 						handleScore(player, 0);
 					} else {
 						if (DataConversions.random(0, 2) < 2 || playerZone == Zone.ZONE_1XP_OUTER) {
-							mes(player, "the ball flys way over the net");
+							mes("the ball flys way over the net");
 						} else {
-							mes(player, "the ball just misses the net");
+							mes("the ball just misses the net");
 						}
 					}
 				}
@@ -131,12 +131,12 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 				@Override
 				public void doSpell() {
 					//logic to try to score from 2xp
-					thinkbubble(player, new Item(ItemId.GNOME_BALL.id()));
-					mes(player, "you throw the ball at the goal");
+					thinkbubble(new Item(ItemId.GNOME_BALL.id()));
+					mes("you throw the ball at the goal");
 					player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
 					int random = DataConversions.random(0, 9);
 					if (random < 4 + (playerZone == Zone.ZONE_2XP_INNER ? 2 : 0)) {
-						mes(player, "it flys through the net...",
+						mes("it flys through the net...",
 								"into the hands of the goal catcher");
 						Npc cheerleader = ifnearvisnpc(player, GnomeNpcs.CHEERLEADER, 10);
 						if (cheerleader != null) {
@@ -145,16 +145,16 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 						handleScore(player, 1);
 					} else {
 						if (DataConversions.random(0, 2) < 2 || playerZone == Zone.ZONE_2XP_OUTER) {
-							mes(player, "you miss by a mile!");
+							mes("you miss by a mile!");
 						} else {
-							mes(player, "the ball flys way over the net");
+							mes("the ball flys way over the net");
 						}
 					}
 				}
 			});
 		} else if (playerZone == Zone.ZONE_NOT_VISIBLE || playerZone == Zone.ZONE_OUTSIDE_THROWABLE) {
-			thinkbubble(player, new Item(ItemId.GNOME_BALL.id()));
-			mes(player, "you throw the ball at the goal",
+			thinkbubble(new Item(ItemId.GNOME_BALL.id()));
+			mes("you throw the ball at the goal",
 					"you miss by a mile!",
 					"maybe you should try playing on the pitch!");
 		}
@@ -211,7 +211,7 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 	public void onTakeObj(Player player, GroundItem item) {
 		if (item.getID() == ItemId.GNOME_BALL.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "you can only carry one ball at a time", "otherwise it would be too easy");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "you can only carry one ball at a time", "otherwise it would be too easy");
 			} else {
 				player.getWorld().unregisterItem(item);
 				give(player, ItemId.GNOME_BALL.id(), 1);

@@ -208,16 +208,16 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 
 				if (multi(player, npc, "You're welcome", "I've got your stuff, let's do this") == 1) {
 					for (int i = 0; i < drunkDragons; i++) {
-						mes(player, "You give a Drunk dragon to Dimintheis");
+						mes("You give a Drunk dragon to Dimintheis");
 						if (hasBoughtDrinks) {
 							player.getCarriedItems().remove(new Item(ItemId.BLURBERRY_BARMAN_DRUNK_DRAGON.id()));
 						} else if (hasMadeDrinks) {
 							player.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
 						}
 					}
-					mes(player, "You give " + goldCost + " coins to Dimintheis");
+					mes("You give " + goldCost + " coins to Dimintheis");
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), goldCost));
-					mes(player, "You give your gauntlets to Dimintheis");
+					mes("You give your gauntlets to Dimintheis");
 					Item itemToRemove = player.getCarriedItems().getEquipment().get(
 						player.getCarriedItems().getEquipment().searchEquipmentForItem(
 							Gauntlets.getById(getGauntletEnchantment(player)).catalogId()));
@@ -228,7 +228,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					}
 					if (itemToRemove == null) return;
 					player.getCarriedItems().remove(itemToRemove);
-					mes(player, "Dimintheis takes your gauntlets",
+					mes("Dimintheis takes your gauntlets",
 					"He mutters some words that you don't understand",
 					"He hands you back a pair of steel gauntlets");
 					give(player, Gauntlets.STEEL.catalogId(), 1);
@@ -293,7 +293,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 							"That sounds good, improve them for me",
 							"I think I'll check my other options with your brothers");
 						if (menu == 0) {
-							mes(player, "Avan takes out a little hammer",
+							mes("Avan takes out a little hammer",
 								"He starts pounding on the gauntlets",
 								"Avan hands the gauntlets to you");
 							Item itemToRemove = player.getCarriedItems().getEquipment().get(
@@ -459,7 +459,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					int menu = multi(player, n, "That sounds good to me",
 						"I shall see what options your brothers can offer me first");
 					if (menu == 0) {
-						mes(player, "Johnathon waves his staff",
+						mes("Johnathon waves his staff",
 							"The gauntlets sparkle and shimmer");
 						Item itemToRemove = player.getCarriedItems().getEquipment().get(
 							player.getCarriedItems().getEquipment().searchEquipmentForItem(
@@ -660,7 +660,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 	public void onUseNpc(Player player, Npc n, Item item) {
 		if (n.getID() == NpcId.JOHNATHON.id() && item.getCatalogId() == ItemId.FULL_CURE_POISON_POTION.id()) {
 			if (player.getQuestStage(this) == 7) {
-				mes(player, "You feed your potion to Johnathon");
+				mes("You feed your potion to Johnathon");
 				player.getCarriedItems().remove(new Item(ItemId.FULL_CURE_POISON_POTION.id()));
 				player.updateQuestStage(this, 8);
 				npcsay(player, n, "Wow I'm feeling a lot better now",

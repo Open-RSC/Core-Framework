@@ -31,10 +31,10 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 		if (obj.getID() == TOBAN_CHEST_CLOSED && item.getCatalogId() == ItemId.KEY.id()) {
 			openChest(obj, 2000, TOBAN_CHEST_OPEN);
 			if (player.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.empty())) {
-				mes(player, "You have already got the stolen gold");
+				mes("You have already got the stolen gold");
 			} else {
 				player.message("You find a stash of gold inside");
-				mes(player, "You take the gold");
+				mes("You take the gold");
 				give(player, ItemId.STOLEN_GOLD.id(), 1);
 			}
 			player.message("The chest springs shut");
@@ -313,7 +313,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 		else if (i.getID() == ItemId.POWERING_CRYSTAL1.id() || i.getID() == ItemId.POWERING_CRYSTAL2.id()
 				|| i.getID() == ItemId.POWERING_CRYSTAL3.id() || i.getID() == ItemId.POWERING_CRYSTAL4.id()) {
 			if (player.getQuestStage(Quests.WATCHTOWER) == -1) {
-				mes(player, "You try and take the crystal but its stuck solid!",
+				mes("You try and take the crystal but its stuck solid!",
 					"You feel magic power coursing through the crystal...",
 					"The force renews your magic level");
 				int maxMagic = getMaxLevel(player, Skills.MAGIC);

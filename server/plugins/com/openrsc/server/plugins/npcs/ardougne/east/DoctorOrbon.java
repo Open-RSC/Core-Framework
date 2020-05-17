@@ -49,7 +49,7 @@ public class DoctorOrbon implements TalkNpcTrigger {
 						// NOTHING
 					} else if (moreMenu == 1) {
 						if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100)) != -1) {
-							mes(player, "you give doctor orbon 100 coins",
+							mes("you give doctor orbon 100 coins",
 								"doctor orbon gives you a protective suit");
 							give(player, ItemId.PROTECTIVE_TROUSERS.id(), 1);
 							give(player, ItemId.PROTECTIVE_JACKET.id(), 1);
@@ -82,7 +82,7 @@ public class DoctorOrbon implements TalkNpcTrigger {
 					// NOTHING
 				} else if (menu == 1) {
 					if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100)) != -1) {
-						mes(player, "you give doctor orbon 100 coins",
+						mes("you give doctor orbon 100 coins",
 							"doctor orbon gives you a protective suit");
 						give(player, ItemId.PROTECTIVE_TROUSERS.id(), 1);
 						give(player, ItemId.PROTECTIVE_JACKET.id(), 1);

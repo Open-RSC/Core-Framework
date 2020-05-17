@@ -30,7 +30,7 @@ public class Sheep implements UseNpcTrigger {
 	}
 
 	private void batchShear(Player player, Item item) {
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.message("You attempt to shear the sheep");
 
 		if (random(0, 4) != 0) {

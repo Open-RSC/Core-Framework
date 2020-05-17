@@ -47,34 +47,34 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), PILE_OF_MUD_MAP_LEVEL_2)) {
 			if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[0]) {
-				mes(player, "you climb the pile of mud...",
+				mes("you climb the pile of mud...",
 					"it leads to a small tunnel...");
 				player.teleport(727, 3448);
 				player.message("..ending at the well entrance");
 			}
 			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[1]) {
-				mes(player, "you climb the pile of mud");
+				mes("you climb the pile of mud");
 				player.teleport(753, 3481);
 			}
 			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[2]) {
-				mes(player, "you climb the pile of mud");
+				mes("you climb the pile of mud");
 				player.teleport(753, 3475);
 			}
 			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[3]) {
-				mes(player, "you climb the pile of mud");
+				mes("you climb the pile of mud");
 				player.teleport(743, 3483);
 			}
 			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[4]) {
-				mes(player, "you climb the pile of mud");
+				mes("you climb the pile of mud");
 				player.teleport(740, 3476);
 			}
 			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[5]) {
-				mes(player, "you climb the pile of mud");
+				mes("you climb the pile of mud");
 				player.teleport(735, 3478);
 			}
 		}
 		else if (obj.getID() == CRATE) {
-			mes(player, "you search the crate");
+			mes("you search the crate");
 			if (!player.getCache().hasKey("crate_food")) {
 				player.message("inside you find some food");
 				give(player, ItemId.SALMON.id(), 2);
@@ -85,12 +85,12 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 			}
 		}
 		else if (inArray(obj.getID(), DUG_UP_SOIL)) {
-			mes(player, "under the soil is a tunnel");
+			mes("under the soil is a tunnel");
 			player.message("would you like to enter?");
 			int menu = multi(player,
 				"no, im scared of small spaces", "yep, let's do it");
 			if (menu == 1) {
-				mes(player, "you climb into the small tunnel");
+				mes("you climb into the small tunnel");
 				if (obj.getID() == DUG_UP_SOIL[1])
 					player.teleport(745, 3457);
 				else
@@ -120,16 +120,16 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 		}
 		else if (obj.getID() == WALL_GRILL_EAST) {
 			if (!player.getCache().hasKey("rope_wall_grill")) {
-				mes(player, "the wall grill is too high");
+				mes("the wall grill is too high");
 				player.message("you can't quite reach");
 			} else {
-				mes(player, "you use the rope tied to the grill to pull yourself up");
+				mes("you use the rope tied to the grill to pull yourself up");
 				player.message("you then climb across the grill to the otherside");
 				player.teleport(762, 3472);
 			}
 		}
 		else if (obj.getID() == WALL_GRILL_WEST) {
-			mes(player, "you climb across the grill to the otherside");
+			mes("you climb across the grill to the otherside");
 			player.teleport(766, 3463);
 		}
 		else if (inArray(obj.getID(), ROCKS)) {
@@ -172,7 +172,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 			}
 		}
 		else if (obj.getID() == PASSAGE) {
-			mes(player, "you walk down the passage way");
+			mes("you walk down the passage way");
 			player.message("you step on a pressure trigger");
 			player.message("it's a trap");
 			if (obj.getX() == 737 || obj.getX() == 735) {
@@ -189,7 +189,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 		}
 		else if (obj.getID() == CAGE_REMAINS) {
 			if (player.getQuestStage(Quests.UNDERGROUND_PASS) >= 5 || player.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
-				mes(player, "you search the cage remains");
+				mes("you search the cage remains");
 				player.message("nothing remains");
 				return;
 			}
@@ -204,7 +204,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 		else if (obj.getID() == GATE_OF_IBAN) {
 			player.message("you pull on the great door");
 			if ((player.getCache().hasKey("flames_of_zamorak1") && player.getCache().hasKey("flames_of_zamorak2") && (player.getCache().hasKey("flames_of_zamorak3") && player.getCache().getInt("flames_of_zamorak3") >= 2)) || atQuestStages(player, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
-				mes(player, "from behind the door you hear cry's and moans");
+				mes("from behind the door you hear cry's and moans");
 				player.message("the door slowly creeks open");
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 723, obj.getDirection(), obj
 					.getType()));
@@ -222,12 +222,12 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 				.getType()));
 			addloc(obj.getWorld(), obj.getLoc(), 3000);
 			player.teleport(766, 3417);
-			mes(player, "you open the huge wooden door");
+			mes("you open the huge wooden door");
 			player.teleport(763, 3417);
 			player.message("and walk through");
 		}
 		else if (obj.getID() == FLAMES_OF_ZAMORAK) {
-			mes(player, "you search the stone structure");
+			mes("you search the stone structure");
 			player.message("on the side you find an old inscription");
 			player.message("it reads...");
 			ActionSender.sendBox(player, "@red@While I sense the soft beating of a good heart I will not open% %@red@Feed me three crests of the blessed warriors, and the%@red@creatures remains% %@red@Throw them to me as an offering, a gift of hatred, a token% %@red@Then finally rejoice as all goodness dies in my flames", true);
@@ -244,7 +244,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 		if (inArray(obj.getID(), RAILINGS)) {
 			if (click == 0) {
 				if (obj.getID() == 168) {
-					mes(player, "the cage door has been sealed shut");
+					mes("the cage door has been sealed shut");
 					player.message("the poor unicorn can't escape");
 					return;
 				}
@@ -272,7 +272,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 				player.message("the cage slams shut behind you");
 			} else if (click == 1) {
 				if (obj.getID() == 168) {
-					mes(player, "you search the cage");
+					mes("you search the cage");
 					if (!player.getCarriedItems().hasCatalogID(ItemId.RAILING.id(), Optional.of(false))) {
 						player.message("you find a loose railing lying on the floor");
 						give(player, ItemId.RAILING.id(), 1);

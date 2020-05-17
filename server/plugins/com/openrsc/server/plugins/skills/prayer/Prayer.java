@@ -27,7 +27,7 @@ public class Prayer implements OpLocTrigger {
 			}
 			if (object.getID() == 625 && object.getY() == 3573) {
 				delay(player.getWorld().getServer().getConfig().GAME_TICK);
-				mes(player, "Suddenly a trapdoor opens beneath you");
+				mes("Suddenly a trapdoor opens beneath you");
 				player.teleport(608, 3525);
 			}
 		}

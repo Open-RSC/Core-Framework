@@ -81,7 +81,7 @@ public class ShiloVillageMosolRei implements TalkNpcTrigger {
 									 */
 									player.updateQuestStage(Quests.SHILO_VILLAGE, 1);
 								} else if (menu4 == 1) {
-									mes(player, "Mosol casts a disaproving glance at you");
+									mes("Mosol casts a disaproving glance at you");
 									npcsay(player, n, "Quite right, bwana, please make all haste!",
 										"Before your spine turns to water as we speak.");
 								}
@@ -134,9 +134,9 @@ public class ShiloVillageMosolRei implements TalkNpcTrigger {
 								if (sub_opt2 == 0) {
 									npcsay(player, n, "Ok, perhaps you'd like to be on your way now?");
 								} else if (sub_opt2 == 1) {
-									mes(player, "Mosol lowers his brows in deep concentration");
+									mes("Mosol lowers his brows in deep concentration");
 									npcsay(player, n, "Well, let me have a think?");
-									mes(player, "He scratches his head.");
+									mes("He scratches his head.");
 									npcsay(player, n, "Hmmm, there was something I think that might help...",
 										"No, sorry, it's gone.");
 									int sub_opt3 = multi(player, n,

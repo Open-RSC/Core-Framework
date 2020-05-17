@@ -196,7 +196,7 @@ public class DruidicRitual implements QuestInterface, TalkNpcTrigger,
 							"He is probably our best teacher of herblaw at the moment",
 							"I believe he is at our stone circle to the north of here");
 					} else if (first == 1) {
-						mes(player, "Sanfew grunts");
+						mes("Sanfew grunts");
 					}
 					break;
 				case 1:
@@ -226,7 +226,7 @@ public class DruidicRitual implements QuestInterface, TalkNpcTrigger,
 							player.updateQuestStage(getQuestId(), 2);
 						}
 					} else if (first == 1) {
-						mes(player, "Sanfew grunts");
+						mes("Sanfew grunts");
 					}
 					break;
 				case 2:
@@ -236,7 +236,7 @@ public class DruidicRitual implements QuestInterface, TalkNpcTrigger,
 						&& player.getCarriedItems().hasCatalogID(ItemId.ENCHANTED_RAT_MEAT.id(), Optional.of(false))
 						&& player.getCarriedItems().hasCatalogID(ItemId.ENCHANTED_BEEF.id(), Optional.of(false))) {
 						say(player, n, "Yes I have everything");
-						mes(player, "You give the meats to Sanfew");
+						mes("You give the meats to Sanfew");
 						player.getCarriedItems().remove(new Item(ItemId.ENCHANTED_CHICKEN_MEAT.id()));
 						player.getCarriedItems().remove(new Item(ItemId.ENCHANTED_BEAR_MEAT.id()));
 						player.getCarriedItems().remove(new Item(ItemId.ENCHANTED_RAT_MEAT.id()));
@@ -285,7 +285,7 @@ public class DruidicRitual implements QuestInterface, TalkNpcTrigger,
 						npcsay(player, n, "Not at the moment",
 							"I need to make some more preparations myself now");
 					} else if (finalMenu == 1) {
-						mes(player, "Sanfew grunts");
+						mes("Sanfew grunts");
 					}
 					break;
 			}
@@ -332,25 +332,25 @@ public class DruidicRitual implements QuestInterface, TalkNpcTrigger,
 			}
 
 			if (item.getCatalogId() == ItemId.RAW_CHICKEN.id()) {
-				mes(player, "You dip the chicken in the cauldron");
+				mes("You dip the chicken in the cauldron");
 				player.getCarriedItems().remove(new Item(ItemId.RAW_CHICKEN.id()));
 
 				give(player, ItemId.ENCHANTED_CHICKEN_MEAT.id(), 1);
 			}
 			else if (item.getCatalogId() == ItemId.RAW_BEAR_MEAT.id()) {
-				mes(player, "You dip the bear meat in the cauldron");
+				mes("You dip the bear meat in the cauldron");
 				player.getCarriedItems().remove(new Item(ItemId.RAW_BEAR_MEAT.id()));
 
 				give(player, ItemId.ENCHANTED_BEAR_MEAT.id(), 1);
 			}
 			else if (item.getCatalogId() == ItemId.RAW_RAT_MEAT.id()) {
-				mes(player, "You dip the rat meat in the cauldron");
+				mes("You dip the rat meat in the cauldron");
 				player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
 
 				give(player, ItemId.ENCHANTED_RAT_MEAT.id(), 1);
 			}
 			else if (item.getCatalogId() == ItemId.RAW_BEEF.id()) {
-				mes(player, "You dip the beef in the cauldron");
+				mes("You dip the beef in the cauldron");
 				player.getCarriedItems().remove(new Item(ItemId.RAW_BEEF.id()));
 
 				give(player, ItemId.ENCHANTED_BEEF.id(), 1);

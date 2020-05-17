@@ -44,7 +44,7 @@ public class DigsiteMiscs implements DropObjTrigger {
 			player.message("You were injured by the exploding liquid");
 		}
 		else if (item.getCatalogId() == ItemId.EXPLOSIVE_COMPOUND.id()) {
-			mes(player, "bang!");
+			mes("bang!");
 			player.getCarriedItems().remove(new Item(ItemId.EXPLOSIVE_COMPOUND.id()));
 			player.damage(61);
 			say(player, null, "Ow!");

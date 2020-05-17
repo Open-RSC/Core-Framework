@@ -26,13 +26,13 @@ public class King implements TalkNpcTrigger {
 			say(player, n, "Your majesty", "I have come to claim the reward",
 				"For the return of the shield of Arrav");
 			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5) {
-				mes(player, "You show the certificate to the king");
+				mes("You show the certificate to the king");
 				npcsay(player, n, "My goodness",
 					"This is the claim for a reward put out by my father",
 					"I never thought I'd see anyone claim this reward",
 					"I see you are claiming half the reward",
 					"So that would come to 600 gold coins");
-				mes(player, "You hand over a certificate",
+				mes("You hand over a certificate",
 					"The king gives you 600 coins");
 				player.getCarriedItems().remove(new Item(ItemId.CERTIFICATE.id()));
 				player.sendQuestComplete(Quests.SHIELD_OF_ARRAV);
@@ -46,7 +46,7 @@ public class King implements TalkNpcTrigger {
 			} else {
 				npcsay(player, n, "You have already claimed the reward",
 					"You can't claim it twice");
-				mes(player, "Why don't you give this certificate",
+				mes("Why don't you give this certificate",
 					"To whoever helped you get the shield");
 			}
 			return;

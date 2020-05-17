@@ -58,7 +58,7 @@ public class Refill implements UseLocTrigger {
 
 		if (item == null) return;
 
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.playSound("filljug");
 		player.message(fillString);
 		player.getCarriedItems().remove(item);

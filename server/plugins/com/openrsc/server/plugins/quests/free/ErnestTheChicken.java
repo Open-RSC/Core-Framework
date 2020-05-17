@@ -54,7 +54,7 @@ public class ErnestTheChicken implements QuestInterface,
 	@Override
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.POISONED_FISH_FOOD.id()) {
-			mes(player, "You pour the poisoned fish food into the fountain",
+			mes("You pour the poisoned fish food into the fountain",
 				"You see the pirhanas eating the food",
 				"The pirhanas drop dead and float to the surface");
 			player.getCarriedItems().remove(new Item(ItemId.POISONED_FISH_FOOD.id()));
@@ -63,23 +63,23 @@ public class ErnestTheChicken implements QuestInterface,
 			}
 		} else if (obj.getID() == QuestObjects.FOUNTAIN
 			&& item.getCatalogId() == ItemId.FISH_FOOD.id()) {
-			mes(player, "You pour the fish food into the fountain",
+			mes("You pour the fish food into the fountain",
 				"You see the pirhanas eating the food",
 				"The pirhanas seem hungrier than ever");
 			player.getCarriedItems().remove(new Item(ItemId.FISH_FOOD.id()));
 		}
 		//nothing happens every other item
 		else if (obj.getID() == QuestObjects.FOUNTAIN) {
-			mes(player, "Nothing interesting happens");
+			mes("Nothing interesting happens");
 		}
 		if (obj.getID() == QuestObjects.COMPOST
 			&& item.getCatalogId() == ItemId.SPADE.id()) {
 			if (!player.getCarriedItems().hasCatalogID(ItemId.CLOSET_KEY.id(), Optional.empty()) && player.getQuestStage(this) > 0) {
-				mes(player, "You dig through the compost heap",
+				mes("You dig through the compost heap",
 					"You find a small key");
 				give(player, ItemId.CLOSET_KEY.id(), 1);
 			} else {
-				mes(player, "You dig through the compost heap",
+				mes("You dig through the compost heap",
 					"You find nothing of interest");
 			}
 		}
@@ -279,8 +279,7 @@ public class ErnestTheChicken implements QuestInterface,
 						&& player.getCarriedItems().hasCatalogID(ItemId.OIL_CAN.id(), Optional.of(false))) {
 						say(player, n, "I have everything");
 						npcsay(player, n, "Give em here then");
-						mes(player,
-							"You give a rubber tube, a pressure gauge and a can of oil to the Professer",
+						mes("You give a rubber tube, a pressure gauge and a can of oil to the Professer",
 							"Oddenstein starts up the machine",
 							"The machine hums and shakes",
 							"Suddenly a ray shoots out of the machine at the chicken");
@@ -297,7 +296,7 @@ public class ErnestTheChicken implements QuestInterface,
 								"Well a cash reward is always nice");
 							npcsay(player, ernest, "Of course, of course");
 
-							mes(player, "Ernest hands you 300 coins");
+							mes("Ernest hands you 300 coins");
 							ernest.remove();
 							player.sendQuestComplete(getQuestId());
 						}
@@ -421,7 +420,7 @@ public class ErnestTheChicken implements QuestInterface,
 					say(player, n,
 						"No no he's been turned into an actual chicken",
 						"By a mad scientist");
-					mes(player, "Veronica lets out an ear piecing shreek");
+					mes("Veronica lets out an ear piecing shreek");
 					npcsay(player, n, "Eeeeek", "My poor darling",
 						"Why must these things happen to us?");
 					say(player, n, "Well I'm doing my best to turn him back");
@@ -641,7 +640,7 @@ public class ErnestTheChicken implements QuestInterface,
 			doDoor(obj, player);
 			player.message("You unlock the door");
 			player.message("You go through the door");
-			thinkbubble(player, item);
+			thinkbubble(item);
 		}
 	}
 

@@ -58,11 +58,10 @@ public final class BrimHavenBartender implements
 				"That'll be 15 coins please");
 			if (ifheld(player, ItemId.COINS.id(), 15)) {
 				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 15));
-				mes(player,
-					"The bartender serves you a glass of strange thick dark liquid",
+				mes("The bartender serves you a glass of strange thick dark liquid",
 					"You wince and drink it", "You stagger backwards");
 				drinkAle(player);
-				mes(player, "You think you see 2 bartenders signing 2 barcrawl cards");
+				mes("You think you see 2 bartenders signing 2 barcrawl cards");
 				player.getCache().store("barfour", true);
 			} else {
 				say(player, n, "I don't have 15 coins right now");

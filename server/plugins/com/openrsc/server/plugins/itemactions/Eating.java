@@ -71,7 +71,7 @@ public class Eating implements OpInvTrigger {
 				player.message("it tastes.....slimey");
 			} else if (id == ItemId.ROCK_CAKE.id()) {
 				// authentic does not send message to quest tab
-				mes(player, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
+				mes("You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 				say(player, null, "Ow! I nearly broke a tooth!");
 				player.message("You feel strangely heavier and more tired");
 			} else if (id == ItemId.EQUA_LEAVES.id())
@@ -183,7 +183,7 @@ public class Eating implements OpInvTrigger {
 				player.playerServerMessage(MessageType.QUEST, message);
 			} else if (id == ItemId.ROTTEN_APPLES.id()) {
 				// authentic does not give message to quest tab
-				mes(player, "you eat an apple");
+				mes("you eat an apple");
 				say(player, null, "yuck");
 				player.message("it's rotten, you spit it out");
 			} else

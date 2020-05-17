@@ -226,7 +226,7 @@ public final class Harvesting implements OpLocTrigger {
 	}
 
 	private void batchClipping(Player player, GameObject object, String objName, HerbsProduce prodEnum) {
-		thinkbubble(player, new Item(ItemId.HERB_CLIPPERS.id()));
+		thinkbubble(new Item(ItemId.HERB_CLIPPERS.id()));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to clip from the spot...");
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 4);
 
@@ -306,7 +306,7 @@ public final class Harvesting implements OpLocTrigger {
 
 	private void batchHarvest(Player player, int toolId, GameObject object, ObjectHarvestingDef def) {
 		final AtomicInteger evt = new AtomicInteger(checkCare(object, player));
-		if (toolId != ItemId.NOTHING.id()) thinkbubble(player, new Item(toolId));
+		if (toolId != ItemId.NOTHING.id()) thinkbubble(new Item(toolId));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to get some produce...");
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 4);
 

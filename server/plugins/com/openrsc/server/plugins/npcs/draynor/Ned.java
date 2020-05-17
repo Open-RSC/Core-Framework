@@ -74,7 +74,7 @@ public final class Ned implements TalkNpcTrigger {
 				"I've not been able to get work at sea these days though",
 				"They say I am too old"
 			);
-			mes(player, "There is a wistfull look in Ned's eyes");
+			mes("There is a wistfull look in Ned's eyes");
 			npcsay(player, n, "I miss those days",
 				"If you could get me a ship I would take you anywhere"
 			);
@@ -157,7 +157,7 @@ public final class Ned implements TalkNpcTrigger {
 					);
 					if (choice == 0) {
 						npcsay(player, n, "Okay, I will have a go.");
-						mes(player, "You hand Ned 3 balls of wool",
+						mes("You hand Ned 3 balls of wool",
 							"Ned works with the wool. His hands move with a speed you couldn't imagine"
 						);
 						player.getCarriedItems().remove(new Item(ItemId.BALL_OF_WOOL.id(), 3));

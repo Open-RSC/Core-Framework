@@ -25,7 +25,7 @@ public class UndergroundPassDemons implements KillNpcTrigger {
 				teleportPlayer(player, n);
 			} else {
 				teleportPlayer(player, n);
-				mes(player, "the demon slumps to the floor");
+				mes("the demon slumps to the floor");
 				if (!player.getCarriedItems().hasCatalogID(n.getID() + 364, Optional.empty())) {
 					player.message("around it's neck you find a strange looking amulet");
 					give(player, n.getID() + 364, 1); // will give correct ammys for all.

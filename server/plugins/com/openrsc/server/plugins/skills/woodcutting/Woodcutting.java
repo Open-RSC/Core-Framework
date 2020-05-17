@@ -75,7 +75,7 @@ public class Woodcutting implements OpLocTrigger {
 
 	private void batchWoodcutting(Player player, GameObject object, ObjectWoodcuttingDef def, int axeId) {
 		player.playerServerMessage(MessageType.QUEST, "You swing your " + player.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the tree...");
-		thinkbubble(player, new Item(axeId));
+		thinkbubble(new Item(axeId));
 		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
 
 		final Item log = new Item(def.getLogId());

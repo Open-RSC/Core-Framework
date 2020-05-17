@@ -49,17 +49,17 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			changedItemLower = changedItem.getDef(player.getWorld()).getName().toLowerCase();
 			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) != -1) {
 				if (itemLower.contains("top") || itemLower.contains("body")) {
-					mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander a " + itemLower,
+					mes(npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander a " + itemLower,
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you a " + changedItemLower);
 				} else if (item.getDef(player.getWorld()).getName().toLowerCase().contains("skirt")) {
 					String metal = itemLower.substring(0, itemLower.indexOf(' '));
-					mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander a " + metal + " plated skirt",
+					mes(npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander a " + metal + " plated skirt",
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you some " + changedItemLower);
 				} else if (item.getDef(player.getWorld()).getName().toLowerCase().contains("legs")) {
 					String metal = itemLower.substring(0, itemLower.indexOf(' '));
-					mes(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander some " + itemLower,
+					mes(npc, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give Thrander some " + itemLower,
 							"Thrander hammers it for a bit");
 					player.message("Thrander gives you a " + metal + " plated skirt");
 				}

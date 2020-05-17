@@ -255,7 +255,7 @@ public class NpcBehavior {
 			return;
 		}
 		lastTackleAttempt = System.currentTimeMillis();
-		thinkbubble(player, new Item(ItemId.GNOME_BALL.id()));
+		thinkbubble(new Item(ItemId.GNOME_BALL.id()));
 		player.message("the gnome trys to tackle you");
 		if (DataConversions.random(0, 1) == 0) {
 			//successful avoiding tackles gives agility xp

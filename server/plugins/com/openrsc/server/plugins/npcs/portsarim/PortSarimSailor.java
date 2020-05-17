@@ -44,10 +44,10 @@ public final class PortSarimSailor implements OpLocTrigger,
 				"I have a wife and family to support");
 		} else if (option == 1) {
 			if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30)) > -1) {
-				mes(player, "You pay 30 gold", "You board the ship");
+				mes("You pay 30 gold", "You board the ship");
 				player.teleport(324, 713, false);
 				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-				mes(player, "The ship arrives at Karamja");
+				mes("The ship arrives at Karamja");
 			} else {
 				say(player, n, "Oh dear I don't seem to have enough money");
 			}

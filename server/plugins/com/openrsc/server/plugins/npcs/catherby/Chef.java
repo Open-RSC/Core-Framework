@@ -31,7 +31,7 @@ public class Chef implements TalkNpcTrigger {
 						"Yes please do that for me",
 						"I'll see what your brothers have to offer first");
 					if (menu == 0) {
-						mes(player, "Caleb holds the gauntlets and closes his eyes",
+						mes("Caleb holds the gauntlets and closes his eyes",
 							"Caleb concentrates",
 							"Caleb hands the gauntlets to you");
 						Item itemToRemove = player.getCarriedItems().getEquipment().get(
@@ -82,7 +82,7 @@ public class Chef implements TalkNpcTrigger {
 					npcsay(player, n, "Remember I want cooked swordfish, bass, tuna, salmon and shrimp");
 				} else {
 					say(player, n, "Yes i have all of that now");
-					mes(player, "You give all of the fish to Caleb");
+					mes("You give all of the fish to Caleb");
 					player.getCarriedItems().remove(new Item(ItemId.SWORDFISH.id()));
 					player.getCarriedItems().remove(new Item(ItemId.BASS.id()));
 					player.getCarriedItems().remove(new Item(ItemId.TUNA.id()));

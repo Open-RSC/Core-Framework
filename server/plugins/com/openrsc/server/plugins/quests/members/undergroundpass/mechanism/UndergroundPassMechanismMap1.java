@@ -65,17 +65,17 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 			if (hasABow(player)) {
 				player.getCarriedItems().remove(new Item(ItemId.LIT_ARROW.id()));
 				if ((getCurrentLevel(player, Skills.RANGED) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
-					mes(player, "you fire the lit arrow at the bridge",
+					mes("you fire the lit arrow at the bridge",
 						"it burns out and has little effect");
 				} else {
-					mes(player, "you fire your arrow at the rope supporting the bridge");
+					mes("you fire your arrow at the rope supporting the bridge");
 					if (DataConversions.getRandom().nextInt(5) == 1) {
 						player.message("the arrow just misses the rope");
 					} else {
 						if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 2) {
 							player.updateQuestStage(Quests.UNDERGROUND_PASS, 3);
 						}
-						mes(player, "the arrow impales the wooden bridge, just below the rope support",
+						mes("the arrow impales the wooden bridge, just below the rope support",
 							"the rope catches alight and begins to burn",
 							"the bridge swings down creating a walkway");
 						player.getWorld().replaceGameObject(obj,
@@ -95,7 +95,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 			}
 		}
 		else if (item.getCatalogId() == ItemId.ROPE.id() && (obj.getID() == STALACTITE_1 || obj.getID() == STALACTITE_2 || obj.getID() == STALACTITE_2 + 1)) {
-			mes(player, "you lasso the rope around the stalactite",
+			mes("you lasso the rope around the stalactite",
 				"and pull yourself up");
 			if (obj.getID() == STALACTITE_1) {
 				player.teleport(695, 3435);
@@ -107,7 +107,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 			player.message("you climb from stalactite to stalactite and over the rocks");
 		}
 		else if (item.getCatalogId() == ItemId.ROCKS.id() && obj.getID() == SWAMP_CROSS) {
-			mes(player, "you throw the rocks onto the swamp");
+			mes("you throw the rocks onto the swamp");
 			player.message("and carefully tread from one to another");
 			player.getCarriedItems().remove(new Item(ItemId.ROCKS.id()));
 			GameObject object = new GameObject(player.getWorld(), Point.location(697, 3441), 774, 2, 0);

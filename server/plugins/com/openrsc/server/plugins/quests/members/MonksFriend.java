@@ -96,8 +96,7 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 							"that should cheer up Androe's son",
 							"and maybe I will be able to get some rest",
 							"..yawn..i'm off to bed, farewell brave traveller.");
-						mes(player,
-							"well done, you have completed part 1 of the monks friend quest");
+						mes("well done, you have completed part 1 of the monks friend quest");
 						player.updateQuestStage(getQuestId(), 2);
 					} else {
 						say(player, n, "I'm afraid not");
@@ -175,7 +174,7 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, n, " yesshh...hic up...beautiful..");
 					say(player, n, "take care old monk");
 					npcsay(player, n, "la..di..da..hic..up..");
-					mes(player, "The monk has had too much to drink");
+					mes("The monk has had too much to drink");
 					break;
 				case 3:
 					say(player, n, "Brother Cedric are you okay?");
@@ -235,14 +234,13 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 	public void onUseNpc(Player player, Npc npc, Item item) {
 		if (npc.getID() == NpcId.BROTHER_CEDRIC.id()) {
 			if (player.getQuestStage(getQuestId()) == 4 && item.getCatalogId() == ItemId.BUCKET_OF_WATER.id()) {
-				thinkbubble(player, item);
+				thinkbubble(item);
 				say(player, npc, "Cedric, here, drink some water");
 				npcsay(player, npc, "oh yes, my head's starting to spin",
 					"gulp...gulp");
-				mes(player, "Brother Cedric drinks the water");
+				mes("Brother Cedric drinks the water");
 				npcsay(player, npc, "aah, that's better");
-				mes(player,
-					"you throw the excess water over brother Cedric");
+				mes("you throw the excess water over brother Cedric");
 				npcsay(player, npc, "now i just need to fix...",
 					"..this cart..", "..and we can go party",
 					".could you help?");

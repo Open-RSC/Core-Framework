@@ -250,9 +250,9 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 						Point.location(558, 617));
 					player.getWorld().unregisterGameObject(obj);
 					player.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
-					mes(player, "The employee picks up the crate");
+					mes("The employee picks up the crate");
 					n.teleport(559, 612);
-					mes(player, "And takes it out to be delivered");
+					mes("And takes it out to be delivered");
 					player.getCache().remove("label");
 					player.updateQuestStage(this, 2);
 				}
@@ -290,7 +290,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 					say(player, n, "Yes, that sounds good",
 						"teleport me");
 					player.teleport(545, 577, false);
-					mes(player, "Cromperty takes out a small box",
+					mes("Cromperty takes out a small box",
 						"Cromperty presses a switch on the box");
 					if (player.getQuestStage(this) == 2 || player.getQuestStage(this) == -1) {
 						player.teleport(560, 588, true);
@@ -314,7 +314,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 				say(player, n, "Yes, that sounds good",
 					"teleport me");
 				player.teleport(545, 577, false);
-				mes(player, "Cromperty takes out a small box",
+				mes("Cromperty takes out a small box",
 					"Cromperty presses a switch on the box");
 				if (player.getQuestStage(this) == 2 || player.getQuestStage(this) == -1) {
 					player.teleport(560, 588, true);
@@ -344,31 +344,31 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 			player.message("The crate is empty");
 		}
 		else if (obj.getID() == 329 && obj.getX() == 559 && obj.getY() == 617) {
-			mes(player, "There is a label on this crate", "It says",
+			mes("There is a label on this crate", "It says",
 				"to Lord Handelmort", "Handelmort Mansion", "Ardougne");
 			if (player.getCarriedItems().hasCatalogID(ItemId.ADDRESS_LABEL.id(), Optional.empty()) || player.getCache().hasKey("label")) {
-				mes(player, "It doesn't seem possible to open the crate");
+				mes("It doesn't seem possible to open the crate");
 			} else {
-				mes(player, "You take the label");
+				mes("You take the label");
 				give(player, ItemId.ADDRESS_LABEL.id(), 1);
 			}
 		}
 		else if (obj.getID() == 328 && obj.getX() == 558 && obj.getY() == 617) {
 			if (player.getCache().hasKey("label")) {
-				mes(player, "There is a label on this crate", "It says",
+				mes("There is a label on this crate", "It says",
 					"to Lord Handelmort", "Handelmort Mansion", "Ardougne");
 				return;
 			}
-			mes(player, "Its ready to be delivered",
+			mes("Its ready to be delivered",
 				"To the wizard's tower in Misthalin",
 				"It doesn't seem possible to open the crate");
 		}
 		else if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			if (command.equalsIgnoreCase("Search for traps")) {
 				if (getCurrentLevel(player, Skills.THIEVING) < 21) {
-					mes(player, "You don't find anything interesting");
+					mes("You don't find anything interesting");
 				} else {
-					mes(player, "You find a trap in the stairs",
+					mes("You find a trap in the stairs",
 						"You make a note of the trap's location",
 						"Ready for next time you go up the stairs");
 					player.getCache().store("trapy", true);
@@ -379,7 +379,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 					player.getCache().remove("trapy");
 					player.teleport(563, 1534, false);
 				} else {
-					mes(player, "You here a click beneath you",
+					mes("You here a click beneath you",
 						"You feel yourself falling",
 						"You have fallen through a trap");
 					player.teleport(563, 3418, false);

@@ -198,7 +198,7 @@ public class ShiloVillageTrufitusInvUse implements UseNpcTrigger {
 			}
 			player.message("You show Trufitus the Bone Shard.");
 			say(player, n, "Could you have a look at this please ?");
-			mes(player, "Trufitus looks at the object for a moment.");
+			mes("Trufitus looks at the object for a moment.");
 			npcsay(player, n, "It looks like a simple shard of bone.",
 				"Why do you think it is significant ?");
 			int menu = multi(player, n,
@@ -239,7 +239,7 @@ public class ShiloVillageTrufitusInvUse implements UseNpcTrigger {
 				"Ok, thanks!");
 			if (menu == 0) {
 				npcsay(player, n, "Hmmm, well just that part about the wards..");
-				mes(player, "Trufitus seems to drift off in thought.");
+				mes("Trufitus seems to drift off in thought.");
 				npcsay(player, n, "It may be possible to make a ward like that?",
 					"But what is the best thing to make it from?");
 				// having zadimus corpse prolly

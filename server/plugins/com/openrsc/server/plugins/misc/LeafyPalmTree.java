@@ -17,8 +17,8 @@ public class LeafyPalmTree implements OpLocTrigger {
 	@Override
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 1176) {
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give the palm tree a good shake.");
-			mes(player, 0, "A palm leaf falls down.");
+			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You give the palm tree a good shake.");
+			mes(0, "A palm leaf falls down.");
 			addobject(ItemId.PALM_TREE_LEAF.id(), 1, obj.getX(), obj.getY(), player);
 			changeloc(obj, 15000, 33);
 		}

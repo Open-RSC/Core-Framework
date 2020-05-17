@@ -52,7 +52,7 @@ public class RuneMysteries implements QuestInterface {
 						"I am sure the head wizard will reward you",
 						"for such an interesting find");
 					if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
-						mes(player, "The Duke hands you a talisman.");
+						mes("The Duke hands you a talisman.");
 						give(player, ItemId.AIR_TALISMAN.id(), 1);
 						player.setQuestStage(Quests.RUNE_MYSTERIES, 1);
 					} else {
@@ -151,7 +151,7 @@ public class RuneMysteries implements QuestInterface {
 							npcsay(player, n, "Pity. If you happen to find it, bring it to me.");
 							return;
 						}
-						mes(player, "You give the talisman to the wizard.");
+						mes("You give the talisman to the wizard.");
 						npcsay(player, n, "Wow! This is incredible! Th-this talisman you brought me...",
 							"it is the last piece of the puzzle. Finally! the legacy of our",
 							"ancestors will return to us once more! I need time to",
@@ -177,7 +177,7 @@ public class RuneMysteries implements QuestInterface {
 								"bring it back to me and I will show you the mystery of runes.");
 
 							player.getCarriedItems().remove(new Item(ItemId.AIR_TALISMAN.id()));
-							mes(player, "The head wizard gives you a research package.");
+							mes("The head wizard gives you a research package.");
 							give(player, ItemId.RESEARCH_PACKAGE.id(), 1);
 							npcsay(player, n, "Best of luck with your quest, " + player.getUsername());
 							player.setQuestStage(Quests.RUNE_MYSTERIES, 2);
@@ -191,11 +191,11 @@ public class RuneMysteries implements QuestInterface {
 					npcsay(player, n, "My my... I think I can pack up another one.");
 
 					if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
-						mes(player, "The head wizard gives you a research package.");
+						mes("The head wizard gives you a research package.");
 						npcsay(player, n, "Be more careful this time");
 						give(player, ItemId.RESEARCH_PACKAGE.id(), 1);
 					} else {
-						mes(player, "The head wizard tried to give you a research package, but your inventory was full.");
+						mes("The head wizard tried to give you a research package, but your inventory was full.");
 					}
 				} else {
 					say(player, n, "What was I supposed to do with this package again?");
@@ -280,7 +280,7 @@ public class RuneMysteries implements QuestInterface {
 					"you find to locate the other altars.",
 					"Now, my research notes, please?");
 				player.getCarriedItems().remove(new Item(ItemId.RESEARCH_NOTES.id()));
-				mes(player, "You hand Sedridor the research notes.");
+				mes("You hand Sedridor the research notes.");
 				give(player, ItemId.AIR_TALISMAN.id(), 1);
 				player.sendQuestComplete(Quests.RUNE_MYSTERIES);
 				break;
@@ -294,7 +294,7 @@ public class RuneMysteries implements QuestInterface {
 					"It's from Sedridor, the head wizard at the Wizards' Tower.");
 				npcsay(player, n, "Really? Surely he can't have...",
 					"Please... let me have it.");
-				mes(player, "You have Aubury the research package.");
+				mes("You have Aubury the research package.");
 				npcsay(player, n, "My gratitude, adventurer, for bringing me this research package.",
 					"Combined with the information I have already collated",
 					"regarding rune essence, I think we have finally",
@@ -306,7 +306,7 @@ public class RuneMysteries implements QuestInterface {
 				player.getCarriedItems().remove(new Item(ItemId.RESEARCH_PACKAGE.id()));
 				give(player, ItemId.RESEARCH_NOTES.id(), 1);
 				player.setQuestStage(Quests.RUNE_MYSTERIES, 3);
-				mes(player, "Aubury gives you his research notes.");
+				mes("Aubury gives you his research notes.");
 				npcsay(player, n, "Now, I'm sure I can spare a couple of runes for",
 					"such a worthy cause as these notes.",
 					"Do you want me to teleport you back?");
@@ -325,10 +325,10 @@ public class RuneMysteries implements QuestInterface {
 				npcsay(player, n, "I see. Here, I have another copy.");
 
 				if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
-					mes(player, "Aubury hands you his research notes.");
+					mes("Aubury hands you his research notes.");
 					give(player, ItemId.RESEARCH_NOTES.id(), 1);
 				} else {
-					mes(player, "Aubury tried to give you notes, but your inventory is full.");
+					mes("Aubury tried to give you notes, but your inventory is full.");
 				}
 			} else {
 				say(player, n, "What am I to do with these notes?");

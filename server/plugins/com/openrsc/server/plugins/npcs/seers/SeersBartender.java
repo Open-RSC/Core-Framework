@@ -45,12 +45,11 @@ public final class SeersBartender implements
 					"That'll be 18 coins please");
 				if (ifheld(player, ItemId.COINS.id(), 18)) {
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 18));
-					mes(player,
-						"The bartender gives you a glass of liverbane ale",
+					mes("The bartender gives you a glass of liverbane ale",
 						"You gulp it down",
 						"The room seems to be swaying");
 					drinkAle(player);
-					mes(player, "The bartender scrawls his signiture on your card");
+					mes("The bartender scrawls his signiture on your card");
 					player.getCache().store("barfive", true);
 				} else {
 					say(player, n, "Sorry I don't have 18 coins");

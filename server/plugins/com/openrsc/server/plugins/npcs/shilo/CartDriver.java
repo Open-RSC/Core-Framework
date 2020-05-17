@@ -32,11 +32,11 @@ public class CartDriver implements TalkNpcTrigger, OpLocTrigger {
 				npcsay(player, n, "Great!",
 					"Just hop into the cart then and we'll go!");
 				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 500));
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You Hop into the cart and the driver urges the horses on.");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You Hop into the cart and the driver urges the horses on.");
 				player.teleport(468, 662);
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You take a taxing journey through the jungle to Brimhaven.");
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You feel fatigued from the journey, but at least");
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "you didn't have to walk all that distance.");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You take a taxing journey through the jungle to Brimhaven.");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You feel fatigued from the journey, but at least");
+				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "you didn't have to walk all that distance.");
 			} else {
 				npcsay(player, n, "Sorry, but it looks as if you don't have enough money.",
 					"Come back and see me when you have enough for the ride.");

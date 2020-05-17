@@ -20,7 +20,7 @@ public class RawEssence implements OpLocTrigger {
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		int axeID = Mining.getAxe(player);
 		if (axeID < 0) {
-			mes(player, "You need a pickaxe to mine Rune Essence.");
+			mes("You need a pickaxe to mine Rune Essence.");
 			return;
 		}
 
@@ -35,7 +35,7 @@ public class RawEssence implements OpLocTrigger {
 
 	private void batchEssence(Player player) {
 		player.playSound("mine");
-		thinkbubble(player, new Item(ItemId.IRON_PICKAXE.id()));
+		thinkbubble(new Item(ItemId.IRON_PICKAXE.id()));
 		give(player, ItemId.RUNE_ESSENCE.id(), 1);
 		player.incExp(Skills.MINING, 20, true);
 		delay(player.getWorld().getServer().getConfig().GAME_TICK);

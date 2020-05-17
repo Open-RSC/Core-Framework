@@ -37,7 +37,7 @@ public class SandPit implements UseLocTrigger {
 		item = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
 		);
-		thinkbubble(player, item);
+		thinkbubble(item);
 		player.message("you fill the bucket with sand");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.SAND.id()));

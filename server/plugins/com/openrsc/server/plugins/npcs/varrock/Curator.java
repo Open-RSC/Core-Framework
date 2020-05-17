@@ -25,7 +25,7 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 				say(player, n,
 					"I have retrieved the shield of Arrav and I would like to claim my reward");
 				npcsay(player, n, "The shield of Arrav?", "Let me see that");
-				mes(player, "The curator peers at the shield");
+				mes("The curator peers at the shield");
 				npcsay(player,
 					n,
 					"This is incredible",
@@ -41,10 +41,10 @@ public class Curator implements TalkNpcTrigger, UseNpcTrigger {
 					"I needed significant help from a friend to get the shield",
 					"We'll split the reward");
 				npcsay(player, n, "Oh ok");
-				mes(player, "You hand over the shield parts");
+				mes("You hand over the shield parts");
 				player.getCarriedItems().remove(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()));
 				player.getCarriedItems().remove(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()));
-				mes(player, "The curator writes out two certificates");
+				mes("The curator writes out two certificates");
 				give(player, ItemId.CERTIFICATE.id(), 1);
 				give(player, ItemId.CERTIFICATE.id(), 1);
 				npcsay(player, n, "Take these to the king",

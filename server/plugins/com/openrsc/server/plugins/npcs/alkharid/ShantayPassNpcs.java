@@ -67,7 +67,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 				} else {
 					int menus;
 					if (!player.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
-						mes(player, "There is a large poster on the wall near the gateway. It reads..",
+						mes("There is a large poster on the wall near the gateway. It reads..",
 							"@gre@The Desert is a VERY Dangerous place...do not enter if you are scared of dying.",
 							"@gre@Beware of high temperatures, sand storms, robbers, and slavers...",
 							"@gre@No responsibility is taken by Shantay ",
@@ -77,7 +77,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 							"Yeah, that poster doesn't scare me!",
 							"No, I'm having serious second thoughts now.");
 					} else {
-						mes(player, "A poster on the wall says exactly the same as the disclaimer.",
+						mes("A poster on the wall says exactly the same as the disclaimer.",
 							"Are you sure you want to go through?");
 						menus = multi(player,
 							"Yeah, I'm not scared!",
@@ -108,7 +108,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 						player.message("you go through the gate");
 						player.teleport(62, 735);
 					} else if (menus == 1) {
-						mes(player, "You decide that your visit to the desert can be postponed..");
+						mes("You decide that your visit to the desert can be postponed..");
 						player.message("Perhaps indefinitely!");
 					}
 
@@ -121,7 +121,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 		if (n.getID() == SHANTAY_MOVING_GUARD) {
 			npcsay(player, n, "Go talk to Shantay or one of his assistants.",
 				"I'm on duty and I don't have time to talk to the likes of you!");
-			mes(player, "The guard seems quite bad tempered,",
+			mes("The guard seems quite bad tempered,",
 				"probably from having to wear heavy armour in this intense heat.");
 			return;
 		}
@@ -173,7 +173,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 				"Er, neither, I'm an adventurer.");
 			if (menu2 == 0) {
 				npcsay(player, n, "Ha, very funny.....", "Guards arrest him!");
-				mes(player, "The guards arrest you and place you in the jail.");
+				mes("The guards arrest you and place you in the jail.");
 				npcsay(player,
 					n,
 					"You'll have to stay in there until you pay the fine of five gold pieces.",
@@ -185,11 +185,10 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 					npcsay(player, n,
 						"Good, I see that you have come to your senses.");
 					if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
-						mes(player, "You hand over five gold pieces to Shantay.");
+						mes("You hand over five gold pieces to Shantay.");
 						npcsay(player, n,
 							"Great Effendi, now please try to keep the peace.");
-						mes(player,
-							"The assistant unlocks the door to the cell.");
+						mes("The assistant unlocks the door to the cell.");
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 						inJail = false;
 					} else {
@@ -232,12 +231,10 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 						npcsay(player, n,
 							"Good, I see that you have come to your senses.");
 						if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
-							mes(player,
-								"You hand over five gold pieces to Shantay.");
+							mes("You hand over five gold pieces to Shantay.");
 							npcsay(player, n,
 								"Great Effendi, now please try to keep the peace.");
-							mes(player,
-								"The assistant unlocks the door to the cell.");
+							mes("The assistant unlocks the door to the cell.");
 							player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 							inJail = false;
 						} else {
@@ -320,8 +317,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 				} else if (menu3 == 1) {
 					npcsay(player, n, "So long...");
 				} else if (menu3 == 2) {
-					mes(player,
-						"The Assistant opens his arms wide as if too embrace you.");
+					mes("The Assistant opens his arms wide as if too embrace you.");
 					npcsay(player,
 						n,
 						"Effendi, you insult me!",
@@ -387,7 +383,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 				return;
 			}
 			if (!player.getCache().hasKey("shantay-chest")) {
-				mes(player, "This chest is used by Shantay and his men.",
+				mes("This chest is used by Shantay and his men.",
 					"They can put things in and out of storage for you.",
 					"You open the bank.");
 				player.getCache().store("shantay-chest", true);
@@ -401,7 +397,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 			if (command.equals("go through")) {
 				int menu;
 				if (!player.getCarriedItems().hasCatalogID(SHANTAY_DISCLAIMER, Optional.of(false))) {
-					mes(player, "There is a large poster on the wall near the gateway. It reads..",
+					mes("There is a large poster on the wall near the gateway. It reads..",
 						"@gre@The Desert is a VERY Dangerous place...do not enter if you are scared of dying.",
 						"@gre@Beware of high temperatures, sand storms, robbers, and slavers...",
 						"@gre@No responsibility is taken by Shantay ",
@@ -411,7 +407,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 						"Yeah, that poster doesn't scare me!",
 						"No, I'm having serious second thoughts now.");
 				} else {
-					mes(player, "A poster on the wall says exactly the same as the disclaimer.",
+					mes("A poster on the wall says exactly the same as the disclaimer.",
 						"Are you sure you want to go through?");
 					menu = multi(player,
 						"Yeah, I'm not scared!",
@@ -420,7 +416,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 				Npc shantayGuard = ifnearvisnpc(player, SHANTAY_STANDING_GUARD, 5);
 				if (menu == 0) {
 					if (!player.getCarriedItems().hasCatalogID(SHANTAY_PASS, Optional.of(false))) {
-						mes(player, "A guard stops you on your way out of the gate...");
+						mes("A guard stops you on your way out of the gate...");
 						if (shantayGuard != null) {
 							npcsay(player, shantayGuard, "You need a Shantay pass to get through this gate.",
 								"See Shantay, he will sell you one for a very reasonable price.");
@@ -446,11 +442,11 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 						}
 					}
 				} else if (menu == 1) {
-					mes(player, "You decide that your visit to the desert can be postponed..");
+					mes("You decide that your visit to the desert can be postponed..");
 					player.message("Perhaps indefinitely!");
 				}
 			} else if (command.equals("look")) {
-				mes(player, "You look at the huge Stone Gate.",
+				mes("You look at the huge Stone Gate.",
 					"On the gate is a large poster, it reads.",
 					"@gre@The Desert is a VERY Dangerous place...do not enter if you are scared of dying.",
 					"@gre@Beware of high temperatures, sand storms, robbers, and slavers...",
