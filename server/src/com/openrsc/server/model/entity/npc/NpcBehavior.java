@@ -28,6 +28,7 @@ public class NpcBehavior {
 
 	protected Mob target;
 	private State state = State.ROAM;
+	private int aggroRadius;
 
 	private boolean draynorManorSkeleton;
 	private boolean blackKnightsFortress;
@@ -39,6 +40,20 @@ public class NpcBehavior {
 		this.draynorManorSkeleton = npc.getID() == NpcId.SKELETON_LVL21.id()
 			&& npc.getLoc().startX() >= 208 && npc.getLoc().startX() <= 211
 			&& npc.getLoc().startY() >= 545 && npc.getLoc().startY() <= 546;
+
+		switch (NpcId.getById(npc.getID())) {
+			case BANDIT_AGGRESSIVE:
+				aggroRadius = 2;
+				break;
+			case BLACK_KNIGHT:
+				aggroRadius = 10;
+				break;
+			case UNDEADONE:
+				aggroRadius = 3;
+				break;
+			default:
+				aggroRadius = npc.getWorld().getServer().getConfig().AGGRO_RANGE;
+		}
 	}
 
 	public void tick() {
@@ -72,16 +87,7 @@ public class NpcBehavior {
 				// We loop through all players in view.
 				for (Player player : npc.getViewArea().getPlayersInView()) {
 
-					int range = npc.getWorld().getServer().getConfig().AGGRO_RANGE;
-					switch (NpcId.getById(npc.getID())) {
-						case BANDIT_AGGRESSIVE:
-							range = 2;
-							break;
-						case BLACK_KNIGHT:
-							range = 10;
-					}
-
-					if (!player.withinRange(npc, range)) continue;
+					if (!player.withinRange(npc, aggroRadius)) continue;
 
 					// Player is a new target AND can't aggro.
 					if (!canAggro(player)) {
@@ -306,12 +312,6 @@ public class NpcBehavior {
 		npc.walk(walkTo.getX(), walkTo.getY());
 	}
 
-	private boolean shouldContinueChase(final Npc n, final Mob player) {
-		return player.getLocation().inWilderness()
-			|| (!player.getLocation().inWilderness() && !npc.getLocation().inWilderness() &&
-			player.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1));
-	}
-
 	private boolean aggressiveCheck(Mob target) {
 		boolean bothInWilderness = (target.getLocation().inWilderness() && npc.getLocation().inWilderness());
 		boolean levelMeetsStandard = target.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1);
@@ -329,9 +329,7 @@ public class NpcBehavior {
 		boolean playerCombatTimeoutExceeded = checkCombatTimer(player.getCombatTimer(), numTicks);
 
 		boolean isAggressive = aggressiveCheck(player);
-		boolean chasingLastOpponent = npc.getLastOpponent() == player
-			&& shouldContinueChase(npc, player)
-			&& !shouldRetreat(npc);
+		boolean chasingLastOpponent = npc.getLastOpponent() == player && !shouldRetreat(npc);
 
 		boolean impervious = player instanceof Player
 			&& (((Player) player).isInvulnerableTo(npc) || ((Player) player).isInvisibleTo(npc));
