@@ -96,7 +96,7 @@ public class ItemUseOnObject implements PacketHandler {
 			}
 			int dir = object.getDirection();
 			int slotID = packet.readShort();
-			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && slotID == -1)
+			if (player.getConfig().WANT_EQUIPMENT_TAB && slotID == -1)
 			{
 				//they used the item from their equipment slot
 				int itemID = packet.readShort();
@@ -121,7 +121,7 @@ public class ItemUseOnObject implements PacketHandler {
 				return;
 			}
 			int slotID = packet.readShort();
-			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && slotID > Inventory.MAX_SIZE) {
+			if (player.getConfig().WANT_EQUIPMENT_TAB && slotID > Inventory.MAX_SIZE) {
 				item = player.getCarriedItems().getEquipment().get(slotID - Inventory.MAX_SIZE);
 			} else
 				item = player.getCarriedItems().getInventory().get(slotID);

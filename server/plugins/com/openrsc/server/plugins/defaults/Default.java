@@ -188,13 +188,13 @@ public class Default implements DefaultHandler,
 
 		GroundItem groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), removingThisIteration, player, item.getNoted());
 		ActionSender.sendSound(player, "dropobject");
-		player.getWorld().registerItem(groundItem, player.getWorld().getServer().getConfig().GAME_TICK * 300);
+		player.getWorld().registerItem(groundItem, config().GAME_TICK * 300);
 		player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped " + item.getDef(player.getWorld()).getName() + " x"
 			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
 
 		// Repeat
 		if (!ifinterrupted() && amountToDrop > 0) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			batchDrop(player, item, fromInventory, amountToDrop);
 		}
 	}
@@ -267,7 +267,7 @@ public class Default implements DefaultHandler,
 	@Override
 	public void onAttackPlayer(Player player, Player affectedmob) {
 		player.startCombat(affectedmob);
-		if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
+		if (config().WANT_PARTIES) {
 			if (player.getParty() != null) {
 				player.getParty().sendParty();
 			}
@@ -282,7 +282,7 @@ public class Default implements DefaultHandler,
 	@Override
 	public void onAttackNpc(Player player, Npc affectedmob) {
 		player.startCombat(affectedmob);
-		if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
+		if (config().WANT_PARTIES) {
 			if (player.getParty() != null) {
 				player.getParty().sendParty();
 			}

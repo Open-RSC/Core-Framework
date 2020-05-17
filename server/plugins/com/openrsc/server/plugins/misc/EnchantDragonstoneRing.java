@@ -14,7 +14,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class EnchantDragonstoneRing implements SpellInvTrigger {
 	@Override
 	public boolean blockSpellInv(Player player, Integer invIndex, Integer itemID, Integer spellID) {
-		return (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
+		return (config().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class EnchantDragonstoneRing implements SpellInvTrigger {
 		if (item == null) return;
 		if (itemID.intValue() == ItemId.DRAGONSTONE_RING.id()) {
 			player.message("What type of dragonstone ring would you like to make?");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			int choice = multi(player, "Ring of Wealth", "Ring of Avarice");
 			int i;
 			if (choice == 0) {

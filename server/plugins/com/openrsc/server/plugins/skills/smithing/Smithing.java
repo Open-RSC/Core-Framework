@@ -147,7 +147,7 @@ public class Smithing implements UseLocTrigger {
 				|| player.getCarriedItems().getInventory().countId(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) < 1) {
 			player.message("You need the two shield halves to repair the shield.");
 		} else {
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You set to work trying to fix the ancient shield.",
+			mes(player, config().GAME_TICK * 2, "You set to work trying to fix the ancient shield.",
 					"You hammer long and hard and use all of your skill.",
 					"Eventually, it is ready...",
 					"You have repaired the Dragon Square Shield.");
@@ -232,8 +232,8 @@ public class Smithing implements UseLocTrigger {
 			player.message("You need " + def.getRequiredBars() + " bars of metal to make this item");
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to smith");
 				return;
@@ -258,7 +258,7 @@ public class Smithing implements UseLocTrigger {
 			}
 		}
 		player.incExp(Skills.SMITHING, getSmithingExp(item.getCatalogId(), def.getRequiredBars()), true);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(config().GAME_TICK);
 
 		// Repeat
 		updatebatch();
@@ -326,7 +326,7 @@ public class Smithing implements UseLocTrigger {
 		offset += 3;
 
 		if (firstType == 2) {
-			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			if (!config().MEMBER_WORLD) {
 				player.message("This feature is members only");
 				return -1;
 			}
@@ -417,7 +417,7 @@ public class Smithing implements UseLocTrigger {
 
 			// Throwing Knife
 		else if (secondType == 1) {
-			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			if (!config().MEMBER_WORLD) {
 				player.message("This feature is members only");
 				return -1;
 			}
@@ -506,7 +506,7 @@ public class Smithing implements UseLocTrigger {
 
 	private int getCount(ItemSmithingDef def, Item item, Player player) {
 		int count = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			String[] options = {
 				"Make 1",
 				"Make 5",

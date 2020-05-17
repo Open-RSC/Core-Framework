@@ -15,7 +15,7 @@ public class RobinBanks implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		if (getMaxLevel(player, Skills.THIEVING) >= 99) {
-			if (player.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
+			if (config().WANT_CUSTOM_QUESTS) {
 				npcsay(player, n, "think you've mastered thieving?",
 					"you know nothing",
 					"but i never avoid a chance to get more coin",

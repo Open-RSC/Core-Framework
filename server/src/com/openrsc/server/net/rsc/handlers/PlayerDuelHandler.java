@@ -179,7 +179,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				affectedPlayer.setBusy(true);
 
 				if (player.getDuel().getDuelSetting(3)) {
-					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+					if (player.getConfig().WANT_EQUIPMENT_TAB) {
 						Item item;
 						for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 							item = player.getCarriedItems().getEquipment().get(i);
@@ -332,7 +332,7 @@ public class PlayerDuelHandler implements PacketHandler {
 					continue;
 				}
 				if (tItem.getAmount() > player.getCarriedItems().getInventory().countId(tItem.getCatalogId())) {
-					if (!(player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && player.getCarriedItems().getEquipment().hasEquipped(tItem.getCatalogId()))) {
+					if (!(player.getConfig().WANT_EQUIPMENT_TAB && tItem.getAmount() == 1 && player.getCarriedItems().getEquipment().hasEquipped(tItem.getCatalogId()))) {
 						player.setSuspiciousPlayer(true, "not want equipment and duel trade item amount 1 and isweilding item");
 						return;
 					}

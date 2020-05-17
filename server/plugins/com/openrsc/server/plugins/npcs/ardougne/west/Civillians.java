@@ -19,7 +19,7 @@ public class Civillians implements TalkNpcTrigger {
 		boolean hasGertrudesCat = player.getCarriedItems().hasCatalogID(ItemId.GERTRUDES_CAT.id());
 		boolean hasFluffsKittens = player.getCarriedItems().hasCatalogID(ItemId.KITTENS.id());
 		boolean hasAnyCat = hasCat || hasKitten || hasKardiasCat || hasGertrudesCat
-				|| (hasFluffsKittens && player.getWorld().getServer().getConfig().WANT_EXTENDED_CATS_BEHAVIOR);
+				|| (hasFluffsKittens && config().WANT_EXTENDED_CATS_BEHAVIOR);
 		switch(NpcId.getById(n.getID())) {
 		case CIVILLIAN_APRON:
 			say(player, n, "hi");
@@ -37,7 +37,7 @@ public class Civillians implements TalkNpcTrigger {
 				else if (hasKitten) civilianShowKittenDialogue(player, n);
 				else if (hasKardiasCat) civilianShowKardiasCatDialogue(player, n);
 				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(player, n);
-				else if (hasFluffsKittens && player.getWorld().getServer().getConfig().WANT_EXTENDED_CATS_BEHAVIOR)
+				else if (hasFluffsKittens && config().WANT_EXTENDED_CATS_BEHAVIOR)
 					civilianShowFluffsKittensDialogue(player, n);
 			}
 			break;
@@ -54,7 +54,7 @@ public class Civillians implements TalkNpcTrigger {
 				else if (hasKitten) civilianShowKittenDialogue(player, n);
 				else if (hasKardiasCat) civilianShowKardiasCatDialogue(player, n);
 				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(player, n);
-				else if (hasFluffsKittens && player.getWorld().getServer().getConfig().WANT_EXTENDED_CATS_BEHAVIOR)
+				else if (hasFluffsKittens && config().WANT_EXTENDED_CATS_BEHAVIOR)
 					civilianShowFluffsKittensDialogue(player, n);
 			}
 			break;
@@ -71,7 +71,7 @@ public class Civillians implements TalkNpcTrigger {
 				else if (hasKitten) civilianShowKittenDialogue(player, n);
 				else if (hasKardiasCat) civilianShowKardiasCatDialogue(player, n);
 				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(player, n);
-				else if (hasFluffsKittens && player.getWorld().getServer().getConfig().WANT_EXTENDED_CATS_BEHAVIOR)
+				else if (hasFluffsKittens && config().WANT_EXTENDED_CATS_BEHAVIOR)
 					civilianShowFluffsKittensDialogue(player, n);
 			}
 			break;

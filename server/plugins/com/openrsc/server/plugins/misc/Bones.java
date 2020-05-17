@@ -26,7 +26,7 @@ public class Bones implements OpInvTrigger {
 			}
 
 			int buryAmount = 1;
-			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			if (config().BATCH_PROGRESSION) {
 				buryAmount = item.getAmount();
 			}
 
@@ -42,7 +42,7 @@ public class Bones implements OpInvTrigger {
 		if(toRemove == null) return;
 
 		player.message("You dig a hole in the ground");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(config().GAME_TICK);
 		player.message("You bury the " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getCarriedItems().remove(toRemove);
 		giveBonesExperience(player, item);

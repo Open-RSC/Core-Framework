@@ -80,10 +80,10 @@ public final class Admins implements CommandTrigger {
 	@Override
 	public void onCommand(final Player player, String command, String[] args) {
 		if (messagePrefix == null) {
-			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			messagePrefix = config().MESSAGE_PREFIX;
 		}
 		if (badSyntaxPrefix == null) {
-			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			badSyntaxPrefix = config().BAD_SYNTAX_PREFIX;
 		}
 
 		if (command.equalsIgnoreCase("cleannpcs")) {
@@ -426,7 +426,7 @@ public final class Admins implements CommandTrigger {
 		HashMap<String, Integer> rareDrops = new HashMap<>();
 		for (int i = 0; i < maxAttempts; i++) {
 			//KDB Specific RDT
-			if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
+			if (config().WANT_CUSTOM_SPRITES) {
 				if (npcID == NpcId.KING_BLACK_DRAGON.id()) {
 					if (player.getWorld().kbdTable.rollAccess(npcID, RoW)) {
 						Item kbdSpecificLoot = player.getWorld().kbdTable.rollItem(RoW, null);
@@ -551,7 +551,7 @@ public final class Admins implements CommandTrigger {
 					if (player.getQuestStage(Quests.OBSERVATORY_QUEST) > -1)
 						continue;
 
-					if (player.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS)
+					if (config().WANT_CUSTOM_QUESTS)
 						if (player.getCache().hasKey("want_unholy_symbol_drops") &&
 							!player.getCache().getBoolean("want_unholy_symbol_drops"))
 							continue;
@@ -941,7 +941,7 @@ public final class Admins implements CommandTrigger {
 			player.message("Need at least one free inventory space.");
 		} else {
 			List<Item> bisList;
-			if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
+			if (config().WANT_CUSTOM_SPRITES) {
 				bisList = newArrayList(
 					new Item(ItemId.DRAGON_MEDIUM_HELMET.id()),
 					new Item(ItemId.DRAGON_SCALE_MAIL.id()),
@@ -2162,7 +2162,7 @@ public final class Admins implements CommandTrigger {
 	}
 
 	private void winterHolidayEvent(Player player, String command, String[] args) {
-		if (!player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) return;
+		if (!config().WANT_CUSTOM_SPRITES) return;
 		GameObjectLoc[] locs = new GameObjectLoc[]{
 			new GameObjectLoc(1238, new Point(127, 648), 1, 0),
 			new GameObjectLoc(1238, new Point(123, 656), 2, 0),

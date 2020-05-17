@@ -23,6 +23,7 @@ import java.util.Random;
 
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.quests.free.ShieldOfArrav.isPhoenixGang;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class RegularPlayer implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(RegularPlayer.class);
@@ -31,15 +32,15 @@ public final class RegularPlayer implements CommandTrigger {
 	public static String badSyntaxPrefix = null;
 
 	public boolean blockCommand(Player player, String cmd, String[] args) {
-		return player.getWorld().getServer().getConfig().PLAYER_COMMANDS || player.isMod();
+		return config().PLAYER_COMMANDS || player.isMod();
 	}
 
 	public void onCommand(Player player, String cmd, String[] args) {
 		if(messagePrefix == null) {
-			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			messagePrefix = config().MESSAGE_PREFIX;
 		}
 		if(badSyntaxPrefix == null) {
-			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			badSyntaxPrefix = config().BAD_SYNTAX_PREFIX;
 		}
 
 		if (cmd.equalsIgnoreCase("gang")) {
@@ -75,7 +76,7 @@ public final class RegularPlayer implements CommandTrigger {
 					+ "P2P wilderness(Wild Lvl. 48-56) : @dre@" + PLAYERS_IN_P2P_WILD + "@whi@ player" + (PLAYERS_IN_P2P_WILD == 1 ? "" : "s") + " %"
 					+ "Edge dungeon wilderness(Wild Lvl. 1-9) : @dre@" + EDGE_DUNGEON + "@whi@ player" + (EDGE_DUNGEON == 1 ? "" : "s") + " %"
 				, false);
-		} else if (cmd.equalsIgnoreCase("c") && player.getWorld().getServer().getConfig().WANT_CLANS) {
+		} else if (cmd.equalsIgnoreCase("c") && config().WANT_CLANS) {
 			if (player.getClan() == null) {
 				player.message(messagePrefix + "You are not in a clan.");
 				return;
@@ -85,7 +86,7 @@ public final class RegularPlayer implements CommandTrigger {
 				message = message + arg + " ";
 			}
 			player.getClan().messageChat(player, "@cya@" + player.getStaffName() + ":@whi@ " + message);
-		} else if (cmd.equalsIgnoreCase("clanaccept") && player.getWorld().getServer().getConfig().WANT_CLANS) {
+		} else if (cmd.equalsIgnoreCase("clanaccept") && config().WANT_CLANS) {
 			if (player.getActiveClanInvite() == null) {
 				player.message(messagePrefix + "You have not been invited to a clan.");
 				return;
@@ -99,7 +100,7 @@ public final class RegularPlayer implements CommandTrigger {
 			}
 			player.getActivePartyInvite().accept();
 			player.message(messagePrefix + "You have joined the party");
-		} else if (cmd.equalsIgnoreCase("claninvite") && player.getWorld().getServer().getConfig().WANT_CLANS) {
+		} else if (cmd.equalsIgnoreCase("claninvite") && config().WANT_CLANS) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
@@ -119,7 +120,7 @@ public final class RegularPlayer implements CommandTrigger {
 
 			ClanInvite.createClanInvite(player, invited);
 			player.message(messagePrefix + invited.getUsername() + " has been invited into clan " + player.getClan().getClanName());
-		} else if (cmd.equalsIgnoreCase("clankick") && player.getWorld().getServer().getConfig().WANT_CLANS) {
+		} else if (cmd.equalsIgnoreCase("clankick") && config().WANT_CLANS) {
 			if (args.length < 1) {
 				player.message(badSyntaxPrefix + cmd.toUpperCase() + " [name]");
 				return;
@@ -177,7 +178,7 @@ public final class RegularPlayer implements CommandTrigger {
 			}
 			player.teleport(player.getWorld().EVENT_X, player.getWorld().EVENT_Y);
 		} else if (cmd.equalsIgnoreCase("g") || cmd.equalsIgnoreCase("pk")) {
-			if (!player.getWorld().getServer().getConfig().WANT_GLOBAL_CHAT) return;
+			if (!config().WANT_GLOBAL_CHAT) return;
 			if (player.isMuted()) {
 				player.message(messagePrefix + "You are muted, you cannot send messages");
 				return;
@@ -254,7 +255,7 @@ public final class RegularPlayer implements CommandTrigger {
 				sayDelay = player.getCache().getLong("say_delay");
 			}
 
-			long waitTime = player.getWorld().getServer().getConfig().GAME_TICK * 2;
+			long waitTime = config().GAME_TICK * 2;
 
 			if (player.isMod()) {
 				waitTime = 0;
@@ -382,10 +383,10 @@ public final class RegularPlayer implements CommandTrigger {
 			ActionSender.sendBox(player, "@whi@Server Groups:%" + StringUtils.join(groups, "%"), true);
 		} else if (cmd.equalsIgnoreCase("time") || cmd.equalsIgnoreCase("date") || cmd.equalsIgnoreCase("datetime")) {
 			player.message(messagePrefix + " the current time/date is:@gre@ " + new java.util.Date().toString());
-		} else if (player.getWorld().getServer().getConfig().NPC_KILL_LIST && cmd.equalsIgnoreCase("kills")) {
+		} else if (config().NPC_KILL_LIST && cmd.equalsIgnoreCase("kills")) {
 			StringBuilder kills = new StringBuilder("NPC Kill List for " + player.getUsername() + " % %");
 				//PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
-				//	"SELECT * FROM `" + player.getWorld().getServer().getConfig().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
+				//	"SELECT * FROM `" + config().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
 				//statement.setInt(1, player.getDatabaseID());
 				//ResultSet result = statement.executeQuery();
 				for (Map.Entry<Integer, Integer> entry : player.getKillCache().entrySet()) {
@@ -428,7 +429,7 @@ public final class RegularPlayer implements CommandTrigger {
 				}
 			}
 		} else if (cmd.equalsIgnoreCase("d")) {
-			if (player.getWorld().getServer().getConfig().WANT_DISCORD_BOT) {
+			if (config().WANT_DISCORD_BOT) {
 				String message = String.join(" ", args);
 				player.getWorld().getServer().getDiscordService().sendMessage("[InGame] " + player.getUsername() + ": " + message);
 

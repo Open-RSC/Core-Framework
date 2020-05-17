@@ -18,13 +18,13 @@ public final class WormBrain implements OpBoundTrigger {
 
 	@Override
 	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
-		return player.getWorld().getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
+		return config().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665;
 	}
 
 	@Override
 	public void onOpBound(final Player player, GameObject obj, Integer click) {
-		if (player.getWorld().getServer().getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
+		if (config().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665) {
 			final Npc n = ifnearvisnpc(player, NpcId.WORMBRAIN.id(), 10);
 			mes(player, "...you knock on the cell door");

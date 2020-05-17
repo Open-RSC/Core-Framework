@@ -40,7 +40,7 @@ public class CutWeb implements UseBoundTrigger,
 
 	@Override
 	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
-		return player.getWorld().getServer().getConfig().WANT_LEFTCLICK_WEBS
+		return config().WANT_LEFTCLICK_WEBS
 			&& obj.getID() == WEB;
 	}
 
@@ -49,7 +49,7 @@ public class CutWeb implements UseBoundTrigger,
 
 		boolean canCut = false;
 		//First, check their equipment for an appropriate weapon
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (config().WANT_EQUIPMENT_TAB) {
 			Item weapon = player.getCarriedItems().getEquipment().get(4);
 			if (weapon != null)
 				canCut = true;

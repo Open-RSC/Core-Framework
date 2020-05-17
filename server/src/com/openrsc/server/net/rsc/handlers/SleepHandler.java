@@ -36,7 +36,7 @@ public final class SleepHandler implements PacketHandler {
 					player.getCache().set("tutorial", 86);
 
 				//Handle exp toggle for servers without fatigue
-				if (!player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (!player.getConfig().WANT_FATIGUE) {
 					handleExpToggle(player);
 				}
 			} else {

@@ -13,8 +13,8 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.plugins.Functions.delay;
-import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.plugins.Functions.*;
+
 public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 
 
@@ -176,7 +176,7 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 			return;
 		}
 		player.message("You feel a powerful force take hold of you...");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(config().GAME_TICK);
 
 		switch(ItemId.getById(item.getCatalogId()))
 		{

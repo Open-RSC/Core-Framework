@@ -53,7 +53,7 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (item.getDef(player.getWorld()).isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (item.getDef(player.getWorld()).isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
 			player.message("You need to be a member to use this object");
 			return;
 		}

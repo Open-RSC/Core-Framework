@@ -24,7 +24,7 @@ public class Certer implements TalkNpcTrigger {
 
 		// Forester (Log certer; custom)
 		if ((n.getID() == NpcId.FORESTER.id())
-			&& !player.getWorld().getServer().getConfig().WANT_WOODCUTTING_GUILD) {
+			&& !config().WANT_WOODCUTTING_GUILD) {
 			return;
 		}
 
@@ -103,7 +103,7 @@ public class Certer implements TalkNpcTrigger {
 		final String[] names = certerDef.getCertNames();
 		player.message("How many certificates do you wish to trade in?");
 		int certAmount;
-		if (player.getWorld().getServer().getConfig().WANT_CERTER_BANK_EXCHANGE) {
+		if (config().WANT_CERTER_BANK_EXCHANGE) {
 			certAmount = multi(player, n, false, "One", "two", "Three", "four",
 				"five", "All to bank");
 		} else {
@@ -157,7 +157,7 @@ public class Certer implements TalkNpcTrigger {
 		player.message("How many " + certerDef.getType() + ending
 			+ " do you wish to trade in?");
 		int certAmount;
-		if (player.getWorld().getServer().getConfig().WANT_CERTER_BANK_EXCHANGE) {
+		if (config().WANT_CERTER_BANK_EXCHANGE) {
 			certAmount = multi(player, n, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive",
 					"All from bank");
 		} else {
@@ -237,6 +237,6 @@ public class Certer implements TalkNpcTrigger {
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		return (DataConversions.inArray(certers, n.getID())) || (n.getID() == NpcId.FORESTER.id() && player.getWorld().getServer().getConfig().WANT_WOODCUTTING_GUILD);
+		return (DataConversions.inArray(certers, n.getID())) || (n.getID() == NpcId.FORESTER.id() && config().WANT_WOODCUTTING_GUILD);
 	}
 }

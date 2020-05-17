@@ -44,7 +44,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 	}
 
 	private boolean CANT_GO(Player player) {
-		boolean equipmentTab = player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB;
+		boolean equipmentTab = config().WANT_EQUIPMENT_TAB;
 		synchronized(player.getCarriedItems().getInventory().getItems()) {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
 				String name = item.getDef(player.getWorld()).getName().toLowerCase();
@@ -87,7 +87,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 				} else {
 					mes(player, "You board the ship");
 					player.teleport(418, 570, false);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+					delay(config().GAME_TICK * 3);
 					mes(player, "The ship arrives at Entrana");
 				}
 			}
@@ -99,7 +99,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 
 				mes(player, "You board the ship");
 				player.teleport(264, 660, false);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+				delay(config().GAME_TICK * 3);
 				mes(player, "The ship arrives at Port Sarim");
 			}
 			return;

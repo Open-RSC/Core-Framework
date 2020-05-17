@@ -205,7 +205,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 
 	private void openGates(Player player) {
 		GameObject the_gate = player.getWorld().getRegionManager().getRegion(Point.location(512, 550)).getGameObject(Point.location(512, 550), player);
-		changeloc(the_gate, player.getWorld().getServer().getConfig().GAME_TICK * 4, 181);
+		changeloc(the_gate, config().GAME_TICK * 4, 181);
 		player.teleport(513, 549);
 	}
 
@@ -218,7 +218,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.LEGENDS_GUILD_GUARD.id()) {
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 0) {
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You approach a nearby guard...");
+				mes(player, config().GAME_TICK * 2, "You approach a nearby guard...");
 			}
 			legendsGuardDialogue(player, n, -1);
 		}
@@ -234,7 +234,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 		if (obj.getID() == MITHRIL_GATES) {
 			if (command.equals("open")) {
 				if (player.getY() <= 550) {
-					changeloc(obj, player.getWorld().getServer().getConfig().GAME_TICK * 4, 181);
+					changeloc(obj, config().GAME_TICK * 4, 181);
 					player.teleport(513, 552);
 					return;
 				}
@@ -242,7 +242,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 				switch (player.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 0:
 						if (legends_guard != null) {
-							mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A nearby guard approaches you...");
+							mes(player, config().GAME_TICK * 2, "A nearby guard approaches you...");
 							legends_guard.initializeTalkScript(player);
 						} else {
 							player.message("The guards is currently busy.");
@@ -276,10 +276,10 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 				}
 
 			} else if (command.equals("search")) {
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The gates to the Legends Guild are made from wrought Mithril.");
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "A small path leads away up to a very grandiose building.");
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "To the left is a smaller out building, but it is no less impressive.");
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "All the buildings are set in wonderfully landscaped gardens.");
+				mes(player, config().GAME_TICK * 2, "The gates to the Legends Guild are made from wrought Mithril.");
+				mes(player, config().GAME_TICK * 2, "A small path leads away up to a very grandiose building.");
+				mes(player, config().GAME_TICK * 2, "To the left is a smaller out building, but it is no less impressive.");
+				mes(player, config().GAME_TICK * 2, "All the buildings are set in wonderfully landscaped gardens.");
 				player.message("Two well dressed guards seem to be guarding the gate.");
 			}
 		}

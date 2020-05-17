@@ -20,7 +20,7 @@ public class ItemUseOnNpc implements PacketHandler {
 		int npcIndex = packet.readShort();
 		final Npc affectedNpc = player.getWorld().getNpc(npcIndex);
 		int itemID = packet.readShort();
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && itemID > Inventory.MAX_SIZE) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB && itemID > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;
 		}

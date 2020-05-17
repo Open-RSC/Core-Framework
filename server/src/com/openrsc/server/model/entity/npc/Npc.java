@@ -788,7 +788,7 @@ public class Npc extends Mob {
 					if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
 						player.getCarriedItems().getInventory().add(item);
 						return true;
-					} else if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
+					} else if (player.getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
 						Item equipped = player.getCarriedItems().getEquipment().get(slot);
 						equipped.changeAmount(player.getWorld().getServer().getDatabase(), item.getAmount());
 						return true;

@@ -66,11 +66,11 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			} else {
 				player.teleport(456, 3352, false);
 				player.message("You hide away in the ship");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				player.message("The ship starts to move");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 5);
+				delay(config().GAME_TICK * 5);
 				player.message("You are out at sea");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 5);
+				delay(config().GAME_TICK * 5);
 				player.message("The ship comes to a stop");
 				player.teleport(456, 520, false);
 				mes(player, "You sneak out of the ship");
@@ -97,12 +97,12 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			if ((player.getQuestStage(this) >= 0 && player.getQuestStage(this) < 3) || !player.getCache().hasKey("lady_test")) {
 				return;
 			}
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			Npc lady = ifnearvisnpc(player, NpcId.LADY_UPSTAIRS.id(), 5);
 			if (lady == null) {
 				lady = addnpc(NpcId.LADY_UPSTAIRS.id(), player.getX() - 1, player.getY() - 1, 60000, player);
 			}
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			if (lady != null) {
 				say(player, lady, "Hello I am here, can I have Excalibur yet?");
 				npcsay(player, lady, "I don't think you are worthy enough",
@@ -123,7 +123,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 		}
 		n.getSkills().setLevel(Skills.HITS, 5);
 		Npc leFaye = addnpc(player.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, 60000);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(config().GAME_TICK);
 		npcsay(player, leFaye, "Please spare my son");
 		int option = multi(player, n, "Tell me how to untrap Merlin and I might",
 			"No he deserves to die", "OK then");
@@ -239,7 +239,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 				if (beggar == null) {
 					beggar = addnpc(NpcId.BEGGAR.id(), 276, 631, 60000, player);
 				}
-				delay(player.getWorld().getServer().getConfig().GAME_TICK);
+				delay(config().GAME_TICK);
 				if (beggar != null) {
 					npcsay(player, beggar, "Please sir, me and my family are starving",
 						"Could you possibly give me a loaf of bread?");

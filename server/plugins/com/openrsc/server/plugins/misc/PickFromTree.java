@@ -27,7 +27,7 @@ public class PickFromTree implements OpLocTrigger {
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == BANANA_TREE_ID || obj.getID() == PINEAPPLE_TREE_ID) {
 			int repeat = 1;
-			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			if (config().BATCH_PROGRESSION) {
 				repeat = getTotalPicks(obj.getID());
 			}
 
@@ -41,7 +41,7 @@ public class PickFromTree implements OpLocTrigger {
 	}
 
 	private void batchTreePick(Player player, GameObject tree) {
-		int tick = player.getWorld().getServer().getConfig().GAME_TICK;
+		int tick = config().GAME_TICK;
 		int fruitCount = 1;
 		if (player.getCache().hasKey(getFruitName(tree.getID()) + "_pick"))
 			fruitCount = player.getCache().getInt(getFruitName(tree.getID()) + "_pick") + 1;

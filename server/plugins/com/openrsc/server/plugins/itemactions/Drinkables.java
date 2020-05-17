@@ -213,7 +213,7 @@ public class Drinkables implements OpInvTrigger {
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(newItem));
 		player.getSkills().setLevel(Skills.FISHING, player.getSkills().getMaxStat(Skills.FISHING) + 3);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		if (left <= 0) {
 			player.message("You have finished your potion");
 		} else {
@@ -226,7 +226,7 @@ public class Drinkables implements OpInvTrigger {
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(newItem));
 		player.cure();
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		if (dosesLeft <= 0) {
 			player.message("You have finished your potion");
 		} else {
@@ -240,7 +240,7 @@ public class Drinkables implements OpInvTrigger {
 		player.getCarriedItems().getInventory().add(new Item(newItem));
 		player.cure();
 		player.setAntidoteProtection(); // 90 seconds.
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		if (dosesLeft <= 0) {
 			player.message("You have finished your potion");
 		} else {
@@ -259,7 +259,7 @@ public class Drinkables implements OpInvTrigger {
 		}
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(newItem));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		if (left <= 0) {
 			player.message("You have finished your potion");
 		} else {
@@ -328,7 +328,7 @@ public class Drinkables implements OpInvTrigger {
 				player.getSkills().setLevel(Skills.HITS, newStat);
 			}
 		}
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		if (left <= 0) {
 			player.message("You have finished your potion");
 		} else {
@@ -345,7 +345,7 @@ public class Drinkables implements OpInvTrigger {
 			newPrayer = player.getSkills().getMaxStat(Skills.PRAYER);
 		}
 		player.getSkills().setLevel(Skills.PRAYER, newPrayer);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		if (left <= 0) {
 			player.message("You have finished your potion");
 		} else {
@@ -374,7 +374,7 @@ public class Drinkables implements OpInvTrigger {
 				player.getSkills().setLevel(i, newStat);
 			}
 		}
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		if (left <= 0) {
 			player.message("You have finished your potion");
 		} else {
@@ -395,11 +395,11 @@ public class Drinkables implements OpInvTrigger {
 				player.getCache().store("gujuo_potion", true);
 			}
 			say(player, null, "Mmmm.....");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			delay(config().GAME_TICK * 2);
 			player.message("It tastes sort of strange...like fried oranges...");
 			say(player, null, ".....!.....");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You feel somehow different...");
+			delay(config().GAME_TICK * 2);
+			mes(player, config().GAME_TICK * 2, "You feel somehow different...");
 			say(player, null, "Let's just hope that this isn't a placibo!");
 		} else if (drink == 1) {
 			player.message("You decide against drinking the potion...");
@@ -482,7 +482,7 @@ public class Drinkables implements OpInvTrigger {
 		player.getCarriedItems().getInventory().add(new Item(ItemId.JUG.id()));
 
 		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 3);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		player.message("You start to feel sick");
 	}
 
@@ -585,7 +585,7 @@ public class Drinkables implements OpInvTrigger {
 		player.playerServerMessage(MessageType.QUEST, "You drink the greenmans ale");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		player.playerServerMessage(MessageType.QUEST, "It has a strange taste");
 		for (int stat = Skills.ATTACK; stat < Skills.HITS; stat++) {
 			player.getSkills().setLevel(stat, player.getSkills().getLevel(stat) - 4);
@@ -600,7 +600,7 @@ public class Drinkables implements OpInvTrigger {
 		player.playerServerMessage(MessageType.QUEST, "you drink the Wizard's Mind Bomb");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		player.playerServerMessage(MessageType.QUEST, "You feel very strange");
 		for (int stat = Skills.ATTACK; stat < Skills.HITS; stat++) {
 			player.getSkills().setLevel(stat, player.getSkills().getLevel(stat) - 4);
@@ -641,7 +641,7 @@ public class Drinkables implements OpInvTrigger {
 		thinkbubble(player, item);
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		player.playerServerMessage(MessageType.QUEST, "You feel slightly reinvigorated");
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
 		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 4);
@@ -662,7 +662,7 @@ public class Drinkables implements OpInvTrigger {
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 		thinkbubble(player, item);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		player.playerServerMessage(MessageType.QUEST, "You feel slightly reinvigorated");
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
 		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 4);
@@ -676,7 +676,7 @@ public class Drinkables implements OpInvTrigger {
 		thinkbubble(player, item);
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		player.playerServerMessage(MessageType.QUEST, "You feel slightly reinvigorated");
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
 		player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - 6);

@@ -46,7 +46,7 @@ public class WoodcutJungle implements OpLocTrigger,
 	}
 
 	private void handleJungleWoodcut(GameObject obj, Player player) {
-		if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+		if (config().STOP_SKILLING_FATIGUED >= 1
 			&& player.getFatigue() >= player.MAX_FATIGUE) {
 			player.playerServerMessage(MessageType.QUEST, "You are too tired to cut the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
 
@@ -72,7 +72,7 @@ public class WoodcutJungle implements OpLocTrigger,
 		}
 
 		if (!player.getCarriedItems().hasCatalogID(ItemId.MACHETTE.id(), Optional.of(false))) {
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "This jungle is very thick, you'll need a machette to cut through.");
+			mes(player, config().GAME_TICK * 3, "This jungle is very thick, you'll need a machette to cut through.");
 			return;
 		}
 
@@ -112,7 +112,7 @@ public class WoodcutJungle implements OpLocTrigger,
 					player.getWorld().delayedSpawnObject(obj.getLoc(), 5500); // 5.5 seconds.
 					if (!force)
 						// authentic does not send to quest tab
-						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You hack your way through the jungle.");
+						mes(player, config().GAME_TICK * 2, "You hack your way through the jungle.");
 				} else {
 					player.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
 					player.getWorld().delayedSpawnObject(obj.getLoc(), 60 * 1000); // 1 minute.
@@ -129,7 +129,7 @@ public class WoodcutJungle implements OpLocTrigger,
 			player.teleport(obj.getX(), obj.getY());
 			if (player.getY() > 871) {
 				if (obj.getID() == JUNGLE_VINE)
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 6);
+					delay(config().GAME_TICK * 6);
 				player.message("You manage to hack your way into the Kharazi Jungle.");
 			}
 		} else {

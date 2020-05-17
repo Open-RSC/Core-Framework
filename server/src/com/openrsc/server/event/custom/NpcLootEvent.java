@@ -55,7 +55,7 @@ public class NpcLootEvent extends SingleEvent {
 		}
 
 		for (Player informee : getWorld().getPlayers())
-			informee.message(player.getWorld().getServer().getConfig().MESSAGE_PREFIX + player.getUsername() + " has killed the special " + npcName + " and won: " + itemDef.getName() +  " x" + itemAmount);
+			informee.message(player.getConfig().MESSAGE_PREFIX + player.getUsername() + " has killed the special " + npcName + " and won: " + itemDef.getName() +  " x" + itemAmount);
 
 		ActionSender.sendBox(player, "You have killed the special " + npcName + "! % Remember to loot your winnings of " + itemAmount + " " + itemDef.getName(),false);
 		lootNpc = null;

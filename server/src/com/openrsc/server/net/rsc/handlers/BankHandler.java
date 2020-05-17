@@ -53,7 +53,7 @@ public final class BankHandler implements PacketHandler {
 
 				if (catalogID == ItemId.NOTHING.id()) return;
 
-				if (player.getWorld().getServer().getConfig().WANT_BANK_NOTES)
+				if (player.getConfig().WANT_BANK_NOTES)
 					wantsNotes = packet.readByte() == 1;
 
 				amount = Math.min(player.getBank().countId(catalogID), amount);
@@ -72,14 +72,14 @@ public final class BankHandler implements PacketHandler {
 				player.getBank().depositAllFromInventory();
 				break;
 			case BANK_DEPOSIT_ALL_FROM_EQUIPMENT:
-				if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				if (!player.getConfig().WANT_EQUIPMENT_TAB) {
 					player.setSuspiciousPlayer(true, "bank deposit from equipment on authentic world");
 					return;
 				}
 				player.getBank().depositAllFromEquipment();
 				break;
 			case BANK_LOAD_PRESET:
-				if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				if (!player.getConfig().WANT_EQUIPMENT_TAB) {
 					player.setSuspiciousPlayer(true, "bank load preset on authentic world");
 					return;
 				}
@@ -93,7 +93,7 @@ public final class BankHandler implements PacketHandler {
 				ActionSender.sendInventory(player);
 				break;
 			case BANK_SAVE_PRESET:
-				if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				if (!player.getConfig().WANT_EQUIPMENT_TAB) {
 					player.setSuspiciousPlayer(true, "bank save preset on authentic world");
 					return;
 				}

@@ -48,7 +48,7 @@ public class WalkRequest implements PacketHandler {
 					player.setLastCombatState(CombatState.RUNNING);
 					opponent.setLastCombatState(CombatState.WAITING);
 					player.resetCombatEvent();
-					if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
+					if (player.getConfig().WANT_PARTIES) {
 						if(player.getParty() != null){
 							player.getParty().sendParty();
 						}
@@ -70,7 +70,7 @@ public class WalkRequest implements PacketHandler {
 				return;
 			}
 		} else if (player.isBusy()) {
-			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			if (player.getConfig().BATCH_PROGRESSION) {
 				player.interruptPlugins();
 			}
 			return;

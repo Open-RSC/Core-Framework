@@ -210,7 +210,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 					.getType()));
 				addloc(obj.getWorld(), obj.getLoc(), 3000);
 				player.teleport(766, 3417);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				player.teleport(770, 3417);
 				player.message("you walk into the darkness");
 			} else {

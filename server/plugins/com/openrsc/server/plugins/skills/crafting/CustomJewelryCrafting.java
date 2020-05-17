@@ -119,7 +119,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 
 		int repeat = 1;
 
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			if (gem > 0) {
 				repeat = Math.min(
 					player.getCarriedItems().getInventory().countId(Crafting.gems[gem], Optional.of(false)),
@@ -172,7 +172,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		if (gem > 0) {
 			player.getCarriedItems().remove(new Item(Crafting.gems[gem]));
 		}
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 
 		Item result = new Item(def.getItemID(), 1);
 
@@ -183,7 +183,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			batchGoldCrafting(player, item, def, gem);
 		}
 	}
@@ -219,7 +219,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		};
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 		}
 
@@ -243,7 +243,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		// Remove silver bar
 		thinkbubble(player, silver);
 		player.getCarriedItems().remove(silver);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 
 		Item result = new Item(resultId);
 		player.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(player.getWorld()).getName());
@@ -253,7 +253,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			batchSilverCrafting(player, item, resultId);
 		}
 	}
@@ -268,8 +268,8 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 	}
 
 	private boolean checkFatigue(Player player) {
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE
-			&& player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+		if (config().WANT_FATIGUE
+			&& config().STOP_SKILLING_FATIGUED >= 2
 			&& player.getFatigue() >= player.MAX_FATIGUE) {
 			player.message("You are too tired to craft");
 			return true;
@@ -281,7 +281,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		final boolean furnace = obj.getID() == 118 || obj.getID() == 813;
 		final boolean jewelryBar = item.getCatalogId() == ItemId.SILVER_BAR.id() || item.getCatalogId() == ItemId.GOLD_BAR.id();
-		final boolean wantBetterJewelryCrafting = player.getWorld().getServer().getConfig().WANT_BETTER_JEWELRY_CRAFTING;
+		final boolean wantBetterJewelryCrafting = config().WANT_BETTER_JEWELRY_CRAFTING;
 
 		// Checks to make sure that we're using a jewelry bar on a furnace
 		// And that we have WANT_BETTER_JEWELRY_CRAFTING enabled.

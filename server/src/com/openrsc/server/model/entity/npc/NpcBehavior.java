@@ -320,7 +320,7 @@ public class NpcBehavior {
 
 		boolean playerOccupied = player.inCombat();
 		boolean playerCombatTimeout = System.currentTimeMillis()
-			- player.getCombatTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5;
+			- player.getCombatTimer() < player.getConfig().GAME_TICK * 5;
 
 		boolean shouldAttack = (npc.getDef().isAggressive() && (player.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
 			|| (player.getLocation().inWilderness() && npc.getLocation().inWilderness())))

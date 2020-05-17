@@ -211,7 +211,7 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 	public void onTakeObj(Player player, GroundItem item) {
 		if (item.getID() == ItemId.GNOME_BALL.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.GNOME_BALL.id(), Optional.of(false))) {
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "you can only carry one ball at a time", "otherwise it would be too easy");
+				mes(player, config().GAME_TICK * 2, "you can only carry one ball at a time", "otherwise it would be too easy");
 			} else {
 				player.getWorld().unregisterItem(item);
 				give(player, ItemId.GNOME_BALL.id(), 1);

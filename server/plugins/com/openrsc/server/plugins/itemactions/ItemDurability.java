@@ -21,25 +21,25 @@ public class ItemDurability implements OpInvTrigger {
 			int charges;
 			if (item.getCatalogId() == ItemId.RING_OF_RECOIL.id()) {
 				if (player.getCache().hasKey("ringofrecoil"))
-					charges = player.getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - player.getCache().getInt("ringofrecoil");
+					charges = config().RING_OF_RECOIL_LIMIT - player.getCache().getInt("ringofrecoil");
 				else
-					charges = player.getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT;
+					charges = config().RING_OF_RECOIL_LIMIT;
 				player.message("Your Ring of Recoil has " + charges + "/" +
-					player.getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT + " charges remaining.");
+					config().RING_OF_RECOIL_LIMIT + " charges remaining.");
 			} else if (item.getCatalogId() == ItemId.RING_OF_FORGING.id()) {
 				if (player.getCache().hasKey("ringofforging"))
-					charges = player.getWorld().getServer().getConfig().RING_OF_FORGING_USES - player.getCache().getInt("ringofforging");
+					charges = config().RING_OF_FORGING_USES - player.getCache().getInt("ringofforging");
 				else
-					charges = player.getWorld().getServer().getConfig().RING_OF_FORGING_USES;
+					charges = config().RING_OF_FORGING_USES;
 				player.message("Your Ring of Forging has " + charges + "/" +
-					player.getWorld().getServer().getConfig().RING_OF_FORGING_USES + " charges remaining.");
+					config().RING_OF_FORGING_USES + " charges remaining.");
 			} else if (item.getCatalogId() == ItemId.DWARVEN_RING.id()) {
 				if (player.getCache().hasKey("dwarvenring"))
-					charges = player.getWorld().getServer().getConfig().DWARVEN_RING_USES - player.getCache().getInt("dwarvenring");
+					charges = config().DWARVEN_RING_USES - player.getCache().getInt("dwarvenring");
 				else
-					charges = player.getWorld().getServer().getConfig().DWARVEN_RING_USES;
+					charges = config().DWARVEN_RING_USES;
 				player.message("Your Dwarven Ring has " + charges + "/" +
-					player.getWorld().getServer().getConfig().DWARVEN_RING_USES + " charges remaining.");
+					config().DWARVEN_RING_USES + " charges remaining.");
 			}
 		} else if (command.equalsIgnoreCase("break")) {
 			player.message("Are you sure you want to break your " + item.getDef(player.getWorld()).getName() + "?");
