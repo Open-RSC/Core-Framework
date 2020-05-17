@@ -499,12 +499,11 @@ public abstract class Mob extends Entity {
 			victim.resetPath();
 			victim.resetRange();
 
-			int victimSprite = this.isNpc() && victim.isPlayer() || this.isNpc() && victim.isNpc() ? 9 : 8;
-			int ourSprite = this.isNpc() && victim.isPlayer() || this.isNpc() && victim.isNpc() ? 8 : 9;
-
-			if (this.isNpc() && victim.isNpc()) {
-				victimSprite = 8;
-				ourSprite = 9;
+			int victimSprite = 8;
+			int ourSprite = 9;
+			if(this.isNpc() && victim.isPlayer() || this.isNpc() && victim.isNpc()) {
+				victimSprite = 9;
+				ourSprite = 8;
 			}
 
 			victim.setBusy(true);
@@ -513,10 +512,8 @@ public abstract class Mob extends Entity {
 			victim.setCombatTimer();
 
 			if (victim.isPlayer()) {
-				assert victim instanceof Player;
 				Player playerVictim = (Player) victim;
 				if (this.isPlayer()) {
-					assert this instanceof Player;
 					((Player) this).setSkulledOn(playerVictim);
 				}
 				playerVictim.resetAll();

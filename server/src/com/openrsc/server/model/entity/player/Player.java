@@ -1810,7 +1810,8 @@ public final class Player extends Mob {
 			}
 		}
 		this.cure();
-		prayers.resetPrayers();
+		// OG RSC did not reset active prayers after death
+		// prayers.resetPrayers();
 		getSkills().normalize();
 		if (getWorld().getServer().getConfig().WANT_PARTIES) {
 			if (getParty() != null) {
