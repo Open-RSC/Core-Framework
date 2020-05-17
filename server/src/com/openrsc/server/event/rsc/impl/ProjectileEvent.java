@@ -147,7 +147,7 @@ public class ProjectileEvent extends SingleTickEvent {
 		if (opponent.isPlayer()) {
 			Player affectedPlayer = (Player) opponent;
 			ActionSender.sendStat(affectedPlayer, Skills.HITS);
-			if (affectedPlayer.getWorld().getServer().getConfig().WANT_PARTIES) {
+			if (affectedPlayer.getConfig().WANT_PARTIES) {
 				if (affectedPlayer.getParty() != null) {
 					affectedPlayer.getParty().sendParty();
 				}

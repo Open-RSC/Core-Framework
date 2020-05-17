@@ -53,7 +53,7 @@ public class WalkRequest implements PacketHandler {
 							player.getParty().sendParty();
 						}
 					}
-					if (opponent.isPlayer() && opponent.getWorld().getServer().getConfig().WANT_PARTIES) {
+					if (opponent.isPlayer() && opponent.getConfig().WANT_PARTIES) {
 						if(((Player) opponent).getParty() != null){
 							((Player) opponent).getParty().sendParty();
 						}

@@ -58,7 +58,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 
 				if ((myItem.getDef(getPlayer().getWorld()).isMembersOnly() || gItem.getDef()
 					.isMembersOnly())
-					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					&& !getPlayer().getConfig().MEMBER_WORLD) {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}

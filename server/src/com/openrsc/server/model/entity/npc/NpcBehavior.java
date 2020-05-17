@@ -67,13 +67,13 @@ public class NpcBehavior {
 		}
 
 		// Check if NPC will aggro
-		if (System.currentTimeMillis() - npc.getCombatTimer() > npc.getWorld().getServer().getConfig().GAME_TICK * 5) {
+		if (System.currentTimeMillis() - npc.getCombatTimer() > npc.getConfig().GAME_TICK * 5) {
 			if ((npc.getDef().isAggressive() && !draynorManorSkeleton) || npc.getLocation().inWilderness() || (blackKnightsFortress)) {
 
 				// We loop through all players in view.
 				for (Player player : npc.getViewArea().getPlayersInView()) {
 
-					int range = npc.getWorld().getServer().getConfig().AGGRO_RANGE;
+					int range = npc.getConfig().AGGRO_RANGE;
 					switch (NpcId.getById(npc.getID())) {
 						case BANDIT_AGGRESSIVE:
 							range = 2;
@@ -104,7 +104,7 @@ public class NpcBehavior {
 		}
 
 		// Check for tackle
-		if (System.currentTimeMillis() - lastTackleAttempt > npc.getWorld().getServer().getConfig().GAME_TICK * 5 &&
+		if (System.currentTimeMillis() - lastTackleAttempt > npc.getConfig().GAME_TICK * 5 &&
 			npc.getDef().getName().toLowerCase().equals("gnome baller")
 			&& !(npc.getID() == NpcId.GNOME_BALLER_TEAMNORTH.id() || npc.getID() == NpcId.GNOME_BALLER_TEAMSOUTH.id())) {
 			for (Player player : npc.getViewArea().getPlayersInView()) {
@@ -122,8 +122,8 @@ public class NpcBehavior {
 		// If NPC has not moved in 3 seconds, and is out of combat 3 seconds
 		// and are finished our previous path.
 		target = null;
-		if (System.currentTimeMillis() - lastMovement > npc.getWorld().getServer().getConfig().GAME_TICK * 5
-			&& System.currentTimeMillis() - npc.getCombatTimer() > npc.getWorld().getServer().getConfig().GAME_TICK * 5
+		if (System.currentTimeMillis() - lastMovement > npc.getConfig().GAME_TICK * 5
+			&& System.currentTimeMillis() - npc.getCombatTimer() > npc.getConfig().GAME_TICK * 5
 			&& npc.finishedPath()) {
 			lastMovement = System.currentTimeMillis();
 			lastTarget = null;
@@ -156,7 +156,7 @@ public class NpcBehavior {
 			|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
 
 			// Send the NPC back to its original spawn point.
-			if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING) {
+			if (npc.getConfig().WANT_IMPROVED_PATHFINDING) {
 				Point origin = new Point(npc.getLoc().startX(), npc.getLoc().startY());
 				npc.walkToEntityAStar(origin.getX(), origin.getY());
 				npc.getSkills().normalize();
@@ -178,7 +178,7 @@ public class NpcBehavior {
 			// If target is not waiting for "run away" timer, send them chasing
 			lastMovement = System.currentTimeMillis();
 			if (!checkTargetCombatTimer()) {
-				if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING)
+				if (npc.getConfig().WANT_IMPROVED_PATHFINDING)
 					npc.walkToEntityAStar(target.getX(), target.getY());
 				else
 					npc.walkToEntity(target.getX(), target.getY());
@@ -369,7 +369,7 @@ public class NpcBehavior {
 	}
 
 	private boolean checkTargetCombatTimer() {
-		return (System.currentTimeMillis() - target.getCombatTimer() < target.getWorld().getServer().getConfig().GAME_TICK * 5);
+		return (System.currentTimeMillis() - target.getCombatTimer() < target.getConfig().GAME_TICK * 5);
 	}
 
 	private boolean expiredLastTargetCombatTimer() {
@@ -391,7 +391,7 @@ public class NpcBehavior {
 	}
 
 	private boolean shouldRetreat(final Npc npc) {
-		if (!npc.getWorld().getServer().getConfig().NPC_DONT_RETREAT) {
+		if (!npc.getConfig().NPC_DONT_RETREAT) {
 			if (npc.getWorld().getServer().getConstants().getRetreats().npcData.containsKey(npc.getID())) {
 				return npc.getSkills().getLevel(Skills.HITS) <= npc.getWorld().getServer().getConstants().getRetreats().npcData.get(npc.getID());
 			}

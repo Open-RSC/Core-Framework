@@ -62,7 +62,7 @@ public class WoodcutJungle implements OpLocTrigger,
 		}
 
 		//if(!hasItem(p, 1163) && !hasItem(p, 1233) && p.getQuestStage(Quests.LEGENDS_QUEST) != -1) { // the radimus scrolls.
-		//	message(p, p.getWorld().getServer().getConfig().GAME_TICK * 3, "This jungle is far too thick, you'll need a special map to go further.");
+		//	message(p, p.getConfig().GAME_TICK * 3, "This jungle is far too thick, you'll need a special map to go further.");
 		//	return;
 		//}
 

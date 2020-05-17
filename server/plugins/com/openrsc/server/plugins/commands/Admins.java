@@ -1208,7 +1208,7 @@ public final class Admins implements CommandTrigger {
 			player.getCarriedItems().remove(item);
 		}
 
-		if (targetPlayer.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (targetPlayer.getConfig().WANT_EQUIPMENT_TAB) {
 			int wearableId;
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				Item equipped = targetPlayer.getCarriedItems().getEquipment().get(i);
@@ -2037,8 +2037,8 @@ public final class Admins implements CommandTrigger {
 		if ((toggle && targetPlayer.isSkulled()) || (!toggle && !skull)) {
 			targetPlayer.removeSkull();
 		} else {
-			targetPlayer.addSkull(targetPlayer.getWorld().getServer().getConfig().GAME_TICK * 2000);
-			targetPlayer.getCache().store("skull_remaining", targetPlayer.getWorld().getServer().getConfig().GAME_TICK * 2000); // Saves the skull timer to the database if the player logs out before it expires
+			targetPlayer.addSkull(targetPlayer.getConfig().GAME_TICK * 2000);
+			targetPlayer.getCache().store("skull_remaining", targetPlayer.getConfig().GAME_TICK * 2000); // Saves the skull timer to the database if the player logs out before it expires
 			targetPlayer.getCache().store("last_skull", System.currentTimeMillis()); // Sets the last time a player had a skull
 		}
 

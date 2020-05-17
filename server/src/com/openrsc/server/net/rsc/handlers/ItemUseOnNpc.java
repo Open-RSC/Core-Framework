@@ -45,7 +45,7 @@ public class ItemUseOnNpc implements PacketHandler {
 					return;
 				}
 				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
-					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					&& !getPlayer().getConfig().MEMBER_WORLD) {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}

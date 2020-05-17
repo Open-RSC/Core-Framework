@@ -74,7 +74,7 @@ public class CombatEvent extends GameTickEvent {
 		}
 		killer.setKillType(0);
 		killed.killedBy(killer);
-		if (killer.getWorld().getServer().getConfig().WANT_PARTIES) {
+		if (killer.getConfig().WANT_PARTIES) {
 			if(killer.isPlayer() && ((Player) killer).getParty() != null){
 				((Player) killer).getParty().sendParty();
 			}

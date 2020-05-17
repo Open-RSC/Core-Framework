@@ -27,7 +27,7 @@ public class ItemUseOnObject implements PacketHandler {
 				getPlayer().resetAll();
 
 				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
-					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					&& !getPlayer().getConfig().MEMBER_WORLD) {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}
@@ -61,7 +61,7 @@ public class ItemUseOnObject implements PacketHandler {
 				getPlayer().resetAll();
 
 				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
-					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					&& !getPlayer().getConfig().MEMBER_WORLD) {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}

@@ -43,8 +43,8 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 				player.message("You need an agility level of 35 to attempt to squeeze through the pipe");
 				return;
 			}
-			if (obj.getWorld().getServer().getConfig().WANT_FATIGUE) {
-				if (obj.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+			if (obj.getConfig().WANT_FATIGUE) {
+				if (obj.getConfig().STOP_SKILLING_FATIGUED >= 1
 					&& player.getFatigue() >= player.MAX_FATIGUE) {
 					player.message("You are too tired to squeeze through the pipe");
 					return;

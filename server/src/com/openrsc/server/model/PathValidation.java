@@ -544,21 +544,21 @@ public class PathValidation {
 		 * NPC blocking config controlled
 		 */
 		if (npc != null) {
-			if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 0) { // No NPC blocks
+			if (mob.getConfig().NPC_BLOCKING == 0) { // No NPC blocks
 				return false;
-			} else if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 1) { // 2 * combat level + 1 blocks AND aggressive
+			} else if (mob.getConfig().NPC_BLOCKING == 1) { // 2 * combat level + 1 blocks AND aggressive
 				if (mob.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1) && npc.getDef().isAggressive()) {
 					return true;
 				}
-			} else if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 2) { // Any aggressive NPC blocks
+			} else if (mob.getConfig().NPC_BLOCKING == 2) { // Any aggressive NPC blocks
 				if (npc.getDef().isAggressive()) {
 					return true;
 				}
-			} else if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 3) { // Any attackable NPC blocks
+			} else if (mob.getConfig().NPC_BLOCKING == 3) { // Any attackable NPC blocks
 				if (npc.getDef().isAttackable()) {
 					return true;
 				}
-			} else if (mob.getWorld().getServer().getConfig().NPC_BLOCKING == 4) { // All NPCs block
+			} else if (mob.getConfig().NPC_BLOCKING == 4) { // All NPCs block
 				return true;
 			}
 		}

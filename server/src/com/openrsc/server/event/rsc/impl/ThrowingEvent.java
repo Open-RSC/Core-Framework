@@ -31,9 +31,9 @@ public class ThrowingEvent extends GameTickEvent {
 		this.deliveredFirstProjectile = false;
 
 		long diff = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L);
-		boolean canShoot = diff >= getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
+		boolean canShoot = diff >= getPlayerOwner().getConfig().GAME_TICK * 3;
 		if (!canShoot) {
-			long delay = diff / getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK;
+			long delay = diff / getPlayerOwner().getConfig().GAME_TICK;
 			setDelayTicks(Math.max(2, delay));
 		}
 	}

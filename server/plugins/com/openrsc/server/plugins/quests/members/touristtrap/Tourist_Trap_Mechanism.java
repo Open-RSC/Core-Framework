@@ -49,14 +49,14 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			if (n != null) {
 				n.teleport(requestPlayer.getX(), requestPlayer.getY());
 				requestPlayer.teleport(requestPlayer.getX(), requestPlayer.getY());
-				delay(requestPlayer.getWorld().getServer().getConfig().GAME_TICK);
+				delay(requestPlayer.getConfig().GAME_TICK);
 				npcsay(requestPlayer, n, "Oi! What are you doing down here?",
 					"You're no slave!");
 				n.startCombat(requestPlayer);
 			} else {
 				requestPlayer.teleport(requestPlayer.getX(), requestPlayer.getY());
 				Npc newNpc = addnpc(requestPlayer.getWorld(), NpcId.MERCENARY.id(), requestPlayer.getX(), requestPlayer.getY(), 30000);
-				delay(requestPlayer.getWorld().getServer().getConfig().GAME_TICK);
+				delay(requestPlayer.getConfig().GAME_TICK);
 				npcsay(requestPlayer, newNpc, "Oi! What are you doing down here?",
 					"You're no slave!");
 				newNpc.startCombat(requestPlayer);

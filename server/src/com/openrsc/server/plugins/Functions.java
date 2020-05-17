@@ -998,7 +998,7 @@ public class Functions {
 	}
 
 	public static void openChest(GameObject obj) {
-		openChest(obj, obj.getWorld().getServer().getConfig().GAME_TICK * 3);
+		openChest(obj, obj.getConfig().GAME_TICK * 3);
 	}
 
 	public static void closeCupboard(GameObject obj, Player player, int cupboardID) {
