@@ -56,7 +56,6 @@ public class NpcBehavior {
 	}
 
 	private void handleRoam() {
-		Mob lastTarget;
 
 		// NPC is in combat or busy, do not set them to ROAM.
 		if (npc.inCombat()) {
@@ -67,7 +66,7 @@ public class NpcBehavior {
 		}
 
 		// Check if NPC will aggro
-		if (System.currentTimeMillis() - npc.getCombatTimer() > npc.getConfig().GAME_TICK * 5) {
+		if (checkCombatTimer(npc.getCombatTimer(), 5)) {
 			if ((npc.getDef().isAggressive() && !draynorManorSkeleton) || npc.getLocation().inWilderness() || (blackKnightsFortress)) {
 
 				// We loop through all players in view.
@@ -82,8 +81,10 @@ public class NpcBehavior {
 							range = 10;
 					}
 
+					// Player is a new target AND can't aggro or is not in range.
+					// Old target gets a pass because ???
 					if (player != npc.getLastOpponent() && (!canAggro(player) || !player.withinRange(npc, range))) {
-						continue; // Can't aggro or is not in range.
+						continue;
 					}
 
 					state = State.AGGRO;
@@ -116,17 +117,15 @@ public class NpcBehavior {
 				//set tackle
 				state = State.TACKLE;
 				target = player;
+				return;
 			}
 		}
 
-		// If NPC has not moved in 3 seconds, and is out of combat 3 seconds
-		// and are finished our previous path.
+		// If NPC has not moved and is out of combat
+		// and is finished its previous path.
 		target = null;
-		if (System.currentTimeMillis() - lastMovement > npc.getConfig().GAME_TICK * 5
-			&& System.currentTimeMillis() - npc.getCombatTimer() > npc.getConfig().GAME_TICK * 5
-			&& npc.finishedPath()) {
+		if (checkCombatTimer(lastMovement, 5) && checkCombatTimer(npc.getCombatTimer(), 5) && npc.finishedPath()) {
 			lastMovement = System.currentTimeMillis();
-			lastTarget = null;
 			int rand = DataConversions.random(0, 1);
 
 			// NPC is not busy, and we rolled to move (50% chance)
@@ -165,7 +164,7 @@ public class NpcBehavior {
 			setRoaming();
 		}
 
-		// Combat with another target - set state.
+		// Chase and fight.
 		else {
 
 			// Reset the target if the wrong one is focused
@@ -177,7 +176,8 @@ public class NpcBehavior {
 
 			// If target is not waiting for "run away" timer, send them chasing
 			lastMovement = System.currentTimeMillis();
-			if (!checkTargetCombatTimer()) {
+			int numTicks = target.getCombatState() == CombatState.RUNNING ? 5 : 0;
+			if (checkCombatTimer(target.getCombatTimer(), numTicks)) {
 				if (npc.getConfig().WANT_IMPROVED_PATHFINDING)
 					npc.walkToEntityAStar(target.getX(), target.getY());
 				else
@@ -227,8 +227,7 @@ public class NpcBehavior {
 
 			// Otherwise, set roaming if NPC is not already following something
 			} else {
-				if (!npc.isFollowing())
-					setRoaming();
+				if (!npc.isFollowing())	setRoaming();
 			}
 		}
 	}
@@ -319,8 +318,9 @@ public class NpcBehavior {
 			npc.getLoc().maxX + 4, npc.getLoc().maxY + 4);
 
 		boolean playerOccupied = player.inCombat();
-		boolean playerCombatTimeout = System.currentTimeMillis()
-			- player.getCombatTimer() < player.getConfig().GAME_TICK * 5;
+
+		int numTicks = player.getCombatState() == CombatState.RUNNING ? 5 : 0;
+		boolean playerCombatTimeout = checkCombatTimer(player.getCombatTimer(), numTicks);
 
 		boolean shouldAttack = (npc.getDef().isAggressive() && (player.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
 			|| (player.getLocation().inWilderness() && npc.getLocation().inWilderness())))
@@ -330,7 +330,7 @@ public class NpcBehavior {
 
 		return closeEnough && shouldAttack
 			&& (player instanceof Player && (!((Player) player).isInvulnerableTo(npc) && !((Player) player).isInvisibleTo(npc)))
-			&& !outOfBounds && !playerOccupied && !playerCombatTimeout;
+			&& !outOfBounds && !playerOccupied && playerCombatTimeout;
 	}
 
 	private boolean grandTreeGnome(final Npc npc) {
@@ -368,8 +368,9 @@ public class NpcBehavior {
 		return null;
 	}
 
-	private boolean checkTargetCombatTimer() {
-		return (System.currentTimeMillis() - target.getCombatTimer() < target.getConfig().GAME_TICK * 5);
+	// Returns true if appropriate tick count has passed.
+	private boolean checkCombatTimer(long timer, int ticks) {
+		return (System.currentTimeMillis() - timer) >= (npc.getConfig().GAME_TICK * ticks);
 	}
 
 	private boolean expiredLastTargetCombatTimer() {

@@ -32,7 +32,7 @@ public class CombatEvent extends GameTickEvent {
 		}
 	}
 
-	private static void onDeath(Mob killed, Mob killer) {
+	private void onDeath(Mob killed, Mob killer) {
 		if (killer.isPlayer() && killed.isNpc()) {
 			if (killed.getWorld().getServer().getPluginHandler().handlePlugin((Player)killer, "PlayerKilledNpc", new Object[]{((Player) killer), ((Npc) killed)})) {
 				return;
@@ -43,8 +43,8 @@ public class CombatEvent extends GameTickEvent {
 			}
 		}
 
-		killed.setLastCombatState(CombatState.WON);
-		killer.setLastCombatState(CombatState.LOST);
+		killed.setLastCombatState(CombatState.LOST);
+		killer.setLastCombatState(CombatState.WON);
 
 		if (killed.isPlayer() && killer.isPlayer()) {
 			int skillsDist[] = {0, 0, 0, 0};
@@ -74,10 +74,8 @@ public class CombatEvent extends GameTickEvent {
 		}
 		killer.setKillType(0);
 		killed.killedBy(killer);
-		if (killer.getConfig().WANT_PARTIES) {
-			if(killer.isPlayer() && ((Player) killer).getParty() != null){
-				((Player) killer).getParty().sendParty();
-			}
+		if (killer.isPlayer()) {
+			updateParty((Player)killer);
 		}
 	}
 
@@ -128,19 +126,20 @@ public class CombatEvent extends GameTickEvent {
 
 	private void inflictDamage(final Mob hitter, final Mob target, int damage) {
 		hitter.incHitsMade();
+
+		// Paralyze monster stops NPC from damaging players.
 		if (hitter.isNpc() && target.isPlayer()) {
 			Player targetPlayer = (Player) target;
-
 			if (targetPlayer.getPrayers().isPrayerActivated(Prayers.PARALYZE_MONSTER)) {
 				hitter.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatScript(hitter, target);
 				return;
 			}
 		}
 
+		// Reduce targets hits by supplied damage amount.
 		int lastHits = target.getLevel(Skills.HITPOINTS);
 		target.getSkills().subtractLevel(Skills.HITS, damage, false);
 		target.getUpdateFlags().setDamage(new Damage(target, damage));
-
 		if (target.isNpc() && hitter.isPlayer()) {
 			Npc n = (Npc) target;
 			Player player = ((Player) hitter);
@@ -148,53 +147,60 @@ public class CombatEvent extends GameTickEvent {
 			n.addCombatDamage(player, damage);
 		}
 
-		String combatSound = null;
-		combatSound = damage > 0 ? "combat1b" : "combat1a";
-
+		// Update players sound and party.
 		if (target.isPlayer()) {
 			if (hitter.isNpc()) {
-				Npc n = (Npc) hitter;
-				if (DataConversions.inArray(Constants.ARMOR_NPCS, n.getID())) {
-					combatSound = damage > 0 ? "combat2b" : "combat2a";
-				} else if (DataConversions.inArray(Constants.UNDEAD_NPCS, n.getID())) {
-					combatSound = damage > 0 ? "combat3b" : "combat3a";
-				} else {
-					combatSound = damage > 0 ? "combat1b" : "combat1a";
-				}
+				sendSound((Player)target, (Npc)hitter, damage > 0);
 			}
-			if (getWorld().getServer().getConfig().WANT_PARTIES) {
-				if(((Player) target).getParty() != null){
-					((Player) target).getParty().sendParty();
-				}
-			}
-			Player opponentPlayer = ((Player) target);
-			ActionSender.sendSound(opponentPlayer, combatSound);
+			updateParty((Player)target);
 		}
 		if (hitter.isPlayer()) {
 			if (target.isNpc()) {
-				Npc n = (Npc) target;
-				if (DataConversions.inArray(Constants.ARMOR_NPCS, n.getID())) {
-					combatSound = damage > 0 ? "combat2b" : "combat2a";
-				} else if (DataConversions.inArray(Constants.UNDEAD_NPCS, n.getID())) {
-					combatSound = damage > 0 ? "combat3b" : "combat3a";
-				} else {
-					combatSound = damage > 0 ? "combat1b" : "combat1a";
-				}
+				sendSound((Player)hitter, (Npc)target, damage > 0);
 			}
-			if (getWorld().getServer().getConfig().WANT_PARTIES) {
-				if(((Player) hitter).getParty() != null){
-					((Player) hitter).getParty().sendParty();
-				}
-			}
-			Player attackerPlayer = (Player) hitter;
-			ActionSender.sendSound(attackerPlayer, combatSound);
+			updateParty((Player)hitter);
 		}
 
 		if (target.getSkills().getLevel(3) > 0) {
-			if (!(target.isPlayer() && !((Player)target).getDuel().isDuelActive() && ((Player)target).checkRingOfLife(hitter)))
+
+			// NPCs can run special combat scripts.
+			// Custom: Ring of Life execution
+			boolean ringOfLifeScript = false;
+			if (target.isPlayer()) {
+				Player player = (Player)target;
+				ringOfLifeScript = player.getDuel().isDuelActive() && player.checkRingOfLife(hitter);
+			}
+			if (target.isNpc() || ringOfLifeScript) {
 				target.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatScript(hitter, target);
-		} else {
+			}
+		}
+
+		// Mob has <= 0 hits.
+		else {
 			onDeath(target, hitter);
+		}
+	}
+
+	// Players in combat with an NPC will receive unique NPC
+	// sounds dependent on npc type.
+	private void sendSound(Player player, Npc npc, boolean damaged) {
+		String combatSound;
+		if (DataConversions.inArray(Constants.ARMOR_NPCS, npc.getID())) {
+			combatSound = damaged ? "combat2b" : "combat2a";
+		} else if (DataConversions.inArray(Constants.UNDEAD_NPCS, npc.getID())) {
+			combatSound = damaged ? "combat3b" : "combat3a";
+		} else {
+			combatSound = damaged ? "combat1b" : "combat1a";
+		}
+
+		ActionSender.sendSound(player, combatSound);
+	}
+
+	private void updateParty(Player player) {
+		if (getWorld().getServer().getConfig().WANT_PARTIES) {
+			if(player.getParty() != null){
+				player.getParty().sendParty();
+			}
 		}
 	}
 
@@ -206,7 +212,9 @@ public class CombatEvent extends GameTickEvent {
 					Player player = (Player) defenderMob;
 					player.resetAll();
 				} else {
-					delayedAggro = 17000; // 17 + 3 second aggro timer for npcs running
+					if (attackerMob.getCombatState() == CombatState.RUNNING) {
+						delayedAggro = 17000; // 17 + 3 second aggro timer for npcs running
+					}
 				}
 
 				defenderMob.setBusy(false);

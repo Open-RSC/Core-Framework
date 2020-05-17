@@ -280,7 +280,14 @@ public class Npc extends Mob {
 				owner = (Player) npcKiller.relatedMob;
 		}
 
-		if (owner == null) return;
+		// Remove poison event(s)
+		this.cure();
+
+		if (owner == null) {
+			deathListeners.clear();
+			remove();
+			return;
+		}
 
 		owner.getWorld().getServer().getPluginHandler().handlePlugin(owner, "KillNpc", new Object[]{owner, this});
 		for (int npcId : removeHandledInPlugin) {
@@ -289,9 +296,6 @@ public class Npc extends Mob {
 
 		String ownerId = handleXpDistribution(mob);
 		owner = getWorld().getPlayerUUID(ownerId);
-
-		// Remove poison event(s)
-		this.cure();
 
 		ActionSender.sendSound(owner, "victory");
 		owner.getWorld().getServer().getAchievementSystem().checkAndIncSlayNpcTasks(owner, this);
@@ -631,11 +635,10 @@ public class Npc extends Mob {
 
 	public void remove() {
 		double respawnMult = getWorld().getServer().getConfig().NPC_RESPAWN_MULTIPLIER;
-
-		this.setLastOpponent(null);
 		if (getCombatEvent() != null) {
 			getCombatEvent().resetCombat();
 		}
+		this.setLastOpponent(null);
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			super.remove();
 			startRespawning();
