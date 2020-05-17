@@ -81,14 +81,12 @@ public class NpcBehavior {
 							range = 10;
 					}
 
-					// Player is a new target AND can't aggro or is not in range.
-					// Old target gets a pass because ???
-					if (player != npc.getLastOpponent() && (!canAggro(player) || !player.withinRange(npc, range))) {
+					if (!player.withinRange(npc, range)) continue;
+
+					// Player is a new target AND can't aggro.
+					if (!canAggro(player)) {
 						continue;
 					}
-
-					state = State.AGGRO;
-					target = player;
 
 					// Remove the opponent if the player has not been engaged in > 10 seconds
 					if (npc.getLastOpponent() == player && (player.getLastOpponent() != npc || expiredLastTargetCombatTimer())) {
@@ -97,6 +95,8 @@ public class NpcBehavior {
 
 						// AggroEvent, as NPC should target this player.
 					} else {
+						setChasing(player);
+						handleAggro();
 						new AggroEvent(npc.getWorld(), npc, player);
 						return;
 					}
@@ -148,10 +148,11 @@ public class NpcBehavior {
 		// There should not be combat or aggro. Let's resume roaming.
 		if ((target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved()) && !npc.isFollowing()) {
 			setRoaming();
+			return;
 		}
 
 		// Target is not in range.
-		else if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
+		if (target.getX() < (npc.getLoc().minX() - 4) || target.getX() > (npc.getLoc().maxX() + 4)
 			|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
 
 			// Send the NPC back to its original spawn point.
@@ -162,33 +163,32 @@ public class NpcBehavior {
 				npc.cure();
 			}
 			setRoaming();
+			return;
 		}
 
 		// Chase and fight.
-		else {
 
-			// Reset the target if the wrong one is focused
-			if (npc.inCombat() && npc.getOpponent() != target) {
-				npc.setLastOpponent(null);
-				target = npc.getOpponent();
-				state = State.COMBAT;
-			}
+		// Reset the target if the wrong one is focused
+		if (npc.inCombat() && npc.getOpponent() != target) {
+			npc.setLastOpponent(null);
+			target = npc.getOpponent();
+			state = State.COMBAT;
+		}
 
-			// If target is not waiting for "run away" timer, send them chasing
-			lastMovement = System.currentTimeMillis();
-			int numTicks = target.getCombatState() == CombatState.RUNNING ? 5 : 0;
-			if (checkCombatTimer(target.getCombatTimer(), numTicks)) {
-				if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING)
-					npc.walkToEntityAStar(target.getX(), target.getY());
-				else
-					npc.walkToEntity(target.getX(), target.getY());
+		// If target is not waiting for "run away" timer, send them chasing
+		lastMovement = System.currentTimeMillis();
+		int numTicks = target.getCombatState() == CombatState.RUNNING ? 5 : 1;
+		if (checkCombatTimer(target.getCombatTimer(), numTicks)) {
+			if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING)
+				npc.walkToEntityAStar(target.getX(), target.getY());
+			else
+				npc.walkToEntity(target.getX(), target.getY());
 
-				// Fight the target when in range
-				if (npc.withinRange(target, 1)
-					&& npc.canReach(target)
-					&& !target.inCombat()) {
-					setFighting(target);
-				}
+			// Fight the target when in range
+			if (npc.withinRange(target, 1)
+				&& npc.canReach(target)
+				&& !target.inCombat()) {
+				setFighting(target);
 			}
 		}
 	}
@@ -216,14 +216,13 @@ public class NpcBehavior {
 			npc.setExecutedAggroScript(false);
 
 			// If there is a valid target and NPC is aggressive, set AGGRO and target.
-			if (npc.getDef().isAggressive() &&
-				(lastTarget != null &&
-					(lastTarget.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1) ||
-						(lastTarget.getLocation().inWilderness() && npc.getLocation().inWilderness()))
-				)) {
-				state = State.AGGRO;
-				if (lastTarget != null)
-					target = lastTarget;
+			if (lastTarget != null && canAggro(lastTarget)) {
+				if (lastTarget.isPlayer()) {
+					setChasing((Player)lastTarget);
+				}
+				else {
+					setChasing((Npc)lastTarget);
+				}
 
 			// Otherwise, set roaming if NPC is not already following something
 			} else {
@@ -313,24 +312,35 @@ public class NpcBehavior {
 			player.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1));
 	}
 
+	private boolean aggressiveCheck(Mob target) {
+		boolean bothInWilderness = (target.getLocation().inWilderness() && npc.getLocation().inWilderness());
+		boolean levelMeetsStandard = target.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1);
+		return npc.getDef().isAggressive() && (levelMeetsStandard || bothInWilderness);
+	}
+
+	// We return false if the player cannot be aggro'd.
 	private boolean canAggro(final Mob player) {
 		boolean outOfBounds = !player.getLocation().inBounds(npc.getLoc().minX - 4, npc.getLoc().minY - 4,
 			npc.getLoc().maxX + 4, npc.getLoc().maxY + 4);
 
-		boolean playerOccupied = player.inCombat();
+		boolean playerInCombat = player.inCombat();
 
 		int numTicks = player.getCombatState() == CombatState.RUNNING ? 5 : 0;
-		boolean playerCombatTimeout = checkCombatTimer(player.getCombatTimer(), numTicks);
+		boolean playerCombatTimeoutExceeded = checkCombatTimer(player.getCombatTimer(), numTicks);
 
-		boolean shouldAttack = (npc.getDef().isAggressive() && (player.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1)
-			|| (player.getLocation().inWilderness() && npc.getLocation().inWilderness())))
-			|| (npc.getLastOpponent() == player && shouldContinueChase(npc, player) && !shouldRetreat(npc));
+		boolean isAggressive = aggressiveCheck(player);
+		boolean chasingLastOpponent = npc.getLastOpponent() == player
+			&& shouldContinueChase(npc, player)
+			&& !shouldRetreat(npc);
 
-		boolean closeEnough = npc.canReach(player);
+		boolean impervious = player instanceof Player
+			&& (((Player) player).isInvulnerableTo(npc) || ((Player) player).isInvisibleTo(npc));
 
-		return closeEnough && shouldAttack
-			&& (player instanceof Player && (!((Player) player).isInvulnerableTo(npc) && !((Player) player).isInvisibleTo(npc)))
-			&& !outOfBounds && !playerOccupied && playerCombatTimeout;
+		return (isAggressive || chasingLastOpponent)
+			&& !impervious
+			&& !outOfBounds
+			&& !playerInCombat
+			&& playerCombatTimeoutExceeded;
 	}
 
 	private boolean grandTreeGnome(final Npc npc) {
