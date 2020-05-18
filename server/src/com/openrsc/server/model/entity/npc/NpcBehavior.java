@@ -95,7 +95,7 @@ public class NpcBehavior {
 					}
 
 					// Remove the opponent if the player has not been engaged in > 10 seconds
-					if (npc.getLastOpponent() == player && (player.getLastOpponent() != npc || expiredLastTargetCombatTimer())) {
+					if (npc.getLastOpponent() == player && checkCombatTimer(npc.getLastOpponent().getCombatTimer(), 200)) {
 						npc.setLastOpponent(null);
 						setRoaming();
 
@@ -152,7 +152,7 @@ public class NpcBehavior {
 
 	private void handleAggro() {
 		// There should not be combat or aggro. Let's resume roaming.
-		if ((target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved()) && !npc.isFollowing()) {
+		if (target == null || target.isRemoved() || target.inCombat() || npc.isRespawning() || npc.isRemoved()) {
 			setRoaming();
 			return;
 		}
@@ -172,13 +172,10 @@ public class NpcBehavior {
 			return;
 		}
 
-		// Chase and fight.
-
 		// Reset the target if the wrong one is focused
 		if (npc.inCombat() && npc.getOpponent() != target) {
 			npc.setLastOpponent(null);
-			target = npc.getOpponent();
-			state = State.COMBAT;
+			setFighting(npc.getOpponent());
 		}
 
 		// If target is not waiting for "run away" timer, send them chasing
@@ -200,34 +197,35 @@ public class NpcBehavior {
 	}
 
 	private void handleCombat() {
-		Mob lastTarget = target;
-		target = npc.getOpponent();
 
 		// No target, return to roaming.
-		if (lastTarget == null || npc.isRespawning() || npc.isRemoved() || lastTarget.isRemoved()) {
+		if (target == null || npc.isRespawning() || npc.isRemoved() || target.isRemoved()) {
 			setRoaming();
 		}
 
 		// Current NPC is in combat
 		else if (npc.inCombat()) {
+			target = npc.getOpponent();
 
 			// Retreat if NPC hits remaining and > round 3
 			if (shouldRetreat(npc) && npc.getSkills().getLevel(Skills.HITS) > 0
 				&& npc.getOpponent().getHitsMade() >= 3) {
 				retreat();
 			}
+		}
 
-		// NPC is not in combat
-		} else if (!npc.inCombat()) {
+		// This case happens when the npc had a target that has
+		// ran away. It will only change its state after 5 ticks.
+		else if (!npc.inCombat() && checkCombatTimer(npc.getCombatTimer(), 5)) {
 			npc.setExecutedAggroScript(false);
 
 			// If there is a valid target and NPC is aggressive, set AGGRO and target.
-			if (lastTarget != null && canAggro(lastTarget)) {
-				if (lastTarget.isPlayer()) {
-					setChasing((Player)lastTarget);
+			if (canAggro(target)) {
+				if (target.isPlayer()) {
+					setChasing((Player)target);
 				}
 				else {
-					setChasing((Npc)lastTarget);
+					setChasing((Npc)target);
 				}
 
 			// Otherwise, set roaming if NPC is not already following something
@@ -379,10 +377,6 @@ public class NpcBehavior {
 	// Returns true if appropriate tick count has passed.
 	private boolean checkCombatTimer(long timer, int ticks) {
 		return (System.currentTimeMillis() - timer) >= (npc.getConfig().GAME_TICK * ticks);
-	}
-
-	private boolean expiredLastTargetCombatTimer() {
-		return (System.currentTimeMillis() - npc.getLastOpponent().getCombatTimer() > 10000);
 	}
 
 	public Mob getChaseTarget() {
