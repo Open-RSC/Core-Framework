@@ -28,7 +28,7 @@ public class ItemUseOnNpc implements PacketHandler {
 		if (affectedNpc == null || item == null) {
 			return;
 		}
-		player.setFollowing(affectedNpc, 0);
+		player.setFollowing(affectedNpc, 0, false);
 		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 1) {
 			public void executeInternal() {
 				getPlayer().resetPath();

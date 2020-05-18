@@ -1976,12 +1976,12 @@ public final class Player extends Mob {
 	}
 
 	public void resetAll() {
-		resetAll(true);
+		resetAll(true, true);
 	}
 
-	public void resetAll(boolean resetWalk) {
+	public void resetAll(boolean resetWalkAction, boolean resetFollowing) {
 		interruptPlugins();
-		resetAllExceptTradeOrDuel(true, resetWalk);
+		resetAllExceptTradeOrDuel(true, resetWalkAction, resetFollowing);
 		getTrade().resetAll();
 		getDuel().resetAll();
 		dropItemEvent = null;
@@ -1999,13 +1999,17 @@ public final class Player extends Mob {
 	}
 
 	private void resetAllExceptTradeOrDuel(boolean resetBank) {
-		resetAllExceptTradeOrDuel(resetBank, true);
+		resetAllExceptTradeOrDuel(resetBank, true, true);
 	}
 
-	private void resetAllExceptTradeOrDuel(boolean resetBank, boolean resetWalk) {
+	private void resetAllExceptTradeOrDuel(boolean resetBank, boolean resetWalkAction, boolean resetFollowing) {
 		resetCannonEvent();
 		setAttribute("bank_pin_entered", "cancel");
-		if (resetWalk) setWalkToAction(null);
+
+		if(resetWalkAction && getWalkToAction() != null) {
+			setWalkToAction(null);
+		}
+
 		if (getMenu() != null) {
 			menu = null;
 		}
@@ -2018,7 +2022,7 @@ public final class Player extends Mob {
 		if (accessingShop()) {
 			resetShop();
 		}
-		if (isFollowing()) {
+		if (resetFollowing && isFollowing()) {
 			resetFollowing();
 		}
 		if (isRanging()) {
@@ -3089,5 +3093,14 @@ public final class Player extends Mob {
 	 */
 	public synchronized CarriedItems getCarriedItems() {
 		return this.carriedItems.get();
+	}
+
+	public int getProjectileRadius(int radius) {
+		if (getRangeEquip() == ItemId.PHOENIX_CROSSBOW.id() || getRangeEquip() == ItemId.CROSSBOW.id())
+			radius = 4;
+		if (getRangeEquip() == ItemId.SHORTBOW.id())
+			radius = 4;
+
+		return radius;
 	}
 }

@@ -31,7 +31,7 @@ public final class NpcTalkTo implements PacketHandler {
 			return;
 		}
 
-		player.setFollowing(n, 0);
+		player.setFollowing(n, 0, false);
 		player.setWalkToAction(new WalkToMobAction(player, n, 1) {
 			public void executeInternal() {
 				getPlayer().resetFollowing();
