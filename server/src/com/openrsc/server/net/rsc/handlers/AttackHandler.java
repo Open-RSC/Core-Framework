@@ -106,7 +106,7 @@ public class AttackHandler implements PacketHandler {
 			player.resetAll();
 			int radius = player.getProjectileRadius(5); // default radius of 5
 			player.setFollowing(affectedMob, 0, false);
-			player.setWalkToAction(new WalkToMobAction(player, affectedMob, radius) {
+			player.setWalkToAction(new WalkToMobAction(player, affectedMob, radius, false) {
 				public void executeInternal() {
 					if(getPlayer().isBusy() || getPlayer().inCombat()) return;
 					getPlayer().resetFollowing();
