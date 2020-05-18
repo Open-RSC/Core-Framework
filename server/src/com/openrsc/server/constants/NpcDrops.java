@@ -2,7 +2,8 @@ package com.openrsc.server.constants;
 
 import com.openrsc.server.content.DropTable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class NpcDrops {
 
@@ -151,13 +152,31 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 32);
 		currentNpcDrops.addItemDrop(ItemId.FEATHER.id(), 3, 76);
 		currentNpcDrops.addItemDrop(ItemId.FEATHER.id(), 10, 20);
+		this.npcDrops.put(NpcId.CHICKEN.id(), currentNpcDrops);
 
 		// Goblin Level 13 (4)
+		currentNpcDrops = new DropTable();
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SCIMITAR.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_AXE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SPEAR.id(), 1, 9);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.MIND_RUNE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 3, 3);
+		currentNpcDrops.addItemDrop(ItemId.BODY_RUNE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_ARROWS.id(), 7, 3);
+		// The rest of the drops aren't outta 128, so I don't know what to do...
+		
+		// Not sure which goblin??? Why tres??
+		// this.npcDrops.put(NpcId.GOBLIN_LVL13.id(), currentNpcDrops);
+		// this.npcDrops.put(NpcId.GOBLIN1_LVL13.id(), currentNpcDrops);
+		// this.npcDrops.put(NpcId.GOBLIN2_LVL13.id(), currentNpcDrops);
 
 		// Cow (6)
 		currentNpcDrops = new DropTable();
 		currentNpcDrops.addItemDrop(ItemId.COW_HIDE.id(), 1, 0);
 		currentNpcDrops.addItemDrop(ItemId.RAW_BEEF.id(), 1, 0);
+		this.npcDrops.put(NpcId.COW_ATTACKABLE.id(), currentNpcDrops);
 
 		// Bear Level 24 (8)
 		currentNpcDrops = new DropTable();
@@ -214,6 +233,23 @@ public class NpcDrops {
 		// Giant (61)
 
 		// Goblin Level 7 (62)
+		currentNpcDrops = new DropTable();
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SPEAR.id(), 1, 12);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SQUARE_SHIELD.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.SHORTBOW.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.WATER_RUNE.id(), 4, 6);
+		currentNpcDrops.addItemDrop(ItemId.BODY_RUNE.id(), 7, 5);
+		currentNpcDrops.addItemDrop(ItemId.CROSSBOW_BOLTS.id(), 8, 3);
+		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 3, 3);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 28);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 9, 3);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 15, 3);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 20, 2);
+		currentNpcDrops.addItemDrop(ItemId.GOBLIN_ARMOUR.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.BEER.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.BRASS_NECKLACE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.CHEFS_HAT.id(), 1, 1);
+		this.npcDrops.put(NpcId.GOBLIN_LVL7.id(), currentNpcDrops);
 
 		// Farmer (63, 319)
 
