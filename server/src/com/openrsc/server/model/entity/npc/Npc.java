@@ -297,6 +297,12 @@ public class Npc extends Mob {
 		String ownerId = handleXpDistribution(mob);
 		owner = getWorld().getPlayerUUID(ownerId);
 
+		if (owner == null) {
+			deathListeners.clear();
+			remove();
+			return;
+		}
+
 		ActionSender.sendSound(owner, "victory");
 		owner.getWorld().getServer().getAchievementSystem().checkAndIncSlayNpcTasks(owner, this);
 		owner.incnpc_kills();
@@ -635,9 +641,7 @@ public class Npc extends Mob {
 
 	public void remove() {
 		double respawnMult = getWorld().getServer().getConfig().NPC_RESPAWN_MULTIPLIER;
-		if (getCombatEvent() != null) {
-			getCombatEvent().resetCombat();
-		}
+		resetCombatEvent();
 		this.setLastOpponent(null);
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
 			super.remove();

@@ -110,7 +110,6 @@ public class AttackHandler implements PacketHandler {
 				public void action() {
 					if(getOwner().isBusy() || getOwner().inCombat()) return;
 					if (target.isPlayer()) {
-						assert target instanceof Player;
 						Player affectedPlayer = (Player) target;
 						getOwner().setSkulledOn(affectedPlayer);
 						affectedPlayer.getTrade().resetAll();

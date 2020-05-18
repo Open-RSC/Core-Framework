@@ -19,6 +19,11 @@ public class GameObjectAction implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) {
 		int pID = packet.getID();
+
+		if (player.inCombat()) {
+			player.message("You can't do that whilst you are fighting");
+			return;
+		}
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
