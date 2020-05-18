@@ -972,7 +972,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		gemTable.addAccessor(NpcId.MOUNTAIN_DWARF.id(),7,256);
 		gemTable.addAccessor(NpcId.BANDIT_AGGRESSIVE.id(),7,256);
 		gemTable.addAccessor(NpcId.BANDIT_AGGRESSIVE.id(),7,256);
-		gemTable.addAccessor(NpcId.PIRATE.id(),8,256);
+		gemTable.addAccessor(NpcId.PIRATE_LVL30.id(),8,256);
 		gemTable.addAccessor(NpcId.HOBGOBLIN_LVL32.id(),8,256);
 		gemTable.addAccessor(NpcId.SKELETON_LVL25.id(),8,256);
 		gemTable.addAccessor(NpcId.SKELETON_LVL31.id(),8,256);

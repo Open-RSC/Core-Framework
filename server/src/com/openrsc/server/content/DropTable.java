@@ -28,6 +28,10 @@ public class DropTable {
 		this.totalWeight += weight;
 	}
 
+	public void addItemDrop(int itemID, int amount, int weight) {
+		addItemDrop(itemID, amount, weight, false);
+	}
+
 	public void addItemDrop(int itemID, int amount, int weight, boolean noted) {
 		drops.add(new Drop(itemID, amount, weight, noted, dropType.ITEM));
 		this.totalWeight += weight;
