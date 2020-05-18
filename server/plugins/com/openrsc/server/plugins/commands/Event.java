@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.openrsc.server.plugins.Functions.*;
+
 public final class Event implements CommandTrigger {
 	public static final Logger LOGGER = LogManager.getLogger(Event.class);
 
@@ -48,10 +50,10 @@ public final class Event implements CommandTrigger {
 	@Override
 	public void onCommand(Player player, String cmd, String[] args) {
 		if(messagePrefix == null) {
-			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			messagePrefix = config().MESSAGE_PREFIX;
 		}
 		if(badSyntaxPrefix == null) {
-			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			badSyntaxPrefix = config().BAD_SYNTAX_PREFIX;
 		}
 
 		if (cmd.equalsIgnoreCase("teleport") || cmd.equalsIgnoreCase("tp") || cmd.equalsIgnoreCase("tele") || cmd.equalsIgnoreCase("town") || cmd.equalsIgnoreCase("goto") || cmd.equalsIgnoreCase("tpto") || cmd.equalsIgnoreCase("teleportto")) {
@@ -693,8 +695,8 @@ public final class Event implements CommandTrigger {
 			if(stat != -1) {
 				if(level < 1)
 					level = 1;
-				if(level > player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT)
-					level = player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT;
+				if(level > config().PLAYER_LEVEL_LIMIT)
+					level = config().PLAYER_LEVEL_LIMIT;
 
 				otherPlayer.getSkills().setLevelTo(stat, level);
 				if (stat == Skills.PRAYER) {

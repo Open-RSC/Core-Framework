@@ -70,13 +70,13 @@ public class ObjectCooking implements UseLocTrigger {
 		// Raw Oomlie Meat (Always burn)
 		else if (item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT.id()) {
 			if (object.getID() == 97 || object.getID() == 274)
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You cook the meat on the fire...");
+				mes(player, config().GAME_TICK * 2, "You cook the meat on the fire...");
 			else
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You cook the meat on the stove...");
+				mes(player, config().GAME_TICK * 2, "You cook the meat on the stove...");
 			player.getCarriedItems().remove(new Item(ItemId.RAW_OOMLIE_MEAT.id()));
 			give(player, ItemId.BURNTMEAT.id(), 1);
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "This meat is too delicate to cook like this.");
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Perhaps you can wrap something around it to protect it from the heat.");
+			mes(player, config().GAME_TICK * 2, "This meat is too delicate to cook like this.");
+			mes(player, config().GAME_TICK * 2, "Perhaps you can wrap something around it to protect it from the heat.");
 		}
 
 		// Poison (Hazeel Cult)
@@ -97,7 +97,7 @@ public class ObjectCooking implements UseLocTrigger {
 		} else if (item.getCatalogId() == ItemId.COOKEDMEAT.id()) { // Cooked meat to get burnt meat
 			if (player.getQuestStage(Quests.WITCHS_POTION) != -1) {
 				thinkbubble(player, item);
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, cookingOnMessage(player, item, object, false));
+				mes(player, config().GAME_TICK * 3, cookingOnMessage(player, item, object, false));
 				player.getCarriedItems().remove(new Item(ItemId.COOKEDMEAT.id()));
 				give(player, ItemId.BURNTMEAT.id(), 1);
 				player.playerServerMessage(MessageType.QUEST, "you burn the meat");
@@ -128,10 +128,10 @@ public class ObjectCooking implements UseLocTrigger {
 			}
 			// Some need a RANGE not a FIRE
 			boolean needOven = false;
-			int timeToCook = player.getWorld().getServer().getConfig().GAME_TICK * 3;
+			int timeToCook = config().GAME_TICK * 3;
 			if (isOvenFood(item)) {
 				needOven = true;
-				timeToCook = player.getWorld().getServer().getConfig().GAME_TICK * 5;
+				timeToCook = config().GAME_TICK * 5;
 			}
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.COOKING_CAPE.id()))
 				timeToCook *= 0.7;
@@ -146,7 +146,7 @@ public class ObjectCooking implements UseLocTrigger {
 				player.message(cookingOnMessage(player, item, object, needOven));
 
 			int repeat = 1;
-			if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+			if (config().BATCH_PROGRESSION) {
 				repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 			}
 
@@ -164,8 +164,8 @@ public class ObjectCooking implements UseLocTrigger {
 			return;
 		}
 		Item cookedFood = new Item(cookingDef.getCookedId());
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to cook this food");
 				return;
@@ -196,7 +196,7 @@ public class ObjectCooking implements UseLocTrigger {
 				}
 			}
 
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 
 			// Repeat
 			updatebatch();
@@ -230,7 +230,7 @@ public class ObjectCooking implements UseLocTrigger {
 
 	private void cookMethod(final Player player, final int itemID, final int product, final boolean hasBubble, final String... messages) {
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(itemID);
 		}
 
@@ -252,7 +252,7 @@ public class ObjectCooking implements UseLocTrigger {
 		}
 
 		// TODO: Add back when `mes` is changed to not use a timer (if it ever is).
-		// delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		// delay(config().GAME_TICK);
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchInedibleCooking(player, itemID, product, hasBubble, messages);

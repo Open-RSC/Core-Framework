@@ -16,7 +16,7 @@ public class ScotRuth implements
 		if (player.getCache().hasKey("scotruth_to_chaos_altar")) {
 			player.message("Thanks for yer business. The tunnel's just over there");
 		} else {
-			int tick = player.getWorld().getServer().getConfig().GAME_TICK;
+			int tick = config().GAME_TICK;
 			npcsay(player, n, "Hey, " + player.getUsername() + "!",
 				"You like savin' time? I can help",
 				"Took me a while, but I just finished this here tunnel",

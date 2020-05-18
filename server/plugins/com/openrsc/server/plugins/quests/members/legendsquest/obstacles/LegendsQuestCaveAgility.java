@@ -80,13 +80,13 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					if (player.getX() <= 419) {
 						player.message("You climb down the steps.");
 						player.teleport(421, 3707);
-						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						delay(config().GAME_TICK);
 						player.incExp(Skills.AGILITY, 20, true);
 						player.teleport(423, 3707);
 					} else {
 						player.message("You climb up the stairs.");
 						player.teleport(421, 3707);
-						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						delay(config().GAME_TICK);
 						player.incExp(Skills.AGILITY, 20, true);
 						player.teleport(419, 3707);
 					}
@@ -94,7 +94,7 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					player.message("You slip and fall...");
 					player.damage(DataConversions.random(2, 3));
 					player.teleport(421, 3707);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					player.incExp(Skills.AGILITY, 5, true);
 					player.teleport(423, 3707);
 				}
@@ -108,13 +108,13 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					if (player.getY() <= 3702) {
 						player.message("You climb down the steps.");
 						player.teleport(419, 3704);
-						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						delay(config().GAME_TICK);
 						player.incExp(Skills.AGILITY, 20, true);
 						player.teleport(419, 3706);
 					} else {
 						player.message("You climb up the stairs.");
 						player.teleport(419, 3704);
-						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						delay(config().GAME_TICK);
 						player.incExp(Skills.AGILITY, 20, true);
 						player.teleport(419, 3702);
 					}
@@ -122,7 +122,7 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					player.message("You slip and fall...");
 					player.damage(DataConversions.random(2, 3));
 					player.teleport(419, 3704);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					player.incExp(Skills.AGILITY, 5, true);
 					player.teleport(419, 3706);
 				}
@@ -136,13 +136,13 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					if (player.getX() >= 426) {
 						player.message("You climb down the steps.");
 						player.teleport(424, 3702);
-						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						delay(config().GAME_TICK);
 						player.incExp(Skills.AGILITY, 20, true);
 						player.teleport(422, 3702);
 					} else {
 						player.message("You climb up the stairs.");
 						player.teleport(424, 3702);
-						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						delay(config().GAME_TICK);
 						player.incExp(Skills.AGILITY, 20, true);
 						player.teleport(426, 3702);
 					}
@@ -150,7 +150,7 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					player.message("You slip and fall...");
 					player.damage(DataConversions.random(2, 3));
 					player.teleport(424, 3702);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					player.incExp(Skills.AGILITY, 5, true);
 					player.teleport(422, 3702);
 				}
@@ -164,13 +164,13 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					if (player.getY() >= 3706) {
 						player.message("You climb down the steps.");
 						player.teleport(426, 3704);
-						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						delay(config().GAME_TICK);
 						player.incExp(Skills.AGILITY, 20, true);
 						player.teleport(426, 3702);
 					} else {
 						player.message("You climb up the stairs.");
 						player.teleport(426, 3704);
-						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						delay(config().GAME_TICK);
 						player.incExp(Skills.AGILITY, 20, true);
 						player.teleport(426, 3706);
 					}
@@ -178,7 +178,7 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					player.message("You slip and fall...");
 					player.damage(DataConversions.random(2, 3));
 					player.teleport(426, 3704);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					player.incExp(Skills.AGILITY, 5, true);
 					player.teleport(426, 3702);
 				}

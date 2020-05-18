@@ -146,7 +146,7 @@ public class DemonSlayer implements QuestInterface,
 			if (questStage >= 2)
 				choices.add("Yes I know but this important");
 
-			if (player.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS
+			if (config().WANT_CUSTOM_QUESTS
 				&& getMaxLevel(player, Skills.ATTACK) >= 99)
 				choices.add("Attack Skillcape");
 
@@ -337,7 +337,7 @@ public class DemonSlayer implements QuestInterface,
 							player.getCarriedItems().remove(new Item(ItemId.BONES.id()));
 							player.message("You give Traiborn a set of bones");
 							boneCount++;
-							delay(player.getWorld().getServer().getConfig().GAME_TICK);
+							delay(config().GAME_TICK);
 							if (boneCount >= 25)
 								break;
 						}
@@ -1001,7 +1001,7 @@ public class DemonSlayer implements QuestInterface,
 			case GypsyConversation.INCANTATION:
 				npcsay(player, n, "Oh yes let me think a second");
 				mes(player, "The gypsy is thinking");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+				delay(config().GAME_TICK * 3);
 				npcsay(player, n, "Alright I've got it now I think", "It goes",
 					"Carlem", "Aber", "Camerinthum", "Purchai", "Gabindo",
 					"Have you got that?");
@@ -1023,7 +1023,7 @@ public class DemonSlayer implements QuestInterface,
 				if (choice == 0) {
 					npcsay(player, n, "Oh yes let me think a second");
 					mes(player, "The gypsy is thinking");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+					delay(config().GAME_TICK * 3);
 					npcsay(player, n, "Alright I've got it now I think", "It goes",
 						"Carlem", "Aber", "Camerinthum", "Purchai", "Gabindo",
 						"Have you got that?");
@@ -1160,7 +1160,7 @@ public class DemonSlayer implements QuestInterface,
 					"Carlem Aber Camerinthum Purchai Gabindo");
 				if (choice != -1) {
 					if (choice == 3) {
-						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "Delrith is sucked back into the dark demension from which he came");
+						mes(player, config().GAME_TICK * 2, "Delrith is sucked back into the dark demension from which he came");
 						n.remove();
 						if (player.getQuestStage(Quests.DEMON_SLAYER) != -1) {
 							//remove flags in case they are present with drop trick
@@ -1169,7 +1169,7 @@ public class DemonSlayer implements QuestInterface,
 							player.sendQuestComplete(getQuestId());
 						}
 					} else {
-						mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "As you chant, Delrith is sucked towards the vortex", "Suddenly the vortex closes");
+						mes(player, config().GAME_TICK * 2, "As you chant, Delrith is sucked towards the vortex", "Suddenly the vortex closes");
 						player.message("And Delrith is still here");
 						player.message("That was the wrong incantation");
 					}

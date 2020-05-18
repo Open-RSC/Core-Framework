@@ -27,7 +27,7 @@ public class Batch {
 	 */
 	public void initialize(int totalBatch) {
 		this.current = 0;
-		this.delay = getPlayer().getWorld().getServer().getConfig().GAME_TICK * 3;
+		this.delay = getPlayer().getConfig().GAME_TICK * 3;
 		this.totalBatch = totalBatch;
 		this.completed = false;
 	}
@@ -78,7 +78,7 @@ public class Batch {
 	private int getTotalBatch() { return totalBatch; }
 	private void incrementBatch() { current++; }
 	private int getCurrentBatchProgress() { return current; }
-	private boolean wantBatching() { return getPlayer().getWorld().getServer().getConfig().BATCH_PROGRESSION; }
+	private boolean wantBatching() { return getPlayer().getConfig().BATCH_PROGRESSION; }
 	public boolean isShowingBar() { return showingBar; }
 	public boolean isCompleted() { return completed; }
 }

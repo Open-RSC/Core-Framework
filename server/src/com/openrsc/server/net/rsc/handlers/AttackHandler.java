@@ -52,7 +52,7 @@ public class AttackHandler implements PacketHandler {
 			}
 			assert affectedMob instanceof Player;
 			Player pl = (Player) affectedMob;
-			if (System.currentTimeMillis() - pl.getCombatTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5) {
+			if (System.currentTimeMillis() - pl.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
 				if (pl.getLocation().inWilderness()) {
 					player.resetPath();
 				}

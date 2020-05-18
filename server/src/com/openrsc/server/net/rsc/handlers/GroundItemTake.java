@@ -46,7 +46,7 @@ public class GroundItemTake implements PacketHandler {
 					return;
 				}
 
-				if (item.getDef().isMembersOnly() && !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+				if (item.getDef().isMembersOnly() && !getPlayer().getConfig().MEMBER_WORLD) {
 					getPlayer().sendMemberErrorMessage();
 					return;
 				}

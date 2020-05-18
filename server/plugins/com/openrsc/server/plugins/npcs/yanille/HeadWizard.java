@@ -12,7 +12,7 @@ public class HeadWizard implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
-		if (player.getWorld().getServer().getConfig().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.HEAD_WIZARD.id()) {
+		if (config().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.HEAD_WIZARD.id()) {
 			if (getCurrentLevel(player, Skills.MAGIC) < 66) {
 				npcsay(player, n, "Hello, you need a magic level of 66 to get in here",
 						"The magical energy in here is unsafe for those below that level");
@@ -26,7 +26,7 @@ public class HeadWizard implements TalkNpcTrigger {
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		return player.getWorld().getServer().getConfig().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.HEAD_WIZARD.id();
+		return player.getConfig().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.HEAD_WIZARD.id();
 	}
 
 }

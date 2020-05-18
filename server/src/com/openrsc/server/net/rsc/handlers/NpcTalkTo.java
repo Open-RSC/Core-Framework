@@ -41,7 +41,7 @@ public final class NpcTalkTo implements PacketHandler {
 				}
 				getPlayer().resetAll();
 
-				if (n.isBusy() || System.currentTimeMillis() - n.getCombatTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5) {
+				if (n.isBusy() || System.currentTimeMillis() - n.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
 					getPlayer().message(n.getDef().getName() + " is busy at the moment");
 					return;
 				}

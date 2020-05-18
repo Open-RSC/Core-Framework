@@ -80,7 +80,7 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 			final int newStat = Math.max(0, player.getSkills().getLevel(affectedStat) - lowerBy);
 			player.getSkills().setLevel(affectedStat, newStat);
 		}
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(config().GAME_TICK);
 		zam.setChasing(player);
 	}
 

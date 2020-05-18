@@ -31,7 +31,7 @@ public class SpiritOfScorpius implements TalkNpcTrigger, OpLocTrigger {
 			} else {
 				if (player.getCache().hasKey("scorpius_mould")) {
 					int option;
-					if (player.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
+					if (config().WANT_CUSTOM_QUESTS) {
 						option = multi(player, n,
 							"I have come to seek a blessing",
 							"I need another unholy symbol mould",

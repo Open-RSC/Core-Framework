@@ -104,7 +104,7 @@ public final class Apothecary implements
 					npcsay(player, n, "Sorry, charity is not my strongest point");
 				}
 			}
-		} else if (option == 3 && player.getWorld().getServer().getConfig().WANT_EXPERIENCE_ELIXIRS) {
+		} else if (option == 3 && config().WANT_EXPERIENCE_ELIXIRS) {
 			npcsay(player, n, "Yes, it's my most mysterious and special elixir",
 				"It has a strange taste and sure does give you a rush",
 				"I would know..",
@@ -154,12 +154,12 @@ public final class Apothecary implements
 		player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 		player.getCarriedItems().remove(new Item(ItemId.LIMPWURT_ROOT.id()));
 		player.getCarriedItems().remove(new Item(ItemId.RED_SPIDERS_EGGS.id()));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		delay(config().GAME_TICK * 3);
 		player.message("The Apothecary brews up a potion");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 4);
+		delay(config().GAME_TICK * 4);
 		player.message("The Apothecary gives you a strength potion");
 		give(player, ItemId.FULL_STRENGTH_POTION.id(), 1);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(config().GAME_TICK);
 
 		// Repeat
 		updatebatch();

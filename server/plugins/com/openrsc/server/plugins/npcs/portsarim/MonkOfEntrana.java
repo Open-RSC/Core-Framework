@@ -53,7 +53,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 	};
 
 	private boolean BLOCK_ITEM(Player player, Item item) {
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
+		if (config().WANT_EQUIPMENT_TAB
 			&& item.getCatalogId() == ItemId.BRONZE_PICKAXE.id()) return false;
 		if (item.isWieldable(player.getWorld())) return true;
 		if (DataConversions.inArray(blockedItems, item.getCatalogId())) return true;
@@ -67,7 +67,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 			}
 		}
 
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (config().WANT_EQUIPMENT_TAB) {
 			Item item;
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				item = player.getCarriedItems().getEquipment().get(i);
@@ -98,7 +98,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 				} else {
 					mes(player, "You board the ship");
 					player.teleport(418, 570, false);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+					delay(config().GAME_TICK * 3);
 					mes(player, "The ship arrives at Entrana");
 				}
 			}
@@ -110,7 +110,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 
 				mes(player, "You board the ship");
 				player.teleport(264, 660, false);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+				delay(config().GAME_TICK * 3);
 				mes(player, "The ship arrives at Port Sarim");
 			}
 			return;

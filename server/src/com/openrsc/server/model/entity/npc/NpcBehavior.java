@@ -111,7 +111,7 @@ public class NpcBehavior {
 		}
 
 		// Check for tackle
-		if (System.currentTimeMillis() - lastTackleAttempt > npc.getWorld().getServer().getConfig().GAME_TICK * 5 &&
+		if (System.currentTimeMillis() - lastTackleAttempt > npc.getConfig().GAME_TICK * 5 &&
 			npc.getDef().getName().toLowerCase().equals("gnome baller")
 			&& !(npc.getID() == NpcId.GNOME_BALLER_TEAMNORTH.id() || npc.getID() == NpcId.GNOME_BALLER_TEAMSOUTH.id())) {
 			for (Player player : npc.getViewArea().getPlayersInView()) {
@@ -162,7 +162,7 @@ public class NpcBehavior {
 			|| target.getY() < (npc.getLoc().minY() - 4) || target.getY() > (npc.getLoc().maxY() + 4)) {
 
 			// Send the NPC back to its original spawn point.
-			if (npc.getWorld().getServer().getConfig().WANT_IMPROVED_PATHFINDING) {
+			if (npc.getConfig().WANT_IMPROVED_PATHFINDING) {
 				Point origin = new Point(npc.getLoc().startX(), npc.getLoc().startY());
 				npc.walkToEntityAStar(origin.getX(), origin.getY());
 				npc.getSkills().normalize();
@@ -378,7 +378,7 @@ public class NpcBehavior {
 
 	// Returns true if appropriate tick count has passed.
 	private boolean checkCombatTimer(long timer, int ticks) {
-		return (System.currentTimeMillis() - timer) >= (npc.getWorld().getServer().getConfig().GAME_TICK * ticks);
+		return (System.currentTimeMillis() - timer) >= (npc.getConfig().GAME_TICK * ticks);
 	}
 
 	private boolean expiredLastTargetCombatTimer() {
@@ -400,7 +400,7 @@ public class NpcBehavior {
 	}
 
 	private boolean shouldRetreat(final Npc npc) {
-		if (!npc.getWorld().getServer().getConfig().NPC_DONT_RETREAT) {
+		if (!npc.getConfig().NPC_DONT_RETREAT) {
 			if (npc.getWorld().getServer().getConstants().getRetreats().npcData.containsKey(npc.getID())) {
 				return npc.getSkills().getLevel(Skills.HITS) <= npc.getWorld().getServer().getConstants().getRetreats().npcData.get(npc.getID());
 			}

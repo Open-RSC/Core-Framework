@@ -86,7 +86,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 						final Npc lepr = addnpc(player.getWorld(), NpcId.LEPRECHAUN.id(), 172, 661, 60000 * 3);
 						lepr.walk(173, 661);
 						try {
-							delay(player.getWorld().getServer().getConfig().GAME_TICK);
+							delay(config().GAME_TICK);
 							lepr.walk(177, 661 + DataConversions.random(0, 10) - 5);
 						} catch (Exception e) {
 							LOGGER.catching(e);
@@ -141,7 +141,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					if (treeSpirit == null) {
 						return;
 					}
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+					delay(config().GAME_TICK * 3);
 					npcsay(player, treeSpirit, "Stop",
 						"I am the spirit of the Dramen Tree",
 						"You must come through me before touching that tree");
@@ -315,7 +315,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 				"Well that is a risk I will have to take");
 			if (option == 1) {
 				player.message("You climb down the ladder");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				teleport(player, 427, 3380);
 				/* What is the point of this? */
 				if (getCurrentLevel(player, Skills.PRAYER) <= 3)
@@ -430,7 +430,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == MAGIC_DOOR) {
 			player.teleport(109, 245, true);
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			player.message("you go through the door and find yourself somewhere else");
 		} else if (obj.getID() == ZANARIS_DOOR) {
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(player, this, 4, -1)) {
@@ -453,7 +453,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 		int axeId = -1;
 
 		for (final int a : Formulae.woodcuttingAxeIDs) {
-			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			if (config().WANT_EQUIPMENT_TAB) {
 				if (player.getCarriedItems().getEquipment().searchEquipmentForItem(a) != -1) {
 					axeId = a;
 					break;

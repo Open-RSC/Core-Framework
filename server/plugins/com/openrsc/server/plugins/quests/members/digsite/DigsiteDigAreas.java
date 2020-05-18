@@ -171,8 +171,8 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 			}
 
 			if (player.getQuestStage(Quests.DIGSITE) >= 4 && getLevel2Digsite(player)) {
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+				if (config().WANT_FATIGUE) {
+					if (config().STOP_SKILLING_FATIGUED >= 1
 						&& player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to do any more digging");
 						return;
@@ -234,8 +234,8 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 					}
 					return;
 				}
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+				if (config().WANT_FATIGUE) {
+					if (config().STOP_SKILLING_FATIGUED >= 1
 						&& player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to do any more digging");
 						return;

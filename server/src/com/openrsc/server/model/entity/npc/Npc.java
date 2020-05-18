@@ -466,7 +466,7 @@ public class Npc extends Mob {
 		if (owner.getQuestStage(Quests.OBSERVATORY_QUEST) > -1)
 			return false; // Quest started.
 
-		if (owner.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS)
+		if (owner.getConfig().WANT_CUSTOM_QUESTS)
 			if (owner.getCache().hasKey("want_unholy_symbol_drops") &&
 				!owner.getCache().getBoolean("want_unholy_symbol_drops"))
 				return false; //
@@ -795,7 +795,7 @@ public class Npc extends Mob {
 					if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
 						player.getCarriedItems().getInventory().add(item);
 						return true;
-					} else if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
+					} else if (player.getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
 						Item equipped = player.getCarriedItems().getEquipment().get(slot);
 						equipped.changeAmount(player.getWorld().getServer().getDatabase(), item.getAmount());
 						return true;

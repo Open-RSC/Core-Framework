@@ -25,7 +25,7 @@ public final class SecurityChangeLog extends Query {
 	}
 
 	public SecurityChangeLog(Player player, ChangeEvent event, String message) {
-		super("INSERT INTO `" + player.getWorld().getServer().getConfig().DB_TABLE_PREFIX
+		super("INSERT INTO `" + player.getConfig().DB_TABLE_PREFIX
 			+ "player_security_changes`(`playerID`, `eventAlias`, `date`, `ip`, `message`) VALUES(?, ?, ?, ?, ?)");
 		this.playerId = player.getDatabaseID();
 		this.eventAlias = event.toString();

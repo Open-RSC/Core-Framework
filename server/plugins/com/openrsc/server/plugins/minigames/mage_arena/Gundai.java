@@ -27,11 +27,11 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 		options.add(optionBank);
 
 		String optionPin = "I'd like to talk about bank pin";
-		if (player.getWorld().getServer().getConfig().WANT_BANK_PINS)
+		if (config().WANT_BANK_PINS)
 			options.add(optionPin);
 
 		String optionCollect = "I'd like to collect my items from auction";
-		if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS)
+		if (config().SPAWN_AUCTION_NPCS)
 			options.add(optionCollect);
 
 		String optionGoodbye = "Well, now i know";
@@ -79,7 +79,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 		if (n.getID() == NpcId.GUNDAI.id()) {
 			if (command.equalsIgnoreCase("Bank")) {
 				quickFeature(n, player, false);
-			} else if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
+			} else if (config().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
 				quickFeature(n, player, true);
 			}
 		}
@@ -90,7 +90,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 		if (n.getID() == NpcId.GUNDAI.id() && command.equalsIgnoreCase("Bank")) {
 			return true;
 		}
-		if (n.getID() == NpcId.GUNDAI.id() && player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
+		if (n.getID() == NpcId.GUNDAI.id() && player.getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
 			return true;
 		}
 		return false;
@@ -103,7 +103,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 		}
 
 		if(validatebankpin(player)) {
-			if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && auction) {
+			if (config().SPAWN_AUCTION_NPCS && auction) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			} else {
 				player.setAccessingBank(true);

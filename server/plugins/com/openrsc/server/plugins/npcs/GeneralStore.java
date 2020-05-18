@@ -85,7 +85,7 @@ public final class GeneralStore extends AbstractShop {
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
 		Shop shop = getShop(n, player);
-		if (command.equalsIgnoreCase("Trade") && player.getWorld().getServer().getConfig().RIGHT_CLICK_TRADE) {
+		if (command.equalsIgnoreCase("Trade") && config().RIGHT_CLICK_TRADE) {
 			player.setAccessingShop(shop);
 			ActionSender.showShop(player, shop);
 		}

@@ -22,7 +22,7 @@ public final class DukeOfLumbridge implements
 		ArrayList<String> menu = new ArrayList<String>();
 		menu.add("Have you any quests for me?");
 		menu.add("Where can I find money?");
-		if (player.getWorld().getServer().getConfig().WANT_RUNECRAFTING)
+		if (config().WANT_RUNECRAFTING)
 			if (player.getQuestStage(Quests.RUNE_MYSTERIES) > 0)
 				menu.add("Rune mysteries");
 
@@ -52,7 +52,7 @@ public final class DukeOfLumbridge implements
 		} else if (option == 1) {
 			say(player, n, "Have you any quests for me?");
 
-			if (!player.getWorld().getServer().getConfig().WANT_RUNECRAFTING) {
+			if (!config().WANT_RUNECRAFTING) {
 				npcsay(player, n, "All is well for me");
 				return;
 			}

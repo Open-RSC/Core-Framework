@@ -121,7 +121,7 @@ public class Thordur implements TalkNpcTrigger {
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10));
 					give(player, ItemId.DISK_OF_RETURNING.id(), 1);
 					player.message("Thordur hands you a special disk");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+					delay(config().GAME_TICK * 2);
 					say(player, n, "Thank you");
 					npcsay(player, n, "If you ever happen to lose the disk whilst being in the Black Hole,",
 							"the magical pool on the other side will allow you",

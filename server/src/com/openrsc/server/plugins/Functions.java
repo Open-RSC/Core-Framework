@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins;
 
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.external.GameObjectLoc;
@@ -149,7 +150,7 @@ public class Functions {
 			if (!message.equalsIgnoreCase("null")) {
 				player.message("@que@" + message);
 			}
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+			delay(player.getConfig().GAME_TICK * 3);
 		}
 	}
 
@@ -184,13 +185,13 @@ public class Functions {
 				}
 				player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
 			}
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * calcDelay(message));
+			delay(player.getConfig().GAME_TICK * calcDelay(message));
 		}
 	}
 
 	public static void say(final Player player, final String message) {
 		player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, player));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * calcDelay(message));
+		delay(player.getConfig().GAME_TICK * calcDelay(message));
 	}
 
 	public static int multi(final Player player, final String... options) {
@@ -355,7 +356,7 @@ public class Functions {
 	public static boolean ifheld(final Player player, final int id, final int amt) {
 		int amount = player.getCarriedItems().getInventory().countId(id);
 		int equipslot = -1;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			if ((equipslot = player.getCarriedItems().getEquipment().searchEquipmentForItem(id)) != -1) {
 				amount += player.getCarriedItems().getEquipment().get(equipslot).getAmount();
 			}
@@ -453,7 +454,7 @@ public class Functions {
 				npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
 			}
 
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * calcDelay(message));
+			delay(player.getConfig().GAME_TICK * calcDelay(message));
 		}
 	}
 
@@ -525,7 +526,7 @@ public class Functions {
 			if (enteredPin != "") {
 				break;
 			}
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getConfig().GAME_TICK);
 		}
 		if (enteredPin.equals("cancel")) {
 			ActionSender.sendCloseBankPinInterface(player);
@@ -554,7 +555,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getConfig().GAME_TICK);
 		}
 
 		return true;
@@ -580,7 +581,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getConfig().GAME_TICK);
 		}
 
 		return true;
@@ -614,7 +615,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getConfig().GAME_TICK);
 		}
 
 		return true;
@@ -624,7 +625,7 @@ public class Functions {
 		BankPinVerifyRequest request;
 		String pin;
 
-		if (!player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
+		if (!player.getConfig().WANT_BANK_PINS) {
 			return true;
 		}
 
@@ -643,7 +644,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getConfig().GAME_TICK);
 		}
 
 		return player.getAttribute("bankpin", false);
@@ -997,7 +998,7 @@ public class Functions {
 	}
 
 	public static void openChest(GameObject obj) {
-		openChest(obj, obj.getWorld().getServer().getConfig().GAME_TICK * 3);
+		openChest(obj, obj.getConfig().GAME_TICK * 3);
 	}
 
 	public static void closeCupboard(GameObject obj, Player player, int cupboardID) {
@@ -1308,7 +1309,7 @@ public class Functions {
 			player.message("Failure - Contact an administrator");
 		}
 		player.setSprite(pdir);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(player.getConfig().GAME_TICK * 2);
 		addloc(new GameObject(object.getWorld(), object.getLoc()));
 	}
 
@@ -1355,6 +1356,12 @@ public class Functions {
 
 	public static void boundaryTeleport(Player player, Point location) {
 		player.setLocation(location);
+	}
+
+	public static ServerConfiguration config() {
+		final Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return null;
+		return player.getConfig();
 	}
 
 }

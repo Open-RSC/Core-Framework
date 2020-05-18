@@ -25,7 +25,7 @@ public class SandPit implements UseLocTrigger {
 		}
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 		}
 
@@ -41,7 +41,7 @@ public class SandPit implements UseLocTrigger {
 		player.message("you fill the bucket with sand");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.SAND.id()));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(config().GAME_TICK);
 
 		// Repeat
 		updatebatch();

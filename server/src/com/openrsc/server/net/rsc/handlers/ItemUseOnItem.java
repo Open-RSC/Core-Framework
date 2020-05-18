@@ -34,12 +34,12 @@ public final class ItemUseOnItem implements PacketHandler {
 			return;
 		}
 
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (itemIndex1 > Inventory.MAX_SIZE || itemIndex2 > Inventory.MAX_SIZE)) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB && (itemIndex1 > Inventory.MAX_SIZE || itemIndex2 > Inventory.MAX_SIZE)) {
 			player.message("Please unequip your item and try again.");
 			return;
 		}
 		if (item1.getDef(player.getWorld()).isMembersOnly() || item2.getDef(player.getWorld()).isMembersOnly()) {
-			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			if (!player.getConfig().MEMBER_WORLD) {
 				player.sendMemberErrorMessage();
 				return;
 			}

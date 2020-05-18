@@ -31,7 +31,7 @@ public final class FriendHandler implements PacketHandler {
 
 		Player affectedPlayer = player.getWorld().getPlayer(friend);
 		if (pID == packetOne) { // Add friend
-			int maxFriends = player.getWorld().getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
+			int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
 				: MAX_FRIENDS;
 			if (player.getSocial().friendCount() >= maxFriends) {
 				player.message("Friend list is full");
@@ -57,7 +57,7 @@ public final class FriendHandler implements PacketHandler {
 				}
 			}
 		} else if (pID == packetThree) { // Add ignore
-			int maxFriends = player.getWorld().getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
+			int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
 				: MAX_FRIENDS;
 			if (player.getSocial().ignoreCount() >= maxFriends) {
 				player.message("Ignore list full");
@@ -76,14 +76,14 @@ public final class FriendHandler implements PacketHandler {
 			String message = DataConversions.upperCaseAllFirst(
 				DataConversions.stripBadCharacters(
 					DataConversions.getEncryptedString(packet, 32576)));
-			if (friendName.toLowerCase().equals("global$") && player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
+			if (friendName.toLowerCase().equals("global$") && player.getConfig().WANT_GLOBAL_FRIEND) {
 				player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 			}
 			else {
 				player.addPrivateMessage(new PrivateMessage(player, message, friend));
 			}
 		} else if (pID == packetSix) {
-			int maxFriends = player.getWorld().getServer().getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
+			int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
 				: MAX_FRIENDS;
 			if (player.getSocial().ignoreCount() >= maxFriends) {
 				player.message("Ignore list full");

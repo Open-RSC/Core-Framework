@@ -12,11 +12,11 @@ public class LiveFeedLog extends Query {
 	private String username;
 
 	public LiveFeedLog(Player player, String feedText) {
-		super("INSERT INTO `" + player.getWorld().getServer().getConfig().DB_TABLE_PREFIX
+		super("INSERT INTO `" + player.getConfig().DB_TABLE_PREFIX
 			+ "live_feeds`(`username`,`message`,`time`) VALUES(?, ?, ?)");
 		this.username = player.getUsername();
 		this.feedText = feedText;
-		if (player.getWorld().getServer().getConfig().WANT_DISCORD_BOT) {
+		if (player.getConfig().WANT_DISCORD_BOT) {
 			player.getWorld().getServer().getDiscordService().sendMessage("[Live Feed] " + this.username + " " + this.feedText.replace("<strong>","**").replace("</strong>","**"));
 		}
 	}

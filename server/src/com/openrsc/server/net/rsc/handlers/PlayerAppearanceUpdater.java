@@ -45,7 +45,7 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 		player.setMale(headGender == 1);
 
 		if (player.isMale()) {
-			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			if (player.getConfig().WANT_EQUIPMENT_TAB) {
 				Item top = player.getCarriedItems().getEquipment().get(1);
 				if (top != null && top.getDef(player.getWorld()).isFemaleOnly()) {
 					if(!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, top, UnequipRequest.RequestType.FROM_EQUIPMENT, false))) {
@@ -78,7 +78,7 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 			}
 		}
 
-		if (player.getWorld().getServer().getConfig().CHARACTER_CREATION_MODE == 1) {
+		if (player.getConfig().CHARACTER_CREATION_MODE == 1) {
 			if (player.getLastLogin() == 0L) {
 				player.setIronMan(playerMode1);
 				player.setOneXp(playerMode2 == 1);

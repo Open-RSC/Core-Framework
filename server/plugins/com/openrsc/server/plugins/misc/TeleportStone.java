@@ -93,7 +93,7 @@ public class TeleportStone implements OpInvTrigger {
 					return;
 			}
 			player.getCarriedItems().remove(new Item(TELEPORT_STONE));
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			player.message("You landed in " + teleLoc[menu]);
 		}
 	}

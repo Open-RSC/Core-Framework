@@ -117,7 +117,7 @@ public class Cannon implements OpLocTrigger,
 			}
 
 			//Disable placing a cannon in KBD's lair on non-authentic servers
-			if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
+			if (config().WANT_CUSTOM_SPRITES) {
 				if (player.getLocation().inBounds(562,3314,572,3332)) {
 					player.message("you can't set up the cannon here");
 					return;
