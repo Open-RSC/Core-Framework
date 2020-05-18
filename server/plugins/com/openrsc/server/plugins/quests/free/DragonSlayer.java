@@ -416,7 +416,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 
 	@Override
 	public boolean blockKillNpc(Player player, Npc npc) {
-		return DataConversions.inArray(new int[]{NpcId.WORKMAN.id(), NpcId.RAT_WMAZEKEY.id(),
+		return DataConversions.inArray(new int[]{NpcId.WORMBRAIN.id(), NpcId.RAT_WMAZEKEY.id(),
 			NpcId.GHOST_WMAZEKEY.id(), NpcId.SKELETON_WMAZEKEY.id(), NpcId.ZOMBIE_WMAZEKEY.id(),
 			NpcId.MELZAR_THE_MAD.id(), NpcId.LESSER_DEMON_WMAZEKEY.id(), NpcId.DRAGON.id()}, npc.getID());
 	}
