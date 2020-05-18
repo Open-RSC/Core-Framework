@@ -35,6 +35,7 @@ import orsc.net.Opcodes;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+import orsc.util.Utils;
 
 import java.io.*;
 import java.security.SecureRandom;
