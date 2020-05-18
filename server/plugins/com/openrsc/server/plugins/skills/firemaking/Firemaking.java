@@ -268,7 +268,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 	@Override
 	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
-		return compareItemsIds(item1, item2, TINDERBOX, ItemId.LOGS.id()) || (config().CUSTOM_FIREMAKING &&
+		return compareItemsIds(item1, item2, TINDERBOX, ItemId.LOGS.id()) || (player.getConfig().CUSTOM_FIREMAKING &&
 		(item1.getCatalogId() == TINDERBOX && inArray(item2.getCatalogId(), LOGS) || item2.getCatalogId() == TINDERBOX && inArray(item1.getCatalogId(), LOGS)));
 	}
 

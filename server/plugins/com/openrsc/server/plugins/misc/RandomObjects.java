@@ -174,7 +174,7 @@ public class RandomObjects implements OpLocTrigger {
 			return true;
 		if (obj.getLocation().getX() == 94 && obj.getLocation().getY() == 521
 			&& obj.getID() == 60) {
-			if (config().MEMBER_WORLD) {
+			if (player.getConfig().MEMBER_WORLD) {
 				return true;
 			}
 		}

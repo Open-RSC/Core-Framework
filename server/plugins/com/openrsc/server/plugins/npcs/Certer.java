@@ -237,6 +237,6 @@ public class Certer implements TalkNpcTrigger {
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		return (DataConversions.inArray(certers, n.getID())) || (n.getID() == NpcId.FORESTER.id() && config().WANT_WOODCUTTING_GUILD);
+		return (DataConversions.inArray(certers, n.getID())) || (n.getID() == NpcId.FORESTER.id() && player.getConfig().WANT_WOODCUTTING_GUILD);
 	}
 }

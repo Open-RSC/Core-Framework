@@ -14,7 +14,7 @@ public class MasterFisher implements TalkNpcTrigger {
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		return config().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.MASTER_FISHER.id();
+		return player.getConfig().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.MASTER_FISHER.id();
 	}
 
 	@Override

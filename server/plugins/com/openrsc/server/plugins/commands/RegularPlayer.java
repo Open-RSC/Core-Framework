@@ -32,7 +32,7 @@ public final class RegularPlayer implements CommandTrigger {
 	public static String badSyntaxPrefix = null;
 
 	public boolean blockCommand(Player player, String cmd, String[] args) {
-		return config().PLAYER_COMMANDS || player.isMod();
+		return player.getConfig().PLAYER_COMMANDS || player.isMod();
 	}
 
 	public void onCommand(Player player, String cmd, String[] args) {

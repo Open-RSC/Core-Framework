@@ -89,7 +89,7 @@ public final class AuburysRunes extends AbstractShop {
 	@Override
 	public boolean blockOpNpc(Player player, Npc n, String command) {
 		return ( n.getID() == 54 &&
-			config().WANT_RUNECRAFTING &&
+			player.getConfig().WANT_RUNECRAFTING &&
 			player.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&
 			command.equalsIgnoreCase("teleport") ||
 			(n.getID() == 54 && command.equalsIgnoreCase("Trade")));

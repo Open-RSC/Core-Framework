@@ -268,7 +268,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			if (obj.getGameObjectDef().getName().equalsIgnoreCase("empty stall")) {
 				return false;
 			}
-			if (!config().MEMBER_WORLD) {
+			if (!player.getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
 				return false;
 			}
@@ -277,7 +277,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				return true;
 			}
 		} else if (obj.getID() >= 334 && obj.getID() <= 339) {
-			if (!config().MEMBER_WORLD) {
+			if (!player.getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
 				return false;
 			}
@@ -302,7 +302,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			}
 
 			if (pickpocket != null) {
-				if (!config().MEMBER_WORLD) {
+				if (!player.getConfig().MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return false;
 				}
@@ -511,7 +511,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	@Override
 	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() >= 93 && obj.getID() <= 97 || obj.getID() >= 99 & obj.getID() <= 100 || obj.getID() == 162) {
-			if (!config().MEMBER_WORLD) {
+			if (!player.getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
 				return false;
 			}

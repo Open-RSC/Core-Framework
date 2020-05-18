@@ -40,7 +40,7 @@ public class CutWeb implements UseBoundTrigger,
 
 	@Override
 	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
-		return config().WANT_LEFTCLICK_WEBS
+		return player.getConfig().WANT_LEFTCLICK_WEBS
 			&& obj.getID() == WEB;
 	}
 

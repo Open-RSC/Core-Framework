@@ -281,7 +281,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		final boolean furnace = obj.getID() == 118 || obj.getID() == 813;
 		final boolean jewelryBar = item.getCatalogId() == ItemId.SILVER_BAR.id() || item.getCatalogId() == ItemId.GOLD_BAR.id();
-		final boolean wantBetterJewelryCrafting = config().WANT_BETTER_JEWELRY_CRAFTING;
+		final boolean wantBetterJewelryCrafting = player.getConfig().WANT_BETTER_JEWELRY_CRAFTING;
 
 		// Checks to make sure that we're using a jewelry bar on a furnace
 		// And that we have WANT_BETTER_JEWELRY_CRAFTING enabled.

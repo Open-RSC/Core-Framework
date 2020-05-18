@@ -18,7 +18,7 @@ public final class WormBrain implements OpBoundTrigger {
 
 	@Override
 	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
-		return config().WANT_BARTER_WORMBRAINS && obj.getID() == 30
+		return player.getConfig().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665;
 	}
 

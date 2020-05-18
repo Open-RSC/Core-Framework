@@ -26,7 +26,7 @@ public class HeadWizard implements TalkNpcTrigger {
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		return config().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.HEAD_WIZARD.id();
+		return player.getConfig().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.HEAD_WIZARD.id();
 	}
 
 }

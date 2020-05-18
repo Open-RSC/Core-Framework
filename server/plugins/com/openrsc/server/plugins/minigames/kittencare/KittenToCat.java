@@ -60,7 +60,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	@Override
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.KITTEN.id()
-			|| (item.getCatalogId() == ItemId.CAT.id() && config().WANT_EXTENDED_CATS_BEHAVIOR);
+			|| (item.getCatalogId() == ItemId.CAT.id() && player.getConfig().WANT_EXTENDED_CATS_BEHAVIOR);
 	}
 
 	@Override

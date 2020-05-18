@@ -14,7 +14,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class EnchantDragonstoneRing implements SpellInvTrigger {
 	@Override
 	public boolean blockSpellInv(Player player, Integer invIndex, Integer itemID, Integer spellID) {
-		return (config().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
+		return (player.getConfig().WANT_EQUIPMENT_TAB && itemID.intValue() == ItemId.DRAGONSTONE_RING.id() && spellID.intValue() == 42);
 	}
 
 	@Override

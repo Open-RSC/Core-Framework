@@ -90,7 +90,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 		if (n.getID() == NpcId.GUNDAI.id() && command.equalsIgnoreCase("Bank")) {
 			return true;
 		}
-		if (n.getID() == NpcId.GUNDAI.id() && config().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
+		if (n.getID() == NpcId.GUNDAI.id() && player.getConfig().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {
 			return true;
 		}
 		return false;
