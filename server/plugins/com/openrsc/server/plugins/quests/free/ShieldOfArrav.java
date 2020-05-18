@@ -20,7 +20,6 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	OpInvTrigger,
 	TalkNpcTrigger,
 	OpLocTrigger,
-	UseLocTrigger,
 	OpBoundTrigger {
 
 	public static final int BLACK_ARM = 0;
@@ -69,15 +68,6 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	public static boolean isPhoenixGang(Player player) {
 		return (player.getCache().hasKey("arrav_gang") && player.getCache().getInt("arrav_gang") == PHOENIX_GANG)
 			|| player.getQuestStage(Quests.SHIELD_OF_ARRAV) == PHOENIX_COMPLETE;
-	}
-
-	@Override
-	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
-		return false;
-	}
-
-	@Override
-	public void onUseLoc(Player player, GameObject obj, Item item) {
 	}
 
 	@Override
