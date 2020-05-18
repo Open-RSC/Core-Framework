@@ -11793,13 +11793,13 @@ public final class mudclient implements Runnable {
 				this.panelLoginWelcome.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
 					this.lastMouseButtonDown);
 				if (this.panelLoginWelcome.isClicked(loginButtonExistingUser)) {
-					if (isAndroid())
-						clientPort.drawKeyboard(); // launches the Android soft keyboard
+					if (isAndroid()) clientPort.drawKeyboard(); // launches the Android soft keyboard
 					this.loginScreenNumber = 2;
 					this.panelLogin.setText(this.controlLoginStatus1, "");
 					this.panelLogin.setText(this.controlLoginStatus2, "Please enter your username and password");
 					this.panelLogin.setFocus(this.controlLoginUser);
 				} else if (panelLoginWelcome.isClicked(loginButtonNewUser)) {
+					if (isAndroid()) clientPort.drawKeyboard();
 					loginScreenNumber = 1;
 					this.menuNewUser.setText(this.menuNewUserStatus, "Please fill in all fields");
 					this.menuNewUser.setText(this.menuNewUserStatus2, "and click submit.");
@@ -14588,6 +14588,9 @@ public final class mudclient implements Runnable {
 				} else {
 					String ip = ClientPort.loadIP(); // loads based on Cache/ip.txt
 					int port = ClientPort.loadPort(); // loads based on Cache/port.txt
+					// Set the config properties so that they can be accessed later.
+					Config.SERVER_IP = ip;
+					Config.SERVER_PORT = port;
 					System.out.println(" ");
 					System.out.println(" ");
 					System.out.println("Fetching server configs from " + ip + ":" + port);
