@@ -40,7 +40,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     sourceSets {
-        main.java.srcDirs += 'src/main/../../../../Client_Base'
+        main.java.srcDirs += ['src/main/java', 'src/main/../../../../Client_Base/src']
     }
     applicationVariants.all { variant ->
         variant.outputs.all {

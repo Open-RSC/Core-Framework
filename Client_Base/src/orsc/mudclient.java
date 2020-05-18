@@ -11141,22 +11141,10 @@ public final class mudclient implements Runnable {
 									}
 									// Add the final search argument without a plus
 									url += (args[args.length - 1]);
+									Utils.openWebpage(url);
 								} else {
 									url = "https://classic.runescape.wiki";
 								}
-
-								// Check if we can open the wiki, otherwise tell the player we can't.
-								/*if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-									try {
-										Desktop.getDesktop().browse(new URI(url));
-									} catch (final Exception ex) {
-										showMessage(true, null, "There is a problem with your search query",
-											MessageType.GAME, 0, null, null);
-									}
-								} else {
-									showMessage(true, null, "There was a problem opening your browser",
-										MessageType.GAME, 0, null, null);
-								}*/
 							} else {
 								this.sendCommandString(var11.substring(2));
 								String putQueue = var11.substring(2);
