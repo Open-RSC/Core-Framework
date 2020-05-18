@@ -40,7 +40,7 @@
             android:name="com.openrsc.android.updater.ApplicationUpdater"
             android:configChanges="orientation"
             android:label="OpenRSC"
-            android:screenOrientation="fullSensor">
+            android:screenOrientation="landscape">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
 
@@ -57,7 +57,7 @@
             android:configChanges="orientation"
             android:label="OpenRSC"
             android:largeHeap="true"
-            android:screenOrientation="fullSensor" />
+            android:screenOrientation="sensorLandscape" />
     </application>
 
 </manifest>
