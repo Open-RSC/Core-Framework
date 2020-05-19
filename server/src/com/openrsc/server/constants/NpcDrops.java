@@ -1,6 +1,8 @@
 package com.openrsc.server.constants;
 
 import com.openrsc.server.content.DropTable;
+import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.Mob;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,22 +10,92 @@ import java.util.HashSet;
 public class NpcDrops {
 
 	private HashMap<Integer, DropTable> npcDrops;
+	private HashSet<Integer> bonelessNpcs;
 	private HashSet<Integer> bigBoneNpcs;
 	private HashSet<Integer> ashesNpcs;
-	private HashSet<Integer> bonelessNpcs;
+
+	private DropTable herbDropTable;
+	private DropTable rareDropTable;
+	private DropTable megaRareDropTable;
+	private DropTable ultraRareDropTable;
 
 	public NpcDrops() {
 		this.npcDrops = new HashMap<>();
 		this.bigBoneNpcs = new HashSet<>();
 		this.ashesNpcs = new HashSet<>();
 		this.bonelessNpcs = new HashSet<>();
-		createDrops();
+
+		createHerbDropTable();
+		createRareDropTable();
+		createMegaRareDropTable();
+		createUltraRareDropTable();
+
+		createBoneDrops();
+		createMobDrops();
 	}
 
-	private void createDrops() {
+	private void createHerbDropTable() {
+		herbDropTable = new DropTable();
+		herbDropTable.addItemDrop(ItemId.UNIDENTIFIED_GUAM_LEAF.id(), 1, 32);
+		herbDropTable.addItemDrop(ItemId.UNIDENTIFIED_MARRENTILL.id(), 1, 24);
+		herbDropTable.addItemDrop(ItemId.UNIDENTIFIED_TARROMIN.id(), 1, 18);
+		herbDropTable.addItemDrop(ItemId.UNIDENTIFIED_HARRALANDER.id(), 1, 14);
+		herbDropTable.addItemDrop(ItemId.UNIDENTIFIED_RANARR_WEED.id(), 1, 11);
+		herbDropTable.addItemDrop(ItemId.UNIDENTIFIED_IRIT_LEAF.id(), 1, 8);
+		herbDropTable.addItemDrop(ItemId.UNIDENTIFIED_AVANTOE.id(), 1, 6);
+		herbDropTable.addItemDrop(ItemId.UNIDENTIFIED_KWUARM.id(), 1, 5);
+		herbDropTable.addItemDrop(ItemId.UNIDENTIFIED_CADANTINE.id(), 1, 4);
+		herbDropTable.addItemDrop(ItemId.UNIDENTIFIED_DWARF_WEED.id(), 1, 3);
+	}
+
+	private void createRareDropTable() {
+		rareDropTable = new DropTable();
+		rareDropTable.addItemDrop(ItemId.UNCUT_SAPPHIRE.id(), 1, 32);
+		rareDropTable.addItemDrop(ItemId.UNCUT_EMERALD.id(), 1, 16);
+		rareDropTable.addItemDrop(ItemId.UNCUT_RUBY.id(), 1, 8);
+		rareDropTable.addItemDrop(ItemId.UNCUT_DIAMOND.id(), 1, 4);
+		rareDropTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 1);
+		rareDropTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 1);
+		rareDropTable.addTableDrop(megaRareDropTable, 1);
+	}
+
+	private void createMegaRareDropTable() {
+		megaRareDropTable = new DropTable();
+		megaRareDropTable.addItemDrop(ItemId.RUNE_SPEAR.id(), 1, 2);
+		megaRareDropTable.addItemDrop(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1, 1);
+	}
+
+	private void createUltraRareDropTable() {
+		ultraRareDropTable = new DropTable();
+		ultraRareDropTable.addItemDrop(ItemId.NOTHING.id(), 0, 81);
+		ultraRareDropTable.addItemDrop(ItemId.COINS.id(), 3000, 42);
+		ultraRareDropTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 34);
+		ultraRareDropTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 34);
+		ultraRareDropTable.addItemDrop(ItemId.RUNE_2_HANDED_SWORD.id(), 1, 8);
+		ultraRareDropTable.addItemDrop(ItemId.RUNE_BATTLE_AXE.id(), 1, 6);
+		ultraRareDropTable.addItemDrop(ItemId.RUNE_AXE.id(), 1, 6);
+		ultraRareDropTable.addItemDrop(ItemId.NATURE_RUNE.id(), 45, 6);
+		ultraRareDropTable.addItemDrop(ItemId.SILVER_CERTIFICATE.id(), 20, 4);
+		ultraRareDropTable.addItemDrop(ItemId.COAL_CERTIFICATE.id(), 20, 4);
+		ultraRareDropTable.addItemDrop(ItemId.DRAGONSTONE.id(), 1, 4);
+		ultraRareDropTable.addItemDrop(ItemId.RUNE_SQUARE_SHIELD.id(), 1, 4);
+		ultraRareDropTable.addItemDrop(ItemId.RUNITE_BAR.id(), 1, 4);
+		ultraRareDropTable.addItemDrop(ItemId.DEATH_RUNE.id(), 30, 4);
+		ultraRareDropTable.addItemDrop(ItemId.LAW_RUNE.id(), 30, 4);
+		ultraRareDropTable.addItemDrop(ItemId.BRONZE_ARROWS.id(), 300, 4);
+		ultraRareDropTable.addItemDrop(ItemId.RUNE_CHAIN_MAIL_BODY.id(), 1, 2);
+		ultraRareDropTable.addItemDrop(ItemId.RUNE_PLATE_MAIL_LEGS.id(), 1, 2);
+		ultraRareDropTable.addItemDrop(ItemId.RUNE_KITE_SHIELD.id(), 1, 2);
+		ultraRareDropTable.addItemDrop(ItemId.DRAGON_MEDIUM_HELMET.id(), 1, 1);
+	}
+
+	private void createBoneDrops() {
 		generateBonelessNpcs();
 		generateBigBoneDrops();
 		generateAshesDrops();
+	}
+
+	private void createMobDrops() {
 		generateNpcDrops();
 		//	put(NpcId.MAN.id(), new ArrayList<Map.Entry<Integer, Integer>> {{
 		//		add(new Map.Entry<Integer, Integer>() {{
@@ -31,80 +103,37 @@ public class NpcDrops {
 
 	private void generateBonelessNpcs() {
 		this.bonelessNpcs.add(NpcId.GHOST_RESTLESS.id());
-		this.bonelessNpcs.add(NpcId.LESSER_DEMON.id());
 		this.bonelessNpcs.add(NpcId.GIANT_SPIDER_LVL8.id());
 		this.bonelessNpcs.add(NpcId.SPIDER.id());
-		this.bonelessNpcs.add(NpcId.DELRITH.id());
 		this.bonelessNpcs.add(NpcId.GIANT_BAT.id());
 		this.bonelessNpcs.add(NpcId.GHOST1.id());
-		this.bonelessNpcs.add(NpcId.GIANT.id());
 		this.bonelessNpcs.add(NpcId.SCORPION.id());
 		this.bonelessNpcs.add(NpcId.GIANT_SPIDER_LVL31.id());
 		this.bonelessNpcs.add(NpcId.GHOST2.id());
 		this.bonelessNpcs.add(NpcId.COUNT_DRAYNOR.id());
 		this.bonelessNpcs.add(NpcId.DEADLY_RED_SPIDER.id());
-		this.bonelessNpcs.add(NpcId.MOSS_GIANT.id());
-		this.bonelessNpcs.add(NpcId.ICE_GIANT.id());
 		this.bonelessNpcs.add(NpcId.KING_SCORPION.id());
-		this.bonelessNpcs.add(NpcId.LESSER_DEMON_WMAZEKEY.id());
-		this.bonelessNpcs.add(NpcId.GREATER_DEMON.id());
-		this.bonelessNpcs.add(NpcId.DRAGON.id());
-		this.bonelessNpcs.add(NpcId.RED_DRAGON.id());
-		this.bonelessNpcs.add(NpcId.BLUE_DRAGON.id());
-		this.bonelessNpcs.add(NpcId.BABY_BLUE_DRAGON.id());
 		this.bonelessNpcs.add(NpcId.SUIT_OF_ARMOUR.id());
 		this.bonelessNpcs.add(NpcId.TREE_SPIRIT.id());
 		this.bonelessNpcs.add(NpcId.SHAPESHIFTER_HUMAN.id());
 		this.bonelessNpcs.add(NpcId.SHAPESHIFTER_SPIDER.id());
 		this.bonelessNpcs.add(NpcId.SHAPESHIFTER_BEAR.id());
 		this.bonelessNpcs.add(NpcId.POISON_SCORPION.id());
-		this.bonelessNpcs.add(NpcId.THRANTAX.id());
-		this.bonelessNpcs.add(NpcId.BLACK_DEMON.id());
-		this.bonelessNpcs.add(NpcId.BLACK_DRAGON.id());
 		this.bonelessNpcs.add(NpcId.POISON_SPIDER.id());
-		this.bonelessNpcs.add(NpcId.OGRE.id());
-		this.bonelessNpcs.add(NpcId.CHRONOZON.id());
 		this.bonelessNpcs.add(NpcId.SHADOW_SPIDER.id());
-		this.bonelessNpcs.add(NpcId.FIRE_GIANT.id());
-		this.bonelessNpcs.add(NpcId.KHAZARD_OGRE.id());
 		this.bonelessNpcs.add(NpcId.KHAZARD_SCORPION.id());
 		this.bonelessNpcs.add(NpcId.FIRST_PLAGUE_SHEEP.id());
 		this.bonelessNpcs.add(NpcId.SECOND_PLAGUE_SHEEP.id());
 		this.bonelessNpcs.add(NpcId.THIRD_PLAGUE_SHEEP.id());
 		this.bonelessNpcs.add(NpcId.FOURTH_PLAGUE_SHEEP.id());
 		this.bonelessNpcs.add(NpcId.RAT_TUTORIAL.id());
-		this.bonelessNpcs.add(NpcId.KING_BLACK_DRAGON.id());
 		this.bonelessNpcs.add(NpcId.JUNGLE_SPIDER.id());
-		this.bonelessNpcs.add(NpcId.JOGRE.id());
-		this.bonelessNpcs.add(NpcId.OGRE_TRAINING_CAMP.id());
-		this.bonelessNpcs.add(NpcId.OGRE_CHIEFTAN.id());
-		this.bonelessNpcs.add(NpcId.BLACK_DEMON_GRANDTREE.id());
 		this.bonelessNpcs.add(NpcId.ZADIMUS.id());
 		this.bonelessNpcs.add(NpcId.NAZASTAROOL_GHOST.id());
 		this.bonelessNpcs.add(NpcId.BLESSED_SPIDER.id());
-		this.bonelessNpcs.add(NpcId.DOOMION.id());
-		this.bonelessNpcs.add(NpcId.HOLTHION.id());
 		this.bonelessNpcs.add(NpcId.GHOST_SCORPIUS.id());
 		this.bonelessNpcs.add(NpcId.SPIRIT_OF_SCORPIUS.id());
 		this.bonelessNpcs.add(NpcId.SCORPION_GRAVE.id());
-		this.bonelessNpcs.add(NpcId.OGRE_SHAMAN.id());
-		this.bonelessNpcs.add(NpcId.OGRE_GUARD_EASTGATE.id());
-		this.bonelessNpcs.add(NpcId.OGRE_GUARD_WESTGATE.id());
-		this.bonelessNpcs.add(NpcId.OGRE_GUARD_BATTLEMENT.id());
-		this.bonelessNpcs.add(NpcId.OG.id());
-		this.bonelessNpcs.add(NpcId.GREW.id());
-		this.bonelessNpcs.add(NpcId.TOBAN.id());
-		this.bonelessNpcs.add(NpcId.GORAD.id());
-		this.bonelessNpcs.add(NpcId.OGRE_GUARD_CAVE_ENTRANCE.id());
-		this.bonelessNpcs.add(NpcId.OGRE_MERCHANT.id());
-		this.bonelessNpcs.add(NpcId.OGRE_TRADER_GENSTORE.id());
-		this.bonelessNpcs.add(NpcId.OGRE_TRADER_ROCKCAKE.id());
-		this.bonelessNpcs.add(NpcId.OGRE_TRADER_FOOD.id());
-		this.bonelessNpcs.add(NpcId.CITY_GUARD.id());
-		this.bonelessNpcs.add(NpcId.OGRE_GUARD_BRIDGE.id());
-		this.bonelessNpcs.add(NpcId.OGRE_CITIZEN.id());
-		this.bonelessNpcs.add(NpcId.OGRE_GENERAL.id());
-		this.bonelessNpcs.add(NpcId.NEZIKCHENED.id());
 		this.bonelessNpcs.add(NpcId.PIT_SCORPION.id());
 	}
 
@@ -176,28 +205,27 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.FEATHER.id(), 10, 20);
 		this.npcDrops.put(NpcId.CHICKEN.id(), currentNpcDrops);
 
-		// Goblin Level 13 (4)
+		// Goblin Level 13 (4, 153, 154)
 		currentNpcDrops = new DropTable();
-		currentNpcDrops.addItemDrop(ItemId.BRONZE_SCIMITAR.id(), 1, 1);
-		currentNpcDrops.addItemDrop(ItemId.BRONZE_AXE.id(), 1, 3);
+		currentNpcDrops.addTableDrop(herbDropTable, 2);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 34);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 34);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 3, 13);
 		currentNpcDrops.addItemDrop(ItemId.BRONZE_SPEAR.id(), 1, 9);
-		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 1, 1);
-		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 8);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 16, 7);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_AXE.id(), 1, 3);
 		currentNpcDrops.addItemDrop(ItemId.MIND_RUNE.id(), 1, 3);
 		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 3, 3);
 		currentNpcDrops.addItemDrop(ItemId.BODY_RUNE.id(), 1, 3);
 		currentNpcDrops.addItemDrop(ItemId.BRONZE_ARROWS.id(), 7, 3);
-		// Herb drop table
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 24, 3);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 16, 7);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 8);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 3, 13);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 34);
-		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 36);
-		// Not sure which goblin??? Why tres??
-		// this.npcDrops.put(NpcId.GOBLIN_LVL13.id(), currentNpcDrops);
-		// this.npcDrops.put(NpcId.GOBLIN1_LVL13.id(), currentNpcDrops);
-		// this.npcDrops.put(NpcId.GOBLIN2_LVL13.id(), currentNpcDrops);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SCIMITAR.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 1, 1);
+		this.npcDrops.put(NpcId.GOBLIN_LVL13.id(), currentNpcDrops); // (4)
+		this.npcDrops.put(NpcId.GOBLIN1_LVL13.id(), currentNpcDrops); // (153)
+		this.npcDrops.put(NpcId.GOBLIN2_LVL13.id(), currentNpcDrops); // (154)
 
 		// Cow (6)
 		currentNpcDrops = new DropTable();
@@ -212,8 +240,28 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.BEAR_LVL24.id(), currentNpcDrops);
 
 		// Man (11, 72, 318)
+		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 23);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 32);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 3, 38);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 9);
+		currentNpcDrops.addItemDrop(ItemId.FISHING_BAIT.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 15, 4);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_ARROWS.id(), 7, 3);
+		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 3, 2);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 4, 2);
+		currentNpcDrops.addItemDrop(ItemId.MIND_RUNE.id(), 6, 2);
+		currentNpcDrops.addItemDrop(ItemId.COPPER_ORE.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.MEDIUM_BRONZE_HELMET.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.CABBAGE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.IRON_DAGGER.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 25, 1);
+		this.npcDrops.put(NpcId.MAN1.id(), currentNpcDrops); // (11)
+		this.npcDrops.put(NpcId.MAN2.id(), currentNpcDrops); // (72)
+		this.npcDrops.put(NpcId.MAN3.id(), currentNpcDrops); // (318)
 
-		// Rat Level 8 (19, 29, 47, 177, 241)
+		// Rat Level 8 (19, 29, 47, 177, 241, 367)
 		currentNpcDrops = new DropTable();
 		currentNpcDrops.addItemDrop(ItemId.RAW_RAT_MEAT.id(), 1, 0);
 		this.npcDrops.put(NpcId.RAT_LVL8.id(), currentNpcDrops);
@@ -224,6 +272,22 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.DUNGEON_RAT.id(), currentNpcDrops);
 
 		// Mugger (21)
+		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 13);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 40);
+		currentNpcDrops.addItemDrop(ItemId.ROPE.id(), 1, 40);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 12);
+		currentNpcDrops.addItemDrop(ItemId.FISHING_BAIT.id(), 1, 6);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.MIND_RUNE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.COPPER_ORE.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.MEDIUM_BRONZE_HELMET.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.WATER_RUNE.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.KNIFE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.CABBAGE.id(), 1, 1);
+		this.npcDrops.put(NpcId.MUGGER.id(), currentNpcDrops);
 
 		// Lesser Demon (22)
 
@@ -261,22 +325,22 @@ public class NpcDrops {
 
 		// Goblin Level 7 (62)
 		currentNpcDrops = new DropTable();
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 50);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 28);
 		currentNpcDrops.addItemDrop(ItemId.BRONZE_SPEAR.id(), 1, 12);
-		currentNpcDrops.addItemDrop(ItemId.BRONZE_SQUARE_SHIELD.id(), 1, 3);
-		currentNpcDrops.addItemDrop(ItemId.SHORTBOW.id(), 1, 1);
 		currentNpcDrops.addItemDrop(ItemId.WATER_RUNE.id(), 4, 6);
 		currentNpcDrops.addItemDrop(ItemId.BODY_RUNE.id(), 7, 5);
+		currentNpcDrops.addItemDrop(ItemId.GOBLIN_ARMOUR.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SQUARE_SHIELD.id(), 1, 3);
 		currentNpcDrops.addItemDrop(ItemId.CROSSBOW_BOLTS.id(), 8, 3);
 		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 3, 3);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 28);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 9, 3);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 15, 3);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 20, 2);
-		currentNpcDrops.addItemDrop(ItemId.GOBLIN_ARMOUR.id(), 1, 5);
 		currentNpcDrops.addItemDrop(ItemId.BEER.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.SHORTBOW.id(), 1, 1);
 		currentNpcDrops.addItemDrop(ItemId.BRASS_NECKLACE.id(), 1, 1);
 		currentNpcDrops.addItemDrop(ItemId.CHEFS_HAT.id(), 1, 1);
-		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 50);
 		this.npcDrops.put(NpcId.GOBLIN_LVL7.id(), currentNpcDrops);
 
 		// Farmer (63, 319)
@@ -472,5 +536,9 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.RAW_OOMLIE_MEAT.id(), 1, 0);
 		this.npcDrops.put(NpcId.OOMLIE_BIRD.id(), currentNpcDrops);
 
+	}
+
+	public DropTable getDropTable(int npcId) {
+		return this.npcDrops.get(npcId);
 	}
 }
