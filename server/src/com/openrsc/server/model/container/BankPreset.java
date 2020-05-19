@@ -159,10 +159,10 @@ public class BankPreset {
 
 			if (neededCatalogId == ItemId.NOTHING.id()) continue;
 
-			// Fail out if we don't have the item we need.
+			// Pass this item if we don't have the item we need.
 			if (player.getBank().countId(neededCatalogId) == 0) {
 				player.message("Could not withdraw item: " + itemNeeded.getDef(player.getWorld()).getName());
-				return;
+				continue;
 			}
 
 			// Add item to equipment if it's not "nothing".
@@ -191,10 +191,10 @@ public class BankPreset {
 
 			if (neededCatalogId == ItemId.NOTHING.id()) continue;
 
-			// We do not have any of the item we need, fail out
+			// We do not have any of the item we need
 			if (player.getBank().countId(neededCatalogId) == 0) {
 				player.message("Could not withdraw item: " + itemNeeded.getDef(player.getWorld()).getName());
-				return;
+				continue;
 			}
 
 			player.getBank().withdrawItemToInventory(itemNeeded.getCatalogId(), itemNeeded.getAmount(), itemNeeded.getNoted(), false);
