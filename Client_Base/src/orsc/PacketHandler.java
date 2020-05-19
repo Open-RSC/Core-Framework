@@ -2693,8 +2693,8 @@ public class PacketHandler {
 				inventoryItems[i].setNoted(noted);
 			}
 		}
-		//The server uses 2 more slots than the client
-		for (int i = 0; i < equipmentItems.length + 2; i++) {
+		//The server uses 3 more slots than the client
+		for (int i = 0; i < equipmentItems.length + 3; i++) {
 			itemBytes[0] = packetsIncoming.getByte();
 			if (itemBytes[0] == -1)
 				continue;
