@@ -50,17 +50,19 @@ public class NpcDrops {
 
 	private void createRareDropTable() {
 		rareDropTable = new DropTable();
+		rareDropTable.addTableDrop(megaRareDropTable, 1);
+		rareDropTable.addItemDrop(ItemId.NOTHING.id(), 0, 67);
 		rareDropTable.addItemDrop(ItemId.UNCUT_SAPPHIRE.id(), 1, 32);
 		rareDropTable.addItemDrop(ItemId.UNCUT_EMERALD.id(), 1, 16);
 		rareDropTable.addItemDrop(ItemId.UNCUT_RUBY.id(), 1, 8);
-		rareDropTable.addItemDrop(ItemId.UNCUT_DIAMOND.id(), 1, 4);
+		rareDropTable.addItemDrop(ItemId.UNCUT_DIAMOND.id(), 1, 2);
 		rareDropTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 1);
 		rareDropTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 1);
-		rareDropTable.addTableDrop(megaRareDropTable, 1);
 	}
 
 	private void createMegaRareDropTable() {
 		megaRareDropTable = new DropTable();
+		megaRareDropTable.addItemDrop(ItemId.NOTHING.id(), 0, 29);
 		megaRareDropTable.addItemDrop(ItemId.RUNE_SPEAR.id(), 1, 2);
 		megaRareDropTable.addItemDrop(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1, 1);
 	}
