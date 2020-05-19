@@ -132,6 +132,15 @@ public class BankPreset {
 			return;
 		}
 
+		// Deposit all held items in inventory.
+		for (Integer catalogId : items) {
+			Item item = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(catalogId)
+			);
+			if (item == null) continue;
+			player.getBank().depositItemFromInventory(item.getCatalogId(), item.getAmount(), false);
+		}
+
 		// Withdraw and equip equipment items if not already equipped.
 		for (int slotID = 0; slotID < equipment.length; slotID++) {
 			Item itemNeeded = equipment[slotID];
@@ -172,15 +181,7 @@ public class BankPreset {
 			}
 		}
 
-		// Deposit all held items in inventory.
-		for (Integer catalogId : items) {
-			Item item = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(catalogId)
-			);
-			if (item == null) continue;
-			player.getBank().depositItemFromInventory(item.getCatalogId(), item.getAmount(), false);
-		}
-
+		// Withdraw inventory items
 		for (int slotID = 0; slotID < inventory.length; slotID++) {
 			Item itemNeeded = inventory[slotID];
 
