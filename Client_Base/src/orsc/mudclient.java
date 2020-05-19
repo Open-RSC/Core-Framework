@@ -4713,7 +4713,6 @@ public final class mudclient implements Runnable {
 							this.scene.removeModel(this.world.modelRoofGrid[2][centerX]);
 						}
 
-
 						if (!this.doCameraZoom) {
 							amountToZoom -= 50;
 							this.doCameraZoom = true;
@@ -11307,6 +11306,12 @@ public final class mudclient implements Runnable {
 					} else if (this.mouseClickXStep < 0) {
 						++this.mouseClickXStep;
 					}
+
+					/*if (this.doCameraZoom && this.cameraZoom > 550) {
+						this.cameraZoom -= 4;
+					} else if (!this.doCameraZoom && this.cameraZoom < 750) {
+						this.cameraZoom += 4;
+					}*/
 
 					if (amountToZoom > 0) {
 						minCameraZoom += 4;
