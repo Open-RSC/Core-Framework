@@ -10,7 +10,7 @@ public class Tile {
 	/**
 	 * The ID of any diagonal walls on this tile
 	 */
-	int diagonalWalls = 0;
+	short diagonalWalls = 0;
 	/**
 	 * The elevation of this tile
 	 */
@@ -51,7 +51,7 @@ public class Tile {
 		tile.roofTexture = in.get();
 		tile.horizontalWall = in.get();
 		tile.verticalWall = in.get();
-		tile.diagonalWalls = in.getInt();
+		tile.diagonalWalls = (short)in.getInt();
 
 		return tile;
 	}
