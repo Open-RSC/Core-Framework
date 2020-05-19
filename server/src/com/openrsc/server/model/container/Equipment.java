@@ -40,7 +40,13 @@ public class Equipment {
 
 	public Item getAmmoItem() {
 		synchronized (list) {
-			return list[12];
+			return list[EquipmentSlot.SLOT_AMMO.getIndex()];
+		}
+	}
+
+	public Item getNeckItem() {
+		synchronized (list) {
+			return list[EquipmentSlot.SLOT_NECK.getIndex()];
 		}
 	}
 

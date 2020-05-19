@@ -5,6 +5,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
@@ -75,8 +76,23 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 				} else {
 					int rubs = player.getCache().getInt("charged_ds_amulet");
 					if (rubs >= 3) {
-						player.getCarriedItems().remove(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
-						player.getCarriedItems().getInventory().add(new Item(ItemId.DRAGONSTONE_AMULET.id()));
+						int chargedId = ItemId.CHARGED_DRAGONSTONE_AMULET.id();
+						Item toAdd = new Item(ItemId.DRAGONSTONE_AMULET.id());
+						boolean added = false;
+						Item currentNeckItem = player.getCarriedItems().getEquipment().getNeckItem();
+						if (config().WANT_EQUIPMENT_TAB && currentNeckItem != null) {
+							if (currentNeckItem.getCatalogId() == chargedId) {
+								player.getCarriedItems().getEquipment().remove(currentNeckItem, 1);
+								player.getCarriedItems().getEquipment().add(toAdd);
+								added = true;
+							}
+						}
+						if (!added) {
+							player.getCarriedItems().remove(new Item(chargedId));
+							player.getCarriedItems().getInventory().add(toAdd);
+						}
+						ActionSender.sendEquipmentStats(player, item.getDef(player.getWorld()).getWieldPosition());
+						ActionSender.sendUpdatedPlayer(player);
 						player.getCache().remove("charged_ds_amulet");
 					} else {
 						player.getCache().put("charged_ds_amulet", rubs + 1);

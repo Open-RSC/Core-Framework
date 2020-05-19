@@ -217,6 +217,10 @@ public class Inventory {
 				int amount = item.getAmount();
 				int itemID = item.getItemId();
 
+				if (itemID == -1) {
+					return -1;
+				}
+
 				int size = list.size();
 				ListIterator<Item> iterator = list.listIterator(size);
 				for (int index = size - 1; iterator.hasPrevious(); index--) {
