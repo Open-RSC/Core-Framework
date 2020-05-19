@@ -8,16 +8,22 @@ import java.util.HashSet;
 public class NpcDrops {
 
 	private HashMap<Integer, DropTable> npcDrops;
+	private HashSet<Integer> bigBoneNpcs;
+	private HashSet<Integer> ashesNpcs;
 	private HashSet<Integer> bonelessNpcs;
 
 	public NpcDrops() {
 		this.npcDrops = new HashMap<>();
+		this.bigBoneNpcs = new HashSet<>();
+		this.ashesNpcs = new HashSet<>();
 		this.bonelessNpcs = new HashSet<>();
 		createDrops();
 	}
 
 	private void createDrops() {
 		generateBonelessNpcs();
+		generateBigBoneDrops();
+		generateAshesDrops();
 		generateNpcDrops();
 		//	put(NpcId.MAN.id(), new ArrayList<Map.Entry<Integer, Integer>> {{
 		//		add(new Map.Entry<Integer, Integer>() {{
@@ -102,44 +108,60 @@ public class NpcDrops {
 		this.bonelessNpcs.add(NpcId.PIT_SCORPION.id());
 	}
 
+	private void generateBigBoneDrops() {
+		// NPCs that only drop Big Bones
+		this.bigBoneNpcs.add(NpcId.BABY_BLUE_DRAGON.id());
+		this.bigBoneNpcs.add(NpcId.KHAZARD_OGRE.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_TRAINING_CAMP.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_CHIEFTAN.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_SHAMAN.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_GUARD_EASTGATE.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_GUARD_WESTGATE.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_GUARD_BATTLEMENT.id());
+		this.bigBoneNpcs.add(NpcId.OG.id());
+		this.bigBoneNpcs.add(NpcId.GREW.id());
+		this.bigBoneNpcs.add(NpcId.TOBAN.id());
+		this.bigBoneNpcs.add(NpcId.GORAD.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_GUARD_CAVE_ENTRANCE.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_MERCHANT.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_TRADER_GENSTORE.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_TRADER_ROCKCAKE.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_TRADER_FOOD.id());
+		this.bigBoneNpcs.add(NpcId.CITY_GUARD.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_GUARD_BRIDGE.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_CITIZEN.id());
+		this.bigBoneNpcs.add(NpcId.OGRE_GENERAL.id());
+
+		// Other
+		this.bigBoneNpcs.add(NpcId.FIRE_GIANT.id());
+		this.bigBoneNpcs.add(NpcId.GIANT.id());
+		this.bigBoneNpcs.add(NpcId.ICE_GIANT.id());
+		this.bigBoneNpcs.add(NpcId.MOSS_GIANT.id());
+		this.bigBoneNpcs.add(NpcId.MOSS_GIANT2.id());
+		this.bigBoneNpcs.add(NpcId.OGRE.id());
+		this.bigBoneNpcs.add(NpcId.JOGRE.id());
+	}
+
+	private void generateAshesDrops() {
+		// NPCs that only drop ashes
+		this.ashesNpcs.add(NpcId.DELRITH.id());
+		this.ashesNpcs.add(NpcId.THRANTAX.id());
+		this.ashesNpcs.add(NpcId.CHRONOZON.id());
+		this.ashesNpcs.add(NpcId.BLACK_DEMON_GRANDTREE.id());
+		this.ashesNpcs.add(NpcId.DOOMION.id());
+		this.ashesNpcs.add(NpcId.HOLTHION.id());
+		this.ashesNpcs.add(NpcId.NEZIKCHENED.id());
+
+		// Other
+		this.ashesNpcs.add(NpcId.IMP.id());
+		this.ashesNpcs.add(NpcId.LESSER_DEMON.id());
+		this.ashesNpcs.add(NpcId.GREATER_DEMON.id());
+		this.ashesNpcs.add(NpcId.BLACK_DEMON.id());
+		this.ashesNpcs.add(NpcId.OTHAINIAN.id());
+	}
+
 	private void generateNpcDrops() {
 		DropTable currentNpcDrops;
-
-		// NPCs that only drop Big Bones
-		currentNpcDrops = new DropTable();
-		currentNpcDrops.addItemDrop(ItemId.BIG_BONES.id(), 1, 0);
-		this.npcDrops.put(NpcId.BABY_BLUE_DRAGON.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.KHAZARD_OGRE.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_TRAINING_CAMP.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_CHIEFTAN.id(), currentNpcDrops); // Ogre Chieftan (531)
-		this.npcDrops.put(NpcId.OGRE_SHAMAN.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_GUARD_EASTGATE.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_GUARD_WESTGATE.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_GUARD_BATTLEMENT.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OG.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.GREW.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.TOBAN.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.GORAD.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_GUARD_CAVE_ENTRANCE.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_MERCHANT.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_TRADER_GENSTORE.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_TRADER_ROCKCAKE.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_TRADER_FOOD.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.CITY_GUARD.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_GUARD_BRIDGE.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_CITIZEN.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.OGRE_GENERAL.id(), currentNpcDrops);
-
-		// NPCs that only drop ashes
-		currentNpcDrops = new DropTable();
-		currentNpcDrops.addItemDrop(ItemId.ASHES.id(), 1, 0);
-		this.npcDrops.put(NpcId.DELRITH.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.THRANTAX.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.CHRONOZON.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.BLACK_DEMON_GRANDTREE.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.DOOMION.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.HOLTHION.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.NEZIKCHENED.id(), currentNpcDrops);
 
 		// Unicorn (0)
 		currentNpcDrops = new DropTable();
@@ -165,8 +187,13 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 3, 3);
 		currentNpcDrops.addItemDrop(ItemId.BODY_RUNE.id(), 1, 3);
 		currentNpcDrops.addItemDrop(ItemId.BRONZE_ARROWS.id(), 7, 3);
-		// The rest of the drops aren't outta 128, so I don't know what to do...
-		
+		// Herb drop table
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 24, 3);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 16, 7);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 8);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 3, 13);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 34);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 36);
 		// Not sure which goblin??? Why tres??
 		// this.npcDrops.put(NpcId.GOBLIN_LVL13.id(), currentNpcDrops);
 		// this.npcDrops.put(NpcId.GOBLIN1_LVL13.id(), currentNpcDrops);
@@ -249,6 +276,7 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.BEER.id(), 1, 2);
 		currentNpcDrops.addItemDrop(ItemId.BRASS_NECKLACE.id(), 1, 1);
 		currentNpcDrops.addItemDrop(ItemId.CHEFS_HAT.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 50);
 		this.npcDrops.put(NpcId.GOBLIN_LVL7.id(), currentNpcDrops);
 
 		// Farmer (63, 319)
