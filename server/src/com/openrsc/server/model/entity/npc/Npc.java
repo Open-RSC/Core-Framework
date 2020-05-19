@@ -464,13 +464,15 @@ public class Npc extends Mob {
 
 	private boolean wantUnholySymbols(Player owner) {
 		if (owner.getQuestStage(Quests.OBSERVATORY_QUEST) > -1)
-			return false; // Quest started.
+			return true; // Quest started.
 
-		if (owner.getConfig().WANT_CUSTOM_QUESTS)
+		if (owner.getConfig().WANT_CUSTOM_QUESTS) {
 			if (owner.getCache().hasKey("want_unholy_symbol_drops") &&
-				!owner.getCache().getBoolean("want_unholy_symbol_drops"))
-				return false; //
-		return true;
+				owner.getCache().getBoolean("want_unholy_symbol_drops")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void dropStackItem(final int dropID, int amount, Player owner) {
