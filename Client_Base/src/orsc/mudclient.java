@@ -11051,11 +11051,13 @@ public final class mudclient implements Runnable {
 					}
 
 					if (this.localPlayer.currentZ != this.cameraPositionZ) {
-						this.cameraPositionZ += (this.localPlayer.currentZ - this.cameraPositionZ);
+						this.cameraPositionZ += (this.localPlayer.currentZ - this.cameraPositionZ)
+							/ ((this.cameraZoom - 500) / 15 + 16);
 					}
 
 					if (this.cameraPositionX != this.localPlayer.currentX) {
-						this.cameraPositionX += (this.localPlayer.currentX - this.cameraPositionX);
+						this.cameraPositionX += (this.localPlayer.currentX - this.cameraPositionX)
+							/ ((this.cameraZoom - 500) / 15 + 16);
 					}
 				} else if (this.cameraPositionX - this.localPlayer.currentX < -500
 					|| this.cameraPositionX - this.localPlayer.currentX > 500
