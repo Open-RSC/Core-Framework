@@ -1,11 +1,10 @@
 package com.openrsc.server.constants;
 
 import com.openrsc.server.content.DropTable;
-import com.openrsc.server.model.container.Item;
-import com.openrsc.server.model.entity.Mob;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 public class NpcDrops {
 
@@ -142,6 +141,7 @@ public class NpcDrops {
 	private void generateBigBoneDrops() {
 		// NPCs that only drop Big Bones
 		this.bigBoneNpcs.add(NpcId.BABY_BLUE_DRAGON.id());
+		this.bigBoneNpcs.add(NpcId.OGRE.id());
 		this.bigBoneNpcs.add(NpcId.KHAZARD_OGRE.id());
 		this.bigBoneNpcs.add(NpcId.OGRE_TRAINING_CAMP.id());
 		this.bigBoneNpcs.add(NpcId.OGRE_CHIEFTAN.id());
@@ -169,7 +169,6 @@ public class NpcDrops {
 		this.bigBoneNpcs.add(NpcId.ICE_GIANT.id());
 		this.bigBoneNpcs.add(NpcId.MOSS_GIANT.id());
 		this.bigBoneNpcs.add(NpcId.MOSS_GIANT2.id());
-		this.bigBoneNpcs.add(NpcId.OGRE.id());
 		this.bigBoneNpcs.add(NpcId.JOGRE.id());
 	}
 
@@ -348,7 +347,27 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.SKELETON_LVL21.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.SKELETON_MAGE.id(), currentNpcDrops);
 
-		// Zombie Level 24 (41, 516)
+		// Zombie Level 24 (41, 359, 516)
+		currentNpcDrops = new DropTable();
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 64);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 18, 21);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 10, 10);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 26, 8);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 35, 6);
+		currentNpcDrops.addItemDrop(ItemId.IRON_MACE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.AIR_RUNE.id(), 2, 3);
+		currentNpcDrops.addItemDrop(ItemId.IRON_DAGGER.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.CROSSBOW.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.BODY_RUNE.id(), 2, 2);
+		currentNpcDrops.addItemDrop(ItemId.TINDERBOX.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_KITE_SHIELD.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.COSMIC_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.TIN_ORE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.EYE_OF_NEWT.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 5, 1);
+		this.npcDrops.put(NpcId.ZOMBIE_LVL24_GEN.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.ZOMBIE_INVOKED.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.TARGET_PRACTICE_ZOMBIE.id(), currentNpcDrops);
 
 		// Giant Bat (43)
 		currentNpcDrops = new DropTable();
@@ -418,6 +437,25 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.BEAR.id(), currentNpcDrops);
 
 		// Zombie Level 19 (52)
+		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 25);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 8);
+		currentNpcDrops.addItemDrop(ItemId.FISHING_BAIT.id(), 5, 46);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 10, 11);
+		currentNpcDrops.addItemDrop(ItemId.BODY_RUNE.id(), 4, 5);
+		currentNpcDrops.addItemDrop(ItemId.MIND_RUNE.id(), 3, 5);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 4, 4);
+		currentNpcDrops.addItemDrop(ItemId.AIR_RUNE.id(), 9, 4);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_ARROWS.id(), 8, 4);
+		currentNpcDrops.addItemDrop(ItemId.MEDIUM_BRONZE_HELMET.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 18, 3);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 28, 2);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 13, 2);
+		currentNpcDrops.addItemDrop(ItemId.COPPER_ORE.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_LONG_SWORD.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.IRON_AXE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 4, 1);
+		this.npcDrops.put(NpcId.ZOMBIE_LVL19.id(), currentNpcDrops);
 
 		// Darkwizard Level 13 (57)
 
@@ -456,6 +494,33 @@ public class NpcDrops {
 		// Hobgoblin Level 32 (67)
 
 		// Zombie Level 32 (68)
+		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 20);
+		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 10);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 25);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 10, 24);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 25, 8);
+		currentNpcDrops.addItemDrop(ItemId.MEDIUM_IRON_HELMET.id(), 1, 6);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_BAR.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.IRON_SHORT_SWORD.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 45, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 65, 3);
+		currentNpcDrops.addItemDrop(ItemId.WATER_RUNE.id(), 6, 3);
+		currentNpcDrops.addItemDrop(ItemId.AIR_RUNE.id(), 10, 3);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 3, 3);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.IRON_AXE.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.IRON_SCIMITAR.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_CHAIN_MAIL_BODY.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.COSMIC_RUNE.id(), 1, 1);
+		this.npcDrops.put(NpcId.ZOMBIE_LVL32.id(), currentNpcDrops);
+
+		// Zombie (Maze) (180)
+		currentNpcDrops = currentNpcDrops.clone();
+		currentNpcDrops.addItemDrop(ItemId.BLUE_KEY.id(), 1, 0);
+		this.npcDrops.put(NpcId.ZOMBIE_WMAZEKEY.id(), currentNpcDrops);
 
 		// Barbarian (76)
 
@@ -497,8 +562,6 @@ public class NpcDrops {
 
 		// Warrior (86, 159, 320)
 
-		// Zombie (Maze) (180)
-
 		// Melzar the Mad (182)
 
 		// Greater Demon (184)
@@ -527,6 +590,20 @@ public class NpcDrops {
 		// Blue Dragon (202)
 
 		// Zombie (Entrana) (214)
+		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 4);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 8);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_AXE.id(), 1, 50);
+		currentNpcDrops.addItemDrop(ItemId.FISHING_BAIT.id(), 5, 46);
+		currentNpcDrops.addItemDrop(ItemId.MEDIUM_BRONZE_HELMET.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.AIR_RUNE.id(), 9, 4);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_ARROWS.id(), 8, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 18, 3);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 28, 2);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_LONG_SWORD.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.IRON_AXE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 4, 1);
+		this.npcDrops.put(NpcId.ZOMBIE_ENTRANA.id(), currentNpcDrops);
 
 		// Bandit (Aggressive) (232)
 
@@ -588,8 +665,6 @@ public class NpcDrops {
 
 		// Necromancer (358)
 
-		// Zombie Level 24 (359)
-
 		// First plague sheep (430)
 		currentNpcDrops = new DropTable();
 		currentNpcDrops.addItemDrop(ItemId.PLAGUED_SHEEP_REMAINS_1.id(), 1, 0);
@@ -636,5 +711,11 @@ public class NpcDrops {
 
 	public DropTable getDropTable(int npcId) {
 		return this.npcDrops.get(npcId);
+	}
+
+	public void debugDropTables() {
+		for (Map.Entry<Integer, DropTable> table : this.npcDrops.entrySet()) {
+			System.out.println(table.getKey() + ": " + table.getValue().getTotalWeight());
+		}
 	}
 }

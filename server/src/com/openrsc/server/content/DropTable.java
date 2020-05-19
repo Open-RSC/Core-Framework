@@ -22,6 +22,22 @@ public class DropTable {
 		totalWeight = 0;
 	}
 
+	public DropTable clone() {
+		DropTable clonedDropTable = new DropTable();
+		for (Drop drop : drops) {
+			if (drop.type == dropType.ITEM) {
+				clonedDropTable.addItemDrop(drop.id, drop.amount, drop.weight, drop.noted);
+			} else if (drop.type == dropType.TABLE) {
+				clonedDropTable.addTableDrop(drop.table, drop.weight);
+			}
+		}
+		return clonedDropTable;
+	}
+
+	public int getTotalWeight() {
+		return totalWeight;
+	}
+
 	public void addEmptyDrop(int weight) {
 		drops.add(new Drop(ItemId.NOTHING.id(), 0, weight, false, dropType.NOTHING));
 		this.totalWeight += weight;
@@ -114,18 +130,6 @@ public class DropTable {
 			}
 		}
 		return false;
-	}
-
-	public DropTable clone() {
-		DropTable clonedDropTable = new DropTable();
-		for (Drop drop : drops) {
-			if (drop.type == dropType.ITEM) {
-				clonedDropTable.addItemDrop(drop.id, drop.amount, drop.weight, drop.noted);
-			} else if (drop.type == dropType.TABLE) {
-				clonedDropTable.addTableDrop(drop.table, drop.weight);
-			}
-		}
-		return clonedDropTable;
 	}
 
 	private class Drop {

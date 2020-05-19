@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.commands;
 
+import com.openrsc.server.constants.NpcDrops;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
@@ -410,6 +411,9 @@ public final class Development implements CommandTrigger {
 		}
 		else if (cmd.equalsIgnoreCase("serverstats")) {
 			ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
+		}
+		else if (cmd.equalsIgnoreCase("debugdroptables")) {
+			new NpcDrops().debugDropTables();
 		}
 	}
 }
