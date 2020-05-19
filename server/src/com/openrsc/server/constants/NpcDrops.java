@@ -292,6 +292,32 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.MUGGER.id(), currentNpcDrops);
 
 		// Lesser Demon (22)
+		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 1);
+		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 120, 40);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 40, 29);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 200, 10);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 40, 8);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 10, 7);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 8, 5);
+		currentNpcDrops.addItemDrop(ItemId.STEEL_AXE.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.LARGE_STEEL_HELMET.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.WINE.id(), 2, 3);
+		currentNpcDrops.addItemDrop(ItemId.STEEL_SCIMITAR.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.DEATH_RUNE.id(), 2, 3);
+		currentNpcDrops.addItemDrop(ItemId.GOLD.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 20, 1);
+		currentNpcDrops.addItemDrop(ItemId.MITHRIL_CHAIN_MAIL_BODY.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.MITHRIL_SQUARE_SHIELD.id(), 1,1);
+		currentNpcDrops.addItemDrop(ItemId.MEDIUM_RUNE_HELMET.id(), 1, 1);
+		this.npcDrops.put(NpcId.LESSER_DEMON.id(), currentNpcDrops);
+
+		// Lesser Demon (Maze) (181)
+		currentNpcDrops = currentNpcDrops.clone();
+		currentNpcDrops.addItemDrop(ItemId.BLACK_KEY.id(), 1, 0);
+		this.npcDrops.put(NpcId.LESSER_DEMON_WMAZEKEY.id(), currentNpcDrops);
 
 		// Jonny the Beard (25)
 		currentNpcDrops = new DropTable();
@@ -299,6 +325,28 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.JONNY_THE_BEARD.id(), currentNpcDrops);
 
 		// Skeleton Level 21 (40, 498)
+		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 21);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 10);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 2, 28);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 6, 21);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 8);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 13, 7);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 20, 4);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_ARROWS.id(), 8, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 30, 3);
+		currentNpcDrops.addItemDrop(ItemId.MEDIUM_BRONZE_HELMET.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.MIND_RUNE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 2, 3);
+		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.WATER_RUNE.id(), 2, 3);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_CHAIN_MAIL_BODY.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.LEATHER_GLOVES.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.IRON_MACE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.BUCKET.id(), 1, 1);
+		this.npcDrops.put(NpcId.SKELETON_LVL21.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.SKELETON_MAGE.id(), currentNpcDrops);
 
 		// Zombie Level 24 (41, 516)
 
@@ -307,9 +355,61 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.BAT_BONES.id(), 1, 0);
 		this.npcDrops.put(NpcId.GIANT_BAT.id(), currentNpcDrops);
 
-		// Skeleton Level 31 (45)
+		// Skeleton Level 31 (45, 179, 195)
+		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 20);
+		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 10);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 25);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 10, 24);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 25, 8);
+		currentNpcDrops.addItemDrop(ItemId.MEDIUM_IRON_HELMET.id(), 1, 6);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_BAR.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.IRON_SHORT_SWORD.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 45, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 65, 3);
+		currentNpcDrops.addItemDrop(ItemId.WATER_RUNE.id(), 6, 3);
+		currentNpcDrops.addItemDrop(ItemId.AIR_RUNE.id(), 10, 3);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 3, 3);
+		currentNpcDrops.addItemDrop(ItemId.IRON_AXE.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.IRON_SCIMITAR.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_CHAIN_MAIL_BODY.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.COSMIC_RUNE.id(), 1, 1);
+		this.npcDrops.put(NpcId.SKELETON_LVL31.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.SKELETON_LVL54.id(), currentNpcDrops);
+
+		// Skeleton (Maze) (179)
+		currentNpcDrops = currentNpcDrops.clone();
+		currentNpcDrops.addItemDrop(ItemId.YELLOW_KEY.id(), 1, 0);
+		this.npcDrops.put(NpcId.SKELETON_WMAZEKEY.id(), currentNpcDrops);
 
 		// Skeleton Level 25 (46)
+		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 21);
+		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 20);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 2, 18);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 12, 15);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_ARROWS.id(), 2, 7);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 4, 7);
+		currentNpcDrops.addItemDrop(ItemId.IRON_DAGGER.id(), 1, 6);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_ARROWS.id(), 5, 4);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SHORT_SWORD.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 16, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 25, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 33, 4);
+		currentNpcDrops.addItemDrop(ItemId.AIR_RUNE.id(), 8, 2);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 2, 2);
+		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 2, 2);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_LONG_SWORD.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 2, 1);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 48, 1);
+		currentNpcDrops.addItemDrop(ItemId.GRAIN.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.IRON_ORE.id(), 1, 1);
+		this.npcDrops.put(NpcId.SKELETON_LVL25.id(), currentNpcDrops);
 
 		// Bear (49)
 		currentNpcDrops = new DropTable();
@@ -397,11 +497,7 @@ public class NpcDrops {
 
 		// Warrior (86, 159, 320)
 
-		// Skeleton (Maze) (179)
-
 		// Zombie (Maze) (180)
-
-		// Lesser Demon (Maze) (181)
 
 		// Melzar the Mad (182)
 
@@ -416,8 +512,6 @@ public class NpcDrops {
 		// Black Knight (Fortress) (189)
 
 		// Chaos Dwarf (190)
-
-		// Skeleton Level 54 (195)
 
 		// Dragon (196)
 		currentNpcDrops = new DropTable();

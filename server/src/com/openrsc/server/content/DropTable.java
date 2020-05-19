@@ -16,7 +16,6 @@ public class DropTable {
 	private static int RING_OF_WEALTH_BOOST_NUMERATOR = 1;
 	private static int RING_OF_WEALTH_BOOST_DENOMINATOR = 128;
 
-
 	public DropTable() {
 		drops = new ArrayList<>();
 		accessors = new ArrayList<>();
@@ -115,6 +114,18 @@ public class DropTable {
 			}
 		}
 		return false;
+	}
+
+	public DropTable clone() {
+		DropTable clonedDropTable = new DropTable();
+		for (Drop drop : drops) {
+			if (drop.type == dropType.ITEM) {
+				clonedDropTable.addItemDrop(drop.id, drop.amount, drop.weight, drop.noted);
+			} else if (drop.type == dropType.TABLE) {
+				clonedDropTable.addTableDrop(drop.table, drop.weight);
+			}
+		}
+		return clonedDropTable;
 	}
 
 	private class Drop {
