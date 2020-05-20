@@ -457,11 +457,17 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 4, 1);
 		this.npcDrops.put(NpcId.ZOMBIE_LVL19.id(), currentNpcDrops);
 
-		// Darkwizard Level 13 (57)
+		// Darkwizard Level 13 (57) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.DARKWIZARD_LVL13.id(), currentNpcDrops);
 
-		// Darkwizard Level 25 (60)
+		// Darkwizard Level 25 (60) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.DARKWIZARD_LVL25.id(), currentNpcDrops);
 
-		// Giant (61)
+		// Giant (61) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.GIANT.id(), currentNpcDrops);
 
 		// Goblin Level 7 (62)
 		currentNpcDrops = new DropTable();
@@ -483,15 +489,31 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.CHEFS_HAT.id(), 1, 1);
 		this.npcDrops.put(NpcId.GOBLIN_LVL7.id(), currentNpcDrops);
 
-		// Farmer (63, 319)
+		// Farmer (63, 319) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.FARMER1.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.FARMER2.id(), currentNpcDrops);
 
-		// Thief (64, 351, 352)
+		// Thief (64, 351, 352) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.THIEF_GENERIC.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.THIEF_BLANKET.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.HEAD_THIEF.id(), currentNpcDrops);
 
-		// Guard (65, 321, 420, 710)
+		// Guard (65, 321, 420, 710) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.GUARD1.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.GUARD_ARDOUGNE.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.CARNILLEAN_GUARD.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.DRAFT_MERCENARY_GUARD.id(), currentNpcDrops);
 
-		// Black Knight (66)
+		// Black Knight (66) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.BLACK_KNIGHT.id(), currentNpcDrops);
 
-		// Hobgoblin Level 32 (67)
+		// Hobgoblin Level 32 (67) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.HOBGOBLIN_LVL32.id(), currentNpcDrops);
 
 		// Zombie Level 32 (68)
 		currentNpcDrops = new DropTable();
@@ -522,9 +544,13 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.BLUE_KEY.id(), 1, 0);
 		this.npcDrops.put(NpcId.ZOMBIE_WMAZEKEY.id(), currentNpcDrops);
 
-		// Barbarian (76)
+		// Barbarian (76) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.BARBARIAN.id(), currentNpcDrops);
 
-		// Gunthor the Brave (78)
+		// Gunthor the Brave (78) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.GUNTHOR_THE_BRAVE.id(), currentNpcDrops);
 
 		// Wizard (81)
 		currentNpcDrops = new DropTable();
@@ -537,34 +563,60 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.BLACK_CAPE.id(), 1, 0);
 		this.npcDrops.put(NpcId.HIGHWAYMAN.id(), currentNpcDrops);
 
-		// Dwarf (94, 356, 694. 699)
+		// Dwarf (94, 356, 694. 699) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.DWARF.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.MOUNTAIN_DWARF_UNDERGROUND.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.DWARF2.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.DWARF3.id(), currentNpcDrops);
 
-		// Fortress Guard (100)
+		// Fortress Guard (100) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.GUARD_FORTRESS.id(), currentNpcDrops);
 
-		// White Knight (102)
+		// White Knight (102) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.WHITE_KNIGHT.id(), currentNpcDrops);
 
-		// Moss Giant (104, 594)
+		// Moss Giant (104, 594) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.MOSS_GIANT.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.MOSS_GIANT2.id(), currentNpcDrops);
 
-		// Imp (114)
+		// Imp (114) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.IMP.id(), currentNpcDrops);
 
-		// Ice Giant (135)
+		// Ice Giant (135) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.ICE_GIANT.id(), currentNpcDrops);
 
-		// Pirate Level 27 (137)
+		// Pirate Level 27 (137) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.PIRATE_LVL27.id(), currentNpcDrops);
 
 		// Monk of Zamorak Level 29 (139)
 		currentNpcDrops = new DropTable();
 		currentNpcDrops.addItemDrop(ItemId.STEEL_MACE.id(), 1, 0);
 		this.npcDrops.put(NpcId.MONK_OF_ZAMORAK_MACE.id(), currentNpcDrops);
 
-		// Goblin Level 13 (153, 154)
+		// Ice Warrior (158) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.ICE_WARRIOR.id(), currentNpcDrops);
 
-		// Ice Warrior (158)
+		// Warrior (86, 159, 320) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.ALKHARID_WARRIOR.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.WARRIOR_VARROCK.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.WARRIOR_ARDOUGNE.id(), currentNpcDrops);
 
-		// Warrior (86, 159, 320)
+		// Melzar the Mad (182) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.MELZAR_THE_MAD.id(), currentNpcDrops);
 
-		// Melzar the Mad (182)
-
-		// Greater Demon (184)
+		// Greater Demon (184) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.GREATER_DEMON.id(), currentNpcDrops);
 
 		// Bear Level 26 (188)
 		currentNpcDrops = new DropTable();
@@ -572,22 +624,34 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.FUR.id(), 1, 0);
 		this.npcDrops.put(NpcId.BEAR_LVL26.id(), currentNpcDrops);
 
-		// Black Knight (Fortress) (189)
+		// Black Knight (Fortress) (189) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.BLACK_KNIGHT_AGGRESSIVE.id(), currentNpcDrops);
 
-		// Chaos Dwarf (190)
+		// Chaos Dwarf (190) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.CHAOS_DWARF.id(), currentNpcDrops);
 
 		// Dragon (196)
 		currentNpcDrops = new DropTable();
 		currentNpcDrops.addItemDrop(ItemId.DRAGON_BONES.id(), 1, 0);
 		this.npcDrops.put(NpcId.DRAGON.id(), currentNpcDrops);
 
-		// Dark Warrior (199)
+		// Dark Warrior (199) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.DARK_WARRIOR.id(), currentNpcDrops);
 
-		// Druid (200)
+		// Druid (200) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.DRUID.id(), currentNpcDrops);
 
-		// Red Dragon (201)
+		// Red Dragon (201) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.RED_DRAGON.id(), currentNpcDrops);
 
-		// Blue Dragon (202)
+		// Blue Dragon (202) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.BLUE_DRAGON.id(), currentNpcDrops);
 
 		// Zombie (Entrana) (214)
 		currentNpcDrops = new DropTable();
@@ -605,43 +669,71 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 4, 1);
 		this.npcDrops.put(NpcId.ZOMBIE_ENTRANA.id(), currentNpcDrops);
 
-		// Bandit (Aggressive) (232)
+		// Bandit (Aggressive) (232) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.BANDIT_AGGRESSIVE.id(), currentNpcDrops);
 
-		// Bandit (Not Aggressive) (234)
+		// Bandit (Not Aggressive) (234) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.BANDIT_PACIFIST.id(), currentNpcDrops);
 
-		// Donny the Lad (236)
+		// Donny the Lad (236) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.DONNY_THE_LAD.id(), currentNpcDrops);
 
-		// Black Heather (237)
+		// Black Heather (237) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.BLACK_HEATHER.id(), currentNpcDrops);
 
-		// Speedy Keith (238)
+		// Speedy Keith (238) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.SPEEDY_KEITH.id(), currentNpcDrops);
 
 		// Grey Wolf (243)
 		currentNpcDrops = new DropTable();
 		currentNpcDrops.addItemDrop(ItemId.GREY_WOLF_FUR.id(), 1, 0);
 		this.npcDrops.put(NpcId.GREY_WOLF.id(), currentNpcDrops);
 
-		// Thug (251)
+		// Thug (251) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.THUG.id(), currentNpcDrops);
 
 		// Firebird (252)
 		currentNpcDrops = new DropTable();
 		currentNpcDrops.addItemDrop(ItemId.RED_FIREBIRD_FEATHER.id(), 1, 0);
 		this.npcDrops.put(NpcId.FIREBIRD.id(), currentNpcDrops);
 
-		// Ice Queen (254)
+		// Ice Queen (254) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.ICE_QUEEN.id(), currentNpcDrops);
 
-		// Pirate Level 30 (264)
+		// Pirate Level 30 (264) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.PIRATE_LVL30.id(), currentNpcDrops);
 
-		// Jailer (265)
+		// Jailer (265) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.JAILER.id(), currentNpcDrops);
 
-		// Lord Darquarius (266)
+		// Lord Darquarius (266) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.LORD_DARQUARIUS.id(), currentNpcDrops);
 
-		// Chaos Druid (270)
+		// Chaos Druid (270) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.CHAOS_DRUID.id(), currentNpcDrops);
 
-		// Renegade Knight (277)
+		// Renegade Knight (277) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.RENEGADE_KNIGHT.id(), currentNpcDrops);
 
-		// Black Demon (290)
+		// Black Demon (290) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.BLACK_DEMON.id(), currentNpcDrops);
 
-		// Black Dragon (291)
+		// Black Dragon (291) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.BLACK_DRAGON.id(), currentNpcDrops);
 
 		// Animated Axe (295)
 		currentNpcDrops = new DropTable();
@@ -653,17 +745,29 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.UNICORN_HORN.id(), 1, 0);
 		this.npcDrops.put(NpcId.BLACK_UNICORN.id(), currentNpcDrops);
 
-		// Otherworldly Being (298)
+		// Otherworldly Being (298) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.OTHERWORLDLY_BEING.id(), currentNpcDrops);
 
-		// Hobgoblin Level 48 (311)
+		// Hobgoblin Level 48 (311) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.HOBGOBLIN_LVL48.id(), currentNpcDrops);
 
-		// Paladin (323)
+		// Paladin (323) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.PALADIN.id(), currentNpcDrops);
 
-		// Rogue (342)
+		// Rogue (342) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.ROGUE.id(), currentNpcDrops);
 
-		// Fire Giant (344)
+		// Fire Giant (344) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.FIRE_GIANT.id(), currentNpcDrops);
 
-		// Necromancer (358)
+		// Necromancer (358) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.NECROMANCER.id(), currentNpcDrops);
 
 		// First plague sheep (430)
 		currentNpcDrops = new DropTable();
@@ -685,22 +789,34 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.PLAGUED_SHEEP_REMAINS_4.id(), 1, 0);
 		this.npcDrops.put(NpcId.FOURTH_PLAGUE_SHEEP.id(), currentNpcDrops);
 
-		// King Black Dragon (477)
+		// King Black Dragon (477) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.KING_BLACK_DRAGON.id(), currentNpcDrops);
 
-		// Jogre (523)
+		// Jogre (523) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.JOGRE.id(), currentNpcDrops);
 
-		// Chaos Druid Warrior (555)
+		// Chaos Druid Warrior (555) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.CHAOS_DRUID_WARRIOR.id(), currentNpcDrops);
 
-		// Salarin the Twisted (567)
+		// Salarin the Twisted (567) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.SALARIN_THE_TWISTED.id(), currentNpcDrops);
 
-		// Earth Warrior (584)
+		// Earth Warrior (584) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.EARTH_WARRIOR.id(), currentNpcDrops);
 
 		// Ugthanki (653)
 		currentNpcDrops = new DropTable();
 		currentNpcDrops.addItemDrop(ItemId.RAW_UGTHANKI_MEAT.id(), 1, 0);
 		this.npcDrops.put(NpcId.UGTHANKI.id(), currentNpcDrops);
 
-		// Goblin Level 19 (660)
+		// Goblin Level 19 (660) TODO
+		currentNpcDrops = new DropTable();
+		this.npcDrops.put(NpcId.GOBLIN_OBSERVATORY.id(), currentNpcDrops);
 
 		// Oomlie Bird (777)
 		currentNpcDrops = new DropTable();
