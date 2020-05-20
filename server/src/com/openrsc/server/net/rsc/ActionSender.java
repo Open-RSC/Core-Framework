@@ -1293,15 +1293,13 @@ public class ActionSender {
 
 	public static void sendBankPinInterface(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_BANK_PIN_INTERFACE.opcode);
-		pb.writeByte(1); // interface ID
-		pb.writeByte(0);
+		pb.writeByte(1);
 		player.write(pb.toPacket());
 	}
 
 	public static void sendCloseBankPinInterface(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_BANK_PIN_INTERFACE.opcode);
-		pb.writeByte(1); // interface ID
-		pb.writeByte(1);
+		pb.writeByte(0);
 		player.write(pb.toPacket());
 	}
 

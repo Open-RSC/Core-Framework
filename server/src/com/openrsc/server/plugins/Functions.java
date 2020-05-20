@@ -639,7 +639,7 @@ public class Functions {
 		}
 
 		pin = showbankpin(player);
-
+		if (pin == null) return false;
 		request = new BankPinVerifyRequest(player.getWorld().getServer(), player, pin);
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
