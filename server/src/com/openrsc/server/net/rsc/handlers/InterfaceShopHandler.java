@@ -157,7 +157,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 					break;
 				}
 
-				int sellAmount = shop.getItemSellPrice(categoryID, def.getDefaultPrice(), ticker);
+				int sellAmount = ticker * shop.getItemSellPrice(categoryID, def.getDefaultPrice(), ticker);
 				totalMoney += sellAmount;
 				totalSold++;
 
