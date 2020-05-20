@@ -40,7 +40,13 @@ public class Equipment {
 
 	public Item getAmmoItem() {
 		synchronized (list) {
-			return list[12];
+			return list[EquipmentSlot.SLOT_AMMO.getIndex()];
+		}
+	}
+
+	public Item getNeckItem() {
+		synchronized (list) {
+			return list[EquipmentSlot.SLOT_NECK.getIndex()];
 		}
 	}
 
@@ -106,8 +112,14 @@ public class Equipment {
 							return -1;
 						} else {
 							list[slotID] = null;
-							player.updateWornItems(curEquipDef.getWieldPosition(),
-								player.getSettings().getAppearance().getSprite(curEquipDef.getWieldPosition()));
+							int appearanceId = player.getSettings().getAppearance().getSprite(curEquipDef.getWieldPosition());
+							int wieldPosition = curEquipDef.getWieldPosition();
+							if (wieldPosition > 4) {
+								appearanceId = 0;
+							}
+							player.updateWornItems(wieldPosition,
+								appearanceId,
+								curEquipDef.getWearableId(), false);
 							player.getWorld().getServer().getDatabase().equipmentRemoveFromPlayer(player, curEquip);
 						}
 						if (updateClient) {
@@ -143,7 +155,7 @@ public class Equipment {
 		//Check legitimacy of packet
 		if ((request.requestType == UnequipRequest.RequestType.FROM_EQUIPMENT
 			|| request.requestType == UnequipRequest.RequestType.FROM_BANK)
-			&& !player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			&& !player.getConfig().WANT_EQUIPMENT_TAB) {
 			player.setSuspiciousPlayer(true, "tried to unequip from a container they can't");
 			return false;
 		}
@@ -191,7 +203,7 @@ public class Equipment {
 					}
 					break;
 				case CHECK_IF_EQUIPMENT_TAB:
-					if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+					if (player.getConfig().WANT_EQUIPMENT_TAB) {
 						request.requestType = UnequipRequest.RequestType.FROM_EQUIPMENT;
 					} else {
 						request.requestType = UnequipRequest.RequestType.FROM_INVENTORY;
@@ -209,6 +221,7 @@ public class Equipment {
 
 		if (updateClient) {
 			ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
+			ActionSender.sendUpdatedPlayer(player);
 			ActionSender.sendInventory(player);
 		}
 		return true;
@@ -250,6 +263,7 @@ public class Equipment {
 		player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
 		if (updateClient) {
 			ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
+			ActionSender.sendUpdatedPlayer(player);
 		}
 		return true;
 	}
@@ -258,7 +272,7 @@ public class Equipment {
 	// Attempts to equip the item from the inventory tab.
 	private boolean equipItemFromInventory(EquipRequest request, boolean updateClient) {
 		synchronized (player.getCarriedItems()) {
-			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) { //on a world with equipment tab
+			if (player.getConfig().WANT_EQUIPMENT_TAB) { //on a world with equipment tab
 
 				ItemDefinition itemDef = request.item.getDef(player.getWorld());
 				if (itemDef == null)
@@ -317,7 +331,7 @@ public class Equipment {
 	private boolean equipItemFromBank(EquipRequest request, boolean updateClient) {
 		synchronized (list) {
 			synchronized (player.getBank().getItems()) {
-				if (!request.player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+				if (!request.player.getConfig().WANT_EQUIPMENT_TAB) {
 					request.player.setSuspiciousPlayer(true, "Tried to equip from bank on a world without equipment tab");
 					return false;
 				}
@@ -451,7 +465,7 @@ public class Equipment {
 	// Equipment::hasEquipped(int)
 	// Returns true if an item is equipped (marked wielded or in Equipment inventory).
 	public boolean hasEquipped(int id) {
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id) != -1;
 		} else {
 			for (Item i : player.getCarriedItems().getInventory().getItems()) {
@@ -472,11 +486,11 @@ public class Equipment {
 		Optional<Integer> optionalLevel = Optional.empty();
 		Optional<Integer> optionalSkillIndex = Optional.empty();
 		boolean ableToWield = true;
-		boolean bypass = !player.getWorld().getServer().getConfig().STRICT_CHECK_ALL &&
+		boolean bypass = !player.getConfig().STRICT_CHECK_ALL &&
 			(itemLower.startsWith("poisoned") &&
-				((itemLower.endsWith("throwing dart") && !player.getWorld().getServer().getConfig().STRICT_PDART_CHECK) ||
-					(itemLower.endsWith("throwing knife") && !player.getWorld().getServer().getConfig().STRICT_PKNIFE_CHECK) ||
-					(itemLower.endsWith("spear") && !player.getWorld().getServer().getConfig().STRICT_PSPEAR_CHECK))
+				((itemLower.endsWith("throwing dart") && !player.getConfig().STRICT_PDART_CHECK) ||
+					(itemLower.endsWith("throwing knife") && !player.getConfig().STRICT_PKNIFE_CHECK) ||
+					(itemLower.endsWith("spear") && !player.getConfig().STRICT_PSPEAR_CHECK))
 			);
 
 		// Spears and throwing knives
@@ -615,7 +629,7 @@ public class Equipment {
 	// Returns the total weapon aim from all equipment (+1 base).
 	public int getWeaponAim() {
 		int total = 1;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			synchronized (list) {
 				for (Item item : list)
 					total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponAimBonus();
@@ -636,7 +650,7 @@ public class Equipment {
 	// Returns the total weapon power from all equipment (+1 base).
 	public int getWeaponPower() {
 		int total = 1;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			synchronized (list) {
 				for (Item item : list)
 					total += item == null ? 0 : item.getDef(player.getWorld()).getWeaponPowerBonus();
@@ -657,7 +671,7 @@ public class Equipment {
 	// Returns the total armour value from all equipment (+1 base).
 	public int getArmour() {
 		int total = 1;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			synchronized (list) {
 				for (Item item : list)
 					total += item == null ? 0 : item.getDef(player.getWorld()).getArmourBonus();
@@ -678,7 +692,7 @@ public class Equipment {
 	// Returns the total magic power from all equipment (+1 base).
 	public int getMagic() {
 		int total = 1;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			synchronized (list) {
 				for (Item item : list)
 					total += item == null ? 0 : item.getDef(player.getWorld()).getMagicBonus();
@@ -699,7 +713,7 @@ public class Equipment {
 	// Returns the total prayer bonus from all equipment (+1 base).
 	public int getPrayer() {
 		int total = 1;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			synchronized (list) {
 				for (Item item : list)
 					total += item == null ? 0 : item.getDef(player.getWorld()).getPrayerBonus();

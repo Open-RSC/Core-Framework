@@ -43,7 +43,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 		int shopAmount = packet.readShort();
 		int amount = packet.readShort();
 		ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(categoryID);
-		if (def.isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (def.isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
 		}
@@ -117,6 +117,8 @@ public final class InterfaceShopHandler implements PacketHandler {
 			// TODO: How to handle this case?
 			if (amount < 0) return;
 
+			amount = Math.min(amount, player.getCarriedItems().getInventory().countId(categoryID, Optional.empty()));
+
 			int totalMoney = 0;
 			int totalSold = 0;
 			int ticker = 1;
@@ -146,13 +148,16 @@ public final class InterfaceShopHandler implements PacketHandler {
 				}
 				if (toSell == null) return;
 				ticker = Math.min(ticker, amount);
+				if (ticker > toSell.getAmount()) {
+					ticker = toSell.getAmount();
+				}
 				if (player.getCarriedItems().remove(new Item(toSell.getCatalogId(), ticker, toSell.getNoted(), toSell.getItemId())) == -1) {
 					/* Break, player doesn't have anything. */
 					player.message("You don't have that many items");
 					break;
 				}
 
-				int sellAmount = shop.getItemSellPrice(categoryID, def.getDefaultPrice(), ticker);
+				int sellAmount = ticker * shop.getItemSellPrice(categoryID, def.getDefaultPrice(), ticker);
 				totalMoney += sellAmount;
 				totalSold++;
 

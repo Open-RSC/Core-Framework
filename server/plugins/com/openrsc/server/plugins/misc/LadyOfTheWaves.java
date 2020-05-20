@@ -44,8 +44,8 @@ public class LadyOfTheWaves implements OpLocTrigger {
 	private void sail(Player player, int option) {
 		if (player.getCarriedItems().hasCatalogID(ItemId.SHIP_TICKET.id(), Optional.of(false))) {
 			player.getCarriedItems().remove(new Item(ItemId.SHIP_TICKET.id()));
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "@yel@Captain: Thanks for the ticket, let's set sail!");
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You board the ship and it sails off.");
+			mes(player, config().GAME_TICK * 2, "@yel@Captain: Thanks for the ticket, let's set sail!");
+			mes(player, config().GAME_TICK * 2, "You board the ship and it sails off.");
 			if (option == 0) {
 				player.teleport(545, 703);
 				player.message("Before you know it, you're in Khazard Port.");
@@ -54,10 +54,10 @@ public class LadyOfTheWaves implements OpLocTrigger {
 				player.message("Before you know it, you're in Port Sarim.");
 			}
 		} else {
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The captain shakes his head.");
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "@yel@Captain: Sorry Bwana, but you need a ticket!");
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "@yel@Captain: You can get one in Shilo Village ");
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "@yel@Captain: Just above the fishing shop. ");
+			mes(player, config().GAME_TICK * 2, "The captain shakes his head.");
+			mes(player, config().GAME_TICK * 2, "@yel@Captain: Sorry Bwana, but you need a ticket!");
+			mes(player, config().GAME_TICK * 2, "@yel@Captain: You can get one in Shilo Village ");
+			mes(player, config().GAME_TICK * 2, "@yel@Captain: Just above the fishing shop. ");
 		}
 	}
 }

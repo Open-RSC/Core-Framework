@@ -153,14 +153,14 @@ public final class Mining implements OpLocTrigger {
 				return;
 			}
 			player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+			delay(config().GAME_TICK * 3);
 			player.playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");
 			return;
 		}
 		if (player.click == 1) {
 			player.playSound("prospect");
 			player.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+			delay(config().GAME_TICK * 3);
 			if (rock.getID() == 496) {
 				// Tutorial Island rock handler
 				mes(player, "This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName(),
@@ -183,7 +183,7 @@ public final class Mining implements OpLocTrigger {
 				"You do not have a pickaxe which you have the mining level to use");
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+		if (config().STOP_SKILLING_FATIGUED >= 1
 			&& player.getFatigue() >= player.MAX_FATIGUE) {
 			player.playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
 			return;
@@ -193,7 +193,7 @@ public final class Mining implements OpLocTrigger {
 			return;
 		}
 
-		if(player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if(config().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, com.openrsc.server.constants.Skills.MINING);
 		}
 
@@ -205,11 +205,11 @@ public final class Mining implements OpLocTrigger {
 		player.playSound("mine");
 		thinkbubble(player, new Item(ItemId.IRON_PICKAXE.id()));
 		player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		delay(config().GAME_TICK * 3);
 
 		final Item ore = new Item(def.getOreId());
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
 				return;
@@ -243,7 +243,7 @@ public final class Mining implements OpLocTrigger {
 				}
 				if (rock.getID() == 496 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 51)
 					player.getCache().set("tutorial", 52);
-				if (!player.getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
+				if (!config().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
 					if (obj != null && obj.getID() == rock.getID() && def.getRespawnTime() > 0) {
 						GameObject newObject = new GameObject(player.getWorld(), rock.getLocation(), 98, rock.getDirection(), rock.getType());
 						changeloc(rock, def.getRespawnTime() * 1000, newObject.getID());
@@ -267,7 +267,7 @@ public final class Mining implements OpLocTrigger {
 
 		// Repeat
 		updatebatch();
-		boolean customBatch = player.getWorld().getServer().getConfig().BATCH_PROGRESSION;
+		boolean customBatch = config().BATCH_PROGRESSION;
 		if (!ifbatchcompleted()) {
 			if ((customBatch && !ifinterrupted()) || !customBatch) {
 				batchMining(player, rock, def, axeId, mineLvl);

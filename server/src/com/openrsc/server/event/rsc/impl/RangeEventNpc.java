@@ -122,7 +122,7 @@ public class RangeEventNpc extends GameTickEvent {
 			} else {
 				getOwner().resetPath();
 
-				boolean canShoot = System.currentTimeMillis() - getOwner().getAttribute("rangedTimeout", 0L) > getOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
+				boolean canShoot = System.currentTimeMillis() - getOwner().getAttribute("rangedTimeout", 0L) > getOwner().getConfig().GAME_TICK * 3;
 				if (canShoot) {
 					if (!PathValidation.checkPath(getWorld(), getOwner().getLocation(), target.getLocation())) {
 						getOwner().resetRange();
@@ -140,7 +140,7 @@ public class RangeEventNpc extends GameTickEvent {
 							return;
 						}
 					}
-					int damage = CombatFormula.doRangedDamage(getPlayerOwner(), 11, target);
+					int damage = CombatFormula.doRangedDamage(getPlayerOwner(), ItemId.LONGBOW.id(), ItemId.BRONZE_ARROWS.id(), target);
 					if (Formulae.looseArrow(damage)) {
 						GroundItem arrows = getArrows(11);
 						if (arrows == null) {

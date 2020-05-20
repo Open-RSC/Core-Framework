@@ -731,6 +731,11 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 			playerData.headSprite,
 			playerData.bodySprite
 		);
+		if (!pa.isValid()) {
+			pa = new PlayerAppearance(
+				0, 0, 0, 0, 1, 2
+			);
+		}
 
 		player.getSettings().setAppearance(pa);
 		player.setMale(playerData.male);
@@ -778,7 +783,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	private void loadPlayerBankPresets(final Player player) throws GameDatabaseException {
 
 		//Check the player is on a world with bank presets
-		if (!player.getWorld().getServer().getConfig().WANT_BANK_PRESETS)
+		if (!player.getConfig().WANT_BANK_PRESETS)
 			return;
 
 		//Make sure the player's bank isn't null

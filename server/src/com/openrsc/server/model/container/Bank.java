@@ -494,14 +494,31 @@ public class Bank {
 				);
 				if (depositItem == null) return;
 
+				// To deal with uncerting from the bank we must
+				// check for an uncerted id IFF the swap_cert flag
+				// has been toggled.
+				int itemToAddCatalogId = depositItem.getCatalogId();
+				int itemToAddAmount = requestedAmount;
+				if (player.getAttribute("swap_cert", false)) {
+					itemToAddCatalogId = uncertedID(itemToAddCatalogId);
+
+					if (itemToAddCatalogId != depositItem.getCatalogId()) {
+						itemToAddAmount *= 5;
+					}
+
+					player.setAttribute("swap_cert", false);
+				}
+
+				Item itemToAdd = new Item(itemToAddCatalogId, itemToAddAmount);
+
 				// Make sure they have enough space in their bank to deposit it
-				if (!canHold(depositItem)) {
+				if (!canHold(itemToAdd)) {
 					player.message("You don't have room for that in your bank");
 					return;
 				}
 
 				// Attempt to add the item to the bank (or fail out).
-				if (!add(new Item(depositItem.getCatalogId(), requestedAmount), updateClient)) return;
+				if (!add(itemToAdd, updateClient)) return;
 
 				// Check the item definition
 				ItemDefinition depositDef = depositItem.getDef(player.getWorld());
@@ -579,7 +596,6 @@ public class Bank {
 	}
 
 	private static int uncertedID(int itemID) {
-
 		if (itemID == ItemId.IRON_ORE_CERTIFICATE.id()) {
 			return ItemId.IRON_ORE.id();
 		} else if (itemID == ItemId.COAL_CERTIFICATE.id()) {

@@ -27,11 +27,7 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 
 	@Override
 	public boolean blockTakeObj(Player player, GroundItem i) {
-		if (i.getID() == ItemId.WINE_OF_ZAMORAK.id()) {
-			Npc zam = ifnearvisnpc(player, 7, NpcId.MONK_OF_ZAMORAK.id(), NpcId.MONK_OF_ZAMORAK_MACE.id());
-			return zam != null && !zam.inCombat();
-		}
-		return false;
+		return i.getID() == ItemId.WINE_OF_ZAMORAK.id();
 	}
 
 	@Override
@@ -84,7 +80,7 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 			final int newStat = Math.max(0, player.getSkills().getLevel(affectedStat) - lowerBy);
 			player.getSkills().setLevel(affectedStat, newStat);
 		}
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(config().GAME_TICK);
 		zam.setChasing(player);
 	}
 

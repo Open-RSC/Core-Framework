@@ -26,17 +26,15 @@ public class ThrowingEvent extends GameTickEvent {
 	private Mob target;
 
 	public ThrowingEvent(World world, Player owner, Mob victim) {
-		super(world, owner, 1, "Throwing Event");
+		super(world, owner, 1, "Throwing Event", false);
 		this.target = victim;
 		this.deliveredFirstProjectile = false;
 
 		long diff = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L);
-		boolean canShoot = diff >= getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
+		boolean canShoot = diff >= getPlayerOwner().getConfig().GAME_TICK * 3;
 		if (!canShoot) {
-			long delay = diff / getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK;
-			if (delay > 0) {
-				setDelayTicks(delay);
-			}
+			long delay = diff / getPlayerOwner().getConfig().GAME_TICK;
+			setDelayTicks(Math.max(2, delay));
 		}
 	}
 
@@ -172,7 +170,7 @@ public class ThrowingEvent extends GameTickEvent {
 			return;
 		}*/
 
-		int damage = CombatFormula.doRangedDamage(getPlayerOwner(), throwingID, target);
+		int damage = CombatFormula.doRangedDamage(getPlayerOwner(), throwingID, throwingID, target);
 
 		if (target.isNpc()) {
 			Npc npc = (Npc) target;
@@ -220,8 +218,8 @@ public class ThrowingEvent extends GameTickEvent {
 				target.startPoisonEvent();
 			}
 		}
-		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
 		getOwner().setKillType(2);
+		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
 		deliveredFirstProjectile = true;
 	}
 }

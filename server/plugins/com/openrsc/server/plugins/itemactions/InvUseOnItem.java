@@ -87,7 +87,7 @@ public class InvUseOnItem implements UseInvTrigger {
 			if (player.getCarriedItems().remove(new Item(ItemId.DAMP_STICKS.id())) > -1) {
 				player.message("you hold the glass to the sun");
 				player.message("above the damp sticks");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				player.message("the glass acts like a lens");
 				player.message("and drys the sticks out");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.DRY_STICKS.id()));
@@ -191,7 +191,7 @@ public class InvUseOnItem implements UseInvTrigger {
 			if (player.getCarriedItems().remove(item1) > -1 && player.getCarriedItems().remove(item2) > -1) {
 				player.message("You join the two halves of the key together");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.CRYSTAL_KEY.id(), 1));
-				if (player.getWorld().getServer().getConfig().CRYSTAL_KEY_GIVES_XP) {
+				if (config().CRYSTAL_KEY_GIVES_XP) {
 					player.incExp(Skills.CRAFTING, 40, true);
 				}
 			}

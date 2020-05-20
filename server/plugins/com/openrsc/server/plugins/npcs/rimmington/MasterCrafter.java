@@ -19,7 +19,7 @@ public class MasterCrafter implements TalkNpcTrigger {
 			npcsay(player, n, "Hello welcome to the Crafter's guild",
 				"Accomplished crafters from all over the land come here",
 				"All to use our top notch workshops");
-			if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES
+			if (config().WANT_CUSTOM_SPRITES
 				&& getMaxLevel(player, Skills.CRAFTING) >= 99) {
 
 				if (multi(player, n, "That's a nice cape you've got on there",

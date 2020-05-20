@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.commands;
 
+import com.openrsc.server.constants.NpcDrops;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
@@ -11,6 +12,8 @@ import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class Development implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Development.class);
@@ -29,10 +32,10 @@ public final class Development implements CommandTrigger {
 	@Override
 	public void onCommand(Player player, String cmd, String[] args) {
 		if(messagePrefix == null) {
-			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			messagePrefix = config().MESSAGE_PREFIX;
 		}
 		if(badSyntaxPrefix == null) {
-			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			badSyntaxPrefix = config().BAD_SYNTAX_PREFIX;
 		}
 
 		if (cmd.equalsIgnoreCase("radiusnpc") || cmd.equalsIgnoreCase("createnpc") || cmd.equalsIgnoreCase("cnpc")|| cmd.equalsIgnoreCase("cpc")) {
@@ -408,6 +411,9 @@ public final class Development implements CommandTrigger {
 		}
 		else if (cmd.equalsIgnoreCase("serverstats")) {
 			ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
+		}
+		else if (cmd.equalsIgnoreCase("debugdroptables")) {
+			new NpcDrops().debugDropTables();
 		}
 	}
 }

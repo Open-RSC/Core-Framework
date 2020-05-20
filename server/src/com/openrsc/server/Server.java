@@ -417,7 +417,7 @@ public class Server implements Runnable {
 		if (updateEvent == null) {
 			return -1;
 		}
-		return updateEvent.timeTillNextRun();
+		return Math.max(updateEvent.timeTillNextRun() - System.currentTimeMillis(), 0);
 	}
 
 	public final long getLastGameStateDuration() {

@@ -91,6 +91,8 @@ public class Skills {
 		if (skill != com.openrsc.server.constants.Skills.PRAYER
 			&& skill != com.openrsc.server.constants.Skills.HITS && !fromRestoreEvent) {
 			mob.tryResyncStatEvent();
+		} else if (skill == com.openrsc.server.constants.Skills.PRAYER && mob.isPlayer()) {
+			((Player)mob).setPrayerStatePoints(level * 120);
 		}
 	}
 

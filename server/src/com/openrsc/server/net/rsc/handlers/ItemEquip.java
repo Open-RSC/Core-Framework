@@ -40,7 +40,7 @@ public final class ItemEquip implements PacketHandler {
 			request.requestType = EquipRequest.RequestType.FROM_INVENTORY;
 			request.inventorySlot = inventorySlot;
 		} else if (opcode == ITEM_EQUIP_FROM_BANK) {
-			if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			if (!player.getConfig().WANT_EQUIPMENT_TAB) {
 				player.setSuspiciousPlayer(true, "tried to equip from bank on a classic world");
 				return;
 			}
@@ -64,7 +64,7 @@ public final class ItemEquip implements PacketHandler {
 			return;
 		}
 		//Check the weapon can be wielded on their world
-		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD && request.item.getDef(player.getWorld()).isMembersOnly()) {
+		if (!player.getConfig().MEMBER_WORLD && request.item.getDef(player.getWorld()).isMembersOnly()) {
 			player.message("You need to be a member to use this object");
 			return;
 		}

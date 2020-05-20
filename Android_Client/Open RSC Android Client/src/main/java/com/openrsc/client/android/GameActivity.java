@@ -16,6 +16,7 @@ import orsc.PacketHandler;
 import orsc.mudclient;
 import orsc.multiclient.ClientPort;
 import orsc.osConfig;
+import orsc.Config;
 
 public class GameActivity extends Activity implements ClientPort {
 
@@ -23,6 +24,7 @@ public class GameActivity extends Activity implements ClientPort {
     private mudclient mudclient;
     private RSCBitmapSurfaceView gameView;
 
+    private boolean hadSideMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,17 +160,24 @@ public class GameActivity extends Activity implements ClientPort {
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         Objects.requireNonNull(imm).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         if (imm.isAcceptingText()) osConfig.F_SHOWING_KEYBOARD = true;
+        if (Config.S_SIDE_MENU_TOGGLE) {
+        	hadSideMenu = mudclient.getOptionSideMenu();
+			mudclient.setOptionSideMenu(false);
+		}
     }
 
     public void closeKeyboard() {
         ((InputMethodManager) Objects.requireNonNull(getSystemService(Activity.INPUT_METHOD_SERVICE)))
                 .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
         osConfig.F_SHOWING_KEYBOARD = false;
+		if (Config.S_SIDE_MENU_TOGGLE) {
+			mudclient.setOptionSideMenu(hadSideMenu);
+		}
     }
 
     @Override
     public void setTitle(String title) {
-        
+
     }
 
     @Override

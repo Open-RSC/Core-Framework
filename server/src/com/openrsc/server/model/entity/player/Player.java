@@ -11,7 +11,6 @@ import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyInvite;
 import com.openrsc.server.content.party.PartyPlayer;
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.event.DelayedEvent;
@@ -610,8 +609,13 @@ public final class Player extends Mob {
 	}
 
 	public void interruptPlugins() {
-		for (final PluginTask ownedPlugin : ownedPlugins) {
-			ownedPlugin.getScriptContext().setInterrupted(true);
+		try {
+			for (final PluginTask ownedPlugin : ownedPlugins) {
+				ownedPlugin.getScriptContext().setInterrupted(true);
+			}
+		}
+		catch (ConcurrentModificationException e) {
+			LOGGER.error(e);
 		}
 	}
 
@@ -818,9 +822,9 @@ public final class Player extends Mob {
 				request.equipmentSlot = Equipment.EquipmentSlot.get(slot);
 				if(!getCarriedItems().getEquipment().unequipItem(request)) {
 					request.requestType = UnequipRequest.RequestType.FROM_BANK;
-					getCarriedItems().getEquipment().unequipItem(request);
+					getCarriedItems().getEquipment().unequipItem(request, false);
 				}
-				ActionSender.sendEquipmentStats(this);
+
 				//check to make sure their item was actually unequipped.
 				//it might not have if they have a full inventory.
 				if (getCarriedItems().getEquipment().get(slot) != null) {
@@ -884,20 +888,14 @@ public final class Player extends Mob {
 				}
 
 				if (unWield) {
-					try {
-						item.setWielded(getWorld().getServer().getDatabase(), false);
-					}
-					catch (GameDatabaseException e) {
-						LOGGER.error(e);
-					}
-					updateWornItems(item.getDef(getWorld()).getWieldPosition(),
-						getSettings().getAppearance().getSprite(item.getDef(getWorld()).getWieldPosition()),
-						item.getDef(getWorld()).getWearableId(), false);
-					ActionSender.sendInventoryUpdateItem(this, slot);
+					UnequipRequest.RequestType type = getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
+						? UnequipRequest.RequestType.FROM_EQUIPMENT : UnequipRequest.RequestType.FROM_INVENTORY;
+					getCarriedItems().getEquipment().unequipItem(
+						new UnequipRequest(this, item, type, true)
+					);
 				}
 			}
 		}
-		ActionSender.sendEquipmentStats(this);
 	}
 
 	public int getBankSize() {
@@ -1812,7 +1810,8 @@ public final class Player extends Mob {
 			}
 		}
 		this.cure();
-		prayers.resetPrayers();
+		// OG RSC did not reset active prayers after death
+		// prayers.resetPrayers();
 		getSkills().normalize();
 		if (getWorld().getServer().getConfig().WANT_PARTIES) {
 			if (getParty() != null) {
@@ -1977,8 +1976,12 @@ public final class Player extends Mob {
 	}
 
 	public void resetAll() {
+		resetAll(true, true);
+	}
+
+	public void resetAll(boolean resetWalkAction, boolean resetFollowing) {
 		interruptPlugins();
-		resetAllExceptTradeOrDuel(true);
+		resetAllExceptTradeOrDuel(true, resetWalkAction, resetFollowing);
 		getTrade().resetAll();
 		getDuel().resetAll();
 		dropItemEvent = null;
@@ -1996,9 +1999,17 @@ public final class Player extends Mob {
 	}
 
 	private void resetAllExceptTradeOrDuel(boolean resetBank) {
+		resetAllExceptTradeOrDuel(resetBank, true, true);
+	}
+
+	private void resetAllExceptTradeOrDuel(boolean resetBank, boolean resetWalkAction, boolean resetFollowing) {
 		resetCannonEvent();
 		setAttribute("bank_pin_entered", "cancel");
-		setWalkToAction(null);
+
+		if(resetWalkAction && getWalkToAction() != null) {
+			setWalkToAction(null);
+		}
+
 		if (getMenu() != null) {
 			menu = null;
 		}
@@ -2011,7 +2022,7 @@ public final class Player extends Mob {
 		if (accessingShop()) {
 			resetShop();
 		}
-		if (isFollowing()) {
+		if (resetFollowing && isFollowing()) {
 			resetFollowing();
 		}
 		if (isRanging()) {
@@ -3082,5 +3093,14 @@ public final class Player extends Mob {
 	 */
 	public synchronized CarriedItems getCarriedItems() {
 		return this.carriedItems.get();
+	}
+
+	public int getProjectileRadius(int radius) {
+		if (getRangeEquip() == ItemId.PHOENIX_CROSSBOW.id() || getRangeEquip() == ItemId.CROSSBOW.id())
+			radius = 4;
+		if (getRangeEquip() == ItemId.SHORTBOW.id())
+			radius = 4;
+
+		return radius;
 	}
 }

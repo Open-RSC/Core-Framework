@@ -73,14 +73,27 @@ public class CarriedItems {
 
 	// TODO: Add parameter allowNoted
 	public int remove(Item item, boolean updateClient) {
+		// If the item id isn't assigned, first attempt to get it from the inventory.
 		if (item.getItemId() == -1) {
-			Item toRemove = getInventory().get(getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted())));
-			item = new Item(toRemove.getCatalogId(), item.getAmount(), toRemove.getNoted(), toRemove.getItemId());
+			Item toRemove = getInventory().get(
+				getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted()))
+			);
+			if (toRemove != null) {
+				item = new Item(toRemove.getCatalogId(), item.getAmount(), toRemove.getNoted(), toRemove.getItemId());
+			}
 		}
-		int result = getInventory().remove(item, updateClient);
-		if (result == -1)
-			return getEquipment().remove(item, item.getAmount());
 
-		return result;
+		// If we don't find it in the inventory, attempt to get it from equipment.
+		if (item.getItemId() == -1) {
+			Item toRemove = getEquipment().get(
+				getEquipment().searchEquipmentForItem(item.getCatalogId())
+			);
+			if (toRemove != null) {
+				item = new Item(toRemove.getCatalogId(), item.getAmount(), toRemove.getNoted(), toRemove.getItemId());
+				return getEquipment().remove(item, item.getAmount());
+			}
+		}
+
+		return getInventory().remove(item, updateClient);
 	}
 }

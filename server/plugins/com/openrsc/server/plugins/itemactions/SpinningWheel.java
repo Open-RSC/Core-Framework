@@ -6,7 +6,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
-import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Optional;
 
@@ -49,8 +48,8 @@ public class SpinningWheel implements UseLocTrigger {
 			return;
 		}
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, Skills.CRAFTING);
+		if (config().BATCH_PROGRESSION) {
+			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 		}
 
 		String resultString = "You " + verb + " the " + consumedItem + " into a " + producedItem;
@@ -66,8 +65,8 @@ public class SpinningWheel implements UseLocTrigger {
 				+ new Item(resultCatalogID).getDef(player.getWorld()).getName().toLowerCase());
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to craft");
 				return;
@@ -85,7 +84,7 @@ public class SpinningWheel implements UseLocTrigger {
 		player.message(resultString);
 		player.getCarriedItems().getInventory().add(new Item(resultCatalogID, 1));
 		player.incExp(Skills.CRAFTING, experience, true);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(config().GAME_TICK);
 
 		// Repeat
 		updatebatch();

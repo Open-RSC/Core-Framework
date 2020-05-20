@@ -43,15 +43,15 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 				player.message("You need an agility level of 35 to attempt to squeeze through the pipe");
 				return;
 			}
-			if (obj.getWorld().getServer().getConfig().WANT_FATIGUE) {
-				if (obj.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+			if (obj.getConfig().WANT_FATIGUE) {
+				if (obj.getConfig().STOP_SKILLING_FATIGUED >= 1
 					&& player.getFatigue() >= player.MAX_FATIGUE) {
 					player.message("You are too tired to squeeze through the pipe");
 					return;
 				}
 			}
 			player.message("You squeeze through the pipe");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+			delay(config().GAME_TICK * 3);
 			if (player.getY() <= 551) {
 				boundaryTeleport(player, Point.location(487, 554));
 			} else {
@@ -60,8 +60,8 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 			player.incExp(Skills.AGILITY, 20, true);
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE && !inArray(obj.getID(), LEDGE)) {
 				player.message("you are too tired to train");
 				return;
@@ -71,19 +71,19 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 		switch (obj.getID()) {
 			case SWING:
 				player.message("You grab the rope and try and swing across");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+				delay(config().GAME_TICK * 3);
 				if (passObstacle) {
 					player.message("You skillfully swing across the hole");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+					delay(config().GAME_TICK * 3);
 					teleport(player, 486, 559);
 					player.incExp(Skills.AGILITY, 80, true);
 					AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 300);
 				} else {
 					player.message("Your hands slip and you fall to the level below");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+					delay(config().GAME_TICK * 3);
 					teleport(player, 486, 3389);
 					player.message("You land painfully on the spikes");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+					delay(config().GAME_TICK * 3);
 					int swingDamage = (int) Math.round((player.getSkills().getLevel(Skills.HITS)) * 0.15D);
 					player.damage(swingDamage);
 					say(player, "ouch");
@@ -91,12 +91,12 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 				break;
 			case LOG:
 				player.message("you stand on the slippery log");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+				delay(config().GAME_TICK * 3);
 				if (passObstacle) {
 					boundaryTeleport(player, Point.location(489, 563));
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					boundaryTeleport(player, Point.location(490, 563));
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					player.message("and walk across");
 					boundaryTeleport(player, Point.location(492, 563));
 					player.incExp(Skills.AGILITY, 50, true);
@@ -120,7 +120,7 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 					return;
 				}
 				player.message("You put your foot on the ledge and try to edge across");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				if (passObstacle) {
 					teleport(player, 501, 1506);
 					player.message("You skillfully balance across the hole");
@@ -151,15 +151,15 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 
 	@Override
 	public void onOpBound(Player player, GameObject obj, Integer click) {
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("you are too tired to train");
 				return;
 			}
 		}
 		player.message("You jump over the wall");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		boundaryTeleport(player, Point.location(player.getX() == obj.getX() ? player.getX() - 1 : player.getX() + 1, player.getY()));
 		player.incExp(Skills.AGILITY, 20, true);
 		AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 300);

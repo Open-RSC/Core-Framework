@@ -4,7 +4,8 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
-import com.openrsc.server.plugins.triggers.PlayerLoginTrigger;
+
+import static com.openrsc.server.plugins.Functions.config;
 
 public class BabyBlueDragonCrystal implements OpInvTrigger {
 //public class BabyBlueDragonCrystal implements OpInvTrigger, PlayerLoginTrigger {
@@ -23,16 +24,16 @@ public class BabyBlueDragonCrystal implements OpInvTrigger {
 		int id = item.getCatalogId();
 
 		if (id == ItemId.A_RED_CRYSTAL.id())
-			if (player.getWorld().getServer().getConfig().WANT_PETS)
+			if (config().WANT_PETS)
 				handleBabyBlueDragon(player, item, command);
 			else
 				player.message("Nothing interesting happens");
 	}
 
 	private void handleBabyBlueDragon(Player player, Item item, String command) {
-		if (player.getWorld().getServer().getConfig().DEBUG)
+		if (config().DEBUG)
 		System.out.println("Pet spawn attempt");
-		if (player.getWorld().getServer().getConfig().WANT_PETS){
+		if (config().WANT_PETS){
 			if (player.getCarriedItems().hasCatalogID(ItemId.A_RED_CRYSTAL.id())) {
 				if (command.equalsIgnoreCase("inspect")) {
 					if (player.getCarriedItems().hasCatalogID(ItemId.A_GLOWING_RED_CRYSTAL.id())) {

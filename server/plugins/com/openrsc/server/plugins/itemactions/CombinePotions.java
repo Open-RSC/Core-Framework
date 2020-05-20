@@ -27,7 +27,7 @@ public class CombinePotions implements UseInvTrigger {
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 
 		// No Decanting without the config set to true!
-		if (!player.getWorld().getServer().getConfig().WANT_DECANTING) {
+		if (!config().WANT_DECANTING) {
 			player.message("Nothing interesting happens");
 			return;
 		}

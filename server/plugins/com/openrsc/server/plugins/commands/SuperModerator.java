@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.util.*;
 
 import static com.openrsc.server.plugins.commands.Event.LOGGER;
+import static com.openrsc.server.plugins.Functions.*;
 
 public final class SuperModerator implements CommandTrigger {
 
@@ -29,10 +30,10 @@ public final class SuperModerator implements CommandTrigger {
 	@Override
 	public void onCommand(Player player, String cmd, String[] args) {
 		if(messagePrefix == null) {
-			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			messagePrefix = config().MESSAGE_PREFIX;
 		}
 		if(badSyntaxPrefix == null) {
-			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			badSyntaxPrefix = config().BAD_SYNTAX_PREFIX;
 		}
 
 		if (cmd.equalsIgnoreCase("setcache") || cmd.equalsIgnoreCase("scache") || cmd.equalsIgnoreCase("storecache")) {

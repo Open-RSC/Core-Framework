@@ -23,7 +23,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 
 public class PacketHandler {
@@ -1495,7 +1494,7 @@ public class PacketHandler {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getInventoryItem(i).setNoted(noted);
-			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, Optional.of(noted)).isStackable()) {
+			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, noted).isStackable()) {
 				mc.setInventoryItemSize(i, packetsIncoming.get32());
 			} else {
 				mc.setInventoryItemSize(i, 1);
@@ -1966,7 +1965,7 @@ public class PacketHandler {
 		mc.setOptionHideFog(packetsIncoming.getUnsignedByte() == 1); // 27
 		mc.setGroundItemsToggle(packetsIncoming.getUnsignedByte()); // 28
 		mc.setOptionAutoMessageSwitch(packetsIncoming.getUnsignedByte() == 1); // 29
-		mc.setOptionHideSideMenu(packetsIncoming.getUnsignedByte() == 1); // 30
+		mc.setOptionSideMenu(packetsIncoming.getUnsignedByte() == 1); // 30
 		mc.setOptionHideKillFeed(packetsIncoming.getUnsignedByte() == 1); // 31
 		mc.setFightModeSelectorToggle(packetsIncoming.getUnsignedByte()); // 32
 		mc.setExperienceCounterToggle(packetsIncoming.getUnsignedByte()); // 33
@@ -2694,8 +2693,8 @@ public class PacketHandler {
 				inventoryItems[i].setNoted(noted);
 			}
 		}
-		//The server uses 2 more slots than the client
-		for (int i = 0; i < equipmentItems.length + 2; i++) {
+		//The server uses 3 more slots than the client
+		for (int i = 0; i < equipmentItems.length + 3; i++) {
 			itemBytes[0] = packetsIncoming.getByte();
 			if (itemBytes[0] == -1)
 				continue;

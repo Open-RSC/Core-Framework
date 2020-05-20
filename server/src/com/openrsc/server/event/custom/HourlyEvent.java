@@ -23,19 +23,21 @@ public class HourlyEvent extends DelayedEvent {
 
 	HourlyEvent(final World world, final int lifeTime, final int minute, final String descriptor) {
 		super(world,null, 1000, descriptor, true);
-		final long now = System.currentTimeMillis() / 1000;
+		final long now = (long)(System.currentTimeMillis() / 1000D);
 		if(minute < 0 || minute > 60) {
 			LOGGER.error("HourlyEvent is trying to create a minute offset that does not lie within an hour.");
 		}
 		this.lifeTime = lifeTime; // How many hours it will run for.
-		this.started = now - (now % 3600) - (minute == 0 ? 0 : ((60 - minute) * 60)); // Exact hour of start time offset by minute
-		this.timestamp = this.started;
+
+		// Exact hour of start time offset by minute
+		short currentMinute = (short)((now % 3600) / 60D);
+		this.timestamp = this.started = now - (currentMinute * 60) - ((60 - minute) * 60) + (currentMinute > minute ? 3600 : 0);
 		this.minute = minute;
 	}
 
 	@Override
 	public void run() {
-		if ((System.currentTimeMillis() / 1000) - this.timestamp < 3600)
+		if ((long)(System.currentTimeMillis() / 1000D) - this.timestamp < 3600)
 			return;
 
 		this.timestamp += 3600;

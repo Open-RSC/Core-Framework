@@ -60,7 +60,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		else
 			player.playerServerMessage(MessageType.QUEST, "You attempt to steal some " + objectName.replaceAll("stall", "").trim() + " from the " + objectName);
 
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		delay(config().GAME_TICK * 3);
 
 		String failNoun = stall.equals(Stall.BAKERS_STALL) ? "cake" : objectName.replaceAll("stall", "").trim();
 		if (!failNoun.endsWith("s")) {
@@ -113,8 +113,8 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			selectedLoot = new Item(stall.lootTable.get(0).getId(), stall.lootTable.get(0).getAmount());
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to thieve here");
 				return;
@@ -199,14 +199,15 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		final Point teleLoc = teleLoctemp;
 		final int xp = xptemp;
 		player.message("You search the chest for traps");
-		boolean makeChestStuck = player.getWorld().getServer().getConfig().LOOTED_CHESTS_STUCK;
+		boolean makeChestStuck = config().LOOTED_CHESTS_STUCK;
 		AtomicReference<GameObject> tempChest = new AtomicReference<GameObject>();
 		if (player.getSkills().getLevel(Skills.THIEVING) < req) {
 			player.message("You find nothing");
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+		if (config().WANT_FATIGUE) {
+			// On OG thieving chests not thievable on 100% fatigue
+			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to thieve here");
 				return;
@@ -224,7 +225,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			tempChest.set(new GameObject(player.getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType()));
 			changeloc(obj, tempChest.get());
 		}
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		player.message("You disable the trap");
 
 		mes(player, "You open the chest");
@@ -267,7 +268,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			if (obj.getGameObjectDef().getName().equalsIgnoreCase("empty stall")) {
 				return false;
 			}
-			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			if (!player.getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
 				return false;
 			}
@@ -276,7 +277,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				return true;
 			}
 		} else if (obj.getID() >= 334 && obj.getID() <= 339) {
-			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			if (!player.getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
 				return false;
 			}
@@ -301,7 +302,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			}
 
 			if (pickpocket != null) {
-				if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+				if (!player.getConfig().MEMBER_WORLD) {
 					player.message(player.MEMBER_MESSAGE);
 					return false;
 				}
@@ -329,7 +330,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.THIEVING);
 			npc.setBusy(true);
 		}
@@ -349,15 +350,15 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			return;
 		}
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobString + "'s pocket");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		boolean succeededPickpocket = succeedThieving(player, pickpocket.getRequiredLevel());
 		if (SkillCapes.shouldActivate(player, THIEVING_CAPE, succeededPickpocket)) {
 			succeededPickpocket = true;
 			thinkbubble(player, new Item(THIEVING_CAPE.id()));
 		}
 		if (succeededPickpocket) {
-			if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-				if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+			if (config().WANT_FATIGUE) {
+				if (config().STOP_SKILLING_FATIGUED >= 2
 					&& player.getFatigue() >= player.MAX_FATIGUE) {
 					player.message("You are too tired to pickpocket this mob");
 					npc.setBusy(false);
@@ -394,7 +395,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				player.getCarriedItems().getInventory().add(selectedLoot);
 			}
 		} else {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobString + "'s pocket");
 			npc.getUpdateFlags()
 				.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
@@ -411,7 +412,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				npc.setBusy(false);
 				return;
 			}
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString);
 		}
 		else {
@@ -442,8 +443,8 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				player.playerServerMessage(MessageType.QUEST, "This chest is locked");
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "you attempt to pick the lock");
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-					if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+				if (config().WANT_FATIGUE) {
+					if (config().STOP_SKILLING_FATIGUED >= 2
 						&& player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to pick the lock");
 						return;
@@ -510,7 +511,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	@Override
 	public boolean blockOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() >= 93 && obj.getID() <= 97 || obj.getID() >= 99 & obj.getID() <= 100 || obj.getID() == 162) {
-			if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			if (!player.getConfig().MEMBER_WORLD) {
 				player.message(player.MEMBER_MESSAGE);
 				return false;
 			}
@@ -612,8 +613,8 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You need a lockpick for this lock");
 				return;
 			}
-			if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-				if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+			if (config().WANT_FATIGUE) {
+				if (config().STOP_SKILLING_FATIGUED >= 2
 					&& player.getFatigue() >= player.MAX_FATIGUE) {
 					player.message("You are too tired to pick the lock");
 					return;

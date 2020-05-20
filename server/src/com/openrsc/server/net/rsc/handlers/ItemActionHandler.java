@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -46,27 +47,32 @@ public class ItemActionHandler implements PacketHandler {
 			commandIndex = packet.readByte();
 		}
 
-		final Item item = tempitem;
+		final Item item = amount > 1 ? new Item(tempitem.getCatalogId(), amount) : tempitem;
 		if (item == null || item.getDef(player.getWorld()).getCommand() == null
 		|| commandIndex < 0 || commandIndex >= item.getDef(player.getWorld()).getCommand().length) {
 			player.setSuspiciousPlayer(true, "item action item null or null item def");
 			return;
 		}
 
-		item.setAmount(player.getWorld().getServer().getDatabase(), amount);
-
-		if (item.getDef(player.getWorld()).isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (item.getDef(player.getWorld()).isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
 			player.message("You need to be a member to use this object");
 			return;
 		}
 
-		if (player.isBusy()) return;
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			return;
 		}
 
-		player.resetAll();
+		if (player.isBusy()) return;
+
+		player.resetAll(false, false);
+
+		// We want to keep walking, but not perform the action when we get there.
+		WalkToAction walkToAction = player.getWalkToAction();
+		if (walkToAction != null) {
+			walkToAction.finishExecution();
+		}
 
 		final String command = item.getDef(player.getWorld()).getCommand()[commandIndex];
 

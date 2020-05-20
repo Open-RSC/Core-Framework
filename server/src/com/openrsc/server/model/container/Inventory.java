@@ -12,7 +12,6 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
-import com.openrsc.server.model.struct.EquipRequest;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
 import org.apache.logging.log4j.LogManager;
@@ -51,7 +50,7 @@ public class Inventory {
 			ItemDefinition itemDef = item.getDef(player.getWorld());
 			if (item.isWieldable(player.getWorld()) && inventory[i].item.isWielded()) {
 				if (itemDef != null) {
-					if (!player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+					if (!player.getConfig().WANT_EQUIPMENT_TAB) {
 						item.getItemStatus().setWielded(true);
 						player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
 					}
@@ -129,13 +128,13 @@ public class Inventory {
 
 					// Make sure they have room in the inventory
 					if (list.size() >= MAX_SIZE) {
-						if (player.getWorld().getServer().getConfig().MESSAGE_FULL_INVENTORY) {
+						if (player.getConfig().MESSAGE_FULL_INVENTORY) {
 							player.message("Your Inventory is full, the " + itemToAdd.getDef(player.getWorld()).getName() + " drops to the ground!");
 						}
 						player.getWorld().registerItem(
 							new GroundItem(player.getWorld(), itemToAdd.getCatalogId(), player.getX(), player.getY(),
 								itemToAdd.getAmount(), player, itemToAdd.getNoted()),
-								player.getWorld().getServer().getConfig().GAME_TICK * 150);
+								player.getConfig().GAME_TICK * 150);
 
 						return false;
 					}
@@ -175,13 +174,13 @@ public class Inventory {
 
 						// Make sure they have room in the inventory for the second stack.
 						if (list.size() >= MAX_SIZE) {
-							if (player.getWorld().getServer().getConfig().MESSAGE_FULL_INVENTORY) {
+							if (player.getConfig().MESSAGE_FULL_INVENTORY) {
 								player.message("Your Inventory is full, the " + itemToAdd.getDef(player.getWorld()).getName() + " drops to the ground!");
 							}
 							player.getWorld().registerItem(
 								new GroundItem(player.getWorld(), itemToAdd.getCatalogId(), player.getX(), player.getY(),
 									itemToAdd.getAmount(), player, itemToAdd.getNoted()),
-									player.getWorld().getServer().getConfig().GAME_TICK * 150);
+									player.getConfig().GAME_TICK * 150);
 							return false;
 						}
 
@@ -217,6 +216,10 @@ public class Inventory {
 				int catalogId = item.getCatalogId();
 				int amount = item.getAmount();
 				int itemID = item.getItemId();
+
+				if (itemID == -1) {
+					return -1;
+				}
 
 				int size = list.size();
 				ListIterator<Item> iterator = list.listIterator(size);
@@ -364,7 +367,7 @@ public class Inventory {
 			return;
 		}
 		boolean shattered = false;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
+		if (player.getConfig().WANT_EQUIPMENT_TAB
 			&& (player.getCarriedItems().getEquipment().searchEquipmentForItem(itemID)) != -1) {
 			Item item = player.getCarriedItems().getEquipment().get(itemID);
 			player.getCarriedItems().getEquipment().remove(item, 1);
@@ -400,7 +403,7 @@ public class Inventory {
 		ItemDefinition def;
 
 		// Add equipment items and values to deathItemsMap (only if config is enabled).
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				Item equipped = player.getCarriedItems().getEquipment().get(i);
 				if (equipped != null) {
@@ -474,7 +477,7 @@ public class Inventory {
 				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), dropOwner, item.getNoted());
 				groundItem.setAttribute("playerKill", true);
 			}
-			player.getWorld().registerItem(groundItem, player.getWorld().getServer().getConfig().GAME_TICK * 1000);
+			player.getWorld().registerItem(groundItem, player.getConfig().GAME_TICK * 1000);
 
 		}
 
@@ -606,7 +609,7 @@ public class Inventory {
 			}
 		}
 
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
+		if (player.getConfig().WANT_EQUIPMENT_TAB)
 			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id) != -1;
 		else
 			return false;
@@ -620,7 +623,7 @@ public class Inventory {
 			}
 		}
 
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
+		if (player.getConfig().WANT_EQUIPMENT_TAB)
 			return player.getCarriedItems().getEquipment().searchEquipmentForItem(id) != -1;
 		else
 			return false;

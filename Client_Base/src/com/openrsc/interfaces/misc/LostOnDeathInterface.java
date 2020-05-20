@@ -93,18 +93,15 @@ public final class LostOnDeathInterface {
 				movedAtFlag = i;
 			}
 
-			if (def.getNotedForm() != -1) {
+			if (curItem.getNoted()) {
 				mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef),
 					curX, curY, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
 					EntityHandler.noteDef.getBlueMask(), false, 0, 1);
-				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-					curX, curY, 48, 32, def.getPictureMask(), 0,
-					def.getBlueMask(),false, 0, 1);
-			} else {
-				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
-					curX, curY, 48, 32, def.getPictureMask(), 0,
-					def.getBlueMask(), false, 0, 1);
 			}
+			mc.getSurface().drawSpriteClipping(mc.spriteSelect(def),
+				curX, curY, 48, 32, def.getPictureMask(), 0,
+				def.getBlueMask(), false, 0, 1);
+
 
 			if (def.isStackable()) {
 				drawString(mudclient.formatStackAmount((int) curItem.getStackCount()),
@@ -141,15 +138,15 @@ public final class LostOnDeathInterface {
 			if (invyItems[i] > 0) {
 				ItemDef def = EntityHandler.getItemDef(invyItems[i]);
 				int stackCount = 1;
-				if (def.isStackable()) {
-					if (Config.S_WANT_EQUIPMENT_TAB && i >= mc.getInventory().length)
-						stackCount = ((int[])equipmentItems[1])[i - mc.getInventory().length];
-					else
-						stackCount = mc.getInventoryItemAmount(i);
-					onDeathItems.add(new OnDeathItem(invyItems[i], def.getBasePrice(), stackCount, false));
-				} else {
-					onDeathItems.add(new OnDeathItem(invyItems[i], def.getBasePrice(), 1, false));
+				boolean noted = false;
+				if (Config.S_WANT_EQUIPMENT_TAB && i >= mc.getInventory().length) {
+					stackCount = ((int[]) equipmentItems[1])[i - mc.getInventory().length];
 				}
+				else {
+					stackCount = mc.getInventoryItemAmount(i);
+					noted = mc.getInventoryItem(i).getNoted();
+				}
+				onDeathItems.add(new OnDeathItem(invyItems[i], def.getBasePrice(), stackCount, false, noted));
 			}
 		}
 
@@ -174,8 +171,8 @@ public final class LostOnDeathInterface {
 			}
 			// Handles special case of stackable items being kept
 			if (EntityHandler.getItemDef(onDeathItems.get(i).getItemID()).isStackable()) {
-				onDeathItems.add(i, new OnDeathItem(onDeathItems.get(i).getItemID(), onDeathItems.get(i).getPrice(), 1, false));
-				onDeathItems.set(i + 1, new OnDeathItem(onDeathItems.get(i + 1).getItemID(), onDeathItems.get(i + 1).getPrice(), onDeathItems.get(i + 1).getStackCount() - 1, false));
+				onDeathItems.add(i, new OnDeathItem(onDeathItems.get(i).getItemID(), onDeathItems.get(i).getPrice(), 1, false, false));
+				onDeathItems.set(i + 1, new OnDeathItem(onDeathItems.get(i + 1).getItemID(), onDeathItems.get(i + 1).getPrice(), onDeathItems.get(i + 1).getStackCount() - 1, false, false));
 				if (onDeathItems.get(i+1).getStackCount() <= 0)
 					onDeathItems.remove(i+1);
 			}
@@ -195,7 +192,8 @@ public final class LostOnDeathInterface {
 					break;
 				}
 				if (onDeathItems.get(i).getItemID() == onDeathItems.get(j).getItemID()) {
-					onDeathItems.set(i, new OnDeathItem(onDeathItems.get(i).getItemID(), onDeathItems.get(i).getPrice(), onDeathItems.get(i).getStackCount() + 1, onDeathItems.get(i).getLost()));
+					OnDeathItem odi = onDeathItems.get(i);
+					onDeathItems.set(i, new OnDeathItem(odi.getItemID(), odi.getPrice(), odi.getStackCount() + 1, odi.getLost(), odi.getNoted()));
 					onDeathItems.remove(i + 1);
 				}
 			}
@@ -258,12 +256,14 @@ class OnDeathItem {
 	private int itemID;
 	private boolean lost;
 	private long price, stackCount;
+	private boolean noted;
 
-	public OnDeathItem(int itemID, long price, long stackCount, boolean lost) {
+	public OnDeathItem(int itemID, long price, long stackCount, boolean lost, boolean noted) {
 		this.itemID = itemID;
 		this.price = price;
 		this.stackCount = stackCount;
 		this.lost = lost;
+		this.noted = noted;
 	}
 
 	public int getItemID() {
@@ -288,5 +288,13 @@ class OnDeathItem {
 
 	public void setLost(boolean lost) {
 		this.lost = lost;
+	}
+
+	public boolean getNoted() {
+		return noted;
+	}
+
+	public void setNoted(boolean noted) {
+		this.noted = noted;
 	}
 }

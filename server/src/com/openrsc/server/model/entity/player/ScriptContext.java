@@ -156,12 +156,13 @@ public class ScriptContext {
 	public Batch getBatch() {
 		final Player player = getContextPlayer();
 		if (player == null) return null;
-
-		// Check to see if a batch is running, and if not,
-		// make a new one for the player.
-		if (batch == null)
-			batch = new Batch(player);
 		return batch;
+	}
+
+	public void setBatch(Batch newBatch) {
+		final Player player = getContextPlayer();
+		if (player == null) return;
+		batch = newBatch;
 	}
 
 	public void setInteractingNpc(final Npc npc) {
@@ -322,7 +323,7 @@ public class ScriptContext {
 		}
 	}
 
-	private void setCurrentAction(final Action currentAction) {
+	public void setCurrentAction(final Action currentAction) {
 		this.currentAction = currentAction;
 	}
 

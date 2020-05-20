@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins;
 
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.external.GameObjectLoc;
@@ -15,6 +16,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.Bubble;
 import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -148,7 +150,7 @@ public class Functions {
 			if (!message.equalsIgnoreCase("null")) {
 				player.message("@que@" + message);
 			}
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+			delay(player.getConfig().GAME_TICK * 3);
 		}
 	}
 
@@ -183,12 +185,13 @@ public class Functions {
 				}
 				player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
 			}
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+			delay(player.getConfig().GAME_TICK * calcDelay(message));
 		}
 	}
 
 	public static void say(final Player player, final String message) {
 		player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, player));
+		delay(player.getConfig().GAME_TICK * calcDelay(message));
 	}
 
 	public static int multi(final Player player, final String... options) {
@@ -353,7 +356,7 @@ public class Functions {
 	public static boolean ifheld(final Player player, final int id, final int amt) {
 		int amount = player.getCarriedItems().getInventory().countId(id);
 		int equipslot = -1;
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			if ((equipslot = player.getCarriedItems().getEquipment().searchEquipmentForItem(id)) != -1) {
 				amount += player.getCarriedItems().getEquipment().get(equipslot).getAmount();
 			}
@@ -398,6 +401,7 @@ public class Functions {
 		}
 
 		if(closestNpc != null) {
+			PluginTask.getContextPluginTask().getScriptContext().setCurrentAction(Action.talknpc);
 			PluginTask.getContextPluginTask().getScriptContext().setInteractingNpc(closestNpc);
 		}
 
@@ -418,6 +422,7 @@ public class Functions {
 		}
 
 		if(closestNpc != null) {
+			PluginTask.getContextPluginTask().getScriptContext().setCurrentAction(Action.talknpc);
 			PluginTask.getContextPluginTask().getScriptContext().setInteractingNpc(closestNpc);
 		}
 
@@ -426,12 +431,11 @@ public class Functions {
 
 	/**
 	 * Npc chat method
-	 *
-	 * @param player
+	 *  @param player
 	 * @param npc
 	 * @param messages - String array of npc dialogue lines.
 	 */
-	public static void npcsay(final Player player, final Npc npc, final int delay, final String... messages) {
+	public static void npcsay(final Player player, final Npc npc, final String... messages) {
 
 		// Reset the walk action on the Npc (stop them from walking).
 		npc.resetPath();
@@ -450,12 +454,8 @@ public class Functions {
 				npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
 			}
 
-			delay(delay);
+			delay(player.getConfig().GAME_TICK * calcDelay(message));
 		}
-	}
-
-	public static void npcsay(final Player player, final Npc npc, final String... messages) {
-		npcsay(player, npc, player.getWorld().getServer().getConfig().GAME_TICK * 3, messages);
 	}
 
 	public static void npcattack(Npc npc, Player player) {
@@ -526,7 +526,7 @@ public class Functions {
 			if (enteredPin != "") {
 				break;
 			}
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getConfig().GAME_TICK);
 		}
 		if (enteredPin.equals("cancel")) {
 			ActionSender.sendCloseBankPinInterface(player);
@@ -555,7 +555,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getConfig().GAME_TICK);
 		}
 
 		return true;
@@ -581,7 +581,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getConfig().GAME_TICK);
 		}
 
 		return true;
@@ -615,7 +615,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getConfig().GAME_TICK);
 		}
 
 		return true;
@@ -625,7 +625,7 @@ public class Functions {
 		BankPinVerifyRequest request;
 		String pin;
 
-		if (!player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
+		if (!player.getConfig().WANT_BANK_PINS) {
 			return true;
 		}
 
@@ -644,7 +644,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(player.getConfig().GAME_TICK);
 		}
 
 		return player.getAttribute("bankpin", false);
@@ -655,13 +655,51 @@ public class Functions {
 		if(!contextPlugin.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			return false;
 		}
-
 		return contextPlugin.getScriptContext().getInterrupted();
+	}
+
+	/**
+	 * Starts a batch and, if enabled, shows a batch bar to the client
+	 * @param totalBatch The total repetitions of a task
+	 */
+	public static void startbatch(int totalBatch) {
+		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return;
+		Batch batch = new Batch(player);
+		batch.initialize(totalBatch);
+		batch.start();
+
+		PluginTask.getContextPluginTask().getScriptContext().setBatch(batch);
+	}
+
+	/**
+	 * Increments the current batch progress by 1
+	 * @return Returns false if batch is completed
+	 */
+	public static void updatebatch() {
+		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return;
+		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		if (batch == null) return;
+
+		batch.update();
+	}
+
+	public static boolean ifbatchcompleted() {
+		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return true;
+		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		if (batch == null) return true;
+		return batch.isCompleted();
 	}
 
 	/**
 	 * Functions below here are not Runescript API
 	 */
+
+	public static int calcDelay(final String message) {
+		return message.length() >= 65 ? 4 : 3;
+	}
 
 	public static boolean inArray(Object o, Object... oArray) {
 		for (Object object : oArray) {
@@ -960,7 +998,7 @@ public class Functions {
 	}
 
 	public static void openChest(GameObject obj) {
-		openChest(obj, obj.getWorld().getServer().getConfig().GAME_TICK * 3);
+		openChest(obj, obj.getConfig().GAME_TICK * 3);
 	}
 
 	public static void closeCupboard(GameObject obj, Player player, int cupboardID) {
@@ -1271,7 +1309,7 @@ public class Functions {
 			player.message("Failure - Contact an administrator");
 		}
 		player.setSprite(pdir);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(player.getConfig().GAME_TICK * 2);
 		addloc(new GameObject(object.getWorld(), object.getLoc()));
 	}
 
@@ -1316,43 +1354,14 @@ public class Functions {
 		return false;
 	}
 
-	/**
-	 * Starts a batch and, if enabled, shows a batch bar to the client
-	 * @param totalBatch The total repetitions of a task
-	 */
-	public static void startbatch(int totalBatch) {
-		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
-		if (player == null) return;
-		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
-		if (batch == null) return;
-
-		batch.initialize(totalBatch);
-		batch.start();
-	}
-
-	/**
-	 * Increments the current batch progress by 1
-	 * @return Returns false if batch is completed
-	 */
-	public static void updatebatch() {
-		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
-		if (player == null) return;
-		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
-		if (batch == null) return;
-
-		batch.update();
-	}
-
-	public static boolean ifbatchcompleted() {
-		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
-		if (player == null) return true;
-		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
-		if (batch == null) return true;
-		return batch.isCompleted();
-	}
-
 	public static void boundaryTeleport(Player player, Point location) {
 		player.setLocation(location);
+	}
+
+	public static ServerConfiguration config() {
+		final Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		if (player == null) return null;
+		return player.getConfig();
 	}
 
 }

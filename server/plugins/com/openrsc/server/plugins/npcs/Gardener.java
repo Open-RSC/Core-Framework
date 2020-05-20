@@ -14,7 +14,10 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class Gardener extends AbstractShop {
 
-	private Shop shop = null;
+	Shop shop = new Shop(false, 3000, 130, 40, 3,
+		new Item(ItemId.FRUIT_PICKER.id(), 10), new Item(ItemId.HAND_SHOVEL.id(), 5),
+		new Item(ItemId.HERB_CLIPPERS.id(), 3), new Item(ItemId.WATERING_CAN.id(), 2),
+		new Item(ItemId.SOIL.id(), 1));
 
 	@Override
 	public void onTalkNpc(Player player, final Npc n) {
@@ -26,8 +29,8 @@ public final class Gardener extends AbstractShop {
 		switch (option) {
 			case 0:
 				npcsay(player, n, "Take a look");
-				player.setAccessingShop(shop);
-				ActionSender.showShop(player, shop);
+				player.setAccessingShop(getShop(player.getWorld()));
+				ActionSender.showShop(player, getShop(player.getWorld()));
 				break;
 			case 2:
 				npcsay(player, n, "Certainly, is there anything in particular",
@@ -74,7 +77,7 @@ public final class Gardener extends AbstractShop {
 		return shop;
 	}
 
-	public Shop getShop(World world) {
+	private Shop getShop(World world) {
 		if(shop == null) {
 			shop = (world.getServer().getConfig().MEMBER_WORLD) ?
 				new Shop(false, 3000, 130, 40, 3,

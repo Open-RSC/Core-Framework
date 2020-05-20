@@ -43,7 +43,7 @@ public class PlayerCollectItemsTask extends MarketTask {
 					items.append("@gre@Rest of the items are still held by auctioneer% make more space in bank and claim.");
 					break;
 				}
-				player.getBank().add(item);
+				player.getBank().add(item, false);
 				items.append(" @lre@").append(item.getDef(player.getWorld()).getName()).append(" @whi@x @cya@").append(item.getAmount()).append("@whi@ ").append(i.explanation).append(" %");
 				dbItem.claim_id = i.claim_id;
 				dbItem.claim_time = System.currentTimeMillis();

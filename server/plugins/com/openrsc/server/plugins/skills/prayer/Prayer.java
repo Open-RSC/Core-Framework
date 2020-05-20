@@ -14,9 +14,9 @@ public class Prayer implements OpLocTrigger {
 	public void onOpLoc(Player player, final GameObject object, String command) {
 		if (command.equalsIgnoreCase("recharge at")) {
 			int maxPray = getMaxLevel(player, Skills.PRAYER) + (object.getID() == 200 ? 2 : 0);
-			player.setPrayerStatePoints(maxPray * 120);
 			if (getCurrentLevel(player, Skills.PRAYER) == maxPray) {
 				player.playerServerMessage(MessageType.QUEST, "You already have full prayer points");
+				player.setPrayerStatePoints(maxPray * 120);
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You recharge your prayer points");
 				player.playSound("recharge");
@@ -26,7 +26,7 @@ public class Prayer implements OpLocTrigger {
 
 			}
 			if (object.getID() == 625 && object.getY() == 3573) {
-				delay(player.getWorld().getServer().getConfig().GAME_TICK);
+				delay(config().GAME_TICK);
 				mes(player, "Suddenly a trapdoor opens beneath you");
 				player.teleport(608, 3525);
 			}

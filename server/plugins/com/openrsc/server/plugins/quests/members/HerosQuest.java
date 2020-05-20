@@ -357,7 +357,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	}
 
 	private boolean canBuyCape(Player player) {
-		if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES
+		if (config().WANT_CUSTOM_SPRITES
 			&& getMaxLevel(player, Skills.STRENGTH) >= 99) { return true; }
 		return false;
 	}
@@ -531,7 +531,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 					removeReturnEventIfPresent(player);
 					player.getWorld().getServer().getGameEventHandler().add(
 						new SingleEvent(player.getWorld(), null,
-							player.getWorld().getServer().getConfig().GAME_TICK * 2,
+							config().GAME_TICK * 2,
 							"Heroes Quest Grip through door", true) {
 							@Override
 							public void action() {
@@ -612,7 +612,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 								grip.teleport(463, 673);
 								// delayed event to prevent grip being trapped if player had invoked him
 								gripReturnEvent.set(new SingleEvent(player.getWorld(), null,
-									player.getWorld().getServer().getConfig().GAME_TICK * 1000,
+									config().GAME_TICK * 1000,
 									"Heroes Quest Delayed Return Grip", true) {
 									@Override
 									public void action() {

@@ -20,7 +20,7 @@ public final class GameReport extends Query {
 	private boolean suggestsOrMutes, triedApplyAction;
 
 	public GameReport(Player reporter, String reported, byte reason, boolean suggestsOrMutes, boolean triedApplyAction) {
-		super("INSERT INTO `" + reporter.getWorld().getServer().getConfig().DB_TABLE_PREFIX + "game_reports`(`time`, `reporter`, `reported`, `reason`, `chatlog`, `reporter_x`, `reporter_y`, `reported_x`, `reported_y`, `suggests_or_mutes`, `tried_apply_action`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		super("INSERT INTO `" + reporter.getConfig().DB_TABLE_PREFIX + "game_reports`(`time`, `reporter`, `reported`, `reason`, `chatlog`, `reporter_x`, `reporter_y`, `reported_x`, `reported_y`, `suggests_or_mutes`, `tried_apply_action`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		this.reason = reason;
 		this.reported = reported;
 		this.reporterPlayer = reporter;

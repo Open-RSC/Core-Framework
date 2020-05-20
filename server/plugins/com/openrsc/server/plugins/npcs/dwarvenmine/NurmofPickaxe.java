@@ -51,7 +51,7 @@ public final class NurmofPickaxe extends AbstractShop {
 		options.add("Yes please");
 		options.add("No thankyou");
 		options.add("Are your pickaxes better than other pickaxes then?");
-		if (player.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS
+		if (config().WANT_CUSTOM_QUESTS
 			&& getMaxLevel(player, Skills.MINING) >= 99)
 			options.add("Mining Skillcape");
 

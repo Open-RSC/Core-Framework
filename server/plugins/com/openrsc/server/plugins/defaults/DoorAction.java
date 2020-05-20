@@ -176,13 +176,13 @@ public class DoorAction {
 				break;
 
 			case 154: // Grand Tree: main door (outside)
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "you open the door");
+				mes(player, config().GAME_TICK * 3, "you open the door");
 				player.teleport(703, 455);
 				player.message("and walk through");
 				break;
 
 			case 153: // Grand Tree: main door (inside)
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "you open the door");
+				mes(player, config().GAME_TICK * 3, "you open the door");
 				player.teleport(416, 165);
 				player.message("and walk through");
 				break;
@@ -329,9 +329,9 @@ public class DoorAction {
 				} else {
 					player.message("Your weight is too much for the bridge to hold");
 					player.teleport(544, 3330);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					player.message("You fall through the bridge");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+					delay(config().GAME_TICK * 2);
 					player.message("The lava singes you");
 					player.damage(DataConversions.roundUp(player.getSkills().getLevel(Skills.HITS) / 5));
 				}
@@ -541,7 +541,7 @@ public class DoorAction {
 						if (masterFisher != null) {
 							npcsay(player, masterFisher, "Hello only the top fishers are allowed in here");
 						}
-						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+						delay(config().GAME_TICK * 2);
 						player.message("You need a fishing level of 68 to enter");
 					} else {
 						doDoor(obj, player);
@@ -560,7 +560,7 @@ public class DoorAction {
 					if (dwarf != null) {
 						npcsay(player, dwarf, "Sorry only the top miners are allowed in there");
 					}
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					player.message("You need a mining of level 60 to enter");
 				} else {
 					doDoor(obj, player);
@@ -576,7 +576,7 @@ public class DoorAction {
 					if (master != null) {
 						npcsay(player, master, "Sorry only experienced craftsmen are allowed in here");
 					}
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					player.message("You need a crafting level of 40 to enter the guild");
 				} else if (!(player.getCarriedItems().getEquipment().hasEquipped(ItemId.BROWN_APRON.id())
 					|| player.getCarriedItems().getEquipment().hasEquipped(ItemId.CRAFTING_CAPE.id()))) {
@@ -599,7 +599,7 @@ public class DoorAction {
 					if (chef != null) {
 						npcsay(player, chef, "Sorry. Only the finest chefs are allowed in here");
 					}
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					player.message("You need a cooking level of 32 to enter");
 				} else if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.CHEFS_HAT.id())) {
 					Npc chef = player.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
@@ -1000,7 +1000,7 @@ public class DoorAction {
 
 			case 57: // Brimhaven Gate (434, 682)
 				if (obj.getX() == 434 && obj.getY() == 682) {
-					if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+					if (!config().MEMBER_WORLD) {
 						player.message(
 							"You need to be a member to use this gate");
 						return;
@@ -1074,7 +1074,7 @@ public class DoorAction {
 				}
 				player.message("you open the gate");
 				doGate(player, obj, 357);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				player.message("and walk through");
 				return;
 
@@ -1083,20 +1083,20 @@ public class DoorAction {
 					return;
 				}
 				if (player.getY() <= 472) {
-					if (player.getWorld().getServer().getConfig().WANT_WOODCUTTING_GUILD) {
+					if (config().WANT_WOODCUTTING_GUILD) {
 						doGate(player, obj);
 					} else { // deny exit if not woodcut guild
 						player.playerServerMessage(MessageType.QUEST, "the gate is locked");
 					}
 				} else {
-					if (player.getWorld().getServer().getConfig().WANT_WOODCUTTING_GUILD) {
+					if (config().WANT_WOODCUTTING_GUILD) {
 						if (getCurrentLevel(player, Skills.WOODCUT) < 70) {
 							final Npc forester = player.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
 								468, 472);
 							if (forester != null) {
 								npcsay(player, forester, "Hello only the top woodcutters are allowed in here");
 							}
-							delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+							delay(config().GAME_TICK * 2);
 							player.message("You need a woodcutting level of 70 to enter");
 						} else {
 							doGate(player, obj);
@@ -1106,11 +1106,11 @@ public class DoorAction {
 							468, 472);
 						if (forester != null) {
 							npcsay(player, forester, "Hey you can't come through here", "This is private land");
-							delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+							delay(config().GAME_TICK * 2);
 							player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
 						} else {
 							player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
-							delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+							delay(config().GAME_TICK * 2);
 							player.playerServerMessage(MessageType.QUEST, "the gate is locked");
 						}
 					}
@@ -1168,7 +1168,7 @@ public class DoorAction {
 				if (obj.getX() != 93 || obj.getY() != 521) {
 					return;
 				}
-				if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+				if (!config().MEMBER_WORLD) {
 					player.message(
 						"You need to be a member to use this gate");
 					return;
@@ -1247,6 +1247,7 @@ public class DoorAction {
 					Npc n = ifnearvisnpc(player, NpcId.GNOME_GUARD.id(), 15);
 					if (n == null) {
 						n = addnpc(player.getWorld(), NpcId.GNOME_GUARD.id(), 705, 530, 30000);
+						n.setBusy(true);
 						spawned = true;
 					}
 					npcsay(player, n, "halt human");
@@ -1260,6 +1261,7 @@ public class DoorAction {
 					npcsay(player, n, "maybe, but that's the orders, I'm sorry");
 					mes(player, "the gnome refuses to open the gate");
 					if (spawned) {
+						n.setBusy(false);
 						n.remove();
 					}
 					return;
@@ -1299,7 +1301,7 @@ public class DoorAction {
 
 				return;
 		}
-		if (members && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (members && !config().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
 		}

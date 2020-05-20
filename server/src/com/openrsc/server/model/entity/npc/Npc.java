@@ -280,7 +280,14 @@ public class Npc extends Mob {
 				owner = (Player) npcKiller.relatedMob;
 		}
 
-		if (owner == null) return;
+		// Remove poison event(s)
+		this.cure();
+
+		if (owner == null) {
+			deathListeners.clear();
+			remove();
+			return;
+		}
 
 		owner.getWorld().getServer().getPluginHandler().handlePlugin(owner, "KillNpc", new Object[]{owner, this});
 		for (int npcId : removeHandledInPlugin) {
@@ -290,8 +297,11 @@ public class Npc extends Mob {
 		String ownerId = handleXpDistribution(mob);
 		owner = getWorld().getPlayerUUID(ownerId);
 
-		// Remove poison event(s)
-		this.cure();
+		if (owner == null) {
+			deathListeners.clear();
+			remove();
+			return;
+		}
 
 		ActionSender.sendSound(owner, "victory");
 		owner.getWorld().getServer().getAchievementSystem().checkAndIncSlayNpcTasks(owner, this);
@@ -436,7 +446,7 @@ public class Npc extends Mob {
 
 		if (rare != null) {
 			if (!handleRingOfAvarice(owner, rare)) {
-				GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getCatalogId(), getX(), getY(), rare.getAmount(), owner);
+				GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getCatalogId(), getX(), getY(), rare.getAmount(), owner, rare.getNoted());
 				groundItem.setAttribute("npcdrop", true);
 				getWorld().registerItem(groundItem);
 			}
@@ -456,10 +466,12 @@ public class Npc extends Mob {
 		if (owner.getQuestStage(Quests.OBSERVATORY_QUEST) > -1)
 			return true; // Quest started.
 
-		if (owner.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS)
+		if (owner.getConfig().WANT_CUSTOM_QUESTS) {
 			if (owner.getCache().hasKey("want_unholy_symbol_drops") &&
-				!owner.getCache().getBoolean("want_unholy_symbol_drops"))
-				return true; //
+				owner.getCache().getBoolean("want_unholy_symbol_drops")) {
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -631,23 +643,24 @@ public class Npc extends Mob {
 
 	public void remove() {
 		double respawnMult = getWorld().getServer().getConfig().NPC_RESPAWN_MULTIPLIER;
-
+		resetCombatEvent();
 		this.setLastOpponent(null);
-		if (getCombatEvent() != null) {
-			getCombatEvent().resetCombat();
-		}
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
+			super.remove();
 			startRespawning();
 			getWorld().removeNpcPosition(this);
-			teleport(0, 0);
 			Npc n = this;
-			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC") {
+			teleport(loc.startX, loc.startY);
+			setRespawning(true);
+			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC", false) {
 				public void run() {
+					n.setRemoved(false);
+					n.getRegion().addEntity(n);
+
 					// Take 4 ticks away from the current time to get a 1 tick pause while the npc spawns,
 					// before it is allowed to attack (if aggressive).
 					setCombatTimer(-getWorld().getServer().getConfig().GAME_TICK * 4);
 					setRespawning(false);
-					teleport(loc.startX, loc.startY);
 					getSkills().normalize();
 					tryResyncHitEvent();
 
@@ -656,10 +669,10 @@ public class Npc extends Mob {
 					rangeDamagers.clear();
 					combatDamagers.clear();
 
+					teleport(loc.startX, loc.startY);
 					getWorld().setNpcPosition(n);
 				}
 			});
-			setRespawning(true);
 		} else if (!shouldRespawn) {
 			setUnregistering(true);
 		}
@@ -743,7 +756,7 @@ public class Npc extends Mob {
 		return true;
 	}
 
-	boolean isRespawning() {
+	public boolean isRespawning() {
 		return isRespawning;
 	}
 
@@ -784,7 +797,7 @@ public class Npc extends Mob {
 					if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
 						player.getCarriedItems().getInventory().add(item);
 						return true;
-					} else if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
+					} else if (player.getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
 						Item equipped = player.getCarriedItems().getEquipment().get(slot);
 						equipped.changeAmount(player.getWorld().getServer().getDatabase(), item.getAmount());
 						return true;

@@ -64,12 +64,12 @@ public class Path {
 
 		// The maximum amount of spaces you can move in one game tick
 		int maxTiles = 1;
-		if(mob instanceof Player && mob.getWorld().getServer().getConfig().MAX_WALKING_SPEED >= maxTiles) {
+		if(mob instanceof Player && mob.getConfig().MAX_WALKING_SPEED >= maxTiles) {
 			Player player = (Player)mob;
 
 			// Each waypoint is one tick of movement. If there are X waypoints, then that means X ticks will pass before we encounter this waypoints.
-			if(player.canLogout() && waypoints.size() >= mob.getWorld().getServer().getConfig().MAX_TICKS_UNTIL_FULL_WALKING_SPEED) {
-				maxTiles = mob.getWorld().getServer().getConfig().MAX_WALKING_SPEED;
+			if(player.canLogout() && waypoints.size() >= mob.getConfig().MAX_TICKS_UNTIL_FULL_WALKING_SPEED) {
+				maxTiles = mob.getConfig().MAX_WALKING_SPEED;
 			}
 		}
 

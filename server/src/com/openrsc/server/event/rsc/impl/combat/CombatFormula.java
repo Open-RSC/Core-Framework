@@ -127,11 +127,12 @@ public class CombatFormula {
 	 * Calculates an accuracy check
 	 *
 	 * @param source             The attacking mob.
+	 * @param bowId				 The type of ranged weapon being wielded
 	 * @param victim             The mob being attacked.
 	 * @return True if the attack is a hit, false if the attack is a miss
 	 */
-	private static boolean calculateRangedAccuracy(final Mob source, final Mob victim) {
-		return calculateAccuracy(getRangedAccuracy(source), getMeleeDefence(victim));
+	private static boolean calculateRangedAccuracy(final Mob source, final int bowId, final Mob victim) {
+		return calculateAccuracy(getRangedAccuracy(source, bowId), getMeleeDefence(victim));
 	}
 
 	/**
@@ -168,11 +169,13 @@ public class CombatFormula {
 	 * Gets the damage dealt for a specific attack. Includes accuracy checks.
 	 *
 	 * @param source             The attacking mob.
+	 * @param bowId				 The ranged ammo being wielded
+	 * @param arrowId			 The ranged weapon being wielded
 	 * @param victim             The mob being attacked.
 	 * @return The amount to hit.
 	 */
-	public static int doRangedDamage(final Mob source, final int arrowId, final Mob victim) {
-		boolean isHit = calculateRangedAccuracy(source, victim);
+	public static int doRangedDamage(final Mob source, final int bowId, final int arrowId, final Mob victim) {
+		boolean isHit = calculateRangedAccuracy(source, bowId, victim);
 
 		//LOGGER.info(source + " " + (isHit ? "hit" : "missed") + " " + victim + ", Damage: " + damage);
 
@@ -205,7 +208,7 @@ public class CombatFormula {
 	 */
 	private static int getRangedDamage(final Mob source, final int arrowId) {
 		final int ranged = source.getSkills().getLevel(Skills.RANGED);
-		final double weaponMultiplier = (arrowPower(arrowId) * 0.00175D)+0.1D;
+		final double weaponMultiplier = (rangedPower(arrowId) * 0.00175D)+0.1D;
 
 		return (int)Math.ceil(ranged * weaponMultiplier);
 	}
@@ -232,11 +235,12 @@ public class CombatFormula {
 	 * Gets the ranged accuracy of the attacking mob
 	 *
 	 * @param attacker             The attacking mob.
+	 * @param bowId				   The ranged weapon being wielded
 	 * @return The ranged accuracy
 	 */
-	private static double getRangedAccuracy(final Mob attacker) {
+	private static double getRangedAccuracy(final Mob attacker, final int bowId) {
 		final double ranged = attacker.getSkills().getLevel(Skills.RANGED);
-		final double weaponMultiplier = (0 * (1.0D/600.0D))+0.1D; // ranged has no weapon aim
+		final double weaponMultiplier = (rangedAim(bowId) * (1.0D/600.0D))+0.1D;
 
 		return ranged * weaponMultiplier;
 	}
@@ -302,7 +306,8 @@ public class CombatFormula {
 	/**
 	 * Returns a power to associate with each arrow
 	 */
-	private static int arrowPower(final int arrowId) {
+	private static int rangedPower(final int arrowId) {
+		// Most of this is guessed and extrapolated downward from Rune items. We have good guesses on all of the Rune equipment. We also know Bronze arrows.
 		switch (ItemId.getById(arrowId)) {
 			case BRONZE_THROWING_DART:
 				return 15;
@@ -342,6 +347,58 @@ public class CombatFormula {
 				return 67;
 			case RUNE_SPEAR:
 				return 75;
+			default:
+				return 0;
+		}
+	}
+
+	/**
+	 * Returns an aim to associate with each ranged item
+	 */
+	private static int rangedAim(final int bowId) {
+		// Everything in this function is just a guess except for Magic longbow.
+		switch (ItemId.getById(bowId)) {
+			case BRONZE_THROWING_DART:
+				return 3;
+			case IRON_THROWING_DART:
+			case BRONZE_THROWING_KNIFE:
+			case CROSSBOW:
+			case PHOENIX_CROSSBOW:
+			case LONGBOW:
+			case SHORTBOW:
+				return 13;
+			case STEEL_THROWING_DART:
+			case IRON_THROWING_KNIFE:
+			case BRONZE_SPEAR:
+			case OAK_LONGBOW:
+			case OAK_SHORTBOW:
+				return 23;
+			case MITHRIL_THROWING_DART:
+			case BLACK_THROWING_KNIFE:
+			case STEEL_THROWING_KNIFE:
+			case IRON_SPEAR:
+			case WILLOW_LONGBOW:
+			case WILLOW_SHORTBOW:
+				return 33;
+			case ADAMANTITE_THROWING_DART:
+			case MITHRIL_THROWING_KNIFE:
+			case STEEL_SPEAR:
+			case MAPLE_LONGBOW:
+			case MAPLE_SHORTBOW:
+				return 43;
+			case RUNE_THROWING_DART:
+			case ADAMANTITE_THROWING_KNIFE:
+			case MITHRIL_SPEAR:
+			case YEW_LONGBOW:
+			case YEW_SHORTBOW:
+				return 53;
+			case RUNE_THROWING_KNIFE:
+			case ADAMANTITE_SPEAR:
+			case MAGIC_LONGBOW:
+			case MAGIC_SHORTBOW:
+				return 63;
+			case RUNE_SPEAR:
+				return 73;
 			default:
 				return 0;
 		}

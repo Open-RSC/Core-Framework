@@ -64,16 +64,14 @@ public class RangeEvent extends GameTickEvent {
 	private Mob target;
 
 	public RangeEvent(World world, Player owner, Mob victim) {
-		super(world, owner, 1, "Range Event");
+		super(world, owner, 1, "Range Event", false);
 		this.target = victim;
 		this.deliveredFirstProjectile = false;
 		long diff = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L);
-		boolean canShoot = diff >= getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
+		boolean canShoot = diff >= getPlayerOwner().getConfig().GAME_TICK * 3;
 		if (!canShoot) {
-			long delay = diff / getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK;
-			if (delay > 0) {
-				setDelayTicks(delay);
-			}
+			long delay = diff / getPlayerOwner().getConfig().GAME_TICK;
+			setDelayTicks(Math.max(2, delay));
 		}
 	}
 
@@ -94,6 +92,7 @@ public class RangeEvent extends GameTickEvent {
 	}
 
 	public void run() {
+		if (!running) return;
 		int bowID = getPlayerOwner().getRangeEquip();
 		if (!getPlayerOwner().loggedIn() || getPlayerOwner().inCombat()
 			|| (target.isPlayer() && !((Player) target).loggedIn())
@@ -103,7 +102,7 @@ public class RangeEvent extends GameTickEvent {
 			stop();
 			return;
 		}
-		if (!canReach(target)) {
+		if (!getPlayerOwner().canProjectileReach(target)) {
 			getPlayerOwner().walkToEntity(target.getX(), target.getY());
 			if (getOwner().nextStep(getOwner().getX(), getOwner().getY(), target) == null && bowID != -1) {
 				getPlayerOwner().message("I can't get close enough");
@@ -254,7 +253,7 @@ public class RangeEvent extends GameTickEvent {
 			getPlayerOwner().resetRange();
 			return;
 		}
-		int damage = CombatFormula.doRangedDamage(getPlayerOwner(), arrowID, target);
+		int damage = CombatFormula.doRangedDamage(getPlayerOwner(), bowID, arrowID, target);
 
 		if (target.isNpc()) {
 			Npc npc = (Npc) target;
@@ -302,19 +301,8 @@ public class RangeEvent extends GameTickEvent {
 				target.startPoisonEvent();
 			}
 		}
-		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
 		getOwner().setKillType(2);
+		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
 		deliveredFirstProjectile = true;
 	}
-
-
-	private boolean canReach(Mob mob) {
-		int radius = 5;
-		if (getPlayerOwner().getRangeEquip() == ItemId.PHOENIX_CROSSBOW.id() || getPlayerOwner().getRangeEquip() == ItemId.CROSSBOW.id())
-			radius = 4;
-		if (getPlayerOwner().getRangeEquip() == ItemId.SHORTBOW.id())
-			radius = 4;
-		return getPlayerOwner().withinRange(mob, radius);
-	}
-
 }

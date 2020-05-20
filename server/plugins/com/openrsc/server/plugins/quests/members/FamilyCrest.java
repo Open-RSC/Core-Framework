@@ -153,7 +153,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 				case -1:
 					npcsay(player, n, "Thankyou for saving our family honour",
 						"We will never forget you");
-					if (player.getWorld().getServer().getConfig().CAN_RETRIEVE_POST_QUEST_ITEMS) {
+					if (config().CAN_RETRIEVE_POST_QUEST_ITEMS) {
 						disenchantGauntlets(player, n);
 					}
 					break;

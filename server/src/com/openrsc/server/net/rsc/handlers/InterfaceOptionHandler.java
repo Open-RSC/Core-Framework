@@ -260,7 +260,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				}
 				break;
 			case 11: // Clan Actions
-				if (!player.getWorld().getServer().getConfig().WANT_CLANS) return;
+				if (!player.getConfig().WANT_CLANS) return;
 				int actionType = packet.readByte();
 				switch (actionType) {
 					case 0: // CREATE CLAN
@@ -413,7 +413,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				}
 				break;
 			case 12: // Party
-				if (!player.getWorld().getServer().getConfig().WANT_PARTIES) return;
+				if (!player.getConfig().WANT_PARTIES) return;
 				int actionType2 = packet.readByte();
 				switch (actionType2) {
 					case 0: // CREATE PARTY

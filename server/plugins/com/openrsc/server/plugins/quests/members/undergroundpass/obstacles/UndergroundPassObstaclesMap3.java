@@ -94,7 +94,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 				player.message("you place them on the chest and the chest opens");
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), DEMONS_CHEST_OPEN, obj.getDirection(), obj.getType()));
 				addloc(obj.getWorld(), obj.getLoc(), 2000);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				player.message("inside you find a strange dark liquid");
 				give(player, ItemId.IBANS_SHADOW.id(), 1);
 			} else {
@@ -104,7 +104,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 		else if (obj.getID() == ZAMORAKIAN_TEMPLE_DOOR) {
 			if (player.getX() <= 792) {
 				if (player.getQuestStage(Quests.UNDERGROUND_PASS) == -1 &&
-					!player.getWorld().getServer().getConfig().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
+					!config().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
 					mes(player, "the temple is in ruins...");
 					player.message("...you cannot enter");
 					return;
@@ -114,7 +114,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 					changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 914, obj.getDirection(), obj.getType()));
 					addloc(obj.getWorld(), obj.getLoc(), 3000);
 					player.teleport(792, 3469);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					player.teleport(795, 3469);
 					mes(player, "you pull open the large doors");
 					player.message("and walk into the temple");
@@ -168,7 +168,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 									say(player, null, "aarrgh");
 									player.message("you're blasted back to the door");
 								}
-								delay(player.getWorld().getServer().getConfig().GAME_TICK);
+								delay(config().GAME_TICK);
 							}
 						} catch (Exception e) {
 							LOGGER.catching(e);
@@ -182,11 +182,11 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 				}
 			} else {
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 914, obj.getDirection(), obj.getType()));
-				addloc(obj.getWorld(), obj.getLoc(), player.getWorld().getServer().getConfig().GAME_TICK * 5);
+				addloc(obj.getWorld(), obj.getLoc(), config().GAME_TICK * 5);
 				player.teleport(794, 3469);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK);
+				delay(config().GAME_TICK);
 				player.teleport(791, 3469);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				player.message("you pull open the large doors");
 				player.message("and walk out of the temple");
 			}

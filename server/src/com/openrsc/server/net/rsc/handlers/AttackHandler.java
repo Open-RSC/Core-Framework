@@ -52,14 +52,16 @@ public class AttackHandler implements PacketHandler {
 			}
 			assert affectedMob instanceof Player;
 			Player pl = (Player) affectedMob;
-			if (pl.getLocation().inWilderness()
-				&& System.currentTimeMillis() - pl.getCombatTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5) {
-				player.resetPath();
+			if (System.currentTimeMillis() - pl.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
+				if (pl.getLocation().inWilderness()) {
+					player.resetPath();
+				}
 				return;
 			}
 		}
 		if (affectedMob.isNpc()) {
 			Npc n = (Npc) affectedMob;
+			if (n.isRespawning()) return;
 			if (n.getX() == 0 && n.getY() == 0)
 				return;
 			if (n.getID() == NpcId.OGRE_TRAINING_CAMP.id() && player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
@@ -69,8 +71,8 @@ public class AttackHandler implements PacketHandler {
 		}
 
 		if (player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
-			player.setFollowing(affectedMob, 0);
-			player.setWalkToAction(new WalkToMobAction(player, affectedMob, 1) {
+			player.setFollowing(affectedMob, 0, false);
+			player.setWalkToAction(new WalkToMobAction(player, affectedMob, 1, false) {
 				public void executeInternal() {
 					getPlayer().resetPath();
 					getPlayer().resetFollowing();
@@ -96,20 +98,21 @@ public class AttackHandler implements PacketHandler {
 				}
 			});
 		} else {
-			if (player.isBusy() || !player.checkAttack(affectedMob, true)) {
+			if (!player.checkAttack(affectedMob, true)) {
 				return;
 			}
 			final Mob target = affectedMob;
 			player.resetPath();
 			player.resetAll();
-			/* To skip the walk packet resetAll() */
-			player.getWorld().getServer().getGameEventHandler().add(new MiniEvent(player.getWorld(), player, "Handle Attack") {
-				@Override
-				public void action() {
-					if (target.isPlayer()) {
-						assert target instanceof Player;
-						Player affectedPlayer = (Player) target;
-						getOwner().setSkulledOn(affectedPlayer);
+			int radius = player.getProjectileRadius(5); // default radius of 5
+			player.setFollowing(affectedMob, 0, false);
+			player.setWalkToAction(new WalkToMobAction(player, affectedMob, radius, false) {
+				public void executeInternal() {
+					if(getPlayer().isBusy() || getPlayer().inCombat()) return;
+					getPlayer().resetFollowing();
+					if (getMob().isPlayer()) {
+						Player affectedPlayer = (Player) getMob();
+						getPlayer().setSkulledOn(affectedPlayer);
 						affectedPlayer.getTrade().resetAll();
 						if (affectedPlayer.getMenuHandler() != null) {
 							affectedPlayer.resetMenuHandler();
@@ -123,12 +126,12 @@ public class AttackHandler implements PacketHandler {
 					}
 
 					// Authentic player always faced NW
-					getOwner().face(getOwner().getX() + 1, getOwner().getY() - 1);
+					getPlayer().face(getPlayer().getX() + 1, getPlayer().getY() - 1);
 
-					if (player.getRangeEquip() > 0) {
-						getOwner().setRangeEvent(new RangeEvent(getOwner().getWorld(), getOwner(), target));
+					if (getPlayer().getRangeEquip() > 0) {
+						getPlayer().setRangeEvent(new RangeEvent(getPlayer().getWorld(), getPlayer(), target));
 					} else {
-						getOwner().setThrowingEvent(new ThrowingEvent(getOwner().getWorld(), getOwner(), target));
+						getPlayer().setThrowingEvent(new ThrowingEvent(getPlayer().getWorld(), getPlayer(), target));
 					}
 				}
 			});

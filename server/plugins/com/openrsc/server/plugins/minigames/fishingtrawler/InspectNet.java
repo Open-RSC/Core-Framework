@@ -22,7 +22,7 @@ public class InspectNet implements OpLocTrigger {
 	@Override
 	public void onOpLoc(Player player, GameObject obj, String command) {
 
-		mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "you inspect the net");
+		mes(player, config().GAME_TICK * 3, "you inspect the net");
 		FishingTrawler trawler = player.getWorld().getFishingTrawler(player);
 
 		if (trawler != null && trawler.isNetBroken()) {
@@ -31,7 +31,7 @@ public class InspectNet implements OpLocTrigger {
 				player.message("you'll need some rope to fix it");
 				return;
 			}
-			mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "you attempt to fix it with your rope");
+			mes(player, config().GAME_TICK * 3, "you attempt to fix it with your rope");
 			if (DataConversions.random(0, 1) == 0) {
 				player.message("you manage to fix the net");
 				player.getCarriedItems().remove(new Item(ItemId.ROPE.id()));

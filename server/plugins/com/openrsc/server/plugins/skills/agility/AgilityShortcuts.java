@@ -101,19 +101,19 @@ public class AgilityShortcuts implements OpLocTrigger,
 						player.teleport(458, 832);
 						say(player, null, "* Ahhhhhhhhhh! *");
 						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
-						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						delay(config().GAME_TICK);
 						player.teleport(458, 836);
 						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
-						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+						delay(config().GAME_TICK * 2);
 						say(player, null, "* Gulp! *");
 						delay(1500);
 						player.teleport(459, 841);
 						say(player, null, "* Gulp! *");
-						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+						delay(config().GAME_TICK * 2);
 						player.message("You just manage to drag your pitiful frame onto the river bank.");
 						say(player, null, "* Gasp! *");
 						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
-						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+						delay(config().GAME_TICK * 2);
 						player.message("Though you nearly drowned in the river!");
 					}
 				}
@@ -143,7 +143,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 						player.teleport(450, 828);
 						mes(player, "You fall and hurt yourself.");
 						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
-						delay(player.getWorld().getServer().getConfig().GAME_TICK);
+						delay(config().GAME_TICK);
 						player.teleport(449, 828);
 					}
 				} else if (menu == 1) {
@@ -165,7 +165,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				player.message("You grab the vine and try and swing across");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				teleport(player, 511, 669);
 				player.message("You skillfully swing across the stream");
 				say(player, null, "Aaaaahahah");
@@ -177,7 +177,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				player.message("You grab the vine and try and swing across");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				teleport(player, 508, 668);
 				player.message("You skillfully swing across the stream");
 				say(player, null, "Aaaaahahah");
@@ -188,7 +188,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 15 to attempt to swing on this rope");
 					return;
 				}
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				teleport(player, 207, 3221);
 				player.message("You skillfully swing across the hole");
 				player.incExp(Skills.AGILITY, 40, true);
@@ -198,7 +198,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 15 to attempt to swing on this rope");
 					return;
 				}
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				teleport(player, 206, 3225);
 				player.message("You skillfully swing across the hole");
 				player.incExp(Skills.AGILITY, 40, true);
@@ -211,7 +211,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You stand on the slippery log");
 				for (int x = 595; x >= 592; x--) {
 					teleport(player, x, 458);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 				}
 				player.message("and you walk across");
 				player.incExp(Skills.AGILITY, 34, true);
@@ -224,7 +224,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You stand on the slippery log");
 				for (int x = 595; x <= 598; x++) {
 					teleport(player, x, 458);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 				}
 				player.message("and you walk across");
 				player.incExp(Skills.AGILITY, 34, true);
@@ -235,7 +235,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 57 to attempt to swing on this rope");
 					return;
 				}
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (config().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to swing on the rope");
 						return;
@@ -257,7 +257,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 57 to attempt to swing on this rope");
 					return;
 				}
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (config().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to swing on the rope");
 						return;
@@ -280,7 +280,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 40 to attempt balancing along this log");
 					return;
 				}
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (config().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to balance on the ledge");
 						return;
@@ -302,7 +302,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 40 to attempt balancing along this log");
 					return;
 				}
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (config().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to balance on the ledge");
 						return;
@@ -333,7 +333,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 67 to attempt to climb up the rubble");
 					return;
 				}
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (config().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to climb up the rubble");
 						return;
@@ -349,7 +349,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 49 to attempt to squeeze through the pipe");
 					return;
 				}
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (config().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to squeeze through the pipe");
 						return;
@@ -365,7 +365,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 49 to attempt to squeeze through the pipe");
 					return;
 				}
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (config().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to squeeze through the pipe");
 						return;
@@ -400,10 +400,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				player.message("You attempt to walk over the the slippery log..");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+				delay(config().GAME_TICK * 3);
 				if (!succeed(player, 32)) {
 					teleport(player, 368, 781);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					player.message("@red@You fall into the stream!");
 					player.message("You lose some health");
 					teleport(player, 370, 776);
@@ -412,11 +412,11 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				if (player.getX() <= 367) {
 					teleport(player, 368, 781);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					teleport(player, 370, 781);
 				} else {
 					teleport(player, 368, 781);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					teleport(player, 366, 781);
 				}
 				player.message("...and make it without any problems!");
@@ -427,7 +427,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 32 to step on these stones");
 					return;
 				}
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (config().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too fatigued to continue.");
 						return;
@@ -436,7 +436,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You jump onto the rock");
 				if (player.getY() <= 805) {
 					teleport(player, 347, 806);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					if (!succeed(player, 32)) {
 						delay(900);
 						teleport(player, 341, 809);
@@ -449,7 +449,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					teleport(player, 346, 808);
 				} else {
 					teleport(player, 346, 807);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					if (!succeed(player, 32)) {
 						delay(900);
 						teleport(player, 341, 805);
@@ -465,7 +465,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.incExp(Skills.AGILITY, 10, true);
 				break;
 			case YANILLE_CLIMBING_ROCKS:
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (config().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to climb up the wall");
 						return;
@@ -480,7 +480,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.incExp(Skills.AGILITY, 40, true);
 				break;
 			case YANILLE_WATCHTOWER_HANDHOLDS:
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (config().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to climb up the wall");
 						return;
@@ -501,7 +501,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
 				return;
 			}
-			if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (config().WANT_FATIGUE) {
 				if (player.getFatigue() >= player.MAX_FATIGUE) {
 					player.message("You are too tired to squeeze through the pipe");
 					return;
@@ -517,7 +517,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
 				return;
 			}
-			if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (config().WANT_FATIGUE) {
 				if (player.getFatigue() >= player.MAX_FATIGUE) {
 					player.message("You are too tired to squeeze through the pipe");
 					return;
@@ -532,13 +532,13 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 55 to climb the rubble");
 					return;
 				}
-				if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
+				if (config().WANT_FATIGUE) {
 					if (player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to climb the rubble");
 						return;
 					}
 				}
-				delay(player.getWorld().getServer().getConfig().GAME_TICK);
+				delay(config().GAME_TICK);
 				if (player.getLocation().getY() < 550) {
 					teleport(player, 434, 551);
 					player.incExp(Skills.AGILITY, 15, true);

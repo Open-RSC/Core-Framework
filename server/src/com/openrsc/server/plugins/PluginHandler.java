@@ -327,7 +327,7 @@ public final class PluginHandler {
 						@Override
 						public int action() {
 							try {
-								LOGGER.info("Executing Plugin : Tick " + getWorld().getServer().getCurrentTick() + " : " + pluginName + " : " + Arrays.deepToString(data));
+								LOGGER.info("Tick " + getWorld().getServer().getCurrentTick() + " : " + pluginName + " : " + Arrays.deepToString(data));
 								m.invoke(cls, data);
 								return 1;
 							} catch (final InvocationTargetException ex) {

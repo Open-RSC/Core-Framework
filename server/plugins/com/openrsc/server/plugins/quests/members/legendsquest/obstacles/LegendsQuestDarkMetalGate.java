@@ -25,17 +25,17 @@ public class LegendsQuestDarkMetalGate implements OpLocTrigger, SpellLocTrigger 
 		if (obj.getID() == DARK_METAL_GATE) {
 			if (command.equalsIgnoreCase("open")) {
 				if (player.getY() <= 3715) {
-					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You open the gates and walk through..");
+					mes(player, config().GAME_TICK * 2, "You open the gates and walk through..");
 					player.teleport(474, 3720);
 					player.message("You magically appear in another area of the cave system.");
 					return;
 				}
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "This gate is fused with rock, it doesn't seem possible to open it.",
+				mes(player, config().GAME_TICK * 2, "This gate is fused with rock, it doesn't seem possible to open it.",
 					"But it does look slightly strange in some way.");
 			} else if (command.equalsIgnoreCase("search")) {
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 5, "It just looks like a normal gate...");
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK, "At first...");
-				mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "And then you notice that some of the bars of metal make up letters.",
+				mes(player, config().GAME_TICK * 5, "It just looks like a normal gate...");
+				mes(player, config().GAME_TICK, "At first...");
+				mes(player, config().GAME_TICK * 2, "And then you notice that some of the bars of metal make up letters.",
 					"After some time you manage to make sense of it...",
 					"Would you like to read it?");
 				int menu = multi(player,
@@ -43,12 +43,12 @@ public class LegendsQuestDarkMetalGate implements OpLocTrigger, SpellLocTrigger 
 					"No, I don't want to read that.",
 					"Search further...");
 				if (menu == 0) {
-					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You attempt to read the message in the gate...");
+					mes(player, config().GAME_TICK * 2, "You attempt to read the message in the gate...");
 					ActionSender.sendBox(player, "Gates of metal will not be kind, % %To those who care not for the way of mind. % %To all men of learning and supernatural powers, % %With book and rune spend the long dark hours. % %If passage further you would endure, % %Give me a taste of your power so pure. % %", true);
 				} else if (menu == 1) {
 					player.message("You decide not to read the message.");
 				} else if (menu == 2) {
-					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "You scour the gate for any more clues...",
+					mes(player, config().GAME_TICK * 2, "You scour the gate for any more clues...",
 						"Something etched into the wall nearby catches your eye...",
 						"It looks like a picture of four pillars or constructions.",
 						"Over the first pillar is a picture of a cloud...",
@@ -73,11 +73,11 @@ public class LegendsQuestDarkMetalGate implements OpLocTrigger, SpellLocTrigger 
 					if (!SpellHandler.checkAndRemoveRunes(player, spell)) {
 						return;
 					}
-					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The orb shatters with the power of the magic.",
+					mes(player, config().GAME_TICK * 2, "The orb shatters with the power of the magic.",
 						"The spell works and the gates open.");
 					player.teleport(474, 3714);
-					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 8, "You magically appear in a different part of the cave system.");
-					mes(player, player.getWorld().getServer().getConfig().GAME_TICK * 2, "It seems that the gate was a test of magical ability.",
+					mes(player, config().GAME_TICK * 8, "You magically appear in a different part of the cave system.");
+					mes(player, config().GAME_TICK * 2, "It seems that the gate was a test of magical ability.",
 						"As soon as you enter this room, you are filled with dread.",
 						"In the centre of the room is a large gaping hole.",
 						"It goes down a long way...");

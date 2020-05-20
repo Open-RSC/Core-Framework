@@ -15,11 +15,6 @@ public class ItemDef extends EntityDef {
 	public boolean noteable;
 	public boolean hasNoteType;
 
-	@Deprecated
-	private int isNotedFormOf = -1;
-	@Deprecated
-	public int notedFormID = -1;
-
 	public ItemDef(String name, String description, int spriteID, String spriteLocation,int id) {
 		super(name,description,id);
 		this.spriteID = spriteID;
@@ -63,32 +58,6 @@ public class ItemDef extends EntityDef {
 			untradeable, noteable, -1, -1, id);
 	}
 
-	/*ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
-				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, boolean membersItem,
-				   boolean untradeable, int notedForm, int notedFormOf, int id) {
-		this(name, description, command, basePrice, spriteID, spriteLocation,
-		stackable, wieldable, wearableID, pictureMask, 0, membersItem,
-		untradeable, notedForm, notedFormOf, id);
-		super(name, description, id);
-		this.command = command.split(",");
-		this.basePrice = basePrice;
-		this.spriteID = spriteID;
-		this.stackable = stackable;
-		this.wieldable = wieldable;
-		this.wearableID = wearableID;
-		this.pictureMask = pictureMask;
-		this.blueMask = 0;
-		this.membersItem = membersItem;
-		this.untradeable = untradeable;
-		this.id = id;
-		this.notedFormID = notedForm;
-		this.isNotedFormOf = notedFormOf;
-		this.spriteLocation = spriteLocation;
-
-		if (this.command.length == 1 && this.command[0] == "")
-			this.command = null;
-	}*/
-
 	ItemDef(String name, String description, String command, int basePrice, int spriteID, String spriteLocation,
 				   boolean stackable, boolean wieldable, int wearableID, int pictureMask, int blueMask, boolean membersItem,
 				   boolean untradeable, boolean noteable, int notedForm, int notedFormOf, int id) {
@@ -105,8 +74,6 @@ public class ItemDef extends EntityDef {
 		this.untradeable = untradeable;
 		this.noteable = noteable;
 		this.id = id;
-		this.notedFormID = notedForm;
-		this.isNotedFormOf = notedFormOf;
 		this.spriteLocation = spriteLocation;
 
 		if (this.command.length == 1 && this.command[0] == "")
@@ -179,13 +146,4 @@ public class ItemDef extends EntityDef {
 		return !stackable && (!untradeable || noteable);
 	}
 
-	@Deprecated
-	public int getNotedFormOf() {
-		return this.isNotedFormOf;
-	}
-
-	@Deprecated
-	public int getNotedForm() {
-		return this.notedFormID;
-	}
 }
