@@ -8523,7 +8523,7 @@ public final class mudclient implements Runnable {
 						this.walkToActionSource(this.playerLocalX, this.playerLocalZ, mX / 128, (mZ / 128),
 							false);
 					}
-					if (Config.S_WANT_CUSTOM_SPRITES && this.mouseButtonClick == 2) {
+					if (!Config.isAndroid() && Config.S_WANT_CUSTOM_SPRITES && this.mouseButtonClick == 2) {
 						this.cameraRotation = 128;
 					}
 
