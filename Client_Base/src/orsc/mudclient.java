@@ -7400,11 +7400,10 @@ public final class mudclient implements Runnable {
 											MenuItemAction.DEV_REMOVE_NPC, "@gr2@Remove NPC",
 											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
 									}
-									if (this.npcs[var9].npcId != 804) {
-										this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
-											MenuItemAction.NPC_TALK_TO, "Talk-to",
-											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
-									}
+
+									this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
+										MenuItemAction.NPC_TALK_TO, "Talk-to",
+										"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
 
 									if (!EntityHandler.getNpcDef(var13).getCommand1().equals("")) {
 										this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
