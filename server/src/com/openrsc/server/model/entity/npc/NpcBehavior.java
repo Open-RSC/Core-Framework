@@ -323,6 +323,8 @@ public class NpcBehavior {
 
 		boolean playerInCombat = player.inCombat();
 
+		boolean lastLogin = player instanceof Player && checkCombatTimer(((Player)player).getLastLogin(), 5);
+
 		int numTicks = player.getCombatState() == CombatState.RUNNING ? 5 : 0;
 		boolean playerCombatTimeoutExceeded = checkCombatTimer(player.getCombatTimer(), numTicks);
 
@@ -336,6 +338,7 @@ public class NpcBehavior {
 			&& !impervious
 			&& !outOfBounds
 			&& !playerInCombat
+			&& lastLogin
 			&& playerCombatTimeoutExceeded;
 	}
 

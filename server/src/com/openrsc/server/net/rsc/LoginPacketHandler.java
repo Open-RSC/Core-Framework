@@ -78,8 +78,6 @@ public class LoginPacketHandler {
 							loadedPlayer.setChangingAppearance(true);
 						}
 
-						loadedPlayer.setCombatTimer();
-
 						server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
 						ActionSender.sendLogin(loadedPlayer);
 					}
