@@ -37,20 +37,20 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 	public static void demonFight(Player player) {
 		Npc third_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), player.getX(), player.getY(), 60000 * 15, player);
 		if (third_nezikchened != null) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			npcsay(player, third_nezikchened, "Now you try to defile my sanctuary...I will teach thee!");
 			if (player.getCache().hasKey("viyeldi_companions") && player.getCache().getInt("viyeldi_companions") <= 3) {
 				npcsay(player, third_nezikchened, "You will pay for your disrespect by meeting some old friends...");
-				mes(third_nezikchened, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Demon starts chanting...",
+				mes(third_nezikchened, config().GAME_TICK * 2, "The Demon starts chanting...",
 					"@yel@Nezikchened: Protectors of source, alive in death,",
 					"@yel@Nezikchened: do not rest while this Vacu draws breath!");
 				if (third_nezikchened != null) {
 					third_nezikchened.remove();
-					mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "The demon is summoning the dead hero's from the Viyeldi caves !");
+					mes(config().GAME_TICK * 2, "The demon is summoning the dead hero's from the Viyeldi caves !");
 					summonViyeldiCompanions(player);
 				}
 			} else if (player.getCache().hasKey("viyeldi_companions") && player.getCache().getInt("viyeldi_companions") == 4) {
-				mes(third_nezikchened, player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Demon screams in rage...");
+				mes(third_nezikchened, config().GAME_TICK * 2, "The Demon screams in rage...");
 				npcsay(player, third_nezikchened, "Raarrrrghhhh!",
 					"I'll kill you myself !");
 				third_nezikchened.startCombat(player);
@@ -96,12 +96,12 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 						player.getCache().store("ran_from_2nd_nezi", true);
 					}
 					n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Run for your life coward...", player));
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+					delay(config().GAME_TICK * 3);
 					n.getUpdateFlags().setChatMessage(new ChatMessage(n, "The next time you come, I will be ready for you!", player));
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+					delay(config().GAME_TICK * 3);
 					n = changenpc(n, NpcId.ECHNED_ZEKIN.id(), true);
 					if (n != null)
-						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+						delay(config().GAME_TICK * 2);
 					n.remove();
 					break;
 				case 8:
@@ -125,17 +125,17 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 			// FIRST FIGHT.
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 3 && player.getLocation().isInsideFlameWall()) {
 				n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Ha ha ha...I shall return for you when the time is right.", player));
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+				delay(config().GAME_TICK * 3);
 				npcWalkFromPlayer(player, n);
-				mes(player.getWorld().getServer().getConfig().GAME_TICK, "Your opponent is retreating");
+				mes(config().GAME_TICK, "Your opponent is retreating");
 				if (n != null) {
 					n.remove();
 				}
-				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "The demon starts an incantation...",
+				mes(config().GAME_TICK * 2, "The demon starts an incantation...",
 					"@yel@Nezikchened : But I will leave you with a taste of my power...",
 					"As he finishes the incantation a powerful bolt of energy strikes you.");
 				player.damage(7);
-				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "@yel@Nezikchened : Haha hah ha ha ha ha....",
+				mes(config().GAME_TICK * 2, "@yel@Nezikchened : Haha hah ha ha ha ha....",
 					"The demon explodes in a powerful burst of flame that scorches you.");
 				player.updateQuestStage(Quests.LEGENDS_QUEST, 4);
 				Npc ungadulu = ifnearvisnpc(player, NpcId.UNGADULU.id(), 8);
@@ -151,7 +151,7 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 				mes("Your opponent is retreating");
 				npcsay(player, n, "You would bite the hand that feeds you!",
 					"Very well, I will ready myself for our next encounter...");
-				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Demon seems very angry now...",
+				mes(config().GAME_TICK * 2, "The Demon seems very angry now...",
 					"You deliver a final devastating blow to the demon, ",
 					"and it's unearthly frame crumbles into dust.");
 				if (n != null) {
@@ -164,10 +164,10 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 				if (n != null) {
 					n.remove();
 				}
-				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You deliver the final killing blow to the foul demon.",
+				mes(config().GAME_TICK * 2, "You deliver the final killing blow to the foul demon.",
 					"The Demon crumbles into a pile of ash.");
 				addobject(ItemId.ASHES.id(), 1, player.getX(), player.getY(), player);
-				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "@yel@Nezikchened: Arrrghhhh.",
+				mes(config().GAME_TICK * 2, "@yel@Nezikchened: Arrrghhhh.",
 					"@yel@Nezikchened: I am beaten by a mere mortal.",
 					"@yel@Nezikchened: I will revenge myself upon you...");
 				say(player, null, "Yeah, yeah, yeah ! ",
@@ -199,8 +199,8 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 	public void onAttackNpc(Player player, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.NEZIKCHENED.id()) {
 			if ((affectedmob.getAttribute("spawnedFor", null) != null && !affectedmob.getAttribute("spawnedFor").equals(player)) || !atQuestStages(player, Quests.LEGENDS_QUEST, 3, 7, 8)) {
-				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "Your attack glides straight through the Demon.");
-				mes(player.getWorld().getServer().getConfig().GAME_TICK, "as if it wasn't really there.");
+				mes(config().GAME_TICK * 2, "Your attack glides straight through the Demon.");
+				mes(config().GAME_TICK, "as if it wasn't really there.");
 				if (affectedmob != null)
 					affectedmob.remove();
 			}

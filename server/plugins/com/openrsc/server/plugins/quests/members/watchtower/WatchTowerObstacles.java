@@ -268,7 +268,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 		}
 		else if (obj.getID() == OGRE_CAVE_ENCLAVE) {
 			if (player.getQuestStage(Quests.WATCHTOWER) == -1 &&
-				!player.getWorld().getServer().getConfig().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
+				!config().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
 				player.message("The ogres have blocked this entrance now");
 				return;
 			}
@@ -344,8 +344,8 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 									"Do you want to get hurt or something ?");
 							} else {
 								player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 20));
-								if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-									if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+								if (config().WANT_FATIGUE) {
+									if (config().STOP_SKILLING_FATIGUED >= 1
 										&& player.getFatigue() >= player.MAX_FATIGUE) {
 										player.message("You are too tired to attempt this jump");
 										return;
@@ -361,8 +361,8 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 							player.message("The guard blocks your path");
 						}
 					} else {
-						if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-							if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+						if (config().WANT_FATIGUE) {
+							if (config().STOP_SKILLING_FATIGUED >= 1
 								&& player.getFatigue() >= player.MAX_FATIGUE) {
 								player.message("You are too tired to attempt this jump");
 								return;
@@ -392,10 +392,10 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 				"This hole must lead to somewhere...");
 		}
 		else if (obj.getID() == SKAVID_HOLE) {
-			if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-				if ((player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+			if (config().WANT_FATIGUE) {
+				if ((config().STOP_SKILLING_FATIGUED >= 2
 					&& player.getFatigue() >= player.MAX_FATIGUE) ||
-					(player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED == 1
+					(config().STOP_SKILLING_FATIGUED == 1
 					&& player.getFatigue() >= 0.95*player.MAX_FATIGUE)) {
 					player.message("You are too tired to enter this tunnel");
 					return;

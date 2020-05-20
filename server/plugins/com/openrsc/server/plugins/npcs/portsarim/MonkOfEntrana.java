@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.portsarim;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
@@ -9,59 +10,69 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
-
-import java.util.Arrays;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class MonkOfEntrana implements OpLocTrigger,
 	TalkNpcTrigger {
 
-	private String[] blockedItems = new String[]{
-		"arrow", "axe", "staff", "bow", "mail", "plate",
-		"bolts", "cannon", "helmet", "mace", "scimitar",
-		"shield", "spear", "2-handed", "long", "short",
-		"amulet", "ring", "cape", "gauntlet", "boot",
-		"necklace", "silverlight", "excalibur", "dagger",
-		"throwing", "sword"
+	final private int[] blockedItems={
+		// Arrows
+		ItemId.BRONZE_ARROWS.id(),
+		ItemId.IRON_ARROWS.id(),
+		ItemId.STEEL_ARROWS.id(),
+		ItemId.MITHRIL_ARROWS.id(),
+		ItemId.ADAMANTITE_ARROWS.id(),
+		ItemId.RUNE_ARROWS.id(),
+		ItemId.ICE_ARROWS.id(),
+		// Poison Arrows
+		ItemId.POISON_BRONZE_ARROWS.id(),
+		ItemId.POISON_IRON_ARROWS.id(),
+		ItemId.POISON_STEEL_ARROWS.id(),
+		ItemId.POISON_MITHRIL_ARROWS.id(),
+		ItemId.POISON_ADAMANTITE_ARROWS.id(),
+		ItemId.POISON_RUNE_ARROWS.id(),
+		// Arrow Heads
+		ItemId.BRONZE_ARROW_HEADS.id(),
+		ItemId.IRON_ARROW_HEADS.id(),
+		ItemId.STEEL_ARROW_HEADS.id(),
+		ItemId.MITHRIL_ARROW_HEADS.id(),
+		ItemId.ADAMANTITE_ARROW_HEADS.id(),
+		ItemId.RUNE_ARROW_HEADS.id(),
+		// Crossbow Bolts
+		ItemId.CROSSBOW_BOLTS.id(),
+		ItemId.POISON_CROSSBOW_BOLTS.id(),
+		ItemId.OYSTER_PEARL_BOLTS.id(),
+		ItemId.OYSTER_PEARL_BOLT_TIPS.id(),
+		// Dwarf Cannon
+		ItemId.DWARF_CANNON_BASE.id(),
+		ItemId.DWARF_CANNON_STAND.id(),
+		ItemId.DWARF_CANNON_BARRELS.id(),
+		ItemId.DWARF_CANNON_FURNACE.id()
 	};
 
-	private String[] exceptions = new String[]{ "fish", "pickaxe" };
-
-	private boolean BLOCK_ITEM(String itemName, boolean equipmentTab) {
-		// Checks to see if the item is in the blocked list
-		boolean blocked = Arrays.stream(blockedItems).parallel().anyMatch(itemName::contains);
-		// If it is, checks to see if it is on the exception list
-		// If it isn't, we block the item.
-		if (blocked && !Arrays.stream(exceptions).parallel().anyMatch(itemName::contains)) {
-			return true;
-		}
-		// Block item if it is a pickaxe that isn't bronze.
-		if (equipmentTab && itemName.contains("pickaxe") && !itemName.contains("bronze")) {
-			return true;
-		}
+	private boolean BLOCK_ITEM(Player player, Item item) {
+		if (config().WANT_EQUIPMENT_TAB
+			&& item.getCatalogId() == ItemId.BRONZE_PICKAXE.id()) return false;
+		if (item.isWieldable(player.getWorld())) return true;
+		if (DataConversions.inArray(blockedItems, item.getCatalogId())) return true;
 		return false;
 	}
 
 	private boolean CANT_GO(Player player) {
-		boolean equipmentTab = player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB;
 		synchronized(player.getCarriedItems().getInventory().getItems()) {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
-				String name = item.getDef(player.getWorld()).getName().toLowerCase();
-				if (BLOCK_ITEM(name, equipmentTab))
-					return true;
+				if (BLOCK_ITEM(player, item)) return true;
 			}
 		}
 
-		if (equipmentTab) {
+		if (config().WANT_EQUIPMENT_TAB) {
 			Item item;
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				item = player.getCarriedItems().getEquipment().get(i);
-				if (item == null)
-					continue;
-				String name = item.getDef(player.getWorld()).getName().toLowerCase();
-				if (BLOCK_ITEM(name, true))
-					return true;
+				if (item == null) continue;
+				if (BLOCK_ITEM(player, item)) return true;
 			}
 		}
 		return false;
@@ -87,7 +98,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 				} else {
 					mes("You board the ship");
 					player.teleport(418, 570, false);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+					delay(config().GAME_TICK * 3);
 					mes("The ship arrives at Entrana");
 				}
 			}
@@ -99,7 +110,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 
 				mes("You board the ship");
 				player.teleport(264, 660, false);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+				delay(config().GAME_TICK * 3);
 				mes("The ship arrives at Port Sarim");
 			}
 			return;

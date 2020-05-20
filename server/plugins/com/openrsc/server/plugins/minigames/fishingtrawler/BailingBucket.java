@@ -26,7 +26,7 @@ public class BailingBucket implements OpInvTrigger {
 			else {
 				player.message("you begin to bail a bucket load of water");
 			}
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			trawler.bailWater();
 		} else {
 			// player.message("");

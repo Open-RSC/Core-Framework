@@ -12,7 +12,7 @@ public final class ChatHandler implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player sender) throws Exception {
 		if (sender.isMuted()) {
-			sender.message(sender.getWorld().getServer().getConfig().MESSAGE_PREFIX + "You are muted " + (sender.getMuteExpires() == -1 ? "@red@permanently" : "for @cya@" + sender.getMinutesMuteLeft() + "@whi@ minutes."));
+			sender.message(sender.getConfig().MESSAGE_PREFIX + "You are muted " + (sender.getMuteExpires() == -1 ? "@red@permanently" : "for @cya@" + sender.getMinutesMuteLeft() + "@whi@ minutes."));
 		}
 
 		if (!sender.hasElevatedPriveledges() && sender.getLocation().onTutorialIsland()) {

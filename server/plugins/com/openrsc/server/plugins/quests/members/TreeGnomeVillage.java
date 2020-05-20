@@ -493,9 +493,9 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 							"placing the two Orbs at the peak of the spirit tree");
 						player.getCarriedItems().remove(new Item(ItemId.ORBS_OF_PROTECTION.id()));
 						n.displayNpcTeleportBubble(656, 695);
-						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+						delay(config().GAME_TICK * 2);
 						n.displayNpcTeleportBubble(656, 695);
-						delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+						delay(config().GAME_TICK * 2);
 						n.displayNpcTeleportBubble(656, 695);
 						npcsay(player, n, "now at last my people are safe once more",
 							"and can live in peace");

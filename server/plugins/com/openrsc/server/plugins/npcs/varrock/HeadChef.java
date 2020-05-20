@@ -17,7 +17,7 @@ public class HeadChef implements TalkNpcTrigger {
 		npcsay(player, n, "Hello welcome to the chef's guild",
 			"Only accomplished chefs and cooks are allowed in here",
 			"Feel free to use any of our facilities");
-		if (player.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS
+		if (config().WANT_CUSTOM_QUESTS
 		&& getMaxLevel(player, Skills.COOKING) >= 99) {
 			npcsay(player, n, "Also for your skill level",
 				"i can offer you cape",

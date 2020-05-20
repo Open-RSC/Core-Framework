@@ -29,7 +29,7 @@ public class Ladders {
 	}
 
 	public void onObjectAction(GameObject obj, String command, Player player) {
-		if (obj.getID() == 487 && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (obj.getID() == 487 && !config().MEMBER_WORLD) {
 			player.message(player.MEMBER_MESSAGE);
 			return;
 		} else if (obj.getID() == 79 && obj.getX() == 243 && obj.getY() == 95) {
@@ -76,21 +76,21 @@ public class Ladders {
 		} else if (obj.getID() == 487) {
 			player.message("You pull the lever");
 			player.teleport(567, 3330);
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			if (player.getX() == 567 && player.getY() == 3330) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
 		} else if (obj.getID() == 488) {
 			player.message("You pull the lever");
 			player.teleport(282, 3019);
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			if (player.getX() == 282 && player.getY() == 3019) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
 		} else if (obj.getID() == 349) {
 			player.playerServerMessage(MessageType.QUEST, "You pull the lever");
 			player.teleport(621, 596);
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			if (player.getX() == 621 && player.getY() == 596) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
@@ -111,7 +111,7 @@ public class Ladders {
 				player.message("you pull the lever");
 				player.teleport(180, 128);
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK);
+				delay(config().GAME_TICK);
 				if (player.getX() == 180 && player.getY() == 128) {
 					displayTeleportBubble(player, player.getX(), player.getY(), false);
 				}
@@ -151,7 +151,7 @@ public class Ladders {
 							player.message("You climb up the ladder");
 						} else {
 							npcsay(player, abbot, "No I feel you are not devout enough");
-							delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+							delay(config().GAME_TICK * 2);
 							player.message("You need a prayer level of 31");
 						}
 					} else if (op == 1) {
@@ -173,7 +173,7 @@ public class Ladders {
 					npcYell(player, dwarf,
 						"Sorry only the top miners are allowed in there");
 				}
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				player.message("You need a mining level of 60 to enter");
 			} else {
 				player.teleport(274, 3397, false);
@@ -182,7 +182,7 @@ public class Ladders {
 			if (!player.getCarriedItems().hasCatalogID(ItemId.DISK_OF_RETURNING.id(), Optional.of(false))) {
 				mes("you seem to be missing a disk to use the ladder");
 			} else {
-				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "You climb down the ladder");
+				mes(config().GAME_TICK * 2, "You climb down the ladder");
 				int offX = DataConversions.random(0,4) - 2;
 				int offY = DataConversions.random(0,4) - 2;
 				player.teleport(305 + offX, 3300 + offY);
@@ -193,7 +193,7 @@ public class Ladders {
 			if (paladinGuard != null) {
 				npcYell(player, paladinGuard, "Stop right there");
 				paladinGuard.setChasing(player);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				if (player.inCombat()) {
 					return;
 				}
@@ -220,7 +220,7 @@ public class Ladders {
 			player.teleport(222, 110, false);
 		} else if (obj.getID() == 331 && obj.getX() == 150 && obj.getY() == 558) {
 			player.teleport(151, 1505, false);
-		} else if (obj.getID() == 6 && obj.getX() == 282 && obj.getY() == 185 && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		} else if (obj.getID() == 6 && obj.getX() == 282 && obj.getY() == 185 && !config().MEMBER_WORLD) {
 			player.message(player.MEMBER_MESSAGE);
 		} else if (obj.getID() == 6 && obj.getX() == 148 && obj.getY() == 1507) {
 			player.teleport(148, 563, false);

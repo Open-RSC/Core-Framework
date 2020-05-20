@@ -221,7 +221,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 	}
 
 	private boolean canBuyCape(Player player) {
-		if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES
+		if (config().WANT_CUSTOM_SPRITES
 			&& getMaxLevel(player, Skills.SMITHING) >= 99) { return true; }
 		return false;
 	}

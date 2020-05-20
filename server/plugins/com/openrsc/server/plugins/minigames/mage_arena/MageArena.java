@@ -190,7 +190,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 
 				startKolodionEvent(player);
 				spawnKolodion(player, NpcId.KOLODION_HUMAN.id());
-				delay(player.getWorld().getServer().getConfig().GAME_TICK);
+				delay(config().GAME_TICK);
 			} else if (choice == 1) {
 				npcsay(player, n, "your loss");
 			}
@@ -199,7 +199,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 
 	public void learnSpellEvent(Player player) {
 		DelayedEvent mageArena = player.getAttribute("mageArenaEvent", null);
-		DelayedEvent mageArenaEvent = new DelayedEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK * 3, "Mage Arena Learn Spell Event") {
+		DelayedEvent mageArenaEvent = new DelayedEvent(player.getWorld(), player, config().GAME_TICK * 3, "Mage Arena Learn Spell Event") {
 			@Override
 			public void run() {
 				/* Player logged out. */
@@ -262,7 +262,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 
 	private void startKolodionEvent(Player player) {
 		DelayedEvent kolE = player.getAttribute("kolodionEvent", null);
-		DelayedEvent kolodionEvent = new DelayedEvent(player.getWorld(), player, player.getWorld().getServer().getConfig().GAME_TICK, "Mage Arena Kolodion Event") {
+		DelayedEvent kolodionEvent = new DelayedEvent(player.getWorld(), player, config().GAME_TICK, "Mage Arena Kolodion Event") {
 			@Override
 			public void run() {
 				Npc npc = getOwner().getAttribute("spawned_kolodion");

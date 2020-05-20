@@ -37,12 +37,12 @@ public class Woodcutting implements OpLocTrigger {
 			player.message("Nothing interesting happens");
 			return;
 		}
-		if (def.getReqLevel() > 1 && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (def.getReqLevel() > 1 && !config().MEMBER_WORLD) {
 			player.message(player.MEMBER_MESSAGE);
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to cut the tree");
 				return;
@@ -65,7 +65,7 @@ public class Woodcutting implements OpLocTrigger {
 		}
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.WOODCUT);
 		}
 
@@ -76,11 +76,11 @@ public class Woodcutting implements OpLocTrigger {
 	private void batchWoodcutting(Player player, GameObject object, ObjectWoodcuttingDef def, int axeId) {
 		player.playerServerMessage(MessageType.QUEST, "You swing your " + player.getWorld().getServer().getEntityHandler().getItemDef(axeId).getName().toLowerCase() + " at the tree...");
 		thinkbubble(new Item(axeId));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		delay(config().GAME_TICK * 3);
 
 		final Item log = new Item(def.getLogId());
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to cut the tree");
 				return;
@@ -129,7 +129,7 @@ public class Woodcutting implements OpLocTrigger {
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			batchWoodcutting(player, object, def, axeId);
 		}
 	}

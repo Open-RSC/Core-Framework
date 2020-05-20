@@ -16,16 +16,35 @@ public class DropTable {
 	private static int RING_OF_WEALTH_BOOST_NUMERATOR = 1;
 	private static int RING_OF_WEALTH_BOOST_DENOMINATOR = 128;
 
-
 	public DropTable() {
 		drops = new ArrayList<>();
 		accessors = new ArrayList<>();
 		totalWeight = 0;
 	}
 
+	public DropTable clone() {
+		DropTable clonedDropTable = new DropTable();
+		for (Drop drop : drops) {
+			if (drop.type == dropType.ITEM) {
+				clonedDropTable.addItemDrop(drop.id, drop.amount, drop.weight, drop.noted);
+			} else if (drop.type == dropType.TABLE) {
+				clonedDropTable.addTableDrop(drop.table, drop.weight);
+			}
+		}
+		return clonedDropTable;
+	}
+
+	public int getTotalWeight() {
+		return totalWeight;
+	}
+
 	public void addEmptyDrop(int weight) {
 		drops.add(new Drop(ItemId.NOTHING.id(), 0, weight, false, dropType.NOTHING));
 		this.totalWeight += weight;
+	}
+
+	public void addItemDrop(int itemID, int amount, int weight) {
+		addItemDrop(itemID, amount, weight, false);
 	}
 
 	public void addItemDrop(int itemID, int amount, int weight, boolean noted) {

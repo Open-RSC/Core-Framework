@@ -125,7 +125,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 							say(player, n, "I have this big fish", "Is it enough to win?");
 							npcsay(player, n, "Well we'll just wait till time is up");
 							player.message("You wait");
-							delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+							delay(config().GAME_TICK * 3);
 							bonzoTimesUpDialogue(player, n);
 						} else if (contestStartedMenu == 1) {
 							say(player, n, "I think I might still be able to find a bigger fish");

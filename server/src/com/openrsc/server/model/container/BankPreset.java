@@ -132,6 +132,15 @@ public class BankPreset {
 			return;
 		}
 
+		// Deposit all held items in inventory.
+		for (Integer catalogId : items) {
+			Item item = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(catalogId)
+			);
+			if (item == null) continue;
+			player.getBank().depositItemFromInventory(item.getCatalogId(), item.getAmount(), false);
+		}
+
 		// Withdraw and equip equipment items if not already equipped.
 		for (int slotID = 0; slotID < equipment.length; slotID++) {
 			Item itemNeeded = equipment[slotID];
@@ -159,10 +168,10 @@ public class BankPreset {
 
 			if (neededCatalogId == ItemId.NOTHING.id()) continue;
 
-			// Fail out if we don't have the item we need.
+			// Pass this item if we don't have the item we need.
 			if (player.getBank().countId(neededCatalogId) == 0) {
 				player.message("Could not withdraw item: " + itemNeeded.getDef(player.getWorld()).getName());
-				return;
+				continue;
 			}
 
 			// Add item to equipment if it's not "nothing".
@@ -172,15 +181,7 @@ public class BankPreset {
 			}
 		}
 
-		// Deposit all held items in inventory.
-		for (Integer catalogId : items) {
-			Item item = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(catalogId)
-			);
-			if (item == null) continue;
-			player.getBank().depositItemFromInventory(item.getCatalogId(), item.getAmount(), false);
-		}
-
+		// Withdraw inventory items
 		for (int slotID = 0; slotID < inventory.length; slotID++) {
 			Item itemNeeded = inventory[slotID];
 
@@ -191,10 +192,10 @@ public class BankPreset {
 
 			if (neededCatalogId == ItemId.NOTHING.id()) continue;
 
-			// We do not have any of the item we need, fail out
+			// We do not have any of the item we need
 			if (player.getBank().countId(neededCatalogId) == 0) {
 				player.message("Could not withdraw item: " + itemNeeded.getDef(player.getWorld()).getName());
-				return;
+				continue;
 			}
 
 			player.getBank().withdrawItemToInventory(itemNeeded.getCatalogId(), itemNeeded.getAmount(), itemNeeded.getNoted(), false);

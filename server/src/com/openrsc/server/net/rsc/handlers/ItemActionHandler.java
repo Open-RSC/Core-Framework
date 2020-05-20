@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -53,7 +54,7 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (item.getDef(player.getWorld()).isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (item.getDef(player.getWorld()).isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
 			player.message("You need to be a member to use this object");
 			return;
 		}
@@ -65,7 +66,13 @@ public class ItemActionHandler implements PacketHandler {
 
 		if (player.isBusy()) return;
 
-		player.resetAll(false);
+		player.resetAll(false, false);
+
+		// We want to keep walking, but not perform the action when we get there.
+		WalkToAction walkToAction = player.getWalkToAction();
+		if (walkToAction != null) {
+			walkToAction.finishExecution();
+		}
 
 		final String command = item.getDef(player.getWorld()).getCommand()[commandIndex];
 

@@ -22,7 +22,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 		Point location = Point.location(packet.readShort(), packet.readShort());
 		final int id = packet.readShort();
 		final int groundItemId = packet.readShort();
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && id > Inventory.MAX_SIZE) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB && id > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;
 		}
@@ -58,7 +58,7 @@ public class ItemUseOnGroundItem implements PacketHandler {
 
 				if ((myItem.getDef(getPlayer().getWorld()).isMembersOnly() || gItem.getDef()
 					.isMembersOnly())
-					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					&& !getPlayer().getConfig().MEMBER_WORLD) {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}

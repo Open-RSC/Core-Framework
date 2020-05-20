@@ -114,7 +114,7 @@ public class HalloweenCracker implements UsePlayerTrigger {
 				return;
 			}
 
-			if (!player.getWorld().getServer().getConfig().CAN_USE_CRACKER_ON_SELF && !player.isAdmin() && player.getCurrentIP().equalsIgnoreCase(otherPlayer.getCurrentIP())) {
+			if (!config().CAN_USE_CRACKER_ON_SELF && !player.isAdmin() && player.getCurrentIP().equalsIgnoreCase(otherPlayer.getCurrentIP())) {
 				player.message(otherPlayer.getUsername() + " does not want to pull a cracker with you...");
 				return;
 			}
@@ -126,13 +126,13 @@ public class HalloweenCracker implements UsePlayerTrigger {
 
 			player.getCarriedItems().remove(item);
 
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 
 			thinkbubble(item);
 			player.message("You pull the cracker with " + otherPlayer.getUsername() + "...");
 			otherPlayer.message(player.getUsername() + " is pulling a cracker with you...");
 
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 
 			int holidayId = Formulae.weightedRandomChoice(holidayIds, holidayWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);

@@ -1066,7 +1066,7 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							"he must be going soft");
 						say(player, n, "so the butler is working for you too?",
 							"Why's it always the Butler? I should have guessed");
-						delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+						delay(config().GAME_TICK * 3);
 						n.setChasing(player);
 					} else if (player.getCache().hasKey("evil_side")) {
 						say(player, n, "hello");

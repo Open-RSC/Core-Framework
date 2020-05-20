@@ -38,7 +38,7 @@ public final class Pick implements OpLocTrigger {
 
 	private void handleCropPickup(final Player player, int objId, String pickMessage) {
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().getFreeSlots();
 		}
 
@@ -55,7 +55,7 @@ public final class Pick implements OpLocTrigger {
 
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			batchCropPickup(player, objId, pickMessage);
 		}
 	}

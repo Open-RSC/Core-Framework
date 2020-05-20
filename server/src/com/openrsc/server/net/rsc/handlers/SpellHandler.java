@@ -77,7 +77,7 @@ public class SpellHandler implements PacketHandler {
 
 		for (Entry<Integer, Integer> e : spell.getRunesRequired()) {
 			boolean skipRune = false;
-			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			if (player.getConfig().WANT_EQUIPMENT_TAB) {
 				for (Item staff : getStaffs(e.getKey())) {
 					if (player.getCarriedItems().getEquipment().searchEquipmentForItem(staff.getCatalogId()) != -1) {
 						skipRune = true;
@@ -144,7 +144,7 @@ public class SpellHandler implements PacketHandler {
 			return;
 		}
 		SpellDef spell = player.getWorld().getServer().getEntityHandler().getSpellDef(idx);
-		if (spell.isMembers() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (spell.isMembers() && !player.getConfig().MEMBER_WORLD) {
 			player.message("You need to login to a members world to use this spell");
 			player.resetPath();
 			return;
@@ -535,7 +535,7 @@ public class SpellHandler implements PacketHandler {
 
 	private void enchantTierOneJewelry(Player player, Item affectedItem, SpellDef spell) {
 		if (affectedItem.getCatalogId() == ItemId.SAPPHIRE_AMULET.id()
-				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
+				|| (player.getConfig().WANT_EQUIPMENT_TAB
 				&& (affectedItem.getCatalogId() == ItemId.SAPPHIRE_RING.id() || affectedItem.getCatalogId() == ItemId.OPAL_RING.id()))) {
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
@@ -563,12 +563,12 @@ public class SpellHandler implements PacketHandler {
 			player.getCarriedItems().getInventory().add(new Item(itemID));
 			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 		} else
-			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted sapphire " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? " rings/amulets or opal rings" : "amulets"));
+			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted sapphire " + (player.getConfig().WANT_EQUIPMENT_TAB ? " rings/amulets or opal rings" : "amulets"));
 	}
 
 	private void enchantTierTwoJewelry(Player player, Item affectedItem, SpellDef spell) {
 		if (affectedItem.getCatalogId() == ItemId.EMERALD_AMULET.id()
-				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.EMERALD_RING.id())) {
+				|| (player.getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.EMERALD_RING.id())) {
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
@@ -591,12 +591,12 @@ public class SpellHandler implements PacketHandler {
 			player.getCarriedItems().getInventory().add(new Item(itemID));
 			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 		} else
-			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted emerald " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted emerald " + (player.getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 	}
 
 	private void enchantTierThreeJewelry(Player player, Item affectedItem, SpellDef spell) {
 		if (affectedItem.getCatalogId() == ItemId.RUBY_AMULET.id()
-				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.RUBY_RING.id())) {
+				|| (player.getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.RUBY_RING.id())) {
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
@@ -619,12 +619,12 @@ public class SpellHandler implements PacketHandler {
 			player.getCarriedItems().getInventory().add(new Item(itemID));
 			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 		} else
-			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted ruby " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted ruby " + (player.getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 	}
 
 	private void enchantTierFourJewelry(Player player, Item affectedItem, SpellDef spell) {
 		if (affectedItem.getCatalogId() == ItemId.DIAMOND_AMULET.id()
-				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.DIAMOND_RING.id())){
+				|| (player.getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.DIAMOND_RING.id())){
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
@@ -647,12 +647,12 @@ public class SpellHandler implements PacketHandler {
 			player.getCarriedItems().getInventory().add(new Item(itemID));
 			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 		} else
-			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted diamond " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted diamond " + (player.getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 	}
 
 	private void enchantTierFiveJewelry(Player player, Item affectedItem, SpellDef spell) {
 		if (affectedItem.getCatalogId() == ItemId.UNENCHANTED_DRAGONSTONE_AMULET.id()
-				|| (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.DRAGONSTONE_RING.id())) {
+				|| (player.getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.DRAGONSTONE_RING.id())) {
 			int itemID = 0;
 			String jewelryType = "";
 			switch(ItemId.getById(affectedItem.getCatalogId())) {
@@ -671,7 +671,7 @@ public class SpellHandler implements PacketHandler {
 			player.getCarriedItems().getInventory().add(new Item(itemID));
 			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 		} else
-			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted dragonstone " + (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
+			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted dragonstone " + (player.getConfig().WANT_EQUIPMENT_TAB ? "rings and amulets" : "amulets"));
 	}
 
 	private void lowLevelAlchemy(Player player, Item affectedItem, SpellDef spell) {
@@ -910,7 +910,7 @@ public class SpellHandler implements PacketHandler {
 			player.resetPath();
 			return;
 		}
-		int timeToAllowAttacks = player.getWorld().getServer().getConfig().GAME_TICK * 5;
+		int timeToAllowAttacks = player.getConfig().GAME_TICK * 5;
 		if (affectedMob.isPlayer()) {
 			Player other = (Player) affectedMob;
 			if (player.getLocation().inWilderness() && System.currentTimeMillis() - other.getCombatTimer() < timeToAllowAttacks) {
@@ -1181,13 +1181,13 @@ public class SpellHandler implements PacketHandler {
 							// Deal first damage
 							getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, firstDamage, 1));
 							// Deal Second Damage
-							getPlayer().getWorld().getServer().getGameEventHandler().add(new MiniEvent(getPlayer().getWorld(), getPlayer(), getPlayer().getWorld().getServer().getConfig().GAME_TICK, "Salarin the Twisted Strike") {
+							getPlayer().getWorld().getServer().getGameEventHandler().add(new MiniEvent(getPlayer().getWorld(), getPlayer(), getPlayer().getConfig().GAME_TICK, "Salarin the Twisted Strike") {
 								@Override
 								public void action() {
 									affectedMob.getSkills().subtractLevel(Skills.HITS, secondAdditionalDamage, false);
 									affectedMob.getUpdateFlags().setDamage(new Damage(affectedMob, secondAdditionalDamage));
 									if (affectedMob.isPlayer()) {
-										if (getPlayer().getWorld().getServer().getConfig().WANT_PARTIES) {
+										if (getPlayer().getConfig().WANT_PARTIES) {
 											if(getPlayer().getParty() != null){
 												getPlayer().getParty().sendParty();
 											}

@@ -62,6 +62,11 @@ public class BankPinInterface extends NComponent {
 		exitButton.setInputListener(new InputListener() {
 			@Override
 			public boolean onMouseDown(int clickX, int clickY, int mButtonDown, int mButtonClick) {
+				getClient().packetHandler.getClientStream().newPacket(199);
+				getClient().packetHandler.getClientStream().bufferBits.putByte(8);
+				getClient().packetHandler.getClientStream().bufferBits.putByte(1);
+				getClient().packetHandler.getClientStream().bufferBits.putString("cancel");
+				getClient().packetHandler.getClientStream().finishPacket();
 				hide();
 				return super.onMouseDown(clickX, clickY, mButtonDown, mButtonClick);
 			}

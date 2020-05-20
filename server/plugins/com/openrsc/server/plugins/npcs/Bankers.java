@@ -30,18 +30,18 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 
 		int menu;
 
-		if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS && player.getWorld().getServer().getConfig().WANT_BANK_PINS)
+		if (config().SPAWN_AUCTION_NPCS && config().WANT_BANK_PINS)
 			menu = multi(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
 				"I'd like to talk about bank pin",
 				"I'd like to collect my items from auction");
-		else if (player.getWorld().getServer().getConfig().WANT_BANK_PINS)
+		else if (config().WANT_BANK_PINS)
 			menu = multi(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
 				"I'd like to talk about bank pin");
-		else if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS)
+		else if (config().SPAWN_AUCTION_NPCS)
 			menu = multi(player, npc,
 				"I'd like to access my bank account please",
 				"What is this place?",
@@ -74,7 +74,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 					"And telling us our signs were wrong",
 					"As if we didn't know what town we were in or something!");
 			}
-		} else if (menu == 2 && player.getWorld().getServer().getConfig().WANT_BANK_PINS) {
+		} else if (menu == 2 && config().WANT_BANK_PINS) {
 			int bankPinMenu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 			if (bankPinMenu == 0) {
 				setbankpin(player);
@@ -83,7 +83,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 			} else if (bankPinMenu == 2) {
 				removebankpin(player);
 			}
-		} else if ((menu == 2 || menu == 3) && player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
+		} else if ((menu == 2 || menu == 3) && config().SPAWN_AUCTION_NPCS) {
 			if(validatebankpin(player)) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			}
@@ -93,9 +93,9 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
 		if (inArray(n.getID(), BANKERS)) {
-			if (command.equalsIgnoreCase("Bank") && player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
+			if (command.equalsIgnoreCase("Bank") && config().RIGHT_CLICK_BANK) {
 				quickFeature(n, player, false);
-			} else if (command.equalsIgnoreCase("Collect") && player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
+			} else if (command.equalsIgnoreCase("Collect") && config().SPAWN_AUCTION_NPCS) {
 				quickFeature(n, player, true);
 			}
 		}

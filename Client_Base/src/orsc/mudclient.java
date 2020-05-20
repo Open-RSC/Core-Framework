@@ -35,6 +35,7 @@ import orsc.net.Opcodes;
 import orsc.util.FastMath;
 import orsc.util.GenUtil;
 import orsc.util.StringUtil;
+import orsc.util.Utils;
 
 import java.io.*;
 import java.security.SecureRandom;
@@ -4712,7 +4713,6 @@ public final class mudclient implements Runnable {
 							this.scene.removeModel(this.world.modelRoofGrid[2][centerX]);
 						}
 
-
 						if (!this.doCameraZoom) {
 							amountToZoom -= 50;
 							this.doCameraZoom = true;
@@ -7400,11 +7400,10 @@ public final class mudclient implements Runnable {
 											MenuItemAction.DEV_REMOVE_NPC, "@gr2@Remove NPC",
 											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
 									}
-									if (this.npcs[var9].npcId != 804) {
-										this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
-											MenuItemAction.NPC_TALK_TO, "Talk-to",
-											"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
-									}
+
+									this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
+										MenuItemAction.NPC_TALK_TO, "Talk-to",
+										"@yel@" + EntityHandler.getNpcDef(this.npcs[var9].npcId).getName());
 
 									if (!EntityHandler.getNpcDef(var13).getCommand1().equals("")) {
 										this.menuCommon.addCharacterItem(this.npcs[var9].serverIndex,
@@ -8524,7 +8523,7 @@ public final class mudclient implements Runnable {
 						this.walkToActionSource(this.playerLocalX, this.playerLocalZ, mX / 128, (mZ / 128),
 							false);
 					}
-					if (Config.S_WANT_CUSTOM_SPRITES && this.mouseButtonClick == 2) {
+					if (!Config.isAndroid() && Config.S_WANT_CUSTOM_SPRITES && this.mouseButtonClick == 2) {
 						this.cameraRotation = 128;
 					}
 
@@ -11143,22 +11142,10 @@ public final class mudclient implements Runnable {
 									}
 									// Add the final search argument without a plus
 									url += (args[args.length - 1]);
+									Utils.openWebpage(url);
 								} else {
 									url = "https://classic.runescape.wiki";
 								}
-
-								// Check if we can open the wiki, otherwise tell the player we can't.
-								/*if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-									try {
-										Desktop.getDesktop().browse(new URI(url));
-									} catch (final Exception ex) {
-										showMessage(true, null, "There is a problem with your search query",
-											MessageType.GAME, 0, null, null);
-									}
-								} else {
-									showMessage(true, null, "There was a problem opening your browser",
-										MessageType.GAME, 0, null, null);
-								}*/
 							} else {
 								this.sendCommandString(var11.substring(2));
 								String putQueue = var11.substring(2);
@@ -11318,6 +11305,12 @@ public final class mudclient implements Runnable {
 					} else if (this.mouseClickXStep < 0) {
 						++this.mouseClickXStep;
 					}
+
+					/*if (this.doCameraZoom && this.cameraZoom > 550) {
+						this.cameraZoom -= 4;
+					} else if (!this.doCameraZoom && this.cameraZoom < 750) {
+						this.cameraZoom += 4;
+					}*/
 
 					if (amountToZoom > 0) {
 						minCameraZoom += 4;
@@ -11806,13 +11799,13 @@ public final class mudclient implements Runnable {
 				this.panelLoginWelcome.handleMouse(this.mouseX, this.mouseY, this.currentMouseButtonDown,
 					this.lastMouseButtonDown);
 				if (this.panelLoginWelcome.isClicked(loginButtonExistingUser)) {
-					if (isAndroid())
-						clientPort.drawKeyboard(); // launches the Android soft keyboard
+					if (isAndroid()) clientPort.drawKeyboard(); // launches the Android soft keyboard
 					this.loginScreenNumber = 2;
 					this.panelLogin.setText(this.controlLoginStatus1, "");
 					this.panelLogin.setText(this.controlLoginStatus2, "Please enter your username and password");
 					this.panelLogin.setFocus(this.controlLoginUser);
 				} else if (panelLoginWelcome.isClicked(loginButtonNewUser)) {
+					if (isAndroid()) clientPort.drawKeyboard();
 					loginScreenNumber = 1;
 					this.menuNewUser.setText(this.menuNewUserStatus, "Please fill in all fields");
 					this.menuNewUser.setText(this.menuNewUserStatus2, "and click submit.");
@@ -14601,6 +14594,9 @@ public final class mudclient implements Runnable {
 				} else {
 					String ip = ClientPort.loadIP(); // loads based on Cache/ip.txt
 					int port = ClientPort.loadPort(); // loads based on Cache/port.txt
+					// Set the config properties so that they can be accessed later.
+					Config.SERVER_IP = ip;
+					Config.SERVER_PORT = port;
 					System.out.println(" ");
 					System.out.println(" ");
 					System.out.println("Fetching server configs from " + ip + ":" + port);

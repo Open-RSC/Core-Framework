@@ -21,7 +21,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 		if (affectedPlayer == null || item == null || item.getItemStatus().getNoted()) {
 			return;
 		}
-		if (System.currentTimeMillis() - affectedPlayer.getCombatTimer() < player.getWorld().getServer().getConfig().GAME_TICK * 5) {
+		if (System.currentTimeMillis() - affectedPlayer.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
 			player.resetPath();
 			return;
 		}
@@ -43,7 +43,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 				getPlayer().resetAll();
 				getPlayer().face(affectedPlayer);
 				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
-					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					&& !getPlayer().getConfig().MEMBER_WORLD) {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}

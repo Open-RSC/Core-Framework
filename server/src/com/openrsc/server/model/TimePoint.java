@@ -9,6 +9,10 @@ public class TimePoint extends Point {
 	}
 
 	public TimePoint(int x, int y, long timestamp) {
+		this((short)x, (short)y, timestamp);
+	}
+
+	public TimePoint(short x, short y, long timestamp) {
 		this.x = x;
 		this.y = y;
 		this.timestamp = timestamp;

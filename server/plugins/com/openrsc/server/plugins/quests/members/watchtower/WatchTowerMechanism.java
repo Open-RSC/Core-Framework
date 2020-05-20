@@ -260,7 +260,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 		else if (npc.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id() && item.getCatalogId() == ItemId.NIGHTSHADE.id()) {
 			if ((player.getQuestStage(Quests.WATCHTOWER) >= 0 && player.getQuestStage(Quests.WATCHTOWER) < 5) ||
 				(player.getQuestStage(Quests.WATCHTOWER) == -1 &&
-				!player.getWorld().getServer().getConfig().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE)) {
+				!config().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE)) {
 				player.message("The guard is occupied at the moment");
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You give the guard some nightshade");

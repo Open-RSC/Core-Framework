@@ -86,7 +86,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 					"I am eternally in your debt brave traveller");
 			}
 			addnpc(player.getWorld(), NpcId.GENERAL_KHAZARD.id(), 613, 708, 60000);
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			delay(config().GAME_TICK * 2);
 			Npc general = ifnearvisnpc(player, NpcId.GENERAL_KHAZARD.id(), 8);
 			if (general != null) {
 				npcsay(player,
@@ -110,7 +110,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 		else if (n.getID() == NpcId.KHAZARD_SCORPION.id()) {
 			player.message("You defeat the scorpion");
 			addnpc(player.getWorld(), NpcId.GENERAL_KHAZARD.id(), 613, 708, 30000);
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			delay(config().GAME_TICK * 2);
 			Npc generalAgain = ifnearvisnpc(player, NpcId.GENERAL_KHAZARD.id(), 15);
 			if (generalAgain != null) {
 				npcsay(player, generalAgain, "Not bad, not bad at all",
@@ -129,7 +129,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 		else if (n.getID() == NpcId.BOUNCER.id()) {
 			player.message("You defeat bouncer");
 			addnpc(player.getWorld(), NpcId.GENERAL_KHAZARD.id(), 613, 708, 60000 * 2);
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			delay(config().GAME_TICK * 2);
 			Npc generalAgainAgain = ifnearvisnpc(player, NpcId.GENERAL_KHAZARD.id(), 15);
 			if (generalAgainAgain != null) {
 				npcsay(player, generalAgainAgain, "nooooo! bouncer, how dare you?",
@@ -468,7 +468,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 					player.getCache().remove("guard_sleeping");
 					npcsay(player, guard, "What are you doing?",
 						"It's an imposter!");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+					delay(config().GAME_TICK * 2);
 					guard.setChasing(player);
 					return;
 				}

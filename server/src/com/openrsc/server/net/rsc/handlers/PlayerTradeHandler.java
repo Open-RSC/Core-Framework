@@ -172,7 +172,7 @@ public class PlayerTradeHandler implements PacketHandler {
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
-					if (tItem.getDef(player.getWorld()).isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+					if (tItem.getDef(player.getWorld()).isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}

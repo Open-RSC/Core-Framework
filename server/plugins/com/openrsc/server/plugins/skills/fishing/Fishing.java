@@ -97,7 +97,7 @@ public class Fishing implements OpLocTrigger {
 		}
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.FISHING);
 		}
 
@@ -109,7 +109,7 @@ public class Fishing implements OpLocTrigger {
 		player.playSound("fish");
 		player.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
 		thinkbubble(new Item(netId));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		delay(config().GAME_TICK * 3);
 
 		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
 			player.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel(player.getWorld()) + " "
@@ -187,7 +187,7 @@ public class Fishing implements OpLocTrigger {
 						player.getCache().set("tutorial", 42);
 				}
 			}
-			if (player.getWorld().getServer().getConfig().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 1000) <= def.getDepletion()) {
+			if (config().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 1000) <= def.getDepletion()) {
 				obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
 					GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), 668, object.getDirection(), object.getType());
@@ -211,7 +211,7 @@ public class Fishing implements OpLocTrigger {
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			batchFishing(player, netId, def, object, command);
 		}
 	}
@@ -270,8 +270,8 @@ public class Fishing implements OpLocTrigger {
 	}
 
 	private boolean checkFatigue(Player player) {
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.playerServerMessage(MessageType.QUEST,"You are too tired to catch this fish");
 				return true;

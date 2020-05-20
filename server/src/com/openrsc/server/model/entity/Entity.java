@@ -1,5 +1,6 @@
 package com.openrsc.server.model.entity;
 
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
@@ -89,6 +90,8 @@ public abstract class Entity {
 	}
 
 	public final World getWorld() { return world; }
+
+	public final ServerConfiguration getConfig() { return getWorld().getServer().getConfig(); }
 
 	public final int getID() {
 		return id;

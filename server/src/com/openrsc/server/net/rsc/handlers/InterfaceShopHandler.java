@@ -43,7 +43,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 		int shopAmount = packet.readShort();
 		int amount = packet.readShort();
 		ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(categoryID);
-		if (def.isMembersOnly() && !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (def.isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
 		}
@@ -157,7 +157,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 					break;
 				}
 
-				int sellAmount = shop.getItemSellPrice(categoryID, def.getDefaultPrice(), ticker);
+				int sellAmount = ticker * shop.getItemSellPrice(categoryID, def.getDefaultPrice(), ticker);
 				totalMoney += sellAmount;
 				totalSold++;
 

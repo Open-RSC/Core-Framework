@@ -34,7 +34,7 @@ public class Refill implements UseLocTrigger {
 				final int itemID = item.getCatalogId();
 				final int refilledID = REFILLED[i];
 				int repeat = 1;
-				if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+				if (config().BATCH_PROGRESSION) {
 					repeat = player.getCarriedItems().getInventory().countId(itemID, Optional.of(false));
 				}
 
@@ -63,7 +63,7 @@ public class Refill implements UseLocTrigger {
 		player.message(fillString);
 		player.getCarriedItems().remove(item);
 		give(player, refilledId, 1);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(config().GAME_TICK);
 
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {

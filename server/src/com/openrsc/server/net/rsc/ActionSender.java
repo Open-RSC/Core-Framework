@@ -162,7 +162,7 @@ public class ActionSender {
 			s.writeByte((byte) with.getDuel().getDuelOffer().getItems().size());
 			for (Item item : with.getDuel().getDuelOffer().getItems()) {
 				s.writeShort(item.getCatalogId());
-				if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+				if (player.getConfig().CUSTOM_PROTOCOL) {
 					s.writeByte((byte)(item.getNoted() ? 1 : 0));
 				}
 				s.writeInt(item.getAmount());
@@ -172,7 +172,7 @@ public class ActionSender {
 			s.writeByte((byte) player.getDuel().getDuelOffer().getItems().size());
 			for (Item item : player.getDuel().getDuelOffer().getItems()) {
 				s.writeShort(item.getCatalogId());
-				if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+				if (player.getConfig().CUSTOM_PROTOCOL) {
 					s.writeByte((byte)(item.getNoted() ? 1 : 0));
 				}
 				s.writeInt(item.getAmount());
@@ -232,7 +232,7 @@ public class ActionSender {
 			s.writeByte((byte) items.size());
 			for (Item item : items) {
 				s.writeShort(item.getCatalogId());
-				if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+				if (player.getConfig().CUSTOM_PROTOCOL) {
 					s.writeByte((byte)(item.getNoted() ? 1 : 0));
 				}
 				s.writeInt(item.getAmount());
@@ -315,7 +315,7 @@ public class ActionSender {
 		s.writeByte(player.getPrayerPoints());
 		player.write(s.toPacket());
 
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			if (slot == -1)
 				sendEquipment(player);
 			else
@@ -389,7 +389,7 @@ public class ActionSender {
 		int onlineStatus = 0;
 		String username = DataConversions.hashToUsername(usernameHash);
 
-		if (usernameHash == Long.MIN_VALUE && player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
+		if (usernameHash == Long.MIN_VALUE && player.getConfig().WANT_GLOBAL_FRIEND) {
 			onlineStatus = 6;
 			username = "Global$";
 		}
@@ -685,7 +685,7 @@ public class ActionSender {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
 				s.writeShort(item.getCatalogId());
 				s.writeByte((byte) (item.isWielded() ? 1 : 0));
-				if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+				if (player.getConfig().CUSTOM_PROTOCOL) {
 					s.writeByte((byte)(item.getNoted() ? 1 : 0));
 				}
 				if (item.getDef(player.getWorld()).isStackable() || item.getNoted())
@@ -1046,7 +1046,7 @@ public class ActionSender {
 		s.writeByte((byte) with.getTrade().getTradeOffer().getItems().size());
 		for (Item item : with.getTrade().getTradeOffer().getItems()) {
 			s.writeShort(item.getCatalogId());
-			if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+			if (player.getConfig().CUSTOM_PROTOCOL) {
 				s.writeByte((byte)(item.getNoted() ? 1 : 0));
 			}
 			s.writeInt(item.getAmount());
@@ -1054,7 +1054,7 @@ public class ActionSender {
 		s.writeByte((byte) player.getTrade().getTradeOffer().getItems().size());
 		for (Item item : player.getTrade().getTradeOffer().getItems()) {
 			s.writeShort(item.getCatalogId());
-			if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+			if (player.getConfig().CUSTOM_PROTOCOL) {
 				s.writeByte((byte)(item.getNoted() ? 1 : 0));
 			}
 			s.writeInt(item.getAmount());
@@ -1098,7 +1098,7 @@ public class ActionSender {
 			s.writeByte((byte) items.size());
 			for (Item item : items) {
 				s.writeShort(item.getCatalogId());
-				if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+				if (player.getConfig().CUSTOM_PROTOCOL) {
 					s.writeByte((byte)(item.getNoted() ? 1 : 0));
 				}
 				s.writeInt(item.getAmount());
@@ -1109,7 +1109,7 @@ public class ActionSender {
 			s.writeByte((byte) items.size());
 			for (Item item : items) {
 				s.writeShort(item.getCatalogId());
-				if (player.getWorld().getServer().getConfig().CUSTOM_PROTOCOL) {
+				if (player.getConfig().CUSTOM_PROTOCOL) {
 					s.writeByte((byte)(item.getNoted() ? 1 : 0));
 				}
 				s.writeInt(item.getAmount());
@@ -1236,7 +1236,7 @@ public class ActionSender {
 	 * Sends the elixir timer
 	 */
 	public static void sendElixirTimer(Player player, int seconds) {
-		if (!player.getWorld().getServer().getConfig().WANT_EXPERIENCE_ELIXIRS) return;
+		if (!player.getConfig().WANT_EXPERIENCE_ELIXIRS) return;
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_ELIXIR.opcode);
 		s.writeShort((int) (((double) seconds / 32D) * 50));
@@ -1293,15 +1293,13 @@ public class ActionSender {
 
 	public static void sendBankPinInterface(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_BANK_PIN_INTERFACE.opcode);
-		pb.writeByte(1); // interface ID
-		pb.writeByte(0);
+		pb.writeByte(1);
 		player.write(pb.toPacket());
 	}
 
 	public static void sendCloseBankPinInterface(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_BANK_PIN_INTERFACE.opcode);
-		pb.writeByte(1); // interface ID
-		pb.writeByte(1);
+		pb.writeByte(0);
 		player.write(pb.toPacket());
 	}
 
@@ -1349,14 +1347,14 @@ public class ActionSender {
 				sendGameSettings(player);
 				sendLoginBox(player);
 
-				sendMessage(player, null, 0, MessageType.QUEST, "Welcome to " + player.getWorld().getServer().getConfig().SERVER_NAME + "!", 0);
+				sendMessage(player, null, 0, MessageType.QUEST, "Welcome to " + player.getConfig().SERVER_NAME + "!", 0);
 				if (player.isMuted()) {
 					sendMessage(player, "You are muted for "
 						+ (double) (System.currentTimeMillis() - player.getMuteExpires()) / 3600000D + " hours.");
 				}
 
 				if (player.getLocation().inTutorialLanding()) {
-					sendBox(player, "@gre@Welcome to the " + player.getWorld().getServer().getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
+					sendBox(player, "@gre@Welcome to the " + player.getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
 				sendPrivacySettings(player);
@@ -1372,10 +1370,10 @@ public class ActionSender {
 				sendInventory(player);
 				player.checkEquipment();
 
-				if (player.getWorld().getServer().getConfig().WANT_BANK_PRESETS)
+				if (player.getConfig().WANT_BANK_PRESETS)
 					sendBankPresets(player);
 
-				if (!player.getWorld().getServer().getConfig().WANT_FATIGUE)
+				if (!player.getConfig().WANT_FATIGUE)
 					sendExperienceToggle(player);
 
 				/*if (!getServer().getConfig().MEMBER_WORLD) {
@@ -1383,7 +1381,7 @@ public class ActionSender {
 				}*/
 
 				if (!player.getLocation().inWilderness()) {
-					if (player.getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
+					if (player.getConfig().SPAWN_AUCTION_NPCS) {
 						player.getWorld().getMarket().addCollectableItemsNotificationTask(player);
 					}
 				}
@@ -1438,7 +1436,7 @@ public class ActionSender {
 	}
 
 	public static void sendKillUpdate(Player player, long killedHash, long killerHash, int type) {
-		if (!player.getWorld().getServer().getConfig().WANT_KILL_FEED) return;
+		if (!player.getConfig().WANT_KILL_FEED) return;
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_KILL_ANNOUNCEMENT.opcode);
 		pb.writeString(DataConversions.hashToUsername(killedHash));
 		pb.writeString(DataConversions.hashToUsername(killerHash));

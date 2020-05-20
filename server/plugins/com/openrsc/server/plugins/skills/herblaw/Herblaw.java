@@ -52,7 +52,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 	}
 
 	private void handleHerbIdentify(final Item herb, Player player) {
-		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (!config().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
 		}
@@ -71,7 +71,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		}
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(herb.getCatalogId());
 		}
 
@@ -89,8 +89,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.message("You need to complete Druidic ritual quest first");
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to identify this herb");
 				return;
@@ -104,7 +104,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		player.getCarriedItems().getInventory().add(newItem);
 		player.playerServerMessage(MessageType.QUEST, "This herb is " + newItem.getDef(player.getWorld()).getName());
 		player.incExp(Skills.HERBLAW, herbDef.getExp(), true);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 
 		// Repeat
 		updatebatch();
@@ -307,7 +307,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		int vialID = vial.getCatalogId();
 		int herbID = herb.getCatalogId();
 		CarriedItems carriedItems = player.getCarriedItems();
-		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (!config().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
 		}
@@ -349,7 +349,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			return;
 		}
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = Math.min(player.getCarriedItems().getInventory().countId(vialID, Optional.of(false)),
 				player.getCarriedItems().getInventory().countId(herbID, Optional.of(false)));
 		}
@@ -383,7 +383,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		player.playerServerMessage(MessageType.QUEST,
 			"You put the " + herb.getDef(player.getWorld()).getName() + " into the vial of water");
 		ci.getInventory().add(new Item(herbDef.getPotionId()));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 
 		// Repeat
 		updatebatch();
@@ -396,7 +396,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 								 final Item unfinished, final ItemHerbSecond def, final boolean isSwapped) {
 		int secondID = second.getCatalogId();
 		int unfinishedID = unfinished.getCatalogId();
-		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (!config().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
 		}
@@ -422,7 +422,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		}
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = Math.min(player.getCarriedItems().getInventory().countId(secondID),
 				player.getCarriedItems().getInventory().countId(unfinishedID));
 		}
@@ -441,8 +441,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.message("You need to complete Druidic ritual quest first");
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to make this potion");
 				return;
@@ -467,7 +467,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		carriedItems.remove(unfinished);
 		carriedItems.getInventory().add(new Item(def.getPotionID(), 1));
 		player.incExp(Skills.HERBLAW, def.getExp(), true);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 
 		// Repeat
 		updatebatch();
@@ -478,7 +478,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 	private boolean makeLiquid(Player player, final Item ingredient,
 							   final Item unfinishedPot, final boolean isSwapped) {
-		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (!config().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return false;
 		}
@@ -536,7 +536,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 	private void doGrind(Player player, final Item mortar,
 							final Item item) {
-		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+		if (!config().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
 		}
@@ -569,7 +569,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		}
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
 		}
 
@@ -591,12 +591,12 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			thinkbubble(new Item(ItemId.PESTLE_AND_MORTAR.id()));
 		}
 		player.getCarriedItems().getInventory().add(new Item(newID, 1));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(config().GAME_TICK);
 
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			batchGrind(player, item, newID);
 		}
 	}

@@ -30,7 +30,7 @@ public class Cactus implements UseLocTrigger {
 		int[] skins = {ItemId.WATER_SKIN_MOSTLY_FULL.id(), ItemId.WATER_SKIN_MOSTLY_EMPTY.id(),
 				ItemId.WATER_SKIN_MOUTHFUL_LEFT.id(), ItemId.EMPTY_WATER_SKIN.id()};
 		thinkbubble(item);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		for (int s : skins) {
 			Item toRemove = new Item(s, 1);
 			if (player.getCarriedItems().remove(toRemove) > -1) {
@@ -61,7 +61,7 @@ public class Cactus implements UseLocTrigger {
 
 				// Swap cacti back after 30 seconds.
 				player.getWorld().getServer().getGameEventHandler().add(
-					new SingleEvent(player.getWorld(), null, player.getWorld().getServer().getConfig().GAME_TICK * 50, "Cactus Respawn") {
+					new SingleEvent(player.getWorld(), null, config().GAME_TICK * 50, "Cactus Respawn") {
 
 						@Override
 						public void action() {

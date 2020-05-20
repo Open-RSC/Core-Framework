@@ -25,7 +25,7 @@ public class RawEssence implements OpLocTrigger {
 		}
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().getFreeSlots();
 		}
 
@@ -38,7 +38,7 @@ public class RawEssence implements OpLocTrigger {
 		thinkbubble(new Item(ItemId.IRON_PICKAXE.id()));
 		give(player, ItemId.RUNE_ESSENCE.id(), 1);
 		player.incExp(Skills.MINING, 20, true);
-		delay(player.getWorld().getServer().getConfig().GAME_TICK);
+		delay(config().GAME_TICK);
 
 		// Repeat
 		updatebatch();

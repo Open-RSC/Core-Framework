@@ -49,7 +49,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.KITTEN.id()) {
 			player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
-			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "you drop the kitten");
+			mes(config().GAME_TICK * 2, "you drop the kitten");
 			mes(0, "it's upset and runs away");
 		}
 
@@ -60,7 +60,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	@Override
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.KITTEN.id()
-			|| (item.getCatalogId() == ItemId.CAT.id() && player.getWorld().getServer().getConfig().WANT_EXTENDED_CATS_BEHAVIOR);
+			|| (item.getCatalogId() == ItemId.CAT.id() && player.getConfig().WANT_EXTENDED_CATS_BEHAVIOR);
 	}
 
 	@Override
@@ -68,13 +68,13 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		if (item.getCatalogId() == ItemId.KITTEN.id()) {
 			mes("you softly stroke the kitten",
 				"@yel@kitten:..purr..purr..");
-			mes(player.getWorld().getServer().getConfig().GAME_TICK, "the kitten appreciates the attention");
+			mes(config().GAME_TICK, "the kitten appreciates the attention");
 
 			reduceKittensLoneliness(player);
-		} else if (item.getCatalogId() == ItemId.CAT.id() && player.getWorld().getServer().getConfig().WANT_EXTENDED_CATS_BEHAVIOR) {
+		} else if (item.getCatalogId() == ItemId.CAT.id() && config().WANT_EXTENDED_CATS_BEHAVIOR) {
 			mes("you softly stroke the cat",
 				"@yel@cat:..purr..purr..");
-			mes(player.getWorld().getServer().getConfig().GAME_TICK, "it appreciates the attention");
+			mes(config().GAME_TICK, "it appreciates the attention");
 		}
 	}
 
@@ -213,7 +213,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 				player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.CAT.id()));
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
-				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "you're kitten has grown into a healthy cat",
+				mes(config().GAME_TICK * 2, "you're kitten has grown into a healthy cat",
 						"it can hunt for its self now");
 			}
 
@@ -273,11 +273,11 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 			player.message("it pounces on the rat...");
 			if (DataConversions.random(0,9) == 0) {
 				n.face(player);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK);
+				delay(config().GAME_TICK);
 				n.remove();
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				//possibly non kosher
-				mes(player.getWorld().getServer().getConfig().GAME_TICK * 3, "...and quickly gobbles it up",
+				mes(config().GAME_TICK * 3, "...and quickly gobbles it up",
 						"it returns to your satchel licking it's paws");
 
 				reduceKittensLoneliness(player);
@@ -285,10 +285,10 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		} else if (item.getCatalogId() == ItemId.CAT.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
 			player.message("the cat pounces on the rat...");
 			n.face(player);
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			n.remove();
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
-			mes(player.getWorld().getServer().getConfig().GAME_TICK * 3, "...and quickly gobbles it up",
+			delay(config().GAME_TICK * 2);
+			mes(config().GAME_TICK * 3, "...and quickly gobbles it up",
 					"it returns to your satchel licking it's paws");
 		}
 	}

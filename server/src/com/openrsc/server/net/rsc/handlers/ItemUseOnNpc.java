@@ -20,7 +20,7 @@ public class ItemUseOnNpc implements PacketHandler {
 		int npcIndex = packet.readShort();
 		final Npc affectedNpc = player.getWorld().getNpc(npcIndex);
 		int itemID = packet.readShort();
-		if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB && itemID > Inventory.MAX_SIZE) {
+		if (player.getConfig().WANT_EQUIPMENT_TAB && itemID > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;
 		}
@@ -28,7 +28,7 @@ public class ItemUseOnNpc implements PacketHandler {
 		if (affectedNpc == null || item == null) {
 			return;
 		}
-		player.setFollowing(affectedNpc, 0);
+		player.setFollowing(affectedNpc, 0, false);
 		player.setWalkToAction(new WalkToMobAction(player, affectedNpc, 1) {
 			public void executeInternal() {
 				getPlayer().resetPath();
@@ -45,7 +45,7 @@ public class ItemUseOnNpc implements PacketHandler {
 					return;
 				}
 				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
-					&& !getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD) {
+					&& !getPlayer().getConfig().MEMBER_WORLD) {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}

@@ -263,7 +263,7 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 				return;
 			}
 
-			if(!player.getWorld().getServer().getConfig().CAN_USE_CRACKER_ON_SELF && !player.isAdmin() && player.getCurrentIP().equalsIgnoreCase(otherPlayer.getCurrentIP())) {
+			if(!config().CAN_USE_CRACKER_ON_SELF && !player.isAdmin() && player.getCurrentIP().equalsIgnoreCase(otherPlayer.getCurrentIP())) {
 				player.message(otherPlayer.getUsername() + " does not want your present...");
 				return;
 			}
@@ -274,16 +274,16 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 			thinkbubble(item);
 			player.message("You give a present to " + otherPlayer.getUsername());
 			otherPlayer.message(player.getUsername() + " handed you a present...");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			otherPlayer.message("You unwrap the present and reach your hand inside...");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 
 			Item prize = presentDrops.rollItem(false, otherPlayer);
 			String prizeName = prize.getDef(player.getWorld()).getName().toLowerCase();
 
 			player.message(otherPlayer.getUsername() + " got a " + prizeName + " from your present!");
 			otherPlayer.message("You take out a " + prizeName + ".");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 
 			String playerDialogue;
 

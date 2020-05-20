@@ -45,7 +45,7 @@ public class ChristmasCracker implements UsePlayerTrigger {
 				return;
 			}
 
-			if(!player.getWorld().getServer().getConfig().CAN_USE_CRACKER_ON_SELF && !player.isAdmin() && player.getCurrentIP().equalsIgnoreCase(otherPlayer.getCurrentIP())) {
+			if(!config().CAN_USE_CRACKER_ON_SELF && !player.isAdmin() && player.getCurrentIP().equalsIgnoreCase(otherPlayer.getCurrentIP())) {
 				player.message(otherPlayer.getUsername() + " does not want to pull a cracker with you...");
 				return;
 			}
@@ -57,7 +57,7 @@ public class ChristmasCracker implements UsePlayerTrigger {
 			player.message("You pull a christmas cracker");
 			otherPlayer.message("You pull a christmas cracker");
 
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 
 			int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);

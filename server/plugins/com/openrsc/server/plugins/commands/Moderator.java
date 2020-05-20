@@ -14,6 +14,8 @@ import org.apache.commons.lang.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.openrsc.server.plugins.Functions.*;
+
 public final class Moderator implements CommandTrigger {
 
 	public static String messagePrefix = null;
@@ -26,10 +28,10 @@ public final class Moderator implements CommandTrigger {
 	@Override
 	public void onCommand(Player player, String cmd, String[] args) {
 		if(messagePrefix == null) {
-			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			messagePrefix = config().MESSAGE_PREFIX;
 		}
 		if(badSyntaxPrefix == null) {
-			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			badSyntaxPrefix = config().BAD_SYNTAX_PREFIX;
 		}
 
 		if (cmd.equalsIgnoreCase("say")) { // SAY is not configged out for mods.

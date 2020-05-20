@@ -143,7 +143,7 @@ public class JungleForester implements TalkNpcTrigger, UseNpcTrigger {
 						"Have you seen any natives in the jungle?",
 						"Ok thanks");
 					if (option == 0) {
-						mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "The forester looks very interested..");
+						mes(config().GAME_TICK * 2, "The forester looks very interested..");
 						npcsay(player, n, "Oh, well, that sounds quite good actually...",
 							"Sorry if I sounded rude before, it just didn't seem like a good idea to me.",
 							"I guess I just wouldn't want to do it myself.",
@@ -177,10 +177,10 @@ public class JungleForester implements TalkNpcTrigger, UseNpcTrigger {
 					break;
 				case JungleForesterNPC_LegendsQuest.MAKE_A_COPY:
 					npcsay(player, n, "Many thanks friend.");
-					mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Jungle Forester takes out some parchment and some charcoal.",
+					mes(config().GAME_TICK * 2, "The Jungle Forester takes out some parchment and some charcoal.",
 						"He studiously renders another copy of your map.");
 					npcsay(player, n, "Many thanks friend.");
-					mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "He takes out a strange looking object and hands it to you.");
+					mes(config().GAME_TICK * 2, "He takes out a strange looking object and hands it to you.");
 					npcsay(player, n, "Here, I won't be needing this any longer, and it may help you.",
 						"Whenever I've used it before, it attracted the attention of jungle natives.");
 					give(player, ItemId.BULL_ROARER.id(), 1);
@@ -312,7 +312,7 @@ public class JungleForester implements TalkNpcTrigger, UseNpcTrigger {
 				LegendsQuest_jungleForesterDialogue(player, n, JungleForesterNPC_LegendsQuest.MAKE_A_COPY);
 			} else if (menu == 1) {
 				npcsay(player, n, "Well, I can offer you this?");
-				mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "The Jungle Forester takes out a strange looking object.",
+				mes(config().GAME_TICK * 2, "The Jungle Forester takes out a strange looking object.",
 					"It looks like a wooden pole, with string attached to one end.");
 				player.message("And at the other end of the string is shaped piece of wood.");
 				npcsay(player, n, "If you swing this above your head, it makes a strange sound.",

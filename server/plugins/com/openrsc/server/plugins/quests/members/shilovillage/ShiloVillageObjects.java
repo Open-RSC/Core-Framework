@@ -76,8 +76,8 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			}
 		}
 		else if (obj.getID() == CLIMB_CAVE_ROCKS) {
-			if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-				if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+			if (config().WANT_FATIGUE) {
+				if (config().STOP_SKILLING_FATIGUED >= 1
 					&& player.getFatigue() >= player.MAX_FATIGUE) {
 					player.message("You are too fatigued to go any further.");
 					return;
@@ -97,23 +97,23 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			player.message("You carefully pick your way through the rocks.");
 			player.teleport(349, 3618);
 			if (ShiloVillageUtils.succeed(player, 32)) {
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				if (obj.getY() == 3619) {
 					player.teleport(348, 3616);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+					delay(config().GAME_TICK * 2);
 					player.message("You manage to carefully clamber up.");
 				} else {
 					player.teleport(348, 3620);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+					delay(config().GAME_TICK * 2);
 					player.message("You manage to carefully clamber down.");
 				}
 			} else {
 				player.message("@red@You fall!");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				player.teleport(348, 3620);
 				player.message("You take damage!");
 				player.damage(3);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				player.damage(0);
 				say(player, null, "Ooooff!");
 			}
@@ -122,7 +122,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 		else if (obj.getID() == METALLIC_DUNGEON_GATE) {
 			if (command.equalsIgnoreCase("Open")) {
 				if (player.getY() >= 3616) {
-					changeloc(obj, player.getWorld().getServer().getConfig().GAME_TICK * 3, 181);
+					changeloc(obj, config().GAME_TICK * 3, 181);
 					player.teleport(348, 3614);
 					return;
 				}
@@ -133,13 +133,13 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					"Err, I'm having second thoughts now!");
 				if (menu == 0) {
 					if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
-						changeloc(obj, player.getWorld().getServer().getConfig().GAME_TICK * 3, 181);
+						changeloc(obj, config().GAME_TICK * 3, 181);
 						player.teleport(348, 3616);
 						player.damage(getCurrentLevel(player, Skills.HITS) / 2 + 1);
 						if (getCurrentLevel(player, Skills.HITS) > 0) {
 							mes("@red@You feel invisible hands starting to choke you...");
 							player.teleport(348, 3614);
-							delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+							delay(config().GAME_TICK * 2);
 							say(player, null, "*Cough*",
 								"*Choke*");
 							player.message("@red@You can barely manage to crawl back through the gates...");
@@ -149,7 +149,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 								"* Gaaaa....*");
 						}
 					} else {
-						changeloc(obj, player.getWorld().getServer().getConfig().GAME_TICK * 3, 181);
+						changeloc(obj, config().GAME_TICK * 3, 181);
 						player.teleport(348, 3616);
 						displayTeleportBubble(player, player.getX(), player.getY(), false);
 						player.message("@red@The Beads of the dead start to glow...");
@@ -195,7 +195,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (obj.getID() == SEARCH_TREE_FOR_ENTRANCE) {
 			if (player.getQuestStage(Quests.SHILO_VILLAGE) == -1 &&
-				!player.getWorld().getServer().getConfig().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
+				!config().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
 				player.message("You find nothing significant.");
 				return;
 			}
@@ -210,7 +210,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			if (ShiloVillageUtils.succeed(player, 32)) {
 				player.message("You push your way through a cunningly designed trap door..");
 				player.teleport(471, 836);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK);
+				delay(config().GAME_TICK);
 				player.message("And appear in bright sunshine and the salty sea air.");
 			} else {
 				player.message("You get halfway but loose your grip.");
@@ -253,7 +253,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 									"You have to wrench yourself free to get out.",
 									"You manage to pull yourself out, but hurt yourself in the process.");
 							player.damage(3);
-							delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+							delay(config().GAME_TICK * 2);
 							player.damage(0);
 							player.message("Maybe you'll have better luck next time?");
 						}
@@ -419,26 +419,26 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					addloc(RAFT_TWO);
 					player.teleport(357, 3673);
 					say(player, null, "Weeeeeeee!");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					delloc(RAFT_TWO);
 
 					GameObject RAFT_THREE = new GameObject(player.getWorld(), Point.location(356, 3678), 698, 0, 0);
 					addloc(RAFT_THREE);
 					player.teleport(356, 3678);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+					delay(config().GAME_TICK * 2);
 					delloc(RAFT_THREE);
 
 					GameObject RAFT_FOUR = new GameObject(player.getWorld(), Point.location(353, 3682), 698, 0, 0);
 					addloc(RAFT_FOUR);
 					player.teleport(353, 3682);
 					say(player, null, "Weeeeeeee!");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					delloc(RAFT_FOUR);
 
 					GameObject RAFT_FIVE = new GameObject(player.getWorld(), Point.location(349, 3685), 698, 0, 0);
 					addloc(RAFT_FIVE);
 					player.teleport(349, 3685);
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					delloc(RAFT_FIVE);
 
 					GameObject RAFT_SIX = new GameObject(player.getWorld(), Point.location(345, 3686), 698, 0, 0);
@@ -446,7 +446,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					player.teleport(345, 3686);
 					player.message("You come to a huge waterfall...");
 					say(player, null, "* Oh oh! *");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					delloc(RAFT_SIX);
 
 					GameObject RAFT_FINAL = new GameObject(player.getWorld(), Point.location(341, 3686), 698, 0, 0);
@@ -455,7 +455,7 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 					mes("...and plough through it!");
 					delloc(RAFT_FINAL);
 					player.message("The raft soon breaks up.");
-					delay(player.getWorld().getServer().getConfig().GAME_TICK);
+					delay(config().GAME_TICK);
 					player.teleport(341, 810);
 				} else if (sub == 2) {
 					mes("You happily start hacking away at the table",
@@ -569,10 +569,10 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			mes("You try the key with the lock.");
 			mes("As soon as you push the key into the lock.");
 			displayTeleportBubble(player, 350, 782, true);
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			delay(config().GAME_TICK * 2);
 			player.message("A shimmering light dances over the doors, before you can blink, the doors creak open.");
 			player.teleport(348, 3611);
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			mes("You feel a strange force pulling you inside.",
 				"The doors close behind you with the sound of crunching bone.",
 				"Before you stretches a winding tunnel blocked by an ancient gate.");

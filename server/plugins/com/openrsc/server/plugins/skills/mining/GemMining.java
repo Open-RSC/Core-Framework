@@ -69,7 +69,7 @@ public class GemMining implements OpLocTrigger {
 		if (player.click == 1) {
 			player.playSound("prospect");
 			player.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+			delay(config().GAME_TICK * 3);
 			if (obj.getID() == GEM_ROCK) {
 				player.playerServerMessage(MessageType.QUEST, "You fail to find anything interesting");
 				return;
@@ -87,7 +87,7 @@ public class GemMining implements OpLocTrigger {
 			return;
 		}
 
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.MINING);
 		}
 
@@ -99,9 +99,9 @@ public class GemMining implements OpLocTrigger {
 		player.playSound("mine");
 		thinkbubble(new Item(ItemId.IRON_PICKAXE.id()));
 		player.playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+		delay(config().GAME_TICK * 3);
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
 				return;
@@ -119,7 +119,7 @@ public class GemMining implements OpLocTrigger {
 				player.getCarriedItems().getInventory().add(gem);
 			}
 
-			if (!player.getWorld().getServer().getConfig().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
+			if (!config().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= 39) {
 				if (object != null && object.getID() == obj.getID()) {
 					GameObject newObject = new GameObject(player.getWorld(), obj.getLocation(), 98, obj.getDirection(), obj.getType());
 					player.getWorld().replaceGameObject(obj, newObject);
@@ -139,7 +139,7 @@ public class GemMining implements OpLocTrigger {
 
 		// Repeat
 		updatebatch();
-		boolean customBatch = player.getWorld().getServer().getConfig().BATCH_PROGRESSION;
+		boolean customBatch = config().BATCH_PROGRESSION;
 		if (!ifbatchcompleted()) {
 			if ((customBatch && !ifinterrupted()) || !customBatch) {
 				batchMining(player, obj, axeId, mineLvl);

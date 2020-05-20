@@ -28,7 +28,7 @@ public class PlayerPoisonScript implements CombatScript {
 			if (player.getDuel().isDuelActive()) {
 				return false;
 			}
-			if (attacker.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			if (attacker.getConfig().WANT_EQUIPMENT_TAB) {
 				Item i;
 				for (int q = 0; q < Equipment.SLOT_COUNT; q++) {
 					i = player.getCarriedItems().getEquipment().get(q);

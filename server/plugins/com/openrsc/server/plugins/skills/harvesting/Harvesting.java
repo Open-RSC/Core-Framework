@@ -155,7 +155,7 @@ public final class Harvesting implements OpLocTrigger {
 
 	private void handleXmasHarvesting(Player player, GameObject object) {
 		player.playerServerMessage(MessageType.QUEST, "You attempt to grab a present...");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 4);
+		delay(config().GAME_TICK * 4);
 
 		final Item present = new Item(ItemId.PRESENT.id());
 		if (getProduce(1, 1)) {
@@ -228,7 +228,7 @@ public final class Harvesting implements OpLocTrigger {
 	private void batchClipping(Player player, GameObject object, String objName, HerbsProduce prodEnum) {
 		thinkbubble(new Item(ItemId.HERB_CLIPPERS.id()));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to clip from the spot...");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 4);
+		delay(config().GAME_TICK * 4);
 
 		// herb uses herb drop table
 		// seaweed 1/4 chance to be edible
@@ -237,8 +237,8 @@ public final class Harvesting implements OpLocTrigger {
 			: prodEnum.produceTable.get(0).getItemId() ) : Formulae.calculateHerbDrop();
 		int reqLevel = prodEnum.produceTable.get(0).getLevel();
 		final Item produce = new Item(prodId);
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to get produce");
 				return;
@@ -308,11 +308,11 @@ public final class Harvesting implements OpLocTrigger {
 		final AtomicInteger evt = new AtomicInteger(checkCare(object, player));
 		if (toolId != ItemId.NOTHING.id()) thinkbubble(new Item(toolId));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to get some produce...");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 4);
+		delay(config().GAME_TICK * 4);
 
 		final Item produce = new Item(def.getProdId());
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 1
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to get produce");
 				return;

@@ -22,7 +22,7 @@ public class Casket implements OpInvTrigger {
 
 			int randomChanceOpen = DataConversions.random(0, 1081);
 
-			mes(player.getWorld().getServer().getConfig().GAME_TICK * 2, "you open the casket");
+			mes(config().GAME_TICK * 2, "you open the casket");
 			player.playerServerMessage(MessageType.QUEST, "you find some treasure inside!");
 
 			player.getCarriedItems().remove(new Item(ItemId.CASKET.id()));

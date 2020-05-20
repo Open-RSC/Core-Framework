@@ -36,7 +36,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 	@Override
 	public void onUseObj(Player player, GroundItem item, Item myItem) {
-		if (player.getWorld().getServer().getConfig().CUSTOM_FIREMAKING) {
+		if (config().CUSTOM_FIREMAKING) {
 			switch (ItemId.getById(item.getID())) {
 				case LOGS:
 				case OAK_LOGS:
@@ -70,7 +70,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		}
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
 		}
 
@@ -82,7 +82,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 	private void batchFiremaking(Player player, GroundItem gItem, FiremakingDef def) {
 		thinkbubble(new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		if (Formulae.lightLogs(player.getSkills().getLevel(Skills.FIREMAKING))) {
 			if (!gItem.isRemoved()) {
 				player.playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
@@ -112,7 +112,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
 				firemakingWalk(player);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 
 				// Drop new log
 				Item log = player.getCarriedItems().getInventory().get(
@@ -134,7 +134,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			// Repeat on fail
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				batchFiremaking(player, gItem, def);
 			}
 		}
@@ -159,7 +159,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		}
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
 		}
 
@@ -170,7 +170,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 	private void batchCustomFiremaking(Player player, GroundItem gItem, FiremakingDef def) {
 		thinkbubble(new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 		if (Formulae.lightCustomLogs(def, player.getSkills().getLevel(Skills.FIREMAKING))) {
 			if (!gItem.isRemoved()) {
 				player.message("The fire catches and the logs begin to burn");
@@ -207,11 +207,11 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 					player.getCarriedItems().getInventory().getLastIndexById(gItem.getID(), Optional.of(false))
 				);
 				if (log == null) return;
-				delay(player.getWorld().getServer().getConfig().GAME_TICK);
+				delay(config().GAME_TICK);
 				player.getCarriedItems().remove(log);
 				gItem = new GroundItem(player.getWorld(), log.getCatalogId(), player.getX(), player.getY(),1, player);
 				player.getWorld().registerItem(gItem);
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				if (player.getViewArea().getGameObject(gItem.getLocation()) != null) {
 					player.playerServerMessage(MessageType.QUEST, "You can't light a fire here");
 					return;
@@ -223,7 +223,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+				delay(config().GAME_TICK * 2);
 				batchCustomFiremaking(player, gItem, def);
 			}
 		}
@@ -268,7 +268,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 	@Override
 	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
-		return compareItemsIds(item1, item2, TINDERBOX, ItemId.LOGS.id()) || (player.getWorld().getServer().getConfig().CUSTOM_FIREMAKING &&
+		return compareItemsIds(item1, item2, TINDERBOX, ItemId.LOGS.id()) || (player.getConfig().CUSTOM_FIREMAKING &&
 		(item1.getCatalogId() == TINDERBOX && inArray(item2.getCatalogId(), LOGS) || item2.getCatalogId() == TINDERBOX && inArray(item1.getCatalogId(), LOGS)));
 	}
 

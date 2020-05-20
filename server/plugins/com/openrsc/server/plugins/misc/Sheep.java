@@ -21,7 +21,7 @@ public class Sheep implements UseNpcTrigger {
 		npc.resetPath();
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().getFreeSlots();
 		}
 
@@ -41,7 +41,7 @@ public class Sheep implements UseNpcTrigger {
 			return;
 		}
 
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+		delay(config().GAME_TICK * 2);
 
 		// Repeat
 		updatebatch();

@@ -16,6 +16,10 @@ public class GameObjectWallAction implements PacketHandler {
 		int pID = packet.getID();
 		int packetTwo = OpcodeIn.WALL_OBJECT_COMMAND1.getOpcode();
 
+		if (player.inCombat()) {
+			player.message("You can't do that whilst you are fighting");
+			return;
+		}
 		if (player.isBusy()) {
 			player.resetPath();
 			return;

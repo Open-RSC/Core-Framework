@@ -81,7 +81,7 @@ public class Social {
 		for (PlayerFriend l : friends) {
 			friendList.put(l.playerHash, 0);
 		}
-		if (player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
+		if (player.getConfig().WANT_GLOBAL_FRIEND) {
 			friendList.put(Long.MIN_VALUE, 0);
 		}
 	}

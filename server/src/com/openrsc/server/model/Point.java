@@ -20,17 +20,24 @@ public class Point {
 		wildernessLocations.add(new WildernessLocation(WildState.MEMBERS_WILD, 243, 2988, 283, 3020));
 	}
 
-	protected int x, y;
+	protected short x, y;
 
 	protected Point() {
 	}
 
 	public Point(int x, int y) {
+		this((short)x, (short)y);
+	}
+
+	public Point(short x, short y) {
 		this.x = x;
 		this.y = y;
 	}
 
 	public static Point location(int x, int y) {
+		return location((short)x, (short)y);
+	}
+	public static Point location(short x, short y) {
 		if (x < 0 || y < 0) {
 			throw new IllegalArgumentException(
 				"Point may not contain non negative values x:" + x + " y:"

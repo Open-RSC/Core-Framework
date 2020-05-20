@@ -49,7 +49,7 @@ public class InvCooking implements UseInvTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You squeeze the grapes into the jug");
 				player.getCarriedItems().remove(new Item(ItemId.JUG_OF_WATER.id()));
 				player.getCarriedItems().remove(new Item(ItemId.GRAPES.id()));
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 5);
+				delay(config().GAME_TICK * 5);
 				if (Formulae.goodWine(player.getSkills().getLevel(Skills.COOKING))) {
 					player.playerServerMessage(MessageType.QUEST, "You make some nice wine");
 					player.getCarriedItems().getInventory().add(new Item(ItemId.WINE.id()));

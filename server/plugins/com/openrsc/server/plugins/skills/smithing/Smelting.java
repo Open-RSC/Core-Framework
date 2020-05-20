@@ -31,7 +31,7 @@ public class Smelting implements UseLocTrigger {
 			if (item.getCatalogId() == ItemId.STEEL_BAR.id()) {
 				if (player.getCarriedItems().hasCatalogID(ItemId.CANNON_AMMO_MOULD.id())) {
 					int repeat = 1;
-					if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+					if (config().BATCH_PROGRESSION) {
 						repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
 					}
 
@@ -64,7 +64,7 @@ public class Smelting implements UseLocTrigger {
 			}
 			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) > -1) {
 				player.message("You smelt the " + item.getDef(player.getWorld()).getName() + "...");
-				delay(player.getWorld().getServer().getConfig().GAME_TICK * 5);
+				delay(config().GAME_TICK * 5);
 				player.message("And retrieve " + amount + " dragon bar" + (amount > 1? "s":""));
 				give(player, ItemId.DRAGON_BAR.id(), amount);
 			}
@@ -80,8 +80,8 @@ public class Smelting implements UseLocTrigger {
 			player.message("You need to complete the dwarf cannon quest");
 			return;
 		}
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to smelt a cannon ball");
 				return;
@@ -93,8 +93,8 @@ public class Smelting implements UseLocTrigger {
 		}
 
 		thinkbubble(new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
-		int tick = player.getWorld().getServer().getConfig().GAME_TICK;
-		int messagedelay = player.getWorld().getServer().getConfig().BATCH_PROGRESSION ? tick : (tick * 2);
+		int tick = config().GAME_TICK;
+		int messagedelay = config().BATCH_PROGRESSION ? tick : (tick * 2);
 		mes(messagedelay, "you heat the steel bar into a liquid state",
 			"and pour it into your cannon ball mould",
 			"you then leave it to cool for a short while");
@@ -102,8 +102,8 @@ public class Smelting implements UseLocTrigger {
 		player.getCarriedItems().remove(new Item(ItemId.STEEL_BAR.id()));
 		// If you are fatigued, you should still make the cannonball, it just
 		// falls to the floor.
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED == 1
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED == 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("you are too tired to lift the ammo");
 				player.getWorld().registerItem(new GroundItem(
@@ -120,11 +120,11 @@ public class Smelting implements UseLocTrigger {
 		player.incExp(Skills.SMITHING, 100, true);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id()));
 		if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DWARVEN_RING.id())) {
-			player.getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), player.getWorld().getServer().getConfig().DWARVEN_RING_BONUS));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), config().DWARVEN_RING_BONUS));
 			int charges;
 			if (player.getCache().hasKey("dwarvenring")) {
 				charges = player.getCache().getInt("dwarvenring") + 1;
-				if (charges >= player.getWorld().getServer().getConfig().DWARVEN_RING_USES) {
+				if (charges >= config().DWARVEN_RING_USES) {
 					player.getCache().remove("dwarvenring");
 					player.getCarriedItems().getInventory().shatter(ItemId.DWARVEN_RING.id());
 				} else
@@ -140,7 +140,7 @@ public class Smelting implements UseLocTrigger {
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
 			player.message("you repeat the process");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK);
+			delay(config().GAME_TICK);
 			handleCannonBallSmelting(player);
 		}
 	}
@@ -183,8 +183,8 @@ public class Smelting implements UseLocTrigger {
 		}
 
 		thinkbubble(item);
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to smelt this ore");
 				return;
@@ -222,7 +222,7 @@ public class Smelting implements UseLocTrigger {
 		}
 
 		int repeat = 1;
-		if (player.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			// repeat = Formulae.getRepeatTimes(player, Skills.SMITHING);
 			int carriedOre = player.getCarriedItems().getInventory().countId(
 				smelt.getID(), Optional.of(false));
@@ -251,10 +251,10 @@ public class Smelting implements UseLocTrigger {
 		String barName = player.getWorld().getServer().getEntityHandler().getItemDef(
 			smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", "");
 		player.playerServerMessage(MessageType.QUEST, smeltString(player.getWorld(), smelt, item));
-		delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+		delay(config().GAME_TICK * 3);
 
-		if (player.getWorld().getServer().getConfig().WANT_FATIGUE) {
-			if (player.getWorld().getServer().getConfig().STOP_SKILLING_FATIGUED >= 2
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to smelt this ore");
 				return;
@@ -330,7 +330,7 @@ public class Smelting implements UseLocTrigger {
 					give(player, smelt.getSmeltBarId(), 1);
 					if (player.getCache().hasKey("ringofforging")) {
 						int ringCheck = player.getCache().getInt("ringofforging");
-						if (ringCheck + 1 == player.getWorld().getServer().getConfig().RING_OF_FORGING_USES) {
+						if (ringCheck + 1 == config().RING_OF_FORGING_USES) {
 							player.getCache().remove("ringofforging");
 							ci.getInventory().shatter(ItemId.RING_OF_FORGING.id());
 						} else {

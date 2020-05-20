@@ -23,7 +23,7 @@ public class WizardFrumscone implements TalkNpcTrigger {
 			npcsay(player, n, "Do you like my magic zombies",
 				"Feel free to kill them",
 				"Theres plenty more where these came from");
-			if (player.getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES
+			if (config().WANT_CUSTOM_SPRITES
 				&& getMaxLevel(player, Skills.MAGIC) >= 99) {
 				if (multi(player, n, "Does your cape have any magical properties?",
 					"I was going to kill them with or without your permission") == 0) {

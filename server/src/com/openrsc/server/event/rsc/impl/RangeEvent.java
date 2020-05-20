@@ -68,9 +68,9 @@ public class RangeEvent extends GameTickEvent {
 		this.target = victim;
 		this.deliveredFirstProjectile = false;
 		long diff = System.currentTimeMillis() - getPlayerOwner().getAttribute("rangedTimeout", 0L);
-		boolean canShoot = diff >= getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK * 3;
+		boolean canShoot = diff >= getPlayerOwner().getConfig().GAME_TICK * 3;
 		if (!canShoot) {
-			long delay = diff / getPlayerOwner().getWorld().getServer().getConfig().GAME_TICK;
+			long delay = diff / getPlayerOwner().getConfig().GAME_TICK;
 			setDelayTicks(Math.max(2, delay));
 		}
 	}
@@ -102,7 +102,7 @@ public class RangeEvent extends GameTickEvent {
 			stop();
 			return;
 		}
-		if (!canReach(target)) {
+		if (!getPlayerOwner().canProjectileReach(target)) {
 			getPlayerOwner().walkToEntity(target.getX(), target.getY());
 			if (getOwner().nextStep(getOwner().getX(), getOwner().getY(), target) == null && bowID != -1) {
 				getPlayerOwner().message("I can't get close enough");
@@ -305,15 +305,4 @@ public class RangeEvent extends GameTickEvent {
 		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
 		deliveredFirstProjectile = true;
 	}
-
-
-	private boolean canReach(Mob mob) {
-		int radius = 5;
-		if (getPlayerOwner().getRangeEquip() == ItemId.PHOENIX_CROSSBOW.id() || getPlayerOwner().getRangeEquip() == ItemId.CROSSBOW.id())
-			radius = 4;
-		if (getPlayerOwner().getRangeEquip() == ItemId.SHORTBOW.id())
-			radius = 4;
-		return getPlayerOwner().withinRange(mob, radius);
-	}
-
 }

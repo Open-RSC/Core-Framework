@@ -23,7 +23,7 @@ public class UnequipRequest {
 		this.sound = sound;
 
 		if (this.requestType == RequestType.CHECK_IF_EQUIPMENT_TAB) {
-			if (player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
+			if (player.getConfig().WANT_EQUIPMENT_TAB)
 				this.requestType = RequestType.FROM_EQUIPMENT;
 			else
 				this.requestType = RequestType.FROM_INVENTORY;

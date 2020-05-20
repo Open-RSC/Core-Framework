@@ -55,7 +55,7 @@ public class HicktonArcheryShop extends AbstractShop {
 		List<String> choices = new ArrayList<>();
 		choices.add("Yes please");
 		choices.add("No, I prefer to bash things close up");
-		if (player.getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS
+		if (config().WANT_CUSTOM_QUESTS
 		&& getMaxLevel(player, Skills.FLETCHING) >= 99)
 			choices.add("Fletching Skillcape");
 

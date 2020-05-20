@@ -34,11 +34,11 @@ public class Docky implements TalkNpcTrigger {
 				} else if (travel == 1) {
 					say(player, n, "Ok");
 					if (ifheld(player, ItemId.COINS.id(), 30)) {
-						mes(player.getWorld().getServer().getConfig().GAME_TICK * 3, "You pay 30 gold");
+						mes(config().GAME_TICK * 3, "You pay 30 gold");
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30));
-						mes(player.getWorld().getServer().getConfig().GAME_TICK * 5, "You board the ship");
+						mes(config().GAME_TICK * 5, "You board the ship");
 						player.teleport(467, 647);
-						delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+						delay(config().GAME_TICK * 3);
 						player.message("The ship arrives at Port Birmhaven");
 					} else {
 						say(player, n, "Oh dear I don't seem to have enough money");

@@ -199,7 +199,7 @@ public class Eating implements OpInvTrigger {
 			}
 			if (heals && !isKebabVariant) {
 				player.playerServerMessage(MessageType.QUEST, "It heals some health");
-				if (player.getWorld().getServer().getConfig().WANT_PARTIES) {
+				if (config().WANT_PARTIES) {
 					if(player.getParty() != null){
 						player.getUpdateFlags().setHpUpdate(new HpUpdate(player, 0));
 						player.getParty().sendParty();

@@ -6,6 +6,8 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import static com.openrsc.server.plugins.Functions.*;
+
 public final class PlayerModerator implements CommandTrigger {
 
 	public static String messagePrefix = null;
@@ -18,10 +20,10 @@ public final class PlayerModerator implements CommandTrigger {
 	@Override
 	public void onCommand(Player player, String cmd, String[] args) {
 		if(messagePrefix == null) {
-			messagePrefix = player.getWorld().getServer().getConfig().MESSAGE_PREFIX;
+			messagePrefix = config().MESSAGE_PREFIX;
 		}
 		if(badSyntaxPrefix == null) {
-			badSyntaxPrefix = player.getWorld().getServer().getConfig().BAD_SYNTAX_PREFIX;
+			badSyntaxPrefix = config().BAD_SYNTAX_PREFIX;
 		}
 
 		if (cmd.equalsIgnoreCase("gmute")) {

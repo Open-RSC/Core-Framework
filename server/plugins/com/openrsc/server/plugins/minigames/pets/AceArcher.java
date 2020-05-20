@@ -19,14 +19,14 @@ public class AceArcher implements UseNpcTrigger {
 
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
-		if (player.getWorld().getServer().getConfig().WANT_PETS) {
+		if (config().WANT_PETS) {
 			npc.resetPath();
 			//npc.resetRange();
 			npc.face(player);
 			player.face(npc);
 			thinkbubble(item);
 			player.message("You attempt to put the baby blue dragon in the crystal.");
-			delay(player.getWorld().getServer().getConfig().GAME_TICK * 2);
+			delay(config().GAME_TICK * 2);
 			/*Npc nearbyNpc = getMultipleNpcsInArea(player, 5, NpcId.BABY_BLUE_DRAGON.id(), NpcId.BLUE_DRAGON.id(), NpcId.RED_DRAGON.id(), NpcId.DRAGON.id());
 			if (nearbyNpc != null) {
 				int selected = npc.getRandom().nextInt(5);

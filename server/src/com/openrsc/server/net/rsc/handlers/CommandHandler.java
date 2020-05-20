@@ -7,7 +7,7 @@ import com.openrsc.server.net.rsc.PacketHandler;
 public final class CommandHandler implements PacketHandler {
 	public void handlePacket(Packet packet, Player player) throws Exception {
 		if (System.currentTimeMillis() - player.getLastCommand() < 1000 && !player.isAdmin()) {
-			player.message(player.getWorld().getServer().getConfig().MESSAGE_PREFIX + "There's a second delay between using commands");
+			player.message(player.getConfig().MESSAGE_PREFIX + "There's a second delay between using commands");
 		} else {
 			String s = packet.readString();
 			int firstSpace = s.indexOf(" ");

@@ -104,7 +104,7 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 						mes("Hetty put's all the ingredients in her cauldron",
 							"Hetty closes her eyes and begins to chant");
 						npcsay(player, n, "Ok drink from the cauldron");
-						delay(player.getWorld().getServer().getConfig().GAME_TICK * 3);
+						delay(config().GAME_TICK * 3);
 						player.updateQuestStage(getQuestId(), 2);
 					} else {
 						say(player, n, "No not yet");

@@ -152,6 +152,7 @@ public class ServerConfiguration {
 	public boolean WANT_CUSTOM_LEATHER;
 	public boolean WANT_BETTER_JEWELRY_CRAFTING;
 	public boolean MORE_SHAFTS_PER_BETTER_LOG;
+	public boolean FASTER_YOHNUS;
 	public boolean WANT_DISCORD_AUCTION_UPDATES;
 	public String DISCORD_AUCTION_WEBHOOK_URL;
 	public boolean WANT_DISCORD_MONITORING_UPDATES;
@@ -398,6 +399,7 @@ public class ServerConfiguration {
 		WANT_CUSTOM_LEATHER = tryReadBool("want_custom_leather").orElse(false);
 		WANT_BETTER_JEWELRY_CRAFTING = tryReadBool("want_better_jewelry_crafting").orElse(false);
 		MORE_SHAFTS_PER_BETTER_LOG = tryReadBool("more_shafts_per_better_log").orElse(false);
+		FASTER_YOHNUS = tryReadBool("faster_yohnus").orElse(false);
 
 		// Bank
 		RIGHT_CLICK_BANK = tryReadBool("right_click_bank").orElse(false);
