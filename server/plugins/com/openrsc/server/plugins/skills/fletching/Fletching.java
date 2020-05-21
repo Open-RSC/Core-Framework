@@ -11,6 +11,7 @@ import com.openrsc.server.external.ItemLogCutDef;
 import com.openrsc.server.model.container.CarriedItems;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -74,25 +75,25 @@ public class Fletching implements UseInvTrigger {
 		} else if (item2ID == ItemId.FEATHER.id() && DataConversions.inArray(attachmentIds, item1.getCatalogId())) {
 			return true;
 
-		// Adding bow strings to unstrung bows.
+			// Adding bow strings to unstrung bows.
 		} else if (item1ID == ItemId.BOW_STRING.id() && DataConversions.inArray(unstrungBows, item2.getCatalogId())) {
 			return true;
 		} else if (item2ID == ItemId.BOW_STRING.id() && DataConversions.inArray(unstrungBows, item1.getCatalogId())) {
 			return true;
 
-		// Add arrow heads to headless arrows.
+			// Add arrow heads to headless arrows.
 		} else if (item1ID == ItemId.HEADLESS_ARROWS.id() && DataConversions.inArray(arrowHeads, item2.getCatalogId())) {
 			return true;
 		} else if (item2ID == ItemId.HEADLESS_ARROWS.id() && DataConversions.inArray(arrowHeads, item1.getCatalogId())) {
 			return true;
 
-		// Use knife on logs.
+			// Use knife on logs.
 		} else if (item1ID == ItemId.KNIFE.id() && DataConversions.inArray(logIds, item2.getCatalogId())) {
 			return true;
 		} else if (item2ID == ItemId.KNIFE.id() && DataConversions.inArray(logIds, item1.getCatalogId())) {
 			return true;
 
-		// Cut oyster pearls.
+			// Cut oyster pearls.
 		} else if (item1ID == ItemId.CHISEL.id() && (item2.getCatalogId() == ItemId.QUEST_OYSTER_PEARLS.id()
 			|| item2.getCatalogId() == ItemId.OYSTER_PEARLS.id())) {
 			return true;
@@ -100,7 +101,7 @@ public class Fletching implements UseInvTrigger {
 			|| item1.getCatalogId() == ItemId.OYSTER_PEARLS.id())) {
 			return true;
 
-		// Add oyster pearl bolt tips to bolts.
+			// Add oyster pearl bolt tips to bolts.
 		} else if (item1ID == ItemId.OYSTER_PEARL_BOLT_TIPS.id() && item2ID == ItemId.CROSSBOW_BOLTS.id()) {
 			return true;
 		} else if (item2ID == ItemId.OYSTER_PEARL_BOLT_TIPS.id() && item1ID == ItemId.CROSSBOW_BOLTS.id()) {
@@ -196,18 +197,25 @@ public class Fletching implements UseInvTrigger {
 		if (feathers == null || attachment == null) return;
 		int loopAmount = Math.min(10, feathers.getAmount());
 		loopAmount = Math.min(loopAmount, attachment.getAmount());
+		boolean authenticClientUpdates = !config().CUSTOM_IMPROVEMENTS;
+		int timesLooped = 0;
 		for (int i = 0; i < loopAmount; ++i) {
-
 			if (checkFatigue(player)) {
 				return;
 			}
 
-			ci.remove(new Item(feathers.getCatalogId(), 1));
-			ci.remove(new Item(attachment.getCatalogId(), 1));
-			ci.getInventory().add(new Item(resultID));
-			player.incExp(Skills.FLETCHING, experience, true);
+			ci.remove(new Item(feathers.getCatalogId(), 1), authenticClientUpdates);
+			ci.remove(new Item(attachment.getCatalogId(), 1), authenticClientUpdates);
+			ci.getInventory().add(new Item(resultID), authenticClientUpdates);
+			if (authenticClientUpdates) {
+				player.incExp(Skills.FLETCHING, experience, true);
+			}
+			timesLooped++;
 		}
-
+		if (!authenticClientUpdates) {
+			ActionSender.sendInventory(player);
+			player.incExp(Skills.FLETCHING, experience * timesLooped, true);
+		}
 		delay(config().GAME_TICK);
 
 		// Repeat
@@ -247,7 +255,6 @@ public class Fletching implements UseInvTrigger {
 	}
 
 	private void batchArrowheads(Player player, Item headlessArrows, Item arrowHeads, ItemArrowHeadDef headDef) {
-		ServerConfiguration config = config();
 		CarriedItems ci = player.getCarriedItems();
 		headlessArrows = ci.getInventory().get(
 			ci.getInventory().getLastIndexById(headlessArrows.getCatalogId(), Optional.of(false))
@@ -258,6 +265,9 @@ public class Fletching implements UseInvTrigger {
 		if (headlessArrows == null || arrowHeads == null) return;
 		int loopAmount = Math.min(10, headlessArrows.getAmount());
 		loopAmount = Math.min(loopAmount, arrowHeads.getAmount());
+		int skillCapeMultiplier = SkillCapes.shouldActivate(player, ItemId.FLETCHING_CAPE) ? 2 : 1;
+		boolean authenticClientUpdates = !config().CUSTOM_IMPROVEMENTS;
+		int timesLooped = 0;
 		for (int i = 0; i < loopAmount; ++i) {
 			if (player.getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
 				player.message("You need a fletching skill of "
@@ -268,14 +278,19 @@ public class Fletching implements UseInvTrigger {
 				return;
 			}
 
-			ci.remove(new Item(headlessArrows.getCatalogId(), 1));
-			ci.remove(new Item(arrowHeads.getCatalogId(), 1));
+			ci.remove(new Item(headlessArrows.getCatalogId(), 1), authenticClientUpdates);
+			ci.remove(new Item(arrowHeads.getCatalogId(), 1), authenticClientUpdates);
+			ci.getInventory().add(new Item(headDef.getArrowID(), skillCapeMultiplier), authenticClientUpdates);
 
-			int skillCapeMultiplier = SkillCapes.shouldActivate(player, ItemId.FLETCHING_CAPE) ? 2 : 1;
-			ci.getInventory().add(new Item(headDef.getArrowID(), skillCapeMultiplier));
-			player.incExp(Skills.FLETCHING, headDef.getExp() * skillCapeMultiplier, true);
+			if (authenticClientUpdates) {
+				player.incExp(Skills.FLETCHING, headDef.getExp() * skillCapeMultiplier, true);
+			}
+			timesLooped++;
 		}
-
+		if (!authenticClientUpdates) {
+			ActionSender.sendInventory(player);
+			player.incExp(Skills.FLETCHING, headDef.getExp() * skillCapeMultiplier * timesLooped, true);
+		}
 		delay(config().GAME_TICK);
 
 		// Repeat
@@ -339,7 +354,7 @@ public class Fletching implements UseInvTrigger {
 	}
 
 	private void doLogCut(final Player player, final Item knife,
-							 final Item log) {
+						  final Item log) {
 		if (!config().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;
@@ -355,7 +370,7 @@ public class Fletching implements UseInvTrigger {
 
 		String[] options = logConfig ? new String[]{"Make arrow shafts", "Make shortbow", "Make longbow"} :
 			(log.getCatalogId() == ItemId.LOGS.id() ? new String[]{"Make arrow shafts",
-			"Make shortbow", "Make longbow"} : new String[]{"Make shortbow", "Make longbow"});
+				"Make shortbow", "Make longbow"} : new String[]{"Make shortbow", "Make longbow"});
 
 		int type = multi(player, options);
 		if (type < 0 || type > options.length) {
@@ -525,6 +540,9 @@ public class Fletching implements UseInvTrigger {
 		if (bolts == null || tips == null) return;
 		int loopCount = Math.min(10, bolts.getAmount());
 		loopCount = Math.min(loopCount, tips.getAmount());
+		int skillCapeMultiplier = SkillCapes.shouldActivate(player, ItemId.FLETCHING_CAPE) ? 2 : 1;
+		int timesLooped = 0;
+		boolean authenticClientUpdates = !config().CUSTOM_IMPROVEMENTS;
 		for (int i = 0; i < loopCount; ++i) {
 			if (player.getSkills().getLevel(Skills.FLETCHING) < 34) {
 				player.message("You need a fletching skill of 34 to do that");
@@ -533,12 +551,17 @@ public class Fletching implements UseInvTrigger {
 			if (checkFatigue(player)) {
 				return;
 			}
-			ci.remove(new Item(bolts.getCatalogId(), 1));
-			ci.remove(new Item(tips.getCatalogId(),1));
-
-			int skillCapeMultiplier = SkillCapes.shouldActivate(player, ItemId.FLETCHING_CAPE) ? 2 : 1;
-			ci.getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), skillCapeMultiplier));
-			player.incExp(Skills.FLETCHING, 25 * skillCapeMultiplier, true);
+			ci.remove(new Item(bolts.getCatalogId(), 1), authenticClientUpdates);
+			ci.remove(new Item(tips.getCatalogId(), 1), authenticClientUpdates);
+			ci.getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), skillCapeMultiplier), authenticClientUpdates);
+			if (authenticClientUpdates) {
+				player.incExp(Skills.FLETCHING, 25 * skillCapeMultiplier, true);
+			}
+			timesLooped++;
+		}
+		if (!authenticClientUpdates) {
+			ActionSender.sendInventory(player);
+			player.incExp(Skills.FLETCHING, 25 * skillCapeMultiplier * timesLooped, true);
 		}
 
 		delay(config().GAME_TICK);
