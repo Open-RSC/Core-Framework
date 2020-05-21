@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.skills.crafting;
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemCraftingDef;
 import com.openrsc.server.external.ItemGemDef;
 import com.openrsc.server.model.Point;
@@ -186,7 +185,7 @@ public class Crafting implements UseInvTrigger,
 		boolean furnace = obj.getID() == 118 || obj.getID() == 813;
 		boolean furnaceItem = DataConversions.inArray(itemsFurnance, item.getCatalogId());
 		boolean jewelryBar = item.getCatalogId() == ItemId.SILVER_BAR.id() || item.getCatalogId() == ItemId.GOLD_BAR.id();
-		boolean wantBetterJewelryCrafting = config().WANT_BETTER_JEWELRY_CRAFTING;
+		boolean wantBetterJewelryCrafting = player.getConfig().WANT_BETTER_JEWELRY_CRAFTING;
 		boolean potteryOven = obj.getID() == 178;
 		boolean potteryItem = DataConversions.inArray(itemsOven, item.getCatalogId());
 		boolean spinningWheel = obj.getID() == 179;
