@@ -31,6 +31,7 @@ public class FireCannonEvent extends GameTickEvent {
 		for (Npc n : npcsInView) {
 			if ((n.getLocation().inBounds(getOwner().getX() - 8, getOwner().getY() - 8, getOwner().getX() + 8, getOwner().getY() + 8))
 				&& (n.getDef().isAttackable()) && PathValidation.checkPath(getOwner().getWorld(), getOwner().getLocation(), n.getLocation())) {
+				if(n.getSkills().getLevel(Skills.HITS) <= 0) continue;
 				possibleTargets.add(n);
 			}
 		}
