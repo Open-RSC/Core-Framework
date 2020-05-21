@@ -114,11 +114,12 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 			if (config().BATCH_PROGRESSION) {
 				repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
 			}
-			batchAmuletCharge(player, item, repeat);
+			startbatch(repeat);
+			batchAmuletCharge(player, item);
 		}
 	}
 
-	private void batchAmuletCharge(Player player, Item item, int repeat) {
+	private void batchAmuletCharge(Player player, Item item) {
 		item = player.getCarriedItems().getInventory().get(
 			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
 		);
@@ -133,10 +134,9 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 		player.message("It now also means you can find more gems when mining");
 
 		// Repeat
-		if (ifinterrupted()) return;
-		repeat--;
-		if (repeat > 0) {
-			batchAmuletCharge(player, item, repeat);
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
+			batchAmuletCharge(player, item);
 		}
 	}
 }
