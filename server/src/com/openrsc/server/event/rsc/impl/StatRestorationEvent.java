@@ -33,6 +33,10 @@ public class StatRestorationEvent extends GameTickEvent {
 
 	@Override
 	public void run() {
+		if (getOwner() == null) {
+			running = false;
+			return;
+		}
 
 		boolean restoredStats = false;
 		boolean restoredHits = false;

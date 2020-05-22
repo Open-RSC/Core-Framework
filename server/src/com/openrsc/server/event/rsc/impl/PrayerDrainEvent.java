@@ -20,6 +20,11 @@ public class PrayerDrainEvent extends GameTickEvent {
 
 	@Override
 	public void run() {
+		if (getOwner() == null) {
+			running = false;
+			return;
+		}
+
 		refreshActivePrayers();
 
 		if (pointDrainage > 0) {
