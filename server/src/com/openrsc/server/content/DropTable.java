@@ -1,15 +1,24 @@
 package com.openrsc.server.content;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
 public class DropTable {
+
+	private static final Logger LOGGER = LogManager.getLogger();
+
+
 	ArrayList<Drop> drops;
 	ArrayList<Accessor> accessors;
 	int totalWeight;
@@ -61,19 +70,35 @@ public class DropTable {
 		accessors.add(new Accessor(id, numerator, denominator));
 	}
 
-	public Item rollItem(boolean ringOfWealth, Mob owner) {
+	public Item rollItem(boolean ringOfWealth, Player owner) {
 		DropTable rollTable = ringOfWealth ? modifyTable(this) : this;
 
 		int hit = DataConversions.random(1, rollTable.totalWeight);
 		int sum = 0;
 		for (Drop drop : rollTable.drops) {
+			if (drop.weight == 0) continue;
+			if (drop.id == ItemId.UNHOLY_SYMBOL_MOULD.id()) {
+				if (owner.wantUnholySymbols()) {
+					continue;
+				}
+			}
+
 			sum += drop.weight;
 			if (sum >= hit) {
-				if (drop.type == dropType.NOTHING)
+				if (drop.type == dropType.NOTHING || drop.id == ItemId.NOTHING.id()) {
 					return null;
+				}
+				if (owner.getWorld().getServer().getEntityHandler().getItemDef(drop.id).isMembersOnly()
+					&& !owner.getWorld().getServer().getConfig().MEMBER_WORLD) {
+					continue; // Members only item on a free world
+				}
 				else if (drop.type == dropType.ITEM) {
-					if (ringOfWealth && owner != null && owner instanceof Player)
+					if (ringOfWealth && owner != null && owner instanceof Player) {
 						((Player) owner).playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
+					}
+					if (owner.getWorld().getServer().getConfig().VALUABLE_DROP_MESSAGES) {
+						checkValuableDrop(drop.id, drop.amount, drop.weight, rollTable.totalWeight, owner);
+					}
 					return new Item(drop.id, drop.amount, drop.noted);
 				} else if (drop.type == dropType.TABLE) {
 					return drop.table.rollItem(ringOfWealth, owner);
@@ -81,6 +106,25 @@ public class DropTable {
 			}
 		}
 		return null;
+	}
+
+	public void dropInvariableItems(Player owner, Mob dropping) {
+		int total = 0;
+		int weightTotal = 0;
+		for (Drop drop : drops) {
+			total = weightTotal = total + drop.weight;
+			if (drop.weight == 0 && drop.id != ItemId.NOTHING.id()) {
+
+				// If Ring of Avarice (custom) is equipped, and the item is a stack,
+				// we will award the item with slightly different logic.
+				if (handleRingOfAvarice(owner, new Item(drop.id, drop.amount))) continue;
+
+				// Otherwise, create a normal GroundItem.
+				GroundItem groundItem = new GroundItem(owner.getWorld(), drop.id, dropping.getX(), dropping.getY(), drop.amount, owner);
+				groundItem.setAttribute("npcdrop", true);
+				owner.getWorld().registerItem(groundItem);
+			}
+		}
 	}
 
 	//removes the empty slots from a table
@@ -96,6 +140,60 @@ public class DropTable {
 			}
 		}
 		return modifiedTable;
+	}
+
+	public static boolean handleRingOfAvarice(final Player player, final Item item) {
+		try {
+			int slot = -1;
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_AVARICE.id())) {
+				ItemDefinition itemDef = player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId());
+				if (itemDef != null && itemDef.isStackable()) {
+					if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
+						player.getCarriedItems().getInventory().add(item);
+						return true;
+					} else if (player.getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
+						Item equipped = player.getCarriedItems().getEquipment().get(slot);
+						equipped.changeAmount(player.getWorld().getServer().getDatabase(), item.getAmount());
+						return true;
+					} else {
+						if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
+							player.getCarriedItems().getInventory().add(item);
+							return true;
+						} else {
+							player.message("Your ring of Avarice tried to activate, but your inventory was full.");
+							return false;
+						}
+					}
+				}
+			}
+		} catch (GameDatabaseException ex) {
+			LOGGER.error(ex.getMessage());
+		}
+		return false;
+	}
+
+	private void checkValuableDrop(int dropID, int amount, int weight, int weightTotal, Player owner) {
+		// Check if we have a "valuable drop" (configurable)
+		Item temp = new Item(dropID);
+		double currentRatio = (double) weight / (double) weightTotal;
+		if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() &&
+			amount > 0 &&
+			(
+				currentRatio > owner.getWorld().getServer().getConfig().VALUABLE_DROP_RATIO ||
+					(
+						owner.getWorld().getServer().getConfig().VALUABLE_DROP_EXTRAS &&
+							owner.getWorld().getServer().getConfig().valuableDrops.contains(temp.getDef(owner.getWorld()).getName())
+					)
+			)
+		) {
+			if (amount > 1) {
+				owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef(owner.getWorld()).getName() + " (" +
+					(temp.getDef(owner.getWorld()).getDefaultPrice() * amount) + " coins)");
+			} else {
+				owner.message("@red@Valuable drop: " + temp.getDef(owner.getWorld()).getName() + " (" +
+					(temp.getDef(owner.getWorld()).getDefaultPrice()) + " coins)");
+			}
+		}
 	}
 
 	public enum dropType {
@@ -152,6 +250,18 @@ public class DropTable {
 			this.type = dropType.TABLE;
 			this.weight = weight;
 			this.table = table;
+		}
+
+		@Override
+		public String toString() {
+			return "Drop{" +
+				"table=" + table +
+				", type=" + type +
+				", id=" + id +
+				", amount=" + amount +
+				", weight=" + weight +
+				", noted=" + noted +
+				'}';
 		}
 	}
 }

@@ -1,8 +1,6 @@
 package com.openrsc.server.model.entity.player;
 
-import com.openrsc.server.constants.Constants;
-import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.clan.Clan;
@@ -3102,5 +3100,18 @@ public final class Player extends Mob {
 			radius = 4;
 
 		return radius;
+	}
+
+	public boolean wantUnholySymbols() {
+		if (getQuestStage(Quests.OBSERVATORY_QUEST) > -1)
+			return true; // Quest started.
+
+		if (getConfig().WANT_CUSTOM_QUESTS) {
+			if (getCache().hasKey("want_unholy_symbol_drops") &&
+				getCache().getBoolean("want_unholy_symbol_drops")) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

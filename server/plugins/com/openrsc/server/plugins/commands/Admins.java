@@ -428,8 +428,8 @@ public final class Admins implements CommandTrigger {
 			//KDB Specific RDT
 			if (config().WANT_CUSTOM_SPRITES) {
 				if (npcID == NpcId.KING_BLACK_DRAGON.id()) {
-					if (player.getWorld().kbdTable.rollAccess(npcID, RoW)) {
-						Item kbdSpecificLoot = player.getWorld().kbdTable.rollItem(RoW, null);
+					if (player.getWorld().npcDrops.getKbdTableCustom().rollAccess(npcID, RoW)) {
+						Item kbdSpecificLoot = player.getWorld().npcDrops.getKbdTableCustom().rollItem(RoW, null);
 						if (kbdSpecificLoot != null) {
 							if (rareDrops.containsKey(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase())) {
 								int amount = rareDrops.get(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase());
@@ -452,12 +452,12 @@ public final class Admins implements CommandTrigger {
 			boolean rdtHit = false;
 			Item rare = null;
 
-			if (player.getWorld().standardTable.rollAccess(npcID, RoW)) {
+			if (player.getWorld().npcDrops.getUltraRareDropTable().rollAccess(npcID, RoW)) {
 				rdtHit = true;
-				rare = player.getWorld().standardTable.rollItem(RoW, null);
-			} else if (player.getWorld().gemTable.rollAccess(npcID, RoW)) {
+				rare = player.getWorld().npcDrops.getUltraRareDropTable().rollItem(RoW, null);
+			} else if (player.getWorld().npcDrops.getRareDropTable().rollAccess(npcID, RoW)) {
 				rdtHit = true;
-				rare = player.getWorld().gemTable.rollItem(RoW, null);
+				rare = player.getWorld().npcDrops.getRareDropTable().rollItem(RoW, null);
 			}
 			if (rdtHit) {
 				if (rare == null) {

@@ -1,6 +1,7 @@
 package com.openrsc.server.model.entity.npc;
 
 import com.openrsc.server.constants.*;
+import com.openrsc.server.content.DropTable;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
@@ -315,6 +316,10 @@ public class Npc extends Mob {
 			logNpcKill(owner);
 		}
 
+		/** Item Drops **/
+
+		/* 1. Custom Rare Drops */
+
 		// Custom KDB Specific Rare Drop Table (RDT)
 		if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
 			if (this.getID() == NpcId.KING_BLACK_DRAGON.id()) {
@@ -328,7 +333,39 @@ public class Npc extends Mob {
 			rdtHit = rollForCustomRareItem(owner);
 		}
 
-		ItemDropDef[] drops = def.getDrops();
+		/* 2. Drop bones (or nothing). */
+
+		// No Bones
+		int bones = ItemId.NOTHING.id();
+		// Big Bones
+		if (getWorld().npcDrops.isBigBoned(this.getID())) {
+			bones = ItemId.BIG_BONES.id();
+		}
+		// Bat
+		else if (getWorld().npcDrops.isBatBoned(this.getID())) {
+			bones = ItemId.BAT_BONES.id();
+		}
+		// Dragon
+		else if (getWorld().npcDrops.isDragon(this.getID())) {
+			bones = ItemId.DRAGON_BONES.id();
+		}
+		// Demon
+		else if (getWorld().npcDrops.isDemon(this.getID())) {
+			bones = ItemId.ASHES.id();
+		}
+		// Not boneless
+		else if(!getWorld().npcDrops.isBoneless(this.getID())) {
+			bones = ItemId.BONES.id();
+		}
+		if (bones != ItemId.NOTHING.id()) {
+			GroundItem groundItem = new GroundItem(owner.getWorld(), bones, getX(), getY(), 1, owner);
+			groundItem.setAttribute("npcdrop", true);
+			getWorld().registerItem(groundItem);
+		}
+
+		/* 3. Get the rest of the mob's drops. */
+
+		DropTable drops = getWorld().npcDrops.getDropTable(this.getID());
 		if (drops == null) {
 			// Some enemies have no drops
 			deathListeners.clear();
@@ -336,63 +373,20 @@ public class Npc extends Mob {
 			return;
 		}
 
-		// Drops that always occur on every kill
-		int total = 0;
-		int weightTotal = 0;
-		for (ItemDropDef drop : drops) {
-			total = weightTotal = total + drop.getWeight();
-			if (drop.getWeight() == 0 && drop.getID() != ItemId.NOTHING.id()) {
+		/* 4. Drop items that should always drop, that are not bones. */
 
-				// If Ring of Avarice (custom) is equipped, and the item is a stack,
-				// we will award the item with slightly different logic.
-				if (handleRingOfAvarice(owner, new Item(drop.getID(), drop.getAmount()))) continue;
+		drops.dropInvariableItems(owner, this);
 
-				// Otherwise, create a normal GroundItem.
-				GroundItem groundItem = new GroundItem(owner.getWorld(), drop.getID(), getX(), getY(), drop.getAmount(), owner);
-				groundItem.setAttribute("npcdrop", true);
-				getWorld().registerItem(groundItem);
-			}
+		/* 5. Roll for drops if we have not rolled a custom RDT item. */
 
-		}
-
-		if (!rdtHit) {
-			int hit = DataConversions.random(0, total);
-			total = 0;
-
-			// Loop on the drops from the Mob
-			for (ItemDropDef drop : drops) {
-				if (drop.getID() == com.openrsc.server.constants.ItemId.UNHOLY_SYMBOL_MOULD.id()) {
-					if (wantUnholySymbols(owner)) {
-						continue;
-					}
+		if (!rdtHit && drops.getTotalWeight() > 0) {
+			Item item = drops.rollItem(false, owner);
+			if (item != null) {
+				if (getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).isStackable()) {
+					dropStackItem(item.getCatalogId(), item.getAmount(), owner);
+				} else {
+					dropStandardItem(item.getCatalogId(), item.getAmount(), owner);
 				}
-
-				int dropID = drop.getID();
-				int amount = drop.getAmount();
-				int weight = drop.getWeight();
-
-				// hit (% chance) is found by taking the weight of the current item
-				// and dividing it by the total weight of all drops from this mob.
-				if (hit >= total && hit < (total + weight)) {
-					if (dropID != ItemId.NOTHING.id()) {
-						if (getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly()
-							&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
-							continue; // Members only item on a free world
-						}
-
-						if (getWorld().getServer().getEntityHandler().getItemDef(dropID).isStackable()) {
-							dropStackItem(dropID, amount, owner);
-						} else {
-							dropStandardItem(dropID, amount, owner);
-						}
-
-						if (getWorld().getServer().getConfig().VALUABLE_DROP_MESSAGES) {
-							checkValuableDrop(dropID, amount, weight, weightTotal, owner);
-						}
-					}
-					break;
-				}
-				total += weight;
 			}
 		}
 
@@ -415,8 +409,8 @@ public class Npc extends Mob {
 
 	private void calculateCustomKingBlackDragonDrop(Player owner) {
 		boolean ringOfWealth = owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id());
-		if (getWorld().kbdTable.rollAccess(this.getID(), ringOfWealth)) {
-			Item kbdSpecificLoot = getWorld().kbdTable.rollItem(ringOfWealth, owner);
+		if (getWorld().npcDrops.getKbdTableCustom().rollAccess(this.getID(), ringOfWealth)) {
+			Item kbdSpecificLoot = getWorld().npcDrops.getKbdTableCustom().rollItem(ringOfWealth, owner);
 			if (kbdSpecificLoot != null) {
 				GroundItem groundItem = new GroundItem(getWorld(), kbdSpecificLoot.getCatalogId(), getX(), getY(), kbdSpecificLoot.getAmount(), owner);
 				groundItem.setAttribute("npcdrop", true);
@@ -438,14 +432,14 @@ public class Npc extends Mob {
 		boolean ringOfWealth = owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id());
 
 		Item rare = null;
-		if (getWorld().standardTable.rollAccess(this.getID(), ringOfWealth)) {
-			rare = getWorld().standardTable.rollItem(ringOfWealth, owner);
-		} else if (getWorld().gemTable.rollAccess(this.getID(), ringOfWealth)) {
-			rare = getWorld().gemTable.rollItem(ringOfWealth, owner);
+		if (getWorld().npcDrops.getUltraRareDropTable().rollAccess(this.getID(), ringOfWealth)) {
+			rare = getWorld().npcDrops.getUltraRareDropTable().rollItem(ringOfWealth, owner);
+		} else if (getWorld().npcDrops.getRareDropTable().rollAccess(this.getID(), ringOfWealth)) {
+			rare = getWorld().npcDrops.getRareDropTable().rollItem(ringOfWealth, owner);
 		}
 
 		if (rare != null) {
-			if (!handleRingOfAvarice(owner, rare)) {
+			if (!DropTable.handleRingOfAvarice(owner, rare)) {
 				GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getCatalogId(), getX(), getY(), rare.getAmount(), owner, rare.getNoted());
 				groundItem.setAttribute("npcdrop", true);
 				getWorld().registerItem(groundItem);
@@ -458,19 +452,6 @@ public class Npc extends Mob {
 				LOGGER.catching(ex);
 			}
 			return true;
-		}
-		return false;
-	}
-
-	private boolean wantUnholySymbols(Player owner) {
-		if (owner.getQuestStage(Quests.OBSERVATORY_QUEST) > -1)
-			return true; // Quest started.
-
-		if (owner.getConfig().WANT_CUSTOM_QUESTS) {
-			if (owner.getCache().hasKey("want_unholy_symbol_drops") &&
-				owner.getCache().getBoolean("want_unholy_symbol_drops")) {
-				return true;
-			}
 		}
 		return false;
 	}
@@ -493,7 +474,7 @@ public class Npc extends Mob {
 			LOGGER.catching(ex);
 		}
 
-		if (!handleRingOfAvarice(owner, new Item(dropID, amount))) {
+		if (!DropTable.handleRingOfAvarice(owner, new Item(dropID, amount))) {
 			GroundItem groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner);
 			groundItem.setAttribute("npcdrop", true);
 			getWorld().registerItem(groundItem);
@@ -528,30 +509,6 @@ public class Npc extends Mob {
 				groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1, owner);
 				groundItem.setAttribute("npcdrop", true);
 				getWorld().registerItem(groundItem);
-			}
-		}
-	}
-
-	private void checkValuableDrop(int dropID, int amount, int weight, int weightTotal, Player owner) {
-		// Check if we have a "valuable drop" (configurable)
-		Item temp = new Item(dropID);
-		double currentRatio = (double) weight / (double) weightTotal;
-		if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() &&
-			amount > 0 &&
-			(
-				currentRatio > getWorld().getServer().getConfig().VALUABLE_DROP_RATIO ||
-					(
-						getWorld().getServer().getConfig().VALUABLE_DROP_EXTRAS &&
-							getWorld().getServer().getConfig().valuableDrops.contains(temp.getDef(getWorld()).getName())
-					)
-			)
-		) {
-			if (amount > 1) {
-				owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef(getWorld()).getName() + " (" +
-					(temp.getDef(getWorld()).getDefaultPrice() * amount) + " coins)");
-			} else {
-				owner.message("@red@Valuable drop: " + temp.getDef(getWorld()).getName() + " (" +
-					(temp.getDef(getWorld()).getDefaultPrice()) + " coins)");
 			}
 		}
 	}
@@ -786,36 +743,6 @@ public class Npc extends Mob {
 
 	public boolean executedAggroScript() {
 		return this.executedAggroScript;
-	}
-
-	public static boolean handleRingOfAvarice(final Player player, final Item item) {
-		try {
-			int slot = -1;
-			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_AVARICE.id())) {
-				ItemDefinition itemDef = player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId());
-				if (itemDef != null && itemDef.isStackable()) {
-					if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
-						player.getCarriedItems().getInventory().add(item);
-						return true;
-					} else if (player.getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
-						Item equipped = player.getCarriedItems().getEquipment().get(slot);
-						equipped.changeAmount(player.getWorld().getServer().getDatabase(), item.getAmount());
-						return true;
-					} else {
-						if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
-							player.getCarriedItems().getInventory().add(item);
-							return true;
-						} else {
-							player.message("Your ring of Avarice tried to activate, but your inventory was full.");
-							return false;
-						}
-					}
-				}
-			}
-		} catch (GameDatabaseException ex) {
-			LOGGER.error(ex.getMessage());
-		}
-		return false;
 	}
 
 	public Point walkablePoint(final Point minP, final Point maxP) {
