@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.commands;
 
 import com.openrsc.server.constants.NpcDrops;
+import com.openrsc.server.content.DropTable;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
@@ -414,6 +415,22 @@ public final class Development implements CommandTrigger {
 		}
 		else if (cmd.equalsIgnoreCase("debugdroptables")) {
 			new NpcDrops(player.getWorld()).debugDropTables();
+		}
+		else if (cmd.equalsIgnoreCase("droptest")) {
+			if (args.length < 1) {
+				mes("::droptest [npc_id]  or  ::droptest [npc_id] [count]");
+				return;
+			}
+			int npcId = Integer.parseInt(args[0]);
+			int count = 1;
+			if (args.length > 1) {
+				count = Integer.parseInt(args[1]);
+			}
+			NpcDrops npcDrops = new NpcDrops(player.getWorld());
+			DropTable dropTable = npcDrops.getDropTable(npcId);
+			for (int i = 0; i < count; i++) {
+				System.out.println(dropTable.rollItem(false, player));
+			}
 		}
 	}
 }
