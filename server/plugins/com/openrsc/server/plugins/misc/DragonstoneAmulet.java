@@ -78,16 +78,14 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 					if (rubs >= 3) {
 						int chargedId = ItemId.CHARGED_DRAGONSTONE_AMULET.id();
 						Item toAdd = new Item(ItemId.DRAGONSTONE_AMULET.id());
-						boolean added = false;
 						Item currentNeckItem = player.getCarriedItems().getEquipment().getNeckItem();
-						if (config().WANT_EQUIPMENT_TAB && currentNeckItem != null) {
-							if (currentNeckItem.getCatalogId() == chargedId) {
-								player.getCarriedItems().getEquipment().remove(currentNeckItem, 1);
-								player.getCarriedItems().getEquipment().add(toAdd);
-								added = true;
-							}
+						if (config().WANT_EQUIPMENT_TAB && currentNeckItem != null
+							&& currentNeckItem.getCatalogId() == chargedId) {
+
+							player.getCarriedItems().getEquipment().remove(currentNeckItem, 1);
+							player.getCarriedItems().getEquipment().add(toAdd);
 						}
-						if (!added) {
+						else {
 							player.getCarriedItems().remove(new Item(chargedId));
 							player.getCarriedItems().getInventory().add(toAdd);
 						}
