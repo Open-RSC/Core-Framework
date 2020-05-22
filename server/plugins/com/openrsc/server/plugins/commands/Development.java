@@ -413,7 +413,7 @@ public final class Development implements CommandTrigger {
 			ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
 		}
 		else if (cmd.equalsIgnoreCase("debugdroptables")) {
-			new NpcDrops().debugDropTables();
+			new NpcDrops(player.getWorld()).debugDropTables();
 		}
 	}
 }

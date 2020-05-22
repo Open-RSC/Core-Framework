@@ -362,7 +362,7 @@ public class Npc extends Mob {
 			// Loop on the drops from the Mob
 			for (ItemDropDef drop : drops) {
 				if (drop.getID() == com.openrsc.server.constants.ItemId.UNHOLY_SYMBOL_MOULD.id()) {
-					if (!wantUnholySymbols(owner)) {
+					if (wantUnholySymbols(owner)) {
 						continue;
 					}
 				}
