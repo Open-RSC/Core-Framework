@@ -4,6 +4,7 @@ import com.openrsc.server.content.DropTable;
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.model.world.World;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,6 +15,7 @@ public class NpcDrops {
 
 	private HashMap<Integer, DropTable> npcDrops;
 	private HashSet<Integer> bonelessNpcs;
+	private HashSet<Integer> batBonedNpcs;
 	private HashSet<Integer> bigBoneNpcs;
 	private HashSet<Integer> dragonNpcs;
 	private HashSet<Integer> ashesNpcs;
@@ -22,23 +24,68 @@ public class NpcDrops {
 	private DropTable rareDropTable;
 	private DropTable megaRareDropTable;
 	private DropTable ultraRareDropTable;
+	
+	private DropTable kbdTableCustom;
 
 	public NpcDrops(World world) {
 		this.config = world.getServer().getConfig();
 
 		this.npcDrops = new HashMap<>();
 		this.bonelessNpcs = new HashSet<>();
+		this.batBonedNpcs = new HashSet<>();
 		this.bigBoneNpcs = new HashSet<>();
 		this.dragonNpcs = new HashSet<>();
 		this.ashesNpcs = new HashSet<>();
 
 		createHerbDropTable();
-		createRareDropTable();
-		createMegaRareDropTable();
-		createUltraRareDropTable();
+
+		if (config.WANT_NEW_RARE_DROP_TABLES) {
+			initializeCustomRareDropTables();
+		}
+		else {
+			createRareDropTable();
+			createMegaRareDropTable();
+			createUltraRareDropTable();
+		}
 
 		createBoneDrops();
 		createMobDrops();
+	}
+
+	public boolean isBoneless(Integer npc) {
+		return this.bonelessNpcs.contains(npc);
+	}
+
+	public boolean isDemon(Integer npc) {
+		return this.ashesNpcs.contains(npc);
+	}
+
+	public boolean isDragon(Integer npc) {
+		return this.dragonNpcs.contains(npc);
+	}
+
+	public boolean isBigBoned(Integer npc) {
+		return this.bigBoneNpcs.contains(npc);
+	}
+
+	public boolean isBatBoned(Integer npc) {
+		return this.batBonedNpcs.contains(npc);
+	}
+
+	public DropTable getRareDropTable() {
+		return rareDropTable;
+	}
+
+	public DropTable getUltraRareDropTable() {
+		return ultraRareDropTable;
+	}
+
+	public DropTable getMegaRareDropTable() {
+		return megaRareDropTable;
+	}
+
+	public DropTable getKbdTableCustom() {
+		return kbdTableCustom;
 	}
 
 	private void createHerbDropTable() {
@@ -100,6 +147,7 @@ public class NpcDrops {
 
 	private void createBoneDrops() {
 		generateBonelessNpcs();
+		generateBatBoneNpcs();
 		generateBigBoneDrops();
 		generateDragonBoneDrops();
 		generateAshesDrops();
@@ -145,6 +193,10 @@ public class NpcDrops {
 		this.bonelessNpcs.add(NpcId.SPIRIT_OF_SCORPIUS.id());
 		this.bonelessNpcs.add(NpcId.SCORPION_GRAVE.id());
 		this.bonelessNpcs.add(NpcId.PIT_SCORPION.id());
+	}
+
+	private void generateBatBoneNpcs() {
+		this.batBonedNpcs.add(NpcId.GIANT_BAT.id());
 	}
 
 	private void generateBigBoneDrops() {
@@ -393,11 +445,6 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.ZOMBIE_LVL24_GEN.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.ZOMBIE_INVOKED.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.TARGET_PRACTICE_ZOMBIE.id(), currentNpcDrops);
-
-		// Giant Bat (43)
-		currentNpcDrops = new DropTable();
-		currentNpcDrops.addItemDrop(ItemId.BAT_BONES.id(), 1, 0);
-		this.npcDrops.put(NpcId.GIANT_BAT.id(), currentNpcDrops);
 
 		// Skeleton Level 31 (45, 179, 195)
 		currentNpcDrops = new DropTable();
@@ -1549,8 +1596,112 @@ public class NpcDrops {
 
 	}
 
+	private void initializeCustomRareDropTables() {
+		rareDropTable = new DropTable();
+		ultraRareDropTable = new DropTable();
+		megaRareDropTable = new DropTable();
+		kbdTableCustom = new DropTable();
+
+		//KBD Specific table
+		kbdTableCustom.addAccessor(NpcId.KING_BLACK_DRAGON.id(), 1673, 51200);
+		kbdTableCustom.addEmptyDrop(1273);
+		kbdTableCustom.addItemDrop(ItemId.DRAGON_2_HANDED_SWORD.id(), 1, 25, false);
+		kbdTableCustom.addItemDrop(ItemId.KING_BLACK_DRAGON_SCALE.id(), 1, 2048, false);
+
+		//ITEMS
+		rareDropTable.addEmptyDrop(45);
+		rareDropTable.addItemDrop(ItemId.FEATHER.id(), 1, 18, false);
+		rareDropTable.addItemDrop(ItemId.UNCUT_SAPPHIRE.id(), 1, 32, false);
+		rareDropTable.addItemDrop(ItemId.UNCUT_EMERALD.id(), 1, 16, false);
+		rareDropTable.addItemDrop(ItemId.UNCUT_RUBY.id(), 1, 8, false);
+		rareDropTable.addItemDrop(ItemId.UNCUT_DIAMOND.id(), 1, 4, false);
+		rareDropTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 2, false);
+		rareDropTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 2, false);
+		rareDropTable.addTableDrop(megaRareDropTable, 1);
+
+		ultraRareDropTable.addItemDrop(ItemId.NATURE_RUNE.id(),50,3, false);
+		ultraRareDropTable.addItemDrop(ItemId.LAW_RUNE.id(),40,2, false);
+		ultraRareDropTable.addItemDrop(ItemId.DEATH_RUNE.id(),50,2, false);
+		ultraRareDropTable.addItemDrop(ItemId.STEEL_ARROWS.id(),150,2, false);
+		ultraRareDropTable.addItemDrop(ItemId.RUNE_ARROWS.id(),40,2, false);
+		ultraRareDropTable.addItemDrop(ItemId.FIRE_RUNE.id(),150,2, false);
+		ultraRareDropTable.addItemDrop(ItemId.IRON_ARROWS.id(),200,1, false);
+		ultraRareDropTable.addItemDrop(ItemId.RUNE_2_HANDED_SWORD.id(),1,3, false);
+		ultraRareDropTable.addItemDrop(ItemId.RUNE_BATTLE_AXE.id(),1,2, false);
+		ultraRareDropTable.addItemDrop(ItemId.RUNE_SQUARE_SHIELD.id(),1,2, false);
+		ultraRareDropTable.addItemDrop(ItemId.RUNE_KITE_SHIELD.id(),1,1, false);
+		ultraRareDropTable.addItemDrop(ItemId.DRAGON_MEDIUM_HELMET.id(),1,1, false);
+		ultraRareDropTable.addItemDrop(ItemId.COINS.id(),3000,22, false);
+		ultraRareDropTable.addItemDrop(ItemId.RUNITE_BAR.id(),1,5, false);
+		ultraRareDropTable.addItemDrop(ItemId.DRAGONSTONE.id(),1,2, false);
+		ultraRareDropTable.addItemDrop(ItemId.SILVER.id(),100,2, true); //noted silver ore
+		ultraRareDropTable.addItemDrop(ItemId.LOOP_KEY_HALF.id(), 1, 20, false);
+		ultraRareDropTable.addItemDrop(ItemId.TOOTH_KEY_HALF.id(), 1, 19, false);
+		ultraRareDropTable.addTableDrop(rareDropTable, 20);
+		ultraRareDropTable.addTableDrop(megaRareDropTable, 15);
+
+		megaRareDropTable.addEmptyDrop(105);
+		megaRareDropTable.addItemDrop(ItemId.COAL.id(), 1, 19, false);
+		megaRareDropTable.addItemDrop(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id(), 1, 4, false);
+
+		//MOBS
+		rareDropTable.addAccessor(NpcId.LESSER_DEMON.id(),3,256);
+		rareDropTable.addAccessor(NpcId.LESSER_DEMON_WMAZEKEY.id(),4,256);
+		rareDropTable.addAccessor(NpcId.DWARF.id(),5,256);
+		rareDropTable.addAccessor(NpcId.THUG.id(),5,256);
+		rareDropTable.addAccessor(NpcId.GREATER_DEMON.id(),5,256);
+		rareDropTable.addAccessor(NpcId.ZOMBIE_LVL19.id(),6,256);
+		rareDropTable.addAccessor(NpcId.TARGET_PRACTICE_ZOMBIE.id(),6,256);
+		rareDropTable.addAccessor(NpcId.SKELETON_LVL21.id(),6,256);
+		rareDropTable.addAccessor(NpcId.CHAOS_DRUID.id(),6,256);
+		rareDropTable.addAccessor(137,7,256);//lower level pirates
+		rareDropTable.addAccessor(NpcId.TRIBESMAN.id(),7,256);
+		rareDropTable.addAccessor(NpcId.MOUNTAIN_DWARF.id(),7,256);
+		rareDropTable.addAccessor(NpcId.BANDIT_AGGRESSIVE.id(),7,256);
+		rareDropTable.addAccessor(NpcId.BANDIT_AGGRESSIVE.id(),7,256);
+		rareDropTable.addAccessor(NpcId.PIRATE_LVL30.id(),8,256);
+		rareDropTable.addAccessor(NpcId.HOBGOBLIN_LVL32.id(),8,256);
+		rareDropTable.addAccessor(NpcId.SKELETON_LVL25.id(),8,256);
+		rareDropTable.addAccessor(NpcId.SKELETON_LVL31.id(),8,256);
+		rareDropTable.addAccessor(NpcId.ZOMBIE_LVL24_GEN.id(),8,256);
+		rareDropTable.addAccessor(NpcId.ZOMBIE_LVL32.id(),8,256);
+		rareDropTable.addAccessor(NpcId.ZOMBIE_WMAZEKEY.id(),8,256);
+		rareDropTable.addAccessor(NpcId.CHAOS_DRUID_WARRIOR.id(),9,256);
+		rareDropTable.addAccessor(NpcId.GIANT.id(),9,256);
+		rareDropTable.addAccessor(NpcId.GUNTHOR_THE_BRAVE.id(),9,256);
+		rareDropTable.addAccessor(NpcId.BLACK_KNIGHT.id(),9,256);
+		rareDropTable.addAccessor(NpcId.BLACK_KNIGHT_AGGRESSIVE.id(),10,256);
+		rareDropTable.addAccessor(NpcId.BLACK_KNIGHT_FORTRESS.id(),12,256);
+		rareDropTable.addAccessor(NpcId.HOBGOBLIN_LVL48.id(),11,256);
+		rareDropTable.addAccessor(NpcId.JAILER.id(),13,256);
+		rareDropTable.addAccessor(NpcId.RENEGADE_KNIGHT.id(),13,256);
+		rareDropTable.addAccessor(NpcId.SKELETON_LVL54.id(),13,256);
+		rareDropTable.addAccessor(NpcId.EARTH_WARRIOR.id(),13,256);
+		rareDropTable.addAccessor(NpcId.ICE_WARRIOR.id(),14,256);
+		rareDropTable.addAccessor(NpcId.CHAOS_DWARF.id(),14,256);
+		rareDropTable.addAccessor(NpcId.WHITE_KNIGHT.id(),14,256);
+		rareDropTable.addAccessor(NpcId.JOGRE.id(),15,256);
+		rareDropTable.addAccessor(NpcId.MOSS_GIANT.id(),15,256);
+		rareDropTable.addAccessor(NpcId.MOSS_GIANT2.id(),15,256);
+		rareDropTable.addAccessor(NpcId.SHADOW_WARRIOR.id(),16,256);
+		rareDropTable.addAccessor(NpcId.OTHERWORLDLY_BEING.id(),17,256);
+		rareDropTable.addAccessor(NpcId.ICE_GIANT.id(),18,256);
+		rareDropTable.addAccessor(NpcId.PALADIN.id(),18,256);
+		rareDropTable.addAccessor(NpcId.LORD_DARQUARIUS.id(),19,256);
+		rareDropTable.addAccessor(NpcId.ICE_QUEEN.id(),22,256);
+
+		ultraRareDropTable.addAccessor(NpcId.BLUE_DRAGON.id(),3,256);
+		ultraRareDropTable.addAccessor(NpcId.FIRE_GIANT.id(),3,256);
+		ultraRareDropTable.addAccessor(NpcId.HELLHOUND.id(),3,256);
+		ultraRareDropTable.addAccessor(NpcId.RED_DRAGON.id(),4,256);
+		ultraRareDropTable.addAccessor(NpcId.BLACK_DEMON.id(),4,256);
+		ultraRareDropTable.addAccessor(NpcId.BLACK_DEMON_GRANDTREE.id(),4,256);
+		ultraRareDropTable.addAccessor(NpcId.BLACK_DRAGON.id(),5,256);
+		ultraRareDropTable.addAccessor(NpcId.KING_BLACK_DRAGON.id(),12,256);
+	}
+
 	public DropTable getDropTable(int npcId) {
-		return this.npcDrops.get(npcId);
+		return this.npcDrops.getOrDefault(npcId, null);
 	}
 
 	public void debugDropTables() {
