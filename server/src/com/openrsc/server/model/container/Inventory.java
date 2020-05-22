@@ -428,17 +428,6 @@ public class Inventory {
 		DeathLog log = new DeathLog(player, opponent, false);
 		for (; iterator.hasNext(); ) {
 			Item item = iterator.next();
-			if (item.isWielded()) {
-				player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
-					player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),
-					item.getDef(player.getWorld()).getWearableId(), false);
-				try {
-					item.setWielded(player.getWorld().getServer().getDatabase(), false);
-				}
-				catch (GameDatabaseException e) {
-					LOGGER.error(e);
-				}
-			}
 			player.getCarriedItems().remove(item, false);
 
 			log.addDroppedItem(item);
