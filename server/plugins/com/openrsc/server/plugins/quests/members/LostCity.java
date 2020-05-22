@@ -118,24 +118,13 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 						return;
 					}
 					Npc spawnedTreeSpirit = ifnearvisnpc(player, NpcId.TREE_SPIRIT.id(), 15);
-					/*
-					 * Check if the spawned tree spirit contains spawnedFor
-					 * attribute
-					 */
 					if (spawnedTreeSpirit != null) {
-						if (spawnedTreeSpirit.getAttribute("spawnedFor") != null) {
-							/* Check if the spawned tree spirit was spawned for us */
-							if (spawnedTreeSpirit.getAttribute("spawnedFor")
-								.equals(player)) {
-								npcsay(player, spawnedTreeSpirit, "Stop",
-									"I am the spirit of the Dramen Tree",
-									"You must come through me before touching that tree");
-								return;
-							}
-						}
+						npcsay(player, spawnedTreeSpirit, "Stop",
+							"I am the spirit of the Dramen Tree",
+							"You must come through me before touching that tree");
+						return;
 					}
-					Npc treeSpirit = addnpc(NpcId.TREE_SPIRIT.id(), player.getX() + 1, player.getY() + 1,
-						300000, player);
+					Npc treeSpirit = addnpc(player.getWorld(), NpcId.TREE_SPIRIT.id(), player.getX() + 1, player.getY() + 1);
 					if (treeSpirit == null) {
 						return;
 					}
@@ -147,7 +136,6 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 						setQuestStage(player, this, 3);
 					}
 				}
-				break;
 		}
 	}
 
