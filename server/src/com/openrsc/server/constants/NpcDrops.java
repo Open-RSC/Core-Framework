@@ -4,7 +4,6 @@ import com.openrsc.server.content.DropTable;
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.model.world.World;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
