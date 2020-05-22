@@ -4,8 +4,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
-import com.openrsc.server.model.entity.GroundItem;
-import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -13,6 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 
 public class DropTable {
 
@@ -22,17 +22,38 @@ public class DropTable {
 	ArrayList<Drop> drops;
 	ArrayList<Accessor> accessors;
 	int totalWeight;
+	String description;
+
 	private static int RING_OF_WEALTH_BOOST_NUMERATOR = 1;
 	private static int RING_OF_WEALTH_BOOST_DENOMINATOR = 128;
 
 	public DropTable() {
+		this("");
+	}
+
+	public DropTable(String description) {
 		drops = new ArrayList<>();
 		accessors = new ArrayList<>();
 		totalWeight = 0;
+
+		this.description = description;
+	}
+
+	@Override
+	public String toString() {
+		return "DropTable{" +
+			"drops=" + drops +
+			", totalWeight=" + totalWeight +
+			", description='" + description + '\'' +
+			'}';
 	}
 
 	public DropTable clone() {
-		DropTable clonedDropTable = new DropTable();
+		return clone("");
+	}
+
+	public DropTable clone(String description) {
+		DropTable clonedDropTable = new DropTable(description);
 		for (Drop drop : drops) {
 			if (drop.type == dropType.ITEM) {
 				clonedDropTable.addItemDrop(drop.id, drop.amount, drop.weight, drop.noted);
@@ -70,61 +91,86 @@ public class DropTable {
 		accessors.add(new Accessor(id, numerator, denominator));
 	}
 
-	public Item rollItem(boolean ringOfWealth, Player owner) {
+	public void removeItemDrop(Item item) {
+		Iterator<Drop> iter = drops.iterator();
+		while (iter.hasNext()) {
+			Drop drop = iter.next();
+			if (drop.id == item.getCatalogId() && drop.amount == item.getAmount()) {
+				iter.remove();
+			}
+		}
+	}
+
+	public void removeCustomRareTableDrops() {
+		Iterator<Drop> iter = drops.iterator();
+		while (iter.hasNext()) {
+			Drop drop = iter.next();
+			if (drop.type == dropType.TABLE) {
+				if (drop.table.description.equalsIgnoreCase("Rare Drop Table")) {
+					iter.remove();
+				}
+				else if (drop.table.description.equalsIgnoreCase("Ultra Rare Drop Table")) {
+					iter.remove();
+				}
+			}
+		}
+	}
+
+	public ArrayList<Item> rollItem(boolean ringOfWealth, Player owner) {
 		DropTable rollTable = ringOfWealth ? modifyTable(this) : this;
 
 		int hit = DataConversions.random(0, rollTable.totalWeight);
 		int sum = 0;
+		ArrayList<Item> items = new ArrayList<>();
 		for (Drop drop : rollTable.drops) {
-			if (drop.weight == 0) continue;
-			if (drop.id == ItemId.UNHOLY_SYMBOL_MOULD.id()) {
-				if (owner.wantUnholySymbols()) {
-					continue;
-				}
-			}
-
 			sum += drop.weight;
-			if (sum >= hit) {
-				if (drop.type == dropType.NOTHING || drop.id == ItemId.NOTHING.id()) {
-					return null;
-				}
-				if (owner.getWorld().getServer().getEntityHandler().getItemDef(drop.id).isMembersOnly()
-					&& !owner.getWorld().getServer().getConfig().MEMBER_WORLD) {
-					continue; // Members only item on a free world
+			if (sum > hit) {
+				if (drop.type == dropType.NOTHING) {
+					break;
 				}
 				else if (drop.type == dropType.ITEM) {
-					if (ringOfWealth && owner != null && owner instanceof Player) {
-						((Player) owner).playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
+					if (drop.weight == 0) continue;
+					if (owner.getWorld().getServer().getEntityHandler().getItemDef(drop.id).isMembersOnly()
+						&& !owner.getWorld().getServer().getConfig().MEMBER_WORLD) {
+						continue; // Members only item on a free world
+					}
+					if (drop.id == ItemId.UNHOLY_SYMBOL_MOULD.id()) {
+						if (owner.wantUnholySymbols()) {
+							continue;
+						}
+					}
+					if (ringOfWealth) {
+						owner.playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
 					}
 					if (owner.getWorld().getServer().getConfig().VALUABLE_DROP_MESSAGES) {
 						checkValuableDrop(drop.id, drop.amount, drop.weight, rollTable.totalWeight, owner);
 					}
-					return new Item(drop.id, drop.amount, drop.noted);
+					items.add(new Item(drop.id, drop.amount, drop.noted));
+					break;
 				} else if (drop.type == dropType.TABLE) {
-					return drop.table.rollItem(ringOfWealth, owner);
+					items.addAll(drop.table.invariableItems(owner));
+					items.addAll(drop.table.rollItem(ringOfWealth, owner));
+					break;
 				}
 			}
 		}
-		return null;
+		return items;
 	}
 
-	public void dropInvariableItems(Player owner, Mob dropping) {
+	public ArrayList<Item> invariableItems(Player owner) {
 		int total = 0;
-		int weightTotal = 0;
+		ArrayList<Item> items = new ArrayList<>();
 		for (Drop drop : drops) {
-			total = weightTotal = total + drop.weight;
+			total = total + drop.weight;
 			if (drop.weight == 0 && drop.id != ItemId.NOTHING.id()) {
 
 				// If Ring of Avarice (custom) is equipped, and the item is a stack,
 				// we will award the item with slightly different logic.
 				if (handleRingOfAvarice(owner, new Item(drop.id, drop.amount))) continue;
-
-				// Otherwise, create a normal GroundItem.
-				GroundItem groundItem = new GroundItem(owner.getWorld(), drop.id, dropping.getX(), dropping.getY(), drop.amount, owner);
-				groundItem.setAttribute("npcdrop", true);
-				owner.getWorld().registerItem(groundItem);
+				items.add(new Item(drop.id, drop.amount, drop.noted));
 			}
 		}
+		return items;
 	}
 
 	//removes the empty slots from a table
@@ -233,8 +279,8 @@ public class DropTable {
 	private class Drop {
 		DropTable table = null;
 		dropType type;
-		int id;
-		int amount;
+		int id = -1;
+		int amount = 0;
 		int weight;
 		boolean noted;
 

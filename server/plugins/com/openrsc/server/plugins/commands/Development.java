@@ -432,24 +432,36 @@ public final class Development implements CommandTrigger {
 			if (args.length > 1) {
 				count = Integer.parseInt(args[1]);
 			}
-			NpcDrops npcDrops = new NpcDrops(player.getWorld());
+			final int finalCount = count;
+			NpcDrops npcDrops = player.getWorld().npcDrops;
 			DropTable dropTable = npcDrops.getDropTable(npcId);
-			HashMap<Integer, Integer> droppedAmount = new HashMap<>();
-			HashMap<Integer, Integer> droppedCount = new HashMap<>();
+			if (dropTable == null) {
+				mes("No NPC for id: " + npcId);
+				return;
+			}
+			HashMap<String, Integer> droppedCount = new HashMap<>();
 			for (int i = 0; i < count; i++) {
-				Item item = dropTable.rollItem(false, player);
-				if (item == null) item = new Item(-1, 0);
-				droppedAmount.put(item.getCatalogId(), droppedAmount.getOrDefault(item.getCatalogId(), 0) + item.getAmount());
-				droppedCount.put(item.getCatalogId(), droppedCount.getOrDefault(item.getCatalogId(), 0) + 1);
+				ArrayList<Item> items = dropTable.rollItem(false, player);
+				if (items.size() == 0) {
+					droppedCount.put("-1:0", droppedCount.getOrDefault("-1:0", 0) + 1);
+				}
+				else {
+					for (Item item : items) {
+						droppedCount.put(item.getCatalogId() + ":" + item.getAmount(),
+							droppedCount.getOrDefault(item.getCatalogId() + ":" + item.getAmount(), 0) + 1);
+					}
+				}
 			}
 			System.out.println("Dropped counts:");
 			droppedCount.entrySet().forEach(entry-> {
 				String key = "NOTHING";
-				Item i = new Item(entry.getKey());
+				int catalogId = Integer.parseInt(entry.getKey().split(":")[0]);
+				int amount = Integer.parseInt(entry.getKey().split(":")[1]);
+				Item i = new Item(catalogId, amount);
 				if (i.getCatalogId() > -1) {
 					key = i.getDef(player.getWorld()).getName();
 				}
-				System.out.println(key + ": " + entry.getValue());
+				System.out.println(key + " (" + amount + "): " + entry.getValue() + " / " + finalCount + " (" + ((entry.getValue() / (double)finalCount) * 128) + "/128)");
 			});
 		}
 	}

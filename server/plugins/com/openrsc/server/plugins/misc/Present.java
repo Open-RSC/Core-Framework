@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.ArrayList;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Present implements UsePlayerTrigger, OpInvTrigger {
@@ -278,7 +280,9 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 			otherPlayer.message("You unwrap the present and reach your hand inside...");
 			delay(config().GAME_TICK);
 
-			Item prize = presentDrops.rollItem(false, otherPlayer);
+			ArrayList<Item> prizeList = presentDrops.rollItem(false, otherPlayer);
+			if (prizeList.size() <= 0) return;
+			Item prize = prizeList.get(0);
 			String prizeName = prize.getDef(player.getWorld()).getName().toLowerCase();
 
 			player.message(otherPlayer.getUsername() + " got a " + prizeName + " from your present!");
