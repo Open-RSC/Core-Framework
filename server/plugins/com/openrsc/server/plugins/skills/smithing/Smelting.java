@@ -126,7 +126,7 @@ public class Smelting implements UseLocTrigger {
 				charges = player.getCache().getInt("dwarvenring") + 1;
 				if (charges >= config().DWARVEN_RING_USES) {
 					player.getCache().remove("dwarvenring");
-					player.getCarriedItems().getInventory().shatter(ItemId.DWARVEN_RING.id());
+					player.getCarriedItems().shatter(new Item(ItemId.DWARVEN_RING.id()));
 				} else
 					player.getCache().put("dwarvenring", charges);
 			}
@@ -326,19 +326,19 @@ public class Smelting implements UseLocTrigger {
 
 			if (smelt.getID() == Smelt.IRON_ORE.getID() && DataConversions.random(0, 1) == 1) {
 				if (ci.getEquipment().hasEquipped(ItemId.RING_OF_FORGING.id())) {
-					player.message("Your ring of forging shines brightly");
+					player.message("@or1@Your ring of forging shines brightly");
 					give(player, smelt.getSmeltBarId(), 1);
 					if (player.getCache().hasKey("ringofforging")) {
 						int ringCheck = player.getCache().getInt("ringofforging");
 						if (ringCheck + 1 == config().RING_OF_FORGING_USES) {
 							player.getCache().remove("ringofforging");
-							ci.getInventory().shatter(ItemId.RING_OF_FORGING.id());
+							ci.shatter(new Item(ItemId.RING_OF_FORGING.id()));
 						} else {
 							player.getCache().set("ringofforging", ringCheck + 1);
 						}
 					} else {
 						player.getCache().put("ringofforging", 1);
-						player.message("You start a new ring of forging");
+						player.message("@or1@You start a new ring of forging");
 					}
 				} else {
 					player.message("The ore is too impure and you fail to refine it");

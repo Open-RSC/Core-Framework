@@ -62,6 +62,27 @@ public class CarriedItems {
 
 	}
 
+	/** CarriedItems::shatter
+	 * Searches for and destroys the provided item.
+	 * For use with things like rings that break after certain number of uses.
+	 * @param item The item to shatter
+	 */
+	public void shatter(Item item) {
+		Item itemToShatter = getEquipment().get(
+			getEquipment().searchEquipmentForItem(item.getCatalogId())
+		);
+		if (player.getConfig().WANT_EQUIPMENT_TAB && itemToShatter != null) {
+			player.getCarriedItems().getEquipment().remove(itemToShatter, 1);
+		} else {
+			itemToShatter = getInventory().get(
+				getInventory().getLastIndexById(item.getCatalogId())
+			);
+			if (itemToShatter == null) return;
+			remove(itemToShatter);
+		}
+		player.message("Your " + player.getWorld().getServer().getEntityHandler().getItemDef(itemToShatter.getCatalogId()).getName() + " shatters");
+	}
+
 	/** CarriedItems::remove
 	 *  Searches and removes from the inventory the last existing
 	 *  items that matches our supplied item argument. Will first

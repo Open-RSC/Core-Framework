@@ -4,6 +4,7 @@ import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -110,7 +111,7 @@ public class CombatEvent extends GameTickEvent {
 						if (getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
 							reflectedDamage = getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
 							((Player) target).getCache().remove("ringofrecoil");
-							((Player) target).getCarriedItems().getInventory().shatter(ItemId.RING_OF_RECOIL.id());
+							((Player) target).getCarriedItems().shatter(new Item(ItemId.RING_OF_RECOIL.id()));
 						} else {
 							((Player) target).getCache().set("ringofrecoil", ringCheck + reflectedDamage);
 						}

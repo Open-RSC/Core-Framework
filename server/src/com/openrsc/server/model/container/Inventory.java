@@ -362,32 +362,6 @@ public class Inventory {
 		return true;
 	}
 
-	public void shatter(int itemID) {
-		if (player.getWorld().getServer().getEntityHandler().getItemDef(itemID) == null) {
-			return;
-		}
-		boolean shattered = false;
-		if (player.getConfig().WANT_EQUIPMENT_TAB
-			&& (player.getCarriedItems().getEquipment().searchEquipmentForItem(itemID)) != -1) {
-			Item item = player.getCarriedItems().getEquipment().get(itemID);
-			player.getCarriedItems().getEquipment().remove(item, 1);
-			shattered = true;
-		} else {
-			for (int i = 0; i < player.getCarriedItems().getInventory().size(); i++) {
-				Item item = player.getCarriedItems().getInventory().get(i);
-				if (item != null && item.getCatalogId() == itemID) {
-					player.getCarriedItems().remove(new Item(i));
-					shattered = true;
-					break;
-				}
-			}
-		}
-		if (shattered) {
-			player.updateWornItems(player.getWorld().getServer().getEntityHandler().getItemDef(itemID).getWieldPosition(), 0);
-			player.message("Your " + player.getWorld().getServer().getEntityHandler().getItemDef(itemID).getName() + " shatters");
-			ActionSender.sendEquipmentStats(player, player.getWorld().getServer().getEntityHandler().getItemDef(itemID).getWieldPosition());
-		}
-	}
 	public void dropOnDeath(Mob opponent) {
 
 		// deathItemsMap: Compiles a list of Value : Items

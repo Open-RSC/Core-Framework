@@ -3,6 +3,7 @@ package com.openrsc.server.event.rsc.impl;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.SingleTickEvent;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -80,7 +81,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck <= reflectedDamage) {
 				reflectedDamage = getWorld().getServer().getConfig().RING_OF_RECOIL_LIMIT - ringCheck;
 				opponent.getCache().remove("ringofrecoil");
-				opponent.getCarriedItems().getInventory().shatter(ItemId.RING_OF_RECOIL.id());
+				opponent.getCarriedItems().shatter(new Item(ItemId.RING_OF_RECOIL.id()));
 			} else {
 				opponent.getCache().set("ringofrecoil", ringCheck + reflectedDamage);
 			}

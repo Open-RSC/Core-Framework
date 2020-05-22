@@ -19,43 +19,43 @@ public class ItemDurability implements OpInvTrigger {
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (command.equalsIgnoreCase("check")) {
 			int charges;
+			int totalCharges;
 			if (item.getCatalogId() == ItemId.RING_OF_RECOIL.id()) {
-				if (player.getCache().hasKey("ringofrecoil"))
-					charges = config().RING_OF_RECOIL_LIMIT - player.getCache().getInt("ringofrecoil");
-				else
-					charges = config().RING_OF_RECOIL_LIMIT;
+				totalCharges = config().RING_OF_RECOIL_LIMIT;
+				charges = player.getCache().hasKey("ringofrecoil")
+					? totalCharges - player.getCache().getInt("ringofrecoil")
+					: totalCharges;
 				player.message("Your Ring of Recoil has " + charges + "/" +
-					config().RING_OF_RECOIL_LIMIT + " charges remaining.");
+					totalCharges + " charges remaining.");
 			} else if (item.getCatalogId() == ItemId.RING_OF_FORGING.id()) {
-				if (player.getCache().hasKey("ringofforging"))
-					charges = config().RING_OF_FORGING_USES - player.getCache().getInt("ringofforging");
-				else
-					charges = config().RING_OF_FORGING_USES;
+				totalCharges = config().RING_OF_FORGING_USES;
+				charges = player.getCache().hasKey("ringofforging")
+					? totalCharges - player.getCache().getInt("ringofforging")
+					: totalCharges;
 				player.message("Your Ring of Forging has " + charges + "/" +
-					config().RING_OF_FORGING_USES + " charges remaining.");
+					totalCharges + " charges remaining.");
 			} else if (item.getCatalogId() == ItemId.DWARVEN_RING.id()) {
-				if (player.getCache().hasKey("dwarvenring"))
-					charges = config().DWARVEN_RING_USES - player.getCache().getInt("dwarvenring");
-				else
-					charges = config().DWARVEN_RING_USES;
+				totalCharges = config().DWARVEN_RING_USES;
+				charges = player.getCache().hasKey("dwarvenring")
+					? totalCharges - player.getCache().getInt("dwarvenring")
+					: totalCharges;
 				player.message("Your Dwarven Ring has " + charges + "/" +
-					config().DWARVEN_RING_USES + " charges remaining.");
+					totalCharges + " charges remaining.");
 			}
 		} else if (command.equalsIgnoreCase("break")) {
 			player.message("Are you sure you want to break your " + item.getDef(player.getWorld()).getName() + "?");
 			delay(300);
 			int choice = multi(player, "Yes", "No");
-			if (choice != 0)
-				return;
+			if (choice != 0) return;
 			if (item.getCatalogId() == ItemId.RING_OF_RECOIL.id()) {
 				player.getCache().remove("ringofrecoil");
-				player.getCarriedItems().getInventory().shatter(item.getCatalogId());
+				player.getCarriedItems().shatter(item);
 			} else if (item.getCatalogId() == ItemId.RING_OF_FORGING.id()) {
 				player.getCache().remove("ringofforging");
-				player.getCarriedItems().getInventory().shatter(item.getCatalogId());
+				player.getCarriedItems().shatter(item);
 			} else if (item.getCatalogId() == ItemId.DWARVEN_RING.id()) {
 				player.getCache().remove("dwarvenring");
-				player.getCarriedItems().getInventory().shatter(item.getCatalogId());
+				player.getCarriedItems().shatter(item);
 			}
 		}
 	}

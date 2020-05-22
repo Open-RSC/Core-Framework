@@ -3081,7 +3081,7 @@ public final class Player extends Mob {
 				}
 				this.teleport(120, 648, false);
 				this.message("Your ring of Life shines brightly");
-				getCarriedItems().getInventory().shatter(ItemId.RING_OF_LIFE.id());
+				getCarriedItems().shatter(new Item(ItemId.RING_OF_LIFE.id()));
 				return true;
 			}
 		}
