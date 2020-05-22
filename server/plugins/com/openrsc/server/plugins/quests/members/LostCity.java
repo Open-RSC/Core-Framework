@@ -23,8 +23,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger,
 	KillNpcTrigger,
 	UseInvTrigger,
-	OpBoundTrigger,
-	AttackNpcTrigger {
+	OpBoundTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(LostCity.class);
 
 	/* Objects */
@@ -350,29 +349,6 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 				"thankyou very much");
 			setQuestStage(player, this, 1);
 		}
-	}
-
-	@Override
-	public void onAttackNpc(Player player, Npc affectedmob) {
-		if (affectedmob.getID() == NpcId.TREE_SPIRIT.id()) {
-			if (affectedmob.getAttribute("spawnedFor", null) != null) {
-				if (!affectedmob.getAttribute("spawnedFor").equals(player)) {
-					player.message("That npc is not after you.");
-				}
-			}
-		}
-	}
-
-	@Override
-	public boolean blockAttackNpc(Player player, Npc n) {
-		if (n.getID() == NpcId.TREE_SPIRIT.id()) {
-			if (n.getAttribute("spawnedFor", null) != null) {
-				if (!n.getAttribute("spawnedFor").equals(player)) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	@Override
