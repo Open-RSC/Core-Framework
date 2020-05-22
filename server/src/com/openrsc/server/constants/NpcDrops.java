@@ -256,7 +256,7 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.FUR.id(), 1, 0);
 		this.npcDrops.put(NpcId.BEAR_LVL24.id(), currentNpcDrops);
 
-		// Man (11, 72, 318) Farmer (63, 319) Warrior (86, 159, 320) Thief (64, 351, 352)
+		// Man (11, 72, 318) Farmer (63, 319) Warrior (86, 159, 320) Thief (64, 351, 352) Rogue (342)
 		currentNpcDrops = new DropTable();
 		currentNpcDrops.addTableDrop(herbDropTable, 23);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 3, 38);
@@ -285,6 +285,7 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.THIEF_GENERIC.id(), currentNpcDrops); // (64)
 		this.npcDrops.put(NpcId.THIEF_BLANKET.id(), currentNpcDrops); // (351)
 		this.npcDrops.put(NpcId.HEAD_THIEF.id(), currentNpcDrops); // (352)
+		this.npcDrops.put(NpcId.ROGUE.id(), currentNpcDrops); // (342)
 
 		// Rat Level 8 (19, 29, 47, 177, 241, 367)
 		currentNpcDrops = new DropTable();
@@ -1031,7 +1032,7 @@ public class NpcDrops {
 		currentNpcDrops = new DropTable();
 		currentNpcDrops.addTableDrop(herbDropTable, 29);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 2, 10);
-		currentNpcDrops.addItemDrop(ItemId.VIAL.id(), 1, 10);
+		currentNpcDrops.addItemDrop(ItemId.EMPTY_VIAL.id(), 1, 10);
 		currentNpcDrops.addItemDrop(ItemId.IRON_DAGGER.id(), 1, 6);
 		currentNpcDrops.addItemDrop(ItemId.DRUIDS_ROBE_TOP.id(), 1, 6);
 		currentNpcDrops.addItemDrop(ItemId.DRUIDS_ROBE_BOTTOM.id(), 1, 5);
@@ -1201,9 +1202,8 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.FIREBIRD.id(), currentNpcDrops);
 
 		// Chaos Druid (270)
-		// TODO: Double Roll
 		currentNpcDrops = new DropTable();
-		currentNpcDrops.addTableDrop(herbDropTable, 46);
+		currentNpcDrops.addTableDrop(herbDropTable, 35);
 		currentNpcDrops.addTableDrop(rareDropTable, 1);
 		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 1, 7);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 3, 5);
@@ -1218,6 +1218,10 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 35, 1);
 		currentNpcDrops.addItemDrop(ItemId.SNAPE_GRASS.id(), 1, 1);
 		currentNpcDrops.addItemDrop(ItemId.UNHOLY_SYMBOL_MOULD.id(), 1, 1);
+		DropTable chaosDruidDouble = new DropTable();
+		chaosDruidDouble.addTableDrop(herbDropTable, 0);
+		chaosDruidDouble.addTableDrop(currentNpcDrops.clone(), 0);
+		currentNpcDrops.addTableDrop(chaosDruidDouble, 11);
 		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.CHAOS_DRUID.id(), currentNpcDrops);
 
@@ -1286,24 +1290,97 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.UNICORN_HORN.id(), 1, 0);
 		this.npcDrops.put(NpcId.BLACK_UNICORN.id(), currentNpcDrops);
 
-		// Otherworldly Being (298) TODO
+		// Otherworldly Being (298)
+		// TODO: Blood runes?
 		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 2, 0);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 2, 8);
+		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 1, 7);
+		currentNpcDrops.addItemDrop(ItemId.COSMIC_RUNE.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.DEATH_RUNE.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.RUBY_RING.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.MITHRIL_MACE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.OTHERWORLDLY_BEING.id(), currentNpcDrops);
 
-		// Paladin (323) TODO
+		// Paladin (323)
 		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 8);
+		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 48, 40);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 15, 19);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 2, 16);
+		currentNpcDrops.addItemDrop(ItemId.WATER_RUNE.id(), 20, 13);
+		currentNpcDrops.addItemDrop(ItemId.MITHRIL_BAR.id(), 1, 11);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 8, 10);
+		currentNpcDrops.addItemDrop(ItemId.STEEL_BAR.id(), 1, 10);
+		currentNpcDrops.addItemDrop(ItemId.IRON_BAR.id(), 1, 9);
+		currentNpcDrops.addItemDrop(ItemId.STEEL_SHORT_SWORD.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 120, 2);
+		currentNpcDrops.addItemDrop(ItemId.LARGE_STEEL_HELMET.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.STEEL_LONG_SWORD.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.BLOOD_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.PALADIN.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.PALADIN_UNDERGROUND_BEARD.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.PALADIN_UNDERGROUND.id(), currentNpcDrops);
 
-		// Rogue (342) TODO
+		// Fire Giant (344)
+		// TODO: Dragon Square?
 		currentNpcDrops = new DropTable();
-		this.npcDrops.put(NpcId.ROGUE.id(), currentNpcDrops);
-
-		// Fire Giant (344) TODO
-		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 23);
+		currentNpcDrops.addTableDrop(ultraRareDropTable, 1);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 60, 40);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 50, 8);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 3, 7);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 15, 7);
+		currentNpcDrops.addItemDrop(ItemId.BLOOD_RUNE.id(), 3, 4);
+		currentNpcDrops.addItemDrop(ItemId.STEEL_AXE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 100, 2);
+		currentNpcDrops.addItemDrop(ItemId.MITHRIL_SQUARE_SHIELD.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.STEEL_BAR.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.LOBSTER.id(), 2, 2);
+		currentNpcDrops.addItemDrop(ItemId.LOBSTER.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.BATTLESTAFF_OF_FIRE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.RUNE_SCIMITAR.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 25, 1);
+		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 3, 1);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 50, 1);
+		currentNpcDrops.addItemDrop(ItemId.TWO_STRENGTH_POTION.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.ONE_STRENGTH_POTION.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.FIRE_GIANT.id(), currentNpcDrops);
 
-		// Necromancer (358) TODO
+		// Necromancer (358)
 		currentNpcDrops = new DropTable();
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 17);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 2, 16);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 4, 9);
+		currentNpcDrops.addItemDrop(ItemId.STAFF.id(), 1, 8);
+		currentNpcDrops.addItemDrop(ItemId.STAFF_OF_FIRE.id(), 1, 8);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 3, 6);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 3, 6);
+		currentNpcDrops.addItemDrop(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 29, 3);
+		currentNpcDrops.addItemDrop(ItemId.ROBE_OF_ZAMORAK_TOP.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 7, 3);
+		currentNpcDrops.addItemDrop(ItemId.WATER_RUNE.id(), 7, 3);
+		currentNpcDrops.addItemDrop(ItemId.AIR_RUNE.id(), 7, 3);
+		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 7, 3);
+		currentNpcDrops.addItemDrop(ItemId.MIND_RUNE.id(), 7, 3);
+		currentNpcDrops.addItemDrop(ItemId.BODY_RUNE.id(), 7, 3);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 12, 2);
+		currentNpcDrops.addItemDrop(ItemId.WATER_RUNE.id(), 12, 2);
+		currentNpcDrops.addItemDrop(ItemId.AIR_RUNE.id(), 12, 2);
+		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 12, 2);
+		currentNpcDrops.addItemDrop(ItemId.MIND_RUNE.id(), 12, 2);
+		currentNpcDrops.addItemDrop(ItemId.BODY_RUNE.id(), 12, 2);
+		currentNpcDrops.addItemDrop(ItemId.BLOOD_RUNE.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 2, 1);
+		currentNpcDrops.addItemDrop(ItemId.COSMIC_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.NECROMANCER.id(), currentNpcDrops);
 
 		// First plague sheep (430)
@@ -1326,24 +1403,117 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.PLAGUED_SHEEP_REMAINS_4.id(), 1, 0);
 		this.npcDrops.put(NpcId.FOURTH_PLAGUE_SHEEP.id(), currentNpcDrops);
 
-		// King Black Dragon (477) TODO
+		// King Black Dragon (477)
+		// TODO Dragon Shield?
 		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(ultraRareDropTable, 1);
+		currentNpcDrops.addItemDrop(ItemId.BLOOD_RUNE.id(), 10, 22);
+		currentNpcDrops.addItemDrop(ItemId.AIR_RUNE.id(), 70, 17);
+		currentNpcDrops.addItemDrop(ItemId.RUBY_AMULET_OF_STRENGTH.id(), 1, 11);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 70, 10);
+		currentNpcDrops.addItemDrop(ItemId.IRON_ARROWS.id(), 690, 10);
+		currentNpcDrops.addItemDrop(ItemId.RUNE_LONG_SWORD.id(), 1, 10);
+		currentNpcDrops.addItemDrop(ItemId.YEW_LOGS_CERTIFICATE.id(), 20, 10);
+		currentNpcDrops.addItemDrop(ItemId.ADAMANTITE_PLATE_MAIL_BODY.id(), 1, 9);
+		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 10, 5);
+		currentNpcDrops.addItemDrop(ItemId.DEATH_RUNE.id(), 5, 4);
+		currentNpcDrops.addItemDrop(ItemId.SHARK.id(), 4, 4);
+		currentNpcDrops.addItemDrop(ItemId.ADAMANTITE_BAR.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.IRON_ORE_CERTIFICATE.id(), 20, 2);
+		currentNpcDrops.addItemDrop(ItemId.ADAMANTITE_AXE.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.OYSTER.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.KING_BLACK_DRAGON.id(), currentNpcDrops);
 
-		// Jogre (523) TODO
+		// Jogre (523)
+		DropTable jogreTwoBoneTable = new DropTable();
+		jogreTwoBoneTable.addItemDrop(ItemId.BIG_BONES.id(), 2, 0);
+		jogreTwoBoneTable.addItemDrop(ItemId.BONES.id(), 2, 0);
+		DropTable jogreOneBoneTable = new DropTable();
+		jogreOneBoneTable.addItemDrop(ItemId.BIG_BONES.id(), 1, 0);
+		jogreOneBoneTable.addItemDrop(ItemId.BONES.id(), 1, 0);
 		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 14);
+		currentNpcDrops.addTableDrop(jogreOneBoneTable, 3);
+		currentNpcDrops.addTableDrop(jogreTwoBoneTable, 2);
+		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SPEAR.id(), 1, 30);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 22, 26);
+		currentNpcDrops.addItemDrop(ItemId.BANANA.id(), 2, 10);
+		currentNpcDrops.addItemDrop(ItemId.PINEAPPLE.id(), 2, 8);
+		currentNpcDrops.addItemDrop(ItemId.BANANA.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.KNIFE.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.IRON_SPEAR.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 3, 2);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 7, 2);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.JOGRE.id(), currentNpcDrops);
 
-		// Chaos Druid Warrior (555) TODO
+		// Chaos Druid Warrior (555)
 		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 34);
+		currentNpcDrops.addItemDrop(ItemId.ONE_SUPER_DEFENSE_POTION.id(), 1, 12);
+		currentNpcDrops.addItemDrop(ItemId.WHITE_BERRIES.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 8, 5);
+		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 29, 3);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 3, 3);
+		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 6, 2);
+		currentNpcDrops.addItemDrop(ItemId.GROUND_UNICORN_HORN.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.LIMPWURT_ROOT.id(), 2, 2);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 10, 1);
+		currentNpcDrops.addItemDrop(ItemId.BLACK_DAGGER.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 2, 1);
+		currentNpcDrops.addItemDrop(ItemId.AIR_RUNE.id(), 24, 1);
+		currentNpcDrops.addItemDrop(ItemId.SNAPE_GRASS.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.LIMPWURT_ROOT.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.LIMPWURT_ROOT.id(), 3, 1);
+		currentNpcDrops.addItemDrop(ItemId.VIAL.id(), 1, 1);
+		chaosDruidDouble = new DropTable();
+		chaosDruidDouble.addTableDrop(herbDropTable, 0);
+		chaosDruidDouble.addTableDrop(currentNpcDrops.clone(), 0);
+		currentNpcDrops.addTableDrop(chaosDruidDouble, 10);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.CHAOS_DRUID_WARRIOR.id(), currentNpcDrops);
 
-		// Salarin the Twisted (567) TODO
+		// Salarin the Twisted (567)
 		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 34);
+		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addItemDrop(ItemId.ONE_SUPER_DEFENSE_POTION.id(), 1, 11);
+		currentNpcDrops.addItemDrop(ItemId.SINISTER_KEY.id(), 1, 10);
+		currentNpcDrops.addItemDrop(ItemId.WATER_RUNE.id(), 12, 5);
+		currentNpcDrops.addItemDrop(ItemId.WHITE_BERRIES.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 3, 5);
+		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 2, 4);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 24, 3);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 10, 3);
+		currentNpcDrops.addItemDrop(ItemId.BLACK_DAGGER.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 3, 1);
+		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 36, 1);
+		currentNpcDrops.addItemDrop(ItemId.SNAPE_GRASS.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.VIAL.id(), 1, 1);
+		chaosDruidDouble = new DropTable();
+		chaosDruidDouble.addTableDrop(herbDropTable, 0);
+		chaosDruidDouble.addTableDrop(currentNpcDrops.clone(), 0);
+		currentNpcDrops.addTableDrop(chaosDruidDouble, 5);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.SALARIN_THE_TWISTED.id(), currentNpcDrops);
 
-		// Earth Warrior (584) TODO
+		// Earth Warrior (584)
 		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 14);
+		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 12, 36);
+		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 8, 13);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 2, 9);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 2, 7);
+		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 1, 6);
+		currentNpcDrops.addItemDrop(ItemId.DEATH_RUNE.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 40, 3);
+		currentNpcDrops.addItemDrop(ItemId.BLOOD_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.EARTH_WARRIOR.id(), currentNpcDrops);
 
 		// Ugthanki (653)
@@ -1351,8 +1521,25 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.RAW_UGTHANKI_MEAT.id(), 1, 0);
 		this.npcDrops.put(NpcId.UGTHANKI.id(), currentNpcDrops);
 
-		// Goblin Level 19 (660) TODO
+		// Goblin Level 19 (660)
+		// TODO: FIND REAL RATES, THESE ARE COPIED FROM GOBLIN LEVEL 13
 		currentNpcDrops = new DropTable();
+		currentNpcDrops.addTableDrop(herbDropTable, 2);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 34);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 3, 13);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SPEAR.id(), 1, 9);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 8);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 16, 7);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_AXE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.MIND_RUNE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 3, 3);
+		currentNpcDrops.addItemDrop(ItemId.BODY_RUNE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_ARROWS.id(), 7, 3);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 24, 3);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SCIMITAR.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NOTHING.id(), 0, 128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.GOBLIN_OBSERVATORY.id(), currentNpcDrops);
 
 		// Oomlie Bird (777)
@@ -1369,10 +1556,6 @@ public class NpcDrops {
 	public void debugDropTables() {
 		for (Map.Entry<Integer, DropTable> table : this.npcDrops.entrySet()) {
 			System.out.println(table.getKey() + ": " + table.getValue().getTotalWeight());
-			// TODO: Check NOTHINGs
-			// TODO: Check URDT who
-			// TODO: Check RDT who
-			// TODO: Check HDT who
 		}
 	}
 }
