@@ -312,7 +312,7 @@ public class Npc extends Mob {
 		//If NPC kill messages are enabled and the filter is enabled and the NPC is in the list of NPCs, display the messages,
 		//otherwise we will display the message for all NPCs if NPC kill messages are enabled if there is no filter.
 		//Also, if we don't have NPC kill logging enabled, we can't have NPC kill messages.
-		if (getWorld().getServer().getConfig().NPC_KILL_LOGGING) {
+		if (getConfig().NPC_KILL_LOGGING) {
 			logNpcKill(owner);
 		}
 
@@ -321,16 +321,10 @@ public class Npc extends Mob {
 		/* 1. Custom Rare Drops */
 
 		// Custom KDB Specific Rare Drop Table (RDT)
-		if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES) {
+		if (getConfig().WANT_CUSTOM_SPRITES) {
 			if (this.getID() == NpcId.KING_BLACK_DRAGON.id()) {
 				calculateCustomKingBlackDragonDrop(owner);
 			}
-		}
-
-		// Custom Rare Drop Table (RDT)
-		boolean rdtHit = false;
-		if (getWorld().getServer().getConfig().WANT_NEW_RARE_DROP_TABLES) {
-			rdtHit = rollForCustomRareItem(owner);
 		}
 
 		/* 2. Drop bones (or nothing). */
@@ -372,20 +366,33 @@ public class Npc extends Mob {
 			remove();
 			return;
 		}
+		drops = drops.clone();
 
 		/* 4. Drop items that should always drop, that are not bones. */
 
-		drops.dropInvariableItems(owner, this);
+		ArrayList<Item> invariableItems = drops.invariableItems(owner);
+		for (Item item : invariableItems) {
+			drops.removeItemDrop(item);
+			GroundItem groundItem = new GroundItem(owner.getWorld(), item.getCatalogId(), getX(), getY(), item.getAmount(), owner);
+			groundItem.setAttribute("npcdrop", true);
+			owner.getWorld().registerItem(groundItem);
+		}
 
-		/* 5. Roll for drops if we have not rolled a custom RDT item. */
+		/* 5. Roll for drops. */
+		if (getConfig().WANT_NEW_RARE_DROP_TABLES) {
+			rollForCustomRareItem(owner);
+			drops.removeCustomRareTableDrops();
+		}
 
-		if (!rdtHit && drops.getTotalWeight() > 0) {
-			Item item = drops.rollItem(false, owner);
-			if (item != null) {
-				if (getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).isStackable()) {
-					dropStackItem(item.getCatalogId(), item.getAmount(), owner);
-				} else {
-					dropStandardItem(item.getCatalogId(), item.getAmount(), owner);
+		if (drops.getTotalWeight() > 0) {
+			ArrayList<Item> items = drops.rollItem(false, owner);
+			for (Item item : items) {
+				if (item != null) {
+					if (getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).isStackable()) {
+						dropStackItem(item.getCatalogId(), item.getAmount(), owner);
+					} else {
+						dropStandardItem(item.getCatalogId(), item.getAmount(), owner);
+					}
 				}
 			}
 		}
@@ -400,9 +407,9 @@ public class Npc extends Mob {
 
 	private void logNpcKill(Player owner) {
 		if (owner.getCache().hasKey("show_npc_kc") && owner.getCache().getBoolean("show_npc_kc")
-			&& getWorld().getServer().getConfig().NPC_KILL_MESSAGES) {
-			owner.addNpcKill(this,!getWorld().getServer().getConfig().NPC_KILL_MESSAGES_FILTER
-				|| getWorld().getServer().getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName()));
+			&& getConfig().NPC_KILL_MESSAGES) {
+			owner.addNpcKill(this,!getConfig().NPC_KILL_MESSAGES_FILTER
+				|| getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName()));
 		} else
 			owner.addNpcKill(this, false);
 	}
@@ -410,20 +417,23 @@ public class Npc extends Mob {
 	private void calculateCustomKingBlackDragonDrop(Player owner) {
 		boolean ringOfWealth = owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id());
 		if (getWorld().npcDrops.getKbdTableCustom().rollAccess(this.getID(), ringOfWealth)) {
-			Item kbdSpecificLoot = getWorld().npcDrops.getKbdTableCustom().rollItem(ringOfWealth, owner);
+			ArrayList<Item> kbdSpecificLoot = getWorld().npcDrops.getKbdTableCustom().rollItem(ringOfWealth, owner);
 			if (kbdSpecificLoot != null) {
-				GroundItem groundItem = new GroundItem(getWorld(), kbdSpecificLoot.getCatalogId(), getX(), getY(), kbdSpecificLoot.getAmount(), owner);
-				groundItem.setAttribute("npcdrop", true);
-				getWorld().registerItem(groundItem);
-				try {
+				for (Item item : kbdSpecificLoot) {
+					GroundItem groundItem = new GroundItem(getWorld(), item.getCatalogId(), getX(), getY(), item.getAmount(), owner);
+					groundItem.setAttribute("npcdrop", true);
+					getWorld().registerItem(groundItem);
+					try {
 
-					getWorld().getServer().getDatabase().addDropLog(
-						owner, this, kbdSpecificLoot.getCatalogId(), kbdSpecificLoot.getAmount());
-				} catch (final GameDatabaseException ex) {
-					LOGGER.catching(ex);
+						getWorld().getServer().getDatabase().addDropLog(
+							owner, this, item.getCatalogId(), item.getAmount());
+					} catch (final GameDatabaseException ex) {
+						LOGGER.catching(ex);
+					}
+					if (item.getCatalogId() == ItemId.DRAGON_2_HANDED_SWORD.id()) {
+						owner.message("Congratulations! You have received a dragon 2-Handed Sword!");
+					}
 				}
-				if (kbdSpecificLoot.getCatalogId() == ItemId.DRAGON_2_HANDED_SWORD.id())
-					owner.message("Congratulations! You have received a dragon 2-Handed Sword!");
 			}
 		}
 	}
@@ -431,7 +441,7 @@ public class Npc extends Mob {
 	private boolean rollForCustomRareItem(Player owner) {
 		boolean ringOfWealth = owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id());
 
-		Item rare = null;
+		ArrayList<Item> rare = null;
 		if (getWorld().npcDrops.getUltraRareDropTable().rollAccess(this.getID(), ringOfWealth)) {
 			rare = getWorld().npcDrops.getUltraRareDropTable().rollItem(ringOfWealth, owner);
 		} else if (getWorld().npcDrops.getRareDropTable().rollAccess(this.getID(), ringOfWealth)) {
@@ -439,17 +449,19 @@ public class Npc extends Mob {
 		}
 
 		if (rare != null) {
-			if (!DropTable.handleRingOfAvarice(owner, rare)) {
-				GroundItem groundItem = new GroundItem(owner.getWorld(), rare.getCatalogId(), getX(), getY(), rare.getAmount(), owner, rare.getNoted());
-				groundItem.setAttribute("npcdrop", true);
-				getWorld().registerItem(groundItem);
-			}
+			for (Item item : rare) {
+				if (!DropTable.handleRingOfAvarice(owner, item)) {
+					GroundItem groundItem = new GroundItem(owner.getWorld(), item.getCatalogId(), getX(), getY(), item.getAmount(), owner, item.getNoted());
+					groundItem.setAttribute("npcdrop", true);
+					getWorld().registerItem(groundItem);
+				}
 
-			try {
-				getWorld().getServer().getDatabase().addDropLog(
-					owner, this, rare.getCatalogId(), rare.getAmount());
-			} catch (final GameDatabaseException ex) {
-				LOGGER.catching(ex);
+				try {
+					getWorld().getServer().getDatabase().addDropLog(
+						owner, this, item.getCatalogId(), item.getAmount());
+				} catch (final GameDatabaseException ex) {
+					LOGGER.catching(ex);
+				}
 			}
 			return true;
 		}
@@ -491,21 +503,11 @@ public class Npc extends Mob {
 
 		// We need to drop multiple counts of "1" item if it's not a stack
 		for (int count = 0; count < amount; count++) {
-
-			// Gem Drop Table + 1/128 chance to roll into very rare item
-			if (dropID == com.openrsc.server.constants.ItemId.UNCUT_SAPPHIRE.id()) {
-				dropID = Formulae.calculateGemDrop(owner);
-				amount = 1;
-			}
-
-			// Herb Drop Table
-			else if (dropID == com.openrsc.server.constants.ItemId.UNIDENTIFIED_GUAM_LEAF.id()) {
-				dropID = Formulae.calculateHerbDrop();
-			}
-
-			if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() && getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly() && !getWorld().getServer().getConfig().MEMBER_WORLD) {
+			if (dropID != ItemId.NOTHING.id()
+				&& getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly()
+				&& !getConfig().MEMBER_WORLD) {
 				continue; // Members item on a non-members world.
-			} else if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id()) {
+			} else if (dropID != ItemId.NOTHING.id()) {
 				groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1, owner);
 				groundItem.setAttribute("npcdrop", true);
 				getWorld().registerItem(groundItem);
@@ -599,7 +601,7 @@ public class Npc extends Mob {
 	}
 
 	public void remove() {
-		double respawnMult = getWorld().getServer().getConfig().NPC_RESPAWN_MULTIPLIER;
+		double respawnMult = getConfig().NPC_RESPAWN_MULTIPLIER;
 		resetCombatEvent();
 		this.setLastOpponent(null);
 		if (!isRemoved() && shouldRespawn && def.respawnTime() > 0) {
@@ -616,7 +618,7 @@ public class Npc extends Mob {
 					// Take 4 ticks away from the current time to get a 1 tick pause while the npc spawns,
 					// before it is allowed to attack (if aggressive).
 					teleport(loc.startX, loc.startY);
-					setCombatTimer(-getWorld().getServer().getConfig().GAME_TICK * 4);
+					setCombatTimer(-getConfig().GAME_TICK * 4);
 					setRespawning(false);
 					getSkills().normalize();
 					tryResyncHitEvent();

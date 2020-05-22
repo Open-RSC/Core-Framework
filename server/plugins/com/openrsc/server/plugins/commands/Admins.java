@@ -429,13 +429,15 @@ public final class Admins implements CommandTrigger {
 			if (config().WANT_CUSTOM_SPRITES) {
 				if (npcID == NpcId.KING_BLACK_DRAGON.id()) {
 					if (player.getWorld().npcDrops.getKbdTableCustom().rollAccess(npcID, RoW)) {
-						Item kbdSpecificLoot = player.getWorld().npcDrops.getKbdTableCustom().rollItem(RoW, null);
-						if (kbdSpecificLoot != null) {
-							if (rareDrops.containsKey(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase())) {
-								int amount = rareDrops.get(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase());
-								rareDrops.put(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase(), amount + kbdSpecificLoot.getAmount());
-							} else {
-								rareDrops.put(kbdSpecificLoot.getDef(player.getWorld()).getName().toLowerCase(), kbdSpecificLoot.getAmount());
+						ArrayList<Item> kbdSpecificLoot = player.getWorld().npcDrops.getKbdTableCustom().rollItem(RoW, null);
+						if (kbdSpecificLoot != null || kbdSpecificLoot.size() > 0) {
+							for (Item item : kbdSpecificLoot) {
+								if (rareDrops.containsKey(item.getDef(player.getWorld()).getName().toLowerCase())) {
+									int amount = rareDrops.get(item.getDef(player.getWorld()).getName().toLowerCase());
+									rareDrops.put(item.getDef(player.getWorld()).getName().toLowerCase(), amount + item.getAmount());
+								} else {
+									rareDrops.put(item.getDef(player.getWorld()).getName().toLowerCase(), item.getAmount());
+								}
 							}
 						} else {
 							if (rareDrops.containsKey("miss")) {
@@ -450,7 +452,7 @@ public final class Admins implements CommandTrigger {
 			}
 
 			boolean rdtHit = false;
-			Item rare = null;
+			ArrayList<Item> rare = null;
 
 			if (player.getWorld().npcDrops.getUltraRareDropTable().rollAccess(npcID, RoW)) {
 				rdtHit = true;
@@ -460,7 +462,7 @@ public final class Admins implements CommandTrigger {
 				rare = player.getWorld().npcDrops.getRareDropTable().rollItem(RoW, null);
 			}
 			if (rdtHit) {
-				if (rare == null) {
+				if (rare == null || rare.size() == 0) {
 					if (rareDrops.containsKey("miss")) {
 						int amount = rareDrops.get("miss");
 						rareDrops.put("miss", amount + 1);
@@ -468,11 +470,13 @@ public final class Admins implements CommandTrigger {
 						rareDrops.put("miss", 1);
 					}
 				} else {
-					if (rareDrops.containsKey(rare.getDef(player.getWorld()).getName().toLowerCase())) {
-						int amount = rareDrops.get(rare.getDef(player.getWorld()).getName().toLowerCase());
-						rareDrops.put(rare.getDef(player.getWorld()).getName().toLowerCase(), amount + rare.getAmount());
-					} else {
-						rareDrops.put(rare.getDef(player.getWorld()).getName().toLowerCase(), rare.getAmount());
+					for (Item item : rare) {
+						if (rareDrops.containsKey(item.getDef(player.getWorld()).getName().toLowerCase())) {
+							int amount = rareDrops.get(item.getDef(player.getWorld()).getName().toLowerCase());
+							rareDrops.put(item.getDef(player.getWorld()).getName().toLowerCase(), amount + item.getAmount());
+						} else {
+							rareDrops.put(item.getDef(player.getWorld()).getName().toLowerCase(), item.getAmount());
+						}
 					}
 				}
 			}
