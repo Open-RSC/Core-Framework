@@ -73,7 +73,7 @@ public class DropTable {
 	public Item rollItem(boolean ringOfWealth, Player owner) {
 		DropTable rollTable = ringOfWealth ? modifyTable(this) : this;
 
-		int hit = DataConversions.random(1, rollTable.totalWeight);
+		int hit = DataConversions.random(0, rollTable.totalWeight);
 		int sum = 0;
 		for (Drop drop : rollTable.drops) {
 			if (drop.weight == 0) continue;

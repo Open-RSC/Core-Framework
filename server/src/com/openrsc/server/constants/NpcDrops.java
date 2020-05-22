@@ -141,7 +141,7 @@ public class NpcDrops {
 		ultraRareDropTable.addItemDrop(ItemId.RUNE_PLATE_MAIL_LEGS.id(), 1, 2);
 		ultraRareDropTable.addItemDrop(ItemId.RUNE_KITE_SHIELD.id(), 1, 2);
 		ultraRareDropTable.addItemDrop(ItemId.DRAGON_MEDIUM_HELMET.id(), 1, 1);
-		ultraRareDropTable.addItemDrop(ItemId.NOTHING.id(), 0, 128 - ultraRareDropTable.getTotalWeight());
+		ultraRareDropTable.addItemDrop(ItemId.NOTHING.id(), 0, 256 - ultraRareDropTable.getTotalWeight());
 	}
 
 	private void createBoneDrops() {

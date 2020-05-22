@@ -4,6 +4,7 @@ import com.openrsc.server.constants.NpcDrops;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,8 +12,13 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+import gnu.trove.impl.sync.TSynchronizedShortByteMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -428,9 +434,23 @@ public final class Development implements CommandTrigger {
 			}
 			NpcDrops npcDrops = new NpcDrops(player.getWorld());
 			DropTable dropTable = npcDrops.getDropTable(npcId);
+			HashMap<Integer, Integer> droppedAmount = new HashMap<>();
+			HashMap<Integer, Integer> droppedCount = new HashMap<>();
 			for (int i = 0; i < count; i++) {
-				System.out.println(dropTable.rollItem(false, player));
+				Item item = dropTable.rollItem(false, player);
+				if (item == null) item = new Item(-1, 0);
+				droppedAmount.put(item.getCatalogId(), droppedAmount.getOrDefault(item.getCatalogId(), 0) + item.getAmount());
+				droppedCount.put(item.getCatalogId(), droppedCount.getOrDefault(item.getCatalogId(), 0) + 1);
 			}
+			System.out.println("Dropped counts:");
+			droppedCount.entrySet().forEach(entry-> {
+				String key = "NOTHING";
+				Item i = new Item(entry.getKey());
+				if (i.getCatalogId() > -1) {
+					key = i.getDef(player.getWorld()).getName();
+				}
+				System.out.println(key + ": " + entry.getValue());
+			});
 		}
 	}
 }
