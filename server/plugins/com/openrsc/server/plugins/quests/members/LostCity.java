@@ -23,7 +23,8 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger,
 	KillNpcTrigger,
 	UseInvTrigger,
-	OpBoundTrigger {
+	OpBoundTrigger,
+	AttackNpcTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(LostCity.class);
 
 	/* Objects */
@@ -107,16 +108,16 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 						return;
 					}
 
-					/*
-					 * New method I made, quite useful, no need for OR checks
-					 * anymore
-					 */
 					if (atQuestStages(player, this, 4, -1)) {
 						mes("You cut a branch from the Dramen tree");
 						give(player, ItemId.DRAMEN_BRANCH.id(), 1);
 						return;
 					}
+
 					Npc spawnedTreeSpirit = ifnearvisnpc(player, NpcId.TREE_SPIRIT.id(), 15);
+					if (atQuestStages(player, this, 2)) {
+						setQuestStage(player, this, 3);
+					}
 					if (spawnedTreeSpirit != null) {
 						npcsay(player, spawnedTreeSpirit, "Stop",
 							"I am the spirit of the Dramen Tree",
@@ -131,9 +132,6 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, treeSpirit, "Stop",
 						"I am the spirit of the Dramen Tree",
 						"You must come through me before touching that tree");
-					if (atQuestStages(player, this, 2)) {
-						setQuestStage(player, this, 3);
-					}
 				}
 		}
 	}
@@ -349,6 +347,19 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 				"thankyou very much");
 			setQuestStage(player, this, 1);
 		}
+	}
+
+	@Override
+	public void onAttackNpc(Player player, Npc affectedmob) {
+
+	}
+
+	@Override
+	public boolean blockAttackNpc(Player player, Npc n) {
+		if (n.getID() == NpcId.TREE_SPIRIT.id() && !atQuestStage(player, this, 3)) {
+			return true; // We return true here only because we want to block the default attack action.
+		}
+		return false;
 	}
 
 	@Override
