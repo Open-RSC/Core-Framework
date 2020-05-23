@@ -681,7 +681,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 					}
 					mes("you give the sheep poisoned sheep feed");
 					player.message("the sheep collapses to the floor and dies");
-					plagueSheep.remove();
+					plagueSheep.killedBy(player);
 				} else {
 					mes("you can't kill the sheep out here",
 						"you might spread the plague");
