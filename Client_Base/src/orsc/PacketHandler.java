@@ -99,11 +99,15 @@ public class PacketHandler {
 
 		// CUSTOM
 		put(19, "SEND_SERVER_CONFIGS");
+		put(34, "FREEZE_EXPERIENCE_TOGGLE");
 		put(113, "SEND_IRONMAN");
 		put(115, "SEND_ON_BLACK_HOLE");
 		put(135, "BANK_PIN_INTERFACE");
 		put(136, "ONLINE_LIST");
 		put(147, "SEND_KILLS2");
+		put(150, "UPDATE_PRESET");
+		put(254, "UPDATE_EQUIPMENT");
+		put(255, "UPDATE_EQUIPMENT_SLOT");
 	}};
 
 
