@@ -5,6 +5,7 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -15,10 +16,12 @@ import java.util.ArrayList;
 public class FireCannonEvent extends GameTickEvent {
 
 	protected int count;
+	private Mob lastTarget;
 
 	public FireCannonEvent(World world, Player player) {
 		super(world, player, 1, "Fire Canon Event");
 		this.count = 0;
+		this.lastTarget = null;
 	}
 
 	@Override
@@ -27,11 +30,12 @@ public class FireCannonEvent extends GameTickEvent {
 
 		Iterable<Npc> npcsInView = getPlayerOwner().getLocalNpcs();
 
-		ArrayList<Npc> possibleTargets = new ArrayList<Npc>();
+		ArrayList<Npc> possibleTargets = new ArrayList<>();
 		for (Npc n : npcsInView) {
 			if ((n.getLocation().inBounds(getOwner().getX() - 8, getOwner().getY() - 8, getOwner().getX() + 8, getOwner().getY() + 8))
 				&& (n.getDef().isAttackable()) && PathValidation.checkPath(getOwner().getWorld(), getOwner().getLocation(), n.getLocation())) {
 				if(n.getSkills().getLevel(Skills.HITS) <= 0) continue;
+				if (lastTarget != null && n.getUUID() == lastTarget.getUUID()) continue;
 				possibleTargets.add(n);
 			}
 		}
@@ -43,6 +47,7 @@ public class FireCannonEvent extends GameTickEvent {
 		}
 
 		Npc target = possibleTargets.get(DataConversions.random(0, possibleTargets.size() - 1));
+		this.lastTarget = target;
 
 		getPlayerOwner().face(target);
 		//35 at level 99 per wayback tip.it
