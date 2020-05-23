@@ -325,7 +325,7 @@ public class NpcBehavior {
 
 		boolean lastLogin = player instanceof Player && checkCombatTimer(((Player)player).getLastLogin(), 5);
 
-		int numTicks = player.getCombatState() == CombatState.RUNNING ? 5 : 0;
+		int numTicks = player.getCombatState() == CombatState.RUNNING ? 5 : player.getConfig().GAME_TICK < 640 ? 2 : 0;
 		boolean playerCombatTimeoutExceeded = checkCombatTimer(player.getCombatTimer(), numTicks);
 
 		boolean isAggressive = aggressiveCheck(player);
