@@ -18,13 +18,19 @@ public class ProjectileEvent extends SingleTickEvent {
 	protected int damage;
 	protected int type;
 	boolean canceled;
+	boolean shouldChase;
 
 	public ProjectileEvent(World world, Mob caster, Mob opponent, int damage, int type) {
+		this(world, caster, opponent, damage, type, true);
+	}
+
+	public ProjectileEvent(World world, Mob caster, Mob opponent, int damage, int type, boolean setChasing) {
 		super(world, caster, 1, "Projectile Event");
 		this.caster = caster;
 		this.opponent = opponent;
 		this.damage = damage;
 		this.type = type;
+		this.shouldChase = setChasing;
 		if (caster.isPlayer() && opponent.isPlayer()) {
 			caster.setAttribute("projectile", this);
 			opponent.setAttribute("projectile", this);
@@ -183,7 +189,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (opponent.isNpc() && caster.isPlayer()) {
 				Npc npc = (Npc) opponent;
 				Player player = (Player) caster;
-				if (!npc.isChasing() && !npc.inCombat()) {
+				if (!npc.isChasing() && !npc.inCombat() && this.shouldChase) {
 					npc.setChasing(player);
 				}
 			}

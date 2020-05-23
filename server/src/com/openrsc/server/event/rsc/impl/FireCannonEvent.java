@@ -53,7 +53,7 @@ public class FireCannonEvent extends GameTickEvent {
 		//35 at level 99 per wayback tip.it
 		int max = getOwner().getSkills().getMaxStat(Skills.RANGED) / 3 + 2;
 		int cannonBallDamage = DataConversions.random(0, max);
-		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getOwner(), target, cannonBallDamage, 5));
+		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getOwner(), target, cannonBallDamage, 5, false));
 		getPlayerOwner().playSound("shoot");
 		getPlayerOwner().getCarriedItems().remove(new Item(ItemId.MULTI_CANNON_BALL.id()));
 
