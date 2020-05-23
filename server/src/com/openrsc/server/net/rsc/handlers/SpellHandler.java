@@ -886,7 +886,7 @@ public class SpellHandler implements PacketHandler {
 							new GenericLog(getPlayer().getWorld(), getPlayer().getUsername() + " telegrabbed " + affectedItem.getDef().getName()
 								+ " x" + affectedItem.getAmount() + " from " + affectedItem.getLocation().toString()
 								+ " while standing at " + getPlayer().getLocation().toString()));
-						Item item = new Item(affectedItem.getID(), affectedItem.getAmount());
+						Item item = new Item(affectedItem.getID(), affectedItem.getAmount(), affectedItem.getNoted());
 
 						if (affectedItem.getOwnerUsernameHash() == 0 || affectedItem.getAttribute("npcdrop", false)) {
 							item.setAttribute("npcdrop", true);
