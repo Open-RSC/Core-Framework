@@ -391,25 +391,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 			player.getWorld().registerItem(
 				new GroundItem(player.getWorld(), ItemId.MAP_PIECE_1.id(), n.getX(), n.getY(), 1, player));
 		}
-		if (n.getID() == NpcId.RAT_WMAZEKEY.id()) {
-			player.getWorld().registerItem(
-				new GroundItem(player.getWorld(), ItemId.RED_KEY.id(), n.getX(), n.getY(), 1, player));
-		} else if (n.getID() == NpcId.GHOST_WMAZEKEY.id()) {
-			player.getWorld().registerItem(
-				new GroundItem(player.getWorld(), ItemId.ORANGE_KEY.id(), n.getX(), n.getY(), 1, player));
-		} else if (n.getID() == NpcId.SKELETON_WMAZEKEY.id()) {
-			player.getWorld().registerItem(
-				new GroundItem(player.getWorld(), ItemId.YELLOW_KEY.id(), n.getX(), n.getY(), 1, player));
-		} else if (n.getID() == NpcId.ZOMBIE_WMAZEKEY.id()) {
-			player.getWorld().registerItem(
-				new GroundItem(player.getWorld(), ItemId.BLUE_KEY.id(), n.getX(), n.getY(), 1, player));
-		} else if (n.getID() == NpcId.MELZAR_THE_MAD.id()) {
-			player.getWorld().registerItem(
-				new GroundItem(player.getWorld(), ItemId.MAGENTA_KEY.id(), n.getX(), n.getY(), 1, player));
-		} else if (n.getID() == NpcId.LESSER_DEMON_WMAZEKEY.id()) {
-			player.getWorld().registerItem(
-				new GroundItem(player.getWorld(), ItemId.BLACK_KEY.id(), n.getX(), n.getY(), 1, player));
-		} else if (n.getID() == NpcId.DRAGON.id() && player.getQuestStage(this) == 3) {
+		if (n.getID() == NpcId.DRAGON.id() && player.getQuestStage(this) == 3) {
 			player.sendQuestComplete(getQuestId());
 		}
 	}
