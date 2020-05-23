@@ -91,4 +91,18 @@ public final class Gardener extends AbstractShop {
 
 		return shop;
 	}
+
+	@Override
+	public void onOpNpc(Player player, Npc n, String command) {
+		if (command.equalsIgnoreCase("Trade") && config().RIGHT_CLICK_TRADE) {
+			Shop shop = getShop();
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
+		}
+	}
+
+	@Override
+	public boolean blockOpNpc(Player player, Npc n, String command) {
+		return n.getID() == NpcId.GARDENER.id() && command.equalsIgnoreCase("Trade");
+	}
 }
