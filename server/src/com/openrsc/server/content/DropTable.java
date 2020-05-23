@@ -1,29 +1,59 @@
 package com.openrsc.server.content;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
-import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 
 public class DropTable {
+
+	private static final Logger LOGGER = LogManager.getLogger();
+
+
 	ArrayList<Drop> drops;
 	ArrayList<Accessor> accessors;
 	int totalWeight;
+	String description;
+
 	private static int RING_OF_WEALTH_BOOST_NUMERATOR = 1;
 	private static int RING_OF_WEALTH_BOOST_DENOMINATOR = 128;
 
 	public DropTable() {
+		this("");
+	}
+
+	public DropTable(String description) {
 		drops = new ArrayList<>();
 		accessors = new ArrayList<>();
 		totalWeight = 0;
+
+		this.description = description;
+	}
+
+	@Override
+	public String toString() {
+		return "DropTable{" +
+			"drops=" + drops +
+			", totalWeight=" + totalWeight +
+			", description='" + description + '\'' +
+			'}';
 	}
 
 	public DropTable clone() {
-		DropTable clonedDropTable = new DropTable();
+		return clone("");
+	}
+
+	public DropTable clone(String description) {
+		DropTable clonedDropTable = new DropTable(description);
 		for (Drop drop : drops) {
 			if (drop.type == dropType.ITEM) {
 				clonedDropTable.addItemDrop(drop.id, drop.amount, drop.weight, drop.noted);
@@ -61,26 +91,86 @@ public class DropTable {
 		accessors.add(new Accessor(id, numerator, denominator));
 	}
 
-	public Item rollItem(boolean ringOfWealth, Mob owner) {
-		DropTable rollTable = ringOfWealth ? modifyTable(this) : this;
+	public void removeItemDrop(Item item) {
+		Iterator<Drop> iter = drops.iterator();
+		while (iter.hasNext()) {
+			Drop drop = iter.next();
+			if (drop.id == item.getCatalogId() && drop.amount == item.getAmount()) {
+				iter.remove();
+			}
+		}
+	}
 
-		int hit = DataConversions.random(1, rollTable.totalWeight);
-		int sum = 0;
-		for (Drop drop : rollTable.drops) {
-			sum += drop.weight;
-			if (sum >= hit) {
-				if (drop.type == dropType.NOTHING)
-					return null;
-				else if (drop.type == dropType.ITEM) {
-					if (ringOfWealth && owner != null && owner instanceof Player)
-						((Player) owner).playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
-					return new Item(drop.id, drop.amount, drop.noted);
-				} else if (drop.type == dropType.TABLE) {
-					return drop.table.rollItem(ringOfWealth, owner);
+	public void removeCustomRareTableDrops() {
+		Iterator<Drop> iter = drops.iterator();
+		while (iter.hasNext()) {
+			Drop drop = iter.next();
+			if (drop.type == dropType.TABLE) {
+				if (drop.table.description.equalsIgnoreCase("Rare Drop Table")) {
+					iter.remove();
+				}
+				else if (drop.table.description.equalsIgnoreCase("Ultra Rare Drop Table")) {
+					iter.remove();
 				}
 			}
 		}
-		return null;
+	}
+
+	public ArrayList<Item> rollItem(boolean ringOfWealth, Player owner) {
+		DropTable rollTable = ringOfWealth ? modifyTable(this) : this;
+
+		int hit = DataConversions.random(0, rollTable.totalWeight);
+		int sum = 0;
+		ArrayList<Item> items = new ArrayList<>();
+		for (Drop drop : rollTable.drops) {
+			sum += drop.weight;
+			if (sum > hit) {
+				if (drop.type == dropType.NOTHING) {
+					break;
+				}
+				else if (drop.type == dropType.ITEM) {
+					if (drop.weight == 0) continue;
+					if (owner.getWorld().getServer().getEntityHandler().getItemDef(drop.id).isMembersOnly()
+						&& !owner.getWorld().getServer().getConfig().MEMBER_WORLD) {
+						continue; // Members only item on a free world
+					}
+					if (drop.id == ItemId.UNHOLY_SYMBOL_MOULD.id()) {
+						if (owner.wantUnholySymbols()) {
+							continue;
+						}
+					}
+					if (ringOfWealth) {
+						owner.playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
+					}
+					if (owner.getWorld().getServer().getConfig().VALUABLE_DROP_MESSAGES) {
+						checkValuableDrop(drop.id, drop.amount, drop.weight, rollTable.totalWeight, owner);
+					}
+					items.add(new Item(drop.id, drop.amount, drop.noted));
+					break;
+				} else if (drop.type == dropType.TABLE) {
+					items.addAll(drop.table.invariableItems(owner));
+					items.addAll(drop.table.rollItem(ringOfWealth, owner));
+					break;
+				}
+			}
+		}
+		return items;
+	}
+
+	public ArrayList<Item> invariableItems(Player owner) {
+		int total = 0;
+		ArrayList<Item> items = new ArrayList<>();
+		for (Drop drop : drops) {
+			total = total + drop.weight;
+			if (drop.weight == 0 && drop.id != ItemId.NOTHING.id()) {
+
+				// If Ring of Avarice (custom) is equipped, and the item is a stack,
+				// we will award the item with slightly different logic.
+				if (handleRingOfAvarice(owner, new Item(drop.id, drop.amount))) continue;
+				items.add(new Item(drop.id, drop.amount, drop.noted));
+			}
+		}
+		return items;
 	}
 
 	//removes the empty slots from a table
@@ -96,6 +186,60 @@ public class DropTable {
 			}
 		}
 		return modifiedTable;
+	}
+
+	public static boolean handleRingOfAvarice(final Player player, final Item item) {
+		try {
+			int slot = -1;
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_AVARICE.id())) {
+				ItemDefinition itemDef = player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId());
+				if (itemDef != null && itemDef.isStackable()) {
+					if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
+						player.getCarriedItems().getInventory().add(item);
+						return true;
+					} else if (player.getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
+						Item equipped = player.getCarriedItems().getEquipment().get(slot);
+						equipped.changeAmount(player.getWorld().getServer().getDatabase(), item.getAmount());
+						return true;
+					} else {
+						if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
+							player.getCarriedItems().getInventory().add(item);
+							return true;
+						} else {
+							player.message("Your ring of Avarice tried to activate, but your inventory was full.");
+							return false;
+						}
+					}
+				}
+			}
+		} catch (GameDatabaseException ex) {
+			LOGGER.error(ex.getMessage());
+		}
+		return false;
+	}
+
+	private void checkValuableDrop(int dropID, int amount, int weight, int weightTotal, Player owner) {
+		// Check if we have a "valuable drop" (configurable)
+		Item temp = new Item(dropID);
+		double currentRatio = (double) weight / (double) weightTotal;
+		if (dropID != com.openrsc.server.constants.ItemId.NOTHING.id() &&
+			amount > 0 &&
+			(
+				currentRatio > owner.getWorld().getServer().getConfig().VALUABLE_DROP_RATIO ||
+					(
+						owner.getWorld().getServer().getConfig().VALUABLE_DROP_EXTRAS &&
+							owner.getWorld().getServer().getConfig().valuableDrops.contains(temp.getDef(owner.getWorld()).getName())
+					)
+			)
+		) {
+			if (amount > 1) {
+				owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef(owner.getWorld()).getName() + " (" +
+					(temp.getDef(owner.getWorld()).getDefaultPrice() * amount) + " coins)");
+			} else {
+				owner.message("@red@Valuable drop: " + temp.getDef(owner.getWorld()).getName() + " (" +
+					(temp.getDef(owner.getWorld()).getDefaultPrice()) + " coins)");
+			}
+		}
 	}
 
 	public enum dropType {
@@ -135,8 +279,8 @@ public class DropTable {
 	private class Drop {
 		DropTable table = null;
 		dropType type;
-		int id;
-		int amount;
+		int id = -1;
+		int amount = 0;
 		int weight;
 		boolean noted;
 
@@ -152,6 +296,18 @@ public class DropTable {
 			this.type = dropType.TABLE;
 			this.weight = weight;
 			this.table = table;
+		}
+
+		@Override
+		public String toString() {
+			return "Drop{" +
+				"table=" + table +
+				", type=" + type +
+				", id=" + id +
+				", amount=" + amount +
+				", weight=" + weight +
+				", noted=" + noted +
+				'}';
 		}
 	}
 }

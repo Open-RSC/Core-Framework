@@ -1,8 +1,10 @@
 package com.openrsc.server.plugins.commands;
 
 import com.openrsc.server.constants.NpcDrops;
+import com.openrsc.server.content.DropTable;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.model.Point;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -10,8 +12,13 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+import gnu.trove.impl.sync.TSynchronizedShortByteMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -414,6 +421,48 @@ public final class Development implements CommandTrigger {
 		}
 		else if (cmd.equalsIgnoreCase("debugdroptables")) {
 			new NpcDrops(player.getWorld()).debugDropTables();
+		}
+		else if (cmd.equalsIgnoreCase("droptest")) {
+			if (args.length < 1) {
+				mes("::droptest [npc_id]  or  ::droptest [npc_id] [count]");
+				return;
+			}
+			int npcId = Integer.parseInt(args[0]);
+			int count = 1;
+			if (args.length > 1) {
+				count = Integer.parseInt(args[1]);
+			}
+			final int finalCount = count;
+			NpcDrops npcDrops = player.getWorld().npcDrops;
+			DropTable dropTable = npcDrops.getDropTable(npcId);
+			if (dropTable == null) {
+				mes("No NPC for id: " + npcId);
+				return;
+			}
+			HashMap<String, Integer> droppedCount = new HashMap<>();
+			for (int i = 0; i < count; i++) {
+				ArrayList<Item> items = dropTable.rollItem(false, player);
+				if (items.size() == 0) {
+					droppedCount.put("-1:0", droppedCount.getOrDefault("-1:0", 0) + 1);
+				}
+				else {
+					for (Item item : items) {
+						droppedCount.put(item.getCatalogId() + ":" + item.getAmount(),
+							droppedCount.getOrDefault(item.getCatalogId() + ":" + item.getAmount(), 0) + 1);
+					}
+				}
+			}
+			System.out.println("Dropped counts:");
+			droppedCount.entrySet().forEach(entry-> {
+				String key = "NOTHING";
+				int catalogId = Integer.parseInt(entry.getKey().split(":")[0]);
+				int amount = Integer.parseInt(entry.getKey().split(":")[1]);
+				Item i = new Item(catalogId, amount);
+				if (i.getCatalogId() > -1) {
+					key = i.getDef(player.getWorld()).getName();
+				}
+				System.out.println(key + " (" + amount + "): " + entry.getValue() + " / " + finalCount + " (" + ((entry.getValue() / (double)finalCount) * 128) + "/128)");
+			});
 		}
 	}
 }
