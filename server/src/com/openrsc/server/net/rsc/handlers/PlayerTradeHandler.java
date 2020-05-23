@@ -245,7 +245,7 @@ public class PlayerTradeHandler implements PacketHandler {
 									player.getTrade().resetAll();
 									return;
 								}
-								if (affectedItem.isWielded()) {
+								if (affectedItem.isWielded() && !player.getConfig().WANT_EQUIPMENT_TAB) {
 									player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 								}
 
@@ -256,7 +256,7 @@ public class PlayerTradeHandler implements PacketHandler {
 								affectedItem = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted(), affectedItem.getItemId());
 
 								// Remove item to be traded quantity from inventory.
-								player.getCarriedItems().remove(affectedItem);
+								player.getCarriedItems().getInventory().remove(affectedItem, true);
 							}
 
 							for (Item item : theirOffer) {
@@ -266,7 +266,7 @@ public class PlayerTradeHandler implements PacketHandler {
 									player.getTrade().resetAll();
 									return;
 								}
-								if (affectedItem.isWielded()) {
+								if (affectedItem.isWielded() && !player.getConfig().WANT_EQUIPMENT_TAB) {
 									affectedPlayer.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(affectedPlayer, affectedItem, UnequipRequest.RequestType.CHECK_IF_EQUIPMENT_TAB, false));
 								}
 
@@ -276,7 +276,7 @@ public class PlayerTradeHandler implements PacketHandler {
 								affectedItem = new Item(affectedItem.getCatalogId(), amount, affectedItem.getNoted(), affectedItem.getItemId());
 
 								// Remove item to be traded quantity from inventory.
-								affectedPlayer.getCarriedItems().remove(affectedItem);
+								affectedPlayer.getCarriedItems().getInventory().remove(affectedItem, true);
 							}
 
 							for (Item item : myOffer) {
