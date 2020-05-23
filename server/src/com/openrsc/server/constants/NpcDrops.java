@@ -168,6 +168,7 @@ public class NpcDrops {
 		this.bonelessNpcs.add(NpcId.COUNT_DRAYNOR.id());
 		this.bonelessNpcs.add(NpcId.DEADLY_RED_SPIDER.id());
 		this.bonelessNpcs.add(NpcId.KING_SCORPION.id());
+		this.bonelessNpcs.add(NpcId.GHOST_WMAZEKEY.id());
 		this.bonelessNpcs.add(NpcId.SUIT_OF_ARMOUR.id());
 		this.bonelessNpcs.add(NpcId.TREE_SPIRIT.id());
 		this.bonelessNpcs.add(NpcId.SHAPESHIFTER_HUMAN.id());
@@ -335,9 +336,12 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.RAT_LVL8.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.RAT_WITCHES_POTION.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.RAT_LVL13.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.RAT_WMAZEKEY.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.RAT_WITCHES_HOUSE.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.DUNGEON_RAT.id(), currentNpcDrops);
+
+		currentNpcDrops = currentNpcDrops.clone("Rat (Maze)");
+		currentNpcDrops.addItemDrop(ItemId.RED_KEY.id(), 1, 0);
+		this.npcDrops.put(NpcId.RAT_WMAZEKEY.id(), currentNpcDrops);
 
 		currentNpcDrops = new DropTable("Mugger (21)");
 		currentNpcDrops.addTableDrop(herbDropTable, 13);
@@ -951,6 +955,10 @@ public class NpcDrops {
 		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.ICE_WARRIOR.id(), currentNpcDrops); // (158)
 		this.npcDrops.put(NpcId.ICE_QUEEN.id(), currentNpcDrops); // (254)
+
+		currentNpcDrops = new DropTable("Ghost (Maze) (178)");
+		currentNpcDrops.addItemDrop(ItemId.ORANGE_KEY.id(), 1, 0);
+		this.npcDrops.put(NpcId.GHOST_WMAZEKEY.id(), currentNpcDrops);
 
 		currentNpcDrops = new DropTable("Greater Demon (184)");
 		currentNpcDrops.addTableDrop(rareDropTable, 1);
