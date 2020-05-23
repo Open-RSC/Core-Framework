@@ -108,34 +108,23 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 						return;
 					}
 
-					/*
-					 * New method I made, quite useful, no need for OR checks
-					 * anymore
-					 */
 					if (atQuestStages(player, this, 4, -1)) {
 						mes("You cut a branch from the Dramen tree");
 						give(player, ItemId.DRAMEN_BRANCH.id(), 1);
 						return;
 					}
+
 					Npc spawnedTreeSpirit = ifnearvisnpc(player, NpcId.TREE_SPIRIT.id(), 15);
-					/*
-					 * Check if the spawned tree spirit contains spawnedFor
-					 * attribute
-					 */
-					if (spawnedTreeSpirit != null) {
-						if (spawnedTreeSpirit.getAttribute("spawnedFor") != null) {
-							/* Check if the spawned tree spirit was spawned for us */
-							if (spawnedTreeSpirit.getAttribute("spawnedFor")
-								.equals(player)) {
-								npcsay(player, spawnedTreeSpirit, "Stop",
-									"I am the spirit of the Dramen Tree",
-									"You must come through me before touching that tree");
-								return;
-							}
-						}
+					if (atQuestStages(player, this, 2)) {
+						setQuestStage(player, this, 3);
 					}
-					Npc treeSpirit = addnpc(NpcId.TREE_SPIRIT.id(), player.getX() + 1, player.getY() + 1,
-						300000, player);
+					if (spawnedTreeSpirit != null) {
+						npcsay(player, spawnedTreeSpirit, "Stop",
+							"I am the spirit of the Dramen Tree",
+							"You must come through me before touching that tree");
+						return;
+					}
+					Npc treeSpirit = addnpc(player.getWorld(), NpcId.TREE_SPIRIT.id(), player.getX() + 1, player.getY() + 1);
 					if (treeSpirit == null) {
 						return;
 					}
@@ -143,11 +132,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, treeSpirit, "Stop",
 						"I am the spirit of the Dramen Tree",
 						"You must come through me before touching that tree");
-					if (atQuestStages(player, this, 2)) {
-						setQuestStage(player, this, 3);
-					}
 				}
-				break;
 		}
 	}
 
@@ -366,23 +351,13 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public void onAttackNpc(Player player, Npc affectedmob) {
-		if (affectedmob.getID() == NpcId.TREE_SPIRIT.id()) {
-			if (affectedmob.getAttribute("spawnedFor", null) != null) {
-				if (!affectedmob.getAttribute("spawnedFor").equals(player)) {
-					player.message("That npc is not after you.");
-				}
-			}
-		}
+
 	}
 
 	@Override
 	public boolean blockAttackNpc(Player player, Npc n) {
-		if (n.getID() == NpcId.TREE_SPIRIT.id()) {
-			if (n.getAttribute("spawnedFor", null) != null) {
-				if (!n.getAttribute("spawnedFor").equals(player)) {
-					return true;
-				}
-			}
+		if (n.getID() == NpcId.TREE_SPIRIT.id() && !atQuestStage(player, this, 3)) {
+			return true; // We return true here only because we want to block the default attack action.
 		}
 		return false;
 	}
