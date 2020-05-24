@@ -391,7 +391,7 @@ public class Npc extends Mob {
 					if (getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).isStackable()) {
 						dropStackItem(item.getCatalogId(), item.getAmount(), owner);
 					} else {
-						dropStandardItem(item.getCatalogId(), item.getAmount(), owner);
+						dropStandardItem(item, owner);
 					}
 				}
 			}
@@ -493,7 +493,9 @@ public class Npc extends Mob {
 		}
 	}
 
-	private void dropStandardItem(int dropID, int amount, Player owner) {
+	private void dropStandardItem(Item item, Player owner) {
+		int dropID = item.getCatalogId();
+		int amount = item.getAmount();
 		try {
 			getWorld().getServer().getDatabase().addDropLog(owner, this, dropID, amount);
 		} catch (final GameDatabaseException ex) {
@@ -502,13 +504,17 @@ public class Npc extends Mob {
 		GroundItem groundItem;
 
 		// We need to drop multiple counts of "1" item if it's not a stack
-		for (int count = 0; count < amount; count++) {
+		// But if it's noted, just drop it all.
+		int loop = amount;
+		if (item.getNoted()) loop = 1;
+		else amount = 1;
+		for (int count = 0; count < loop; count++) {
 			if (dropID != ItemId.NOTHING.id()
 				&& getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly()
 				&& !getConfig().MEMBER_WORLD) {
 				continue; // Members item on a non-members world.
 			} else if (dropID != ItemId.NOTHING.id()) {
-				groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), 1, owner);
+				groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner, item.getNoted());
 				groundItem.setAttribute("npcdrop", true);
 				getWorld().registerItem(groundItem);
 			}

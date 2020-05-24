@@ -1536,10 +1536,10 @@ public class NpcDrops {
 	}
 
 	private void initializeCustomRareDropTables() {
-		rareDropTable = new DropTable();
-		ultraRareDropTable = new DropTable();
-		megaRareDropTable = new DropTable();
-		kbdTableCustom = new DropTable();
+		rareDropTable = new DropTable("Rare Drop Table");
+		ultraRareDropTable = new DropTable("Ultra Rare Drop Table");
+		megaRareDropTable = new DropTable("Mega Rare Drop Table");
+		kbdTableCustom = new DropTable("KBD Rare Drop Table");
 
 		//KBD Specific table
 		kbdTableCustom.addAccessor(NpcId.KING_BLACK_DRAGON.id(), 1673, 51200);
