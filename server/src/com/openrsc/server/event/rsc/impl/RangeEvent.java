@@ -3,6 +3,7 @@ package com.openrsc.server.event.rsc.impl;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.content.DropTable;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.model.PathValidation;
@@ -285,7 +286,7 @@ public class RangeEvent extends GameTickEvent {
 		}
 		if (Formulae.looseArrow(damage)) {
 			GroundItem arrows = getArrows(arrowID);
-			if (!Npc.handleRingOfAvarice(getPlayerOwner(), new Item(arrowID, 1))) {
+			if (!DropTable.handleRingOfAvarice(getPlayerOwner(), new Item(arrowID, 1))) {
 				if (arrows == null) {
 					getWorld().registerItem(
 						new GroundItem(getPlayerOwner().getWorld(), arrowID, target.getX(), target.getY(), 1, getPlayerOwner()));

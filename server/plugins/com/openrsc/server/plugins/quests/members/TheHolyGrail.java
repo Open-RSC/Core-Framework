@@ -368,6 +368,8 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.BLACK_KNIGHT_TITAN.id()) {
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.EXCALIBUR.id())) {
+				player.getWorld().registerItem(
+					new GroundItem(player.getWorld(), ItemId.BIG_BONES.id(), n.getX(), n.getY(), 1, player));
 				n.remove();
 				player.message("Well done you have defeated the black knight titan");
 				player.teleport(414, 11, false);
