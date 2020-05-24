@@ -955,6 +955,9 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.BLOOD_RUNE.id(), 1, 1);
 		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.ICE_WARRIOR.id(), currentNpcDrops); // (158)
+
+		currentNpcDrops = currentNpcDrops.clone();
+		currentNpcDrops.addItemDrop(ItemId.ICE_GLOVES.id(), 1, 0);
 		this.npcDrops.put(NpcId.ICE_QUEEN.id(), currentNpcDrops); // (254)
 
 		currentNpcDrops = new DropTable("Ghost (Maze) (178)");
