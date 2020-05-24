@@ -109,7 +109,6 @@ public class Server implements Runnable {
 			server.start();
 		}
 		final long endTime = System.currentTimeMillis();
-
 		final long bootTime = (long) Math.ceil((double) (endTime - startTime) / 1000.0);
 
 		LOGGER.info(server.getName() + " started in " + bootTime + "s");
@@ -340,6 +339,8 @@ public class Server implements Runnable {
 					});
 
 					monitoring.run();
+
+					LOGGER.info("Tick " + getCurrentTick() + " processed.");
 				} else {
 					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
 						for (Player p : getWorld().getPlayers()) {
