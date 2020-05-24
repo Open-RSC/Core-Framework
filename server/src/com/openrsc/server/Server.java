@@ -340,7 +340,7 @@ public class Server implements Runnable {
 					// Set us to be in the next tick.
 					this.lastTickTimestamp += getConfig().GAME_TICK;
 
-					LOGGER.info("Tick " + currentTick + " processed.");
+					//LOGGER.info("Tick " + currentTick + " processed.");
 				} else {
 					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
 						for (Player p : getWorld().getPlayers()) {
