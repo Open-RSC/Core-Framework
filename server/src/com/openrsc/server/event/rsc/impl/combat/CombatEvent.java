@@ -281,7 +281,7 @@ public class CombatEvent extends GameTickEvent {
 			|| (defenderMob.isPlayer() && ((Player) defenderMob).loggedIn());
 		boolean respawning = (attackerMob.isNpc() && ((Npc)attackerMob).isRespawning())
 			|| (defenderMob.isNpc() && ((Npc)defenderMob).isRespawning());
-		return bothLoggedIn && !removed && nextToVictim && running;
+		return bothLoggedIn && !removed && !respawning && nextToVictim && running;
 	}
 
 	public Mob getAttacker() {
