@@ -176,6 +176,7 @@ public class NpcDrops {
 		this.bonelessNpcs.add(NpcId.SHAPESHIFTER_BEAR.id());
 		this.bonelessNpcs.add(NpcId.POISON_SCORPION.id());
 		this.bonelessNpcs.add(NpcId.POISON_SPIDER.id());
+		this.bonelessNpcs.add(NpcId.ANIMATED_AXE.id());
 		this.bonelessNpcs.add(NpcId.SHADOW_SPIDER.id());
 		this.bonelessNpcs.add(NpcId.KHAZARD_SCORPION.id());
 		this.bonelessNpcs.add(NpcId.FIRST_PLAGUE_SHEEP.id());
