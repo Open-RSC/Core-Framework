@@ -207,8 +207,10 @@ public class ServerConfiguration {
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
-			"An established connection was aborted by the software in your host machine",
-			"Connection reset by peer");
+			"An established connection was aborted by the software in your host machine");
+
+	public ImmutableList<String> NETWORK_CONNECTION_RESET_EXCEPTIONS =
+		ImmutableList.of("Connection reset by peer", "Connection reset");
 
 	public String configFile;
 	private String[] deprecatedKeys = new String[]{
