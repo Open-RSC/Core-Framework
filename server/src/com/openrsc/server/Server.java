@@ -6,7 +6,6 @@ import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
 import com.openrsc.server.database.impl.mysql.MySqlGameLogger;
-import com.openrsc.server.event.custom.MonitoringEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.SingleTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
@@ -21,6 +20,7 @@ import com.openrsc.server.net.*;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.rsc.CollisionFlag;
+import com.openrsc.server.util.rsc.MessageType;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -50,7 +50,6 @@ public class Server implements Runnable {
 	private final GameStateUpdater gameUpdater;
 	private final GameEventHandler gameEventHandler;
 	private final DiscordService discordService;
-	private final MonitoringEvent monitoring;
 	private final LoginExecutor loginExecutor;
 	private final ServerConfiguration config;
 	private final ScheduledExecutorService scheduledExecutor;
@@ -79,7 +78,7 @@ public class Server implements Runnable {
 	private long lastOutgoingPacketsDuration = 0;
 	private long lastTickDuration = 0;
 	private long timeLate = 0;
-	private long lastClientUpdate = 0;
+	private long lastTickTimestamp = 0;
 
 	/*Used for pathfinding view debugger
 	JPanel2 panel = new JPanel2();
@@ -169,7 +168,6 @@ public class Server implements Runnable {
 		gameLogger = new MySqlGameLogger(this, (MySqlGameDatabase)database);
 		entityHandler = new EntityHandler(this);
 		achievementSystem = new AchievementSystem(this);
-		monitoring = new MonitoringEvent(getWorld());
 		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName() + " : GameThread").build());
 	}
 
@@ -254,8 +252,6 @@ public class Server implements Runnable {
 			LOGGER.catching(t);
 			System.exit(1);
 		}
-
-		lastClientUpdate = System.currentTimeMillis();
 	}
 
 	public void start() {
@@ -265,7 +261,7 @@ public class Server implements Runnable {
 			}
 
 			running = true;
-			serverStartedTime = System.currentTimeMillis();
+			lastTickTimestamp = serverStartedTime = System.currentTimeMillis();
 			scheduledExecutor.scheduleAtFixedRate(this, 0, 10, TimeUnit.MILLISECONDS);
 
 			loginExecutor.start();
@@ -316,9 +312,8 @@ public class Server implements Runnable {
 	public void run() {
 		synchronized (running) {
 			try {
-				this.timeLate = System.currentTimeMillis() - lastClientUpdate;
+				this.timeLate = System.currentTimeMillis() - lastTickTimestamp;
 				if (getTimeLate() >= getConfig().GAME_TICK) {
-					this.lastClientUpdate += getConfig().GAME_TICK;
 					this.timeLate -= getConfig().GAME_TICK;
 
 					// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
@@ -338,9 +333,14 @@ public class Server implements Runnable {
 						}
 					});
 
-					monitoring.run();
+					// Storing the current tick because we will update the time stamp in either monitorTickPerformance or afterward which will cause getCurrentTick() to return the next tick
+					final long currentTick = getCurrentTick();
+					monitorTickPerformance();
 
-					LOGGER.info("Tick " + getCurrentTick() + " processed.");
+					// Set us to be in the next tick.
+					this.lastTickTimestamp += getConfig().GAME_TICK;
+
+					LOGGER.info("Tick " + currentTick + " processed.");
 				} else {
 					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
 						for (Player p : getWorld().getPlayers()) {
@@ -358,6 +358,47 @@ public class Server implements Runnable {
 				LOGGER.catching(t);
 			}
 		}
+	}
+
+	private void monitorTickPerformance() {
+		// Store the current tick because we can modify it by calling skipTicks()
+		final long currentTick = getCurrentTick();
+		// Check if processing game tick took longer than the tick
+		final boolean isLastTickLate = getLastTickDuration() > getConfig().GAME_TICK;
+		final long ticksLate = getTimeLate() / getConfig().GAME_TICK;
+		final boolean isServerLate = ticksLate >= 1;
+
+		if (isLastTickLate) {
+			// Last tick processing took too long.
+			final String message = "Tick " + currentTick + " is late: " +
+				getLastTickDuration() + "ms " +
+				getLastIncomingPacketsDuration() + "ms " +
+				getLastEventsDuration() + "ms " +
+				getLastGameStateDuration() + "ms " +
+				getLastOutgoingPacketsDuration() + "ms";
+
+			sendMonitoringWarning(message);
+		} else if (isServerLate) {
+			// Server fell behind, skip ticks
+			skipTicks(ticksLate);
+			final String ticksSkipped = ticksLate>1 ? "ticks (" + (currentTick+1) + " - " + (currentTick+ticksLate) + ")" : "tick (" + (currentTick+ticksLate) + ")";
+			final String message = "Tick " + currentTick + " " + getTimeLate() + "ms behind. Skipping " + ticksLate + " " + ticksSkipped;
+			sendMonitoringWarning(message);
+		}
+	}
+
+	private void sendMonitoringWarning(final String message) {
+		// Warn logged in developers
+		for (Player p : getWorld().getPlayers()) {
+			if (!p.isDev()) {
+				continue;
+			}
+
+			p.playerServerMessage(MessageType.QUEST, getWorld().getServer().getConfig().MESSAGE_PREFIX + message);
+		}
+
+		LOGGER.warn(message);
+		getWorld().getServer().getDiscordService().monitoringSendServerBehind(message);
 	}
 
 	public boolean shutdownForUpdate(int seconds) {
@@ -470,11 +511,11 @@ public class Server implements Runnable {
 	}
 
 	public final long getCurrentTick() {
-		return (System.currentTimeMillis() - getServerStartedTime()) / getConfig().GAME_TICK;
+		return (lastTickTimestamp - getServerStartedTime()) / getConfig().GAME_TICK;
 	}
 
-	public void skipTicks(final long ticks) {
-		lastClientUpdate += ticks * getConfig().GAME_TICK;
+	private void skipTicks(final long ticks) {
+		lastTickTimestamp += ticks * getConfig().GAME_TICK;
 	}
 
 	public final ServerConfiguration getConfig() {
