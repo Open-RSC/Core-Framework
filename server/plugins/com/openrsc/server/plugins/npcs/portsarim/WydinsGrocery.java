@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.portsarim;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -49,22 +50,50 @@ public final class WydinsGrocery extends AbstractShop implements OpBoundTrigger 
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
-		npcsay(player, n, "Welcome to my foodstore",
-			"Would you like to buy anything");
+		boolean newStore = player.getCache().hasKey("job_wydin")
+			|| player.getQuestStage(Quests.PIRATES_TREASURE) >= 2
+			|| player.getQuestStage(Quests.PIRATES_TREASURE) == -1;
 
-		int option = multi(player, n, false, //do not send over
+		int option;
+
+		if (!newStore) {
+			npcsay(player, n, "Welcome to my foodstore",
+				"Would you like to buy anything");
+
+			option = multi(player, n, false, //do not send over
 				"yes please", "No thankyou", "what can you recommend?");
-		switch (option) {
-			case 0:
-				say(player, n, "Yes please");
+			switch (option) {
+				case 0:
+					say(player, n, "Yes please");
+					player.setAccessingShop(shop);
+					ActionSender.showShop(player, shop);
+					break;
+				case 2:
+					say(player, n, "What can you recommend?");
+					npcsay(player, n, "We have this really exotic fruit",
+						"All the way from Karamja", "It's called a banana");
+					break;
+			}
+		} else {
+			npcsay(player, n, "Is it nice and tidy round the back now");
+			option = multi(player, n, false, //do not send over
+				"Yes, can I work out front now?", "Yes, are you going to pay me yet?",
+				"No it's a complete mess", "Can I buy something please?");
+			if (option == 0) {
+				say(player, n, "Yes, can I work out front now?");
+				npcsay(player, n, "No I'm the one who works here");
+			} else if (option == 1) {
+				say(player, n, "Yes, are you going to pay me yet?");
+				npcsay(player, n, "Umm no not yet");
+			} else if (option == 2) {
+				say(player, n, "No it's a complete mess");
+				npcsay(player, n, "Ah well, It'll give you something to do won't it");
+			} else if (option == 3) {
+				say(player, n, "Can I buy something please");
+				npcsay(player, n, "Yes Ok");
 				player.setAccessingShop(shop);
 				ActionSender.showShop(player, shop);
-				break;
-			case 2:
-				say(player, n, "What can you recommend?");
-				npcsay(player, n, "We have this really exotic fruit",
-					"All the way from Karamja", "It's called a banana");
-				break;
+			}
 		}
 
 	}

@@ -11,6 +11,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -18,7 +19,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
+public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpcTrigger {
 
 
 	/**
@@ -440,23 +441,15 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 			if (player.getX() <= 664) {
 				player.teleport(player.getX() + 1, player.getY());
 			} else {
-				if (player.getCache().hasKey("has_ogre_gift")) {
+				if (player.getCache().hasKey("has_ogre_gift") || player.getQuestStage(Quests.WATCHTOWER) == -1) {
 					npcsay(player, ogre_guard, "It's that creature again",
 						"This time we will let it go...");
 					player.teleport(player.getX() - 1, player.getY());
 					player.message("You climb over the battlement");
-				} else if (player.getCache().hasKey("get_ogre_gift") || player.getQuestStage(Quests.WATCHTOWER) == -1) {
+				} else if (player.getCache().hasKey("get_ogre_gift")) {
 					if (ogre_guard != null) {
 						npcsay(player, ogre_guard, "Stop creature!... Oh its you",
 							"Well what have you got for us then ?");
-						if (player.getQuestStage(Quests.WATCHTOWER) == -1) {
-							say(player, ogre_guard, "I didn't bring anything");
-							npcsay(player, ogre_guard, "Didn't bring anything!",
-								"In that case shove off!");
-							player.message("The guard pushes you out of the city");
-							player.teleport(635, 774);
-							return;
-						}
 						if (player.getCarriedItems().hasCatalogID(ItemId.ROCK_CAKE.id(), Optional.of(false))) {
 							say(player, ogre_guard, "How about this ?");
 							player.message("You give the guard a rock cake");
@@ -566,5 +559,24 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger {
 				break;
 		}
 		return coords;
+	}
+
+	@Override
+	public void onUseNpc(Player player, Npc npc, Item item) {
+		if (npc.getID() == NpcId.OGRE_GUARD_BATTLEMENT.id()) {
+			switch (ItemId.getById(item.getCatalogId())) {
+				case OGRE_RELIC:
+					npcsay(player, npc, "It's a relic, what of it ?");
+					say(player, npc, "Ow!");
+					player.playerServerMessage(MessageType.QUEST, "The guard gives you a smack around the head");
+					npcsay(player, npc, "Bring me something good next time!");
+					break;
+			}
+		}
+	}
+
+	@Override
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return npc.getID() == NpcId.OGRE_GUARD_BATTLEMENT.id();
 	}
 }

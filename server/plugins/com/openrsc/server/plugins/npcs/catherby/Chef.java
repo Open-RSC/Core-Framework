@@ -147,7 +147,10 @@ public class Chef implements TalkNpcTrigger {
 			case 7:
 			case 8:
 				npcsay(player, n, "How are you doing getting the rest of the crest?");
-				if (!player.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_ONE.id(), Optional.of(false))) {
+				if (player.getCarriedItems().hasCatalogID(ItemId.FAMILY_CREST.id(), Optional.of(false))) {
+					say(player, n, "I have found it");
+					npcsay(player, n, "Well done, take it to my father");
+				} else if (!player.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_ONE.id(), Optional.of(false))) {
 					int menu = multi(player, n,
 						"I am still working on it",
 						"I have lost the piece you gave me");

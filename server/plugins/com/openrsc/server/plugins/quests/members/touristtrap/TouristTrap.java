@@ -1607,9 +1607,17 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 								"What is this place?",
 								"Goodbye!");
 							if (dede == 0) {
-								npcsay(player, n, "Well, hurry along and get those plans for me.");
+								if (!player.getCache().hasKey("tech_plans")) {
+									npcsay(player, n, "Well, hurry along and get those plans for me.");
+								} else {
+									npcsay(player, n, "I really need those plans!");
+								}
 							} else if (dede == 1) {
-								npcsay(player, n, "Well, first you need to get those plans from Captain Siad.");
+								if (!player.getCache().hasKey("tech_plans")) {
+									npcsay(player, n, "Well, first you need to get those plans from Captain Siad.");
+								} else {
+									npcsay(player, n, "Bring me the plans from Captain Siad's office...they're in a chest.");
+								}
 							} else if (dede == 2) {
 								alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
 							} else if (dede == 3) {
@@ -2593,6 +2601,9 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							"You use the Bedobin Copy Key to open the chest.",
 							"You open the chest and take out the plans.");
 						give(player, ItemId.TECHNICAL_PLANS.id(), 1);
+						if (!player.getCache().hasKey("tech_plans")) {
+							player.getCache().store("tech_plans", true);
+						}
 					} else {
 						player.message("The chest is empty.");
 					}

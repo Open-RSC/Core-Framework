@@ -173,6 +173,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 					npcsay(player, n, "great stuff",
 							"there are no rules to gnome ball, so it can get a bit rough",
 							"you can pass to the winger gnomes if your behind the start line",
+							"then you can make a run and they'll pass back",
 							"otherwise, if you're feeling brave you, can just charge and dodge");
 					say(player, n, "sounds easy enough");
 					npcsay(player, n, "the main aim is to leave with no broken limbs",

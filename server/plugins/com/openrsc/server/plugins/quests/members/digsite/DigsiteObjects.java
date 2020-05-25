@@ -1,10 +1,12 @@
 package com.openrsc.server.plugins.quests.members.digsite;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -99,7 +101,37 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 			}
 		}
 		else if (obj.getID() == SPECIMEN_TRAY) {
-			int[] TRAY_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.IRON_DAGGER.id(), ItemId.BROKEN_ARROW.id(), ItemId.BROKEN_GLASS.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.COINS.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
+			Npc workmanCheck = ifnearvisnpc(player, NpcId.WORKMAN.id(), 15);
+			if (workmanCheck != null) {
+				Npc workman = addnpc(player.getWorld(), NpcId.WORKMAN.id(), player.getX(), player.getY(), 30000);
+				if (!player.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_JAR.id(), Optional.of(false))) {
+					if (workman != null) {
+						npcsay(player, workman, "Oi! what are you doing ?");
+						npcWalkFromPlayer(player, workman);
+						int option = multi(player,
+							"I am on an errand",
+							"I am searching this tray");
+						if (option == 0) {
+							npcsay(player, workman, "Oh yeah? and whose errand is that then...",
+								"Where is your specimen jar then?");
+							say(player, workman, "Oh I dont have one");
+							npcsay(player, workman, "And you reckon you have been sent on an errand...",
+								"Without a specimen jar - no sorry I can't let you do that!");
+						} else if (option == 1) {
+							npcsay(player, workman, "Oh you are, are you ?",
+								"Well, where's your specimen jar?");
+							say(player, workman, "Ah, I don't have one...");
+							npcsay(player, workman, "In that case how can you handle the specimens without it?",
+								"As you should know, specimens are to be kept in sealed specimen jars",
+								"To keep them safe and preserved...",
+								"Next time bring it along!");
+						}
+					}
+				}
+				return;
+			}
+
+				int[] TRAY_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.IRON_DAGGER.id(), ItemId.BROKEN_ARROW.id(), ItemId.BROKEN_GLASS.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.COINS.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
 			player.incExp(Skills.MINING, 4, true);
 			mes("You sift through the earth in the tray");
 			int randomize = DataConversions.random(0, (TRAY_ITEMS.length - 1));

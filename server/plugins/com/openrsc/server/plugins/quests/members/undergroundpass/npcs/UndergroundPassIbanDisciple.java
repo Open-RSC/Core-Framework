@@ -6,12 +6,14 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class UndergroundPassIbanDisciple implements KillNpcTrigger {
+public class UndergroundPassIbanDisciple implements TalkNpcTrigger, KillNpcTrigger {
 
 	@Override
 	public boolean blockKillNpc(Player player, Npc n) {
@@ -35,5 +37,36 @@ public class UndergroundPassIbanDisciple implements KillNpcTrigger {
 				addobject(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id(), 1, player.getX(), player.getY(), player);
 			}
 		}
+	}
+
+	@Override
+	public void onTalkNpc(Player player, Npc n) {
+		say(player, n, "hi");
+		if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.ROBE_OF_ZAMORAK_TOP.id())
+			&& !player.getCarriedItems().getEquipment().hasEquipped(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id())) {
+			npcsay(player, n, "an imposter....die scum");
+			n.startCombat(player);
+		} else {
+			int selected = DataConversions.getRandom().nextInt(3);
+
+			if (selected == 0) {
+				// nothing
+			} else if (selected == 1) {
+				npcsay(player, n, "hail the great one, my lord iban", "i die for you again and again");
+				say(player, n, "is that possible?");
+				npcsay(player, n, "under iban anything is possible", "death is only the beginning");
+			} else if (selected == 2) {
+				npcsay(player, n, "som molica aniul demonte");
+				say(player, n, "pardon");
+				npcsay(player, n, "som molica aniul demonte");
+			} else if (selected == 3) {
+				npcsay(player, n, "iban is our father, our guide", "soon he will rule all life");
+			}
+		}
+	}
+
+	@Override
+	public boolean blockTalkNpc(Player player, Npc n)  {
+		return n.getID() == NpcId.IBAN_DISCIPLE.id();
 	}
 }

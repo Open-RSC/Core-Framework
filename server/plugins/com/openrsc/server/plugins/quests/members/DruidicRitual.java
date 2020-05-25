@@ -146,7 +146,9 @@ public class DruidicRitual implements QuestInterface, TalkNpcTrigger,
 					"So is there anything in this for me?");
 				if (four == 0) {
 					say(player, n, "Ok I will try and help");
-					npcsay(player, n, "Ok go and speak to our Elder druid, Sanfew");
+					npcsay(player, n, "Ok go and speak to our Elder druid, Sanfew",
+						"He lives in our village to the south of here",
+						"He knows better what we need than I");
 					player.updateQuestStage(getQuestId(), 1);
 				} else if (four == 1) {
 					say(player, n, "No that doesn't sound very interesting");

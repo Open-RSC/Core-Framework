@@ -328,8 +328,16 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 				case ROCK_SAMPLE_ORANGE:
 				case ROCK_SAMPLE_PURPLE: //rock samples
 					say(player, n, "Have a look at this rock");
-					npcsay(player, n, "This rock is not naturally formed",
-						"It looks like it might belong to someone...");
+					if (i.getCatalogId() == ItemId.ROCK_SAMPLE_ORANGE.id()) {
+						npcsay(player, n, "This rock has been picked at",
+							"It looks like it could belong to someone...");
+					} else if (i.getCatalogId() == ItemId.ROCK_SAMPLE_GREEN.id()) {
+						npcsay(player, n, "This has been partly prepared",
+							"It looks like it may belong to someone...");
+					} else if (i.getCatalogId() == ItemId.ROCK_SAMPLE_PURPLE.id()) {
+						npcsay(player, n, "This rock is not naturally formed",
+							"It looks like it might belong to someone...");
+					}
 					break;
 				case ROTTEN_APPLES:
 					say(player, n, "I found these...");

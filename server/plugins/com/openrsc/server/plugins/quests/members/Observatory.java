@@ -51,7 +51,8 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		return n.getID() == NpcId.OBSERVATORY_ASSISTANT.id() || n.getID() == NpcId.OBSERVATORY_PROFESSOR.id() || n.getID() == NpcId.PROFESSOR.id();
+		return n.getID() == NpcId.OBSERVATORY_ASSISTANT.id() || n.getID() == NpcId.OBSERVATORY_PROFESSOR.id() || n.getID() == NpcId.PROFESSOR.id()
+			|| n.getID() == NpcId.GOBLIN_GUARD.id();
 	}
 
 	@Override
@@ -414,6 +415,11 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 					}
 					break;
 			}
+		} else if (n.getID() == NpcId.GOBLIN_GUARD.id()) {
+			npcsay(player, n, "What are you doing here ?",
+				"This is our domain now",
+				"Begone foul human!");
+			n.startCombat(player);
 		}
 	} // DUNGEON SPIDER 656 poison
 

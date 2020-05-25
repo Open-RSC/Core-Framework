@@ -17,7 +17,31 @@ public class ShiloVillageTrufitusInvUse implements UseNpcTrigger {
 	@Override
 	public boolean blockUseNpc(Player player, Npc n, Item item) {
 		return n.getID() == NpcId.TRUFITUS.id() && (inArray(item.getCatalogId(), ItemId.STONE_PLAQUE.id(), ItemId.CRUMPLED_SCROLL.id(), ItemId.TATTERED_SCROLL.id(), ItemId.ZADIMUS_CORPSE.id(),
-				ItemId.BONE_SHARD.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(), ItemId.SWORD_POMMEL.id(), ItemId.RASHILIYA_CORPSE.id()));
+				ItemId.BONE_KEY.id(), ItemId.BONE_SHARD.id(), ItemId.LOCATING_CRYSTAL.id(), ItemId.BERVIRIUS_TOMB_NOTES.id(), ItemId.SWORD_POMMEL.id(), ItemId.RASHILIYA_CORPSE.id()));
+	}
+
+	private void boneKeyWork(Player player, Npc n) {
+		npcsay(player, n, "Does the key work?");
+		int menu = multi(player, n,
+			"Yes and I explored inside some sort of cavern.",
+			"I don't know, I haven't tried it yet.");
+		if (menu == 0) {
+			npcsay(player, n, "How interesting Bwana, did you find anything?");
+			int submenu = multi(player, n,
+				"Not really.",
+				"Yes, I found lots of things.");
+			if (submenu == 0) {
+				npcsay(player, n, "Maybe you should go back and try to find some more things.",
+					"Show me any other items that you may have.",
+					"We need any clue to locate Rashiliyia's resting place.");
+			} else if (submenu == 1) {
+				npcsay(player, n, "If you let me see them Bwana,",
+					"perhaps I can offer you some extra information.");
+			}
+		} else if (menu == 1) {
+			npcsay(player, n, "It may be an idea to try it and then scout out the area.",
+				"If it relates to Rashiliyia, it might help us to defeat her.");
+		}
 	}
 
 	private void corpseBuriedChat(Player player, Npc n) {
@@ -188,6 +212,31 @@ public class ShiloVillageTrufitusInvUse implements UseNpcTrigger {
 				"This will help you to locate the entrance to Rashiliyia's tomb.",
 				"Simply activate it when you think you are near, and it should ",
 				"glow different colours to show how near you are.");
+		}
+		else if (n.getID() == NpcId.TRUFITUS.id() && item.getCatalogId() == ItemId.BONE_KEY.id()) {
+			if (player.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
+				say(player, n, "Have a look at this.");
+				npcsay(player, n, "Hmmm, I'm not sure you will get much use out of this.",
+					"Why not see if you can sell it in Shilo Village.");
+				return;
+			}
+			say(player, n, "Have a look at this!");
+			npcsay(player, n, "This is amazing Bwana,the level of detail is incredible.",
+				"Where did you find it?");
+			int menu = multi(player, n,
+				"I made it from the bone shard that Zadimus gave me.",
+				"Do you know what it opens?");
+			if (menu == 0) {
+				npcsay(player, n, "How very inventive Bwana.",
+					"You must have seen the lock to have crafted it so well.");
+				boneKeyWork(player, n);
+			} else if (menu == 1) {
+				npcsay(player, n, "You must already know what it opens to have carved it",
+					"so pefectly.",
+					"Perhaps in your travels you have come",
+					"across some unique doors with a unique lock",
+					"I hope this helps with your quest.");
+			}
 		}
 		else if (n.getID() == NpcId.TRUFITUS.id() && item.getCatalogId() == ItemId.BONE_SHARD.id()) {
 			if (player.getQuestStage(Quests.SHILO_VILLAGE) == -1) {

@@ -224,12 +224,17 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 			}
 		}
 		else if (n.getID() == NpcId.GUARD_KHAZARD_BYPRISONER.id()) {
-			if (player.getQuestStage(getQuestId()) >= 2) {
+			if (player.getQuestStage(getQuestId()) >= 2 || player.getQuestStage(getQuestId()) == -1) {
 				if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
 					&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
 					say(player, n, "hello");
 					npcsay(player, n, "hello, hope you're keeping busy?");
 					say(player, n, "of course");
+					if (player.getQuestStage(getQuestId()) != 2) {
+						npcsay(player, n, "General Khazard doesn't tolerate the lazy",
+							"if you're not keeping busy",
+							"i'll practice my combat skills on your hide");
+					}
 				} else {
 					npcsay(player, n, "this area is restricted, leave now",
 						"OUT and don't come back!");
@@ -328,10 +333,19 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 					"i can't wait");
 				return;
 			}
+			if (player.getQuestStage(getQuestId()) == 2) {
+				say(player, n, "hello");
+				npcsay(player, n, "are you enjoying the arena?",
+					"i heard the servil family are fighting soon",
+					"should be very entertaining");
+				return;
+			}
 			say(player, n, "hello");
-			npcsay(player, n, "are you enjoying the arena?",
-				"i heard the servil family are fighting soon",
-				"should be very entertaining");
+			npcsay(player, n, "hello stranger are you new to these parts?",
+				"you look lost",
+				"i suppose you're here for the fight arena?",
+				"there are some rich folk fighting tomorrow",
+				"should be entertaining");
 		}
 		else if (n.getID() == NpcId.LADY_SERVIL.id()) {
 			switch (player.getQuestStage(this)) {

@@ -379,7 +379,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 					"Normally we recruit for our gang",
 					"By watching local thugs and thieves in action",
 					"People don't normally waltz in here",
-					"Saying 'hello can I play'",
+					"Saying 'hello can I play' ",
 					"How can I be sure you can be trusted?");
 				int choice11 = multi(player, n,
 					"Well you can give me a try, can't you?",

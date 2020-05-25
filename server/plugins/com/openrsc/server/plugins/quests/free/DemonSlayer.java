@@ -435,7 +435,41 @@ public class DemonSlayer implements QuestInterface,
 									traibornTheWizDialogue(player, n, Traiborn.KNOCKING);
 								}
 							} else if (choice8 == 1) {
-								traibornTheWizDialogue(player, n, Traiborn.KNOCKING);
+								npcsay(player, n, "The key?", "The key to what?",
+									"There's more than one key in the world, don't you know?",
+									"Would be a bit odd if there was only one");
+								int choice9a = multi(player, n, false, //do not send over
+									"It's the key to get a sword called Silverlight",
+									"You've lost it, haven't you?");
+								if (choice9a == 0) {
+									say(player, n, "Its the key to get a sword called Silverlight");
+									npcsay(player, n, "Silverlight? Never heard of that",
+										"Sounds a good name for a ship",
+										"Are you sure it's not the name of a ship, rather than a sword?");
+									int choice9b = multi(player, n,
+										"Yeah, pretty sure",
+										"Well, have you got any keys knocking around?");
+									if (choice9b == 0) {
+										npcsay(player, n, "That's a pity",
+											"Waste of a name");
+										int opts = multi(player, n,
+											"Err I'd better be off really",
+											"Well, have you got any keys knocking around?");
+										if (opts == 0) {
+											traibornTheWizDialogue(player, n, Traiborn.BEOFF);
+										} else if (opts == 1) {
+											traibornTheWizDialogue(player, n, Traiborn.KNOCKING);
+										}
+									} else if (choice9b == 1) {
+										traibornTheWizDialogue(player, n, Traiborn.KNOCKING);
+									}
+								} else if (choice9a == 1) {
+									say(player, n, "You've lost it, haven't you?");
+									npcsay(player, n, "Me?  Lose things?",
+										"Thats a nasty accusation");
+									say(player, n, "Well, have you got any keys knocking around?");
+									traibornTheWizDialogue(player, n, Traiborn.KNOCKING);
+								}
 							}
 						} else if (choice5 == 2) {
 							traibornTheWizDialogue(player, n, Traiborn.KNOCKING);

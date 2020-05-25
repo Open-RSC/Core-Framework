@@ -238,10 +238,11 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					break;
 				case 3:
 				case -1:
+					npcsay(player, n, "Halt. Who goes there? Friend or foe?");
 					say(player, n,
-						"Hi friend, i am just checking out things here");
-					npcsay(player, n, "The prince got away, i am in trouble",
-						"I better not talk to you, they are not sure i was drunk");
+						"Hi friend, I am just checking out things here");
+					npcsay(player, n, "The Prince got away, I am in trouble",
+						"I better not talk to you, they are not sure I was drunk");
 					say(player, n,
 						"I won't say anything, your secret is safe with me");
 					break;
