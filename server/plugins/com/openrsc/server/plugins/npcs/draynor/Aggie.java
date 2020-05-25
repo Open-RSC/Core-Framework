@@ -205,7 +205,9 @@ public final class Aggie implements TalkNpcTrigger {
 					} else {
 						say(player, n, "Okay, make me some yellow dye please");
 						mes("You hand the onions and payment to Aggie");
-						player.getCarriedItems().remove(new Item(ItemId.ONION.id(), 2));
+						for (int i = 0; i < 2; i++) {
+							player.getCarriedItems().remove(new Item(ItemId.ONION.id()));
+						}
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 						mes("she takes a yellow bottle from nowhere and hands it to you");
 						give(player, ItemId.YELLOWDYE.id(), 1);
@@ -232,7 +234,9 @@ public final class Aggie implements TalkNpcTrigger {
 					} else {
 						say(player, n, "Okay, make me some red dye please");
 						mes("You hand the berries and payment to Aggie");
-						player.getCarriedItems().remove(new Item(ItemId.REDBERRIES.id(), 3));
+						for (int i = 0; i < 3; i++) {
+							player.getCarriedItems().remove(new Item(ItemId.REDBERRIES.id()));
+						}
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 						mes("she takes a red bottle from nowhere and hands it to you");
 						give(player, ItemId.REDDYE.id(), 1);
@@ -259,7 +263,9 @@ public final class Aggie implements TalkNpcTrigger {
 					} else {
 						say(player, n, "Okay, make me some blue dye please");
 						mes("You hand the woad leaves and payment to Aggie");
-						player.getCarriedItems().remove(new Item(ItemId.WOAD_LEAF.id(), 2));
+						for (int i = 0; i < 2; i++) {
+							player.getCarriedItems().remove(new Item(ItemId.WOAD_LEAF.id(), 2));
+						}
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 						mes("she takes a blue bottle from nowhere and hands it to you");
 						give(player, ItemId.BLUEDYE.id(), 1);
