@@ -281,7 +281,9 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					say(player, n,
 						"Here, just keep these for later, I hate to see a thirsty guard");
 					mes("You hand two more beers to the guard");
-					player.getCarriedItems().remove(new Item(ItemId.BEER.id(), 2));
+					for (int i = 0; i < 2; i++) {
+						player.getCarriedItems().remove(new Item(ItemId.BEER.id()));
+					}
 					mes("he takes a sip of one, and then he drinks them both");
 					npcsay(player,
 						n,

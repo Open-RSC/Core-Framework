@@ -380,9 +380,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 					&& player.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
 				say(player, n, "all done, here you go");
 				mes(config().GAME_TICK * 3, "you give aluft one veg ball, one twisted toads legs and one worm hole");
-				player.getCarriedItems().remove(new Item(ItemId.VEGBALL.id(), 1));
-				player.getCarriedItems().remove(new Item(ItemId.TANGLED_TOADS_LEGS.id(), 1));
-				player.getCarriedItems().remove(new Item(ItemId.WORM_HOLE.id(), 1));
+				player.getCarriedItems().remove(new Item(ItemId.VEGBALL.id()));
+				player.getCarriedItems().remove(new Item(ItemId.TANGLED_TOADS_LEGS.id()));
+				player.getCarriedItems().remove(new Item(ItemId.WORM_HOLE.id()));
 				player.incExp(Skills.COOKING, 425, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");

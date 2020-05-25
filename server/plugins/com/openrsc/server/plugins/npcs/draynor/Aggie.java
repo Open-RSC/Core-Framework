@@ -264,7 +264,7 @@ public final class Aggie implements TalkNpcTrigger {
 						say(player, n, "Okay, make me some blue dye please");
 						mes("You hand the woad leaves and payment to Aggie");
 						for (int i = 0; i < 2; i++) {
-							player.getCarriedItems().remove(new Item(ItemId.WOAD_LEAF.id(), 2));
+							player.getCarriedItems().remove(new Item(ItemId.WOAD_LEAF.id()));
 						}
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 						mes("she takes a blue bottle from nowhere and hands it to you");

@@ -2919,7 +2919,9 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							"You can go back and work with the other slaves then!");
 					} else {
 						say(player, n, "Hey, I have your rocks here, let me out.");
-						player.getCarriedItems().remove(new Item(ItemId.ROCKS.id(), 15));
+						for (int i = 0; i < 15; i++) {
+							player.getCarriedItems().remove(new Item(ItemId.ROCKS.id()));
+						}
 						npcsay(player, n, "Ok, ok, come on out.");
 						player.teleport(71, 3626);
 						player.message("The guard unlocks the gate and lets you out.");

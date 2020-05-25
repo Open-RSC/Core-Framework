@@ -167,7 +167,9 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 					npcsay(player, n, "Have you got those crossbows for me yet?");
 					say(player, n, "Yes I have");
 					player.message("You give the crossbows to katrine");
-					player.getCarriedItems().remove(new Item(ItemId.PHOENIX_CROSSBOW.id(), 2));
+					for (int i = 0; i < 2; i++) {
+						player.getCarriedItems().remove(new Item(ItemId.PHOENIX_CROSSBOW.id()));
+					}
 					npcsay(player, n,
 						"Ok you can join our gang now",
 						"Ok you can join our gang now",
