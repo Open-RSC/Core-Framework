@@ -538,7 +538,9 @@ public class ShiloVillageObjects implements OpLocTrigger, UseLocTrigger {
 			if (!ifheld(player, ItemId.BONES.id(), 3)) {
 				player.message("You do not have enough bones for all the recesses.");
 			} else {
-				player.getCarriedItems().remove(new Item(ItemId.BONES.id(), 3));
+				for (int i = 0; i < 3; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.BONES.id()));
+				}
 				mes("You fit the bones into the reccesses of the door.",
 					"The door seems to change slightly.",
 					"Two depictions of skeletal warriors turn their heads towards you.",

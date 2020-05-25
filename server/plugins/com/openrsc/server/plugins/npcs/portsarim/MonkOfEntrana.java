@@ -17,7 +17,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public final class MonkOfEntrana implements OpLocTrigger,
 	TalkNpcTrigger {
 
-	final private int[] blockedItems={
+	final private int[] blockedItems = {
 		// Arrows
 		ItemId.BRONZE_ARROWS.id(),
 		ItemId.IRON_ARROWS.id(),
@@ -52,10 +52,14 @@ public final class MonkOfEntrana implements OpLocTrigger,
 		ItemId.DWARF_CANNON_FURNACE.id()
 	};
 
+	final private int[] allowedItems = {
+		ItemId.ICE_GLOVES.id()
+	};
+
 	private boolean BLOCK_ITEM(Player player, Item item) {
 		if (config().WANT_EQUIPMENT_TAB
 			&& item.getCatalogId() == ItemId.BRONZE_PICKAXE.id()) return false;
-		if (item.isWieldable(player.getWorld())) return true;
+		if (item.isWieldable(player.getWorld()) && !DataConversions.inArray(allowedItems, item.getCatalogId())) return true;
 		if (DataConversions.inArray(blockedItems, item.getCatalogId())) return true;
 		return false;
 	}

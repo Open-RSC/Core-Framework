@@ -270,7 +270,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				say(player, n, "all done, here you go");
 				mes(config().GAME_TICK * 3, "you give aluft two worm batta's a veg batta and a toad batta");
 				player.incExp(Skills.COOKING, 425, true);
-				player.getCarriedItems().remove(new Item(ItemId.WORM_BATTA.id(), 2));
+				for (int i = 0; i < 2; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.WORM_BATTA.id()));
+				}
 				player.getCarriedItems().remove(new Item(ItemId.VEG_BATTA.id()));
 				player.getCarriedItems().remove(new Item(ItemId.TOAD_BATTA.id()));
 				npcsay(player, n, "they look great, well done",
@@ -292,8 +294,12 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				say(player, n, "here you go aluft");
 				mes(config().GAME_TICK * 3, "you give aluft choc bomb, two choc crunchies and two toad crunchies");
 				player.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_BOMB.id()));
-				player.getCarriedItems().remove(new Item(ItemId.CHOC_CRUNCHIES.id(), 2));
-				player.getCarriedItems().remove(new Item(ItemId.TOAD_CRUNCHIES.id(), 2));
+				for (int i = 0; i < 2; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.CHOC_CRUNCHIES.id()));
+				}
+				for (int i = 0; i < 2; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.TOAD_CRUNCHIES.id()));
+				}
 				player.incExp(Skills.COOKING, 675, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
@@ -311,7 +317,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 			if (ifheld(player, ItemId.CHOC_CRUNCHIES.id(), 2)) {
 				say(player, n, "all done, here you go");
 				mes(config().GAME_TICK * 3, "you give aluft the two choc crunchies");
-				player.getCarriedItems().remove(new Item(ItemId.CHOC_CRUNCHIES.id(), 2));
+				for (int i = 0; i < 2; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.CHOC_CRUNCHIES.id()));
+				}
 				player.incExp(Skills.COOKING, 300, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
@@ -330,7 +338,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				say(player, n, "here you go aluft");
 				mes(config().GAME_TICK * 3, "you give aluft one choc bomb and two choc crunchies");
 				player.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_BOMB.id()));
-				player.getCarriedItems().remove(new Item(ItemId.CHOC_CRUNCHIES.id(), 2));
+				for (int i = 0; i < 2; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.CHOC_CRUNCHIES.id()));
+				}
 				player.incExp(Skills.COOKING, 425, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
@@ -347,7 +357,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 					&& player.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
 				say(player, n, "here you go aluft");
 				mes(config().GAME_TICK * 3, "you give aluft two veg batta's and a worm hole");
-				player.getCarriedItems().remove(new Item(ItemId.VEG_BATTA.id(), 2));
+				for (int i = 0; i < 2; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.VEG_BATTA.id()));
+				}
 				player.getCarriedItems().remove(new Item(ItemId.WORM_HOLE.id()));
 				player.incExp(Skills.COOKING, 425, true);
 				npcsay(player, n, "they look great, well done",
@@ -368,9 +380,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 					&& player.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
 				say(player, n, "all done, here you go");
 				mes(config().GAME_TICK * 3, "you give aluft one veg ball, one twisted toads legs and one worm hole");
-				player.getCarriedItems().remove(new Item(ItemId.VEGBALL.id(), 1));
-				player.getCarriedItems().remove(new Item(ItemId.TANGLED_TOADS_LEGS.id(), 1));
-				player.getCarriedItems().remove(new Item(ItemId.WORM_HOLE.id(), 1));
+				player.getCarriedItems().remove(new Item(ItemId.VEGBALL.id()));
+				player.getCarriedItems().remove(new Item(ItemId.TANGLED_TOADS_LEGS.id()));
+				player.getCarriedItems().remove(new Item(ItemId.WORM_HOLE.id()));
 				player.incExp(Skills.COOKING, 425, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
@@ -391,7 +403,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 						"...and two portions of worm crunchies");
 				player.getCarriedItems().remove(new Item(ItemId.CHEESE_AND_TOMATO_BATTA.id()));
 				player.getCarriedItems().remove(new Item(ItemId.VEGBALL.id()));
-				player.getCarriedItems().remove(new Item(ItemId.WORM_CRUNCHIES.id(), 2));
+				for (int i = 0; i < 2; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.WORM_CRUNCHIES.id()));
+				}
 				player.incExp(Skills.COOKING, 550, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
@@ -412,7 +426,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 					&& player.getCarriedItems().hasCatalogID(ItemId.VEGBALL.id(), Optional.of(false))) {
 				say(player, n, "all done, here you go");
 				mes(config().GAME_TICK * 3, "you give aluft the tangled toads legs and two worm crunchies");
-				player.getCarriedItems().remove(new Item(ItemId.SPICE_CRUNCHIES.id(), 2));
+				for (int i = 0; i < 2; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.SPICE_CRUNCHIES.id()));
+				}
 				player.getCarriedItems().remove(new Item(ItemId.FRUIT_BATTA.id()));
 				player.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_BOMB.id()));
 				player.getCarriedItems().remove(new Item(ItemId.VEGBALL.id()));
@@ -437,7 +453,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				say(player, n, "all done, here you go");
 				mes(config().GAME_TICK * 3, "you give aluft one choc bomb and two choc crunchies");
 				player.getCarriedItems().remove(new Item(ItemId.TANGLED_TOADS_LEGS.id()));
-				player.getCarriedItems().remove(new Item(ItemId.WORM_CRUNCHIES.id(), 2));
+				for (int i = 0; i < 2; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.WORM_CRUNCHIES.id()));
+				}
 				player.incExp(Skills.COOKING, 425, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");

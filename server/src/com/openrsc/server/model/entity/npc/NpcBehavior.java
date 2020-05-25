@@ -72,6 +72,14 @@ public class NpcBehavior {
 
 	private void handleRoam() {
 
+		// Plagued sheep shouldn't roam
+		if (npc.getID() == NpcId.FIRST_PLAGUE_SHEEP.id() ||
+			npc.getID() == NpcId.SECOND_PLAGUE_SHEEP.id() ||
+			npc.getID() == NpcId.THIRD_PLAGUE_SHEEP.id() ||
+			npc.getID() == NpcId.FOURTH_PLAGUE_SHEEP.id()) {
+			return;
+		}
+
 		// NPC is in combat or busy, do not set them to ROAM.
 		if (npc.inCombat()) {
 			state = State.COMBAT;
@@ -98,14 +106,18 @@ public class NpcBehavior {
 					if (npc.getLastOpponent() == player && checkCombatTimer(npc.getLastOpponent().getCombatTimer(), 200)) {
 						npc.setLastOpponent(null);
 						setRoaming();
+					}
 
-						// AggroEvent, as NPC should target this player.
-					} else {
+					// AggroEvent, as NPC should target this player.
+					else {
 						setChasing(player);
 						handleAggro();
 						new AggroEvent(npc.getWorld(), npc, player);
-						return;
 					}
+
+					// We've found a target, or stopped our aggro,
+					// so stop looping and take a tick break.
+					return;
 				}
 			}
 		}
@@ -136,13 +148,6 @@ public class NpcBehavior {
 
 			// NPC is not busy, and we rolled to move (50% chance)
 			if (!npc.isBusy() && rand == 1 && !npc.isRemoved() && !npc.isRespawning()) {
-				//Plagued sheep shouldn't roam
-				if (npc.getID() == NpcId.FIRST_PLAGUE_SHEEP.id() ||
-					npc.getID() == NpcId.SECOND_PLAGUE_SHEEP.id() ||
-					npc.getID() == NpcId.THIRD_PLAGUE_SHEEP.id() ||
-					npc.getID() == NpcId.FOURTH_PLAGUE_SHEEP.id()) {
-					return;
-				}
 				Point point = npc.walkablePoint(Point.location(npc.getLoc().minX(), npc.getLoc().minY()),
 					Point.location(npc.getLoc().maxX(), npc.getLoc().maxY()));
 				npc.walk(point.getX(), point.getY());
@@ -176,6 +181,7 @@ public class NpcBehavior {
 		if (npc.inCombat() && npc.getOpponent() != target) {
 			npc.setLastOpponent(null);
 			setFighting(npc.getOpponent());
+			return;
 		}
 
 		// If target is not waiting for "run away" timer, send them chasing

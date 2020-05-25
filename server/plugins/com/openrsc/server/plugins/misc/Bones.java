@@ -13,11 +13,12 @@ public class Bones implements OpInvTrigger {
 
 	@Override
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
-		return command.equalsIgnoreCase("bury");
+		return command.equalsIgnoreCase("bury") && item.getCatalogId() != ItemId.RASHILIYA_CORPSE.id();
 	}
 
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
+		if (item.getCatalogId() == ItemId.RASHILIYA_CORPSE.id()) return;
 		if (command.equalsIgnoreCase("bury")) {
 
 			if (item.getNoted()) {

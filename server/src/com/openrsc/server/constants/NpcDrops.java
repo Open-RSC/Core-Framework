@@ -176,6 +176,7 @@ public class NpcDrops {
 		this.bonelessNpcs.add(NpcId.SHAPESHIFTER_BEAR.id());
 		this.bonelessNpcs.add(NpcId.POISON_SCORPION.id());
 		this.bonelessNpcs.add(NpcId.POISON_SPIDER.id());
+		this.bonelessNpcs.add(NpcId.ANIMATED_AXE.id());
 		this.bonelessNpcs.add(NpcId.SHADOW_SPIDER.id());
 		this.bonelessNpcs.add(NpcId.KHAZARD_SCORPION.id());
 		this.bonelessNpcs.add(NpcId.FIRST_PLAGUE_SHEEP.id());
@@ -673,9 +674,12 @@ public class NpcDrops {
 		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.BLACK_KNIGHT.id(), currentNpcDrops); // (66)
 		this.npcDrops.put(NpcId.BLACK_KNIGHT_AGGRESSIVE.id(), currentNpcDrops); // (189)
-		this.npcDrops.put(NpcId.JAILER.id(), currentNpcDrops); // (265)
 		this.npcDrops.put(NpcId.LORD_DARQUARIUS.id(), currentNpcDrops); // (266)
 		this.npcDrops.put(NpcId.RENEGADE_KNIGHT.id(), currentNpcDrops); // (277)
+
+		currentNpcDrops = currentNpcDrops.clone();
+		currentNpcDrops.addItemDrop(ItemId.JAIL_KEYS.id(), 1, 0);
+		this.npcDrops.put(NpcId.JAILER.id(), currentNpcDrops); // (265)
 
 		currentNpcDrops = new DropTable("Hobgoblin Level 32 (67) Hobgoblin Level 48 (311)");
 		currentNpcDrops.addTableDrop(herbDropTable, 7);
@@ -954,6 +958,9 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.BLOOD_RUNE.id(), 1, 1);
 		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.ICE_WARRIOR.id(), currentNpcDrops); // (158)
+
+		currentNpcDrops = currentNpcDrops.clone();
+		currentNpcDrops.addItemDrop(ItemId.ICE_GLOVES.id(), 1, 0);
 		this.npcDrops.put(NpcId.ICE_QUEEN.id(), currentNpcDrops); // (254)
 
 		currentNpcDrops = new DropTable("Ghost (Maze) (178)");

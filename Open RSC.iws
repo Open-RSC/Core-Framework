@@ -15,142 +15,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Databases/upgrade_custom.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/constants/SceneryId.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/DatabaseType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/GameLogger.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/struct/DiscordWatchlist.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/struct/FloorItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/struct/NpcLocation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/struct/SceneryObject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Client_Base/src/com/openrsc/client/entityhandling/EntityHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client_Base/src/com/openrsc/client/entityhandling/EntityHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Client_Base/src/com/openrsc/interfaces/misc/SkillGuideInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client_Base/src/com/openrsc/interfaces/misc/SkillGuideInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Client_Base/src/orsc/mudclient.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client_Base/src/orsc/mudclient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Databases/cabbage_game_server.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Databases/core.sql" beforeDir="false" afterPath="$PROJECT_DIR$/Databases/core.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Databases/custom.sql" beforeDir="false" afterPath="$PROJECT_DIR$/Databases/custom.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Databases/openrsc_game_server.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Databases/preservation_game_server.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Databases/rework_cabbage_conversion.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Databases/rework_conversion.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Databases/rework_openrsc_conversion.sql" beforeDir="false" afterPath="$PROJECT_DIR$/Databases/upgrade_core.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Databases/upgrade.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PC_Client/src/orsc/ORSCApplet.java" beforeDir="false" afterPath="$PROJECT_DIR$/PC_Client/src/orsc/ORSCApplet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/connections.conf" beforeDir="false" afterPath="$PROJECT_DIR$/server/connections.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/default.conf" beforeDir="false" afterPath="$PROJECT_DIR$/server/default.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/dev.conf" beforeDir="false" afterPath="$PROJECT_DIR$/server/dev.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/openrsc.conf" beforeDir="false" afterPath="$PROJECT_DIR$/server/openrsc.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Admins.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/commands/Admins.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/defaults/DoorAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/defaults/DoorAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/Cow.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/Cow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/Drinkables.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/Drinkables.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/Eating.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/Eating.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/InvAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/InvAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/InvUseOnItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/InvUseOnItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/PotFlour.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/PotFlour.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/Refill.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/Refill.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/SandPit.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/SandPit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/SoilMound.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/SoilMound.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/pets/BabyBlueDragonCrystal.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/itemactions/pets/BabyBlueDragonCrystal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/minigames/blurberrysbar/DrinkHeating.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/minigames/blurberrysbar/DrinkHeating.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/minigames/blurberrysbar/DrinkMixing.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/minigames/blurberrysbar/DrinkMixing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/minigames/gnomerestaurant/GnomeSlice.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/minigames/gnomerestaurant/GnomeSlice.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/minigames/gnomerestaurant/SwampToads.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/minigames/gnomerestaurant/SwampToads.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/minigames/kittencare/KittenToCat.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/minigames/kittencare/KittenToCat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/misc/DragonstoneAmulet.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/misc/DragonstoneAmulet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/misc/Panning.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/misc/Panning.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/misc/Pick.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/misc/Pick.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/Certer.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/Certer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/ardougne/west/SpiritOfScorpius.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/ardougne/west/SpiritOfScorpius.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/catherby/Chef.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/npcs/catherby/Chef.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/free/DemonSlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/free/DemonSlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/BioHazard.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/BioHazard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/FamilyCrest.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/FamilyCrest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/GertrudesCat.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/GertrudesCat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/MurderMystery.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/MurderMystery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/PlagueCity.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/PlagueCity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/SeaSlug.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/SeaSlug.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/digsite/DigsiteExpert.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/digsite/DigsiteExpert.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/digsite/DigsiteObjects.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/digsite/DigsiteObjects.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/mechanism/LegendsQuestHolyWater.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/mechanism/LegendsQuestHolyWater.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/mechanism/LegendsQuestInvAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/mechanism/LegendsQuestInvAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/mechanism/LegendsQuestMapJungle.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/mechanism/LegendsQuestMapJungle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/npcs/LegendsQuestGujuo.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/npcs/LegendsQuestGujuo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/npcs/LegendsQuestViyeldi.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/npcs/LegendsQuestViyeldi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/obstacles/LegendsQuestGameObjects.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/obstacles/LegendsQuestGameObjects.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/obstacles/LegendsQuestWallObjects.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/legendsquest/obstacles/LegendsQuestWallObjects.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/shilovillage/ShiloVillageUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/shilovillage/ShiloVillageUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/touristtrap/TouristTrap.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/touristtrap/TouristTrap.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/touristtrap/Tourist_Trap_Mechanism.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/touristtrap/Tourist_Trap_Mechanism.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/undergroundpass/obstacles/UndergroundPassDungeonFloor.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/undergroundpass/obstacles/UndergroundPassDungeonFloor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/watchtower/WatchTowerMechanism.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/quests/members/watchtower/WatchTowerMechanism.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/skills/cooking/ObjectCooking.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/skills/cooking/ObjectCooking.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/skills/crafting/Crafting.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/skills/crafting/Crafting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/skills/harvesting/Harvesting.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/skills/harvesting/Harvesting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/skills/herblaw/Herblaw.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/skills/herblaw/Herblaw.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/skills/smithing/Smelting.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/skills/smithing/Smelting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/rsccabbage.conf" beforeDir="false" afterPath="$PROJECT_DIR$/server/rsccabbage.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/GameStateUpdater.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/GameStateUpdater.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/misc/Present.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/misc/Present.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/GameEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/GameEventHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/ServerConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/ServerConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/constants/ItemId.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/constants/ItemId.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/content/clan/ClanManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/content/clan/ClanManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/content/market/CollectableItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/content/market/CollectibleItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/content/market/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/content/market/Market.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/content/market/MarketDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/content/market/MarketDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/content/market/task/CollectableItemsNotificationTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/content/market/task/CollectibleItemsNotificationTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/content/market/task/PlayerCollectItemsTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/content/market/task/PlayerCollectItemsTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/GameDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/GameDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/WorldPopulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/WorldPopulator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/GameLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameLogger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameDatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameDatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlQueries.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/ChatLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/ChatLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/DeathLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/DeathLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/EventLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/EventLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/GameReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/GameReport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/GenericLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/GenericLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/LiveFeedLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/LiveFeedLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/LoginLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/LoginLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/PMLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/PMLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/SecurityChangeLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/SecurityChangeLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/StaffLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/StaffLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/TradeLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/logging/TradeLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/player/login/PlayerOnlineFlagQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/queries/player/login/PlayerOnlineFlagQuery.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/struct/ExpiredAuction.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/struct/ExpiredAuction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/struct/PlayerData.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/struct/PlayerData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/event/custom/WildernessCycleEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/event/custom/WildernessCycleEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/event/rsc/impl/PrayerDrainEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/event/rsc/impl/PrayerDrainEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/event/rsc/impl/combat/CombatEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/event/rsc/impl/combat/CombatEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/external/EntityHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/external/EntityHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/external/Gauntlets.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/external/Gauntlets.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/Skills.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/Skills.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/container/Bank.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/container/Bank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/container/Equipment.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/container/Equipment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/container/Inventory.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/container/Inventory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/container/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/container/Item.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/container/ItemStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/container/ItemStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/Mob.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/Mob.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/npc/Npc.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/npc/Npc.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/player/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/player/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/net/DiscordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/net/DiscordService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/ActionSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/ActionSender.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/AttackHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/AttackHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/InterfaceShopHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/InterfaceShopHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/ItemActionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/ItemActionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/ItemUseOnPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/ItemUseOnPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/PlayerDuelHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/PlayerDuelHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/PlayerFollowRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/PlayerFollowRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/SpellHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/SpellHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/WalkRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/WalkRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/plugins/Functions.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/plugins/Functions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/util/rsc/Formulae.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/util/rsc/Formulae.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -376,6 +247,11 @@
       <workItem from="1587834582378" duration="15559000" />
       <workItem from="1587922398473" duration="18274000" />
       <workItem from="1588037561316" duration="15998000" />
+      <workItem from="1589481702045" duration="4205000" />
+      <workItem from="1590290829670" duration="8741000" />
+      <workItem from="1590372358383" duration="7906000" />
+      <workItem from="1590384695635" duration="315000" />
+      <workItem from="1590422662727" duration="4745000" />
     </task>
     <servers />
   </component>
@@ -416,12 +292,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/AttackHandler.java</url>
-          <line>23</line>
+          <line>18</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/AttackHandler.java</url>
-          <line>24</line>
+          <line>19</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -431,7 +307,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/server/src/com/openrsc/server/event/rsc/PluginTask.java</url>
-          <line>81</line>
+          <line>112</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>

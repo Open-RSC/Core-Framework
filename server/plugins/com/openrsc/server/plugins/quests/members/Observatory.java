@@ -270,7 +270,9 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 								n,
 								"Well done, I can start the tripod construction now",
 								"Now for the bronze");
-							player.getCarriedItems().remove(new Item(ItemId.PLANK.id(), 3));
+							for (int i = 0; i < 3; i++) {
+								player.getCarriedItems().remove(new Item(ItemId.PLANK.id()));
+							}
 
 							player.updateQuestStage(getQuestId(), 2);
 						} else {

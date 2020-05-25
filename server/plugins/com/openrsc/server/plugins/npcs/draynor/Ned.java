@@ -132,8 +132,10 @@ public final class Ned implements TalkNpcTrigger {
 				} else {
 					say(player, n, "I have some balls of wool. could you make me some Rope?");
 					npcsay(player, n, "Sure I can.");
+					for (int i = 0; i < 4; i++) {
+						player.getCarriedItems().remove(new Item(ItemId.BALL_OF_WOOL.id()));
+					}
 					player.getCarriedItems().getInventory().add(new Item(ItemId.ROPE.id(), 1));
-					player.getCarriedItems().remove(new Item(ItemId.BALL_OF_WOOL.id(), 4));
 				}
 			}
 		} else if (option == 2) { // Prince Ali's Rescue
@@ -160,7 +162,9 @@ public final class Ned implements TalkNpcTrigger {
 						mes("You hand Ned 3 balls of wool",
 							"Ned works with the wool. His hands move with a speed you couldn't imagine"
 						);
-						player.getCarriedItems().remove(new Item(ItemId.BALL_OF_WOOL.id(), 3));
+						for (int i = 0; i < 3; i++) {
+							player.getCarriedItems().remove(new Item(ItemId.BALL_OF_WOOL.id()));
+						}
 						npcsay(player, n, "Here you go, hows that for a quick effort? Not bad I think!");
 						player.message("Ned gives you a pretty good wig");
 						give(player, ItemId.WOOL_WIG.id(), 1);

@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.misc;
 
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -89,6 +90,8 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 							player.getCarriedItems().remove(new Item(chargedId));
 							player.getCarriedItems().getInventory().add(toAdd);
 						}
+						ItemDefinition itemDef = item.getDef(player.getWorld());
+						player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
 						ActionSender.sendEquipmentStats(player, item.getDef(player.getWorld()).getWieldPosition());
 						ActionSender.sendUpdatedPlayer(player);
 						player.getCache().remove("charged_ds_amulet");
