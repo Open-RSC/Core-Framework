@@ -192,7 +192,9 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 				&& player.getCarriedItems().hasCatalogID(ItemId.SGG.id(), Optional.of(false))) {
 				say(player, n, "here you go, two wizard blizzards and an s.g.g.");
 				player.message("you give blurberry two wizard blizzards and an s.g.g.");
-				player.getCarriedItems().remove(new Item(ItemId.WIZARD_BLIZZARD.id(), 2));
+				for (int i = 0; i < 2; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.WIZARD_BLIZZARD.id()));
+				}
 				player.getCarriedItems().remove(new Item(ItemId.SGG.id()));
 				player.incExp(Skills.COOKING, 360, true);
 				npcsay(player, n, "that's excellent, here's your share of the profit");
@@ -217,7 +219,9 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 				player.getCarriedItems().remove(new Item(ItemId.WIZARD_BLIZZARD.id()));
 				player.getCarriedItems().remove(new Item(ItemId.PINEAPPLE_PUNCH.id()));
 				player.getCarriedItems().remove(new Item(ItemId.BLURBERRY_SPECIAL.id()));
-				player.getCarriedItems().remove(new Item(ItemId.FRUIT_BLAST.id(), 2));
+				for (int i = 0; i < 2; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.FRUIT_BLAST.id()));
+				}
 				player.incExp(Skills.COOKING, 540, true);
 				npcsay(player, n, "wow fantastic, here's your share of the profit");
 				player.message("blurberry gives you 179 gold coins");
@@ -235,7 +239,9 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 				&& player.getCarriedItems().hasCatalogID(ItemId.BLURBERRY_SPECIAL.id(), Optional.of(false))) {
 				say(player, n, "here you go, two s.g.g. and one blurberry special");
 				player.message("you give blurberry two s.g.g. and one blurberry special");
-				player.getCarriedItems().remove(new Item(ItemId.SGG.id(), 2));
+				for (int i = 0; i < 2; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.SGG.id()));
+				}
 				player.getCarriedItems().remove(new Item(ItemId.BLURBERRY_SPECIAL.id()));
 				player.incExp(Skills.COOKING, 360, true);
 				npcsay(player, n, "great, here's your share of the profit");
