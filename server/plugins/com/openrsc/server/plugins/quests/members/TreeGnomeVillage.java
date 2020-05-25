@@ -233,7 +233,9 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, n,
 						"hello again, we're still desperate for wood soldier");
 					if (ifheld(player, ItemId.LOGS.id(), 6)) {
-						player.getCarriedItems().remove(new Item(ItemId.LOGS.id(), 6));
+						for (int i = 0; i < 6; i++) {
+							player.getCarriedItems().remove(new Item(ItemId.LOGS.id()));
+						}
 						say(player, n, "i have some here");
 						player.message("you give some wood to the commander");
 						npcsay(player,
