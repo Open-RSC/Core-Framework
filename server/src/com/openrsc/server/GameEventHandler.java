@@ -104,7 +104,7 @@ public class GameEventHandler {
 		return eventsEnd - eventsStart;
 	}
 
-	public final String buildProfilingDebugInformation(boolean forInGame) {
+	public final String buildProfilingDebugInformation(final boolean forInGame) {
 		int countAllEvents = 0;
 		long durationAllEvents = 0;
 		String newLine = forInGame ? "%" : "\r\n";
@@ -115,8 +115,8 @@ public class GameEventHandler {
 		// Calculate Totals
 		for (Map.Entry<String, Integer> eventEntry : eventsCounts.entrySet())
 			countAllEvents += eventEntry.getValue();
-//		for (Map.Entry<String, Long> eventEntry : eventsDurations.entrySet())
-//			durationAllEvents += eventEntry.getValue();
+		//for (Map.Entry<String, Long> eventEntry : eventsDurations.entrySet())
+		//	durationAllEvents += eventEntry.getValue();
 
 		// Sort the Events Hashmap
 		List<Map.Entry<String,Long>> mapEntries = new LinkedList<>(eventsDurations.entrySet());
@@ -135,23 +135,44 @@ public class GameEventHandler {
 			return prevDuration < nextDuration ? 1 : -1;
 		});
 		eventsDurations.clear();
-//		HashMap<String, Long> sortedHashMap = new LinkedHashMap<>();
+		//HashMap<String, Long> sortedHashMap = new LinkedHashMap<>();
 		for (Map.Entry<String, Long> entry : mapEntries)
 			eventsDurations.put(entry.getKey(), entry.getValue());
-//		eventsDurations.clear();
-//		eventsDurations.putAll(sortedHashMap);
+		//eventsDurations.clear();
+		//eventsDurations.putAll(sortedHashMap);
 
 		StringBuilder s = new StringBuilder();
 		int idx = 0;
+		if (!forInGame) {
+			s.append("========================").append(newLine);
+			s.append("===     Events       ===").append(newLine);
+			s.append("========================").append(newLine);
+		}
 		for (Map.Entry<String, Long> entry : eventsDurations.entrySet()) {
-			if (forInGame && idx++ >= 16) // Only display first 17 elements of the hashmap
+			// Only display first 17 elements of the hashmap
+			if (forInGame && idx++ >= 16) {
 				break;
+			}
 			s.append(entry.getKey()).append(" : ");
 			s.append(entry.getValue()).append("ms").append(" : ");
 			s.append(eventsCounts.get(entry.getKey())).append(newLine);
 		}
 
-		String returnString = (
+		if (!forInGame) {
+			s.append("========================").append(newLine);
+			s.append("=== Incoming Packets ===").append(newLine);
+			s.append("========================").append(newLine);
+			for (Map.Entry<Integer, Integer> entry : getServer().getIncomingCountPerPacketOpcode().entrySet()) {
+				final int incomingPacketId = entry.getKey();
+				final int incomingCount = entry.getValue();
+				final long incomingTime = getServer().getIncomingTimePerPacketOpcode().get(incomingPacketId);
+				s.append("Packet ID: ").append(incomingPacketId).append(" : ");
+				s.append(incomingTime).append("ms").append(" : ");
+				s.append(incomingCount).append(newLine);
+			}
+		}
+
+		final String returnString = (
 			"Tick: " + getServer().getConfig().GAME_TICK + "ms, Server: " + getServer().getLastTickDuration() + "ms " + getServer().getLastIncomingPacketsDuration() + "ms " + getServer().getLastEventsDuration() + "ms " + getServer().getLastGameStateDuration() + "ms " + getServer().getLastOutgoingPacketsDuration() + "ms" + newLine +
 				"Game Updater: " + getServer().getGameUpdater().getLastProcessPlayersDuration() + "ms " + getServer().getGameUpdater().getLastProcessNpcsDuration() + "ms " + getServer().getGameUpdater().getLastProcessMessageQueuesDuration() + "ms " + getServer().getGameUpdater().getLastUpdateClientsDuration() + "ms " + getServer().getGameUpdater().getLastDoCleanupDuration() + "ms " + getServer().getGameUpdater().getLastExecuteWalkToActionsDuration() + "ms " + newLine +
 				"Events: " + countAllEvents + ", NPCs: " + getServer().getWorld().getNpcs().size() + ", Players: " + getServer().getWorld().getPlayers().size() + ", Shops: " + getServer().getWorld().getShops().size() + newLine +
@@ -160,8 +181,9 @@ public class GameEventHandler {
 				s.toString()
 		);
 
-		if(!forInGame)
+		if (!forInGame) {
 			LOGGER.info(returnString);
+		}
 
 		return returnString.substring(0, Math.min(returnString.length(), 1999)); // Limit to 2000 characters for Discord.
 	}

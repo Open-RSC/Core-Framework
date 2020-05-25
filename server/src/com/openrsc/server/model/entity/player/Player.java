@@ -1919,16 +1919,24 @@ public final class Player extends Mob {
 		synchronized (incomingPackets) {
 			Packet packet = incomingPackets.poll();
 			while (packet != null) {
-				activePackets.remove(activePackets.indexOf(packet.getID()));
-				final PacketHandler ph = PacketHandlerLookup.get(packet.getID());
-				if (ph != null && packet.getBuffer().readableBytes() >= 0) {
-					try {
-						ph.handlePacket(packet, this);
-					} catch (final Exception e) {
-						LOGGER.catching(e);
-						unregister(false, "Malformed packet!");
+				// Final copied variable needed to pass into lambda
+				final Packet curPacket = packet;
+				final long packetTime = getWorld().getServer().bench(
+					() -> {
+						activePackets.remove(activePackets.indexOf(curPacket.getID()));
+						final PacketHandler ph = PacketHandlerLookup.get(curPacket.getID());
+						if (ph != null && curPacket.getBuffer().readableBytes() >= 0) {
+							try {
+								ph.handlePacket(curPacket, this);
+							} catch (final Exception e) {
+								LOGGER.catching(e);
+								unregister(false, "Malformed packet!");
+							}
+						}
 					}
-				}
+				);
+				getWorld().getServer().addIncomingPacketDuration(curPacket.getID(), packetTime);
+				getWorld().getServer().incrementIncomingPacketCount(curPacket.getID());
 
 				packet = incomingPackets.poll();
 			};
@@ -1949,13 +1957,18 @@ public final class Player extends Mob {
 		synchronized (outgoingPackets) {
 			try {
 				for (final Packet outgoing : outgoingPackets) {
-					channel.writeAndFlush(outgoing);
+					final long packetTime = getWorld().getServer().bench(
+						() -> {
+							channel.writeAndFlush(outgoing);
+						}
+					);
+					getWorld().getServer().addOutgoingPacketDuration(outgoing.getID(), packetTime);
+					getWorld().getServer().incrementOutgoingPacketCount(outgoing.getID());
 				}
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				LOGGER.catching(e);
 			}
-			// channel.flush();
-
+			//channel.flush();
 			outgoingPackets.clear();
 		}
 	}

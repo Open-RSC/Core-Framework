@@ -33,6 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -79,6 +80,10 @@ public class Server implements Runnable {
 	private long lastTickDuration = 0;
 	private long timeLate = 0;
 	private long lastTickTimestamp = 0;
+	private final HashMap<Integer, Long> incomingTimePerPacketOpcode = new HashMap<>();
+	private final HashMap<Integer, Integer> incomingCountPerPacketOpcode = new HashMap<>();
+	private final HashMap<Integer, Long> outgoingTimePerPacketOpcode = new HashMap<>();
+	private final HashMap<Integer, Integer> outgoingCountPerPacketOpcode = new HashMap<>();
 
 	/*Used for pathfinding view debugger
 	JPanel2 panel = new JPanel2();
@@ -95,7 +100,7 @@ public class Server implements Runnable {
 				"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
 			LOGGER = LogManager.getLogger();
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			throw new ExceptionInInitializerError(t);
 		}
 	}
@@ -123,14 +128,14 @@ public class Server implements Runnable {
 
 			try {
 				startServer("default.conf");
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				LOGGER.catching(t);
 			}
 		} else {
 			for (int i = 0; i < args.length; i++) {
 				try {
 					startServer(args[i]);
-				} catch (Throwable t) {
+				} catch (final Throwable t) {
 					LOGGER.catching(t);
 				}
 			}
@@ -248,7 +253,7 @@ public class Server implements Runnable {
 
 			initialized = true;
 
-		} catch (Throwable t) {
+		} catch (final Throwable t) {
 			LOGGER.catching(t);
 			System.exit(1);
 		}
@@ -268,8 +273,9 @@ public class Server implements Runnable {
 			boolean wantDiscordBot = getConfig().WANT_DISCORD_BOT;
 			boolean wantDiscordAuctionUpdates = getConfig().WANT_DISCORD_AUCTION_UPDATES;
 			boolean wantDiscordMonitoringUpdates = getConfig().WANT_DISCORD_MONITORING_UPDATES;
-			if (wantDiscordBot || wantDiscordAuctionUpdates || wantDiscordMonitoringUpdates)
+			if (wantDiscordBot || wantDiscordAuctionUpdates || wantDiscordMonitoringUpdates) {
 				discordService.start();
+			}
 			gameLogger.start();
 		}
 	}
@@ -297,11 +303,10 @@ public class Server implements Runnable {
 	private void unbind() {
 		try {
 			serverChannel.channel().disconnect();
-		} catch (Exception exception) {
-			LOGGER.catching(exception);
+		} catch (final Exception e) {
+			LOGGER.catching(e);
 		}
 	}
-
 
 	public static long bench(final Runnable r) {
 		long start = System.currentTimeMillis();
@@ -340,6 +345,12 @@ public class Server implements Runnable {
 					// Set us to be in the next tick.
 					this.lastTickTimestamp += getConfig().GAME_TICK;
 
+					// Clear out the outgoing and incoming packet processing time frames
+					incomingTimePerPacketOpcode.clear();
+					incomingCountPerPacketOpcode.clear();
+					outgoingTimePerPacketOpcode.clear();
+					outgoingCountPerPacketOpcode.clear();
+
 					LOGGER.info("Tick " + currentTick + " processed.");
 				} else {
 					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
@@ -354,7 +365,7 @@ public class Server implements Runnable {
 						getGameUpdater().executeWalkToActions();
 					}
 				}
-			} catch (Throwable t) {
+			} catch (final Throwable t) {
 				LOGGER.catching(t);
 			}
 		}
@@ -369,7 +380,7 @@ public class Server implements Runnable {
 		final boolean isServerLate = ticksLate >= 1;
 
 		if (isLastTickLate) {
-			// Last tick processing took too long.
+			// Current tick processing took too long.
 			final String message = "Tick " + currentTick + " is late: " +
 				getLastTickDuration() + "ms " +
 				getLastIncomingPacketsDuration() + "ms " +
@@ -377,17 +388,18 @@ public class Server implements Runnable {
 				getLastGameStateDuration() + "ms " +
 				getLastOutgoingPacketsDuration() + "ms";
 
-			sendMonitoringWarning(message);
-		} else if (isServerLate) {
+			sendMonitoringWarning(message, true);
+		}
+		if (isServerLate) {
 			// Server fell behind, skip ticks
 			skipTicks(ticksLate);
 			final String ticksSkipped = ticksLate>1 ? "ticks (" + (currentTick+1) + " - " + (currentTick+ticksLate) + ")" : "tick (" + (currentTick+ticksLate) + ")";
 			final String message = "Tick " + currentTick + " " + getTimeLate() + "ms behind. Skipping " + ticksLate + " " + ticksSkipped;
-			sendMonitoringWarning(message);
+			sendMonitoringWarning(message, false);
 		}
 	}
 
-	private void sendMonitoringWarning(final String message) {
+	private void sendMonitoringWarning(final String message, final boolean showEventData) {
 		// Warn logged in developers
 		for (Player p : getWorld().getPlayers()) {
 			if (!p.isDev()) {
@@ -398,10 +410,10 @@ public class Server implements Runnable {
 		}
 
 		LOGGER.warn(message);
-		getWorld().getServer().getDiscordService().monitoringSendServerBehind(message);
+		getWorld().getServer().getDiscordService().monitoringSendServerBehind(message, showEventData);
 	}
 
-	public boolean shutdownForUpdate(int seconds) {
+	public boolean shutdownForUpdate(final int seconds) {
 		if (updateEvent != null) {
 			return false;
 		}
@@ -440,7 +452,7 @@ public class Server implements Runnable {
 		getGameEventHandler().add(up);
 	}
 
-	public boolean restart(int seconds) {
+	public boolean restart(final int seconds) {
 		if (updateEvent != null) {
 			return false;
 		}
@@ -564,6 +576,50 @@ public class Server implements Runnable {
 
 	public AchievementSystem getAchievementSystem() {
 		return achievementSystem;
+	}
+
+	public HashMap<Integer, Long> getIncomingTimePerPacketOpcode() {
+		return incomingTimePerPacketOpcode;
+	}
+
+	public HashMap<Integer, Integer> getIncomingCountPerPacketOpcode() {
+		return incomingCountPerPacketOpcode;
+	}
+
+	public HashMap<Integer, Long> getOutgoingTimePerPacketOpcode() {
+		return outgoingTimePerPacketOpcode;
+	}
+
+	public HashMap<Integer, Integer> getOutgoingCountPerPacketOpcode() {
+		return outgoingCountPerPacketOpcode;
+	}
+
+	public void addIncomingPacketDuration(final int packetOpcode, final long additionalTime) {
+		if (!incomingTimePerPacketOpcode.containsKey(packetOpcode)) {
+			incomingTimePerPacketOpcode.put(packetOpcode, 0L);
+		}
+		incomingTimePerPacketOpcode.put(packetOpcode, incomingTimePerPacketOpcode.get(packetOpcode) + additionalTime);
+	}
+
+	public void incrementIncomingPacketCount(final int packetOpcode) {
+		if (!incomingCountPerPacketOpcode.containsKey(packetOpcode)) {
+			incomingCountPerPacketOpcode.put(packetOpcode, 0);
+		}
+		incomingCountPerPacketOpcode.put(packetOpcode, incomingCountPerPacketOpcode.get(packetOpcode) + 1);
+	}
+
+	public void addOutgoingPacketDuration(final int packetOpcode, final long additionalTime) {
+		if (!outgoingTimePerPacketOpcode.containsKey(packetOpcode)) {
+			outgoingTimePerPacketOpcode.put(packetOpcode, 0L);
+		}
+		outgoingTimePerPacketOpcode.put(packetOpcode, outgoingTimePerPacketOpcode.get(packetOpcode) + additionalTime);
+	}
+
+	public void incrementOutgoingPacketCount(final int packetOpcode) {
+		if (!outgoingCountPerPacketOpcode.containsKey(packetOpcode)) {
+			outgoingCountPerPacketOpcode.put(packetOpcode, 0);
+		}
+		outgoingCountPerPacketOpcode.put(packetOpcode, outgoingCountPerPacketOpcode.get(packetOpcode) + 1);
 	}
 
 	class JPanel2 extends JPanel {

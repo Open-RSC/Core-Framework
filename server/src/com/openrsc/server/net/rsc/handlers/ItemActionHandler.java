@@ -16,7 +16,7 @@ public class ItemActionHandler implements PacketHandler {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
-		int idx = (int) packet.readShort();
+		int idx = packet.readShort();
 		int amount = packet.readInt();
 		int commandIndex;
 
@@ -36,7 +36,7 @@ public class ItemActionHandler implements PacketHandler {
 
 		//User wants to use the item from equipment tab
 		if (idx == -1) {
-			idx = (int) packet.readShort();
+			idx = packet.readShort();
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(idx);
 			if (slot != -1) {
 				tempitem = player.getCarriedItems().getEquipment().get(slot);
@@ -64,12 +64,14 @@ public class ItemActionHandler implements PacketHandler {
 			return;
 		}
 
-		if (player.isBusy()) return;
+		if (player.isBusy()) {
+			return;
+		}
 
 		player.resetAll(false, false);
 
 		// We want to keep walking, but not perform the action when we get there.
-		WalkToAction walkToAction = player.getWalkToAction();
+		final WalkToAction walkToAction = player.getWalkToAction();
 		if (walkToAction != null) {
 			walkToAction.finishExecution();
 		}

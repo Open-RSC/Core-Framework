@@ -57,7 +57,7 @@ public class DiscordService implements Runnable{
 	private JDA jda;
 	private GitLabApi gitLabApi;
 
-	public DiscordService(Server server) {
+	public DiscordService(final Server server) {
 		this.server = server;
 
 		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : DiscordServiceThread").build());
@@ -66,9 +66,9 @@ public class DiscordService implements Runnable{
 			if (tokenFile.exists()) {
 				try
 				{
-					byte[] encoded = Files.readAllBytes(Paths.get(tokenFile.getPath()));
+					final byte[] encoded = Files.readAllBytes(Paths.get(tokenFile.getPath()));
 					startPlayerBot(new String(encoded, StandardCharsets.UTF_8));
-				} catch (IOException a) {
+				} catch (final IOException a) {
 					a.printStackTrace();
 				}
 			} else {
@@ -81,7 +81,7 @@ public class DiscordService implements Runnable{
 				{
 					byte[] encoded = Files.readAllBytes(Paths.get(tokenFile.getPath()));
 					//gitLabApi = new GitLabApi("http://gitlab.openrsc.com", new String(encoded, StandardCharsets.UTF_8));
-				} catch (IOException a) {
+				} catch (final IOException a) {
 					a.printStackTrace();
 				}
 			} else {
@@ -90,26 +90,26 @@ public class DiscordService implements Runnable{
 		}
 	}
 
-	private void startPlayerBot(String token) {
+	private void startPlayerBot(final String token) {
 		this.builder = new JDABuilder(AccountType.BOT);
 		this.builder.setEventManager(new AnnotatedEventManager());
 		this.builder.addEventListeners(this);
 		this.builder.setToken(token);
 		try {
 			this.jda = this.builder.build();
-		} catch (LoginException a) {
+		} catch (final LoginException a) {
 			a.printStackTrace();
 		}
 
 	}
 
 	@SubscribeEvent
-	private void handleIncomingMessage(MessageReceivedEvent event)
+	private void handleIncomingMessage(final MessageReceivedEvent event)
 	{
-		MessageChannel channel = event.getChannel();
-		Message message = event.getMessage();
+		final MessageChannel channel = event.getChannel();
+		final Message message = event.getMessage();
 		if (!event.getAuthor().isBot()) {
-			String[] args = message.getContentRaw().split(" ");
+			final String[] args = message.getContentRaw().split(" ");
 			String reply = "";
 			if (event.getChannelType() == ChannelType.PRIVATE) {
 				if (message.getContentRaw().startsWith("!help"))
@@ -118,8 +118,7 @@ public class DiscordService implements Runnable{
 				} else if (message.getContentRaw().startsWith("!commands")) {
 					reply = "!auctions\n!stats\n!watch\n!pair\n!help";
 				} else if (message.getContentRaw().startsWith("!pair")) {
-					if (args.length != 2)
-					{
+					if (args.length != 2) {
 						reply = "Usage: !pair TOKEN";
 					} else {
 						try {
@@ -148,8 +147,8 @@ public class DiscordService implements Runnable{
 						}
 					}
 				} else if (message.getContentRaw().startsWith("!auctions")) {
-					ArrayList<MarketItem> auctionList = (ArrayList<MarketItem>)this.server.getWorld().getMarket().getAuctionItems().clone();
-					Iterator<MarketItem> e = auctionList.iterator();
+					final ArrayList<MarketItem> auctionList = (ArrayList<MarketItem>)this.server.getWorld().getMarket().getAuctionItems().clone();
+					final Iterator<MarketItem> e = auctionList.iterator();
 					if (e.hasNext()) {
 							int dbID = 0;
 							if ((dbID = discordToDBId(message.getAuthor().getIdLong())) != 0) {
@@ -201,8 +200,8 @@ public class DiscordService implements Runnable{
 					}
 				} else if (message.getContentRaw().startsWith("!bug ")) {
 					if (gitLabApi != null) {
-						int hasTitle = message.getContentRaw().indexOf(" -t ");
-						int hasDesc = message.getContentRaw().indexOf(" -d ");
+						final int hasTitle = message.getContentRaw().indexOf(" -t ");
+						final int hasDesc = message.getContentRaw().indexOf(" -d ");
 						String title, desc;
 						if (hasTitle != -1 && hasDesc != -1 &&
 							hasTitle < hasDesc && hasDesc-hasTitle > 3) {
@@ -221,7 +220,7 @@ public class DiscordService implements Runnable{
 				} else if (message.getContentRaw().startsWith("!watch")) {
 					if (args.length > 1) {
 						try {
-							String dbWatchlist = getServer().getDatabase().getWatchlist(message.getAuthor().getIdLong());
+							final String dbWatchlist = getServer().getDatabase().getWatchlist(message.getAuthor().getIdLong());
 							if (args[1].equalsIgnoreCase("list")) {
 								if (dbWatchlist != null) {
 									String[] watchlist = dbWatchlist.split(",");
@@ -323,32 +322,33 @@ public class DiscordService implements Runnable{
 				}
 			} else if (message.getChannel().getIdLong() == this.server.getConfig().CROSS_CHAT_CHANNEL
 						&& !message.getContentRaw().isEmpty()) {
-				String strMessage = EmojiParser.parseToAliases(message.getContentRaw());
+				final String strMessage = EmojiParser.parseToAliases(message.getContentRaw());
 
 				for (Player p : this.server.getWorld().getPlayers()) {
 					ActionSender.sendMessage(p, null, 0, MessageType.GLOBAL_CHAT, "@whi@[@gr2@D>G@whi@] @or1@" + message.getAuthor().getName() + "@yel@: " + strMessage, 0);
 				}
 			} else {
-				if (message.getContentRaw().startsWith("!help"))
-				{
+				if (message.getContentRaw().startsWith("!help")) {
 					reply = "Please use !help in a DM to me for more information.";
 				}
 			}
 
-			if (!reply.isEmpty())
+			if (!reply.isEmpty()) {
 				channel.sendMessage(reply).queue();
+			}
 		}
 	}
 
-	public void sendMessage(String message) {
-		TextChannel textChannel = jda.getTextChannelById(this.server.getConfig().CROSS_CHAT_CHANNEL);
-		if (textChannel != null)
+	public void sendMessage(final String message) {
+		final TextChannel textChannel = jda.getTextChannelById(this.server.getConfig().CROSS_CHAT_CHANNEL);
+		if (textChannel != null) {
 			textChannel.sendMessage(message).queue();
+		}
 	}
 
-	public void sendPM(long channelID, String message) {
-		PrivateChannel textChannel = jda.getPrivateChannelById(channelID);
-		User user = jda.getUserById(channelID);
+	public void sendPM(final long channelID, final String message) {
+		final PrivateChannel textChannel = jda.getPrivateChannelById(channelID);
+		final User user = jda.getUserById(channelID);
 		if (user != null)
 			user.openPrivateChannel().queue((channel) -> {
 				channel.sendMessage(message).queue();
@@ -359,12 +359,12 @@ public class DiscordService implements Runnable{
 		return server;
 	}
 
-	public void auctionAdd(MarketItem addItem) {
-		String pluralHandlerMessage = addItem.getAmount() > 1
+	public void auctionAdd(final MarketItem addItem) {
+		final String pluralHandlerMessage = addItem.getAmount() > 1
 				? "%d x %s, priced at %d coins each, auctioned by %s."
 				: "%d x %s, priced at %d coins, auctioned by %s.";
 
-		String addMessage = String.format(pluralHandlerMessage,
+		final String addMessage = String.format(pluralHandlerMessage,
 				addItem.getAmount(),
 				getServer().getEntityHandler().getItemDef(addItem.getCatalogID()).getName(),
 				addItem.getPrice() / addItem.getAmount(),
@@ -376,29 +376,29 @@ public class DiscordService implements Runnable{
 
 		//TODO: Add a delay between auction post and watchlist notification.
 		try {
-			DiscordWatchlist[] watchlists = getServer().getDatabase().getWaitlists();
+			final DiscordWatchlist[] watchlists = getServer().getDatabase().getWaitlists();
 			for (DiscordWatchlist discordWatchlist : watchlists) {
-				String watchlist = discordWatchlist.list;
+				final String watchlist = discordWatchlist.list;
 				if (watchlist.contains(String.valueOf(addItem.getCatalogID()))) {
 					try {
-						long discordID = discordWatchlist.discordId;
-						ItemDefinition itemDef = server.getEntityHandler().getItemDef(addItem.getCatalogID());
+						final long discordID = discordWatchlist.discordId;
+						final ItemDefinition itemDef = server.getEntityHandler().getItemDef(addItem.getCatalogID());
 						if (itemDef != null) {
 							String message = "[" + server.getConfig().SERVER_NAME + " watchlist] " + itemDef.getName() + " ( " + addItem.getAmountLeft() + " @ " + addItem.getPrice() + "gp)";
 							sendPM(discordID, message);
 						}
-					} catch (NumberFormatException a) {
+					} catch (final NumberFormatException a) {
 						a.printStackTrace();
 					}
 				}
 			}
-		} catch (GameDatabaseException a) {
+		} catch (final GameDatabaseException a) {
 			a.printStackTrace();
 		}
 	}
 
-	public void auctionBuy(MarketItem buyItem) {
-		String buyMessage = String.format("%s purchased from %s.  %d left in auction.",
+	public void auctionBuy(final MarketItem buyItem) {
+		final String buyMessage = String.format("%s purchased from %s.  %d left in auction.",
 			getServer().getEntityHandler().getItemDef(buyItem.getCatalogID()).getName(),
 				buyItem.getSellerName(),
 				buyItem.getAmountLeft()
@@ -407,8 +407,8 @@ public class DiscordService implements Runnable{
 		auctionSendToDiscord(buyMessage);
 	}
 
-	public void auctionCancel(MarketItem cancelItem) {
-		String cancelMessage = String.format("%d x %s cancelled from auction by %s.",
+	public void auctionCancel(final MarketItem cancelItem) {
+		final String cancelMessage = String.format("%d x %s cancelled from auction by %s.",
 				cancelItem.getAmount(),
 				getServer().getEntityHandler().getItemDef(cancelItem.getCatalogID()).getName(),
 				cancelItem.getSellerName()
@@ -417,8 +417,8 @@ public class DiscordService implements Runnable{
 		auctionSendToDiscord(cancelMessage);
 	}
 
-	public void auctionModDelete(MarketItem deleteItem) {
-		String cancelMessage = String.format("%d x %s, auctioned by %s, has been deleted by moderator.",
+	public void auctionModDelete(final MarketItem deleteItem) {
+		final String cancelMessage = String.format("%d x %s, auctioned by %s, has been deleted by moderator.",
 				deleteItem.getAmount(),
 				getServer().getEntityHandler().getItemDef(deleteItem.getCatalogID()).getName(),
 				deleteItem.getSellerName()
@@ -427,21 +427,21 @@ public class DiscordService implements Runnable{
 		auctionSendToDiscord(cancelMessage);
 	}
 
-	public void monitoringSendServerBehind(String message) {
+	public void monitoringSendServerBehind(final String message, final boolean showEventData) {
 		try {
-			monitoringSendToDiscord(message + "\r\n" + getServer().getGameEventHandler().buildProfilingDebugInformation(false));
-		} catch(Exception e) {
+			monitoringSendToDiscord(message + (showEventData ? "\r\n" + getServer().getGameEventHandler().buildProfilingDebugInformation(false) : ""));
+		} catch(final Exception e) {
 			LOGGER.catching(e);
 		}
 	}
 
-	private void auctionSendToDiscord(String message) {
+	private void auctionSendToDiscord(final String message) {
 		if(getServer().getConfig().WANT_DISCORD_AUCTION_UPDATES) {
 			auctionRequests.add(message);
 		}
 	}
 
-	private void monitoringSendToDiscord(String message) {
+	private void monitoringSendToDiscord(final String message) {
 		final long now = System.currentTimeMillis();
 
 		if(getServer().getConfig().WANT_DISCORD_MONITORING_UPDATES && now >= (monitoringLastUpdate + 3600)) {
@@ -450,21 +450,21 @@ public class DiscordService implements Runnable{
 		}
 	}
 
-	private static void sendToDiscord(String webhookUrl, String message) throws Exception {
-		StringBuilder sb = new StringBuilder();
+	private static void sendToDiscord(final String webhookUrl, final String message) throws Exception {
+		final StringBuilder sb = new StringBuilder();
 		JsonUtils.quoteAsString(message, sb);
 
-		String jsonPostBody = String.format("{\"content\": \"%s\"}", sb);
+		final String jsonPostBody = String.format("{\"content\": \"%s\"}", sb);
 
-		java.net.URL url = new java.net.URL(webhookUrl);
+		final java.net.URL url = new java.net.URL(webhookUrl);
 
-		URLConnection con = url.openConnection();
-		HttpURLConnection http = (HttpURLConnection) con;
+		final URLConnection con = url.openConnection();
+		final HttpURLConnection http = (HttpURLConnection) con;
 		http.setRequestMethod("POST");
 		http.setDoOutput(true);
 
-		byte[] out = jsonPostBody.getBytes(StandardCharsets.UTF_8);
-		int length = out.length;
+		final byte[] out = jsonPostBody.getBytes(StandardCharsets.UTF_8);
+		final int length = out.length;
 
 		http.setFixedLengthStreamingMode(length);
 		http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -474,7 +474,7 @@ public class DiscordService implements Runnable{
 		}
 	}
 
-	public int discordToDBId(long discord) {
+	public int discordToDBId(final long discord) {
 		try {
 			getServer().getDatabase().playerIdFromDiscordId(discord);
 		} catch (GameDatabaseException a) {
@@ -483,7 +483,7 @@ public class DiscordService implements Runnable{
 		return 0;
 	}
 
-	public String dbIdToUsername(int dbId) {
+	public String dbIdToUsername(final int dbId) {
 		try {
 			return getServer().getDatabase().usernameFromId(dbId);
 		} catch (GameDatabaseException a) {
@@ -505,7 +505,7 @@ public class DiscordService implements Runnable{
 				while ((message = monitoringRequests.poll()) != null) {
 					sendToDiscord(getServer().getConfig().DISCORD_MONITORING_WEBHOOK_URL, message);
 				}
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				LOGGER.catching(e);
 			}
 		}
