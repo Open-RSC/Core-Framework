@@ -254,6 +254,8 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract int queryPlayerIdFromDiscordId(final long discordId) throws GameDatabaseException;
 
+	protected abstract int queryMaxItemID() throws GameDatabaseException;
+
 	protected abstract int addItemToPlayer(Item item);
 
 	protected abstract void removeItemFromPlayer(Item item);
@@ -490,7 +492,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	public void itemPurge(final Item item) throws GameDatabaseException {
-		queryItemPurge(item);
+		//queryItemPurge(item);
 	}
 
 	public void itemUpdate(final Item item) throws GameDatabaseException {
@@ -498,7 +500,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	public int inventoryAddToPlayer(final Player player, final Item item, int slot) {
-		return addItemToPlayer(item);
+		player.getWorld().getServer().incrementMaxItemID();
+		System.out.println(player.getWorld().getServer().getMaxItemID());
+		return player.getWorld().getServer().getMaxItemID();
+		//return addItemToPlayer(item);
 	}
 
 	public void inventoryRemoveFromPlayer(final Player player, final Item item) {
@@ -506,7 +511,9 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	public int equipmentAddToPlayer(final Player player, final Item item) {
-		return addItemToPlayer(item);
+		player.getWorld().getServer().incrementMaxItemID();
+		return player.getWorld().getServer().getMaxItemID();
+		//return addItemToPlayer(item);
 	}
 
 	public void equipmentRemoveFromPlayer(final Player player, final Item item) {
@@ -514,7 +521,9 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	public int bankAddToPlayer(final Player player, final Item item, int slot) {
-		return addItemToPlayer(item);
+		player.getWorld().getServer().incrementMaxItemID();
+		return player.getWorld().getServer().getMaxItemID();
+		//return addItemToPlayer(item);
 	}
 
 	public void bankRemoveFromPlayer(final Player player, final Item item) {
@@ -999,6 +1008,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 			inventory[i].item = player.getCarriedItems().getInventory().get(i);
 			inventory[i].wielded = player.getCarriedItems().getInventory().get(i).isWielded();
 			inventory[i].slot = i;
+			inventory[i].amount = player.getCarriedItems().getInventory().get(i).getAmount();
+			inventory[i].noted = player.getCarriedItems().getInventory().get(i).getNoted();
+			inventory[i].catalogID = player.getCarriedItems().getInventory().get(i).getCatalogId();
+			inventory[i].durability = 100;
 		}
 
 		querySavePlayerInventory(player.getDatabaseID(), inventory);
@@ -1207,6 +1220,16 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		}
 
 		querySavePlayerExperience(player.getDatabaseID(), skills);
+	}
+
+	public int getMaxItemID() {
+		try {
+			return queryMaxItemID();
+		}
+		catch (Exception e) {
+			LOGGER.error(e);
+		}
+		return 0;
 	}
 
 	protected void queryInventoryAdd(final Player player, final Item item, int slot) throws GameDatabaseException {

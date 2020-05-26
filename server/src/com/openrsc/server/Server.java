@@ -85,6 +85,8 @@ public class Server implements Runnable {
 	private final HashMap<Integer, Long> outgoingTimePerPacketOpcode = new HashMap<>();
 	private final HashMap<Integer, Integer> outgoingCountPerPacketOpcode = new HashMap<>();
 
+	private int maxItemId;
+
 	/*Used for pathfinding view debugger
 	JPanel2 panel = new JPanel2();
 	JFrame frame = new JFrame();
@@ -174,6 +176,8 @@ public class Server implements Runnable {
 		entityHandler = new EntityHandler(this);
 		achievementSystem = new AchievementSystem(this);
 		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName() + " : GameThread").build());
+
+		maxItemId = database.getMaxItemID();
 	}
 
 	private void initialize() {
@@ -719,5 +723,13 @@ public class Server implements Runnable {
 				}
 			}
 		}
+	}
+
+	public synchronized int getMaxItemID() {
+		return maxItemId;
+	}
+
+	public synchronized void incrementMaxItemID() {
+		maxItemId++;
 	}
 }

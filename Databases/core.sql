@@ -35910,7 +35910,7 @@ CREATE TABLE IF NOT EXISTS `grounditems`
 DROP TABLE IF EXISTS `itemstatuses`;
 CREATE TABLE IF NOT EXISTS `itemstatuses`
 (
-    `itemID`     int(10) UNSIGNED    NOT NULL AUTO_INCREMENT,
+    `itemID`     int(10) UNSIGNED    NOT NULL,
     `catalogID`  int(10) UNSIGNED    NOT NULL,
     `amount`     int(10) UNSIGNED    NOT NULL DEFAULT 1,
     `noted`      tinyint(1) UNSIGNED NOT NULL DEFAULT 0,

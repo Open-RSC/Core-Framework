@@ -1746,16 +1746,27 @@ public class MySqlGameDatabase extends GameDatabase {
 		try {
 			updateLongs(getQueries().save_DeleteInv, playerId);
 			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_InventoryAdd);
+			PreparedStatement statement2 = getConnection().prepareStatement(getQueries().save_ItemCreate);
 			for (PlayerInventory item : inventory) {
 				statement.setInt(1, playerId);
 				statement.setInt(2, item.itemId);
 				statement.setInt(3, item.slot);
 				statement.addBatch();
+
+				statement2.setInt(1, item.itemId);
+				statement2.setInt(2, item.catalogID);
+				statement2.setInt(3, item.amount);
+				statement2.setInt(4, item.noted ? 1 : 0);
+				statement2.setInt(5, item.wielded ? 1 : 0);
+				statement2.setInt(6, item.durability);
+				statement2.addBatch();
 			}
 			try {
 				statement.executeBatch();
+				statement2.executeBatch();
 			} finally {
 				statement.close();
+				statement2.close();
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
@@ -1768,15 +1779,26 @@ public class MySqlGameDatabase extends GameDatabase {
 		try {
 			updateLongs(getQueries().save_DeleteEquip, playerId);
 			PreparedStatement statement = getConnection().prepareStatement(getQueries().save_EquipmentAdd);
+			PreparedStatement statement2 = getConnection().prepareStatement(getQueries().save_ItemCreate);
 			for (PlayerEquipped item : equipment) {
 				statement.setInt(1, playerId);
 				statement.setInt(2, item.itemId);
 				statement.addBatch();
+
+				statement2.setInt(1, item.itemId);
+				statement2.setInt(2, item.itemStatus.getCatalogId());
+				statement2.setInt(3, item.itemStatus.getAmount());
+				statement2.setInt(4, item.itemStatus.getNoted() ? 1 : 0);
+				statement2.setInt(5, 1);
+				statement2.setInt(6, item.itemStatus.getDurability());
+				statement2.addBatch();
 			}
 			try {
 				statement.executeBatch();
+				statement2.executeBatch();
 			} finally {
 				statement.close();
+				statement2.close();
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
@@ -1790,17 +1812,28 @@ public class MySqlGameDatabase extends GameDatabase {
 			updateLongs(getQueries().save_DeleteBank, playerId);
 			if (bank.length > 0) {
 				PreparedStatement statement = getConnection().prepareStatement(getQueries().save_BankAdd);
+				PreparedStatement statement2 = getConnection().prepareStatement(getQueries().save_ItemCreate);
 				int slot = 0;
 				for (PlayerBank item : bank) {
 					statement.setInt(1, playerId);
 					statement.setInt(2, item.itemId);
 					statement.setInt(3, slot++);
 					statement.addBatch();
+
+					statement2.setInt(1, item.itemId);
+					statement2.setInt(2, item.itemStatus.getCatalogId());
+					statement2.setInt(3, item.itemStatus.getAmount());
+					statement2.setInt(4, item.itemStatus.getNoted() ? 1 : 0);
+					statement2.setInt(5, 0);
+					statement2.setInt(6, item.itemStatus.getDurability());
+					statement2.addBatch();
 				}
 				try {
 					statement.executeBatch();
+					statement2.executeBatch();
 				} finally {
 					statement.close();
+					statement2.close();
 				}
 			}
 		} catch (final SQLException ex) {
@@ -2022,6 +2055,20 @@ public class MySqlGameDatabase extends GameDatabase {
 			} finally {
 				statement.close();
 			}
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected int queryMaxItemID() throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().max_itemStatus, 1);
+			ResultSet result = statement.executeQuery();
+			int itemID = 0;
+			if (result.next()) itemID = result.getInt(1);
+			return itemID;
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());

@@ -7,4 +7,8 @@ public class PlayerInventory {
 	public boolean wielded;
 	public int slot;
 	public Item item;
+	public int amount;
+	public boolean noted;
+	public int catalogID;
+	public int durability;
 }
