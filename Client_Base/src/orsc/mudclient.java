@@ -14594,9 +14594,6 @@ public final class mudclient implements Runnable {
 				} else {
 					String ip = ClientPort.loadIP(); // loads based on Cache/ip.txt
 					int port = ClientPort.loadPort(); // loads based on Cache/port.txt
-					// Set the config properties so that they can be accessed later.
-					Config.SERVER_IP = ip;
-					Config.SERVER_PORT = port;
 					System.out.println(" ");
 					System.out.println(" ");
 					System.out.println("Fetching server configs from " + ip + ":" + port);
