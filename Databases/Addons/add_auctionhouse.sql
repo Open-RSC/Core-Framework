@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `openrsc_expired_auctions`;
-CREATE TABLE IF NOT EXISTS `openrsc_expired_auctions`
+DROP TABLE IF EXISTS `expired_auctions`;
+CREATE TABLE IF NOT EXISTS `expired_auctions`
 (
     `playerID`    int(10) UNSIGNED NOT NULL,
     `claim_id`    int(11)          NOT NULL AUTO_INCREMENT,
@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS `openrsc_expired_auctions`
 ) ENGINE = MyISAM
   DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS `openrsc_auctions`;
-CREATE TABLE IF NOT EXISTS `openrsc_auctions`
+DROP TABLE IF EXISTS `auctions`;
+CREATE TABLE IF NOT EXISTS `auctions`
 (
     `auctionID`       bigint(20)       NOT NULL AUTO_INCREMENT,
     `itemID`          int(11)          NOT NULL,

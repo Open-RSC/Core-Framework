@@ -2593,7 +2593,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			int[] data = new int[getServer().getConstants().getSkills().getSkillsCount()];
 			for (int i = 0; i < data.length; i++) {
-				data[i] = result.getInt("cur_" + getServer().getConstants().getSkills().getSkillName(i));
+				data[i] = result.getInt(getServer().getConstants().getSkills().getSkillName(i));
 			}
 			return data;
 		} finally {
@@ -2610,7 +2610,7 @@ public class MySqlGameDatabase extends GameDatabase {
 		try {
 			if (result.next()) {
 				for (int i = 0; i < data.length; i++) {
-					data[i] = result.getInt("exp_" + getServer().getConstants().getSkills().getSkillName(i));
+					data[i] = result.getInt(getServer().getConstants().getSkills().getSkillName(i));
 				}
 			}
 		} finally {

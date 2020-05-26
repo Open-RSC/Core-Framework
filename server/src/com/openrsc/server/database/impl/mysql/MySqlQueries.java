@@ -42,10 +42,10 @@ public class MySqlQueries {
 		playerCurExp = "SELECT ";
 
 		for (SkillDef skill : getServer().getConstants().getSkills().skills) {
-			updateExperience = updateExperience + "`exp_" + skill.getShortName().toLowerCase() + "`=?, ";
-			updateStats = updateStats + "`cur_" + skill.getShortName().toLowerCase() + "`=?, ";
-			playerExp = playerExp + "`exp_" + skill.getShortName().toLowerCase() + "`, ";
-			playerCurExp = playerCurExp + "`cur_" + skill.getShortName().toLowerCase() + "`, ";
+			updateExperience = updateExperience + "`" + skill.getShortName().toLowerCase() + "`=?, ";
+			updateStats = updateStats + "`" + skill.getShortName().toLowerCase() + "`=?, ";
+			playerExp = playerExp + "`" + skill.getShortName().toLowerCase() + "`, ";
+			playerCurExp = playerCurExp + "`" + skill.getShortName().toLowerCase() + "`, ";
 		}
 
 		updateExperience = updateExperience.substring(0, updateExperience.length() - 2) + " ";

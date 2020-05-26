@@ -259,7 +259,7 @@ public class ServerConfiguration {
 		DB_HOST = tryReadString("db_host").orElse("localhost:3306");
 		DB_USER = tryReadString("db_user").orElse("root");
 		DB_PASS = tryReadString("db_pass").orElse("root");
-		DB_TABLE_PREFIX = tryReadString("db_table_prefix").orElse("openrsc_");
+		DB_TABLE_PREFIX = tryReadString("db_table_prefix").orElse("");
 
 		// Discord settings
 		DISCORD_AUCTION_WEBHOOK_URL = tryReadString("discord_auction_webhook_url").orElse("null");

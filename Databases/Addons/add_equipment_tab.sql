@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `openrsc_equipped`;
-CREATE TABLE IF NOT EXISTS `openrsc_equipped`
+DROP TABLE IF EXISTS `equipped`;
+CREATE TABLE IF NOT EXISTS `equipped`
 (
     `playerID` int(10) UNSIGNED NOT NULL,
     `itemID`   int(10) UNSIGNED NOT NULL

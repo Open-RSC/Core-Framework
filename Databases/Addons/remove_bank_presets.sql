@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS `openrsc_bankpresets`;
+DROP TABLE IF EXISTS `bankpresets`;

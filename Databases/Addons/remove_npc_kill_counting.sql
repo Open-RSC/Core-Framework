@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS `openrsc_npckills`;
+DROP TABLE IF EXISTS `npckills`;

@@ -1,4 +1,4 @@
-REPLACE INTO `openrsc_npcdef` (`id`, `name`, `description`, `command`, `command2`, `attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, `sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, `sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, `camera2`, `walkModel`, `combatModel`, `combatSprite`, `canEdit`, `roundMode`) VALUES
+REPLACE INTO `npcdef` (`id`, `name`, `description`, `command`, `command2`, `attack`, `strength`, `hits`, `defense`, `ranged`, `combatlvl`, `isMembers`, `attackable`, `aggressive`, `respawnTime`, `sprites1`, `sprites2`, `sprites3`, `sprites4`, `sprites5`, `sprites6`, `sprites7`, `sprites8`, `sprites9`, `sprites10`, `sprites11`, `sprites12`, `hairColour`, `topColour`, `bottomColour`, `skinColour`, `camera1`, `camera2`, `walkModel`, `combatModel`, `combatSprite`, `canEdit`, `roundMode`) VALUES
        (794, 'Auctioneer', 'He gives access to auction house', 'Auction', '', 15, 16, 12, 18, NULL, 15, 0, 0, 0, 30, 0, 1, 2, -1, -1, -1, -1, -1, 46, -1, -1, -1, 16761440, 2, 8409120, 13415270, 145, 230, 6, 6, 5, 0, 0),
        (795, 'Auction Clerk', 'There to help me make my auctions', 'Auction', 'Teleport', 15, 16, 12, 18, NULL, 15, 0, 0, 0, 30, 3, 4, 2, -1, -1, -1, -1, -1, -1, 11, -1, -1, 11167296, 11141375, 11141375, 14415270, 145, 220, 6, 6, 5, 0, 0),
        (796, 'Subscription Vendor', 'Exchange your subscription token to subscription time', '', '', 15, 16, 12, 18, NULL, 15, 0, 0, 0, 30, 3, 4, 2, -1, -1, 77, -1, -1, -1, -1, -1, -1, 16711680, 143190, 143190, 15523536, 145, 220, 6, 6, 5, 0, 0),
@@ -19,7 +19,7 @@ REPLACE INTO `openrsc_npcdef` (`id`, `name`, `description`, `command`, `command2
        (811, 'Robin Banks', 'A master thief', '', '', 34, 32, 37, 33, NULL, 34, 1, 0, 0, 61, 6, 1, 2, -1, 50, -1, 45, -1, 46, -1, -1, -1, 1, 2, 3, 15523536, 150, 230, 6, 6, 5, 0, -1);
 
 
-REPLACE INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index`) VALUES
+REPLACE INTO `npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_index`) VALUES
         (236, '1', 10, 100, 15011),
         (236, '1', 165, 50, 15012),
         (236, '1', 383, 30, 15013),
@@ -118,7 +118,7 @@ REPLACE INTO `openrsc_npcdrops` (`npcdef_id`, `amount`, `id`, `weight`, `db_inde
         (809, '1', 1363, 0, 16905);
 
 
-REPLACE INTO `openrsc_npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
+REPLACE INTO `npclocs` (`id`, `startX`, `minX`, `maxX`, `startY`, `minY`, `maxY`, `dbid`) VALUES
        (795, 441, 440, 442, 494, 493, 495, 7568),
        (795, 501, 500, 502, 451, 450, 452, 7569),
        (795, 552, 551, 553, 610, 609, 611, 7570),

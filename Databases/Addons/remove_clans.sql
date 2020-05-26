@@ -1,3 +1,3 @@
-DROP TABLE IF EXISTS `openrsc_clan`;
+DROP TABLE IF EXISTS `clan`;
 
-DROP TABLE IF EXISTS `openrsc_clan_players`;
+DROP TABLE IF EXISTS `clan_players`;

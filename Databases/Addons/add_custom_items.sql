@@ -1,4 +1,4 @@
-REPLACE INTO `openrsc_itemdef` (`id`, `name`, `description`, `command`, `isFemaleOnly`, `isMembersOnly`, `isStackable`, `isUntradable`, `isWearable`, `appearanceID`, `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, `armourBonus`, `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `isNoteable`) VALUES
+REPLACE INTO `itemdef` (`id`, `name`, `description`, `command`, `isFemaleOnly`, `isMembersOnly`, `isStackable`, `isUntradable`, `isWearable`, `appearanceID`, `wearableID`, `wearSlot`, `requiredLevel`, `requiredSkillID`, `armourBonus`, `weaponAimBonus`, `weaponPowerBonus`, `magicBonus`, `prayerBonus`, `basePrice`, `isNoteable`) VALUES
 (1290, 'Ironman helm', 'For just a rather very independent scaper.', '', 0, 0, 0, 1, 1, 318, 33, 0, 1, 1, 6, 0, 0, 0, 0, 154, 1),
 (1291, 'Ironman platebody', 'Take it off and what are you?', '', 0, 0, 0, 1, 1, 319, 322, 1, 1, 1, 20, 0, 0, 0, 0, 560, 1),
 (1292, 'Ironman platelegs', 'Take it off and what are you?', '', 0, 0, 0, 1, 1, 320, 644, 2, 1, 1, 10, 0, 0, 0, 0, 280, 1),
@@ -96,24 +96,24 @@ REPLACE INTO `openrsc_itemdef` (`id`, `name`, `description`, `command`, `isFemal
 (1384, 'Crafting cape', 'The cape worn by master craftworkers', 'Teleport', 0, 0, 0, 1, 1, 441, 2048, 11, 99, 12, 6, 0, 0, 0, 0, 99000, 0);
 
 -- Make arrows wieldable.
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=1000, `wearSlot`=12, `requiredLevel`=1, `requiredSkillID`=4 WHERE `id` IN (
+UPDATE `itemdef` SET `isWearable`=1, `wearableID`=1000, `wearSlot`=12, `requiredLevel`=1, `requiredSkillID`=4 WHERE `id` IN (
     11, 574, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 723
 );
 -- Make bolts wieldable
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=1001, `wearSlot`=12, `requiredLevel`=1, `requiredSkillID`=4 WHERE `id` IN (
+UPDATE `itemdef` SET `isWearable`=1, `wearableID`=1001, `wearSlot`=12, `requiredLevel`=1, `requiredSkillID`=4 WHERE `id` IN (
     190,  592, 786
 );
 
 -- Make pickaxes wieldable.
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=0, `weaponPowerBonus`=0 WHERE `id`=156; -- Bronze
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=7, `weaponPowerBonus`=5 WHERE `id`=1258; -- Iron
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=5, `requiredSkillID`=0, `weaponAimBonus`=11, `weaponPowerBonus`=8 WHERE `id`=1259; -- Steel
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=20, `requiredSkillID`=0, `weaponAimBonus`=16, `weaponPowerBonus`=12 WHERE `id`=1260; -- Mithril
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=30, `requiredSkillID`=0, `weaponAimBonus`=23, `weaponPowerBonus`=17 WHERE `id`=1261; -- Adamant
-UPDATE `openrsc_itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=40, `requiredSkillID`=0, `weaponAimBonus`=36, `weaponPowerBonus`=26 WHERE `id`=1262; -- Rune
+UPDATE `itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=0, `weaponPowerBonus`=0 WHERE `id`=156; -- Bronze
+UPDATE `itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=1, `requiredSkillID`=0, `weaponAimBonus`=7, `weaponPowerBonus`=5 WHERE `id`=1258; -- Iron
+UPDATE `itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=5, `requiredSkillID`=0, `weaponAimBonus`=11, `weaponPowerBonus`=8 WHERE `id`=1259; -- Steel
+UPDATE `itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=20, `requiredSkillID`=0, `weaponAimBonus`=16, `weaponPowerBonus`=12 WHERE `id`=1260; -- Mithril
+UPDATE `itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=30, `requiredSkillID`=0, `weaponAimBonus`=23, `weaponPowerBonus`=17 WHERE `id`=1261; -- Adamant
+UPDATE `itemdef` SET `isWearable`=1, `wearableID`=16, `wearSlot`=4, `requiredLevel`=40, `requiredSkillID`=0, `weaponAimBonus`=36, `weaponPowerBonus`=26 WHERE `id`=1262; -- Rune
 
 -- Custom appearance sprites.
-UPDATE `openrsc_itemdef` SET `appearanceID`=(case
+UPDATE `itemdef` SET `appearanceID`=(case
     -- Axes
     when id=87 then 230
     when id=12 then 231
@@ -265,5 +265,5 @@ end) WHERE `id` IN (
 	-- Pickaxes
 	156, 1258, 1259, 1260, 1261, 1262
 );
-REPLACE INTO `openrsc_grounditems` (`id`, `x`, `y`, `amount`, `respawn`, `idx`)
+REPLACE INTO `grounditems` (`id`, `x`, `y`, `amount`, `respawn`, `idx`)
 VALUES (1362, 309, 3429, 1, 95, 1117);

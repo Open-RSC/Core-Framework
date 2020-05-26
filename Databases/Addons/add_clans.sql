@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `openrsc_clan`;
-CREATE TABLE IF NOT EXISTS `openrsc_clan`
+DROP TABLE IF EXISTS `clan`;
+CREATE TABLE IF NOT EXISTS `clan`
 (
     `id`                int(10)               NOT NULL AUTO_INCREMENT,
     `name`              varchar(16)           NOT NULL,
@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS `openrsc_clan`
 ) ENGINE = MyISAM
   DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS `openrsc_clan_players`;
-CREATE TABLE IF NOT EXISTS `openrsc_clan_players`
+DROP TABLE IF EXISTS `clan_players`;
+CREATE TABLE IF NOT EXISTS `clan_players`
 (
     `id`       int(10)               NOT NULL AUTO_INCREMENT,
     `clan_id`  int(10) UNSIGNED      NOT NULL,

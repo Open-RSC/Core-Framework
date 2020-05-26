@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `openrsc_npckills`;
-CREATE TABLE IF NOT EXISTS `openrsc_npckills`
+DROP TABLE IF EXISTS `npckills`;
+CREATE TABLE IF NOT EXISTS `npckills`
 (
     `ID`        int(10) NOT NULL AUTO_INCREMENT,
     `npcID`     int(10) DEFAULT NULL,

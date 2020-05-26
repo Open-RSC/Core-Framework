@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS `openrsc_equipped`;
+DROP TABLE IF EXISTS `equipped`;

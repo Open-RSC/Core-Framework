@@ -1,4 +1,4 @@
-REPLACE INTO `openrsc_objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
+REPLACE INTO `objects` (`x`, `y`, `id`, `direction`, `type`, `d_id`) VALUES
 		(177, 655, 1, 0, 0, 28946),
 		(280, 3472, 226, 4, 0, 28952),
 		(393, 179, 283, 0, 0, 29062),

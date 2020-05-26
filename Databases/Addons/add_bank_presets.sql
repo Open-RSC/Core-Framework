@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `openrsc_bankpresets`;
-CREATE TABLE IF NOT EXISTS `openrsc_bankpresets`
+DROP TABLE IF EXISTS `bankpresets`;
+CREATE TABLE IF NOT EXISTS `bankpresets`
 (
     `id`        int(10)          NOT NULL AUTO_INCREMENT,
     `playerID`  int(10) unsigned NOT NULL,

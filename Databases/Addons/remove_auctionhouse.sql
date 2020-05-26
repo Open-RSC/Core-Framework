@@ -1,3 +1,3 @@
-DROP TABLE IF EXISTS `openrsc_expired_auctions`;
+DROP TABLE IF EXISTS `expired_auctions`;
 
-DROP TABLE IF EXISTS `openrsc_auctions`;
+DROP TABLE IF EXISTS `auctions`;
