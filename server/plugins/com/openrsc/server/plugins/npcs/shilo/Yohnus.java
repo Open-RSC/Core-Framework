@@ -90,24 +90,22 @@ public class Yohnus implements TalkNpcTrigger, OpBoundTrigger {
 				return;
 			}
 
+			// Custom fast pay feature
+			boolean fastPayConfig = player.getWorld().getServer().getConfig().FASTER_YOHNUS;
+			boolean fastPay = (boolean)player.getAttribute("fast_yohnus", false);
+			if (fastPayConfig && fastPay) {
+				if (takeFromBank(player)) {
+					player.message("Yohnus takes 20 coins from your bank and shows you inside");
+					player.teleport(400, 844);
+				} else {
+					player.message("You don't have enough coins in your bank");
+					player.setAttribute("fast_yohnus", false);
+				}
+				return;
+			}
+
 			Npc yohnus = ifnearvisnpc(player, NpcId.YOHNUS.id(), 5);
 			if (yohnus != null) {
-
-				// Custom fast pay feature
-				boolean fastPayConfig = player.getWorld().getServer().getConfig().FASTER_YOHNUS;
-				boolean fastPay = (boolean)player.getAttribute("fast_yohnus", false);
-				if (fastPayConfig && fastPay) {
-					if (takeFromBank(player)) {
-						player.message("Yohnus takes 20 coins from your bank and shows you inside");
-						player.teleport(400, 844);
-					} else {
-						npcsay(player, yohnus, "Sorry Bwana",
-							"You don't have enough coins in your bank");
-						player.setAttribute("fast_yohnus", false);
-					}
-					return;
-				}
-
 				npcsay(player, yohnus, "Sorry but the blacksmiths is closed.",
 					"But I can let you use the furnace at the cost",
 					"of 20 gold pieces.");
