@@ -73,11 +73,13 @@ public class Bank {
 					// TODO: Durability
 					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount());
 
+					// Update the database
+					int itemID = player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
+
+					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), false, itemID);
+
 					// Update the server bank
 					list.add(itemToAdd);
-
-					// Update the database
-					player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
 
 					// Update the client bank
 					if (updateClient) {
@@ -110,11 +112,13 @@ public class Bank {
 						// Adjust quantity of second stack to reflect that which was added to the first stack.
 						itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount() - remainingSize);
 
+						// Update the database - second stack
+						int itemID = player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
+
+						itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), false, itemID);
+
 						// Update the server bank - second stack
 						list.add(itemToAdd);
-
-						// Update the database - second stack
-						player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
 
 						// Update the client - both stacks
 						if (updateClient) {

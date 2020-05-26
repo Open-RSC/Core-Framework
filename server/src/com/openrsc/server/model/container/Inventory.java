@@ -139,11 +139,13 @@ public class Inventory {
 						return false;
 					}
 
+					// Update the Database - Add to the last slot and create a new itemID
+					int itemID = player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size() - 1);
+
+					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), itemToAdd.getNoted(), itemID);
+
 					// Update the server inventory
 					list.add(itemToAdd);
-
-					// Update the Database - Add to the last slot and create a new itemID
-					player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size() - 1);
 
 					//Update the client
 					if (sendInventory)
@@ -187,11 +189,13 @@ public class Inventory {
 						// Update the existing stack amount to max value
 						existingStack.setAmount(player.getWorld().getServer().getDatabase(), Integer.MAX_VALUE);
 
+						// Update the Database - Add new stack to the last slot and create a new itemID
+						int itemID = player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
+
+						itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), itemToAdd.getNoted(), itemID);
+
 						// Update the server inventory
 						list.add(itemToAdd);
-
-						// Update the Database - Add new stack to the last slot and create a new itemID
-						player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
 
 						// Update the Client - Both stacks
 						ActionSender.sendInventoryUpdateItem(player, index);

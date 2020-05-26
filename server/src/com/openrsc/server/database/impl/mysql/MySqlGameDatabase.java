@@ -2710,6 +2710,29 @@ public class MySqlGameDatabase extends GameDatabase {
 		return this.itemIDList;
 	}
 
+	public int addItemToPlayer(Item item) {
+		try {
+			int itemId = item.getItemId();
+			if (itemId == Item.ITEM_ID_UNASSIGNED) {
+				return assignItemID(item);
+			}
+			return itemId;
+		}
+		catch (GameDatabaseException e) {
+			System.out.println(e);
+		}
+		return Item.ITEM_ID_UNASSIGNED;
+	}
+
+	public void removeItemFromPlayer(Item item) {
+		try {
+			itemPurge(item);
+		}
+		catch (GameDatabaseException e) {
+			System.out.println(e);
+		}
+	}
+
 	public int assignItemID(Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			int itemId = itemCreate(item);

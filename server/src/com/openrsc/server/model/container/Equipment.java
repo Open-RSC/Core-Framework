@@ -68,8 +68,9 @@ public class Equipment {
 
 				if (list[slotID] == null) {
 					Item toEquip = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
+					int itemID = player.getWorld().getServer().getDatabase().equipmentAddToPlayer(player, toEquip);
+					toEquip = new Item(toEquip.getCatalogId(), toEquip.getAmount(), toEquip.getNoted(), itemID);
 					list[slotID] = toEquip;
-					player.getWorld().getServer().getDatabase().equipmentAddToPlayer(player, toEquip);
 					return slotID;
 				} else {
 					if (itemDef.isStackable()

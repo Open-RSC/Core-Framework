@@ -254,6 +254,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract int queryPlayerIdFromDiscordId(final long discordId) throws GameDatabaseException;
 
+	protected abstract int addItemToPlayer(Item item);
+
+	protected abstract void removeItemFromPlayer(Item item);
+
 	public void open() {
 		synchronized (open) {
 			try {
@@ -359,8 +363,9 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 			}
 
 			savePlayerBankPresets(player);
-			//savePlayerInventory(player);
-			//savePlayerEquipment(player);
+			savePlayerInventory(player);
+			savePlayerEquipment(player);
+			querySavePlayerBank(player);
 			//savePlayerAchievements(player);
 			savePlayerQuests(player);
 			savePlayerCastTime(player);
@@ -492,31 +497,28 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		queryItemUpdate(item);
 	}
 
-	public void inventoryAddToPlayer(final Player player, final Item item, int slot) throws GameDatabaseException {
-		queryInventoryAdd(player, item, slot);
+	public int inventoryAddToPlayer(final Player player, final Item item, int slot) {
+		return addItemToPlayer(item);
 	}
 
-	public void inventoryRemoveFromPlayer(final Player player, final Item item) throws GameDatabaseException {
-		queryInventoryRemove(player, item);
-		querySavePlayerInventory(player); // To update slot ids across the inventory
+	public void inventoryRemoveFromPlayer(final Player player, final Item item) {
+		removeItemFromPlayer(item);
 	}
 
-	public void equipmentAddToPlayer(final Player player, final Item item) throws GameDatabaseException {
-		queryEquipmentAdd(player, item);
+	public int equipmentAddToPlayer(final Player player, final Item item) {
+		return addItemToPlayer(item);
 	}
 
-	public void equipmentRemoveFromPlayer(final Player player, final Item item) throws GameDatabaseException {
-		queryEquipmentRemove(player, item);
-		querySavePlayerEquipped(player);
+	public void equipmentRemoveFromPlayer(final Player player, final Item item) {
+		removeItemFromPlayer(item);
 	}
 
-	public void bankAddToPlayer(final Player player, final Item item, int slot) throws GameDatabaseException {
-		queryBankAdd(player, item, slot);
+	public int bankAddToPlayer(final Player player, final Item item, int slot) {
+		return addItemToPlayer(item);
 	}
 
-	public void bankRemoveFromPlayer(final Player player, final Item item) throws GameDatabaseException {
-		queryBankRemove(player, item);
-		querySavePlayerBank(player); // To update slot ids across the bank
+	public void bankRemoveFromPlayer(final Player player, final Item item) {
+		removeItemFromPlayer(item);
 	}
 
 	public void saveNewPassword(final int playerId, String newPassword) throws GameDatabaseException {
