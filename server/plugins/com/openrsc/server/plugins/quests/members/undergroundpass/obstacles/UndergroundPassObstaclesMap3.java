@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -135,30 +136,30 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 						mes("a blast of energy comes from ibans staff");
 						player.message("you are hit by ibans magic bolt");
 						displayTeleportBubble(player, player.getX() + 1, player.getY(), true);
-						player.damage(((int) getCurrentLevel(player, Skills.HITS) / 7) + 1);
+						player.damage((int)Math.floor(getCurrentLevel(player, Skills.HITS)/10.0) + 4 + DataConversions.random(-1,1));
 						say(player, null, "aarrgh");
 						mes("@yel@Iban:die foolish mortal");
 						long start = System.currentTimeMillis();
 						Area area = Areas.getArea("ibans_room");
 						int ticks = config().GAME_TICK > 600 ? 1 : 2;
-						player.getWorld().getServer().getGameEventHandler().add(new GameTickEvent(player.getWorld(), player, ticks, "Iban's chamber event", false) {
+						player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), player, ticks, "Iban's chamber event", false) {
 							@Override
 							public void run() {
 								/* Time-out fail, handle appropriately */
-								if (System.currentTimeMillis() - start > 1000 * 60 * 2 && player.getLocation().inBounds(boundArea.getMinX(), boundArea.getMinY(),
+								if (System.currentTimeMillis() - start > 1000 * 60 * 2 && getOwner().getLocation().inBounds(boundArea.getMinX(), boundArea.getMinY(),
 									boundArea.getMaxX(), boundArea.getMaxY())) {
-									player.message("you're blasted out of the temple");
-									player.message("@yel@Iban: and stay out");
-									player.teleport(790, 3469);
+									getOwner().message("you're blasted out of the temple");
+									getOwner().message("@yel@Iban: and stay out");
+									getOwner().teleport(790, 3469);
 									stop();
 								}
 								/* If player has logged out or not region area */
-								else if (player.isRemoved() || !player.getLocation().inBounds(boundArea.getMinX(), boundArea.getMinY(),
+								else if (getOwner().isRemoved() || !getOwner().getLocation().inBounds(boundArea.getMinX(), boundArea.getMinY(),
 									boundArea.getMaxX(), boundArea.getMaxY())) {
 									stop();
 								}
 								/* ends it */
-								else if (player.getAttribute("iban_bubble_show", false)) {
+								else if (getOwner().getAttribute("iban_bubble_show", false)) {
 									stop();
 								}
 								else {
@@ -166,13 +167,13 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 									Point blastPosition = new Point(
 										DataConversions.random(area.getMinX(), area.getMaxX()),
 										DataConversions.random(area.getMinY(), area.getMaxY()));
-									ActionSender.sendTeleBubble(player, blastPosition.getX(), blastPosition.getY(), true);
-									if (player.getLocation().withinRange(blastPosition, 1)) {
+									ActionSender.sendTeleBubble(getOwner(), blastPosition.getX(), blastPosition.getY(), true);
+									if (getOwner().getLocation().withinRange(blastPosition, 1)) {
 										/* Blast hit */
-										player.damage(((int) getCurrentLevel(player, Skills.HITS) / 6) + 2);
-										player.teleport(795, 3469); // insert the coords
-										player.getUpdateFlags().setChatMessage(new ChatMessage(player, "aarrgh"));
-										player.message("you're blasted back to the door");
+										getOwner().damage((int)Math.floor(getCurrentLevel(getOwner(), Skills.HITS)/10.0) + 4 + DataConversions.random(-1,1));
+										getOwner().teleport(795, 3469); // insert the coords
+										getOwner().getUpdateFlags().setChatMessage(new ChatMessage(getOwner(), "aarrgh"));
+										getOwner().message("you're blasted back to the door");
 									}
 								}
 							}
