@@ -2,8 +2,8 @@ package com.openrsc.server.model.world;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.avatargenerator.AvatarGenerator;
-import com.openrsc.server.constants.*;
-import com.openrsc.server.content.DropTable;
+import com.openrsc.server.constants.NpcDrops;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.content.clan.ClanManager;
 import com.openrsc.server.content.market.Market;
 import com.openrsc.server.content.minigame.fishingtrawler.FishingTrawler;
@@ -68,8 +68,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public int godSpellsStart = 1;
 	public int godSpellsMax = 5;
 
-	private static World worldInstance;
-
 	private final RegionManager regionManager;
 	private final EntityList<Npc> npcs;
 	private HashMap<String, ArrayList<Npc>> npcPositions;
@@ -79,7 +77,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final List<Shop> shopData;
 	private final List<Shop> shops;
 	private final ConcurrentMap<TrawlerBoat, FishingTrawler> fishingTrawler;
-	private final TileValue[][] tiles;
 	private final PartyManager partyManager;
 	private final ClanManager clanManager;
 	private final Market market;
@@ -99,28 +96,27 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	private final Server server;
 
-	public World(Server server) {
+	public World(final Server server) {
 		this.server = server;
-		npcs = new EntityList<Npc>(4000);
-		npcPositions = new HashMap<>();
-		npcDrops = new NpcDrops(this);
-		players = new EntityList<Player>(2000);
-		quests = Collections.synchronizedList( new LinkedList<QuestInterface>() );
-		minigames = Collections.synchronizedList( new LinkedList<MiniGameInterface>() );
-		shopData = Collections.synchronizedList( new ArrayList<Shop>() );
-		shops = Collections.synchronizedList( new ArrayList<Shop>() );
-		wildernessIPTracker = new ThreadSafeIPTracker<String>();
-		playerUnderAttackMap = new ConcurrentHashMap<Player, Boolean>();
-		npcUnderAttackMap = new ConcurrentHashMap<Npc, Boolean>();
-		fishingTrawler = new ConcurrentHashMap<TrawlerBoat, FishingTrawler>();
-		snapshots = new LinkedList<Snapshot>();
-		tiles = new TileValue[Constants.MAX_WIDTH][Constants.MAX_HEIGHT];
-		avatarGenerator = new AvatarGenerator(this);
-		worldLoader = new WorldLoader(this);
-		regionManager = new RegionManager(this);
-		clanManager = new ClanManager(this);
-		partyManager = new PartyManager(this);
-		market = getServer().getConfig().SPAWN_AUCTION_NPCS ? new Market(this) : null;
+		this.npcs = new EntityList<Npc>(4000);
+		this.npcPositions = new HashMap<>();
+		this.npcDrops = new NpcDrops(this);
+		this.players = new EntityList<>(2000);
+		this.quests = Collections.synchronizedList( new LinkedList<>() );
+		this.minigames = Collections.synchronizedList( new LinkedList<>() );
+		this.shopData = Collections.synchronizedList( new ArrayList<>() );
+		this.shops = Collections.synchronizedList( new ArrayList<>() );
+		this.wildernessIPTracker = new ThreadSafeIPTracker<>();
+		this.playerUnderAttackMap = new ConcurrentHashMap<>();
+		this.npcUnderAttackMap = new ConcurrentHashMap<>();
+		this.fishingTrawler = new ConcurrentHashMap<>();
+		this.snapshots = new LinkedList<>();
+		this.avatarGenerator = new AvatarGenerator(this);
+		this.worldLoader = new WorldLoader(this);
+		this.regionManager = new RegionManager(this);
+		this.clanManager = new ClanManager(this);
+		this.partyManager = new PartyManager(this);
+		this.market = getServer().getConfig().SPAWN_AUCTION_NPCS ? new Market(this) : null;
 	}
 
 	private void shutdownCheck() {
@@ -130,9 +126,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				if (getServer().getConfig().AUTO_SERVER_RESTART) {
 					if ((int) ((currSecond / 3600.0) % 24) == getServer().getConfig().RESTART_HOUR
 						&& (int) ((currSecond / 60.0) % 60) >= getServer().getConfig().RESTART_MINUTE) {
-						int seconds = getServer().getConfig().RESTART_DELAY;
-						int minutes = seconds / 60;
-						int remainder = seconds % 60;
+						final int seconds = getServer().getConfig().RESTART_DELAY;
+						final int minutes = seconds / 60;
+						final int remainder = seconds % 60;
 						if (getServer().restart(seconds)) {
 							for (Player player : getPlayers()) {
 								ActionSender.startShutdown(player, seconds);
@@ -143,9 +139,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				if (getServer().getConfig().AUTO_SERVER_RESTART_2) {
 					if ((int) ((currSecond / 3600.0) % 24) == getServer().getConfig().RESTART_HOUR_2
 						&& (int) ((currSecond / 60.0) % 60) >= getServer().getConfig().RESTART_MINUTE_2) {
-						int seconds = getServer().getConfig().RESTART_DELAY_2;
-						int minutes = seconds / 60;
-						int remainder = seconds % 60;
+						final int seconds = getServer().getConfig().RESTART_DELAY_2;
+						final int minutes = seconds / 60;
+						final int remainder = seconds % 60;
 						if (getServer().restart(seconds)) {
 							for (Player player : getWorld().getPlayers()) {
 								ActionSender.startShutdown(player, seconds);
@@ -161,10 +157,10 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	public void restartCommand() {
 		getServer().getGameEventHandler().add(new SingleEvent(this, null, 1000, "Restart Command") {
 			public void action() {
-				int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
-				int seconds = 10;
-				int minutes = seconds / 60;
-				int remainder = seconds % 60;
+				final int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
+				final int seconds = 10;
+				final int minutes = seconds / 60;
+				final int remainder = seconds % 60;
 				if (getServer().restart(seconds)) {
 					for (Player player : getPlayers()) {
 						ActionSender.startShutdown(player, seconds);
@@ -231,16 +227,16 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		this.delayedSpawnObject(loc, respawnTime, false);
 	}
 
-	public Npc getNpc(int idx) {
+	public Npc getNpc(final int idx) {
 		try {
 			return getNpcs().get(idx);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			return null;
 		}
 	}
 
-	public Npc getNpc(int id, int minX, int maxX, int minY, int maxY) {
-		for (Npc npc : getNpcs()) {
+	public Npc getNpc(final int id, final int minX, final int maxX, final int minY, final int maxY) {
+		for (final Npc npc : getNpcs()) {
 			if (npc.getID() == id && npc.getX() >= minX && npc.getX() <= maxX && npc.getY() >= minY
 				&& npc.getY() <= maxY) {
 				return npc;
@@ -249,8 +245,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return null;
 	}
 
-	public Npc getNpc(int id, int minX, int maxX, int minY, int maxY, boolean notNull) {
-		for (Npc npc : getNpcs()) {
+	public Npc getNpc(final int id, final int minX, final int maxX, final int minY, final int maxY, final boolean notNull) {
+		for (final Npc npc : getNpcs()) {
 			if (npc.getID() == id && npc.getX() >= minX && npc.getX() <= maxX && npc.getY() >= minY
 				&& npc.getY() <= maxY) {
 				if (!npc.inCombat()) {
@@ -261,8 +257,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return null;
 	}
 
-	public Npc getNpcById(int id) {
-		for (Npc npc : getNpcs()) {
+	public Npc getNpcById(final int id) {
+		for (final Npc npc : getNpcs()) {
 			if (npc.getID() == id) {
 				return npc;
 			}
@@ -270,8 +266,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return null;
 	}
 
-	public Npc getNpcByUUID(String id) {
-		for (Npc npc : getNpcs()) {
+	public Npc getNpcByUUID(final String id) {
+		for (final Npc npc : getNpcs()) {
 			if (npc.getUUID() == id) {
 				return npc;
 			}
@@ -289,9 +285,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	/**
 	 * Gets a Player by their server index
 	 */
-	public Player getPlayer(int idx) {
+	public Player getPlayer(final int idx) {
 		try {
-			Player player = getPlayers().get(idx);
+			final Player player = getPlayers().get(idx);
 			return player;
 		} catch (Exception e) {
 			return null;
@@ -302,8 +298,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	/**
 	 * Gets a player by their username hash
 	 */
-	public Player getPlayer(long usernameHash) {
-		for (Player player : getPlayers()) {
+	public Player getPlayer(final long usernameHash) {
+		for (final Player player : getPlayers()) {
 			if (player.getUsernameHash() == usernameHash) {
 				return player;
 			}
@@ -314,8 +310,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	/**
 	 * Gets a player by their ID
 	 */
-	public Player getPlayerID(int databaseID) {
-		for (Player player : getPlayers()) {
+	public Player getPlayerID(final int databaseID) {
+		for (final Player player : getPlayers()) {
 			if (player.getDatabaseID() == databaseID) {
 				return player;
 			}
@@ -326,8 +322,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	/**
 	 * Gets a player by their UUID
 	 */
-	public Player getPlayerUUID(String uuid) {
-		for (Player player : getPlayers()) {
+	public Player getPlayerUUID(final String uuid) {
+		for (final Player player : getPlayers()) {
 			if (player.getUUID().equals(uuid)) {
 				return player;
 			}
@@ -346,8 +342,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 * @return
 	 * @throws IllegalArgumentException when a quest by that ID isn't found
 	 */
-	public QuestInterface getQuest(int q) throws IllegalArgumentException {
-		for (QuestInterface quest : this.getQuests()) {
+	public QuestInterface getQuest(final int q) throws IllegalArgumentException {
+		for (final QuestInterface quest : this.getQuests()) {
 			if (quest.getQuestId() == q) {
 				return quest;
 			}
@@ -362,8 +358,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 * @return
 	 * @throws IllegalArgumentException when a quest by that ID isn't found
 	 */
-	public MiniGameInterface getMiniGame(int m) throws IllegalArgumentException {
-		for (MiniGameInterface minigame : getMiniGames()) {
+	public MiniGameInterface getMiniGame(final int m) throws IllegalArgumentException {
+		for (final MiniGameInterface minigame : getMiniGames()) {
 			if (minigame.getMiniGameId() == m) {
 				return minigame;
 			}
@@ -379,27 +375,11 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return minigames;
 	}
 
-	public synchronized List<Shop> getShops() {
+	public List<Shop> getShops() {
 		return shops;
 	}
 
-	public synchronized TileValue getTile(int x, int y) {
-		if (!withinWorld(x, y)) {
-			return null;
-		}
-		TileValue t = tiles[x][y];
-		if (t == null) {
-			t = new TileValue();
-			tiles[x][y] = t;
-		}
-		return t;
-	}
-
-	public synchronized TileValue getTile(Point point) {
-		return getTile(point.getX(), point.getY());
-	}
-
-	public boolean hasNpc(Npc n) {
+	public boolean hasNpc(final Npc n) {
 		return getNpcs().contains(n);
 	}
 	/*
@@ -407,11 +387,11 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 * Classes - viewArea, world, region, gameObjectAction, GameObjectWallAction, ItemUseOnObject
 	 */
 
-	public boolean hasPlayer(Player player) {
+	public boolean hasPlayer(final Player player) {
 		return getPlayers().contains(player);
 	}
 
-	public boolean isLoggedIn(long usernameHash) {
+	public boolean isLoggedIn(final long usernameHash) {
 		Player friend = getPlayer(usernameHash);
 		if (friend != null) {
 			return friend.loggedIn();
@@ -443,10 +423,10 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 	}
 
-	public void registerGameObject(GameObject o) {
+	public void registerGameObject(final GameObject o) {
 		Point objectCoordinates = Point.location(o.getLoc().getX(), o.getLoc().getY());
-		GameObject collidingGameObject = getRegionManager().getRegion(objectCoordinates).getGameObject(objectCoordinates, null);
-		GameObject collidingWallObject = getRegionManager().getRegion(objectCoordinates).getWallGameObject(objectCoordinates, o.getLoc().getDirection(), null);
+		final GameObject collidingGameObject = getRegionManager().getRegion(objectCoordinates).getGameObject(objectCoordinates, null);
+		final GameObject collidingWallObject = getRegionManager().getRegion(objectCoordinates).getWallGameObject(objectCoordinates, o.getLoc().getDirection(), null);
 		if (collidingGameObject != null && o.getType() == 0) {
 			unregisterGameObject(collidingGameObject);
 		}
@@ -455,7 +435,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 		o.setLocation(Point.location(o.getLoc().getX(), o.getLoc().getY()));
 
-		int dir = o.getDirection();
+		final int dir = o.getDirection();
 		if (o.getID() == 1147) {
 			return;
 		}
@@ -527,7 +507,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	private boolean isProjectileClipAllowed(GameObject o) {
-		for (String s : com.openrsc.server.constants.Constants.objectsProjectileClipAllowed) {
+		for (final String s : com.openrsc.server.constants.Constants.objectsProjectileClipAllowed) {
 			if (o.getType() == 0) {
 				// there are many of the objects that need to
 				// have clip enabled.
@@ -547,7 +527,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return false;
 	}
 
-	private void handleProjectileClipAllowance(int x, int y, int dir, int type, int objectType, int doorType) {
+	private void handleProjectileClipAllowance(final int x, final int y, final int dir, final int type, final int objectType, final int doorType) {
 
 		// Always give the current tile a clip mask.
 		getTile(x, y).projectileAllowed = true;
@@ -575,7 +555,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		registerItem(i, i.getConfig().GAME_TICK * 200);
 	}
 
-	public void registerItem(final GroundItem i, int delayTime) {
+	public void registerItem(final GroundItem i, final int delayTime) {
 		try {
 			if (i.getLoc() == null) {
 				getServer().getGameEventHandler().add(new SingleEvent(this, null, delayTime, "Register Item") {
@@ -590,8 +570,8 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 	}
 
-	public Npc registerNpc(Npc n) {
-		NPCLoc npc = n.getLoc();
+	public Npc registerNpc(final Npc n) {
+		final NPCLoc npc = n.getLoc();
 		if (npc.startX < npc.minX || npc.startX > npc.maxX || npc.startY < npc.minY || npc.startY > npc.maxY
 			|| (getTile(npc.startX, npc.startY).overlay & 64) != 0) {
 			LOGGER.error("Broken Npc: <id>" + npc.id + "</id><startX>" + npc.startX + "</startX><startY>"
@@ -603,13 +583,13 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return n;
 	}
 
-	public void registerObjects(GameObject... obs) {
-		for (GameObject o : obs) {
+	public void registerObjects(final GameObject... obs) {
+		for (final GameObject o : obs) {
 			o.setLocation(Point.location(o.getLoc().getX(), o.getLoc().getY()));
 		}
 	}
 
-	public boolean registerPlayer(Player player) {
+	public boolean registerPlayer(final Player player) {
 		if (!getPlayers().contains(player)) {
 			player.setUUID(UUID.randomUUID().toString());
 
@@ -640,13 +620,13 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return false;
 	}
 
-	public void registerQuest(QuestInterface quest) {
+	public void registerQuest(final QuestInterface quest) {
 		if (quest.getQuestName() == null) {
 			throw new IllegalArgumentException("Quest name cannot be null");
 		} else if (quest.getQuestName().length() > 40) {
 			throw new IllegalArgumentException("Quest name cannot be longer then 40 characters");
 		}
-		for (QuestInterface q : getQuests()) {
+		for (final QuestInterface q : getQuests()) {
 			if (q.getQuestId() == quest.getQuestId()) {
 				throw new IllegalArgumentException("Quest ID must be unique");
 			}
@@ -659,13 +639,13 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		getQuests().add(quest);
 	}
 
-	public void registerMiniGame(MiniGameInterface minigame) {
+	public void registerMiniGame(final MiniGameInterface minigame) {
 		if (minigame.getMiniGameName() == null) {
 			throw new IllegalArgumentException("Minigame name cannot be null");
 		} else if (minigame.getMiniGameName().length() > 40) {
 			throw new IllegalArgumentException("Minigame name cannot be longer then 40 characters");
 		}
-		for (MiniGameInterface m : getMiniGames()) {
+		for (final MiniGameInterface m : getMiniGames()) {
 			if (m.getMiniGameId() == minigame.getMiniGameId()) {
 				System.out.println(minigame.getMiniGameId());
 				throw new IllegalArgumentException("MiniGame ID must be unique");
@@ -674,42 +654,43 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		getMiniGames().add(minigame);
 	}
 
-	public void registerShop(Shop shop) {
+	public void registerShop(final Shop shop) {
 		getShops().add(shop);
 	}
 
-	public void registerShops(Shop... shop) {
+	public void registerShops(final Shop... shop) {
 		getShops().addAll(Arrays.asList(shop));
 	}
 
-	public void replaceGameObject(GameObject old, GameObject _new) {
+	public void replaceGameObject(final GameObject old, final GameObject _new) {
 		unregisterGameObject(old);
 		registerGameObject(_new);
 	}
 
-	public void sendKilledUpdate(long killedHash, long killerHash, int type) {
-		for (final Player player : getPlayers())
+	public void sendKilledUpdate(final long killedHash, final long killerHash, final int type) {
+		for (final Player player : getPlayers()) {
 			ActionSender.sendKillUpdate(player, killedHash, killerHash, type);
+		}
 	}
 
-	public void sendModAnnouncement(String string) {
-		for (Player player : getPlayers()) {
+	public void sendModAnnouncement(final String string) {
+		for (final Player player : getPlayers()) {
 			if (player.isMod()) {
 				player.message("[@cya@SERVER@whi@]: " + string);
 			}
 		}
 	}
 
-	public void sendWorldAnnouncement(String msg) {
+	public void sendWorldAnnouncement(final String msg) {
 		if (getServer().getConfig().WANT_GLOBAL_CHAT) {
-			for (Player player : getPlayers()) {
+			for (final Player player : getPlayers()) {
 				player.playerServerMessage(MessageType.QUEST, "@gre@[Global] @whi@" + msg);
 			}
 		}
 	}
 
-	public void sendWorldMessage(String msg) {
-		for (Player player : getPlayers()) {
+	public void sendWorldMessage(final String msg) {
+		for (final Player player : getPlayers()) {
 			player.playerServerMessage(MessageType.QUEST, msg);
 		}
 	}
@@ -717,9 +698,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	/**
 	 * Removes an object from the server
 	 */
-	public void unregisterGameObject(GameObject o) {
+	public void unregisterGameObject(final GameObject o) {
 		o.remove();
-		int dir = o.getDirection();
+		final int dir = o.getDirection();
 		switch (o.getType()) {
 			case 0:
 				if (o.getGameObjectDef().getType() != 1 && o.getGameObjectDef().getType() != 2) {
@@ -777,21 +758,21 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return globalMessageQueue.poll();
 	}
 
-	public void addGlobalMessage(GlobalMessage privateMessage) {
+	public void addGlobalMessage(final GlobalMessage privateMessage) {
 		getGlobalMessageQueue().add(privateMessage);
 	}
 
 	/**
 	 * Removes an item from the server
 	 */
-	public void unregisterItem(GroundItem i) {
+	public void unregisterItem(final GroundItem i) {
 		i.remove();
 	}
 
 	/**
 	 * Removes an npc from the server
 	 */
-	public void unregisterNpc(Npc n) {
+	public void unregisterNpc(final Npc n) {
 		if (hasNpc(n)) {
 			getNpcs().remove(n);
 		}
@@ -810,19 +791,19 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 			}
 			player.logout();
 			LOGGER.info("Unregistered " + player.getUsername() + " from player list.");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
 
 	}
 
-	public void unregisterQuest(QuestInterface quest) {
+	public void unregisterQuest(final QuestInterface quest) {
 		if (getQuests().contains(quest)) {
 			getQuests().remove(quest);
 		}
 	}
 
-	public void unregisterMiniGame(MiniGameInterface minigame) {
+	public void unregisterMiniGame(final MiniGameInterface minigame) {
 		if (getMiniGames().contains(minigame)) {
 			getMiniGames().remove(minigame);
 		}
@@ -831,11 +812,19 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	/**
 	 * Are the given coords within the world boundaries
 	 */
-	public boolean withinWorld(int x, int y) {
-		return x >= 0 && x < Constants.MAX_WIDTH && y >= 0 && y < Constants.MAX_HEIGHT;
+	public boolean withinWorld(final int x, final int y) {
+		return getRegionManager().withinWorld(x, y);
 	}
 
-	public FishingTrawler getFishingTrawler(TrawlerBoat boat) {
+	public TileValue getTile(final int x, final int y) {
+		return getRegionManager().getTile(x, y);
+	}
+
+	public TileValue getTile(final Point point) {
+		return getRegionManager().getTile(point);
+	}
+
+	public FishingTrawler getFishingTrawler(final TrawlerBoat boat) {
 		FishingTrawler trawlerInstance = fishingTrawler.get(boat);
 		if (trawlerInstance != null && !trawlerInstance.shouldRemove()) {
 			return trawlerInstance;
@@ -848,7 +837,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		}
 	}
 
-	public FishingTrawler getFishingTrawler(Player player) {
+	public FishingTrawler getFishingTrawler(final Player player) {
 		if (fishingTrawler.get(TrawlerBoat.EAST) != null && fishingTrawler.get(TrawlerBoat.EAST).getPlayers().contains(player)) {
 			return fishingTrawler.get(TrawlerBoat.EAST);
 		}
@@ -860,35 +849,35 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	// notified when event is stopped to deallocate reference
 	@Override
-	public void update(FishingTrawler ctx) {
+	public void update(final FishingTrawler ctx) {
 		if (ctx != null && ctx.getPlayers().size() == 0) {
 			fishingTrawler.put(ctx.getBoat(), null);
 		}
 	}
 
-	public void produceUnderAttack(Player player) {
+	public void produceUnderAttack(final Player player) {
 		getPlayersUnderAttack().put(player, true);
 	}
 
-	public void produceUnderAttack(Npc n) {
+	public void produceUnderAttack(final Npc n) {
 		getNpcsUnderAttack().put(n, true);
 	}
 
-	public boolean checkUnderAttack(Player player) {
+	public boolean checkUnderAttack(final Player player) {
 		return getPlayersUnderAttack().getOrDefault(player, false);
 	}
 
-	public boolean checkUnderAttack(Npc n) {
+	public boolean checkUnderAttack(final Npc n) {
 		return getNpcsUnderAttack().getOrDefault(n, false);
 	}
 
-	public void releaseUnderAttack(Player player) {
+	public void releaseUnderAttack(final Player player) {
 		if (getPlayersUnderAttack().containsKey(player)) {
 			getPlayersUnderAttack().remove(player);
 		}
 	}
 
-	public void releaseUnderAttack(Npc n) {
+	public void releaseUnderAttack(final Npc n) {
 		if (getNpcsUnderAttack().containsKey(n)) {
 			getNpcsUnderAttack().remove(n);
 		}
@@ -942,16 +931,16 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return npcPositions;
 	}
 
-	public void setNpcPosition(Npc n) {
-		String key = n.getX() + "," + n.getY();
+	public void setNpcPosition(final Npc n) {
+		final String key = n.getX() + "," + n.getY();
 		npcPositions.putIfAbsent(key, new ArrayList<>());
 		npcPositions.get(key).add(n);
 	}
 
-	public void removeNpcPosition(Npc n) {
-		String key = n.getX() + "," + n.getY();
+	public void removeNpcPosition(final Npc n) {
+		final String key = n.getX() + "," + n.getY();
 		if (npcPositions.containsKey(key)) {
-			ArrayList<Npc> ar = npcPositions.get(key);
+			final ArrayList<Npc> ar = npcPositions.get(key);
 			if (ar.size() > 1) {
 				for (int i = 0; i < ar.size(); i++) {
 					if (n.getUUID().equals(ar.get(i).getUUID())) {

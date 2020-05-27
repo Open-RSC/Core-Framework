@@ -329,12 +329,12 @@ public class Server implements Runnable {
 					this.lastTickDuration = bench(() -> {
 						try {
 							this.lastIncomingPacketsDuration = this.lastOutgoingPacketsDuration = 0L;
-							for (Player player : getWorld().getPlayers()) {
+							for (final Player player : getWorld().getPlayers()) {
 								this.lastIncomingPacketsDuration += bench(player::processIncomingPackets);
 							}
 							this.lastGameStateDuration = getGameUpdater().doUpdates();
 							this.lastEventsDuration = getGameEventHandler().runGameEvents();
-							for (Player player : getWorld().getPlayers()) {
+							for (final Player player : getWorld().getPlayers()) {
 								this.lastOutgoingPacketsDuration += bench(player::processOutgoingPackets);
 							}
 						} catch (final Throwable t) {
@@ -358,11 +358,11 @@ public class Server implements Runnable {
 					//LOGGER.info("Tick " + currentTick + " processed.");
 				} else {
 					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
-						for (Player p : getWorld().getPlayers()) {
+						for (final Player p : getWorld().getPlayers()) {
 							p.updatePosition();
 						}
 
-						for (Npc n : getWorld().getNpcs()) {
+						for (final Npc n : getWorld().getNpcs()) {
 							n.updatePosition();
 						}
 

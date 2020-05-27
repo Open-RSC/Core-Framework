@@ -1,5 +1,6 @@
 package com.openrsc.server.model.world.region;
 
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
@@ -12,24 +13,55 @@ import java.util.HashSet;
 
 public class Region {
 	/**
+	 * The RegionManager this Region belongs to
+	 */
+	private final RegionManager regionManager;
+	/**
 	 * A list of players in this region.
 	 */
-	private HashSet<Player> players = new HashSet<Player>();
+	final private HashSet<Player> players = new HashSet<Player>();
 
 	/**
 	 * A list of NPCs in this region.
 	 */
-	private HashSet<Npc> npcs = new HashSet<Npc>();
+	final private HashSet<Npc> npcs = new HashSet<Npc>();
 
 	/**
 	 * A list of objects in this region.
 	 */
-	private HashSet<GameObject> objects = new HashSet<GameObject>();
+	final private HashSet<GameObject> objects = new HashSet<>();
 
 	/**
 	 * A list of objects in this region.
 	 */
-	private HashSet<GroundItem> items = new HashSet<GroundItem>();
+	final private HashSet<GroundItem> items = new HashSet<>();
+
+	/**
+	 * A list of tiles in this region.
+	 */
+	final private TileValue[][] tiles = new TileValue[Constants.REGION_SIZE][Constants.REGION_SIZE];
+
+	/**
+	 * The X index of this region
+	 */
+	private final int regionX;
+
+	/**
+	 * The Y index of this region
+	 */
+	private final int regionY;
+
+	public Region(final RegionManager regionManager, final int regionX, final int regionY) {
+		this.regionManager = regionManager;
+		this.regionX = regionX;
+		this.regionY = regionY;
+
+		for (int i = 0; i < Constants.REGION_SIZE; i++) {
+			for (int j = 0; j < Constants.REGION_SIZE; j++) {
+				tiles[i][j] = new TileValue();
+			}
+		}
+	}
 
 	/**
 	 * Gets the list of players.
@@ -70,7 +102,7 @@ public class Region {
 		}
 	}
 
-	public void removeEntity(Entity e) {
+	public void removeEntity(final Entity e) {
 		if (e.isPlayer()) {
 			synchronized (players) {
 				players.remove((Player) e);
@@ -90,7 +122,7 @@ public class Region {
 		}
 	}
 
-	public void addEntity(Entity e) {
+	public void addEntity(final Entity e) {
 		if (e.isRemoved()) {
 			return;
 		}
@@ -114,7 +146,7 @@ public class Region {
 	}
 
 	public String toString() {
-		StringBuilder sb = new StringBuilder(2000);
+		final StringBuilder sb = new StringBuilder(2000);
 		sb.append("Players:\n");
 		for (Player p : players) {
 			sb.append("\t").append(p).append("\n");
@@ -138,8 +170,8 @@ public class Region {
 		return sb.toString();
 	}
 
-	public String toString(boolean debugPlayers, boolean debugNpcs, boolean debugItems, boolean debugObjects) {
-		StringBuilder sb = new StringBuilder(2000);
+	public String toString(final boolean debugPlayers, final boolean debugNpcs, final boolean debugItems, final boolean debugObjects) {
+		final StringBuilder sb = new StringBuilder(2000);
 		if (debugPlayers) {
 			sb.append("Players:\n");
 			for (Player p : players) {
@@ -168,9 +200,9 @@ public class Region {
 		return sb.toString();
 	}
 
-	public GameObject getGameObject(int x, int y, Entity e) {
+	public GameObject getGameObject(final int x, final int y, final Entity e) {
 		synchronized (objects) {
-			for (GameObject o : objects) {
+			for (final GameObject o : objects) {
 				if (o.getX() == x && o.getY() == y && (e == null || !o.isInvisibleTo(e))) {
 					return o;
 				}
@@ -179,9 +211,9 @@ public class Region {
 		return null;
 	}
 
-	public GameObject getGameObject(Point point, Entity e) {
+	public GameObject getGameObject(final Point point, final Entity e) {
 		synchronized (objects) {
-			for (GameObject o : objects) {
+			for (final GameObject o : objects) {
 				if (o.getLocation().getX() == point.getX() && o.getLocation().getY() == point.getY() && o.getType() == 0 && (e == null || !o.isInvisibleTo(e))) {
 					return o;
 				}
@@ -190,9 +222,9 @@ public class Region {
 		return null;
 	}
 
-	public GameObject getWallGameObject(Point point, int direction, Entity e) {
+	public GameObject getWallGameObject(final Point point, final int direction, final Entity e) {
 		synchronized (objects) {
-			for (GameObject o : objects) {
+			for (final GameObject o : objects) {
 				if (o.getLocation().getX() == point.getX() && o.getLocation().getY() == point.getY() && o.getType() == 1 && o.getDirection() == direction && (e == null || !o.isInvisibleTo(e))) {
 					return o;
 				}
@@ -201,9 +233,9 @@ public class Region {
 		return null;
 	}
 
-	public GameObject getWallGameObject(Point point, Entity e) {
+	public GameObject getWallGameObject(final Point point, final Entity e) {
 		synchronized (objects) {
-			for (GameObject o : objects) {
+			for (final GameObject o : objects) {
 				if (o.getLocation().getX() == point.getX() && o.getLocation().getY() == point.getY() && o.getType() == 1 && (e == null || !o.isInvisibleTo(e))) {
 					return o;
 				}
@@ -212,9 +244,9 @@ public class Region {
 		return null;
 	}
 
-	public Npc getNpc(int x, int y, Entity e) {
+	public Npc getNpc(final int x, final int y, final Entity e) {
 		synchronized (npcs) {
-			for (Npc n : npcs) {
+			for (final Npc n : npcs) {
 				if (n.getLocation().getX() == x && n.getLocation().getY() == y && (e == null || !n.isInvisibleTo(e))) {
 					return n;
 				}
@@ -223,9 +255,9 @@ public class Region {
 		return null;
 	}
 
-	public Player getPlayer(int x, int y, Entity e) {
+	public Player getPlayer(final int x, final int y, final Entity e) {
 		synchronized (players) {
-			for (Player p : players) {
+			for (final Player p : players) {
 				if (p.getX() == x && p.getY() == y && (e == null || !p.isInvisibleTo(e))) {
 					return p;
 				}
@@ -234,14 +266,34 @@ public class Region {
 		return null;
 	}
 
-	public GroundItem getItem(int id, Point location, Entity e) {
-		int x = location.getX();
-		int y = location.getY();
-		for (GroundItem i : getGroundItems()) {
+	public GroundItem getItem(final int id, final Point location, final Entity e) {
+		final int x = location.getX();
+		final int y = location.getY();
+		for (final GroundItem i : getGroundItems()) {
 			if (i.getID() == id && i.getX() == x && i.getY() == y && (e == null || !i.isInvisibleTo(e))) {
 				return i;
 			}
 		}
 		return null;
+	}
+
+	public TileValue getTileValue(final int regionX, final int regionY) {
+		return tiles[regionX][regionY];
+	}
+
+	public TileValue getTileValue(final Point regionPoint) {
+		return getTileValue(regionPoint.getX(), regionPoint.getY());
+	}
+
+	public RegionManager getRegionManager() {
+		return regionManager;
+	}
+
+	public int getRegionX() {
+		return regionX;
+	}
+
+	public int getRegionY() {
+		return regionY;
 	}
 }
