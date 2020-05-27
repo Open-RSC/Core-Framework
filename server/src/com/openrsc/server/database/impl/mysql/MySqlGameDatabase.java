@@ -2036,11 +2036,18 @@ public class MySqlGameDatabase extends GameDatabase {
 	@Override
 	protected int queryMaxItemID() throws GameDatabaseException {
 		try {
-			final PreparedStatement statement = getConnection().prepareStatement(getQueries().max_itemStatus, 1);
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().max_itemStatus);
 			ResultSet result = statement.executeQuery();
-			int itemID = 0;
-			if (result.next()) itemID = result.getInt(1);
-			return itemID;
+			try {
+				if (result.next()) {
+					return result.getInt("itemID");
+				}
+			}
+			finally {
+				result.close();
+				statement.close();
+			}
+			return 0;
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());

@@ -177,7 +177,7 @@ public class Server implements Runnable {
 		achievementSystem = new AchievementSystem(this);
 		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName() + " : GameThread").build());
 
-		maxItemId = database.getMaxItemID();
+		maxItemId = 0;
 	}
 
 	private void initialize() {
@@ -223,6 +223,10 @@ public class Server implements Runnable {
 			LOGGER.info("\t Achievements Completed");*/
 
 			LOGGER.info("Profiling Completed");
+
+			maxItemId = getDatabase().getMaxItemID();
+
+			LOGGER.info("Set max item ID to : " + maxItemId);
 
 			//Never run ResourceLeakDetector PARANOID in production.
 			//ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);

@@ -105,15 +105,18 @@ public class CarriedItems {
 		}
 
 		// If we don't find it in the inventory, attempt to get it from equipment.
-
-		Item toRemove = getEquipment().get(
-			getEquipment().searchEquipmentForItem(item.getCatalogId())
-		);
-		if (toRemove != null) {
-			item = new Item(toRemove.getCatalogId(), item.getAmount(), toRemove.getNoted(), toRemove.getItemId());
-			return getEquipment().remove(item, item.getAmount());
+		if (item != null) {
+			return getInventory().remove(item, updateClient);
 		}
-
-		return getInventory().remove(item, updateClient);
+		else {
+			Item toRemove = getEquipment().get(
+				getEquipment().searchEquipmentForItem(item.getCatalogId())
+			);
+			if (toRemove != null && toRemove.getAmount() >= item.getAmount()) {
+				item = new Item(toRemove.getCatalogId(), item.getAmount(), toRemove.getNoted(), toRemove.getItemId());
+				return getEquipment().remove(item, item.getAmount());
+			}
+		}
+		return -1;
 	}
 }
