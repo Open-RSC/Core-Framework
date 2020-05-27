@@ -22,6 +22,9 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 				zam.face(owner);
 				applyCurse(owner, zam);
 			}
+			else {
+				owner.groundItemTake(item);
+			}
 		}
 	}
 
