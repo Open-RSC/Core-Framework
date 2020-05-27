@@ -7,16 +7,26 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DigsiteStudents implements TalkNpcTrigger {
+public class DigsiteStudents implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.STUDENT_ORANGE.id() || n.getID() == NpcId.STUDENT_PURPLE.id() || n.getID() == NpcId.STUDENT_GREEN.id();
+	}
+
+	@Override
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return (npc.getID() == NpcId.STUDENT_ORANGE.id() || npc.getID() == NpcId.STUDENT_PURPLE.id() || npc.getID() == NpcId.STUDENT_GREEN.id())
+			&& (item.getCatalogId() == ItemId.CRACKED_ROCK_SAMPLE.id() || item.getCatalogId() == ItemId.ROCK_SAMPLE_ORANGE.id()
+			|| item.getCatalogId() == ItemId.ROCK_SAMPLE_PURPLE.id() || item.getCatalogId() == ItemId.ROCK_SAMPLE_GREEN.id())
+			&& !item.getNoted();
 	}
 
 	/**
@@ -46,16 +56,7 @@ public class DigsiteStudents implements TalkNpcTrigger {
 						say(player, n, "Thanks for the information");
 					} else if (player.getCache().hasKey("student_orange_s")) { // started orange student help
 						if (player.getCarriedItems().hasCatalogID(ItemId.ROCK_SAMPLE_ORANGE.id(), Optional.of(false))) {
-							say(player, n, "Look what I found");
-							player.getCarriedItems().remove(new Item(ItemId.ROCK_SAMPLE_ORANGE.id()));
-							player.getCache().store("student_orange_c", true); // store completed orange student help
-							player.getCache().remove("student_orange_s"); // remove started orange student help
-							npcsay(player, n, "Excellent!",
-								"I'm so happy",
-								"Let me now help you with your exams...",
-								"The elligible people to use the digsite are:",
-								"All that have passed the appropriate earth sciences exams");
-							say(player, n, "Thanks for the information");
+							giveRock(player, n);
 						} else {
 							say(player, n, "How's the study going ?");
 							npcsay(player, n, "I'm getting there",
@@ -135,16 +136,7 @@ public class DigsiteStudents implements TalkNpcTrigger {
 					} else if (player.getCache().hasKey("student_green_s")) { // started green student help
 
 						if (player.getCarriedItems().hasCatalogID(ItemId.ROCK_SAMPLE_GREEN.id(), Optional.of(false))) {
-							say(player, n, "Hi, is this your rock sample ?");
-							player.getCarriedItems().remove(new Item(ItemId.ROCK_SAMPLE_GREEN.id()));
-							player.getCache().store("student_green_c", true); // completed green student help
-							player.getCache().remove("student_green_s"); // remove started green student help
-							npcsay(player, n, "Oh wow! you've found it!",
-								"Thank you so much",
-								"I'll be glad to tell you what I know about the exam",
-								"The study of earthsciences is:",
-								"The study of the earth, It's contents and It's history");
-							say(player, n, "Okay I'll remember that");
+							giveRock(player, n);
 						} else {
 							say(player, n, "How's the study going ?");
 							npcsay(player, n, "Very well thanks",
@@ -225,16 +217,7 @@ public class DigsiteStudents implements TalkNpcTrigger {
 						say(player, n, "Great, thanks for your advice");
 					} else if (player.getCache().hasKey("student_purple_s")) { // started purple student help
 						if (player.getCarriedItems().hasCatalogID(ItemId.ROCK_SAMPLE_PURPLE.id(), Optional.of(false))) {
-							say(player, n, "Guess what I found ?");
-							player.getCarriedItems().remove(new Item(ItemId.ROCK_SAMPLE_PURPLE.id()));
-							player.getCache().store("student_purple_c", true); // completed purple student help
-							player.getCache().remove("student_purple_s"); // remove started purple student help
-							npcsay(player, n, "Hey! my sample!",
-								"Thanks ever so much",
-								"Let me help you with those questions now",
-								"The proper health and safety points are:",
-								"Gloves and boots to be worn at all times, proper tools must be used");
-							say(player, n, "Great, thanks for your advice");
+							giveRock(player, n);
 						} else {
 							say(player, n, "How's the study going ?");
 							npcsay(player, n, "Very well thanks",
@@ -330,5 +313,150 @@ public class DigsiteStudents implements TalkNpcTrigger {
 					break;
 			}
 		}
+	}
+
+	// correct rock passed at correct time
+	private void giveRock(Player player, Npc npc) {
+		if (npc.getID() == NpcId.STUDENT_ORANGE.id()) {
+			say(player, npc, "Look what I found");
+			player.getCarriedItems().remove(new Item(ItemId.ROCK_SAMPLE_ORANGE.id()));
+			player.getCache().store("student_orange_c", true); // store completed orange student help
+			player.getCache().remove("student_orange_s"); // remove started orange student help
+			npcsay(player, npc, "Excellent!",
+				"I'm so happy",
+				"Let me now help you with your exams...",
+				"The elligible people to use the digsite are:",
+				"All that have passed the appropriate earth sciences exams");
+			say(player, npc, "Thanks for the information");
+		} else if (npc.getID() == NpcId.STUDENT_GREEN.id()) {
+			say(player, npc, "Hi, is this your rock sample ?");
+			player.getCarriedItems().remove(new Item(ItemId.ROCK_SAMPLE_GREEN.id()));
+			player.getCache().store("student_green_c", true); // completed green student help
+			player.getCache().remove("student_green_s"); // remove started green student help
+			npcsay(player, npc, "Oh wow! you've found it!",
+				"Thank you so much",
+				"I'll be glad to tell you what I know about the exam",
+				"The study of earthsciences is:",
+				"The study of the earth, It's contents and It's history");
+			say(player, npc, "Okay I'll remember that");
+		} else if (npc.getID() == NpcId.STUDENT_PURPLE.id()) {
+			say(player, npc, "Guess what I found ?");
+			player.getCarriedItems().remove(new Item(ItemId.ROCK_SAMPLE_PURPLE.id()));
+			player.getCache().store("student_purple_c", true); // completed purple student help
+			player.getCache().remove("student_purple_s"); // remove started purple student help
+			npcsay(player, npc, "Hey! my sample!",
+				"Thanks ever so much",
+				"Let me help you with those questions now",
+				"The proper health and safety points are:",
+				"Gloves and boots to be worn at all times, proper tools must be used");
+			say(player, npc, "Great, thanks for your advice");
+		}
+	}
+
+	@Override
+	public void onUseNpc(Player player, Npc npc, Item item) {
+		int cId;
+		int dId = RockDialogue.NONE;
+		if (item.getCatalogId() == ItemId.CRACKED_ROCK_SAMPLE.id()) {
+			dId = RockDialogue.CRACKED_ROCK;
+		} else if (npc.getID() == NpcId.STUDENT_ORANGE.id()) {
+			cId = player.getQuestStage(Quests.DIGSITE) >= 3 || player.getQuestStage(Quests.DIGSITE) == -1 || player.getCache().hasKey("student_orange_c")
+				? Progress.GAVE_ROCK : (player.getCache().hasKey("student_orange_s") ? Progress.REQUESTED_ROCK : Progress.NOT_STARTED);
+			if (cId == Progress.REQUESTED_ROCK) {
+				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_ORANGE.id()) {
+					giveRock(player, npc);
+				} else {
+					dId = RockDialogue.INCORRECT_ROCK;
+				}
+			} else if (cId == Progress.NOT_STARTED) {
+				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_ORANGE.id()) {
+					mes("I am not sure why I am giving this rock to the student...");
+				} else {
+					mes("Perhaps I should speak to him first");
+				}
+			} else {
+				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_ORANGE.id()) {
+					dId = RockDialogue.ALREADY_GAVE;
+				} else {
+					dId = RockDialogue.INCORRECT_ROCK;
+				}
+			}
+		} else if (npc.getID() == NpcId.STUDENT_GREEN.id()) {
+			cId = player.getQuestStage(Quests.DIGSITE) >= 3 || player.getQuestStage(Quests.DIGSITE) == -1 || player.getCache().hasKey("student_green_c")
+				? Progress.GAVE_ROCK : (player.getCache().hasKey("student_green_s") ? Progress.REQUESTED_ROCK : Progress.NOT_STARTED);
+			if (cId == Progress.REQUESTED_ROCK) {
+				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_GREEN.id()) {
+					giveRock(player, npc);
+				} else {
+					dId = RockDialogue.INCORRECT_ROCK;
+				}
+			} else if (cId == Progress.NOT_STARTED) {
+				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_GREEN.id()) {
+					mes("I am not sure why I am giving this rock to the student...");
+				} else {
+					mes("Perhaps I should speak to him first");
+				}
+			} else {
+				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_GREEN.id()) {
+					dId = RockDialogue.ALREADY_GAVE;
+				} else {
+					dId = RockDialogue.INCORRECT_ROCK;
+				}
+			}
+		} else if (npc.getID() == NpcId.STUDENT_PURPLE.id()) {
+			cId = player.getQuestStage(Quests.DIGSITE) >= 3 || player.getQuestStage(Quests.DIGSITE) == -1 || player.getCache().hasKey("student_purple_c")
+				? Progress.GAVE_ROCK : (player.getCache().hasKey("student_purple_s") ? Progress.REQUESTED_ROCK : Progress.NOT_STARTED);
+			if (cId == Progress.REQUESTED_ROCK) {
+				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_PURPLE.id()) {
+					giveRock(player, npc);
+				} else {
+					dId = RockDialogue.INCORRECT_ROCK;
+				}
+			} else if (cId == Progress.NOT_STARTED) {
+				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_PURPLE.id()) {
+					mes("I am not sure why I am giving this rock to the student...");
+				} else {
+					mes("Perhaps I should speak to her first");
+				}
+			} else {
+				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_PURPLE.id()) {
+					dId = RockDialogue.ALREADY_GAVE;
+				} else {
+					dId = RockDialogue.INCORRECT_ROCK;
+				}
+			}
+		}
+
+		if (dId == RockDialogue.ALREADY_GAVE) {
+			npcsay(player, npc, "Uh? you've already given me my rock sample back!");
+		} else if(dId == RockDialogue.INCORRECT_ROCK || dId == RockDialogue.CRACKED_ROCK) {
+			player.playerServerMessage(MessageType.QUEST, "You give the rock sample to the student");
+			say(player, npc, "Is this your sample ?");
+			if (dId == RockDialogue.INCORRECT_ROCK) {
+				npcsay(player, npc, "Oh dear, no it's not", "It looks a bit like this, but not the same...");
+			} else if (dId == RockDialogue.CRACKED_ROCK) {
+				if (npc.getID() == NpcId.STUDENT_GREEN.id()) {
+					npcsay(player, npc, "This ? oh no...", "mine wasn't in two pieces");
+				} else if (npc.getID() == NpcId.STUDENT_ORANGE.id()) {
+					npcsay(player, npc, "This broken rock ?", "I hope not!");
+				} else if (npc.getID() == NpcId.STUDENT_PURPLE.id()) {
+					// no captured dialogue from any sources - recreated
+					npcsay(player, npc, "This one cracked ?", "don't think so.");
+				}
+			}
+		}
+	}
+
+	class Progress {
+		public static final int NOT_STARTED = 0;
+		public static final int REQUESTED_ROCK = 1;
+		public static final int GAVE_ROCK = 2;
+	}
+
+	class RockDialogue {
+		public static final int NONE = -1;
+		public static final int ALREADY_GAVE = 0;
+		public static final int INCORRECT_ROCK = 1;
+		public static final int CRACKED_ROCK = 2;
 	}
 }

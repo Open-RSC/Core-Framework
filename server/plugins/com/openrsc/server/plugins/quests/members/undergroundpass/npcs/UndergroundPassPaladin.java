@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
@@ -25,24 +26,34 @@ public class UndergroundPassPaladin implements TalkNpcTrigger,
 		switch (player.getQuestStage(Quests.UNDERGROUND_PASS)) {
 			case 4:
 				say(player, n, "hello paladin");
-				if (!player.getCache().hasKey("paladin_food")) {
-					npcsay(player, n, "you've done well to get this far traveller, here eat");
-					player.message("the paladin gives you some food");
-					give(player, ItemId.MEAT_PIE.id(), 2);
-					give(player, ItemId.STEW.id(), 1);
-					give(player, ItemId.BREAD.id(), 2);
-					give(player, ItemId.TWO_ATTACK_POTION.id(), 1);
-					give(player, ItemId.TWO_RESTORE_PRAYER_POTION.id(), 1);
-					player.getCache().store("paladin_food", true);
-					say(player, n, "thanks");
+				int rand = DataConversions.getRandom().nextInt(1);
+				if (rand == 0) {
+					if (!player.getCache().hasKey("paladin_food")) {
+						npcsay(player, n, "you've done well to get this far traveller, here eat");
+						giveFood(player, n);
+						say(player, n, "thanks");
+					}
+					npcsay(player, n, "you should leave this place now traveller",
+						"i heard the crashing of rocks further down the cavern",
+						"iban must be restless",
+						"i have no doubt that zamorak still controls these caverns",
+						"a little further on lies the great door of iban",
+						"we've tried everything, but it will not let us enter",
+						"leave now before iban awakes and it's too late");
+				} else {
+					npcsay(player, n, "traveller, what are you doing in this most unholy place?");
+					say(player, n, "i'm looking for safe route through the caverns",
+						"under order of king lathas");
+					if (!player.getCache().hasKey("paladin_food")) {
+						npcsay(player, n, "you've done well to come this far, here eat");
+						giveFood(player, n);
+					}
+					npcsay(player, n, "There's no doubt Iban still controls these caverns..",
+						"we've also been looking for a passage through..",
+						"a little further on lies the great door of iban..",
+						"we've tried everything, but it will not let us enter..",
+						"leave now before iban awakes and it's too late");
 				}
-				npcsay(player, n, "you should leave this place now traveller",
-					"i heard the crashing of rocks further down the cavern",
-					"iban must be restless",
-					"i have no doubt that zamorak still controls these caverns",
-					"a little further on lies the great door of iban",
-					"we've tried everything, but it will not let us enter",
-					"leave now before iban awakes and it's too late");
 				break;
 			case 5:
 			case 6:
@@ -54,6 +65,16 @@ public class UndergroundPassPaladin implements TalkNpcTrigger,
 				n.startCombat(player);
 				break;
 		}
+	}
+
+	private void giveFood(Player player, Npc n) {
+		player.message("the paladin gives you some food");
+		give(player, ItemId.MEAT_PIE.id(), 2);
+		give(player, ItemId.STEW.id(), 1);
+		give(player, ItemId.BREAD.id(), 2);
+		give(player, ItemId.TWO_ATTACK_POTION.id(), 1);
+		give(player, ItemId.TWO_RESTORE_PRAYER_POTION.id(), 1);
+		player.getCache().store("paladin_food", true);
 	}
 
 	@Override

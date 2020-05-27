@@ -434,18 +434,31 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 371 && (obj.getY() == 700 || obj.getY() == 707)) {
 			Npc joe = ifnearvisnpc(player, NpcId.FIGHTSLAVE_JOE.id(), 5);
-
 			if (joe != null) {
 				say(player, joe, "are you ok?");
-				npcsay(player, joe, "spare me your fake pity",
-					"I spit on Khazard's grave and all who do his bidding");
+				if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
+					&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
+					npcsay(player, joe, "spare me your fake pity",
+						"I spit on Khazard's grave and all who do his bidding");
+				} else {
+					npcsay(player, joe, "you're not safe here traveller",
+						"leave while you still can");
+				}
 			}
+
 			Npc kelvin = ifnearvisnpc(player, NpcId.FIGHTSLAVE_KELVIN.id(), 5);
 			if (kelvin != null) {
 				say(player, kelvin, "hello there");
-				npcsay(player, kelvin, "get away, get away",
-					"one day i'll have my revenge",
-					"and i'll have all your heads!");
+				if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
+					&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
+					npcsay(player, kelvin, "get away, get away",
+						"one day i'll have my revenge",
+						"and i'll have all your heads!");
+				} else {
+					npcsay(player, kelvin, "you're a brave man",
+						"if the guards get you",
+						"you'll be in here next");
+				}
 			}
 		}
 		else if (obj.getID() == 371 && obj.getY() == 716) {

@@ -14,7 +14,8 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Bankers.class);
-	public static int[] BANKERS = {95, 224, 268, 540, 617};
+	public static int[] BANKERS = {NpcId.BANKER_GEN1.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_GEN2.id(),
+		NpcId.GNOME_BANKER.id(), NpcId.JUNGLE_BANKER.id()};
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc npc) {
@@ -26,7 +27,12 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player player, final Npc npc) {
-		npcsay(player, npc, "Good day" + (npc.getID() == NpcId.JUNGLE_BANKER.id() ? " Bwana" : "") + ", how may I help you?");
+		if (npc.getID() == NpcId.GNOME_BANKER.id()) {
+			say(player, npc, "hello");
+			npcsay(player, npc, "good day to you sir");
+		} else {
+			npcsay(player, npc, "Good day" + (npc.getID() == NpcId.JUNGLE_BANKER.id() ? " Bwana" : "") + ", how may I help you?");
+		}
 
 		int menu;
 
@@ -63,16 +69,21 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 				ActionSender.showBank(player);
 			}
 		} else if (menu == 1) {
-			npcsay(player, npc, "This is a branch of the bank of Runescape", "We have branches in many towns");
-			int branchMenu = multi(player, npc, "And what do you do?",
-				"Didn't you used to be called the bank of Varrock");
-			if (branchMenu == 0) {
-				npcsay(player, npc, "We will look after your items and money for you",
-					"So leave your valuables with us if you want to keep them safe");
-			} else if (branchMenu == 1) {
-				npcsay(player, npc, "Yes we did, but people kept on coming into our branches outside of varrock",
-					"And telling us our signs were wrong",
-					"As if we didn't know what town we were in or something!");
+			if (npc.getID() == NpcId.GNOME_BANKER.id()) {
+				npcsay(player, npc, "well it's the tree gnome bank off course", "a lot of custom passes through here",
+					"so a bank is essential in encouraging visitors");
+			} else {
+				npcsay(player, npc, "This is a branch of the bank of Runescape", "We have branches in many towns");
+				int branchMenu = multi(player, npc, "And what do you do?",
+					"Didn't you used to be called the bank of Varrock");
+				if (branchMenu == 0) {
+					npcsay(player, npc, "We will look after your items and money for you",
+						"So leave your valuables with us if you want to keep them safe");
+				} else if (branchMenu == 1) {
+					npcsay(player, npc, "Yes we did, but people kept on coming into our branches outside of varrock",
+						"And telling us our signs were wrong",
+						"As if we didn't know what town we were in or something!");
+				}
 			}
 		} else if (menu == 2 && config().WANT_BANK_PINS) {
 			int bankPinMenu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");

@@ -46,6 +46,9 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 				if (menu == 0) {
 					player.message("You carefully place the remains in your inventory.");
 					give(player, ItemId.RASHILIYA_CORPSE.id(), 1);
+					if (!player.getCache().hasKey("rashiliya_corpse")) {
+						player.getCache().store("rashiliya_corpse", true);
+					}
 				} else if (menu == 1) {
 					player.message("You decide to leave the remains where they are.");
 				}

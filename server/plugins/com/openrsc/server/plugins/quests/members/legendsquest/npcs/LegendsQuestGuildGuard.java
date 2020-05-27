@@ -73,7 +73,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 					}
 					break;
 				case LegendsGuard.HOW_DO_I_GET_IN_HERE:
-					npcsay(player, n, "Well " + (player.isMale() ? "sir" : "Ma'am") + ", ",
+					npcsay(player, n, "Well " + (player.isMale() ? "sir," : "Ma'am, "),
 						"you'll need to be a legendary citizen of RuneScape.",
 						"If you want to use the Legends Hall, ",
 						"you'll be invited to complete a quest.",

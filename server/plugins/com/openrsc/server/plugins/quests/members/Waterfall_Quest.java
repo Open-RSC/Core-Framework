@@ -214,6 +214,8 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 		} else if (n.getID() == NpcId.HADLEY.id()) {
 			if (player.getQuestStage(this) == 0 || player.getQuestStage(this) == 1) {
 				hadleyAltDialogue(player, n, HADLEY.ALL);
+			} else if (player.getCarriedItems().hasCatalogID(ItemId.BOOK_ON_BAXTORIAN.id(), Optional.of(false))) {
+				hadleyBookDialogue(player, n);
 			} else {
 				hadleyMainDialogue(player, n, HADLEY.ALL);
 			}
@@ -436,6 +438,18 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 		}
 	}
 
+	public void hadleyBookDialogue(final Player player, final Npc n) {
+		say(player, n, "hello there");
+		npcsay(player, n, "i hope you're enjoying your stay",
+			"there should be lots of useful infomation in that book",
+			"places to go, people to see");
+		int cID = hadleyMainMenuOptions(player, n, HADLEY.ALL);
+
+		if (cID >= 0) {
+			hadleyMainDialogue(player, n, cID);
+		}
+	}
+
 	public void hadleyMainDialogue(final Player player, final Npc n, int cID) {
 		if (cID == -1) {
 			say(player, n, "hello there");
@@ -548,7 +562,8 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 			npcsay(player, n, "surely pretty is an understatement kind sir",
 				"beautiful, amazing or possibly life changing would be more suitable wording",
 				"have your seen the baxtorian waterfall",
-				"it's quite a sight");
+				"it's quite a sight",
+				"named after the elf king who was buried beneath");
 			cID = hadleyAltMenuOptions(player, n, HADLEY.ALL);
 		}
 		//what happened to the elf king?

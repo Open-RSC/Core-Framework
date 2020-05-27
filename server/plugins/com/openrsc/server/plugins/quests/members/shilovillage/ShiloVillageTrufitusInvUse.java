@@ -233,7 +233,7 @@ public class ShiloVillageTrufitusInvUse implements UseNpcTrigger {
 			} else if (menu == 1) {
 				npcsay(player, n, "You must already know what it opens to have carved it",
 					"so pefectly.",
-					"Perhaps in your travels you have come",
+					"Perhaps in your travels you have come ",
 					"across some unique doors with a unique lock",
 					"I hope this helps with your quest.");
 			}
