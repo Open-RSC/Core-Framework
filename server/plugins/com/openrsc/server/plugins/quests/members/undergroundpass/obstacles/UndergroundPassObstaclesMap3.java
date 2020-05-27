@@ -154,8 +154,8 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 									stop();
 								}
 								/* If player has logged out or not region area */
-								else if (getOwner().isRemoved() || !getOwner().getLocation().inBounds(boundArea.getMinX(), boundArea.getMinY(),
-									boundArea.getMaxX(), boundArea.getMaxY())) {
+								else if (getOwner().isRemoved() || !getOwner().getLocation().inBounds(boundArea.getMinX(), boundArea.getMinY() - 3,
+									boundArea.getMaxX() + 4, boundArea.getMaxY() + 3)) {
 									stop();
 								}
 								/* ends it */
