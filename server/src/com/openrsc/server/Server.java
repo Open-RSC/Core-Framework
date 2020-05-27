@@ -355,7 +355,7 @@ public class Server implements Runnable {
 					outgoingTimePerPacketOpcode.clear();
 					outgoingCountPerPacketOpcode.clear();
 
-					LOGGER.info("Tick " + currentTick + " processed.");
+					//LOGGER.info("Tick " + currentTick + " processed.");
 				} else {
 					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
 						for (Player p : getWorld().getPlayers()) {
