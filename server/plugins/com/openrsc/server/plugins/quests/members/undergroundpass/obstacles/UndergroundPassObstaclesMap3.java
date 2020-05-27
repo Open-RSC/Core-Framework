@@ -3,10 +3,12 @@ package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.world.Area;
 import com.openrsc.server.model.world.Areas;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -30,7 +32,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 	public static final int DEMONS_CHEST_CLOSED = 912;
 
 	public static final int [] PIT_COORDS = {802, 3469};
-	public static final Area boundArea = new Area(PIT_COORDS[0] - 24, PIT_COORDS[0] + 24, PIT_COORDS[1] - 24, PIT_COORDS[1] + 24);
+	public static final Area boundArea = new Area(794, 800, 3467, 3471);
 
 	@Override
 	public boolean blockOpLoc(Player player, GameObject obj, String command) {
@@ -138,41 +140,43 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 						mes("@yel@Iban:die foolish mortal");
 						long start = System.currentTimeMillis();
 						Area area = Areas.getArea("ibans_room");
-						try {
-							while (true) {
+						int ticks = config().GAME_TICK > 600 ? 1 : 2;
+						player.getWorld().getServer().getGameEventHandler().add(new GameTickEvent(player.getWorld(), player, ticks, "Iban's chamber event", false) {
+							@Override
+							public void run() {
 								/* Time-out fail, handle appropriately */
-								if (System.currentTimeMillis() - start > 1000 * 60 * 2 && player.getLocation().inBounds(794, 3467, 799, 3471)) {
+								if (System.currentTimeMillis() - start > 1000 * 60 * 2 && player.getLocation().inBounds(boundArea.getMinX(), boundArea.getMinY(),
+									boundArea.getMaxX(), boundArea.getMaxY())) {
 									player.message("you're blasted out of the temple");
 									player.message("@yel@Iban: and stay out");
 									player.teleport(790, 3469);
-									break;
+									stop();
 								}
 								/* If player has logged out or not region area */
-								if (player.isRemoved() || !player.getLocation().inBounds(boundArea.getMinX(), boundArea.getMinY(),
-										boundArea.getMaxX(), boundArea.getMaxY())) {
-									break;
+								else if (player.isRemoved() || !player.getLocation().inBounds(boundArea.getMinX(), boundArea.getMinY(),
+									boundArea.getMaxX(), boundArea.getMaxY())) {
+									stop();
 								}
 								/* ends it */
-								if (player.getAttribute("iban_bubble_show", false)) {
-									break;
+								else if (player.getAttribute("iban_bubble_show", false)) {
+									stop();
 								}
-								/* Get random point on the area */
-								Point blastPosition = new Point(
-									DataConversions.random(area.getMinX(), area.getMaxX()),
-									DataConversions.random(area.getMinY(), area.getMaxY()));
-								ActionSender.sendTeleBubble(player, blastPosition.getX(), blastPosition.getY(), true);
-								if (player.getLocation().withinRange(blastPosition, 1)) {
-									/* Blast hit */
-									player.damage(((int) getCurrentLevel(player, Skills.HITS) / 6) + 2);
-									player.teleport(795, 3469); // insert the coords
-									say(player, null, "aarrgh");
-									player.message("you're blasted back to the door");
+								else {
+									/* Get random point on the area */
+									Point blastPosition = new Point(
+										DataConversions.random(area.getMinX(), area.getMaxX()),
+										DataConversions.random(area.getMinY(), area.getMaxY()));
+									ActionSender.sendTeleBubble(player, blastPosition.getX(), blastPosition.getY(), true);
+									if (player.getLocation().withinRange(blastPosition, 1)) {
+										/* Blast hit */
+										player.damage(((int) getCurrentLevel(player, Skills.HITS) / 6) + 2);
+										player.teleport(795, 3469); // insert the coords
+										player.getUpdateFlags().setChatMessage(new ChatMessage(player, "aarrgh"));
+										player.message("you're blasted back to the door");
+									}
 								}
-								delay(config().GAME_TICK);
 							}
-						} catch (Exception e) {
-							LOGGER.catching(e);
-						}
+						});
 					} else {
 						player.message("inside iban stands preaching at the alter");
 					}
