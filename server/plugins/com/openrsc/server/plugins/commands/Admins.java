@@ -107,7 +107,7 @@ public final class Admins implements CommandTrigger {
 		else if (command.equalsIgnoreCase("simrdt")) {
 			simulateRareDropTable(player, command, args);
 		} else if (command.equalsIgnoreCase("simulatedrop")) {
-			simulateDrop(player, command, args);
+
 		} else if (command.equalsIgnoreCase("restart")) {
 			player.getWorld().restartCommand();
 		} else if (command.equalsIgnoreCase("gi") || command.equalsIgnoreCase("gitem") || command.equalsIgnoreCase("grounditem")) {
@@ -485,112 +485,6 @@ public final class Admins implements CommandTrigger {
 		for (Map.Entry<String, Integer> entry : rareDrops.entrySet()) {
 			System.out.println(entry.getKey() + ": " + entry.getValue());
 		}
-	}
-
-	private void simulateDrop(Player player, String command, String[] args) {
-		if (args.length < 2 || args.length == 3) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [max_attempts]");
-			return;
-		}
-
-		int npcID;
-		try {
-			npcID = Integer.parseInt(args[0]);
-		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [max_attempts]");
-			return;
-		}
-
-		int maxAttempts;
-		try {
-			maxAttempts = Integer.parseInt(args[1]);
-		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [max_attempts]");
-			return;
-		}
-
-		int dropID = -1;
-		int dropWeight = 0;
-
-		HashMap<String, Integer> hmap = new HashMap<>();
-
-		ItemDropDef[] drops = Objects.requireNonNull(player.getWorld().getServer().getEntityHandler().getNpcDef(npcID)).getDrops();
-		for (ItemDropDef drop : drops) {
-			dropID = drop.getID();
-			if (dropID == -1) continue;
-
-			if (dropID == 10) {
-				for (int g : GoldDrops.drops.getOrDefault(npcID, new int[]{1}))
-					hmap.put("coins " + g, 0);
-			} else if (dropID == 160) {
-				int[] rares = {160, 159, 158, 157, 526, 527, 1277};
-				String[] rareNames = {"uncut sapphire", "uncut emerald",
-					"uncut ruby", "uncut diamond", "Half of a key", "Half of a key", "Half Dragon Square Shield"};
-				for (int r = 0; r < rares.length; r++)
-					hmap.put(rareNames[r].toLowerCase() + " " + rares[r], 0);
-			} else if (dropID == 165) {
-				int[] herbs = {165, 435, 436, 437, 438, 439, 440, 441, 442, 443};
-				for (int h : herbs)
-					hmap.put("herb " + h, 0);
-			} else {
-				ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(dropID);
-				hmap.put(def.getName().toLowerCase() + " " + dropID, 0);
-			}
-		}
-		int originalTotal = 0;
-		for (ItemDropDef drop : drops) {
-			originalTotal += drop.getWeight();
-		}
-		System.out.println("Total Weight: " + originalTotal);
-
-		int total = 0;
-		for (int i = 0; i < maxAttempts; i++) {
-			int hit = DataConversions.random(0, originalTotal);
-			total = 0;
-			for (ItemDropDef drop : drops) {
-				if (drop == null) {
-					continue;
-				}
-				if (drop.getID() == com.openrsc.server.constants.ItemId.UNHOLY_SYMBOL_MOULD.id()) {
-					if (player.getQuestStage(Quests.OBSERVATORY_QUEST) > -1)
-						continue;
-
-					if (config().WANT_CUSTOM_QUESTS)
-						if (player.getCache().hasKey("want_unholy_symbol_drops") &&
-							!player.getCache().getBoolean("want_unholy_symbol_drops"))
-							continue;
-				}
-				dropID = drop.getID();
-				dropWeight = drop.getWeight();
-				if (dropWeight == 0 && dropID != -1) {
-					continue;
-				}
-				if (hit >= total && hit < (total + dropWeight)) {
-					if (dropID != -1) {
-						if (dropID == 10) {
-							int d = Formulae.calculateGoldDrop(GoldDrops.drops.getOrDefault(npcID, new int[]{1}));
-							try {
-								hmap.put("coins " + d, hmap.get("coins " + d) + 1);
-							} catch (NullPointerException n) { // No coin value for npc
-							}
-						} else {
-							if (dropID == 160)
-								dropID = Formulae.calculateGemDrop(player);
-							else if (dropID == 165)
-								dropID = Formulae.calculateHerbDrop();
-							ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(dropID);
-							try {
-								hmap.put(def.getName().toLowerCase() + " " + dropID, hmap.get(def.getName().toLowerCase() + " " + dropID) + 1);
-							} catch (NullPointerException n) {
-							}
-						}
-						break;
-					}
-				}
-				total += dropWeight;
-			}
-		}
-		System.out.println(Arrays.toString(hmap.entrySet().toArray()));
 	}
 
 	private void spawnGroundItem(Player player, String command, String[] args) {

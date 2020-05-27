@@ -66,8 +66,6 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract NpcDef[] queryNpcDefs() throws GameDatabaseException;
 
-	protected abstract NpcDrop[] queryNpcDrops() throws GameDatabaseException;
-
 	protected abstract ItemDef[] queryItemDefs() throws GameDatabaseException;
 
 	protected abstract NpcLocation[] queryNpcLocations() throws GameDatabaseException;
@@ -461,10 +459,6 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	public NpcDef[] getNpcDefs() throws GameDatabaseException {
 		return queryNpcDefs();
-	}
-
-	public NpcDrop[] getNpcDrops() throws GameDatabaseException {
-		return queryNpcDrops();
 	}
 
 	public ItemDef[] getItemDefs() throws GameDatabaseException {

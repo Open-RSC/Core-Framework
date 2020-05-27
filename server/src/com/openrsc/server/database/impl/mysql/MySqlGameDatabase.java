@@ -235,34 +235,6 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected NpcDrop[] queryNpcDrops() throws GameDatabaseException {
-		try {
-			final PreparedStatement statement = getConnection().prepareStatement(getQueries().npcDrops);
-			final ResultSet dropResult = statement.executeQuery();
-			final ArrayList<NpcDrop> list = new ArrayList<>();
-
-			try {
-				while (dropResult.next()) {
-					NpcDrop drop = new NpcDrop();
-					drop.itemId = dropResult.getInt("id");
-					drop.npcId = dropResult.getInt("npcdef_id");
-					drop.weight = dropResult.getInt("weight");
-					drop.amount = dropResult.getInt("amount");
-
-					list.add(drop);
-				}
-			} finally {
-				dropResult.close();
-				statement.close();
-			}
-			return list.toArray(new NpcDrop[list.size()]);
-		} catch (final SQLException ex) {
-			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(this, ex.getMessage());
-		}
-	}
-
-	@Override
 	protected ItemDef[] queryItemDefs() throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().itemDefs);

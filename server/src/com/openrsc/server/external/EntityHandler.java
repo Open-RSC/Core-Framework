@@ -177,33 +177,8 @@ public final class EntityHandler {
 				npcDefinitions.add(def);
 			}
 
-			final NpcDrop drops[] = getServer().getDatabase().getNpcDrops();
-			final HashMap<Integer, ArrayList<ItemDropDef>> list = new HashMap<>();
-
-			for(final NpcDrop drop : drops) {
-				if(!list.containsKey(drop.npcId)) {
-					list.put(drop.npcId, new ArrayList<>());
-				}
-
-				final ItemDropDef dropDef = new ItemDropDef(drop.itemId, drop.amount, drop.weight);
-				list.get(drop.npcId).add(dropDef);
-			}
-
-			final Set<Map.Entry<Integer, ArrayList<ItemDropDef>>> entrySet = list.entrySet();
-			for (Map.Entry<Integer, ArrayList<ItemDropDef>> entry : entrySet) {
-				final int npcId = entry.getKey();
-				final ArrayList<ItemDropDef> arrayList = entry.getValue();
-				final NPCDef def = npcDefinitions.get(npcId);
-				def.drops = arrayList.toArray(new ItemDropDef[]{});
-			}
-
 			LOGGER.info("\t Loaded {}", box(npcDefinitions.size()) + " NPC definitions");
 			npcs = (ArrayList<NPCDef>) npcDefinitions.clone();
-			/*for (NPCDef n : npcs) {
-				if (n.isAttackable()) {
-					n.respawnTime -= (n.respawnTime / 3);
-				}
-			}*/
 
 			/* LOAD ITEM DEFS */
 			ArrayList<ItemDefinition> itemDefinitions = new ArrayList<ItemDefinition>();
