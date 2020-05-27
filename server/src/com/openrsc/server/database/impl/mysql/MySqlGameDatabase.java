@@ -235,34 +235,6 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected NpcDrop[] queryNpcDrops() throws GameDatabaseException {
-		try {
-			final PreparedStatement statement = getConnection().prepareStatement(getQueries().npcDrops);
-			final ResultSet dropResult = statement.executeQuery();
-			final ArrayList<NpcDrop> list = new ArrayList<>();
-
-			try {
-				while (dropResult.next()) {
-					NpcDrop drop = new NpcDrop();
-					drop.itemId = dropResult.getInt("id");
-					drop.npcId = dropResult.getInt("npcdef_id");
-					drop.weight = dropResult.getInt("weight");
-					drop.amount = dropResult.getInt("amount");
-
-					list.add(drop);
-				}
-			} finally {
-				dropResult.close();
-				statement.close();
-			}
-			return list.toArray(new NpcDrop[list.size()]);
-		} catch (final SQLException ex) {
-			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(this, ex.getMessage());
-		}
-	}
-
-	@Override
 	protected ItemDef[] queryItemDefs() throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().itemDefs);
@@ -2064,11 +2036,18 @@ public class MySqlGameDatabase extends GameDatabase {
 	@Override
 	protected int queryMaxItemID() throws GameDatabaseException {
 		try {
-			final PreparedStatement statement = getConnection().prepareStatement(getQueries().max_itemStatus, 1);
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().max_itemStatus);
 			ResultSet result = statement.executeQuery();
-			int itemID = 0;
-			if (result.next()) itemID = result.getInt(1);
-			return itemID;
+			try {
+				if (result.next()) {
+					return result.getInt("itemID");
+				}
+			}
+			finally {
+				result.close();
+				statement.close();
+			}
+			return 0;
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());

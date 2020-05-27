@@ -66,8 +66,6 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract NpcDef[] queryNpcDefs() throws GameDatabaseException;
 
-	protected abstract NpcDrop[] queryNpcDrops() throws GameDatabaseException;
-
 	protected abstract ItemDef[] queryItemDefs() throws GameDatabaseException;
 
 	protected abstract NpcLocation[] queryNpcLocations() throws GameDatabaseException;
@@ -463,10 +461,6 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		return queryNpcDefs();
 	}
 
-	public NpcDrop[] getNpcDrops() throws GameDatabaseException {
-		return queryNpcDrops();
-	}
-
 	public ItemDef[] getItemDefs() throws GameDatabaseException {
 		return queryItemDefs();
 	}
@@ -500,10 +494,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	public int inventoryAddToPlayer(final Player player, final Item item, int slot) {
-		player.getWorld().getServer().incrementMaxItemID();
-		System.out.println(player.getWorld().getServer().getMaxItemID());
-		return player.getWorld().getServer().getMaxItemID();
-		//return addItemToPlayer(item);
+		return player.getWorld().getServer().incrementMaxItemID();
 	}
 
 	public void inventoryRemoveFromPlayer(final Player player, final Item item) {
@@ -511,9 +502,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	public int equipmentAddToPlayer(final Player player, final Item item) {
-		player.getWorld().getServer().incrementMaxItemID();
-		return player.getWorld().getServer().getMaxItemID();
-		//return addItemToPlayer(item);
+		return player.getWorld().getServer().incrementMaxItemID();
 	}
 
 	public void equipmentRemoveFromPlayer(final Player player, final Item item) {
@@ -521,9 +510,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	public int bankAddToPlayer(final Player player, final Item item, int slot) {
-		player.getWorld().getServer().incrementMaxItemID();
-		return player.getWorld().getServer().getMaxItemID();
-		//return addItemToPlayer(item);
+		return player.getWorld().getServer().incrementMaxItemID();
 	}
 
 	public void bankRemoveFromPlayer(final Player player, final Item item) {

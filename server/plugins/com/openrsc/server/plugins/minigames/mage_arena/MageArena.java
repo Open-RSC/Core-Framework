@@ -15,6 +15,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
@@ -309,7 +310,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				}
 				String[] randomMessage = {"roooaar", "die you foolish mortal", "feel the power of the elements", "the bigger the better", "aaarrgghhh"};
 				npcYell(getOwner(), npc, randomMessage[random(0, randomMessage.length - 1)]);
-				getOwner().damage(random(3, 13));
+				getOwner().damage((int)Math.floor(getCurrentLevel(getOwner(), Skills.HITS)/10.0));
 
 			}
 		};

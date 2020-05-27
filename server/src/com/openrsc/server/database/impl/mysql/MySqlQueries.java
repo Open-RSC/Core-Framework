@@ -89,7 +89,7 @@ public class MySqlQueries {
 		playerCache = "SELECT `type`, `key`, `value` FROM `" + PREFIX + "player_cache` WHERE `playerID`=?";
 		save_DeleteBank = "DELETE i.*, i2.* FROM `" + PREFIX + "bank` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=?";
 		save_DeleteBankPresets = "DELETE FROM `" + PREFIX + "bankpresets` WHERE `playerID`=? AND `slot`=?";
-		max_itemStatus = "SELECT MAX(`itemID`) FROM " + PREFIX + "itemstatuses";
+		max_itemStatus = "SELECT `itemID` FROM `" + PREFIX + "itemstatuses` ORDER BY `itemID` DESC LIMIT 1";
 		save_ItemCreate = "INSERT INTO `" + PREFIX + "itemstatuses`(`itemId`, `catalogID`, `amount`, `noted`, `wielded`, `durability`) VALUES(?, ?, ?, ?, ?, ?)";
 		save_ItemPurge = "DELETE FROM `" + PREFIX + "itemstatuses` WHERE `itemID`=?";
 		save_ItemUpdate = "UPDATE `" + PREFIX + "itemstatuses` SET `amount`=?, `noted`=?, `wielded`=?, `durability`=? WHERE `itemID`=?";

@@ -230,32 +230,7 @@ public final class SuperModerator implements CommandTrigger {
 			}
 
 			player.message(messagePrefix + targetPlayer.getUsername() + " has stage " + targetPlayer.getQuestStage(quest) + " for quest " + quest);
-		} else if (cmd.equalsIgnoreCase("reloaddrops")) {
-			try {
-				final NpcDrop drops[] = player.getWorld().getServer().getDatabase().getNpcDrops();
-				final HashMap<Integer, ArrayList<ItemDropDef>> list = new HashMap<>();
 
-				for(final NpcDrop drop : drops) {
-					if(!list.containsKey(drop.npcId)) {
-						list.put(drop.npcId, new ArrayList<>());
-					}
-
-					final ItemDropDef dropDef = new ItemDropDef(drop.itemId, drop.amount, drop.weight);
-					list.get(drop.npcId).add(dropDef);
-				}
-
-				final Set<Map.Entry<Integer, ArrayList<ItemDropDef>>> entrySet = list.entrySet();
-				for (Map.Entry<Integer, ArrayList<ItemDropDef>> entry : entrySet) {
-					final int npcId = entry.getKey();
-					final ArrayList<ItemDropDef> arrayList = entry.getValue();
-					final NPCDef def = player.getWorld().getServer().getEntityHandler().getNpcDef(npcId);
-					def.drops = null;
-					def.drops = arrayList.toArray(new ItemDropDef[]{});
-				}
-			} catch (final GameDatabaseException ex) {
-				LOGGER.catching(ex);
-			}
-			player.message(messagePrefix + "Drop tables reloaded");
 		} else if (cmd.equalsIgnoreCase("reloadworld") || cmd.equalsIgnoreCase("reloadland")) {
 			player.getWorld().getWorldLoader().loadWorld();
 			player.message(messagePrefix + "World Reloaded");
