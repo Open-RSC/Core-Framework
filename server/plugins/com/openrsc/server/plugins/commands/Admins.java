@@ -1528,7 +1528,7 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		player.getWorld().getServer().getGameEventHandler().add(new HourlyNpcLootEvent(player.getWorld(), hours, "Oh no! Chickens are invading Lumbridge!", player.getLocation(), 3, npcAmount, 10, itemAmount, npcLifeTime));
+		player.getWorld().getServer().getGameEventHandler().add(new HourlyNpcLootEvent(player.getWorld(), hours, "Oh no! Chickens are invading Lumbridge!", Point.location(120, 648), 3, npcAmount, 10, itemAmount, npcLifeTime));
 		player.message(messagePrefix + "Chicken event started.");
 	}
 
