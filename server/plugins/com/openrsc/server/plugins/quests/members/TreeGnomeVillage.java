@@ -59,29 +59,50 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.KHAZARD_WARLORD.id()) {
-			if (player.getQuestStage(getQuestId()) == 6
-				|| player.getQuestStage(getQuestId()) == -1) {
-				if (player.getCarriedItems().hasCatalogID(ItemId.ORBS_OF_PROTECTION.id(), Optional.empty()) || player.getQuestStage(getQuestId()) == -1) {
-					say(player, n, "i thought i killed you?");
-					npcsay(player, n,
-						"fool.. warriors blessed by khazard don't die",
-						"you can't kill that which is already dead",
-						"however i can kill you");
+			switch (player.getQuestStage(getQuestId())) {
+				case 0:
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+					say(player, n, "hello, how are you?");
+					npcsay(player, n, "don't speak to me you insignificant wretch!",
+						"die, in the name of khazard!");
 					n.startCombat(player);
-				} else {
-					say(player, n, "you there, stop!");
-					npcsay(player, n, "go back to your pesky little green friends");
-					say(player, n, "i've come for the orbs");
-					npcsay(player, n, "you're out of your depth traveller",
-						"these orbs are part of a much larger picture");
-					say(player, n, "they're stolen goods",
-						"now give them here");
-					npcsay(player, n,
-						"hee hee you really think you stand a chance?",
-						"i'll crush you!");
-					delay(800);
+					break;
+				case 5:
+					say(player, n, "hello there");
+					npcsay(player, n, "you think you're so clever",
+						"you know nothing!");
+					say(player, n, "what?");
+					npcsay(player, n, "i'll crush you and those pesky little green men!");
 					n.startCombat(player);
-				}
+					break;
+				case 6:
+				case -1:
+					if ((player.getQuestStage(getQuestId()) == 6 && player.getCache().hasKey("looted_orbs_protect"))
+						|| player.getQuestStage(getQuestId()) == -1) {
+						say(player, n, "i thought i killed you?");
+						npcsay(player, n,
+							"fool.. warriors blessed by khazard don't die",
+							"you can't kill that which is already dead",
+							"however i can kill you");
+						n.startCombat(player);
+					} else {
+						say(player, n, "you there, stop!");
+						npcsay(player, n, "go back to your pesky little green friends");
+						say(player, n, "i've come for the orbs");
+						npcsay(player, n, "you're out of your depth traveller",
+							"these orbs are part of a much larger picture");
+						say(player, n, "they're stolen goods",
+							"now give them here");
+						npcsay(player, n,
+							"hee hee you really think you stand a chance?",
+							"i'll crush you!");
+						delay(800);
+						n.startCombat(player);
+					}
+					break;
 			}
 		}
 		else if (n.getID() == NpcId.TRACKER_1.id()) {

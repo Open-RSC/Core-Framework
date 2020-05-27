@@ -533,6 +533,29 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 										"Good luck for the rest of your quest.");
 								}
 								return;
+							} else if (player.getCache().hasKey("rashiliya_corpse")) {
+								say(player, n, "Hello...");
+								npcsay(player, n, "Greetings Bwana, I sense that something dreadful has happened.",
+									"Mosol Rei has sent word to me to say that the village is over",
+									"run with Zombies. Tell me, did you find Rashiliyias Tomb?");
+								int optD = multi(player, n, "Yes, I found the tomb.",
+									"I found Rashiliyias remains but I dropped them.",
+									"I found nothing.");
+								if (optD == 0) {
+									npcsay(player, n, "And what happened then?");
+									int subopt = multi(player, n, "I found Rashiliyias remains but I dropped them.",
+										"I found nothing.");
+									if (subopt == 0) {
+										trufitisChat(player, n, Trufitus.DROPED_RASHILIYIA);
+									} else if (subopt == 1) {
+										trufitisChat(player, n, Trufitus.FOUND_NOTHING);
+									}
+								} else if (optD == 1) {
+									trufitisChat(player, n, Trufitus.DROPED_RASHILIYIA);
+								} else if (optD == 2) {
+									trufitisChat(player, n, Trufitus.FOUND_NOTHING);
+								}
+								return;
 							}
 							say(player, n, "Hello again..");
 							npcsay(player, n, "And greetings to you Bwana!",
@@ -575,6 +598,33 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 			}
 		}
 		switch (cID) {
+			case Trufitus.DROPED_RASHILIYIA:
+				mes("Trufitus looks at you in amazement...");
+				npcsay(player, n, "I am truly speechless bwana.",
+					"How could you have been so careless.",
+					"You will need to get into her tomb again.",
+					"To see if you can reclaim her remains once more",
+					"Wait...I hear a voice....");
+				Npc zadimus = ifnearvisnpc(player, NpcId.ZADIMUS.id(), 10);
+				if (zadimus == null) {
+					zadimus = addnpc(player.getWorld(), NpcId.ZADIMUS.id(), player.getX(), player.getY());
+					npcsay(player, zadimus, "Rashiliyia has returned to her tomb and her power grows",
+						"you must gain entry to her resting place and",
+						"sanctify her remains in the manner of her son.",
+						"Remember, 'I am the key, but only kin may approach her.'");
+					mes("The apparition fades into nothingness.");
+					if (!player.getCarriedItems().hasCatalogID(ItemId.BONE_SHARD.id())) {
+						mes("A shard of bone appears on the ground in front of you.",
+							"You take the bone shard and place it into your inventory.");
+						give(player, ItemId.BONE_SHARD.id(), 1);
+					}
+					zadimus.remove();
+				}
+				break;
+			case Trufitus.FOUND_NOTHING:
+				npcsay(player, n, "You really should try to find the tomb.",
+					"It is our only chance if we hope to defeat Rashiliyia!");
+				break;
 			case Trufitus.DIDNT_FIND_ANYTHING_IN_THE_TOMB:
 				npcsay(player, n, "Maybe you need to look around a little more.",
 					"There must be some small detail at least that can help us");
@@ -1090,6 +1140,8 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 		public static final int HELP_WITH_BERVIRIUS = 15;
 		public static final int HELP_WITH_AH_ZA_RHOON_TEMPLE = 16;
 		public static final int DIDNT_FIND_ANYTHING_IN_THE_TOMB = 17;
+		public static final int DROPED_RASHILIYIA = 18;
+		public static final int FOUND_NOTHING = 19;
 	}
 
 	class QuestObjects {

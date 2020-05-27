@@ -121,7 +121,7 @@ public class Mourner implements TalkNpcTrigger {
 					npcsay(player, n, "are you ok");
 					say(player, n, "yes I'm fine thanks");
 					npcsay(player, n, "have you experienced any plague symptoms?");
-					int menuOpt = multi(player, n, //false
+					int menuOpt = multi(player, n, false, //do not send over
 						"What are the symptoms?",
 						"No i feel fine",
 						"No, but tell me where did the plague come from?");
