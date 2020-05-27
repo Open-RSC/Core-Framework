@@ -49,6 +49,14 @@ public class NpcDrops {
 
 		createBoneDrops();
 		createMobDrops();
+
+		if (config.WANT_RUNECRAFTING) {
+			//createRunecraftDrops();
+		}
+
+		if (config.WANT_CUSTOM_QUESTS) {
+			createCustomQuestDrops();
+		}
 	}
 
 	public boolean isBoneless(Integer npc) {
@@ -1542,6 +1550,8 @@ public class NpcDrops {
 
 	}
 
+	/** Custom Drop Tables **/
+
 	private void initializeCustomRareDropTables() {
 		rareDropTable = new DropTable("Rare Drop Table");
 		ultraRareDropTable = new DropTable("Ultra Rare Drop Table");
@@ -1645,6 +1655,12 @@ public class NpcDrops {
 		ultraRareDropTable.addAccessor(NpcId.BLACK_DRAGON.id(),5,256);
 		ultraRareDropTable.addAccessor(NpcId.KING_BLACK_DRAGON.id(),12,256);
 	}
+
+	private void createCustomQuestDrops() {
+		this.npcDrops.getOrDefault(NpcId.BALROG.id(), new DropTable("Balrog (809)")).addItemDrop(ItemId.TEDDY_HEAD.id(), 1, 0);
+	}
+
+	/** Helpers **/
 
 	public DropTable getDropTable(int npcId) {
 		return this.npcDrops.getOrDefault(npcId, null);
