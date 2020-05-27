@@ -729,7 +729,7 @@ public class Server implements Runnable {
 		return maxItemId;
 	}
 
-	public synchronized void incrementMaxItemID() {
-		maxItemId++;
+	public synchronized int incrementMaxItemID() {
+		return ++maxItemId;
 	}
 }
