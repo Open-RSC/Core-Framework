@@ -1396,6 +1396,28 @@ public class NpcDrops {
 		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.NECROMANCER.id(), currentNpcDrops);
 
+		currentNpcDrops = new DropTable("Tribesman (421)");
+		currentNpcDrops.addTableDrop(herbDropTable, 11);
+		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 15, 25);
+		currentNpcDrops.addItemDrop(ItemId.SNAPE_GRASS.id(), 1, 20);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 28, 12);
+		currentNpcDrops.addItemDrop(ItemId.LIMPWURT_ROOT.id(), 1, 12);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 2, 8);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 62, 5);
+		currentNpcDrops.addItemDrop(ItemId.GOLD.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 42, 4);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SPEAR.id(), 2, 4);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SPEAR.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.TWO_POISON_ANTIDOTE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.MITHRIL_SPEAR.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.IRON_SPEAR.id(), 1, 2);
+		currentNpcDrops.addItemDrop(ItemId.POISON_BRONZE_ARROWS.id(), 5, 2);
+		currentNpcDrops.addItemDrop(ItemId.POISON_CROSSBOW_BOLTS.id(), 4, 2);
+		currentNpcDrops.addItemDrop(ItemId.STEEL_SPEAR.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.FULL_POISON_ANTIDOTE.id(), 1, 1);
+		this.npcDrops.put(NpcId.TRIBESMAN.id(), currentNpcDrops);
+
 		currentNpcDrops = new DropTable("First plague sheep (430)");
 		currentNpcDrops.addItemDrop(ItemId.PLAGUED_SHEEP_REMAINS_1.id(), 1, 0);
 		this.npcDrops.put(NpcId.FIRST_PLAGUE_SHEEP.id(), currentNpcDrops);
