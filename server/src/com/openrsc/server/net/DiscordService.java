@@ -468,9 +468,14 @@ public class DiscordService implements Runnable{
 
 		http.setFixedLengthStreamingMode(length);
 		http.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-		http.connect();
-		try (OutputStream os = http.getOutputStream()) {
-			os.write(out);
+		try {
+			http.connect();
+			try (OutputStream os = http.getOutputStream()) {
+				os.write(out);
+			}
+		}
+		catch (Exception e) {
+			LOGGER.error(e);
 		}
 	}
 
