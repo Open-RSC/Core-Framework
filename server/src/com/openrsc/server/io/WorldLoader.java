@@ -165,13 +165,12 @@ public class WorldLoader {
 					int x = (sx + wildX) / 48;
 					int y = (sy + (lvl * 944) + wildY) / 48;
 					if (loadSection(x, y, lvl, sx, sy + (944 * lvl))) {
-						loadSection(x, y, lvl, sx, sy + (944 * lvl));
 						sectors++;
 					}
 				}
 			}
 		}
-		LOGGER.info(((System.currentTimeMillis() - start) / 1000) + "s to load landscape with " + sectors + " regions.");
+		LOGGER.info((System.currentTimeMillis() - start) + "ms to load landscape with " + sectors + " regions.");
 	}
 
 	public World getWorld() {
