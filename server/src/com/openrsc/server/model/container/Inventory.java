@@ -441,6 +441,7 @@ public class Inventory {
 				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), player, item.getNoted());
 			} else {
 				dropOwner = (opponent == null || !opponent.isPlayer()) ? player : (Player) opponent;
+				dropOwner = ((Player)opponent).getIronMan() > 0 ? null : dropOwner;
 				groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), item.getAmount(), dropOwner, item.getNoted());
 				groundItem.setAttribute("playerKill", true);
 			}
