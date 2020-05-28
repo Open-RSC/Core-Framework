@@ -44,7 +44,7 @@ logs:
 # Sets a specified username to be in a specified group in a specified database
 # Call via "make rank db=cabbage group=0 username=wolf"
 rank:
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "USE ${db}; UPDATE ${PREFIX}players SET group_id = '${group}' WHERE ${PREFIX}players.username = '${username}';"
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "USE ${db}; UPDATE players SET group_id = '${group}' WHERE players.username = '${username}';"
 
 # Creates a database that the user specifies the name of
 # Call via "make create db=cabbage"
