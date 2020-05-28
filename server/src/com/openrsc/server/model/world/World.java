@@ -111,7 +111,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		this.npcUnderAttackMap = new ConcurrentHashMap<>();
 		this.fishingTrawler = new ConcurrentHashMap<>();
 		this.snapshots = new LinkedList<>();
-		this.avatarGenerator = new AvatarGenerator(this);
+		this.avatarGenerator = getServer().getConfig().AVATAR_GENERATOR ? new AvatarGenerator(this) : null;
 		this.worldLoader = new WorldLoader(this);
 		this.regionManager = new RegionManager(this);
 		this.clanManager = new ClanManager(this);
@@ -786,8 +786,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		try {
 			if (getServer().getLoginExecutor() != null) {
 				getServer().getGameLogger().addQuery(new PlayerOnlineFlagQuery(getServer(), player.getDatabaseID(), false));
-				if (getServer().getConfig().AVATAR_GENERATOR)
+				if (avatarGenerator != null) {
 					avatarGenerator.generateAvatar(player.getDatabaseID(), player.getSettings().getAppearance(), player.getWornItems());
+				}
 			}
 			player.logout();
 			LOGGER.info("Unregistered " + player.getUsername() + " from player list.");
