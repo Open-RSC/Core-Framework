@@ -115,7 +115,7 @@ public class Server implements Runnable {
 			server.start();
 		}
 		final long endTime = System.currentTimeMillis();
-		final long bootTime = (endTime - startTime;
+		final long bootTime = endTime - startTime;
 
 		LOGGER.info(server.getName() + " started in " + bootTime + "ms");
 
