@@ -1,8 +1,11 @@
 package com.openrsc.server.io;
 
-import com.openrsc.server.model.world.World;
-import com.openrsc.server.model.world.region.TileValue;
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.database.WorldPopulator;
+import com.openrsc.server.model.world.World;
+import com.openrsc.server.model.world.region.Region;
+import com.openrsc.server.model.world.region.RegionManager;
+import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,22 +17,24 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class WorldLoader {
-	private static final int[] ALLOWED_WALL_ID_TYPES = {5, 6, 14, 42, 63, 128, 229, 230};
 	/**
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
+
+	private static final int[] ALLOWED_WALL_ID_TYPES = {5, 6, 14, 42, 63, 128, 229, 230};
+
 	private ZipFile tileArchive;
 	private final World world;
 	private final WorldPopulator worldPopulator;
 
-	public WorldLoader(World world) {
+	public WorldLoader(final World world) {
 		this.world = world;
 		this.worldPopulator = new WorldPopulator(getWorld());
 	}
 
-	private static boolean projectileClipAllowed(int wallID) {
-		for (int allowedWallIdType : ALLOWED_WALL_ID_TYPES) {
+	private static boolean projectileClipAllowed(final int wallID) {
+		for (final int allowedWallIdType : ALLOWED_WALL_ID_TYPES) {
 			if (allowedWallIdType == wallID) {
 				return true;
 			}
@@ -37,26 +42,25 @@ public class WorldLoader {
 		return false;
 	}
 
-	private boolean loadSection(int sectionX, int sectionY, int height, int bigX, int bigY) {
+	private boolean loadSection(final int sectionX, final int sectionY, final int height, final int bigX, final int bigY) {
 		Sector s = null;
 		try {
-			String filename = "h" + height + "x" + sectionX + "y" + sectionY;
-			ZipEntry e = tileArchive.getEntry(filename);
+			final String filename = "h" + height + "x" + sectionX + "y" + sectionY;
+			final ZipEntry e = tileArchive.getEntry(filename);
 			if (e == null) {
-				//LOGGER.warn("Ignoring Missing tile: " + filename);
+				//LOGGER.warn("Ignoring Missing Sector: " + filename);
 				return false;
 			}
-			ByteBuffer data = DataConversions
-				.streamToBuffer(new BufferedInputStream(tileArchive
-					.getInputStream(e)));
+			final ByteBuffer data = DataConversions.streamToBuffer(new BufferedInputStream(tileArchive.getInputStream(e)));
 			s = Sector.unpack(data);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
-		for (int y = 0; y < Sector.HEIGHT; y++) {
-			for (int x = 0; x < Sector.WIDTH; x++) {
-				int bx = bigX + x;
-				int by = bigY + y;
+		for (int y = 0; y < Constants.REGION_SIZE; y++) {
+			for (int x = 0; x < Constants.REGION_SIZE; x++) {
+				final int bx = bigX + x;
+				final int by = bigY + y;
+
 				if (!getWorld().withinWorld(bx, by)) {
 					continue;
 				}
@@ -73,14 +77,14 @@ public class WorldLoader {
 					sectorTile.groundOverlay = (byte) 2;
 				}
 
-				byte groundOverlay = sectorTile.groundOverlay;
+				final byte groundOverlay = sectorTile.groundOverlay;
 				if (groundOverlay > 0
 					&& getWorld().getServer().getEntityHandler().getTileDef(groundOverlay - 1)
 					.getObjectType() != 0) {
 					tile.traversalMask |= 0x40; // 64
 				}
 
-				int verticalWall = sectorTile.verticalWall & 0xFF;
+				final int verticalWall = sectorTile.verticalWall & 0xFF;
 				if (verticalWall > 0
 					&& getWorld().getServer().getEntityHandler().getDoorDef(verticalWall - 1)
 					.getUnknown() == 0
@@ -95,7 +99,7 @@ public class WorldLoader {
 					}
 				}
 
-				int horizontalWall = sectorTile.horizontalWall & 0xFF;
+				final int horizontalWall = sectorTile.horizontalWall & 0xFF;
 				if (horizontalWall > 0
 					&& getWorld().getServer().getEntityHandler().getDoorDef(horizontalWall - 1)
 					.getUnknown() == 0
@@ -109,7 +113,7 @@ public class WorldLoader {
 					}
 				}
 
-				int diagonalWalls = sectorTile.diagonalWalls;
+				final int diagonalWalls = sectorTile.diagonalWalls;
 				if (diagonalWalls > 0
 					&& diagonalWalls < 12000
 					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 1)
@@ -134,8 +138,9 @@ public class WorldLoader {
 					}
 				}
 
-				if (getWorld().getTile(bx, by).overlay == 2 || getWorld().getTile(bx, by).overlay == 11)
-					getWorld().getTile(bx, by).projectileAllowed = true;
+				if (tile.overlay == 2 || tile.overlay == 11) {
+					tile.projectileAllowed = true;
+				}
 			}
 		}
 		return true;
@@ -153,7 +158,7 @@ public class WorldLoader {
 			} else {
 				tileArchive = new ZipFile(new File("./conf/server/data/F2PLandscape.orsc")); // Free landscape
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
 		int sectors = 0;
@@ -170,6 +175,23 @@ public class WorldLoader {
 				}
 			}
 		}
+
+		// Detect if all tiles in each Region are equal, and if so only store that fact rather than array of all tiles.
+		// There are a lot of "null" sectors in the map file and storing tile values for all eats a lot of memory.
+		// The authentic map file may have a way to flag null regions and only use one tile value across the entire thing
+		// Unfortunately, the map files we are using currently do not support that feature so we need to detect
+		// Unfortunately, we also have to allocate all the tiles and then clear them because the process of loading a sector can effect other sectors.
+
+		final RegionManager regionManager = getWorld().getRegionManager();
+		for (int lvl = 0; lvl < 4; lvl++) {
+			for (int sx = 0; sx < 20; sx++) {
+				for (int sy = 0; sy < 20; sy++) {
+					final Region region = regionManager.getRegion(sx * Constants.REGION_SIZE, sy * Constants.REGION_SIZE + (Constants.REGION_SIZE * 20 * lvl));
+					region.checkRegionValues();
+				}
+			}
+		}
+
 		LOGGER.info((System.currentTimeMillis() - start) + "ms to load landscape with " + sectors + " regions.");
 	}
 

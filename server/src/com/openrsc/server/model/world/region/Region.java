@@ -7,11 +7,18 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 import java.util.HashSet;
 
 public class Region {
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	/**
 	 * The RegionManager this Region belongs to
 	 */
@@ -39,7 +46,12 @@ public class Region {
 	/**
 	 * A list of tiles in this region.
 	 */
-	final private TileValue[][] tiles = new TileValue[Constants.REGION_SIZE][Constants.REGION_SIZE];
+	private volatile TileValue[][] tiles;
+
+	/**
+	 * The constant tile value used for this region.
+	 */
+	private volatile TileValue tile;
 
 	/**
 	 * The X index of this region
@@ -51,10 +63,19 @@ public class Region {
 	 */
 	private final int regionY;
 
+	/**
+	 * This constructor is used to create a blank region
+	 * @param regionManager
+	 * @param regionX
+	 * @param regionY
+	 */
 	public Region(final RegionManager regionManager, final int regionX, final int regionY) {
 		this.regionManager = regionManager;
 		this.regionX = regionX;
 		this.regionY = regionY;
+
+		this.tiles = new TileValue[Constants.REGION_SIZE][Constants.REGION_SIZE];
+		this.tile = null;
 
 		for (int i = 0; i < Constants.REGION_SIZE; i++) {
 			for (int j = 0; j < Constants.REGION_SIZE; j++) {
@@ -105,19 +126,19 @@ public class Region {
 	public void removeEntity(final Entity e) {
 		if (e.isPlayer()) {
 			synchronized (players) {
-				players.remove((Player) e);
+				players.remove(e);
 			}
 		} else if (e.isNpc()) {
 			synchronized (npcs) {
-				npcs.remove((Npc) e);
+				npcs.remove(e);
 			}
 		} else if (e instanceof GameObject) {
 			synchronized (objects) {
-				objects.remove((GameObject) e);
+				objects.remove(e);
 			}
 		} else if (e instanceof GroundItem) {
 			synchronized (items) {
-				items.remove((GroundItem) e);
+				items.remove(e);
 			}
 		}
 	}
@@ -148,22 +169,22 @@ public class Region {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder(2000);
 		sb.append("Players:\n");
-		for (Player p : players) {
+		for (final Player p : players) {
 			sb.append("\t").append(p).append("\n");
 		}
 
 		sb.append("\nNpcs:\n");
-		for (Npc n : npcs) {
+		for (final Npc n : npcs) {
 			sb.append("\t").append(n).append("\n");
 		}
 
 		sb.append("\nItems:\n");
-		for (GroundItem i : items) {
+		for (final GroundItem i : items) {
 			sb.append("\t").append(i).append("\n");
 		}
 
 		sb.append("\nObjects:\n");
-		for (Object o : objects) {
+		for (final Object o : objects) {
 			sb.append("\t").append(o).append("\n");
 		}
 
@@ -174,25 +195,25 @@ public class Region {
 		final StringBuilder sb = new StringBuilder(2000);
 		if (debugPlayers) {
 			sb.append("Players:\n");
-			for (Player p : players) {
+			for (final Player p : players) {
 				sb.append("\t").append(p).append("\n");
 			}
 		}
 		if (debugNpcs) {
 			sb.append("\nNpcs:\n");
-			for (Npc n : npcs) {
+			for (final Npc n : npcs) {
 				sb.append("\t").append(n).append("\n");
 			}
 		}
 		if (debugItems) {
 			sb.append("\nItems:\n");
-			for (GroundItem i : items) {
+			for (final GroundItem i : items) {
 				sb.append("\t").append(i).append("\n");
 			}
 		}
 		if (debugObjects) {
 			sb.append("\nObjects:\n");
-			for (Object o : objects) {
+			for (final Object o : objects) {
 				sb.append("\t").append(o).append("\n");
 			}
 		}
@@ -278,7 +299,7 @@ public class Region {
 	}
 
 	public TileValue getTileValue(final int regionX, final int regionY) {
-		return tiles[regionX][regionY];
+		return tile != null ? tile : tiles[regionX][regionY];
 	}
 
 	public TileValue getTileValue(final Point regionPoint) {
@@ -295,5 +316,20 @@ public class Region {
 
 	public int getRegionY() {
 		return regionY;
+	}
+
+	public void checkRegionValues() {
+		boolean allTilesEqual = true;
+		final TileValue firstTile = tiles[0][0];
+		for (int i = 0; i < Constants.REGION_SIZE && allTilesEqual; i++) {
+			for (int j = 0; j < Constants.REGION_SIZE && allTilesEqual; j++) {
+				allTilesEqual = allTilesEqual && firstTile.equals(tiles[i][j]);
+			}
+		}
+
+		if (allTilesEqual) {
+			tile = tiles[0][0];
+			tiles = null;
+		}
 	}
 }

@@ -8,4 +8,27 @@ public class TileValue {
 	public byte verticalWallVal = 0;
 	public byte elevation = 0;
 	public boolean projectileAllowed = false;
+
+	@Override
+	public String toString() {
+		return "TileValue{" +
+			"traversalMask=" + traversalMask +
+			", diagWallVal=" + diagWallVal +
+			", horizontalWallVal=" + horizontalWallVal +
+			", overlay=" + overlay +
+			", verticalWallVal=" + verticalWallVal +
+			", elevation=" + elevation +
+			", projectileAllowed=" + projectileAllowed +
+			'}';
+	}
+
+	public boolean equals(final TileValue other) {
+		return 	this.traversalMask == other.traversalMask &&
+				this.diagWallVal == other.diagWallVal &&
+				this.horizontalWallVal == other.horizontalWallVal &&
+				this.overlay == other.overlay &&
+				this.verticalWallVal == other.verticalWallVal &&
+				this.elevation == other.elevation &&
+				this.projectileAllowed == other.projectileAllowed;
+	}
 }

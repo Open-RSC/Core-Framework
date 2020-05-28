@@ -50,7 +50,7 @@ public class RegionManager {
 	 * @return The collection of local NPCs.
 	 */
 	public Collection<Npc> getLocalNpcs(final Entity entity) {
-		final LinkedHashSet<Npc> localNpcs = new LinkedHashSet<Npc>();
+		final LinkedHashSet<Npc> localNpcs = new LinkedHashSet<>();
 		for (final Region region : getSurroundingRegions(entity.getLocation())) {
 			for (final Npc npc : region.getNpcs()) {
 				if (npc.withinRange(entity)) {
@@ -63,8 +63,8 @@ public class RegionManager {
 
 	public Collection<GameObject> getLocalObjects(final Mob entity) {
 		LinkedHashSet<GameObject> localObjects = new LinkedHashSet<GameObject>();
-		for (Iterator<Region> region = getSurroundingRegions(entity.getLocation()).iterator(); region.hasNext(); ) {
-			for (Iterator<GameObject> o = region.next().getGameObjects().iterator(); o.hasNext(); ) {
+		for (final Iterator<Region> region = getSurroundingRegions(entity.getLocation()).iterator(); region.hasNext(); ) {
+			for (final Iterator<GameObject> o = region.next().getGameObjects().iterator(); o.hasNext(); ) {
 				if (o == null) continue;
 				final GameObject gameObject = o.next();
 				if (gameObject.getLocation().withinGridRange(entity.getLocation(), getWorld().getServer().getConfig().VIEW_DISTANCE)) {

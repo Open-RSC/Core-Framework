@@ -1,18 +1,11 @@
 package com.openrsc.server.io;
 
+import com.openrsc.server.constants.Constants;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class Sector {
-	/**
-	 * The height of a sector
-	 */
-	static final short HEIGHT = 48;
-
-	/**
-	 * The width of a sector
-	 */
-	static final short WIDTH = 48;
 	/**
 	 * An array containing all the tiles within this Sector
 	 */
@@ -22,7 +15,7 @@ public class Sector {
 	 * Creates a new Sector full of blank tiles
 	 */
 	private Sector() {
-		tiles = new Tile[Sector.WIDTH * Sector.HEIGHT];
+		tiles = new Tile[Constants.REGION_SIZE * Constants.REGION_SIZE];
 		for (int i = 0; i < tiles.length; i++) {
 			tiles[i] = new Tile();
 		}
@@ -32,7 +25,7 @@ public class Sector {
 	 * Create a new Sector from raw data packed into the given ByteBuffer
 	 */
 	static Sector unpack(ByteBuffer in) throws IOException {
-		int length = Sector.WIDTH * Sector.HEIGHT;
+		final int length = Constants.REGION_SIZE * Constants.REGION_SIZE;
 		if (in.remaining() < (10 * length)) {
 			throw new IOException("Provided buffer too short");
 		}
@@ -56,7 +49,7 @@ public class Sector {
 	 * Gets the Tile at the given coords
 	 */
 	public Tile getTile(int x, int y) {
-		return getTile(x * Sector.WIDTH + y);
+		return getTile(x * Constants.REGION_SIZE + y);
 	}
 
 	/**
@@ -77,7 +70,7 @@ public class Sector {
 	 * Sets the the Tile at the given coords
 	 */
 	public void setTile(int x, int y, Tile t) {
-		setTile(x * Sector.WIDTH + y, t);
+		setTile(x * Constants.REGION_SIZE + y, t);
 	}
 
 	/**
@@ -94,7 +87,7 @@ public class Sector {
 //	public boolean isNorthernTraversalPermitted() {
 //		return (traversalMask & NORTH_TRAVERSAL_PERMITTED) > 0;
 //	}
-//	
+//
 //	/**
 //	 * Checks if eastern traversal is permitted.
 //	 * @return True if so, false if not.
@@ -102,7 +95,7 @@ public class Sector {
 //	public boolean isEasternTraversalPermitted() {
 //		return (traversalMask & EAST_TRAVERSAL_PERMITTED) > 0;
 //	}
-//	
+//
 //	/**
 //	 * Checks if southern traversal is permitted.
 //	 * @return True if so, false if not.
@@ -110,7 +103,7 @@ public class Sector {
 //	public boolean isSouthernTraversalPermitted() {
 //		return (traversalMask & SOUTH_TRAVERSAL_PERMITTED) > 0;
 //	}
-//	
+//
 //	/**
 //	 * Checks if western traversal is permitted.
 //	 * @return True if so, false if not.
