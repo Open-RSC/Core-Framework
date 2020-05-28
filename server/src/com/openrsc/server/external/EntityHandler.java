@@ -34,7 +34,7 @@ public final class EntityHandler {
 	private final Server server;
 	private final PersistenceManager persistenceManager;
 
-	public ItemDefinition[] items;
+	public ArrayList<ItemDefinition> items;
 	public ArrayList<NPCDef> npcs;
 	public SpellDef[] spells;
 	private HashMap<Integer, ItemArrowHeadDef> arrowHeads;
@@ -106,11 +106,6 @@ public final class EntityHandler {
 		this.persistenceManager = new PersistenceManager(getServer());
 	}
 
-	public void load() {
-		setupFileDefinitions();
-		setupDbDefinitions();
-	}
-
 	public void unload() {
 		npcs = null;
 		items = null;
@@ -146,13 +141,19 @@ public final class EntityHandler {
 		certers = null;
 	}
 
-	protected void setupFileDefinitions() {
+	public void load() {
 		npcs = new ArrayList<>();
 		LOGGER.info("\t Loading npc definitions...");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefs.json");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefsCustom.json");
 		customNpcConditions();
 		LOGGER.info("\t Loaded " + npcs.size() + " npc definitions");
+
+		items = new ArrayList<>();
+		LOGGER.info("\t Loading item definitions...");
+		loadItems(getServer().getConfig().CONFIG_DIR + "/defs/ItemDefs.json");
+		loadItems(getServer().getConfig().CONFIG_DIR + "/defs/ItemDefsCustom.json");
+		LOGGER.info("\t Loaded " + items.size() + " item definitions");
 
 		doors = (DoorDef[]) getPersistenceManager().load("defs/DoorDef.xml.gz");
 		gameObjects = (GameObjectDef[]) getPersistenceManager().load("defs/GameObjectDef.xml.gz");
@@ -183,51 +184,6 @@ public final class EntityHandler {
 		objectHarvesting = (HashMap<Integer, ObjectHarvestingDef>) getPersistenceManager().load("defs/extras/ObjectHarvesting.xml.gz");
 		objectTelePoints = (HashMap<Point, TelePoint>) getPersistenceManager().load("locs/extras/ObjectTelePoints.xml.gz");
 		certers = (HashMap<Integer, CerterDef>) getPersistenceManager().load("defs/extras/NpcCerters.xml.gz");
-	}
-
-	protected void setupDbDefinitions() {
-		try {
-			/* LOAD ITEM DEFS */
-			ArrayList<ItemDefinition> itemDefinitions = new ArrayList<ItemDefinition>();
-
-			ItemDef[] itemDefs = getServer().getDatabase().getItemDefs();
-
-			for (ItemDef item : itemDefs) {
-				ItemDefinition toAdd = new ItemDefinition(
-					item.id,
-					item.name,
-					item.description,
-					item.command.split(","),
-					item.isFemaleOnly,
-					item.isMembersOnly,
-					item.isStackable,
-					item.isUntradable,
-					item.isWearable,
-					item.appearanceID,
-					item.wearableID,
-					item.wearSlot,
-					item.requiredLevel,
-					item.requiredSkillID,
-					item.armourBonus,
-					item.weaponAimBonus,
-					item.weaponPowerBonus,
-					item.magicBonus,
-					item.prayerBonus,
-					item.basePrice,
-					item.isNoteable);
-
-				if (toAdd.getCommand().length == 1 && toAdd.getCommand()[0] == "") {
-					toAdd.nullCommand();
-				}
-				itemDefinitions.add(toAdd);
-			}
-
-			items = itemDefinitions.toArray(new ItemDefinition[]{});
-			LOGGER.info("\t Loaded {}", box(itemDefinitions.size()) + " item definitions");
-		} catch (Exception e) {
-			LOGGER.catching(e);
-			System.exit(1);
-		}
 	}
 
 	private void loadNpcs(String filename) {
@@ -274,6 +230,7 @@ public final class EntityHandler {
 		}
 	}
 
+
 	private void customNpcConditions() {
 		if (getServer().getConfig().RIGHT_CLICK_TRADE) {
 			for (int npcId : quickTradeNpcs) {
@@ -284,10 +241,50 @@ public final class EntityHandler {
 			if (getServer().getConfig().WANT_RUNECRAFTING) {
 				npcs.get(NpcId.AUBURY.id()).setCommand1("Teleport");
 				npcs.get(NpcId.AUBURY.id()).setCommand2("Trade");
-			}
-			else {
+			} else {
 				npcs.get(NpcId.AUBURY.id()).setCommand1("Trade");
 			}
+		}
+	}
+
+	private void loadItems(String filename) {
+		try {
+			JSONObject object = new JSONObject(Files.readString(Paths.get(filename)));
+			JSONArray itemDefs = object.getJSONArray(JSONObject.getNames(object)[0]);
+			for (int i = 0; i < itemDefs.length(); i++) {
+				JSONObject item = itemDefs.getJSONObject(i);
+				ItemDefinition toAdd = new ItemDefinition(
+					item.getInt("id"),
+					item.getString("name"),
+					item.getString("description"),
+					item.getString("command").split(","),
+					item.getInt("isFemaleOnly") == 1,
+					item.getInt("isMembersOnly") == 1,
+					item.getInt("isStackable") == 1,
+					item.getInt("isUntradable") == 1,
+					item.getInt("isWearable") == 1,
+					item.getInt("appearanceID"),
+					item.getInt("wearableID"),
+					item.getInt("wearSlot"),
+					item.getInt("requiredLevel"),
+					item.getInt("requiredSkillID"),
+					item.getInt("armourBonus"),
+					item.getInt("weaponAimBonus"),
+					item.getInt("weaponPowerBonus"),
+					item.getInt("magicBonus"),
+					item.getInt("prayerBonus"),
+					item.getInt("basePrice"),
+					item.getInt("isNoteable") == 1
+				);
+
+				if (toAdd.getCommand().length == 1 && toAdd.getCommand()[0] == "") {
+					toAdd.nullCommand();
+				}
+				items.add(toAdd);
+			}
+		}
+		catch (Exception e) {
+			LOGGER.error(e);
 		}
 	}
 
@@ -393,10 +390,10 @@ public final class EntityHandler {
 	 * @return the ItemDef with the given ID
 	 */
 	public ItemDefinition getItemDef(int id) {
-		if (id < 0 || id >= items.length) {
+		if (id < 0 || id >= items.size()) {
 			return null;
 		}
-		return items[id];
+		return items.get(id);
 	}
 
 	/**

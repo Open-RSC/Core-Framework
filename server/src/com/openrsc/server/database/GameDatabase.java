@@ -64,8 +64,6 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract String queryBanPlayer(String userNameToBan, Player bannedBy, long bannedForMinutes) throws GameDatabaseException;
 
-	protected abstract ItemDef[] queryItemDefs() throws GameDatabaseException;
-
 	protected abstract NpcLocation[] queryNpcLocations() throws GameDatabaseException;
 
 	protected abstract SceneryObject[] queryObjects() throws GameDatabaseException;
@@ -453,10 +451,6 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	public PlayerLoginData getPlayerLoginData(final String username) throws GameDatabaseException {
 		return queryPlayerLoginData(username);
-	}
-
-	public ItemDef[] getItemDefs() throws GameDatabaseException {
-		return queryItemDefs();
 	}
 
 	public NpcLocation[] getNpcLocs() throws GameDatabaseException {

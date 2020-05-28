@@ -186,50 +186,6 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected ItemDef[] queryItemDefs() throws GameDatabaseException {
-		try {
-			final PreparedStatement statement = getConnection().prepareStatement(getQueries().itemDefs);
-			final ResultSet result = statement.executeQuery();
-			final ArrayList<ItemDef> itemDefs = new ArrayList<>();
-
-			try {
-				while (result.next()) {
-					ItemDef item = new ItemDef();
-					item.id = result.getInt("id");
-					item.name = result.getString("name");
-					item.description = result.getString("description");
-					item.command = result.getString("command");
-					item.isFemaleOnly = result.getBoolean("isFemaleOnly");
-					item.isMembersOnly = result.getBoolean("isMembersOnly");
-					item.isStackable = result.getBoolean("isStackable");
-					item.isUntradable = result.getBoolean("isUntradable");
-					item.isWearable = result.getBoolean("isWearable");
-					item.appearanceID = result.getInt("appearanceID");
-					item.wearableID = result.getInt("wearableID");
-					item.wearSlot = result.getInt("wearSlot");
-					item.requiredLevel = result.getInt("requiredLevel");
-					item.requiredSkillID = result.getInt("requiredSkillID");
-					item.armourBonus = result.getInt("armourBonus");
-					item.weaponAimBonus = result.getInt("weaponAimBonus");
-					item.weaponPowerBonus = result.getInt("weaponPowerBonus");
-					item.magicBonus = result.getInt("magicBonus");
-					item.prayerBonus = result.getInt("prayerBonus");
-					item.basePrice = result.getInt("basePrice");
-					item.isNoteable = result.getBoolean("isNoteable");
-
-					itemDefs.add(item);
-				}
-				return itemDefs.toArray(new ItemDef[itemDefs.size()]);
-			} finally {
-				result.close();
-				statement.close();
-			}
-		} catch (final SQLException ex) {
-			throw new GameDatabaseException(this, ex.getMessage());
-		}
-	}
-
-	@Override
 	protected NpcLocation[] queryNpcLocations() throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().npcLocs);

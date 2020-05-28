@@ -66,7 +66,7 @@ public class InvItemPoisoning implements UseInvTrigger {
 	private Item getPoisonedItem(World world, String name) {
 		String poisonedVersion = "Poisoned " + name;
 		String poisonedVersion2 = "Poison " + name;
-		for (int i = 0; i < world.getServer().getEntityHandler().items.length; i++) {
+		for (int i = 0; i < world.getServer().getEntityHandler().items.size(); i++) {
 			ItemDefinition def = world.getServer().getEntityHandler().getItemDef(i);
 			if (def.getName().equalsIgnoreCase(poisonedVersion) || def.getName().equalsIgnoreCase(poisonedVersion2)) {
 				return new Item(i);
