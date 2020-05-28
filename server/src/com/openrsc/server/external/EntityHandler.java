@@ -230,18 +230,19 @@ public final class EntityHandler {
 		}
 	}
 
-
 	private void customNpcConditions() {
 		if (getServer().getConfig().RIGHT_CLICK_TRADE) {
 			for (int npcId : quickTradeNpcs) {
 				npcs.get(npcId).setCommand1("Trade");
 			}
+
 			npcs.get(NpcId.BLURBERRY_BARMAN.id()).setCommand1("pickpocket");
 			npcs.get(NpcId.BLURBERRY_BARMAN.id()).setCommand2("Trade");
 			if (getServer().getConfig().WANT_RUNECRAFTING) {
 				npcs.get(NpcId.AUBURY.id()).setCommand1("Teleport");
 				npcs.get(NpcId.AUBURY.id()).setCommand2("Trade");
-			} else {
+			}
+			else {
 				npcs.get(NpcId.AUBURY.id()).setCommand1("Trade");
 			}
 		}
