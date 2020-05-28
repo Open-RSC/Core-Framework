@@ -1655,7 +1655,7 @@ public class EntityHandler {
 		sprites = new int[]{3, 4, 2, -1, -1, -1, 201, 202, -1, -1, -1, 65};
 		npcs.add(new NPCDef("Rashiliyia", "A willowy ethereal being who floats above the ground", "", 80, 80, 80, 80, false, sprites, 1, 2, 3, 3978097, 155, 220, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, -1, 193, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Blurberry", "It's a red faced tree gnome", shopOption, 3, 3, 3, 3, false, sprites, 1, 11184895, 14535850, 36864, 110, 140, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Blurberry", "It's a red faced tree gnome", "", 3, 3, 3, 3, false, sprites, 1, 11184895, 14535850, 36864, 110, 140, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, -1, 195, -1, -1, -1, -1, 10, -1};
 		npcs.add(new NPCDef("Heckel funch", "It's another jolly tree gnome", shopOption, 3, 3, 3, 3, false, sprites, 1, 16711680, 14535850, 36864, 90, 130, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1};

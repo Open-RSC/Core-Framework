@@ -98,7 +98,7 @@ public final class EntityHandler {
 		NpcId.OGRE_TRADER_ROCKCAKE.id(), NpcId.OGRE_TRADER_FOOD.id(), NpcId.SHANTAY_PASS_GUARD_MOVING.id(),
 		NpcId.SHANTAY_PASS_GUARD_STANDING.id(), NpcId.ASSISTANT.id(), NpcId.NURMOF.id(),
 		NpcId.SIEGFRIED_ERKLE.id(), NpcId.TEA_SELLER.id(), NpcId.FIONELLA.id(),
-		NpcId.LUNDAIL.id(), NpcId.DWARVEN_SMITHY.id()
+		NpcId.LUNDAIL.id(), NpcId.DWARVEN_SMITHY.id(), NpcId.GARDENER.id()
 	};
 
 	public EntityHandler(Server server) {
@@ -279,7 +279,7 @@ public final class EntityHandler {
 			for (int npcId : quickTradeNpcs) {
 				npcs.get(npcId).setCommand1("Trade");
 			}
-			npcs.get(NpcId.BLURBERRY_BARMAN.id()).setCommand1("Pickpocket");
+			npcs.get(NpcId.BLURBERRY_BARMAN.id()).setCommand1("pickpocket");
 			npcs.get(NpcId.BLURBERRY_BARMAN.id()).setCommand2("Trade");
 			if (getServer().getConfig().WANT_RUNECRAFTING) {
 				npcs.get(NpcId.AUBURY.id()).setCommand1("Teleport");
