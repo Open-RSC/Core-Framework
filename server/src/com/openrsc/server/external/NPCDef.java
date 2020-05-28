@@ -114,9 +114,15 @@ public class NPCDef extends EntityDef {
 	public String getCommand1() {
 		return command1;
 	}
+	public void setCommand1(String command) {
+		command1 = command;
+	}
 
 	public String getCommand2() {
 		return command2;
+	}
+	public void setCommand2(String command) {
+		command2 = command;
 	}
 
 	public int getDef() {

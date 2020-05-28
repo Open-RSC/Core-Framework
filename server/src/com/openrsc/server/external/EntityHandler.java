@@ -1,10 +1,12 @@
 package com.openrsc.server.external;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.database.struct.ItemDef;
 import com.openrsc.server.database.struct.NpcDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.TelePoint;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.util.PersistenceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,6 +65,42 @@ public final class EntityHandler {
 	private PrayerDef[] prayers;
 	private TileDef[] tiles;
 
+	private int[] quickTradeNpcs = new int[] {
+		NpcId.BOB.id(), NpcId.HORVIK_THE_ARMOURER.id(), NpcId.SHOPKEEPER_VARROCK.id(),
+		NpcId.SHOPKEEPER_LUMBRIDGE.id(), NpcId.SHOPKEEPER_VARROCK_SWORD.id(), NpcId.LOWE.id(),
+		NpcId.THESSALIA.id(), NpcId.ZAFF.id(), NpcId.PEKSA.id(),
+		NpcId.SHOP_ASSISTANT_VARROCK.id(), NpcId.SHOP_ASSISTANT_LUMBRIDGE.id(), NpcId.ZEKE.id(),
+		NpcId.LOUIE_LEGS.id(), NpcId.SHOPKEEPER_ALKHARID.id(), NpcId.SHOP_ASSISTANT_ALKHARID.id(),
+		NpcId.CASSIE.id(), NpcId.RANAEL.id(), NpcId.SHOPKEEPER_FALADOR.id(),
+		NpcId.SHOP_ASSISTANT_FALADOR.id(), NpcId.VALAINE.id(), NpcId.DROGO.id(),
+		NpcId.FLYNN.id(), NpcId.WYDIN.id(), NpcId.SHOP_ASSISTANT_VARROCK_SWORD.id(),
+		NpcId.BRIAN.id(), NpcId.WAYNE.id(), NpcId.DWARVEN_SHOPKEEPER.id(),
+		NpcId.SHOPKEEPER_RIMMINGTON.id(), NpcId.SHOP_ASSISTANT_RIMMINGTON.id(), NpcId.BETTY.id(),
+		NpcId.HERQUIN.id(), NpcId.ROMMIK.id(), NpcId.GRUM.id(),
+		NpcId.ZAMBO.id(), NpcId.GERRANT.id(), NpcId.SHOPKEEPER_KARAMJA.id(),
+		NpcId.SHOP_ASSISTANT_KARAMJA.id(), NpcId.DOMMIK.id(), NpcId.SCAVVO.id(),
+		NpcId.SHOPKEEPER_EDGEVILLE.id(), NpcId.SHOP_ASSISTANT_EDGEVILLE.id(), NpcId.OZIACH.id(),
+		NpcId.IRKSOL.id(), NpcId.JAKUT.id(), NpcId.FAIRY_SHOPKEEPER.id(),
+		NpcId.FAIRY_SHOP_ASSISTANT.id(), NpcId.GAIUS.id(), NpcId.JATIX.id(),
+		NpcId.NOTERAZZO.id(), NpcId.FAT_TONY.id(), NpcId.HARRY.id(),
+		NpcId.ALFONSE_THE_WAITER.id(), NpcId.HELEMOS.id(), NpcId.DAVON.id(),
+		NpcId.ARHEIN.id(), NpcId.CANDLEMAKER.id(), NpcId.HICKTON.id(),
+		NpcId.FRINCOS.id(), NpcId.GEM_TRADER.id(), NpcId.BAKER.id(),
+		NpcId.FUR_TRADER.id(), NpcId.SILVER_MERCHANT.id(), NpcId.SPICE_MERCHANT.id(),
+		NpcId.GEM_MERCHANT.id(), NpcId.ZENESHA.id(), NpcId.AEMAD.id(),
+		NpcId.KORTAN.id(), NpcId.SHOPKEEPER_FISHING_GUILD.id(), NpcId.SHOPKEEPER_PORTKHAZARD.id(),
+		NpcId.BOLKOY.id(), NpcId.TAILOR.id(), NpcId.MAGIC_STORE_OWNER.id(),
+		NpcId.JIMINUA.id(), NpcId.SHOP_KEEPER_TRAINING_CAMP.id(), NpcId.FRENITA.id(),
+		NpcId.ROMETTI.id(), NpcId.HECKEL_FUNCH.id(),
+		NpcId.HUDO_GLENFAD.id(), NpcId.GNOME_WAITER.id(),
+		NpcId.GULLUCK.id(), NpcId.FERNAHEI.id(), NpcId.OBLI.id(),
+		NpcId.CHADWELL.id(), NpcId.OGRE_MERCHANT.id(), NpcId.OGRE_TRADER_GENSTORE.id(),
+		NpcId.OGRE_TRADER_ROCKCAKE.id(), NpcId.OGRE_TRADER_FOOD.id(), NpcId.SHANTAY_PASS_GUARD_MOVING.id(),
+		NpcId.SHANTAY_PASS_GUARD_STANDING.id(), NpcId.ASSISTANT.id(), NpcId.NURMOF.id(),
+		NpcId.SIEGFRIED_ERKLE.id(), NpcId.TEA_SELLER.id(), NpcId.FIONELLA.id(),
+		NpcId.LUNDAIL.id(), NpcId.DWARVEN_SMITHY.id()
+	};
+
 	public EntityHandler(Server server) {
 		this.server = server;
 		this.persistenceManager = new PersistenceManager(getServer());
@@ -113,6 +151,7 @@ public final class EntityHandler {
 		LOGGER.info("\t Loading npc definitions...");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefs.json");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefsCustom.json");
+		customNpcConditions();
 		LOGGER.info("\t Loaded " + npcs.size() + " npc definitions");
 
 		doors = (DoorDef[]) getPersistenceManager().load("defs/DoorDef.xml.gz");
@@ -232,6 +271,23 @@ public final class EntityHandler {
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
+		}
+	}
+
+	private void customNpcConditions() {
+		if (getServer().getConfig().RIGHT_CLICK_TRADE) {
+			for (int npcId : quickTradeNpcs) {
+				npcs.get(npcId).setCommand1("Trade");
+			}
+			npcs.get(NpcId.BLURBERRY_BARMAN.id()).setCommand1("Pickpocket");
+			npcs.get(NpcId.BLURBERRY_BARMAN.id()).setCommand2("Trade");
+			if (getServer().getConfig().WANT_RUNECRAFTING) {
+				npcs.get(NpcId.AUBURY.id()).setCommand1("Teleport");
+				npcs.get(NpcId.AUBURY.id()).setCommand2("Trade");
+			}
+			else {
+				npcs.get(NpcId.AUBURY.id()).setCommand1("Trade");
+			}
 		}
 	}
 
