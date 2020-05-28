@@ -77,7 +77,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.ACHETTIES.id(), NpcId.GRUBOR.id(),
-				NpcId.TROBERT.id(), NpcId.GRIP.id()}, n.getID());
+				NpcId.TROBERT.id(), NpcId.GRIP.id(), NpcId.GARV.id()}, n.getID());
 	}
 
 	private void dutiesDialogue(Player player, Npc n) {
@@ -151,9 +151,41 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 		}
 	}
 
+	private void garvInspectDialogue(Player player, Npc n) {
+		say(player, n, "Hi, I'm Hartigen",
+			"I've come to work here");
+		if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_LEGS.id())
+			&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.LARGE_BLACK_HELMET.id())&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_BODY.id())) {
+			npcsay(player, n, "So have you got your i.d paper?");
+			if (player.getCarriedItems().hasCatalogID(ItemId.ID_PAPER.id(), Optional.of(false))) {
+				npcsay(player, n, "You had better come in then",
+					"Grip will want to talk to you");
+				player.getCache().store("garv_door", true);
+			} else {
+				say(player, n, "No I must have left it in my other suit of armour");
+			}
+		} else {
+			npcsay(player, n, "Hartigen the black knight?",
+				"I don't think so - he doesn't dress like that");
+		}
+	}
+
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
-		if (n.getID() == NpcId.GRIP.id()) {
+		if (n.getID() == NpcId.GARV.id()) {
+			npcsay(player, n, "Hello, what do you want?");
+			if (isBlackArmGang(player) && player.getCache().hasKey("hq_impersonate") && !player.getCache().hasKey("garv_door")) {
+				garvInspectDialogue(player, n);
+			} else {
+				int opts = multi(player, n, "Can I go in there?", "I want for nothing");
+				if (opts == 0) {
+					npcsay(player, n, "No in there is private");
+				} else if (opts == 1) {
+					npcsay(player, n, "You're one of a very lucky few then");
+				}
+			}
+		}
+		else if (n.getID() == NpcId.GRIP.id()) {
 			if (player.getCache().hasKey("talked_grip") || player.getQuestStage(this) == -1) {
 				int menu = multi(player, n,
 					"So can I guard the treasure room please",
@@ -496,23 +528,8 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 			}
 			if (garv != null) {
 				npcsay(player, garv, "Where do you think you're going?");
-				if (isBlackArmGang(player)) {
-					say(player, garv, "Hi, I'm Hartigen",
-						"I've come to work here");
-					if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_LEGS.id())
-							&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.LARGE_BLACK_HELMET.id())&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.BLACK_PLATE_MAIL_BODY.id())) {
-						npcsay(player, garv, "So have you got your i.d paper?");
-						if (player.getCarriedItems().hasCatalogID(ItemId.ID_PAPER.id(), Optional.of(false))) {
-							npcsay(player, garv, "You had better come in then",
-								"Grip will want to talk to you");
-							player.getCache().store("garv_door", true);
-						} else {
-							say(player, garv, "No I must have left it in my other suit of armour");
-						}
-					} else {
-						npcsay(player, garv, "Hartigen the black knight?",
-							"I don't think so - he doesn't dress like that");
-					}
+				if (isBlackArmGang(player) && player.getCache().hasKey("hq_impersonate")) {
+					garvInspectDialogue(player, garv);
 				}
 			}
 		}

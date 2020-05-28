@@ -92,7 +92,8 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 							"Yes, I'll train now.",
 							"No, I've got something else to do at the moment.");
 						if (menu == 0) {
-							npcsay(player, n, "You can choose " + getRewardClaimCount(player) + " areas to increase your abilities in.");
+							npcsay(player, n, "You can choose " + getRewardClaimCount(player) + " area" +
+								(getRewardClaimCount(player) > 1 ? "s" : "") + " to increase your abilities in.");
 							radimusInGuildDialogue(player, n, RadimusInGuild.SKILL_MENU_ONE);
 						} else if (menu == 1) {
 							say(player, n, "No, I've got something else to do at the moment.");
@@ -210,7 +211,8 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 				"Do feel free to explore the rest of the building.");
 			player.sendQuestComplete(Quests.LEGENDS_QUEST);
 		} else {
-			npcsay(player, n, "You can choose " + getRewardClaimCount(player) + " areas to increase your abilities in.");
+			npcsay(player, n, "You can choose " + getRewardClaimCount(player) + " area" +
+				(getRewardClaimCount(player) > 1 ? "s" : "") + " to increase your abilities in.");
 			radimusInGuildDialogue(player, n, RadimusInGuild.SKILL_MENU_ONE);
 		}
 	}

@@ -641,7 +641,7 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 			give(player, ItemId.WEAPON_POISON.id(), 1);
 		} else if (selectedNumber == 7) {
 			npcsay(player, n, "Aries the ram",
-				"The ram's strength improves your attack abilities");
+				"The ram's strength improves your attack abilites");
 			questData[Quests.MAPIDX_SKILL] = Skills.ATTACK;
 			incQuestReward(player, questData, false);
 		} else if (selectedNumber == 8) {

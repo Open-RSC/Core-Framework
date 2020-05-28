@@ -939,6 +939,9 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						"You should find them west of here.",
 						"You should have no problem in finishing them all off.",
 						"Do this for me and maybe I will consider helping you.");
+					if (!player.getCache().hasKey("find_al_bhasim")) {
+						player.getCache().store("find_al_bhasim", true);
+					}
 					int doThis = multi(player, n,
 						"Consider it done.",
 						"I don't think I can do that.");
@@ -1540,10 +1543,6 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			if (cID == -1) {
 				switch (player.getQuestStage(Quests.TOURIST_TRAP)) {
 					case 0:
-					case 1:
-					case 2:
-					case 3:
-					case 4:
 						npcsay(player, n, "Hello Effendi!",
 							"I am Al Shabim, greetings on behalf of the Bedabin nomads.");
 						int menu = multi(player, n,
@@ -1553,6 +1552,39 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
 						} else if (menu == 1) {
 							npcsay(player, n, "Very well, good day Effendi!");
+						}
+						break;
+					case 1:
+					case 2:
+					case 3:
+					case 4:
+						npcsay(player, n, "Hello Effendi!",
+							"I am Al Shabim, greetings on behalf of the Bedabin nomads.");
+						int menuO;
+						if (player.getCache().hasKey("find_al_bhasim") &&
+							!player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
+							menuO = multi(player, n,
+								"I am looking for Al Zaba Bhasim.",
+								"What is this place?");
+							if (menuO == 0) {
+								npcsay(player, n, "Huh! You have been talking to the guards at the mining camp.",
+									"Or worse, that cowardly mercenary captain.",
+									"Al Zaba Bhasim does not exist, he is a figment of their imagination!",
+									"Go back and tell this captain that if he wants to find this man",
+									"he should search for him personally.",
+									"See how much of his own time he would like to waste.");
+							} else if (menuO == 1) {
+								alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+							}
+						} else {
+							menuO = multi(player, n,
+								"What is this place?",
+								"Goodbye!");
+							if (menuO == 0) {
+								alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+							} else if (menuO == 1) {
+								npcsay(player, n, "Very well, good day Effendi!");
+							}
 						}
 						break;
 					case 5:
@@ -2526,7 +2558,16 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						"The associated smells of a hundred sweaty miners greets your nostrils.",
 						"And your ears ring with the 'CLANG CLANG CLANG' as metal hits rock.");
 				} else {
-					Npc n = addnpc(player.getWorld(), NpcId.DRAFT_MERCENARY_GUARD.id(), player.getX(), player.getY(), 60000);
+					final Npc n = new Npc(player.getWorld(), NpcId.DRAFT_MERCENARY_GUARD.id(), player.getX(), player.getY());
+					n.setShouldRespawn(false);
+					player.getWorld().registerNpc(n);
+					player.getWorld().getServer().getGameEventHandler().add(
+						new SingleEvent(player.getWorld(), null, config().GAME_TICK * 50, "Draft Mercenary Talk Delay") {
+							public void action() {
+								npcsay(player, n, "Is that the time, I ought to be going.");
+								n.remove();
+							}
+						});
 					delay(config().GAME_TICK * 2);
 					npcsay(player, n, "Oi You!");
 					mes("A guard notices you and approaches...");

@@ -43,16 +43,21 @@ public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackN
 				(!player.getCarriedItems().hasCatalogID(ItemId.BRONZE_LONG_SWORD.id()) || player.getCarriedItems().getEquipment().hasEquipped(ItemId.BRONZE_LONG_SWORD.id()))) {
 				npcsay(player, n, "Today we're going to be killing giant rats");
 				Npc rat = ifnearvisnpc(player, NpcId.RAT_TUTORIAL.id(), 10);
-				if (rat != null) {
+				if (rat == null) {
+					// if no rat around releases one, see: https://youtu.be/33YvXfbHfnc?t=425
+					npcsay(player, n, "I'll just let out some rats for you");
+					player.message("The combat instructor releases a rat");
+					rat = addnpc(player.getWorld(), NpcId.RAT_TUTORIAL.id(), 231, 735);
+				} else {
 					npcsay(player, rat, "squeek");
+					n = ifnearvisnpc(player, n.getID(), 10);
+					npcsay(player, n, "move your mouse over a rat you will see it is level 7",
+						"You will see that it's level is written in green",
+						"If it is green this means you have a strong chance of killing it",
+						"creatures with their name in red should probably be avoided",
+						"As this indicates they are tougher than you",
+						"left click on the rat to attack it");
 				}
-				n = ifnearvisnpc(player, n.getID(), 10);
-				npcsay(player, n, "move your mouse over a rat you will see it is level 7",
-					"You will see that it's level is written in green",
-					"If it is green this means you have a strong chance of killing it",
-					"creatures with their name in red should probably be avoided",
-					"As this indicates they are tougher than you",
-					"left click on the rat to attack it");
 			} else {
 				npcsay(player, n, "You need to wield your equipment",
 						"You can access it by selecting the bag icon",

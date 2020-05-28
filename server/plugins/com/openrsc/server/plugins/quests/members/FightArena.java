@@ -63,7 +63,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
 		return DataConversions.inArray(new int[] {NpcId.LADY_SERVIL.id(), NpcId.LOCAL.id(), NpcId.GUARD_KHAZARD_BRIBABLE.id(), NpcId.GUARD_KHAZARD_BYPRISONER.id(),
-				NpcId.GUARD_KHAZARD_MACE.id(), NpcId.JEREMY_SERVIL.id(), NpcId.HENGRAD.id()}, n.getID());
+				NpcId.GUARD_KHAZARD_MACE.id(), NpcId.JEREMY_SERVIL.id(), NpcId.HENGRAD.id(), NpcId.GENERAL_KHAZARD.id()}, n.getID());
 	}
 
 	@Override
@@ -399,6 +399,17 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 						"while i wait for the cart fixer");
 					say(player, n, "hope he's not too long");
 					npcsay(player, n, "thanks again for everything");
+					break;
+			}
+		} else if (n.getID() == NpcId.GENERAL_KHAZARD.id()) {
+			switch (player.getQuestStage(this)) {
+				case 3:
+				case -1:
+					say(player, n, "i thought i was rid of you");
+					npcsay(player, n, "you might not believe it young one",
+						"but you can't kill what's already dead",
+						"die, foul smelling creature");
+					n.startCombat(player);
 					break;
 			}
 		}

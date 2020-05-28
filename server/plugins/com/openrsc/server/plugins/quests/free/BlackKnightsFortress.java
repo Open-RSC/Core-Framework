@@ -51,7 +51,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 	public void handleReward(Player player) {
 		player.message("Sir Amik hands you 2500 coins");
 		give(player, ItemId.COINS.id(), 2500);
-		player.message("Well done. You have completed the Black Knights Fortress quest");
+		player.message("Well done.You have completed the Black Knights fortress quest");
 		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.BLACK_KNIGHTS_FORTRESS), true);
 		player.message("@gre@You haved gained 3 quest points!");
 	}
@@ -91,7 +91,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 							"You've come along just right actually",
 							"All of my knights are known to the black knights already",
 							"Subtlety isn't exactly our strong point");
-						say(player, n, "So, what needs doing?");
+						say(player, n, "So what needs doing?");
 						npcsay(player, n,
 							"Well the black knights have started making strange threats to us",
 							"Demanding large amounts of money and land",
@@ -101,17 +101,17 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 							"What I want you to do is get inside their fortress",
 							"Find out what their secret weapon is",
 							"And then sabotage it", "You will be well paid");
-						say(player, n, "Ok I'll give it a try");
+						say(player, n, "OK I'll give it a try");
 						player.updateQuestStage(getQuestId(), 1);
 					} else if (sub_menu == 1) {
-						npcsay(player, n, "Er", "well",
+						npcsay(player, n, "Err", "Well",
 							"spy work does involve a little hiding in corners I suppose");
 						int sub = multi(player, n,
 							"Oh I suppose I'll give it a go then",
 							"No I'm not convinced");
 
 						if (sub == 0) {
-							say(player, n, "So, what needs doing?");
+							say(player, n, "So what needs doing?");
 							npcsay(player, n,
 								"Well the black knights have started making strange threats to us",
 								"Demanding large amounts of money and land",
@@ -121,7 +121,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 								"What I want you to do is get inside their fortress",
 								"Find out what their secret weapon is",
 								"And then sabotage it", "You will be well paid");
-							say(player, n, "Ok I'll give it a try");
+							say(player, n, "OK I'll give it a try");
 							player.updateQuestStage(getQuestId(), 1);
 						}
 					}
@@ -139,7 +139,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 				npcsay(player, n, "How's the mission going?");
 
 				say(player, n,
-					"I have found out what the Black Knights' secret weapon is.",
+					"I've found out what the black knight's secret weapon is.",
 					"It's a potion of invincibility.");
 
 				npcsay(player, n,
@@ -149,11 +149,11 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 				break;
 			case 3:
 				say(player, n,
-					"I have ruined the black knight's invincibility potion.",
+					"I have ruined the black knight's invincibilty potion.",
 					"That should put a stop to your problem.");
 
 				npcsay(player, n,
-					"Yes we have just recieved a message from the black knights.",
+					"Yes we have just received a message from the black knights.",
 					"Saying they withdraw their demands.",
 					"Which confirms your story");
 
@@ -231,7 +231,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 						"It's a specially grown cabbage",
 						"Grown by my cousin Helda who lives in Draynor Manor",
 						"The soil there is slightly magical",
-						"And gives the cabbages slight magic properties",
+						"And it gives the cabbages slight magic properties",
 						"Not to mention the trees",
 						"Now remember Greldo only a Draynor Manor cabbage will do",
 						"Don't get lazy and bring any old cabbage",

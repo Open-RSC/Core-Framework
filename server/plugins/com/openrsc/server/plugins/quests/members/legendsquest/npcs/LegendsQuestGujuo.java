@@ -123,22 +123,43 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 						npcsay(player, n, "I have visited Ungadulu in the caves, he is hard at work studying..",
 							"He looks well!",
 							"How is your quest Bwana ?");
-						int opt25 = multi(player, n,
-							"Where can I get more water for the Yommi tree?",
-							"Where is the source of the spring of pure water ?",
-							"I searched the catacombs thoroughly but found nothing else.",
-							"If I went in search of the source, could you help me?",
-							"Ok thanks for your help.");
-						if (opt25 == 0) {
-							GujuoDialogue(player, n, Gujuo.WHERE_CAN_I_GET_MORE_WATER_FOR_THE_YOMMI_TREE);
-						} else if (opt25 == 1) {
-							GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
-						} else if (opt25 == 2) {
-							GujuoDialogue(player, n, Gujuo.I_SEARCHED_THE_CATACOMBS_THOROUGHLY_BUT_FOUND_NADA_NIET);
-						} else if (opt25 == 3) {
-							GujuoDialogue(player, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
-						} else if (opt25 == 4) {
-							GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+						// TODO: verify if is the deepest part of or just by going down the rope
+						if (player.getCache().hasKey("cavernous_opening")) {
+							int opt25a = multi(player, n,
+								"I have found a way into the caves !",
+								"Where is the source of the spring of pure water ?",
+								"I searched the catacombs thoroughly but found nothing else.",
+								"If I went in search of the source, could you help me?",
+								"Ok thanks for your help.");
+							if (opt25a == 0) {
+								GujuoDialogue(player, n, Gujuo.WHERE_CAN_I_GET_MORE_WATER_FOR_THE_YOMMI_TREE);
+							} else if (opt25a == 1) {
+								GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
+							} else if (opt25a == 2) {
+								GujuoDialogue(player, n, Gujuo.I_SEARCHED_THE_CATACOMBS_THOROUGHLY_BUT_FOUND_NADA_NIET);
+							} else if (opt25a == 3) {
+								GujuoDialogue(player, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
+							} else if (opt25a == 4) {
+								GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+							}
+						} else {
+							int opt25 = multi(player, n,
+								"Where can I get more water for the Yommi tree?",
+								"Where is the source of the spring of pure water ?",
+								"I searched the catacombs thoroughly but found nothing else.",
+								"If I went in search of the source, could you help me?",
+								"Ok thanks for your help.");
+							if (opt25 == 0) {
+								GujuoDialogue(player, n, Gujuo.WHERE_CAN_I_GET_MORE_WATER_FOR_THE_YOMMI_TREE);
+							} else if (opt25 == 1) {
+								GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
+							} else if (opt25 == 2) {
+								GujuoDialogue(player, n, Gujuo.I_SEARCHED_THE_CATACOMBS_THOROUGHLY_BUT_FOUND_NADA_NIET);
+							} else if (opt25 == 3) {
+								GujuoDialogue(player, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
+							} else if (opt25 == 4) {
+								GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+							}
 						}
 						break;
 					case 8:
@@ -190,9 +211,10 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 							gujuoBye(player, n);
 							return;
 						}
-						npcsay(player, n, "Good day Bwana.",
-								"The Kharazi jungle is especially beautifull today isn't it?",
-								"My village people pass on their thanks to you.");
+						npcsay(player, n, "Good day Bwana.");
+						npcsay(player, n, DataConversions.getRandom().nextBoolean() ? "The Kharazi jungle is especially beautifull today isn't it?"
+							: "The jungle is especially beatifull today isn't it?");
+						npcsay(player, n, "My village people pass on their thanks to you.");
 						String[] menuOpts;
 						if (player.getCarriedItems().hasCatalogID(ItemId.GILDED_TOTEM_POLE.id(), Optional.of(false)) || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 							menuOpts = new String[]{ "Do you have any news?",
@@ -230,6 +252,66 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 				}
 			}
 			switch (cID) {
+				case Gujuo.WHO_IS_VIYELDI:
+					// TODO: check message times
+					mes(n, config().GAME_TICK * 2, "Gujuo scratches his head for a moment.");
+					npcsay(player, n, "Well, I have heard that name before, perhaps from the eldars.");
+					mes(n, config().GAME_TICK * 2, "Gujuo suddenly has an inspiration.");
+					npcsay(player, n, "Ah, yes, I think that is the name of the wizard who first",
+						"went in search of the source.",
+						"Be wary of him Bwana, he may try to trick you.");
+					int viymenu = multi(player, n,
+						"I have found a way into the caves !",
+						"Do you know anything more about the caves?",
+						"Where is the source of the spring of pure water ?",
+						"Ok thanks for your help.");
+					if (viymenu == 0) {
+						GujuoDialogue(player, n, Gujuo.I_FOUND_WAY_INTO_CAVES);
+					} else if (viymenu == 1) {
+						GujuoDialogue(player, n, Gujuo.DO_YOU_KNOW_MORE_ABOUT_CAVES);
+					} else if (viymenu == 2) {
+						GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
+					} else if (viymenu == 3) {
+						GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+					}
+					break;
+				case Gujuo.DO_YOU_KNOW_MORE_ABOUT_CAVES:
+					npcsay(player, n, "I am sorry to say that I don't Bwana.",
+						"You will need to explore that area,",
+						"but use your wits, and you may be lucky.");
+					int submenu = multi(player, n,
+						"I have found a way into the caves !",
+						"Who is Viyeldi?",
+						"Where is the source of the spring of pure water ?",
+						"Ok thanks for your help.");
+					if (submenu == 0) {
+						GujuoDialogue(player, n, Gujuo.I_FOUND_WAY_INTO_CAVES);
+					} else if (submenu == 1) {
+						GujuoDialogue(player, n, Gujuo.WHO_IS_VIYELDI);
+					} else if (submenu == 2) {
+						GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
+					} else if (submenu == 3) {
+						GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+					}
+					break;
+				case Gujuo.I_FOUND_WAY_INTO_CAVES:
+					npcsay(player, n, "That's great Bwana, good luck with your quest...",
+						"and take care!");
+					int aa_menu = multi(player, n,
+						"Do you know anything more about the caves?",
+						"Who is Viyeldi?",
+						"Where is the source of the spring of pure water ?",
+						"Ok thanks for your help.");
+					if (aa_menu == 0) {
+						GujuoDialogue(player, n, Gujuo.DO_YOU_KNOW_MORE_ABOUT_CAVES);
+					} else if (aa_menu == 1) {
+						GujuoDialogue(player, n, Gujuo.WHO_IS_VIYELDI);
+					} else if (aa_menu == 2) {
+						GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
+					} else if (aa_menu == 3) {
+						GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+					}
+					break;
 				case Gujuo.I_FOUND_THE_SOURCE_OF_THE_SPRING_AND_I_GOT_THE_WATER:
 					npcsay(player, n, "Great Bwana, you are truly a brave warrior.",
 						"Now you can try to grow the Yommi tree in earnest and make the totem pole.");
@@ -1039,9 +1121,12 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 		static final int WHERE_CAN_I_FIND_ARDRIGAL = 30;
 		static final int WILL_I_NEED_THIS_POTION_I_FEEL_BRAVE_AS_I_AM = 31;
 
-		static final int I_FOUND_THE_SOURCE_OF_THE_SPRING_AND_I_GOT_THE_WATER = 32;
-		static final int I_KILLED_THE_DEMON_AGAIN = 33;
-		static final int HOW_DO_I_MAKE_THE_TOTEM_POLE = 34;
-		static final int OK_I_WONT_GO = 35;
+		static final int I_FOUND_WAY_INTO_CAVES = 32;
+		static final int DO_YOU_KNOW_MORE_ABOUT_CAVES = 33;
+		static final int WHO_IS_VIYELDI = 34;
+		static final int I_FOUND_THE_SOURCE_OF_THE_SPRING_AND_I_GOT_THE_WATER = 35;
+		static final int I_KILLED_THE_DEMON_AGAIN = 36;
+		static final int HOW_DO_I_MAKE_THE_TOTEM_POLE = 37;
+		static final int OK_I_WONT_GO = 38;
 	}
 }

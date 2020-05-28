@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.npcs.tutorial;
 
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -40,16 +41,35 @@ public class MagicInstructor implements TalkNpcTrigger {
 				"You will see you have the runes for the spell",
 				"And it shows up yellow in your list");
 			player.getCache().set("tutorial", 76);
-		} else if(player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 76) {
+		} else if(player.getCache().hasKey("tutorial")
+			&& (player.getCache().getInt("tutorial") == 76 || player.getCache().getInt("tutorial") == 77)) {
 			Npc chicken = ifnearvisnpc(player, NpcId.CHICKEN.id(), 10);
-			if (chicken != null) {
-				npcsay(player, chicken, "cluck");
+			if (chicken == null) {
+				// if no chicken around invokes one, see: https://youtu.be/EIOVbx6usE0?t=1095
+				npcsay(player, n, "I think we need a chicken");
+				player.message("The wizard waves his arms around and chants");
+				chicken = addnpc(player.getWorld(), NpcId.CHICKEN.id(), 218, 755);
+				ActionSender.sendTeleBubble(player, 218, 755, true);
+				for (Player pe : player.getViewArea().getPlayersInView()) {
+					ActionSender.sendTeleBubble(pe, 218, 755, true);
+				}
+			} else {
+				if (player.getCache().getInt("tutorial") == 76) {
+					npcsay(player, chicken, "cluck");
+					npcsay(player, n, "Aha a chicken",
+						"An Ideal wind strike target",
+						"ok click on the wind strike spell in your spell list",
+						"then click on the chicken to chose it as a target");
+					player.getCache().set("tutorial", 77);
+				} else {
+					npcsay(player, n, "To shoot a wind strike at a chicken",
+						"select the book icon in the menu bar",
+						"then click on the yellow wind strike text",
+						"then left click on the chicken to cast the spell");
+					npcsay(player, chicken, "cluck");
+					player.getCache().set("tutorial", 78);
+				}
 			}
-			npcsay(player, n, "Aha a chicken",
-				"An Ideal wind strike target",
-				"ok click on the wind strike spell in your spell list",
-				"then click on the chicken to chose it as a target");
-			player.getCache().set("tutorial", 77);
 		} else {
 			npcsay(player, n, "Well done",
 					"As you get a higher magic level",

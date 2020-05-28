@@ -115,7 +115,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 				break;
 			case 2:
 				if (!player.getCache().hasKey("key_made")) {
-					npcsay(player, n, "I understand the spymaster has hired you",
+					npcsay(player, n, "I understand the Spymaster has hired you",
 						"I will pay the reward only when the Prince is rescued",
 						"I can pay some expenses once the spymaster approves it");
 				} else {

@@ -147,11 +147,28 @@ public class GoblinDiplomacy implements QuestInterface, TalkNpcTrigger {
 					"Now you've solved our argument we gotta think of something else to do");
 				npcsay(player, otherGoblin, "Yep, we bored now");
 			}
+		} else if (n.getID() == NpcId.GOBLIN_RED_ARMOUR_LVL13.id()) {
+			npcsay(player, n, "Red Armour best");
+			int gobopt = multi(player, n, "Err Ok", "Why is red best?");
+			if (gobopt == 1) {
+				npcsay(player, n, "Cos General Bentnoze says so",
+					"And he bigger than me");
+			}
+		} else if (n.getID() == NpcId.GOBLIN_GREEN_ARMOUR_LVL13.id()) {
+			npcsay(player, n, "green Armour best");
+			int gobopt = multi(player, n, "Err Ok", "Why is green best?");
+			if (gobopt == 1) {
+				npcsay(player, n, "I forgot now",
+					"but General Wartface says it is",
+					"So it must be");
+			}
 		}
 	}
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		return n.getID() == NpcId.GENERAL_WARTFACE.id() || n.getID() == NpcId.GENERAL_BENTNOZE.id();
+		return n.getID() == NpcId.GENERAL_WARTFACE.id() || n.getID() == NpcId.GENERAL_BENTNOZE.id()
+			|| n.getID() == NpcId.GOBLIN_RED_ARMOUR_LVL13.id()
+			|| n.getID() == NpcId.GOBLIN_GREEN_ARMOUR_LVL13.id();
 	}
 }

@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.npcs.tutorial;
 
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -56,12 +57,16 @@ public class CookingInstructor implements TalkNpcTrigger {
 				"If the number on the left is lower eat some food to be healed");
 			player.getCache().set("tutorial", 34);
 		} else if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") >= 34) {
-			npcsay(player, n, "There are many other sorts of food you can cook",
-				"As your cooking level increases you will be able to cook even more",
-				"Some of these dishes are more complicated to prepare",
-				"If you want to know more about cookery",
-				"You could consult the online manual",
-				"Now proceed through the next door");
+			if (player.getCarriedItems().hasCatalogID(ItemId.COOKEDMEAT.id()) && getCurrentLevel(player, Skills.HITS) < 10) {
+				npcsay(player, n, "to eat the food left click on it in your inventory");
+			} else {
+				npcsay(player, n, "There are many other sorts of food you can cook",
+					"As your cooking level increases you will be able to cook even more",
+					"Some of these dishes are more complicated to prepare",
+					"If you want to know more about cookery",
+					"You could consult the online manual",
+					"Now proceed through the next door");
+			}
 			if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") < 35)
 				player.getCache().set("tutorial", 35);
 		}
