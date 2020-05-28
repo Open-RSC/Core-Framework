@@ -186,55 +186,6 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected NpcDef[] queryNpcDefs() throws GameDatabaseException {
-		try {
-			final PreparedStatement statement = getConnection().prepareStatement(getQueries().npcDefs);
-			final ResultSet result = statement.executeQuery();
-			final ArrayList<NpcDef> npcs = new ArrayList<>();
-
-			try {
-				while (result.next()) {
-					NpcDef def = new NpcDef();
-					def.name = result.getString("name");
-					def.description = result.getString("description");
-					def.command = result.getString("command");
-					def.command2 = result.getString("command2");
-					def.attack = result.getInt("attack");
-					def.strength = result.getInt("strength");
-					def.hits = result.getInt("hits");
-					def.defense = result.getInt("defense");
-					def.ranged = result.getInt("ranged");
-					def.combatlvl = result.getInt("combatlvl");
-					def.isMembers = result.getBoolean("isMembers");
-					def.attackable = result.getBoolean("attackable");
-					def.aggressive = result.getBoolean("aggressive");
-					def.respawnTime = result.getInt("respawnTime");
-					for (int i = 0; i < 12; i++) {
-						def.sprites[i] = result.getInt("sprites" + (i + 1));
-					}
-					def.hairColour = result.getInt("hairColour");
-					def.topColour = result.getInt("topColour");
-					def.bottomColour = result.getInt("bottomColour");
-					def.skinColour = result.getInt("skinColour");
-					def.camera1 = result.getInt("camera1");
-					def.camera2 = result.getInt("camera2");
-					def.walkModel = result.getInt("walkModel");
-					def.combatModel = result.getInt("combatModel");
-					def.combatSprite = result.getInt("combatSprite");
-					def.roundMode = result.getInt("roundMode");
-					npcs.add(def);
-				}
-			} finally {
-				result.close();
-				statement.close();
-			}
-			return npcs.toArray(new NpcDef[npcs.size()]);
-		} catch (final SQLException ex) {
-			throw new GameDatabaseException(this, ex.getMessage());
-		}
-	}
-
-	@Override
 	protected ItemDef[] queryItemDefs() throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().itemDefs);

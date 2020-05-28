@@ -3,17 +3,17 @@ package com.openrsc.server.external;
 import com.openrsc.server.Server;
 import com.openrsc.server.database.struct.ItemDef;
 import com.openrsc.server.database.struct.NpcDef;
-import com.openrsc.server.database.struct.NpcDrop;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.util.PersistenceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.*;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
@@ -109,6 +109,12 @@ public final class EntityHandler {
 	}
 
 	protected void setupFileDefinitions() {
+		npcs = new ArrayList<>();
+		LOGGER.info("\t Loading npc definitions...");
+		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefs.json");
+		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefsCustom.json");
+		LOGGER.info("\t Loaded " + npcs.size() + " npc definitions");
+
 		doors = (DoorDef[]) getPersistenceManager().load("defs/DoorDef.xml.gz");
 		gameObjects = (GameObjectDef[]) getPersistenceManager().load("defs/GameObjectDef.xml.gz");
 		prayers = (PrayerDef[]) getPersistenceManager().load("defs/PrayerDef.xml.gz");
@@ -142,44 +148,6 @@ public final class EntityHandler {
 
 	protected void setupDbDefinitions() {
 		try {
-			/* LOAD NPC DEFS */
-			ArrayList<NPCDef> npcDefinitions = new ArrayList<NPCDef>();
-
-			NpcDef npcDefs[] = getServer().getDatabase().getNpcDefs();
-
-			for (NpcDef npc : npcDefs) {
-				NPCDef def = new NPCDef();
-				def.name = npc.name;
-				def.description = npc.description;
-				def.command1 = npc.command;
-				def.command2 = npc.command2;
-				def.attack = npc.attack;
-				def.strength = npc.strength;
-				def.hits = npc.hits;
-				def.defense = npc.defense;
-				def.ranged = npc.ranged;
-				def.combatLevel = npc.combatlvl;
-				def.members = npc.isMembers;
-				def.attackable = npc.attackable;
-				def.aggressive = npc.aggressive;
-				def.respawnTime = npc.respawnTime;
-				def.sprites = npc.sprites;
-				def.hairColour = npc.hairColour;
-				def.topColour = npc.topColour;
-				def.bottomColour = npc.bottomColour;
-				def.skinColour = npc.skinColour;
-				def.camera1 = npc.camera1;
-				def.camera2 = npc.camera2;
-				def.walkModel = npc.walkModel;
-				def.combatModel = npc.combatModel;
-				def.combatSprite = npc.combatSprite;
-				def.roundMode = npc.roundMode;
-				npcDefinitions.add(def);
-			}
-
-			LOGGER.info("\t Loaded {}", box(npcDefinitions.size()) + " NPC definitions");
-			npcs = (ArrayList<NPCDef>) npcDefinitions.clone();
-
 			/* LOAD ITEM DEFS */
 			ArrayList<ItemDefinition> itemDefinitions = new ArrayList<ItemDefinition>();
 
@@ -220,6 +188,50 @@ public final class EntityHandler {
 		} catch (Exception e) {
 			LOGGER.catching(e);
 			System.exit(1);
+		}
+	}
+
+	private void loadNpcs(String filename) {
+		try {
+			JSONObject object = new JSONObject(Files.readString(Paths.get(filename)));
+			JSONArray npcDefs = object.getJSONArray(JSONObject.getNames(object)[0]);
+			for (int i = 0; i < npcDefs.length(); i++) {
+				NPCDef def = new NPCDef();
+				JSONObject npc = npcDefs.getJSONObject(i);
+				def.name = npc.getString("name");
+				def.description = npc.getString("description");
+				def.command1 = npc.getString("command");
+				def.command2 = npc.getString("command2");
+				def.attack = npc.getInt("attack");
+				def.strength = npc.getInt("strength");
+				def.hits = npc.getInt("hits");
+				def.defense = npc.getInt("defense");
+				def.ranged = npc.getBoolean("ranged") ? 1 : 0;
+				def.combatLevel = npc.getInt("combatlvl");
+				def.members = npc.getInt("isMembers") == 1;
+				def.attackable = npc.getInt("attackable") == 1;
+				def.aggressive = npc.getInt("aggressive") == 1;
+				def.respawnTime = npc.getInt("respawnTime");
+				int[] sprites = new int[12];
+				for (int j = 0; j < 12; j++) {
+					sprites[j] = npc.getInt("sprites" + (j+1));
+				}
+				def.sprites = sprites;
+				def.hairColour = npc.getInt("hairColour");
+				def.topColour = npc.getInt("topColour");
+				def.bottomColour = npc.getInt("bottomColour");
+				def.skinColour = npc.getInt("skinColour");
+				def.camera1 = npc.getInt("camera1");
+				def.camera2 = npc.getInt("camera2");
+				def.walkModel = npc.getInt("walkModel");
+				def.combatModel = npc.getInt("combatModel");
+				def.combatSprite = npc.getInt("combatSprite");
+				def.roundMode = npc.getInt("roundMode");
+				npcs.add(def);
+			}
+		}
+		catch (Exception e) {
+			LOGGER.error(e);
 		}
 	}
 
