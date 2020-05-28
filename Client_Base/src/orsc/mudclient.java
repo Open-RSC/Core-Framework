@@ -11822,15 +11822,6 @@ public final class mudclient implements Runnable {
 	}
 
 	private void sendRegister(String user, String pass, String email) {
-		if (this.m_Zb > 0) {
-			this.showLoginScreenStatus("Please wait...", "Communicating with server");
-			try {
-				GenUtil.sleepShadow(2000L);
-			} catch (Exception var14) {
-			}
-			this.showLoginScreenStatus("Sorry! The server is currently full.", "Please try again later");
-		}
-
 		this.m_Zb = 1500;
 		username = user;
 		user = DataOperations.addCharacters(user, 20);
