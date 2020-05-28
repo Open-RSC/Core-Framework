@@ -181,6 +181,7 @@ public class WorldLoader {
 		// The authentic map file may have a way to flag null regions and only use one tile value across the entire thing
 		// Unfortunately, the map files we are using currently do not support that feature so we need to detect
 		// Unfortunately, we also have to allocate all the tiles and then clear them because the process of loading a sector can effect other sectors.
+		// Downside is that Scenery/Boundary spawn can change tile values, and if one is spawned in a "null region," then we will not be able to change the tile value from the Scenery/Boundary spawn.
 
 		final RegionManager regionManager = getWorld().getRegionManager();
 		for (int lvl = 0; lvl < 4; lvl++) {
