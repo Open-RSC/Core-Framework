@@ -1,6 +1,7 @@
 package com.openrsc.server.external;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.database.struct.ItemDef;
 import com.openrsc.server.database.struct.NpcDef;
@@ -153,6 +154,7 @@ public final class EntityHandler {
 		LOGGER.info("\t Loading item definitions...");
 		loadItems(getServer().getConfig().CONFIG_DIR + "/defs/ItemDefs.json");
 		loadItems(getServer().getConfig().CONFIG_DIR + "/defs/ItemDefsCustom.json");
+		customItemConditions();
 		LOGGER.info("\t Loaded " + items.size() + " item definitions");
 
 		doors = (DoorDef[]) getPersistenceManager().load("defs/DoorDef.xml.gz");
@@ -286,6 +288,212 @@ public final class EntityHandler {
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
+		}
+	}
+
+	private void customItemConditions() {
+		if (getServer().getConfig().WANT_EQUIPMENT_TAB) {
+			// Make arrows wieldable.
+			int[] wieldableArrows = new int[] {
+				ItemId.BRONZE_ARROWS.id(), ItemId.POISON_BRONZE_ARROWS.id(),
+				ItemId.IRON_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id(),
+				ItemId.STEEL_ARROWS.id(), ItemId.POISON_STEEL_ARROWS.id(),
+				ItemId.MITHRIL_ARROWS.id(), ItemId.POISON_MITHRIL_ARROWS.id(),
+				ItemId.ADAMANTITE_ARROWS.id(), ItemId.POISON_ADAMANTITE_ARROWS.id(),
+				ItemId.RUNE_ARROWS.id(), ItemId.POISON_RUNE_ARROWS.id(),
+				ItemId.ICE_ARROWS.id()
+			};
+			for (int itemId : wieldableArrows) {
+				items.get(itemId).setWieldable(true);
+				items.get(itemId).setWearableId(1000);
+				items.get(itemId).setWieldPosition(12);
+				items.get(itemId).setRequiredLevel(1);
+				items.get(itemId).setRequiredSkillIndex(4);
+			}
+
+			// Make bolts wieldable.
+			int[] wieldableBolts = new int[] {
+				ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id()
+			};
+			for (int itemId : wieldableBolts) {
+				items.get(itemId).setWieldable(true);
+				items.get(itemId).setWearableId(1001);
+				items.get(itemId).setWieldPosition(12);
+				items.get(itemId).setRequiredLevel(1);
+				items.get(itemId).setRequiredSkillIndex(4);
+			}
+
+			// Make pickaxes wieldable
+			items.get(ItemId.BRONZE_PICKAXE.id()).setWieldable(true);
+			items.get(ItemId.IRON_PICKAXE.id()).setWieldable(true);
+			items.get(ItemId.STEEL_PICKAXE.id()).setWieldable(true);
+			items.get(ItemId.MITHRIL_PICKAXE.id()).setWieldable(true);
+			items.get(ItemId.ADAMANTITE_PICKAXE.id()).setWieldable(true);
+			items.get(ItemId.RUNE_PICKAXE.id()).setWieldable(true);
+
+			items.get(ItemId.BRONZE_PICKAXE.id()).setWearableId(16);
+			items.get(ItemId.IRON_PICKAXE.id()).setWearableId(16);
+			items.get(ItemId.STEEL_PICKAXE.id()).setWearableId(16);
+			items.get(ItemId.MITHRIL_PICKAXE.id()).setWearableId(16);
+			items.get(ItemId.ADAMANTITE_PICKAXE.id()).setWearableId(16);
+			items.get(ItemId.RUNE_PICKAXE.id()).setWearableId(16);
+
+			items.get(ItemId.BRONZE_PICKAXE.id()).setWieldPosition(4);
+			items.get(ItemId.IRON_PICKAXE.id()).setWieldPosition(4);
+			items.get(ItemId.STEEL_PICKAXE.id()).setWieldPosition(4);
+			items.get(ItemId.MITHRIL_PICKAXE.id()).setWieldPosition(4);
+			items.get(ItemId.ADAMANTITE_PICKAXE.id()).setWieldPosition(4);
+			items.get(ItemId.RUNE_PICKAXE.id()).setWieldPosition(4);
+
+			items.get(ItemId.BRONZE_PICKAXE.id()).setRequiredLevel(1);
+			items.get(ItemId.IRON_PICKAXE.id()).setRequiredLevel(1);
+			items.get(ItemId.STEEL_PICKAXE.id()).setRequiredLevel(5);
+			items.get(ItemId.MITHRIL_PICKAXE.id()).setRequiredLevel(20);
+			items.get(ItemId.ADAMANTITE_PICKAXE.id()).setRequiredLevel(30);
+			items.get(ItemId.RUNE_PICKAXE.id()).setRequiredLevel(40);
+
+			items.get(ItemId.BRONZE_PICKAXE.id()).setRequiredSkillIndex(0);
+			items.get(ItemId.IRON_PICKAXE.id()).setRequiredSkillIndex(0);
+			items.get(ItemId.STEEL_PICKAXE.id()).setRequiredSkillIndex(0);
+			items.get(ItemId.MITHRIL_PICKAXE.id()).setRequiredSkillIndex(0);
+			items.get(ItemId.ADAMANTITE_PICKAXE.id()).setRequiredSkillIndex(0);
+			items.get(ItemId.RUNE_PICKAXE.id()).setRequiredSkillIndex(0);
+
+			items.get(ItemId.BRONZE_PICKAXE.id()).setWeaponAimBonus(0);
+			items.get(ItemId.IRON_PICKAXE.id()).setWeaponAimBonus(7);
+			items.get(ItemId.STEEL_PICKAXE.id()).setWeaponAimBonus(11);
+			items.get(ItemId.MITHRIL_PICKAXE.id()).setWeaponAimBonus(16);
+			items.get(ItemId.ADAMANTITE_PICKAXE.id()).setWeaponAimBonus(23);
+			items.get(ItemId.RUNE_PICKAXE.id()).setWeaponAimBonus(36);
+
+			items.get(ItemId.BRONZE_PICKAXE.id()).setWeaponPowerBonus(0);
+			items.get(ItemId.IRON_PICKAXE.id()).setWeaponPowerBonus(5);
+			items.get(ItemId.STEEL_PICKAXE.id()).setWeaponPowerBonus(8);
+			items.get(ItemId.MITHRIL_PICKAXE.id()).setWeaponPowerBonus(12);
+			items.get(ItemId.ADAMANTITE_PICKAXE.id()).setWeaponPowerBonus(17);
+			items.get(ItemId.RUNE_PICKAXE.id()).setWeaponPowerBonus(26);
+
+			items.get(ItemId.BRONZE_PICKAXE.id()).setAppearanceId(434);
+			items.get(ItemId.IRON_PICKAXE.id()).setAppearanceId(435);
+			items.get(ItemId.STEEL_PICKAXE.id()).setAppearanceId(436);
+			items.get(ItemId.MITHRIL_PICKAXE.id()).setAppearanceId(437);
+			items.get(ItemId.ADAMANTITE_PICKAXE.id()).setAppearanceId(438);
+			items.get(ItemId.RUNE_PICKAXE.id()).setAppearanceId(439);
+		}
+
+		if (getServer().getConfig().WANT_CUSTOM_SPRITES) {
+			// Set custom appearance IDs in ascending order.
+			items.get(ItemId.BRONZE_AXE.id()).setAppearanceId(230);
+			items.get(ItemId.IRON_AXE.id()).setAppearanceId(231);
+			items.get(ItemId.STEEL_AXE.id()).setAppearanceId(232);
+			items.get(ItemId.MITHRIL_AXE.id()).setAppearanceId(233);
+			items.get(ItemId.ADAMANTITE_AXE.id()).setAppearanceId(234);
+			items.get(ItemId.RUNE_AXE.id()).setAppearanceId(235);
+			items.get(ItemId.BLACK_AXE.id()).setAppearanceId(236);
+
+			items.get(ItemId.BRONZE_KITE_SHIELD.id()).setAppearanceId(237);
+			items.get(ItemId.IRON_KITE_SHIELD.id()).setAppearanceId(238);
+			items.get(ItemId.STEEL_KITE_SHIELD.id()).setAppearanceId(239);
+			items.get(ItemId.MITHRIL_KITE_SHIELD.id()).setAppearanceId(240);
+			items.get(ItemId.ADAMANTITE_KITE_SHIELD.id()).setAppearanceId(241);
+			items.get(ItemId.RUNE_KITE_SHIELD.id()).setAppearanceId(242);
+			items.get(ItemId.BLACK_KITE_SHIELD.id()).setAppearanceId(243);
+
+			items.get(ItemId.DRAGON_SQUARE_SHIELD.id()).setAppearanceId(244);
+
+			items.get(ItemId.DRAGON_MEDIUM_HELMET.id()).setAppearanceId(245);
+
+			items.get(ItemId.BRONZE_PLATED_SKIRT.id()).setAppearanceId(246);
+			items.get(ItemId.IRON_PLATED_SKIRT.id()).setAppearanceId(247);
+			items.get(ItemId.STEEL_PLATED_SKIRT.id()).setAppearanceId(248);
+			items.get(ItemId.MITHRIL_PLATED_SKIRT.id()).setAppearanceId(249);
+			items.get(ItemId.ADAMANTITE_PLATED_SKIRT.id()).setAppearanceId(250);
+			items.get(ItemId.RUNE_SKIRT.id()).setAppearanceId(251);
+			items.get(ItemId.BLACK_PLATED_SKIRT.id()).setAppearanceId(252);
+
+			items.get(ItemId.LONGBOW.id()).setAppearanceId(253);
+			items.get(ItemId.SHORTBOW.id()).setAppearanceId(253);
+			items.get(ItemId.OAK_LONGBOW.id()).setAppearanceId(254);
+			items.get(ItemId.OAK_SHORTBOW.id()).setAppearanceId(254);
+			items.get(ItemId.WILLOW_LONGBOW.id()).setAppearanceId(255);
+			items.get(ItemId.WILLOW_SHORTBOW.id()).setAppearanceId(255);
+			items.get(ItemId.MAPLE_LONGBOW.id()).setAppearanceId(256);
+			items.get(ItemId.MAPLE_SHORTBOW.id()).setAppearanceId(256);
+			items.get(ItemId.YEW_LONGBOW.id()).setAppearanceId(257);
+			items.get(ItemId.YEW_SHORTBOW.id()).setAppearanceId(257);
+			items.get(ItemId.MAGIC_LONGBOW.id()).setAppearanceId(258);
+			items.get(ItemId.MAGIC_SHORTBOW.id()).setAppearanceId(258);
+
+			items.get(ItemId.BRONZE_SHORT_SWORD.id()).setAppearanceId(259);
+			items.get(ItemId.IRON_SHORT_SWORD.id()).setAppearanceId(260);
+			items.get(ItemId.STEEL_SHORT_SWORD.id()).setAppearanceId(261);
+			items.get(ItemId.MITHRIL_SHORT_SWORD.id()).setAppearanceId(262);
+			items.get(ItemId.ADAMANTITE_SHORT_SWORD.id()).setAppearanceId(263);
+			items.get(ItemId.RUNE_SHORT_SWORD.id()).setAppearanceId(264);
+			items.get(ItemId.BLACK_SHORT_SWORD.id()).setAppearanceId(265);
+
+			items.get(ItemId.BRONZE_DAGGER.id()).setAppearanceId(266);
+			items.get(ItemId.IRON_DAGGER.id()).setAppearanceId(267);
+			items.get(ItemId.STEEL_DAGGER.id()).setAppearanceId(268);
+			items.get(ItemId.MITHRIL_DAGGER.id()).setAppearanceId(269);
+			items.get(ItemId.ADAMANTITE_DAGGER.id()).setAppearanceId(270);
+			items.get(ItemId.RUNE_DAGGER.id()).setAppearanceId(271);
+			items.get(ItemId.BLACK_DAGGER.id()).setAppearanceId(272);
+
+			items.get(ItemId.POISONED_BRONZE_DAGGER.id()).setAppearanceId(273);
+			items.get(ItemId.POISONED_IRON_DAGGER.id()).setAppearanceId(274);
+			items.get(ItemId.POISONED_STEEL_DAGGER.id()).setAppearanceId(275);
+			items.get(ItemId.POISONED_MITHRIL_DAGGER.id()).setAppearanceId(276);
+			items.get(ItemId.POISONED_RUNE_DAGGER.id()).setAppearanceId(277);
+			items.get(ItemId.POISONED_ADAMANTITE_DAGGER.id()).setAppearanceId(278);
+			items.get(ItemId.POISONED_BLACK_DAGGER.id()).setAppearanceId(279);
+
+			items.get(ItemId.BRONZE_2_HANDED_SWORD.id()).setAppearanceId(280);
+			items.get(ItemId.IRON_2_HANDED_SWORD.id()).setAppearanceId(281);
+			items.get(ItemId.STEEL_2_HANDED_SWORD.id()).setAppearanceId(282);
+			items.get(ItemId.MITHRIL_2_HANDED_SWORD.id()).setAppearanceId(283);
+			items.get(ItemId.ADAMANTITE_2_HANDED_SWORD.id()).setAppearanceId(284);
+			items.get(ItemId.RUNE_2_HANDED_SWORD.id()).setAppearanceId(285);
+			items.get(ItemId.BLACK_2_HANDED_SWORD.id()).setAppearanceId(286);
+
+			items.get(ItemId.BRONZE_SPEAR.id()).setAppearanceId(388);
+			items.get(ItemId.IRON_SPEAR.id()).setAppearanceId(389);
+			items.get(ItemId.STEEL_SPEAR.id()).setAppearanceId(390);
+			items.get(ItemId.MITHRIL_SPEAR.id()).setAppearanceId(391);
+			items.get(ItemId.ADAMANTITE_SPEAR.id()).setAppearanceId(392);
+			items.get(ItemId.RUNE_SPEAR.id()).setAppearanceId(393);
+
+			items.get(ItemId.SAPPHIRE_NECKLACE.id()).setAppearanceId(405);
+			items.get(ItemId.SAPPHIRE_AMULET.id()).setAppearanceId(406);
+			items.get(ItemId.EMERALD_NECKLACE.id()).setAppearanceId(407);
+			items.get(ItemId.EMERALD_AMULET.id()).setAppearanceId(408);
+			items.get(ItemId.RUBY_NECKLACE.id()).setAppearanceId(409);
+			items.get(ItemId.RUBY_AMULET.id()).setAppearanceId(410);
+			items.get(ItemId.DIAMOND_NECKLACE.id()).setAppearanceId(411);
+			items.get(ItemId.DIAMOND_AMULET.id()).setAppearanceId(412);
+			items.get(ItemId.DRAGONSTONE_NECKLACE.id()).setAppearanceId(413);
+			items.get(ItemId.CHARGED_DRAGONSTONE_AMULET.id()).setAppearanceId(414);
+
+			items.get(ItemId.ANNAS_SILVER_NECKLACE.id()).setAppearanceId(415);
+			items.get(ItemId.BEADS_OF_THE_DEAD.id()).setAppearanceId(416);
+			items.get(ItemId.PENDANT_OF_LUCIEN.id()).setAppearanceId(417);
+			items.get(ItemId.PENDANT_OF_ARMADYL.id()).setAppearanceId(418);
+			items.get(ItemId.GLARIALS_AMULET.id()).setAppearanceId(419);
+
+			items.get(ItemId.HOLY_SYMBOL_OF_SARADOMIN.id()).setAppearanceId(420);
+			items.get(ItemId.UNHOLY_SYMBOL_OF_ZAMORAK.id()).setAppearanceId(421);
+
+			items.get(ItemId.BATTLESTAFF_OF_AIR.id()).setAppearanceId(422);
+			items.get(ItemId.BATTLESTAFF_OF_WATER.id()).setAppearanceId(423);
+			items.get(ItemId.BATTLESTAFF_OF_EARTH.id()).setAppearanceId(424);
+			items.get(ItemId.BATTLESTAFF_OF_FIRE.id()).setAppearanceId(425);
+
+			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_AIR.id()).setAppearanceId(426);
+			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_WATER.id()).setAppearanceId(427);
+			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id()).setAppearanceId(428);
+			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id()).setAppearanceId(429);
+
+
 		}
 	}
 

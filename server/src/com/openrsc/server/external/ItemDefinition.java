@@ -296,6 +296,9 @@ public final class ItemDefinition extends EntityDef {
 	public final boolean isWieldable() {
 		return isWearable;
 	}
+	public void setWieldable(boolean wieldable) {
+		this.isWearable = wieldable;
+	}
 
 	/**
 	 * Returns the current appearance-ID
@@ -305,6 +308,9 @@ public final class ItemDefinition extends EntityDef {
 	 */
 	public final int getAppearanceId() {
 		return appearanceId;
+	}
+	public void setAppearanceId(int appearanceId) {
+		this.appearanceId = appearanceId;
 	}
 
 	/**
@@ -366,6 +372,9 @@ public final class ItemDefinition extends EntityDef {
 	public final int getRequiredLevel() {
 		return requiredLevel;
 	}
+	public void setRequiredLevel(int requiredLevel) {
+		this.requiredLevel = requiredLevel;
+	}
 
 	/**
 	 * Returns the current required skill-index
@@ -375,6 +384,9 @@ public final class ItemDefinition extends EntityDef {
 	 */
 	public final int getRequiredSkillIndex() {
 		return requiredSkillIndex;
+	}
+	public void setRequiredSkillIndex(int index) {
+		this.requiredSkillIndex = index;
 	}
 
 	/**
@@ -386,6 +398,9 @@ public final class ItemDefinition extends EntityDef {
 	public final int getWeaponAimBonus() {
 		return weaponAimBonus;
 	}
+	public void setWeaponAimBonus(int bonus) {
+		this.weaponAimBonus = bonus;
+	}
 
 	/**
 	 * Returns the current weapon power-bonus
@@ -395,6 +410,9 @@ public final class ItemDefinition extends EntityDef {
 	 */
 	public final int getWeaponPowerBonus() {
 		return weaponPowerBonus;
+	}
+	public void setWeaponPowerBonus(int bonus) {
+		this.weaponPowerBonus = bonus;
 	}
 
 	/**
@@ -406,6 +424,9 @@ public final class ItemDefinition extends EntityDef {
 	public final int getWearableId() {
 		return wearableId;
 	}
+	public void setWearableId(int wearableId) {
+		this.wearableId = wearableId;
+	}
 
 	/**
 	 * Returns the current worn-item-index
@@ -415,6 +436,9 @@ public final class ItemDefinition extends EntityDef {
 	 */
 	public final int getWieldPosition() {
 		return wornItemIndex;
+	}
+	public void setWieldPosition(int wieldPosition) {
+		this.wornItemIndex = wieldPosition;
 	}
 
 	/**
