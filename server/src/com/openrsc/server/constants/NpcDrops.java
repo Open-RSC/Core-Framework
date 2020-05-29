@@ -297,8 +297,8 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 1, 1);
 		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.GOBLIN_LVL13.id(), currentNpcDrops); // (4)
-		this.npcDrops.put(NpcId.GOBLIN1_LVL13.id(), currentNpcDrops); // (153)
-		this.npcDrops.put(NpcId.GOBLIN2_LVL13.id(), currentNpcDrops); // (154)
+		this.npcDrops.put(NpcId.GOBLIN_RED_ARMOUR_LVL13.id(), currentNpcDrops); // (153)
+		this.npcDrops.put(NpcId.GOBLIN_GREEN_ARMOUR_LVL13.id(), currentNpcDrops); // (154)
 
 		currentNpcDrops = new DropTable("Cow (6)");
 		currentNpcDrops.addItemDrop(ItemId.COW_HIDE.id(), 1, 0);
