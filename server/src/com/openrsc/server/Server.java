@@ -33,6 +33,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.Executors;
@@ -47,6 +48,8 @@ public class Server implements Runnable {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER;
+
+	public static final ArrayList<Server> serversList;
 
 	private final GameStateUpdater gameUpdater;
 	private final GameEventHandler gameEventHandler;
@@ -101,6 +104,7 @@ public class Server implements Runnable {
 			System.setProperty("Log4jContextSelector",
 				"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
+			serversList = new ArrayList<>();
 			LOGGER = LogManager.getLogger();
 		} catch (final Throwable t) {
 			throw new ExceptionInInitializerError(t);
@@ -109,20 +113,19 @@ public class Server implements Runnable {
 
 	public static final Server startServer(final String confName) throws IOException {
 		final long startTime = System.currentTimeMillis();
-		Server server = new Server(confName);
+		final Server server = new Server(confName);
 
 		if (!server.isRunning()) {
 			server.start();
 		}
 		final long endTime = System.currentTimeMillis();
 		final long bootTime = endTime - startTime;
-
 		LOGGER.info(server.getName() + " started in " + bootTime + "ms");
 
 		return server;
 	}
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		LOGGER.info("Launching Game Server...");
 
 		if (args.length == 0) {
@@ -274,6 +277,7 @@ public class Server implements Runnable {
 			}
 
 			running = true;
+			serversList.add(this);
 			lastTickTimestamp = serverStartedTime = System.currentTimeMillis();
 			scheduledExecutor.scheduleAtFixedRate(this, 0, 10, TimeUnit.MILLISECONDS);
 
@@ -291,6 +295,7 @@ public class Server implements Runnable {
 	public void stop() {
 		synchronized (running) {
 			running = false;
+			serversList.remove(this);
 			scheduledExecutor.shutdown();
 
 			loginExecutor.stop();
