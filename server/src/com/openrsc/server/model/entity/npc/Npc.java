@@ -317,85 +317,7 @@ public class Npc extends Mob {
 		}
 
 		/** Item Drops **/
-
-		/* 1. Custom Rare Drops */
-
-		// Custom KDB Specific Rare Drop Table (RDT)
-		if (getConfig().WANT_CUSTOM_SPRITES) {
-			if (this.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-				calculateCustomKingBlackDragonDrop(owner);
-			}
-		}
-
-		/* 2. Drop bones (or nothing). */
-
-		// No Bones
-		int bones = ItemId.NOTHING.id();
-		// Big Bones
-		if (getWorld().npcDrops.isBigBoned(this.getID())) {
-			bones = ItemId.BIG_BONES.id();
-		}
-		// Bat
-		else if (getWorld().npcDrops.isBatBoned(this.getID())) {
-			bones = ItemId.BAT_BONES.id();
-		}
-		// Dragon
-		else if (getWorld().npcDrops.isDragon(this.getID())) {
-			bones = ItemId.DRAGON_BONES.id();
-		}
-		// Demon
-		else if (getWorld().npcDrops.isDemon(this.getID())) {
-			bones = ItemId.ASHES.id();
-		}
-		// Not boneless
-		else if(!getWorld().npcDrops.isBoneless(this.getID())) {
-			bones = ItemId.BONES.id();
-		}
-		if (bones != ItemId.NOTHING.id()) {
-			GroundItem groundItem = new GroundItem(owner.getWorld(), bones, getX(), getY(), 1, owner);
-			groundItem.setAttribute("npcdrop", true);
-			getWorld().registerItem(groundItem);
-		}
-
-		/* 3. Get the rest of the mob's drops. */
-
-		DropTable drops = getWorld().npcDrops.getDropTable(this.getID());
-		if (drops == null) {
-			// Some enemies have no drops
-			deathListeners.clear();
-			remove();
-			return;
-		}
-		drops = drops.clone();
-
-		/* 4. Drop items that should always drop, that are not bones. */
-
-		ArrayList<Item> invariableItems = drops.invariableItems(owner);
-		for (Item item : invariableItems) {
-			drops.removeItemDrop(item);
-			GroundItem groundItem = new GroundItem(owner.getWorld(), item.getCatalogId(), getX(), getY(), item.getAmount(), owner);
-			groundItem.setAttribute("npcdrop", true);
-			owner.getWorld().registerItem(groundItem);
-		}
-
-		/* 5. Roll for drops. */
-		if (getConfig().WANT_NEW_RARE_DROP_TABLES) {
-			rollForCustomRareItem(owner);
-			drops.removeCustomRareTableDrops();
-		}
-
-		if (drops.getTotalWeight() > 0) {
-			ArrayList<Item> items = drops.rollItem(false, owner);
-			for (Item item : items) {
-				if (item != null) {
-					if (getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).isStackable()) {
-						dropStackItem(item.getCatalogId(), item.getAmount(), owner);
-					} else {
-						dropStandardItem(item, owner);
-					}
-				}
-			}
-		}
+		dropItems(owner);
 
 		for (NpcLootEvent e : deathListeners) {
 			e.onLootNpcDeath((Player) mob, this);
@@ -412,6 +334,63 @@ public class Npc extends Mob {
 				|| getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName()));
 		} else
 			owner.addNpcKill(this, false);
+	}
+
+	public void dropItems(Player owner) {
+		/* 1. Custom Rare Drops */
+		if (getConfig().WANT_CUSTOM_SPRITES) {
+			if (this.getID() == NpcId.KING_BLACK_DRAGON.id()) {
+				calculateCustomKingBlackDragonDrop(owner); // Custom KDB Specific RDT
+			}
+		}
+
+		/* 2. Drop bones (or nothing). */
+		int bones = getBonesDrop();
+		if (bones != ItemId.NOTHING.id()) {
+			GroundItem groundItem = new GroundItem(
+				owner.getWorld(), bones, getX(), getY(), 1, owner
+			);
+			groundItem.setAttribute("npcdrop", true);
+			getWorld().registerItem(groundItem);
+		}
+
+		/* 3. Get the rest of the mob's drops. */
+		DropTable drops = getWorld().npcDrops.getDropTable(this.getID());
+		if (drops == null) {
+			// Some enemies have no drops
+			deathListeners.clear();
+			remove();
+			return;
+		}
+		drops = drops.clone(drops.getDescription());
+
+		/* 4. Drop items that should always drop, that are not bones. */
+		ArrayList<Item> invariableItems = drops.invariableItems(owner);
+		for (Item item : invariableItems) {
+			drops.removeItemDrop(item);
+			GroundItem groundItem = new GroundItem(owner.getWorld(), item.getCatalogId(), getX(), getY(), item.getAmount(), owner);
+			groundItem.setAttribute("npcdrop", true);
+			owner.getWorld().registerItem(groundItem);
+		}
+
+		/* 5. Roll for drops. */
+		boolean ringOfWealth = false;
+		if (getConfig().WANT_NEW_RARE_DROP_TABLES) {
+			ringOfWealth = owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id());
+		}
+
+		if (drops.getTotalWeight() > 0) {
+			ArrayList<Item> items = drops.rollItem(ringOfWealth, owner);
+			for (Item item : items) {
+				if (item != null) {
+					if (getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).isStackable()) {
+						dropStackItem(item.getCatalogId(), item.getAmount(), owner);
+					} else {
+						dropStandardItem(item, owner);
+					}
+				}
+			}
+		}
 	}
 
 	private void calculateCustomKingBlackDragonDrop(Player owner) {
@@ -438,34 +417,29 @@ public class Npc extends Mob {
 		}
 	}
 
-	private boolean rollForCustomRareItem(Player owner) {
-		boolean ringOfWealth = owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id());
-
-		ArrayList<Item> rare = null;
-		if (getWorld().npcDrops.getUltraRareDropTable().rollAccess(this.getID(), ringOfWealth)) {
-			rare = getWorld().npcDrops.getUltraRareDropTable().rollItem(ringOfWealth, owner);
-		} else if (getWorld().npcDrops.getRareDropTable().rollAccess(this.getID(), ringOfWealth)) {
-			rare = getWorld().npcDrops.getRareDropTable().rollItem(ringOfWealth, owner);
+	private int getBonesDrop() {
+		int bones = ItemId.NOTHING.id();
+		// Big Bones
+		if (getWorld().npcDrops.isBigBoned(this.getID())) {
+			bones = ItemId.BIG_BONES.id();
 		}
-
-		if (rare != null) {
-			for (Item item : rare) {
-				if (!DropTable.handleRingOfAvarice(owner, item)) {
-					GroundItem groundItem = new GroundItem(owner.getWorld(), item.getCatalogId(), getX(), getY(), item.getAmount(), owner, item.getNoted());
-					groundItem.setAttribute("npcdrop", true);
-					getWorld().registerItem(groundItem);
-				}
-
-				try {
-					getWorld().getServer().getDatabase().addDropLog(
-						owner, this, item.getCatalogId(), item.getAmount());
-				} catch (final GameDatabaseException ex) {
-					LOGGER.catching(ex);
-				}
-			}
-			return true;
+		// Bat
+		else if (getWorld().npcDrops.isBatBoned(this.getID())) {
+			bones = ItemId.BAT_BONES.id();
 		}
-		return false;
+		// Dragon
+		else if (getWorld().npcDrops.isDragon(this.getID())) {
+			bones = ItemId.DRAGON_BONES.id();
+		}
+		// Demon
+		else if (getWorld().npcDrops.isDemon(this.getID())) {
+			bones = ItemId.ASHES.id();
+		}
+		// Not boneless
+		else if(!getWorld().npcDrops.isBoneless(this.getID())) {
+			bones = ItemId.BONES.id();
+		}
+		return bones;
 	}
 
 	private void dropStackItem(final int dropID, int amount, Player owner) {
