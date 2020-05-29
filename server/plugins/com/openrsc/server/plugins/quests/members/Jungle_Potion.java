@@ -422,12 +422,14 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 								say(player, n, "It just so happens that I have!");
 								npcsay(player, n, "Oh! So you managed to bury Zadimus's Corpse?");
 								say(player, n, "Yes, it was pretty grisly!");
-								int m = multi(player, n,
+								int m = multi(player, n, false, //do not send over
 									"The spirit said something about keys and kin?",
 									"The spirit rambled on about some nonsense.");
 								if (m == 0) {
+									say(player, n, " \"The spirit said something about keys and kin?\"");
 									trufitisChat(player, n, Trufitus.KEYS_AND_KIN);
 								} else if (m == 1) {
+									say(player, n, "The spirit rambled on about some nonsense.");
 									npcsay(player, n, "Oh, so it most likely was not very important then?");
 								}
 							}

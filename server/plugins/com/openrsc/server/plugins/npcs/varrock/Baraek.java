@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
+import java.util.ArrayList;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Baraek implements
@@ -16,36 +18,46 @@ public final class Baraek implements
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		int menu;
-		boolean bargained = false;
 		boolean hasFur = player.getCarriedItems().hasCatalogID(ItemId.FUR.id());
-		if (canGetInfoGang(player) && hasFur) {
-			menu = multi(player, n, false, //do not send over
-				"Can you tell me where I can find the phoenix gang?",
-				"Can you sell me some furs?",
-				"Hello. I am in search of a quest",
-				"Would you like to buy my fur?");
-		} else if (canGetInfoGang(player) && !hasFur) {
-			menu = multi(player, n, false, //do not send over
-				"Can you tell me where I can find the phoenix gang?",
-				"Can you sell me some furs?",
-				"Hello. I am in search of a quest");
-		} else if (hasFur) {
-			menu = multi(player, n, false, //do not send over
-				"Can you sell me some furs?",
-				"Hello. I am in search of a quest",
-				"Would you like to buy my fur?");
-			if (menu >= 0) {
-				menu += 1;
-			}
+		boolean hasWolfFur = player.getCarriedItems().hasCatalogID(ItemId.GREY_WOLF_FUR.id());
+		ArrayList<String> options = new ArrayList<>();
+		int start, skip;
+		skip = -1;
+		start = 0;
+		if (canGetInfoGang(player)) {
+			options.add("Can you tell me where I can find the phoenix gang?");
 		} else {
-			menu = multi(player, n, false, //do not send over
-				"Can you sell me some furs?",
-				"Hello. I am in search of a quest");
-			if (menu >= 0) {
-				menu += 1;
-			}
+			start = 1; // menu start at 1
 		}
-		if (menu == 0) {
+		options.add("Can you sell me some furs?");
+		options.add("Hello. I am in search of a quest");
+		// very likely exclusive between wolf and reg furs, preferring wolf fur
+		if (hasWolfFur) {
+			options.add("Would you like to buy my grey wolf fur?");
+			// also changed "Hello. I am in search of a quest" to "Hello I am in search of a quest"
+			options.set(options.indexOf("Hello. I am in search of a quest"), "Hello I am in search of a quest");
+		} else if (hasFur) {
+			skip = start + 2; // skip option of wolf fur
+			options.add("Would you like to buy my fur?");
+		}
+		String[] finalOptions = new String[options.size()];
+		menu = multi(player, n, false, //do not send over
+			finalOptions);
+
+		if (menu >= 0) {
+			menu += start;
+			if (menu == skip) {
+				// reg fur selected but was shown in position of wolf fur, selection+1
+				menu++;
+			}
+
+			baraekDialogue(player, n, menu);
+		}
+	}
+
+	private void baraekDialogue(Player player, Npc n, int chosenOption) {
+		boolean bargained = false;
+		if (chosenOption == 0) {
 			say(player, n, "Can you tell me where I can find the phoenix gang?");
 			npcsay(player, n, "Sh Sh, not so loud",
 				"You don't want to get me in trouble");
@@ -83,7 +95,7 @@ public final class Baraek implements
 			} else if (sub_menu == 2) {
 				//nothing
 			}
-		} else if (menu == 1) {
+		} else if (chosenOption == 1) {
 			say(player, n, "Can you sell me some furs?");
 			npcsay(player, n, "Yeah sure they're 20 gold coins a piece");
 			int opts = multi(player, n, false, //do not send over
@@ -105,11 +117,28 @@ public final class Baraek implements
 				npcsay(player, n, "Well, okay I'll go down to 18");
 				bargained = true;
 			}
-		} else if (menu == 2) {
+		} else if (chosenOption == 2) {
 			say(player, n, "Hello I am in search of a quest");
 			npcsay(player, n,
 				"Sorry kiddo, I'm a fur trader not a damsel in distress");
-		} else if (menu == 3) {
+		} else if (chosenOption == 3) {
+			say(player, n, "Would you like to buy my grey wolf fur?");
+			npcsay(player, n, "Grey wolf fur, now you're talking",
+				"Hmm I'll give you 120 per fur, does that sound fair?");
+			int wolfmenu = multi(player, n, false, //do not send over
+				"Yep sounds fine", "No I almost got my throat torn out by a wolf to get this");
+			if (wolfmenu == 0) {
+				say(player, n, "Yep that sounds fine");
+				int count = player.getCarriedItems().getInventory().countId(ItemId.GREY_WOLF_FUR.id());
+				for (int i=0; i<count; i++) {
+					player.getCarriedItems().remove(new Item(ItemId.GREY_WOLF_FUR.id()));
+					give(player, ItemId.COINS.id(), 120);
+					delay(config().GAME_TICK);
+				}
+			} else if (wolfmenu == 1) {
+				say(player, n, "No I almost got my throat torn out by a wolf to get this");
+			}
+		} else if (chosenOption == 4) {
 			say(player, n, "Would you like to buy my fur?");
 			npcsay(player, n, "Lets have a look at it");
 			player.message("Baraek examines a fur");
