@@ -263,53 +263,53 @@ public class Server implements Runnable {
 					LOGGER.catching(ex);
 					System.exit(1);
 				}
-				LOGGER.info("\t Database Connection Completed");
+				LOGGER.info("Database Connection Completed");
 
 				LOGGER.info("Loading Game Definitions...");
 				getEntityHandler().load();
-				LOGGER.info("\t Definitions Completed");
+				LOGGER.info("Definitions Completed");
 
 				LOGGER.info("Loading Game State Updater...");
 				getGameUpdater().load();
-				LOGGER.info("\t Game State Updater Completed");
+				LOGGER.info("Game State Updater Completed");
 
 				LOGGER.info("Loading Game Event Handler...");
 				getGameEventHandler().load();
-				LOGGER.info("\t Game Event Handler Completed");
+				LOGGER.info("Game Event Handler Completed");
 
 				LOGGER.info("Loading Plugins...");
 				getPluginHandler().load();
-				LOGGER.info("\t Plugins Completed");
+				LOGGER.info("Plugins Completed");
 
 				LOGGER.info("Loading Combat Scripts...");
 				getCombatScriptLoader().load();
-				LOGGER.info("\t Combat Scripts Completed");
+				LOGGER.info("Combat Scripts Completed");
 
 				LOGGER.info("Loading World...");
 				getWorld().load();
-				LOGGER.info("\t World Completed");
+				LOGGER.info("World Completed");
 
 				/*LOGGER.info("Loading Achievements...");
 				getAchievementSystem().load();
-				LOGGER.info("\t Achievements Completed");*/
+				LOGGER.info("Achievements Completed");*/
 
 				LOGGER.info("Loading LoginExecutor...");
 				getLoginExecutor().start();
-				LOGGER.info("\t LoginExecutor Completed");
+				LOGGER.info("LoginExecutor Completed");
 
 				if (getDiscordService() != null) {
 					LOGGER.info("Loading DiscordService...");
 					getDiscordService().start();
-					LOGGER.info("\t DiscordService Completed");
+					LOGGER.info("DiscordService Completed");
 				}
 
 				LOGGER.info("Loading GameLogger...");
 				getGameLogger().start();
-				LOGGER.info("\t GameLogger Completed");
+				LOGGER.info("GameLogger Completed");
 
 				LOGGER.info("Loading Packet Filter...");
 				getPacketFilter().load();
-				LOGGER.info("\t Packet Filter Completed");
+				LOGGER.info("Packet Filter Completed");
 
 				maxItemId = getDatabase().getMaxItemID();
 
