@@ -92,7 +92,7 @@ public class Server implements Runnable {
 	private final HashMap<Integer, Long> outgoingTimePerPacketOpcode = new HashMap<>();
 	private final HashMap<Integer, Integer> outgoingCountPerPacketOpcode = new HashMap<>();
 
-	private int maxItemId;
+	private volatile int maxItemId;
 
 	/*Used for pathfinding view debugger
 	JPanel2 panel = new JPanel2();
