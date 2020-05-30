@@ -170,6 +170,7 @@ public class NpcDrops {
 		this.bonelessNpcs.add(NpcId.GHOST2.id());
 		this.bonelessNpcs.add(NpcId.COUNT_DRAYNOR.id());
 		this.bonelessNpcs.add(NpcId.DEADLY_RED_SPIDER.id());
+		this.bonelessNpcs.add(NpcId.IMP.id());
 		this.bonelessNpcs.add(NpcId.KING_SCORPION.id());
 		this.bonelessNpcs.add(NpcId.GHOST_WMAZEKEY.id());
 		this.bonelessNpcs.add(NpcId.SUIT_OF_ARMOUR.id());
