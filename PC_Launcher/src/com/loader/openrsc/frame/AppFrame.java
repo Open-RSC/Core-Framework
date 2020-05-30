@@ -14,11 +14,6 @@ public class AppFrame extends JFrame {
 	private JLabel logo;
 	private JProgressBar progress;
 
-	private JLabel orsc_online;
-	private JLabel rscc_online;
-	private JLabel rscp_online;
-	private JLabel dev_online;
-
 	private CheckCombo comboBox;
 	private LaunchButton launch1;
 	private LaunchButton launch2;
@@ -135,33 +130,6 @@ public class AppFrame extends JFrame {
 		subText.setFont(Utils.getFont("Helvetica.otf", 1, 10.0f));
 		this.bg.add(subText);*/
 
-		/*
-		 * RSC Preservation
-		 */
-		// Online player count
-		(this.rscp_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
-		this.rscp_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.rscp_online.setBounds(preservation_x + 10, launch_button_y + 95, 327, 15);
-		//this.bg.add(this.rscp_online); // Disabled on purpose
-
-		/*
-		 * Open RSC
-		 */
-		// Online player count
-		(this.orsc_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
-		this.orsc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.orsc_online.setBounds(openrsc_x + 10, launch_button_y + 95, 327, 15);
-		this.bg.add(this.orsc_online);
-
-		/*
-		 * RSC Cabbage
-		 */
-		// Online player count
-		(this.rscc_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
-		this.rscc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.rscc_online.setBounds(cabbage_x + 10, launch_button_y + 95, 327, 15);
-		this.bg.add(this.rscc_online);
-
 		comboBox = new CheckCombo();
 		//comboBox.combo.setBounds(585, 132, 150, 30);
 
@@ -192,22 +160,6 @@ public class AppFrame extends JFrame {
 
 	public LaunchButton getLaunchdev() {
 		return this.launch5;
-	}
-
-	public JLabel getrsccOnline() {
-		return this.rscc_online;
-	}
-
-	public JLabel getorscOnline() {
-		return this.orsc_online;
-	}
-
-	public JLabel getdevOnline() {
-		return this.dev_online;
-	}
-
-	public JLabel getrscpOnline() {
-		return this.rscp_online;
 	}
 
 	// Spritepack combobox
