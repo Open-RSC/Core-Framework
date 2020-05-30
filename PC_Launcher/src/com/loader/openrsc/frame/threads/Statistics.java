@@ -31,16 +31,6 @@ public class Statistics implements Runnable {
 		} catch (Exception ignored) {
 		}
 
-		// OpenPK
-		try {
-			Document document = Jsoup.connect(Constants.OPENPK_WORLD_STATS_URL).get();
-
-			for (Element getopenpkOnline : document.select("a[href$=\"NULLonline\"]")) { // Broken on purpose until a website is operating
-				AppFrame.get().getopenpkOnline().setText("<html>Players Online: <span style='color:90c040;'>" + getopenpkOnline.text() + "</span></html>");
-			}
-		} catch (Exception ignored) {
-		}
-
 		// RSCP
 		try {
 			Document document = Jsoup.connect(Constants.RSCP_WORLD_STATS_URL).get();

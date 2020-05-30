@@ -40,28 +40,24 @@ if [ "$compiling" == "1" ]; then
     echo ""
 elif [ "$compiling" == "2" ]; then
     # PC Client
-    yes | sudo cp -f Client_Base/*.jar ../Website/downloads/
+    yes | sudo cp -f Client_Base/*.jar ../Website/site/public/downloads/
 
     # Android client
-    #yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/downloads/
+    #yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/site/public/downloads/
 
     # Launcher
-    yes | sudo cp -rf PC_Launcher/*.jar ../Website/downloads/
+    yes | sudo cp -rf PC_Launcher/*.jar ../Website/site/public/downloads/
 
     # Set file permissions within the Website downloads folder
-    sudo chmod +x ../Website/downloads/*.jar
-    sudo chmod +x ../Website/downloads/*.jar
-    sudo chmod -R 777 ../Website/downloads
+    sudo chmod +x ../Website/site/public/downloads/*.jar
+    sudo chmod +x ../Website/site/public/downloads/*.jar
+    sudo chmod -R 777 ../Website/site/public/downloads
 
     # Cache copy and file permissions
     sudo chmod 777 -R 'Client_Base/Cache'                                                       # Normal cache related files
-    yes | sudo cp -a -rf "Client_Base/Cache/." "../Website/downloads/"                          # Normal cache related files
+    yes | sudo cp -a -rf "Client_Base/Cache/." "../Website/site/public/downloads/"                          # Normal cache related files
 
-    sudo chmod 777 -R 'Client_Base/PK'                                                          # Open PK related files
-    yes | sudo cp -a -rf "Client_Base/PK/." "../Website/downloads/PK/"                          # Open PK related files
-    yes | sudo cp -f "Client_Base/Open_PK_Client.jar" "../Website/downloads/Open_PK_Client.jar" # Open PK related files
-
-    cd '../Website/downloads/' || exit
+    cd '../Website/site/public/downloads/' || exit
     find -type f \( -not -name "MD5.SUM" \) -exec md5sum '{}' \; >MD5.SUM # Performs md5 hashing of all files in cache and writes to a text file for the launcher to read
     cd '../../Game' || exit
 fi

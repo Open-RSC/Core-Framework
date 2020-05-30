@@ -1,4 +1,3 @@
-include .env
 #---------------------------------------------------------------
 
 # Section utilized by various shell scripts within Deployment_Scripts
@@ -83,11 +82,23 @@ import-addon:
 upgrade-authentic:
 	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/convert_core_4.3.0.sql
 
+upgrade-authentic2:
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/1_remove_redundant_prefix_5.0.0.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/2_alter_redundant_columns_5.0.0.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/4_remove_itemstatus_autoincrement.sql
+
 # Upgrades a database
 # Call via "make upgrade-custom db=cabbage"
 upgrade-custom:
 	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/convert_core_4.3.0.sql
 	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/convert_custom_4.3.0.sql
+
+upgrade-custom2:
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/1_remove_redundant_prefix_5.0.0.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/2_alter_redundant_columns_5.0.0.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/3_alter_custom_content_5.0.0.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Upgrades/4_remove_itemstatus_autoincrement.sql
+#1_remove_redundant_prefix_5.0.0.sql  2_alter_redundant_columns_5.0.0.sql  3_alter_custom_content_5.0.0.sql  4_remove_itemstatus_autoincrement.sql
 
 # Creates a database export of the specified database and saves to the output directory specified in the .env file.  Good for utilizing as a crontab.
 # Call via "make backup db=cabbage"
