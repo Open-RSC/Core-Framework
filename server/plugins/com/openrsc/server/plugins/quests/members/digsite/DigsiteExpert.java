@@ -294,7 +294,7 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 					npcsay(player, n, "Yes many parts are discovered",
 						"The inhabitants of these parts were great potters...");
 					say(player, n, "You mean they were good at using potions ?");
-					npcsay(player, n, "No no silly - they were known for their skill with clay");
+					npcsay(player, n, "No no silly - they are were known for their skill with clay");
 					break;
 				case DAMAGED_ARMOUR_1:
 					say(player, n, "I found some old armour");

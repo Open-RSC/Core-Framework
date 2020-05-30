@@ -143,9 +143,9 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					"at this whole investigation thing are you?");
 			} else if (n.getID() == NpcId.ELIZABETH_SINCLAIR.id() && player.getCarriedItems().hasCatalogID(ItemId.THREAD_BLUE.id())) {
 				player.message("You show her the thread from the study window");
-				npcsay(player, n, "Looks like a Blue thread to me.",
-					" If you can't work that out for yourself I",
-					"don't hold much hope of you solving this crime.");
+				npcsay(player, n, "Looks like Blue thread to me.",
+					"If you can't work that out for yourself I",
+					"don't hold much hope of you solving this crime");
 				say(player, n, "It looks a lot like the material your trousers",
 					"are made of doesn't it?");
 				npcsay(player, n, "I suppose it does. So what?");

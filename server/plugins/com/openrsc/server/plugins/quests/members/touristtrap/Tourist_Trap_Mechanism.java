@@ -64,11 +64,16 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		}
 	}
 
+	public boolean isPineappleBased(Item item) {
+		return !item.getNoted() && DataConversions.inArray(new int[]{ItemId.TENTI_PINEAPPLE.id(), ItemId.PINEAPPLE.id(), ItemId.FRESH_PINEAPPLE.id(),
+			ItemId.PINEAPPLE_CHUNKS.id(), ItemId.PINEAPPLE_RING.id()}, item.getCatalogId());
+	}
+
 	@Override
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
 		return (item.getCatalogId() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.BEDABIN_NOMAD_GUARD.id())
 				|| (item.getCatalogId() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.AL_SHABIM.id())
-				|| (item.getCatalogId() == ItemId.TENTI_PINEAPPLE.id() && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id())
+				|| (isPineappleBased(item) && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id())
 				|| (item.getCatalogId() == ItemId.MINING_BARREL.id() && npc.getID() == NpcId.ANA.id());
 	}
 
@@ -92,15 +97,25 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		else if (item.getCatalogId() == ItemId.TECHNICAL_PLANS.id() && npc.getID() == NpcId.AL_SHABIM.id()) {
 			TouristTrap.indirectTalktoAlShabim(player, npc);
 		}
-		else if (item.getCatalogId() == ItemId.TENTI_PINEAPPLE.id() && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
-			player.getCarriedItems().remove(new Item(ItemId.TENTI_PINEAPPLE.id()));
-			npcsay(player, npc, "Great! Just what I've been looking for!",
-				"Mmmmmmm, delicious!!",
-				"Oh, this is soo nice!",
-				"Mmmmm, *SLURP*",
-				"Yummmm....Oh yes, this is great.");
-			if (player.getQuestStage(Quests.TOURIST_TRAP) == 8) {
-				player.updateQuestStage(Quests.TOURIST_TRAP, 9);
+		else if (!item.getNoted() && isPineappleBased(item) && npc.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
+			if (item.getCatalogId() == ItemId.TENTI_PINEAPPLE.id()) {
+				player.getCarriedItems().remove(new Item(ItemId.TENTI_PINEAPPLE.id()));
+				npcsay(player, npc, "Great! Just what I've been looking for!",
+					"Mmmmmmm, delicious!!",
+					"Oh, this is soo nice!",
+					"Mmmmm, *SLURP*",
+					"Yummmm....Oh yes, this is great.");
+				if (player.getQuestStage(Quests.TOURIST_TRAP) == 8) {
+					player.updateQuestStage(Quests.TOURIST_TRAP, 9);
+				}
+			} else {
+				npcsay(player, npc, "Oh great!");
+				mes("The guard rolls his eyes in glee.",
+					"and takes a bite of the pineapple.",
+					"His face turns from pleasure to pain as he spits the mouthful of pineapple out.");
+				npcsay(player, npc, "Yeuch!",
+					"That's awful! That's not Tenti pineapple,",
+					"Get me some Tenti pineapple if you know what's good for you.");
 			}
 		}
 		else if (item.getCatalogId() == ItemId.MINING_BARREL.id() && npc.getID() == NpcId.ANA.id()) {
@@ -280,7 +295,8 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 		}
 		else if (obj.getID() == MINING_CAVE) {
 			Npc n = ifnearvisnpc(player, NpcId.MERCENARY_ESCAPEGATES.id(), 10);
-			if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id()) && player.getQuestStage(Quests.TOURIST_TRAP) != -1) {
+			if ((!player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id())
+				|| !player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) && player.getQuestStage(Quests.TOURIST_TRAP) != -1) {
 				player.message("This guard looks as if he's been down here a while.");
 				npcsay(player, n, "Hey, you're no slave!");
 				npcsay(player, n, "What are you doing down here?");

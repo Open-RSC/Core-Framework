@@ -101,32 +101,30 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 			}
 		}
 		else if (obj.getID() == SPECIMEN_TRAY) {
-			Npc workmanCheck = ifnearvisnpc(player, NpcId.WORKMAN.id(), 15);
-			if (workmanCheck != null) {
-				Npc workman = addnpc(player.getWorld(), NpcId.WORKMAN.id(), player.getX(), player.getY(), 30000);
-				if (!player.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_JAR.id(), Optional.of(false))) {
-					if (workman != null) {
-						npcsay(player, workman, "Oi! what are you doing ?");
-						npcWalkFromPlayer(player, workman);
-						int option = multi(player,
-							"I am on an errand",
-							"I am searching this tray");
-						if (option == 0) {
-							npcsay(player, workman, "Oh yeah? and whose errand is that then...",
-								"Where is your specimen jar then?");
-							say(player, workman, "Oh I dont have one");
-							npcsay(player, workman, "And you reckon you have been sent on an errand...",
-								"Without a specimen jar - no sorry I can't let you do that!");
-						} else if (option == 1) {
-							npcsay(player, workman, "Oh you are, are you ?",
-								"Well, where's your specimen jar?");
-							say(player, workman, "Ah, I don't have one...");
-							npcsay(player, workman, "In that case how can you handle the specimens without it?",
-								"As you should know, specimens are to be kept in sealed specimen jars",
-								"To keep them safe and preserved...",
-								"Next time bring it along!");
-						}
-					}
+			if (!player.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_JAR.id(), Optional.of(false))) {
+				Npc workmanCheck = ifnearvisnpc(player, NpcId.WORKMAN.id(), 15);
+				if (workmanCheck == null) {
+					workmanCheck = addnpc(player.getWorld(), NpcId.WORKMAN.id(), player.getX(), player.getY(), 30000);
+				}
+				npcsay(player, workmanCheck, "Oi! what are you doing ?");
+				npcWalkFromPlayer(player, workmanCheck);
+				int option = multi(player,
+					"I am on an errand",
+					"I am searching this tray");
+				if (option == 0) {
+					npcsay(player, workmanCheck, "Oh yeah? and whose errand is that then...",
+						"Where is your specimen jar then?");
+					say(player, workmanCheck, "Oh I dont have one");
+					npcsay(player, workmanCheck, "And you reckon you have been sent on an errand...",
+						"Without a specimen jar - no sorry I can't let you do that!");
+				} else if (option == 1) {
+					npcsay(player, workmanCheck, "Oh you are, are you ?",
+						"Well, where's your specimen jar?");
+					say(player, workmanCheck, "Ah, I don't have one...");
+					npcsay(player, workmanCheck, "In that case how can you handle the specimens without it?",
+						"As you should know, specimens are to be kept in sealed specimen jars",
+						"To keep them safe and preserved...",
+						"Next time bring it along!");
 				}
 				return;
 			}

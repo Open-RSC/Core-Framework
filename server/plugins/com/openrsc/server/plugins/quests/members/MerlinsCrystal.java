@@ -44,7 +44,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 		player.getCache().remove("magic_words");
 		player.message("Well done you have completed the Merlin's crystal quest");
 		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.MERLINS_CRYSTAL), true);
-		player.message("You haved gained 6 quest points!");
+		player.message("@gre@You haved gained 6 quest points!");
 	}
 
 	@Override

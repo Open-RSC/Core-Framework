@@ -203,6 +203,31 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 				addnpc(player.getWorld(), NpcId.KHAZARD_OGRE.id(), 613, 708, 60000 * 2);
 			}
 		}
+		else if (n.getID() == NpcId.GUARD_KHAZARD.id()) {
+			if (player.getQuestStage(getQuestId()) == 3
+				|| player.getQuestStage(getQuestId()) == -1) {
+				say(player, n, "hello");
+				npcsay(player, n, "You're the outsider who killed bouncer!",
+					"on-guard fiend!");
+				n.setChasing(player);
+				return;
+			}
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
+				&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
+				say(player, n, "hello");
+				npcsay(player, n, "damn thieves, that was good armour",
+					"did you see anyone around here?");
+				say(player, n, "me? no, no one");
+				npcsay(player, n, "hmmmmm");
+			} else {
+				say(player, n, "Hello");
+				npcsay(player, n, "Who goes there?");
+				say(player, n, "..er .. i'm..");
+				npcsay(player, n, "I don't know you",
+					"Get out of my house strange");
+				player.message("He doesn't seem too friendly");
+			}
+		}
 		else if (n.getID() == NpcId.GUARD_KHAZARD_MACE.id()) {
 			if (player.getQuestStage(getQuestId()) == 3
 				|| player.getQuestStage(getQuestId()) == -1) {
@@ -271,7 +296,15 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 			}
 			if (player.getCache().hasKey("guard_sleeping")
 				|| player.getCache().hasKey("freed_servil")) {
-				npcsay(player, n, "please, let me rest");
+				if (player.getCarriedItems().hasCatalogID(ItemId.KHAZARD_CELL_KEYS.id(), Optional.of(false))) {
+					npcsay(player, n, "please, let me rest");
+				} else {
+					say(player, n, "i've lost the keys");
+					npcsay(player, n, "what?! you're foolish..",
+						"hiccup.. and i'm drunk",
+						"here, i've got another set");
+					give(player, ItemId.KHAZARD_CELL_KEYS.id(), 1);
+				}
 				return;
 			}
 			if (player.getQuestStage(getQuestId()) == 2) {

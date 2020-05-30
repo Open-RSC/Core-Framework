@@ -1055,7 +1055,8 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					case -1:
 						if (player.getLocation().inTouristTrapCave()) {
 							npcsay(player, n, "Can't you see I'm busy?");
-							if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id()) && player.getQuestStage(this) != -1) {
+							if ((!player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id())
+								|| !player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) && player.getQuestStage(this) != -1) {
 								player.message("A guard notices you and starts running after you.");
 								Npc npcN = ifnearvisnpc(player, NpcId.MERCENARY.id(), 10);
 								if (npcN == null) {
@@ -1084,7 +1085,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						} else {
 							npcsay(player, n, "Oh bother, I was caught by the guards again...",
 								"Listen, if you can get me some Desert Clothes,",
-								"I'll trade you for my slaves clothes again..",
+								" I'll trade you for my slaves clothes again..",
 								"Do you want to trade?");
 							int trade = multi(player, n,
 								"Yes, I'll trade.",
@@ -1305,7 +1306,8 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		if (n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			if (cID == -1) {
 				if (player.getLocation().inTouristTrapCave()) {
-					if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) {
+					if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id())
+						|| !player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) {
 						player.message("This guard looks as if he's been down here a while.");
 						npcsay(player, n, "Hey, you're no slave!",
 							"What are you doing down here?");
@@ -2165,7 +2167,8 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				player.message("This slave does not appear interested in talking to you.");
 				return;
 			}
-			if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id()) && !player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id()) && player.getQuestStage(this) != -1) {
+			if ((!player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id())
+				|| !player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) && player.getQuestStage(this) != -1) {
 				player.message("A guard notices you and starts running after you.");
 				Npc npcN = ifnearvisnpc(player, NpcId.MERCENARY.id(), 10);
 				if (npcN == null) {
@@ -2517,23 +2520,33 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					return;
 				} else if (!player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 					player.message("This gate is locked, you'll need a key to open it.");
-				} else if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id())
-					&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) {
-					Npc guard = ifnearvisnpc(player, NpcId.MERCENARY.id(), 5);
-					if (guard != null ){
-						player.message("A guard notices you as you try to slip past...");
-						npcsay(player, guard, "Hey! Where do you think you're going?");
-						guard.setChasing(player);
-						npcsay(player, guard, "Guards! Slave escaping!");
-						if (player.getX() <= 91) {
-							// sent to jail
-							mercenaryDialogue(player, guard, Mercenary.THROW_PRISON);
-						} else {
-							// sent to desert
-							mercenaryDialogue(player, guard, Mercenary.LEAVE_DESERT);
-						}
-					}
 				} else {
+					Armed armedVal = playerArmed(player);
+					// armed player makes mercenary not follow slave dialogue but that of weapon/armour
+					if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id())
+						&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())
+						&& armedVal == Armed.NONE) {
+						Npc guard = ifnearvisnpc(player, NpcId.MERCENARY.id(), 5);
+						if (guard != null ){
+							player.message("A guard notices you as you try to slip past...");
+							npcsay(player, guard, "Hey! Where do you think you're going?");
+							guard.setChasing(player);
+							npcsay(player, guard, "Guards! Slave escaping!");
+							if (player.getQuestStage(this) == -1) {
+								player.message("No other guards come to the rescue.");
+								return;
+							}
+							if (player.getX() <= 91) {
+								// sent to jail
+								mercenaryDialogue(player, guard, Mercenary.THROW_PRISON);
+							} else {
+								// sent to desert
+								mercenaryDialogue(player, guard, Mercenary.LEAVE_DESERT);
+							}
+						}
+						return;
+					}
+
 					mes("You use the metal key to unlock the gates.",
 						"You manage to sneak past the guards!.");
 					doGate(player, obj);
@@ -2545,7 +2558,6 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						if (player.getQuestStage(this) == -1) { // no dialogue after quest on just opening gates
 							// todo change the coords going in and going out.
 						} else {
-							Armed armedVal = playerArmed(player);
 							if (armedVal != Armed.NONE) {
 								switch (armedVal) {
 									case WEAPON:
