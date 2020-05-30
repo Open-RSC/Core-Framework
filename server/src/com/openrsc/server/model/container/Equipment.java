@@ -417,7 +417,7 @@ public class Equipment {
 		synchronized (player.getCarriedItems().getInventory()) {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
 				if (request.item.wieldingAffectsItem(player.getWorld(), item) && item.isWielded()) {
-					if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_INVENTORY, false)))
+					if (!player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, item, UnequipRequest.RequestType.FROM_INVENTORY, false), false))
 						return false;
 				}
 			}
