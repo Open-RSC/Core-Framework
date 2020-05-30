@@ -55,14 +55,6 @@ public class ButtonListener implements ActionListener {
 				return;
 			}
 
-			case "openpk": {
-				String ip = "openpk.openrsc.com";
-				String port = "43597";
-				setOpenPK(ip, port);
-				launch_openpk();
-				return;
-			}
-
 			case "wk": {
 				String ip = "game.openrsc.com";
 				String port = "43598";
@@ -125,31 +117,6 @@ public class ButtonListener implements ActionListener {
 					}
 				}
 
-				File pk = new File(Constants.CONF_DIR + File.separator + "PK");
-				File[] pList = pk.listFiles();
-				assert pList != null;
-				for (File file : pList) {
-					String extension = String.valueOf(file);
-					if (extension.endsWith(".orsc")) {
-						new File(String.valueOf(file)).delete();
-					}
-					if (extension.endsWith(".osar")) {
-						new File(String.valueOf(file)).delete();
-					}
-					if (extension.endsWith(".wav")) {
-						new File(String.valueOf(file)).delete();
-					}
-					if (extension.endsWith(".txt")) {
-						new File(String.valueOf(file)).delete();
-					}
-					if (extension.endsWith(".pack")) {
-						new File(String.valueOf(file)).delete();
-					}
-					if (extension.endsWith(".mem")) {
-						new File(String.valueOf(file)).delete();
-					}
-				}
-
 				System.exit(0);
 			}
 
@@ -171,25 +138,6 @@ public class ButtonListener implements ActionListener {
 		}
 		try {
 			fileout = new FileOutputStream("Cache" + File.separator + "port.txt");
-			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-			outputWriter.write(port);
-			outputWriter.close();
-		} catch (Exception ignored) {
-		}
-	}
-
-	private void setOpenPK(String ip, String port) {
-		// Sets the IP and port
-		FileOutputStream fileout;
-		try {
-			fileout = new FileOutputStream("PK" + File.separator + "ip.txt");
-			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-			outputWriter.write(ip);
-			outputWriter.close();
-		} catch (Exception ignored) {
-		}
-		try {
-			fileout = new FileOutputStream("PK" + File.separator + "port.txt");
 			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
 			outputWriter.write(port);
 			outputWriter.close();
@@ -223,33 +171,5 @@ public class ButtonListener implements ActionListener {
 		}
 
 		ClientLauncher.launchClient();
-	}
-
-	private void launch_openpk() {
-		// Deletes the client.properties file that may persist unwanted settings between different games
-		File f = new File(Constants.CONF_DIR + File.separator + "PK" + File.separator + "client.properties");
-		f.delete();
-
-		//update the sprite pack config file
-		File configFile = new File(Constants.CONF_DIR + File.separator + "PK" + File.separator + "config.txt");
-		configFile.delete();
-
-		CheckCombo.store[] entries = AppFrame.get().getComboBoxState();
-
-		//Update the config file
-		if (!(entries.length == 1 && entries[0].text.equalsIgnoreCase("none"))) {
-			try {
-				FileWriter write = new FileWriter(configFile, true);
-				PrintWriter writer = new PrintWriter(write);
-				for (CheckCombo.store entry : entries)
-					writer.println(entry.text + ":" + (entry.state ? 1 : 0));
-				writer.close();
-				write.close();
-			} catch (IOException a) {
-				a.printStackTrace();
-			}
-		}
-
-		ClientLauncher.launchClient_openpk();
 	}
 }

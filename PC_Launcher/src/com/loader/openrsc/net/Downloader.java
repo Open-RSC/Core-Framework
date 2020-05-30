@@ -12,15 +12,13 @@ import java.util.ArrayList;
 
 public class Downloader {
 
-	private ArrayList<String> excludedFiles = new ArrayList<>();
-	private ArrayList<String> refuseUpdate = new ArrayList<>();
+	private final ArrayList<String> excludedFiles = new ArrayList<>();
+	private final ArrayList<String> refuseUpdate = new ArrayList<>();
 
 	public Downloader() {
 		excludedFiles.add(Constants.MD5_TABLENAME);
 		excludedFiles.add("android_version.txt");
-		excludedFiles.add("android_version_pk.txt");
 		excludedFiles.add("openrsc.apk");
-		excludedFiles.add("openpk.apk");
 		refuseUpdate.add("credentials.txt");
 		refuseUpdate.add("config.txt");
 	}
@@ -59,8 +57,6 @@ public class Downloader {
 		try {
 			AppFrame.get().getLaunchopenrsc().setEnabled(false);
 			AppFrame.get().getLaunchcabbage().setEnabled(false);
-			AppFrame.get().getLaunchopenpk().setEnabled(false);
-			//AppFrame.get().getLaunchpreservation().setEnabled(false);
 			AppFrame.get().getLaunchdev().setEnabled(false);
 			AppFrame.get().setDownloadProgress("Checking for updates...", 100.0f);
 
@@ -162,7 +158,6 @@ public class Downloader {
 				old.delete();
 			AppFrame.get().getLaunchopenrsc().setEnabled(true);
 			AppFrame.get().getLaunchcabbage().setEnabled(true);
-			AppFrame.get().getLaunchopenpk().setEnabled(true);
 			//AppFrame.get().getLaunchpreservation().setEnabled(true);
 			AppFrame.get().getLaunchdev().setEnabled(true);
 			AppFrame.get().getSpriteCombo().loadSpritePacks();

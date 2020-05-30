@@ -31,14 +31,16 @@ public final class Baraek implements
 		}
 		options.add("Can you sell me some furs?");
 		options.add("Hello. I am in search of a quest");
-		// very likely exclusive between wolf and reg furs, preferring wolf fur
+		if (hasFur) {
+			options.add("Would you like to buy my fur?");
+		}
 		if (hasWolfFur) {
+			if (!hasFur) {
+				skip = start + 2; // skip option of fur
+			}
 			options.add("Would you like to buy my grey wolf fur?");
 			// also changed "Hello. I am in search of a quest" to "Hello I am in search of a quest"
 			options.set(options.indexOf("Hello. I am in search of a quest"), "Hello I am in search of a quest");
-		} else if (hasFur) {
-			skip = start + 2; // skip option of wolf fur
-			options.add("Would you like to buy my fur?");
 		}
 		String[] finalOptions = new String[options.size()];
 		menu = multi(player, n, false, //do not send over
@@ -47,7 +49,7 @@ public final class Baraek implements
 		if (menu >= 0) {
 			menu += start;
 			if (menu == skip) {
-				// reg fur selected but was shown in position of wolf fur, selection+1
+				// wolf fur selected but was shown in position of reg fur, selection+1
 				menu++;
 			}
 
@@ -122,6 +124,21 @@ public final class Baraek implements
 			npcsay(player, n,
 				"Sorry kiddo, I'm a fur trader not a damsel in distress");
 		} else if (chosenOption == 3) {
+			say(player, n, "Would you like to buy my fur?");
+			npcsay(player, n, "Lets have a look at it");
+			player.message("Baraek examines a fur");
+			npcsay(player, n, "It's not in the best of condition",
+				"I guess I could give 12 coins to take it off your hands");
+			int opts = multi(player, n, "Yeah that'll do", "I think I'll keep hold of it actually");
+			if (opts == 0) {
+				mes("You give Baraek a fur",
+					"And he gives you twelve coins");
+				player.getCarriedItems().remove(new Item(ItemId.FUR.id()));
+				give(player, ItemId.COINS.id(), 12);
+			} else if (opts == 1) {
+				npcsay(player, n, "Oh ok", "Didn't want it anyway");
+			}
+		} else if (chosenOption == 4) {
 			say(player, n, "Would you like to buy my grey wolf fur?");
 			npcsay(player, n, "Grey wolf fur, now you're talking",
 				"Hmm I'll give you 120 per fur, does that sound fair?");
@@ -137,21 +154,6 @@ public final class Baraek implements
 				}
 			} else if (wolfmenu == 1) {
 				say(player, n, "No I almost got my throat torn out by a wolf to get this");
-			}
-		} else if (chosenOption == 4) {
-			say(player, n, "Would you like to buy my fur?");
-			npcsay(player, n, "Lets have a look at it");
-			player.message("Baraek examines a fur");
-			npcsay(player, n, "It's not in the best of condition",
-				"I guess I could give 12 coins to take it off your hands");
-			int opts = multi(player, n, "Yeah that'll do", "I think I'll keep hold of it actually");
-			if (opts == 0) {
-				mes("You give Baraek a fur",
-					"And he gives you twelve coins");
-				player.getCarriedItems().remove(new Item(ItemId.FUR.id()));
-				give(player, ItemId.COINS.id(), 12);
-			} else if (opts == 1) {
-				npcsay(player, n, "Oh ok", "Didn't want it anyway");
 			}
 		}
 

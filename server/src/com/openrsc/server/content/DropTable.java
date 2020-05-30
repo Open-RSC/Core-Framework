@@ -11,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 
 public class DropTable {
@@ -55,9 +54,13 @@ public class DropTable {
 	public DropTable clone(String description) {
 		DropTable clonedDropTable = new DropTable(description);
 		for (Drop drop : drops) {
-			if (drop.type == dropType.ITEM) {
+			if (drop.type == dropType.NOTHING) {
+				clonedDropTable.addEmptyDrop(drop.weight);
+			}
+			else if (drop.type == dropType.ITEM) {
 				clonedDropTable.addItemDrop(drop.id, drop.amount, drop.weight, drop.noted);
-			} else if (drop.type == dropType.TABLE) {
+			}
+			else if (drop.type == dropType.TABLE) {
 				clonedDropTable.addTableDrop(drop.table, drop.weight);
 			}
 		}
@@ -66,6 +69,10 @@ public class DropTable {
 
 	public int getTotalWeight() {
 		return totalWeight;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	public void addEmptyDrop(int weight) {
@@ -83,7 +90,11 @@ public class DropTable {
 	}
 
 	public void addTableDrop(DropTable table, int weight) {
-		drops.add(new Drop(table, weight));
+		addTableDrop(table, weight, false);
+	}
+
+	public void addTableDrop(DropTable table, int weight, boolean rare) {
+		drops.add(new Drop(table, weight, rare));
 		this.totalWeight += weight;
 	}
 
@@ -101,25 +112,9 @@ public class DropTable {
 		}
 	}
 
-	public void removeCustomRareTableDrops() {
-		Iterator<Drop> iter = drops.iterator();
-		while (iter.hasNext()) {
-			Drop drop = iter.next();
-			if (drop.type == dropType.TABLE) {
-				if (drop.table.description.equalsIgnoreCase("Rare Drop Table")) {
-					iter.remove();
-				}
-				else if (drop.table.description.equalsIgnoreCase("Ultra Rare Drop Table")) {
-					iter.remove();
-				}
-			}
-		}
-	}
-
 	public ArrayList<Item> rollItem(boolean ringOfWealth, Player owner) {
 		DropTable rollTable = ringOfWealth ? modifyTable(this) : this;
-
-		int hit = DataConversions.random(0, rollTable.totalWeight);
+		int hit = DataConversions.random(0, rollTable.totalWeight - 1);
 		int sum = 0;
 		ArrayList<Item> items = new ArrayList<>();
 		for (Drop drop : rollTable.drops) {
@@ -139,9 +134,6 @@ public class DropTable {
 							continue;
 						}
 					}
-					if (ringOfWealth) {
-						owner.playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
-					}
 					if (owner.getWorld().getServer().getConfig().VALUABLE_DROP_MESSAGES) {
 						checkValuableDrop(drop.id, drop.amount, drop.weight, rollTable.totalWeight, owner);
 					}
@@ -149,6 +141,9 @@ public class DropTable {
 					break;
 				} else if (drop.type == dropType.TABLE) {
 					items.addAll(drop.table.invariableItems(owner));
+					if (ringOfWealth && drop.rare) {
+						owner.playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
+					}
 					items.addAll(drop.table.rollItem(ringOfWealth, owner));
 					break;
 				}
@@ -173,7 +168,7 @@ public class DropTable {
 		return items;
 	}
 
-	//removes the empty slots from a table
+	// Removes the empty slots from a table
 	private DropTable modifyTable(DropTable table) {
 		DropTable modifiedTable = new DropTable();
 		for (Drop drop : table.drops) {
@@ -283,19 +278,30 @@ public class DropTable {
 		int amount = 0;
 		int weight;
 		boolean noted;
+		boolean rare;
 
 		private Drop(int itemID, int amount, int weight, boolean noted, dropType type) {
+			this(itemID, amount, weight, noted, type, false);
+		}
+
+		private Drop(int itemID, int amount, int weight, boolean noted, dropType type, boolean rare) {
 			this.id = itemID;
 			this.amount = amount;
 			this.weight = weight;
 			this.noted = noted;
 			this.type = type;
+			this.rare = rare;
 		}
 
 		private Drop(DropTable table, int weight) {
+			this(table, weight, false);
+		}
+
+		private Drop(DropTable table, int weight, boolean rare) {
 			this.type = dropType.TABLE;
 			this.weight = weight;
 			this.table = table;
+			this.rare = rare;
 		}
 
 		@Override

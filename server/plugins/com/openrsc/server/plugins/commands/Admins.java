@@ -339,59 +339,6 @@ public final class Admins implements CommandTrigger {
 		player.message(targetPlayer.getnpc_kills() + "");
 	}
 
-	private void fakeCrystalChest(Player player, String[] args) {
-		String loot;
-		HashMap<String, Integer> allLoot = new HashMap<String, Integer>();
-
-		int maxAttempts = Integer.parseInt(args[0]);
-
-		int percent = 0;
-
-
-		for (int i = 0; i < maxAttempts; i++) {
-			loot = "None";
-			percent = DataConversions.random(0, 100);
-			if (percent <= 70) {
-				loot = "SpinachRollAnd2000Coins";
-			}
-			if (percent < 60) {
-				loot = "SwordfishCertsAnd1000Coins";
-			}
-			if (percent < 30) {
-				loot = "Runes";
-			}
-			if (percent < 14) {
-				loot = "CutRubyAndDiamond";
-			}
-			if (percent < 12) {
-				loot = "30IronCerts";
-			}
-			if (percent < 10) {
-				loot = "20CoalCerts";
-			}
-			if (percent < 9) {
-				loot = "3RuneBars";
-			}
-			if (percent < 4) {
-				if (DataConversions.random(0, 1) == 1) {
-					loot = "LoopHalfKeyAnd750Coins";
-				} else
-					loot = "TeethHalfKeyAnd750Coins";
-			}
-			if (percent < 2) {
-				loot = "AddySquare";
-			}
-			if (percent < 1) {
-				loot = "RuneLegs";
-			}
-			if (allLoot.get(loot) == null)
-				allLoot.put(loot, 1);
-			else
-				allLoot.put(loot, allLoot.get(loot) + 1);
-		}
-		System.out.println(Arrays.toString(allLoot.entrySet().toArray()));
-	}
-
 	private void simulateRareDropTable(Player player, String command, String[] args) {
 		if (args.length != 3) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
@@ -484,6 +431,60 @@ public final class Admins implements CommandTrigger {
 		for (Map.Entry<String, Integer> entry : rareDrops.entrySet()) {
 			System.out.println(entry.getKey() + ": " + entry.getValue());
 		}
+	}
+
+
+	private void fakeCrystalChest(Player player, String[] args) {
+		String loot;
+		HashMap<String, Integer> allLoot = new HashMap<String, Integer>();
+
+		int maxAttempts = Integer.parseInt(args[0]);
+
+		int percent = 0;
+
+
+		for (int i = 0; i < maxAttempts; i++) {
+			loot = "None";
+			percent = DataConversions.random(0, 100);
+			if (percent <= 70) {
+				loot = "SpinachRollAnd2000Coins";
+			}
+			if (percent < 60) {
+				loot = "SwordfishCertsAnd1000Coins";
+			}
+			if (percent < 30) {
+				loot = "Runes";
+			}
+			if (percent < 14) {
+				loot = "CutRubyAndDiamond";
+			}
+			if (percent < 12) {
+				loot = "30IronCerts";
+			}
+			if (percent < 10) {
+				loot = "20CoalCerts";
+			}
+			if (percent < 9) {
+				loot = "3RuneBars";
+			}
+			if (percent < 4) {
+				if (DataConversions.random(0, 1) == 1) {
+					loot = "LoopHalfKeyAnd750Coins";
+				} else
+					loot = "TeethHalfKeyAnd750Coins";
+			}
+			if (percent < 2) {
+				loot = "AddySquare";
+			}
+			if (percent < 1) {
+				loot = "RuneLegs";
+			}
+			if (allLoot.get(loot) == null)
+				allLoot.put(loot, 1);
+			else
+				allLoot.put(loot, allLoot.get(loot) + 1);
+		}
+		System.out.println(Arrays.toString(allLoot.entrySet().toArray()));
 	}
 
 	private void spawnGroundItem(Player player, String command, String[] args) {

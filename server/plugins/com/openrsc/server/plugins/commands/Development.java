@@ -427,9 +427,13 @@ public final class Development implements CommandTrigger {
 			}
 			int npcId = Integer.parseInt(args[0]);
 			int count = 1;
+			boolean ringOfWealth = false;
 			if (args.length > 1) {
 				count = Integer.parseInt(args[1]);
 			}
+			if (args.length > 2) {
+				ringOfWealth = Integer.parseInt(args[2]) == 1;
+			};
 			final int finalCount = count;
 			NpcDrops npcDrops = player.getWorld().getNpcDrops();
 			DropTable dropTable = npcDrops.getDropTable(npcId);
@@ -439,7 +443,7 @@ public final class Development implements CommandTrigger {
 			}
 			HashMap<String, Integer> droppedCount = new HashMap<>();
 			for (int i = 0; i < count; i++) {
-				ArrayList<Item> items = dropTable.rollItem(false, player);
+				ArrayList<Item> items = dropTable.rollItem(ringOfWealth, player);
 				if (items.size() == 0) {
 					droppedCount.put("-1:0", droppedCount.getOrDefault("-1:0", 0) + 1);
 				}
@@ -450,8 +454,8 @@ public final class Development implements CommandTrigger {
 					}
 				}
 			}
-			System.out.println("Dropped counts:");
-			droppedCount.entrySet().forEach(entry-> {
+			System.out.println("Dropped counts (RoW: " + ringOfWealth + "):");
+			droppedCount.entrySet().forEach(entry -> {
 				String key = "NOTHING";
 				int catalogId = Integer.parseInt(entry.getKey().split(":")[0]);
 				int amount = Integer.parseInt(entry.getKey().split(":")[1]);

@@ -14,12 +14,6 @@ public class AppFrame extends JFrame {
 	private JLabel logo;
 	private JProgressBar progress;
 
-	private JLabel orsc_online;
-	private JLabel rscc_online;
-	private JLabel openpk_online;
-	private JLabel rscp_online;
-	private JLabel dev_online;
-
 	private CheckCombo comboBox;
 	private LaunchButton launch1;
 	private LaunchButton launch2;
@@ -27,13 +21,13 @@ public class AppFrame extends JFrame {
 	private LaunchButton launch4;
 	private LaunchButton launch5;
 
-	private int preservation_x = 113;
-	private int openrsc_x = 165;
-	private int cabbage_x = 295;
-	private int openpk_x = 420;
-	private int dev_x = 535;
-	private int launch_button_y = 218;
-	private int link_button_y = 359;
+	private final int preservation_x = 113;
+	private final int openrsc_x = 165;
+	private final int cabbage_x = 295;
+	private final int openpk_x = 420;
+	private final int dev_x = 535;
+	private final int launch_button_y = 218;
+	private final int link_button_y = 359;
 
 	public AppFrame() {
 		this.setPreferredSize(new Dimension(795, 555));
@@ -113,10 +107,6 @@ public class AppFrame extends JFrame {
 		(this.launch2 = new LaunchButton(cabbage)).setBounds(cabbage_x, launch_button_y - 3, launch_button_width, launch_button_height);
 		this.bg.add(this.launch2);
 
-		String openpk = "openpk";
-		(this.launch3 = new LaunchButton(openpk)).setBounds(openpk_x, launch_button_y, launch_button_width, launch_button_height);
-		this.bg.add(this.launch3);
-
 		String dev = "dev";
 		(this.launch5 = new LaunchButton(dev)).setBounds(dev_x, launch_button_y, launch_button_width, launch_button_height);
 		this.bg.add(this.launch5);
@@ -139,51 +129,6 @@ public class AppFrame extends JFrame {
 		subText.setForeground(new Color(255, 255, 255, 220));
 		subText.setFont(Utils.getFont("Helvetica.otf", 1, 10.0f));
 		this.bg.add(subText);*/
-
-		/*
-		 * RSC Preservation
-		 */
-		// Online player count
-		(this.rscp_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
-		this.rscp_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.rscp_online.setBounds(preservation_x + 10, launch_button_y + 95, 327, 15);
-		//this.bg.add(this.rscp_online); // Disabled on purpose
-
-		/*
-		 * Open RSC
-		 */
-		// Online player count
-		(this.orsc_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
-		this.orsc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.orsc_online.setBounds(openrsc_x + 10, launch_button_y + 95, 327, 15);
-		this.bg.add(this.orsc_online);
-
-		/*
-		 * RSC Cabbage
-		 */
-		// Online player count
-		(this.rscc_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
-		this.rscc_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.rscc_online.setBounds(cabbage_x + 10, launch_button_y + 95, 327, 15);
-		this.bg.add(this.rscc_online);
-
-		/*
-		 * Open PK
-		 */
-		// Online player count
-		(this.openpk_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
-		this.openpk_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.openpk_online.setBounds(openpk_x + 10, launch_button_y + 95, 327, 15);
-		//this.bg.add(this.openpk_online);
-
-		/*
-		 * Dev World
-		 */
-		// Online player count
-		(this.dev_online = new JLabel("Players Online: 0")).setForeground(Color.WHITE);
-		this.dev_online.setFont(Utils.getFont("Helvetica.otf", 0, 11.0f));
-		this.dev_online.setBounds(dev_x + 10, launch_button_y + 95, 95, 15);
-		//this.bg.add(this.dev_online);
 
 		comboBox = new CheckCombo();
 		//comboBox.combo.setBounds(585, 132, 150, 30);
@@ -209,36 +154,12 @@ public class AppFrame extends JFrame {
 		return this.launch2;
 	}
 
-	public LaunchButton getLaunchopenpk() {
-		return this.launch3;
-	}
-
 	public LaunchButton getLaunchpreservation() {
 		return this.launch4;
 	}
 
 	public LaunchButton getLaunchdev() {
 		return this.launch5;
-	}
-
-	public JLabel getrsccOnline() {
-		return this.rscc_online;
-	}
-
-	public JLabel getorscOnline() {
-		return this.orsc_online;
-	}
-
-	public JLabel getopenpkOnline() {
-		return this.openpk_online;
-	}
-
-	public JLabel getdevOnline() {
-		return this.dev_online;
-	}
-
-	public JLabel getrscpOnline() {
-		return this.rscp_online;
 	}
 
 	// Spritepack combobox
