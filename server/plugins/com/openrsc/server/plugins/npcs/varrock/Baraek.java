@@ -44,7 +44,7 @@ public final class Baraek implements
 		}
 		String[] finalOptions = new String[options.size()];
 		menu = multi(player, n, false, //do not send over
-			finalOptions);
+			options.toArray(finalOptions));
 
 		if (menu >= 0) {
 			menu += start;

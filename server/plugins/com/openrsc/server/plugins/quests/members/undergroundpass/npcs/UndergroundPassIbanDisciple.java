@@ -43,7 +43,7 @@ public class UndergroundPassIbanDisciple implements TalkNpcTrigger, KillNpcTrigg
 	public void onTalkNpc(Player player, Npc n) {
 		say(player, n, "hi");
 		if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.ROBE_OF_ZAMORAK_TOP.id())
-			&& !player.getCarriedItems().getEquipment().hasEquipped(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id())) {
+			|| !player.getCarriedItems().getEquipment().hasEquipped(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id())) {
 			npcsay(player, n, "an imposter....die scum");
 			n.startCombat(player);
 		} else {
