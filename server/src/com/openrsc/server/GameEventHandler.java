@@ -30,8 +30,8 @@ public class GameEventHandler {
 
 	public GameEventHandler(final Server server) {
 		this.server = server;
-		final int nThreads = Runtime.getRuntime().availableProcessors();
-		executor = new ThreadPoolExecutor(nThreads, nThreads * 2, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new NamedThreadFactory(getServer().getName() + " : EventHandler"));
+		final int nThreads = (Runtime.getRuntime().availableProcessors() * 2) / Server.serversList.size();
+		executor = new ThreadPoolExecutor(nThreads / 2, nThreads, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new NamedThreadFactory(getServer().getName() + " : EventHandler"));
 		executor.prestartAllCoreThreads();
 	}
 

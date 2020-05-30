@@ -100,14 +100,9 @@ public final class Admins implements CommandTrigger {
 			checkHolidayDrop(player);
 		} else if (command.equalsIgnoreCase("npc_kills")) {
 			npcKills(player, args);
-		}
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
 			fakeCrystalChest(player, args);
 		} */
-		else if (command.equalsIgnoreCase("simrdt")) {
-			simulateRareDropTable(player, command, args);
-		} else if (command.equalsIgnoreCase("simulatedrop")) {
-
 		} else if (command.equalsIgnoreCase("restart")) {
 			player.getWorld().restartCommand();
 		} else if (command.equalsIgnoreCase("gi") || command.equalsIgnoreCase("gitem") || command.equalsIgnoreCase("grounditem")) {
@@ -391,100 +386,6 @@ public final class Admins implements CommandTrigger {
 				allLoot.put(loot, allLoot.get(loot) + 1);
 		}
 		System.out.println(Arrays.toString(allLoot.entrySet().toArray()));
-	}
-
-	private void simulateRareDropTable(Player player, String command, String[] args) {
-		if (args.length != 3) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
-			return;
-		}
-
-		int npcID;
-		try {
-			npcID = Integer.parseInt(args[0]);
-		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
-			return;
-		}
-
-		int maxAttempts;
-		try {
-			maxAttempts = Integer.parseInt(args[1]);
-		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
-			return;
-		}
-
-		boolean RoW;
-		try {
-			RoW = Integer.parseInt(args[2]) == 1;
-		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
-			return;
-		}
-
-		HashMap<String, Integer> rareDrops = new HashMap<>();
-		for (int i = 0; i < maxAttempts; i++) {
-			//KDB Specific RDT
-			if (config().WANT_CUSTOM_SPRITES) {
-				if (npcID == NpcId.KING_BLACK_DRAGON.id()) {
-					if (player.getWorld().npcDrops.getKbdTableCustom().rollAccess(npcID, RoW)) {
-						ArrayList<Item> kbdSpecificLoot = player.getWorld().npcDrops.getKbdTableCustom().rollItem(RoW, null);
-						if (kbdSpecificLoot != null || kbdSpecificLoot.size() > 0) {
-							for (Item item : kbdSpecificLoot) {
-								if (rareDrops.containsKey(item.getDef(player.getWorld()).getName().toLowerCase())) {
-									int amount = rareDrops.get(item.getDef(player.getWorld()).getName().toLowerCase());
-									rareDrops.put(item.getDef(player.getWorld()).getName().toLowerCase(), amount + item.getAmount());
-								} else {
-									rareDrops.put(item.getDef(player.getWorld()).getName().toLowerCase(), item.getAmount());
-								}
-							}
-						} else {
-							if (rareDrops.containsKey("miss")) {
-								int amount = rareDrops.get("miss");
-								rareDrops.put("miss", amount + 1);
-							} else {
-								rareDrops.put("miss", 1);
-							}
-						}
-					}
-				}
-			}
-
-			boolean rdtHit = false;
-			ArrayList<Item> rare = null;
-
-			if (player.getWorld().npcDrops.getUltraRareDropTable().rollAccess(npcID, RoW)) {
-				rdtHit = true;
-				rare = player.getWorld().npcDrops.getUltraRareDropTable().rollItem(RoW, null);
-			} else if (player.getWorld().npcDrops.getRareDropTable().rollAccess(npcID, RoW)) {
-				rdtHit = true;
-				rare = player.getWorld().npcDrops.getRareDropTable().rollItem(RoW, null);
-			}
-			if (rdtHit) {
-				if (rare == null || rare.size() == 0) {
-					if (rareDrops.containsKey("miss")) {
-						int amount = rareDrops.get("miss");
-						rareDrops.put("miss", amount + 1);
-					} else {
-						rareDrops.put("miss", 1);
-					}
-				} else {
-					for (Item item : rare) {
-						if (rareDrops.containsKey(item.getDef(player.getWorld()).getName().toLowerCase())) {
-							int amount = rareDrops.get(item.getDef(player.getWorld()).getName().toLowerCase());
-							rareDrops.put(item.getDef(player.getWorld()).getName().toLowerCase(), amount + item.getAmount());
-						} else {
-							rareDrops.put(item.getDef(player.getWorld()).getName().toLowerCase(), item.getAmount());
-						}
-					}
-				}
-			}
-		}
-
-		for (Map.Entry<String, Integer> entry : rareDrops.entrySet()) {
-			System.out.println(entry.getKey() + ": " + entry.getValue());
-		}
 	}
 
 	private void spawnGroundItem(Player player, String command, String[] args) {

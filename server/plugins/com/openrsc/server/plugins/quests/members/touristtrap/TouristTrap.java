@@ -516,13 +516,34 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						"Before you try to bribe someone, make sure you have the money effendi!");
 					mercenaryDialogue(player, n, Mercenary.LEAVE_DESERT);
 					break;
+				case Mercenary.THROW_PRISON:
+					mes("The Guards search you!");
+					int rand = DataConversions.random(0, 3);
+					if (player.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false)) && rand == 0) {
+						player.message("The guards find the cell door key and remove it!");
+						player.getCarriedItems().remove(new Item(ItemId.CELL_DOOR_KEY.id()));
+					}
+					if (player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false)) && rand == 1) {
+						player.message("The guards find the main gate key and remove it!");
+						player.getCarriedItems().remove(new Item(ItemId.METAL_KEY.id()));
+					}
+					mes("More guards rush to catch you.",
+						"You are roughed up a bit by the guards as you're manhandlded to a cell.");
+					if (n != null) {
+						npcsay(player, n, "Into the cell you go! I hope this teaches you a lesson.");
+					}
+					player.teleport(89, 801);
+					break;
 				case Mercenary.LEAVE_DESERT:
 					npcsay(player, n, "Guards, guards!");
-					n.setChasing(player);
+					if (!n.inCombat()) {
+						n.setChasing(player);
+					}
 					mes("Nearby guards quickly grab you and rough you up a bit.");
 					npcsay(player, n, "Let's see how good you are with desert survival techniques!");
 					mes("You're bundled into the back of a cart and blindfolded...");
 					mes("Sometime later you wake up in the desert.");
+					// TODO: can also take waterskins and replace them with single empty waterskin.
 					if (player.getCarriedItems().hasCatalogID(ItemId.BOWL_OF_WATER.id(), Optional.of(false))) {
 						npcsay(player, n, "You won't be needing that water any more!");
 						mes("The guards throw your water away...");
@@ -656,6 +677,11 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 								"Ok Thanks.");
 							if (eightMenu == 0) {
 								say(player, n, "Can I have a bet on that?");
+								if (player.getCache().hasKey("mercenary_bet")) {
+									npcsay(player, n, "Sorry, we've already taken your bet, wouldn't want any cheating now.",
+										"Anyway, I have to get back to work. See ya around...");
+									return;
+								}
 								npcsay(player, n, "Well, if you think you stand a chance, sure.",
 									"But remember, if he gives us an order, we have to obey.");
 								int ninthMenu = multi(player, n,
@@ -1040,6 +1066,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 								npcN.startCombat(player);
 								mes("The Guards search you!");
 								if (player.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false))) {
+									player.message("The guards find the cell door key and remove it!");
 									player.getCarriedItems().remove(new Item(ItemId.CELL_DOOR_KEY.id()));
 								}
 								mes("Some guards rush to help their comrade.",
@@ -2490,6 +2517,22 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					return;
 				} else if (!player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false))) {
 					player.message("This gate is locked, you'll need a key to open it.");
+				} else if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_BOTTOM.id())
+					&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.SLAVES_ROBE_TOP.id())) {
+					Npc guard = ifnearvisnpc(player, NpcId.MERCENARY.id(), 5);
+					if (guard != null ){
+						player.message("A guard notices you as you try to slip past...");
+						npcsay(player, guard, "Hey! Where do you think you're going?");
+						guard.setChasing(player);
+						npcsay(player, guard, "Guards! Slave escaping!");
+						if (player.getX() <= 91) {
+							// sent to jail
+							mercenaryDialogue(player, guard, Mercenary.THROW_PRISON);
+						} else {
+							// sent to desert
+							mercenaryDialogue(player, guard, Mercenary.LEAVE_DESERT);
+						}
+					}
 				} else {
 					mes("You use the metal key to unlock the gates.",
 						"You manage to sneak past the guards!.");
@@ -2578,22 +2621,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						player.message("No other guards come to the rescue.");
 						return;
 					}
-					mes("The Guards search you!");
-					int rand = DataConversions.random(0, 3);
-					if (player.getCarriedItems().hasCatalogID(ItemId.CELL_DOOR_KEY.id(), Optional.of(false)) && rand == 0) {
-						player.message("The guards find the cell door key and remove it!");
-						player.getCarriedItems().remove(new Item(ItemId.CELL_DOOR_KEY.id()));
-					}
-					if (player.getCarriedItems().hasCatalogID(ItemId.METAL_KEY.id(), Optional.of(false)) && rand == 1) {
-						player.message("The guards find the main gate key and remove it!");
-						player.getCarriedItems().remove(new Item(ItemId.METAL_KEY.id()));
-					}
-					mes("More guards rush to catch you.",
-						"You are roughed up a bit by the guards as you're manhandlded to a cell.");
-					if (n != null) {
-						npcsay(player, n, "Into the cell you go! I hope this teaches you a lesson.");
-					}
-					player.teleport(89, 801);
+					mercenaryDialogue(player, n, Mercenary.THROW_PRISON);
 				}
 			} else if (command.equals("watch")) {
 				if (obj.getX() == 81 && obj.getY() == 3633) {
@@ -3179,6 +3207,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		static final int ANA_FIRST = 6;
 		static final int ANA_SECOND = 7;
 		static final int LEAVE_DESERT = 8;
+		static final int THROW_PRISON = 9;
 	}
 
 	class MercenaryCaptain {
