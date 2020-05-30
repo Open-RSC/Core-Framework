@@ -52,10 +52,11 @@ public class ShiloVillageTrufitusInvUse implements UseNpcTrigger {
 			"I'm not sure.");
 		if (alt == 0) {
 			npcsay(player, n, "What did he say?");
-			int opt = multi(player, n,
+			int opt = multi(player, n, false, //do not send over
 				"The spirit said something about keys and kin?",
 				"The spirit rambled on about some nonsense.");
 			if (opt == 0) {
+				say(player, n, " \"The spirit said something about keys and kin?\"");
 				npcsay(player, n, "Hmmm, maybe it's a clue of some kind?",
 					"Well, Rashiliyias only kin, Bervirius, is entombed",
 					"on a small island which lies to the South West.",
@@ -67,6 +68,7 @@ public class ShiloVillageTrufitusInvUse implements UseNpcTrigger {
 					player.updateQuestStage(Quests.SHILO_VILLAGE, 5);
 				}
 			} else if (opt == 1) {
+				say(player, n, "The spirit rambled on about some nonsense.");
 				npcsay(player, n, "Oh, so it most likely was not very important then?");
 			}
 		} else if (alt == 1) {

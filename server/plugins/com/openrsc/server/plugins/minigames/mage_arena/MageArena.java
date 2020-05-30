@@ -72,7 +72,15 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				spawnKolodion(player, player.getCache().getInt("kolodion_stage"));
 				startKolodionEvent(player);
 
-			} else if (stage >= 2) {
+			} else if (stage == 2) {
+				say(player, n, "hello kolodion");
+				npcsay(player, n, "hello  young mage.. you're a tough one you");
+				say(player, n, "what now?");
+				npcsay(player, n, "step into the magic pool, it will take you to the chamber",
+					"there you must decide which god you'll represent in the arena");
+				say(player, n, "ok .. thanks kolodion");
+				npcsay(player, n, "that's what i'm here for");
+			} else if (stage >= 3) {
 				say(player, n, "hello kolodion");
 				npcsay(player, n, "hey there, how are you?, enjoying the bloodshed?");
 				say(player, n, "it's not bad, i've seen worse");

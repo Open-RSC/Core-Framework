@@ -9,6 +9,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -16,7 +17,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class LegendsQuestGujuo implements TalkNpcTrigger {
+public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 
 	private void GujuoDialogue(Player player, Npc n, int cID) {
 		if (n.getID() == NpcId.GUJUO.id()) {
@@ -58,7 +59,8 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 						break;
 					case 3:
 						if (player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL.id(), Optional.of(false))
-							|| player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id(), Optional.of(false))) { // GOLDEN BOWL
+							|| player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id(), Optional.of(false))
+							|| player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id(), Optional.of(false))) { // GOLDEN BOWL
 							npcsay(player, n, "Greetings Bwana.",
 								"Ah I see you have the golden bowl !",
 								"Would like me to show you how to bless it?");
@@ -67,9 +69,25 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 								"No thanks, I need help with something else.");
 							if (bowl == 0) {
 								GujuoDialogue(player, n, Gujuo.BLESS_THE_BOWL);
-								GujuoDialogue(player, n, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
 							} else if (bowl == 1) {
 								GujuoDialogue(player, n, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
+							}
+						} else if (player.getCarriedItems().hasCatalogID(ItemId.BLESSED_GOLDEN_BOWL.id(), Optional.of(false))
+							|| player.getCarriedItems().hasCatalogID(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), Optional.of(false))
+							|| player.getCarriedItems().hasCatalogID(ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id(), Optional.of(false))) {
+							npcsay(player, n, "How goes your quest to release Ungadulu Bwana?");
+							int releaseopt = multi(player, n, "Ungadulu looks strange.",
+								"I need to douse some flames with pure water.",
+								"I'm not sure what to do?",
+								"Can you help me?");
+							if (releaseopt == 0) {
+								GujuoDialogue(player, n, Gujuo.UNGADULU_LOOKS_STRANGE);
+							} else if (releaseopt == 1) {
+								GujuoDialogue(player, n, Gujuo.I_NEED_TO_DOUSE_SOME_FLAMES_WITH_PURE_WATER);
+							} else if (releaseopt == 2) {
+								GujuoDialogue(player, n, Gujuo.IM_NOT_SURE_WHAT_TO_DO);
+							} else if (releaseopt == 3) {
+								GujuoDialogue(player, n, Gujuo.CAN_YOU_HELP_ME);
 							}
 						} else {
 							GujuoDialogue(player, n, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
@@ -1003,49 +1021,76 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 						GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
 					}
 					break;
-				case Gujuo.BLESS_THE_BOWL:
-					if (getCurrentLevel(player, Skills.PRAYER) < 42) {
-						npcsay(player, n, "Bwana, I am very sorry,",
-							"But you are too inexperienced to bless this bowl.");
-						player.message("You need a prayer ability of 42 to complete this task.");
-					} else {
-						npcsay(player, n, "Very well Bwana...");
-						mes(config().GAME_TICK * 2, "Gujuo places the bowl on the floor in front of you,");
-						mes("and leads you into a deep meditation...");
-						npcsay(player, n, "Ohhhhhmmmmmm");
-						say(player, n, "Oooooommmmmmmmmm");
-						npcsay(player, n, "Ohhhhhmmmmmm");
-						say(player, n, "Oooooohhhhmmmmmmmmmm");
-						npcsay(player, n, "Ohhhhhmmmmmm");
-						if (Formulae.failCalculation(player, Skills.PRAYER, 42)) {
-							mes(config().GAME_TICK * 2, "A totally peacefull aura surrounds you and you ",
-								"bring down the blessings of your god on the bowl.");
-							if (player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL.id(), Optional.of(false))) {
-								player.getCarriedItems().remove(new Item(ItemId.GOLDEN_BOWL.id()));
-								player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
-							} else if (player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id(), Optional.of(false))) {
-								player.getCarriedItems().remove(new Item(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id()));
-								player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()));
-							}
-							GujuoDialogue(player, n, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
-						} else {
-							mes(config().GAME_TICK * 2, "You were not able to go into a deep enough trance.",
-								"You lose some prayer...");
-							player.getSkills().setLevel(Skills.PRAYER, player.getSkills().getLevel(Skills.PRAYER) - 5);
-							npcsay(player, n, "Would you like to try again.");
-							int failMenu = multi(player, n, false, //do not send over
-								"Yes, I'd like to bless my golden bowl.",
-								"No thanks, I'll wait.");
-							if (failMenu == 0) {
-								GujuoDialogue(player, n, Gujuo.BLESS_THE_BOWL);
-							} else if (failMenu == 1) {
-								say(player, n, "No thanks, I'll wait.");
-								npcsay(player, n, "Very well, let me know when you want to try?");
-								GujuoDialogue(player, n, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
-							}
-						}
+				case Gujuo.CAN_YOU_HELP_ME:
+					npcsay(player, n, "I am sorry Bwana, but I have no experience of these things.",
+						"I am sure that I would get in your way...");
+					int helpopts = multi(player, n, "I'm not sure what to do?", "Ok thanks for your help.");
+					if (helpopts == 0) {
+						GujuoDialogue(player, n, Gujuo.IM_NOT_SURE_WHAT_TO_DO);
+					} else if (helpopts == 1) {
+						GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
 					}
 					break;
+				case Gujuo.IM_NOT_SURE_WHAT_TO_DO:
+					npcsay(player, n, "Don't you need to take some pure water down to the caves?",
+						"If you haven't got the water yet, try getting some from the pool.");
+					int sureopts = multi(player, n, "Can you help me?", "Ok thanks for your help.");
+					if (sureopts == 0) {
+						GujuoDialogue(player, n, Gujuo.CAN_YOU_HELP_ME);
+					} else if (sureopts == 1) {
+						GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+					}
+					break;
+				case Gujuo.BLESS_THE_BOWL:
+					gujuoBlessBowl(player, n);
+					break;
+			}
+		}
+	}
+
+	public void gujuoBlessBowl(Player player, Npc npc) {
+		if (getCurrentLevel(player, Skills.PRAYER) < 42) {
+			npcsay(player, npc, "Bwana, I am very sorry,",
+				"But you are too inexperienced to bless this bowl.");
+			player.message("You need a prayer ability of 42 to complete this task.");
+		} else {
+			npcsay(player, npc, "Very well Bwana...");
+			mes(config().GAME_TICK * 2, "Gujuo places the bowl on the floor in front of you,");
+			mes("and leads you into a deep meditation...");
+			npcsay(player, npc, "Ohhhhhmmmmmm");
+			say(player, npc, "Oooooommmmmmmmmm");
+			npcsay(player, npc, "Ohhhhhmmmmmm");
+			say(player, npc, "Oooooohhhhmmmmmmmmmm");
+			npcsay(player, npc, "Ohhhhhmmmmmm");
+			if (Formulae.failCalculation(player, Skills.PRAYER, 42)) {
+				mes(config().GAME_TICK * 2, "A totally peacefull aura surrounds you and you ",
+					"bring down the blessings of your god on the bowl.");
+				if (player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL.id(), Optional.of(false))) {
+					player.getCarriedItems().remove(new Item(ItemId.GOLDEN_BOWL.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
+				} else if (player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id(), Optional.of(false))) {
+					player.getCarriedItems().remove(new Item(ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()));
+				} else if (player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id(), Optional.of(false))) {
+					player.getCarriedItems().remove(new Item(ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PLAIN_WATER.id()));
+				}
+				GujuoDialogue(player, npc, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
+			} else {
+				mes(config().GAME_TICK * 2, "You were not able to go into a deep enough trance.",
+					"You lose some prayer...");
+				player.getSkills().setLevel(Skills.PRAYER, player.getSkills().getLevel(Skills.PRAYER) - 5);
+				npcsay(player, npc, "Would you like to try again.");
+				int failMenu = multi(player, npc, false, //do not send over
+					"Yes, I'd like to bless my golden bowl.",
+					"No thanks, I'll wait.");
+				if (failMenu == 0) {
+					GujuoDialogue(player, npc, Gujuo.BLESS_THE_BOWL);
+				} else if (failMenu == 1) {
+					say(player, npc, "No thanks, I'll wait.");
+					npcsay(player, npc, "Very well, let me know when you want to try?");
+					GujuoDialogue(player, npc, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
+				}
 			}
 		}
 	}
@@ -1087,6 +1132,32 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 		}
 	}
 
+	@Override
+	public void onUseNpc(Player player, Npc npc, Item item) {
+		if (npc.getID() == NpcId.GUJUO.id() && !item.getNoted()) {
+			if (item.getCatalogId() == ItemId.GOLDEN_BOWL.id()
+				|| item.getCatalogId() == ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id() || item.getCatalogId() == ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id()) {
+				npcsay(player, npc, "Aha Bwana, well done, you have made the golden bowl.",
+					"Would you like me to show you how to bless it.");
+				int menu = multi(player, npc, false, //do not send over
+					"Yes, I'd like to bless my golden bowl.", "No thanks, I'll wait.");
+				if (menu == 0) {
+					gujuoBlessBowl(player, npc);
+				} else if (menu == 1) {
+					say(player, npc, "No thanks, I'll wait.");
+					npcsay(player, npc, "Very well, let me know when you want to try?");
+					GujuoDialogue(player, npc, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
+				}
+			}
+		}
+	}
+
+	@Override
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return (npc.getID() == NpcId.GUJUO.id() && !item.getNoted() && (item.getCatalogId() == ItemId.GOLDEN_BOWL.id()
+			|| item.getCatalogId() == ItemId.GOLDEN_BOWL_WITH_PURE_WATER.id() || item.getCatalogId() == ItemId.GOLDEN_BOWL_WITH_PLAIN_WATER.id()));
+	}
+
 	class Gujuo {
 		static final int SORRY_IT_WAS_A_MISTAKE = 0;
 		static final int IM_LOST = 1;
@@ -1104,29 +1175,31 @@ public class LegendsQuestGujuo implements TalkNpcTrigger {
 		static final int WHERE_CAN_I_FIND_THIS_METAL = 13;
 		static final int HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU = 14;
 		static final int BLESS_THE_BOWL = 15;
-		static final int WHAT_DO_I_DO_NOW = 16;
-		static final int I_HAVE_THE_YOMMI_TREE_SEEDS = 17;
-		static final int UNGADULU_IS_FREE = 18;
-		static final int WHERE_IS_THE_FETILE_SOIL = 19;
-		static final int I_HAVE_GERMINATED_THE_YOMMI_TREE_SEEDS = 20;
-		static final int THE_YOMMI_TREE_DIED = 21;
-		static final int DOES_THE_YOMMI_TREE_HAVE_TO_HAVE_PURE_WATER = 22;
-		static final int WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER = 23;
-		static final int THE_WATER_POOL_HAS_DRIED_UP_AND_I_NEED_MORE_WATER = 24;
-		static final int WHERE_CAN_I_GET_MORE_WATER_FOR_THE_YOMMI_TREE = 25;
-		static final int I_SEARCHED_THE_CATACOMBS_THOROUGHLY_BUT_FOUND_NADA_NIET = 26;
-		static final int IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME = 27;
-		static final int WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2 = 28;
-		static final int WHERE_CAN_I_FIND_SNAKE_WEED = 29;
-		static final int WHERE_CAN_I_FIND_ARDRIGAL = 30;
-		static final int WILL_I_NEED_THIS_POTION_I_FEEL_BRAVE_AS_I_AM = 31;
+		static final int IM_NOT_SURE_WHAT_TO_DO = 16;
+		static final int CAN_YOU_HELP_ME = 17;
+		static final int WHAT_DO_I_DO_NOW = 18;
+		static final int I_HAVE_THE_YOMMI_TREE_SEEDS = 19;
+		static final int UNGADULU_IS_FREE = 20;
+		static final int WHERE_IS_THE_FETILE_SOIL = 21;
+		static final int I_HAVE_GERMINATED_THE_YOMMI_TREE_SEEDS = 22;
+		static final int THE_YOMMI_TREE_DIED = 23;
+		static final int DOES_THE_YOMMI_TREE_HAVE_TO_HAVE_PURE_WATER = 24;
+		static final int WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER = 25;
+		static final int THE_WATER_POOL_HAS_DRIED_UP_AND_I_NEED_MORE_WATER = 26;
+		static final int WHERE_CAN_I_GET_MORE_WATER_FOR_THE_YOMMI_TREE = 27;
+		static final int I_SEARCHED_THE_CATACOMBS_THOROUGHLY_BUT_FOUND_NADA_NIET = 28;
+		static final int IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME = 29;
+		static final int WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2 = 30;
+		static final int WHERE_CAN_I_FIND_SNAKE_WEED = 31;
+		static final int WHERE_CAN_I_FIND_ARDRIGAL = 32;
+		static final int WILL_I_NEED_THIS_POTION_I_FEEL_BRAVE_AS_I_AM = 33;
 
-		static final int I_FOUND_WAY_INTO_CAVES = 32;
-		static final int DO_YOU_KNOW_MORE_ABOUT_CAVES = 33;
-		static final int WHO_IS_VIYELDI = 34;
-		static final int I_FOUND_THE_SOURCE_OF_THE_SPRING_AND_I_GOT_THE_WATER = 35;
-		static final int I_KILLED_THE_DEMON_AGAIN = 36;
-		static final int HOW_DO_I_MAKE_THE_TOTEM_POLE = 37;
-		static final int OK_I_WONT_GO = 38;
+		static final int I_FOUND_WAY_INTO_CAVES = 34;
+		static final int DO_YOU_KNOW_MORE_ABOUT_CAVES = 35;
+		static final int WHO_IS_VIYELDI = 36;
+		static final int I_FOUND_THE_SOURCE_OF_THE_SPRING_AND_I_GOT_THE_WATER = 37;
+		static final int I_KILLED_THE_DEMON_AGAIN = 38;
+		static final int HOW_DO_I_MAKE_THE_TOTEM_POLE = 39;
+		static final int OK_I_WONT_GO = 40;
 	}
 }
