@@ -22,10 +22,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -44,7 +41,7 @@ public final class PluginHandler {
 
 	private URLClassLoader urlClassLoader;
 	private boolean reloading = true;
-	private ArrayList<Class<?>> loadedClassFiles = new ArrayList<>();
+	private ArrayList<Class<?>> loadedClassFiles;
 
 	private Object defaultHandler = null;
 	private List<Class<?>> knownInterfaces;
@@ -53,6 +50,9 @@ public final class PluginHandler {
 	public PluginHandler (final Server server) {
 		this.server = server;
 		this.threadFactory = new NamedThreadFactory(getServer().getName()+" : PluginThread");
+		this.knownInterfaces = new ArrayList<>();
+		this.plugins = new HashMap<>();
+		this.loadedClassFiles = new ArrayList<>();
 	}
 
 	public void loadJar() throws Exception {
@@ -222,8 +222,6 @@ public final class PluginHandler {
 		// TODO: Separate static loading from class based loading.
 		reloading = false;
 
-		knownInterfaces = new ArrayList<>();
-		plugins = new HashMap<>();
 		defaultHandler = null;
 		executor = (ThreadPoolExecutor) Executors.newCachedThreadPool(threadFactory);
 
@@ -236,6 +234,14 @@ public final class PluginHandler {
 
 		urlClassLoader.close();
 		getExecutor().shutdown();
+		try {
+			final boolean terminationResult = getExecutor().awaitTermination(1, TimeUnit.MINUTES);
+			if (!terminationResult) {
+				LOGGER.error("PluginHandler thread pool termination failed");
+			}
+		} catch (final InterruptedException e) {
+			LOGGER.catching(e);
+		}
 
 		getServer().getWorld().getQuests().clear();
 		getServer().getWorld().getMiniGames().clear();
@@ -245,11 +251,8 @@ public final class PluginHandler {
 		plugins.clear();
 		loadedClassFiles.clear();
 
-		knownInterfaces = null;
 		executor = null;
-		loadedClassFiles = null;
 		defaultHandler = null;
-		plugins = null;
 	}
 
 	public boolean handlePlugin(final World world, final String interfce, final Object[] data) {

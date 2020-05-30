@@ -32,7 +32,6 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
-import com.openrsc.server.util.rsc.GoldDrops;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -109,13 +108,13 @@ public final class Admins implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("simulatedrop")) {
 
 		} else if (command.equalsIgnoreCase("restart")) {
-			player.getWorld().restartCommand();
+			serverRestart(player, args);
 		} else if (command.equalsIgnoreCase("gi") || command.equalsIgnoreCase("gitem") || command.equalsIgnoreCase("grounditem")) {
 			spawnGroundItem(player, command, args);
 		} else if (command.equalsIgnoreCase("rgi") || command.equalsIgnoreCase("rgitem") || command.equalsIgnoreCase("rgrounditem") || command.equalsIgnoreCase("removegi") || command.equalsIgnoreCase("removegitem") || command.equalsIgnoreCase("removegrounditem")) {
 			removeGroundItem(player, command, args);
 		} else if (command.equalsIgnoreCase("shutdown")) {
-			serverShutdown(player);
+			serverShutdown(player, args);
 		} else if (command.equalsIgnoreCase("update")) {
 			serverUpdate(player, args);
 		} else if (command.equalsIgnoreCase("item")) {
@@ -428,8 +427,8 @@ public final class Admins implements CommandTrigger {
 			//KDB Specific RDT
 			if (config().WANT_CUSTOM_SPRITES) {
 				if (npcID == NpcId.KING_BLACK_DRAGON.id()) {
-					if (player.getWorld().npcDrops.getKbdTableCustom().rollAccess(npcID, RoW)) {
-						ArrayList<Item> kbdSpecificLoot = player.getWorld().npcDrops.getKbdTableCustom().rollItem(RoW, null);
+					if (player.getWorld().getNpcDrops().getKbdTableCustom().rollAccess(npcID, RoW)) {
+						ArrayList<Item> kbdSpecificLoot = player.getWorld().getNpcDrops().getKbdTableCustom().rollItem(RoW, null);
 						if (kbdSpecificLoot != null || kbdSpecificLoot.size() > 0) {
 							for (Item item : kbdSpecificLoot) {
 								if (rareDrops.containsKey(item.getDef(player.getWorld()).getName().toLowerCase())) {
@@ -454,12 +453,12 @@ public final class Admins implements CommandTrigger {
 			boolean rdtHit = false;
 			ArrayList<Item> rare = null;
 
-			if (player.getWorld().npcDrops.getUltraRareDropTable().rollAccess(npcID, RoW)) {
+			if (player.getWorld().getNpcDrops().getUltraRareDropTable().rollAccess(npcID, RoW)) {
 				rdtHit = true;
-				rare = player.getWorld().npcDrops.getUltraRareDropTable().rollItem(RoW, null);
-			} else if (player.getWorld().npcDrops.getRareDropTable().rollAccess(npcID, RoW)) {
+				rare = player.getWorld().getNpcDrops().getUltraRareDropTable().rollItem(RoW, null);
+			} else if (player.getWorld().getNpcDrops().getRareDropTable().rollAccess(npcID, RoW)) {
 				rdtHit = true;
-				rare = player.getWorld().npcDrops.getRareDropTable().rollItem(RoW, null);
+				rare = player.getWorld().getNpcDrops().getRareDropTable().rollItem(RoW, null);
 			}
 			if (rdtHit) {
 				if (rare == null || rare.size() == 0) {
@@ -634,13 +633,32 @@ public final class Admins implements CommandTrigger {
 		player.getWorld().unregisterItem(itemr);
 	}
 
-	private void serverShutdown(Player player) {
-		int seconds = 0;
-		if (player.getWorld().getServer().shutdownForUpdate(seconds)) {
-			for (Player playerToUpdate : player.getWorld().getPlayers()) {
-				ActionSender.startShutdown(playerToUpdate, seconds);
-			}
+	private void serverRestart(Player player, String[] args) {
+		int seconds = 300;
+
+		if (args.length > 0) {
+			try {
+				seconds = Integer.parseInt(args[0]);
+			} catch (final NumberFormatException e) { }
 		}
+
+		seconds = seconds < 30 ? 30 : seconds;
+
+		player.getWorld().getServer().restart(seconds);
+	}
+
+	private void serverShutdown(Player player, String[] args) {
+		int seconds = 300;
+
+		if (args.length > 0) {
+			try {
+				seconds = Integer.parseInt(args[0]);
+			} catch (final NumberFormatException e) { }
+		}
+
+		seconds = seconds < 30 ? 30 : seconds;
+
+		player.getWorld().getServer().shutdown(seconds);
 	}
 
 	private void serverUpdate(Player player, String[] args) {
@@ -663,16 +681,12 @@ public final class Admins implements CommandTrigger {
 		int minutes = seconds / 60;
 		int remainder = seconds % 60;
 
-		if (player.getWorld().getServer().shutdownForUpdate(seconds)) {
-			String message = "The server will be shutting down for updates in "
-				+ (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
-				+ (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "")
-				+ (reason.toString() == "" ? "" : ": % % " + reason);
-			for (Player playerToUpdate : player.getWorld().getPlayers()) {
-				ActionSender.sendBox(playerToUpdate, message, false);
-				ActionSender.startShutdown(playerToUpdate, seconds);
-			}
-		}
+		String message = "The server will be shutting down for updates in "
+			+ (minutes > 0 ? minutes + " minute" + (minutes > 1 ? "s" : "") + " " : "")
+			+ (remainder > 0 ? remainder + " second" + (remainder > 1 ? "s" : "") : "")
+			+ (reason.toString() == "" ? "" : ": % % " + reason);
+
+		player.getWorld().getServer().closeProcess(seconds, message);
 		// Services.lookup(DatabaseManager.class).addQuery(new
 		// StaffLog(player, 7));
 	}

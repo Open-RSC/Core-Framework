@@ -24,13 +24,13 @@ public class CombatScriptLoader {
 
 	private final Server server;
 
-	public CombatScriptLoader (Server server) {
+	public CombatScriptLoader (final Server server) {
 		this.server = server;
 	}
 
 	private void loadCombatScripts() throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		for (Class<?> c : getServer().getPluginHandler().loadClasses("com.openrsc.server.event.rsc.impl.combat.scripts.all")) {
-			Object classInstance = c.getConstructor().newInstance();
+		for (final Class<?> c : getServer().getPluginHandler().loadClasses("com.openrsc.server.event.rsc.impl.combat.scripts.all")) {
+			final Object classInstance = c.getConstructor().newInstance();
 			if (classInstance instanceof CombatScript) {
 				CombatScript script = (CombatScript) classInstance;
 				combatScripts.put(classInstance.getClass().getName(), script);
@@ -47,7 +47,7 @@ public class CombatScriptLoader {
 	}
 
 	public void checkAndExecuteCombatScript(final Mob attacker, final Mob victim) {
-		for (CombatScript script : combatScripts.values()) {
+		for (final CombatScript script : combatScripts.values()) {
 			if (script.shouldExecute(attacker, victim)) {
 				script.executeScript(attacker, victim);
 			}
@@ -56,35 +56,35 @@ public class CombatScriptLoader {
 
 	public void checkAndExecuteOnStartCombatScript(final Mob attacker, final Mob victim) {
 		try {
-			for (OnCombatStartScript script : combatStartScripts.values()) {
+			for (final OnCombatStartScript script : combatStartScripts.values()) {
 				if (script.shouldExecute(attacker, victim)) {
 					script.executeScript(attacker, victim);
 				}
 			}
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			LOGGER.catching(e);
 		}
 	}
-	
+
 	public void checkAndExecuteCombatAggroScript(final Npc npc, final Player player) {
 		try {
-			for (CombatAggroScript script : combatAggroScripts.values()) {
+			for (final CombatAggroScript script : combatAggroScripts.values()) {
 				if (script.shouldExecute(npc, player)) {
 					script.executeScript(npc, player);
 				}
 			}
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			LOGGER.catching(e);
 		}
 	}
 	public void checkAndExecuteCombatAggroScript(final Npc npc, final Mob mob) {
 		try {
-			for (CombatAggroScript script : combatAggroScripts.values()) {
+			for (final CombatAggroScript script : combatAggroScripts.values()) {
 				if (script.shouldExecute(npc, mob)) {
 					script.executeScript(npc, mob);
 				}
 			}
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			LOGGER.catching(e);
 		}
 	}
@@ -97,6 +97,12 @@ public class CombatScriptLoader {
 		} catch (NoSuchMethodException | InvocationTargetException e) {
 			LOGGER.catching(e);
 		}
+	}
+
+	public void unload() {
+		combatScripts.clear();
+		combatStartScripts.clear();
+		combatAggroScripts.clear();
 	}
 
 	public Server getServer() {

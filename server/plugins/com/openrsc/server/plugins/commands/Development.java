@@ -12,13 +12,11 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
-import gnu.trove.impl.sync.TSynchronizedShortByteMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -433,7 +431,7 @@ public final class Development implements CommandTrigger {
 				count = Integer.parseInt(args[1]);
 			}
 			final int finalCount = count;
-			NpcDrops npcDrops = player.getWorld().npcDrops;
+			NpcDrops npcDrops = player.getWorld().getNpcDrops();
 			DropTable dropTable = npcDrops.getDropTable(npcId);
 			if (dropTable == null) {
 				mes("No NPC for id: " + npcId);

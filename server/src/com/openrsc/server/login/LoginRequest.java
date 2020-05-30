@@ -140,7 +140,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				return (byte) LoginResponse.CLIENT_UPDATED;
 			}
 
-			final long i = getServer().timeTillShutdown();
+			final long i = getServer().getTimeUntilShutdown();
 			if (i > 0 && i < 30000 && !isAdmin) {
 				return (byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS;
 			}

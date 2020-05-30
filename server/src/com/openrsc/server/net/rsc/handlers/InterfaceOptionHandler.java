@@ -206,7 +206,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 					player.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
-				if (player.getWorld().getServer().timeTillShutdown() > 0) {
+				if (player.getWorld().getServer().getTimeUntilShutdown() > 0) {
 					player.message("Auction house is disabled until server restart!");
 					return;
 				}

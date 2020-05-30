@@ -1323,7 +1323,7 @@ public class ActionSender {
 			if (player.getWorld().registerPlayer(player)) {
 				sendWorldInfo(player);
 				player.getWorld().getServer().getGameUpdater().sendUpdatePackets(player);
-				long timeTillShutdown = player.getWorld().getServer().timeTillShutdown();
+				long timeTillShutdown = player.getWorld().getServer().getTimeUntilShutdown();
 				if (timeTillShutdown > -1)
 					startShutdown(player, (int)(timeTillShutdown / 1000));
 
@@ -1491,10 +1491,10 @@ public class ActionSender {
 	public static void sendClans(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
 		pb.writeByte(4);
-		pb.writeShort(ClanManager.clans.size());
+		pb.writeShort(player.getWorld().getClanManager().getClans().size());
 		int rank = 1;
-		ClanManager.clans.sort(ClanManager.CLAN_COMPERATOR);
-		for (Clan c : ClanManager.clans) {
+		player.getWorld().getClanManager().getClans().sort(ClanManager.CLAN_COMPERATOR);
+		for (Clan c : player.getWorld().getClanManager().getClans()) {
 			pb.writeShort(c.getClanID());
 			pb.writeString(c.getClanName());
 			pb.writeString(c.getClanTag());
@@ -1509,10 +1509,10 @@ public class ActionSender {
 	public static void sendParties(Player player) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
 		pb.writeByte(4);
-		pb.writeShort(player.getWorld().getPartyManager().parties.size());
+		pb.writeShort(player.getWorld().getPartyManager().getParties().size());
 		int rank = 1;
-		player.getWorld().getPartyManager().parties.sort(PartyManager.PARTY_COMPERATOR);
-		for (Party c : player.getWorld().getPartyManager().parties) {
+		player.getWorld().getPartyManager().getParties().sort(PartyManager.PARTY_COMPERATOR);
+		for (Party c : player.getWorld().getPartyManager().getParties()) {
 			pb.writeShort(c.getPartyID());
 			pb.writeByte(c.getPlayers().size());
 			pb.writeByte(c.getAllowSearchJoin());

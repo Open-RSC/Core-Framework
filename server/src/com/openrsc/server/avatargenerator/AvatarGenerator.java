@@ -21,14 +21,16 @@ import java.util.zip.ZipFile;
 public final class AvatarGenerator {
 
 	private final static Logger LOGGER = LogManager.getLogger();
-	private final World world;
+
 	/// A map of unpacked sprites
 	private final static HashMap<String, Map<String, Entry>> spriteTree = new HashMap<>();
 	private final static Sprite[] sprites = new Sprite[4000];
 	/// The animations
 	private final static ArrayList<AnimationDef> animations = new ArrayList<>();
 
-	public AvatarGenerator(World world) {
+	private final World world;
+
+	public AvatarGenerator(final World world) {
 		this.world = world;
 	}
 

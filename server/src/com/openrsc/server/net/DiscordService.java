@@ -43,14 +43,14 @@ import java.util.concurrent.TimeUnit;
 
 public class DiscordService implements Runnable{
 	private static final int WATCHLIST_MAX_SIZE = 10;
-	private final ScheduledExecutorService scheduledExecutor;
+	private ScheduledExecutorService scheduledExecutor;
 
-	private Queue<String> auctionRequests = new ConcurrentLinkedQueue<String>();
-	private Queue<String> monitoringRequests = new ConcurrentLinkedQueue<String>();
+	private final Queue<String> auctionRequests = new ConcurrentLinkedQueue<String>();
+	private final Queue<String> monitoringRequests = new ConcurrentLinkedQueue<String>();
 
-	private static final Logger LOGGER	= LogManager.getLogger();
-	private long monitoringLastUpdate	= 0;
-	private Boolean running				= false;
+	private static final Logger LOGGER = LogManager.getLogger();
+	private long monitoringLastUpdate = 0;
+	private Boolean running = false;
 
 	private final Server server;
 	private JDABuilder builder;
@@ -60,7 +60,6 @@ public class DiscordService implements Runnable{
 	public DiscordService(final Server server) {
 		this.server = server;
 
-		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : DiscordServiceThread").build());
 		if (server.getConfig().WANT_DISCORD_BOT) {
 			File tokenFile = new File(server.getConfig().SERVER_NAME + ".tok");
 			if (tokenFile.exists()) {
@@ -100,7 +99,6 @@ public class DiscordService implements Runnable{
 		} catch (final LoginException a) {
 			a.printStackTrace();
 		}
-
 	}
 
 	@SubscribeEvent
@@ -518,16 +516,32 @@ public class DiscordService implements Runnable{
 
 	public void start() {
 		synchronized(running) {
-			running = true;
+			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : DiscordServiceThread").build());
 			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+			running = true;
 		}
 	}
 
 	public void stop() {
 		synchronized(running) {
-			running = false;
 			scheduledExecutor.shutdown();
+			try {
+				final boolean terminationResult = scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
+				if (!terminationResult) {
+					LOGGER.error("DiscordService thread termination failed");
+				}
+			} catch (final InterruptedException e) {
+				LOGGER.catching(e);
+			}
+			clearRequests();
+			scheduledExecutor = null;
+			running = false;
 		}
+	}
+
+	private void clearRequests() {
+		monitoringRequests.clear();
+		auctionRequests.clear();
 	}
 
 	public final boolean isRunning() {

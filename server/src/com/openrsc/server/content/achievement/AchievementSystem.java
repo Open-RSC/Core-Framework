@@ -25,13 +25,11 @@ public class AchievementSystem {
 
 	private final Server server;
 
-	public AchievementSystem(Server server) {
+	public AchievementSystem(final Server server) {
 		this.server = server;
 	}
 
 	public void load() {
-		loadedAchievements.clear();
-
 		try {
 			loadedAchievements = getServer().getDatabase().getAchievements();
 		} catch (GameDatabaseException e) {
@@ -39,13 +37,17 @@ public class AchievementSystem {
 		}
 	}
 
+	public void unload() {
+		loadedAchievements.clear();
+	}
+
 	public LinkedList<Achievement> getAchievements() {
 		return loadedAchievements;
 	}
 
-	public ArrayList<Achievement> getAvailableQuestsForEntity(Player player, Entity e) {
-		ArrayList<Achievement> tasksAvailable = new ArrayList<Achievement>();
-		for (Achievement task : loadedAchievements) {
+	public ArrayList<Achievement> getAvailableQuestsForEntity(final Player player, final Entity e) {
+		final ArrayList<Achievement> tasksAvailable = new ArrayList<Achievement>();
+		for (final Achievement task : loadedAchievements) {
 			if (e.getID() == task.getStartID()) {
 				if (!isPlayerCanStartQuest(player, task)) {
 					continue;
@@ -80,7 +82,7 @@ public class AchievementSystem {
 		return tasksAvailable;
 	}
 
-	public boolean isPlayerCanStartQuest(Player player, Achievement task) {
+	public boolean isPlayerCanStartQuest(final Player player, final Achievement task) {
 		if (playerCompletedQuest(player, task)) {
 			return false;
 		}
@@ -199,10 +201,10 @@ public class AchievementSystem {
 		}
 	}*/
 
-	public String getTaskProgressText(Player player, int id) {
+	public String getTaskProgressText(final Player player, final int id) {
 		String questInfo = "Task Progress: %";
 
-		Achievement quest = loadedAchievements.get(id);
+		final Achievement quest = loadedAchievements.get(id);
 		if (quest == null) {
 			return "Quest not found";
 		}
@@ -224,7 +226,7 @@ public class AchievementSystem {
 		return questInfo;
 	}
 
-	public int getTaskProgress(Player player, AchievementTask task) {
+	public int getTaskProgress(final Player player, final AchievementTask task) {
 		if (task.getTask() == TaskType.DO_QUEST) {
 			return player.getQuestStage(task.getId()) == -1 ? 1 : 0;
 		}
@@ -234,29 +236,29 @@ public class AchievementSystem {
 		return player.getCache().getInt("simpletask[" + task.getId() + "]_task_" + task.getTask().toString());
 	}
 
-	public void setQuestStage(Player player, int questID, int stage) {
+	public void setQuestStage(final Player player, final int questID, final int stage) {
 		player.getCache().set("simpletask[" + questID + "]_stage", (int) stage);
 	}
 
-	public void setQuestStage(Player player, Achievement quest, int stage) {
+	public void setQuestStage(final Player player, final Achievement quest, final int stage) {
 		player.getCache().set("simpletask[" + quest.getId() + "]_stage", (int) stage);
 	}
 
-	public boolean playerCompletedQuest(Player player, Achievement quest) {
+	public boolean playerCompletedQuest(final Player player, final Achievement quest) {
 		if (player.getCache().hasKey("simpletask[" + quest.getId() + "]_stage")) {
 			return player.getCache().getInt("simpletask[" + quest.getId() + "]_stage") == ACHIEVEMENT_COMPLETED;
 		}
 		return false;
 	}
 
-	public boolean playerCompletedQuest(Player player, int id) {
+	public boolean playerCompletedQuest(final Player player,final  int id) {
 		if (player.getCache().hasKey("simpletask[" + id + "]_stage")) {
 			return player.getCache().getInt("simpletask[" + id + "]_stage") == ACHIEVEMENT_COMPLETED;
 		}
 		return false;
 	}
 
-	public boolean playerCanFinishQuest(Player player, Achievement quest) {
+	public boolean playerCanFinishQuest(final Player player, final Achievement quest) {
 		int completedTasks = 0;
 		for (AchievementTask task : quest.getTasks()) {
 			if (getTaskProgress(player, task) >= task.getAmount()) {
@@ -269,22 +271,22 @@ public class AchievementSystem {
 		return false;
 	}
 
-	private boolean playerStartedQuest(Player player, Achievement quest) {
+	private boolean playerStartedQuest(final Player player, final Achievement quest) {
 		if (player.getCache().hasKey("simpletask[" + quest.getId() + "]_stage")) {
 			return player.getCache().getInt("simpletask[" + quest.getId() + "]_stage") == ACHIEVEMENT_STARTED;
 		}
 		return false;
 	}
 
-	public void checkAndIncGatherItemTasks(Player player, Item item) {
-		for (Achievement quest : loadedAchievements) {
+	public void checkAndIncGatherItemTasks(final Player player, final Item item) {
+		for (final Achievement quest : loadedAchievements) {
 			if (!playerStartedQuest(player, quest))
 				continue;
 
-			for (AchievementTask task : quest.getTasks()) {
+			for (final AchievementTask task : quest.getTasks()) {
 				if (task.getTask() == TaskType.GATHER_ITEM) {
 					if (task.getId() == item.getCatalogId() && getTaskProgress(player, task) < task.getAmount()) {
-						int newAmount = getTaskProgress(player, task) + item.getAmount();
+						final int newAmount = getTaskProgress(player, task) + item.getAmount();
 						player.getCache().set("simpletask[" + task.getId() + "]_task_" + task.getTask().toString(),
 							newAmount);
 						if (newAmount == task.getAmount()) {
@@ -297,15 +299,15 @@ public class AchievementSystem {
 		}
 	}
 
-	public void checkAndIncSlayNpcTasks(Player player, Npc npc) {
-		for (Achievement quest : loadedAchievements) {
+	public void checkAndIncSlayNpcTasks(final Player player, final Npc npc) {
+		for (final Achievement quest : loadedAchievements) {
 			if (!playerStartedQuest(player, quest))
 				continue;
 
-			for (AchievementTask task : quest.getTasks()) {
+			for (final AchievementTask task : quest.getTasks()) {
 				if (task.getTask() == TaskType.KILL_NPC) {
 					if (task.getId() == npc.getID() && getTaskProgress(player, task) < task.getAmount()) {
-						int newAmount = getTaskProgress(player, task) + 1;
+						final int newAmount = getTaskProgress(player, task) + 1;
 						player.getCache().set("simpletask[" + task.getId() + "]_task_" + task.getTask().toString(),
 							newAmount);
 						if (newAmount == task.getAmount()) {
@@ -318,8 +320,8 @@ public class AchievementSystem {
 		}
 	}
 
-	public void achievementListGUI(Player player, int achievement, int status) {
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+	public void achievementListGUI(final Player player, final int achievement, final int status) {
+		final com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(50);
 		s.writeByte((byte) 2);
 		s.writeInt(achievement);
@@ -327,14 +329,14 @@ public class AchievementSystem {
 		player.write(s.toPacket());
 	}
 
-	public  void achievementListGUI(Player player) {
+	public  void achievementListGUI(final Player player) {
 		try {
-			com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-			LinkedList<Achievement> availableTasks = getAchievements();
+			final com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+			final LinkedList<Achievement> availableTasks = getAchievements();
 			s.setID(50);
 			s.writeByte((byte) 1);
 			s.writeShort(availableTasks.size());
-			for (Achievement task : availableTasks) {
+			for (final Achievement task : availableTasks) {
 				s.writeInt(task.getId());
 				s.writeByte((byte) player.getAchievementStatus(task.getId()));
 				s.writeString(task.getName());

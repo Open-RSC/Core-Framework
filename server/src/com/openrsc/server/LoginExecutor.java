@@ -17,7 +17,7 @@ public class LoginExecutor implements Runnable {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final ScheduledExecutorService loginThreadExecutor;
+	private ScheduledExecutorService scheduledExecutor;
 
 	private final Queue<LoginExecutorProcess> requests;
 
@@ -30,9 +30,8 @@ public class LoginExecutor implements Runnable {
 
 	public LoginExecutor(final Server server) {
 		this.server = server;
-		running = false;
-		loginThreadExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : LoginThread").build());
-		requests = new ConcurrentLinkedQueue<>();
+		this.running = false;
+		this.requests = new ConcurrentLinkedQueue<>();
 	}
 
 	public void add(final LoginExecutorProcess request) {
@@ -49,7 +48,7 @@ public class LoginExecutor implements Runnable {
 				while ((request = requests.poll()) != null) {
 					request.process();
 				}
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				LOGGER.catching(e);
 			}
 		}
@@ -57,15 +56,32 @@ public class LoginExecutor implements Runnable {
 
 	public void start() {
 		synchronized (running) {
+			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : LoginThread").build());
+			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
 			running = true;
-			loginThreadExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
 		}
 	}
 
 	public void stop() {
 		synchronized (running) {
+			scheduledExecutor.shutdown();
+			try {
+				final boolean terminationResult = scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
+				if (!terminationResult) {
+					LOGGER.error("LoginExecutor thread termination failed");
+				}
+			} catch (final InterruptedException e) {
+				LOGGER.catching(e);
+			}
+			clearRequests();
+			scheduledExecutor = null;
 			running = false;
-			loginThreadExecutor.shutdown();
+		}
+	}
+
+	private void clearRequests() {
+		synchronized (running) {
+			requests.clear();
 		}
 	}
 

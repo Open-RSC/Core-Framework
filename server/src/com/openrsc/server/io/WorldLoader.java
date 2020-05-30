@@ -196,6 +196,10 @@ public class WorldLoader {
 		LOGGER.info((System.currentTimeMillis() - start) + "ms to load landscape with " + sectors + " regions.");
 	}
 
+	public void unloadWorld() {
+		tileArchive = null;
+	}
+
 	public World getWorld() {
 		return world;
 	}

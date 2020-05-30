@@ -76,10 +76,10 @@ public final class WorldPopulator {
 					n = null;
 					continue;
 				}
-			/*if(!Point.inWilderness(n.startX, n.startY) && EntityHandler.getNpcDef(n.id).isAttackable() && n.id != 192 && n.id != 35 && n.id != 196 && n.id != 50 && n.id != 70 && n.id != 136 && n.id != 37) {
-				for(int i = 0; i < 1; i++)
-					world.registerNpc(new Npc(n));
-			}*/
+				/*if(!Point.inWilderness(n.startX, n.startY) && EntityHandler.getNpcDef(n.id).isAttackable() && n.id != 192 && n.id != 35 && n.id != 196 && n.id != 50 && n.id != 70 && n.id != 136 && n.id != 37) {
+					for(int i = 0; i < 1; i++)
+						world.registerNpc(new Npc(n));
+				}*/
 				getWorld().registerNpc(new Npc(getWorld(), n));
 			}
 			LOGGER.info("\t Loaded {}", box(getWorld().countNpcs()) + " NPC spawns");

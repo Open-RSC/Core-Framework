@@ -215,7 +215,7 @@ public class ServerConfiguration {
 	public String configFile;
 	private String[] deprecatedKeys = new String[]{
 		"bank_size", "want_password_massage", "mysql_db",
-		"mysql_host", "mysql_user", "mysql_pass", "mysql_table_prefix"
+		"mysql_host", "mysql_user", "mysql_pass", "mysql_table_prefix", "AUTO_SERVER_RESTART", "AUTO_SERVER_RESTART_2"
 	};
 
 	/**

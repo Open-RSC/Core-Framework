@@ -22,13 +22,12 @@ public final class MySqlGameLogger extends GameLogger {
 	private volatile AtomicBoolean running;
 	private final BlockingQueue<Query> queries;
 	private final Server server;
-	private final ScheduledExecutorService scheduledExecutor;
+	private ScheduledExecutorService scheduledExecutor;
 	private final MySqlGameDatabase database;
 
 	public MySqlGameLogger(final Server server, final MySqlGameDatabase database) {
 		this.server = server;
 
-		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName() + " : DatabaseLogging").build());
 		running = new AtomicBoolean(false);
 		queries = new ArrayBlockingQueue<>(10000);
 		// TODO: Implement GameLogger into the database driver.
@@ -44,20 +43,41 @@ public final class MySqlGameLogger extends GameLogger {
 	}
 
 	public void start() {
-		running.set(true);
-		scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+		synchronized (running) {
+			running.set(true);
+			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName() + " : DatabaseLogging").build());
+			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
+		}
 	}
 
 	public void stop() {
-		running.set(false);
-		scheduledExecutor.shutdown();
+		synchronized (running) {
+			scheduledExecutor.shutdown();
+			try {
+				final boolean terminationResult = scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
+				if (!terminationResult) {
+					LOGGER.error("MySqlGameLogger thread termination failed");
+				}
+			} catch (final InterruptedException e) {
+				LOGGER.catching(e);
+			}
+			clearQueries();
+			scheduledExecutor = null;
+			running.set(false);
+		}
+	}
+
+	private void clearQueries() {
+		queries.clear();
 	}
 
 	@Override
 	public void run() {
-		if (running.get()) {
-			while (queries.size() > 0 && getDatabase().getConnection().isConnected()) {
-				pollNextQuery();
+		synchronized (running) {
+			if (running.get()) {
+				while (queries.size() > 0 && getDatabase().getConnection().isConnected()) {
+					pollNextQuery();
+				}
 			}
 		}
 	}

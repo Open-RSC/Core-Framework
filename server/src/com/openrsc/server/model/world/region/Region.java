@@ -84,6 +84,15 @@ public class Region {
 		}
 	}
 
+	public void unload() {
+		players.clear();
+		npcs.clear();
+		objects.clear();
+		items.clear();
+		tiles = null;
+		tile = null;
+	}
+
 	/**
 	 * Gets the list of players.
 	 *

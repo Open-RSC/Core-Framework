@@ -1,6 +1,7 @@
 package com.openrsc.server;
 
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.database.impl.mysql.queries.logging.PMLog;
 import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.Point;
@@ -14,8 +15,6 @@ import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.entity.update.*;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.database.impl.mysql.queries.logging.PMLog;
-import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,30 +30,39 @@ public final class GameStateUpdater {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final EntityList<Player> players;
-	private final EntityList<Npc> npcs;
-
-	private long lastProcessPlayersDuration			= 0;
-	private long lastProcessNpcsDuration			= 0;
-	private long lastProcessMessageQueuesDuration	= 0;
-	private long lastUpdateClientsDuration			= 0;
-	private long lastDoCleanupDuration				= 0;
-	private long lastExecuteWalkToActionsDuration	= 0;
+	private long lastWorldUpdateDuration = 0;
+	private long lastProcessPlayersDuration = 0;
+	private long lastProcessNpcsDuration = 0;
+	private long lastProcessMessageQueuesDuration = 0;
+	private long lastUpdateClientsDuration = 0;
+	private long lastDoCleanupDuration = 0;
+	private long lastExecuteWalkToActionsDuration = 0;
 
 	private final Server server;
 	public final Server getServer() {
 		return server;
 	}
 
-	public GameStateUpdater(Server server) {
+	public GameStateUpdater(final Server server) {
 		this.server = server;
-		this.players = getServer().getWorld().getPlayers();
-		this.npcs = getServer().getWorld().getNpcs();
 	}
 
+	public void load() {
+
+	}
+
+	public void unload() {
+		lastWorldUpdateDuration = 0;
+		lastProcessPlayersDuration = 0;
+		lastProcessNpcsDuration = 0;
+		lastProcessMessageQueuesDuration = 0;
+		lastUpdateClientsDuration = 0;
+		lastDoCleanupDuration = 0;
+		lastExecuteWalkToActionsDuration = 0;
+	}
 
 	// private static final int PACKET_UPDATETIMEOUTS = 0;
-	public void sendUpdatePackets(Player player) {
+	public void sendUpdatePackets(final Player player) {
 		// TODO: Should be private
 		try {
 			updatePlayers(player);
@@ -66,7 +74,7 @@ public final class GameStateUpdater {
 			updateGroundItems(player);
 			sendClearLocations(player);
 			updateTimeouts(player);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			LOGGER.catching(e);
 			player.unregister(true, "Exception while updating player " + player.getUsername());
 		}
@@ -75,10 +83,10 @@ public final class GameStateUpdater {
 	/**
 	 * Checks if the player has moved within the last X minutes
 	 */
-	protected void updateTimeouts(Player player) {
-		long curTime = System.currentTimeMillis();
-		int timeoutLimit = getServer().getConfig().IDLE_TIMER; // 5 minute idle log out
-		int autoSave = getServer().getConfig().AUTO_SAVE; // 30 second autosave
+	protected void updateTimeouts(final Player player) {
+		final long curTime = System.currentTimeMillis();
+		final int timeoutLimit = getServer().getConfig().IDLE_TIMER; // 5 minute idle log out
+		final int autoSave = getServer().getConfig().AUTO_SAVE; // 30 second autosave
 		if (player.isRemoved() || player.getAttribute("dummyplayer", false)) {
 			return;
 		}
@@ -106,12 +114,12 @@ public final class GameStateUpdater {
 		}
 	}
 
-	protected void updateNpcs(Player playerToUpdate) throws Exception {
-		com.openrsc.server.net.PacketBuilder packet = new com.openrsc.server.net.PacketBuilder();
+	protected void updateNpcs(final Player playerToUpdate) {
+		final com.openrsc.server.net.PacketBuilder packet = new com.openrsc.server.net.PacketBuilder();
 		packet.setID(79);
 		packet.startBitAccess();
 		packet.writeBits(playerToUpdate.getLocalNpcs().size(), 8);
-		for (Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext(); ) {
+		for (final Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext(); ) {
 			Npc localNpc = it$.next();
 
 			if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isRespawning() || localNpc.isTeleporting() || localNpc.inCombat()) {
@@ -133,7 +141,7 @@ public final class GameStateUpdater {
 				}
 			}
 		}
-		for (Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
+		for (final Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
 			if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved() || newNPC.isRespawning()
 				|| newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")
 				|| !playerToUpdate.withinRange(newNPC, (getServer().getConfig().VIEW_DISTANCE * 8) - 1) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
@@ -141,7 +149,7 @@ public final class GameStateUpdater {
 			} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
 				break;
 			}
-			byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
+			final byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
 			packet.writeBits(newNPC.getIndex(), 12);
 			packet.writeBits(offsets[0], 6);
 			packet.writeBits(offsets[1], 6);
@@ -154,9 +162,8 @@ public final class GameStateUpdater {
 		playerToUpdate.write(packet.toPacket());
 	}
 
-	protected void updatePlayers(Player playerToUpdate) throws Exception {
-
-		com.openrsc.server.net.PacketBuilder positionBuilder = new com.openrsc.server.net.PacketBuilder();
+	protected void updatePlayers(final Player playerToUpdate) {
+		final com.openrsc.server.net.PacketBuilder positionBuilder = new com.openrsc.server.net.PacketBuilder();
 		positionBuilder.setID(191);
 		positionBuilder.startBitAccess();
 		positionBuilder.writeBits(playerToUpdate.getX(), 11);
@@ -165,8 +172,8 @@ public final class GameStateUpdater {
 		positionBuilder.writeBits(playerToUpdate.getLocalPlayers().size(), 8);
 
 		if (playerToUpdate.loggedIn()) {
-			for (Iterator<Player> it$ = playerToUpdate.getLocalPlayers().iterator(); it$.hasNext(); ) {
-				Player otherPlayer = it$.next();
+			for (final Iterator<Player> it$ = playerToUpdate.getLocalPlayers().iterator(); it$.hasNext(); ) {
+				final Player otherPlayer = it$.next();
 
 				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
 					|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
@@ -194,14 +201,14 @@ public final class GameStateUpdater {
 				}
 			}
 
-			for (Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
+			for (final Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
 				if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
 					|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
 					|| otherPlayer.isRemoved() || otherPlayer.isInvisibleTo(playerToUpdate)
 					|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
 					continue;
 				}
-				byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
+				final byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
 					playerToUpdate.getLocation());
 				positionBuilder.writeBits(otherPlayer.getIndex(), 11);
 				positionBuilder.writeBits(offsets[0], 6);
@@ -217,16 +224,16 @@ public final class GameStateUpdater {
 		playerToUpdate.write(positionBuilder.toPacket());
 	}
 
-	public void updateNpcAppearances(Player player) {
-		ConcurrentLinkedQueue<Damage> npcsNeedingHitsUpdate = new ConcurrentLinkedQueue<>();
-		ConcurrentLinkedQueue<ChatMessage> npcMessagesNeedingDisplayed = new ConcurrentLinkedQueue<>();
-		ConcurrentLinkedQueue<Projectile> npcProjectilesNeedingDisplayed = new ConcurrentLinkedQueue<>();
-		ConcurrentLinkedQueue<Skull> npcSkullsNeedingDisplayed = new ConcurrentLinkedQueue<>();
-		ConcurrentLinkedQueue<Wield> npcWieldsNeedingDisplayed = new ConcurrentLinkedQueue<>();
-		ConcurrentLinkedQueue<BubbleNpc> npcBubblesNeedingDisplayed = new ConcurrentLinkedQueue<>();
+	public void updateNpcAppearances(final Player player) {
+		final ConcurrentLinkedQueue<Damage> npcsNeedingHitsUpdate = new ConcurrentLinkedQueue<>();
+		final ConcurrentLinkedQueue<ChatMessage> npcMessagesNeedingDisplayed = new ConcurrentLinkedQueue<>();
+		final ConcurrentLinkedQueue<Projectile> npcProjectilesNeedingDisplayed = new ConcurrentLinkedQueue<>();
+		final ConcurrentLinkedQueue<Skull> npcSkullsNeedingDisplayed = new ConcurrentLinkedQueue<>();
+		final ConcurrentLinkedQueue<Wield> npcWieldsNeedingDisplayed = new ConcurrentLinkedQueue<>();
+		final ConcurrentLinkedQueue<BubbleNpc> npcBubblesNeedingDisplayed = new ConcurrentLinkedQueue<>();
 
-		for (Npc npc : player.getLocalNpcs()) {
-			UpdateFlags updateFlags = npc.getUpdateFlags();
+		for (final Npc npc : player.getLocalNpcs()) {
+			final UpdateFlags updateFlags = npc.getUpdateFlags();
 			if (updateFlags.hasChatMessage()) {
 				ChatMessage chatMessage = updateFlags.getChatMessage();
 				npcMessagesNeedingDisplayed.add(chatMessage);
@@ -256,10 +263,10 @@ public final class GameStateUpdater {
 					npcBubblesNeedingDisplayed.add(bubble);
 			}
 		}
-		int updateSize = npcMessagesNeedingDisplayed.size() + npcsNeedingHitsUpdate.size()
+		final int updateSize = npcMessagesNeedingDisplayed.size() + npcsNeedingHitsUpdate.size()
 			+ npcProjectilesNeedingDisplayed.size() + npcSkullsNeedingDisplayed.size() + npcWieldsNeedingDisplayed.size() + npcBubblesNeedingDisplayed.size();
 		if (updateSize > 0) {
-			PacketBuilder npcAppearancePacket = new PacketBuilder();
+			final PacketBuilder npcAppearancePacket = new PacketBuilder();
 			npcAppearancePacket.setID(104);
 			npcAppearancePacket.writeShort(updateSize);
 
@@ -321,14 +328,13 @@ public final class GameStateUpdater {
 	 *
 	 * @param player
 	 */
-	public void updatePlayerAppearances(Player player) {
-
-		ArrayDeque<Bubble> bubblesNeedingDisplayed = new ArrayDeque<>();
-		ArrayDeque<ChatMessage> chatMessagesNeedingDisplayed = new ArrayDeque<>();
-		ArrayDeque<Projectile> projectilesNeedingDisplayed = new ArrayDeque<>();
-		ArrayDeque<Damage> playersNeedingDamageUpdate = new ArrayDeque<>();
-		ArrayDeque<HpUpdate> playersNeedingHpUpdate = new ArrayDeque<HpUpdate>();
-		ArrayDeque<Player> playersNeedingAppearanceUpdate = new ArrayDeque<>();
+	public void updatePlayerAppearances(final Player player) {
+		final ArrayDeque<Bubble> bubblesNeedingDisplayed = new ArrayDeque<>();
+		final ArrayDeque<ChatMessage> chatMessagesNeedingDisplayed = new ArrayDeque<>();
+		final ArrayDeque<Projectile> projectilesNeedingDisplayed = new ArrayDeque<>();
+		final ArrayDeque<Damage> playersNeedingDamageUpdate = new ArrayDeque<>();
+		final ArrayDeque<HpUpdate> playersNeedingHpUpdate = new ArrayDeque<HpUpdate>();
+		final ArrayDeque<Player> playersNeedingAppearanceUpdate = new ArrayDeque<>();
 
 		if (player.getUpdateFlags().hasBubble()) {
 			Bubble bubble = player.getUpdateFlags().getActionBubble().get();
@@ -353,24 +359,22 @@ public final class GameStateUpdater {
 		if (player.getUpdateFlags().hasAppearanceChanged()) {
 			playersNeedingAppearanceUpdate.add(player);
 		}
-		for (Player otherPlayer : player.getLocalPlayers()) {
-
-			UpdateFlags updateFlags = otherPlayer.getUpdateFlags();
+		for (final Player otherPlayer : player.getLocalPlayers()) {
+			final UpdateFlags updateFlags = otherPlayer.getUpdateFlags();
 
 			if(otherPlayer.getUsername().trim().equalsIgnoreCase("kenix") && player.getUsername().trim().equalsIgnoreCase("kenix")) {
 				LOGGER.info("UF: " + updateFlags + ", isTeleporting: " + otherPlayer.isTeleporting() + ", Override: " + player.requiresAppearanceUpdateForPeek(otherPlayer));
 			}
 
 			if (updateFlags.hasBubble()) {
-				Bubble bubble = updateFlags.getActionBubble().get();
+				final Bubble bubble = updateFlags.getActionBubble().get();
 				bubblesNeedingDisplayed.add(bubble);
 			}
 			if (updateFlags.hasFiredProjectile()) {
 				Projectile projectileFired = updateFlags.getProjectile().get();
 				projectilesNeedingDisplayed.add(projectileFired);
 			}
-			if (updateFlags.hasChatMessage() && !player.getSettings()
-				.getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES)) {
+			if (updateFlags.hasChatMessage() && !player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES)) {
 				ChatMessage chatMessage = updateFlags.getChatMessage();
 				chatMessagesNeedingDisplayed.add(chatMessage);
 			}
@@ -382,23 +386,25 @@ public final class GameStateUpdater {
 				HpUpdate hpUpdate = updateFlags.getHpUpdate().get();
 				playersNeedingHpUpdate.add(hpUpdate);
 			}
-			if (player.requiresAppearanceUpdateFor(otherPlayer))
+			if (player.requiresAppearanceUpdateFor(otherPlayer)) {
 				playersNeedingAppearanceUpdate.add(otherPlayer);
+			}
 		}
 		issuePlayerAppearanceUpdatePacket(player, bubblesNeedingDisplayed, chatMessagesNeedingDisplayed,
 			projectilesNeedingDisplayed, playersNeedingDamageUpdate, playersNeedingHpUpdate, playersNeedingAppearanceUpdate);
 	}
 
-	private void issuePlayerAppearanceUpdatePacket(Player player, Queue<Bubble> bubblesNeedingDisplayed,
-														  Queue<ChatMessage> chatMessagesNeedingDisplayed, Queue<Projectile> projectilesNeedingDisplayed,
-														  Queue<Damage> playersNeedingDamageUpdate, Queue<HpUpdate> playersNeedingHpUpdate, Queue<Player> playersNeedingAppearanceUpdate) {
+	private void issuePlayerAppearanceUpdatePacket(final Player player, final Queue<Bubble> bubblesNeedingDisplayed,
+												   final Queue<ChatMessage> chatMessagesNeedingDisplayed, final Queue<Projectile> projectilesNeedingDisplayed,
+												   final Queue<Damage> playersNeedingDamageUpdate,final Queue<HpUpdate> playersNeedingHpUpdate,
+												   final Queue<Player> playersNeedingAppearanceUpdate) {
 		if (player.loggedIn()) {
-			int updateSize = bubblesNeedingDisplayed.size() + chatMessagesNeedingDisplayed.size()
+			final int updateSize = bubblesNeedingDisplayed.size() + chatMessagesNeedingDisplayed.size()
 				+ playersNeedingDamageUpdate.size() + projectilesNeedingDisplayed.size()
 				+ playersNeedingAppearanceUpdate.size() + playersNeedingHpUpdate.size();
 
 			if (updateSize > 0) {
-				PacketBuilder appearancePacket = new PacketBuilder();
+				final PacketBuilder appearancePacket = new PacketBuilder();
 				appearancePacket.setID(234);
 				appearancePacket.writeShort(updateSize);
 				Bubble b;
@@ -503,18 +509,18 @@ public final class GameStateUpdater {
 		}
 	}
 
-	protected void updateGameObjects(Player playerToUpdate) throws Exception {
+	protected void updateGameObjects(final Player playerToUpdate) {
 		boolean changed = false;
-		PacketBuilder packet = new PacketBuilder();
+		final PacketBuilder packet = new PacketBuilder();
 		packet.setID(48);
 		// TODO: This is not handled correctly.
 		//       According to RSC+ replays, the server never tells the client to unload objects until
 		//       a region is unloaded. It then instructs the client to only unload the region.
-		for (Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext(); ) {
-			GameObject o = it$.next();
+		for (final Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext(); ) {
+			final GameObject o = it$.next();
 			if (!playerToUpdate.withinGridRange(o) || o.isRemoved() || o.isInvisibleTo(playerToUpdate)) {
-				int offsetX = o.getX() - playerToUpdate.getX();
-				int offsetY = o.getY() - playerToUpdate.getY();
+				final int offsetX = o.getX() - playerToUpdate.getX();
+				final int offsetY = o.getY() - playerToUpdate.getY();
 				//If the object is close enough we can use regular way to remove:
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
 					packet.writeShort(60000);
@@ -532,15 +538,15 @@ public final class GameStateUpdater {
 			}
 		}
 
-		for (GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
+		for (final GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
 			if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
 				|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 0
 				|| playerToUpdate.getLocalGameObjects().contains(newObject)) {
 				continue;
 			}
 			packet.writeShort(newObject.getID());
-			int offsetX = newObject.getX() - playerToUpdate.getX();
-			int offsetY = newObject.getY() - playerToUpdate.getY();
+			final int offsetX = newObject.getX() - playerToUpdate.getX();
+			final int offsetY = newObject.getY() - playerToUpdate.getY();
 			packet.writeByte(offsetX);
 			packet.writeByte(offsetY);
 			packet.writeByte(newObject.getDirection());
@@ -551,14 +557,14 @@ public final class GameStateUpdater {
 			playerToUpdate.write(packet.toPacket());
 	}
 
-	protected void updateGroundItems(Player playerToUpdate) throws Exception {
+	protected void updateGroundItems(final Player playerToUpdate) {
 		boolean changed = false;
-		PacketBuilder packet = new PacketBuilder();
+		final PacketBuilder packet = new PacketBuilder();
 		packet.setID(99);
-		for (Iterator<GroundItem> it$ = playerToUpdate.getLocalGroundItems().iterator(); it$.hasNext(); ) {
-			GroundItem groundItem = it$.next();
-			int offsetX = (groundItem.getX() - playerToUpdate.getX());
-			int offsetY = (groundItem.getY() - playerToUpdate.getY());
+		for (final Iterator<GroundItem> it$ = playerToUpdate.getLocalGroundItems().iterator(); it$.hasNext(); ) {
+			final GroundItem groundItem = it$.next();
+			final int offsetX = (groundItem.getX() - playerToUpdate.getX());
+			final int offsetY = (groundItem.getY() - playerToUpdate.getY());
 
 			if (!playerToUpdate.withinGridRange(groundItem)) {
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
@@ -584,37 +590,38 @@ public final class GameStateUpdater {
 			}
 		}
 
-		for (GroundItem groundItem : playerToUpdate.getViewArea().getItemsInView()) {
+		for (final GroundItem groundItem : playerToUpdate.getViewArea().getItemsInView()) {
 			if (!playerToUpdate.withinGridRange(groundItem) || groundItem.isRemoved()
 				|| groundItem.isInvisibleTo(playerToUpdate)
 				|| playerToUpdate.getLocalGroundItems().contains(groundItem)) {
 				continue;
 			}
 			packet.writeShort(groundItem.getID());
-			int offsetX = groundItem.getX() - playerToUpdate.getX();
-			int offsetY = groundItem.getY() - playerToUpdate.getY();
+			final int offsetX = groundItem.getX() - playerToUpdate.getX();
+			final int offsetY = groundItem.getY() - playerToUpdate.getY();
 			packet.writeByte(offsetX);
 			packet.writeByte(offsetY);
-			if (getServer().getConfig().WANT_BANK_NOTES)
+			if (getServer().getConfig().WANT_BANK_NOTES) {
 				packet.writeByte(groundItem.getNoted() ? 1 : 0);
+			}
 			playerToUpdate.getLocalGroundItems().add(groundItem);
 			changed = true;
-
 		}
-		if (changed)
+		if (changed) {
 			playerToUpdate.write(packet.toPacket());
+		}
 	}
 
-	protected void updateWallObjects(Player playerToUpdate) throws Exception {
+	protected void updateWallObjects(final Player playerToUpdate) {
 		boolean changed = false;
-		PacketBuilder packet = new PacketBuilder();
+		final PacketBuilder packet = new PacketBuilder();
 		packet.setID(91);
 
-		for (Iterator<GameObject> it$ = playerToUpdate.getLocalWallObjects().iterator(); it$.hasNext(); ) {
-			GameObject o = it$.next();
+		for (final Iterator<GameObject> it$ = playerToUpdate.getLocalWallObjects().iterator(); it$.hasNext(); ) {
+			final GameObject o = it$.next();
 			if (!playerToUpdate.withinGridRange(o) || (o.isRemoved() || o.isInvisibleTo(playerToUpdate))) {
-				int offsetX = o.getX() - playerToUpdate.getX();
-				int offsetY = o.getY() - playerToUpdate.getY();
+				final int offsetX = o.getX() - playerToUpdate.getX();
+				final int offsetY = o.getY() - playerToUpdate.getY();
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
 					packet.writeShort(60000);
 					packet.writeByte(offsetX);
@@ -629,15 +636,15 @@ public final class GameStateUpdater {
 				}
 			}
 		}
-		for (GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
+		for (final GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
 			if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
 				|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 1
 				|| playerToUpdate.getLocalWallObjects().contains(newObject)) {
 				continue;
 			}
 
-			int offsetX = newObject.getX() - playerToUpdate.getX();
-			int offsetY = newObject.getY() - playerToUpdate.getY();
+			final int offsetX = newObject.getX() - playerToUpdate.getX();
+			final int offsetY = newObject.getY() - playerToUpdate.getY();
 			packet.writeShort(newObject.getID());
 			packet.writeByte(offsetX);
 			packet.writeByte(offsetY);
@@ -645,16 +652,17 @@ public final class GameStateUpdater {
 			playerToUpdate.getLocalWallObjects().add(newObject);
 			changed = true;
 		}
-		if (changed)
+		if (changed) {
 			playerToUpdate.write(packet.toPacket());
+		}
 	}
 
-	protected void sendClearLocations(Player player) {
+	protected void sendClearLocations(final Player player) {
 		if (player.getLocationsToClear().size() > 0) {
-			PacketBuilder packetBuilder = new PacketBuilder(211);
-			for (Point point : player.getLocationsToClear()) {
-				int offsetX = point.getX() - player.getX();
-				int offsetY = point.getY() - player.getY();
+			final PacketBuilder packetBuilder = new PacketBuilder(211);
+			for (final Point point : player.getLocationsToClear()) {
+				final int offsetX = point.getX() - player.getX();
+				final int offsetY = point.getY() - player.getY();
 				packetBuilder.writeShort(offsetX);
 				packetBuilder.writeShort(offsetY);
 			}
@@ -663,33 +671,30 @@ public final class GameStateUpdater {
 		}
 	}
 
-	public long doUpdates() throws Exception {
-		final long gameStateStart			= System.currentTimeMillis();
-		lastProcessPlayersDuration			= processPlayers();
-		lastProcessNpcsDuration				= processNpcs();
-		lastProcessMessageQueuesDuration	= processMessageQueues();
-		lastUpdateClientsDuration			= updateClients();
-		lastDoCleanupDuration				= doCleanup();
-		lastExecuteWalkToActionsDuration	= executeWalkToActions();
-		final long gameStateEnd				= System.currentTimeMillis();
+	public long doUpdates() {
+		final long gameStateStart = System.currentTimeMillis();
+		lastWorldUpdateDuration = updateWorld();
+		lastProcessPlayersDuration = processPlayers();
+		lastProcessNpcsDuration = processNpcs();
+		lastProcessMessageQueuesDuration = processMessageQueues();
+		lastUpdateClientsDuration = updateClients();
+		lastDoCleanupDuration = doCleanup();
+		lastExecuteWalkToActionsDuration = executeWalkToActions();
+		final long gameStateEnd = System.currentTimeMillis();
 
 		return gameStateEnd - gameStateStart;
-		/*final int HORIZONTAL_PLANES = (World.MAX_WIDTH / RegionManager.REGION_SIZE) + 1;
-		final int VERTICAL_PLANES = (World.MAX_HEIGHT / RegionManager.REGION_SIZE) + 1;
-		for (int x = 0; x < HORIZONTAL_PLANES; ++x)
-			for (int y = 0; y < VERTICAL_PLANES; ++y) {
-				Region r = RegionManager.getRegion(x * RegionManager.REGION_SIZE, y * RegionManager.REGION_SIZE);
-				if (r != null)
-					for (Iterator<Player> i = r.getPlayers().iterator(); i.hasNext();) {
-						if (i.next().isRemoved())
-							i.remove();
-					}
-			}*/
+	}
+
+	protected final long updateWorld() {
+		final long updateWorldStart = System.currentTimeMillis();
+		getServer().getWorld().run();
+		final long updateWorldEnd = System.currentTimeMillis();
+		return updateWorldEnd - updateWorldStart;
 	}
 
 	protected final long updateClients() {
 		final long updateClientsStart	= System.currentTimeMillis();
-		for (Player player : players) {
+		for (final Player player : getServer().getWorld().getPlayers()) {
 			sendUpdatePackets(player);
 			player.process();
 		}
@@ -704,7 +709,7 @@ public final class GameStateUpdater {
 		 * Reset the update related flags and unregister npcs flagged as
 		 * unregistering
 		 */
-		for (Npc npc : npcs) {
+		for (final Npc npc : getServer().getWorld().getNpcs()) {
 			npc.setHasMoved(false);
 			npc.resetSpriteChanged();
 			npc.getUpdateFlags().reset();
@@ -715,7 +720,7 @@ public final class GameStateUpdater {
 		 * Reset the update related flags and unregister players that are
 		 * flagged as unregistered
 		 */
-		for (Player player : players) {
+		for (final Player player : getServer().getWorld().getPlayers()) {
 			player.setTeleporting(false);
 			player.resetSpriteChanged();
 			player.getUpdateFlags().reset();
@@ -729,7 +734,7 @@ public final class GameStateUpdater {
 
 	protected final long executeWalkToActions() {
 		final long executeWalkToActionsStart	= System.currentTimeMillis();
-		for (Player player : players) {
+		for (final Player player : getServer().getWorld().getPlayers()) {
 			if (player.getWalkToAction() != null) {
 				if (player.getWalkToAction().shouldExecute()) {
 					player.getWalkToAction().execute();
@@ -737,13 +742,12 @@ public final class GameStateUpdater {
 			}
 		}
 		final long executeWalkToActionsEnd	= System.currentTimeMillis();
-
 		return executeWalkToActionsEnd - executeWalkToActionsStart;
 	}
 
 	protected final long processNpcs() {
 		final long processNpcsStart	= System.currentTimeMillis();
-		for (Npc n : npcs) {
+		for (final Npc n : getServer().getWorld().getNpcs()) {
 			try {
 				if (n.isUnregistering()) {
 					getServer().getWorld().unregisterNpc(n);
@@ -754,13 +758,12 @@ public final class GameStateUpdater {
 				if(!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
 					n.updatePosition();
 				}
-			} catch (Exception e) {
-				LOGGER.error(
-					"Error while updating " + n + " at position " + n.getLocation() + " loc: " + n.getLoc());
+			} catch (final Exception e) {
+				LOGGER.error("Error while updating " + n + " at position " + n.getLocation() + " loc: " + n.getLoc());
 				LOGGER.catching(e);
 			}
 		}
-		final long processNpcsEnd	= System.currentTimeMillis();
+		final long processNpcsEnd = System.currentTimeMillis();
 		return processNpcsEnd - processNpcsStart;
 	}
 
@@ -768,9 +771,9 @@ public final class GameStateUpdater {
 	 * Updates the messages queues for each player
 	 */
 	protected final long processMessageQueues() {
-		final long processMessageQueuesStart	= System.currentTimeMillis();
-		for (Player player : players) {
-			PrivateMessage pm = player.getNextPrivateMessage();
+		final long processMessageQueuesStart = System.currentTimeMillis();
+		for (final Player player : getServer().getWorld().getPlayers()) {
+			final PrivateMessage pm = player.getNextPrivateMessage();
 			if (pm != null) {
 				Player affectedPlayer = getServer().getWorld().getPlayer(pm.getFriend());
 				if (affectedPlayer != null) {
@@ -786,9 +789,9 @@ public final class GameStateUpdater {
 				}
 			}
 		}
-		GlobalMessage gm = null;
+		GlobalMessage gm ;
 		while((gm = getServer().getWorld().getNextGlobalMessage()) != null) {
-			for (Player player : players) {
+			for (final Player player : getServer().getWorld().getPlayers()) {
 				if (player == gm.getPlayer()) {
 					ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
 				}
@@ -798,7 +801,7 @@ public final class GameStateUpdater {
 				}
 			}
 		}
-		for (Player player : players) {
+		for (final Player player : getServer().getWorld().getPlayers()) {
 			if (player.requiresOfferUpdate()) {
 				ActionSender.sendTradeItems(player);
 				player.setRequiresOfferUpdate(false);
@@ -814,7 +817,7 @@ public final class GameStateUpdater {
 	 */
 	protected final long processPlayers() {
 		final long processPlayersStart	= System.currentTimeMillis();
-		for (Player player : players) {
+		for (final Player player : getServer().getWorld().getPlayers()) {
 			// Checking login because we don't want to unregister more than once
 			if (player.isUnregistering() && player.isLoggedIn()) {
 				getServer().getWorld().unregisterPlayer(player);
@@ -832,6 +835,10 @@ public final class GameStateUpdater {
 		}
 		final long processPlayersEnd	= System.currentTimeMillis();
 		return processPlayersEnd - processPlayersStart;
+	}
+
+	public long getLastWorldUpdateDuration() {
+		return lastWorldUpdateDuration;
 	}
 
 	public long getLastProcessPlayersDuration() {

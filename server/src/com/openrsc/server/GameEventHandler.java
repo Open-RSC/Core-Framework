@@ -9,7 +9,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class GameEventHandler {
 
@@ -24,15 +27,38 @@ public class GameEventHandler {
 	private final ConcurrentHashMap<String, Integer> eventsCounts = new ConcurrentHashMap<String, Integer>();
 	private final ConcurrentHashMap<String, Long> eventsDurations = new ConcurrentHashMap<String, Long>();
 
-	private final ThreadPoolExecutor executor;
+	private ThreadPoolExecutor executor;
 
 	private final Server server;
 
 	public GameEventHandler(final Server server) {
 		this.server = server;
-		final int nThreads = (Runtime.getRuntime().availableProcessors() * 2) / Server.serversList.size();
-		executor = new ThreadPoolExecutor(nThreads / 2, nThreads, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new NamedThreadFactory(getServer().getName() + " : EventHandler"));
+	}
+
+	public void load() {
+		final int coreThreads = Runtime.getRuntime().availableProcessors();
+		executor = new ThreadPoolExecutor(coreThreads, coreThreads * 2, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new NamedThreadFactory(getServer().getName() + " : EventHandler"));
 		executor.prestartAllCoreThreads();
+	}
+
+	public void unload() {
+		// Process any events still in the queue.
+		processEvents();
+
+		executor.shutdown();
+		try {
+			final boolean terminationResult = executor.awaitTermination(1, TimeUnit.MINUTES);
+			if (!terminationResult) {
+				LOGGER.error("GameEventHandler thread pool termination failed");
+			}
+		} catch (final InterruptedException e) {
+			LOGGER.catching(e);
+		}
+
+		events.clear();
+		eventsToAdd.clear();
+		eventsCounts.clear();
+		eventsDurations.clear();
 	}
 
 	public void add(final GameTickEvent event) {
@@ -51,7 +77,7 @@ public class GameEventHandler {
 			public void action() {
 				try {
 					r.run();
-				} catch (Throwable e) {
+				} catch (final Throwable e) {
 					LOGGER.catching(e);
 				}
 			}
@@ -66,6 +92,11 @@ public class GameEventHandler {
 	}
 
 	private void processEvents() {
+		// Update the number of threads in the pool. More servers could have been started so we want to allocate the right amount of threads.
+		final int maxThreads = (Runtime.getRuntime().availableProcessors() * 2) / (Server.serversList.size() > 0 ? Server.serversList.size() : 1);
+		executor.setCorePoolSize(maxThreads / 2);
+		executor.setMaximumPoolSize(maxThreads);
+
 		if (eventsToAdd.size() > 0) {
 			events.putAll(eventsToAdd);
 			eventsToAdd.clear();
@@ -180,7 +211,7 @@ public class GameEventHandler {
 
 		final String returnString = (
 			"Tick: " + getServer().getConfig().GAME_TICK + "ms, Server: " + getServer().getLastTickDuration() + "ms " + getServer().getLastIncomingPacketsDuration() + "ms " + getServer().getLastEventsDuration() + "ms " + getServer().getLastGameStateDuration() + "ms " + getServer().getLastOutgoingPacketsDuration() + "ms" + newLine +
-				"Game Updater: " + getServer().getGameUpdater().getLastProcessPlayersDuration() + "ms " + getServer().getGameUpdater().getLastProcessNpcsDuration() + "ms " + getServer().getGameUpdater().getLastProcessMessageQueuesDuration() + "ms " + getServer().getGameUpdater().getLastUpdateClientsDuration() + "ms " + getServer().getGameUpdater().getLastDoCleanupDuration() + "ms " + getServer().getGameUpdater().getLastExecuteWalkToActionsDuration() + "ms " + newLine +
+				"Game Updater: " + getServer().getGameUpdater().getLastWorldUpdateDuration() + "ms " + getServer().getGameUpdater().getLastProcessPlayersDuration() + "ms " + getServer().getGameUpdater().getLastProcessNpcsDuration() + "ms " + getServer().getGameUpdater().getLastProcessMessageQueuesDuration() + "ms " + getServer().getGameUpdater().getLastUpdateClientsDuration() + "ms " + getServer().getGameUpdater().getLastDoCleanupDuration() + "ms " + getServer().getGameUpdater().getLastExecuteWalkToActionsDuration() + "ms " + newLine +
 				"Events: " + countAllEvents + ", NPCs: " + getServer().getWorld().getNpcs().size() + ", Players: " + getServer().getWorld().getPlayers().size() + ", Shops: " + getServer().getWorld().getShops().size() + newLine +
 				"Threads: " + Thread.activeCount() + ", Total: " + totalMemory + ", Free: " +  freeMemory + ", Used: " + usedMemory + newLine +
 				/*"Player Atk Map: " + getWorld().getPlayersUnderAttack().size() + ", NPC Atk Map: " + getWorld().getNpcsUnderAttack().size() + ", Quests: " + getWorld().getQuests().size() + ", Mini Games: " + getWorld().getMiniGames().size() + newLine +*/

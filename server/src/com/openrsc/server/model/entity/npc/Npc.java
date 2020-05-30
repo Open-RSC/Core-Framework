@@ -6,8 +6,6 @@ import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.ImmediateEvent;
-import com.openrsc.server.external.ItemDefinition;
-import com.openrsc.server.external.ItemDropDef;
 import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.Point;
@@ -332,23 +330,23 @@ public class Npc extends Mob {
 		// No Bones
 		int bones = ItemId.NOTHING.id();
 		// Big Bones
-		if (getWorld().npcDrops.isBigBoned(this.getID())) {
+		if (getWorld().getNpcDrops().isBigBoned(this.getID())) {
 			bones = ItemId.BIG_BONES.id();
 		}
 		// Bat
-		else if (getWorld().npcDrops.isBatBoned(this.getID())) {
+		else if (getWorld().getNpcDrops().isBatBoned(this.getID())) {
 			bones = ItemId.BAT_BONES.id();
 		}
 		// Dragon
-		else if (getWorld().npcDrops.isDragon(this.getID())) {
+		else if (getWorld().getNpcDrops().isDragon(this.getID())) {
 			bones = ItemId.DRAGON_BONES.id();
 		}
 		// Demon
-		else if (getWorld().npcDrops.isDemon(this.getID())) {
+		else if (getWorld().getNpcDrops().isDemon(this.getID())) {
 			bones = ItemId.ASHES.id();
 		}
 		// Not boneless
-		else if(!getWorld().npcDrops.isBoneless(this.getID())) {
+		else if(!getWorld().getNpcDrops().isBoneless(this.getID())) {
 			bones = ItemId.BONES.id();
 		}
 		if (bones != ItemId.NOTHING.id()) {
@@ -359,7 +357,7 @@ public class Npc extends Mob {
 
 		/* 3. Get the rest of the mob's drops. */
 
-		DropTable drops = getWorld().npcDrops.getDropTable(this.getID());
+		DropTable drops = getWorld().getNpcDrops().getDropTable(this.getID());
 		if (drops == null) {
 			// Some enemies have no drops
 			deathListeners.clear();
@@ -416,8 +414,8 @@ public class Npc extends Mob {
 
 	private void calculateCustomKingBlackDragonDrop(Player owner) {
 		boolean ringOfWealth = owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id());
-		if (getWorld().npcDrops.getKbdTableCustom().rollAccess(this.getID(), ringOfWealth)) {
-			ArrayList<Item> kbdSpecificLoot = getWorld().npcDrops.getKbdTableCustom().rollItem(ringOfWealth, owner);
+		if (getWorld().getNpcDrops().getKbdTableCustom().rollAccess(this.getID(), ringOfWealth)) {
+			ArrayList<Item> kbdSpecificLoot = getWorld().getNpcDrops().getKbdTableCustom().rollItem(ringOfWealth, owner);
 			if (kbdSpecificLoot != null) {
 				for (Item item : kbdSpecificLoot) {
 					GroundItem groundItem = new GroundItem(getWorld(), item.getCatalogId(), getX(), getY(), item.getAmount(), owner);
@@ -442,10 +440,10 @@ public class Npc extends Mob {
 		boolean ringOfWealth = owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_WEALTH.id());
 
 		ArrayList<Item> rare = null;
-		if (getWorld().npcDrops.getUltraRareDropTable().rollAccess(this.getID(), ringOfWealth)) {
-			rare = getWorld().npcDrops.getUltraRareDropTable().rollItem(ringOfWealth, owner);
-		} else if (getWorld().npcDrops.getRareDropTable().rollAccess(this.getID(), ringOfWealth)) {
-			rare = getWorld().npcDrops.getRareDropTable().rollItem(ringOfWealth, owner);
+		if (getWorld().getNpcDrops().getUltraRareDropTable().rollAccess(this.getID(), ringOfWealth)) {
+			rare = getWorld().getNpcDrops().getUltraRareDropTable().rollItem(ringOfWealth, owner);
+		} else if (getWorld().getNpcDrops().getRareDropTable().rollAccess(this.getID(), ringOfWealth)) {
+			rare = getWorld().getNpcDrops().getRareDropTable().rollItem(ringOfWealth, owner);
 		}
 
 		if (rare != null) {

@@ -10,23 +10,24 @@ import java.util.Map;
 
 public class NpcDrops {
 
-	private ServerConfiguration config;
+	private final World world;
+	private final ServerConfiguration config;
 
-	private HashMap<Integer, DropTable> npcDrops;
-	private HashSet<Integer> bonelessNpcs;
-	private HashSet<Integer> batBonedNpcs;
-	private HashSet<Integer> bigBoneNpcs;
-	private HashSet<Integer> dragonNpcs;
-	private HashSet<Integer> ashesNpcs;
+	private final HashMap<Integer, DropTable> npcDrops;
+	private final HashSet<Integer> bonelessNpcs;
+	private final HashSet<Integer> batBonedNpcs;
+	private final HashSet<Integer> bigBoneNpcs;
+	private final HashSet<Integer> dragonNpcs;
+	private final HashSet<Integer> ashesNpcs;
 
 	private DropTable herbDropTable;
 	private DropTable rareDropTable;
 	private DropTable megaRareDropTable;
 	private DropTable ultraRareDropTable;
-	
 	private DropTable kbdTableCustom;
 
-	public NpcDrops(World world) {
+	public NpcDrops(final World world) {
+		this.world = world;
 		this.config = world.getServer().getConfig();
 
 		this.npcDrops = new HashMap<>();
@@ -35,7 +36,9 @@ public class NpcDrops {
 		this.bigBoneNpcs = new HashSet<>();
 		this.dragonNpcs = new HashSet<>();
 		this.ashesNpcs = new HashSet<>();
+	}
 
+	public void load() {
 		createHerbDropTable();
 
 		if (config.WANT_NEW_RARE_DROP_TABLES) {
@@ -59,19 +62,34 @@ public class NpcDrops {
 		}
 	}
 
-	public boolean isBoneless(Integer npc) {
+	public void unload() {
+		npcDrops.clear();
+		bonelessNpcs.clear();
+		batBonedNpcs.clear();
+		bigBoneNpcs.clear();
+		dragonNpcs.clear();
+		ashesNpcs.clear();
+
+		herbDropTable = null;
+		rareDropTable = null;
+		megaRareDropTable = null;
+		ultraRareDropTable = null;
+		kbdTableCustom = null;
+	}
+
+	public boolean isBoneless(final Integer npc) {
 		return this.bonelessNpcs.contains(npc);
 	}
 
-	public boolean isDemon(Integer npc) {
+	public boolean isDemon(final Integer npc) {
 		return this.ashesNpcs.contains(npc);
 	}
 
-	public boolean isDragon(Integer npc) {
+	public boolean isDragon(final Integer npc) {
 		return this.dragonNpcs.contains(npc);
 	}
 
-	public boolean isBigBoned(Integer npc) {
+	public boolean isBigBoned(final Integer npc) {
 		return this.bigBoneNpcs.contains(npc);
 	}
 
@@ -93,6 +111,10 @@ public class NpcDrops {
 
 	public DropTable getKbdTableCustom() {
 		return kbdTableCustom;
+	}
+
+	public World getWorld() {
+		return world;
 	}
 
 	private void createHerbDropTable() {

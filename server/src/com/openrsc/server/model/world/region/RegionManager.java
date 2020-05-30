@@ -25,6 +25,20 @@ public class RegionManager {
 		this.regions = new ConcurrentHashMap<>();
 	}
 
+	public void load() {
+		// TODO: The WorldLoader.loadWorld() should accept a RegionManager as an argument and place regions there.
+		getWorld().getWorldLoader().loadWorld();
+	}
+
+	public void unload() {
+		for (final ConcurrentHashMap<Integer, Region> yRegionList : regions.values()) {
+			for (final Region region : yRegionList.values()) {
+				region.unload();
+			}
+		}
+		regions.clear();
+	}
+
 	/**
 	 * Gets the local players around an entity.
 	 *

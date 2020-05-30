@@ -18,8 +18,12 @@ public class ClanManager {
 		return world;
 	}
 
+	public ArrayList<Clan> getClans() {
+		return clans;
+	}
+
 	private static class ClanRankComparator implements Comparator<Clan> {
-		public int compare(Clan o1, Clan o2) {
+		public int compare(final Clan o1, final Clan o2) {
 			if (o1.getClanPoints() == o2.getClanPoints()) {
 				return o1.getClanName().compareTo(o2.getClanName());
 			}
@@ -32,7 +36,8 @@ public class ClanManager {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
-	public static ArrayList<Clan> clans = new ArrayList<>();
+
+	private final ArrayList<Clan> clans = new ArrayList<>();
 
 	private final World world;
 
@@ -41,25 +46,31 @@ public class ClanManager {
 	}
 
 	public void createClan(Clan clan) {
-		clans.add(clan);
+		getClans().add(clan);
 		databaseCreateClan(clan);
 	}
 
 	public void deleteClan(Clan clan) {
 		databaseDeleteClan(clan);
-		clans.remove(clan);
+		getClans().remove(clan);
 	}
 
 	public void initialize() {
 		if (getWorld().getServer().getConfig().WANT_CLANS) {
 			LOGGER.info("Loading Clans...");
 			loadClans();
-			LOGGER.info("Loaded " + clans.size() + " clans");
+			LOGGER.info("Loaded " + getClans().size() + " clans");
 		}
 	}
 
-	public Clan getClan(String exist) {
-		for (Clan t : clans) {
+	public void uninitialize() {
+		if (getWorld().getServer().getConfig().WANT_CLANS) {
+			getClans().clear();
+		}
+	}
+
+	public Clan getClan(final String exist) {
+		for (final Clan t : getClans()) {
 			if (t.getClanName().equalsIgnoreCase(exist))
 				return t;
 			else if (t.getClanTag().equalsIgnoreCase(exist))
@@ -68,9 +79,9 @@ public class ClanManager {
 		return null;
 	}
 
-	public void checkAndAttachToClan(Player player) {
-		for (Clan p : clans) {
-			ClanPlayer clanMember = p.getPlayer(player.getUsername());
+	public void checkAndAttachToClan(final Player player) {
+		for (final Clan p : getClans()) {
+			final ClanPlayer clanMember = p.getPlayer(player.getUsername());
 			if (clanMember != null) {
 				clanMember.setPlayerReference(player);
 				player.setClan(p);
@@ -81,8 +92,8 @@ public class ClanManager {
 		}
 	}
 
-	public void checkAndUnattachFromClan(Player player) {
-		for (Clan p : clans) {
+	public void checkAndUnattachFromClan(final Player player) {
+		for (Clan p : getClans()) {
 			ClanPlayer cp = p.getPlayer(player.getUsername());
 			if (cp != null) {
 				cp.setPlayerReference(null);
@@ -93,12 +104,12 @@ public class ClanManager {
 	}
 
 	public void saveClans() {
-		for (Clan t : clans) {
+		for (final Clan t : getClans()) {
 			saveClanChanges(t);
 		}
 	}
 
-	public void saveClanChanges(Clan clan) {
+	public void saveClanChanges(final Clan clan) {
 		updateClan(clan);
 
 		deleteClanPlayers(clan);
@@ -111,7 +122,7 @@ public class ClanManager {
 		try {
 			ClanDef[] clansDefs = getWorld().getServer().getDatabase().getClans();
 			for (ClanDef clanDef : clansDefs) {
-				Clan clan = new Clan(getWorld());
+				final Clan clan = new Clan(getWorld());
 				clan.setClanID(clanDef.id);
 				clan.setClanName(clanDef.name);
 				clan.setClanTag(clanDef.tag);
@@ -137,22 +148,22 @@ public class ClanManager {
 
 				clan.setPlayers(clanMembers);
 
-				clans.add(clan);
+				getClans().add(clan);
 			}
-		} catch (GameDatabaseException ex) {
+		} catch (final GameDatabaseException ex) {
 			LOGGER.error("Unable to load clans.");
 			LOGGER.catching(ex);
 		}
 	}
 
-	private void databaseCreateClan(Clan clan) {
+	private void databaseCreateClan(final Clan clan) {
 		try {
 			clan.setClanID(getWorld().getServer().getDatabase()
 				.newClan(clan.getClanName(), clan.getClanTag(), clan.getLeader().getUsername()));
 
 			final ArrayList<ClanMember> clanMembers = new ArrayList<>();
 
-			for (ClanPlayer member : clan.getPlayers()) {
+			for (final ClanPlayer member : clan.getPlayers()) {
 				ClanMember clanMember = new ClanMember();
 				clanMember.username = member.getUsername();
 				clanMember.rank = member.getRank().getRankIndex();
@@ -164,26 +175,26 @@ public class ClanManager {
 			getWorld().getServer().getDatabase().saveClanMembers(clan.getClanID(),
 				clanMembers.toArray(new ClanMember[clanMembers.size()]));
 
-		} catch (GameDatabaseException ex) {
+		} catch (final GameDatabaseException ex) {
 			LOGGER.error("Error creating clan");
 			LOGGER.catching(ex);
 		}
 	}
 
-	private void databaseDeleteClan(Clan clan) {
+	private void databaseDeleteClan(final Clan clan) {
 		try {
 			getWorld().getServer().getDatabase().deleteClan(clan.getClanID());
-		} catch (GameDatabaseException ex) {
+		} catch (final GameDatabaseException ex) {
 			LOGGER.error("Error deleting clan");
 			LOGGER.catching(ex);
 		}
 	}
 
-	private void saveClanPlayers(Clan clan) {
+	private void saveClanPlayers(final Clan clan) {
 		try {
-			ArrayList<ClanMember> clanMembers = new ArrayList<>();
-			for (ClanPlayer member : clan.getPlayers()) {
-				ClanMember clanMember = new ClanMember();
+			final ArrayList<ClanMember> clanMembers = new ArrayList<>();
+			for (final ClanPlayer member : clan.getPlayers()) {
+				final ClanMember clanMember = new ClanMember();
 				clanMember.username = member.getUsername();
 				clanMember.rank = member.getRank().getRankIndex();
 				clanMember.kills = member.getKills();
@@ -195,24 +206,24 @@ public class ClanManager {
 			getWorld().getServer().getDatabase()
 				.saveClanMembers(clan.getClanID(), clanMembers.toArray(new ClanMember[clanMembers.size()]));
 
-		} catch (GameDatabaseException e) {
+		} catch (final GameDatabaseException e) {
 			LOGGER.error("Unable to save clan players for clan: " + clan.getClanName());
 			LOGGER.catching(e);
 		}
 	}
 
-	private void deleteClanPlayers(Clan clan) {
+	private void deleteClanPlayers(final Clan clan) {
 		try {
 			getWorld().getServer().getDatabase().deleteClanMembers(clan.getClanID());
-		} catch (GameDatabaseException e) {
+		} catch (final GameDatabaseException e) {
 			LOGGER.error("Unable to delete players from clan: " + clan.getClanName());
 			LOGGER.catching(e);
 		}
 	}
 
-	private void updateClan(Clan clan) {
+	private void updateClan(final Clan clan) {
 		try {
-			ClanDef clanDef = new ClanDef();
+			final ClanDef clanDef = new ClanDef();
 			clanDef.id = clan.getClanID();
 			clanDef.name = clan.getClanName();
 			clanDef.tag = clan.getClanTag();
@@ -223,24 +234,22 @@ public class ClanManager {
 			clanDef.clan_points = clan.getClanPoints();
 
 			getWorld().getServer().getDatabase().updateClan(clanDef);
-		} catch (GameDatabaseException e) {
+		} catch (final GameDatabaseException e) {
 			LOGGER.error("Unable to update clan: " + clan.getClanName());
 			LOGGER.catching(e);
 		}
 	}
 
-	public void updateClanRankPlayer(ClanPlayer cp) {
+	public void updateClanRankPlayer(final ClanPlayer cp) {
 		try {
-			ClanMember clanMember = new ClanMember();
+			final ClanMember clanMember = new ClanMember();
 			clanMember.username = cp.getUsername();
 			clanMember.rank = cp.getRank().getRankIndex();
 
 			getWorld().getServer().getDatabase().updateClanMember(clanMember);
-		} catch (GameDatabaseException e) {
+		} catch (final GameDatabaseException e) {
 			LOGGER.error("Unable to update rank for clan player: " + cp.getUsername());
 			LOGGER.catching(e);
 		}
-
 	}
-
 }

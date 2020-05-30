@@ -56,33 +56,73 @@ public class RSCPacketFilter {
 
 	public RSCPacketFilter(final Server server) {
 		this.server = server;
-		connectionAttempts = new HashMap<String, ArrayList<Long>>();
-		loginAttempts = new HashMap<String, ArrayList<Long>>();
-		connections = new HashMap<String, ArrayList<Channel>>();
-		adminHosts = new ArrayList<String>();
-		packets = new HashMap<Channel, ArrayList<Long>>();
-		ipBans = new HashMap<String, Long>();
-		loggedInCount = new HashMap<String, Integer>();
-		passwordAttempts = new HashMap<String, ArrayList<Long>>();
+		this.connectionAttempts = new HashMap<>();
+		this.loginAttempts = new HashMap<>();
+		this.connections = new HashMap<>();
+		this.adminHosts = new ArrayList<>();
+		this.packets = new HashMap<>();
+		this.ipBans = new HashMap<>();
+		this.loggedInCount = new HashMap<>();
+		this.passwordAttempts = new HashMap<>();
+	}
+
+	public void load() {
+
+	}
+
+	public void unload() {
+		synchronized (connectionAttempts) {
+			connectionAttempts.clear();
+		}
+
+		synchronized (loginAttempts) {
+			loginAttempts.clear();
+		}
+
+		synchronized (connections) {
+			loginAttempts.clear();
+		}
+
+		synchronized (adminHosts) {
+			loginAttempts.clear();
+		}
+
+		synchronized (packets) {
+			loginAttempts.clear();
+		}
+
+		synchronized (ipBans) {
+			loginAttempts.clear();
+		}
+
+		synchronized (loggedInCount) {
+			loginAttempts.clear();
+		}
+
+		synchronized (passwordAttempts) {
+			loginAttempts.clear();
+		}
 	}
 
 	public void ipBanHost(final String hostAddress, final long until, String reason) {
 		// Do not IP ban afmans!
 		if(isHostAdmin(hostAddress)) {
 			String time = (until == -1) ? "permanently" : "until " + DateFormat.getInstance().format(until);
-			if (until != 0)
+			if (until != 0) {
 				LOGGER.info("Won't IP ban Afman " + hostAddress + ", would have been banned " + time + " for " + reason);
-			else
+			} else {
 				LOGGER.info("Won't un-IP ban Afman " + hostAddress + " for " + reason);
+			}
 			return;
 		}
 
 		synchronized(ipBans) {
 			String time = (until == -1) ? " permanently" : " until " + DateFormat.getInstance().format(until);
-			if (until != 0)
+			if (until != 0) {
 				LOGGER.info("IP Banned " + hostAddress + time + " for " + reason);
-			else
+			} else {
 				LOGGER.info("un-IP Banned " + hostAddress + time + " for " + reason);
+			}
 			ipBans.put(hostAddress, until);
 		}
 	}

@@ -41,7 +41,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public final class World implements SimpleSubscriber<FishingTrawler> {
+public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	/**
 	 * The asynchronous logger.
@@ -62,7 +62,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public boolean EVENT = false;
 	public int EVENT_X = -1, EVENT_Y = -1;
-	public int EVENT_COMBAT_MIN, EVENT_COMBAT_MAX;
+	public int EVENT_COMBAT_MIN = -1, EVENT_COMBAT_MAX = -1;
 	public int membersWildStart = 48;
 	public int membersWildMax = 56;
 	public int godSpellsStart = 1;
@@ -74,7 +74,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	private final EntityList<Player> players;
 	private final List<QuestInterface> quests;
 	private final List<MiniGameInterface> minigames;
-	private final List<Shop> shopData;
 	private final List<Shop> shops;
 	private final ConcurrentMap<TrawlerBoat, FishingTrawler> fishingTrawler;
 	private final PartyManager partyManager;
@@ -87,7 +86,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	private Queue<GlobalMessage> globalMessageQueue = new LinkedList<GlobalMessage>();
 
-	public NpcDrops npcDrops;
+	private NpcDrops npcDrops;
 
 	/**
 	 * Double ended queue to store snapshots into
@@ -98,13 +97,12 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 
 	public World(final Server server) {
 		this.server = server;
-		this.npcs = new EntityList<Npc>(4000);
+		this.npcs = new EntityList<>(4000);
 		this.npcPositions = new HashMap<>();
 		this.npcDrops = new NpcDrops(this);
 		this.players = new EntityList<>(2000);
 		this.quests = Collections.synchronizedList( new LinkedList<>() );
 		this.minigames = Collections.synchronizedList( new LinkedList<>() );
-		this.shopData = Collections.synchronizedList( new ArrayList<>() );
 		this.shops = Collections.synchronizedList( new ArrayList<>() );
 		this.wildernessIPTracker = new ThreadSafeIPTracker<>();
 		this.playerUnderAttackMap = new ConcurrentHashMap<>();
@@ -119,58 +117,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		this.market = getServer().getConfig().SPAWN_AUCTION_NPCS ? new Market(this) : null;
 	}
 
-	private void shutdownCheck() {
-		getServer().getGameEventHandler().add(new SingleEvent(this, null, 1000, "Shutdown Check") {
-			public void action() {
-				int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
-				if (getServer().getConfig().AUTO_SERVER_RESTART) {
-					if ((int) ((currSecond / 3600.0) % 24) == getServer().getConfig().RESTART_HOUR
-						&& (int) ((currSecond / 60.0) % 60) >= getServer().getConfig().RESTART_MINUTE) {
-						final int seconds = getServer().getConfig().RESTART_DELAY;
-						final int minutes = seconds / 60;
-						final int remainder = seconds % 60;
-						if (getServer().restart(seconds)) {
-							for (Player player : getPlayers()) {
-								ActionSender.startShutdown(player, seconds);
-							}
-						}
-					}
-				}
-				if (getServer().getConfig().AUTO_SERVER_RESTART_2) {
-					if ((int) ((currSecond / 3600.0) % 24) == getServer().getConfig().RESTART_HOUR_2
-						&& (int) ((currSecond / 60.0) % 60) >= getServer().getConfig().RESTART_MINUTE_2) {
-						final int seconds = getServer().getConfig().RESTART_DELAY_2;
-						final int minutes = seconds / 60;
-						final int remainder = seconds % 60;
-						if (getServer().restart(seconds)) {
-							for (Player player : getWorld().getPlayers()) {
-								ActionSender.startShutdown(player, seconds);
-							}
-						}
-					}
-				}
-				shutdownCheck();
-			}
-		});
-	}
-
-	public void restartCommand() {
-		getServer().getGameEventHandler().add(new SingleEvent(this, null, 1000, "Restart Command") {
-			public void action() {
-				final int currSecond = (int) (System.currentTimeMillis() / 1000.0 - (4 * 3600));
-				final int seconds = 10;
-				final int minutes = seconds / 60;
-				final int remainder = seconds % 60;
-				if (getServer().restart(seconds)) {
-					for (Player player : getPlayers()) {
-						ActionSender.startShutdown(player, seconds);
-					}
-				}
-				restartCommand();
-			}
-		});
-	}
-
 	/**
 	 * Returns double-ended queue for snapshots.
 	 */
@@ -183,14 +129,6 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	 */
 	public void addEntryToSnapshots(Snapshot snapshot) {
 		getSnapshots().offerFirst(snapshot);
-	}
-
-	public void addShopData(Shop... shop) {
-		shopData.addAll(Arrays.asList(shop));
-	}
-
-	public void clearShopData() {
-		shopData.clear();
 	}
 
 	public int countNpcs() {
@@ -392,7 +330,7 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 	}
 
 	public boolean isLoggedIn(final long usernameHash) {
-		Player friend = getPlayer(usernameHash);
+		final Player friend = getPlayer(usernameHash);
 		if (friend != null) {
 			return friend.loggedIn();
 		}
@@ -403,24 +341,60 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		try {
 			getClanManager().initialize();
 			getPartyManager().initialize();
-
-			if(getMarket() != null) {
+			if (getMarket() != null) {
 				getMarket().start();
 			}
-
-			getWorldLoader().loadWorld();
+			getRegionManager().load();
 			getWorldLoader().getWorldPopulator().populateWorld();
-			shutdownCheck();
-			//AchievementSystem.loadAchievements();
-			// getWorld().getServer().getEventHandler().add(new WildernessCycleEvent());
-			//setFishingTrawler(new FishingTrawler());
-			//getWorld().getServer().getEventHandler().add(getFishingTrawler());
-			if(getMarket() != null) {
-				market.start();
-			}
-		} catch (Exception e) {
+			getNpcDrops().load();
+		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
+	}
+
+	public void unload() {
+		LOGGER.info("Saving clans for shutdown");
+		if (getServer().getConfig().WANT_CLANS) {
+			getServer().getWorld().getClanManager().saveClans();
+		}
+		LOGGER.info("Processing Market for shutdown");
+		if (getServer().getWorld().getMarket() != null) {
+			// Finish processing world market.
+			getServer().getWorld().getMarket().run();
+		}
+		LOGGER.info("Saving players for shutdown...");
+		for (final Player p : getServer().getWorld().getPlayers()) {
+			p.unregister(true, "Server shutting down.");
+		}
+		LOGGER.info("Players saved");
+
+		getClanManager().uninitialize();
+		getPartyManager().uninitialize();
+		getWorldLoader().unloadWorld();
+		if (getMarket() != null) {
+			getMarket().stop();
+		}
+		getRegionManager().unload();
+		getNpcDrops().unload();
+		npcs.clear();
+		npcPositions.clear();
+		players.clear();
+		snapshots.clear();
+		wildernessIPTracker.clear();
+		playerUnderAttackMap.clear();
+		npcUnderAttackMap.clear();
+		globalMessageQueue.clear();
+		fishingTrawler.clear();
+
+		EVENT = false;
+		EVENT_X = -1;
+		EVENT_Y = -1;
+		EVENT_COMBAT_MIN = -1;
+		EVENT_COMBAT_MAX = -1;
+		membersWildStart = 48;
+		membersWildMax = 56;
+		godSpellsStart = 1;
+		godSpellsMax = 5;
 	}
 
 	public void registerGameObject(final GameObject o) {
@@ -920,6 +894,10 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 		return clanManager;
 	}
 
+	public synchronized NpcDrops getNpcDrops() {
+		return npcDrops;
+	}
+
 	public boolean isTelegrabEnabled() {
 		return telegrabEnabled;
 	}
@@ -954,5 +932,9 @@ public final class World implements SimpleSubscriber<FishingTrawler> {
 				npcPositions.remove(key);
 			}
 		}
+	}
+
+	@Override
+	public void run() {
 	}
 }

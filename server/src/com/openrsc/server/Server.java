@@ -17,6 +17,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.*;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.rsc.CollisionFlag;
@@ -33,9 +34,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -49,14 +50,14 @@ public class Server implements Runnable {
 	 */
 	private static final Logger LOGGER;
 
-	public static final ArrayList<Server> serversList;
+	public static final ConcurrentHashMap<String, Server> serversList = new ConcurrentHashMap<>();
 
 	private final GameStateUpdater gameUpdater;
 	private final GameEventHandler gameEventHandler;
 	private final DiscordService discordService;
 	private final LoginExecutor loginExecutor;
 	private final ServerConfiguration config;
-	private final ScheduledExecutorService scheduledExecutor;
+	private ScheduledExecutorService scheduledExecutor;
 	private final PluginHandler pluginHandler;
 	private final CombatScriptLoader combatScriptLoader;
 	private final EntityHandler entityHandler;
@@ -69,11 +70,14 @@ public class Server implements Runnable {
 	private final World world;
 	private final String name;
 
-	private GameTickEvent updateEvent;
+	private GameTickEvent shutdownEvent;
 	private ChannelFuture serverChannel;
+	private EventLoopGroup workerGroup;
+	private EventLoopGroup bossGroup;
 
 	private volatile Boolean running = false;
-	private volatile boolean initialized = false;
+	private boolean restarting = false;
+	private boolean shuttingDown = false;
 
 	private long serverStartedTime = 0;
 	private long lastIncomingPacketsDuration = 0;
@@ -99,12 +103,11 @@ public class Server implements Runnable {
 	static {
 		try {
 			Thread.currentThread().setName("InitThread");
-			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
 			// Enables asynchronous, garbage-free logging.
+			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
 			System.setProperty("Log4jContextSelector",
 				"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
-			serversList = new ArrayList<>();
 			LOGGER = LogManager.getLogger();
 		} catch (final Throwable t) {
 			throw new ExceptionInInitializerError(t);
@@ -114,7 +117,6 @@ public class Server implements Runnable {
 	public static final Server startServer(final String confName) throws IOException {
 		final long startTime = System.currentTimeMillis();
 		final Server server = new Server(confName);
-
 		if (!server.isRunning()) {
 			server.start();
 		}
@@ -123,6 +125,26 @@ public class Server implements Runnable {
 		LOGGER.info(server.getName() + " started in " + bootTime + "ms");
 
 		return server;
+	}
+
+	public static boolean closeProcess(final int seconds, final String message) {
+		for (final Server server : serversList.values()) {
+			if (server.shutdownEvent != null) {
+				return false;
+			}
+		}
+
+		for (final Server server : serversList.values()) {
+			if (message != null) {
+				for (final Player playerToUpdate : server.getWorld().getPlayers()) {
+					ActionSender.sendBox(playerToUpdate, message, false);
+				}
+			}
+
+			server.shutdown(seconds);
+		}
+
+		return true;
 	}
 
 	public static void main(final String[] args) {
@@ -145,6 +167,19 @@ public class Server implements Runnable {
 				}
 			}
 		}
+
+		while (serversList.size() > 0) {
+			try {
+				Thread.sleep(1000);
+			} catch (final InterruptedException e) { }
+
+			for (final Server server : serversList.values()) {
+				server.checkShutdown();
+			}
+		}
+
+		LOGGER.info("Exiting server process...");
+		System.exit(0);
 	}
 
 	public Server(final String configFile) throws IOException {
@@ -170,7 +205,10 @@ public class Server implements Runnable {
 				break;
 		}
 
-		discordService = new DiscordService(this);
+		final boolean wantDiscordBot = getConfig().WANT_DISCORD_BOT;
+		final boolean wantDiscordAuctionUpdates = getConfig().WANT_DISCORD_AUCTION_UPDATES;
+		final boolean wantDiscordMonitoringUpdates = getConfig().WANT_DISCORD_MONITORING_UPDATES;
+		discordService = wantDiscordBot || wantDiscordAuctionUpdates || wantDiscordMonitoringUpdates ? new DiscordService(this) : null;
 		loginExecutor = new LoginExecutor(this);
 		world = new World(this);
 		gameEventHandler = new GameEventHandler(this);
@@ -178,146 +216,212 @@ public class Server implements Runnable {
 		gameLogger = new MySqlGameLogger(this, (MySqlGameDatabase)database);
 		entityHandler = new EntityHandler(this);
 		achievementSystem = new AchievementSystem(this);
-		scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName() + " : GameThread").build());
 
 		maxItemId = 0;
 	}
 
-	private void initialize() {
-		try {
-			// TODO: We need an uninitialize process. Unloads all of these classes. When this is written the initialize() method should synchronize on initialized like run does with running.
-
-			/*
-			// Used for pathfinding view debugger
-			if (PathValidation.DEBUG) {
-				panel.setLayout(layout);
-				frame.add(panel);
-				frame.setSize(600, 600);
-				frame.setVisible(true);
-			}*/
-
-			LOGGER.info("Connecting to Database...");
-			try {
-				getDatabase().open();
-			} catch (final Exception ex) {
-				LOGGER.catching(ex);
-				System.exit(1);
+	public void checkShutdown() {
+		if (isShuttingDown()) {
+			stop();
+			if (isRestarting()) {
+				start();
+				restarting = false;
 			}
-			LOGGER.info("\t Database Connection Completed");
-
-			LOGGER.info("Loading Game Definitions...");
-			getEntityHandler().load();
-			LOGGER.info("\t Definitions Completed");
-
-			LOGGER.info("Loading Plugins...");
-			getPluginHandler().load();
-			LOGGER.info("\t Plugins Completed");
-
-			LOGGER.info("Loading Combat Scripts...");
-			getCombatScriptLoader().load();
-			LOGGER.info("\t Combat Scripts Completed");
-
-			LOGGER.info("Loading World...");
-			getWorld().load();
-			LOGGER.info("\t World Completed");
-
-			/*LOGGER.info("Loading Achievements...");
-			getAchievementSystem().load();
-			LOGGER.info("\t Achievements Completed");*/
-
-			LOGGER.info("Profiling Completed");
-
-			maxItemId = getDatabase().getMaxItemID();
-
-			LOGGER.info("Set max item ID to : " + maxItemId);
-
-			//Never run ResourceLeakDetector PARANOID in production.
-			//ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
-			final EventLoopGroup bossGroup = new NioEventLoopGroup(0, new NamedThreadFactory(getName() + " : IOBossThread"));
-			final EventLoopGroup workerGroup = new NioEventLoopGroup(0, new NamedThreadFactory(getName() + " : IOWorkerThread"));
-			final ServerBootstrap bootstrap = new ServerBootstrap();
-			final Server gameServer = this;
-
-			bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(
-				new ChannelInitializer<SocketChannel>() {
-					@Override
-					protected void initChannel(final SocketChannel channel) {
-						final ChannelPipeline pipeline = channel.pipeline();
-						pipeline.addLast("decoder", new RSCProtocolDecoder());
-						pipeline.addLast("encoder", new RSCProtocolEncoder());
-						pipeline.addLast("handler", new RSCConnectionHandler(gameServer));
-					}
-				}
-			);
-
-			bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
-			bootstrap.childOption(ChannelOption.SO_KEEPALIVE, false);
-			bootstrap.childOption(ChannelOption.SO_RCVBUF, 10000);
-			bootstrap.childOption(ChannelOption.SO_SNDBUF, 10000);
-			try {
-				getPluginHandler().handlePlugin(getWorld(), "Startup", new Object[]{});
-				serverChannel = bootstrap.bind(new InetSocketAddress(getConfig().SERVER_PORT)).sync();
-				LOGGER.info("Game world is now online on port {}!", box(getConfig().SERVER_PORT));
-			} catch (final InterruptedException e) {
-				LOGGER.catching(e);
-			}
-
-			initialized = true;
-
-		} catch (final Throwable t) {
-			LOGGER.catching(t);
-			System.exit(1);
+			shuttingDown = false;
 		}
 	}
 
 	public void start() {
 		synchronized (running) {
-			if (!isInitialized()) {
-				initialize();
-			}
+			try {
+				if (isRunning()) {
+					return;
+				}
 
-			running = true;
-			serversList.add(this);
-			lastTickTimestamp = serverStartedTime = System.currentTimeMillis();
-			scheduledExecutor.scheduleAtFixedRate(this, 0, 10, TimeUnit.MILLISECONDS);
+				scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName() + " : GameThread").build());
+				scheduledExecutor.scheduleAtFixedRate(this, 0, 10, TimeUnit.MILLISECONDS);
 
-			loginExecutor.start();
-			boolean wantDiscordBot = getConfig().WANT_DISCORD_BOT;
-			boolean wantDiscordAuctionUpdates = getConfig().WANT_DISCORD_AUCTION_UPDATES;
-			boolean wantDiscordMonitoringUpdates = getConfig().WANT_DISCORD_MONITORING_UPDATES;
-			if (wantDiscordBot || wantDiscordAuctionUpdates || wantDiscordMonitoringUpdates) {
-				discordService.start();
+				// Do not allow two servers to be started with the same name
+				// We will bypass that if we are restarting because we never removed this server from the list.
+				if (!isRestarting() && serversList.get(this.getName()) != null) {
+					throw new IllegalArgumentException("Can not initialize. Server " + this.getName() + " already exists.");
+				}
+
+				/*
+				// Used for pathfinding view debugger
+				if (PathValidation.DEBUG) {
+					panel.setLayout(layout);
+					frame.add(panel);
+					frame.setSize(600, 600);
+					frame.setVisible(true);
+				}*/
+
+				LOGGER.info("Connecting to Database...");
+				try {
+					getDatabase().open();
+				} catch (final Exception ex) {
+					LOGGER.catching(ex);
+					System.exit(1);
+				}
+				LOGGER.info("\t Database Connection Completed");
+
+				LOGGER.info("Loading Game Definitions...");
+				getEntityHandler().load();
+				LOGGER.info("\t Definitions Completed");
+
+				LOGGER.info("Loading Game State Updater...");
+				getGameUpdater().load();
+				LOGGER.info("\t Game State Updater Completed");
+
+				LOGGER.info("Loading Game Event Handler...");
+				getGameEventHandler().load();
+				LOGGER.info("\t Game Event Handler Completed");
+
+				LOGGER.info("Loading Plugins...");
+				getPluginHandler().load();
+				LOGGER.info("\t Plugins Completed");
+
+				LOGGER.info("Loading Combat Scripts...");
+				getCombatScriptLoader().load();
+				LOGGER.info("\t Combat Scripts Completed");
+
+				LOGGER.info("Loading World...");
+				getWorld().load();
+				LOGGER.info("\t World Completed");
+
+				/*LOGGER.info("Loading Achievements...");
+				getAchievementSystem().load();
+				LOGGER.info("\t Achievements Completed");*/
+
+				LOGGER.info("Loading LoginExecutor...");
+				getLoginExecutor().start();
+				LOGGER.info("\t LoginExecutor Completed");
+
+				if (getDiscordService() != null) {
+					LOGGER.info("Loading DiscordService...");
+					getDiscordService().start();
+					LOGGER.info("\t DiscordService Completed");
+				}
+
+				LOGGER.info("Loading GameLogger...");
+				getGameLogger().start();
+				LOGGER.info("\t GameLogger Completed");
+
+				LOGGER.info("Loading Packet Filter...");
+				getPacketFilter().load();
+				LOGGER.info("\t Packet Filter Completed");
+
+				maxItemId = getDatabase().getMaxItemID();
+
+				LOGGER.info("Set max item ID to : " + maxItemId);
+
+				//Never run ResourceLeakDetector PARANOID in production.
+				//ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
+				bossGroup = new NioEventLoopGroup(0, new NamedThreadFactory(getName() + " : IOBossThread"));
+				workerGroup = new NioEventLoopGroup(0, new NamedThreadFactory(getName() + " : IOWorkerThread"));
+				final ServerBootstrap bootstrap = new ServerBootstrap();
+				final Server serverOwner = this;
+
+				bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(
+					new ChannelInitializer<SocketChannel>() {
+						@Override
+						protected void initChannel(final SocketChannel channel) {
+							final ChannelPipeline pipeline = channel.pipeline();
+							pipeline.addLast("decoder", new RSCProtocolDecoder());
+							pipeline.addLast("encoder", new RSCProtocolEncoder());
+							pipeline.addLast("handler", new RSCConnectionHandler(serverOwner));
+						}
+					}
+				);
+
+				bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
+				bootstrap.childOption(ChannelOption.SO_KEEPALIVE, false);
+				bootstrap.childOption(ChannelOption.SO_RCVBUF, 10000);
+				bootstrap.childOption(ChannelOption.SO_SNDBUF, 10000);
+				try {
+					getPluginHandler().handlePlugin(getWorld(), "Startup", new Object[]{});
+					serverChannel = bootstrap.bind(new InetSocketAddress(getConfig().SERVER_PORT)).sync();
+					LOGGER.info("Game world is now online on port {}!", box(getConfig().SERVER_PORT));
+				} catch (final InterruptedException e) {
+					LOGGER.catching(e);
+				}
+
+				// Only add this server to the active servers list if it's not already there
+				if (!isRestarting()) {
+					serversList.put(this.getName(), this);
+				}
+
+				lastTickTimestamp = serverStartedTime = System.currentTimeMillis();
+				running = true;
+			} catch (final Throwable t) {
+				LOGGER.catching(t);
+				System.exit(1);
 			}
-			gameLogger.start();
 		}
 	}
 
 	public void stop() {
 		synchronized (running) {
-			running = false;
-			serversList.remove(this);
-			scheduledExecutor.shutdown();
+			try {
+				if (!isRunning()) {
+					return;
+				}
 
-			loginExecutor.stop();
-			discordService.stop();
-			gameLogger.stop();
-		}
-	}
+				scheduledExecutor.shutdown();
+				final boolean terminationResult = scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
+				if (!terminationResult) {
+					throw new Exception("Server thread termination failed");
+				}
+				getLoginExecutor().stop();
+				if (getDiscordService() != null) {
+					getDiscordService().stop();
+				}
+				getGameLogger().stop();
+				getGameUpdater().unload();
+				getGameEventHandler().unload();
+				getEntityHandler().unload();
+				getPluginHandler().unload();
+				getCombatScriptLoader().unload();
+				getPacketFilter().unload();
+				//getAchievementSystem().unload();
+				getWorld().unload();
+				getDatabase().close();
+				bossGroup.shutdownGracefully().sync();
+				workerGroup.shutdownGracefully().sync();
+				serverChannel.channel().closeFuture().sync();
 
-	public void kill() {
-		synchronized (running) {
-			// TODO: Uninitialize server
-			stop();
-			LOGGER.fatal(getName() + " shutting down...");
-			System.exit(0);
-		}
-	}
+				shutdownEvent = null;
+				serverChannel = null;
+				bossGroup = null;
+				workerGroup = null;
+				scheduledExecutor = null;
 
-	private void unbind() {
-		try {
-			serverChannel.channel().disconnect();
-		} catch (final Exception e) {
-			LOGGER.catching(e);
+				maxItemId = 0;
+				serverStartedTime = 0;
+				lastIncomingPacketsDuration = 0;
+				lastGameStateDuration = 0;
+				lastEventsDuration = 0;
+				lastOutgoingPacketsDuration = 0;
+				lastTickDuration = 0;
+				timeLate = 0;
+				lastTickTimestamp = 0;
+				incomingTimePerPacketOpcode.clear();
+				incomingCountPerPacketOpcode.clear();
+				outgoingTimePerPacketOpcode.clear();
+				outgoingCountPerPacketOpcode.clear();
+
+				// Don't remove this server from the active servers list if we are just restarting.
+				if (!isRestarting()) {
+					serversList.remove(this.getName());
+				}
+
+				running = false;
+
+				LOGGER.info("Server unloaded");
+			} catch (final Throwable t) {
+				LOGGER.catching(t);
+				System.exit(1);
+			}
 		}
 	}
 
@@ -423,68 +527,53 @@ public class Server implements Runnable {
 		}
 
 		LOGGER.warn(message);
-		getWorld().getServer().getDiscordService().monitoringSendServerBehind(message, showEventData);
+		if (getWorld().getServer().getDiscordService() != null) {
+			getWorld().getServer().getDiscordService().monitoringSendServerBehind(message, showEventData);
+		}
 	}
 
-	public boolean shutdownForUpdate(final int seconds) {
-		if (updateEvent != null) {
+	public boolean shutdown(final int seconds) {
+		if (shutdownEvent != null) {
 			return false;
 		}
-		updateEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000 / getConfig().GAME_TICK, "Shutdown for Update") {
+		shutdownEvent = new SingleTickEvent(getWorld(), null, seconds * 1000 / getConfig().GAME_TICK, "Shutdown for Update") {
 			public void action() {
-				unbind();
-				saveAndShutdown();
+				shuttingDown = true;
 			}
 		};
-		getGameEventHandler().add(updateEvent);
+		getGameEventHandler().add(shutdownEvent);
+
+		for (final Player playerToUpdate : getWorld().getPlayers()) {
+			ActionSender.startShutdown(playerToUpdate, seconds);
+		}
+
 		return true;
-	}
-
-	private void saveAndShutdown() {
-		LOGGER.info("Saving players for shutdown...");
-		if (getConfig().WANT_CLANS) {
-			getWorld().getClanManager().saveClans();
-		}
-		for (Player p : getWorld().getPlayers()) {
-			p.unregister(true, "Server shutting down.");
-		}
-		LOGGER.info("Players saved...");
-
-		SingleTickEvent up = new SingleTickEvent(getWorld(), null, 10, "Save and Shutdown") {
-			public void action() {
-				LOGGER.info("Killing server process...");
-				System.exit(0);
-				try {
-					LOGGER.info("Closing the database connection...");
-					getDatabase().close();
-				} catch (final Exception ex) {
-					LOGGER.catching(ex);
-				}
-			}
-		};
-		getGameEventHandler().add(up);
 	}
 
 	public boolean restart(final int seconds) {
-		if (updateEvent != null) {
+		if (shutdownEvent != null) {
 			return false;
 		}
-		updateEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000 / getConfig().GAME_TICK, "Restart") {
+		shutdownEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000 / getConfig().GAME_TICK, "Restart") {
 			public void action() {
-				unbind();
-				//saveAndRestart();
-				saveAndShutdown();
+				shuttingDown = true;
+				restarting = true;
 			}
 		};
-		getGameEventHandler().add(updateEvent);
+		getGameEventHandler().add(shutdownEvent);
+
+		for (final Player playerToUpdate : getWorld().getPlayers()) {
+			ActionSender.startShutdown(playerToUpdate, seconds);
+		}
+
 		return true;
 	}
 
-	public long timeTillShutdown() {
-		if (updateEvent == null) {
+	public long getTimeUntilShutdown() {
+		if (shutdownEvent == null) {
 			return -1;
 		}
-		return Math.max(updateEvent.timeTillNextRun() - System.currentTimeMillis(), 0);
+		return Math.max(shutdownEvent.timeTillNextRun() - System.currentTimeMillis(), 0);
 	}
 
 	public final long getLastGameStateDuration() {
@@ -547,10 +636,6 @@ public class Server implements Runnable {
 		return config;
 	}
 
-	public final boolean isInitialized() {
-		return initialized;
-	}
-
 	public final boolean isRunning() {
 		return running;
 	}
@@ -589,6 +674,14 @@ public class Server implements Runnable {
 
 	public AchievementSystem getAchievementSystem() {
 		return achievementSystem;
+	}
+
+	public boolean isRestarting() {
+		return restarting;
+	}
+
+	public boolean isShuttingDown() {
+		return shuttingDown;
 	}
 
 	public HashMap<Integer, Long> getIncomingTimePerPacketOpcode() {
@@ -633,6 +726,14 @@ public class Server implements Runnable {
 			outgoingCountPerPacketOpcode.put(packetOpcode, 0);
 		}
 		outgoingCountPerPacketOpcode.put(packetOpcode, outgoingCountPerPacketOpcode.get(packetOpcode) + 1);
+	}
+
+	public synchronized int getMaxItemID() {
+		return maxItemId;
+	}
+
+	public synchronized int incrementMaxItemID() {
+		return ++maxItemId;
 	}
 
 	class JPanel2 extends JPanel {
@@ -732,13 +833,5 @@ public class Server implements Runnable {
 				}
 			}
 		}
-	}
-
-	public synchronized int getMaxItemID() {
-		return maxItemId;
-	}
-
-	public synchronized int incrementMaxItemID() {
-		return ++maxItemId;
 	}
 }

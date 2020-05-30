@@ -11,8 +11,12 @@ import java.util.Comparator;
 
 public class PartyManager {
 
+	public ArrayList<Party> getParties() {
+		return parties;
+	}
+
 	private static class PartyRankComparator implements Comparator<Party> {
-		public int compare(Party o1, Party o2) {
+		public int compare(final Party o1, final Party o2) {
 			if (o1.getPartyPoints() == o2.getPartyPoints()) {
 				return o1.getPartyName().compareTo(o2.getPartyName());
 			}
@@ -26,22 +30,22 @@ public class PartyManager {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public ArrayList<Party> parties = new ArrayList<>();
+	private final ArrayList<Party> parties = new ArrayList<>();
 
 	private final World world;
 
-	public PartyManager (World world) {
+	public PartyManager (final World world) {
 		this.world = world;
 	}
 
-	public void createParty(Party party) {
-		parties.add(party);
+	public void createParty(final Party party) {
+		getParties().add(party);
 		//databaseCreateParty(party);
 	}
 
-	public void deleteParty(Party party) {
+	public void deleteParty(final Party party) {
 		//databaseDeleteParty(party);
-		parties.remove(party);
+		getParties().remove(party);
 	}
 
 	public void initialize() {
@@ -50,8 +54,12 @@ public class PartyManager {
 		//LOGGER.info("Loaded " + partys.size() + " partys");
 	}
 
-	public Party getParty(String exist) {
-		for (Party t : parties) {
+	public void uninitialize() {
+		getParties().clear();
+	}
+
+	public Party getParty(final String exist) {
+		for (final Party t : getParties()) {
 			if (t.getPartyName().equalsIgnoreCase(exist))
 				return t;
 			else if (t.getPartyTag().equalsIgnoreCase(exist))
@@ -60,9 +68,9 @@ public class PartyManager {
 		return null;
 	}
 
-	public void checkAndAttachToParty(Player player) {
-		for (Party p : parties) {
-			PartyPlayer partyMember = p.getPlayer(player.getUsername());
+	public void checkAndAttachToParty(final Player player) {
+		for (final Party p : getParties()) {
+			final PartyPlayer partyMember = p.getPlayer(player.getUsername());
 			if (partyMember != null) {
 				partyMember.setPlayerReference(player);
 				player.setParty(p);
@@ -88,9 +96,9 @@ public class PartyManager {
 
 	}*/
 
-	public void checkAndUnattachFromParty(Player player) {
-		for (Party p : parties) {
-			PartyPlayer cp = p.getPlayer(player.getUsername());
+	public void checkAndUnattachFromParty(final Player player) {
+		for (final Party p : getParties()) {
+			final PartyPlayer cp = p.getPlayer(player.getUsername());
 			if (cp != null) {
 				cp.setPlayerReference(null);
 				p.updatePartyGUI();
@@ -100,12 +108,12 @@ public class PartyManager {
 	}
 
 	public void saveParties() {
-		for (Party t : parties) {
+		for (final Party t : getParties()) {
 			savePartyChanges(t);
 		}
 	}
 
-	public void savePartyChanges(Party party) {
+	public void savePartyChanges(final Party party) {
 		//updateParty(party);
 
 		//deletePartyPlayer(party);
