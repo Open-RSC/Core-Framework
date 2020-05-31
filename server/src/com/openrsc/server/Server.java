@@ -312,11 +312,8 @@ public class Server implements Runnable {
 				LOGGER.info("Packet Filter Completed");
 
 				maxItemId = getDatabase().getMaxItemID();
-
 				LOGGER.info("Set max item ID to : " + maxItemId);
 
-				//Never run ResourceLeakDetector PARANOID in production.
-				//ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 				bossGroup = new NioEventLoopGroup(0, new NamedThreadFactory(getName() + " : IOBossThread"));
 				workerGroup = new NioEventLoopGroup(0, new NamedThreadFactory(getName() + " : IOWorkerThread"));
 				final ServerBootstrap bootstrap = new ServerBootstrap();
