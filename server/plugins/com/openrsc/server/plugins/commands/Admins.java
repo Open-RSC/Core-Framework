@@ -99,14 +99,9 @@ public final class Admins implements CommandTrigger {
 			checkHolidayDrop(player);
 		} else if (command.equalsIgnoreCase("npc_kills")) {
 			npcKills(player, args);
-		}
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
 			fakeCrystalChest(player, args);
 		} */
-		else if (command.equalsIgnoreCase("simrdt")) {
-			simulateRareDropTable(player, command, args);
-		} else if (command.equalsIgnoreCase("simulatedrop")) {
-
 		} else if (command.equalsIgnoreCase("restart")) {
 			serverRestart(player, args);
 		} else if (command.equalsIgnoreCase("gi") || command.equalsIgnoreCase("gitem") || command.equalsIgnoreCase("grounditem")) {

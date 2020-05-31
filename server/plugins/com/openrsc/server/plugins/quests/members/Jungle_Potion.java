@@ -474,7 +474,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 								if (chat == 0) {
 									say(player, n, "I think I found Bervirius Tomb.");
 									npcsay(player, n, "Congratulations Bwana,",
-										"but perhaps you need to make a thorough ",
+										"but perhaps you need to make a thorough",
 										"examination of the Ah Za Rhoon temple first?",
 										"Show me any items you have found though.",
 										"I may be able to help.");

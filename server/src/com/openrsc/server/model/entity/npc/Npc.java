@@ -356,7 +356,7 @@ public class Npc extends Mob {
 		}
 
 		/* 3. Get the rest of the mob's drops. */
-		DropTable drops = getWorld().getNpcDrops().getDropTable(this.getID());
+		DropTable drops = getWorld().npcDrops.getDropTable(this.getID());
 		if (drops == null) {
 			// Some enemies have no drops
 			deathListeners.clear();
@@ -421,23 +421,23 @@ public class Npc extends Mob {
 	private int getBonesDrop() {
 		int bones = ItemId.NOTHING.id();
 		// Big Bones
-		if (getWorld().getNpcDrops().isBigBoned(this.getID())) {
+		if (getWorld().npcDrops.isBigBoned(this.getID())) {
 			bones = ItemId.BIG_BONES.id();
 		}
 		// Bat
-		else if (getWorld().getNpcDrops().isBatBoned(this.getID())) {
+		else if (getWorld().npcDrops.isBatBoned(this.getID())) {
 			bones = ItemId.BAT_BONES.id();
 		}
 		// Dragon
-		else if (getWorld().getNpcDrops().isDragon(this.getID())) {
+		else if (getWorld().npcDrops.isDragon(this.getID())) {
 			bones = ItemId.DRAGON_BONES.id();
 		}
 		// Demon
-		else if (getWorld().getNpcDrops().isDemon(this.getID())) {
+		else if (getWorld().npcDrops.isDemon(this.getID())) {
 			bones = ItemId.ASHES.id();
 		}
 		// Not boneless
-		else if(!getWorld().getNpcDrops().isBoneless(this.getID())) {
+		else if(!getWorld().npcDrops.isBoneless(this.getID())) {
 			bones = ItemId.BONES.id();
 		}
 		return bones;
