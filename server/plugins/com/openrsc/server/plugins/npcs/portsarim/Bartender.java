@@ -50,7 +50,7 @@ public class Bartender implements TalkNpcTrigger {
 					n,
 					"No it was earlier",
 					"There was a guy in here saying the goblins up by the mountain are arguing again",
-					"Of all things about the colour of their armour",
+					"Of all things about the colour of their armour.",
 					"Knowing the goblins, it could easily turn into a full blown war",
 					"Which wouldn't be good",
 					"Goblin wars make such a mess of the countryside");

@@ -114,7 +114,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 					"and takes a bite of the pineapple.",
 					"His face turns from pleasure to pain as he spits the mouthful of pineapple out.");
 				npcsay(player, npc, "Yeuch!",
-					"That's awful! That's not Tenti pineapple,",
+					"That's awful! That's not Tenti pineapple, ",
 					"Get me some Tenti pineapple if you know what's good for you.");
 			}
 		}

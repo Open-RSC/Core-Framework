@@ -339,15 +339,22 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 
 		// So how would I go about catching them then?
 		else if (choice == 1) {
-			npcsay(player, n, "Well I have a scorpion cage here",
-				"Which you can use to catch them in");
-			give(player, ItemId.SCORPION_CAGE_NONE.id(), 1);
-			mes("Thormac gives you a cage");
+			if (!player.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_NONE.id(), Optional.of(false))) {
+				npcsay(player, n, "Well I have a scorpion cage here",
+					"Which you can use to catch them in");
+				give(player, ItemId.SCORPION_CAGE_NONE.id(), 1);
+				mes("Thormac gives you a cage");
+			} else {
+				npcsay(player, n, "Well you have that scorpion cage I gave you",
+					"Which you can use to catch them in");
+			}
 			npcsay(player, n,
 				"If you go up to the village of seers to the north of here",
 				"One of them will be able to tell you where the scorpions are now");
 
-			player.updateQuestStage(getQuestId(), 1); // STARTED QUEST
+			if (player.getQuestStage(this) == 0) {
+				player.updateQuestStage(getQuestId(), 1); // STARTED QUEST
+			}
 
 			choice = multi(player, n,
 				"What's in it for me?",

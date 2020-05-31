@@ -144,10 +144,11 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 						"some of these games get really rough");
 				int sub_option = multi(player, n, "how do you play?", "it looks like a silly game anyway");
 				if (sub_option == 0) {
-					npcsay(player, n, "the gnomes in orange are on your team",
+					npcsay(player, n, "it's easy, you're given a ball from the ref",
+							"the gnomes in orange are on your team",
 							"you then charge at the gnome defense and try to throw the ball..",
-							"..through the net to the goal catcher, it's a rough game but fun",
-							"it's also great way to improve your agility");
+							"..through the net to the goal catcher, it's a rough game but great fun",
+							"it's also a great way to improve your agility");
 				} else if (option == 1) {
 					npcsay(player, n, "gnome ball silly!, this my friend is the backbone of our community",
 							"it also happens to be a great way to stay fit and agile");

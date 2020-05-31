@@ -252,9 +252,15 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 			if (player.getQuestStage(getQuestId()) >= 2 || player.getQuestStage(getQuestId()) == -1) {
 				if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
 					&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
-					say(player, n, "hello");
-					npcsay(player, n, "hello, hope you're keeping busy?");
-					say(player, n, "of course");
+					if (DataConversions.getRandom().nextBoolean()) {
+						say(player, n, "hello again");
+						npcsay(player, n, "i hope you're keeping busy?");
+						say(player, n, "of course");
+					} else {
+						say(player, n, "hello");
+						npcsay(player, n, "hello, hope you're keeping busy?");
+						say(player, n, "of course");
+					}
 					if (player.getQuestStage(getQuestId()) != 2) {
 						npcsay(player, n, "General Khazard doesn't tolerate the lazy",
 							"if you're not keeping busy",

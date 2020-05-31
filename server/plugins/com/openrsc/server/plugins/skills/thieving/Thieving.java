@@ -322,6 +322,11 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			player.message("I can't get close enough");
 			return;
 		}
+		if (npc.getID() == NpcId.WORKMAN_UNDERGROUND.id()) {
+			npcsay(player, npc, "Hey! trying to steal from me are you ?", "What do you think I am - stupid or something !?");
+			say(player, npc, "Err...sorry");
+			return;
+		}
 		final ArrayList<LootItem> lootTable = new ArrayList<LootItem>(pickpocket.getLootTable());
 		String thievedMobName = npc.getDef().getName().toLowerCase();
 		//gnome local, child, trainer and barman all known as gnome for the thiev messages

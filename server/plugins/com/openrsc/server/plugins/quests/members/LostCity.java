@@ -216,18 +216,24 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 				if (option == 0) {
 					say(player, n, "What are you camped here for?");
 					npcsay(player, n, "We're looking for Zanaris");
-					int sub_option = multi(player, n, "Who's Zanaris?",
+					int sub_option = multi(player, n, false, //do not send over
+						"Who's Zanaris?",
 						"what's Zanaris?",
 						"What makes you think it's out here");
 					if (sub_option == 0 || sub_option == 2) {
-						if (sub_option == 0)
+						if (sub_option == 0) {
+							say(player, n, "Who's Zanaris?");
 							npcsay(player, n, "hehe Zanaris isn't a person",
 								"It's a magical hidden city");
-						else
-							npcsay(player, n, "Don't you know of the legends?",
-								"of the magical city, hidden in the swamp");
+						}
+						else {
+							say(player, n, "what makes you think it's out here?");
+							npcsay(player, n, "Don't you know the legends?",
+								"Of the magical city, hidden in the swamp");
+						}
 						ZANARIS_MENU(player, n);
 					} else if (sub_option == 1) {
+						say(player, n, "what's Zanaris?");
 						npcsay(player, n,
 							"I don't think we want other people competing with us to find it");
 						int next_option = multi(player, n, "Please tell me",
@@ -248,18 +254,22 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					} else if (insist == 1) {
 						npcsay(player, n, "We're on one of the greatest adventures I'll have you know",
 							"Searching for Zanaris isn't a walk in the park");
-						int sub_option = multi(player, n, "Who's Zanaris?",
+						int sub_option = multi(player, n, false, //do not send over
+							"Who's Zanaris?",
 							"what's Zanaris?",
 							"What makes you think it's out here");
 						if (sub_option == 0 || sub_option == 2) {
-							if (sub_option == 0)
+							if (sub_option == 0) {
 								npcsay(player, n, "hehe Zanaris isn't a person",
 									"It's a magical hidden city");
-							else
-								npcsay(player, n, "Don't you know of the legends?",
-									"of the magical city, hidden in the swamp");
+							}
+							else {
+								npcsay(player, n, "Don't you know the legends?",
+									"Of the magical city, hidden in the swamp");
+							}
 							ZANARIS_MENU(player, n);
 						} else if (sub_option == 1) {
+							say(player, n, "what's Zanaris?");
 							npcsay(player, n,
 								"I don't think we want other people competing with us to find it");
 							int next_option = multi(player, n, "Please tell me",

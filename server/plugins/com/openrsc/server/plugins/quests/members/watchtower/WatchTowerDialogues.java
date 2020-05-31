@@ -268,7 +268,9 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 			n.startCombat(player);
 		}
 		else if (n.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id()) {
-			if (player.getQuestStage(Quests.WATCHTOWER) != -1) {
+			if (player.getQuestStage(Quests.WATCHTOWER) >= 0 && player.getQuestStage(Quests.WATCHTOWER) < 5) {
+				npcsay(player, n, "Stop bothering me minion!");
+			} else if (player.getQuestStage(Quests.WATCHTOWER) != -1) {
 				npcsay(player, n, "What do you want ?");
 				int menu = multi(player, n,
 					"I want to go in there",

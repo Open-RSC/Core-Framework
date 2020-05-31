@@ -1,13 +1,13 @@
 package com.openrsc.server.plugins.npcs.barbarian;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.NpcId;
 
 public class Barbarians implements TalkNpcTrigger {
 
@@ -19,7 +19,7 @@ public class Barbarians implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
 		say(player, n, "Hello");
-		int randomDiag = DataConversions.random(0, 10);
+		int randomDiag = DataConversions.random(0, 11);
 		if (randomDiag == 0) {
 			npcsay(player, n, "Go away",
 				"This is our village");
@@ -47,6 +47,11 @@ public class Barbarians implements TalkNpcTrigger {
 			player.message("The barbarian ignores you");
 		} else if (randomDiag == 10) {
 			npcsay(player, n, "Grr");
+		} else if (randomDiag == 11) {
+			npcsay(player, n, "Bones?");
+			player.message("The barbarian gives you some bones");
+			give(player, ItemId.BONES.id(), 1);
+			say(player, n, "Err, thanks");
 		}
 	}
 }

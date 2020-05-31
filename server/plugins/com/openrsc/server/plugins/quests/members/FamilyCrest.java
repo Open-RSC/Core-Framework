@@ -12,6 +12,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
@@ -428,6 +429,11 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 			if (player.getQuestStage(this) >= 0 && player.getQuestStage(this) < 7) {
 				npcsay(player, n, "I am so very tired, leave me to rest");
 			} else if (player.getQuestStage(this) == 7) {
+				if (player.getCache().hasKey("johnathon_ill")) {
+					npcsay(player, n, "Arrgh what has that spider done to me",
+						"I feel so ill, I can hardly think");
+					return;
+				}
 				say(player, n, "Greetings, are you Johnathon Fitzharmon?");
 				npcsay(player, n, "That is I");
 				say(player, n,
@@ -435,7 +441,14 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 				npcsay(player, n, "The poison it is too much",
 					"arrgh my head is all of a spin");
 				player.message("Sweat is pouring down Johnathon's face");
+				player.getCache().store("johnathon_ill", true);
 			} else if (player.getQuestStage(this) == 8) {
+				if (player.getCarriedItems().hasCatalogID(ItemId.CREST_FRAGMENT_THREE.id(), Optional.of(false))) {
+					say(player, n, "I have your part of the crest now");
+					npcsay(player, n,
+						"Well done take it to my father");
+					return;
+				}
 				npcsay(player, n,
 					"I'm trying to kill the demon chronozon  that you mentioned");
 				int menu = multi(player, n,
@@ -656,16 +669,23 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.JOHNATHON.id() && item.getCatalogId() == ItemId.FULL_CURE_POISON_POTION.id();
+		return npc.getID() == NpcId.JOHNATHON.id() && !item.getNoted() &&
+			DataConversions.inArray(new int[]{ItemId.FULL_CURE_POISON_POTION.id(), ItemId.TWO_CURE_POISON_POTION.id(),
+				ItemId.ONE_CURE_POISON_POTION.id()}, item.getCatalogId());
 	}
 
 	@Override
 	public void onUseNpc(Player player, Npc n, Item item) {
-		if (n.getID() == NpcId.JOHNATHON.id() && item.getCatalogId() == ItemId.FULL_CURE_POISON_POTION.id()) {
+		if (n.getID() == NpcId.JOHNATHON.id() && !item.getNoted() &&
+			DataConversions.inArray(new int[]{ItemId.FULL_CURE_POISON_POTION.id(), ItemId.TWO_CURE_POISON_POTION.id(),
+				ItemId.ONE_CURE_POISON_POTION.id()}, item.getCatalogId())) {
 			if (player.getQuestStage(this) == 7) {
 				mes("You feed your potion to Johnathon");
-				player.getCarriedItems().remove(new Item(ItemId.FULL_CURE_POISON_POTION.id()));
+				player.getCarriedItems().remove(new Item(item.getCatalogId()));
 				player.updateQuestStage(this, 8);
+				if (player.getCache().hasKey("johnathon_ill")) {
+					player.getCache().remove("johnathon_ill");
+				}
 				npcsay(player, n, "Wow I'm feeling a lot better now",
 					"Thankyou, what can I do for you?");
 				say(player, n,

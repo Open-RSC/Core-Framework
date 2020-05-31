@@ -57,7 +57,7 @@ public class Dorics implements QuestInterface, TalkNpcTrigger {
 						npcsay(player,
 							n,
 							"Well, clay is what I use more than anything. I make casts",
-							"Could you get me 6 clay, and 4 copper ore, and 2 iron ore please?",
+							"Could you get me 6 clay, and 4 copper ore and 2 iron ore please?",
 							"I could pay a little, and let you use my anvils");
 						say(player, n,
 							"Certainly, I will get them for you. goodbye");

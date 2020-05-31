@@ -315,8 +315,8 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 		} else if (job == 2) {
 			npcsay(player, n, "hello again traveller how did you do?");
 			if (ifheld(player, ItemId.CHOC_CRUNCHIES.id(), 2)) {
-				say(player, n, "all done, here you go");
-				mes(config().GAME_TICK * 3, "you give aluft the two choc crunchies");
+				say(player, n, "here you go aluft");
+				mes(config().GAME_TICK * 3, "you aluft two portions of choc crunchies");
 				for (int i = 0; i < 2; i++) {
 					player.getCarriedItems().remove(new Item(ItemId.CHOC_CRUNCHIES.id()));
 				}
@@ -497,7 +497,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 			npcsay(player, n, "ok, i need a choc bomb, two choc crunchies and two toad crunchies");
 			say(player, n, "no problem");
 		} else if (randomize == 2) {
-			npcsay(player, n, "i just need two choc crunchies please");
+			npcsay(player, n, "i need two portions of choc crunchies please");
 			say(player, n, "no problem");
 		} else if (randomize == 3) {
 			npcsay(player, n, "i just need one choc bomb and two choc crunchies please");

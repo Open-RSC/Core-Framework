@@ -33,7 +33,7 @@ public class BoatFromBrimhaven implements TalkNpcTrigger, OpLocTrigger {
 			"You're not putting your hands on my things");
 		if (sub_opt == 0) {
 			npcsay(player, n,
-				"Because Asgarnia has banned the import of intoxicating spirits");
+				"Because Kandarin has banned the import of intoxicating spirits");
 		} else if (sub_opt == 1) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id(), Optional.of(false))) {
 				npcsay(player, n, "Aha trying to smuggle rum are we?");

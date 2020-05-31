@@ -11,6 +11,7 @@ import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
@@ -48,16 +49,28 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 		return n.getID() == NpcId.TRUFITUS.id();
 	}
 
-	private void trufitusDialogue(Player player, Npc n) {
-		npcsay(player, n, "My people are afraid to stay in the village.",
-			"They have returned to the jungle",
-			"I need to commune with the gods",
-			"to see what fate befalls us",
-			"you could help me by collecting",
-			"some herbs that I need.");
-		int s_opt = multi(player, n, false, //do not send over
-			"Me, how can I help?",
-			"I am very sorry, but I don't have time for that at the moment.");
+	private void trufitusDialogue(Player player, Npc n, int path) {
+		int s_opt = -1;
+		if (path == 0) {
+			npcsay(player, n, "My people are afraid to stay in the village.",
+				"They have returned to the jungle",
+				"I need to commune with the gods",
+				"to see what fate befalls us",
+				"you could help me by collecting",
+				"some herbs that I need.");
+			s_opt = multi(player, n, false, //do not send over
+				"Me, how can I help?",
+				"I am very sorry, but I don't have time for that at the moment.");
+		} else if (path == 1) {
+			npcsay(player, n, "My people are afraid to stay in the village",
+				"They have returned to the jungle",
+				"I need to commune with my gods",
+				"to see what fate befalls us",
+				"You may be able to help with this");
+			s_opt = multi(player, n, false, //do not send over
+				"Me! How can I help?",
+				"I am sorry, but I don't have time for that.");
+		}
 		if (s_opt == 0) {
 			say(player, n, "Me, how can I help?");
 			npcsay(player, n, "I need to make a special brew",
@@ -130,7 +143,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"I am sorry, but I am very busy");
 								if (s1 == 0) {
 									npcsay(player, n, "I hoped that you would think so.");
-									trufitusDialogue(player, n);
+									trufitusDialogue(player, n, 0);
 								} else if (s1 == 1) {
 									npcsay(player, n, "Very well then",
 										"may your journeys bring you much joy",
@@ -156,7 +169,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 								"I am sorry, but I am very busy");
 							if (ss == 0) {
 								say(player, n, "It seems like a nice village, where is everyone?");
-								trufitusDialogue(player, n);
+								trufitusDialogue(player, n, 1);
 							} else if (ss == 1) {
 								say(player, n, "I am sorry, but I am very busy");
 								npcsay(player, n, "Very well then",
@@ -167,7 +180,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 							}
 						} else if (opt == 2) {
 							say(player, n, "It seems like a nice village, where is everyone?");
-							trufitusDialogue(player, n);
+							trufitusDialogue(player, n, 1);
 						}
 						break;
 					case 1:
@@ -354,13 +367,28 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 							return;
 						}
 						if (player.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
-							say(player, n, "Greetings");
-							npcsay(player, n, "Hello Bwana.",
-								"I conclude that you have been succesful.",
-								"Mosol sent word that the village is clearing of Zombies.",
-								"You have done us all a great dead!",
-								"Why not go and visit him and have a look around Shilo",
-								"village. You may find some interesting things there!");
+							int conv = DataConversions.getRandom().nextInt(2);
+							if (conv == 0) {
+								say(player, n, "Greetings");
+								npcsay(player, n, "Hello Bwana.",
+									"I conclude that you have been succesful.",
+									"Mosol sent word that the village is clearing of Zombies.",
+									"You have done us all a great dead!",
+									"Why not go and visit him and have a look around Shilo",
+									"village. You may find some interesting things there!");
+							} else if (conv == 1) {
+								say(player, n, "Hello!");
+								npcsay(player, n, "Hello again Bwana.!",
+									"Well Done again for helping to defeat Rashiliyia.",
+									"Hopefully things will return to normal around here now.");
+							} else if (conv == 2) {
+								say(player, n, "Hello Bwana!");
+								npcsay(player, n, "Greetings!",
+									"I hope things are going well for you now.",
+									"I have no new information since last we spoke.",
+									"Needless to say, that if something does come up",
+									"I will certainly get in touch directly.");
+							}
 						} else if (player.getQuestStage(Quests.SHILO_VILLAGE) == 1 || player.getQuestStage(Quests.SHILO_VILLAGE) == 2) {
 							/*
 							 * Handle shilo village start.
@@ -446,7 +474,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 								if (chat == 0) {
 									say(player, n, "I think I found Bervirius Tomb.");
 									npcsay(player, n, "Congratulations Bwana,",
-										"but perhaps you need to make a thorough",
+										"but perhaps you need to make a thorough ",
 										"examination of the Ah Za Rhoon temple first?",
 										"Show me any items you have found though.",
 										"I may be able to help.");

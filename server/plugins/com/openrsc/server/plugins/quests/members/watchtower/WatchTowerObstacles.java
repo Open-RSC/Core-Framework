@@ -448,26 +448,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 					player.message("You climb over the battlement");
 				} else if (player.getCache().hasKey("get_ogre_gift")) {
 					if (ogre_guard != null) {
-						npcsay(player, ogre_guard, "Stop creature!... Oh its you",
-							"Well what have you got for us then ?");
-						if (player.getCarriedItems().hasCatalogID(ItemId.ROCK_CAKE.id(), Optional.of(false))) {
-							say(player, ogre_guard, "How about this ?");
-							player.message("You give the guard a rock cake");
-							player.getCarriedItems().remove(new Item(ItemId.ROCK_CAKE.id()));
-							npcsay(player, ogre_guard, "Well well, looks at this",
-								"My favourite, rock cake!",
-								"Okay we will let it through");
-							player.teleport(663, 812);
-							player.message("You climb over the battlement");
-							player.getCache().remove("get_ogre_gift");
-							player.getCache().store("has_ogre_gift", true);
-						} else {
-							say(player, ogre_guard, "I didn't bring anything");
-							npcsay(player, ogre_guard, "Didn't bring anything!",
-								"In that case shove off!");
-							player.message("The guard pushes you out of the city");
-							player.teleport(635, 774);
-						}
+						cakeCheckGuard(player, ogre_guard);
 					}
 				} else {
 					if (ogre_guard != null) {
@@ -561,6 +542,29 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 		return coords;
 	}
 
+	private void cakeCheckGuard(Player player, Npc ogre_guard) {
+		npcsay(player, ogre_guard, "Stop creature!... Oh its you",
+			"Well what have you got for us then ?");
+		if (player.getCarriedItems().hasCatalogID(ItemId.ROCK_CAKE.id(), Optional.of(false))) {
+			say(player, ogre_guard, "How about this ?");
+			player.message("You give the guard a rock cake");
+			player.getCarriedItems().remove(new Item(ItemId.ROCK_CAKE.id()));
+			npcsay(player, ogre_guard, "Well well, looks at this",
+				"My favourite, rock cake!",
+				"Okay we will let it through");
+			player.teleport(663, 812);
+			player.message("You climb over the battlement");
+			player.getCache().remove("get_ogre_gift");
+			player.getCache().store("has_ogre_gift", true);
+		} else {
+			say(player, ogre_guard, "I didn't bring anything");
+			npcsay(player, ogre_guard, "Didn't bring anything!",
+				"In that case shove off!");
+			player.message("The guard pushes you out of the city");
+			player.teleport(635, 774);
+		}
+	}
+
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
 		if (npc.getID() == NpcId.OGRE_GUARD_BATTLEMENT.id()) {
@@ -571,12 +575,20 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 					player.playerServerMessage(MessageType.QUEST, "The guard gives you a smack around the head");
 					npcsay(player, npc, "Bring me something good next time!");
 					break;
+				case ROCK_CAKE:
+					Npc ogre_guard = ifnearvisnpc(player, NpcId.OGRE_GUARD_BATTLEMENT.id(), 5);
+					if (player.getCache().hasKey("get_ogre_gift")) {
+						cakeCheckGuard(player, ogre_guard);
+					} else {
+						say(player, npc, "Why am I giving this cake to this ogre ???");
+					}
+					break;
 			}
 		}
 	}
 
 	@Override
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.OGRE_GUARD_BATTLEMENT.id();
+		return npc.getID() == NpcId.OGRE_GUARD_BATTLEMENT.id() && !item.getNoted();
 	}
 }

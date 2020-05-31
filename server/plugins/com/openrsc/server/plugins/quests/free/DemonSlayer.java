@@ -891,7 +891,7 @@ public class DemonSlayer implements QuestInterface,
 						"No, I don't believe in that stuff",
 						"Ooh how old are you then?");
 					if (choice == 0) {
-						gypsyDialogue(player, n, GypsyConversation.QUEST_START);
+						gypsyDialogue(player, n, GypsyConversation.YES_PLEASE);
 					} else if (choice == 1) {
 						npcsay(player, n, "Ok suit yourself");
 					} else if (choice == 2) {
@@ -919,25 +919,35 @@ public class DemonSlayer implements QuestInterface,
 						npcsay(player, n, "Ok suit yourself");
 					} else if (choice == 1) {
 						// Yes please
-						gypsyDialogue(player, n, GypsyConversation.QUEST_START);
+						gypsyDialogue(player, n, GypsyConversation.YES_PLEASE);
 					}
 				} else if (choice == 1) {
 					// How do you know how old I think you are?
 					say(player, n, "How do you know how old I think you are");
 					npcsay(player, n, "I have the power to know",
 						"Just as I have the power to foresee the future");
-					choice = multi(player, n, "Ok what am I thinking now?",
+					choice = multi(player, n, false, //do not send over
+						"Ok what am I thinking now?",
 						"Ok but how old are you?",
 						"Go on then, what's my future?");
 					if (choice == 0) {
-						// Ok what am I thinking now?
+						say(player, n, "Ok what am I thinking now?");
 						npcsay(player, n, "You are thinking that I'll never guess what you are thinking");
 					} else if (choice == 1) {
-						// Ok but how old are you?
+						say(player, n, "Ok but how old are you?");
 						gypsyDialogue(player, n, GypsyConversation.HOW_OLD_TWO);
 					} else if (choice == 2) {
-						// Go on then, what's my future?
-						gypsyDialogue(player, n, GypsyConversation.QUEST_START);
+						say(player, n, "Go on then what's my future");
+						npcsay(player, n, "Cross my palm with silver and I'll tell you");
+						int crosspalm = multi(player, n, false, //do not send over
+							"Ok here you go", "Oh you want me to pay. No thanks");
+						if (crosspalm == 0) {
+							say(player, n, "Ok, here you go");
+							gypsyDialogue(player, n, GypsyConversation.QUEST_START);
+						} else if (crosspalm == 1) {
+							say(player, n, "Oh you want me to pay. No thanks");
+							npcsay(player, n, "Go away then");
+						}
 					}
 				} else if (choice == 2) {
 					// Oh pretty old then
@@ -950,6 +960,19 @@ public class DemonSlayer implements QuestInterface,
 					"Count the number of legs of the chairs in the blue moon inn",
 					"And multiply that number by seven");
 				say(player, n, "Errr yeah whatever");
+				break;
+			case GypsyConversation.YES_PLEASE:
+				npcsay(player, n,
+					"Cross my palm with silver then");
+				int crosspalm = multi(player, n, false, //do not send over
+					"Ok here you go", "Oh you want me to pay. No thanks");
+				if (crosspalm == 0) {
+					say(player, n, "Ok, here you go");
+					gypsyDialogue(player, n, GypsyConversation.QUEST_START);
+				} else if (crosspalm == 1) {
+					say(player, n, "Oh you want me to pay. No thanks");
+					npcsay(player, n, "Go away then");
+				}
 				break;
 			case GypsyConversation.QUEST_START:// Quest Start
 				if (player.getCarriedItems().hasCatalogID(ItemId.COINS.id()))
@@ -1229,16 +1252,17 @@ public class DemonSlayer implements QuestInterface,
 
 	class GypsyConversation {
 		static final int INTRO = 0;
-		static final int QUEST_START = 1;
-		static final int DEFEATING_DELRITH = 2;
-		static final int WHO_IS_DELRITH = 3;
-		static final int WALLY = 4;
-		static final int INCANTATION_SILVERLIGHT_MENU = 5;
-		static final int SILVERLIGHT = 6;
-		static final int ILL_DO_MY_BEST = 7;
-		static final int INCANTATION = 8;
-		static final int HOW_OLD = 9;
-		static final int HOW_OLD_TWO = 10;
+		static final int YES_PLEASE = 1;
+		static final int QUEST_START = 2;
+		static final int DEFEATING_DELRITH = 3;
+		static final int WHO_IS_DELRITH = 4;
+		static final int WALLY = 5;
+		static final int INCANTATION_SILVERLIGHT_MENU = 6;
+		static final int SILVERLIGHT = 7;
+		static final int ILL_DO_MY_BEST = 8;
+		static final int INCANTATION = 9;
+		static final int HOW_OLD = 10;
+		static final int HOW_OLD_TWO = 11;
 	}
 
 	class SirPrysin {

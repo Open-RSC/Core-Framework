@@ -271,7 +271,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 					} else {
 						final Npc guard = ifnearvisnpc(player, NpcId.GUARD_FORTRESS.id(), 20);
 						if (guard != null) {
-							npcsay(player, guard, "Heh, you can't come in here",
+							npcsay(player, guard, "Heh you can't come in here",
 								"This is a high security military installation");
 							int option = multi(player, guard, "Yes but I work here", "Oh sorry", "So who does it belong to?");
 							if (option == 0) {

@@ -101,7 +101,7 @@ public final class Apothecary implements
 					npcsay(player, n, "Yes, ok. Try this potion");
 					give(player, ItemId.POTION.id(), 1);
 				} else {
-					npcsay(player, n, "Sorry, charity is not my strongest point");
+					npcsay(player, n, "Sorry, charity is not my strong point");
 				}
 			}
 		} else if (option == 3 && config().WANT_EXPERIENCE_ELIXIRS) {

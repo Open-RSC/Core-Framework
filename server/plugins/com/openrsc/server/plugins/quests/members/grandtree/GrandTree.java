@@ -335,26 +335,31 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					npcsay(player, n, "please traveller, just leave before it's too late");
 					break;
 				case 12:
-					say(player, n, "look, i found this at glough's home");
-					mes("you give the king the strategic notes");
-					player.getCarriedItems().remove(new Item(ItemId.GLOUGHS_NOTES.id()));
-					npcsay(player, n, "hmmm, these are interesting",
-						"but it's not proof, any one could have made these",
-						"traveller, i understand your concern",
-						"i had guards search glough's house",
-						"but they found nothing suspicious",
-						"just these old pebbles");
-					mes("narnode gives you four old pebbles");
-					give(player, ItemId.PEBBLE_3.id(), 1);
-					give(player, ItemId.PEBBLE_2.id(), 1);
-					give(player, ItemId.PEBBLE_4.id(), 1);
-					give(player, ItemId.PEBBLE_1.id(), 1);
-					npcsay(player, n, "on the other hand, if glough's right about the humans",
-						"we will need an army of gnomes to protect ourselves",
-						"so i've decided to allow glough to raise a mighty gnome army",
-						"the grand tree's still slowly dying, if it is human sabotage",
-						"we must respond");
-					player.updateQuestStage(this, 13);
+					say(player, n, "hi narnode, did you think about what i said?");
+					npcsay(player, n, "look, if you're right about glough i would have him arrested",
+						"but there's no reason for me to think he's lying");
+					if (player.getCarriedItems().hasCatalogID(ItemId.GLOUGHS_NOTES.id(), Optional.of(false))) {
+						say(player, n, "look, i found this at glough's home");
+						mes("you give the king the strategic notes");
+						player.getCarriedItems().remove(new Item(ItemId.GLOUGHS_NOTES.id()));
+						npcsay(player, n, "hmmm, these are interesting",
+							"but it's not proof, any one could have made these",
+							"traveller, i understand your concern",
+							"i had guards search glough's house",
+							"but they found nothing suspicious",
+							"just these old pebbles");
+						mes("narnode gives you four old pebbles");
+						give(player, ItemId.PEBBLE_3.id(), 1);
+						give(player, ItemId.PEBBLE_2.id(), 1);
+						give(player, ItemId.PEBBLE_4.id(), 1);
+						give(player, ItemId.PEBBLE_1.id(), 1);
+						npcsay(player, n, "on the other hand, if glough's right about the humans",
+							"we will need an army of gnomes to protect ourselves",
+							"so i've decided to allow glough to raise a mighty gnome army",
+							"the grand tree's still slowly dying, if it is human sabotage",
+							"we must respond");
+						player.updateQuestStage(this, 13);
+					}
 					break;
 				case 13:
 					say(player, n, "hello again narnode");
@@ -988,7 +993,11 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					npcsay(player, n, "well hello again adventurer",
 						"how are you?");
 					say(player, n, "i'm good thanks, how's the tree?");
-					npcsay(player, n, "better than ever, thanks for asking");
+					if (DataConversions.getRandom().nextBoolean()) {
+						npcsay(player, n, "better than ever, thanks to you");
+					} else {
+						npcsay(player, n, "better than ever, thanks for asking");
+					}
 					break;
 				default:
 					break;

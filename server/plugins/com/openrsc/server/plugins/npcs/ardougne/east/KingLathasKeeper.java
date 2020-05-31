@@ -27,7 +27,7 @@ public final class KingLathasKeeper extends AbstractShop {
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		say(player, n, "hello");
-		npcsay(player, n, "so are you looking to buy some weapons",
+		npcsay(player, n, "so are you looking to buy some weapons?",
 			"king lathas keeps us very well stocked");
 		int option = multi(player, n, "what do you have?", "no thanks");
 		switch (option) {

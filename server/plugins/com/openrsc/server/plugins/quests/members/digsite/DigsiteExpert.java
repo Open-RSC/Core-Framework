@@ -128,7 +128,7 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 						say(player, n, "Excellent!");
 					} else {
 						npcsay(player, n, "I can't do much with these nuggets yet",
-							"Come back when you have 3, and I will exchange them with you");
+							"Come back when you have 3, and I will exchange them for you");
 						say(player, n, "Okay I will, thanks");
 					}
 					break;
@@ -278,7 +278,7 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 				case BROKEN_STAFF:
 					say(player, n, "Have a look at this staff");
 					npcsay(player, n, "Look at this...interesting",
-						"This appears to belong to a cleric of some kind",
+						"This appers to belong to a cleric of some kind",
 						"Certainly not a follower of saradomin however...",
 						"I wonder if there was another civilization before the saradominists ?");
 					break;
@@ -300,7 +300,7 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 					say(player, n, "I found some old armour");
 					npcsay(player, n, "Hmm...unusual",
 						"This armour dosen't seem to match with the other finds",
-						"keep looking, this could be evidence of an older civilization!");
+						"Keep looking, this could be evidence of an older civilization!");
 					break;
 				case DAMAGED_ARMOUR_2:
 					say(player, n, "I found some armour");

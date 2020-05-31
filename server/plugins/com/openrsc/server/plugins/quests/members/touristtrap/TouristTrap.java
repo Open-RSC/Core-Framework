@@ -89,7 +89,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
 		return inArray(n.getID(), NpcId.IRENA.id(), NpcId.MERCENARY.id(), NpcId.MERCENARY_CAPTAIN.id(), NpcId.MERCENARY_ESCAPEGATES.id(),
-				NpcId.CAPTAIN_SIAD.id(), NpcId.MINING_SLAVE.id(), NpcId.BEDABIN_NOMAD.id(), NpcId.BEDABIN_NOMAD_GUARD.id(),
+				NpcId.CAPTAIN_SIAD.id(), NpcId.MINING_SLAVE.id(), NpcId.ESCAPING_MINING_SLAVE.id(), NpcId.BEDABIN_NOMAD.id(), NpcId.BEDABIN_NOMAD_GUARD.id(),
 				NpcId.AL_SHABIM.id(), NpcId.MERCENARY_LIFTPLATFORM.id(), NpcId.ANA.id());
 	}
 
@@ -1302,6 +1302,12 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			player.updateQuestStage(this, 3);
 	}
 
+	private void escapingSlaveDialogue(Player player, Npc n) {
+		npcsay(player, n, "Hey, I'm trying to escape!",
+			"You're attracting too much attention to me!",
+			"See ya!");
+	}
+
 	private void mercenaryInsideDialogue(Player player, Npc n, int cID) {
 		if (n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {
 			if (cID == -1) {
@@ -2400,6 +2406,8 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			mercenaryInsideDialogue(player, n, -1);
 		} else if (n.getID() == NpcId.MINING_SLAVE.id()) {
 			slaveDialogue(player, n, -1);
+		} else if (n.getID() == NpcId.ESCAPING_MINING_SLAVE.id()) {
+			escapingSlaveDialogue(player, n);
 		} else if (n.getID() == NpcId.BEDABIN_NOMAD.id()) {
 			bedabinNomadDialogue(player, n, -1);
 		} else if (n.getID() == NpcId.BEDABIN_NOMAD_GUARD.id()) {
@@ -2706,8 +2714,17 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			} else {
 				Npc n = ifnearvisnpc(player, NpcId.CAPTAIN_SIAD.id(), 5);
 				if (n == null) {
-					n = addnpc(player.getWorld(), NpcId.CAPTAIN_SIAD.id(), player.getX(), player.getY(), 60000);
-					n.teleport(86, 1745);
+					final Npc npc = new Npc(player.getWorld(), NpcId.CAPTAIN_SIAD.id(), 86, 1745);
+					npc.setShouldRespawn(false);
+					player.getWorld().registerNpc(npc);
+					player.getWorld().getServer().getGameEventHandler().add(
+						new SingleEvent(player.getWorld(), null, config().GAME_TICK * 492, "Captain Siad Despawn Delay") {
+							public void action() {
+								npcsay(player, npc, "Ah, time for my evening snooze!");
+								npc.remove();
+							}
+						});
+					n = npc;
 					delay(config().GAME_TICK * 2);
 				}
 				captainSiadDialogue(player, n, -1, obj);
