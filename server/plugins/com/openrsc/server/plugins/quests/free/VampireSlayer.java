@@ -295,6 +295,6 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public boolean blockAttackNpc(Player player, Npc npc) {
-		return npc.getID() == NpcId.COUNT_DRAYNOR.id();
+		return false;
 	}
 }
