@@ -13,6 +13,7 @@ import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -393,12 +394,18 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 					}
 					break;
 				case Gujuo.WILL_I_NEED_THIS_POTION_I_FEEL_BRAVE_AS_I_AM:
-					npcsay(player, n, "I would urge you to take it, Bwana, ",
-						"I have heard that the caves are protected by supernatural ",
-						"fear that renders even the bravest man to a trembling wreck.",
+					npcsay(player, n, "I would urge you to take it, Bwana, ");
+					if (player.getCache().hasKey("gujuo_potion")) {
+						npcsay(player, n, "I have heard that the caves are protected by supernatural ");
+					} else {
+						npcsay(player, n, "I have heard that the caves are protected by a supernatural ");
+					}
+					npcsay(player, n, "fear that renders even the bravest man to a trembling wreck.",
 						"You will need all your wits about you when dealing with",
 						"the terrors that exist down there. ");
-					player.getCache().store("gujuo_potion", true);
+					if (!player.getCache().hasKey("gujuo_potion")) {
+						player.getCache().store("gujuo_potion", true);
+					}
 					int opt33 = multi(player, n,
 						"Where can I find Snake weed?",
 						"Where is the source of the spring of pure water ?",
@@ -439,18 +446,22 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 							GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
 						}
 					} else {
-						opt32 = multi(player, n,
+						opt32 = multi(player, n, false, //do not send over
 							"Where is the source of the spring of pure water ?",
 							"Where can I find Snake weed?",
 							"If I went in search of the source, could you help me?",
 							"Ok thanks for your help.");
 						if (opt32 == 0) {
+							say(player, n, "Where is the source of the spring of pure water ?");
 							GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
 						} else if (opt32 == 1) {
+							say(player, n, "Where can I find Snake weed ?");
 							GujuoDialogue(player, n, Gujuo.WHERE_CAN_I_FIND_SNAKE_WEED);
 						} else if (opt32 == 2) {
+							say(player, n, "If I went in search of the source, could you help me?");
 							GujuoDialogue(player, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
 						} else if (opt32 == 3) {
+							say(player, n, "Ok thanks for your help.");
 							GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
 						}
 					}
@@ -509,10 +520,17 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 						"You should perhaps talk to Ungadulu, he may know something ?",
 						"Perhaps there is another way to get to the source of the stream?",
 						"But I am not sure where it is...");
+					ArrayList<String> options = new ArrayList<>();
+					options.add("Where is the source of the spring of pure water ?");
+					if (player.getCache().hasKey("gujuo_potion")) {
+						options.add("If I went in search of the source, could you help me?");
+					} else {
+						options.add("If I went, could you help me?");
+					}
+					options.add("Ok thanks for your help.");
+					String[] finalOptions = new String[options.size()];
 					int opt30 = multi(player, n, false, //do not send over
-						"Where is the source of the spring of pure water ?",
-						"If I went in search of the source, could you help me?",
-						"Ok thanks for your help.");
+						options.toArray(finalOptions));
 					if (opt30 == 0) {
 						say(player, n, "Where is the source of the spring of pure water ?");
 						GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
@@ -539,21 +557,26 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 							"Add them both to a vial of water,",
 							"and you will walk with the bravery of the Kharazi lion.");
 					}
-					int opt29 = multi(player, n,
+					int opt29 = multi(player, n, false, //do not send over
 						"Where can I find Snake weed?",
 						"Where is the source of the spring of pure water ?",
 						"Where can I find ardrigal.",
 						"Will I need this potion? I feel brave enough as I am.",
 						"Ok thanks for your help.");
 					if (opt29 == 0) {
+						say(player, n, "Where can I find Snake weed ?");
 						GujuoDialogue(player, n, Gujuo.WHERE_CAN_I_FIND_SNAKE_WEED);
 					} else if (opt29 == 1) {
+						say(player, n, "Where is the source of the spring of pure water ?");
 						GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
 					} else if (opt29 == 2) {
+						say(player, n, "Where can I find ardrigal.");
 						GujuoDialogue(player, n, Gujuo.WHERE_CAN_I_FIND_ARDRIGAL);
 					} else if (opt29 == 3) {
+						say(player, n, "Will I need this potion? I feel brave enough as I am.");
 						GujuoDialogue(player, n, Gujuo.WILL_I_NEED_THIS_POTION_I_FEEL_BRAVE_AS_I_AM);
 					} else if (opt29 == 4) {
+						say(player, n, "Ok thanks for your help.");
 						GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
 					}
 					break;

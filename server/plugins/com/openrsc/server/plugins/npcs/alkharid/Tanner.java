@@ -45,7 +45,7 @@ public class Tanner implements TalkNpcTrigger {
 				break;
 			case 2:
 				say(player, n, "Leather is rather weak stuff");
-				npcsay(player, n, "Well yes if all you're concerned with is how much it will protect you in a fight");
+				npcsay(player, n, "Well yes if all you're concerned with how much it will protect you in a fight");
 				break;
 		}
 	}

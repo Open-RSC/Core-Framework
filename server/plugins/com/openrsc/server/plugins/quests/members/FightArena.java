@@ -358,18 +358,20 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 				"mind you, too much khali brew and i'll fall asleep");
 		}
 		else if (n.getID() == NpcId.LOCAL.id()) {
-			if (player.getQuestStage(getQuestId()) == -1) {
-				say(player, n, "hello");
-				npcsay(player, n, "please, i haven't done anything");
-				say(player, n, "what?");
-				npcsay(player, n, "i love General Khazard, please believe me");
-				return;
-			}
-			if (player.getQuestStage(getQuestId()) == 3) {
-				say(player, n, "hello");
-				npcsay(player, n, "hello stranger",
-					"Khazard's got some great fights lined up this week",
-					"i can't wait");
+			if (player.getQuestStage(getQuestId()) == 3
+				|| player.getQuestStage(getQuestId()) == -1) {
+				if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_HELMET.id())
+					&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.KHAZARD_CHAINMAIL.id())) {
+					say(player, n, "hello");
+					npcsay(player, n, "please, i haven't done anything");
+					say(player, n, "what?");
+					npcsay(player, n, "i love General Khazard, please believe me");
+				} else {
+					say(player, n, "hello");
+					npcsay(player, n, "hello stranger",
+						"Khazard's got some great fights lined up this week",
+						"i can't wait");
+				}
 				return;
 			}
 			if (player.getQuestStage(getQuestId()) == 2) {
@@ -377,6 +379,18 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 				npcsay(player, n, "are you enjoying the arena?",
 					"i heard the servil family are fighting soon",
 					"should be very entertaining");
+				return;
+			}
+			if (player.getQuestStage(getQuestId()) == 1) {
+				say(player, n, "hello");
+				npcsay(player, n, "hello stranger are you new to these parts?");
+				say(player, n, "i suppose i am");
+				npcsay(player, n, "what's your business?");
+				say(player, n, "just visiting friends in the cells");
+				npcsay(player, n, "visiting, that's funny",
+					"only khazard guards are allowed to see prisoners",
+					"so unless you know where to get some khazard armour",
+					"you won't be visiting anyone");
 				return;
 			}
 			say(player, n, "hello");
@@ -418,8 +432,15 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 					break;
 				case 1:
 				case 2:
-					say(player, n, "hello Lady Servil");
-					npcsay(player, n, "Brave traveller, please..bring back my family");
+					if (!player.getCache().hasKey("freed_servil")) {
+						say(player, n, "hello Lady Servil");
+						npcsay(player, n, "Brave traveller, please..bring back my family");
+					} else {
+						say(player, n, "Lady Servil, i've freed your son",
+							"but he has returned to the arena to try and help your husband");
+						npcsay(player, n, "oh no, they won't stand a chance",
+							"please go back and help");
+					}
 					break;
 				case 3:
 					say(player, n, "Lady Servil");

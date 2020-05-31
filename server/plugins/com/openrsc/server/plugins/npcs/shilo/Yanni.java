@@ -21,7 +21,7 @@ public class Yanni implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
-		boolean hasItemsInterest = false;
+		int countItemsInterest = 0;
 		if (n.getID() == NpcId.YANNI.id()) {
 			say(player, n, "Hello there!");
 			npcsay(player, n, "Greetings Bwana!",
@@ -39,35 +39,39 @@ public class Yanni implements TalkNpcTrigger, UseNpcTrigger {
 				npcsay(player, n, "Great Bwana!");
 				if (player.getCarriedItems().hasCatalogID(ItemId.BONE_KEY.id(), Optional.of(false))) {
 					npcsay(player, n, "I'll give you 100 Gold for the Bone Key.");
-					hasItemsInterest |= true;
+					countItemsInterest++;
 				}
 				if (player.getCarriedItems().hasCatalogID(ItemId.STONE_PLAQUE.id(), Optional.of(false))) {
 					npcsay(player, n, "I'll give you 100 Gold for the Stone-Plaque.");
-					hasItemsInterest |= true;
+					countItemsInterest++;
 				}
 				if (player.getCarriedItems().hasCatalogID(ItemId.TATTERED_SCROLL.id(), Optional.of(false))) {
 					npcsay(player, n, "I'll give you 100 Gold for your tattered scroll");
-					hasItemsInterest |= true;
+					countItemsInterest++;
 				}
 				if (player.getCarriedItems().hasCatalogID(ItemId.CRUMPLED_SCROLL.id(), Optional.of(false))) {
 					npcsay(player, n, "I'll give you 100 Gold for your crumpled scroll");
-					hasItemsInterest |= true;
+					countItemsInterest++;
 				}
 				if (player.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.of(false))) {
 					npcsay(player, n, "I'll give you 100 Gold for your Bervirius Tomb Notes.");
-					hasItemsInterest |= true;
+					countItemsInterest++;
 				}
 				if (player.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.of(false))) {
 					npcsay(player, n, "WOW! I'll give you 500 Gold for your Locating Crystal!");
-					hasItemsInterest |= true;
+					countItemsInterest++;
 				}
 				if (player.getCarriedItems().hasCatalogID(ItemId.BEADS_OF_THE_DEAD.id(), Optional.of(false))) {
 					npcsay(player, n, "Great I'll give you 1000 Gold for your Beads of the Dead.");
-					hasItemsInterest |= true;
+					countItemsInterest++;
 				}
-				if (hasItemsInterest) {
-					npcsay(player, n, "Those are the items I am interested in Bwana.",
-							"If you want to sell me those items, simply show them to me.");
+				if (countItemsInterest > 0) {
+					if (countItemsInterest > 1) {
+						npcsay(player, n, "Those are the items I am interested in Bwana.");
+					} else {
+						npcsay(player, n, "And that's the only item I am interested in.");
+					}
+					npcsay(player, n, "If you want to sell me those items, simply show them to me.");
 				} else {
 					npcsay(player, n, "Sorry Bwana, you have nothing I am interested in.");
 				}

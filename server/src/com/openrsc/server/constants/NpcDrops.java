@@ -817,8 +817,8 @@ public class NpcDrops {
 		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.DWARF.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.MOUNTAIN_DWARF_UNDERGROUND.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.DWARF2.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.DWARF3.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.DWARF_NEAR_COMMANDER.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.DWARF_NEAR_ENGINEER.id(), currentNpcDrops);
 
 		currentNpcDrops = new DropTable("White Knight (102)");
 		currentNpcDrops.addTableDrop(herbDropTable, 5);

@@ -687,7 +687,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 					"I have some items that I need some help with.",
 					"I actually need help with something else.");
 				if (chat3 == 0) {
-					trufitisChat(player, n, Trufitus.SHOW_ME_TEMPLE_ITEMS);
+					trufitisChat(player, n, Trufitus.SHOW_ME_TEMPLE_ITEMS2);
 				} else if (chat3 == 1) {
 					trufitisChat(player, n, Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE);
 				}
@@ -1004,49 +1004,11 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 					}
 				}
 				break;
+			case Trufitus.SHOW_ME_TEMPLE_ITEMS2:
+				showMeItemsDialogue(player, n, 1);
+				break;
 			case Trufitus.SHOW_ME_TEMPLE_ITEMS:
-				npcsay(player, n, "Well, just let me see the item and I'll help as much as I can.");
-				if (player.getQuestStage(Quests.SHILO_VILLAGE) >= 6) {
-					int optTemp = multi(player, n, "I need help with Zadimus.",
-							"I need help with Bervirius.",
-							"I need help with Rashliyia.",
-							"I need some help with the Temple of Ah Za Rhoon.",
-							"Ok, thanks!");
-					if (optTemp == 0) {
-						trufitisChat(player, n, Trufitus.HELP_WITH_BERVIRIUS);
-					} else if (optTemp == 1) {
-						trufitisChat(player, n, Trufitus.HELP_WITH_RASH);
-					} else if (optTemp == 2) {
-						trufitisChat(player, n, Trufitus.HELP_WITH_AH_ZA_RHOON_TEMPLE);
-					} else if (optTemp == 3) {
-						npcsay(player, n, "You're quite welcome Bwana.");
-					}
-					return;
-				}
-				//no stone-plaque in bank or inventory
-				if(!player.getBank().hasItemId(ItemId.STONE_PLAQUE.id()) && !player.getCarriedItems().hasCatalogID(ItemId.STONE_PLAQUE.id())) {
-					npcsay(player, n, "Look for something that can identify the place.",
-							"Leave no stone unturned.");
-				}
-				else {
-					npcsay(player, n, "We need to identify that the place you have found",
-							"is indeed Ah Za Rhoon.");
-				}
-				//player has not explored inner Ah Za Rhoon
-				if(!player.getCache().hasKey("obtained_shilo_info")) {
-					npcsay(player, n, "Look for details of Rashiliyias Kin, these may be well hidden.",
-							"There is a legend about Rashiliyia, look for it in the temple.",
-							"Look for something relating to Zadimus at the temple.",
-							"And best of luck!");
-				}
-				else {
-					npcsay(player, n, "Any scrolls or information about Rashiliyias Kin would be helpful",
-							"Have you got any items concerning Rashiliyia?",
-							"If so, please show me them.",
-							"There must be something relating to Zadimus at the temple",
-							"Did you find anything? If so, let me see it.",
-							"And best of luck!");
-				}
+				showMeItemsDialogue(player, n, 0);
 				break;
 			case Trufitus.KEYS_AND_KIN:
 				npcsay(player, n, "Hmmm, maybe it's a clue of some kind?",
@@ -1062,6 +1024,55 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				break;
 		}
 
+	}
+
+	private void showMeItemsDialogue(Player player, Npc n, int path) {
+		if (path == 0) {
+			npcsay(player, n, "Well, just let me see the item and I'll help as much as I can.");
+		} else if (path == 1) {
+			npcsay(player, n, "Well, just show me the items and I'll help as much as I can.");
+		}
+		if (player.getQuestStage(Quests.SHILO_VILLAGE) >= 6) {
+			int optTemp = multi(player, n, "I need help with Zadimus.",
+				"I need help with Bervirius.",
+				"I need help with Rashliyia.",
+				"I need some help with the Temple of Ah Za Rhoon.",
+				"Ok, thanks!");
+			if (optTemp == 0) {
+				trufitisChat(player, n, Trufitus.HELP_WITH_BERVIRIUS);
+			} else if (optTemp == 1) {
+				trufitisChat(player, n, Trufitus.HELP_WITH_RASH);
+			} else if (optTemp == 2) {
+				trufitisChat(player, n, Trufitus.HELP_WITH_AH_ZA_RHOON_TEMPLE);
+			} else if (optTemp == 3) {
+				npcsay(player, n, "You're quite welcome Bwana.");
+			}
+			return;
+		}
+		//no stone-plaque in bank or inventory
+		if(!player.getBank().hasItemId(ItemId.STONE_PLAQUE.id()) && !player.getCarriedItems().hasCatalogID(ItemId.STONE_PLAQUE.id())) {
+			npcsay(player, n, "Look for something that can identify the place.",
+				"Leave no stone unturned.");
+		}
+		else {
+			npcsay(player, n, "We need to identify that the place you have found",
+				"is indeed Ah Za Rhoon.");
+		}
+		//player has not explored inner Ah Za Rhoon
+		if(!player.getCache().hasKey("obtained_shilo_info")) {
+			npcsay(player, n, "Look for details of Rashiliyias Kin, these may be well hidden.",
+				"There is a legend about Rashiliyia, look for it in the temple.",
+				"Look for something relating to Zadimus at the temple.",
+				"And best of luck!");
+		}
+		else {
+			npcsay(player, n, "Any scrolls or information about Rashiliyias Kin would be helpful",
+				"Have you got any items concerning Rashiliyia?",
+				"If so, please show me them.",
+				"There must be something relating to Zadimus at the temple",
+				"Did you find anything? If so, let me see it.",
+				"And best of luck!");
+		}
 	}
 
 	@Override
@@ -1188,15 +1199,16 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 		public static final int OH_OK = 8;
 		public static final int WEAKNESS = 9;
 		public static final int SHOW_ME_TEMPLE_ITEMS = 10;
-		public static final int KEYS_AND_KIN = 11;
-		public static final int ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE = 12;
-		public static final int HELP_WITH_RASH = 13;
-		public static final int HELP_WITH_ZADIMUS = 14;
-		public static final int HELP_WITH_BERVIRIUS = 15;
-		public static final int HELP_WITH_AH_ZA_RHOON_TEMPLE = 16;
-		public static final int DIDNT_FIND_ANYTHING_IN_THE_TOMB = 17;
-		public static final int DROPED_RASHILIYIA = 18;
-		public static final int FOUND_NOTHING = 19;
+		public static final int SHOW_ME_TEMPLE_ITEMS2 = 11;
+		public static final int KEYS_AND_KIN = 12;
+		public static final int ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE = 13;
+		public static final int HELP_WITH_RASH = 14;
+		public static final int HELP_WITH_ZADIMUS = 15;
+		public static final int HELP_WITH_BERVIRIUS = 16;
+		public static final int HELP_WITH_AH_ZA_RHOON_TEMPLE = 17;
+		public static final int DIDNT_FIND_ANYTHING_IN_THE_TOMB = 18;
+		public static final int DROPED_RASHILIYIA = 19;
+		public static final int FOUND_NOTHING = 20;
 	}
 
 	class QuestObjects {

@@ -55,8 +55,8 @@ public class DwarfCannon
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		return n.getID() == NpcId.DWARF_COMMANDER.id() || n.getID() == NpcId.DWARF_CANNON_ENGINEER.id() ||
-			n.getID() == NpcId.GRAMAT.id() || n.getID() == NpcId.DWARVEN_SMITHY.id() || n.getID() == NpcId.DWARVEN_YOUTH.id();
+		return n.getID() == NpcId.DWARF_COMMANDER.id() || n.getID() == NpcId.DWARF_CANNON_ENGINEER.id() || n.getID() == NpcId.DWARF_NEAR_COMMANDER.id()
+			|| n.getID() == NpcId.GRAMAT.id() || n.getID() == NpcId.DWARVEN_SMITHY.id() || n.getID() == NpcId.DWARVEN_YOUTH.id();
 	}
 
 	@Override
@@ -430,6 +430,21 @@ public class DwarfCannon
 					say(player, n, "not bad, yourself?");
 					npcsay(player, n, "i'm great, the goblins can't get close with this cannon blasting at them");
 					break;
+			}
+		} else if (n.getID() == NpcId.DWARF_NEAR_COMMANDER.id()) {
+			int selected = DataConversions.getRandom().nextInt(1);
+
+			say(player, n, "hello\"");
+
+			if (selected == 0) {
+				npcsay(player, n, "blooming goblins, such dirty beasts");
+				say(player, n, "really!");
+				npcsay(player, n, "i've spent the whole morning cleaning up their do'ings");
+				say(player, n, "yuck");
+			} else if (selected == 1) {
+				npcsay(player, n, "next goblin i catch sneeking around's..",
+					"..gonna be hung on my wall, little green..");
+				say(player, n, "yep..they can be troublesome");
 			}
 		} else if (n.getID() == NpcId.GRAMAT.id()) {
 			int stage = player.getCache().hasKey("miniquest_dwarf_youth_rescue") ? player.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;

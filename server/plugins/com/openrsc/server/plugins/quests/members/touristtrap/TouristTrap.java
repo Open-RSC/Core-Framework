@@ -1690,6 +1690,24 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							} else if (dede == 3) {
 								npcsay(player, n, "Very well, good day Effendi!");
 							}
+						} else if (player.getCache().hasKey("tech_plans")) {
+							int keke = multi(player, n,
+								"I've lost the key and the plans!",
+								"What is this place?",
+								"Goodbye!");
+							if (keke == 0) {
+								npcsay(player, n, "How very careless of you!");
+								player.message("Al Shabim thinks for a moment.");
+								npcsay(player, n, "The Captain may have some new plans drawn up.",
+									"Go back and see if you can collect them.",
+									"Here is the key you'll need for the chest!");
+								player.message("Al Shabim gives you another key.");
+								give(player, ItemId.BEDOBIN_COPY_KEY.id(), 1);
+							} else if (keke == 1) {
+								alShabimDialogue(player, n, AlShabim.WHATISTHISPLACE);
+							} else if (keke == 2) {
+								npcsay(player, n, "Very well, good day Effendi!");
+							}
 						} else {
 							int kaka = multi(player, n,
 								"I've lost the key!",

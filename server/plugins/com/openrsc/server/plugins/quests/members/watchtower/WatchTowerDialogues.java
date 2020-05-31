@@ -121,29 +121,46 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 			}
 		}
 		else if (inArray(n.getID(), NpcId.SKAVID_IG.id(), NpcId.SKAVID_AR.id(), NpcId.SKAVID_CUR.id(), NpcId.SKAVID_NOD.id())) {
+			// replays not showing what happens immediately afte completing language but very likely them saying Ar cur! up to and incl. after quest
 			if (n.getID() == NpcId.SKAVID_IG.id()) {
-				if (player.getCache().hasKey("language_ig") || player.getCache().hasKey("skavid_completed_language") || player.getQuestStage(Quests.WATCHTOWER) == -1) {
+				if (player.getCache().hasKey("skavid_completed_language") || player.getQuestStage(Quests.WATCHTOWER) == -1) {
+					npcsay(player, n, "Ar cur!");
+					player.message("You have already learned the skavid language");
+					return;
+				} else if (player.getCache().hasKey("language_ig")) {
 					npcsay(player, n, "Bidith Ig...");
 					player.message("You have already talked to this skavid");
 					return;
 				}
 				npcsay(player, n, "Cur bidith...");
 			} else if (n.getID() == NpcId.SKAVID_AR.id()) {
-				if (player.getCache().hasKey("language_ar") || player.getCache().hasKey("skavid_completed_language") || player.getQuestStage(Quests.WATCHTOWER) == -1) {
+				if (player.getCache().hasKey("skavid_completed_language") || player.getQuestStage(Quests.WATCHTOWER) == -1) {
+					npcsay(player, n, "Ar cur!");
+					player.message("You have already learned the skavid language");
+					return;
+				} else if (player.getCache().hasKey("language_ar")) {
 					npcsay(player, n, "Ar cur...");
 					player.message("You have already talked to this skavid");
 					return;
 				}
 				npcsay(player, n, "Gor cur...");
 			} else if (n.getID() == NpcId.SKAVID_CUR.id()) {
-				if (player.getCache().hasKey("language_cur") || player.getCache().hasKey("skavid_completed_language") || player.getQuestStage(Quests.WATCHTOWER) == -1) {
+				if (player.getCache().hasKey("skavid_completed_language") || player.getQuestStage(Quests.WATCHTOWER) == -1) {
+					npcsay(player, n, "Ar cur!");
+					player.message("You have already learned the skavid language");
+					return;
+				} else if (player.getCache().hasKey("language_cur")) {
 					npcsay(player, n, "Cur tanath...");
 					player.message("You have already talked to this skavid");
 					return;
 				}
 				npcsay(player, n, "Bidith tanath...");
 			} else if (n.getID() == NpcId.SKAVID_NOD.id()) {
-				if (player.getCache().hasKey("language_nod") || player.getCache().hasKey("skavid_completed_language") || player.getQuestStage(Quests.WATCHTOWER) == -1) {
+				if (player.getCache().hasKey("skavid_completed_language") || player.getQuestStage(Quests.WATCHTOWER) == -1) {
+					npcsay(player, n, "Ar cur!");
+					player.message("You have already learned the skavid language");
+					return;
+				} else if (player.getCache().hasKey("language_nod")) {
 					npcsay(player, n, "Gor nod...");
 					player.message("You have already talked to this skavid");
 					return;

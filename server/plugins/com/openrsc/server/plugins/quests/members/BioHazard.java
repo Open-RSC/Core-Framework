@@ -956,7 +956,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 									"That's why Elena wanted you to do it- because she wasn't sure what was happening",
 									"So what does that mean exactly?");
 								if (menu3 == 0) {
-									npcsay(player, n, "Well that's just it. Nothing has happened",
+									npcsay(player, n, "Well that's just it.Nothing has happened",
 										"I don't know what this sample is, but it certainly isn't toxic");
 									say(player, n, "So what about the plague?");
 									npcsay(player, n, "Don't you understand, there is no plague!",

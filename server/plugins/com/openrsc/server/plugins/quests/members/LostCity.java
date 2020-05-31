@@ -166,7 +166,8 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					"I've been in that shed, I didn't see a city");
 				if (menu == 0) {
 					say(player, n, "How does it fit in a shed then?");
-					npcsay(player, n, "The city isn't in the shed",
+					npcsay(player, n, "Silly person",
+						"The city isn't in the shed",
 						"The shed is a portal to Zanaris");
 					say(player, n, "So I just walk into the shed and end up in Zanaris?");
 				} else if (menu == 1) {

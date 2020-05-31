@@ -240,19 +240,28 @@ public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
 						npcsay(player, n, "are you ok?, i heard a rumble further down the cavern",
 							"i thought the whole place was going to cave in");
 						say(player, n, "im fine");
+						npcsay(player, n, "i assumed you were dead, or worse");
+						say(player, n, "i've managed to survive so far");
+						npcsay(player, n, "the passsage ahead's blocked ,but you should be able to get through",
+							"i'll follow behind",
+							"aaaaaarrgghhh");
+						say(player, n, "what's wrong?");
+						npcsay(player, n, "it's the voices, can't you hear them",
+							"they wont leave me be",
+							"i feel him calling to me");
 					} else {
 						npcsay(player, n, "keep back foul beast of the nigh.. ,wait, it's you!");
 						say(player, n, "as far as i know");
+						npcsay(player, n, "i assumed you were dead, or worse");
+						say(player, n, "i've managed to survive so far");
+						npcsay(player, n, "the passsage ahead's blocked ,but you should be able to get through",
+							"i'll follow behind",
+							"aaaaaarrgghhh");
+						say(player, n, "what's wrong?");
+						npcsay(player, n, "it's the voices, can't you hear them?",
+							"they wont leave be",
+							"i feel him calling to me");
 					}
-					npcsay(player, n, "i assumed you were dead, or worse");
-					say(player, n, "i've managed to survive so far");
-					npcsay(player, n, "the passsage ahead's blocked ,but you should be able to get through",
-						"i'll follow behind",
-						"aaaaaarrgghhh");
-					say(player, n, "what's wrong?");
-					npcsay(player, n, "it's the voices, can't you hear them?",
-						"they wont leave be",
-						"i feel him calling to me");
 					break;
 				//nothing interesting happens on stage 5,6,7
 				case 5:

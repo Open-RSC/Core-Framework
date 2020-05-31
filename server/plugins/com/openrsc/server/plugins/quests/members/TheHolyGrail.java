@@ -382,9 +382,16 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 				player.message("Well done you have defeated the black knight titan");
 				player.teleport(414, 11, false);
 			} else {
-				n.resetCombatEvent();
-				n.getSkills().setLevel(Skills.HITS, n.getDef().hits);
-				n.teleport(n.getLoc().startX, n.getLoc().startY);
+				// should remove the original black knight, make dialogue if there is some black
+				// titan and add a new one
+				n.remove();
+				Npc otherTitan = ifnearvisnpc(player, NpcId.BLACK_KNIGHT_TITAN.id(), 5);
+				Npc newTitan = addnpc(player.getWorld(), NpcId.BLACK_KNIGHT_TITAN.id(), 413, 11);
+				if (otherTitan != null) {
+					newTitan.setShouldRespawn(false);
+					npcsay(player, otherTitan, "You can't defeat me little man",
+						"I'm invincible!");
+				}
 				player.message("Maybe you need something more to beat the titan");
 			}
 		}
@@ -419,7 +426,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 			if (player.getQuestStage(this) == 4) {
 				mes("You hear muffled noises from the sack");
 				player.message("You open the sack");
-				Npc percival = addnpc(player.getWorld(), NpcId.SIR_PERCIVAL.id(), 328, 446, 120000);
+				Npc percival = addnpc(player.getWorld(), NpcId.SIR_PERCIVAL.id(), 328, 446, 64 * 1000);
 				npcsay(player, percival, "Wow thankyou",
 					"I could hardly breathe in there");
 				int menu = multi(player, percival,

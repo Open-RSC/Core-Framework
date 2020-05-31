@@ -13,11 +13,11 @@ public class Man implements TalkNpcTrigger {
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
-		// Dialogue same between all Man, Farmer, Thief, Rogue
+		// Dialogue same between all Man, Farmer, Thief, Rogue, Alkharid Warrior
 		return inArray(n.getID(), NpcId.MAN1.id(), NpcId.MAN2.id(), NpcId.MAN3.id(),
 			NpcId.FARMER1.id(), NpcId.FARMER2.id(),
 			NpcId.THIEF_GENERIC.id(), NpcId.THIEF_BLANKET.id(), NpcId.HEAD_THIEF.id(),
-			NpcId.ROGUE.id());
+			NpcId.ROGUE.id(), NpcId.ALKHARID_WARRIOR.id());
 	}
 
 	@Override
