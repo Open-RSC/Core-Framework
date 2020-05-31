@@ -410,7 +410,7 @@ public class Mourner implements TalkNpcTrigger {
 			}
 			String[] finalOptions = new String[options.size()];
 			int menu = multi(player, n, false, //do not send over
-				finalOptions);
+				options.toArray(finalOptions));
 			if (player.getQuestStage(Quests.PLAGUE_CITY) >= 9 && n.getID() == HEAD_MOURNER) {
 				headMournerDialogue(player, n, menu);
 			}

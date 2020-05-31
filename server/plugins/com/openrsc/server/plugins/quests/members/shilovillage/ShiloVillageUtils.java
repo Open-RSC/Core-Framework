@@ -320,6 +320,9 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				"Tattered Yellow papyrus",
 				"Decayed White papyrus",
 				"Crusty Orange papyrus");
+			if (menu >= 0 && !player.getCache().hasKey("read_tomb_notes")) {
+				player.getCache().store("read_tomb_notes", true);
+			}
 			if (menu == 0) {
 				ActionSender.sendBox(player, "...and rest like your mother who is silent in the peace of her "
 					+ "tomb far to the North of Ah Za Rhoon. Near the sea, and under "

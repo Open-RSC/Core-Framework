@@ -64,7 +64,11 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 			}
 
 			if(validatebankpin(player)) {
-				npcsay(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
+				if (npc.getID() == NpcId.GNOME_BANKER.id()) {
+					npcsay(player, npc, "absolutely sir");
+				} else {
+					npcsay(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
+				}
 				player.setAccessingBank(true);
 				ActionSender.showBank(player);
 			}

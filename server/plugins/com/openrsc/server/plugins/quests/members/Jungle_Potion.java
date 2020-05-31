@@ -434,52 +434,77 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 								}
 							}
 						} else if (player.getQuestStage(Quests.SHILO_VILLAGE) == 6) {
+							int chat;
 							say(player, n, "Greetings...");
-							npcsay(player, n, "Greetings Bwana, did you find the tomb of Bervirius?");
-							int chat = multi(player, n,
-								"Yes, I found his tomb.",
-								"No, I didn't find a thing.",
-								"I actually need help with something else.");
-							if (chat == 0) {
-								npcsay(player, n, "That is truly great news Bwana!",
-									"You are certainly very resourceful.",
-									"If you have found any items that you need help with",
-									"please let me see them and I will help as much as I can.");
-								int ex5 = multi(player, n,
-									"I actually need help with something else.",
-									"I didn't find anything in the tomb.");
-								if (ex5 == 0) {
-									trufitisChat(player, n, Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE);
-								} else if (ex5 == 1) {
-									trufitisChat(player, n, Trufitus.DIDNT_FIND_ANYTHING_IN_THE_TOMB);
+							if (!player.getCache().hasKey("read_tomb_notes")) {
+								npcsay(player, n, "Greetings Bwana, did you find Rashiliyias Tomb?");
+								say(player, n, "Yes, I think so.");
+								chat = multi(player, n, false, //do not send over
+									"I think I found Bervirius Tomb",
+									"I have some items that I need help with.",
+									"I need some help with the Temple of Ah Za Rhoon.");
+								if (chat == 0) {
+									say(player, n, "I think I found Bervirius Tomb.");
+									npcsay(player, n, "Congratulations Bwana,",
+										"but perhaps you need to make a thorough",
+										"examination of the Ah Za Rhoon temple first?",
+										"Show me any items you have found though.",
+										"I may be able to help.");
+								} else if (chat == 1) {
+									say(player, n, "I have some items that I need help with.");
+									trufitisChat(player, n, Trufitus.SHOW_ME_TEMPLE_ITEMS);
+								} else if (chat == 2) {
+									say(player, n, "I need some help with the Temple of Ah Za Rhoon.");
+									trufitisChat(player, n, Trufitus.HELP_WITH_AH_ZA_RHOON_TEMPLE);
 								}
-							} else if (chat == 1) {
-								npcsay(player, n, "That is a shame Bwana, we really do need to act against",
-									"Rashiliyia soon if we are ever to stand a chance of defeating her.");
-								int chat2 = multi(player, n,
-									"Actually I did find the tomb, I was just joking.",
-									"I actually need help with something else.",
-									"I didn't find anything in the tomb.");
-								if (chat2 == 0) {
-									npcsay(player, n, "Well, Bwana, this is no laughing matter.",
-										"We need to take this very seriously and act now!",
-										"If you have found any items at the tomb that you need help ",
-										"with please let me see them and I will help as much as I can.");
-									int ex4 = multi(player, n,
-										"I didn't find anything in the tomb.",
-										"I actually need help with something else.");
-									if (ex4 == 0) {
-										trufitisChat(player, n, Trufitus.DIDNT_FIND_ANYTHING_IN_THE_TOMB);
-									} else if (ex4 == 1) {
+							}
+							else {
+								npcsay(player, n, "Greetings Bwana, did you find the tomb of Bervirius?");
+								chat = multi(player, n,
+									"Yes, I found his tomb.",
+									"No, I didn't find a thing.",
+									"I actually need help with something else.");
+								if (chat == 0) {
+									npcsay(player, n, "That is truly great news Bwana!",
+										"You are certainly very resourceful.",
+										"If you have found any items that you need help with",
+										"please let me see them and I will help as much as I can.");
+									int ex5 = multi(player, n,
+										"I actually need help with something else.",
+										"I didn't find anything in the tomb.");
+									if (ex5 == 0) {
 										trufitisChat(player, n, Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE);
+									} else if (ex5 == 1) {
+										trufitisChat(player, n, Trufitus.DIDNT_FIND_ANYTHING_IN_THE_TOMB);
 									}
-								} else if (chat2 == 1) {
+								} else if (chat == 1) {
+									npcsay(player, n, "That is a shame Bwana, we really do need to act against",
+										"Rashiliyia soon if we are ever to stand a chance of defeating her.");
+									int chat2 = multi(player, n,
+										"Actually I did find the tomb, I was just joking.",
+										"I actually need help with something else.",
+										"I didn't find anything in the tomb.");
+									if (chat2 == 0) {
+										npcsay(player, n, "Well, Bwana, this is no laughing matter.",
+											"We need to take this very seriously and act now!",
+											"If you have found any items at the tomb that you need help ",
+											"with please let me see them and I will help as much as I can.");
+										int ex4 = multi(player, n,
+											"I didn't find anything in the tomb.",
+											"I actually need help with something else.");
+										if (ex4 == 0) {
+											trufitisChat(player, n, Trufitus.DIDNT_FIND_ANYTHING_IN_THE_TOMB);
+										} else if (ex4 == 1) {
+											trufitisChat(player, n, Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE);
+										}
+									} else if (chat2 == 1) {
+										trufitisChat(player, n, Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE);
+									} else if (chat2 == 2) {
+										trufitisChat(player, n, Trufitus.DIDNT_FIND_ANYTHING_IN_THE_TOMB);
+									}
+								} else if (chat == 2) {
 									trufitisChat(player, n, Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE);
-								} else if (chat2 == 2) {
-									trufitisChat(player, n, Trufitus.DIDNT_FIND_ANYTHING_IN_THE_TOMB);
 								}
-							} else if (chat == 2) {
-								trufitisChat(player, n, Trufitus.ACTUALLY_NEED_HELP_WITH_SOMETHING_ELSE);
 							}
 						} else if (player.getQuestStage(Quests.SHILO_VILLAGE) == 7) {
 							npcsay(player, n, "You may want to start looking for Rashiliyia's Tomb.",

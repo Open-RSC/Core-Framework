@@ -398,6 +398,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 						"fear that renders even the bravest man to a trembling wreck.",
 						"You will need all your wits about you when dealing with",
 						"the terrors that exist down there. ");
+					player.getCache().store("gujuo_potion", true);
 					int opt33 = multi(player, n,
 						"Where can I find Snake weed?",
 						"Where is the source of the spring of pure water ?",
@@ -414,44 +415,90 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 					}
 					break;
 				case Gujuo.WHERE_CAN_I_FIND_ARDRIGAL:
+					int opt32;
 					npcsay(player, n, "Ardrigal is often found growing near to large groups of palms.",
 						"Such a collection exists in the North. If you head east out of",
 						"Tai Bwo Wannai village you should come across them.",
 						"The herb grows in the shade of the palm so check carefully.");
-					int opt32 = multi(player, n,
-						"Where is the source of the spring of pure water ?",
-						"Where can I find Snake weed?",
-						"If I went in search of the source, could you help me?",
-						"Ok thanks for your help.");
-					if (opt32 == 0) {
-						GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
-					} else if (opt32 == 1) {
-						GujuoDialogue(player, n, Gujuo.WHERE_CAN_I_FIND_SNAKE_WEED);
-					} else if (opt32 == 2) {
-						GujuoDialogue(player, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
-					} else if (opt32 == 3) {
-						GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+					if (player.getCache().hasKey("gujuo_potion")) {
+						opt32 = multi(player, n,
+							"Where can I find Snake weed ?",
+							"Where is the source of the spring of pure water ?",
+							"If I went, could you help me ?",
+							"Will I need this potion? I feel brave enough as I am.",
+							"Ok thanks for your help.");
+						if (opt32 == 0) {
+							GujuoDialogue(player, n, Gujuo.WHERE_CAN_I_FIND_SNAKE_WEED);
+						} else if (opt32 == 1) {
+							GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
+						} else if (opt32 == 2) {
+							GujuoDialogue(player, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
+						} else if (opt32 == 3) {
+							GujuoDialogue(player, n, Gujuo.WILL_I_NEED_THIS_POTION_I_FEEL_BRAVE_AS_I_AM);
+						} else if (opt32 == 4) {
+							GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+						}
+					} else {
+						opt32 = multi(player, n,
+							"Where is the source of the spring of pure water ?",
+							"Where can I find Snake weed?",
+							"If I went in search of the source, could you help me?",
+							"Ok thanks for your help.");
+						if (opt32 == 0) {
+							GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
+						} else if (opt32 == 1) {
+							GujuoDialogue(player, n, Gujuo.WHERE_CAN_I_FIND_SNAKE_WEED);
+						} else if (opt32 == 2) {
+							GujuoDialogue(player, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
+						} else if (opt32 == 3) {
+							GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+						}
 					}
 					break;
 				case Gujuo.WHERE_CAN_I_FIND_SNAKE_WEED:
-					npcsay(player, n, "Snake weed is usually found in swampy marshy areas.",
-						"It is not very common and it may be quite difficult to find.",
-						"There is some marsh to the South of Tai Bwo Wannai village.",
-						"Near to where the river becomes the sea.",
-						"The herb grows near Jungle Vines, so check all around very carefully.");
-					int opt31 = multi(player, n,
-						"Where is the source of the spring of pure water ?",
-						"Where can I find ardrigal.",
-						"If I went in search of the source, could you help me?",
-						"Ok thanks for your help.");
-					if (opt31 == 0) {
-						GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
-					} else if (opt31 == 1) {
-						GujuoDialogue(player, n, Gujuo.WHERE_CAN_I_FIND_ARDRIGAL);
-					} else if (opt31 == 2) {
-						GujuoDialogue(player, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
-					} else if (opt31 == 3) {
-						GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+					int opt31;
+					if (player.getCache().hasKey("gujuo_potion")) {
+						npcsay(player, n, "Snake weed is usually found by swampy marshy areas.",
+							"It is not very common and it may be quite difficult to find.",
+							"There is some marsh to the south of Tai Bwo Wannai village,",
+							"The herb grows near Jungle Vines, so check all around very carefully.");
+						opt31 = multi(player, n,
+							"Where can I find ardrigal.",
+							"Where is the source of the spring of pure water ?",
+							"If I went, could you help me ?",
+							"Will I need this potion? I feel brave enough as I am.",
+							"Ok thanks for your help.");
+						if (opt31 == 0) {
+							GujuoDialogue(player, n, Gujuo.WHERE_CAN_I_FIND_ARDRIGAL);
+						} else if (opt31 == 1) {
+							GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
+						} else if (opt31 == 2) {
+							GujuoDialogue(player, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
+						} else if (opt31 == 3) {
+							GujuoDialogue(player, n, Gujuo.WILL_I_NEED_THIS_POTION_I_FEEL_BRAVE_AS_I_AM);
+						} else if (opt31 == 4) {
+							GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+						}
+					} else {
+						npcsay(player, n, "Snake weed is usually found in swampy marshy areas.",
+							"It is not very common and it may be quite difficult to find.",
+							"There is some marsh to the South of Tai Bwo Wannai village.",
+							"Near to where the river becomes the sea.",
+							"The herb grows near Jungle Vines, so check all around very carefully.");
+						opt31 = multi(player, n,
+							"Where is the source of the spring of pure water ?",
+							"Where can I find ardrigal.",
+							"If I went in search of the source, could you help me?",
+							"Ok thanks for your help.");
+						if (opt31 == 0) {
+							GujuoDialogue(player, n, Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2);
+						} else if (opt31 == 1) {
+							GujuoDialogue(player, n, Gujuo.WHERE_CAN_I_FIND_ARDRIGAL);
+						} else if (opt31 == 2) {
+							GujuoDialogue(player, n, Gujuo.IF_I_WENT_IN_SEARCH_OF_THE_SOURCE_COULD_U_HELP_ME);
+						} else if (opt31 == 3) {
+							GujuoDialogue(player, n, Gujuo.OK_THANKS_FOR_YOUR_HELP);
+						}
 					}
 					break;
 				case Gujuo.I_SEARCHED_THE_CATACOMBS_THOROUGHLY_BUT_FOUND_NADA_NIET:
@@ -482,10 +529,16 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 						"I will assist as much as I can.",
 						"You will need the bravery of the Jungle lion,",
 						"if you are to go into that forbidden place.",
-						"I can give you the recipe for a potion to help with that.",
-						"You will need to find two herbs, Snake weed and Ardrigal.",
-						"Add them both to a vial of water,",
-						"and you will walk with the bravery of the Kharazi lion.");
+						"I can give you the recipe for a potion to help with that.");
+					if (player.getCache().hasKey("gujuo_potion")) {
+						npcsay(player, n, "You will need to find two herbs, Snake weed and ardrigal.",
+							"Add them both to a vial of water,",
+							"and you will walk with the bravery of the lion.");
+					} else {
+						npcsay(player, n, "You will need to find two herbs, Snake weed and Ardrigal.",
+							"Add them both to a vial of water,",
+							"and you will walk with the bravery of the Kharazi lion.");
+					}
 					int opt29 = multi(player, n,
 						"Where can I find Snake weed?",
 						"Where is the source of the spring of pure water ?",

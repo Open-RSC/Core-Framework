@@ -332,6 +332,14 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 		else if (item.getCatalogId() == ItemId.BELL.id()) {
 			player.message("Ting a ling a ling");
 			if (player.getLocation().inBounds(411, 27, 425, 40)) {
+				if (DataConversions.getRandom().nextBoolean()) {
+					Npc maiden = ifnearvisnpc(player, NpcId.MAIDEN.id(), 5);
+					if (maiden != null) {
+						npcsay(player, maiden, "welcome to the grail castle",
+							"you should come inside",
+							"It's cold out there");
+					}
+				}
 				player.message("Somehow you are now inside the castle");
 				player.teleport(420, 35, false);
 			}

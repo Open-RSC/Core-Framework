@@ -20,6 +20,12 @@ public class Chef implements TalkNpcTrigger {
 	public void onTalkNpc(final Player player, final Npc n) {
 		switch (player.getQuestStage(Quests.FAMILY_CREST)) {
 			case -1:
+				if (player.getCache().hasKey("famcrest_gauntlets")
+					&& player.getCache().getInt("famcrest_gauntlets") != Gauntlets.STEEL.id()) {
+					npcsay(player, n, "I hear you have bought the completed crest to my father",
+						"Impressive work I must say");
+					return;
+				}
 				npcsay(player, n, "I hear you have brought the completed crest to my father",
 					"Impressive work I must say");
 				if (player.getCarriedItems().hasCatalogID(ItemId.STEEL_GAUNTLETS.id(), Optional.of(false)) && getGauntletEnchantment(player) == Gauntlets.STEEL.id()) {
