@@ -1,3 +1,4 @@
+include .env
 #---------------------------------------------------------------
 
 # Section utilized by various shell scripts within Deployment_Scripts
