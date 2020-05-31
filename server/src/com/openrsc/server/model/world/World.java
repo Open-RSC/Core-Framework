@@ -86,7 +86,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	private Queue<GlobalMessage> globalMessageQueue = new LinkedList<GlobalMessage>();
 
-	private NpcDrops npcDrops;
+	public NpcDrops npcDrops;
 
 	/**
 	 * Double ended queue to store snapshots into
