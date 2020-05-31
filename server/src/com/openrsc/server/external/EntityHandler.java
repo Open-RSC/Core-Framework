@@ -3,22 +3,18 @@ package com.openrsc.server.external;
 import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.database.struct.ItemDef;
-import com.openrsc.server.database.struct.NpcDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.TelePoint;
-import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.util.PersistenceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import static org.apache.logging.log4j.util.Unbox.box;
 
 /**
  * This class handles the loading of entities from the conf files, and provides
@@ -144,18 +140,18 @@ public final class EntityHandler {
 
 	public void load() {
 		npcs = new ArrayList<>();
-		LOGGER.info("\t Loading npc definitions...");
+		LOGGER.info("Loading npc definitions...");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefs.json");
 		loadNpcs(getServer().getConfig().CONFIG_DIR + "/defs/NpcDefsCustom.json");
 		customNpcConditions();
-		LOGGER.info("\t Loaded " + npcs.size() + " npc definitions");
+		LOGGER.info("Loaded " + npcs.size() + " npc definitions");
 
 		items = new ArrayList<>();
-		LOGGER.info("\t Loading item definitions...");
+		LOGGER.info("Loading item definitions...");
 		loadItems(getServer().getConfig().CONFIG_DIR + "/defs/ItemDefs.json");
 		loadItems(getServer().getConfig().CONFIG_DIR + "/defs/ItemDefsCustom.json");
 		customItemConditions();
-		LOGGER.info("\t Loaded " + items.size() + " item definitions");
+		LOGGER.info("Loaded " + items.size() + " item definitions");
 
 		doors = (DoorDef[]) getPersistenceManager().load("defs/DoorDef.xml.gz");
 		gameObjects = (GameObjectDef[]) getPersistenceManager().load("defs/GameObjectDef.xml.gz");

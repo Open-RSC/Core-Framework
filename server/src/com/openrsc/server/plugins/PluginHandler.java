@@ -203,9 +203,9 @@ public final class PluginHandler {
 			}
 		}
 
-		LOGGER.info("\t Loaded {}", box(getServer().getWorld().getQuests().size()) + " Quests.");
-		LOGGER.info("\t Loaded {}", box(getServer().getWorld().getMiniGames().size()) + " MiniGames.");
-		LOGGER.info("\t Loaded total of {}", box(countPlugins) + " plugin handlers.");
+		LOGGER.info("Loaded {}", box(getServer().getWorld().getQuests().size()) + " Quests.");
+		LOGGER.info("Loaded {}", box(getServer().getWorld().getMiniGames().size()) + " MiniGames.");
+		LOGGER.info("Loaded total of {}", box(countPlugins) + " plugin handlers.");
 	}
 
 	private List<Class<?>> loadInterfaces(final String thePackage) throws ClassNotFoundException {

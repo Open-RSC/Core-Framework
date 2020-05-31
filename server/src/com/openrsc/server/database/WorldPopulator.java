@@ -48,7 +48,7 @@ public final class WorldPopulator {
 				getWorld().registerGameObject(obj);
 				countOBJ++;
 			}
-			LOGGER.info("\t Loaded {}", box(countOBJ) + " Objects.");
+			LOGGER.info("Loaded {}", box(countOBJ) + " Objects.");
 
 			/* LOAD NPC LOCS */
 			NpcLocation[] npcLocations = getWorld().getServer().getDatabase().getNpcLocs();
@@ -82,7 +82,7 @@ public final class WorldPopulator {
 				}*/
 				getWorld().registerNpc(new Npc(getWorld(), n));
 			}
-			LOGGER.info("\t Loaded {}", box(getWorld().countNpcs()) + " NPC spawns");
+			LOGGER.info("Loaded {}", box(getWorld().countNpcs()) + " NPC spawns");
 
 			/* LOAD GROUND ITEMS */
 			FloorItem[] groundItems = getWorld().getServer().getDatabase().getGroundItems();
@@ -106,14 +106,14 @@ public final class WorldPopulator {
 				getWorld().registerItem(new GroundItem(getWorld(), i));
 				countGI++;
 			}
-			LOGGER.info("\t Loaded {}", box(countGI) + " grounditems.");
+			LOGGER.info("Loaded {}", box(countGI) + " grounditems.");
 
 			//Load the in-use ItemID's from the database
 			Integer inUseItemIds[] = getWorld().getServer().getDatabase().getInUseItemIds();
 			for (Integer itemId : inUseItemIds)
 				getWorld().getServer().getDatabase().getItemIDList().add(itemId);
 
-			LOGGER.info("\t Loaded {}", box(getWorld().getServer().getDatabase().getItemIDList().size()) + " itemIDs.");
+			LOGGER.info("Loaded {}", box(getWorld().getServer().getDatabase().getItemIDList().size()) + " itemIDs.");
 
 		} catch (Exception e) {
 			LOGGER.catching(e);
