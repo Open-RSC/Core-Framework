@@ -121,15 +121,16 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 				player.message("You bind the temple's power into " + def.getRuneName() + " runes.");
 			}
 			int successCount = 0;
-			int repeatTimes = player.getCarriedItems().getInventory().countId(ItemId.RUNE_ESSENCE.id());
+			int repeatTimes = player.getCarriedItems().getInventory().countId(ItemId.RUNE_ESSENCE.id(), Optional.of(false));
 			for (int loop = 0; loop < repeatTimes; ++loop) {
 				Item i = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(ItemId.RUNE_ESSENCE.id(), Optional.of(false)));
-				if (i == null) return;
+				if (i == null) break;
 				player.getCarriedItems().remove(i);
 				player.getCarriedItems().getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())));
 				++successCount;
 			}
+			System.out.println(def.getExp() + " " + successCount);
 			player.incExp(Skills.RUNECRAFTING, def.getExp() * successCount, true);
 		}
 	}
