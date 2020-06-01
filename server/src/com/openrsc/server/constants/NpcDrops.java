@@ -53,6 +53,8 @@ public class NpcDrops {
 		}
 
 		if (config.WANT_CUSTOM_QUESTS) {
+			// TODO: Find a better config for this.
+			initializeCustomRareDropTables();
 			createCustomQuestDrops();
 		}
 	}
