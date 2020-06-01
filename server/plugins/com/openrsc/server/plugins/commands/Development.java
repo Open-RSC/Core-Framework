@@ -17,6 +17,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -418,7 +420,10 @@ public final class Development implements CommandTrigger {
 			ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
 		}
 		else if (cmd.equalsIgnoreCase("debugdroptables")) {
-			new NpcDrops(player.getWorld()).debugDropTables();
+			for (Map.Entry<Integer, DropTable> drop : player.getWorld().getNpcDrops().getDrops().entrySet()) {
+				if (drop.getValue().getTotalWeight() == 0 || drop.getValue().getTotalWeight() == 128) continue;
+				System.out.println(drop.getKey() + " = " + drop.getValue().getTotalWeight());
+			}
 		}
 		else if (cmd.equalsIgnoreCase("droptest")) {
 			if (args.length < 1) {

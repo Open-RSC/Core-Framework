@@ -1434,6 +1434,7 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.POISON_CROSSBOW_BOLTS.id(), 4, 2);
 		currentNpcDrops.addItemDrop(ItemId.STEEL_SPEAR.id(), 1, 1);
 		currentNpcDrops.addItemDrop(ItemId.FULL_POISON_ANTIDOTE.id(), 1, 1);
+		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.TRIBESMAN.id(), currentNpcDrops);
 
 		currentNpcDrops = new DropTable("First plague sheep (430)");
@@ -1612,9 +1613,7 @@ public class NpcDrops {
 		return this.npcDrops.getOrDefault(npcId, null);
 	}
 
-	public void debugDropTables() {
-		for (Map.Entry<Integer, DropTable> table : this.npcDrops.entrySet()) {
-			System.out.println(table.getKey() + ": " + table.getValue().getTotalWeight());
-		}
+	public HashMap<Integer, DropTable> getDrops() {
+		return this.npcDrops;
 	}
 }

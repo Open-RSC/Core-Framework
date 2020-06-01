@@ -145,7 +145,9 @@ public class DropTable {
 					if (ringOfWealth && drop.rare) {
 						owner.playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
 					}
-					items.addAll(drop.table.rollItem(ringOfWealth, owner));
+					if (drop.table.getTotalWeight() > 0) {
+						items.addAll(drop.table.rollItem(ringOfWealth, owner));
+					}
 					break;
 				}
 			}
