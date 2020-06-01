@@ -66,7 +66,7 @@ public final class Event implements CommandTrigger {
 			}
 
 			Player targetPlayer = null;
-			boolean isTown = false;
+			boolean isTownOrPlayer = false;
 			String town = "";
 			int x = -1;
 			int y = -1;
@@ -76,12 +76,12 @@ public final class Event implements CommandTrigger {
 			if(args.length == 1) {
 				targetPlayer = player;
 				town = args[0];
-				isTown = true;
+				isTownOrPlayer = true;
 			}
 			else if(args.length == 2) {
 				try {
 					x = Integer.parseInt(args[0]);
-					isTown = false;
+					isTownOrPlayer = false;
 
 					try {
 						y = Integer.parseInt(args[1]);
@@ -95,7 +95,7 @@ public final class Event implements CommandTrigger {
 				catch(NumberFormatException ex) {
 					targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
 					town = args[1];
-					isTown = true;
+					isTownOrPlayer = true;
 				}
 			}
 			else if(args.length >= 3) {
@@ -114,7 +114,7 @@ public final class Event implements CommandTrigger {
 					player.message(badSyntaxPrefix + cmd.toUpperCase() + " [player] [x] [y]");
 					return;
 				}
-				isTown = false;
+				isTownOrPlayer = false;
 			}
 
 			if(targetPlayer == null) {
@@ -134,43 +134,43 @@ public final class Event implements CommandTrigger {
 
 			originalLocation = targetPlayer.getLocation();
 
-			if (isTown) {
-				int townIndex = -1;
-				for (int i = 0; i < towns.length; i++) {
-					if (town.equalsIgnoreCase(towns[i])) {
-						townIndex = i;
-						break;
+			if (isTownOrPlayer) {
+
+				// Check player first
+				Player tpTo = player.getWorld().getPlayer(DataConversions.usernameToHash(town));
+				if (tpTo == null) {
+					int townIndex = -1;
+					for (int i = 0; i < towns.length; i++) {
+						if (town.equalsIgnoreCase(towns[i])) {
+							townIndex = i;
+							break;
+						}
 					}
-				}
-
-				// townFound will == -1 when not found
-				if(townIndex == -1) {
-					// townIndex to find a town, look for a player instead...
-					Player tpTo = player.getWorld().getPlayer(DataConversions.usernameToHash(town));
-
-					if (tpTo == null) {
+					if (townIndex == -1) {
 						player.message(messagePrefix + "Invalid target");
 						return;
 					}
 
-					if(tpTo.isInvisibleTo(player) && !player.isAdmin()) {
+					teleportTo = townLocations[townIndex];
+
+				} else {
+					if (tpTo.isInvisibleTo(player) && !player.isAdmin()) {
 						player.message(messagePrefix + "You can not teleport to an invisible player.");
 						return;
 					}
 
 					teleportTo = tpTo.getLocation();
-				} else {
-					teleportTo = townLocations[townIndex];
 				}
 			}
 			else {
-				if(!player.getWorld().withinWorld(x, y)) {
-					player.message(messagePrefix + "Invalid coordinates");
-					return;
-				}
-
-				teleportTo = new Point(x,y);
+				teleportTo = new Point(x, y);
 			}
+
+			if (!player.getWorld().withinWorld(teleportTo.getX(), teleportTo.getY())) {
+				player.message(messagePrefix + "Invalid coordinates");
+				return;
+			}
+
 
 			// Same player and command usage is tpto or goto, we want to set a return point in order to use ::return later
 			if((cmd.equalsIgnoreCase("goto") || cmd.equalsIgnoreCase("tpto")) && targetPlayer.getUsernameHash() == player.getUsernameHash()) {
@@ -373,9 +373,13 @@ public final class Event implements CommandTrigger {
 					if(authorized || dbUsername.toLowerCase().trim().equals(targetUsername.toLowerCase().trim()))
 						names.add(dbUsername);
 				}
-				StringBuilder builder = new StringBuilder("@red@").append(targetUsername.toUpperCase())
-					.append(" @whi@currently has ").append(names.size() > 0 ? "@gre@" : "@red@")
-					.append(names.size()).append(" @whi@registered characters.");
+				StringBuilder builder = new StringBuilder("@red@")
+					.append(targetUsername.toUpperCase())
+					.append(" (" + target.getX() + "," + target.getY() + ")")
+					.append(" @whi@currently has ")
+					.append(names.size() > 0 ? "@gre@" : "@red@")
+					.append(names.size())
+					.append(" @whi@registered characters.");
 
 				if(player.isAdmin())
 					builder.append(" %IP Address: " + currentIp);
