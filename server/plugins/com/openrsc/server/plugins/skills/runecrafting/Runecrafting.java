@@ -126,13 +126,10 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 				Item i = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(ItemId.RUNE_ESSENCE.id(), Optional.of(false)));
 				if (i == null) return;
-				Item essenceToRemove = new Item(i.getCatalogId(), 1, false, i.getItemId());
-				if (player.getCarriedItems().getInventory().remove(essenceToRemove, false) != -1) {
-					player.getCarriedItems().getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())),false);
-					++successCount;
-				}
+				player.getCarriedItems().remove(i);
+				player.getCarriedItems().getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())));
+				++successCount;
 			}
-			ActionSender.sendInventory(player);
 			player.incExp(Skills.RUNECRAFTING, def.getExp() * successCount, true);
 		}
 	}
