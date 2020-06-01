@@ -130,7 +130,6 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 				player.getCarriedItems().getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())));
 				++successCount;
 			}
-			System.out.println(def.getExp() + " " + successCount);
 			player.incExp(Skills.RUNECRAFTING, def.getExp() * successCount, true);
 		}
 	}

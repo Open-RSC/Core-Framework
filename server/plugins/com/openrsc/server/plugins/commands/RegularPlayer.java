@@ -298,18 +298,22 @@ public final class RegularPlayer implements CommandTrigger {
 				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
 			}
 		} else if (cmd.equalsIgnoreCase("online")) {
-			int players = (int) (player.getWorld().getPlayers().size());
-			for (Player p : player.getWorld().getPlayers()) {
-				if (p.isMod() && p.getSettings().getPrivacySetting(1)) {
-					players--;
+			int players = 0;
+			for (Player targetPlayer : player.getWorld().getPlayers()) {
+				boolean elevated = targetPlayer.hasElevatedPriveledges();
+				boolean privacy = targetPlayer.getSettings().getPrivacySetting(1) || elevated;
+				if (targetPlayer.isDefaultUser() && !privacy) {
+					players++;
 				}
 			}
 			player.message(messagePrefix + "Players Online: " + players);
 		} else if (cmd.equalsIgnoreCase("uniqueonline")) {
 			ArrayList<String> IP_ADDRESSES = new ArrayList<>();
-			for (Player p : player.getWorld().getPlayers()) {
-				if (!IP_ADDRESSES.contains(p.getCurrentIP()))
-					IP_ADDRESSES.add(p.getCurrentIP());
+			for (Player targetPlayer : player.getWorld().getPlayers()) {
+				boolean elevated = targetPlayer.hasElevatedPriveledges();
+				boolean privacy = targetPlayer.getSettings().getPrivacySetting(1) || elevated;
+				if (!IP_ADDRESSES.contains(targetPlayer.getCurrentIP()) && !privacy)
+					IP_ADDRESSES.add(targetPlayer.getCurrentIP());
 			}
 			player.message(messagePrefix + "There are " + IP_ADDRESSES.size() + " unique players online");
 		} else if (cmd.equalsIgnoreCase("leaveparty")) {
@@ -353,28 +357,18 @@ public final class RegularPlayer implements CommandTrigger {
 					}
 				}
 			}
-		} else if (cmd.equals("onlinelist")) { // modern onlinelist display using ActionSender.SendOnlineList()
-			ActionSender.sendOnlineList(player);
-		/*} else if (cmd.equalsIgnoreCase("onlinelist")) { // this is the old onlinelist display using ActionSender.sendBox()
-			int players = player.getWorld().getPlayers().size();
-			for (Player p : player.getWorld().getPlayers()) {
-				if (p.isMod() && p.getSettings().getPrivacySetting(1)) {
-					players--;
+		} else if (cmd.equals("onlinelist")) {
+			int online = 0;
+			ArrayList<Player> players = new ArrayList<>();
+			for (Player targetPlayer : player.getWorld().getPlayers()) {
+				boolean elevated = targetPlayer.hasElevatedPriveledges();
+				boolean privacy = targetPlayer.getSettings().getPrivacySetting(1) || elevated;
+				if (targetPlayer.isDefaultUser() && !privacy) {
+					players.add(targetPlayer);
+					online++;
 				}
 			}
-			StringBuilder boxTextPlayerNames = new StringBuilder();
-			for (Player p : player.getWorld().getPlayers()) {
-				boxTextPlayerNames
-					.append(Group.getNameSprite(p.getGroupID()) + Group.getNameColour(p.getGroupID())) // displays group color for player username
-					.append(p.getUsername()) // displays player username
-					.append(player.getCombatLevel() > p.getCombatLevel() ? " @whi@(@gre@" : "") // less than combat level is green
-					.append(player.getCombatLevel() == p.getCombatLevel() ? " @whi@(@whi@" : "") // equal to combat level is white
-					.append(player.getCombatLevel() < p.getCombatLevel() ? " @whi@(@yel@" : "") // greater than combat level is yellow
-					.append("level-" + p.getCombatLevel() + "@whi@)") // displays the player's combat level
-					.append(player.isDev() ? (p.getLocation()) : "") // states player coordinates for staff to see
-					.append(players > 1 ? ("  ") : ""); // adds a double space between player names if there are more than one online
-			}
-			ActionSender.sendBox(player, "" + "@yel@Online Players: %" + boxTextPlayerNames, true);*/
+			ActionSender.sendOnlineList(player, players, online);
 		} else if (cmd.equalsIgnoreCase("groups") || cmd.equalsIgnoreCase("ranks")) {
 			ArrayList<String> groups = new ArrayList<>();
 			for (HashMap.Entry<Integer, String> entry : Group.GROUP_NAMES.entrySet()) {

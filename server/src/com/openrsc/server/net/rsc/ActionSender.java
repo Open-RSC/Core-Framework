@@ -27,6 +27,7 @@ import io.netty.channel.ChannelFutureListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -1399,10 +1400,10 @@ public class ActionSender {
 		}
 	}
 
-	public static void sendOnlineList(Player player) {
+	public static void sendOnlineList(Player player, ArrayList<Player> players, int online) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
-		pb.writeShort(player.getWorld().getPlayers().size());
-		for (Player friend : player.getWorld().getPlayers()) {
+		pb.writeShort(online);
+		for (Player friend : players) {
 			pb.writeString(friend.getUsername());
 			pb.writeInt(friend.getIcon());
 		}
