@@ -15,7 +15,7 @@ public class PlayerData {
 	public int fatigue;
 	public int kills;
 	public int deaths;
-	public int npc_kills;
+	public int npcKills;
 	public int ironMan;
 	public int ironManRestriction;
 	public int hcIronManDeath;

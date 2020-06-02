@@ -25,9 +25,6 @@ Admin Commands
   - Usage: `::getholidaydrop`
   - Alias: `::checkholidaydrop`
   - Gets information about the currently running holiday drop.
-- simulatedrop
-  - Usage: `::simulatedrop [npc_id] [max_attempts]`
-  - Simulates drops from NPC. Results are output to the server console.
 - restart
   - Usage: `::restart`
   - Restarts the server.
@@ -108,6 +105,9 @@ Admin Commands
 - npctalk
   - Usage: `::npctalk [npc_id] [msg]`
   - Causes the specified NPC to say the specified message to all players in the area.
+- npckills
+  - Usage: `::npckills [name]`
+  - Shows kill counts for name.
 - playertalk
   - Usage: `::playertalk [name] [msg]`
   - Causes the specified player to say the specified message to all players in the area.
@@ -169,6 +169,40 @@ Admin Commands
   - Spawns the specified NPC with the specified walking radius for the specified amount of time.
   - If no walking radius is supplied, then 1 is used.
   - If no duration is supplied, then 10 minutes is used.
+- shootme
+  - Usage: `::shootme [npc_id] (damage) (type)`
+  - Npc shoots player.
+- npcrangeevent
+  - Usage: `::npcrangeevent [npc_id] [npc_id]`
+  - Npc shoots npc.
+- npcrangeevent2
+  - Usage: `::npcrangeevent2 [npc_id]`
+  - Npc shoots current player.
+- npcfightevent
+  - Usage: `::npcfightevent [npc_id] [npc_id]`
+  - Npc fights npc.
+- npcrangedlvl
+  - Usage: `::npcrangedlvl [npc_id]`
+  - Returns npc ranged level.
+- getnpcstats
+  - Usage: `::getnpcstats [npc_id]`
+  - Returns stats of npc.
+- strpotnpc
+  - Usage: `::strpotnpc [npc_id]`
+  - Emulates giving a strength potion to an npc.
+- combatstylenpc
+  - Usage: `::combatstylenpc [npc_id]`
+  - Returns npc combat style.
+- combatstyle
+  - Usage: `::combatstyle`
+  - Returns own combat style.
+- setnpcstats
+  - Usage: `::setnpcstats [npc_id] [att lvl] [def lvl] [str lvl] [hits lvl]`
+  - Sets npc's combat stats.
+- winterholidayevent
+  - Usage: `::winterholidayevent`
+  - Turns on the winter holiday event (spawns tree objects).
+  
 ------------------------
 Developer Commands
 ------------------------
@@ -207,9 +241,12 @@ Developer Commands
   - Usage: `::coords (player)`
   - Shows coordinate information about the specified player.
   - If no player is specified, then it show coordinate info about the current player.\
-- events
-  - Usage: `::events`
+- serverstats
+  - Usage: `::serverstats`
   - Shows statistics about the currently running server Events, including how many events are running for each Event Class.
+- droptest
+  - Usage: `::droptest [npc_id] [count]`
+  - Returns drop outcomes of `[count]` executions of drops on npc `[npc_id]`
 ------------------------
 Super/Senior Moderator Commands
 ------------------------
@@ -354,12 +391,12 @@ Event Commands
   - If no duration is specified, then 60 minutes is used.
   - You must be in the Seers party hall upstairs or downstairs to use this command.
   - Only enables the chest downstairs or upstairs based on the current player's location.
-- stopevent
-  - Usage: `::stopevent`
+- stoppvpevent
+  - Usage: `::stoppvpevent`
   - Stops the currently running PK event.
-- startevent
-  - Usage: `::startevent [x] [y] [minCb] [maxCb]`
-  - Alias: `::setevent`
+- startpvpevent
+  - Usage: `::startpvpevent [x] [y] [minCb] [maxCb]`
+  - Alias: `::setpvpevent`
   - Starts a PK event with the specified location and specified min and max combat levels.
 - setgroup
   - Usage: `::setgroup [name]` to read a group

@@ -85,23 +85,16 @@ public final class Admins implements CommandTrigger {
 			badSyntaxPrefix = config().BAD_SYNTAX_PREFIX;
 		}
 
-		if (command.equalsIgnoreCase("cleannpcs")) {
-			cleanNpcs(player);
-		} else if (command.equalsIgnoreCase("saveall")) {
+		if (command.equalsIgnoreCase("saveall")) {
 			saveAll(player);
-		} else if (command.equalsIgnoreCase("cleanregions")) {
-			cleanRegions(player);
 		} else if (command.equalsIgnoreCase("holidaydrop")) {
 			startHolidayDrop(player, command, args);
 		} else if (command.equalsIgnoreCase("stopholidaydrop") || command.equalsIgnoreCase("cancelholidaydrop")) {
 			stopHolidayDrop(player);
 		} else if (command.equalsIgnoreCase("getholidaydrop") || command.equalsIgnoreCase("checkholidaydrop")) {
 			checkHolidayDrop(player);
-		} else if (command.equalsIgnoreCase("npc_kills")) {
+		} else if (command.equalsIgnoreCase("npckills")) {
 			npcKills(player, args);
-		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
-			fakeCrystalChest(player, args);
-		} */
 		} else if (command.equalsIgnoreCase("restart")) {
 			serverRestart(player, args);
 		} else if (command.equalsIgnoreCase("gi") || command.equalsIgnoreCase("gitem") || command.equalsIgnoreCase("grounditem")) {
@@ -125,7 +118,7 @@ public final class Admins implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("quickbank")) { // Show the bank screen to yourself
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);
-		} else if (command.equals("beastmode")) {
+		} else if (command.equalsIgnoreCase("beastmode")) {
 			spawnItemBestInSlot(player);
 		} else if (command.equalsIgnoreCase("heal")) {
 			restorePlayerHits(player, args);
@@ -161,7 +154,7 @@ public final class Admins implements CommandTrigger {
 			startNpcEvent(player, command, args);
 		} else if (command.equalsIgnoreCase("chickenevent")) {
 			startChickenEvent(player, command, args);
-		} else if (command.equalsIgnoreCase("stopnpcevent") || command.equalsIgnoreCase("cancelnpcevent")) {
+		} else if (command.equalsIgnoreCase("stopnpcevent") || command.equalsIgnoreCase("cancelnpcevent") || command.equalsIgnoreCase("stopchickenevent")) {
 			stopNpcEvent(player);
 		} else if (command.equalsIgnoreCase("getnpcevent") || command.equalsIgnoreCase("checknpcevent")) {
 			checkNpcEvent(player);
@@ -171,22 +164,20 @@ public final class Admins implements CommandTrigger {
 			freezeExperience(player, command, args);
 		} else if (command.equalsIgnoreCase("shootme")) {
 			npcShootPlayer(player, command, args);
-		} else if (command.equalsIgnoreCase("shootme2")) {
-			npcShootPlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("npcrangeevent")) {
 			npcShootNpc(player, command, args);
 		} else if (command.equalsIgnoreCase("npcfightevent")) {
 			npcFightPlayerOther(player, command, args);
 		} else if (command.equalsIgnoreCase("npcrangedlvl")) {
 			npcQueryRangedLevel(player, command, args);
-		} else if (command.equalsIgnoreCase("getstats")) {
+		} else if (command.equalsIgnoreCase("getnpcstats")) {
 			npcQueryStats(player, command, args);
 		} else if (command.equalsIgnoreCase("strpotnpc")) {
 			npcIncreaseStrength(player, command, args);
 		} else if (command.equalsIgnoreCase("combatstylenpc")) {
-			npcChangeCombatStyle(player, command, args);
-		} else if (command.equalsIgnoreCase("combatstyle")) {
 			npcQueryCombatStyle(player, command, args);
+		} else if (command.equalsIgnoreCase("combatstyle")) {
+			playerQueryCombatStyle(player, command, args);
 		} else if (command.equalsIgnoreCase("setnpcstats")) {
 			npcSetStats(player, command, args);
 		} else if (command.equalsIgnoreCase("skull")) {
@@ -199,9 +190,12 @@ public final class Admins implements CommandTrigger {
 			sendAppearanceScreen(player, args);
 		} else if (command.equalsIgnoreCase("spawnnpc")) {
 			spawnNpc(player, command, args);
-		} else if (command.equalsIgnoreCase("holidayevent") || command.equalsIgnoreCase("toggleholiday")) {
+		} else if (command.equalsIgnoreCase("winterholidayevent") || command.equalsIgnoreCase("toggleholiday")) {
 			winterHolidayEvent(player, command, args);
 		}
+		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
+			fakeCrystalChest(player, args);
+		} */
 	}
 
 	private void cleanNpcs(Player player) {
@@ -331,103 +325,8 @@ public final class Admins implements CommandTrigger {
 			player.message(messagePrefix + "Invalid name or player is not online");
 			return;
 		}
-		player.message(targetPlayer.getnpc_kills() + "");
+		player.message(targetPlayer.getNpcKills() + "");
 	}
-
-	private void simulateRareDropTable(Player player, String command, String[] args) {
-		if (args.length != 3) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
-			return;
-		}
-
-		int npcID;
-		try {
-			npcID = Integer.parseInt(args[0]);
-		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
-			return;
-		}
-
-		int maxAttempts;
-		try {
-			maxAttempts = Integer.parseInt(args[1]);
-		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
-			return;
-		}
-
-		boolean RoW;
-		try {
-			RoW = Integer.parseInt(args[2]) == 1;
-		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [max_attempts] [row? 1 or 0]");
-			return;
-		}
-
-		HashMap<String, Integer> rareDrops = new HashMap<>();
-		for (int i = 0; i < maxAttempts; i++) {
-			//KDB Specific RDT
-			if (config().WANT_CUSTOM_SPRITES) {
-				if (npcID == NpcId.KING_BLACK_DRAGON.id()) {
-					if (player.getWorld().getNpcDrops().getKbdTableCustom().rollAccess(npcID, RoW)) {
-						ArrayList<Item> kbdSpecificLoot = player.getWorld().getNpcDrops().getKbdTableCustom().rollItem(RoW, null);
-						if (kbdSpecificLoot != null || kbdSpecificLoot.size() > 0) {
-							for (Item item : kbdSpecificLoot) {
-								if (rareDrops.containsKey(item.getDef(player.getWorld()).getName().toLowerCase())) {
-									int amount = rareDrops.get(item.getDef(player.getWorld()).getName().toLowerCase());
-									rareDrops.put(item.getDef(player.getWorld()).getName().toLowerCase(), amount + item.getAmount());
-								} else {
-									rareDrops.put(item.getDef(player.getWorld()).getName().toLowerCase(), item.getAmount());
-								}
-							}
-						} else {
-							if (rareDrops.containsKey("miss")) {
-								int amount = rareDrops.get("miss");
-								rareDrops.put("miss", amount + 1);
-							} else {
-								rareDrops.put("miss", 1);
-							}
-						}
-					}
-				}
-			}
-
-			boolean rdtHit = false;
-			ArrayList<Item> rare = null;
-
-			if (player.getWorld().getNpcDrops().getUltraRareDropTable().rollAccess(npcID, RoW)) {
-				rdtHit = true;
-				rare = player.getWorld().getNpcDrops().getUltraRareDropTable().rollItem(RoW, null);
-			} else if (player.getWorld().getNpcDrops().getRareDropTable().rollAccess(npcID, RoW)) {
-				rdtHit = true;
-				rare = player.getWorld().getNpcDrops().getRareDropTable().rollItem(RoW, null);
-			}
-			if (rdtHit) {
-				if (rare == null || rare.size() == 0) {
-					if (rareDrops.containsKey("miss")) {
-						int amount = rareDrops.get("miss");
-						rareDrops.put("miss", amount + 1);
-					} else {
-						rareDrops.put("miss", 1);
-					}
-				} else {
-					for (Item item : rare) {
-						if (rareDrops.containsKey(item.getDef(player.getWorld()).getName().toLowerCase())) {
-							int amount = rareDrops.get(item.getDef(player.getWorld()).getName().toLowerCase());
-							rareDrops.put(item.getDef(player.getWorld()).getName().toLowerCase(), amount + item.getAmount());
-						} else {
-							rareDrops.put(item.getDef(player.getWorld()).getName().toLowerCase(), item.getAmount());
-						}
-					}
-				}
-			}
-		}
-
-		for (Map.Entry<String, Integer> entry : rareDrops.entrySet()) {
-			System.out.println(entry.getKey() + ": " + entry.getValue());
-		}
-	}
-
 
 	private void fakeCrystalChest(Player player, String[] args) {
 		String loot;
@@ -1539,7 +1438,7 @@ public final class Admins implements CommandTrigger {
 		}
 
 		player.getWorld().getServer().getGameEventHandler().add(new HourlyNpcLootEvent(player.getWorld(), hours, "Oh no! Chickens are invading Lumbridge!", Point.location(120, 648), 3, npcAmount, 10, itemAmount, npcLifeTime));
-		player.message(messagePrefix + "Chicken event started.");
+		player.message(messagePrefix + "Chicken event started. Type ::stopnpcevent to halt.");
 	}
 
 	private void stopNpcEvent(Player player) {
@@ -1848,7 +1747,7 @@ public final class Admins implements CommandTrigger {
 		player.message(j.getCombatLevel() + " cb");
 	}
 
-	private void npcChangeCombatStyle(Player player, String command, String[] args) {
+	private void npcQueryCombatStyle(Player player, String command, String[] args) {
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc id]");
 			return;
@@ -1871,7 +1770,7 @@ public final class Admins implements CommandTrigger {
 		player.message(j.getCombatStyle() + " ");
 	}
 
-	private void npcQueryCombatStyle(Player player, String command, String[] args) {
+	private void playerQueryCombatStyle(Player player, String command, String[] args) {
 		if (args.length > 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " ");
 			return;

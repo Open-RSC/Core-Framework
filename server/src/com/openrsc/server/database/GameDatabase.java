@@ -690,7 +690,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		player.setFatigue(playerData.fatigue);
 		player.setKills(playerData.kills);
 		player.setDeaths(playerData.deaths);
-		player.setnpc_kills(playerData.npc_kills);
+		player.setNpcKills(playerData.npcKills);
 		if (getServer().getConfig().SPAWN_IRON_MAN_NPCS) {
 			player.setIronMan(playerData.ironMan);
 			player.setIronManRestriction(playerData.ironManRestriction);
@@ -943,7 +943,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		playerData.fatigue = player.getFatigue();
 		playerData.kills = player.getKills();
 		playerData.deaths = player.getDeaths();
-		playerData.npc_kills = player.getnpc_kills();
+		playerData.npcKills = player.getNpcKills();
 		if (getServer().getConfig().SPAWN_IRON_MAN_NPCS) {
 			playerData.ironMan = player.getIronMan();
 			playerData.ironManRestriction = player.getIronManRestriction();

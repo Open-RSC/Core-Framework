@@ -79,7 +79,7 @@ public final class Player extends Mob {
 	private boolean sleeping = false;
 	private int activity = 0;
 	private int kills = 0;
-	private int npc_kills = 0;
+	private int npcKills = 0;
 	private int expShared = 0;
 	private int deaths = 0;
 	private int npcDeaths = 0;
@@ -2381,8 +2381,8 @@ public final class Player extends Mob {
 		return npcDeaths;
 	}
 
-	public int getnpc_kills() {
-		return npc_kills;
+	public int getNpcKills() {
+		return npcKills;
 	}
 
 	public int getExpShared() {
@@ -2397,9 +2397,9 @@ public final class Player extends Mob {
 		this.npcDeaths = i;
 	}
 
-	public void setnpc_kills(final int i) {
-		this.npc_kills = i;
-		ActionSender.sendnpc_kills(this);
+	public void setNpcKills(final int i) {
+		this.npcKills = i;
+		ActionSender.sendNpcKills(this);
 	}
 
 	public synchronized WalkToAction getLastExecutedWalkToAction() {
@@ -2427,8 +2427,8 @@ public final class Player extends Mob {
 		kills++;
 	}
 
-	public void incnpc_kills() {
-		npc_kills++;
+	public void incNpcKills() {
+		npcKills++;
 	}
 
 	public void addKill(final boolean add) {

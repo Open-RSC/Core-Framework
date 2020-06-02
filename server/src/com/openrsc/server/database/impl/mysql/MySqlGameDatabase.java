@@ -437,7 +437,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				playerData.fatigue = result.getInt("fatigue");
 				playerData.kills = result.getInt("kills");
 				playerData.deaths = result.getInt("deaths");
-				playerData.npc_kills = result.getInt("npc_kills");
+				playerData.npcKills = result.getInt("npc_kills");
 				if (server.getConfig().SPAWN_IRON_MAN_NPCS) {
 					playerData.ironMan = result.getInt("iron_man");
 					playerData.ironManRestriction = result.getInt("iron_man_restriction");
@@ -1532,7 +1532,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(counter++, playerData.fatigue);
 			statement.setInt(counter++, playerData.kills);
 			statement.setInt(counter++, playerData.deaths);
-			statement.setInt(counter++, playerData.npc_kills);
+			statement.setInt(counter++, playerData.npcKills);
 			if (getServer().getConfig().SPAWN_IRON_MAN_NPCS) {
 				statement.setInt(counter++, playerData.ironMan);
 				statement.setInt(counter++, playerData.ironManRestriction);
