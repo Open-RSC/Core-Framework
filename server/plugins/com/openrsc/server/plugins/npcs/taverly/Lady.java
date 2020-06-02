@@ -35,7 +35,7 @@ public class Lady implements TalkNpcTrigger {
 		} else if (option == 2) {
 			npcsay(player,
 				n,
-				"Aye, I have that artifact in my possession",
+				"Aye, I have that artifact in my possesion",
 				"Tis very valuable and not an artifact to be given away lightly",
 				"I would want to give it away only to one who is worthy and good");
 			say(player, n, "And how am I meant to prove that");

@@ -8,8 +8,8 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
+public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 
 	private static final int[] SIGNPOST = {1060, 1061, 1062, 1063};
 	/* Objects */
@@ -211,7 +211,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 	@Override
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (obj.getID() == TENT_CHEST_LOCKED && item.getCatalogId() == ItemId.DIGSITE_CHEST_KEY.id()) || obj.getID() == X_BARREL
-				|| obj.getID() == X_BARREL_OPEN || obj.getID() == BRICK;
+				|| obj.getID() == X_BARREL_OPEN || obj.getID() == BRICK || obj.getID() == SPECIMEN_TRAY;
 	}
 
 	@Override
@@ -306,6 +306,34 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 						say(player, null, "Now what am I trying to achieve here ?");
 					}
 					break;
+				default:
+					player.message("Nothing interesting happens");
+					break;
+			}
+		}
+		else if (obj.getID() == SPECIMEN_TRAY) {
+			switch (ItemId.getById(item.getCatalogId())) {
+				case TROWEL:
+				case SPADE:
+					Npc workmanCheck = ifnearvisnpc(player, NpcId.WORKMAN.id(), 15);
+					if (workmanCheck == null) {
+						workmanCheck = addnpc(player.getWorld(), NpcId.WORKMAN.id(), player.getX(), player.getY(), 30000);
+					}
+					if (item.getCatalogId() == ItemId.TROWEL.id()) {
+						npcsay(player, workmanCheck, "Excuse me...",
+							"No digging in the specimen trays please");
+					} else if (item.getCatalogId() == ItemId.SPADE.id()) {
+						npcsay(player, workmanCheck, "Oi! what do you think you are doing ?",
+							"Don't you realize there are fragile specimens around here ?");
+					}
+					break;
+				case SPECIMEN_JAR:
+					// behavior unconfirmed on replay - believed to have similar as rs2+
+					say(player, null, "I'm not sure if this will be useful or not");
+					mes("You scoop some earth with the jar");
+					break;
+				case ROCK_PICK:
+				case SPECIMEN_BRUSH:
 				default:
 					player.message("Nothing interesting happens");
 					break;

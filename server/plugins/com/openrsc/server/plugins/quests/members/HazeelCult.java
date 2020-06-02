@@ -396,13 +396,15 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 					break;
 				case 3:
 					say(player, n, "hello madam");
-					npcsay(player, n, "i hope you've found those awful holigans",
-						"I can't sleep at night");
 					if (player.getCache().hasKey("good_side")) {
+						npcsay(player, n, "i hope you've found those awful holigans",
+							"I can't sleep at night");
 						say(player, n, "i'm working on it madam");
 						npcsay(player, n, "i don't know",
 							"there really are some strange folk around these parts");
 					} else if (player.getCache().hasKey("evil_side")) {
+						npcsay(player, n, "i hope you found those awful hooligans",
+							"I can't sleep at night");
 						say(player, n, "I'm afraid not");
 						npcsay(player, n, "you really are useless");
 						say(player, n, "thanks a lot");

@@ -61,7 +61,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 
 	@Override
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.WATCHTOWER_WIZARD.id() || (npc.getID() == NpcId.CITY_GUARD.id() && item.getCatalogId() == ItemId.DEATH_RUNE.id())
+		return (npc.getID() == NpcId.WATCHTOWER_WIZARD.id() && item.getCatalogId() != ItemId.FINGERNAILS.id()) || (npc.getID() == NpcId.CITY_GUARD.id() && item.getCatalogId() == ItemId.DEATH_RUNE.id())
 				|| (npc.getID() == NpcId.OGRE_GUARD_CAVE_ENTRANCE.id() && item.getCatalogId() == ItemId.NIGHTSHADE.id());
 	}
 
@@ -88,13 +88,10 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
 		if (npc.getID() == NpcId.WATCHTOWER_WIZARD.id()) {
-			if (player.getQuestStage(Quests.WATCHTOWER) == -1) {
-				player.message("The wizard has no need for more evidence");
-				return;
-			}
 			switch (ItemId.getById(item.getCatalogId())) {
 				case POWERING_CRYSTAL1:
-					if (player.getQuestStage(Quests.WATCHTOWER) == 10) {
+					if (player.getQuestStage(Quests.WATCHTOWER) == 10
+						|| player.getQuestStage(Quests.WATCHTOWER) == -1) {
 						npcsay(player, npc, "More crystals ?",
 							"I don't need any more now...");
 						return;
@@ -113,7 +110,8 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 					}
 					break;
 				case POWERING_CRYSTAL2:
-					if (player.getQuestStage(Quests.WATCHTOWER) == 10) {
+					if (player.getQuestStage(Quests.WATCHTOWER) == 10
+						|| player.getQuestStage(Quests.WATCHTOWER) == -1) {
 						npcsay(player, npc, "More crystals ?",
 							"I don't need any more now...");
 						return;
@@ -131,7 +129,8 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 					}
 					break;
 				case POWERING_CRYSTAL3:
-					if (player.getQuestStage(Quests.WATCHTOWER) == 10) {
+					if (player.getQuestStage(Quests.WATCHTOWER) == 10
+						|| player.getQuestStage(Quests.WATCHTOWER) == -1) {
 						npcsay(player, npc, "More crystals ?",
 							"I don't need any more now...");
 						return;
@@ -149,7 +148,8 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 					}
 					break;
 				case POWERING_CRYSTAL4:
-					if (player.getQuestStage(Quests.WATCHTOWER) == 10) {
+					if (player.getQuestStage(Quests.WATCHTOWER) == 10
+						|| player.getQuestStage(Quests.WATCHTOWER) == -1) {
 						npcsay(player, npc, "More crystals ?",
 							"I don't need any more now...");
 						return;
@@ -170,35 +170,41 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 					break;
 				case OGRE_RELIC_PART_BODY:
 					say(player, npc, "I had this given to me");
-					if (!player.getCache().hasKey("wizard_relic_part_1")) {
+					if (player.getCache().hasKey("wizard_relic_part_1")
+						|| player.getQuestStage(Quests.WATCHTOWER) == 10
+						|| player.getQuestStage(Quests.WATCHTOWER) == -1) {
+						npcsay(player, npc, "I already have that part...");
+					} else {
 						player.getCarriedItems().remove(new Item(ItemId.OGRE_RELIC_PART_BODY.id()));
 						npcsay(player, npc, "It's part of an ogre relic");
 						player.getCache().store("wizard_relic_part_1", true);
 						relicParts(player, npc);
-					} else {
-						npcsay(player, npc, "I already have that part...");
 					}
 					break;
 				case OGRE_RELIC_PART_BASE:
 					say(player, npc, "I got given this by an ogre");
-					if (!player.getCache().hasKey("wizard_relic_part_2")) {
+					if (player.getCache().hasKey("wizard_relic_part_2")
+						|| player.getQuestStage(Quests.WATCHTOWER) == 10
+						|| player.getQuestStage(Quests.WATCHTOWER) == -1) {
+						npcsay(player, npc, "I already have that part...");
+					} else {
 						player.getCarriedItems().remove(new Item(ItemId.OGRE_RELIC_PART_BASE.id()));
 						npcsay(player, npc, "Good good,a part of an ogre relic");
 						player.getCache().store("wizard_relic_part_2", true);
 						relicParts(player, npc);
-					} else {
-						npcsay(player, npc, "I already have that part...");
 					}
 					break;
 				case OGRE_RELIC_PART_HEAD:
 					say(player, npc, "An ogre gave me this");
-					if (!player.getCache().hasKey("wizard_relic_part_3")) {
+					if (player.getCache().hasKey("wizard_relic_part_3")
+						|| player.getQuestStage(Quests.WATCHTOWER) == 10
+						|| player.getQuestStage(Quests.WATCHTOWER) == -1) {
+						npcsay(player, npc, "I already have that part...");
+					} else {
 						player.getCarriedItems().remove(new Item(ItemId.OGRE_RELIC_PART_HEAD.id()));
 						npcsay(player, npc, "Ah, it's part of an old ogre statue");
 						player.getCache().store("wizard_relic_part_3", true);
 						relicParts(player, npc);
-					} else {
-						npcsay(player, npc, "I already have that part...");
 					}
 					break;
 				case OGRE_RELIC:
@@ -216,7 +222,18 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 						"Indeed this shows the paths into the skavid caves",
 						"I suggest you search these now...");
 					break;
+				case UNFINISHED_OGRE_POTION:
+					npcsay(player, npc, "No no, the potion is not complete yet...");
+					break;
 				case OGRE_POTION:
+					if (player.getQuestStage(Quests.WATCHTOWER) == -1) {
+						npcsay(player, npc, "Another potion ?",
+							"Ooo no, I don't think so...",
+							"I can't let you use this anymore, it is just too dangerous",
+							"I'd better take it from you before you injure yourself");
+						player.getCarriedItems().remove(new Item(ItemId.OGRE_POTION.id()));
+						return;
+					}
 					say(player, npc, "Yes I have made the potion");
 					npcsay(player, npc, "That's great news, let me infuse it with magic...");
 					player.message("The wizard mutters strange words over the liquid");
@@ -232,6 +249,31 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 				case MAGIC_OGRE_POTION:
 					npcsay(player, npc, "Yes that is the potion I enchanted for you",
 						"Go and use it now...");
+					break;
+				case ARMOUR:
+				case WATCH_TOWER_EYE_PATCH:
+				case ROBE:
+				case DAGGER:
+				case GOBLIN_ARMOUR:
+				case EYE_PATCH:
+				case IRON_DAGGER:
+				case WIZARDS_ROBE:
+					if (player.getQuestStage(Quests.WATCHTOWER) != 1) {
+						player.message("The wizard has no need for more evidence");
+						return;
+					}
+					if (item.getCatalogId() == ItemId.EYE_PATCH.id()) {
+						say(player, npc, "I found this eye patch");
+					} else if (item.getCatalogId() == ItemId.GOBLIN_ARMOUR.id()) {
+						say(player, npc, "Have a look at this goblin armour");
+					} else if (item.getCatalogId() == ItemId.IRON_DAGGER.id()) {
+						say(player, npc, "I found a dagger");
+					} else if (item.getCatalogId() == ItemId.WIZARDS_ROBE.id()) {
+						say(player, npc, "I have this robe");
+					}
+					npcsay(player, npc, "Let me see...",
+						"No, sorry this is not evidence",
+						"You need to keep searching im afraid");
 					break;
 				default:
 					player.message("Nothing interesting happens");

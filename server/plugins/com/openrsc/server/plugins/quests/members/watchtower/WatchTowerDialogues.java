@@ -8,13 +8,14 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
+public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseNpcTrigger {
 
 	/**
 	 * REMEMBER:
@@ -648,6 +649,34 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 		}
 	}
 
+	private void fingerNailsDialogue(Player player, Npc n) {
+		if (player.getQuestStage(this) == 1) {
+			say(player, n, "Have a look at these");
+			player.getCarriedItems().remove(new Item(ItemId.FINGERNAILS.id()));
+			npcsay(player, n, "Interesting, very interesting",
+				"Long nails...grey in colour",
+				"Well chewed...",
+				"Of course, they belong to a skavid");
+			say(player, n, "A skavid ?");
+			npcsay(player, n, "A servant race to the ogres",
+				"Gray depressed looking creatures",
+				"Always loosing nails, teeth and hair",
+				"They inhabit the caves in the mendip hills",
+				"They normally keep to themselves though",
+				"It's unusual for them to venture from their caves");
+			int m = multi(player, n,
+				"What do you suggest that I do ?",
+				"Shall I search the caves ?");
+			if (m == 0) {
+				watchtowerWizardDialogue(player, n, WatchTowerWizard.SEARCHINGTHECAVES);
+			} else if (m == 1) {
+				watchtowerWizardDialogue(player, n, WatchTowerWizard.SEARCHINGTHECAVES);
+			}
+		} else {
+			player.message("The wizard has no need for more evidence");
+		}
+	}
+
 	private void watchtowerWizardDialogue(Player player, Npc n, int cID) {
 		if (n.getID() == NpcId.WATCHTOWER_WIZARD.id()) {
 			if (cID == -1) {
@@ -748,27 +777,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 						npcsay(player, n, "Hello again",
 							"Did you find anything of interest ?");
 						if (player.getCarriedItems().hasCatalogID(ItemId.FINGERNAILS.id(), Optional.of(false))) {
-							say(player, n, "Have a look at these");
-							player.getCarriedItems().remove(new Item(ItemId.FINGERNAILS.id()));
-							npcsay(player, n, "Interesting, very interesting",
-								"Long nails...grey in colour",
-								"Well chewed...",
-								"Of course, they belong to a skavid");
-							say(player, n, "A skavid ?");
-							npcsay(player, n, "A servant race to the ogres",
-								"Gray depressed looking creatures",
-								"Always loosing nails, teeth and hair",
-								"They inhabit the caves in the mendip hills",
-								"They normally keep to themselves though",
-								"It's unusual for them to venture from their caves");
-							int m = multi(player, n,
-								"What do you suggest that I do ?",
-								"Shall I search the caves ?");
-							if (m == 0) {
-								watchtowerWizardDialogue(player, n, WatchTowerWizard.SEARCHINGTHECAVES);
-							} else if (m == 1) {
-								watchtowerWizardDialogue(player, n, WatchTowerWizard.SEARCHINGTHECAVES);
-							}
+							fingerNailsDialogue(player, n);
 						}
 						/** EASTER EGG? IN OFFICIAL RSC THE RELATED QUEST ITEMS WERE NOT CHECKED
 						 * BUT INSTEAD THE REGULAR ONES (see wiki)
@@ -1071,6 +1080,18 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger {
 		if (ogre != null) {
 			ogre.startCombat(player);
 		}
+	}
+
+	@Override
+	public void onUseNpc(Player player, Npc npc, Item item) {
+		if (npc.getID() == NpcId.WATCHTOWER_WIZARD.id() && item.getCatalogId() == ItemId.FINGERNAILS.id()) {
+			fingerNailsDialogue(player, npc);
+		}
+	}
+
+	@Override
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return npc.getID() == NpcId.WATCHTOWER_WIZARD.id() && !item.getNoted() && item.getCatalogId() == ItemId.FINGERNAILS.id();
 	}
 
 	class WatchTowerWizard {

@@ -9,6 +9,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -266,9 +267,109 @@ public class DoorAction {
 				break;
 
 			case 176: // Alkharid: Shantay Pass jail door
-				player.message("The door opens.");
-				player.message(""); // strange.
-				doDoor(obj, player);
+				if (!player.getCache().hasKey("shantay_jail")) {
+					player.message("The door opens.");
+					player.message(""); // strange.
+					doDoor(obj, player);
+				} else {
+					player.message("This door is locked.");
+					if (player.getX() >= 66) {
+						// on the side of the jail
+						Npc shantay = ifnearvisnpc(player, NpcId.SHANTAY.id(), 8);
+						if (shantay != null) {
+							player.message("Shantay saunters over to talk with you.");
+							npcsay(player, shantay, "If you want to be let out, you have to pay a fine of five gold.",
+								"Do you want to pay now?");
+							int pay = multi(player, shantay, "Yes, Ok.", "No thanks, you're not having my money.");
+							if (pay == 0) {
+								npcsay(player, shantay,
+									"Good, I see that you have come to your senses.");
+								if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
+									mes("You hand over five gold pieces to Shantay.");
+									npcsay(player, shantay,
+										"Great Effendi, now please try to keep the peace.");
+									mes("Shantay unlocks the door to the cell.");
+									player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
+									player.getCache().remove("shantay_jail");
+								} else {
+									npcsay(player,
+										shantay,
+										"You don't have that kind of cash on you I see.",
+										"But perhaps you have some in your bank?",
+										"You can transfer some money from your bank and pay the fine.",
+										"or you will be sent to a maximum security prison in Port Sarim.",
+										"Which is it going to be?");
+									int menu8 = multi(player, shantay, false, //do not send over
+										"I'll pay the fine.",
+										"I'm not paying the fine!");
+									if (menu8 == 0) {
+										say(player, shantay, "I'll pay the fine.");
+										if (player.isIronMan(2)) {
+											player.message("As an Ultimate Iron Man, you cannot use the bank.");
+											return;
+										}
+										npcsay(player, shantay,
+											"Ok then..., you'll need access to your bank.");
+										player.setAccessingBank(true);
+										ActionSender.showBank(player);
+										player.getCache().remove("shantay_jail");
+									} else if (menu8 == 1) {
+										say(player, shantay, "No thanks, you're not having my money.");
+										sendToPortSarim(player, shantay, 1);
+									}
+								}
+							} else if (pay == 1) {
+								npcsay(player,
+									shantay,
+									"You have a choice.",
+									"You can either pay five gold pieces or...",
+									"You can be transported to a maximum security prison in Port Sarim.",
+									"Will you pay the five gold pieces?");
+								int menu7 = multi(player, shantay, "Yes, Ok.", "No, do your worst!");
+								if (menu7 == 0) {
+									npcsay(player, shantay,
+										"Good, I see that you have come to your senses.");
+									if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
+										mes("You hand over five gold pieces to Shantay.");
+										npcsay(player, shantay,
+											"Great Effendi, now please try to keep the peace.");
+										mes("Shantay unlocks the door to the cell.");
+										player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
+										player.getCache().remove("shantay_jail");
+									} else {
+										npcsay(player,
+											shantay,
+											"You don't have that kind of cash on you I see.",
+											"But perhaps you have some in your bank?",
+											"You can transfer some money from your bank and pay the fine.",
+											"or you will be sent to a maximum security prison in Port Sarim.",
+											"Which is it going to be?");
+										int menu8 = multi(player, shantay, false, //do not send over
+											"I'll pay the fine.",
+											"I'm not paying the fine!");
+										if (menu8 == 0) {
+											say(player, shantay, "I'll pay the fine.");
+											if (player.isIronMan(2)) {
+												player.message("As an Ultimate Iron Man, you cannot use the bank.");
+												return;
+											}
+											npcsay(player, shantay,
+												"Ok then..., you'll need access to your bank.");
+											player.setAccessingBank(true);
+											ActionSender.showBank(player);
+											player.getCache().remove("shantay_jail");
+										} else if (menu8 == 1) {
+											say(player, shantay, "No thanks, you're not having my money.");
+											sendToPortSarim(player, shantay, 1);
+										}
+									}
+								} else if (menu7 == 1) {
+									sendToPortSarim(player, shantay, 0);
+								}
+							}
+						}
+					}
+				}
 				break;
 
 			/** TEMPLE OF IKOV DOORS **/
@@ -808,6 +909,19 @@ public class DoorAction {
 				}
 				break;
 		}
+	}
+
+	private void sendToPortSarim(Player player, Npc n, int path) {
+		if (path == 0) {
+			npcsay(player, n,
+				"You are to be transported to a maximum security prison in Port Sarim.",
+				"I hope you've learnt an important lesson from this.");
+		} else if (path == 1) {
+			npcsay(player, n,
+				"Very well, I grow tired of you, you'll be taken to a new jail in Port Sarim.");
+		}
+		player.teleport(281, 665, false);
+		player.getCache().remove("shantay_jail");
 	}
 
 	public boolean blockInvUseOnWallObject(GameObject obj, Item item,

@@ -326,6 +326,74 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 			"Cos I'll break your knuckles");
 	}
 
+	private void goDownDialogue(final Player player, final Npc n) {
+		npcsay(player, n, "This is the home of the mountain dwarves",
+			"How would you like it if I wanted to take a short cut through your home");
+		//do not send over
+		final int third = multi(player, n, false,
+			"Ooh is this a short cut to somewhere",
+			"Oh sorry I hadn't realised it was private",
+			"If you were my friend I wouldn't mind it");
+		if (third == 0) {
+			say(player, n, "Ooh is this a short cut to somewhere?");
+			npcsay(player, n, "Well it is easier to go this way",
+				"Than through passes full of wolves");
+		} else if (third == 1) {
+			say(player, n, "Oh sorry I hadn't realised it was private");
+		} else if (third == 2) {
+			say(player, n, "If you were my friend I wouldn't mind");
+			npcsay(player, n, "Yes, but I don't even know you");
+			//do not send over
+			final int fourth = multi(player, n, false,
+				"Well lets be friends",
+				"You're a grumpy little man aren't you?");
+			if (fourth == 0) {
+				say(player, n, "Well lets be friends");
+				npcsay(player, n, "I don't make friends easily",
+					"People need to earn my trust first");
+
+				//do not send over
+				final int fifth = multi(player, n, false,
+					"And how am I meant to do that?",
+					"You're a grumpy little man aren't you?");
+				if (fifth == 0) {
+					say(player, n, "And how am I meant to do that?");
+					npcsay(player,
+						n,
+						"My we are the persistant one aren't we",
+						"Well theres a certain gold artifact we're after",
+						"We dwarves are big fans of gold",
+						"This artifact is the first prize at the hemenster fishing competition",
+						"Fortunately we have acquired a pass to enter that competition",
+						"Unfortunately Dwarves don't make good fishermen");
+					//do not send over
+					final int six = multi(player, n, false,
+						"Fortunately I'm alright at fishing",
+						"I'm not much of a fisherman either");
+					if (six == 0) {
+						say(player, n, "fortunately I'm alright at fishing");
+						npcsay(player,
+							n,
+							"Okay I entrust you with our competition pass",
+							"go to Hemenster and do us proud");
+						give(player, ItemId.FISHING_COMPETITION_PASS.id(), 1);
+						player.updateQuestStage(getQuestId(), 1);
+					} else if (six == 1) {
+						say(player, n, "I'm not much of a fisherman either");
+						npcsay(player, n, "what good are you?");
+					}
+				} else if (fifth == 1) {
+					say(player, n, "You're a grumpy little man aren't you");
+					npcsay(player, n, " Don't you know it");
+				}
+
+			} else if (fourth == 1) {
+				say(player, n, "You're a grumpy little man aren't you");
+				npcsay(player, n, " Don't you know it");
+			}
+		}
+	}
+
 	private void mountainDwarfDialogue(final Player player, final Npc n) {
 		switch (player.getQuestStage(this)) {
 			case 0:
@@ -348,71 +416,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 						npcsay(player, n, "Good");
 					} else if (second == 1) {
 						say(player, n, "Why not?");
-						npcsay(player, n, "This is the home of the mountain dwarves",
-							"How would you like it if I wanted to take a short cut through your home");
-						//do not send over
-						final int third = multi(player, n, false,
-							"Ooh is this a short cut to somewhere",
-							"Oh sorry I hadn't realised it was private",
-							"If you were my friend I wouldn't mind it");
-						if (third == 0) {
-							say(player, n, "Ooh is this a short cut to somewhere?");
-							npcsay(player, n, "Well it is easier to go this way",
-								"Than through passes full of wolves");
-						} else if (third == 1) {
-							say(player, n, "Oh sorry I hadn't realised it was private");
-						} else if (third == 2) {
-							say(player, n, "If you were my friend I wouldn't mind");
-							npcsay(player, n, "Yes, but I don't even know you");
-							//do not send over
-							final int fourth = multi(player, n, false,
-								"Well lets be friends",
-								"You're a grumpy little man aren't you?");
-							if (fourth == 0) {
-								say(player, n, "Well lets be friends");
-								npcsay(player, n, "I don't make friends easily",
-									"People need to earn my trust first");
-
-								//do not send over
-								final int fifth = multi(player, n, false,
-									"And how am I meant to do that?",
-									"You're a grumpy little man aren't you?");
-								if (fifth == 0) {
-									say(player, n, "And how am I meant to do that?");
-									npcsay(player,
-										n,
-										"My we are the persistant one aren't we",
-										"Well theres a certain gold artifact we're after",
-										"We dwarves are big fans of gold",
-										"This artifact is the first prize at the hemenster fishing competition",
-										"Fortunately we have acquired a pass to enter that competition",
-										"Unfortunately Dwarves don't make good fishermen");
-									//do not send over
-									final int six = multi(player, n, false,
-										"Fortunately I'm alright at fishing",
-										"I'm not much of a fisherman either");
-									if (six == 0) {
-										say(player, n, "fortunately I'm alright at fishing");
-										npcsay(player,
-											n,
-											"Okay I entrust you with our competition pass",
-											"go to Hemenster and do us proud");
-										give(player, ItemId.FISHING_COMPETITION_PASS.id(), 1);
-										player.updateQuestStage(getQuestId(), 1);
-									} else if (six == 1) {
-										say(player, n, "I'm not much of a fisherman either");
-										npcsay(player, n, "what good are you?");
-									}
-								} else if (fifth == 1) {
-									say(player, n, "You're a grumpy little man aren't you");
-									npcsay(player, n, " Don't you know it");
-								}
-
-							} else if (fourth == 1) {
-								say(player, n, "You're a grumpy little man aren't you");
-								npcsay(player, n, " Don't you know it");
-							}
-						}
+						goDownDialogue(player, n);
 					} else if (second == 2) {
 						say(player, n, "I'm bigger than you", "Let me by");
 						npcsay(player, n, "Go away",
@@ -666,7 +670,25 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				//final Npc dwarf = getWorld().getNpc(355, 375, 395, 445,
 				//		475);
 				if (dwarf != null) {
-					mountainDwarfDialogue(player, dwarf);
+					if (player.getQuestStage(this) == 0) {
+						npcsay(player, dwarf, "Hoi there, halt",
+							"You can't come in here");
+						int stairMenu = multi(player, dwarf,
+							"why not?",
+							"Oh sorry I hadn't realised it was private",
+							"I'm bigger than you let me by");
+						if (stairMenu == 0) {
+							npcsay(player, dwarf, "Why not?");
+							goDownDialogue(player, dwarf);
+						} else if (stairMenu == 1) {
+							say(player, dwarf, "Oh sorry I hadn't realised it was private");
+						} else if (stairMenu == 2) {
+							say(player, dwarf, "I was just stopping to say hello");
+							npcsay(player, dwarf, "Hello then");
+						}
+					} else {
+						mountainDwarfDialogue(player, dwarf);
+					}
 				}
 			}
 		}
