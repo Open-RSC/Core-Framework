@@ -385,13 +385,6 @@ public class Inventory {
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				Item equipped = player.getCarriedItems().getEquipment().get(i);
 				if (equipped != null) {
-					/*
-					player.updateWornItems(equipped.getDef(player.getWorld()).getWieldPosition(),
-
-						player.getSettings().getAppearance().getSprite(equipped.getDef(player.getWorld()).getWieldPosition()),
-						equipped.getDef(player.getWorld()).getWearableId(), false);
-					player.getCarriedItems().getEquipment().unequipItem(new UnequipRequest(player, equipped, UnequipRequest.RequestType.FROM_EQUIPMENT, false));
-					 */
 					def = equipped.getDef(player.getWorld());
 					key = def.isStackable() || equipped.getNoted() ? -1 : def.getDefaultPrice(); // Stacks are always lost.
 					value = deathItemsMap.getOrDefault(key, new ArrayList<Item>());
@@ -432,6 +425,7 @@ public class Inventory {
 		DeathLog log = new DeathLog(player, opponent, false);
 		for (; iterator.hasNext(); ) {
 			Item item = iterator.next();
+			item = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
 			player.getCarriedItems().remove(item, false);
 
 			log.addDroppedItem(item);
