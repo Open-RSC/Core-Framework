@@ -165,6 +165,7 @@ public final class Baraek implements
 					say(player, n, "Oh dear I don't seem to have enough money");
 					npcsay(player, n, "Well I can't go any cheaper than that mate",
 						"I have a family to feed");
+					say(player, n, "Ah well never mind");
 				} else {
 					say(player, n, "Okay here you go");
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 18));

@@ -190,18 +190,22 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 						n,
 						"Can't say, all very secret. you should get out of here",
 						"I am not supposed to talk while I guard");
-					final int choice = multi(player, n,
+					final int choice = multi(player, n, false, //do not send over
 						"Hey, chill out, I won't cause you trouble",
 						"Tell me about the life of a guard",
 						"What did you want to be when you were a boy",
 						"I had better leave, I don't want trouble");
 					if (choice == 0) {
+						say(player, n, "Hey, chill out, I won't cause you trouble");
 						joeDialogue(player, n, Joe.CHILL);
 					} else if (choice == 1) {
+						say(player, n, "Tell me about the life of a guard");
 						joeDialogue(player, n, Joe.LIFE);
 					} else if (choice == 2) {
+						say(player, n, "What did you want to be when you were a boy?");
 						joeDialogue(player, n, Joe.BOY);
 					} else if (choice == 3) {
+						say(player, n, "I had better leave, I don't want trouble");
 						joeDialogue(player, n, Joe.BETTERLEAVE);
 					}
 					break;
@@ -221,18 +225,22 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 						n,
 						"Can't say, all very secret, you should get out of here",
 						"I am not supposed to talk while I guard");
-					final int menu2 = multi(player, n,
+					final int menu2 = multi(player, n, false, //do not send over
 						"I have some beer here, fancy one?",
 						"Tell me about the life of a guard",
 						"What did you want to be when you were a boy",
 						"I had better leave, I don't want trouble");
 					if (menu2 == 0) {
+						say(player, n, "I have some beer here, fancy one?");
 						joeDialogue(player, n, Joe.BEER);
 					} else if (menu2 == 1) {
+						say(player, n, "Tell me about the life of a guard");
 						joeDialogue(player, n, Joe.LIFE);
 					} else if (menu2 == 2) {
+						say(player, n, "What did you want to be when you were a boy?");
 						joeDialogue(player, n, Joe.BOY);
 					} else if (menu2 == 3) {
+						say(player, n, "I had better leave, I don't want trouble");
 						joeDialogue(player, n, Joe.BETTERLEAVE);
 					}
 					break;
@@ -323,15 +331,18 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					"All us guards go to the same bar, And drink ourselves stupid",
 					"Its what I enjoy these days, that fade into unconciousness",
 					"I can't resist the sight of a really cold beer");
-				final int choice1 = multi(player, n,
+				final int choice1 = multi(player, n, false, //do not send over
 					"Tell me about the life of a guard",
 					"What did you want to be when you were a boy",
 					"I had better leave, I don't want trouble");
 				if (choice1 == 0) {
+					say(player, n, "Tell me about the life of a guard");
 					joeDialogue(player, n, Joe.LIFE);
 				} else if (choice1 == 1) {
+					say(player, n, "What did you want to be when you were a boy?");
 					joeDialogue(player, n, Joe.BOY);
 				} else if (choice1 == 2) {
+					say(player, n, "I had better leave, I don't want trouble");
 					joeDialogue(player, n, Joe.BETTERLEAVE);
 				}
 				break;
@@ -344,15 +355,18 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					"I just wondered if you wanted some part-time bodyguard work");
 				npcsay(player, n, "Oh. sorry. no, I don't need money",
 					"As long as you were not offering me a bribe");
-				final int choice11 = multi(player, n,
+				final int choice11 = multi(player, n, false, //do not send over
 					"Tell me about the life of a guard",
 					"What did you want to be when you were a boy",
 					"I had better leave, I don't want trouble");
 				if (choice11 == 0) {
+					say(player, n, "Tell me about the life of a guard");
 					joeDialogue(player, n, Joe.LIFE);
 				} else if (choice11 == 1) {
+					say(player, n, "What did you want to be when you were a boy?");
 					joeDialogue(player, n, Joe.BOY);
 				} else if (choice11 == 2) {
+					say(player, n, "I had better leave, I don't want trouble");
 					joeDialogue(player, n, Joe.BETTERLEAVE);
 				}
 				break;
@@ -363,15 +377,18 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					".... But most of those hours are a drag",
 					"If only I had spent more time in Knight school when I was a young boy",
 					"Maybe I wouldn't be here now, scared of Keli");
-				final int choice2 = multi(player, n,
+				final int choice2 = multi(player, n, false, //do not send over
 					"Hey chill out, I won't cause you trouble",
 					"What did you want to be when you were a boy",
 					"I had better leave, I don't want trouble");
 				if (choice2 == 0) {
+					say(player, n, "Hey chill out, I won't cause you trouble");
 					joeDialogue(player, n, Joe.CHILL);
 				} else if (choice2 == 1) {
+					say(player, n, "What did you want to be when you were a boy?");
 					joeDialogue(player, n, Joe.BOY);
 				} else if (choice2 == 2) {
+					say(player, n, "I had better leave, I don't want trouble");
 					joeDialogue(player, n, Joe.BETTERLEAVE);
 				}
 				break;
@@ -559,10 +576,11 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					"I cannot see the harm");
 				player.message("Keli shows you a small key on a stronglooking chain");
 				if (player.getQuestStage(this) == 2 && player.getCarriedItems().hasCatalogID(ItemId.SOFT_CLAY.id(), Optional.of(false))) {
-					final int menu1 = multi(player, n,
+					final int menu1 = multi(player, n, false, //do not send over
 						"Could I touch the key for a moment please",
 						"I should not disturb someone as tough as you");
 					if (menu1 == 0) {
+						say(player, n, "Could I touch the key a moment please");
 						npcsay(player, n, "Only for a moment then");
 						mes("You put a piece of your soft clay in your hand",
 							"As you touch the key, you take an imprint of it");
@@ -573,6 +591,7 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 						npcsay(player, n,
 							"You are welcome, run along now, I am very busy");
 					} else if (menu1 == 1) {
+						say(player, n, "I should not disturb someone as tough as you");
 						keliDialogue(player, n, Keli.NOT_DISTURB);
 					}
 				} else {
@@ -622,18 +641,22 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 			case Keli.NEVERHEARD:
 				npcsay(player, n, "You must be new to this land then",
 					"EVERYONE knows of Lady Keli and her prowess with the sword");
-				final int choice8 = multi(player, n,
+				final int choice8 = multi(player, n, false, //do not send over
 					"No, still doesn't ring a bell",
 					"Yes, of course I have heard of you",
 					"You must have trained a lot for this work",
 					"I should not disturb someone as tough as you");
 				if (choice8 == 0) {
+					say(player, n, "No, your name still doesn't ring a bell");
 					keliDialogue(player, n, Keli.NOBELL);
 				} else if (choice8 == 1) {
+					say(player, n, "The great Lady Keli, of course I have heard of you");
 					keliDialogue(player, n, Keli.OFCOURSE);
 				} else if (choice8 == 2) {
+					say(player, n, "You must have trained a lot for this work");
 					keliDialogue(player, n, Keli.TRAINED);
 				} else if (choice8 == 3) {
+					say(player, n, "I should not disturb someone as tough as you");
 					keliDialogue(player, n, Keli.NOT_DISTURB);
 				}
 				break;
@@ -1021,15 +1044,18 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					npcsay(player, n, "Our Prince is captive by the Lady Keli",
 						"We just need to make the rescue",
 						"There are three things we need you to do");
-					final int menu = multi(player, n,
+					final int menu = multi(player, n, false, //do not send over
 						"What is first thing I must do?",
 						"What is needed second?",
 						"And the final thing you need?");
 					if (menu == 0) {
+						say(player, n, "What is the first thing I must do?");
 						osmanDialogue(player, n, Osman.FIRST);
 					} else if (menu == 1) {
+						say(player, n, "What is needed second?");
 						osmanDialogue(player, n, Osman.SECOND);
 					} else if (menu == 2) {
+						say(player, n, "And the final thing you need?");
 						osmanDialogue(player, n, Osman.FINAL);
 					}
 					break;
@@ -1107,32 +1133,39 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					"If you can convince Lady Keli to show it to you for a moment",
 					"She is very boastful. It should not be too hard",
 					"Bring the imprint to me, with a bar of bronze.");
-				final int choice = multi(player, n,
+				final int choice = multi(player, n, false, //do not send over
 					"What is first thing I must do?",
 					"What exactly is needed second?",
 					"And the final thing you need?",
 					"Okay, I better go find some things");
 				if (choice == 0) {
+					say(player, n, "What is the first thing I must do?");
 					osmanDialogue(player, n, Osman.FIRST);
 				} else if (choice == 1) {
+					say(player, n, "What exactly is needed second?");
 					osmanDialogue(player, n, Osman.SECOND);
 				} else if (choice == 2) {
+					say(player, n, "And the final thing you need?");
 					osmanDialogue(player, n, Osman.FINAL);
 				} else if (choice == 3) {
+					say(player, n, "Okay, I better go find some things");
 					osmanDialogue(player, n, Osman.BETTER_FIND);
 				}
 				break;
 			case Osman.FINAL:
 				npcsay(player, n, "You will need to stop the guard at the door",
 					"Find out if he has any weaknesses, and use them");
-				final int finalChoice = multi(player, n,
+				final int finalChoice = multi(player, n, false, //do not send over
 					"What is first thing I must do?", "What is needed second?",
 					"Okay, I better go find some things");
 				if (finalChoice == 0) {
+					say(player, n, "What is the first thing I must do?");
 					osmanDialogue(player, n, Osman.FIRST);
 				} else if (finalChoice == 1) {
+					say(player, n, "What is needed second?");
 					osmanDialogue(player, n, Osman.SECOND);
 				} else if (finalChoice == 2) {
+					say(player, n, "Okay, I better go find some things");
 					osmanDialogue(player, n, Osman.BETTER_FIND);
 				}
 				break;

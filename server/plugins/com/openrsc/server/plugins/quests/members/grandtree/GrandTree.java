@@ -667,6 +667,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 		}
 		else if (n.getID() == NpcId.SHIPYARD_WORKER_WHITE.id() || n.getID() == NpcId.SHIPYARD_WORKER_BLACK.id()) {
 			int selected = DataConversions.getRandom().nextInt(14);
+			boolean isAlternative = n.getID() == NpcId.SHIPYARD_WORKER_BLACK.id();
 			say(player, n, "hello");
 			if (selected == 0) {
 				npcsay(player, n, "ouch");
@@ -729,7 +730,8 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				npcsay(player, n, "well it's hard work, but the pay is good");
 			} else if (selected == 13) {
 				npcsay(player, n, "what do you want?");
-				say(player, n, "is that any way to talk to your new superior?");
+				say(player, n, isAlternative ? "is that anyway to talk to your new superior?"
+					: "is that any way to talk to your new superior?");
 				npcsay(player, n, "oh, i'm sorry, i didn't realise");
 			}
 		}

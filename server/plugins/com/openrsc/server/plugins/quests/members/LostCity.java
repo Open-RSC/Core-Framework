@@ -124,7 +124,8 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 							"You must come through me before touching that tree");
 						return;
 					}
-					Npc treeSpirit = addnpc(player.getWorld(), NpcId.TREE_SPIRIT.id(), player.getX() + 1, player.getY() + 1);
+					// spawns independent on player position
+					Npc treeSpirit = addnpc(player.getWorld(), NpcId.TREE_SPIRIT.id(), 412, 3403);
 					if (treeSpirit == null) {
 						return;
 					}

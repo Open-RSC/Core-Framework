@@ -64,7 +64,7 @@ public final class BrimHavenBartender implements
 				mes("You think you see 2 bartenders signing 2 barcrawl cards");
 				player.getCache().store("barfour", true);
 			} else {
-				say(player, n, "I don't have 15 coins right now");
+				say(player, n, "Sorry I don't have 15 coins");
 			}
 		}
 	}

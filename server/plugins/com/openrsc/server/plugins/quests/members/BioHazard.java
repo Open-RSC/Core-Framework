@@ -595,7 +595,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 							player.getCache().store("wrong_vial_chancy", true);
 							player.getCarriedItems().remove(new Item(ItemId.ETHENEA.id()));
 							mes("You give him the vial of ethenea");
-							say(player, n, "Right.I'll see you later in the dancing donkey inn");
+							say(player, n, "Right. I'll see you later in the dancing donkey inn");
 							npcsay(player, n, "Be lucky");
 						}
 					} else {
@@ -607,7 +607,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 							player.getCache().store("vial_chancy", true);
 							player.getCarriedItems().remove(new Item(ItemId.LIQUID_HONEY.id()));
 							mes("You give him the vial of liquid honey");
-							say(player, n, "Right.I'll see you later in the dancing donkey inn");
+							say(player, n, "Right. I'll see you later in the dancing donkey inn");
 							npcsay(player, n, "Be lucky");
 						}
 					} else {

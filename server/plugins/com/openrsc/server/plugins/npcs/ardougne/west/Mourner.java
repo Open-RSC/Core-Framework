@@ -205,11 +205,12 @@ public class Mourner implements TalkNpcTrigger {
 					say(player, n, "why?");
 					npcsay(player, n, "the plague of course",
 						"we can't risk cross contamination");
-					menu = multi(player, n,
+					menu = multi(player, n, false, //do not send over
 						"What brought the plague to ardougne?",
 						"What are the symptoms of the plague?",
 						"Ok then see you around");
 					if (menu == 0) {
+						say(player, n, "what brought the plague to ardougne?");
 						npcsay(player, n, "it's all down to king tyras of west ardougne",
 							"rather than protecting his people",
 							"he spends his time in the lands to the west",
@@ -222,6 +223,7 @@ public class Mourner implements TalkNpcTrigger {
 						say(player, n, "isn't that treason?");
 						npcsay(player, n, "he's not my king");
 					} else if (menu == 1) {
+						say(player, n, "what are the symptoms of the plague?");
 						npcsay(player, n, "the first signs are typical flu symptoms",
 							"these tend to be followed by severe nightmares",
 							"horrifying hallucinations which drive many to madness");
@@ -236,6 +238,7 @@ public class Mourner implements TalkNpcTrigger {
 							"spreading itself further wherever possible");
 						say(player, n, "I think I've heard enough");
 					} else if (menu == 2) {
+						say(player, n, "ok then see you around");
 						npcsay(player, n, "maybe");
 					}
 					break;
@@ -261,7 +264,7 @@ public class Mourner implements TalkNpcTrigger {
 						"what are the symptoms of the plague",
 						"you're a very sick man");
 					if (menu == 0) {
-						say(player, n, "What brought the plague to ardougne?");
+						say(player, n, "what brought the plague to ardougne?");
 						npcsay(player, n, "it's all down to king tyras of west ardougne",
 							"rather than protecting his people",
 							"he spends his time in the lands to the west",
@@ -274,7 +277,7 @@ public class Mourner implements TalkNpcTrigger {
 						say(player, n, "isn't that treason?");
 						npcsay(player, n, "he's not my king");
 					} else if (menu == 1) {
-						say(player, n, "What are the symptoms of the plague?");
+						say(player, n, "what are the symptoms of the plague?");
 						npcsay(player, n, "the first signs are typical flu symptoms",
 							"these tend to be followed by severe nightmares",
 							"horrifying hallucinations which drive many to madness");
@@ -306,7 +309,7 @@ public class Mourner implements TalkNpcTrigger {
 						"what are the symptoms of the plague?",
 						"well keep up the good work");
 					if (menu == 0) {
-						say(player, n, "What brought the plague to ardougne?");
+						say(player, n, "what brought the plague to ardougne?");
 						npcsay(player, n, "it's all down to king tyras of west ardougne",
 							"rather than protecting his people",
 							"he spends his time in the lands to the west",
@@ -319,7 +322,7 @@ public class Mourner implements TalkNpcTrigger {
 						say(player, n, "isn't that treason?");
 						npcsay(player, n, "he's not my king");
 					} else if (menu == 1) {
-						say(player, n, "What are the symptoms of the plague?");
+						say(player, n, "what are the symptoms of the plague?");
 						npcsay(player, n, "the first signs are typical flu symptoms",
 							"these tend to be followed by severe nightmares",
 							"horrifying hallucinations which drive many to madness");
@@ -354,11 +357,12 @@ public class Mourner implements TalkNpcTrigger {
 						"don't you know there's been a plague outbreak?");
 					say(player, n, "yes i had heard");
 					npcsay(player, n, "then i suggest you leave as soon as you can");
-					menu = multi(player, n,
+					menu = multi(player, n, false, //do not send over
 						"What brought the plague to ardougne?",
 						"What are the symptoms of the plague?",
 						"thanks for the advice");
 					if (menu == 0) {
+						say(player, n, "what brought the plague to ardougne?");
 						npcsay(player, n, "it's all down to king tyras of west ardougne",
 							"rather than protecting his people",
 							"he spends his time in the lands to the west",
@@ -371,6 +375,7 @@ public class Mourner implements TalkNpcTrigger {
 						say(player, n, "isn't that treason?");
 						npcsay(player, n, "he's not my king");
 					} else if (menu == 1) {
+						say(player, n, "what are the symptoms of the plague?");
 						npcsay(player, n, "the first signs are typical flu symptoms",
 							"these tend to be followed by severe nightmares",
 							"horrifying hallucinations which drive many to madness");
@@ -384,6 +389,8 @@ public class Mourner implements TalkNpcTrigger {
 							"roaming like a zombie",
 							"spreading itself further wherever possible");
 						say(player, n, "I think I've heard enough");
+					} else if (menu == 2) {
+						say(player, n, "thanks for the advice");
 					}
 					break;
 			}

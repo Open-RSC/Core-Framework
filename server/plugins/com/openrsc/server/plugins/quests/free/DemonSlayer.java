@@ -179,7 +179,7 @@ public class DemonSlayer implements QuestInterface,
 					}
 				} else if (choices.get(choice).equalsIgnoreCase("Yes I know but this important")) {
 					if (questStage > 1) {
-						say(player, n, "Yes I know but this important");
+						say(player, n, "Yes, I know, but this is important");
 						captainRovinDialogue(player, n, CaptainRovin.IMPORTANT);
 					}
 				}

@@ -206,12 +206,14 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 							npcsay(player, n, "I'm impressed",
 								"You must be very powerfull",
 								"I don't suppose you can stop me being a ghost?");
-							int choice3 = multi(player, n,
+							int choice3 = multi(player, n, false, //do not send over
 								"Yes, Ok. Do you know why you're a ghost?",
 								"No, you're scary");
 							if (choice3 == 0) {
+								say(player, n, "Yes, Ok do you know why you're a ghost?");
 								ghostDialogue(player, n, Ghost.WHY);
 							} else if (choice3 == 1) {
+								say(player, n, "No, you're scary");
 								ghostDialogue(player, n, Ghost.SCARY);
 							}
 						}
@@ -221,12 +223,14 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 							n,
 							"Oh its your amulet that's doing it. I did wonder",
 							"I don't suppose you can help me? I don't like being a ghost");
-						int choice3 = multi(player, n,
+						int choice3 = multi(player, n, false, //do not send over
 							"Yes, Ok. Do you know why you're a ghost?",
 							"No, you're scary");
 						if (choice3 == 0) {
+							say(player, n, "Yes, Ok do you know why you're a ghost?");
 							ghostDialogue(player, n, Ghost.WHY);
 						} else if (choice3 == 1) {
+							say(player, n, "No, you're scary");
 							ghostDialogue(player, n, Ghost.SCARY);
 						}
 					}
@@ -363,7 +367,8 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 					if (skeleton == null) {
 						//spawn skeleton and give message
 						player.message("Out of nowhere a skeleton appears");
-						skeleton = addnpc(player.getWorld(), NpcId.SKELETON_RESTLESS.id(), 217, 3520, 100);
+						skeleton = addnpc(player.getWorld(), NpcId.SKELETON_RESTLESS.id(), 218, 3521);
+						skeleton.setShouldRespawn(false);
 						skeleton.setChasing(player);
 					} else {
 						skeleton.setChasing(player);

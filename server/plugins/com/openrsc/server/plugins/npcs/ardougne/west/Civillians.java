@@ -35,10 +35,10 @@ public class Civillians implements TalkNpcTrigger {
 			} else {
 				if (hasCat) civilianWantCatDialogue(player, n);
 				else if (hasKitten) civilianShowKittenDialogue(player, n);
-				else if (hasKardiasCat) civilianShowKardiasCatDialogue(player, n);
-				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(player, n);
+				else if (hasKardiasCat) civilianShowKardiasCatDialogue(player, n, 1);
+				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(player, n, 1);
 				else if (hasFluffsKittens && config().WANT_EXTENDED_CATS_BEHAVIOR)
-					civilianShowFluffsKittensDialogue(player, n);
+					civilianShowFluffsKittensDialogue(player, n, 1);
 			}
 			break;
 		case CIVILLIAN_ATTACKABLE:
@@ -52,10 +52,10 @@ public class Civillians implements TalkNpcTrigger {
 			} else {
 				if (hasCat) civilianWantCatDialogue(player, n);
 				else if (hasKitten) civilianShowKittenDialogue(player, n);
-				else if (hasKardiasCat) civilianShowKardiasCatDialogue(player, n);
-				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(player, n);
+				else if (hasKardiasCat) civilianShowKardiasCatDialogue(player, n, 0);
+				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(player, n, 0);
 				else if (hasFluffsKittens && config().WANT_EXTENDED_CATS_BEHAVIOR)
-					civilianShowFluffsKittensDialogue(player, n);
+					civilianShowFluffsKittensDialogue(player, n, 0);
 			}
 			break;
 		case CIVILLIAN_PICKPOCKET:
@@ -69,10 +69,10 @@ public class Civillians implements TalkNpcTrigger {
 			} else {
 				if (hasCat) civilianWantCatDialogue(player, n);
 				else if (hasKitten) civilianShowKittenDialogue(player, n);
-				else if (hasKardiasCat) civilianShowKardiasCatDialogue(player, n);
-				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(player, n);
+				else if (hasKardiasCat) civilianShowKardiasCatDialogue(player, n, 0);
+				else if (hasGertrudesCat) civilianShowGertrudesCatDialogue(player, n, 0);
 				else if (hasFluffsKittens && config().WANT_EXTENDED_CATS_BEHAVIOR)
-					civilianShowFluffsKittensDialogue(player, n);
+					civilianShowFluffsKittensDialogue(player, n, 0);
 			}
 			break;
 		default:
@@ -121,23 +121,23 @@ public class Civillians implements TalkNpcTrigger {
 		}
 	}
 
-	private void civilianShowKardiasCatDialogue(Player player, Npc n) {
-		say(player, n, "i have a cat..look");
+	private void civilianShowKardiasCatDialogue(Player player, Npc n, int path) {
+		say(player, n, "i have a cat..look" + (path == 1 ? "!" : ""));
 		npcsay(player, n, "hmmm..doesn't look like it's seen daylight in years",
 				"that's not going to catch any mice");
 	}
 
 	//no known method to obtain gertrudes cat
-	private void civilianShowGertrudesCatDialogue(Player player, Npc n) {
-		say(player, n, "i have a cat..look");
+	private void civilianShowGertrudesCatDialogue(Player player, Npc n, int path) {
+		say(player, n, "i have a cat..look" + (path == 1 ? "!" : ""));
 		npcsay(player, n, "hmmm..doesn't look like it belongs to you",
 				"i cannot buy it");
 	}
 
 	//very likely did not trigger something, it does not appear to trigger dialogue in OSRS
 	//and kardias cat is wikified to have dialogue in OSRS
-	private void civilianShowFluffsKittensDialogue(Player player, Npc n) {
-		say(player, n, "i have some kittens..look");
+	private void civilianShowFluffsKittensDialogue(Player player, Npc n, int path) {
+		say(player, n, "i have some kittens..look" + (path == 1 ? "!" : ""));
 		npcsay(player, n, "hmmm..doesn't look like they are happy",
 				"better return them where they were");
 	}

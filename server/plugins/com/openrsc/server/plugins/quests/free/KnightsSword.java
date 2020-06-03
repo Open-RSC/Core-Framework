@@ -111,20 +111,27 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 					choices.add("Hello are you an Imcando Dwarf?");
 					choices.add("Would you like some redberry pie?");
 					if (canBuyCape(player)) choices.add("What's that cape you've got on?");
-					int option = multi(player, n, choices.toArray(new String[choices.size()]));
+					int option = multi(player, n, false, //do not send over
+						choices.toArray(new String[choices.size()]));
 					if (option == 0) {
+						say(player, n, "Hello are you an Imcando Dwarf?");
 						npcsay(player, n, "Yeah what about it?");
-						option = multi(player, n, "Would you like some redberry  Pie?",
+						option = multi(player, n, false, //do not send over
+							"Would you like some redberry  Pie?",
 							"Can you make me a special sword?");
 						if (option == 0) {
+							say(player, n, "Would you like some redberry Pie?");
 							givePie(player, n);
 						} else if (option == 1) {
+							say(player, n, "Can you make me a special sword?");
 							npcsay(player, n, "no I don't do that anymore",
 								"I'm getting old");
 						}
 					} else if (option == 1) {
+						say(player, n, "Would you like some redberry Pie?");
 						givePie(player, n);
 					} else if (option == 2) {
+						say(player, n, "What's that cape you've got on?");
 						skillcape(player, n, "yes");
 					}
 				}

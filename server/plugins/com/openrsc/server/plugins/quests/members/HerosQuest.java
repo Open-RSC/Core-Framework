@@ -418,7 +418,10 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onTakeObj(Player player, GroundItem i) {
 		if (i.getID() == ItemId.RED_FIREBIRD_FEATHER.id()) {
-			if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
+			if (player.getQuestStage(this) <= 0) {
+				say(player, null, "It looks dangerously hot");
+				say(player, null, "And I have no reason to take it");
+			} else if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				player.message("Ouch that is too hot to take");
 				player.message("I need something cold to pick it up with");
 				int damage = (int) Math.round((player.getSkills().getLevel(Skills.HITS)) * 0.15D);
@@ -430,7 +433,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public boolean blockTakeObj(Player player, GroundItem i) {
 		if (i.getID() == ItemId.RED_FIREBIRD_FEATHER.id()) {
-			if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
+			if (player.getQuestStage(this) <= 0 || !player.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				return true;
 			}
 		}

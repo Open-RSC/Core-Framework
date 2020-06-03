@@ -58,12 +58,27 @@ public class Klarense implements TalkNpcTrigger {
 				"Ah well, nevermind"
 			};
 
-			int choice = multi(player, n, menu);
+			int choice = multi(player, n, false, //do not send over
+				menu);
+			if (choice == 0) {
+				say(player, n, "Do you know when she will be seaworthy?");
+			} else if (choice == 1) {
+				say(player, n, "Would you take me to Crandor Isle when it's ready?");
+			} else if (choice == 2) {
+				say(player, n, "I don't suppose I could buy it");
+			} else if (choice == 3) {
+				say(player, n, "Ah well never mind");
+			}
 			travel(player, n, choice);
 		} else {
-			int choice = multi(player, n, menu);
-			if (choice == 0)
+			int choice = multi(player, n, false, //do not send over
+				menu);
+			if (choice == 0) {
+				say(player, n, "Do you know when she will be seaworthy?");
 				travel(player, n, choice);
+			} else if (choice == 1) {
+				say(player, n, "Ah well never mind");
+			}
 		}
 	}
 

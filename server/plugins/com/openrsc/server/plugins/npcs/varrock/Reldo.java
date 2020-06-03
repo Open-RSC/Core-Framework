@@ -46,17 +46,20 @@ public final class Reldo implements TalkNpcTrigger {
 			options.add("What do you know about the Imcando dwarves?");
 		}
 		String[] finalOptions = new String[options.size()];
-		int option = multi(player, n, options.toArray(finalOptions));
+		int option = multi(player, n, false, //do not send over
+			options.toArray(finalOptions));
 
 		if (option == 3) {
 			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0
 				&& player.getQuestStage(Quests.THE_KNIGHTS_SWORD) == 1) {
+				say(player, n, "What do you know about the Imcando Dwarves?");
 				knightsSwordDialog(player, n);
 			}
 		}
 
 		else if (option == 2) {
 			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
+				say(player, n, "What do you do?");
 				npcsay(player, n, "I'm the palace librarian");
 				say(player, n, "Ah that's why you're in the library then");
 				npcsay(player, n, "Yes",
@@ -64,16 +67,19 @@ public final class Reldo implements TalkNpcTrigger {
 					"I like reading");
 			}
 			else if (player.getQuestStage(Quests.THE_KNIGHTS_SWORD) == 1) {
+				say(player, n, "What do you know about the Imcando Dwarves?");
 				knightsSwordDialog(player, n);
 			}
 		}
 
 		else if (option == 1) {
 			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
+				say(player, n, "Do you have anything to trade?");
 				npcsay(player, n, "No, sorry. I'm not the trading type");
 				say(player, n, "ah well");
 			}
 			else {
+				say(player, n, "What do you do?");
 				npcsay(player, n, "I'm the palace librarian");
 				say(player, n, "Ah that's why you're in the library then");
 				npcsay(player, n, "Yes",
@@ -84,10 +90,12 @@ public final class Reldo implements TalkNpcTrigger {
 
 		else if (option == 0) {
 			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
+				say(player, n, "I'm in search of a quest");
 				shieldOfArravDialog(player, n);
 			}
 
 			else {
+				say(player, n, "Do you have anything to trade?");
 				npcsay(player, n, "No, sorry. I'm not the trading type");
 				say(player, n, "ah well");
 			}

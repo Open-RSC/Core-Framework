@@ -290,10 +290,11 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 							"In my quest to find the perfect gold I learned a lot",
 							"I can make it so when you're wearing these");
 						npcsay(player, n, "You gain more experience when smithing gold");
-						int menu = multi(player, n,
+						int menu = multi(player, n, false, //do not send over
 							"That sounds good, improve them for me",
 							"I think I'll check my other options with your brothers");
 						if (menu == 0) {
+							say(player, n, "That sounds good, enchant them for me");
 							mes("Avan takes out a little hammer",
 								"He starts pounding on the gauntlets",
 								"Avan hands the gauntlets to you");
@@ -310,6 +311,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 							player.getCarriedItems().getInventory().add(new Item(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()));
 							player.getCache().set("famcrest_gauntlets", Gauntlets.GOLDSMITHING.id());
 						} else if (menu == 1) {
+							say(player, n, "I think I'll check my other options with your brothers");
 							npcsay(player, n,
 								"Ok if you insist on getting help from the likes of them");
 						}
@@ -322,12 +324,14 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, n, "Can't you see I'm busy?");
 					break;
 				case 4:
-					int menu = multi(player, n,
+					int menu = multi(player, n, false, //do not send over
 						"Why are you hanging around in a scorpion pit?",
 						"I'm looking for a man named Avan");
 					if (menu == 0) {
+						say(player, n, "Why are you hanging about in a scorpion pit?");
 						npcsay(player, n, "It's a good place to find gold");
 					} else if (menu == 1) {
+						say(player, n, "I'm looking for a man named Avan");
 						npcsay(player, n, "I'm called Avan yes");
 						say(player, n, "You have part of a crest",
 							"I have been sent to fetch it");

@@ -81,13 +81,16 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 							"The old lady who lives there is scary",
 							"She's locked the ball in her wooden shed",
 							"Can you get my ball back for me please");
-						int second = multi(player, n, "Ok, I'll see what I can do",
+						int second = multi(player, n, false, //do not send over
+							"Ok, I'll see what I can do",
 							"Get it back yourself");
 						if (second == 0) {
+							say(player, n, "Ok I'll see what I can do");
 							npcsay(player, n, "Thankyou");
 							player.updateQuestStage(getQuestId(), 1);
 						} else if (second == 1) {
 							// NOTHING
+							say(player, n, "Get it back yourself");
 						}
 					} else if (first == 1) {
 						mes("The boy sniffs slightly");

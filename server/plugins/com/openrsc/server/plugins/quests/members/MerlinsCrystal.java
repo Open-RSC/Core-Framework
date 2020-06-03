@@ -556,19 +556,22 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 						"Greetings I am Sir Lancelot the greatest knight in the land",
 						"What do you want?");
 					if (player.getCache().hasKey("talked_to_gawain")) {
-						int opt = multi(player, n,
+						int opt = multi(player, n, false, //do not send over
 							"I want to get Merlin out of the crystal",
 							"You're a little full of yourself aren't you?",
 							"Any ideas on how to get into Morgan Le Faye's stronghold?");
 						if (opt == 0) {
+							say(player, n, "I want to get Merlin out of the crystal");
 							npcsay(player, n,
 								"Well the knights of the round table can't manage it",
 								"I can't see how a commoner like you could succeed where we have failed");
 						} else if (opt == 1) {
+							say(player, n, "You're a little full of yourself aren't you?");
 							npcsay(player, n,
 								"I have every right to be proud of myself",
 								"My prowess in battle is world renowned");
 						} else if (opt == 2) {
+							say(player, n, "Any ideas on how to get into Morgan Le Fayes's stronghold");
 							npcsay(player,
 								n,
 								"That stronghold is built in a strong defensive position",

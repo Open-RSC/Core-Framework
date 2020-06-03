@@ -76,11 +76,14 @@ public class DoctorOrbon implements TalkNpcTrigger {
 					"I could sell it to you",
 					"then i could make myself another",
 					"hmmm..i'll need at least 100 gold coins");
-				int menu = multi(player, n, "Sorry doc, that's too much",
+				int menu = multi(player, n, false, //do not send over
+					"Sorry doc, that's too much",
 					"Ok i'll take it");
 				if (menu == 0) {
 					// NOTHING
+					say(player, n, "sorry doc, that's too much");
 				} else if (menu == 1) {
+					say(player, n, "ok i'll take it");
 					if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100)) != -1) {
 						mes("you give doctor orbon 100 coins",
 							"doctor orbon gives you a protective suit");

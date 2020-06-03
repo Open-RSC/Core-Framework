@@ -203,11 +203,13 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 				case 0:
 					npcsay(player, n, "Hello adventurer",
 						"What brings you to these parts ?");
-					int first = multi(player, n, "I am lost!!!",
+					int first = multi(player, n, false, //do not send over
+						"I am lost!!!",
 						"I'd like to have a look through that telescope",
 						"Whats the ladder over there for ?",
 						"It is of no concern of yours...");
 					if (first == 0) {
+						say(player, n, "I am lost!!!");
 						npcsay(player,
 							n,
 							"Lost ? it must have been those gnomes that have lead you astray",
@@ -216,6 +218,7 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 							"Thanks for your help");
 						npcsay(player, n, "No problem at all, come and visit again");
 					} else if (first == 1) {
+						say(player, n, "I'd like to have a look through that telescope");
 						npcsay(player, n, "So would I !!",
 							"The trouble is, its not working");
 						say(player, n, "What do you mean ?");
@@ -252,10 +255,12 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 						}
 
 					} else if (first == 2) {
+						say(player, n, "What's the ladder there for ?");
 						npcsay(player, n,
 							"The ladder leads to the entrance of the cavern",
 							"That leads from here to the observatory");
 					} else if (first == 3) {
+						say(player, n, "It is of no concern of yours...");
 						npcsay(player, n, "Okay Okay, there's no need to be insulting!");
 						player.message("The professor carries on with his studies");
 					}

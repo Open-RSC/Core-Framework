@@ -32,19 +32,20 @@ public class SpiritOfScorpius implements TalkNpcTrigger, OpLocTrigger {
 				if (player.getCache().hasKey("scorpius_mould")) {
 					int option;
 					if (config().WANT_CUSTOM_QUESTS) {
-						option = multi(player, n,
+						option = multi(player, n, false, //do not send over
 							"I have come to seek a blessing",
 							"I need another unholy symbol mould",
 							"I have come to kill you",
 							"About mould drops");
 					} else {
-						option = multi(player, n,
+						option = multi(player, n, false, //do not send over
 							"I have come to seek a blessing",
 							"I need another unholy symbol mould",
 							"I have come to kill you");
 					}
 
 					if (option == 0) {
+						say(player, n, "I have come to seek a blessing");
 						if (player.getCarriedItems().hasCatalogID(ItemId.UNHOLY_SYMBOL_OF_ZAMORAK.id(), Optional.of(false))) {
 							npcsay(player, n, "I see you have the unholy symbol of our Lord",
 								"It is blessed with the Lord Zamorak's power",
@@ -63,6 +64,7 @@ public class SpiritOfScorpius implements TalkNpcTrigger, OpLocTrigger {
 								"Who have no symbol of our Lord's love!");
 						}
 					} else if (option == 1) {
+						say(player, n, "I need another mould for the unholy symbol");
 						if (player.getCarriedItems().hasCatalogID(ItemId.UNHOLY_SYMBOL_MOULD.id(), Optional.of(false))) {
 							npcsay(player, n, "One you already have, another is not needed",
 								"Leave me be!");
@@ -73,8 +75,10 @@ public class SpiritOfScorpius implements TalkNpcTrigger, OpLocTrigger {
 							give(player, ItemId.UNHOLY_SYMBOL_MOULD.id(), 1);
 						}
 					} else if (option == 2) {
+						say(player, n, "I have come to kill you");
 						npcsay(player, n, "The might of mortals to me is as the dust is to the sea!");
 					} else if (option == 3) {
+						say(player, n, "About mould drops");
 						if (!player.getCache().hasKey("want_unholy_symbol_drops"))
 							player.getCache().store("want_unholy_symbol_drops", true);
 

@@ -252,11 +252,12 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 						npcsay(player, n,
 							"Yes it'll cost you 40000 coins for the materials needed mind you",
 							"Which sort of staff did you want enchanting?");
-						int five = multi(player, n,
+						int five = multi(player, n, false, //do not send over
 							"battlestaff of fire", "battlestaff of water",
 							"battlestaff of air", "battlestaff of earth",
 							"I won't bother yet actually");
 						if (five == 0) {
+							say(player, n, "battlestaff of fire please");
 							if (!player.getCarriedItems().hasCatalogID(ItemId.BATTLESTAFF_OF_FIRE.id(), Optional.of(false))) {
 								say(player, n, "I don't have a battlestaff of fire yet though");
 								return;
@@ -271,6 +272,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 								player.message("Thormac enchants your staff");
 							}
 						} else if (five == 1) {
+							say(player, n, "battlestaff of water please");
 							if (!player.getCarriedItems().hasCatalogID(ItemId.BATTLESTAFF_OF_WATER.id(), Optional.of(false))) {
 								say(player, n, "I don't have a battlestaff of water yet though");
 								return;
@@ -285,6 +287,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 								player.message("Thormac enchants your staff");
 							}
 						} else if (five == 2) {
+							say(player, n, "battlestaff of air please");
 							if (!player.getCarriedItems().hasCatalogID(ItemId.BATTLESTAFF_OF_AIR.id(), Optional.of(false))) {
 								say(player, n, "I don't have a battlestaff of air yet though");
 								return;
@@ -299,6 +302,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 								player.message("Thormac enchants your staff");
 							}
 						} else if (five == 3) {
+							say(player, n, "battlestaff of earth please");
 							if (!player.getCarriedItems().hasCatalogID(ItemId.BATTLESTAFF_OF_EARTH.id(), Optional.of(false))) {
 								say(player, n, "I don't have a battlestaff of earth yet though");
 								return;
@@ -312,6 +316,8 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 								give(player, ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id(), 1);
 								player.message("Thormac enchants your staff");
 							}
+						} else if (five == 4) {
+							say(player, n, "I won't bother yet actually");
 						}
 					}
 					break;

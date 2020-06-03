@@ -40,7 +40,7 @@ public final class Aggie implements TalkNpcTrigger {
 					"Could you think of a way to make pink skin paste",
 					"What could you make for me",
 					"Cool, do you turn people into frogs?",
-					"You mad old witch you can't help me",
+					"You mad old witch, you can't help me",
 					"Can you make dyes for me please");
 				if (choice == 0) {
 					aggieDialogue(player, n, Aggie.SKIN_PASTE);
@@ -57,7 +57,7 @@ public final class Aggie implements TalkNpcTrigger {
 				int choiceOther = multi(player, n,
 					"What could you make for me",
 					"Cool, do you turn people into frogs?",
-					"You mad old witch you can't help me",
+					"You mad old witch, you can't help me",
 					"Can you make dyes for me please");
 				if (choiceOther == 0) {
 					aggieDialogue(player, n, Aggie.MAKEME);

@@ -50,18 +50,22 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 		if (cID == -1) {
 			npcsay(player, n, "Hello, I'm Sidney Smith, the certification Clerk.",
 				"How can I help you ?");
-			int menu = multi(player, n,
+			int menu = multi(player, n, false, //do not send over
 				"I'd like to certificate some goods please.",
 				"I'd like to change some certificates for goods please.",
 				"What is certification ?",
 				"Which goods do you certificate ?");
 			if (menu == 0) {
+				say(player, n, "I'd like to certificate some goods please.");
 				sidneyCert(player, n, Sidney.GOODS_TO_CERTIFICATE);
 			} else if (menu == 1) {
+				say(player, n, "I'd like to change some certificates for goods please.");
 				sidneyCert(player, n, Sidney.CERTIFICATE_TO_GOODS);
 			} else if (menu == 2) {
+				say(player, n, "What is certification?");
 				sidneyCert(player, n, Sidney.WHAT_IS_CERTIFICATION);
 			} else if (menu == 3) {
+				say(player, n, "Which goods do you certificate ?");
 				sidneyCert(player, n, Sidney.WHICH_GOODS_DO_YOU_CERTIFICATE);
 			}
 		}
