@@ -301,7 +301,7 @@ public class Equipment {
 				for (Item item : items) {
 					remove(item, item.getAmount(), updateClient); // Remove from equipment
 				}
-				player.getCarriedItems().remove(toEquip, updateClient); // Remove from inventory
+				player.getCarriedItems().getInventory().remove(toEquip, updateClient); // Remove from inventory
 
 				for (Item item : items) {
 					player.getCarriedItems().getInventory().add( // Add to inventory

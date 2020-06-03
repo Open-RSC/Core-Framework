@@ -95,7 +95,7 @@ public class CarriedItems {
 	// TODO: Add parameter allowNoted
 	public int remove(Item item, boolean updateClient) {
 		// If the item id isn't assigned, first attempt to get it from the inventory.
-		Item toRemove = null;
+		Item toRemove = item;
 		if (item.getItemId() == -1) {
 			toRemove = getInventory().get(
 				getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted()))
