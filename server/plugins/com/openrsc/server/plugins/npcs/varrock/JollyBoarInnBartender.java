@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class JollyBoarInnBartender implements TalkNpcTrigger {
@@ -21,7 +23,8 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 	public void onTalkNpc(Player player, Npc n) {
 		npcsay(player, n, "Yes please?");
 		String[] options = {};
-		if (player.getCache().hasKey("barcrawl") && !player.getCache().hasKey("barone")) {
+		if (player.getCache().hasKey("barcrawl") && !player.getCache().hasKey("barone")
+			&& player.getCarriedItems().hasCatalogID(ItemId.BARCRAWL_CARD.id(), Optional.of(false))) {
 			options = new String[]{
 				"I'll have a beer please",
 				"Any hints where I can go adventuring?",

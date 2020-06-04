@@ -9,6 +9,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Barmaid implements
@@ -23,7 +25,8 @@ public final class Barmaid implements
 	@Override
 	public void onTalkNpc(Player player, final Npc n) {
 		if (player.getCache().hasKey("barcrawl")
-			&& !player.getCache().hasKey("barthree")) {
+			&& !player.getCache().hasKey("barthree")
+			&& player.getCarriedItems().hasCatalogID(ItemId.BARCRAWL_CARD.id(), Optional.of(false))) {
 			int barCrawlOpt = multi(player, n, false, //do not send over
 				"Hi what ales are you serving",
 				"I'm doing Alfred Grimhand's barcrawl");

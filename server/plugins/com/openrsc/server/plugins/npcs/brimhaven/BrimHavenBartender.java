@@ -8,6 +8,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class BrimHavenBartender implements
@@ -23,7 +25,8 @@ public final class BrimHavenBartender implements
 		npcsay(player, n, "Yohoho me hearty what would you like to drink?");
 		String[] options;
 		if (player.getCache().hasKey("barcrawl")
-			&& !player.getCache().hasKey("barfour")) {
+			&& !player.getCache().hasKey("barfour")
+			&& player.getCarriedItems().hasCatalogID(ItemId.BARCRAWL_CARD.id(), Optional.of(false))) {
 			options = new String[]{"Nothing thankyou",
 				"A pint of Grog please", "A bottle of rum please",
 				"I'm doing Alfred Grimhand's barcrawl"};

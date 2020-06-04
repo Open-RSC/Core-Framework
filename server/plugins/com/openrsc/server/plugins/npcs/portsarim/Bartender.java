@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -28,7 +29,8 @@ public class Bartender implements TalkNpcTrigger {
 		} else {
 			options.add("Have you heard any more rumours in here?");
 		}
-		if (player.getCache().hasKey("barcrawl") && !player.getCache().hasKey("barsix")) {
+		if (player.getCache().hasKey("barcrawl") && !player.getCache().hasKey("barsix")
+			&& player.getCarriedItems().hasCatalogID(ItemId.BARCRAWL_CARD.id(), Optional.of(false))) {
 			options.add("I'm doing Alfred Grimhand's barcrawl");
 		}
 		String[] finalOptions = new String[options.size()];

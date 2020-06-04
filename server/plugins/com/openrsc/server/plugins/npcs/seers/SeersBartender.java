@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -28,7 +29,8 @@ public final class SeersBartender implements
 		options.add("What do you have?");
 		options.add("Beer please");
 		if (player.getCache().hasKey("barcrawl")
-			&& !player.getCache().hasKey("barfive")) {
+			&& !player.getCache().hasKey("barfive")
+			&& player.getCarriedItems().hasCatalogID(ItemId.BARCRAWL_CARD.id(), Optional.of(false))) {
 			options.add("I'm doing Alfred Grimhand's barcrawl");
 		}
 		options.add("I don't really want anything thanks");
@@ -37,7 +39,8 @@ public final class SeersBartender implements
 
 		if (option == 2) {
 			if (player.getCache().hasKey("barcrawl")
-				&& !player.getCache().hasKey("barfive")) {
+				&& !player.getCache().hasKey("barfive")
+				&& player.getCarriedItems().hasCatalogID(ItemId.BARCRAWL_CARD.id(), Optional.of(false))) {
 				npcsay(player,
 					n,
 					"Oh you're a barbarian then",

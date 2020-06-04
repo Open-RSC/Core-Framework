@@ -9,6 +9,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Bartender implements TalkNpcTrigger {
@@ -22,7 +24,8 @@ public class Bartender implements TalkNpcTrigger {
 	public void onTalkNpc(Player player, Npc n) {
 		npcsay(player, n, "What can I do yer for?");
 		String[] options = {};
-		if (player.getCache().hasKey("barcrawl") && !player.getCache().hasKey("bartwo")) {
+		if (player.getCache().hasKey("barcrawl") && !player.getCache().hasKey("bartwo")
+			&& player.getCarriedItems().hasCatalogID(ItemId.BARCRAWL_CARD.id(), Optional.of(false))) {
 			options = new String[]{
 				"A glass of your finest ale please",
 				"Can you recommend anywhere an adventurer might make his fortune?",
