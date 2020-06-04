@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.skills.crafting;
 
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.external.ItemCraftingDef;
 import com.openrsc.server.external.ItemGemDef;
@@ -127,6 +128,10 @@ public class Crafting implements UseInvTrigger,
 		} else if ((item2ID == ItemId.BUCKET_OF_WATER.id() || item2ID == ItemId.JUG_OF_WATER.id() || item2ID == ItemId.BOWL_OF_WATER.id()) && useWater(player, item2, item1)) {
 			return;
 		} else if (item1ID == ItemId.MOLTEN_GLASS.id() && item2ID == ItemId.LENS_MOULD.id() || item1ID == ItemId.LENS_MOULD.id() && item2ID == ItemId.MOLTEN_GLASS.id()) {
+			if (getQuestStage(player, Quests.OBSERVATORY_QUEST) >= 0 && getQuestStage(player, Quests.OBSERVATORY_QUEST) <= 5) {
+				say(player, null, "Perhaps I should speak to the professor first");
+				return;
+			}
 			if (getCurrentLevel(player, Skills.CRAFTING) < 10) {
 				player.message("You need a crafting level of 10 to make the lens");
 				return;

@@ -88,10 +88,11 @@ public class DigsiteExaminer implements TalkNpcTrigger {
 							digsiteExaminerDialogue(player, n, ExaminerNPC.START_EXAM_AND_MENU_ONE);
 						} else {
 							npcsay(player, n, "I am still waiting for your stamped letter of recommendation");
-							int opt = multi(player, n,
+							int opt = multi(player, n, false, //do not send over
 								"I have lost the letter you gave me",
 								"All right I'll try and get it");
 							if (opt == 0) {
+								say(player, n, "I have lost the letter you gave me");
 								if (player.getCarriedItems().hasCatalogID(ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id(), Optional.of(false))) {
 									npcsay(player, n, "Oh now come on",
 										"You have it with you!");
@@ -101,6 +102,7 @@ public class DigsiteExaminer implements TalkNpcTrigger {
 									give(player, ItemId.UNSTAMPED_LETTER_OF_RECOMMENDATION.id(), 1);
 								}
 							} else if (opt == 1) {
+								say(player, n, "All right i'll try and get it");
 								npcsay(player, n, "I am sure you wont get any problems");
 							}
 						}

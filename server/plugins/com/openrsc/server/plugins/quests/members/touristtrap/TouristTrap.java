@@ -3053,6 +3053,9 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						player.teleport(71, 3626);
 						player.message("The guard unlocks the gate and lets you out.");
 						player.teleport(69, 3625);
+						if (!player.getCache().hasKey("paid_mine_jail")) {
+							player.getCache().store("paid_mine_jail", true);
+						}
 					}
 				} else {
 					npcsay(player, n, "Hey, move away from that gate!");

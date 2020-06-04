@@ -796,9 +796,11 @@ public class DoorAction {
 							"You cannot go through this door without paying the trading tax");
 						say(player, n, "What do I need to pay?");
 						npcsay(player, n, "One diamond");
-						int m = multi(player, n, "Okay", "A diamond, are you crazy?",
+						int m = multi(player, n, false, //do not send over
+							"Okay", "A diamond, are you crazy?",
 							"I haven't brought my diamonds with me");
 						if (m == 0) {
+							say(player, n, "Okay");
 							if (!player.getCarriedItems().hasCatalogID(ItemId.DIAMOND.id(), Optional.of(false))) {
 								say(player, n,
 									"I haven't brought my diamonds with me");
@@ -808,7 +810,10 @@ public class DoorAction {
 								doDoor(obj, player);
 							}
 						} else if (m == 1) {
+							say(player, n, "A diamond?", "are you crazy?");
 							npcsay(player, n, "Nope those are the rules");
+						} else if (m == 2) {
+							say(player, n, "I haven't brought my diamonds with me");
 						}
 					}
 					break;
@@ -821,9 +826,11 @@ public class DoorAction {
 							"You cannot go through this door without paying the trading tax");
 						say(player, n, "What do I need to pay?");
 						npcsay(player, n, "One diamond");
-						int m = multi(player, n, "Okay", "A diamond, are you crazy?",
+						int m = multi(player, n, false, //do not send over
+							"Okay", "A diamond, are you crazy?",
 							"I haven't brought my diamonds with me");
 						if (m == 0) {
+							say(player, n, "Okay");
 							if (!player.getCarriedItems().hasCatalogID(ItemId.DIAMOND.id(), Optional.of(false))) {
 								say(player, n,
 									"I haven't brought my diamonds with me");
@@ -833,7 +840,10 @@ public class DoorAction {
 								doDoor(obj, player);
 							}
 						} else if (m == 1) {
+							say(player, n, "A diamond?", "are you crazy?");
 							npcsay(player, n, "Nope those are the rules");
+						} else if (m == 2) {
+							say(player, n, "I haven't brought my diamonds with me");
 						}
 					}
 				}

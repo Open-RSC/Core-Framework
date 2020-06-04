@@ -318,6 +318,7 @@ public class ErnestTheChicken implements QuestInterface,
 							npcsay(player, n, "A rubber tube");
 						if (!player.getCarriedItems().hasCatalogID(ItemId.PRESSURE_GAUGE.id()))
 							npcsay(player, n, "A Pressure Gauge");
+						say(player, n, "Ok I'll try and find them");
 					}
 					break;
 			}

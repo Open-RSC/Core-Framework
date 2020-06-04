@@ -123,12 +123,14 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 							say(player, npc, "hello again blurberry");
 							npcsay(player, npc, "well hello traveller",
 								"i'm quite busy as usual, any chance you could help");
-							int menu = multi(player, npc,
+							int menu = multi(player, npc, false, //do not send over
 								"I'm quite busy myself, sorry",
 								"ok then, what do you need");
 							if (menu == 0) {
+								say(player, npc, "i'm quite busy myself, sorry");
 								npcsay(player, npc, "that's ok, come back when you're free");
 							} else if (menu == 1) {
+								say(player, npc, "ok then, what do you need");
 								randomizeJob(player, npc);
 							}
 						}
@@ -278,12 +280,14 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 			player.getCache().set("blurberry_jobs_completed", (completedJobs + 1));
 		}
 		npcsay(player, n, "could you make me another order");
-		int menu = multi(player, n,
+		int menu = multi(player, n, false, //do not send over
 			"I'm quite busy myself, sorry",
 			"ok then, what do you need");
 		if (menu == 0) {
+			say(player, n, "i'm quite busy myself, sorry");
 			npcsay(player, n, "that's ok, come back when you're free");
 		} else if (menu == 1) {
+			say(player, n, "ok then, what do you need");
 			randomizeJob(player, n);
 		}
 	}

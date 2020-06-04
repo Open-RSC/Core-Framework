@@ -10,8 +10,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.AbstractShop;
 
-import static com.openrsc.server.plugins.Functions.multi;
-import static com.openrsc.server.plugins.Functions.npcsay;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Scavvo extends AbstractShop {
 
@@ -32,6 +31,13 @@ public class Scavvo extends AbstractShop {
 	public void onTalkNpc(Player player, Npc n) {
 		npcsay(player, n, "Ello matey", "Want to buy some exciting new toys?");
 		int options = multi(player, n, "No, toys are for kids", "Lets have a look then", "Ooh goody goody toys");
+		if (options == 0) {
+			say(player, n, "No toys are for kids");
+		} else if (options == 1) {
+			say(player, n, "Let's have a look then");
+		} else if (options == 2) {
+			say(player, n, "Ooh goody goody toys");
+		}
 		if (options == 1 || options == 2) {
 			player.setAccessingShop(scavvosShop);
 			ActionSender.showShop(player, scavvosShop);

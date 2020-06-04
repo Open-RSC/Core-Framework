@@ -123,7 +123,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 						!player.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_TWO_THREE.id(), Optional.of(false)) &&
 						!player.getCarriedItems().hasCatalogID(ItemId.SCORPION_CAGE_ONE_TWO_THREE.id(), Optional.of(false))) {
 						npcsay(player, n, "Many greetings");
-						say(player, n, "I have retrieved a second scorpion");
+						say(player, n, "I have retrieved a second scoprion");
 						npcsay(player, n,
 							"That's lucky because I've got some information on the last scorpion for you",
 							"It seems to be in some sort of upstairs room",
@@ -194,7 +194,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 				"I keep getting captured",
 				"Would you like to give it a go");
 			choice = multi(player, n, "Yes please",
-				"No it's too dangerous for me");
+				"No it's to dangerous for me too");
 			if (choice == 0) {
 				mes("Velrak reaches inside his boot and passes you a key");
 				give(player, ItemId.DUSTY_KEY.id(), 1);

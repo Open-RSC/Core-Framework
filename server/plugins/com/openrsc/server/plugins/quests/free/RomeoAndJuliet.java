@@ -56,7 +56,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 					if (choice2 == 0) {
 						say(player, n, "Yes, I will tell her how you feel");
 						npcsay(player, n, "You are the saviour of my heart, thank you.");
-						say(player, n, "err, yes. Ok. Thats.... nice.");
+						say(player, n, "err, yes. Ok. Thats.... nice. ");
 						player.updateQuestStage(this, 1);
 					} else if (choice2 == 1) {
 						say(player, n, "Sorry, I am too busy. Maybe later?");
@@ -72,7 +72,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 						"I can't, it sounds like work to me");
 					if (choice3 == 0) {
 						npcsay(player, n, "You are the saviour of my heart, thank you.");
-						say(player, n, "err, yes. Ok. Thats.... nice.");
+						say(player, n, "err, yes. Ok. Thats.... nice. ");
 						player.updateQuestStage(this, 1);
 					} else if (choice3 == 1) {
 						npcsay(player, n,
@@ -84,7 +84,7 @@ public class RomeoAndJuliet implements QuestInterface, TalkNpcTrigger {
 						"Please tell her I long to be with her");
 					say(player, n, "Yes, I will tell her how you feel");
 					npcsay(player, n, "You are the saviour of my heart, thank you.");
-					say(player, n, "err, yes. Ok. Thats.... nice.");
+					say(player, n, "err, yes. Ok. Thats.... nice. ");
 					player.updateQuestStage(this, 1);
 				}
 				break;

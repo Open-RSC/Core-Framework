@@ -262,6 +262,9 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 				case JUG:
 					say(player, null, "I had better not, someone might want to drink from this!");
 					break;
+				case VASE:
+					say(player, null, "I'm not sure it's good for growing flowers!");
+					break;
 				case EMPTY_VIAL:
 					player.message("You fill the vial with the liquid");
 					player.message("You close the barrel");

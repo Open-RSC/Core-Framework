@@ -37,9 +37,11 @@ public class SilkTrader implements TalkNpcTrigger {
 		if (option1 == 0) {
 			npcsay(player, n, "3 Coins");
 
-			int option2 = multi(player, n, "No. That's too much for me",
+			int option2 = multi(player, n, false, //do not send over
+				"No. That's too much for me",
 				"OK, that sounds good");
 			if (option2 == 0) {
+				say(player, n, "No. That's too much for me");
 				npcsay(player, n, "Two coins and that's as low as I'll go",
 					"I'm not selling it for any less",
 					"You'll probably go and sell it in Varrock for a profit anyway"
@@ -60,6 +62,7 @@ public class SilkTrader implements TalkNpcTrigger {
 				}
 
 			} else if (option2 == 1) {
+				say(player, n, "Ok, that sounds good");
 				if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 3)) > -1) {
 					give(player, ItemId.SILK.id(), 1);
 					player.message("You buy some silk for 3 coins");

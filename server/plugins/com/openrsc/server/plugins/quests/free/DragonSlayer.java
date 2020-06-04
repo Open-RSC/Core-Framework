@@ -184,7 +184,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					"And will i need anything to defeat this dragon",
 					"I may be a champion, but I don't think I'm up to dragon killing yet");
 				if (sub_menu3 == 0) {
-					say(player, n, "A dragon, that sounds like fun");
+					say(player, n, "A dragon that sounds like fun");
 					oziachDialogue(player, n, Oziach.DRAGON_FUN);
 				} else if (sub_menu3 == 1) {
 					say(player, n, "And will I need anything to defeat this dragon?");

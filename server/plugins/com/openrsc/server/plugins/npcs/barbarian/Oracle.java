@@ -27,13 +27,15 @@ public final class Oracle implements
 			return;
 		}
 
-		options.add("Can you impart your wise knowledge to me oh oracle?");
+		options.add("Can you impart your wise knowledge to me oh oracle");
 
 		String[] finalOptions = new String[options.size()];
-		int option = multi(player, n, options.toArray(finalOptions));
+		int option = multi(player, n, false, //do not send over
+			options.toArray(finalOptions));
 
 		if (option == 0) {
 			if (player.getQuestStage(Quests.DRAGON_SLAYER) == 2) {
+				say(player, n, "I seek a piece of the map of the isle of Crandor");
 				npcsay(player, n, "The map's behind a door below",
 					"But entering is rather tough",
 					"And this is what you need to know",
@@ -44,12 +46,14 @@ public final class Oracle implements
 					"Last a bowl that's not seen heat");
 			}
 			else {
+				say(player, n, "Can you impart your wise knowledge to me oh oracle?");
 				randomResponse(player, n);
 			}
 		}
 
 		else if (option == 1) {
 			if (player.getQuestStage(Quests.DRAGON_SLAYER) == 2) {
+				say(player, n, "Can you impart your wise knowledge to me oh oracle?");
 				npcsay(player, n, "You must search from within to find your true destiny");
 			}
 		}

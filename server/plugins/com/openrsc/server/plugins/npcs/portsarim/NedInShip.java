@@ -36,9 +36,11 @@ public final class NedInShip implements
 		} else {
 			if (player.getQuestStage(Quests.DRAGON_SLAYER) == 3 || player.getQuestStage(Quests.DRAGON_SLAYER) == -1) {
 				npcsay(player, n, "Hello again " + (player.isMale() ? "lad" : "lass"));
-				int menu = multi(player, n, "Can you take me back to Crandor again",
+				int menu = multi(player, n, false, //do not send over
+					"Can you take me back to Crandor again",
 					"How did you get back?");
 				if (menu == 0) {
+					say(player, n, "Can you take me back to Crandor again?");
 					if (player.getCache().hasKey("ship_fixed")) {
 						npcsay(player, n, "Okie Dokie");
 						mes("You feel the ship begin to move",
@@ -54,6 +56,7 @@ public final class NedInShip implements
 							"You'll have to fix it again");
 					}
 				} else if (menu == 1) {
+					say(player, n, "How did you get back?");
 					npcsay(player, n, "I got towed back by a passing friendly whale");
 				}
 				return;

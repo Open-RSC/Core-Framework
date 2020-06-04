@@ -410,12 +410,14 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, n, "Aha, my friend returns",
 						"Thanks for all your help with the telescope",
 						"What can I do for you ?");
-					int completedQuest = multi(player, n,
+					int completedQuest = multi(player, n, false, //do not send over
 						"Do you have any more quests", "Nothing, thanks");
 					if (completedQuest == 0) {
+						say(player, n, "Do you have any more quests ?");
 						npcsay(player, n, "No I'm all out of quests now",
 							"But the stars may hold a secret for you...");
 					} else if (completedQuest == 1) {
+						say(player, n, "Nothing, thanks");
 						npcsay(player, n, "Okay no problem");
 					}
 					break;

@@ -409,7 +409,8 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 						"he's planning to take over runescape");
 					npcsay(player, n, "i'm sorry traveller but it's just not realistic",
 						"how could glough- even with a gnome army- take over?");
-					say(player, n, "he plans to make a fleet of warships from the grand tree's wood");
+					say(player, n, DataConversions.getRandom().nextBoolean() ? "he plans to make a fleet of warships from the grand trees' wood"
+						: "he plans to make a fleet of warships from the grand tree's wood");
 					npcsay(player, n, "that's enough traveller, i've no time for make believe",
 						"the tree's still dying, i must get to the truth of this");
 					break;

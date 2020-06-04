@@ -461,7 +461,7 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 							"And it now gleams from the canvas of my latest epic:",
 							"The Majesty of Varrock");
 						say(player, n, "That's great",
-							"Thanks to you I'll have to walk back to East Ardougne to get another vial");
+							"Now I'll have to walk all the way back to East Ardougne to get another vial");
 						npcsay(player, n, "Well you can't put a price on art");
 						player.getCache().remove("wrong_vial_vinci");
 					}

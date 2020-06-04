@@ -25,7 +25,7 @@ public class Lady implements TalkNpcTrigger {
 		if ((player.getQuestStage(Quests.MERLINS_CRYSTAL) >= 3 || player.getQuestStage(Quests.MERLINS_CRYSTAL) == -1)
 			&& !player.getCarriedItems().hasCatalogID(ItemId.EXCALIBUR.id(), Optional.empty())) {
 
-			options.add("I seek the sword Exalibur");
+			options.add("I seek the sword Excalibur");
 		}
 
 		String finalOptions[] = new String[options.size()];

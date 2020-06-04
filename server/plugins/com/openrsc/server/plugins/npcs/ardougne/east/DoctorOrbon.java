@@ -43,11 +43,14 @@ public class DoctorOrbon implements TalkNpcTrigger {
 						"I see you don't have your protective clothing with you",
 						"Would you like to buy some more?",
 						"Same price as before");
-					int moreMenu = multi(player, n, "No i don't need any more",
+					int moreMenu = multi(player, n, false, //do not send over
+						"No i don't need any more",
 						"Ok i'll take it");
 					if (moreMenu == 0) {
 						// NOTHING
+						say(player, n, "No I don't need any more");
 					} else if (moreMenu == 1) {
+						say(player, n, "ok i'll take it");
 						if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100)) != -1) {
 							mes("you give doctor orbon 100 coins",
 								"doctor orbon gives you a protective suit");
@@ -109,8 +112,10 @@ public class DoctorOrbon implements TalkNpcTrigger {
 			say(player, n, "no, not since i was young");
 			npcsay(player, n, "good good", "have to be carefull nowadays",
 				"the plague spreads faster than a common cold");
-			int m = multi(player, n, "The plague? tell me more", "Ok i'll be careful");
+			int m = multi(player, n, false, //do not send over
+				"The plague? tell me more", "Ok i'll be careful");
 			if (m == 0) {
+				say(player, n, "the plague? tell me more");
 				npcsay(player, n, "the virus came from the west and is deadly");
 				say(player, n, "what are the symtoms?");
 				npcsay(player,
@@ -119,6 +124,7 @@ public class DoctorOrbon implements TalkNpcTrigger {
 					"when you find a thick black liquid dripping from your nose and eyes",
 					"then no one can save you");
 			} else if (m == 1) {
+				say(player, n, "ok I'll be careful");
 				npcsay(player, n, "you do that traveller");
 			}
 

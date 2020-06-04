@@ -83,14 +83,18 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 						npcsay(player, n, "An adventurer hmm?",
 							"I may have an adventure for you",
 							"I desperatly need my family crest returning to me");
-						int menu2 = multi(player, n,
+						int menu2 = multi(player, n, false, //do not send over
 							"Why are you so desperate for it?",
 							"So where is this crest?",
 							"I'm not interested in that adventure right now");
 						if (menu2 == 0) {
+							say(player, n, "Why are you desperate for it?");
 							dimintheisDialogue(player, n, Dimintheis.TRADITION);
 						} else if (menu2 == 1) {
+							say(player, n, "so where is this crest?");
 							dimintheisDialogue(player, n, Dimintheis.THREE_SONS);
+						} else if (menu2 == 2) {
+							say(player, n, "I'm not interested in that adventure right now");
 						}
 					}
 					break;
@@ -171,12 +175,16 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					"However recently I heard word that my son Caleb is alive",
 					"trying to earn his fortune",
 					"As a great chef, far away in the lands beyond white wolf mountain");
-				int menu3 = multi(player, n, "Ok I will help you",
+				int menu3 = multi(player, n, false, //do not send over
+					"Ok I will help you",
 					"I'm not interested in that adventure right now");
 				if (menu3 == 0) {
+					say(player, n, "Ok, I will help you");
 					npcsay(player, n, "I thank you greatly",
 						"If you find Caleb send him my love");
 					player.updateQuestStage(Quests.FAMILY_CREST, 1); // QUEST STARTED.
+				} else if (menu3 == 1) {
+					say(player, n, "I'm not interested in that adventure right now");
 				}
 				break;
 			case Dimintheis.TRADITION:

@@ -49,6 +49,7 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 
 		String[] options;
 		int extraOptions = 0;
+		int skip = 0;
 		boolean ears = player.getCarriedItems().hasCatalogID(ItemId.BUNNY_EARS.id()) || player.getBank().countId(ItemId.BUNNY_EARS.id()) > 0;
 		boolean scythe = player.getCarriedItems().hasCatalogID(ItemId.SCYTHE.id()) || player.getBank().countId(ItemId.SCYTHE.id()) > 0;
 		if (player.getCache().hasKey("bunny_ears") && player.getCache().hasKey("scythe") && !scythe && !ears) {
@@ -59,6 +60,7 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 				"No, thank you"
 			};
 			extraOptions = 3;
+			skip = 2;
 		} else if (player.getCache().hasKey("scythe") && !scythe) {
 			options = new String[]{
 				"I have lost my scythe can I get another one please?",
@@ -66,6 +68,7 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 				"No, thank you"
 			};
 			extraOptions = 2;
+			skip = 1;
 		} else if (player.getCache().hasKey("bunny_ears") && !ears) {
 			options = new String[]{
 				"I have lost my bunny ears can I get some more please?",
@@ -73,13 +76,14 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 				"No, thank you"
 			};
 			extraOptions = 1;
+			skip = 1;
 		} else {
 			options = new String[]{
 				"What have you got?",
 				"No, thank you"
 			};
 		}
-		int option = multi(player, n, options);
+		int option = multi(player, n, false, options);
 		if (extraOptions > 0) {
 			int item = 0;
 			switch (extraOptions) {
@@ -98,20 +102,29 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 
 			}
 			if (item == 1) {
+				say(player, n, "I have lost my bunny ears can I get some more please?");
 				npcsay(player, n, "Ohh you poor dear, I have some more here");
 				player.message("Thessalia gives you some new bunny ears");
 				give(player, ItemId.BUNNY_EARS.id(), 1);
+				return;
 			} else if (item == 2) {
+				say(player, n, "I have lost my scythe can I get another please?");
 				npcsay(player, n, "Ohh you poor dear, I have another here");
 				player.message("Thessalia gives you a new scythe");
 				give(player, ItemId.SCYTHE.id(), 1);
+				return;
+			} else if (option >= skip) {
+				option = option - skip;
 			}
 
-		} else {
-			if (option == 0) {
-				player.setAccessingShop(shop);
-				ActionSender.showShop(player, shop);
-			}
+		}
+
+		if (option == 0) {
+			say(player, n, "What have you got?");
+			player.setAccessingShop(shop);
+			ActionSender.showShop(player, shop);
+		} else if (option == 1) {
+			say(player, n, "No, thank you");
 		}
 	}
 

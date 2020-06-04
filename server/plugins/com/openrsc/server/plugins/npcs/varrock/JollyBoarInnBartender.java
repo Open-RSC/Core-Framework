@@ -35,8 +35,10 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 				"Heard any good gossip?"
 			};
 		}
-		int reply = multi(player, n, options);
+		int reply = multi(player, n, false, //do not send over
+			options);
 		if (reply == 0) {
+			say(player, n, "I'll have a pint of beer please");
 			npcsay(player, n, "Ok, that'll be two coins");
 
 			if (ifheld(player, ItemId.COINS.id(), 2)) {
@@ -47,6 +49,7 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 				say(player, n, "Oh dear. I don't seem to have enough money");
 			}
 		} else if (reply == 1) {
+			say(player, n, "Any hints on where I can go adventuring?");
 			npcsay(player, n,
 				"It's funny you should say that",
 				"An adventurer passed through here, the other day,",
@@ -59,6 +62,7 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 			);
 			say(player, n, "Thanks", "I may try that at some point");
 		} else if (reply == 2) {
+			say(player, n, "Heard any good gossip?");
 			npcsay(player, n,
 				"I'm not that well up on the gossip out here",
 				"I've heard that the bartender in the Blue Moon Inn has gone a little crazy",
@@ -67,6 +71,7 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 				"That's probably old news by now though"
 			);
 		} else if (reply == 3) {
+			say(player, n, "I'm doing Alfred Grimhand's barcrawl");
 			npcsay(player, n, "Ah, there seems to be a fair few doing that one these days",
 				"My supply of Olde Suspiciouse is starting to run low",
 				"It'll cost you 10 coins");

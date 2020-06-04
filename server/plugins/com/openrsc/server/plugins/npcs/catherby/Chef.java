@@ -123,8 +123,10 @@ public class Chef implements TalkNpcTrigger {
 			case 3:
 				if (player.getCache().hasKey("skipped_menu")) {
 					npcsay(player, n, "Hello again, I'm just putting the finishing touches to my salad");
-					int menu = multi(player, n, "Err what happened to the rest of the crest?", "Good luck with that then");
+					int menu = multi(player, n, false, //do not send over
+						"Err what happened to the rest of the crest?", "Good luck with that then");
 					if (menu == 0) {
+						say(player, n, "Err what happened to the rest of the crest?");
 						npcsay(player, n, "Well we had a bit of a fight over it",
 							"We all wanted to be the heir of our fathers lands",
 							"we each ended up with a piece of the crest",
@@ -140,6 +142,8 @@ public class Chef implements TalkNpcTrigger {
 							"My brother has very expensive tastes",
 							"He may not give up the crest easily");
 						player.getCache().remove("skipped_menu");
+					} else if (menu == 1) {
+						say(player, n, "Good look with that then");
 					}
 					return;
 				}

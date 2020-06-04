@@ -78,12 +78,15 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 					"so a bank is essential in encouraging visitors");
 			} else {
 				npcsay(player, npc, "This is a branch of the bank of Runescape", "We have branches in many towns");
-				int branchMenu = multi(player, npc, "And what do you do?",
+				int branchMenu = multi(player, npc, false, //do not send over
+					"And what do you do?",
 					"Didn't you used to be called the bank of Varrock");
 				if (branchMenu == 0) {
+					say(player, npc, "And what do you do?");
 					npcsay(player, npc, "We will look after your items and money for you",
 						"So leave your valuables with us if you want to keep them safe");
 				} else if (branchMenu == 1) {
+					say(player, npc, "Didn't you used to be called the bank of Varrock?");
 					npcsay(player, npc, "Yes we did, but people kept on coming into our branches outside of varrock",
 						"And telling us our signs were wrong",
 						"As if we didn't know what town we were in or something!");

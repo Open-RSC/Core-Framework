@@ -543,8 +543,10 @@ public class DemonSlayer implements QuestInterface,
 					"Hmm, that's too bad. I really need that key",
 					"I'll get the bones for you");
 				if (choices == 0) {
+					say(player, n, "Hmm, thats too bad. I really need that key");
 					npcsay(player, n, "Ah well sorry I couldn't be any more help");
 				} else if (choices == 1) {
+					say(player, n, "I'll get the bones for you");
 					traibornTheWizDialogue(player, n, Traiborn.BONES);
 				}
 				break;
@@ -575,13 +577,17 @@ public class DemonSlayer implements QuestInterface,
 							"Gypsy Aris said I should come and talk to you"
 						};
 
-					choice = multi(player, n, choices);
+					choice = multi(player, n, false, //do not send over
+						choices);
 					if (choice == 0) {
+						say(player, n, "I am a mighty adventurer. Who are you?");
 						npcsay(player, n, "I am Sir Prysin",
 							"A bold and famous knight of the realm");
 					} else if (choice == 1) {
+						say(player, n, "I'm not sure. I was hoping you could tell me");
 						npcsay(player, n, "Well I've never met you before");
 					} else if (choice == 2 && questStage > 0) {
+						say(player, n, "Gypsy Aris said I should come and talk to you");
 						sirPrysinDialogue(player, n, SirPrysin.GYPSY);
 					}
 					break;
@@ -1022,18 +1028,21 @@ public class DemonSlayer implements QuestInterface,
 					"Ye Gods",
 					"Silverlight was the sword you were holding in the ball vision",
 					"You are the one destined to try and stop the demon this time");
-				choice = multi(player, n,
+				choice = multi(player, n, false, //do not send over
 					"How am I meant to fight a demon who can destroy cities?",
 					"Ok where is he? I'll kill him for you",
 					"Wally doesn't sound like a very heroic name");
 				if (choice == 0) {
+					say(player, n, "How am I meant to fight a demon who can destroy cities");
 					npcsay(player, n, "I admit it won't be easy");
 					gypsyDialogue(player, n, GypsyConversation.DEFEATING_DELRITH);
 				} else if (choice == 1) {
+					say(player, n, "Ok where is he? I'll kill him for you");
 					npcsay(player, n, "Well you can't just go and fight",
 						"He can't be harmed by ordinary weapons");
 					gypsyDialogue(player, n, GypsyConversation.DEFEATING_DELRITH);
 				} else if (choice == 2) {
+					say(player, n, "Wally doesn't sound a very heroic name");
 					gypsyDialogue(player, n, GypsyConversation.WALLY);
 				}
 				break;

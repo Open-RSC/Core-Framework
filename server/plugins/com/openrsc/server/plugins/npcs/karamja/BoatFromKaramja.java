@@ -57,7 +57,7 @@ public final class BoatFromKaramja implements TalkNpcTrigger, OpLocTrigger {
 							"Oh dear I don't seem to have enough money");
 					}
 				} else if (pay_opt == 1) {
-					say(player, n, "Oh, I'll not bother then");
+					say(player, n, "Oh I'll not bother then");
 				}
 			}
 		} else if (sub_opt == 2) {

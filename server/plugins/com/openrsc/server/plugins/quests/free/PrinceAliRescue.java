@@ -84,24 +84,25 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 			case 0:
 				npcsay(player, n,
 					"Greetings. I am Hassan, Chancellor to the Emir of Al Kharid");
-				final int choice = multi(
-					player,
-					n,
+				final int choice = multi(player, n, false, //do not send over
 					"Can I help you? You must need some help here in the desert.",
 					"Its just too hot here. How can you stand it?",
 					"Do you mind if I just kill your Warriors?");
 				if (choice == 0) {
+					say(player, n, "Can I help you? You must need some help here in the desert.");
 					npcsay(player, n, "I need the services of someone, yes.",
 						"If you are interested, see the spymaster, Osman",
 						"I manage the finances here. come to me when you need payment");
 					player.updateQuestStage(this, 1); // yepp
 				} else if (choice == 1) {
+					say(player, n, "Its just too hot here. How can you stand it?");
 					npcsay(player, n,
 						"We manage, in our humble way. We are a wealthy town",
 						"And we have water. It cures many thirsts");
 					player.message("The chancellor hands you some water");
 					give(player, ItemId.BUCKET_OF_WATER.id(), 1);
 				} else if (choice == 2) {
+					say(player, n, "Do you mind if I just kill your warriors?");
 					npcsay(player,
 						n,
 						"You are welcome. They are not expensive.",
@@ -555,15 +556,18 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					"And the locksmith who made the lock,",
 					"died suddenly when he had finished",
 					"There is not another key like this in the world");
-				final int choice5 = multi(player, n,
+				final int choice5 = multi(player, n, false, //do not send over
 					"Could I see the key please",
 					"That is a good way to keep secrets",
 					"I should not disturb someone as tough as you");
 				if (choice5 == 0) {
+					say(player, n, "Could I see the key please, just for a moment");
 					keliDialogue(player, n, Keli.KEYPLEASE);
 				} else if (choice5 == 1) {
+					say(player, n, "That is a good way to keep secrets");
 					keliDialogue(player, n, Keli.SECRETS);
 				} else if (choice5 == 2) {
+					say(player, n, "I should not disturb someone as tough as you");
 					keliDialogue(player, n, Keli.NOT_DISTURB);
 				}
 				break;
