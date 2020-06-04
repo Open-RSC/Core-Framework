@@ -20,7 +20,7 @@ public class ButtonListener implements ActionListener {
 				return;
 			}
 			case "our wiki": {
-				Utils.openWebpage("https://openrsc.com/wiki");
+				Utils.openWebpage("https://runescapeclassic.dev/wiki");
 				return;
 			}
 			case "bug reports": {
