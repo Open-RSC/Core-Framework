@@ -691,7 +691,7 @@ public class SpellHandler implements PacketHandler {
 			player.message("@gre@Ana: Don't you start casting spells on me!");
 			finalizeSpellNoMessage(player, spell);
 		} else {
-			if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId())) > -1) {
+			if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId(), affectedItem.getAmount())) > -1) {
 				int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.4D);
 				player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), value)); // 40%
 			}
@@ -716,7 +716,7 @@ public class SpellHandler implements PacketHandler {
 			player.message("@gre@Ana: Don't you start casting spells on me!");
 			finalizeSpellNoMessage(player, spell);
 		} else {
-			if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId())) > -1) {
+			if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId(), affectedItem.getAmount())) > -1) {
 				int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.6D);
 				player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), value)); // 60%
 			}
