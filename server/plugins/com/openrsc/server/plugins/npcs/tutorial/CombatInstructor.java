@@ -129,7 +129,6 @@ public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackN
 	@Override
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.RAT_TUTORIAL.id()) {
-			n.remove();
 			// GIVE NO XP ACCORDING TO YOUTUBE VIDEOS FOR COMBAT SINCE IT WAS HEAVILY ABUSED IN REAL RSC TO TRAIN ON THOSE RATS.
 			if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 16) {
 				mes("Well done you've killed the rat",

@@ -293,7 +293,12 @@ public class Npc extends Mob {
 
 		owner.getWorld().getServer().getPluginHandler().handlePlugin(owner, "KillNpc", new Object[]{owner, this});
 		for (int npcId : removeHandledInPlugin) {
-			if (this.getID() == npcId) return;
+			if (this.getID() == npcId) {
+				if (this.getID() == NpcId.RAT_TUTORIAL.id()) {
+					remove();
+				}
+				return;
+			}
 		}
 
 		String ownerId = handleXpDistribution(mob);
