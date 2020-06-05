@@ -31,6 +31,7 @@ public class ItemActionHandler implements PacketHandler {
 
 		if (idx >= player.getCarriedItems().getInventory().size()) {
 			player.setSuspiciousPlayer(true, "idx >= inv size");
+			return;
 		}
 		Item tempitem = null;
 
@@ -46,6 +47,8 @@ public class ItemActionHandler implements PacketHandler {
 			tempitem = player.getCarriedItems().getInventory().get(idx);
 			commandIndex = packet.readByte();
 		}
+
+		if (tempitem == null) return;
 
 		final Item item = amount > 1 ? new Item(tempitem.getCatalogId(), amount) : tempitem;
 		if (item == null || item.getDef(player.getWorld()).getCommand() == null
