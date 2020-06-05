@@ -64,9 +64,14 @@ public class AttackHandler implements PacketHandler {
 			if (n.isRespawning()) return;
 			if (n.getX() == 0 && n.getY() == 0)
 				return;
-			if (n.getID() == NpcId.OGRE_TRAINING_CAMP.id() && player.getRangeEquip() < 0 && player.getThrowingEquip() < 0) {
-				player.message("these ogres are for range combat training only");
-				return;
+			if (n.getID() == NpcId.OGRE_TRAINING_CAMP.id()) {
+				boolean melee = player.getRangeEquip() < 0 && player.getThrowingEquip() < 0;
+				boolean inPen = player.getX() >= 663 && player.getX() <= 668
+					&& player.getY() >= 531 && player.getY() <= 535;
+				if (melee || inPen) {
+					player.message("these ogres are for range combat training only");
+					return;
+				}
 			}
 		}
 
