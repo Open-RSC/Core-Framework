@@ -24,6 +24,11 @@ public class RawEssence implements OpLocTrigger {
 			return;
 		}
 
+		if (player.getCarriedItems().getInventory().full()) {
+			mes("You cannot mine essence with a full inventory.");
+			return;
+		}
+
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
 			repeat = player.getCarriedItems().getInventory().getFreeSlots();
