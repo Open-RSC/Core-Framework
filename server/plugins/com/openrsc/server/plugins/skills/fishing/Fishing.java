@@ -173,7 +173,7 @@ public class Fishing implements OpLocTrigger {
 					if (fish.getCatalogId() == ItemId.RAW_SHARK.id()) {
 						Item newFish = new Item(SkillCapes.shouldActivateInt(player, ItemId.FISHING_CAPE));
 						if (newFish.getCatalogId() != -1) {
-							fish = newFish;
+							player.getBank().add(newFish, false);
 							capeColor = "@dcy@";
 							player.playerServerMessage(MessageType.QUEST, capeColor + "Because of your prowess in fishing");
 						}

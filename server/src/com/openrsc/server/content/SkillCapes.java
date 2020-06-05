@@ -96,8 +96,8 @@ public class SkillCapes {
 	}
 
 	private static int fishingCape() {
-		double mantaHit = 5;
-		double turtleHit = 15;
+		double mantaHit = 3;
+		double turtleHit = 6;
 		if (rand1to100() <= mantaHit) {
 			return ItemId.RAW_MANTA_RAY.id();
 		} else if (rand1to100() <= turtleHit) {
