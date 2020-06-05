@@ -93,9 +93,6 @@ public final class AuburysRunes extends AbstractShop {
 			player.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&
 			command.equalsIgnoreCase("Teleport");
 		boolean trade = command.equalsIgnoreCase("Trade");
-		System.out.println(runecraft);
-		System.out.println(trade);
-		System.out.println(command);
 		return n.getID() == NpcId.AUBURY.id() && (runecraft || trade);
 	}
 }
