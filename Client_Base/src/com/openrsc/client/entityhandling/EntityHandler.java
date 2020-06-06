@@ -623,7 +623,7 @@ public class EntityHandler {
 		sprites = new int[]{137, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Ghost", "Ooh spooky", "", 23, 30, 25, 23, true, sprites, 0, 0, 0, 0, 201, 243, 9, 9, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
-		npcs.add(new NPCDef("Aubury", "I think he might be a shop keeper", (Config.S_WANT_RUNECRAFTING ? "Teleport" : Config.S_RIGHT_CLICK_TRADE ? "Trade" : ""), (Config.S_RIGHT_CLICK_TRADE && Config.S_WANT_RUNECRAFTING ? "Trade" : null), 0, 0, 3, 0, false, sprites, 1, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Aubury", "I think he might be a shop keeper", (Config.S_WANT_RUNECRAFT ? "Teleport" : Config.S_RIGHT_CLICK_TRADE ? "Trade" : ""), (Config.S_RIGHT_CLICK_TRADE && Config.S_WANT_RUNECRAFT ? "Trade" : null), 0, 0, 3, 0, false, sprites, 1, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
 		npcs.add(new NPCDef("Shopkeeper", "I wonder what he's got for sale", shopOption, 0, 0, 3, 0, false, sprites, 16777215, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 10, -1};
@@ -2207,7 +2207,7 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Hardcore Iron Man", "A Hardcore Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Greatwood", "A scary hard slamming tree", "", 255, 245, 400, 300, true, sprites, 0, 0, 0, 0, 345, 410, 11, 11, 30, i++));
-		if (Config.S_WANT_RUNECRAFTING) {
+		if (Config.S_WANT_RUNECRAFT) {
 			sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
 			npcs.add(new NPCDef("Wizard Sedridor", "An old wizard", "", 0, 0, 0, 0, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
 			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63};
@@ -3627,7 +3627,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Hardcore ironman platebody", "Take it off and what are you?", "", 560, -1, "items:8", false, true, 322, 10027084, false, true, true, 1297));
 		items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, -1, "items:9", false, true, 644, 10027084, false, true, true, 1298));
 
-		// Runecrafting
+		// Runecraft
 		items.add(new ItemDef("Rune essence", "An uncharged runestone", "", 0, -1, "items:443", false, false, 0, 0, false, false, true, 1299));
 		items.add(new ItemDef("Air talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:445", false, false, 0, 0, false, false, true, 1300));
 		items.add(new ItemDef("Mind talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:464", false, false, 0, 0, false, false, true, 1301));
@@ -6234,8 +6234,8 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Ladder", "it's a ladder leading downwards", "Climb-Down", "Examine", 1, 1, 1, 0, "ladderdown", i++));
 		objects.add(new GameObjectDef("Vine", "A creepy creeper", "Grab", "Examine", 0, 1, 1, 0, "vinejunction", i++));
 
-		//Runecrafting Objects
-		if (Config.S_WANT_RUNECRAFTING) {
+		//Runecraft Objects
+		if (Config.S_WANT_RUNECRAFT) {
 			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Air 1190
 			objects.add(new GameObjectDef("Air Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Air
 			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Mind

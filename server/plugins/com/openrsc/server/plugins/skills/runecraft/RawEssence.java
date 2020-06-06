@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.skills.runecrafting;
+package com.openrsc.server.plugins.skills.runecraft;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;

@@ -1,9 +1,9 @@
-package com.openrsc.server.plugins.skills.runecrafting;
+package com.openrsc.server.plugins.skills.runecraft;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.external.ObjectRunecraftingDef;
+import com.openrsc.server.external.ObjectRunecraftDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Runecrafting implements OpLocTrigger, UseLocTrigger {
+public class Runecraft implements OpLocTrigger, UseLocTrigger {
 
 
 	@Override
@@ -23,7 +23,7 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 		if (obj.getID() < 1190 || obj.getID() > 1213)
 			return false;
 
-		final ObjectRunecraftingDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftingDef(obj.getID());
+		final ObjectRunecraftDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftDef(obj.getID());
 
 		if (def != null) {
 			switch (ItemId.getById(def.getRuneId()))
@@ -54,7 +54,7 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 	@Override
 	public void onOpLoc(Player player, GameObject obj, String command) {
 
-		final ObjectRunecraftingDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftingDef(obj.getID());
+		final ObjectRunecraftDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftDef(obj.getID());
 
 		if (command.equalsIgnoreCase("enter")) {
 			int requiredTalisman = -1;
@@ -114,7 +114,7 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 				return;
 			}
 			else {
-				if (player.getSkills().getLevel(Skills.RUNECRAFTING) < def.getRequiredLvl()) {
+				if (player.getSkills().getLevel(Skills.RUNECRAFT) < def.getRequiredLvl()) {
 					player.message("You require more skill to use this altar.");
 					return;
 				}
@@ -130,7 +130,7 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 				player.getCarriedItems().getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())));
 				++successCount;
 			}
-			player.incExp(Skills.RUNECRAFTING, def.getExp() * successCount, true);
+			player.incExp(Skills.RUNECRAFT, def.getExp() * successCount, true);
 		}
 	}
 
@@ -221,43 +221,43 @@ public class Runecrafting implements OpLocTrigger, UseLocTrigger {
 
 		switch(ItemId.getById(runeId)) {
 			case AIR_RUNE:
-				retVal =  (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFTING)/11.0)+1;
+				retVal =  (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFT)/11.0)+1;
 				if (retVal > 10)
 					retVal = 10;
 				break;
 			case MIND_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFTING)/14.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFT)/14.0)+1;
 				if (retVal > 8)
 					retVal = 8;
 				break;
 			case WATER_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFTING)/19.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFT)/19.0)+1;
 				if (retVal > 6)
 					retVal = 6;
 				break;
 			case EARTH_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFTING)/26.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFT)/26.0)+1;
 				if (retVal > 4)
 					retVal = 4;
 				break;
 			case FIRE_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFTING)/35.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFT)/35.0)+1;
 				if (retVal > 3)
 					retVal = 3;
 				break;
 			case BODY_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFTING)/46.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skills.RUNECRAFT)/46.0)+1;
 				if (retVal > 2)
 					retVal = 2;
 				break;
 			case COSMIC_RUNE:
-				retVal = getCurrentLevel(player,Skills.RUNECRAFTING) >= 59 ? 2 : 1;
+				retVal = getCurrentLevel(player,Skills.RUNECRAFT) >= 59 ? 2 : 1;
 				break;
 			case CHAOS_RUNE:
-				retVal = getCurrentLevel(player,Skills.RUNECRAFTING) >= 74 ? 2 : 1;
+				retVal = getCurrentLevel(player,Skills.RUNECRAFT) >= 74 ? 2 : 1;
 				break;
 			case NATURE_RUNE:
-				retVal = getCurrentLevel(player, Skills.RUNECRAFTING) >= 91 ? 2 : 1;
+				retVal = getCurrentLevel(player, Skills.RUNECRAFT) >= 91 ? 2 : 1;
 				break;
 		}
 

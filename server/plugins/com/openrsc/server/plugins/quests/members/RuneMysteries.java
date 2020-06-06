@@ -346,7 +346,7 @@ public class RuneMysteries implements QuestInterface {
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the rune mysteries quest");
 		player.message("@gre@You haved gained 1 quest point!");
-		player.message("You now have access to the Runecrafting skill!");
+		player.message("You now have access to the Runecraft skill!");
 		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.RUNE_MYSTERIES), true);
 	}
 }

@@ -148,7 +148,7 @@ public class ServerConfiguration {
 	public boolean IMPROVED_ITEM_OBJECT_NAMES;
 	public boolean CRYSTAL_KEY_GIVES_XP;
 	public boolean LOOTED_CHESTS_STUCK;
-	public boolean WANT_RUNECRAFTING;
+	public boolean WANT_RUNECRAFT;
 	public boolean WANT_HARVESTING;
 	public boolean WANT_CUSTOM_LEATHER;
 	public boolean WANT_BETTER_JEWELRY_CRAFTING;
@@ -388,7 +388,7 @@ public class ServerConfiguration {
 		IMPROVED_ITEM_OBJECT_NAMES = tryReadBool("improved_item_object_names").orElse(false);
 		CRYSTAL_KEY_GIVES_XP = tryReadBool("crystal_key_gives_xp").orElse(false);
 		LOOTED_CHESTS_STUCK = tryReadBool("looted_chests_stuck").orElse(false);
-		WANT_RUNECRAFTING = tryReadBool("want_runecrafting").orElse(false);
+		WANT_RUNECRAFT = tryReadBool("want_runecraft").orElse(false);
 		WANT_HARVESTING = tryReadBool("want_harvesting").orElse(false);
 		WANT_CUSTOM_LANDSCAPE = tryReadBool("custom_landscape").orElse(false);
 		WANT_EQUIPMENT_TAB = tryReadBool("want_equipment_tab").orElse(false);

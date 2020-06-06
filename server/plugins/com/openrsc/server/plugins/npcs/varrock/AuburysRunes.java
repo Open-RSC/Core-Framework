@@ -48,7 +48,7 @@ public final class AuburysRunes extends AbstractShop {
 		menu.add("Yes please");
 		menu.add("Oh it's a rune shop. No thank you, then.");
 
-		if (config().WANT_RUNECRAFTING)
+		if (config().WANT_RUNECRAFT)
 			if (player.getQuestStage(Quests.RUNE_MYSTERIES) == 2)
 				menu.add("I've been sent here with a package for you.");
 			else if (player.getQuestStage(Quests.RUNE_MYSTERIES) == 3)
@@ -92,7 +92,7 @@ public final class AuburysRunes extends AbstractShop {
 
 	@Override
 	public boolean blockOpNpc(Player player, Npc n, String command) {
-		boolean runecraft = player.getConfig().WANT_RUNECRAFTING &&
+		boolean runecraft = player.getConfig().WANT_RUNECRAFT &&
 			player.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&
 			command.equalsIgnoreCase("Teleport");
 		boolean trade = command.equalsIgnoreCase("Trade");

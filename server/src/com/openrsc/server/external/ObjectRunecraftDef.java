@@ -1,6 +1,6 @@
 package com.openrsc.server.external;
 
-public final class ObjectRunecraftingDef {
+public final class ObjectRunecraftDef {
 
 	//Level required to use this altar
 	public int requiredLvl;

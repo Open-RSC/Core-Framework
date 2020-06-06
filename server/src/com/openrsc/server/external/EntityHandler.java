@@ -57,7 +57,7 @@ public final class EntityHandler {
 	private HashMap<Integer, ObjectMiningDef> objectMining;
 	private HashMap<Point, TelePoint> objectTelePoints;
 	private HashMap<Integer, ObjectWoodcuttingDef> objectWoodcutting;
-	private HashMap<Integer, ObjectRunecraftingDef> objectRunecrafting;
+	private HashMap<Integer, ObjectRunecraftDef> objectRunecraft;
 	private HashMap<Integer, ObjectHarvestingDef> objectHarvesting;
 	private PrayerDef[] prayers;
 	private TileDef[] tiles;
@@ -131,7 +131,7 @@ public final class EntityHandler {
 		itemCrafting = null;
 		objectMining = null;
 		objectWoodcutting = null;
-		objectRunecrafting = null;
+		objectRunecraft = null;
 		objectFishing = null;
 		objectHarvesting = null;
 		objectTelePoints = null;
@@ -177,7 +177,7 @@ public final class EntityHandler {
 		itemCrafting = (ItemCraftingDef[]) getPersistenceManager().load("defs/extras/ItemCraftingDef.xml.gz");
 		objectMining = (HashMap<Integer, ObjectMiningDef>) getPersistenceManager().load("defs/extras/ObjectMining.xml.gz");
 		objectWoodcutting = (HashMap<Integer, ObjectWoodcuttingDef>) getPersistenceManager().load("defs/extras/ObjectWoodcutting.xml.gz");
-		objectRunecrafting = (HashMap<Integer, ObjectRunecraftingDef>) getPersistenceManager().load("defs/extras/ObjectRunecrafting.xml.gz");
+		objectRunecraft = (HashMap<Integer, ObjectRunecraftDef>) getPersistenceManager().load("defs/extras/ObjectRunecraft.xml.gz");
 		objectFishing = (HashMap<Integer, ObjectFishingDef[]>) getPersistenceManager().load("defs/extras/ObjectFishing.xml.gz");
 		objectHarvesting = (HashMap<Integer, ObjectHarvestingDef>) getPersistenceManager().load("defs/extras/ObjectHarvesting.xml.gz");
 		objectTelePoints = (HashMap<Point, TelePoint>) getPersistenceManager().load("locs/extras/ObjectTelePoints.xml.gz");
@@ -235,14 +235,14 @@ public final class EntityHandler {
 			}
 
 			npcs.get(NpcId.BLURBERRY_BARMAN.id()).setCommand2("Trade");
-			if (getServer().getConfig().WANT_RUNECRAFTING) {
+			if (getServer().getConfig().WANT_RUNECRAFT) {
 				npcs.get(NpcId.AUBURY.id()).setCommand2("Trade");
 			}
 			else {
 				npcs.get(NpcId.AUBURY.id()).setCommand1("Trade");
 			}
 		}
-		if (getServer().getConfig().WANT_RUNECRAFTING) {
+		if (getServer().getConfig().WANT_RUNECRAFT) {
 			npcs.get(NpcId.AUBURY.id()).setCommand1("Teleport");
 		}
 	}
@@ -718,8 +718,8 @@ public final class EntityHandler {
 		return null;
 	}
 
-	public ObjectRunecraftingDef getObjectRunecraftingDef(int id) {
-		return objectRunecrafting.get(id);
+	public ObjectRunecraftDef getObjectRunecraftDef(int id) {
+		return objectRunecraft.get(id);
 	}
 	/**
 	 * @param id the entities ID

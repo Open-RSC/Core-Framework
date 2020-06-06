@@ -911,7 +911,7 @@ public final class SkillGuideInterface {
 				}
 			}
 		}
-		if (mc.getSkillGuideChosen().equalsIgnoreCase("Runecrafting")) {
+		if (mc.getSkillGuideChosen().equalsIgnoreCase("Runecraft")) {
 			if (curTab == 0) {
 				skillMenuEntries.add(new SkillMenuItem(33, "1", "Air Rune"));
 				skillMenuEntries.add(new SkillMenuItem(35, "1", "Mind Rune"));

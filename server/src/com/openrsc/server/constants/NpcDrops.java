@@ -48,10 +48,6 @@ public class NpcDrops {
 		createBoneDrops();
 		createMobDrops();
 
-		if (config.WANT_RUNECRAFTING) {
-			//createRunecraftDrops();
-		}
-
 		if (config.WANT_CUSTOM_QUESTS) {
 			// TODO: Find a better config for this.
 			initializeCustomRareDropTables();

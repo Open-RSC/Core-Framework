@@ -23,13 +23,13 @@ public class Sedridor implements TalkNpcTrigger, OpNpcTrigger {
 
 		ArrayList<String> menu = new ArrayList<>();
 		menu.add("Nothing, thanks. I'm just looking around");
-		if (config().WANT_RUNECRAFTING && player.getQuestStage(Quests.RUNE_MYSTERIES) == -1)
+		if (config().WANT_RUNECRAFT && player.getQuestStage(Quests.RUNE_MYSTERIES) == -1)
 			menu.add("Teleport me to the rune essence");
-		else if (config().WANT_RUNECRAFTING && player.getQuestStage(Quests.RUNE_MYSTERIES) < 2)
+		else if (config().WANT_RUNECRAFT && player.getQuestStage(Quests.RUNE_MYSTERIES) < 2)
 			menu.add("What are you doing down here?");
 		else
 			menu.add("Rune Mysteries");
-		if (config().WANT_RUNECRAFTING && player.getQuestStage(Quests.RUNE_MYSTERIES) == 1)
+		if (config().WANT_RUNECRAFT && player.getQuestStage(Quests.RUNE_MYSTERIES) == 1)
 			menu.add("I'm looking for the head wizard.");
 		int choice = multi(player,n, menu.toArray(new String[menu.size()]));
 		if (choice > 0) {
@@ -54,7 +54,7 @@ public class Sedridor implements TalkNpcTrigger, OpNpcTrigger {
 	@Override
 	public boolean blockOpNpc(Player player, Npc n, String command) {
 		return (n.getID() == 803 &&
-			player.getConfig().WANT_RUNECRAFTING &&
+			player.getConfig().WANT_RUNECRAFT &&
 			player.getQuestStage(Quests.RUNE_MYSTERIES) == Quests.QUEST_STAGE_COMPLETED &&
 			command.equalsIgnoreCase("teleport"));
 	}

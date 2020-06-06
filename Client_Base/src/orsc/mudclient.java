@@ -15752,7 +15752,7 @@ public final class mudclient implements Runnable {
 			System.out.println(Config.S_ALLOW_RESIZE + " 49");
 			System.out.println(Config.S_LENIENT_CONTACT_DETAILS + " 50");
 			System.out.println(Config.S_WANT_FATIGUE + " 51");
-			System.out.println(Config.S_WANT_RUNECRAFTING + " 60");
+			System.out.println(Config.S_WANT_RUNECRAFT + " 60");
 			System.out.println(S_WANT_CUSTOM_LANDSCAPE + " 61");
 			System.out.println(S_WANT_EQUIPMENT_TAB + " 62");
 			System.out.println(S_WANT_BANK_PRESETS + " 63");
@@ -16658,7 +16658,7 @@ public final class mudclient implements Runnable {
 			if (Config.S_WANT_CUSTOM_SPRITES) {
 				skillGuideChosenTabs.add("Other");
 			}
-		} else if (skillGuideChosen.equalsIgnoreCase("Runecrafting")) {
+		} else if (skillGuideChosen.equalsIgnoreCase("Runecraft")) {
 			skillGuideChosenTabs.add("Singles");
 			skillGuideChosenTabs.add("Multiples");
 		} else if (skillGuideChosen.equalsIgnoreCase("Harvesting")) {
@@ -16745,8 +16745,8 @@ public final class mudclient implements Runnable {
 		addSkill("Agility");
 		addSkill("Thieving");
 
-		if (S_WANT_RUNECRAFTING)
-			addSkill("Runecrafting", "Runecraft");
+		if (S_WANT_RUNECRAFT)
+			addSkill("Runecraft");
 		if (S_WANT_HARVESTING)
 			addSkill("Harvesting");
 	}
@@ -16978,7 +16978,7 @@ public final class mudclient implements Runnable {
 		int AuburyID = 54;
 		int SedridorID = 803;
 		int RuneMysteriesID = 50;
-		if (S_WANT_RUNECRAFTING &&
+		if (S_WANT_RUNECRAFT &&
 			questStages[RuneMysteriesID] == -1) {
 			NPCDef AuburyDef = EntityHandler.getNpcDef(AuburyID);
 			NPCDef SedridorDef = EntityHandler.getNpcDef(SedridorID);

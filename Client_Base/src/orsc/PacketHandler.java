@@ -905,7 +905,7 @@ public class PacketHandler {
 		int wantDropX, wantExpInfo, wantWoodcuttingGuild, wantFixedOverheadChat, wantPets, showUnidentifiedHerbNames;
 		int wantDecanting, wantCertsToBank, wantCustomRankDisplay, wantRightClickBank, wantPlayerCommands;
 		int getFPS, wantEmail, wantRegistrationLimit, allowResize, lenientContactDetails, wantFatigue, wantCustomSprites;
-		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecrafting, wantCustomLandscape, wantEquipmentTab;
+		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecraft, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
 		int globalFriendChat, wantRightClickTrade, customProtocol, wantExtendedCatsBehavior;
@@ -972,7 +972,7 @@ public class PacketHandler {
 			wantQuestStartedIndicator = this.getClientStream().getUnsignedByte(); // 57
 			fishingSpotsDepletable = this.getClientStream().getUnsignedByte(); //58
 			improvedItemObjectNames = this.getClientStream().getUnsignedByte(); //59
-			wantRunecrafting = this.getClientStream().getUnsignedByte(); //60
+			wantRunecraft = this.getClientStream().getUnsignedByte(); //60
 			wantCustomLandscape = this.getClientStream().getUnsignedByte(); //61
 			wantEquipmentTab = this.getClientStream().getUnsignedByte(); //62
 			wantBankPresets = this.getClientStream().getUnsignedByte(); //63
@@ -1051,7 +1051,7 @@ public class PacketHandler {
 			wantQuestStartedIndicator = packetsIncoming.getUnsignedByte(); // 57
 			fishingSpotsDepletable = packetsIncoming.getUnsignedByte(); //58
 			improvedItemObjectNames = packetsIncoming.getUnsignedByte(); //59
-			wantRunecrafting = packetsIncoming.getUnsignedByte(); //60
+			wantRunecraft = packetsIncoming.getUnsignedByte(); //60
 			wantCustomLandscape = packetsIncoming.getUnsignedByte(); //61
 			wantEquipmentTab = packetsIncoming.getUnsignedByte(); //62
 			wantBankPresets = packetsIncoming.getUnsignedByte(); //63
@@ -1133,7 +1133,7 @@ public class PacketHandler {
 					"\nS_WANT_QUEST_STARTED_INDICATOR " + wantQuestStartedIndicator + // 57
 					"\nS_FISHING_SPOTS_DEPLETABLE " + fishingSpotsDepletable + // 58
 					"\nS_IMPROVED_ITEM_OBJECT_NAMES " + improvedItemObjectNames + // 59
-					"\nS_WANT_RUNECRAFTING " + wantRunecrafting + // 60
+					"\nS_WANT_RUNECRAFT " + wantRunecraft + // 60
 					"\nS_WANT_CUSTOM_LANDSCAPE " + wantCustomLandscape + // 61
 					"\nS_WANT_EQUIPMENT_TAB " + wantEquipmentTab + // 62
 					"\nS_WANT_BANK_PRESETS " + wantEquipmentTab + // 63
@@ -1216,7 +1216,7 @@ public class PacketHandler {
 		props.setProperty("S_WANT_QUEST_STARTED_INDICATOR", wantQuestStartedIndicator == 1 ? "true" : "false"); // 57
 		props.setProperty("S_FISHING_SPOTS_DEPLETABLE", fishingSpotsDepletable == 1 ? "true" : "false"); //58
 		props.setProperty("S_IMPROVED_ITEM_OBJECT_NAMES", improvedItemObjectNames == 1 ? "true" : "false"); //59
-		props.setProperty("S_WANT_RUNECRAFTING", wantRunecrafting == 1 ? "true" : "false"); //60
+		props.setProperty("S_WANT_RUNECRAFT", wantRunecraft == 1 ? "true" : "false"); //60
 		props.setProperty("S_WANT_CUSTOM_LANDSCAPE", wantCustomLandscape == 1 ? "true" : "false"); //61
 		props.setProperty("S_WANT_EQUIPMENT_TAB", wantEquipmentTab == 1 ? "true" : "false"); //62
 		props.setProperty("S_WANT_BANK_PRESETS", wantBankPresets == 1 ? "true" : "false"); //63

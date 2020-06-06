@@ -122,7 +122,7 @@ public final class Quests {
 			put(GERTRUDES_CAT, new int[]{1, Skills.COOKING, 700, 180});
 			put(LEGENDS_QUEST, new int[]{4, -1, 600, 600}); // Skill ID Handled in Legends files
 
-			if(constants.getServer().getConfig().WANT_RUNECRAFTING) {
+			if(constants.getServer().getConfig().WANT_RUNECRAFT) {
 				put(RUNE_MYSTERIES, new int[]{1, -1, 0, 0});
 			}
 		}};
