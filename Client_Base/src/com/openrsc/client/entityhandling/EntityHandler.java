@@ -3740,6 +3740,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Magic cape", "The cape worn by the most powerful mages", "", 99000, -1, "items:489", false, true, 2048, 0, false, false, false, 1382));
 		items.add(new ItemDef("Smithing cape", "The cape worn by master smiths", "", 99000, -1, "items:494", false, true, 2048, 0, false, false, false, 1383));
 		items.add(new ItemDef("Crafting cape", "The cape worn by master craftworkers", "Teleport", 99000, -1, "items:482", false, true, 2048, 0, false, false, false, 1384));
+
+		items.add(new ItemDef("Uncharged talisman", "This needs charging to work properly...", "", 0, -1, "items:558", false, false, 0, 0, false, false, true, 1385));
 	}
 
 	private static void loadAnimationDefinitions() {
