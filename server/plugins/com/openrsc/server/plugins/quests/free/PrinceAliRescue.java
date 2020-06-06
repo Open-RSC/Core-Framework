@@ -403,15 +403,18 @@ public class PrinceAliRescue implements QuestInterface, OpBoundTrigger,
 					n,
 					"It kept us from goblin hunting, which was what most boys did",
 					"What are you here for?");
-				final int choice3 = multi(player, n,
-					"Hey chill out, I won't cause you trouble",
+				final int choice3 = multi(player, n, false, //do not send over
+					"Chill out, I won't cause you trouble",
 					"Tell me about the life of a guard",
 					"I had better leave, I don't want trouble");
 				if (choice3 == 0) {
+					say(player, n, "Hey, chill out, I won't cause you trouble");
 					joeDialogue(player, n, Joe.CHILL);
 				} else if (choice3 == 1) {
+					say(player, n, "Tell me about the life of a guard");
 					joeDialogue(player, n, Joe.LIFE);
 				} else if (choice3 == 2) {
+					say(player, n, "I had better leave, I don't want trouble");
 					joeDialogue(player, n, Joe.BETTERLEAVE);
 				}
 				break;

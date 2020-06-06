@@ -284,8 +284,26 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 		else if (inArray(obj.getID(), SMASH_BOULDERS)) {
 			if (player.getCarriedItems().hasCatalogID(Mining.getAxe(player), Optional.of(false))) {
 				if (getCurrentLevel(player, Skills.MINING) < 52) {
-					player.message("You need a mining ability of at least 52 to affect these boulders.");
-					return;
+					if (player.getY() < 3707) {
+						player.message("You need a mining ability of at least 52 to affect these boulders.");
+						return;
+					} else {
+						mes("You could be stuck here for ages until your mining ability returns.",
+							"Would you like to try to climb out?",
+							"It looks rough going, but at least you won't be stuck here for ages.");
+						int outmenu = multi(player, "Yes, I'll climb out.", "No, I'll stay here a while.");
+						if (outmenu == 0) {
+							while (player.getY() > 3707) {
+								player.damage(2);
+								player.teleport(player.getX(), player.getY() - 3);
+								delay(config().GAME_TICK * 3);
+							}
+							player.damage(1);
+							player.teleport(442, 3703);
+						} else if (outmenu == 1) {
+							mes("You decide to stay where you are.");
+						}
+					}
 				}
 				if (Formulae.failCalculation(player, Skills.MINING, 50)) {
 					mes(config().GAME_TICK * 2, "You take a good swing at the rock with your pick...");

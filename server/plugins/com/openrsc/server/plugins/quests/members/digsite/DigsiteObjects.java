@@ -11,6 +11,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -151,6 +152,10 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 			}
 		}
 		else if (inArray(obj.getID(), SACKS)) {
+			if (obj.getID() == SACKS[0] && Formulae.getHeight(obj.getLocation()) == 3) {
+				say(player, null, "There is nothing under the sack!");
+				return;
+			}
 			player.playerServerMessage(MessageType.QUEST, "You search the sacks");
 			if (obj.getID() == SACKS[0] || player.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_JAR.id(), Optional.of(false))) {
 				player.playerServerMessage(MessageType.QUEST, "You find nothing of interest");
@@ -211,7 +216,9 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 	@Override
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (obj.getID() == TENT_CHEST_LOCKED && item.getCatalogId() == ItemId.DIGSITE_CHEST_KEY.id()) || obj.getID() == X_BARREL
-				|| obj.getID() == X_BARREL_OPEN || obj.getID() == BRICK || obj.getID() == SPECIMEN_TRAY;
+				|| obj.getID() == X_BARREL_OPEN || obj.getID() == BRICK || obj.getID() == SPECIMEN_TRAY
+				|| (inArray(obj.getID(), BURIED_SKELETON) && item.getCatalogId() == ItemId.TROWEL.id())
+				|| (obj.getID() == BRICK && item.getCatalogId() == ItemId.ROCK_PICK.id());
 	}
 
 	@Override
@@ -341,6 +348,17 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 					player.message("Nothing interesting happens");
 					break;
 			}
+		} else if (inArray(obj.getID(), BURIED_SKELETON) && item.getCatalogId() == ItemId.TROWEL.id()) {
+			Npc workmanCheck = ifnearvisnpc(player, NpcId.WORKMAN.id(), 15);
+			if (workmanCheck == null) {
+				workmanCheck = addnpc(player.getWorld(), NpcId.WORKMAN.id(), player.getX(), player.getY(), 30000);
+			}
+			npcsay(player, workmanCheck, "Hey! that's fragile!",
+				"Stop poking it around with that trowel!");
+			say(player, workmanCheck, "Oh okay, sorry");
+		} else if (obj.getID() == BRICK && item.getCatalogId() == ItemId.ROCK_PICK.id()) {
+			say(player, null, "That would be like cutting the lawn with nail scissors!",
+				"It would take a year to chip away these rocks...");
 		}
 	}
 }

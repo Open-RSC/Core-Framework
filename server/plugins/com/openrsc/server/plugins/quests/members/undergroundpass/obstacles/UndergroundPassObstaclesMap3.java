@@ -1,13 +1,14 @@
 package com.openrsc.server.plugins.quests.members.undergroundpass.obstacles;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.DelayedEvent;
-import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.world.Area;
@@ -47,6 +48,10 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 				player.message("the man seems to be entranced");
 				mes("the cage is locked");
 				delay(1600);
+				Npc souless = ifnearvisnpc(player, NpcId.SOULESS_HUMAN.id(), 6);
+				if (souless != null) {
+					npcsay(player, souless, "kuluf ali monopiate");
+				}
 				mes("you search through the bottom of the cage");
 				if (!player.getCache().hasKey("cons_on_doll")) {
 					player.message("but the souless bieng bites into your arm");
@@ -73,6 +78,10 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 				player.message("the man seems to be entranced");
 				mes("the cage is locked");
 				delay(1600);
+				Npc souless = ifnearvisnpc(player, NpcId.SOULESS_HUMAN.id(), 6);
+				if (souless != null) {
+					npcsay(player, souless, "kuluf ali monopiate");
+				}
 				mes("you search through the bottom of the cage");
 				player.message("but the souless bieng bites into your arm");
 				if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())) {

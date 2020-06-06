@@ -18,10 +18,12 @@ public class Guildmaster implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 
-		int option = multi(player, n, "What is this place?",
-			"Do you know where I could get a rune plate mail body?");
+		int option = multi(player, n, false, //do not send over
+			"What is this place?",
+			"Do you know know where I could get a rune plate mail body?");
 
 		if (option == 0) {
+			say(player, n, "What is this place?");
 			npcsay(player,
 				n,
 				"This is the champions' guild",
@@ -32,7 +34,7 @@ public class Guildmaster implements TalkNpcTrigger {
 				"But so will the rewards");
 
 		} else if (option == 1) {
-
+			say(player, n, "Do you know where I could get a rune plate mail body?");
 			npcsay(player,
 				n,
 				"I have a friend called Oziach who lives by the cliffs",

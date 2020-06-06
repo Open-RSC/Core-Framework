@@ -819,6 +819,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 					}
 					break;
 				case -1:
+					say(player, n, "hello there, you look lost");
 					npcsay(player, n, "are you trying to be funny?");
 					say(player, n, "no");
 					npcsay(player, n, "hmmm");

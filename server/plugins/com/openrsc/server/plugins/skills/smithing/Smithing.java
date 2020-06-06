@@ -273,7 +273,7 @@ public class Smithing implements UseLocTrigger {
 		// Steel Bar
 		if (item.getCatalogId() == ItemId.STEEL_BAR.id()) {
 			option = multi(player, "Make Weapon", "Make Armour",
-				"Make Missile Heads", "Make Steel Nails", "Cancel");
+				"Make Missile Heads", "Make Nails", "Cancel");
 
 			// Cancel
 			if (option == 4) return -1;
@@ -456,9 +456,9 @@ public class Smithing implements UseLocTrigger {
 
 	private int swordChoice(Player player) {
 		player.message("What sort of sword do you want to make?");
-		int option = multi(player, "Short Sword",
-			"Long Sword (2 bars)", "Scimitar (2 bars)",
-			"2-handed Sword (3 bars)");
+		int option = multi(player, "Short sword",
+			"Long sword (2 bars)", "Scimitar (2 bars)",
+			"2-handed sword (3 bars)");
 		if (option == 0) return 2; // Short Sword
 		else if (option == 1) return 3; // Long Sword
 		else if (option == 2) return 4; // Scimitar
@@ -494,9 +494,9 @@ public class Smithing implements UseLocTrigger {
 
 	private int armourChoice(Player player) {
 		player.message("What sort of armour do you want to make?");
-		int option = multi(player, "Chain Mail Body (3 bars)",
-			"Plate Mail Body (5 bars)",
-			"Plate Mail Legs (3 bars)", "Plated Skirt (3 bars)");
+		int option = multi(player, "Chain mail body (3 bars)",
+			"Plate mail body (5 bars)",
+			"Plate mail legs (3 bars)", "Plated Skirt (3 bars)");
 		if (option == 0) return 14; // Chain Mail Body
 		else if (option == 1) return 15; // Plate Mail Body
 		else if (option == 2) return 16; // Plate Mail Legs

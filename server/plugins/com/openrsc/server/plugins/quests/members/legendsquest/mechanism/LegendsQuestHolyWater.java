@@ -22,29 +22,53 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 
 	@Override
 	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
-		return compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id());
+		return compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id())
+			|| compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.EMPTY_VIAL.id());
 	}
 
 	@Override
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
-		// simple random for the moment
-		mes(0, "You pour some of the sacred water into the enchanted vial.",
+		if (compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id())) {
+			// simple random for the moment
+			mes(0, "You pour some of the sacred water into the enchanted vial.",
 				"You now have a vial of holy water.");
-		player.getCarriedItems().remove(new Item(ItemId.ENCHANTED_VIAL.id()));
-		player.getCarriedItems().getInventory().add(new Item(ItemId.HOLY_WATER_VIAL.id()));
-		if(!player.getCache().hasKey("remaining_blessed_bowl")) {
-			player.getCache().set("remaining_blessed_bowl", DataConversions.random(1, 15));
-		} else {
-			int remain = player.getCache().getInt("remaining_blessed_bowl");
-			if(remain > 1) {
-				player.getCache().put("remaining_blessed_bowl", remain - 1);
+			player.getCarriedItems().remove(new Item(ItemId.ENCHANTED_VIAL.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.HOLY_WATER_VIAL.id()));
+			if(!player.getCache().hasKey("remaining_blessed_bowl")) {
+				player.getCache().set("remaining_blessed_bowl", DataConversions.random(1, 15));
+			} else {
+				int remain = player.getCache().getInt("remaining_blessed_bowl");
+				if(remain > 1) {
+					player.getCache().put("remaining_blessed_bowl", remain - 1);
+				}
+				// empty the bowl
+				else {
+					player.message("The pure water in the golden bowl has run out...");
+					player.getCarriedItems().remove(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
+					player.getCache().remove("remaining_blessed_bowl");
+				}
 			}
-			// empty the bowl
-			else {
-				player.message("The pure water in the golden bowl has run out...");
-				player.getCarriedItems().remove(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()));
-				player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
-				player.getCache().remove("remaining_blessed_bowl");
+		} else if (compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.EMPTY_VIAL.id())) {
+			// simple random for the moment
+			mes(0, "You pour some of the water into the empty vial",
+				"The water seems to loose some of it's effervescence.");
+			player.getCarriedItems().remove(new Item(ItemId.EMPTY_VIAL.id()));
+			player.getCarriedItems().getInventory().add(new Item(ItemId.VIAL.id()));
+			if(!player.getCache().hasKey("remaining_blessed_bowl")) {
+				player.getCache().set("remaining_blessed_bowl", DataConversions.random(1, 15));
+			} else {
+				int remain = player.getCache().getInt("remaining_blessed_bowl");
+				if(remain > 1) {
+					player.getCache().put("remaining_blessed_bowl", remain - 1);
+				}
+				// empty the bowl
+				else {
+					player.message("The pure water in the golden bowl has run out...");
+					player.getCarriedItems().remove(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()));
+					player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
+					player.getCache().remove("remaining_blessed_bowl");
+				}
 			}
 		}
 	}

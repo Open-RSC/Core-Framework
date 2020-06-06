@@ -1,14 +1,13 @@
 package com.openrsc.server.plugins.npcs.shilo;
 
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
-
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
 
 public class Kaleb implements TalkNpcTrigger {
 
@@ -20,7 +19,7 @@ public class Kaleb implements TalkNpcTrigger {
 				"What can I do for you today?");
 			int menu = multi(player, n, false, //do not send over
 				"Can you tell me a bit about this place?",
-				"Buy some wine: 1 Gold.",
+				"Buy some wine : 1 Gold.",
 				"Buy some Beer: 2 Gold.",
 				"Buy a nights rest: 35 Gold",
 				"Buy a pack of 5 Dorm tickets: 175 Gold");

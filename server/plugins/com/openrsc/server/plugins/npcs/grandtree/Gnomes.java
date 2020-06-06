@@ -49,7 +49,7 @@ public class Gnomes implements TalkNpcTrigger {
 		}
 		else if (n.getID() == NpcId.GNOME_LOCAL_PURPLE.id()) {
 			say(player, n, "hello");
-			int chatRandom = DataConversions.getRandom().nextInt(4);
+			int chatRandom = DataConversions.getRandom().nextInt(5);
 			switch (chatRandom) {
 				case 0:
 					npcsay(player, n, "hello traveller",
@@ -75,6 +75,13 @@ public class Gnomes implements TalkNpcTrigger {
 					say(player, n, "good attitude");
 					break;
 				// case 3 nothing but hello.
+				case 4:
+					npcsay(player, n, "well good day to you kind sir",
+						"are you new to these parts?");
+					say(player, n, "kind of");
+					npcsay(player, n, "well if your looking for a good night out",
+						"blurberrys cocktail bar's great");
+					break;
 			}
 		}
 		else if (n.getID() == NpcId.GNOME_CHILD_GREEN_PURPLE.id() || n.getID() == NpcId.GNOME_CHILD_CREAM_PURPLE.id()) {
@@ -182,7 +189,7 @@ public class Gnomes implements TalkNpcTrigger {
 		}
 		else if (n.getID() == NpcId.GNOME_CHILD_PINK_GREEN.id()) {
 			say(player, n, "hello");
-			int chatRandom = DataConversions.getRandom().nextInt(7);
+			int chatRandom = DataConversions.getRandom().nextInt(9);
 			switch (chatRandom) {
 				case 0:
 					npcsay(player, n, "To be or not to be");
@@ -221,6 +228,20 @@ public class Gnomes implements TalkNpcTrigger {
 						"But then it doesn't tend to rain much round here");
 					break;
 				// case 6 hello
+				case 7:
+					npcsay(player, n, "i have a riddle for you");
+					say(player, n, "ok");
+					npcsay(player, n, "A tree which is planted on Monday and doubles in size each day...",
+						"...is fully grown on the following sunday",
+						"On what day is it half grown?");
+					say(player, n, "Erm..i'm not sure");
+					npcsay(player, n, "saturday",
+						"you big folk really aren't the quickest");
+					break;
+				case 8:
+					npcsay(player, n, "I worship Guthix, the god of balance",
+						"He really does have exceptional co-ordination");
+					break;
 			}
 		}
 	}

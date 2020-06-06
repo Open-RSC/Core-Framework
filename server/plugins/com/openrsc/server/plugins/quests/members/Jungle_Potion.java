@@ -367,7 +367,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 							return;
 						}
 						if (player.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
-							int conv = DataConversions.getRandom().nextInt(2);
+							int conv = DataConversions.getRandom().nextInt(3);
 							if (conv == 0) {
 								say(player, n, "Greetings");
 								npcsay(player, n, "Hello Bwana.",

@@ -739,15 +739,18 @@ public class DemonSlayer implements QuestInterface,
 					"I managed to drop the key in the drain",
 					"Just outside the palace kitchen",
 					"It is just inside and I can't reach it");
-				int yourKey = multi(player, n,
-					"So what does the drain connect to?",
+				int yourKey = multi(player, n, false, //do not send over
+					"So what does the drain lead to?",
 					"Where can I find Captain Rovin?",
 					"Where does the wizard live?");
 				if (yourKey == 0) {
+					say(player, n, "So what does the drain connect to?");
 					sirPrysinDialogue(player, n, SirPrysin.DRAIN);
 				} else if (yourKey == 1) {
+					say(player, n, "Where can I find Captain Rovin?");
 					sirPrysinDialogue(player, n, SirPrysin.ROVIN);
 				} else if (yourKey == 2) {
+					say(player, n, "Where does the wizard live?");
 					sirPrysinDialogue(player, n, SirPrysin.WIZARD);
 				}
 				break;

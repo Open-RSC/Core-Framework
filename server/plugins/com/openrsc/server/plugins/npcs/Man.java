@@ -22,7 +22,7 @@ public class Man implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
-		int selected = DataConversions.getRandom().nextInt(19);
+		int selected = DataConversions.getRandom().nextInt(20);
 		boolean autoChoose = DataConversions.getRandom().nextBoolean();
 		String[] menuOptions;
 
@@ -71,7 +71,7 @@ public class Man implements TalkNpcTrigger {
 				"I'm in search of enemies to kill"};
 			int option;
 			if (autoChoose) {
-				option = DataConversions.getRandom().nextInt(menuOptions.length-1);
+				option = DataConversions.getRandom().nextInt(menuOptions.length);
 			} else {
 				option = multi(player, n, false, menuOptions);
 			}

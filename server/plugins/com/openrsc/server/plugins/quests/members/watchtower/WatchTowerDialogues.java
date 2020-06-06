@@ -386,7 +386,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseN
 				case 8:
 				case 9:
 				case 10:
-					if (player.getCache().hasKey("ogre_grew_p1")) {
+					if (player.getCache().hasKey("ogre_relic_part_2")) {
 						npcsay(player, n, "What are you doing here morsel ?");
 						int menu = multi(player, n,
 							"Can I do anything else for you ?",
@@ -414,29 +414,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseN
 						}
 					} else {
 						if (player.getCache().hasKey("ogre_grew")) {
-							npcsay(player, n, "The morsel is back",
-								"Does it have our tooth for us ?");
-							if (player.getCarriedItems().hasCatalogID(ItemId.OGRE_TOOTH.id(), Optional.of(false))) {
-								say(player, n, "I have it");
-								npcsay(player, n, "It's got it, good good",
-									"That should annoy gorad wonderfully",
-									"Heheheheh!");
-								player.getCarriedItems().remove(new Item(ItemId.OGRE_TOOTH.id()));
-								npcsay(player, n, "Heres a token of my gratitude");
-								give(player, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
-								npcsay(player, n, "Some old gem I stole from Gorad...",
-									"And an old part of a statue",
-									"Heheheheh!");
-								player.message("The ogre hands you a large crystal");
-								player.message("The ogre gives you part of a statue");
-								give(player, ItemId.POWERING_CRYSTAL1.id(), 1);
-								player.getCache().remove("ogre_grew");
-								player.getCache().store("ogre_grew_p1", true);
-							} else {
-								say(player, n, "Err, I don't have it");
-								npcsay(player, n, "Morsel, you dare to return without the tooth!",
-									"Either you are a fool, or want to be eaten!");
-							}
+							toothDialogue(player, n);
 						} else {
 							npcsay(player, n, "What do you want tiny morsel ?",
 								"You would look good on my plate");
@@ -500,39 +478,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseN
 						}
 					} else {
 						if (player.getCache().hasKey("ogre_og")) {
-							npcsay(player, n, "Where is my gold from that traitor toban?");
-							int subMenu = multi(player, n,
-								"I have your gold",
-								"I haven't got it yet",
-								"I have lost the key!");
-							if (subMenu == 0) {
-								if (player.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.of(false))) {
-									npcsay(player, n, "Well well, the little rat has got it!",
-										"take this to show the little rat is a friend to the ogres",
-										"Hahahahaha!");
-									player.getCarriedItems().remove(new Item(ItemId.STOLEN_GOLD.id()));
-									player.message("The ogre gives you part of a horrible statue");
-									give(player, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
-									player.getCache().remove("ogre_og");
-									/** Very strange setup of quest tbh, but that's what it is **/
-									player.getCache().store("ogre_relic_part_3", true);
-								} else {
-									npcsay(player, n, "That is not what I want rat!",
-										"If you want to impress me",
-										"Then get the gold I asked for!");
-								}
-							} else if (subMenu == 1) {
-								npcsay(player, n, "Don't come back until you have it",
-									"Unless you want to be on tonight's menu!");
-							} else if (subMenu == 2) {
-								if (player.getCarriedItems().hasCatalogID(ItemId.KEY.id(), Optional.of(false))) {
-									npcsay(player, n, "Oh yeah! what's that then ?");
-									player.message("It seems you still have the key...");
-								} else {
-									npcsay(player, n, "Idiot! take another and don't lose it!");
-									give(player, ItemId.KEY.id(), 1);
-								}
-							}
+							stolenGoldDialogue(player, n);
 						} else {
 							npcsay(player, n, "Why are you here little rat ?");
 							int menu = multi(player, n,
@@ -600,21 +546,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseN
 						}
 					} else {
 						if (player.getCache().hasKey("ogre_toban")) {
-							npcsay(player, n, "Ha ha ha! small thing returns",
-								"Did you bring the dragon bone ?");
-							if (player.getCarriedItems().hasCatalogID(ItemId.DRAGON_BONES.id(), Optional.of(false))) {
-								say(player, n, "When I say I will get something I get it!");
-								player.getCarriedItems().remove(new Item(ItemId.DRAGON_BONES.id()));
-								npcsay(player, n, "Ha ha ha! small thing has done it",
-									"Toban is glad, take this...");
-								player.message("The ogre gives you part of a statue");
-								give(player, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
-								player.getCache().remove("ogre_toban");
-								player.getCache().store("ogre_relic_part_1", true);
-							} else {
-								say(player, n, "I have nothing for you");
-								npcsay(player, n, "Then you shall get nothing from me!");
-							}
+							dragonBoneDialogue(player, n);
 						} else {
 							npcsay(player, n, "What do you want small thing ?");
 							int menu = multi(player, n,
@@ -674,6 +606,98 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseN
 			}
 		} else {
 			player.message("The wizard has no need for more evidence");
+		}
+	}
+
+	private void stolenGoldDialogue(Player player, Npc n) {
+		npcsay(player, n, "Where is my gold from that traitor toban?");
+		int subMenu = multi(player, n,
+			"I have your gold",
+			"I haven't got it yet",
+			"I have lost the key!");
+		if (subMenu == 0) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.of(false))) {
+				npcsay(player, n, "Well well, the little rat has got it!",
+					"take this to show the little rat is a friend to the ogres",
+					"Hahahahaha!");
+				player.getCarriedItems().remove(new Item(ItemId.STOLEN_GOLD.id()));
+				player.message("The ogre gives you part of a horrible statue");
+				give(player, ItemId.OGRE_RELIC_PART_HEAD.id(), 1);
+				if (player.getCache().hasKey("ogre_og")) {
+					player.getCache().remove("ogre_og");
+				}
+				if (!player.getCache().hasKey("ogre_relic_part_3")) {
+					/** Very strange setup of quest tbh, but that's what it is **/
+					player.getCache().store("ogre_relic_part_3", true);
+				}
+			} else {
+				npcsay(player, n, "That is not what I want rat!",
+					"If you want to impress me",
+					"Then get the gold I asked for!");
+			}
+		} else if (subMenu == 1) {
+			npcsay(player, n, "Don't come back until you have it",
+				"Unless you want to be on tonight's menu!");
+		} else if (subMenu == 2) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.KEY.id(), Optional.of(false))) {
+				npcsay(player, n, "Oh yeah! what's that then ?");
+				player.message("It seems you still have the key...");
+			} else {
+				npcsay(player, n, "Idiot! take another and don't lose it!");
+				give(player, ItemId.KEY.id(), 1);
+			}
+		}
+	}
+
+	private void toothDialogue(Player player, Npc n) {
+		npcsay(player, n, "The morsel is back",
+			"Does it have our tooth for us ?");
+		if (player.getCarriedItems().hasCatalogID(ItemId.OGRE_TOOTH.id(), Optional.of(false))) {
+			say(player, n, "I have it");
+			npcsay(player, n, "It's got it, good good",
+				"That should annoy gorad wonderfully",
+				"Heheheheh!");
+			player.getCarriedItems().remove(new Item(ItemId.OGRE_TOOTH.id()));
+			npcsay(player, n, "Heres a token of my gratitude");
+			give(player, ItemId.OGRE_RELIC_PART_BASE.id(), 1);
+			npcsay(player, n, "Some old gem I stole from Gorad...",
+				"And an old part of a statue",
+				"Heheheheh!");
+			player.message("The ogre hands you a large crystal");
+			player.message("The ogre gives you part of a statue");
+			give(player, ItemId.POWERING_CRYSTAL1.id(), 1);
+			if (player.getCache().hasKey("ogre_grew")) {
+				player.getCache().remove("ogre_grew");
+			}
+			if (!player.getCache().hasKey("ogre_relic_part_2")) {
+				player.getCache().store("ogre_relic_part_2", true);
+			}
+		} else {
+			say(player, n, "Err, I don't have it");
+			npcsay(player, n, "Morsel, you dare to return without the tooth!",
+				"Either you are a fool, or want to be eaten!");
+		}
+	}
+
+	private void dragonBoneDialogue(Player player, Npc n) {
+		npcsay(player, n, "Ha ha ha! small thing returns",
+			"Did you bring the dragon bone ?");
+		if (player.getCarriedItems().hasCatalogID(ItemId.DRAGON_BONES.id(), Optional.of(false))) {
+			say(player, n, "When I say I will get something I get it!");
+			player.getCarriedItems().remove(new Item(ItemId.DRAGON_BONES.id()));
+			npcsay(player, n, "Ha ha ha! small thing has done it",
+				"Toban is glad, take this...");
+			player.message("The ogre gives you part of a statue");
+			give(player, ItemId.OGRE_RELIC_PART_BODY.id(), 1);
+			if (player.getCache().hasKey("ogre_toban")) {
+				player.getCache().remove("ogre_toban");
+			}
+			if (!player.getCache().hasKey("ogre_relic_part_1")) {
+				player.getCache().store("ogre_relic_part_1", true);
+			}
+		} else {
+			say(player, n, "I have nothing for you");
+			npcsay(player, n, "Then you shall get nothing from me!");
 		}
 	}
 
@@ -1086,12 +1110,38 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseN
 	public void onUseNpc(Player player, Npc npc, Item item) {
 		if (npc.getID() == NpcId.WATCHTOWER_WIZARD.id() && item.getCatalogId() == ItemId.FINGERNAILS.id()) {
 			fingerNailsDialogue(player, npc);
+		} else if (npc.getID() == NpcId.OG.id() && item.getCatalogId() == ItemId.STOLEN_GOLD.id()) {
+			if (player.getCache().hasKey("ogre_og") || player.getCache().hasKey("ogre_relic_part_3")) {
+				stolenGoldDialogue(player, npc);
+			} else {
+				// needs checking
+				player.message("Nothing interesting happens");
+			}
+		} else if (npc.getID() == NpcId.GREW.id() && item.getCatalogId() == ItemId.OGRE_TOOTH.id()) {
+			if (player.getCache().hasKey("ogre_relic_part_2")) {
+				say(player, null, "I am not sure giving him another tooth will have any purpose");
+			} else if (player.getCache().hasKey("ogre_grew")) {
+				toothDialogue(player, npc);
+			} else {
+				// needs checking
+				player.message("Nothing interesting happens");
+			}
+		} else if (npc.getID() == NpcId.TOBAN.id() && item.getCatalogId() == ItemId.DRAGON_BONES.id()) {
+			if (player.getCache().hasKey("ogre_toban") || player.getCache().hasKey("ogre_relic_part_1")) {
+				dragonBoneDialogue(player, npc);
+			} else {
+				// needs checking
+				player.message("Nothing interesting happens");
+			}
 		}
 	}
 
 	@Override
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
-		return npc.getID() == NpcId.WATCHTOWER_WIZARD.id() && !item.getNoted() && item.getCatalogId() == ItemId.FINGERNAILS.id();
+		return !item.getNoted() && (npc.getID() == NpcId.WATCHTOWER_WIZARD.id() && item.getCatalogId() == ItemId.FINGERNAILS.id()
+			|| npc.getID() == NpcId.OG.id() && item.getCatalogId() == ItemId.STOLEN_GOLD.id()
+			|| npc.getID() == NpcId.GREW.id() && item.getCatalogId() == ItemId.OGRE_TOOTH.id()
+			|| npc.getID() == NpcId.TOBAN.id() && item.getCatalogId() == ItemId.DRAGON_BONES.id());
 	}
 
 	class WatchTowerWizard {

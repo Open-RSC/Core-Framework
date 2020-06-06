@@ -26,7 +26,7 @@ public class UndergroundPassPaladin implements TalkNpcTrigger,
 		switch (player.getQuestStage(Quests.UNDERGROUND_PASS)) {
 			case 4:
 				say(player, n, "hello paladin");
-				int rand = DataConversions.getRandom().nextInt(1);
+				int rand = DataConversions.getRandom().nextInt(2);
 				if (rand == 0) {
 					if (!player.getCache().hasKey("paladin_food")) {
 						npcsay(player, n, "you've done well to get this far traveller, here eat");

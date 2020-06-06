@@ -31,6 +31,12 @@ public class ShiloVillageTrufitusInvUse implements UseNpcTrigger {
 				"Not really.",
 				"Yes, I found lots of things.");
 			if (submenu == 0) {
+				// unsure if also other stages
+				if (player.getQuestStage(Quests.SHILO_VILLAGE) == -1) {
+					npcsay(player, n, "Maybe you should go back and try to find some more things.",
+						"Maybe there are more items to be found at Ah Za Rhoon?");
+					return;
+				}
 				npcsay(player, n, "Maybe you should go back and try to find some more things.",
 					"Show me any other items that you may have.",
 					"We need any clue to locate Rashiliyia's resting place.");

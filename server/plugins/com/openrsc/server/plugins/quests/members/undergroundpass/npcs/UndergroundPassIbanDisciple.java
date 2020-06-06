@@ -47,7 +47,7 @@ public class UndergroundPassIbanDisciple implements TalkNpcTrigger, KillNpcTrigg
 			npcsay(player, n, "an imposter....die scum");
 			n.startCombat(player);
 		} else {
-			int selected = DataConversions.getRandom().nextInt(3);
+			int selected = DataConversions.getRandom().nextInt(4);
 
 			if (selected == 0) {
 				// nothing

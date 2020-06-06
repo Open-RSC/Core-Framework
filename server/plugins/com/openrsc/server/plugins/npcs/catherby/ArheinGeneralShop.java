@@ -106,7 +106,7 @@ public class ArheinGeneralShop extends AbstractShop {
 
 			option = multi(player, n, false, //do not send over
 				"I don't suppose I could get a lift anywhere?",
-				"Well good luck with the buisness");
+				"Well good luck with your buisness");
 
 			if (option == 0) {
 				say(player, n, "I don't suppose I could get a lift anywhere?");

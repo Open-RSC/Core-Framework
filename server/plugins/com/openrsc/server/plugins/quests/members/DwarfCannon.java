@@ -432,7 +432,7 @@ public class DwarfCannon
 					break;
 			}
 		} else if (n.getID() == NpcId.DWARF_NEAR_COMMANDER.id()) {
-			int selected = DataConversions.getRandom().nextInt(1);
+			int selected = DataConversions.getRandom().nextInt(2);
 
 			say(player, n, "hello\"");
 

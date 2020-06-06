@@ -253,7 +253,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 							"Yes it'll cost you 40000 coins for the materials needed mind you",
 							"Which sort of staff did you want enchanting?");
 						int five = multi(player, n, false, //do not send over
-							"battlestaff of fire", "battlestaff of water",
+							"Battlestaff of fire", "battlestaff of water",
 							"battlestaff of air", "battlestaff of earth",
 							"I won't bother yet actually");
 						if (five == 0) {

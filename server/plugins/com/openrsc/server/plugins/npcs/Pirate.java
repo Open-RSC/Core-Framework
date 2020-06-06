@@ -17,7 +17,7 @@ public class Pirate implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
-		int mood = DataConversions.getRandom().nextInt(24);
+		int mood = DataConversions.getRandom().nextInt(25);
 
 		say(player, n, "Hello");
 

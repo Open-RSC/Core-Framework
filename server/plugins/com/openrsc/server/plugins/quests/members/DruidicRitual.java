@@ -59,18 +59,20 @@ public class DruidicRitual implements QuestInterface, TalkNpcTrigger,
 						npcsay(player, n, "We are the druids of Guthix",
 							"We worship our God at our famous stone circles");
 						int third = multi(
-							player,
-							n,
+							player, n, false, //do not send over
 							"What about the stone circle full of dark wizards?",
 							"So whats so good about Guthix",
 							"Well I'll be on my way now");
 						if (third == 0) {
+							say(player, n, "What about the stone circle full of dark wizards?");
 							kaqemeexDialogue(player, n, kaqemeex.STONE_CIRCLE);
 						} else if (third == 1) {
+							say(player, n, "So what's so good abou Guthix?");
 							npcsay(player, n, "Guthix is very important to this world",
 								"He is the God of nature and balance",
 								"He is in the trees and he is in the rock");
 						} else if (third == 2) {
+							say(player, n, "Well I'll be on my way now");
 							kaqemeexDialogue(player, n, kaqemeex.ON_MY_WAY_NOW);
 						}
 					} else if (first == 1) {
