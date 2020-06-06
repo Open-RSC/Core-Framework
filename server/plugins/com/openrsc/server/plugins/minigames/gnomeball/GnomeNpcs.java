@@ -222,6 +222,10 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
+		Npc baller = player.getWorld().getNpc(n.getID(),
+			player.getX() - 2, player.getX() + 2,
+			player.getY() - 2, player.getY() + 2);
+		if (baller == null) return;
 		if (n.getID() == GNOME_BALLER_NORTH || n.getID() == GNOME_BALLER_SOUTH) {
 			if(command.equalsIgnoreCase("pass to")) {
 				passToTeam(player, n);

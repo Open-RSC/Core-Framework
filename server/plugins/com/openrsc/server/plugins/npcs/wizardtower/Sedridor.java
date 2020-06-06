@@ -44,6 +44,10 @@ public class Sedridor implements TalkNpcTrigger, OpNpcTrigger {
 
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
+		Npc sedridor = player.getWorld().getNpc(n.getID(),
+			player.getX() - 2, player.getX() + 2,
+			player.getY() - 2, player.getY() + 2);
+		if (sedridor == null) return;
 		RuneMysteries.sedridorDialog(player,n, 0);
 	}
 

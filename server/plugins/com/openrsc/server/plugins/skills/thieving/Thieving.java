@@ -639,6 +639,10 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
 		if (command.equalsIgnoreCase("pickpocket")) {
+			Npc npc = player.getWorld().getNpc(n.getID(),
+				player.getX() - 2, player.getX() + 2,
+				player.getY() - 2, player.getY() + 2);
+			if (npc == null) return;
 			Pickpocket pickpocket = Pickpocket.valueOf(n.getDef().getName().toUpperCase().replace(" ", "_"));
 			if (pickpocket != null) {
 				doPickpocket(player, n, pickpocket);

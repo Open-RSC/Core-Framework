@@ -77,6 +77,10 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
 		if (n.getID() == NpcId.GUNDAI.id()) {
+			Npc banker = player.getWorld().getNpc(n.getID(),
+				player.getX() - 2, player.getX() + 2,
+				player.getY() - 2, player.getY() + 2);
+			if (banker == null) return;
 			if (command.equalsIgnoreCase("Bank")) {
 				quickFeature(n, player, false);
 			} else if (config().SPAWN_AUCTION_NPCS && command.equalsIgnoreCase("Collect")) {

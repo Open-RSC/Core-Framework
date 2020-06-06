@@ -79,6 +79,10 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
 		if (n.getID() == AUCTIONEER) {
+			Npc auctioneer = player.getWorld().getNpc(AUCTIONEER,
+				player.getX() - 2, player.getX() + 2,
+				player.getY() - 2, player.getY() + 2);
+			if (auctioneer == null) return;
 			if (command.equalsIgnoreCase("Auction")) {
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
@@ -92,6 +96,10 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 				}
 			}
 		} else if (n.getID() == AUCTION_CLERK) {
+			Npc auctionClerk = player.getWorld().getNpc(AUCTION_CLERK,
+				player.getX() - 2, player.getX() + 2,
+				player.getY() - 2, player.getY() + 2);
+			if (auctionClerk == null) return;
 			if (command.equalsIgnoreCase("Auction")) {
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {

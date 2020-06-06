@@ -111,6 +111,10 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
 		if (inArray(n.getID(), BANKERS)) {
+			Npc banker = player.getWorld().getNpc(n.getID(),
+				player.getX() - 2, player.getX() + 2,
+				player.getY() - 2, player.getY() + 2);
+			if (banker == null) return;
 			if (command.equalsIgnoreCase("Bank") && config().RIGHT_CLICK_BANK) {
 				quickFeature(n, player, false);
 			} else if (command.equalsIgnoreCase("Collect") && config().SPAWN_AUCTION_NPCS) {
