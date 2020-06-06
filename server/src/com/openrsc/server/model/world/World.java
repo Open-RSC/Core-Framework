@@ -175,8 +175,9 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	public Npc getNpc(final int id, final int minX, final int maxX, final int minY, final int maxY) {
 		for (final Npc npc : getNpcs()) {
+			boolean exists = !npc.isBusy() && !npc.isRemoved() && !npc.isRespawning();
 			if (npc.getID() == id && npc.getX() >= minX && npc.getX() <= maxX && npc.getY() >= minY
-				&& npc.getY() <= maxY) {
+				&& npc.getY() <= maxY && exists) {
 				return npc;
 			}
 		}
