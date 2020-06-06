@@ -1239,6 +1239,7 @@ public class NpcDrops {
 		currentNpcDrops = new DropTable("Chaos Druid (270)");
 		currentNpcDrops.addTableDrop(herbDropTable, 35);
 		currentNpcDrops.addTableDrop(rareDropTable, 1, true);
+		currentNpcDrops.addItemDrop(ItemId.VIAL.id(), 1, 10);
 		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 1, 7);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 3, 5);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 8, 5);
