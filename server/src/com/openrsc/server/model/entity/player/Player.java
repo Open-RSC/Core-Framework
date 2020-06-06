@@ -1996,6 +1996,7 @@ public final class Player extends Mob {
 		getTrade().resetAll();
 		getDuel().resetAll();
 		dropItemEvent = null;
+		setAttribute("auctionhouse", false);
 	}
 
 	public void resetAllExceptBank() {
