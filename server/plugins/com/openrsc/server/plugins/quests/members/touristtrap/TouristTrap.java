@@ -2488,12 +2488,16 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				npcsay(player, n, "I should think so to, now get back to work.");
 			} else if (menu == 2) {
 				npcsay(player, n, "Why you ungrateful whelp...I'll teach you some manners.");
-				mes("The guard shouts for help.");
-				n.startCombat(player);
-				mes("Other guards start arriving.");
-				npcsay(player, n, "Get " + (player.isMale() ? "him" : "her") + " men!");
-				player.message("The guards rough you up a bit and then drag you to a cell.");
-				player.teleport(76, 3625);
+				if (player.getQuestStage(this) == -1) {
+					n.startCombat(player);
+				} else {
+					mes("The guard shouts for help.");
+					n.startCombat(player);
+					mes("Other guards start arriving.");
+					npcsay(player, n, "Get " + (player.isMale() ? "him" : "her") + " men!");
+					player.message("The guards rough you up a bit and then drag you to a cell.");
+					player.teleport(76, 3625);
+				}
 			}
 		} else if (n.getID() == NpcId.ANA.id()) {
 			anaDialogue(player, n, -1);
@@ -2811,9 +2815,10 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 
 	@Override
 	public boolean blockAttackNpc(Player player, Npc n) {
-		return n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+		return player.getQuestStage(this) >= 0 &&
+			(n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
 				|| n.getID() == NpcId.MERCENARY_LIFTPLATFORM.id() || n.getID() == NpcId.MERCENARY_JAILDOOR.id()
-				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1);
+				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1));
 	}
 
 	@Override
@@ -2823,9 +2828,10 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 
 	@Override
 	public boolean blockPlayerRangeNpc(Player player, Npc n) {
-		return n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+		return player.getQuestStage(this) >= 0 &&
+			(n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
 				|| n.getID() == NpcId.MERCENARY_LIFTPLATFORM.id() || n.getID() == NpcId.MERCENARY_JAILDOOR.id()
-				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1);
+				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1));
 	}
 
 	@Override
@@ -2835,9 +2841,10 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 
 	@Override
 	public boolean blockSpellNpc(Player player, Npc n) {
-		return n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
+		return player.getQuestStage(this) >= 0 &&
+			(n.getID() == NpcId.CAPTAIN_SIAD.id() || n.getID() == NpcId.MERCENARY.id() || n.getID() == NpcId.MERCENARY_ESCAPEGATES.id()
 				|| n.getID() == NpcId.MERCENARY_LIFTPLATFORM.id() || n.getID() == NpcId.MERCENARY_JAILDOOR.id()
-				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1);
+				|| (n.getID() == NpcId.MERCENARY_CAPTAIN.id() && player.getCarriedItems().getInventory().countId(ItemId.METAL_KEY.id()) < 1));
 	}
 
 	@Override
