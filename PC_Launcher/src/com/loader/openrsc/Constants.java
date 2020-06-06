@@ -8,7 +8,7 @@ public class Constants {
 	public static final String RSCP_WORLD_STATS_URL = "https://runescapeclassic.dev"; // Used for the world statistics
 	public static final String DEV_WORLD_STATS_URL = "https://runescapeclassic.dev"; // Used for the world statistics
 	public static final String Title = "Open RSC Game Launcher";
-	public static final String BASE_URL = "http://game.openrsc.com/static"; // Cache and client jar download locations depend on this
+	public static final String BASE_URL = "http://game.openrsc.com/static/"; // Cache and client jar download locations depend on this
 	public static final String CONF_DIR = "Cache";
 	public static final String CLIENT_FILENAME = "Open_RSC_Client.jar";
 	public static final String CACHE_URL = BASE_URL + "downloads/";
