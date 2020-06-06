@@ -692,7 +692,7 @@ public class SpellHandler implements PacketHandler {
 			finalizeSpellNoMessage(player, spell);
 		} else {
 			if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId(), affectedItem.getAmount())) > -1) {
-				int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.4D);
+				int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.4D * affectedItem.getAmount());
 				player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), value)); // 40%
 			}
 			finalizeSpell(player, spell, "Alchemy spell successful");
@@ -717,7 +717,7 @@ public class SpellHandler implements PacketHandler {
 			finalizeSpellNoMessage(player, spell);
 		} else {
 			if (player.getCarriedItems().remove(new Item(affectedItem.getCatalogId(), affectedItem.getAmount())) > -1) {
-				int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.6D);
+				int value = (int) (affectedItem.getDef(player.getWorld()).getDefaultPrice() * 0.6D * affectedItem.getAmount());
 				player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), value)); // 60%
 			}
 			finalizeSpell(player, spell, "Alchemy spell successful");
