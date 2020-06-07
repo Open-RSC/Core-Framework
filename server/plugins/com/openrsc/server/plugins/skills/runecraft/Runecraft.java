@@ -27,12 +27,13 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		ItemId.EARTH_RUNE.id(),
 		ItemId.MIND_RUNE.id(),
 		ItemId.BODY_RUNE.id(),
-		ItemId.DEATH_RUNE.id(),
-		ItemId.NATURE_RUNE.id(),
 		ItemId.CHAOS_RUNE.id(),
-		ItemId.LAW_RUNE.id(),
 		ItemId.COSMIC_RUNE.id(),
-		ItemId.BLOOD_RUNE.id()
+		ItemId.NATURE_RUNE.id(),
+		// TODO
+		// ItemId.LAW_RUNE.id(),
+		// ItemId.DEATH_RUNE.id(),
+		// ItemId.BLOOD_RUNE.id()
 	};
 
 	HashMap<Integer, Integer> talismanIds = new HashMap<Integer, Integer>() {{
@@ -42,12 +43,13 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		put(ItemId.EARTH_RUNE.id(), ItemId.EARTH_TALISMAN.id());
 		put(ItemId.MIND_RUNE.id(), ItemId.MIND_TALISMAN.id());
 		put(ItemId.BODY_RUNE.id(), ItemId.BODY_TALISMAN.id());
-		put(ItemId.DEATH_RUNE.id(), ItemId.DEATH_TALISMAN.id());
-		put(ItemId.NATURE_RUNE.id(), ItemId.NATURE_TALISMAN.id());
-		put(ItemId.CHAOS_RUNE.id(), ItemId.CHAOS_TALISMAN.id());
-		put(ItemId.LAW_RUNE.id(), ItemId.LAW_TALISMAN.id());
 		put(ItemId.COSMIC_RUNE.id(), ItemId.COSMIC_TALISMAN.id());
-		put(ItemId.BLOOD_RUNE.id(), ItemId.BLOOD_TALISMAN.id());
+		put(ItemId.CHAOS_RUNE.id(), ItemId.CHAOS_TALISMAN.id());
+		put(ItemId.NATURE_RUNE.id(), ItemId.NATURE_TALISMAN.id());
+		// TODO
+		// put(ItemId.LAW_RUNE.id(), ItemId.LAW_TALISMAN.id());
+		// put(ItemId.DEATH_RUNE.id(), ItemId.DEATH_TALISMAN.id());
+		// put(ItemId.BLOOD_RUNE.id(), ItemId.BLOOD_TALISMAN.id());
 	}};
 
 	int LEVEL_INDEX = 0;
@@ -62,9 +64,10 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		put(ItemId.COSMIC_TALISMAN.id(), new int[]{27, 28});
 		put(ItemId.CHAOS_TALISMAN.id(), new int[]{35, 30});
 		put(ItemId.NATURE_TALISMAN.id(), new int[]{44, 32});
-		put(ItemId.LAW_TALISMAN.id(), new int[]{54, 34});
-		put(ItemId.DEATH_TALISMAN.id(), new int[]{65, 36});
-		put(ItemId.BLOOD_TALISMAN.id(), new int[]{77, 38});
+		// TODO
+		// put(ItemId.LAW_TALISMAN.id(), new int[]{54, 34});
+		// put(ItemId.DEATH_TALISMAN.id(), new int[]{65, 36});
+		// put(ItemId.BLOOD_TALISMAN.id(), new int[]{77, 38});
 	}};
 
 	@Override
