@@ -5,6 +5,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -52,6 +53,9 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	private static int STURDY_IRON_GATE = 200;
 	private ArrayList<Integer> wieldPos = new ArrayList<>();
 	private ArrayList<Integer> allowed = new ArrayList<>();
+
+	// points player may be left of in the desert
+	private final Point[] desertTPPoints = new Point[]{new Point(121, 743), new Point(135, 775), new Point(121, 803), new Point(102, 775), new Point(93, 765) };
 
 	@Override
 	public int getQuestId() {
@@ -549,8 +553,8 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						mes("The guards throw your water away...");
 						player.getCarriedItems().remove(new Item(ItemId.BOWL_OF_WATER.id()));
 					}
-					player.teleport(121, 803);
-					mes("The guards move off in the cart leaving you stranded in the desert.");
+					Point desertLoc = desertTPPoints[DataConversions.getRandom().nextInt(desertTPPoints.length)];
+					player.teleport(desertLoc.getX(), desertLoc.getX());
 					break;
 				case Mercenary.PLACE_START:
 					npcsay(player, n, "It's none of your business now get lost.");
@@ -2896,7 +2900,8 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						player.getCarriedItems().remove(new Item(ItemId.BOWL_OF_WATER.id()));
 					}
 					mes("The guards move off in the cart leaving you stranded in the desert.");
-					player.teleport(121, 743);
+					Point desertLoc = desertTPPoints[DataConversions.getRandom().nextInt(desertTPPoints.length)];
+					player.teleport(desertLoc.getX(), desertLoc.getX());
 				}
 			} else if (menu == 1) {
 				player.message("You decide not to attack the guard.");
@@ -2973,16 +2978,12 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						"about desert survival techniques.");
 					mes("The guards grab you and rough you up a bit.");
 				}
-				player.damage(7);
+				player.damage(DataConversions.random(4, 7));
 				mes("You're grabed and manhandled onto a cart.",
 					"Sometime later you're dumped in the middle of the desert.",
 					"The guards move off in the cart leaving you stranded in the desert.");
-				int random = DataConversions.getRandom().nextInt(2);
-				if (random == 0) {
-					player.teleport(102, 775);
-				} else if (random == 1) {
-					player.teleport(135, 775);
-				}
+				Point desertLoc = desertTPPoints[DataConversions.getRandom().nextInt(desertTPPoints.length)];
+				player.teleport(desertLoc.getX(), desertLoc.getX());
 			}
 		}
 	}
