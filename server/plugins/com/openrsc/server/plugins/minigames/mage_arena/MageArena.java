@@ -17,6 +17,7 @@ import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -304,21 +305,58 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				if (random(0, 5) != 2) {
 					return;
 				}
-				int spell_type = random(0, 2);
+				if (DataConversions.getRandom().nextBoolean()) {
+					// just message
+					getOwner().message(DataConversions.getRandom().nextBoolean()
+						? "@yel@kolodion: die you foolish mortal" : "@yel@kolodion: the bigger the better");
+					return;
+				}
+				int transformStage = 0;
+				switch(NpcId.getById(npc.getID())) {
+					case KOLODION:
+					case KOLODION_OGRE:
+						transformStage = 0;
+						break;
+					case KOLODION_SPIDER:
+						transformStage = 1;
+						break;
+					case KOLODION_SOULESS:
+						transformStage = 2;
+						break;
+					case KOLODION_DEMON:
+						transformStage = 3;
+						break;
+				}
+				boolean allElems = transformStage >= 2;
+				int spell_type = random(0, 1 + (allElems ? 1 : 0));
 				switch (spell_type) {
-					case 0:
+					case 0: //claws of guthix
 						godSpellObject(getOwner(), 33);
 						break;
-					case 1:
+					case 1: //saradomin strike
 						godSpellObject(getOwner(), 34);
 						break;
-					case 2:
+					case 2: //flames of zamorak
 						godSpellObject(getOwner(), 35);
 						break;
 				}
-				String[] randomMessage = {"roooaar", "die you foolish mortal", "feel the power of the elements", "the bigger the better", "aaarrgghhh"};
-				npcYell(getOwner(), npc, randomMessage[random(0, randomMessage.length - 1)]);
-				getOwner().damage((int)Math.floor(getCurrentLevel(getOwner(), Skills.HITS)/10.0));
+				// how many lvls needed for +1 dmg (min 16, max 25)
+				int reciprocalSlope = (int) Math.floor(1.0 / (0.06 - (0.01 / 48.0) * getMaxLevel(getOwner(), Skills.HITS)));
+				// what is the lvl "shift" per new transformation to calculate dmg
+				int shiftPerPhase = (int) Math.round((0.004 * getMaxLevel(getOwner(), Skills.HITS) + 0.4) * reciprocalSlope);
+				ArrayList<String[]> messages = new ArrayList<String[]>() {
+					{
+						add(new String[]{"@yel@kolodion: roooaar", "claws grab you from below"});
+						add(new String[]{"@yel@kolodion: aaarrgghhh", "@yel@kolodion: feel the power of the elements", "you are hit by a lightning bolt"});
+						add(new String[]{"@yel@kolodion: feel the power of the elements mortal", "you burst into flames"});
+					}
+				};
+				if (transformStage == 3 && spell_type == 2 && DataConversions.getRandom().nextBoolean()) {
+					// replace message of flames of zamorak
+					messages.set(2, new String[]{"@yel@kolodion: burn fool ....burn", "you burst into flames"});
+				}
+				mes(messages.get(spell_type));
+				getOwner().damage((int) Math.ceil(Math.max(getCurrentLevel(getOwner(), Skills.HITS) + (transformStage - 1.0) * shiftPerPhase, 0) / reciprocalSlope) + 1);
 
 			}
 		};
