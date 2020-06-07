@@ -238,7 +238,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					if (getCurrentLevel(getOwner(), Skills.HITS) < 20) {
 						getOwner().damage(2);
 					} else {
-						getOwner().damage(getCurrentLevel(getOwner(), Skills.HITS) / 10);
+						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skills.HITS) * 0.08));
 					}
 				} else if (Zamorak != null && Zamorak.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 35);
@@ -246,7 +246,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					if (getCurrentLevel(getOwner(), Skills.HITS) < 20) {
 						getOwner().damage(2);
 					} else {
-						getOwner().damage(getCurrentLevel(getOwner(), Skills.HITS) / 10);
+						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skills.HITS) * 0.08));
 					}
 				} else if (Saradomin != null && Saradomin.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 34);
@@ -254,7 +254,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					if (getCurrentLevel(getOwner(), Skills.HITS) < 20) {
 						getOwner().damage(2);
 					} else {
-						getOwner().damage(getCurrentLevel(getOwner(), Skills.HITS) / 10);
+						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skills.HITS) * 0.08));
 					}
 				}
 			}
