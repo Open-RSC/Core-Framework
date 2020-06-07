@@ -373,7 +373,6 @@ public class Npc extends Mob {
 		/* 4. Drop items that should always drop, that are not bones. */
 		ArrayList<Item> invariableItems = drops.invariableItems(owner);
 		for (Item item : invariableItems) {
-			drops.removeItemDrop(item);
 			GroundItem groundItem = new GroundItem(owner.getWorld(), item.getCatalogId(), getX(), getY(), item.getAmount(), owner);
 			groundItem.setAttribute("npcdrop", true);
 			owner.getWorld().registerItem(groundItem);

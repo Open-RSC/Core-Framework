@@ -23,18 +23,24 @@ public class DropTable {
 	ArrayList<Accessor> accessors;
 	int totalWeight;
 	String description;
+	boolean rare;
 
 	private static int RING_OF_WEALTH_BOOST_NUMERATOR = 1;
 	private static int RING_OF_WEALTH_BOOST_DENOMINATOR = 128;
 
 	public DropTable() {
-		this("");
+		this("", false);
 	}
 
 	public DropTable(String description) {
+		this(description, false);
+	}
+
+	public DropTable(String description, boolean rare) {
 		drops = new ArrayList<>();
 		accessors = new ArrayList<>();
 		totalWeight = 0;
+		this.rare = rare;
 
 		this.description = description;
 	}
@@ -53,7 +59,7 @@ public class DropTable {
 	}
 
 	public DropTable clone(String description) {
-		DropTable clonedDropTable = new DropTable(description);
+		DropTable clonedDropTable = new DropTable(description, this.rare);
 		for (Drop drop : drops) {
 			if (drop.type == dropType.NOTHING) {
 				clonedDropTable.addEmptyDrop(drop.weight);
@@ -91,11 +97,7 @@ public class DropTable {
 	}
 
 	public void addTableDrop(DropTable table, int weight) {
-		addTableDrop(table, weight, false);
-	}
-
-	public void addTableDrop(DropTable table, int weight, boolean rare) {
-		drops.add(new Drop(table, weight, rare));
+		drops.add(new Drop(table, weight));
 		this.totalWeight += weight;
 	}
 
@@ -141,12 +143,16 @@ public class DropTable {
 					items.add(new Item(drop.id, drop.amount, drop.noted));
 					break;
 				} else if (drop.type == dropType.TABLE) {
-					items.addAll(drop.table.invariableItems(owner));
-					if (ringOfWealth && drop.rare) {
+					if (ringOfWealth && drop.table.rare) {
 						owner.playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
 					}
-					if (drop.table.getTotalWeight() > 0) {
-						items.addAll(drop.table.rollItem(ringOfWealth, owner));
+
+					DropTable newTable = drop.table.clone();
+
+					items.addAll(newTable.invariableItems(owner));
+
+					if (newTable.getTotalWeight() > 0) {
+						items.addAll(newTable.rollItem(ringOfWealth, owner));
 					}
 					break;
 				}
@@ -162,10 +168,16 @@ public class DropTable {
 			total = total + drop.weight;
 			if (drop.weight == 0 && drop.id != ItemId.NOTHING.id()) {
 
+				Item item = new Item(drop.id, drop.amount, drop.noted);
+
+				// Remove from the table once it's dropped.
+				removeItemDrop(item);
+
 				// If Ring of Avarice (custom) is equipped, and the item is a stack,
 				// we will award the item with slightly different logic.
-				if (handleRingOfAvarice(owner, new Item(drop.id, drop.amount))) continue;
-				items.add(new Item(drop.id, drop.amount, drop.noted));
+				if (handleRingOfAvarice(owner, item)) continue;
+
+				items.add(item);
 			}
 		}
 		return items;
@@ -281,30 +293,19 @@ public class DropTable {
 		int amount = 0;
 		int weight;
 		boolean noted;
-		boolean rare;
 
 		private Drop(int itemID, int amount, int weight, boolean noted, dropType type) {
-			this(itemID, amount, weight, noted, type, false);
-		}
-
-		private Drop(int itemID, int amount, int weight, boolean noted, dropType type, boolean rare) {
 			this.id = itemID;
 			this.amount = amount;
 			this.weight = weight;
 			this.noted = noted;
 			this.type = type;
-			this.rare = rare;
 		}
 
 		private Drop(DropTable table, int weight) {
-			this(table, weight, false);
-		}
-
-		private Drop(DropTable table, int weight, boolean rare) {
 			this.type = dropType.TABLE;
 			this.weight = weight;
 			this.table = table;
-			this.rare = rare;
 		}
 
 		@Override
