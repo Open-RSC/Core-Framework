@@ -485,10 +485,10 @@ public final class EntityHandler {
 			items.get(ItemId.BATTLESTAFF_OF_EARTH.id()).setAppearanceId(424);
 			items.get(ItemId.BATTLESTAFF_OF_FIRE.id()).setAppearanceId(425);
 
-			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_AIR.id()).setAppearanceId(426);
-			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_WATER.id()).setAppearanceId(427);
-			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id()).setAppearanceId(428);
-			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id()).setAppearanceId(429);
+			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_AIR.id()).setAppearanceId(422);
+			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_WATER.id()).setAppearanceId(423);
+			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id()).setAppearanceId(424);
+			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id()).setAppearanceId(425);
 
 
 		}
