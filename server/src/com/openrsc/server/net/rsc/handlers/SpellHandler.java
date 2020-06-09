@@ -223,7 +223,14 @@ public class SpellHandler implements PacketHandler {
 
 		// Cast on Inventory Item
 		else if (pID == CAST_ON_INV_ITEM) {
-			if (spell.getSpellType() == 3) {
+			// Have to throw in ugly exceptions for curse and enfeeble
+			boolean runecraft = player.getConfig().WANT_RUNECRAFT;
+			int curse = 9;
+			int enfeeble = 44;
+
+			if (spell.getSpellType() == 3
+				|| (runecraft && (idx == curse || idx == enfeeble))) {
+
 				int invIndex = packet.readShort();
 				Item item = player.getCarriedItems().getInventory().get(invIndex);
 				if (item == null) {
@@ -491,6 +498,12 @@ public class SpellHandler implements PacketHandler {
 				enchantTierOneJewelry(player, affectedItem, spell);
 				break;
 
+			// Curse or Enfeeble on talisman
+			case 9:
+			case 44:
+				buffTalisman(player, affectedItem, spell);
+				break;
+
 			// Low level alchemy
 			case 10:
 				lowLevelAlchemy(player, affectedItem, spell);
@@ -564,6 +577,62 @@ public class SpellHandler implements PacketHandler {
 			finalizeSpell(player, spell, "You succesfully enchant the " + jewelryType);
 		} else
 			player.playerServerMessage(MessageType.QUEST, "This spell can only be used on unenchanted sapphire " + (player.getConfig().WANT_EQUIPMENT_TAB ? " rings/amulets or opal rings" : "amulets"));
+	}
+
+	private void buffTalisman(Player player, Item item, SpellDef spell) {
+		int talismen[] = {
+			ItemId.AIR_TALISMAN.id(),
+			ItemId.MIND_TALISMAN.id(),
+			ItemId.WATER_TALISMAN.id(),
+			ItemId.EARTH_TALISMAN.id(),
+			ItemId.FIRE_TALISMAN.id(),
+			ItemId.BODY_TALISMAN.id(),
+			ItemId.COSMIC_TALISMAN.id(),
+			ItemId.CHAOS_TALISMAN.id(),
+			ItemId.NATURE_TALISMAN.id(),
+			ItemId.LAW_TALISMAN.id(),
+			ItemId.DEATH_TALISMAN.id(),
+			ItemId.BLOOD_TALISMAN.id()
+		};
+		int curse = 9;
+		int enfeeble = 44;
+		int talismanIndex = -1;
+
+		for (int i = 0; i < talismen.length; ++i) {
+			if (item.getCatalogId() == talismen[i]) {
+				talismanIndex = i;
+				break;
+			}
+		}
+
+		if (talismanIndex == -1 || item.getItemStatus().getNoted()) {
+			player.message("Nothing interesting happens");
+			return;
+		}
+
+		if (!checkAndRemoveRunes(player, spell)) return;
+
+		// Get last talisman in inventory.
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(
+				item.getCatalogId(), Optional.of(false)));
+		if (item == null) return;
+
+		// Get the talisman to replace it with
+		Item newTalisman = null;
+		if (spell.getName().equalsIgnoreCase("curse")) {
+			newTalisman = new Item(ItemId.CURSED_AIR_TALISMAN.id() + talismanIndex);
+		}
+		else if (spell.getName().equalsIgnoreCase("enfeeble")) {
+			newTalisman = new Item(ItemId.ENFEEBLED_AIR_TALISMAN.id() + talismanIndex);
+		}
+		if (newTalisman == null) return;
+
+		// Remove it
+		player.getCarriedItems().remove(item);
+		player.getCarriedItems().getInventory().add(newTalisman);
+		finalizeSpell(player, spell, "You successfully cast " + spell.getName()
+			+ " on the " + item.getDef(player.getWorld()).getName());
 	}
 
 	private void enchantTierTwoJewelry(Player player, Item affectedItem, SpellDef spell) {

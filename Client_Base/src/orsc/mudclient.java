@@ -7557,7 +7557,12 @@ public final class mudclient implements Runnable {
 								vId = (vId + 1) * -1;
 							}
 							if (this.selectedSpell >= 0) {
-								if (EntityHandler.getSpellDef(selectedSpell).getSpellType() == 3) {
+								SpellDef spellDef = EntityHandler.getSpellDef(selectedSpell);
+
+								// Ugly checks for curse and enfeeble so you can cast on talismans
+								if (spellDef.getSpellType() == 3
+									|| (S_WANT_RUNECRAFT && (this.selectedSpell == 9 || this.selectedSpell == 44))) {
+
 									this.menuCommon.addCharacterItem_WithID(var5,
 										"@lre@" + EntityHandler.getItemDef(id).getName(),
 										MenuItemAction.ITEM_CAST_SPELL,
@@ -16991,9 +16996,16 @@ public final class mudclient implements Runnable {
 	}
 
 	public boolean openInventorySpell(int spellID) {
-		for (int spell : this.inventorySpellList)
+		for (int spell : this.inventorySpellList) {
 			if (spell == spellID)
 				return true;
+		}
+
+		// Check if your casting curse or enfeeble.
+		// This is for the talisman buff feature.
+		if (S_WANT_RUNECRAFT && (spellID == 9 || spellID == 44)) {
+			return true;
+		}
 		return false;
 	}
 
