@@ -2758,6 +2758,7 @@
 	"prayerBonus": 0,
 	"basePrice": 0,
 	"isNoteable": 0
+<<<<<<< HEAD
   },
   {
 	"id": 1410,
@@ -2919,6 +2920,8 @@
     "prayerBonus": 0,
     "basePrice": 200,
     "isNoteable": 1
+=======
+>>>>>>> Added item definitions for the new talismen.
   }
 ]
 }
