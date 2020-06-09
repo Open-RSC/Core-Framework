@@ -1456,6 +1456,7 @@ public enum ItemId {
 	TWO_SUPER_RUNECRAFT_POTION(1415),
 	ONE_SUPER_RUNECRAFT_POTION(1416);
 
+
 	private int itemId;
 
 	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();
