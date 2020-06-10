@@ -29,7 +29,7 @@ Feel free to join our Discord if you need help: <a href="https://discord.gg/KGvu
 
 ## Hosting Your Own Server<a name="hosting"></a>
 
-[Check out this wiki page.](https://openrsc.com/wiki/index.php?title=Running_your_own_server)
+[Check out this wiki page.](https://runescapeclassic.dev/wiki/index.php?title=Running_your_own_server)
 
 Need more help? Contact developers on Discord in #diy-server-hosting or #single-player-support. https://discord.gg/vasyjJT
 
