@@ -230,6 +230,7 @@ public class NpcDrops {
 		this.bigBoneNpcs.add(NpcId.KHAZARD_OGRE.id());
 		this.bigBoneNpcs.add(NpcId.OGRE_TRAINING_CAMP.id());
 		this.bigBoneNpcs.add(NpcId.OGRE_CHIEFTAN.id());
+		this.bigBoneNpcs.add(NpcId.GOBLIN_GUARD.id());
 		this.bigBoneNpcs.add(NpcId.OGRE_SHAMAN.id());
 		this.bigBoneNpcs.add(NpcId.OGRE_GUARD_EASTGATE.id());
 		this.bigBoneNpcs.add(NpcId.OGRE_GUARD_WESTGATE.id());
