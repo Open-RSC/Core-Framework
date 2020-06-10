@@ -169,7 +169,7 @@ public class CombatEvent extends GameTickEvent {
 			boolean ringOfLifeScript = false;
 			if (target.isPlayer()) {
 				Player player = (Player)target;
-				ringOfLifeScript = player.getDuel().isDuelActive() && player.checkRingOfLife(hitter);
+				ringOfLifeScript = !player.getDuel().isDuelActive() && player.checkRingOfLife(hitter);
 			}
 			if (target.isNpc() || ringOfLifeScript) {
 				target.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatScript(hitter, target);
