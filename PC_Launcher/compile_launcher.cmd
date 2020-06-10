@@ -1,0 +1,1 @@
+../server/inc/ant/bin/ant compile
