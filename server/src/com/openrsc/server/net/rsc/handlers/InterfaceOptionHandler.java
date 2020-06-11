@@ -27,6 +27,13 @@ public class InterfaceOptionHandler implements PacketHandler {
 
 	@Override
 	public void handlePacket(Packet packet, Player player) throws Exception {
+		if (player.isBusy()) {
+			return;
+		}
+		if (player.inCombat()) {
+			player.message("You can't do that whilst you are fighting");
+			return;
+		}
 		switch (packet.readByte()) {
 			case 0:
 				player.setAttribute("swap_cert", packet.readByte() == 1);
