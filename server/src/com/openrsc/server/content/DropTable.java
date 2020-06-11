@@ -164,14 +164,16 @@ public class DropTable {
 	public ArrayList<Item> invariableItems(Player owner) {
 		int total = 0;
 		ArrayList<Item> items = new ArrayList<>();
-		for (Drop drop : drops) {
+		Iterator<Drop> it = drops.iterator();
+		while (it.hasNext()) {
+			Drop drop = it.next();
 			total = total + drop.weight;
 			if (drop.weight == 0 && drop.id != ItemId.NOTHING.id()) {
 
 				Item item = new Item(drop.id, drop.amount, drop.noted);
 
 				// Remove from the table once it's dropped.
-				removeItemDrop(item);
+				it.remove();
 
 				// If Ring of Avarice (custom) is equipped, and the item is a stack,
 				// we will award the item with slightly different logic.
