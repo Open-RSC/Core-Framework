@@ -9,6 +9,8 @@ import com.openrsc.server.net.rsc.ActionSender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Optional;
+
 public class Duel implements ContainerListener {
 	public static Logger LOGGER = LogManager.getLogger();
 	private Player player;
@@ -142,24 +144,33 @@ public class Duel implements ContainerListener {
 		clearDuelOptions();
 	}
 
-
 	public void resetDuelOffer() {
 		duelOffer.clear();
 	}
-
 
 	public void addToDuelOffer(Item tItem) {
 		duelOffer.add(tItem);
 	}
 
+	public boolean checkDuelItems() {
+		for (Item i : getDuelOffer().getItems()) {
+			Item affectedItem = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(i.getCatalogId(), Optional.of(i.getNoted())));
+			if (affectedItem == null || affectedItem.getAmount() < i.getAmount()) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public void dropOnDeath() {
 		DeathLog log = new DeathLog(player, duelRecipient, true);
 		Player duelOpponent = getDuelRecipient();
 		synchronized(getDuelOffer().getItems()) {
 			for (Item item : getDuelOffer().getItems()) {
-				Item affectedItem = player.getCarriedItems().getInventory().get(item);
-				if (affectedItem == null) {
+				Item affectedItem = player.getCarriedItems().getInventory().get(
+					player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted())));
+				if (affectedItem == null || item.getAmount() > affectedItem.getAmount()) {
 					if (player.getConfig().WANT_EQUIPMENT_TAB && item.getAmount() == 1 && player.getCarriedItems().getEquipment().hasEquipped(item.getCatalogId())) {
 						player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(),
 							player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()),

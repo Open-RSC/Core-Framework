@@ -178,6 +178,15 @@ public class PlayerDuelHandler implements PacketHandler {
 				affectedPlayer.resetAllExceptDueling();
 				affectedPlayer.setBusy(true);
 
+				// We do not have the items we offered.
+				if (!player.getDuel().checkDuelItems() || !affectedPlayer.getDuel().checkDuelItems()) {
+					player.resetAll();
+					affectedPlayer.resetAll();
+					player.setSuspiciousPlayer(true, "duel without appropriate items in inventory");
+					affectedPlayer.setSuspiciousPlayer(true, "duel without appropriate items in inventory");
+					return;
+				}
+
 				if (player.getDuel().getDuelSetting(3)) {
 					if (player.getConfig().WANT_EQUIPMENT_TAB) {
 						Item item;
