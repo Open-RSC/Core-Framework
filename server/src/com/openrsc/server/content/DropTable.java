@@ -10,7 +10,6 @@ import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.security.DrbgParameters;
 import java.util.ArrayList;
 import java.util.Iterator;
 

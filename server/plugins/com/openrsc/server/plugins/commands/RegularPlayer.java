@@ -77,7 +77,7 @@ public final class RegularPlayer implements CommandTrigger {
 			toggleLootShare(player);
 		} else if (command.equalsIgnoreCase("shareexp")) {
 			toggleExperienceShare(player);
-		} else if (command.equals("onlinelist")) {
+		} else if (command.equalsIgnoreCase("onlinelist")) {
 			queryOnlinePlayers(player);
 		} else if (command.equalsIgnoreCase("groups") || command.equalsIgnoreCase("ranks")) {
 			queryGroupIDs(player);
@@ -441,12 +441,21 @@ public final class RegularPlayer implements CommandTrigger {
 	private void queryOnlinePlayers(Player player) {
 		int online = 0;
 		ArrayList<Player> players = new ArrayList<>();
-		for (Player targetPlayer : player.getWorld().getPlayers()) {
-			boolean elevated = targetPlayer.hasElevatedPriveledges();
-			boolean privacy = targetPlayer.getSettings().getPrivacySetting(1) || elevated;
-			if (targetPlayer.isDefaultUser() && !privacy) {
-				players.add(targetPlayer);
-				online++;
+		if (player.hasElevatedPriveledges()) {
+			for (Player targetPlayer : player.getWorld().getPlayers()) {
+				if (targetPlayer.getGroupID() >= player.getGroupID()) {
+					players.add(targetPlayer);
+					online++;
+				}
+			}
+		}
+		else {
+			for (Player targetPlayer : player.getWorld().getPlayers()) {
+				boolean privacy = targetPlayer.getSettings().getPrivacySetting(1);
+				if (targetPlayer.isDefaultUser() && !privacy) {
+					players.add(targetPlayer);
+					online++;
+				}
 			}
 		}
 		ActionSender.sendOnlineList(player, players, online);
