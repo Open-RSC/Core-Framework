@@ -2923,5 +2923,28 @@
 =======
 >>>>>>> Added item definitions for the new talismen.
   }
+  {
+	"id": 1410,
+	"name": "Fish oil",
+	"description": "Good for my heart",
+	"command": "Eat",
+	"isFemaleOnly": 0,
+	"isMembersOnly": 0,
+	"isStackable": 1,
+	"isUntradable": 0,
+	"isWearable": 0,
+	"appearanceID": 0,
+	"wearableID": 0,
+	"wearSlot": 0,
+	"requiredLevel": 0,
+	"requiredSkillID": 0,
+	"armourBonus": 0,
+	"weaponAimBonus": 0,
+	"weaponPowerBonus": 0,
+	"magicBonus": 0,
+	"prayerBonus": 0,
+	"basePrice": 0,
+	"isNoteable": 0
+  }
 ]
 }
