@@ -11,6 +11,8 @@ import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTrigger, TakeObjTrigger {
@@ -84,7 +86,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 		if (player.getLocation().inBounds(445, 749, 449, 753)) {
 			mes("You hear an unearthly moaning sound as you see",
 				"an apparition materialises right in front of you.");
-			Npc zadimus = addnpc(player.getWorld(), NpcId.ZADIMUS.id(), player.getX(), player.getY(), 60000);
+			Npc zadimus = addnpc(player.getWorld(), NpcId.ZADIMUS.id(), player.getX(), player.getY(), (int)TimeUnit.SECONDS.toMillis(60));
 			delay(config().GAME_TICK);
 			if (zadimus != null) {
 				npcsay(player, zadimus, "You have released me from my torture, and now I shall aid you");
@@ -142,7 +144,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				player.getCarriedItems().remove(new Item(ItemId.RASHILIYA_CORPSE.id()));
 				mes("You drop Rashiliyias remains on the ground.",
 					"The bones turn to dust and forms into the shape of a human figure.");
-				Npc rash = addnpc(player.getWorld(), NpcId.RASHILIYIA.id(), player.getX(), player.getY(), 30000);
+				Npc rash = addnpc(player.getWorld(), NpcId.RASHILIYIA.id(), player.getX(), player.getY(), (int)TimeUnit.SECONDS.toMillis(30));
 				mes("The figure turns to you and you hear a cackling, croaky voice on the air.");
 				if (rash != null) {
 					npcsay(player, rash, "Many thanks for releasing me!",

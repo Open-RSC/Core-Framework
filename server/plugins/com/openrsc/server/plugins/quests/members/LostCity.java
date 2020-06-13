@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -82,7 +83,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 						player.message("There is nothing in this tree");
 					} else {
 						player.message("A Leprechaun jumps down from the tree and runs off");
-						final Npc lepr = addnpc(player.getWorld(), NpcId.LEPRECHAUN.id(), 172, 661, 60000 * 3);
+						final Npc lepr = addnpc(player.getWorld(), NpcId.LEPRECHAUN.id(), 172, 661, (int)TimeUnit.SECONDS.toMillis(180));
 						lepr.walk(173, 661);
 						try {
 							delay(config().GAME_TICK);

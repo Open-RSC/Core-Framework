@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.*;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -935,7 +936,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 					"A blinding light fills the room...",
 					"A supernatural light falls on Ungadulu...",
 					"And a mighty demon forms in front of you...");
-				Npc nez = addnpc(NpcId.NEZIKCHENED.id(), npc.getX(), npc.getY(), 60000 * 15, player);
+				Npc nez = addnpc(NpcId.NEZIKCHENED.id(), npc.getX(), npc.getY(), (int)TimeUnit.SECONDS.toMillis(500), player);
 				if (nez != null) {
 					npcsay(player, nez, "Curse you foul intruder...your faith will help you little here.");
 					nez.startCombat(player);

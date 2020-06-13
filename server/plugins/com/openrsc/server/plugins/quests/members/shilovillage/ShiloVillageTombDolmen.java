@@ -12,6 +12,7 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -169,7 +170,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 						player.message("You carefully place Rashiliyia's remains on the Dolmen.");
 						delay(config().GAME_TICK * 2);
 						player.message("You feel a strange vibration in the air.");
-						Npc rash = addnpc(player.getWorld(), NpcId.RASHILIYIA.id(), player.getX(), player.getY(), 60000);
+						Npc rash = addnpc(player.getWorld(), NpcId.RASHILIYIA.id(), player.getX(), player.getY(), (int) TimeUnit.SECONDS.toMillis(60));
 						if (rash != null) {
 							rash.teleport(rash.getX() + 1, rash.getY());
 							npcsay(player, rash, "You have my gratitude for releasing my spirit.",

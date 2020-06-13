@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -168,7 +169,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 			}
 			if (!player.getCache().hasKey("witch_spawned")) {
 				mes("As you reach out to open the door you hear footsteps inside the house", "The footsteps approach the back door");
-				addnpc(player.getWorld(), NpcId.NORA_T_HAG.id(), 356, 494, 60000);
+				addnpc(player.getWorld(), NpcId.NORA_T_HAG.id(), 356, 495, 60000);
 				player.getCache().store("witch_spawned", true);
 			} else {
 				mes("The shed door is locked");
@@ -289,7 +290,18 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				return;
 			}
 			mes("A rat appears from a hole and eats the cheese");
-			addnpc(player.getWorld(), NpcId.RAT_WITCHES_HOUSE.id(), 356, 494, 60000);
+			//if there's already a rat, it despawns them in 19 secs
+			final Npc oldRat = ifnearvisnpc(player, NpcId.RAT_WITCHES_HOUSE.id(), 5);
+			if (oldRat != null) {
+				player.getWorld().getServer().getGameEventHandler().add(
+					new SingleEvent(player.getWorld(), null, config().GAME_TICK * 30, "Witches House Rat Delay") {
+						public void action() {
+							oldRat.remove();
+						}
+					});
+			}
+
+			addnpc(player.getWorld(), NpcId.RAT_WITCHES_HOUSE.id(), 356, 494);
 		}
 	}
 

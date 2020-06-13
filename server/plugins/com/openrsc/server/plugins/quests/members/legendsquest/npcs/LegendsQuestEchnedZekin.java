@@ -11,6 +11,7 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -50,7 +51,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 		int formerNpcY = n.getY();
 		if (n != null)
 			n.remove();
-		Npc second_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, player);
+		Npc second_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, (int)TimeUnit.SECONDS.toMillis(500), player);
 		if (second_nezikchened != null) {
 			if (useHolySpell) {
 				holyForceSpell(player, second_nezikchened);
@@ -138,7 +139,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 							int formerNpcY = n.getY();
 							if (n != null)
 								n.remove();
-							Npc second_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, player);
+							Npc second_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, (int)TimeUnit.SECONDS.toMillis(500), player);
 							if (second_nezikchened != null) {
 								delay(config().GAME_TICK);
 								second_nezikchened.startCombat(player);

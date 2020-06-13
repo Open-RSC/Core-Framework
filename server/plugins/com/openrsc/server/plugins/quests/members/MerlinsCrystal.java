@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,8 +13,11 @@ import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -23,6 +27,8 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	KillNpcTrigger,
 	UseLocTrigger,
 	DropObjTrigger {
+
+	private static final Logger LOGGER = LogManager.getLogger(MerlinsCrystal.class);
 
 	@Override
 	public int getQuestId() {
@@ -99,7 +105,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			delay(config().GAME_TICK);
 			Npc lady = ifnearvisnpc(player, NpcId.LADY_UPSTAIRS.id(), 5);
 			if (lady == null) {
-				lady = addnpc(NpcId.LADY_UPSTAIRS.id(), player.getX() - 1, player.getY() - 1, 60000, player);
+				lady = addnpc(player.getWorld(), NpcId.LADY_UPSTAIRS.id(), 279, 1576, (int)TimeUnit.SECONDS.toMillis(74));
 			}
 			delay(config().GAME_TICK);
 			if (lady != null) {
@@ -121,7 +127,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			n.getCombatEvent().resetCombat();
 		}
 		n.getSkills().setLevel(Skills.HITS, 5);
-		Npc leFaye = addnpc(player.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, 60000);
+		Npc leFaye = addnpc(player.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, (int)TimeUnit.SECONDS.toMillis(63));
 		delay(config().GAME_TICK);
 		npcsay(player, leFaye, "Please spare my son");
 		int option = multi(player, n, "Tell me how to untrap Merlin and I might",
@@ -208,7 +214,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			if (player.getQuestStage(this) == 4) {
 				mes("The crystal shatters");
 				player.getWorld().unregisterGameObject(obj);
-				player.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
+				player.getWorld().delayedSpawnObject(obj.getLoc(), (int)TimeUnit.SECONDS.toMillis(32));
 				Npc merlin = ifnearvisnpc(player, NpcId.MERLIN_CRYSTAL.id(), 5);
 				npcsay(player, merlin, "Thankyou thankyou",
 					"It's not fun being trapped in a giant crystal",
@@ -236,7 +242,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 			} else {
 				Npc beggar = ifnearvisnpc(player, NpcId.BEGGAR.id(), 5);
 				if (beggar == null) {
-					beggar = addnpc(NpcId.BEGGAR.id(), 276, 631, 60000, player);
+					beggar = addnpc(player.getWorld(), NpcId.BEGGAR.id(), 276, 631, (int)TimeUnit.SECONDS.toMillis(74));
 				}
 				delay(config().GAME_TICK);
 				if (beggar != null) {
@@ -258,12 +264,12 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 							npcsay(player, beggar, "Thankyou very much");
 							if (player.getCache().hasKey("lady_test")) {
 								player.message("The beggar has turned into the lady of the lake!");
-								Npc lady = changenpc(beggar, NpcId.LADY_GROUND.id(), false);
+								Npc lady = changenpc(beggar, NpcId.LADY_GROUND.id(), true);
+								delayedRemoveLady(player, lady);
 								npcsay(player, lady, "Well done you have passed my test",
 									"Here is Excalibur, guard it well");
 								give(player, ItemId.EXCALIBUR.id(), 1);
 								player.getCache().remove("lady_test");
-								lady.remove();
 							} else {
 								doDoor(obj, player);
 								beggar.remove();
@@ -283,6 +289,22 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 
 	}
 
+	private void delayedRemoveLady(Player player, Npc n) {
+		try {
+			player.getWorld().getServer().getGameEventHandler().add(
+				new SingleEvent(player.getWorld(), null,
+					config().GAME_TICK * 116,
+					"Lady Lakes Bread Delayed Remove", true) {
+					@Override
+					public void action() {
+						n.remove();
+					}
+				});
+		} catch (Exception e) {
+			LOGGER.catching(e);
+		}
+	}
+
 	@Override
 	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return player.getX() == 448 && player.getY() == 435 && item.getCatalogId() == ItemId.BAT_BONES.id()
@@ -291,7 +313,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
-		Npc n = addnpc(player.getWorld(), NpcId.THRANTAX.id(), player.getX(), player.getY(), 300000);
+		Npc n = addnpc(player.getWorld(), NpcId.THRANTAX.id(), 448, 435, (int)TimeUnit.SECONDS.toMillis(63));
 		n.displayNpcTeleportBubble(n.getX(), n.getY());
 		player.message("Suddenly a demon appears");
 		say(player, null, "Now what were those magic words?");

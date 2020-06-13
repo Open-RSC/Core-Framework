@@ -9,13 +9,14 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -85,7 +86,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 				npcsay(player, justin, "You saved my life and my son's",
 					"I am eternally in your debt brave traveller");
 			}
-			addnpc(player.getWorld(), NpcId.GENERAL_KHAZARD.id(), 613, 708, 60000);
+			addnpc(player.getWorld(), NpcId.GENERAL_KHAZARD.id(), 613, 708, 30000);
 			delay(config().GAME_TICK * 2);
 			Npc general = ifnearvisnpc(player, NpcId.GENERAL_KHAZARD.id(), 8);
 			if (general != null) {
@@ -105,6 +106,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 					"Guards! take him away!");
 				player.message("Khazard's men have locked you in a cell");
 				player.teleport(609, 715, false);
+				general.remove();
 			}
 		}
 		else if (n.getID() == NpcId.KHAZARD_SCORPION.id()) {
@@ -116,10 +118,11 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 				npcsay(player, generalAgain, "Not bad, not bad at all",
 					"I think you need a tougher challenge",
 					"Time for my puppy", "Guards, guards bring on bouncer");
+				generalAgain.remove();
 			}
 			mes("From above you hear a voice...",
 				"Ladies and gentlemen!", "Todays second round");
-			addnpc(player.getWorld(), NpcId.BOUNCER.id(), 613, 708, 240000);
+			addnpc(player.getWorld(), NpcId.BOUNCER.id(), 612, 708, (int)TimeUnit.SECONDS.toMillis(1000));
 			player.message("between the Outsider and bouncer");
 			Npc bouncer = player.getWorld().getNpcById(NpcId.BOUNCER.id());
 			if (bouncer != null) {
@@ -128,19 +131,19 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (n.getID() == NpcId.BOUNCER.id()) {
 			player.message("You defeat bouncer");
-			addnpc(player.getWorld(), NpcId.GENERAL_KHAZARD.id(), 613, 708, 60000 * 2);
+			addnpc(player.getWorld(), NpcId.GENERAL_KHAZARD.id(), 613, 708, (int)TimeUnit.SECONDS.toMillis(1000));
 			delay(config().GAME_TICK * 2);
-			Npc generalAgainAgain = ifnearvisnpc(player, NpcId.GENERAL_KHAZARD.id(), 15);
-			if (generalAgainAgain != null) {
-				npcsay(player, generalAgainAgain, "nooooo! bouncer, how dare you?",
+			Npc generalAgain = ifnearvisnpc(player, NpcId.GENERAL_KHAZARD.id(), 15);
+			if (generalAgain != null) {
+				npcsay(player, generalAgain, "nooooo! bouncer, how dare you?",
 					"you've taken the life of my only friend!");
 				player.message("Khazard looks very angry");
-				npcsay(player, generalAgainAgain,
+				npcsay(player, generalAgain,
 					"now you'll suffer traveller, prepare to meet your maker");
 				mes("No, he doesn't look happy at all",
 					"You might want to run for it",
 					"Go back to lady servil to claim your reward");
-				generalAgainAgain.setChasing(player);
+				generalAgain.setChasing(player);
 			}
 			player.updateQuestStage(getQuestId(), 3);
 		}
@@ -179,7 +182,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 					"Ladies and gentlemen!",
 					"Todays first fight between the outsider",
 					"And everyone's favorite scorpion has begun");
-				addnpc(player.getWorld(), NpcId.KHAZARD_SCORPION.id(), 613, 708, 120000);
+				addnpc(player.getWorld(), NpcId.KHAZARD_SCORPION.id(), 609, 707, (int)TimeUnit.SECONDS.toMillis(1000));
 				Npc scorp = player.getWorld().getNpcById(NpcId.KHAZARD_SCORPION.id());
 				if (scorp != null) {
 					scorp.setChasing(player);
@@ -200,7 +203,11 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 				mes("You see Jeremy's father Justin",
 					"Trying to escape an ogre");
 				npcsay(player, n, "Please help him!");
-				addnpc(player.getWorld(), NpcId.KHAZARD_OGRE.id(), 613, 708, 60000 * 2);
+				addnpc(player.getWorld(), NpcId.KHAZARD_OGRE.id(), 611, 706, (int)TimeUnit.SECONDS.toMillis(1000));
+				Npc ogre = player.getWorld().getNpcById(NpcId.KHAZARD_OGRE.id());
+				if (ogre != null) {
+					ogre.setChasing(player);
+				}
 			}
 		}
 		else if (n.getID() == NpcId.GUARD_KHAZARD.id()) {
@@ -463,6 +470,18 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 			}
 		} else if (n.getID() == NpcId.GENERAL_KHAZARD.id()) {
 			switch (player.getQuestStage(this)) {
+				case 0:
+				case 1:
+				case 2:
+					// unsure if at stage 2 would have had different
+					say(player, n, "hello");
+					npcsay(player, n, "who dares enter my home?",
+						"you, a feeble traveller");
+					say(player, n, "..feeble!");
+					npcsay(player, n, "i'll enjoy spilling your blood",
+						"face your doom!");
+					n.startCombat(player);
+					break;
 				case 3:
 				case -1:
 					say(player, n, "i thought i was rid of you");

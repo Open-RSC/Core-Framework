@@ -6,6 +6,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.triggers.*;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigger, KillNpcTrigger, PlayerRangeNpcTrigger, AttackNpcTrigger {
@@ -16,16 +18,16 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 	private static void summonViyeldiCompanions(Player player) {
 		Npc COMPANION = null;
 		if (player.getCache().hasKey("viyeldi_companions") && player.getCache().getInt("viyeldi_companions") == 1) {
-			COMPANION = addnpc(NpcId.SAN_TOJALON.id(), player.getX(), player.getY(), 60000 * 15, player);
+			COMPANION = addnpc(NpcId.SAN_TOJALON.id(), player.getX(), player.getY(), (int)TimeUnit.SECONDS.toMillis(500), player);
 		}
 		if (player.getCache().hasKey("viyeldi_companions") && player.getCache().getInt("viyeldi_companions") == 2) {
-			COMPANION = addnpc(NpcId.IRVIG_SENAY.id(), player.getX(), player.getY(), 60000 * 15, player);
+			COMPANION = addnpc(NpcId.IRVIG_SENAY.id(), player.getX(), player.getY(), (int)TimeUnit.SECONDS.toMillis(500), player);
 		}
 		if (player.getCache().hasKey("viyeldi_companions") && player.getCache().getInt("viyeldi_companions") == 3) {
-			COMPANION = addnpc(NpcId.RANALPH_DEVERE.id(), player.getX(), player.getY(), 60000 * 15, player);
+			COMPANION = addnpc(NpcId.RANALPH_DEVERE.id(), player.getX(), player.getY(), (int)TimeUnit.SECONDS.toMillis(500), player);
 		}
 		if (player.getCache().hasKey("viyeldi_companions") && player.getCache().getInt("viyeldi_companions") == 4) {
-			COMPANION = addnpc(NpcId.NEZIKCHENED.id(), player.getX(), player.getY(), 60000 * 15, player);
+			COMPANION = addnpc(NpcId.NEZIKCHENED.id(), player.getX(), player.getY(), (int)TimeUnit.SECONDS.toMillis(500), player);
 		}
 		if (COMPANION != null) {
 			npcsay(player, COMPANION, "Corrupted are we now that Viyeldi is slain..");
@@ -35,7 +37,7 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 	}
 
 	public static void demonFight(Player player) {
-		Npc third_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), player.getX(), player.getY(), 60000 * 15, player);
+		Npc third_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), player.getX(), player.getY(), (int)TimeUnit.SECONDS.toMillis(500), player);
 		if (third_nezikchened != null) {
 			delay(config().GAME_TICK);
 			npcsay(player, third_nezikchened, "Now you try to defile my sanctuary...I will teach thee!");

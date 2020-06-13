@@ -19,6 +19,7 @@ import com.openrsc.server.plugins.misc.Cannon;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -679,7 +680,7 @@ public class DwarfCannon
 			// only allow at quest stage and before being rescued
 			if (player.getQuestStage(this) == 3 && !player.getCache().hasKey("savedlollk")) {
 				mes("you search the crate", "inside you see a dwarf child tied up", "you untie the child");
-				Npc lollk = addnpc(player.getWorld(), NpcId.LOLLK.id(), 619, 3314, 60000);
+				Npc lollk = addnpc(player.getWorld(), NpcId.LOLLK.id(), 619, 3314, (int)TimeUnit.SECONDS.toMillis(60));
 				npcsay(player, lollk, "thank the heavens, you saved me", "i thought i'd be goblin lunch for sure");
 				say(player, lollk, "are you ok?");
 				npcsay(player, lollk, "i think so, i'd better run of home");

@@ -2765,11 +2765,11 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			} else {
 				Npc n = ifnearvisnpc(player, NpcId.CAPTAIN_SIAD.id(), 5);
 				if (n == null) {
-					final Npc npc = new Npc(player.getWorld(), NpcId.CAPTAIN_SIAD.id(), 86, 1745);
+					final Npc npc = new Npc(player.getWorld(), NpcId.CAPTAIN_SIAD.id(), 85, 1745);
 					npc.setShouldRespawn(false);
 					player.getWorld().registerNpc(npc);
 					player.getWorld().getServer().getGameEventHandler().add(
-						new SingleEvent(player.getWorld(), null, config().GAME_TICK * 492, "Captain Siad Despawn Delay") {
+						new SingleEvent(player.getWorld(), null, config().GAME_TICK * 490, "Captain Siad Despawn Delay") {
 							public void action() {
 								npcsay(player, npc, "Ah, time for my evening snooze!");
 								npc.remove();

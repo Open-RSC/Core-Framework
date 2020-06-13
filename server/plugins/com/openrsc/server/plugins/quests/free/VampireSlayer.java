@@ -197,6 +197,10 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 		if ((obj.getID() == COUNT_DRAYNOR_COFFIN_OPEN || obj.getID() == COUNT_DRAYNOR_COFFIN_CLOSED) && obj.getY() == 3380) {
 			if (command.equalsIgnoreCase("open")) {
 				openGenericObject(obj, player, COUNT_DRAYNOR_COFFIN_OPEN, "You open the coffin");
+				// if quest is not complete spawns also vampire if none present
+				if (player.getQuestStage(this) >= 0) {
+					spawnVampire(player);
+				}
 			} else if (command.equalsIgnoreCase("close")) {
 				closeGenericObject(obj, player, COUNT_DRAYNOR_COFFIN_CLOSED, "You close the coffin");
 			} else {
@@ -204,17 +208,7 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 					player.message("There's a pillow in here");
 					return;
 				} else {
-					for (Npc npc : player.getRegion().getNpcs()) {
-						if (npc.getID() == NpcId.COUNT_DRAYNOR.id() && npc.getAttribute("spawnedFor", null).equals(player)) {
-							player.message("There's nothing there.");
-							return;
-						}
-					}
-
-					final Npc n = addnpc(NpcId.COUNT_DRAYNOR.id(), 206, 3381, 1000 * 60 * 5, player);
-					n.setShouldRespawn(false);
-					player.message("A vampire jumps out of the coffin");
-					return;
+					spawnVampire(player);
 				}
 			}
 		} else if ((obj.getID() == GARLIC_CUPBOARD_OPEN || obj.getID() == GARLIC_CUPBOARD_CLOSED) && obj.getY() == 1562) {
@@ -233,6 +227,21 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 			}
 			return;
 		}
+	}
+
+	private void spawnVampire(Player player) {
+		Npc spawnedVampire = ifnearvisnpc(player, NpcId.COUNT_DRAYNOR.id(), 15);
+
+		if (spawnedVampire != null) {
+			//nothing to do
+			return;
+		}
+
+		final Npc vampire = addnpc(player.getWorld(), NpcId.COUNT_DRAYNOR.id(), 205, 3382);
+		if (vampire == null) {
+			return;
+		}
+		player.message("A vampire jumps out of the coffin");
 	}
 
 	@Override

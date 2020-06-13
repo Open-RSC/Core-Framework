@@ -12,6 +12,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestBullRoarer implements OpInvTrigger {
@@ -76,7 +78,7 @@ public class LegendsQuestBullRoarer implements OpInvTrigger {
 
 	private void delayedRemoveGujuo(Player player, Npc n) {
 		try {
-			player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), null, 60000 * 3, "Delayed Remove Gujuo") {
+			player.getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), null, (int)TimeUnit.SECONDS.toMillis(150), "Delayed Remove Gujuo") {
 				@Override
 				public void run() {
 					if (!player.isLoggedIn() || player.isRemoved()) {

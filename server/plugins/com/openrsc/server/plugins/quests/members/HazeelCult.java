@@ -16,6 +16,7 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -1134,7 +1135,7 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							"the room is silent",
 							"suddenly a shrill scream comes from the coffin of hazeel",
 							"A shadowy figure appears");
-						Npc lord_hazeel = addnpc(player.getWorld(), NpcId.LORD_HAZEEL.id(), 580, 3420, 60000 * 2);
+						Npc lord_hazeel = addnpc(player.getWorld(), NpcId.LORD_HAZEEL.id(), 580, 3420, (int)TimeUnit.SECONDS.toMillis(120));
 						ActionSender.sendTeleBubble(player, 580,
 							3420, true);
 						for (Player pe : player.getViewArea().getPlayersInView()) {

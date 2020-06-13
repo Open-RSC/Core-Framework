@@ -14,6 +14,7 @@ import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -426,7 +427,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 			if (player.getQuestStage(this) == 4) {
 				mes("You hear muffled noises from the sack");
 				player.message("You open the sack");
-				Npc percival = addnpc(player.getWorld(), NpcId.SIR_PERCIVAL.id(), 328, 446, 64 * 1000);
+				Npc percival = addnpc(player.getWorld(), NpcId.SIR_PERCIVAL.id(), 328, 446, (int)TimeUnit.SECONDS.toMillis(64));
 				npcsay(player, percival, "Wow thankyou",
 					"I could hardly breathe in there");
 				int menu = multi(player, percival,

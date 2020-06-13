@@ -14,6 +14,7 @@ import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -50,7 +51,7 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 				int formerNpcY = n.getY();
 				if (n != null)
 					n.remove();
-				Npc second_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, 60000 * 15, player);
+				Npc second_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, (int)TimeUnit.SECONDS.toMillis(500), player);
 				if (second_nezikchened != null) {
 					mes(second_nezikchened, config().GAME_TICK, "The spell seems to weaken the Demon.");
 					second_nezikchened.getSkills().setLevel(Skills.DEFENSE, n.getSkills().getLevel(Skills.DEFENSE) - 5);

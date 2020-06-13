@@ -20,6 +20,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -85,7 +86,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (echned == null) {
 				mes(config().GAME_TICK * 2, "A thick, green mist seems to emanate from the water...",
 					"It slowly congeals into the shape of a body...");
-				echned = addnpc(player, NpcId.ECHNED_ZEKIN.id(), player.getX(), player.getY(), 0, 60000 * 3);
+				echned = addnpc(player, NpcId.ECHNED_ZEKIN.id(), player.getX(), player.getY(), 0, (int)TimeUnit.SECONDS.toMillis(180));
 				if (echned != null) {
 					delay(config().GAME_TICK * 2);
 					mes(echned, config().GAME_TICK * 2, "Which slowly floats towards you.");
@@ -992,7 +993,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			player.message("almost as if the Kharazi jungle were sighing.");
 			player.message("Perhaps Gujuo would like to see the totem pole.");
 			if (calledGujuo) {
-				Npc gujuo = addnpc(obj.getWorld(), NpcId.GUJUO.id(), player.getX(), player.getY(), 60000 * 3);
+				Npc gujuo = addnpc(obj.getWorld(), NpcId.GUJUO.id(), player.getX(), player.getY(), (int)TimeUnit.SECONDS.toMillis(150));
 				if (gujuo != null) {
 					gujuo.initializeTalkScript(player);
 				}

@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Cache;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -10,6 +11,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.triggers.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
@@ -21,6 +24,8 @@ public class ErnestTheChicken implements QuestInterface,
 	OpBoundTrigger,
 	TalkNpcTrigger, OpLocTrigger,
 	UseLocTrigger {
+
+	private static final Logger LOGGER = LogManager.getLogger(ErnestTheChicken.class);
 
 	@Override
 	public int getQuestId() {
@@ -288,7 +293,8 @@ public class ErnestTheChicken implements QuestInterface,
 							player.getCarriedItems().remove(new Item(ItemId.RUBBER_TUBE.id()));
 							player.getCarriedItems().remove(new Item(ItemId.PRESSURE_GAUGE.id()));
 							player.getCarriedItems().remove(new Item(ItemId.OIL_CAN.id()));
-							Npc ernest = changenpc(chicken, NpcId.ERNEST.id(), false);
+							Npc ernest = changenpc(chicken, NpcId.ERNEST.id(), true);
+							delayedChangeErnest(player, ernest);
 							npcsay(player, ernest, "Thank you sir",
 								"It was dreadfully irritating being a chicken",
 								"How can I ever thank you?");
@@ -297,7 +303,6 @@ public class ErnestTheChicken implements QuestInterface,
 							npcsay(player, ernest, "Of course, of course");
 
 							mes("Ernest hands you 300 coins");
-							ernest.remove();
 							player.sendQuestComplete(getQuestId());
 						}
 					}
@@ -380,6 +385,22 @@ public class ErnestTheChicken implements QuestInterface,
 					"Which I'm going to need to get this thing started again");
 				player.updateQuestStage(this, 2);
 				break;
+		}
+	}
+
+	private void delayedChangeErnest(Player player, Npc n) {
+		try {
+			player.getWorld().getServer().getGameEventHandler().add(
+				new SingleEvent(player.getWorld(), null,
+					config().GAME_TICK * 98,
+					"Ernest Chicken Delayed Change Ernest", true) {
+					@Override
+					public void action() {
+						changenpc(n, NpcId.ERNEST_CHICKEN.id(), true);
+					}
+				});
+		} catch (Exception e) {
+			LOGGER.catching(e);
 		}
 	}
 

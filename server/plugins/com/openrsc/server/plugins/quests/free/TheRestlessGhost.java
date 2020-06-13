@@ -315,7 +315,6 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == GHOST_COFFIN_OPEN && player.getQuestStage(this) == 3
 			&& item.getCatalogId() == ItemId.QUEST_SKULL.id()) {
-			addnpc(player.getWorld(), NpcId.GHOST_RESTLESS.id(), 102, 675, 30);
 			mes("You put the skull in the coffin");
 			player.getCarriedItems().remove(new Item(ItemId.QUEST_SKULL.id()));
 			//on completion cache key no longer needed
@@ -367,7 +366,7 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 					if (skeleton == null) {
 						//spawn skeleton and give message
 						player.message("Out of nowhere a skeleton appears");
-						skeleton = addnpc(player.getWorld(), NpcId.SKELETON_RESTLESS.id(), 218, 3521);
+						skeleton = addnpc(player.getWorld(), NpcId.SKELETON_RESTLESS.id(), 216, 3520);
 						skeleton.setShouldRespawn(false);
 						skeleton.setChasing(player);
 					} else {
