@@ -14,6 +14,7 @@ import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -39,6 +40,28 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		ItemId.UNIDENTIFIED_VOLENCIA_MOSS.id(),
 		ItemId.UNIDENTIFIED_ROGUES_PURSE.id()
 	};
+
+	int LOW = 0;
+	int HIGH = 1;
+	HashMap<Integer, int[]> oilPerFish = new HashMap<>(){{
+		put(ItemId.RAW_TROUT.id(), new int[]{0, 1});
+		put(ItemId.RAW_PIKE.id(), new int[]{1, 1});
+		put(ItemId.RAW_SALMON.id(), new int[]{1, 1});
+		put(ItemId.RAW_TUNA.id(), new int[]{1, 2});
+		put(ItemId.RAW_LOBSTER.id(), new int[]{1, 2});
+		put(ItemId.RAW_BASS.id(), new int[]{1, 3});
+		put(ItemId.RAW_SWORDFISH.id(), new int[]{1, 3});
+		put(ItemId.RAW_SHARK.id(), new int[]{2, 3});
+		put(ItemId.RAW_SEA_TURTLE.id(), new int[]{4, 4});
+		put(ItemId.RAW_MANTA_RAY.id(), new int[]{4, 4});
+		put(ItemId.TUNA.id(), new int[]{0, 1});
+		put(ItemId.LOBSTER.id(), new int[]{0, 1});
+		put(ItemId.BASS.id(), new int[]{0, 1});
+		put(ItemId.SWORDFISH.id(), new int[]{0, 1});
+		put(ItemId.SHARK.id(), new int[]{1, 1});
+		put(ItemId.SEA_TURTLE.id(), new int[]{2, 2});
+		put(ItemId.MANTA_RAY.id(), new int[]{2, 2});
+	}};
 
 	@Override
 	public void onOpInv(Player player, Integer invIndex, final Item item, String command) {
@@ -540,7 +563,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.sendMemberErrorMessage();
 			return;
 		}
-		int newID;
+		int newID = -1;
 		switch (ItemId.getById(item.getCatalogId())) {
 			case UNICORN_HORN:
 				newID = ItemId.GROUND_UNICORN_HORN.id();
@@ -564,8 +587,16 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			/**
 			 * End of Herblaw Quest Items.
 			 */
-			default:
-				return;
+		}
+
+		if (config().WANT_RUNECRAFT && oilPerFish.get(item.getCatalogId()) != null)
+		{
+			newID = ItemId.FISH_OIL.id();
+		}
+
+		if (newID == -1) {
+			player.message("Nothing interesting happens");
+			return;
 		}
 
 		int repeat = 1;
@@ -583,14 +614,23 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		);
 		if (item == null) return;
 		player.getCarriedItems().remove(item);
-		if (item.getCatalogId() != ItemId.A_LUMP_OF_CHARCOAL.id()) {
-			player.playerServerMessage(MessageType.QUEST, "You grind the " + item.getDef(player.getWorld()).getName()
-				+ " to dust");
+
+		boolean fish = config().WANT_RUNECRAFT && newID == ItemId.FISH_OIL.id();
+		int min = 1;
+		int max = 1;
+		if (fish) {
+			min = oilPerFish.get(item.getCatalogId())[LOW];
+			max = oilPerFish.get(item.getCatalogId())[HIGH];
 		}
-		if (item.getCatalogId() == ItemId.A_LUMP_OF_CHARCOAL.id() || item.getCatalogId() == ItemId.BAT_BONES.id()) {
+
+		if (item.getCatalogId() != ItemId.A_LUMP_OF_CHARCOAL.id()) {
+			player.playerServerMessage(MessageType.QUEST, "You grind the " + (fish ? "fish" : item.getDef(player.getWorld()).getName())
+				+ " to " + (fish ? "oil" : "dust"));
+		}
+		if (item.getCatalogId() == ItemId.A_LUMP_OF_CHARCOAL.id() || item.getCatalogId() == ItemId.BAT_BONES.id() || fish) {
 			thinkbubble(new Item(ItemId.PESTLE_AND_MORTAR.id()));
 		}
-		player.getCarriedItems().getInventory().add(new Item(newID, 1));
+		player.getCarriedItems().getInventory().add(new Item(newID, DataConversions.random(min, max)));
 		delay(config().GAME_TICK);
 
 		// Repeat
