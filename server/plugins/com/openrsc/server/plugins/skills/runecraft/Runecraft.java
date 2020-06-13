@@ -350,6 +350,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 					player.getSkills().setLevel(Skills.RUNECRAFT,
 						(player.getSkills().getLevel(Skills.RUNECRAFT) - subtractLevel));
 					player.damage(3);
+					say(player, "ouch");
 				}
 			}
 
