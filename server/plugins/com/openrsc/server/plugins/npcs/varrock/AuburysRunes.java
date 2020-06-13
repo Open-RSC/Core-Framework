@@ -54,7 +54,7 @@ public final class AuburysRunes extends AbstractShop {
 			else if (player.getQuestStage(Quests.RUNE_MYSTERIES) == 3)
 				menu.add("Rune mysteries");
 			else if (player.getQuestStage(Quests.RUNE_MYSTERIES) == -1)
-				menu.add("Teleport to rune essence");
+				menu.add("Teleport to rune stone mine");
 
 		npcsay(player, n, "Do you want to buy some runes?");
 

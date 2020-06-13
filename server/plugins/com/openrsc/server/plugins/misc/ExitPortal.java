@@ -84,7 +84,7 @@ public class ExitPortal implements OpLocTrigger {
 				case 1225://blood altar
 					player.teleport(0, 0, false);
 					break;
-				case 1226://rune essence mine
+				case 1226://rune stone mine
 				{
 					if (player.getCache().hasKey("essence_entrance")) {
 						if (player.getCache().getInt("essence_entrance") == 0) {

@@ -255,7 +255,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 			}
 
 			if (!player.getCarriedItems().hasCatalogID(ItemId.RUNE_STONE.id(), Optional.of(false))){
-				player.message("You have no rune essence to bind.");
+				player.message("You have no rune stones to bind.");
 				return;
 			}
 			else {
@@ -332,7 +332,14 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 				} else {
 					// Enfeebled talisman gets destroyed.
 					player.getCarriedItems().remove(talisman);
-					player.message("The runes and enfeebled talisman crumble to dust");
+					player.message("The runes crumble to dust");
+					delay(config().GAME_TICK * 3);
+					player.message("And your talisman explodes!");
+					delay(config().GAME_TICK);
+					// Deal 25% damage
+					int damage = (int) Math.round(player.getSkills().getLevel(Skills.HITS) * 0.25);
+					player.damage(damage);
+					say(player, "ouch");
 				}
 			}
 

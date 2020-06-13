@@ -24,7 +24,7 @@ public class Sedridor implements TalkNpcTrigger, OpNpcTrigger {
 		ArrayList<String> menu = new ArrayList<>();
 		menu.add("Nothing, thanks. I'm just looking around");
 		if (config().WANT_RUNECRAFT && player.getQuestStage(Quests.RUNE_MYSTERIES) == -1)
-			menu.add("Teleport me to the rune essence");
+			menu.add("Teleport me to the rune stone mine");
 		else if (config().WANT_RUNECRAFT && player.getQuestStage(Quests.RUNE_MYSTERIES) < 2)
 			menu.add("What are you doing down here?");
 		else
