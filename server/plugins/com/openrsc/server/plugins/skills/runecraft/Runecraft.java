@@ -7,7 +7,6 @@ import com.openrsc.server.external.ObjectRunecraftDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
@@ -34,6 +33,51 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		// ItemId.LAW_RUNE.id(),
 		// ItemId.DEATH_RUNE.id(),
 		// ItemId.BLOOD_RUNE.id()
+	};
+
+	int[] TALISMANS = {
+		ItemId.AIR_TALISMAN.id(),
+		ItemId.MIND_TALISMAN.id(),
+		ItemId.WATER_TALISMAN.id(),
+		ItemId.EARTH_TALISMAN.id(),
+		ItemId.FIRE_TALISMAN.id(),
+		ItemId.BODY_TALISMAN.id(),
+		ItemId.COSMIC_TALISMAN.id(),
+		ItemId.CHAOS_TALISMAN.id(),
+		ItemId.NATURE_TALISMAN.id(),
+		ItemId.LAW_TALISMAN.id(),
+		ItemId.DEATH_TALISMAN.id(),
+		ItemId.BLOOD_TALISMAN.id(),
+	};
+
+	int[] CURSED_TALISMANS = {
+		ItemId.CURSED_AIR_TALISMAN.id(),
+		ItemId.CURSED_MIND_TALISMAN.id(),
+		ItemId.CURSED_WATER_TALISMAN.id(),
+		ItemId.CURSED_EARTH_TALISMAN.id(),
+		ItemId.CURSED_FIRE_TALISMAN.id(),
+		ItemId.CURSED_BODY_TALISMAN.id(),
+		ItemId.CURSED_COSMIC_TALISMAN.id(),
+		ItemId.CURSED_CHAOS_TALISMAN.id(),
+		ItemId.CURSED_NATURE_TALISMAN.id(),
+		ItemId.CURSED_LAW_TALISMAN.id(),
+		ItemId.CURSED_DEATH_TALISMAN.id(),
+		ItemId.CURSED_BLOOD_TALISMAN.id(),
+	};
+
+	int[] ENFEEBLED_TALISMANS = {
+		ItemId.ENFEEBLED_AIR_TALISMAN.id(),
+		ItemId.ENFEEBLED_MIND_TALISMAN.id(),
+		ItemId.ENFEEBLED_WATER_TALISMAN.id(),
+		ItemId.ENFEEBLED_EARTH_TALISMAN.id(),
+		ItemId.ENFEEBLED_FIRE_TALISMAN.id(),
+		ItemId.ENFEEBLED_BODY_TALISMAN.id(),
+		ItemId.ENFEEBLED_COSMIC_TALISMAN.id(),
+		ItemId.ENFEEBLED_CHAOS_TALISMAN.id(),
+		ItemId.ENFEEBLED_NATURE_TALISMAN.id(),
+		ItemId.ENFEEBLED_LAW_TALISMAN.id(),
+		ItemId.ENFEEBLED_DEATH_TALISMAN.id(),
+		ItemId.ENFEEBLED_BLOOD_TALISMAN.id(),
 	};
 
 	HashMap<Integer, Integer> talismanIds = new HashMap<Integer, Integer>() {{
@@ -69,6 +113,84 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		// put(ItemId.DEATH_TALISMAN.id(), new int[]{65, 36});
 		// put(ItemId.BLOOD_TALISMAN.id(), new int[]{77, 38});
 	}};
+
+	final int AIR_ALTAR = 1190;
+	final int MIND_ALTAR = 1192;
+	final int WATER_ALTAR = 1194;
+	final int EARTH_ALTAR = 1196;
+	final int FIRE_ALTAR = 1198;
+	final int BODY_ALTAR = 1200;
+	final int COSMIC_ALTAR = 1202;
+	final int CHAOS_ALTAR = 1204;
+	final int NATURE_ALTAR = 1206;
+	final int LAW_ALTAR = 1208;
+	final int DEATH_ALTAR = 1210;
+	final int BLOOD_ALTAR = 1212;
+	HashMap<Integer, int[]> altarTalismans = new HashMap<>() {{
+		put(AIR_ALTAR, new int[]{
+			ItemId.AIR_TALISMAN.id(),
+			ItemId.CURSED_AIR_TALISMAN.id(),
+			ItemId.ENFEEBLED_AIR_TALISMAN.id()});
+		put(MIND_ALTAR, new int[]{
+			ItemId.MIND_TALISMAN.id(),
+			ItemId.CURSED_MIND_TALISMAN.id(),
+			ItemId.ENFEEBLED_MIND_TALISMAN.id()});
+		put(WATER_ALTAR, new int[]{
+			ItemId.WATER_TALISMAN.id(),
+			ItemId.CURSED_WATER_TALISMAN.id(),
+			ItemId.ENFEEBLED_WATER_TALISMAN.id()});
+		put(EARTH_ALTAR, new int[]{
+			ItemId.EARTH_TALISMAN.id(),
+			ItemId.CURSED_EARTH_TALISMAN.id(),
+			ItemId.ENFEEBLED_EARTH_TALISMAN.id()});
+		put(FIRE_ALTAR, new int[]{
+			ItemId.FIRE_TALISMAN.id(),
+			ItemId.CURSED_FIRE_TALISMAN.id(),
+			ItemId.ENFEEBLED_FIRE_TALISMAN.id()});
+		put(BODY_ALTAR, new int[]{
+			ItemId.BODY_TALISMAN.id(),
+			ItemId.CURSED_BODY_TALISMAN.id(),
+			ItemId.ENFEEBLED_BODY_TALISMAN.id()});
+		put(COSMIC_ALTAR, new int[]{
+			ItemId.COSMIC_TALISMAN.id(),
+			ItemId.CURSED_COSMIC_TALISMAN.id(),
+			ItemId.ENFEEBLED_COSMIC_TALISMAN.id()});
+		put(CHAOS_ALTAR, new int[]{
+			ItemId.CHAOS_TALISMAN.id(),
+			ItemId.CURSED_CHAOS_TALISMAN.id(),
+			ItemId.ENFEEBLED_CHAOS_TALISMAN.id()});
+		put(NATURE_ALTAR, new int[]{
+			ItemId.NATURE_TALISMAN.id(),
+			ItemId.CURSED_NATURE_TALISMAN.id(),
+			ItemId.ENFEEBLED_NATURE_TALISMAN.id()});
+		put(LAW_ALTAR, new int[]{
+			ItemId.LAW_TALISMAN.id(),
+			ItemId.CURSED_LAW_TALISMAN.id(),
+			ItemId.ENFEEBLED_LAW_TALISMAN.id()});
+		put(DEATH_ALTAR, new int[]{
+			ItemId.DEATH_TALISMAN.id(),
+			ItemId.CURSED_DEATH_TALISMAN.id(),
+			ItemId.ENFEEBLED_DEATH_TALISMAN.id()});
+		put(BLOOD_ALTAR, new int[]{
+			ItemId.BLOOD_TALISMAN.id(),
+			ItemId.CURSED_BLOOD_TALISMAN.id(),
+			ItemId.ENFEEBLED_BLOOD_TALISMAN.id()});
+	}};
+
+	int[] BIND_ALTARS = {
+		1191, // Air
+		1193, // Mind
+		1195, // Water
+		1197, // Earth
+		1199, // Fire
+		1201, // Body
+		1203, // Cosmic
+		1205, // Chaos
+		1207, // Nature
+		1209, // Law
+		1211, // Death
+		1213, // Blood
+	};
 
 	@Override
 	public boolean blockOpLoc(Player player, GameObject obj, String command) {
@@ -109,48 +231,19 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		final ObjectRunecraftDef def = player.getWorld().getServer().getEntityHandler().getObjectRunecraftDef(obj.getID());
 
 		if (command.equalsIgnoreCase("enter")) {
-			int requiredTalisman = -1;
-			switch (obj.getID()) {
-				case 1190:
-					requiredTalisman = ItemId.AIR_TALISMAN.id();
+			int heldTalisman = -1;
+
+			if (altarTalismans.get(obj.getID()) == null) return;
+
+			for (int talismanId : altarTalismans.get(obj.getID())) {
+				if (player.getCarriedItems().hasCatalogID(talismanId, Optional.of(false))) {
+					heldTalisman = talismanId;
 					break;
-				case 1192:
-					requiredTalisman = ItemId.MIND_TALISMAN.id();
-					break;
-				case 1194:
-					requiredTalisman = ItemId.WATER_TALISMAN.id();
-					break;
-				case 1196:
-					requiredTalisman = ItemId.EARTH_TALISMAN.id();
-					break;
-				case 1198:
-					requiredTalisman = ItemId.FIRE_TALISMAN.id();
-					break;
-				case 1200:
-					requiredTalisman = ItemId.BODY_TALISMAN.id();
-					break;
-				case 1202:
-					requiredTalisman = ItemId.COSMIC_TALISMAN.id();
-					break;
-				case 1204:
-					requiredTalisman = ItemId.CHAOS_TALISMAN.id();
-					break;
-				case 1206:
-					requiredTalisman = ItemId.NATURE_TALISMAN.id();
-					break;
-				case 1208:
-					requiredTalisman = ItemId.LAW_TALISMAN.id();
-					break;
-				case 1210:
-					requiredTalisman = ItemId.DEATH_TALISMAN.id();
-					break;
-				case 1212:
-					requiredTalisman = ItemId.BLOOD_TALISMAN.id();
-					break;
+				}
 			}
 
-			if (player.getCarriedItems().hasCatalogID(requiredTalisman, Optional.of(false))) {
-				this.onUseLoc(player, obj, new Item(requiredTalisman, 1));
+			if (heldTalisman != -1) {
+				this.onUseLoc(player, obj, new Item(heldTalisman, 1));
 			} else {
 				player.message("You can't enter this place");
 			}
@@ -172,6 +265,31 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 				}
 				player.message("You bind the temple's power into " + def.getRuneName() + " runes.");
 			}
+
+			// Get the proper talisman type for the altar
+			int talismanIndex = -1;
+			for (int i = 0; i < BIND_ALTARS.length; i++) {
+				if (obj.getID() == BIND_ALTARS[i]) {
+					talismanIndex = i;
+					break;
+				}
+			}
+
+			// Check to see if the player has one of the fancy talismans
+			int multiplier = 1;
+			boolean cursed = false;
+			boolean enfeebled = false;
+			if (player.getCarriedItems().hasCatalogID(ENFEEBLED_TALISMANS[talismanIndex], Optional.of(false))) {
+					multiplier = 5;
+					enfeebled = true;
+			}
+			if (!enfeebled) {
+				if (player.getCarriedItems().hasCatalogID(CURSED_TALISMANS[talismanIndex], Optional.of(false))) {
+					multiplier = 2;
+					cursed = true;
+				}
+			}
+
 			int successCount = 0;
 			int repeatTimes = player.getCarriedItems().getInventory().countId(ItemId.RUNE_STONE.id(), Optional.of(false));
 			for (int loop = 0; loop < repeatTimes; ++loop) {
@@ -179,40 +297,56 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 					player.getCarriedItems().getInventory().getLastIndexById(ItemId.RUNE_STONE.id(), Optional.of(false)));
 				if (i == null) break;
 				player.getCarriedItems().remove(i);
-				player.getCarriedItems().getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())));
+
+				// Don't get any runes if they have a fancy talisman
+				if (!(cursed || enfeebled)) {
+					player.getCarriedItems().getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())));
+				}
 				++successCount;
 			}
-			player.incExp(Skills.RUNECRAFT, def.getExp() * successCount, true);
+
+			if (cursed) {
+				Item talisman = player.getCarriedItems().getInventory().get(
+					player.getCarriedItems().getInventory().getLastIndexById(CURSED_TALISMANS[talismanIndex], Optional.of(false))
+				);
+
+				// If they try to pull a fast one and not have the talisman,
+				// we'll just put the multiplier back to 1.
+				if (talisman == null) {
+					multiplier = 1;
+				} else {
+					// Cursed talisman gets replaced with the original.
+					player.getCarriedItems().remove(talisman);
+					player.message("The runes crumble to dust and the glow of your cursed talisman fades away");
+					player.getCarriedItems().getInventory().add(new Item(TALISMANS[talismanIndex]));
+				}
+			} else if (enfeebled) {
+				Item talisman = player.getCarriedItems().getInventory().get(
+					player.getCarriedItems().getInventory().getLastIndexById(ENFEEBLED_TALISMANS[talismanIndex], Optional.of(false))
+				);
+
+				// If they try to pull a fast one and not have the talisman,
+				// we'll just put the multiplier back to 1.
+				if (talisman == null) {
+					multiplier = 1;
+				} else {
+					// Enfeebled talisman gets destroyed.
+					player.getCarriedItems().remove(talisman);
+					player.message("The runes and enfeebled talisman crumble to dust");
+				}
+			}
+
+			player.incExp(Skills.RUNECRAFT, def.getExp() * successCount * multiplier, true);
 		}
 	}
 
 	@Override
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
+		if (altarTalismans.get(obj.getID()) == null) return false;
 
-		if (item.getCatalogId() == ItemId.AIR_TALISMAN.id() && obj.getID() == 1190)
-			return true;
-		else if (item.getCatalogId() == ItemId.MIND_TALISMAN.id() && obj.getID() == 1192)
-			return true;
-		else if (item.getCatalogId() == ItemId.WATER_TALISMAN.id() && obj.getID() == 1194)
-			return true;
-		else if (item.getCatalogId() == ItemId.EARTH_TALISMAN.id() && obj.getID() == 1196)
-			return true;
-		else if (item.getCatalogId() == ItemId.FIRE_TALISMAN.id() && obj.getID() == 1198)
-			return true;
-		else if (item.getCatalogId() == ItemId.BODY_TALISMAN.id() && obj.getID() == 1200)
-			return true;
-		else if (item.getCatalogId() == ItemId.COSMIC_TALISMAN.id() && obj.getID() == 1202)
-			return true;
-		else if (item.getCatalogId() == ItemId.CHAOS_TALISMAN.id() && obj.getID() == 1204)
-			return true;
-		else if (item.getCatalogId() == ItemId.NATURE_TALISMAN.id() && obj.getID() == 1206)
-			return true;
-		else if (item.getCatalogId() == ItemId.LAW_TALISMAN.id() && obj.getID() == 1208)
-			return true;
-		else if (item.getCatalogId() == ItemId.DEATH_TALISMAN.id() && obj.getID() == 1210)
-			return true;
-		else if (item.getCatalogId() == ItemId.BLOOD_TALISMAN.id() && obj.getID() == 1212)
-			return true;
+		for (int talismanId : altarTalismans.get(obj.getID())) {
+			if (item.getCatalogId() == talismanId) return true;
+		}
 		return false;
 	}
 
@@ -227,42 +361,42 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		player.message("You feel a powerful force take hold of you...");
 		delay(config().GAME_TICK);
 
-		switch(ItemId.getById(item.getCatalogId()))
+		switch(obj.getID())
 		{
-			case AIR_TALISMAN:
+			case AIR_ALTAR:
 				player.teleport(985,19,false);
 				break;
-			case MIND_TALISMAN:
+			case MIND_ALTAR:
 				player.teleport(934,14,false);
 				break;
-			case WATER_TALISMAN:
+			case WATER_ALTAR:
 				player.teleport(986,63,false);
 				break;
-			case EARTH_TALISMAN:
+			case EARTH_ALTAR:
 				player.teleport(934,70,false);
 				break;
-			case FIRE_TALISMAN:
+			case FIRE_ALTAR:
 				player.teleport(887,26,false);
 				break;
-			case BODY_TALISMAN:
+			case BODY_ALTAR:
 				player.teleport(893,71,false);
 				break;
-			case COSMIC_TALISMAN:
+			case COSMIC_ALTAR:
 				player.teleport(839,26,false);
 				break;
-			case CHAOS_TALISMAN:
+			case CHAOS_ALTAR:
 				player.teleport(826,90,false);
 				break;
-			case NATURE_TALISMAN:
+			case NATURE_ALTAR:
 				player.teleport(787,29,false);
 				break;
-			case LAW_TALISMAN:
+			case LAW_ALTAR:
 				player.teleport(790,69,false);
 				break;
-			case DEATH_TALISMAN:
+			case DEATH_ALTAR:
 				player.teleport(934,14,false);
 				break;
-			case BLOOD_TALISMAN:
+			case BLOOD_ALTAR:
 				player.teleport(743,22,false);
 				break;
 		}
