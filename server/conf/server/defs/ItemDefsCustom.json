@@ -2758,7 +2758,7 @@
 	"prayerBonus": 0,
 	"basePrice": 0,
 	"isNoteable": 0
-  }
+  },
   {
 	"id": 1410,
 	"name": "Fish oil",
@@ -2771,7 +2771,7 @@
 	"isWearable": 0,
 	"appearanceID": 0,
 	"wearableID": 0,
-	"wearSlot": 0,
+	"wearSlot": -1,
 	"requiredLevel": 0,
 	"requiredSkillID": 0,
 	"armourBonus": 0,

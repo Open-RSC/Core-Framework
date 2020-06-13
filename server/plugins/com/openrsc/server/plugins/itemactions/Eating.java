@@ -16,7 +16,9 @@ public class Eating implements OpInvTrigger {
 
 	@Override
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
-		return item.isEdible(player.getWorld()) || item.getCatalogId() == ItemId.ROTTEN_APPLES.id();
+		return item.isEdible(player.getWorld())
+			|| item.getCatalogId() == ItemId.ROTTEN_APPLES.id()
+			|| item.getCatalogId() == ItemId.FISH_OIL.id();
 	}
 
 	@Override
@@ -208,6 +210,28 @@ public class Eating implements OpInvTrigger {
 			}
 
 			addFoodResult(player, id);
+
+		} else if (item.getCatalogId() == ItemId.FISH_OIL.id()) {
+			ActionSender.sendSound(player, "eat");
+			int id = item.getCatalogId();
+
+			player.playerServerMessage(MessageType.QUEST, "You eat the fish oil");
+			// See if it heals
+			if (DataConversions.random(1, 2) == 1) {
+				// Heal
+				if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
+					int newHp = player.getSkills().getLevel(Skills.HITS) + 1;
+					if (newHp > player.getSkills().getMaxStat(Skills.HITS)) {
+						newHp = player.getSkills().getMaxStat(Skills.HITS);
+					}
+					player.getSkills().setLevel(Skills.HITS, newHp);
+				}
+				player.playerServerMessage(MessageType.QUEST, "It heals some health");
+			} else {
+				player.playerServerMessage(MessageType.QUEST, "You don't feel a difference");
+			}
+			// Remove
+			player.getCarriedItems().remove(new Item(id, 1));
 		}
 	}
 
