@@ -45,6 +45,7 @@ public class Retreats {
 			put(NpcId.SCORPION.id(), 2);
 			put(NpcId.POISON_SCORPION.id(), 2);
 			put(NpcId.KING_SCORPION.id(), 2);
+			put(NpcId.KHAZARD_SCORPION.id(), 2);
 			put(NpcId.JUNGLE_SPIDER.id(), 2); //might be a typo on authentic retreat, kept as is
 			put(NpcId.OTHERWORLDLY_BEING.id(), 1);
 			put(NpcId.HOBGOBLIN_LVL32.id(), 1);
