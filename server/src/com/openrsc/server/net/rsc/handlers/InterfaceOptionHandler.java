@@ -27,9 +27,6 @@ public class InterfaceOptionHandler implements PacketHandler {
 
 	@Override
 	public void handlePacket(Packet packet, Player player) throws Exception {
-		if (player.isBusy()) {
-			return;
-		}
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			return;
