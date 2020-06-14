@@ -19,6 +19,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -372,7 +373,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 	}
 
 	public void spawnKolodion(Player player, int id) {
-		player.setAttribute("spawned_kolodion", addnpc(id, 227, 130, 300000, player));
+		player.setAttribute("spawned_kolodion", addnpc(id, 227, 130, (int)TimeUnit.SECONDS.toMillis(516), player));
 		player.getCache().set("kolodion_stage", id);
 		player.message("kolodion blasts you " + (id == NpcId.KOLODION_HUMAN.id() ? "with his staff" : "again"));
 		player.damage(random(7, 15));

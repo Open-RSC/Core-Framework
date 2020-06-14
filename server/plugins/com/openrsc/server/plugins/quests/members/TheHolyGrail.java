@@ -385,11 +385,13 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 			} else {
 				// should remove the original black knight, make dialogue if there is some black
 				// titan and add a new one
-				n.remove();
 				Npc otherTitan = ifnearvisnpc(player, NpcId.BLACK_KNIGHT_TITAN.id(), 5);
-				Npc newTitan = addnpc(player.getWorld(), NpcId.BLACK_KNIGHT_TITAN.id(), 413, 11);
-				if (otherTitan != null) {
-					newTitan.setShouldRespawn(false);
+				if (otherTitan == null) {
+					Npc newTitan = addnpc(player.getWorld(), NpcId.BLACK_KNIGHT_TITAN.id(), 413, 11);
+					n.remove();
+				} else {
+					n.teleport(413, 11);
+					n.getSkills().setLevel(Skills.HITS, n.getDef().hits);
 					npcsay(player, otherTitan, "You can't defeat me little man",
 						"I'm invincible!");
 				}
