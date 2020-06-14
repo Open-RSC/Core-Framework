@@ -255,6 +255,7 @@ public class Eating implements OpInvTrigger {
 	}
 
 	private void handleTastyKebab(Player player, Item item) {
+		thinkbubble(item);
 		player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName());
 		player.playerServerMessage(MessageType.QUEST, "It heals some health");
 		// restores up to 19
