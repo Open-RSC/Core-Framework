@@ -346,6 +346,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 					player.message("And your talisman explodes!");
 					delay(config().GAME_TICK * 3);
 					player.message("You feel strange");
+
 					int subtractLevel = (int)Math.round(player.getSkills().getLevel(Skills.RUNECRAFT) * 0.15D);
 					player.getSkills().setLevel(Skills.RUNECRAFT,
 						(player.getSkills().getLevel(Skills.RUNECRAFT) - subtractLevel));
