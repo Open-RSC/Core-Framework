@@ -286,6 +286,19 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			carriedItems.remove(new Item(ItemId.ARDRIGAL_SOLUTION.id()));
 			carriedItems.getInventory().add(new Item(ItemId.GUJUO_POTION.id()));
 		}
+
+		// Runecraft potion
+		boolean runecraft = config().WANT_RUNECRAFT;
+		boolean fishOil = itemID == ItemId.FISH_OIL.id() || usedWithID == ItemId.FISH_OIL.id();
+		boolean marrentill = itemID == ItemId.UNFINISHED_MARRENTILL_POTION.id() || usedWithID == ItemId.UNFINISHED_MARRENTILL_POTION.id();
+		boolean avantoe = itemID == ItemId.UNFINISHED_AVANTOE_POTION.id() || usedWithID == ItemId.UNFINISHED_AVANTOE_POTION.id();
+		if (runecraft && ((fishOil && marrentill) || fishOil && avantoe)) {
+			if (itemID == ItemId.FISH_OIL.id()) {
+				doCustomHerbSecond(player, usedWithID, itemID);
+			} else {
+				doCustomHerbSecond(player, itemID, usedWithID);
+			}
+		}
 	}
 
 	public boolean blockUseInv(Player player, Integer invIndex, Item item, Item usedWith) {
@@ -323,6 +336,13 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				|| usedWithID == ItemId.SNAKE_WEED.id() && itemID == ItemId.ARDRIGAL_SOLUTION.id()) {
 			return true;
 		}
+
+		// Runecraft potion
+		boolean runecraft = player.getConfig().WANT_RUNECRAFT;
+		boolean fishOil = itemID == ItemId.FISH_OIL.id() || usedWithID == ItemId.FISH_OIL.id();
+		boolean marrentill = itemID == ItemId.UNFINISHED_MARRENTILL_POTION.id() || usedWithID == ItemId.UNFINISHED_MARRENTILL_POTION.id();
+		boolean avantoe = itemID == ItemId.UNFINISHED_AVANTOE_POTION.id() || usedWithID == ItemId.UNFINISHED_AVANTOE_POTION.id();
+		if (runecraft && ((fishOil && marrentill) || fishOil && avantoe)) return true;
 		return false;
 	}
 
@@ -496,6 +516,91 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchPotionSecondary(player, unfinished, second, def, bubbleItem);
+		}
+	}
+
+	private void doCustomHerbSecond(Player player, int unfinishedPotId, int secondaryId) {
+		if (!config().MEMBER_WORLD) {
+			player.sendMemberErrorMessage();
+			return;
+		}
+
+		int reqLevel = 1;
+		int xp = 0;
+		int resultId = -1;
+		if (unfinishedPotId == ItemId.UNFINISHED_MARRENTILL_POTION.id()) {
+			xp = 150;
+			reqLevel = 5;
+			resultId = ItemId.FULL_RUNECRAFT_POTION.id();
+		}
+		else if (unfinishedPotId == ItemId.UNFINISHED_AVANTOE_POTION.id()) {
+			xp = 450;
+			reqLevel = 50;
+			resultId = ItemId.FULL_SUPER_RUNECRAFT_POTION.id();
+		}
+
+		if (player.getLevel(Skills.HERBLAW) < reqLevel) {
+			player.playerServerMessage(MessageType.QUEST, "You need a herblaw level of "
+				+ reqLevel + " to make this potion");
+			return;
+		}
+
+		if (player.getQuestStage(Quests.DRUIDIC_RITUAL) != -1) {
+			player.message("You need to complete Druidic ritual quest first");
+			return;
+		}
+
+		if (player.getCarriedItems().getInventory().countId(secondaryId) < 10) {
+			player.message("You don't have enough Fish oil to make this potion");
+			return;
+		}
+
+		if (resultId == -1) return;
+
+		int repeat = 1;
+		if (config().BATCH_PROGRESSION) {
+			repeat = Math.min((player.getCarriedItems().getInventory().countId(secondaryId)/10),
+				player.getCarriedItems().getInventory().countId(unfinishedPotId));
+		}
+
+		startbatch(repeat);
+		batchCustomHerbSecond(player, unfinishedPotId, secondaryId, resultId, xp);
+	}
+
+	private void batchCustomHerbSecond(Player player, int unfinishedPotId,
+									   int secondaryId, int resultId, int xp) {
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to make this potion");
+				return;
+			}
+		}
+
+		Item unfinished = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(unfinishedPotId, Optional.of(false))
+		);
+		Item secondary = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(secondaryId, Optional.of(false))
+		);
+		if (unfinished == null || secondary == null) return;
+		if (secondary.getAmount() < 10) return;
+		
+		player.playSound("mix");
+		player.playerServerMessage(MessageType.QUEST, "You mix the " + secondary.getDef(player.getWorld()).getName()
+			+ " into your potion");
+		player.getCarriedItems().remove(unfinished);
+		// Have to do this because fish oil is stacked
+		player.getCarriedItems().remove(new Item(secondaryId, 10));
+		player.getCarriedItems().getInventory().add(new Item(resultId));
+
+		player.incExp(Skills.HERBLAW, xp, true);
+		delay(config().GAME_TICK * 2);
+
+		// Repeat
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
+			batchCustomHerbSecond(player, unfinishedPotId, secondaryId, resultId, xp);
 		}
 	}
 
