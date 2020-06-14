@@ -274,6 +274,9 @@ public class Npc extends Mob {
 
 	@Override
 	public void killedBy(Mob mob) {
+		if (this.killed) return;
+		this.killed = true;
+
 		Player owner = getWorld().getPlayerUUID(mob.getUUID());
 		if (owner == null) {
 			Npc npcKiller = getWorld().getNpcByUUID(mob.getUUID());
@@ -597,6 +600,7 @@ public class Npc extends Mob {
 			setRespawning(true);
 			getWorld().getServer().getGameEventHandler().add(new DelayedEvent(getWorld(), null, (long)(def.respawnTime() * respawnMult * 1000), "Respawn NPC", false) {
 				public void run() {
+					n.killed = false;
 					n.setRemoved(false);
 					n.getRegion().addEntity(n);
 

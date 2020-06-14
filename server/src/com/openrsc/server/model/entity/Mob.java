@@ -1,6 +1,5 @@
 package com.openrsc.server.model.entity;
 
-import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
@@ -34,6 +33,7 @@ public abstract class Mob extends Entity {
 	private final Skills skills = new Skills(this.getWorld(), this);
 	private final WalkingQueue walkingQueue = new WalkingQueue(this);
 	private int killType = 0;
+	protected boolean killed = false;
 	private int combatStyle = com.openrsc.server.constants.Skills.CONTROLLED_MODE;
 	private int poisonDamage = 0;
 	private RangeEventNpc rangeEventNpc;
