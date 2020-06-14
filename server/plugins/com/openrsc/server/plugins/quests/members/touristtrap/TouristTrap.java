@@ -2672,9 +2672,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						"The associated smells of a hundred sweaty miners greets your nostrils.",
 						"And your ears ring with the 'CLANG CLANG CLANG' as metal hits rock.");
 				} else {
-					final Npc n = new Npc(player.getWorld(), NpcId.DRAFT_MERCENARY_GUARD.id(), player.getX(), player.getY());
-					n.setShouldRespawn(false);
-					player.getWorld().registerNpc(n);
+					final Npc n = addnpc(player.getWorld(), NpcId.DRAFT_MERCENARY_GUARD.id(), player.getX(), player.getY());
 					player.getWorld().getServer().getGameEventHandler().add(
 						new SingleEvent(player.getWorld(), null, config().GAME_TICK * 50, "Draft Mercenary Talk Delay") {
 							public void action() {
@@ -2765,9 +2763,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			} else {
 				Npc n = ifnearvisnpc(player, NpcId.CAPTAIN_SIAD.id(), 5);
 				if (n == null) {
-					final Npc npc = new Npc(player.getWorld(), NpcId.CAPTAIN_SIAD.id(), 85, 1745);
-					npc.setShouldRespawn(false);
-					player.getWorld().registerNpc(npc);
+					final Npc npc = addnpc(player.getWorld(), NpcId.CAPTAIN_SIAD.id(), 85, 1745);
 					player.getWorld().getServer().getGameEventHandler().add(
 						new SingleEvent(player.getWorld(), null, config().GAME_TICK * 490, "Captain Siad Despawn Delay") {
 							public void action() {

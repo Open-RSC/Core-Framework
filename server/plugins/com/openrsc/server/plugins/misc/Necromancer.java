@@ -23,8 +23,7 @@ public class Necromancer implements AttackNpcTrigger, KillNpcTrigger, SpellNpcTr
 			Npc zombie = ifnearvisnpc(player, NpcId.ZOMBIE_INVOKED.id(), 10);
 			if (!player.getCache().hasKey("necroSpawn") || (player.getCache().hasKey("necroSpawn") && player.getCache().getInt("necroSpawn") < 7) || (player.getCache().hasKey("killedZomb") && player.getCache().getInt("killedZomb") != 0 && zombie == null)) {
 				npcsay(player, necromancer, "I summon the undead to smite you down");
-				zombie = player.getWorld().registerNpc(new Npc(necromancer.getWorld(), NpcId.ZOMBIE_INVOKED.id(), necromancer.getX(), necromancer.getY()));
-				zombie.setShouldRespawn(false);
+				zombie = addnpc(necromancer.getWorld(), NpcId.ZOMBIE_INVOKED.id(), necromancer.getX(), necromancer.getY());
 				delay(1600);
 				if (!player.inCombat()) {
 					zombie.startCombat(player);
@@ -53,8 +52,7 @@ public class Necromancer implements AttackNpcTrigger, KillNpcTrigger, SpellNpcTr
 		if (n.getID() == NpcId.NECROMANCER.id()) {
 			player.getCache().remove("necroSpawn");
 			player.getCache().remove("killedZomb");
-			Npc newZombie = player.getWorld().registerNpc(new Npc(n.getWorld(), NpcId.ZOMBIE_INVOKED.id(), player.getX(), player.getY()));
-			newZombie.setShouldRespawn(false);
+			Npc newZombie = addnpc(n.getWorld(), NpcId.ZOMBIE_INVOKED.id(), player.getX(), player.getY());
 			newZombie.setChasing(player);
 		}
 		if (n.getID() == NpcId.ZOMBIE_INVOKED.id()) {

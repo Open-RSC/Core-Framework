@@ -84,9 +84,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 							"No, I'm having serious second thoughts now.");
 					}
 					if (menus == 0) {
-						final Npc npc = new Npc(n.getWorld(), NpcId.SHANTAY_PASS_GUARD_STANDING.id(), 63, 731);
-						npc.setShouldRespawn(false);
-						player.getWorld().registerNpc(npc);
+						final Npc npc = addnpc(n.getWorld(), NpcId.SHANTAY_PASS_GUARD_STANDING.id(), 63, 731);
 						player.getWorld().getServer().getGameEventHandler().add(
 							new SingleEvent(player.getWorld(), null, config().GAME_TICK * 50, "Shantay Pass Talk Delay") {
 								public void action() {
