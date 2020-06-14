@@ -331,15 +331,15 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 					multiplier = 1;
 				} else {
 					// Enfeebled talisman gets destroyed.
+					// Player's Runecraft level is lowered by 10.
 					player.getCarriedItems().remove(talisman);
 					player.message("The runes crumble to dust");
 					delay(config().GAME_TICK * 3);
 					player.message("And your talisman explodes!");
-					delay(config().GAME_TICK);
-					// Deal 25% damage
-					int damage = (int) Math.round(player.getSkills().getLevel(Skills.HITS) * 0.25);
-					player.damage(damage);
-					say(player, "ouch");
+					delay(config().GAME_TICK * 3);
+					player.message("You feel strange");
+					player.getSkills().setLevel(Skills.RUNECRAFT,
+						(player.getSkills().getLevel(Skills.RUNECRAFT) - 10));
 				}
 			}
 
