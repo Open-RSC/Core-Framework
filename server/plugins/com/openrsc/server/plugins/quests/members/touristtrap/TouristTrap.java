@@ -2676,8 +2676,13 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					player.getWorld().getServer().getGameEventHandler().add(
 						new SingleEvent(player.getWorld(), null, config().GAME_TICK * 50, "Draft Mercenary Talk Delay") {
 							public void action() {
-								npcsay(player, n, "Is that the time, I ought to be going.");
-								n.remove();
+								npcYell(player, n, "Is that the time, I ought to be going.");
+								getWorld().getServer().getGameEventHandler().add(new SingleEvent(getWorld(), null, n.getConfig().GAME_TICK * 5, "Draft Mercenary Remove") {
+									@Override
+									public void action() {
+										n.remove();
+									}
+								});
 							}
 						});
 					delay(config().GAME_TICK * 2);
@@ -2767,8 +2772,13 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					player.getWorld().getServer().getGameEventHandler().add(
 						new SingleEvent(player.getWorld(), null, config().GAME_TICK * 490, "Captain Siad Despawn Delay") {
 							public void action() {
-								npcsay(player, npc, "Ah, time for my evening snooze!");
-								npc.remove();
+								npcYell(player, npc, "Ah, time for my evening snooze!");
+								getWorld().getServer().getGameEventHandler().add(new SingleEvent(getWorld(), null, npc.getConfig().GAME_TICK * 5, "Captain Siad Remove") {
+									@Override
+									public void action() {
+										npc.remove();
+									}
+								});
 							}
 						});
 					n = npc;

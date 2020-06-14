@@ -88,8 +88,13 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 						player.getWorld().getServer().getGameEventHandler().add(
 							new SingleEvent(player.getWorld(), null, config().GAME_TICK * 50, "Shantay Pass Talk Delay") {
 								public void action() {
-									npcsay(player, npc, "Right, time for dinner!");
-									npc.remove();
+									npcYell(player, npc, "Right, time for dinner!");
+									getWorld().getServer().getGameEventHandler().add(new SingleEvent(getWorld(), null, npc.getConfig().GAME_TICK * 5, "Shantay Pass Guard Remove") {
+										@Override
+										public void action() {
+											npc.remove();
+										}
+									});
 								}
 							});
 						delay(config().GAME_TICK * 2);
