@@ -1826,6 +1826,7 @@ public final class Player extends Mob {
 			@Override
 			public void run() {
 				getOwner().killed = false;
+				stop();
 			}
 		});
 	}
