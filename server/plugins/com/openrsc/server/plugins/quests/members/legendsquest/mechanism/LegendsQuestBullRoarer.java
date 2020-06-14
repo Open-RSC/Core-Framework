@@ -108,10 +108,12 @@ public class LegendsQuestBullRoarer implements OpInvTrigger {
 					} else {
 						npcsay(player, n, "I have work to do Bwana, I may see you again...");
 					}
-					getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), null, config().GAME_TICK * 3, "Legends Quest Gujuo Disappears") {
+					getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), null, n.getConfig().GAME_TICK * 3, "Legends Quest Gujuo Disappears") {
 						public void action() {
-							player.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
-							n.remove();
+							if (player != null)
+								player.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
+							if(n != null)
+								n.remove();
 						}
 					});
 					stop();

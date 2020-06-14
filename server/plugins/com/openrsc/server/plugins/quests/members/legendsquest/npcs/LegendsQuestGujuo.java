@@ -1188,10 +1188,10 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 		npcsay(player, n, "");
 		player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), null, config().GAME_TICK * 3, "Legends Quest Gujuo Disappears") {
 			public void action() {
-				player.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
-				if(n != null) {
+				if (player != null)
+					player.message("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
+				if(n != null)
 					n.remove();
-				}
 			}
 		});
 	}
