@@ -20,8 +20,8 @@ public class PrayerDrainEvent extends GameTickEvent {
 
 	@Override
 	public void run() {
-		if (getOwner() == null || getOwner().isPlayer() && (getPlayerOwner() == null || getPlayerOwner().isRemoved())) {
-
+		boolean isPlayerAbsent = getOwner().isPlayer() && (getPlayerOwner() == null || getPlayerOwner().isRemoved());
+		if (getOwner() == null || isPlayerAbsent) {
 			running = false;
 			return;
 		}

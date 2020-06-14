@@ -33,9 +33,9 @@ public class StatRestorationEvent extends GameTickEvent {
 
 	@Override
 	public void run() {
-		if (getOwner() == null || (getOwner().isPlayer() && (getPlayerOwner() == null || getPlayerOwner().isRemoved())) ||
-			(getOwner().isNpc() && (getNpcOwner() == null || (getNpcOwner().isRemoved() && !getNpcOwner().isRespawning())))) {
-
+		boolean isPlayerAbsent = getOwner().isPlayer() && (getPlayerOwner() == null || getPlayerOwner().isRemoved());
+		boolean isNpcAbsent = getOwner().isNpc() && (getNpcOwner() == null || (getNpcOwner().isRemoved() && !getNpcOwner().isRespawning()));
+		if (getOwner() == null || isPlayerAbsent || isNpcAbsent) {
 			running = false;
 			return;
 		}
