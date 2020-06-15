@@ -134,10 +134,6 @@ public final class InterfaceShopHandler implements PacketHandler {
 			return true;
 		}
 
-		//if (player.getCarriedItems().getInventory().size() + totalBought >= 30 && !tempItem.getDef(player.getWorld()).isStackable()) {
-		//	return true;
-		//}
-
 		return false;
 	}
 
@@ -170,40 +166,30 @@ public final class InterfaceShopHandler implements PacketHandler {
 			}
 			amount = Math.min(amount, toSell.getAmount());
 
-			player.getCarriedItems().remove(new Item(toSell.getCatalogId(), amount, toSell.getNoted(), toSell.getItemId()));
-
 			int sellAmount = amount * shop.getItemSellPrice(catalogID, def.getDefaultPrice(), amount);
 
 			totalMoney += sellAmount;
 			totalSold += amount;
 
+			shop.addShopItem(new Item(catalogID, amount));
+
+			player.getCarriedItems().remove(new Item(toSell.getCatalogId(), amount, toSell.getNoted(), toSell.getItemId()));
+
 			if (sellAmount > 0) {
 				player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), sellAmount));
 			}
-
-			shop.addShopItem(new Item(catalogID, amount));
 		}
 		else {
 			for (int i = 0; i < amount; i++) {
-				// Start with selling noted and move to normal after.
 				Item toSell = player.getCarriedItems().getInventory().get(
-					player.getCarriedItems().getInventory().getLastIndexById(catalogID, Optional.of(true))
+					player.getCarriedItems().getInventory().getLastIndexById(catalogID, Optional.of(false))
 				);
-				if (toSell == null) {
-					toSell = player.getCarriedItems().getInventory().get(
-						player.getCarriedItems().getInventory().getLastIndexById(catalogID, Optional.of(false))
-					);
-				}
 				if (toSell == null) {
 					player.message("You don't have that many items");
 					return;
 				}
 
-				if (player.getCarriedItems().remove(new Item(toSell.getCatalogId(), 1, toSell.getNoted(), toSell.getItemId())) == -1) {
-					/* Break, player doesn't have anything. */
-					player.message("You don't have that many items");
-					break;
-				}
+				player.getCarriedItems().remove(new Item(toSell.getCatalogId(), 1, toSell.getNoted(), toSell.getItemId()));
 
 				int sellAmount = shop.getItemSellPrice(catalogID, def.getDefaultPrice(), 1);
 				totalMoney += sellAmount;
