@@ -86,8 +86,18 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 
 				reduceKittensLoneliness(player);
 			} else {
+				mes("your cat plays around with the ball of wool",
+						"it seems to love pouncing on it");
+			}
+		} else if (item.getCatalogId() == ItemId.WOOL.id()) {
+			if (!isGrown) {
+				mes("your kitten plays around with the wool",
+					"it seems to be enjoying itself");
+
+				reduceKittensLoneliness(player);
+			} else {
 				mes("your cat plays around with the wool",
-						"it seems to be enjoying itself");
+					"it seems to be enjoying itself");
 			}
 		}
 	}
@@ -226,12 +236,12 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 
 	@Override
 	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
-		return isFoodOnCat(item1, item2) || isBallWoolOnCat(item1, item2);
+		return isFoodOnCat(item1, item2) || isEntertainmentForCat(item1, item2);
 	}
 
 	@Override
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
-		if (isFoodOnCat(item1, item2) || isBallWoolOnCat(item1, item2)) {
+		if (isFoodOnCat(item1, item2) || isEntertainmentForCat(item1, item2)) {
 			boolean isGrownCat = item1.getCatalogId() != ItemId.KITTEN.id() && item2.getCatalogId() != ItemId.KITTEN.id();
 			Item item;
 			if (isGrownCat) {
@@ -239,7 +249,7 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 			} else {
 				item = item1.getCatalogId() == ItemId.KITTEN.id() ? item2 : item1;
 			}
-			if (isBallWoolOnCat(item1, item2)) {
+			if (isEntertainmentForCat(item1, item2)) {
 				entertainCat(item, player, isGrownCat);
 			} else if (isFoodOnCat(item1, item2)) {
 				feedCat(item, player, isGrownCat);
@@ -247,9 +257,11 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		}
 	}
 
-	private boolean isBallWoolOnCat(Item item1, Item item2) {
+	private boolean isEntertainmentForCat(Item item1, Item item2) {
 		return compareItemsIds(item1, item2, ItemId.KITTEN.id(), ItemId.BALL_OF_WOOL.id())
-				|| compareItemsIds(item1, item2, ItemId.CAT.id(), ItemId.BALL_OF_WOOL.id());
+				|| compareItemsIds(item1, item2, ItemId.CAT.id(), ItemId.BALL_OF_WOOL.id())
+				|| compareItemsIds(item1, item2, ItemId.KITTEN.id(), ItemId.WOOL.id())
+				|| compareItemsIds(item1, item2, ItemId.CAT.id(), ItemId.WOOL.id());
 	}
 
 	private boolean isFoodOnCat(Item item1, Item item2) {
