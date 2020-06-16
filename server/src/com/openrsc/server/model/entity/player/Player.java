@@ -1592,7 +1592,7 @@ public final class Player extends Mob {
 	}
 
 	public boolean isPlayerMod() {
-		return groupID == Group.PLAYER_MOD || isSuperMod();
+		return groupID == Group.PLAYER_MOD || isMod();
 	}
 
 	public boolean isDev() {

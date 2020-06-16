@@ -198,20 +198,6 @@ public final class Admins implements CommandTrigger {
 		} */
 	}
 
-	private void cleanNpcs(Player player) {
-		int count = 0;
-		player.getWorld().getServer().getGameEventHandler().submit(() -> {
-			for (Npc n : player.getWorld().getNpcs()) {
-				if (n.getOpponent() instanceof Player) {
-					if (n.getOpponent().isUnregistering()) {
-						n.setOpponent(null);
-					}
-				}
-			}
-		}, "cleannpcs");
-		player.message(messagePrefix + "Cleaned " + count + " NPC opponent references.");
-	}
-
 	private void saveAll(Player player) {
 		int count = 0;
 		for (Player playerToSave : player.getWorld().getPlayers()) {
@@ -219,24 +205,6 @@ public final class Admins implements CommandTrigger {
 			count++;
 		}
 		player.message(messagePrefix + "Saved " + count + " players on server!");
-	}
-
-	private void cleanRegions(Player player) {
-		int count = 0;
-		player.getWorld().getServer().getGameEventHandler().submit(() -> {
-			final int HORIZONTAL_PLANES = (Constants.MAX_WIDTH / Constants.REGION_SIZE) + 1;
-			final int VERTICAL_PLANES = (Constants.MAX_HEIGHT / Constants.REGION_SIZE) + 1;
-			for (int x = 0; x < HORIZONTAL_PLANES; ++x) {
-				for (int y = 0; y < VERTICAL_PLANES; ++y) {
-					Region r = player.getWorld().getRegionManager().getRegion(x * Constants.REGION_SIZE,
-						y * Constants.REGION_SIZE);
-					if (r != null) {
-						r.getPlayers().removeIf(Entity::isRemoved);
-					}
-				}
-			}
-		}, "cleanregions");
-		player.message(messagePrefix + "Cleaned " + count + " regions.");
 	}
 
 	private void startHolidayDrop(Player player, String command, String[] args) {

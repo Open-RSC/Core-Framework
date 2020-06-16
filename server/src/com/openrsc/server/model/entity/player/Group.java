@@ -9,10 +9,11 @@ public class Group {
 	public static final int ADMIN = 1;
 	public static final int SUPER_MOD = 2;
 	public static final int MOD = 3;
-	public static final int DEV = 8;
-	public static final int EVENT = 9;
+	public static final int DEV = 5;
+	public static final int EVENT = 7;
+	public static final int PLAYER_MOD = 8;
+	private static final int TESTER = 9;
 	public static final int USER = 10;
-	public static final int PLAYER_MOD = 11;
 
 	public static final int DEFAULT_GROUP = Group.USER;
 
@@ -25,8 +26,9 @@ public class Group {
 		GROUP_NAMES.put(MOD, "Moderator");
 		GROUP_NAMES.put(DEV, "Developer");
 		GROUP_NAMES.put(EVENT, "Event");
-		GROUP_NAMES.put(USER, "User");
 		GROUP_NAMES.put(PLAYER_MOD, "Player Moderator");
+		GROUP_NAMES.put(TESTER, "Tester");
+		GROUP_NAMES.put(USER, "User");
 	}
 
 	public static String getNameColour(World world, int groupID) {
@@ -47,6 +49,7 @@ public class Group {
 			case EVENT:
 				return "@eve@";
 			case PLAYER_MOD:
+			case TESTER:
 			case USER:
 			default:
 				return "";
