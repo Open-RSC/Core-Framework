@@ -125,6 +125,10 @@ public class Packet {
 		}
 	}
 
+	public int readUnsignedShort() {
+		return payload.readUnsignedShort();
+	}
+
 
 	/**
 	 * Reads an integer.

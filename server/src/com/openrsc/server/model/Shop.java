@@ -104,7 +104,11 @@ public final class Shop {
 		synchronized (shopItems) {
 			for (Item i : shopItems) {
 				if (i.getCatalogId() == item.getCatalogId()) {
-					i.getItemStatus().setAmount(i.getAmount() + item.getAmount());
+					int amount = i.getAmount() + item.getAmount();
+					if (amount > Short.MAX_VALUE * 2 - 1) {
+						amount = 0xffff;
+					}
+					i.getItemStatus().setAmount(amount);
 					has = true;
 					break;
 				}
