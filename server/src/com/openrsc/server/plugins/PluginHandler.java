@@ -138,6 +138,7 @@ public final class PluginHandler {
 	public void initPlugins() throws Exception {
 		int countPlugins = 0;
 
+		HashMap<Class<?>, Object> pluginInstances = new HashMap<>();
 		for (final Class<?> interfce : loadInterfaces("com.openrsc.server.plugins.triggers")) {
 			knownInterfaces.add(interfce);
 			for (final Class<?> plugin : loadedClassFiles) {
@@ -145,7 +146,11 @@ public final class PluginHandler {
 					continue;
 				}
 
-				final Object instance = plugin.getConstructor().newInstance();
+				if (!pluginInstances.containsKey(plugin)) {
+					pluginInstances.put(plugin, plugin.getConstructor().newInstance());
+				}
+
+				final Object instance = pluginInstances.get(plugin);
 				final String interfceName = interfce.getSimpleName();
 
 				if (!plugins.containsKey(interfceName)) {
@@ -153,7 +158,6 @@ public final class PluginHandler {
 				}
 
 				if (!plugins.get(interfceName).contains(instance)) {
-					countPlugins++;
 
 					if (instance instanceof DefaultHandler && defaultHandler == null) {
 						defaultHandler = instance;
@@ -162,7 +166,7 @@ public final class PluginHandler {
 
 					plugins.get(interfceName).add(instance);
 
-					if (instance instanceof AbstractShop) {
+					if (instance instanceof AbstractShop && interfceName.equals("TalkNpcTrigger")) {
 						final AbstractShop it = (AbstractShop) instance;
 
 						for (final Shop s : it.getShops(getServer().getWorld())) {
@@ -181,7 +185,12 @@ public final class PluginHandler {
 				if (!interfce.isAssignableFrom(plugin)) {
 					continue;
 				}
-				final Object instance = plugin.getConstructor().newInstance();
+
+				if (!pluginInstances.containsKey(plugin)) {
+					pluginInstances.put(plugin, plugin.getConstructor().newInstance());
+				}
+
+				final Object instance = pluginInstances.get(plugin);
 
 				if (Arrays.asList(instance.getClass().getInterfaces()).contains(QuestInterface.class)) {
 					final QuestInterface q = (QuestInterface) instance;
@@ -205,7 +214,7 @@ public final class PluginHandler {
 
 		LOGGER.info("Loaded {}", box(getServer().getWorld().getQuests().size()) + " Quests.");
 		LOGGER.info("Loaded {}", box(getServer().getWorld().getMiniGames().size()) + " MiniGames.");
-		LOGGER.info("Loaded total of {}", box(countPlugins) + " plugin handlers.");
+		LOGGER.info("Loaded total of {}", pluginInstances.size() + " plugin handlers.");
 	}
 
 	private List<Class<?>> loadInterfaces(final String thePackage) throws ClassNotFoundException {
