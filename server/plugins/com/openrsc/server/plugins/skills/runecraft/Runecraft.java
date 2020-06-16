@@ -258,12 +258,10 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 				player.message("You have no rune stones to bind.");
 				return;
 			}
-			else {
-				if (player.getSkills().getLevel(Skills.RUNECRAFT) < def.getRequiredLvl()) {
-					player.message("You require more skill to use this altar.");
-					return;
-				}
-				player.message("You bind the temple's power into " + def.getRuneName() + " runes.");
+
+			if (player.getSkills().getLevel(Skills.RUNECRAFT) < def.getRequiredLvl()) {
+				player.message("You require more skill to use this altar.");
+				return;
 			}
 
 			// Get the proper talisman type for the altar
@@ -277,18 +275,29 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 
 			// Check to see if the player has one of the fancy talismans
 			int multiplier = 1;
+			int levelAdd = 0;
 			boolean cursed = false;
 			boolean enfeebled = false;
 			if (player.getCarriedItems().hasCatalogID(ENFEEBLED_TALISMANS[talismanIndex], Optional.of(false))) {
-					multiplier = 5;
-					enfeebled = true;
+				multiplier = 5;
+				levelAdd = 14;
+				enfeebled = true;
 			}
 			if (!enfeebled) {
 				if (player.getCarriedItems().hasCatalogID(CURSED_TALISMANS[talismanIndex], Optional.of(false))) {
 					multiplier = 2;
+					levelAdd = 7;
 					cursed = true;
 				}
 			}
+
+			if ((cursed || enfeebled)
+				&& player.getSkills().getLevel(Skills.RUNECRAFT) < def.getRequiredLvl() + levelAdd) {
+				player.message("You require more skill to use this talisman with this altar.");
+				return;
+			}
+
+			player.message("You bind the temple's power into " + def.getRuneName() + " runes.");
 
 			int successCount = 0;
 			int repeatTimes = player.getCarriedItems().getInventory().countId(ItemId.RUNE_STONE.id(), Optional.of(false));
@@ -331,15 +340,16 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 					multiplier = 1;
 				} else {
 					// Enfeebled talisman gets destroyed.
-					// Player's Runecraft level is lowered by 10.
+					// Player's Runecraft level is lowered by 15%.
 					player.getCarriedItems().remove(talisman);
 					player.message("The runes crumble to dust");
 					delay(config().GAME_TICK * 3);
 					player.message("And your talisman explodes!");
 					delay(config().GAME_TICK * 3);
 					player.message("You feel strange");
+					int subtractLevel = (int)Math.round(player.getSkills().getLevel(Skills.RUNECRAFT) * 0.15D);
 					player.getSkills().setLevel(Skills.RUNECRAFT,
-						(player.getSkills().getLevel(Skills.RUNECRAFT) - 10));
+						(player.getSkills().getLevel(Skills.RUNECRAFT) - subtractLevel));
 				}
 			}
 
