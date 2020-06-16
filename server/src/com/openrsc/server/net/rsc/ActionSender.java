@@ -1400,12 +1400,14 @@ public class ActionSender {
 		}
 	}
 
-	public static void sendOnlineList(Player player, ArrayList<Player> players, int online) {
+	public static void sendOnlineList(Player player, ArrayList<Player> players, ArrayList<String> locations, int online) {
 		PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
 		pb.writeShort(online);
-		for (Player friend : players) {
+		for (int i = 0; i < players.size(); i++) {
+			Player friend = players.get(i);
 			pb.writeString(friend.getUsername());
 			pb.writeInt(friend.getIcon());
+			pb.writeString(locations.get(i));
 		}
 		player.write(pb.toPacket());
 	}

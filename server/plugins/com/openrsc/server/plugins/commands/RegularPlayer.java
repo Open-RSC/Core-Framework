@@ -446,6 +446,9 @@ public final class RegularPlayer implements CommandTrigger {
 			for (Player targetPlayer : player.getWorld().getPlayers()) {
 				if (targetPlayer.getGroupID() >= player.getGroupID()) {
 					players.add(targetPlayer);
+					locations.add(
+						targetPlayer.getLocation().returnLocationName()
+					);
 					online++;
 				}
 			}
@@ -455,11 +458,12 @@ public final class RegularPlayer implements CommandTrigger {
 				boolean privacy = targetPlayer.getSettings().getPrivacySetting(1);
 				if (targetPlayer.isDefaultUser() && !privacy) {
 					players.add(targetPlayer);
+					locations.add(""); // No locations for regular players.
 					online++;
 				}
 			}
 		}
-		ActionSender.sendOnlineList(player, players, online);
+		ActionSender.sendOnlineList(player, players, locations, online);
 	}
 
 	private void queryGroupIDs(Player player) {

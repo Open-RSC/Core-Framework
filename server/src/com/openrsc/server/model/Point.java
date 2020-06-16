@@ -45,6 +45,126 @@ public class Point {
 		}
 		return new Point(x, y);
 	}
+	
+	public String returnLocationName() {
+		if (inHeroQuestRangeRoom()) {
+			return "Hero's Quest Range Room";
+		}
+
+		else if (inTutorialLanding()) {
+			return "Tutorial Landing";
+		}
+
+		else if (aroundTutorialRatZone()) {
+			return "Tutorial Rats";
+		}
+
+		else if (onTutorialIsland()) {
+			return "Tutorial Island";
+		}
+
+		else if (onBlackHole()) {
+			return "Black Hole";
+		}
+
+		else if (inModRoom()) {
+			return "Mod Room";
+		}
+
+		else if (inFreeWild()) {
+			return "F2P Wilderness";
+		}
+
+		else if (inWilderness()) {
+			return "Wilderness";
+		}
+
+		else if (inVarrock()) {
+			return "Varrock";
+		}
+
+		else if (inEdgeville()) {
+			return "Edgeville";
+		}
+
+		else if (inBarbVillage()) {
+			return "Barbarian Village";
+		}
+
+		else if (inDraynor()) {
+			return "Draynor";
+		}
+
+		else if (inLumbridge()) {
+			return "Lumbridge";
+		}
+
+		else if (inAlKharid()) {
+			return "Al Kharid";
+		}
+
+		else if (inFalador()) {
+			return "Falador";
+		}
+
+		else if (inPortSarim()) {
+			return "Port Sarim";
+		}
+
+		else if (inTaverly()) {
+			return "Taverly";
+		}
+
+		else if (inEntrana()) {
+			return "Entrana";
+		}
+
+		else if (inCatherby()) {
+			return "Catherby";
+		}
+
+		else if (isInSeersPartyHall()) {
+			return "Seers Party Hall";
+		}
+
+		else if (inSeers()) {
+			return "Seers";
+		}
+
+		else if (inGnomeStronghold()) {
+			return "Gnome Stronghold";
+		}
+
+		else if (inArdougne()) {
+			return "Ardougne";
+		}
+
+		else if (inYanille()) {
+			return "Yanille";
+		}
+
+		else if (inBrimhaven()) {
+			return "Brimhaven";
+		}
+
+		else if (inKaramja()) {
+			return "Karamja";
+		}
+
+		else if (inShiloVillage()) {
+			return "Shilo Village";
+		}
+
+		else if (isInFisherKingRealm()) {
+			return "Fisher King Realm";
+		}
+
+		else if (isInsideGrandTreeGround()) {
+			return "Grand Tree";
+		}
+
+		return getX() + "," + getY();
+	}
 
 	public static boolean inWilderness(int x, int y) {
 		int wild = 2203 - (y + (1776 - (944 * (int) (y / 944))));

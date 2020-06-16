@@ -79,15 +79,19 @@ public class OnlineListInterface extends NComponent {
 		setVisible(false);
 	}
 
-	public void addOnlineUser(final String user, final int crownID, boolean isLast) {
-		int textWidth = graphics().stringWidth(1, user) + (crownID > 0 ? 15 : 0);
+	public void addOnlineUser(final String user, final int crownID, String location, boolean isLast) {
+		String text = user;
+		if (!location.equals("")) {
+			text += " (" + location + ")";
+		}
+		int textWidth = graphics().stringWidth(1, text) + (crownID > 0 ? 15 : 0);
 		int textHeight = graphics().fontHeight(1) - 1;
 		if (currentX + textWidth > userListContainer.getWidth()) {
 			currentX = 5;
 			currentY += textHeight;
 		}
 		final NComponent userComponent = new NComponent(getClient());
-		userComponent.setText(isLast ? user : user + ", ");
+		userComponent.setText(isLast ? text : text + ", ");
 		userComponent.setFontColor(0xFFFFFF, 0xFF0000);
 		userComponent.setTextSize(1);
 		userComponent.setLocation(currentX, currentY);
