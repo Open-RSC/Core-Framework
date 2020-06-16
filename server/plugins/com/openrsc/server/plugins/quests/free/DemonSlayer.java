@@ -539,7 +539,7 @@ public class DemonSlayer implements QuestInterface,
 					"Hmm",
 					"Main problem with that is I'll need 25 sets of bones",
 					"Now where am I going to get hold of something like that");
-				int choices = multi(player, n,
+				int choices = multi(player, n, false,
 					"Hmm, that's too bad. I really need that key",
 					"I'll get the bones for you");
 				if (choices == 0) {
