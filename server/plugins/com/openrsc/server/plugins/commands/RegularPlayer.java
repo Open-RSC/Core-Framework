@@ -441,7 +441,8 @@ public final class RegularPlayer implements CommandTrigger {
 	private void queryOnlinePlayers(Player player) {
 		int online = 0;
 		ArrayList<Player> players = new ArrayList<>();
-		if (player.hasElevatedPriveledges()) {
+		ArrayList<String> locations = new ArrayList<>();
+		if (player.isMod()) {
 			for (Player targetPlayer : player.getWorld().getPlayers()) {
 				if (targetPlayer.getGroupID() >= player.getGroupID()) {
 					players.add(targetPlayer);
