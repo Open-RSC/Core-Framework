@@ -529,13 +529,13 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		int xp = 0;
 		int resultId = -1;
 		if (unfinishedPotId == ItemId.UNFINISHED_MARRENTILL_POTION.id()) {
-			xp = 150;
-			reqLevel = 5;
+			xp = 200;
+			reqLevel = 12;
 			resultId = ItemId.FULL_RUNECRAFT_POTION.id();
 		}
 		else if (unfinishedPotId == ItemId.UNFINISHED_AVANTOE_POTION.id()) {
-			xp = 450;
-			reqLevel = 50;
+			xp = 500;
+			reqLevel = 57;
 			resultId = ItemId.FULL_SUPER_RUNECRAFT_POTION.id();
 		}
 
@@ -585,7 +585,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		);
 		if (unfinished == null || secondary == null) return;
 		if (secondary.getAmount() < 10) return;
-		
+
 		player.playSound("mix");
 		player.playerServerMessage(MessageType.QUEST, "You mix the " + secondary.getDef(player.getWorld()).getName()
 			+ " into your potion");
