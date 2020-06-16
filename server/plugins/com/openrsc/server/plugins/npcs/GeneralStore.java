@@ -68,16 +68,16 @@ public final class GeneralStore extends AbstractShop {
 	}
 
 	@Override
-	public void onTalkNpc(final Player p, final Npc n) {
-		Shop shop = getShop(n, p);
+	public void onTalkNpc(final Player player, final Npc n) {
+		Shop shop = getShop(n, player);
 		if (shop != null) {
-			npcsay(p, n, "Can I help you at all?");
-			int menu = multi(p, n, "Yes please, what are you selling?", "No thanks");
+			npcsay(player, n, "Can I help you at all?");
+			int menu = multi(player, n, "Yes please, what are you selling?", "No thanks");
 			if (menu == 0) {
-				npcsay(p, n, "Take a look");
+				npcsay(player, n, "Take a look");
 
-				p.setAccessingShop(shop);
-				ActionSender.showShop(p, shop);
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
 			}
 		}
 	}
@@ -96,38 +96,40 @@ public final class GeneralStore extends AbstractShop {
 	}
 
 	private Shop getShop(Npc n, Player player) {
-		boolean found = false;
-		Shop shp = null;
-		for (final Shop s : shops) {
-			if (s != null) {
-				for (final int i : s.ownerIDs) {
-					if (i == n.getID()) {
-						found = true;
-						shp = s;
+		Shop accessedShop = null;
+		final Point location = player.getLocation();
+
+		// Lumbridge
+		if (location.getX() >= 132 && location.getX() <= 137
+			&& location.getY() >= 639 && location.getY() <= 644) {
+			accessedShop = shops[3];
+		}
+
+		// Falador
+		else if (location.getX() >= 317 && location.getX() <= 322
+			&& location.getY() >= 530 && location.getY() <= 536) {
+			accessedShop = shops[2];
+		}
+
+		// Varrock
+		else if (location.getX() >= 124 && location.getX() <= 129
+			&& location.getY() >= 513 && location.getY() <= 518) {
+			accessedShop = shops[1];
+		}
+
+		// Unique shop keepers
+		else {
+			for (final Shop currentShop : shops) {
+				if (currentShop != null) {
+					for (final int i : currentShop.ownerIDs) {
+						if (i == n.getID()) {
+							accessedShop = currentShop;
+						}
 					}
 				}
 			}
 		}
-		if (!found) {
-			return null;
-		}
 
-		final Shop shap = shp;
-
-		final Point location = player.getLocation();
-
-		Shop shop = shap;
-
-		if (location.getX() >= 132 && location.getX() <= 137
-			&& location.getY() >= 639 && location.getY() <= 644) {
-			shop = shops[3];
-		} else if (location.getX() >= 317 && location.getX() <= 322
-			&& location.getY() >= 530 && location.getY() <= 536) {
-			shop = shops[2];
-		} else if (location.getX() >= 124 && location.getX() <= 129
-			&& location.getY() >= 513 && location.getY() <= 518) {
-			shop = shops[1];
-		}
-		return shop;
+		return accessedShop;
 	}
 }
