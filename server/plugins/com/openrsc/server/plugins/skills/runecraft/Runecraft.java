@@ -307,8 +307,8 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 				if (i == null) break;
 				player.getCarriedItems().remove(i);
 
-				// Don't get any runes if they have a fancy talisman
-				if (!(cursed || enfeebled)) {
+				// Don't get any runes if they have a enfeebled talisman
+				if (!enfeebled) {
 					player.getCarriedItems().getInventory().add(new Item(def.getRuneId(), getRuneMultiplier(player, def.getRuneId())));
 				}
 				++successCount;
@@ -324,10 +324,9 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 				if (talisman == null) {
 					multiplier = 1;
 				} else {
-					// Cursed talisman gets replaced with the original.
+					// Cursed talisman gets destroyed.
 					player.getCarriedItems().remove(talisman);
-					player.message("The runes crumble to dust and the glow of your cursed talisman fades away");
-					player.getCarriedItems().getInventory().add(new Item(TALISMANS[talismanIndex]));
+					player.message("Your talisman crumbles to dust");
 				}
 			} else if (enfeebled) {
 				Item talisman = player.getCarriedItems().getInventory().get(
