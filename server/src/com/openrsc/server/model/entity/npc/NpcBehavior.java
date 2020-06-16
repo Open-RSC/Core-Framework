@@ -141,7 +141,6 @@ public class NpcBehavior {
 
 		// If NPC has not moved and is out of combat
 		// and is finished its previous path.
-		target = null;
 		if (checkCombatTimer(lastMovement, 5) && checkCombatTimer(npc.getCombatTimer(), 5) && npc.finishedPath()) {
 			lastMovement = System.currentTimeMillis();
 			int rand = DataConversions.random(0, 1);
@@ -394,6 +393,7 @@ public class NpcBehavior {
 
 	public void setRoaming() {
 		npc.setExecutedAggroScript(false);
+		target = null;
 		state = State.ROAM;
 	}
 

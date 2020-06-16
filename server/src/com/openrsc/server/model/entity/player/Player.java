@@ -1822,13 +1822,15 @@ public final class Player extends Mob {
 		getUpdateFlags().reset();
 		removeSkull();
 
-		getWorld().getServer().getGameEventHandler().add(new DelayedEvent(player.getWorld(), this, getConfig().GAME_TICK * 5, "Reset Killed") {
-			@Override
-			public void run() {
-				getOwner().killed = false;
-				stop();
+		getWorld().getServer().getGameEventHandler().add(
+			new DelayedEvent(getWorld(), this, getConfig().GAME_TICK * 5, "Reset Killed") {
+				@Override
+				public void run() {
+					getOwner().killed = false;
+					stop();
+				}
 			}
-		});
+		);
 	}
 
 	private int getEquippedWeaponID() {
