@@ -204,6 +204,24 @@ public class Drinkables implements OpInvTrigger {
 		else if (id == ItemId.GLASS_MILK.id())
 			handleGlassMilk(player, item);
 
+		else if (id == ItemId.FULL_RUNECRAFT_POTION.id())
+			useRunecraftPotion(player, item, ItemId.TWO_RUNECRAFT_POTION.id(), false, 2);
+
+		else if (id == ItemId.TWO_RUNECRAFT_POTION.id())
+			useRunecraftPotion(player, item, ItemId.ONE_RUNECRAFT_POTION.id(), false, 1);
+
+		else if (id == ItemId.ONE_RUNECRAFT_POTION.id())
+			useRunecraftPotion(player, item, ItemId.EMPTY_VIAL.id(), false, 0);
+
+		else if (id == ItemId.FULL_SUPER_RUNECRAFT_POTION.id())
+			useRunecraftPotion(player, item, ItemId.TWO_SUPER_RUNECRAFT_POTION.id(), true, 2);
+
+		else if (id == ItemId.TWO_SUPER_RUNECRAFT_POTION.id())
+			useRunecraftPotion(player, item, ItemId.ONE_SUPER_RUNECRAFT_POTION.id(), true, 1);
+
+		else if (id == ItemId.ONE_SUPER_RUNECRAFT_POTION.id())
+			useRunecraftPotion(player, item, ItemId.EMPTY_VIAL.id(), true, 0);
+
 		else
 			player.message("Nothing interesting happens");
 	}
@@ -379,6 +397,20 @@ public class Drinkables implements OpInvTrigger {
 			player.message("You have finished your potion");
 		} else {
 			player.message("You have " + left + " dose" + (left == 1 ? "" : "s") + " of potion left");
+		}
+	}
+
+	private void useRunecraftPotion(Player player, final Item item, final int newItem, final boolean superPot, final int left) {
+		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
+		player.getCarriedItems().remove(item);
+		player.getCarriedItems().getInventory().add(new Item(newItem));
+		int newStat = Math.min(player.getSkills().getLevel(Skills.RUNECRAFT), player.getSkills().getMaxStat(Skills.RUNECRAFT)) + (superPot ? 6 : 3);
+		player.getSkills().setLevel(Skills.RUNECRAFT, newStat);
+		delay(config().GAME_TICK * 2);
+		if (left <= 0) {
+			player.message("You have finished your potion");
+		} else {
+			player.message("You have " + left + " doses of potion left");
 		}
 	}
 
