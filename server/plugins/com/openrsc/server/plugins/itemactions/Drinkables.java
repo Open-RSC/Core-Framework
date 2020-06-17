@@ -204,24 +204,29 @@ public class Drinkables implements OpInvTrigger {
 		else if (id == ItemId.GLASS_MILK.id())
 			handleGlassMilk(player, item);
 
-		else if (id == ItemId.FULL_RUNECRAFT_POTION.id())
-			useRunecraftPotion(player, item, ItemId.TWO_RUNECRAFT_POTION.id(), false, 2);
+		else if (config().WANT_RUNECRAFT) {
 
-		else if (id == ItemId.TWO_RUNECRAFT_POTION.id())
-			useRunecraftPotion(player, item, ItemId.ONE_RUNECRAFT_POTION.id(), false, 1);
+			if (id == ItemId.FULL_RUNECRAFT_POTION.id())
+				useRunecraftPotion(player, item, ItemId.TWO_RUNECRAFT_POTION.id(), false, 2);
 
-		else if (id == ItemId.ONE_RUNECRAFT_POTION.id())
-			useRunecraftPotion(player, item, ItemId.EMPTY_VIAL.id(), false, 0);
+			else if (id == ItemId.TWO_RUNECRAFT_POTION.id())
+				useRunecraftPotion(player, item, ItemId.ONE_RUNECRAFT_POTION.id(), false, 1);
 
-		else if (id == ItemId.FULL_SUPER_RUNECRAFT_POTION.id())
-			useRunecraftPotion(player, item, ItemId.TWO_SUPER_RUNECRAFT_POTION.id(), true, 2);
+			else if (id == ItemId.ONE_RUNECRAFT_POTION.id())
+				useRunecraftPotion(player, item, ItemId.EMPTY_VIAL.id(), false, 0);
 
-		else if (id == ItemId.TWO_SUPER_RUNECRAFT_POTION.id())
-			useRunecraftPotion(player, item, ItemId.ONE_SUPER_RUNECRAFT_POTION.id(), true, 1);
+			else if (id == ItemId.FULL_SUPER_RUNECRAFT_POTION.id())
+				useRunecraftPotion(player, item, ItemId.TWO_SUPER_RUNECRAFT_POTION.id(), true, 2);
 
-		else if (id == ItemId.ONE_SUPER_RUNECRAFT_POTION.id())
-			useRunecraftPotion(player, item, ItemId.EMPTY_VIAL.id(), true, 0);
+			else if (id == ItemId.TWO_SUPER_RUNECRAFT_POTION.id())
+				useRunecraftPotion(player, item, ItemId.ONE_SUPER_RUNECRAFT_POTION.id(), true, 1);
 
+			else if (id == ItemId.ONE_SUPER_RUNECRAFT_POTION.id())
+				useRunecraftPotion(player, item, ItemId.EMPTY_VIAL.id(), true, 0);
+			
+			else
+				player.message("Nothing interesting happens");
+		}
 		else
 			player.message("Nothing interesting happens");
 	}
