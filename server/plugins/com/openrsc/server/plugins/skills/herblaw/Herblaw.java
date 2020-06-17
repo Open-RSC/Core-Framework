@@ -43,7 +43,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 	int LOW = 0;
 	int HIGH = 1;
-	HashMap<Integer, int[]> oilPerFish = new HashMap<>(){{
+	HashMap<Integer, int[]> oilPerFish = new HashMap<Integer, int[]>(){{
 		put(ItemId.RAW_TROUT.id(), new int[]{0, 1});
 		put(ItemId.RAW_PIKE.id(), new int[]{1, 1});
 		put(ItemId.RAW_SALMON.id(), new int[]{1, 1});

@@ -126,7 +126,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 	final int LAW_ALTAR = 1208;
 	final int DEATH_ALTAR = 1210;
 	final int BLOOD_ALTAR = 1212;
-	HashMap<Integer, int[]> altarTalismans = new HashMap<>() {{
+	HashMap<Integer, int[]> altarTalismans = new HashMap<Integer, int[]>() {{
 		put(AIR_ALTAR, new int[]{
 			ItemId.AIR_TALISMAN.id(),
 			ItemId.CURSED_AIR_TALISMAN.id(),
