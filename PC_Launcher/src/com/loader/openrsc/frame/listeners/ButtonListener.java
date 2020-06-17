@@ -64,10 +64,10 @@ public class ButtonListener implements ActionListener {
 			}
 
 			case "dev": {
-				String ip = "orsc.dev";
+				String ip = "game.openrsc.com";
 				String port = "43599";
 				set(ip, port);
-				launch();
+				launch(true);
 				return;
 			}
 
@@ -146,6 +146,10 @@ public class ButtonListener implements ActionListener {
 	}
 
 	private void launch() {
+		launch(false);
+	}
+
+	private void launch(boolean dev) {
 		// Deletes the client.properties file that may persist unwanted settings between different games
 		File f = new File(Constants.CONF_DIR + File.separator + "client.properties");
 		f.delete();
@@ -170,6 +174,6 @@ public class ButtonListener implements ActionListener {
 			}
 		}
 
-		ClientLauncher.launchClient();
+		ClientLauncher.launchClient(dev);
 	}
 }

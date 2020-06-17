@@ -15,9 +15,10 @@ public class ClientLauncher {
 		return frame;
 	}
 
-	public static void launchClient() throws IllegalArgumentException, SecurityException {
+	public static void launchClient(boolean dev) throws IllegalArgumentException, SecurityException {
 		try {
-			File f = new File(Constants.CONF_DIR + File.separator + Constants.CLIENT_FILENAME);
+			File f = new File(Constants.CONF_DIR + File.separator
+				+ Constants.CLIENT_FILENAME + (dev ? "_dev" : "") + ".jar");
 			ProcessBuilder pb = new ProcessBuilder(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java", "-jar", f.getAbsolutePath());
 			pb.start();
 		} catch (Exception e) {
