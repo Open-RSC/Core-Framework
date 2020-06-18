@@ -608,30 +608,49 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				player.message("You have already unlocked the door");
 				return;
 			}
-			player.playerServerMessage(MessageType.QUEST, "you attempt to pick the lock");
 
-			if (getCurrentLevel(player, Skills.THIEVING) < req) {
-				player.playerServerMessage(MessageType.QUEST, "You are not a high enough level to pick this lock");
+			int repeat = 1;
+			if (config().BATCH_PROGRESSION) {
+				repeat = Formulae.getRepeatTimes(player, Skills.THIEVING);
+			}
+
+			startbatch(repeat);
+			batchPicklock(player, obj, req, exp, goThrough, requiresLockpick);
+		}
+	}
+
+	public void batchPicklock(Player player, GameObject obj, int req,
+							  int exp, boolean goThrough, boolean requiresLockpick) {
+		player.playerServerMessage(MessageType.QUEST, "you attempt to pick the lock");
+
+		if (getCurrentLevel(player, Skills.THIEVING) < req) {
+			player.playerServerMessage(MessageType.QUEST, "You are not a high enough level to pick this lock");
+			return;
+		}
+		if (!player.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false)) && requiresLockpick) {
+			player.playerServerMessage(MessageType.QUEST, "You need a lockpick for this lock");
+			return;
+		}
+		if (config().WANT_FATIGUE) {
+			if (config().STOP_SKILLING_FATIGUED >= 2
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.message("You are too tired to pick the lock");
 				return;
 			}
-			if (!player.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false)) && requiresLockpick) {
-				player.playerServerMessage(MessageType.QUEST, "You need a lockpick for this lock");
-				return;
-			}
-			if (config().WANT_FATIGUE) {
-				if (config().STOP_SKILLING_FATIGUED >= 2
-					&& player.getFatigue() >= player.MAX_FATIGUE) {
-					player.message("You are too tired to pick the lock");
-					return;
-				}
-			}
-			if (succeedPickLockThieving(player, req) && !goThrough) {
-				player.playerServerMessage(MessageType.QUEST, "You manage to pick the lock");
-				doDoor(obj, player);
-				player.message("You go through the door");
-				player.incExp(Skills.THIEVING, (int) exp, true);
-			} else {
-				player.playerServerMessage(MessageType.QUEST, "You fail to pick the lock");
+		}
+		if (succeedPickLockThieving(player, req) && !goThrough) {
+			player.playerServerMessage(MessageType.QUEST, "You manage to pick the lock");
+			doDoor(obj, player);
+			player.message("You go through the door");
+			player.incExp(Skills.THIEVING, (int) exp, true);
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You fail to pick the lock");
+
+			// Repeat on failure
+			updatebatch();
+			if (!ifinterrupted() && !ifbatchcompleted()) {
+				delay(config().GAME_TICK);
+				batchPicklock(player, obj, req, exp, goThrough, requiresLockpick);
 			}
 		}
 	}
