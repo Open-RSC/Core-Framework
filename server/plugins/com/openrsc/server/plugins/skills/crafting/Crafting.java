@@ -123,10 +123,10 @@ public class Crafting implements UseInvTrigger,
 			useWool(player, item1, item2);
 		} else if (item2ID == ItemId.BALL_OF_WOOL.id()) {
 			useWool(player, item2, item1);
-		} else if ((item1ID == ItemId.BUCKET_OF_WATER.id() || item1ID == ItemId.JUG_OF_WATER.id() || item1ID == ItemId.BOWL_OF_WATER.id()) && useWater(player, item1, item2)) {
-			return;
-		} else if ((item2ID == ItemId.BUCKET_OF_WATER.id() || item2ID == ItemId.JUG_OF_WATER.id() || item2ID == ItemId.BOWL_OF_WATER.id()) && useWater(player, item2, item1)) {
-			return;
+		} else if ((item1ID == ItemId.BUCKET_OF_WATER.id() || item1ID == ItemId.JUG_OF_WATER.id()) && item2ID == ItemId.CLAY.id()) {
+			useWater(player, item1, item2);
+		} else if ((item2ID == ItemId.BUCKET_OF_WATER.id() || item2ID == ItemId.JUG_OF_WATER.id()) && item1ID == ItemId.CLAY.id()) {
+			useWater(player, item2, item1);
 		} else if (item1ID == ItemId.MOLTEN_GLASS.id() && item2ID == ItemId.LENS_MOULD.id() || item1ID == ItemId.LENS_MOULD.id() && item2ID == ItemId.MOLTEN_GLASS.id()) {
 			if (getQuestStage(player, Quests.OBSERVATORY_QUEST) >= 0 && getQuestStage(player, Quests.OBSERVATORY_QUEST) <= 5) {
 				say(player, null, "Perhaps I should speak to the professor first");
@@ -1026,30 +1026,42 @@ public class Crafting implements UseInvTrigger,
 		}
 	}
 
-	private boolean useWater(Player player, Item water, Item item) {
+	private void useWater(Player player, Item water, Item item) {
+		int repeat = 1;
+		if (config().BATCH_PROGRESSION) {
+			repeat = Math.min(player.getCarriedItems().getInventory().countId(water.getCatalogId(), Optional.of(false)),
+				player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)));
+		}
+
+		startbatch(repeat);
+		batchWaterClay(player, water, item);
+	}
+
+	private void batchWaterClay(Player player, Item water, Item item) {
 		int jugID = Formulae.getEmptyJug(water.getCatalogId());
-		if (jugID == -1) { // This shouldn't happen
-			return false;
+		if (jugID == -1) return;
+
+		water = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(water.getCatalogId(), Optional.of(false))
+		);
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+		);
+		if (water == null || item == null) return;
+		player.getCarriedItems().remove(water);
+		player.getCarriedItems().remove(item);
+		player.getCarriedItems().getInventory().add(new Item(jugID));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.SOFT_CLAY.id()));
+		player.message("You mix the clay and water");
+		delay(config().GAME_TICK * 2);
+		player.message("You now have some soft workable clay");
+
+		// Repeat
+		updatebatch();
+		if (!ifinterrupted() && !ifbatchcompleted()) {
+			delay(config().GAME_TICK);
+			batchWaterClay(player, water, item);
 		}
-		// Clay and water is not bowl of water
-		if (item.getCatalogId() == ItemId.CLAY.id() && water.getCatalogId() != ItemId.BOWL_OF_WATER.id()) {
-			water = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(water.getCatalogId(), Optional.of(false))
-			);
-			item = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
-			);
-			if (water == null || item == null) return false;
-			player.getCarriedItems().remove(water);
-			player.getCarriedItems().remove(item);
-			player.getCarriedItems().getInventory().add(new Item(jugID));
-			player.getCarriedItems().getInventory().add(new Item(ItemId.SOFT_CLAY.id()));
-			mes(config().GAME_TICK * 2, "You mix the clay and water");
-			player.message("You now have some soft workable clay");
-		} else {
-			return false;
-		}
-		return true;
 	}
 
 	private String potteryItemName(String rawName) {
