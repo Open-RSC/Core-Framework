@@ -736,12 +736,11 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			thinkbubble(new Item(ItemId.PESTLE_AND_MORTAR.id()));
 		}
 		player.getCarriedItems().getInventory().add(new Item(newID, DataConversions.random(min, max)));
-		delay(config().GAME_TICK);
 
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(config().GAME_TICK);
+			delay(config().GAME_TICK * 2);
 			batchGrind(player, item, newID);
 		}
 	}
