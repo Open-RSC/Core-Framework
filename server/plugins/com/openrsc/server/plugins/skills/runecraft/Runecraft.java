@@ -259,11 +259,6 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 				return;
 			}
 
-			if (player.getSkills().getLevel(Skills.RUNECRAFT) < def.getRequiredLvl()) {
-				player.message("You require more skill to use this altar.");
-				return;
-			}
-
 			// Get the proper talisman type for the altar
 			int talismanIndex = -1;
 			for (int i = 0; i < BIND_ALTARS.length; i++) {
@@ -282,13 +277,25 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 				multiplier = 5;
 				levelAdd = 14;
 				enfeebled = true;
+			} else if (player.getCarriedItems().hasCatalogID(CURSED_TALISMANS[talismanIndex], Optional.of(false))) {
+				multiplier = 2;
+				levelAdd = 7;
+				cursed = true;
 			}
-			if (!enfeebled) {
-				if (player.getCarriedItems().hasCatalogID(CURSED_TALISMANS[talismanIndex], Optional.of(false))) {
-					multiplier = 2;
-					levelAdd = 7;
-					cursed = true;
-				}
+
+			// Check to see if they have a talisman
+			// cursed == enfeebled would mean both are false,
+			// thus they are not carrying either special type.
+			if (cursed == enfeebled &&
+				player.getCarriedItems().getInventory().countId(TALISMANS[talismanIndex], Optional.of(false)) <= 0) {
+
+				player.message("You need a talisman to use the power of this altar");
+				return;
+			}
+
+			if (player.getSkills().getLevel(Skills.RUNECRAFT) < def.getRequiredLvl()) {
+				player.message("You require more skill to use this altar.");
+				return;
 			}
 
 			if ((cursed || enfeebled)
