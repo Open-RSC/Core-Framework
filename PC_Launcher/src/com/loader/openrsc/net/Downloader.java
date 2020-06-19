@@ -19,6 +19,7 @@ public class Downloader {
 		excludedFiles.add(Constants.MD5_TABLENAME);
 		excludedFiles.add("android_version.txt");
 		excludedFiles.add("openrsc.apk");
+		excludedFiles.add("OpenRSC.jar");
 		refuseUpdate.add("credentials.txt");
 		refuseUpdate.add("config.txt");
 	}
