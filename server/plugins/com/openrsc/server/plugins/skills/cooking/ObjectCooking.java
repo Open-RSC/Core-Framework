@@ -197,11 +197,10 @@ public class ObjectCooking implements UseLocTrigger {
 				}
 			}
 
-			delay(config().GAME_TICK);
-
 			// Repeat
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
+				delay(config().GAME_TICK);
 				batchCooking(player, item, timeToCook, cookingDef);
 			}
 		}
