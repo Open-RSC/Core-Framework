@@ -274,27 +274,38 @@ public final class SkillGuideInterface {
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Hits")) {
+			boolean harvesting = Config.S_WANT_HARVESTING && Config.S_WANT_CUSTOM_SPRITES;
+			boolean runecraft = Config.S_WANT_RUNECRAFT && Config.S_WANT_CUSTOM_SPRITES;
 			skillMenuEntries.add(new SkillMenuItem(193, "", "Beer - Heals 1"));
+			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1352, "", "Red Cabbage - Heals 1"));
+			if (runecraft) skillMenuEntries.add(new SkillMenuItem(1410, "", "Fish oil - 50% chance to heal 1"));
 			skillMenuEntries.add(new SkillMenuItem(350, "", "Shrimp - Heals 2"));
 			skillMenuEntries.add(new SkillMenuItem(352, "", "Anchovies - Heals 2"));
 			skillMenuEntries.add(new SkillMenuItem(249, "", "Banana - Heals 2"));
+			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1349, "", "grapefruit - Heals 2"));
+			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1359, "", "grapefruit slices - Heals 2"));
+			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1360, "", "Diced grapefruit - Heals 2"));
 			skillMenuEntries.add(new SkillMenuItem(132, "", "Cooked Meat - Heals 3"));
 			skillMenuEntries.add(new SkillMenuItem(355, "", "Sardine - Heals 4"));
 			skillMenuEntries.add(new SkillMenuItem(138, "", "Bread - Heals 4"));
+			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1348, "", "red apple - Heals 4"));
 			skillMenuEntries.add(new SkillMenuItem(362, "", "Herring - Heals 5"));
 			skillMenuEntries.add(new SkillMenuItem(718, "", "Giant Carp - Heals 6"));
 			skillMenuEntries.add(new SkillMenuItem(553, "", "Mackerel - Heals 6"));
 			skillMenuEntries.add(new SkillMenuItem(258, "", "Redberry Pie - Heals 6"));
+			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1353, "", "Corn - Heals 6"));
 			skillMenuEntries.add(new SkillMenuItem(359, "", "Trout - Heals 7"));
 			skillMenuEntries.add(new SkillMenuItem(551, "", "Cod - Heals 7"));
 			skillMenuEntries.add(new SkillMenuItem(364, "", "Pike - Heals 8"));
 			skillMenuEntries.add(new SkillMenuItem(259, "", "Meat Pie - Heals 8"));
 			skillMenuEntries.add(new SkillMenuItem(1269, "", "Oomlie Meat Parcel - Heals 8"));
+			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1350, "", "papaya - Heals 8"));
 			skillMenuEntries.add(new SkillMenuItem(357, "", "Salmon - Heals 9"));
 			skillMenuEntries.add(new SkillMenuItem(346, "", "Stew - Heals 9"));
 			skillMenuEntries.add(new SkillMenuItem(367, "", "Tuna - Heals 10"));
 			skillMenuEntries.add(new SkillMenuItem(325, "", "Plain Pizza - Heals 10"));
 			skillMenuEntries.add(new SkillMenuItem(257, "", "Apple Pie - Heals 10"));
+			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1354, "", "White Pumpkin - Heals 10"));
 			skillMenuEntries.add(new SkillMenuItem(142, "", "Wine - Heals 11"));
 			skillMenuEntries.add(new SkillMenuItem(373, "", "Lobster - Heals 12"));
 			skillMenuEntries.add(new SkillMenuItem(330, "", "Cake - Heals 12"));
@@ -308,8 +319,8 @@ public final class SkillGuideInterface {
 			skillMenuEntries.add(new SkillMenuItem(1102, "", "Tasty Ugthanki Kebab - Heals 19"));
 			skillMenuEntries.add(new SkillMenuItem(546, "", "Shark - Heals 20"));
 			skillMenuEntries.add(new SkillMenuItem(750, "", "Pineapple Pizza - Heals 20"));
-			skillMenuEntries.add(new SkillMenuItem(1193, "", "Sea Turtle - Heals 21"));
-			skillMenuEntries.add(new SkillMenuItem(1191, "", "Manta Ray - Heals 22"));
+			skillMenuEntries.add(new SkillMenuItem(1193, "", "Sea Turtle - Heals 20"));
+			skillMenuEntries.add(new SkillMenuItem(1191, "", "Manta Ray - Heals 20"));
 			/*if (Config.S_WANT_CUSTOM_SPRITES) {
 				skillMenuEntries.add(new SkillMenuItem(2319, "99", "Cape"));
 			}*/
@@ -624,6 +635,9 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(615, "62", "Battlestaff of Fire"));
 				skillMenuEntries.add(new SkillMenuItem(617, "66", "Battlestaff of Air"));
 			} else if (curTab == 7) {
+				if (Config.S_WANT_RUNECRAFT && Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(1385, "1", "Uncharged talismans"));
+				}
 				skillMenuEntries.add(new SkillMenuItem(779, "34", "Oyster Pearls"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1347, "90", "King Black Dragon Scale"));
@@ -692,6 +706,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(105, "33", "Steel Medium Helms - 1 Bar"));
 				skillMenuEntries.add(new SkillMenuItem(67, "34", "Steel Short Swords - 1 Bar"));
 				skillMenuEntries.add(new SkillMenuItem(1064, "34", "Steel Dart Tips - 1 Bar makes 7"));
+				skillMenuEntries.add(new SkillMenuItem(419, "34", "Nails - 1 Bar makes 2"));
 				skillMenuEntries.add(new SkillMenuItem(84, "35", "Steel Scimitars - 2 Bars"));
 				skillMenuEntries.add(new SkillMenuItem(671, "35", "Steel Arrowheads - 1 Bar makes 10"));
 				skillMenuEntries.add(new SkillMenuItem(1041, "35", "Cannonball - 1 Bar"));
@@ -798,6 +813,7 @@ public final class SkillGuideInterface {
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Herblaw")) {
+			boolean runecraft = Config.S_WANT_RUNECRAFT && Config.S_WANT_CUSTOM_SPRITES;
 			if (curTab == 0) {
 				skillMenuEntries.add(new SkillMenuItem(444, "3", EntityHandler.getItemDef(444).name));
 				skillMenuEntries.add(new SkillMenuItem(445, "5", EntityHandler.getItemDef(445).name));
@@ -815,6 +831,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(566, "5", "Cure poison potion - Marrentill & ground unicorn horn"));
 				skillMenuEntries.add(new SkillMenuItem(1176, "10", "Explosive compound - Nitro & nitrate & charcoal & a. root"));
 				skillMenuEntries.add(new SkillMenuItem(222, "12", "Strength potion - Tarromin & limpwurt root"));
+				if (runecraft) skillMenuEntries.add(new SkillMenuItem(1411, "12", "Runecraft potion - Marrentill & 10 fish oil"));
 				skillMenuEntries.add(new SkillMenuItem(1053, "14", "Ogre potion - Guam leaf & jangerberries & ground bat bones"));
 				skillMenuEntries.add(new SkillMenuItem(477, "22", "Stat restore potion - Harralander & red spiders' eggs"));
 				skillMenuEntries.add(new SkillMenuItem(588, "25", "Blamish oil - Harralander & blamish snail slime"));
@@ -825,6 +842,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(569, "48", "Poison antidote - Irit leaf & ground unicorn horn"));
 				skillMenuEntries.add(new SkillMenuItem(489, "50", "Fishing potion - Avantoe & snape grass"));
 				skillMenuEntries.add(new SkillMenuItem(492, "55", "Super strength potion - Kwuarm & limpwurt root"));
+				if (runecraft) skillMenuEntries.add(new SkillMenuItem(1414, "57", "Super Runecraft potion - Avantoe & 10 fish oil"));
 				skillMenuEntries.add(new SkillMenuItem(572, "60", "Weapon poison potion - Kwuarm & ground blue dragon scale"));
 				skillMenuEntries.add(new SkillMenuItem(495, "66", "Super defense potion - Cadantine & white berries"));
 				skillMenuEntries.add(new SkillMenuItem(498, "72", "Ranging potion - Dwarf weed & wine of zamorak"));
@@ -957,6 +975,36 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(32, "95", "Water Rune x6"));
 				skillMenuEntries.add(new SkillMenuItem(35, "98", "Mind Rune x8"));
 				skillMenuEntries.add(new SkillMenuItem(33, "99", "Air Rune x10"));
+			}
+			else if (curTab == 2) {
+				skillMenuEntries.add(new SkillMenuItem(1300, "1", "Imbue Air talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1301, "2", "Imbue Mind talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1302, "5", "Imbue Water talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1386, "8", "Cursed air talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1387, "8", "Cursed mind talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1303, "9", "Imbue Earth talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1388, "12", "Cursed water talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1304, "14", "Imbue Fire talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1398, "15", "Enfeebled air talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1399, "15", "Enfeebled mind talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1389, "16", "Cursed earth talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1400, "19", "Enfeebled water talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1305, "20", "Imbue Body talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1390, "21", "Cursed fire talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1401, "23", "Enfeebled earth talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1306, "27", "Imbue Cosmic talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1391, "27", "Cursed body talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1402, "28", "Enfeebled fire talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1392, "34", "Cursed cosmic talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1403, "34", "Enfeebled body talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1307, "35", "Imbue Chaos talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1404, "41", "Enfeebled cosmic talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1393, "42", "Cursed chaos talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1308, "44", "Imbue Nature talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1394, "49", "Cursed nature talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1405, "49", "Enfeebled chaos talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1406, "56", "Enfeebled nature talisman"));
+
 			}
 		}
 		if (mc.getSkillGuideChosen().equalsIgnoreCase("Harvesting")) {

@@ -16666,6 +16666,8 @@ public final class mudclient implements Runnable {
 		} else if (skillGuideChosen.equalsIgnoreCase("Runecraft")) {
 			skillGuideChosenTabs.add("Singles");
 			skillGuideChosenTabs.add("Multiples");
+			skillGuideChosenTabs.add("Talismans");
+
 		} else if (skillGuideChosen.equalsIgnoreCase("Harvesting")) {
 			skillGuideChosenTabs.add("Allotments");
 			skillGuideChosenTabs.add("Fruits");
