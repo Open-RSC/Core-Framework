@@ -98,8 +98,10 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 				case 9:
 				case 10:
 				case -1:
-					npcsay(player, t_guard, "It is the wizards helping hand",
-						"Let 'em up");
+					if (t_guard != null) {
+						npcsay(player, t_guard, "It is the wizards helping hand",
+							"Let 'em up");
+					}
 					int[] coords = coordModifier(player, true, obj);
 					player.teleport(coords[0], coords[1], false);
 					break;
@@ -442,8 +444,10 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 				player.teleport(player.getX() + 1, player.getY());
 			} else {
 				if (player.getCache().hasKey("has_ogre_gift") || player.getQuestStage(Quests.WATCHTOWER) == -1) {
-					npcsay(player, ogre_guard, "It's that creature again",
-						"This time we will let it go...");
+					if (ogre_guard != null) {
+						npcsay(player, ogre_guard, "It's that creature again",
+							"This time we will let it go...");
+					}
 					player.teleport(player.getX() - 1, player.getY());
 					player.message("You climb over the battlement");
 				} else if (player.getCache().hasKey("get_ogre_gift")) {

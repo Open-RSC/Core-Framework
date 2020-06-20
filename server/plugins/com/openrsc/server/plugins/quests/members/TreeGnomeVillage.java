@@ -854,6 +854,7 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 392) {
 			Npc trackerTwo = ifnearvisnpc(player, NpcId.TRACKER_2.id(), 5);
+			if (trackerTwo == null) return;
 			switch (player.getQuestStage(getQuestId())) {
 				case 0:
 				case 1:

@@ -535,42 +535,44 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					player.teleport(419, 2992);
 					delay(5000);
 					Npc jailCharlie = ifnearvisnpc(player, NpcId.CHARLIE.id(), 5);
-					npcsay(player, jailCharlie, "so, they've got you as well");
-					say(player, jailCharlie, "it's glough, he's trying to cover something up");
-					npcsay(player, jailCharlie, "i shouldn't tell you this adventurer",
-						"but if you want to get to the bottom of this",
-						"you should go and talk to the karamja foreman");
-					say(player, jailCharlie, "why?");
-					npcsay(player, jailCharlie, "glough sent me to karamja to meet him",
-						"i delivered a large amount of gold",
-						"for what i do not know",
-						"but he may be able to tell you what glough's up to",
-						"that's if you can get out of here",
-						"you'll find him in a ship yard south of birmhaven",
-						"be careful, if he discovers that you're not...",
-						"...working for glough there'll be trouble",
-						"the sea men use the pass word ka-lu-min");
-					say(player, jailCharlie, "thanks charlie");
-					delay(5000);
-					Npc narnode = addnpc(player.getWorld(), NpcId.KING_NARNODE_SHAREEN.id(), 419, 2993, (int)TimeUnit.SECONDS.toMillis(36));
-					npcsay(player, narnode, "adventurer please accept my apologies",
-						"glough had no right to arrest you",
-						"i just think he's scared of humans",
-						"let me get you out of there");
-					mes("king shareem opens the cage");
-					player.teleport(418, 2993);
-					say(player, narnode, "i don't think you can trust glough, narnode",
-						"he seems to have a unatural hatred for humans");
-					npcsay(player, narnode, "i know he can seem a little extreme at times",
-						"but he's the best tree guardian i have",
-						"he has however caused much fear towards humans",
-						"i'm afraid he's placed guards on the front gate...",
-						"...to stop you escaping",
-						"let my glider pilot fly you away",
-						"untill things calm down around here");
-					say(player, narnode, "well, if that's how you feel");
-					narnode.remove();
-					player.updateQuestStage(this, 8);
+					if (jailCharlie != null) {
+						npcsay(player, jailCharlie, "so, they've got you as well");
+						say(player, jailCharlie, "it's glough, he's trying to cover something up");
+						npcsay(player, jailCharlie, "i shouldn't tell you this adventurer",
+							"but if you want to get to the bottom of this",
+							"you should go and talk to the karamja foreman");
+						say(player, jailCharlie, "why?");
+						npcsay(player, jailCharlie, "glough sent me to karamja to meet him",
+							"i delivered a large amount of gold",
+							"for what i do not know",
+							"but he may be able to tell you what glough's up to",
+							"that's if you can get out of here",
+							"you'll find him in a ship yard south of birmhaven",
+							"be careful, if he discovers that you're not...",
+							"...working for glough there'll be trouble",
+							"the sea men use the pass word ka-lu-min");
+						say(player, jailCharlie, "thanks charlie");
+						delay(5000);
+						Npc narnode = addnpc(player.getWorld(), NpcId.KING_NARNODE_SHAREEN.id(), 419, 2993, (int)TimeUnit.SECONDS.toMillis(36));
+						npcsay(player, narnode, "adventurer please accept my apologies",
+							"glough had no right to arrest you",
+							"i just think he's scared of humans",
+							"let me get you out of there");
+						mes("king shareem opens the cage");
+						player.teleport(418, 2993);
+						say(player, narnode, "i don't think you can trust glough, narnode",
+							"he seems to have a unatural hatred for humans");
+						npcsay(player, narnode, "i know he can seem a little extreme at times",
+							"but he's the best tree guardian i have",
+							"he has however caused much fear towards humans",
+							"i'm afraid he's placed guards on the front gate...",
+							"...to stop you escaping",
+							"let my glider pilot fly you away",
+							"untill things calm down around here");
+						say(player, narnode, "well, if that's how you feel");
+						narnode.remove();
+						player.updateQuestStage(this, 8);
+					}
 					break;
 				case 10:
 					say(player, n, "I know what you're up to glough");
@@ -752,6 +754,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 			if (player.getQuestStage(this) == 8) {
 				player.message("you follow the foreman into the wooden hut");
 				Npc HUT_FOREMAN = ifnearvisnpc(player, NpcId.SHIPYARD_FOREMAN_HUT.id(), 4);
+				if (HUT_FOREMAN == null) return;
 				npcsay(player, HUT_FOREMAN, "so tell me again why you're here");
 				say(player, HUT_FOREMAN, "erm...glough sent me?");
 				npcsay(player, HUT_FOREMAN, "ok and how is glough..still with his wife?");
@@ -821,6 +824,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				}
 			} else if (player.getQuestStage(this) == 9) {
 				Npc HUT_FOREMAN = ifnearvisnpc(player, NpcId.SHIPYARD_FOREMAN_HUT.id(), 4);
+				if (HUT_FOREMAN == null) return;
 				npcYell(player, n, "die imposter");
 				HUT_FOREMAN.setChasing(player);
 			}
@@ -887,10 +891,12 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					if (smuggled) {
 						player.teleport(708, 510);
 						Npc femi = ifnearvisnpc(player, NpcId.FEMI_STRONGHOLD.id(), 2);
-						npcsay(player, femi, "ok traveller, you'd better get going");
-						if (favor) {
-							say(player, femi, "thanks again femi");
-							npcsay(player, femi, "that's ok, all the best");
+						if (femi != null) {
+							npcsay(player, femi, "ok traveller, you'd better get going");
+							if (favor) {
+								say(player, femi, "thanks again femi");
+								npcsay(player, femi, "that's ok, all the best");
+							}
 						}
 					}
 					break;

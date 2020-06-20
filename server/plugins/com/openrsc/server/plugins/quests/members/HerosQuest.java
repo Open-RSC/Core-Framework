@@ -467,20 +467,22 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 		else if (obj.getID() == 76 && obj.getX() == 439 && obj.getY() == 694) {
 			Npc grubor = ifnearvisnpc(player, NpcId.GRUBOR.id(), 10);
 			if (player.getQuestStage(this) == -1) {
-				npcsay(player, grubor, "Yes? what do you want?");
-				int mem = multi(player, grubor, false, //do not send over
-					"Would you like to have your windows refitting?",
-					"I want to come in",
-					"Do you want to trade?");
-				if (mem == 0) {
-					say(player, grubor, "Would you like to have your windows refitting?");
-					npcsay(player, grubor, "Don't be daft, we don't have any windows");
-				} else if (mem == 1) {
-					say(player, grubor, "I want to come in");
-					npcsay(player, grubor, "No, go away");
-				} else if (mem == 2) {
-					say(player, grubor, "Do you want to trade");
-					npcsay(player, grubor, "No I'm busy");
+				if (grubor != null) {
+					npcsay(player, grubor, "Yes? what do you want?");
+					int mem = multi(player, grubor, false, //do not send over
+						"Would you like to have your windows refitting?",
+						"I want to come in",
+						"Do you want to trade?");
+					if (mem == 0) {
+						say(player, grubor, "Would you like to have your windows refitting?");
+						npcsay(player, grubor, "Don't be daft, we don't have any windows");
+					} else if (mem == 1) {
+						say(player, grubor, "I want to come in");
+						npcsay(player, grubor, "No, go away");
+					} else if (mem == 2) {
+						say(player, grubor, "Do you want to trade");
+						npcsay(player, grubor, "No I'm busy");
+					}
 				}
 				return;
 			}

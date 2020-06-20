@@ -2554,9 +2554,11 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 							Ana.remove();
 						}
 						Npc Irena = ifnearvisnpc(player, NpcId.IRENA.id(), 15);
-						npcsay(player, Irena, "Hi Ana!");
-						rewardMenu(player, Irena, true);
-						player.getCache().remove("tried_ana_barrel");
+						if (Irena != null) {
+							npcsay(player, Irena, "Hi Ana!");
+							rewardMenu(player, Irena, true);
+							player.getCache().remove("tried_ana_barrel");
+						}
 					}
 					//should not have an ana in barrel in other stages
 					else {
@@ -2886,7 +2888,8 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				player.message("You decide to attack the guard.");
 				npcsay(player, affectedmob, "Guards! Guards!");
 				if (affectedmob.getID() == NpcId.MERCENARY_CAPTAIN.id()) {
-					affectedmob = ifnearvisnpc(player, NpcId.MERCENARY.id(), 10);
+					Npc helpermob = ifnearvisnpc(player, NpcId.MERCENARY.id(), 10);
+					if (helpermob != null) affectedmob = helpermob;
 				}
 				affectedmob.startCombat(player);
 				if (affectedmob.getID() == NpcId.MERCENARY_ESCAPEGATES.id()) {

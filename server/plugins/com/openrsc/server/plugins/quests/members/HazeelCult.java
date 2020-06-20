@@ -171,22 +171,24 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 								"we'll sort this out once and for all");
 							mes("you follow ceril up to butler Jones' room");
 							player.teleport(613, 1562);
-							mes("ceril speaks briefly with Jones");
 							Npc ceril = ifnearvisnpc(player, NpcId.CERIL.id(), 10);
-							npcsay(player, ceril, "Well, he assures me that he's a loyal hard working man",
-								"I cannot fathom, why you would believe he is a spy");
-							say(player, ceril, "surely you won't take his word for it?");
-							npcsay(player, ceril, "we have also decided that due to the humilliation you have caused",
-								"it is only fair that Jones shall recieve your reward",
-								"you shall recieve payment more suited to your low life personality");
-							mes("ceril gives you 5 gold coins");
-							give(player, ItemId.COINS.id(), 5);
-							mes("ceril gives jones 695 gold coins");
-							npcsay(player, ceril, "now take it and leave");
-							mes("butler Jones has a slight grin",
-								"You're going to need more than just your word",
-								"To prove Jones' treachary");
-							player.updateQuestStage(this, 5);
+							if (ceril != null) {
+								mes("ceril speaks briefly with Jones");
+								npcsay(player, ceril, "Well, he assures me that he's a loyal hard working man",
+									"I cannot fathom, why you would believe he is a spy");
+								say(player, ceril, "surely you won't take his word for it?");
+								npcsay(player, ceril, "we have also decided that due to the humilliation you have caused",
+									"it is only fair that Jones shall recieve your reward",
+									"you shall recieve payment more suited to your low life personality");
+								mes("ceril gives you 5 gold coins");
+								give(player, ItemId.COINS.id(), 5);
+								mes("ceril gives jones 695 gold coins");
+								npcsay(player, ceril, "now take it and leave");
+								mes("butler Jones has a slight grin",
+									"You're going to need more than just your word",
+									"To prove Jones' treachary");
+								player.updateQuestStage(this, 5);
+							}
 						} else {
 							say(player, n, "ceril, how are you?");
 							npcsay(player, n, "Im ok. Have you found the armour");
@@ -1059,7 +1061,9 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 					npcsay(player, n, "what, an intruder",
 						"kill him");
 					Npc cults = ifnearvisnpc(player, NpcId.CULT_MEMBER.id(), 20);
-					cults.setChasing(player);
+					if (cults != null) {
+						cults.setChasing(player);
+					}
 					break;
 				case 3:
 					if (player.getCache().hasKey("good_side")) {
@@ -1233,34 +1237,36 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 				mes("you search the cupboard");
 				if (player.getQuestStage(this) == 5 && player.getCache().hasKey("good_side")) {
 					mes("you find a bottle of poison",
-						"and a strange amulet",
-						"you pass your finds to ceril");
+						"and a strange amulet");
 					Npc ceril = ifnearvisnpc(player, NpcId.CERIL.id(), 10);
-					say(player, ceril, "look what i've found?");
-					npcsay(player, ceril, "what's this for jones?");
-					mes("ceril takes the bottle");
-					npcsay(player, ceril, "i don't believe it, it's poison");
-					Npc butler = ifnearvisnpc(player, NpcId.BUTLER.id(), 10);
-					npcsay(player, butler, "mr carnillean, it's for the rats",
-						"i'm just a loyal servent");
-					npcsay(player, ceril, "i've seen this amulet before",
-						"the thieves that broke in",
-						"one of them  was wearing exactly the same amulet",
-						"jones i don't believe it",
-						"we trusted you");
-					npcsay(player, butler, "that's because you're an old fool ceril",
-						"I should have got rid of you and your family weeks ago");
-					mes("ceril calls for the guards");
-					npcsay(player, butler, "don't worry ceril",
-						"we'll make sure you and your family pay");
-					npcsay(player, ceril, "looks like i owe you an apology traveller");
-					say(player, ceril, "that's ok, we all make mistakes");
-					npcsay(player, ceril, "if it wasn't for you he could have poisoned my whole family",
-						"i'm sorry for the way i spoke to you",
-						"the least i can do is give you a proper reward");
-					player.sendQuestComplete(Quests.THE_HAZEEL_CULT);
-					say(player, ceril, "thanks ceril");
-					npcsay(player, ceril, "thankyou, you're welcome here any time traveller");
+					if (ceril != null) {
+						mes("you pass your finds to ceril");
+						say(player, ceril, "look what i've found?");
+						npcsay(player, ceril, "what's this for jones?");
+						mes("ceril takes the bottle");
+						npcsay(player, ceril, "i don't believe it, it's poison");
+						Npc butler = ifnearvisnpc(player, NpcId.BUTLER.id(), 10);
+						npcsay(player, butler, "mr carnillean, it's for the rats",
+							"i'm just a loyal servent");
+						npcsay(player, ceril, "i've seen this amulet before",
+							"the thieves that broke in",
+							"one of them  was wearing exactly the same amulet",
+							"jones i don't believe it",
+							"we trusted you");
+						npcsay(player, butler, "that's because you're an old fool ceril",
+							"I should have got rid of you and your family weeks ago");
+						mes("ceril calls for the guards");
+						npcsay(player, butler, "don't worry ceril",
+							"we'll make sure you and your family pay");
+						npcsay(player, ceril, "looks like i owe you an apology traveller");
+						say(player, ceril, "that's ok, we all make mistakes");
+						npcsay(player, ceril, "if it wasn't for you he could have poisoned my whole family",
+							"i'm sorry for the way i spoke to you",
+							"the least i can do is give you a proper reward");
+						player.sendQuestComplete(Quests.THE_HAZEEL_CULT);
+						say(player, ceril, "thanks ceril");
+						npcsay(player, ceril, "thankyou, you're welcome here any time traveller");
+					}
 				} else {
 					mes("but find nothing");
 				}

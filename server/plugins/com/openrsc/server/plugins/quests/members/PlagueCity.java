@@ -248,10 +248,12 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 									npcsay(player, n, "I'll see what I can do I suppose",
 										"Mr Bravek there's a " + (player.isMale() ? "man" : "lady") + " here who really needs to speak to you");
 									Npc bravek = ifnearvisnpc(player, NpcId.BRAVEK.id(), 15);
-									npcsay(player, bravek, "I suppose they can come in then",
-										"If they keep it short");
-									player.message("You go into the office");
-									player.teleport(647, 585, false);
+									if (bravek != null) {
+										npcsay(player, bravek, "I suppose they can come in then",
+											"If they keep it short");
+										player.message("You go into the office");
+										player.teleport(647, 585, false);
+									}
 								} else if (third == 1) {
 									// nothing
 								}
@@ -262,10 +264,12 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 							npcsay(player, n, "I'll see what I can do I suppose",
 								"Mr Bravek there's a " + (player.isMale() ? "man" : "lady") + " here who really needs to speak to you");
 							Npc bravek = ifnearvisnpc(player, NpcId.BRAVEK.id(), 15);
-							npcsay(player, bravek, "I suppose they can come in then",
-								"If they keep it short");
-							player.message("You go into the office");
-							player.teleport(647, 585, false);
+							if (bravek != null) {
+								npcsay(player, bravek, "I suppose they can come in then",
+									"If they keep it short");
+								player.message("You go into the office");
+								player.teleport(647, 585, false);
+							}
 						}
 
 					} else if (first == 1) {
@@ -281,10 +285,12 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 							npcsay(player, n, "I'll see what I can do I suppose",
 								"Mr Bravek there's a " + (player.isMale() ? "man" : "lady") + " here who really needs to speak to you");
 							Npc bravek = ifnearvisnpc(player, NpcId.BRAVEK.id(), 15);
-							npcsay(player, bravek, "I suppose they can come in then",
-								"If they keep it short");
-							player.message("You go into the office");
-							player.teleport(647, 585, false);
+							if (bravek != null) {
+								npcsay(player, bravek, "I suppose they can come in then",
+									"If they keep it short");
+								player.message("You go into the office");
+								player.teleport(647, 585, false);
+							}
 						} else if (second == 1) {
 							// nothing
 						}

@@ -318,7 +318,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 						if (option == 1) {
 							doDoor(obj, player);
 							Npc n = ifnearvisnpc(player, NpcId.BLACK_KNIGHT.id(), 7);
-							if (!n.isChasing()) {
+							if (n != null && !n.isChasing()) {
 								n.setChasing(player);
 								new AggroEvent(n.getWorld(), n, player);
 							}

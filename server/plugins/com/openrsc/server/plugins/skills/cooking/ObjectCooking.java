@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.skills.cooking;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.external.ItemCookingDef;
@@ -21,7 +22,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class ObjectCooking implements UseLocTrigger {
 	@Override
 	public void onUseLoc(Player owner, GameObject object, Item item) {
-		Npc cook = ifnearvisnpc(owner, 7, 20);
+		Npc cook = ifnearvisnpc(owner, NpcId.COOK.id(), 20);
 		if (cook != null && owner.getQuestStage(Quests.COOKS_ASSISTANT) != -1
 			&& object.getID() == 119) {
 			npcsay(owner, cook, "Hey! Who said you could use that?");
