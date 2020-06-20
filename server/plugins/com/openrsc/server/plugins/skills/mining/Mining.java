@@ -185,6 +185,8 @@ public final class Mining implements OpLocTrigger {
 		}
 		if (config().STOP_SKILLING_FATIGUED >= 1
 			&& player.getFatigue() >= player.MAX_FATIGUE) {
+			// authentically on fatigued, shows pickaxe that would have been used
+			thinkbubble(new Item(axeId));
 			player.playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
 			return;
 		}
@@ -211,6 +213,8 @@ public final class Mining implements OpLocTrigger {
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
+				// authentically on fatigued, shows pickaxe that would have been used
+				thinkbubble(new Item(axeId));
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
 				return;
 			}
