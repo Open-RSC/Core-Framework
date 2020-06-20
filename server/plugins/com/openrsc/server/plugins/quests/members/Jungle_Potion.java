@@ -437,7 +437,6 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"I need some help with the Temple of Ah Za Rhoon.");
 							}
 							if (menu == 0) {
-								npcsay(player, n, "Well, just let me see the item and I'll help as much as I can.");
 								trufitisChat(player, n, Trufitus.SHOW_ME_TEMPLE_ITEMS);
 							} else if (menu == 1) {
 								npcsay(player, n, "If you have found the temple, you should search it",
