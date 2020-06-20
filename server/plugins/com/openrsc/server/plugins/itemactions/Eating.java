@@ -47,7 +47,7 @@ public class Eating implements OpInvTrigger {
 						player.getSkills().setLevel(Skills.DEFENSE, newStat);
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase()
-							+ ". Yuck!");
+						+ ". Yuck!");
 				}
 			} else if (id == ItemId.KEBAB.id()) {
 				isKebabVariant = true;
@@ -157,9 +157,9 @@ public class Eating implements OpInvTrigger {
 				String needleSt = "half a";
 				String origName;
 				if (itemName.contains("pie")) {
-					if (itemName.contains(needleSt+" ")) {
+					if (itemName.contains(needleSt + " ")) {
 						origName = itemName.substring(7); // "half a "
-					} else if (itemName.contains(needleSt+"n ")) {
+					} else if (itemName.contains(needleSt + "n ")) {
 						origName = itemName.substring(8); // "half an "
 					} else { // complete pies
 						origName = itemName;
@@ -202,7 +202,7 @@ public class Eating implements OpInvTrigger {
 			if (heals && !isKebabVariant) {
 				player.playerServerMessage(MessageType.QUEST, "It heals some health");
 				if (config().WANT_PARTIES) {
-					if(player.getParty() != null){
+					if (player.getParty() != null) {
 						player.getUpdateFlags().setHpUpdate(new HpUpdate(player, 0));
 						player.getParty().sendParty();
 					}
@@ -216,19 +216,20 @@ public class Eating implements OpInvTrigger {
 			int id = item.getCatalogId();
 
 			player.playerServerMessage(MessageType.QUEST, "You eat the fish oil");
-			// See if it heals
-			if (DataConversions.random(1, 2) == 1) {
-				// Heal
-				if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
+
+			// Heal
+			if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
+				// See if it heals
+				if (DataConversions.random(1, 2) == 1) {
 					int newHp = player.getSkills().getLevel(Skills.HITS) + 1;
 					if (newHp > player.getSkills().getMaxStat(Skills.HITS)) {
 						newHp = player.getSkills().getMaxStat(Skills.HITS);
 					}
 					player.getSkills().setLevel(Skills.HITS, newHp);
+					player.playerServerMessage(MessageType.QUEST, "It heals some health");
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "You don't feel a difference");
 				}
-				player.playerServerMessage(MessageType.QUEST, "It heals some health");
-			} else {
-				player.playerServerMessage(MessageType.QUEST, "You don't feel a difference");
 			}
 			// Remove
 			player.getCarriedItems().remove(new Item(id, 1));
