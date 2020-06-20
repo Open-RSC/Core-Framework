@@ -172,7 +172,6 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 					}
 					npcsay(player, n,
 						"Ok you can join our gang now",
-						"Ok you can join our gang now",
 						"Feel free to enter any the rooms of the ganghouse");
 					player.updateQuestStage(this, 5);
 					if (!player.getCache().hasKey("arrav_gang")) {
