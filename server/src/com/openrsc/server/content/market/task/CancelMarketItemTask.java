@@ -4,6 +4,7 @@ import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.DiscordService;
 import com.openrsc.server.net.rsc.ActionSender;
 
 public class CancelMarketItemTask extends MarketTask {
@@ -44,7 +45,10 @@ public class CancelMarketItemTask extends MarketTask {
 		}
 		owner.getWorld().getMarket().addRequestOpenAuctionHouseTask(owner);
 		if (updateDiscord) {
-			owner.getWorld().getServer().getDiscordService().auctionCancel(item);
+			DiscordService ds = owner.getWorld().getServer().getDiscordService();
+			if (ds != null) {
+				ds.auctionCancel(item);
+			}
 		}
 	}
 

@@ -5,6 +5,7 @@ import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.DiscordService;
 import com.openrsc.server.net.rsc.ActionSender;
 
 import java.util.ArrayList;
@@ -112,7 +113,10 @@ public class NewMarketItemTask extends MarketTask {
 		}
 		owner.getWorld().getMarket().addRequestOpenAuctionHouseTask(owner);
 		if (updateDiscord) {
-			owner.getWorld().getServer().getDiscordService().auctionAdd(newItem);
+			DiscordService ds = owner.getWorld().getServer().getDiscordService();
+			if (ds != null) {
+				ds.auctionAdd(newItem);
+			}
 		}
 	}
 }
