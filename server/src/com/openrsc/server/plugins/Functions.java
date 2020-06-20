@@ -212,7 +212,11 @@ public class Functions {
 				player.resetMenuHandler();
 				return -1;
 			}
+			else {
+				npc.face(player);
+			}
 		}
+		player.face(npc);
 		player.setMenuHandler(new MenuOptionListener(options));
 		ActionSender.sendMenu(player, options);
 
