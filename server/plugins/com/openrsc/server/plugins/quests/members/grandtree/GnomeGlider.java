@@ -130,15 +130,17 @@ public class GnomeGlider implements TalkNpcTrigger {
 					player.teleport(425, 764);
 					say(player, n, "ouch");
 					Npc GNOME_PILOT = ifnearvisnpc(player, NpcId.GNOME_PILOT_KARAMJA_BROKEN.id(), 5);
-					npcsay(player, GNOME_PILOT, "ouch");
-					player.message("you crash in south karamja");
-					npcsay(player, GNOME_PILOT, "sorry about that, are you ok");
-					say(player, GNOME_PILOT, "i seem to be fine, can't say the same for your glider");
-					npcsay(player, GNOME_PILOT, "i don't think i can fix this",
-						"looks like we'll be heading back by foot",
-						"i hope you find what you came for adventurer");
-					say(player, GNOME_PILOT, "me too, take care little man");
-					npcsay(player, GNOME_PILOT, "traveller watch out");
+					if (GNOME_PILOT != null) {
+						npcsay(player, GNOME_PILOT, "ouch");
+						player.message("you crash in south karamja");
+						npcsay(player, GNOME_PILOT, "sorry about that, are you ok");
+						say(player, GNOME_PILOT, "i seem to be fine, can't say the same for your glider");
+						npcsay(player, GNOME_PILOT, "i don't think i can fix this",
+							"looks like we'll be heading back by foot",
+							"i hope you find what you came for adventurer");
+						say(player, GNOME_PILOT, "me too, take care little man");
+						npcsay(player, GNOME_PILOT, "traveller watch out");
+					}
 					Npc JOGRE = ifnearvisnpc(player, NpcId.JOGRE.id(), 15);
 					if (JOGRE != null) {
 						npcsay(player, JOGRE, "grrrrr");

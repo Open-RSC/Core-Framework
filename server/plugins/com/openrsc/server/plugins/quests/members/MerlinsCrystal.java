@@ -215,13 +215,15 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 				mes("The crystal shatters");
 				player.getWorld().unregisterGameObject(obj);
 				player.getWorld().delayedSpawnObject(obj.getLoc(), (int)TimeUnit.SECONDS.toMillis(32));
-				Npc merlin = ifnearvisnpc(player, NpcId.MERLIN_CRYSTAL.id(), 5);
-				npcsay(player, merlin, "Thankyou thankyou",
-					"It's not fun being trapped in a giant crystal",
-					"Go speak to King Arthur, I'm sure he'll reward you");
+				Npc merlin = ifnearvisnpc(player, NpcId.MERLIN_CRYSTAL.id(), 10);
+				if (merlin != null) {
+					npcsay(player, merlin, "Thankyou thankyou",
+						"It's not fun being trapped in a giant crystal",
+						"Go speak to King Arthur, I'm sure he'll reward you");
 
-				player.message("You have set Merlin free now talk to king arthur");
-				player.updateQuestStage(this, 5);
+					player.message("You have set Merlin free now talk to king arthur");
+					player.updateQuestStage(this, 5);
+				}
 			} else {
 				player.message("Nothing interesting happens");
 			}

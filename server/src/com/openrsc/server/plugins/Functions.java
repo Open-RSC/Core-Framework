@@ -212,7 +212,11 @@ public class Functions {
 				player.resetMenuHandler();
 				return -1;
 			}
+			else {
+				npc.face(player);
+			}
 		}
+		player.face(npc);
 		player.setMenuHandler(new MenuOptionListener(options));
 		ActionSender.sendMenu(player, options);
 
@@ -441,20 +445,23 @@ public class Functions {
 	public static void npcsay(final Player player, final Npc npc, final String... messages) {
 
 		// Reset the walk action on the Npc (stop them from walking).
-		npc.resetPath();
-		player.resetPath();
-		npc.face(player);
-		if (!player.inCombat()) {
+		if(npc != null) {
+			npc.resetPath();
+			npc.face(player);
+		}
+		if (npc != null && !player.inCombat()) {
 			player.face(npc);
 		}
 
 		// Send each message with a delay between.
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
-				if (npc.isRemoved()) {
-					return;
+				if (npc != null) {
+					if (npc.isRemoved()) {
+						return;
+					}
+					npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
 				}
-				npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, player));
 			}
 
 			delay(player.getConfig().GAME_TICK * calcDelay(message));

@@ -170,10 +170,12 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 							if (!player.getCache().hasKey("garlic_activated")) {
 								player.message("Your fishing competition spot is beside the oak tree");
 							} else {
-								npcsay(player, sinister,
-									"Arrgh what is that ghastly smell",
-									"I think I will move over here instead");
-								sinister.teleport(570, 495);
+								if (sinister != null) {
+									npcsay(player, sinister,
+										"Arrgh what is that ghastly smell",
+										"I think I will move over here instead");
+									sinister.teleport(570, 495);
+								}
 								npcsay(player, n,
 									"Hmm you'd better go and take the area by the pipes then");
 								player.message("Your fishing competition spot is beside the pipes");
@@ -489,12 +491,16 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 			mes("You stash the garlic in the pipe");
 			player.getCarriedItems().remove(new Item(ItemId.GARLIC.id()));
 			if (player.getCache().hasKey("paid_contest_fee") && !player.getCache().hasKey("garlic_activated")) {
-				npcsay(player, sinister,
-					"Arrgh what is that ghastly smell",
-					"I think I will move over here instead");
-				sinister.teleport(570, 495);
-				npcsay(player, bonzo,
-					"Hmm you'd better go and take the area by the pipes then");
+				if (sinister != null) {
+					npcsay(player, sinister,
+						"Arrgh what is that ghastly smell",
+						"I think I will move over here instead");
+					sinister.teleport(570, 495);
+				}
+				if (bonzo != null) {
+					npcsay(player, bonzo,
+						"Hmm you'd better go and take the area by the pipes then");
+				}
 				player.message("Your fishing competition spot has been moved to beside the pipes");
 			}
 			if (!player.getCache().hasKey("garlic_activated")) {
@@ -597,7 +603,9 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 					}
 				}
 			} else {
-				npcsay(player, sinister, "I think you will find that is my spot");
+				if (sinister != null) {
+					npcsay(player, sinister, "I think you will find that is my spot");
+				}
 			}
 		}
 		else if (obj.getID() == 352) {
@@ -650,11 +658,15 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 353) {
 			Npc dave = ifnearvisnpc(player, NpcId.BIG_DAVE.id(), 10);
-			bigDaveDialogue(player, dave);
+			if (dave != null) {
+				bigDaveDialogue(player, dave);
+			}
 		}
 		else if (obj.getID() == 354) {
 			Npc joshua = ifnearvisnpc(player, NpcId.JOSHUA.id(), 10);
-			joshuaDialogue(player, joshua);
+			if (joshua != null) {
+				joshuaDialogue(player, joshua);
+			}
 		}
 		else if (obj.getID() == 359) {
 			if (player.getQuestStage(getQuestId()) == -1) {

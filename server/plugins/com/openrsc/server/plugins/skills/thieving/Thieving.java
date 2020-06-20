@@ -50,7 +50,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			int chance_player_caught = 60;
 			Npc teaseller = ifnearvisnpc(player, stall.getOwnerID(), 8);
 			boolean caught = (chance_player_caught > DataConversions.random(0, 100));
-			if (caught) {
+			if (caught && teaseller != null) {
 				npcsay(player, teaseller, "Oi what do you think you are doing ?", "I'm not like those stallholders in Al Kharid", "No one steals from my stall..");
 				return;
 			} else

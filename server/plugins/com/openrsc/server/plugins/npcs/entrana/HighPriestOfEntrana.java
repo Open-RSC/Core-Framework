@@ -19,27 +19,29 @@ public class HighPriestOfEntrana implements TalkNpcTrigger {
 					"I know not where it is now",
 					"Nor do I really care");
 				n = ifnearvisnpc(player, NpcId.CRONE.id(), 20);
-				npcsay(player, n, "Wait!",
-					"Did you say the grail?",
-					"You are a grail knight yes?",
-					"Well you'd better hurry, a fisher king is in pain");
-				say(player, n, "Well I would but I don't know where I am going");
-				npcsay(player, n, "Go to where the six heads face",
-					"blow the whistle and away you go");
-				if (player.getQuestStage(Quests.THE_HOLY_GRAIL) == 2) {
-					player.updateQuestStage(Quests.THE_HOLY_GRAIL, 3);
-				}
-				int menu = multi(player, n,
-					"What are the six heads?",
-					"What's a fisher king?",
-					"Ok I will go searching",
-					"What do you mean by the whistle?");
-				if (menu == 0) {
-					entranaPriestDialogue(player, n, EntranaPriest.sixHeads);
-				} else if (menu == 1) {
-					entranaPriestDialogue(player, n, EntranaPriest.fisherKing);
-				} else if (menu == 3) {
-					entranaPriestDialogue(player, n, EntranaPriest.whistle);
+				if (n != null) {
+					npcsay(player, n, "Wait!",
+						"Did you say the grail?",
+						"You are a grail knight yes?",
+						"Well you'd better hurry, a fisher king is in pain");
+					say(player, n, "Well I would but I don't know where I am going");
+					npcsay(player, n, "Go to where the six heads face",
+						"blow the whistle and away you go");
+					if (player.getQuestStage(Quests.THE_HOLY_GRAIL) == 2) {
+						player.updateQuestStage(Quests.THE_HOLY_GRAIL, 3);
+					}
+					int menu = multi(player, n,
+						"What are the six heads?",
+						"What's a fisher king?",
+						"Ok I will go searching",
+						"What do you mean by the whistle?");
+					if (menu == 0) {
+						entranaPriestDialogue(player, n, EntranaPriest.sixHeads);
+					} else if (menu == 1) {
+						entranaPriestDialogue(player, n, EntranaPriest.fisherKing);
+					} else if (menu == 3) {
+						entranaPriestDialogue(player, n, EntranaPriest.whistle);
+					}
 				}
 				return;
 			} else {

@@ -45,12 +45,17 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 				} else {
 					Npc witch = ifnearvisnpc(player, NpcId.KARDIA_THE_WITCH.id(), 5);
 					player.message("you reach to open the door");
-					npcsay(player, witch, "get away...far away from here");
-					delay(config().GAME_TICK * 2);
-					player.message("the witch raises her hands above her");
-					displayTeleportBubble(player, player.getX(), player.getY(), true);
-					player.damage(((int) getCurrentLevel(player, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.
-					npcsay(player, witch, "haa haa.. die mortal");
+					if (witch != null) {
+						npcsay(player, witch, "get away...far away from here");
+						delay(config().GAME_TICK * 2);
+						player.message("the witch raises her hands above her");
+						displayTeleportBubble(player, player.getX(), player.getY(), true);
+						player.damage(((int) getCurrentLevel(player, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.
+						npcsay(player, witch, "haa haa.. die mortal");
+					} else {
+						// TODO: find if something happens here authentically
+						player.message("but nothing seems to happen");
+					}
 				}
 			} else if (click == 1) {
 				if (player.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false)) && !player.getCache().hasKey("kardia_cat")) {

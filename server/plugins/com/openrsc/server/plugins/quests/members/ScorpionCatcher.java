@@ -159,7 +159,10 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 				break;
 
 			case SEER_NPC.PRIMARY_DIALOGUE:
-				npcsay(player, n, "Many greetings");
+				// OG post-quest doesn't say this and jumps directly to menu
+				if (player.getQuestStage(this) != -1) {
+					npcsay(player, n, "Many greetings");
+				}
 				int menu = multi(player, n, "Many greetings", "I seek knowledge and power");
 				if (menu == 1) {
 					npcsay(player, n, "Knowledge comes from experience, power comes from battleaxes");

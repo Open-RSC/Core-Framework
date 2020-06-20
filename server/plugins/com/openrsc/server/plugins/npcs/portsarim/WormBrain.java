@@ -27,31 +27,33 @@ public final class WormBrain implements OpBoundTrigger {
 		if (config().WANT_BARTER_WORMBRAINS && obj.getID() == 30
 				&& obj.getX() == 283 && obj.getY() == 665) {
 			final Npc n = ifnearvisnpc(player, NpcId.WORMBRAIN.id(), 10);
-			mes("...you knock on the cell door");
-			npcsay(player, n, "Whut you want?");
+			if (n != null) {
+				mes("...you knock on the cell door");
+				npcsay(player, n, "Whut you want?");
 
-			ArrayList<String> options = new ArrayList<>();
-			if (player.getQuestStage(Quests.DRAGON_SLAYER) >= 2 && !player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))) {
-				options.add("I believe you've got a piece of a map that I need");
-			}
-			options.add("What are you in for?");
-			options.add("Sorry, thought this was a zoo");
-
-			String[] finalOptions = new String[options.size()];
-			int option = multi(player, n, options.toArray(finalOptions));
-
-			if (option == 0) {
+				ArrayList<String> options = new ArrayList<>();
 				if (player.getQuestStage(Quests.DRAGON_SLAYER) >= 2 && !player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))) {
-					dragonSlayerConversation(player, n);
+					options.add("I believe you've got a piece of a map that I need");
 				}
-				else {
-					defaultConversation(player, n);
-				}
-			}
+				options.add("What are you in for?");
+				options.add("Sorry, thought this was a zoo");
 
-			else if (option == 1) {
-				if (player.getQuestStage(Quests.DRAGON_SLAYER) >= 2 && !player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))) {
-					defaultConversation(player, n);
+				String[] finalOptions = new String[options.size()];
+				int option = multi(player, n, options.toArray(finalOptions));
+
+				if (option == 0) {
+					if (player.getQuestStage(Quests.DRAGON_SLAYER) >= 2 && !player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))) {
+						dragonSlayerConversation(player, n);
+					}
+					else {
+						defaultConversation(player, n);
+					}
+				}
+
+				else if (option == 1) {
+					if (player.getQuestStage(Quests.DRAGON_SLAYER) >= 2 && !player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_1.id(), Optional.of(false))) {
+						defaultConversation(player, n);
+					}
 				}
 			}
 		}
