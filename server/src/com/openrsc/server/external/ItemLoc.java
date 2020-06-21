@@ -22,6 +22,8 @@ public class ItemLoc {
 	 */
 	public int y;
 
+	public ItemLoc() { }
+
 	public ItemLoc(int id, int x, int y, int amount, int respawnTime) {
 		this.id = id;
 		this.x = x;

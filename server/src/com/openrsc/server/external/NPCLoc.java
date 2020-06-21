@@ -30,6 +30,8 @@ public class NPCLoc {
 	 */
 	public int startY;
 
+	public NPCLoc() { }
+
 	public NPCLoc(int id, int startX, int startY, int minX, int maxX, int minY, int maxY) {
 		this.id = id;
 		this.startX = startX;
