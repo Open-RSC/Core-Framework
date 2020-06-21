@@ -43,6 +43,7 @@ public class ObjectCooking implements UseLocTrigger {
 					player.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
 					player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BURNTMEAT.id()));
+					delay();
 					mes("sometimes you will burn food");
 					delay(3);
 					mes("As your cooking level increases this will happen less");

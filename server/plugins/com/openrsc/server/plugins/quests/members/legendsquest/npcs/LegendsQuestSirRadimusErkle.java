@@ -479,6 +479,7 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 					mes(n, "Radimus Erkle orders some guards to take the totem pole,");
 					delay(2);
 					mes(n, "into the main Legends Hall.");
+					delay(2);
 					player.getCarriedItems().remove(new Item(item.getCatalogId()));
 					npcsay(player, n, "That will take pride of place in the Legends Guild ",
 						"As a reminder of your quest to gain entry.",

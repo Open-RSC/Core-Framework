@@ -47,6 +47,7 @@ public class BattlestaffCrafting implements UseInvTrigger {
 		delay();
 		if (combine.messages.length > 1) {
 			mes(combine.messages[0]);
+			delay(3);
 		}
 		else {
 			player.message(combine.messages[0]);

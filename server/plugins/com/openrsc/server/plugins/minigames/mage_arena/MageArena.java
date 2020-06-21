@@ -363,6 +363,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					messages.set(2, new String[]{"@yel@kolodion: burn fool ....burn", "you burst into flames"});
 				}
 				mes(messages.get(spell_type));
+				delay(3);
 				getOwner().damage((int) Math.ceil(Math.max(getCurrentLevel(getOwner(), Skills.HITS) + (transformStage - 1.0) * shiftPerPhase, 0) / reciprocalSlope) + 1);
 
 			}

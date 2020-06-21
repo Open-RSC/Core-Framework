@@ -109,7 +109,7 @@ public class LegendsQuestViyeldi implements TalkNpcTrigger, TakeObjTrigger, Atta
 				mes(n, "You see a flash as something travels from Viyeldi into the dagger.");
 				delay(2);
 				mes(n, "The dagger seems to glow as Viyeldi crumpels to the floor.");
-				delay(1);
+				delay();
 				if (n != null) {
 					n.remove();
 				}

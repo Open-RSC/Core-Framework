@@ -230,7 +230,7 @@ public class Functions {
 					return -1;
 				}
 
-				delay(1);
+				delay();
 			}
 			player.releaseUnderAttack();
 			return -1;
