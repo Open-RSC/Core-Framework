@@ -32,6 +32,7 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), LEDGES)) {
 			mes("you climb the ledge");
+			delay(4);
 			if (succeed(player, 1)) {
 				switch (obj.getID()) {
 					case 862:
@@ -65,17 +66,21 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 				failBlackAreaObstacle(player, obj); // fail directly, to get stage 5.
 			} else {
 				mes("you walk down the stone steps");
+				delay(4);
 				player.teleport(766, 585);
 
 			}
 		}
 		else if (obj.getID() == SOUTH_STONE_STEP) {
-			mes("you walk down the steps",
-				"they lead to a ladder, you climb down");
+			mes("you walk down the steps");
+			delay(4);
+			mes("they lead to a ladder, you climb down");
+			delay(4);
 			player.teleport(739, 667);
 		}
 		else if (obj.getID() == FIRST_REMAINING_BRIDGE) {
 			mes("you attempt to walk over the remaining bridge..");
+			delay(4);
 			if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {
 				failBlackAreaObstacle(player, obj); // fail directly, to get stage 5.
 			} else {
@@ -94,8 +99,10 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 		else if (inArray(obj.getID(), STONE_REMAINING_BRIDGES) || inArray(obj.getID(), STONE_JUMP_BRIDGES)) {
 			if (inArray(obj.getID(), STONE_JUMP_BRIDGES)) {
 				mes("you attempt to jump across the gap..");
+				delay(4);
 			} else {
 				mes("you attempt to walk over the remaining bridge..");
+				delay(4);
 			}
 			if (succeed(player, 1)) {
 				if (obj.getX() == player.getX() + 1) {

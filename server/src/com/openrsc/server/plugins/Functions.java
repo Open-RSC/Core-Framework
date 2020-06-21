@@ -119,15 +119,11 @@ public class Functions {
 	}
 
 	/**
-	 * Displays server message(s) with 2.2 second delay.
+	 * Displays server message(s)
 	 *
 	 * @param messages
 	 */
-	public static void mes(int delay, final String... messages) {
-		mes(null, delay, messages);
-	}
-
-	public static void mes(final Npc npc, int delay, final String... messages) {
+	public static void mes(final Npc npc, final String... messages) {
 		final Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
 		if (player == null) return;
 		for (final String message : messages) {
@@ -140,12 +136,11 @@ public class Functions {
 				}
 				player.message(message);
 			}
-			delay(delay);
 		}
 	}
 
 	/**
-	 * Displays server message(s) with 2.2 second delay.
+	 * Displays server message(s)
 	 *
 	 * @param messages
 	 */
@@ -156,7 +151,6 @@ public class Functions {
 			if (!message.equalsIgnoreCase("null")) {
 				player.message("@que@" + message);
 			}
-			delay(3);
 		}
 	}
 

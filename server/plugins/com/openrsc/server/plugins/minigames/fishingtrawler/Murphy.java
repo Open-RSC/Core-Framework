@@ -163,6 +163,7 @@ public class Murphy implements MiniGameInterface, TalkNpcTrigger {
 			"i'll warn you though, the seas are merciless",
 			"and with out fishing experience you won't catch much");
 		mes("you need a fishing level of 15 or above to catch any fish on the trawler");
+		delay(4);
 		npcsay(player, npc, "on occasions the net rip's, so you'll need some rope to repair it");
 		say(player, npc, "rope...ok");
 		npcsay(player, npc, "there's also a slight problem with leaks");
@@ -228,7 +229,12 @@ public class Murphy implements MiniGameInterface, TalkNpcTrigger {
 			if (option == 0) {
 				say(player, n, "i insist murphy, take me back");
 				npcsay(player, n, "ok, ok, i'll try, but don't say i didn't warn you");
-				mes(config().GAME_TICK * 3, "murphy sharply turns the large ship", "the boats gone under", "you're lost at sea!");
+				mes("murphy sharply turns the large ship");
+				delay(3);
+				mes("the boats gone under");
+				delay(3);
+				mes("you're lost at sea!");
+				delay(3);
 				if (player.getWorld().getFishingTrawler(player) != null) {
 					player.getWorld().getFishingTrawler(player).quitPlayer(player);
 				}

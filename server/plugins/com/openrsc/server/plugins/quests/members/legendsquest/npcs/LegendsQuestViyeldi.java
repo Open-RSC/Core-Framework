@@ -23,12 +23,15 @@ public class LegendsQuestViyeldi implements TalkNpcTrigger, TakeObjTrigger, Atta
 		if (n.getID() == NpcId.VIYELDI.id()) {
 			switch (player.getQuestStage(Quests.LEGENDS_QUEST)) {
 				case 7:
-					mes(n, config().GAME_TICK * 2, "The headless, spirit of Viyeldi animates and walks towards you.");
+					mes(n, "The headless, spirit of Viyeldi animates and walks towards you.");
+					delay(2);
 					if (!player.getCache().hasKey("killed_viyeldi")) {
-						mes(n, config().GAME_TICK * 2, "And starts talking to you in a shrill, excited voice...");
+						mes(n, "And starts talking to you in a shrill, excited voice...");
+						delay(2);
 						npcsay(player, n, "Beware adventurer, lest thee loses they head in search of source.",
 							"Bravery has thee been tested and not found wanting..");
-						mes(n, config().GAME_TICK * 2, "The spirit wavers slightly and then stands proud...");
+						mes(n, "The spirit wavers slightly and then stands proud...");
+						delay(2);
 						npcsay(player, n, "But perilous danger waits for thee,",
 							"Tojalon, Senay and Devere makes three,",
 							"None hold malice but will test your might,",
@@ -58,12 +61,14 @@ public class LegendsQuestViyeldi implements TalkNpcTrigger, TakeObjTrigger, Atta
 	public void onTakeObj(Player player, GroundItem i) {
 		if (i.getID() == ItemId.A_BLUE_WIZARDS_HAT.id() && i.getX() == 426 && i.getY() == 3708) {
 			player.teleport(i.getX(), i.getY());
-			mes(config().GAME_TICK * 2, "Your hand passes through the hat as if it wasn't there.");
+			mes("Your hand passes through the hat as if it wasn't there.");
+			delay(2);
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) >= 8) {
 				return;
 			}
 			player.teleport(i.getX(), i.getY() - 1);
-			mes(config().GAME_TICK * 2, "Instantly the clothes begin to animate and then walk towards you.");
+			mes("Instantly the clothes begin to animate and then walk towards you.");
+			delay(2);
 			Npc n = ifnearvisnpc(player, NpcId.VIYELDI.id(), 3);
 			if (n == null)
 				n = addnpc(player.getWorld(), NpcId.VIYELDI.id(), i.getX(), i.getY(), 60000);
@@ -88,18 +93,23 @@ public class LegendsQuestViyeldi implements TalkNpcTrigger, TakeObjTrigger, Atta
 	private void attackViyeldi(Player player, Npc n) {
 		if (n.getID() == NpcId.VIYELDI.id()) {
 			if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.DARK_DAGGER.id())) {
-				mes(n, config().GAME_TICK * 2, "Your attack passes straight through Viyeldi.");
+				mes(n, "Your attack passes straight through Viyeldi.");
+				delay(2);
 				npcsay(player, n, "Take challenge with me is useless for I am impervious to your attack",
 					"Take your fight to someone else, and maybe then get back on track.");
 			} else {
 				player.getCarriedItems().remove(new Item(ItemId.DARK_DAGGER.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.GLOWING_DARK_DAGGER.id()));
-				mes(n, config().GAME_TICK * 2, "You thrust the Dark Dagger at Viyeldi...");
+				mes(n, "You thrust the Dark Dagger at Viyeldi...");
+				delay(2);
 				npcsay(player, n, "So, you have fallen for the foul one's trick...");
-				mes(n, config().GAME_TICK * 2, "You hit Viyeldi squarely with the Dagger .");
+				mes(n, "You hit Viyeldi squarely with the Dagger .");
+				delay(2);
 				npcsay(player, n, "AhhhhhhhhHH! The Pain!");
-				mes(n, config().GAME_TICK * 2, "You see a flash as something travels from Viyeldi into the dagger.");
-				mes(n, 0, "The dagger seems to glow as Viyeldi crumpels to the floor.");
+				mes(n, "You see a flash as something travels from Viyeldi into the dagger.");
+				delay(2);
+				mes(n, "The dagger seems to glow as Viyeldi crumpels to the floor.");
+				delay(1);
 				if (n != null) {
 					n.remove();
 				}

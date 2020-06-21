@@ -251,9 +251,11 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 				openChest(obj, 2000, TOBAN_CHEST_OPEN);
 				if (player.getCarriedItems().hasCatalogID(ItemId.STOLEN_GOLD.id(), Optional.empty())) {
 					mes("You have already got the stolen gold");
+					delay(4);
 				} else {
 					player.message("You find a stash of gold inside");
 					mes("You take the gold");
+					delay(4);
 					give(player, ItemId.STOLEN_GOLD.id(), 1);
 				}
 				player.message("The chest springs shut");

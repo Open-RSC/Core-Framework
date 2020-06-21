@@ -54,11 +54,13 @@ public class Urhney implements TalkNpcTrigger {
 			}
 			else if (afterAmulet) {
 				mes("Father Urhney sighs");
+				delay(4);
 				npcsay(player, n, "How careless can you get",
 					"Those things aren't easy to come by you know",
 					"It's a good job I've got a spare");
 				give(player, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1);
 				mes("Father Urhney hands you an amulet");
+				delay(4);
 				npcsay(player, n, "Be more careful this time");
 				say(player, n, "Ok I'll try to be");
 			}
@@ -105,6 +107,7 @@ public class Urhney implements TalkNpcTrigger {
 				"Tell you what I can do though",
 				"Take this amulet");
 			mes("Father Urhney hands you an amulet");
+			delay(4);
 			give(player, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1); // AMULET OF GHOST SPEAK.
 			npcsay(player,
 				n,
@@ -142,6 +145,7 @@ public class Urhney implements TalkNpcTrigger {
 				"Tell you what I can do though",
 				"Take this amulet");
 			mes("Father Urhney hands you an amulet");
+			delay(4);
 			give(player, ItemId.AMULET_OF_GHOSTSPEAK.id(), 1); // AMULET OF GHOST SPEAK.
 			npcsay(player,
 				n,

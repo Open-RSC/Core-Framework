@@ -75,6 +75,7 @@ public final class Ned implements TalkNpcTrigger {
 				"They say I am too old"
 			);
 			mes("There is a wistfull look in Ned's eyes");
+			delay(4);
 			npcsay(player, n, "I miss those days",
 				"If you could get me a ship I would take you anywhere"
 			);

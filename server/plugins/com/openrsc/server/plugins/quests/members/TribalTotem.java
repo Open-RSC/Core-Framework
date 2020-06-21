@@ -251,8 +251,10 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 					player.getWorld().unregisterGameObject(obj);
 					player.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
 					mes("The employee picks up the crate");
+					delay(4);
 					n.teleport(559, 612);
 					mes("And takes it out to be delivered");
+					delay(4);
 					player.getCache().remove("label");
 					player.updateQuestStage(this, 2);
 				}
@@ -344,33 +346,58 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 			player.message("The crate is empty");
 		}
 		else if (obj.getID() == 329 && obj.getX() == 559 && obj.getY() == 617) {
-			mes("There is a label on this crate", "It says",
-				"to Lord Handelmort", "Handelmort Mansion", "Ardougne");
+			mes("There is a label on this crate");
+			delay(4);
+			mes("It says");
+			delay(4);
+			mes("to Lord Handelmort");
+			delay(4);
+			mes("Handelmort Mansion");
+			delay(4);
+			mes("Ardougne");
+			delay(4);
 			if (player.getCarriedItems().hasCatalogID(ItemId.ADDRESS_LABEL.id(), Optional.empty()) || player.getCache().hasKey("label")) {
 				mes("It doesn't seem possible to open the crate");
+				delay(4);
 			} else {
 				mes("You take the label");
+				delay(4);
 				give(player, ItemId.ADDRESS_LABEL.id(), 1);
 			}
 		}
 		else if (obj.getID() == 328 && obj.getX() == 558 && obj.getY() == 617) {
 			if (player.getCache().hasKey("label")) {
-				mes("There is a label on this crate", "It says",
-					"to Lord Handelmort", "Handelmort Mansion", "Ardougne");
+				mes("There is a label on this crate");
+				delay(4);
+				mes("It says");
+				delay(4);
+				mes("to Lord Handelmort");
+				delay(4);
+				mes("Handelmort Mansion");
+				delay(4);
+				mes("Ardougne");
+				delay(4);
 				return;
 			}
-			mes("Its ready to be delivered",
-				"To the wizard's tower in Misthalin",
-				"It doesn't seem possible to open the crate");
+			mes("Its ready to be delivered");
+			delay(4);
+			mes("To the wizard's tower in Misthalin");
+			delay(4);
+			mes("It doesn't seem possible to open the crate");
+			delay(4);
 		}
 		else if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			if (command.equalsIgnoreCase("Search for traps")) {
 				if (getCurrentLevel(player, Skills.THIEVING) < 21) {
 					mes("You don't find anything interesting");
+					delay(4);
 				} else {
-					mes("You find a trap in the stairs",
-						"You make a note of the trap's location",
-						"Ready for next time you go up the stairs");
+					mes("You find a trap in the stairs");
+					delay(4);
+					mes("You make a note of the trap's location");
+					delay(4);
+					mes("Ready for next time you go up the stairs");
+					delay(4);
 					player.getCache().store("trapy", true);
 				}
 			} else if (command.equalsIgnoreCase("Go up")) {
@@ -379,9 +406,12 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 					player.getCache().remove("trapy");
 					player.teleport(563, 1534, false);
 				} else {
-					mes("You here a click beneath you",
-						"You feel yourself falling",
-						"You have fallen through a trap");
+					mes("You here a click beneath you");
+					delay(4);
+					mes("You feel yourself falling");
+					delay(4);
+					mes("You have fallen through a trap");
+					delay(4);
 					player.teleport(563, 3418, false);
 					player.damage(7);
 				}
@@ -394,10 +424,13 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 				closeGenericObject(obj, player, HANDELMORT_CHEST_CLOSED, "You close the chest");
 			} else {
 				player.message("You search the chest");
+				delay(4);
 				if (player.getCarriedItems().hasCatalogID(ItemId.TRIBAL_TOTEM.id(), Optional.empty())) {
 					player.message("The chest is empty");
+					delay(4);
 				} else {
 					player.message("You find a tribal totem which you take");
+					delay(4);
 					give(player, ItemId.TRIBAL_TOTEM.id(), 1);
 				}
 			}

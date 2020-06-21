@@ -227,6 +227,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					npcsay(player, n,
 						"This is the key to the front entrance to the maze");
 					mes("Oziach hands you a key");
+					delay(4);
 					give(player, ItemId.MAZE_KEY.id(), 1);
 				}
 				int menu = multi(player, n, "Where can I get an antidragon shield?",

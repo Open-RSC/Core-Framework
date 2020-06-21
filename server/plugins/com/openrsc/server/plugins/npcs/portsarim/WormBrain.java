@@ -29,6 +29,7 @@ public final class WormBrain implements OpBoundTrigger {
 			final Npc n = ifnearvisnpc(player, NpcId.WORMBRAIN.id(), 10);
 			if (n != null) {
 				mes("...you knock on the cell door");
+				delay(4);
 				npcsay(player, n, "Whut you want?");
 
 				ArrayList<String> options = new ArrayList<>();

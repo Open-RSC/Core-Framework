@@ -93,11 +93,13 @@ public class Smelting implements UseLocTrigger {
 		}
 
 		thinkbubble(new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
-		int tick = config().GAME_TICK;
-		int messagedelay = config().BATCH_PROGRESSION ? tick : (tick * 2);
-		mes(messagedelay, "you heat the steel bar into a liquid state",
-			"and pour it into your cannon ball mould",
-			"you then leave it to cool for a short while");
+		int messagedelay = config().BATCH_PROGRESSION ? 1 : 2;
+		mes("you heat the steel bar into a liquid state");
+		delay(messagedelay);
+		mes("and pour it into your cannon ball mould");
+		delay(messagedelay);
+		mes("you then leave it to cool for a short while");
+		delay(messagedelay);
 
 		player.getCarriedItems().remove(new Item(ItemId.STEEL_BAR.id()));
 		// If you are fatigued, you should still make the cannonball, it just

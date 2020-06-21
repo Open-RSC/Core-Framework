@@ -26,6 +26,7 @@ public class DrinkHeating implements UseLocTrigger {
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() && obj.getID() == 119) {
 			mes("you briefly place the drink in the oven");
+			delay(4);
 			player.message("you remove the warm drink");
 			if (player.getCache().hasKey("drunk_dragon_base") && player.getCache().hasKey("diced_pa_to_drink") && player.getCache().hasKey("cream_into_drink")) {
 				player.getCarriedItems().remove(new Item(ItemId.FULL_COCKTAIL_GLASS.id()));
@@ -44,6 +45,7 @@ public class DrinkHeating implements UseLocTrigger {
 		if ((item.getCatalogId() == ItemId.HALF_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id())
 			&& obj.getID() == 119) {
 			mes("you briefly place the drink in the oven");
+			delay(4);
 			player.message("you remove the warm drink");
 		}
 	}

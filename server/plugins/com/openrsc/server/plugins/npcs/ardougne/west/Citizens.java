@@ -114,6 +114,7 @@ public class Citizens implements TalkNpcTrigger {
 					npcsay(player, npc, "Tyras will be informed of these words of treason");
 					delay();
 					mes("Someone throws a tomato at the recruiter");
+					delay(4);
 					player.getWorld().registerItem(new GroundItem(
 						player.getWorld(),
 						ItemId.TOMATO.id(),

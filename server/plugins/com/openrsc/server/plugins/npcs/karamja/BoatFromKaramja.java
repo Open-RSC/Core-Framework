@@ -49,7 +49,10 @@ public final class BoatFromKaramja implements TalkNpcTrigger, OpLocTrigger {
 				if (pay_opt == 0) {
 					if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30)) != -1) {
 						say(player, n, "Ok");
-						mes("You pay 30 gold", "You board the ship");
+						mes("You pay 30 gold");
+						delay(4);
+						mes("You board the ship");
+						delay(4);
 						teleport(player, 269, 648);
 						player.message("The ship arrives at Port Sarim");
 					} else { // not enough money

@@ -101,6 +101,7 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkNpcTrigger
 					say(player, n,
 						"I think I jusht about done them all, but I losht count");
 					mes("You give the card to the barbarian");
+					delay(4);
 					player.getCarriedItems().remove(new Item(ItemId.BARCRAWL_CARD.id()));
 					npcsay(player,
 						n,
@@ -143,6 +144,7 @@ public class AlfredGrimhandBarCrawl implements MiniGameInterface, TalkNpcTrigger
 						"The Alfred Grimhand barcrawl",
 						"First done by Alfred Grimhand");
 					mes("The guard hands you a barcrawl card");
+					delay(4);
 					give(player, ItemId.BARCRAWL_CARD.id(), 1);
 					npcsay(player,
 						n,

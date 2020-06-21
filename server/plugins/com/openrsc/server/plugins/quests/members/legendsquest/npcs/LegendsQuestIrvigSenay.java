@@ -47,9 +47,12 @@ public class LegendsQuestIrvigSenay implements AttackNpcTrigger, KillNpcTrigger,
 			if (player.getCache().hasKey("viyeldi_companions") && player.getCache().getInt("viyeldi_companions") == 2) {
 				player.getCache().set("viyeldi_companions", 3);
 			}
-			mes(config().GAME_TICK * 2, "A nerve tingling scream echoes around you as you slay the dead Hero.",
-				"@yel@Irvig Senay: Ahhhggggh",
-				"@yel@Irvig Senay: Forever must I live in this torment till this beast is slain...");
+			mes("A nerve tingling scream echoes around you as you slay the dead Hero.");
+			delay(2);
+			mes("@yel@Irvig Senay: Ahhhggggh");
+			delay(2);
+			mes("@yel@Irvig Senay: Forever must I live in this torment till this beast is slain...");
+			delay(2);
 			delay();
 			LegendsQuestNezikchened.demonFight(player);
 		}
@@ -67,8 +70,10 @@ public class LegendsQuestIrvigSenay implements AttackNpcTrigger, KillNpcTrigger,
 				player.message("Your opponent is retreating");
 				npcsay(player, n, "");
 				n.remove();
-				mes(config().GAME_TICK * 2, "A piece of crystal forms in midair and falls to the floor.",
-					"You place the crystal in your inventory.");
+				mes("A piece of crystal forms in midair and falls to the floor.");
+				delay(2);
+				mes("You place the crystal in your inventory.");
+				delay(2);
 				give(player, ItemId.A_LUMP_OF_CRYSTAL.id(), 1);
 			}
 		}
@@ -107,10 +112,14 @@ public class LegendsQuestIrvigSenay implements AttackNpcTrigger, KillNpcTrigger,
 	public void onEscapeNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.IRVIG_SENAY.id() && player.getQuestStage(Quests.LEGENDS_QUEST) == 8 && player.getCache().hasKey("viyeldi_companions")) {
 			n.remove();
-			mes(config().GAME_TICK * 2, "As you try to make your escape,",
-				"the Viyeldi fighter is recalled by the demon...",
-				"@yel@Nezikchened : Ha, ha ha!",
-				"@yel@Nezikchened : Run then fetid worm...and never touch my totem again...");
+			mes("As you try to make your escape,");
+			delay(2);
+			mes("the Viyeldi fighter is recalled by the demon...");
+			delay(2);
+			mes("@yel@Nezikchened : Ha, ha ha!");
+			delay(2);
+			mes("@yel@Nezikchened : Run then fetid worm...and never touch my totem again...");
+			delay(2);
 		}
 
 	}

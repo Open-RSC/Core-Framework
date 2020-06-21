@@ -88,8 +88,10 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 				return;
 			}
 			if (command.equalsIgnoreCase("Look")) {
-				mes("The Dolmen is intricately decorated with the family",
-					"symbol of two crossed palm trees .");
+				mes("The Dolmen is intricately decorated with the family");
+				delay(4);
+				mes("symbol of two crossed palm trees .");
+				delay(4);
 				if (player.getQuestStage(Quests.SHILO_VILLAGE) == 8) {
 					player.message("There is nothing on the Dolmen.");
 					return;
@@ -131,8 +133,10 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 					mes("You would need some Papyrus and Charcoal");
 					player.message("to take more notes from this Dolmen!");
 				} else if (!player.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.empty()) && !player.getCache().hasKey("dropped_writing")) {
-					mes("you grab some nearby scraps of delicate paper together ",
-						"and copy the text as best you can and collect");
+					mes("you grab some nearby scraps of delicate paper together ");
+					delay(4);
+					mes("and copy the text as best you can and collect");
+					delay(4);
 					player.message("them together as a scroll");
 					give(player, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
 				}

@@ -65,13 +65,17 @@ public class MagicalPool implements OpLocTrigger {
 				teleport(player, 471, 3385);
 				player.message("you are teleported further under ground");
 			} else {
-				mes(config().GAME_TICK * 2, "you step into the pool");
-				mes(config().GAME_TICK * 2, "you wet your boots");
+				mes("you step into the pool");
+				delay(2);
+				mes("you wet your boots");
+				delay(2);
 			}
 		}
 		if (obj.getID() == 1166) {
-			mes(config().GAME_TICK * 2, "you step into the sparkling water");
-			mes(config().GAME_TICK * 2, "you feel energy rush through your veins");
+			mes("you step into the sparkling water");
+			delay(2);
+			mes("you feel energy rush through your veins");
+			delay(2);
 			teleport(player, 447, 3373);
 			player.message("you are teleported to kolodions cave");
 		}

@@ -147,10 +147,14 @@ public class Smithing implements UseLocTrigger {
 				|| player.getCarriedItems().getInventory().countId(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()) < 1) {
 			player.message("You need the two shield halves to repair the shield.");
 		} else {
-			mes(config().GAME_TICK * 2, "You set to work trying to fix the ancient shield.",
-					"You hammer long and hard and use all of your skill.",
-					"Eventually, it is ready...",
-					"You have repaired the Dragon Square Shield.");
+			mes("You set to work trying to fix the ancient shield.");
+			delay(2);
+			mes("You hammer long and hard and use all of your skill.");
+			delay(2);
+			mes("Eventually, it is ready...");
+			delay(2);
+			mes("You have repaired the Dragon Square Shield.");
+			delay(2);
 			player.getCarriedItems().remove(new Item(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id()));
 			player.getCarriedItems().remove(new Item(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.DRAGON_SQUARE_SHIELD.id()));

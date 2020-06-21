@@ -80,6 +80,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 				player.message("The ship comes to a stop");
 				player.teleport(456, 520, false);
 				mes("You sneak out of the ship");
+				delay(4);
 			}
 		} else if (obj.getID() == 291) {
 			player.message("there are buckets in this crate");
@@ -199,6 +200,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 				}
 			} else if (item.getCatalogId() == ItemId.BUCKET.id()) {
 				mes("You try to get some wax from the beehive");
+				delay(4);
 				if (player.getCache().hasKey("squirt")) {
 					mes("You get some wax from the hive",
 						"The bees fly back to the hive as the repellant wears off");
@@ -213,6 +215,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 		} else if (obj.getID() == 287 && item.getCatalogId() == ItemId.EXCALIBUR.id()) {
 			if (player.getQuestStage(this) == 4) {
 				mes("The crystal shatters");
+				delay(4);
 				player.getWorld().unregisterGameObject(obj);
 				player.getWorld().delayedSpawnObject(obj.getLoc(), (int)TimeUnit.SECONDS.toMillis(32));
 				Npc merlin = ifnearvisnpc(player, NpcId.MERLIN_CRYSTAL.id(), 10);
@@ -262,6 +265,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 							beggar.remove();
 						} else {
 							mes("You give the bread to the beggar");
+							delay(4);
 							player.getCarriedItems().remove(new Item(ItemId.BREAD.id()));
 							npcsay(player, beggar, "Thankyou very much");
 							if (player.getCache().hasKey("lady_test")) {

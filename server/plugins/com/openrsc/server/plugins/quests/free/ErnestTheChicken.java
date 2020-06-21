@@ -59,33 +59,44 @@ public class ErnestTheChicken implements QuestInterface,
 	@Override
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.POISONED_FISH_FOOD.id()) {
-			mes("You pour the poisoned fish food into the fountain",
-				"You see the pirhanas eating the food",
-				"The pirhanas drop dead and float to the surface");
+			mes("You pour the poisoned fish food into the fountain");
+			delay(4);
+			mes("You see the pirhanas eating the food");
+			delay(4);
+			mes("The pirhanas drop dead and float to the surface");
+			delay(4);
 			player.getCarriedItems().remove(new Item(ItemId.POISONED_FISH_FOOD.id()));
 			if (!player.getCache().hasKey("poisoned_fountain")) {
 				player.getCache().store("poisoned_fountain", true);
 			}
 		} else if (obj.getID() == QuestObjects.FOUNTAIN
 			&& item.getCatalogId() == ItemId.FISH_FOOD.id()) {
-			mes("You pour the fish food into the fountain",
-				"You see the pirhanas eating the food",
-				"The pirhanas seem hungrier than ever");
+			mes("You pour the fish food into the fountain");
+			delay(4);
+			mes("You see the pirhanas eating the food");
+			delay(4);
+			mes("The pirhanas seem hungrier than ever");
+			delay(4);
 			player.getCarriedItems().remove(new Item(ItemId.FISH_FOOD.id()));
 		}
 		//nothing happens every other item
 		else if (obj.getID() == QuestObjects.FOUNTAIN) {
 			mes("Nothing interesting happens");
+			delay(4);
 		}
 		if (obj.getID() == QuestObjects.COMPOST
 			&& item.getCatalogId() == ItemId.SPADE.id()) {
 			if (!player.getCarriedItems().hasCatalogID(ItemId.CLOSET_KEY.id(), Optional.empty()) && player.getQuestStage(this) > 0) {
-				mes("You dig through the compost heap",
-					"You find a small key");
+				mes("You dig through the compost heap");
+				delay(4);
+				mes("You find a small key");
+				delay(4);
 				give(player, ItemId.CLOSET_KEY.id(), 1);
 			} else {
-				mes("You dig through the compost heap",
-					"You find nothing of interest");
+				mes("You dig through the compost heap");
+				delay(4);
+				mes("You find nothing of interest");
+				delay(4);
 			}
 		}
 	}
@@ -284,10 +295,14 @@ public class ErnestTheChicken implements QuestInterface,
 						&& player.getCarriedItems().hasCatalogID(ItemId.OIL_CAN.id(), Optional.of(false))) {
 						say(player, n, "I have everything");
 						npcsay(player, n, "Give em here then");
-						mes("You give a rubber tube, a pressure gauge and a can of oil to the Professer",
-							"Oddenstein starts up the machine",
-							"The machine hums and shakes",
-							"Suddenly a ray shoots out of the machine at the chicken");
+						mes("You give a rubber tube, a pressure gauge and a can of oil to the Professer");
+						delay(4);
+						mes("Oddenstein starts up the machine");
+						delay(4);
+						mes("The machine hums and shakes");
+						delay(4);
+						mes("Suddenly a ray shoots out of the machine at the chicken");
+						delay(4);
 						Npc chicken = ifnearvisnpc(player, NpcId.ERNEST_CHICKEN.id(), 20);
 						if (chicken != null) {
 							player.getCarriedItems().remove(new Item(ItemId.RUBBER_TUBE.id()));
@@ -303,6 +318,7 @@ public class ErnestTheChicken implements QuestInterface,
 							npcsay(player, ernest, "Of course, of course");
 
 							mes("Ernest hands you 300 coins");
+							delay(4);
 							player.sendQuestComplete(getQuestId());
 						}
 					}
@@ -443,6 +459,7 @@ public class ErnestTheChicken implements QuestInterface,
 						"No no he's been turned into an actual chicken",
 						"By a mad scientist");
 					mes("Veronica lets out an ear piecing shreek");
+					delay(4);
 					npcsay(player, n, "Eeeeek", "My poor darling",
 						"Why must these things happen to us?");
 					say(player, n, "Well I'm doing my best to turn him back");

@@ -482,8 +482,10 @@ public class Mourner implements TalkNpcTrigger {
 		}
 		if (n.getID() == ILL_MOURNER) {
 			if (player.getQuestStage(Quests.BIOHAZARD) > 4) {
-				mes("the mourner is sick",
-					"he doesn't feel like talking");
+				mes("the mourner is sick");
+				delay(4);
+				mes("he doesn't feel like talking");
+				delay(4);
 				return;
 			}
 			say(player, n, "hello there");

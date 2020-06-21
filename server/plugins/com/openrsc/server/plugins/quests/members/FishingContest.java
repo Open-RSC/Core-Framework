@@ -96,6 +96,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 			case -1:
 				if (!isDirectTalk) {
 					mes("you have already won the fishing competition");
+					delay(4);
 				} else {
 					npcsay(player, n, "Hello champ",
 						"So any hints on how to fish so well");
@@ -184,6 +185,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 
 						} else {
 							mes("I don't have the 5gp though");
+							delay(4);
 							npcsay(player, n, "No pay, no play");
 						}
 					} else if (first == 1) {

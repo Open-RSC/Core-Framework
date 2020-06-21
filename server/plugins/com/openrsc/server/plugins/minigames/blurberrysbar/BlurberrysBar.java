@@ -385,6 +385,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 			"here, you'll need these ingredients",
 			"but I'm afraid i can't give you any more if you mess up");
 		mes("blurberry gives you two lemons,one orange, one pineapple");
+		delay(4);
 		give(player, ItemId.LEMON.id(), 2);
 		give(player, ItemId.ORANGE.id(), 1);
 		give(player, ItemId.FRESH_PINEAPPLE.id(), 1);
@@ -399,6 +400,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	private void assignDrunkDragon(Player player, Npc npc) {
 		say(player, npc, "here you go");
 		mes("you give blurberry the fruit blast");
+		delay(4);
 		player.getCarriedItems().remove(new Item(ItemId.FRUIT_BLAST.id()));
 		player.message("he takes a sip");
 		npcsay(player, npc, "hmmm... not bad, not bad at all",
@@ -420,6 +422,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	private void assignSGG(Player player, Npc npc) {
 		say(player, npc, "here you go");
 		mes("you give blurberry the drunk dragon");
+		delay(4);
 		player.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
 		player.incExp(Skills.COOKING, 160, true);
 		player.message("he takes a sip");
@@ -444,6 +447,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	private void assignChocolateSaturday(Player player, Npc npc) {
 		say(player, npc, "here you go");
 		mes("you give blurberry the short green guy");
+		delay(4);
 		player.getCarriedItems().remove(new Item(ItemId.SGG.id()));
 		player.incExp(Skills.COOKING, 160, true);
 		player.message("he takes a sip");
@@ -470,6 +474,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	private void assignBlurberrySpecial(Player player, Npc npc) {
 		say(player, npc, "here.. try some");
 		mes("you give blurberry the cocktail");
+		delay(4);
 		player.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_SATURDAY.id()));
 		player.incExp(Skills.COOKING, 160, true);
 		player.message("he takes a sip");
@@ -496,6 +501,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	private void completeBlurberrysBar(Player player, Npc npc) {
 		say(player, npc, "I think i've made it right");
 		mes("you give the blurberry special to blurberry");
+		delay(4);
 		player.getCarriedItems().remove(new Item(ItemId.BLURBERRY_SPECIAL.id()));
 		player.message("he takes a sip");
 		npcsay(player, npc, "well i never, incredible",

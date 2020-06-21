@@ -21,9 +21,11 @@ public class UndergroundPassWell implements OpLocTrigger {
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == WELL) {
 			mes("you climb into the well");
+			delay(4);
 			if ((player.getCache().hasKey("orb_of_light1") && player.getCache().hasKey("orb_of_light2") && player.getCache().hasKey("orb_of_light3") && player.getCache().hasKey("orb_of_light4")) ||
 					atQuestStages(player, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				mes("you feel the grip of icy hands all around you...");
+				delay(4);
 				player.teleport(722, 3461);
 				delay();
 				displayTeleportBubble(player, player.getX(), player.getY(), true);
@@ -31,8 +33,10 @@ public class UndergroundPassWell implements OpLocTrigger {
 			} else {
 				player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.2D));
 				displayTeleportBubble(player, obj.getX(), obj.getY(), false);
-				mes("from below an icy blast of air chills you to your bones",
-					"a mystical force seems to blast you back out of the well");
+				mes("from below an icy blast of air chills you to your bones");
+				delay(4);
+				mes("a mystical force seems to blast you back out of the well");
+				delay(4);
 				player.message("there must be a positive force near by!");
 			}
 		}

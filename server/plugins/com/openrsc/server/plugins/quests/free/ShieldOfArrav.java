@@ -95,6 +95,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 					say(player, null, "Aha the shield of Arrav");
 					say(player, null, "That was what I was looking for");
 					mes("You take the book from the bookcase");
+					delay(4);
 					give(player, ItemId.BOOK.id(), 1);
 					if (!player.getCache().hasKey("read_arrav")) {
 						player.getCache().store("read_arrav", true);
@@ -112,14 +113,20 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 				} else {
 					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))
 							|| player.getCarriedItems().getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))) {
-							mes("You search the chest", "The chest is empty");
+							mes("You search the chest");
+							delay(4);
+							mes("The chest is empty");
+							delay(4);
 							return;
 					} else if (isPhoenixGang(player)) {
 						mes("You search the chest",
 							"You find half a shield which you take");
 						give(player, ItemId.BROKEN_SHIELD_ARRAV_1.id(), 1);
 					} else {
-						mes("You search the chest", "The chest is empty");
+						mes("You search the chest");
+						delay(4);
+						mes("The chest is empty");
+						delay(4);
 					}
 				}
 				break;
@@ -132,14 +139,20 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 				} else {
 					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))
 						|| player.getCarriedItems().getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))) {
-						mes("You search the cupboard", "The cupboard is empty");
+						mes("You search the cupboard");
+						delay(4);
+						mes("The cupboard is empty");
+						delay(4);
 						return;
 					} else if (isBlackArmGang(player)) {
 						mes("You search the cupboard",
 							"You find half a shield which you take");
 						give(player, ItemId.BROKEN_SHIELD_ARRAV_2.id(), 1);
 					} else {
-						mes("You search the cupboard", "The cupboard is empty");
+						mes("You search the cupboard");
+						delay(4);
+						mes("The cupboard is empty");
+						delay(4);
 					}
 				}
 				break;
@@ -544,12 +557,14 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 			&& obj.getY() == 532) {
 			thinkbubble(item);
 			mes("You unlock the door");
+			delay(4);
 			if (player.getY() <= 531) {
 				doDoor(obj, player);
 			} else {
 				doDoor(obj, player);
 			}
 			mes("You go through the door");
+			delay(4);
 		}
 
 	}

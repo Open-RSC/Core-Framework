@@ -21,8 +21,10 @@ public class UndergroundPassKalrag implements KillNpcTrigger {
 	@Override
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.KALRAG.id()) {
-			mes("kalrag slumps to the floor",
-				"poison flows from the corpse over the soil");
+			mes("kalrag slumps to the floor");
+			delay(4);
+			mes("poison flows from the corpse over the soil");
+			delay(4);
 			if (!player.getCache().hasKey("poison_on_doll") && player.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 				if (player.getCarriedItems().hasCatalogID(ItemId.A_DOLL_OF_IBAN.id(), Optional.of(false))) {
 					mes("you smear the doll of iban in the poisoned blood");

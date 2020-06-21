@@ -193,12 +193,18 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			}
 
 			if (player.getCache().hasKey("foodtrough") && correctSetup) {
-				mes("In their panic the rats bend and twist",
-						"The cage bars with their teeth",
-						"They're becoming weak, some have collapsed",
-						"The rats are eating the poison",
-						"They're becoming weak, some have collapsed",
-						"The rats are slowly dying");
+				mes("In their panic the rats bend and twist");
+				delay(4);
+				mes("The cage bars with their teeth");
+				delay(4);
+				mes("They're becoming weak, some have collapsed");
+				delay(4);
+				mes("The rats are eating the poison");
+				delay(4);
+				mes("They're becoming weak, some have collapsed");
+				delay(4);
+				mes("The rats are slowly dying");
+				delay(4);
 				for (Npc rats : player.getViewArea().getNpcsInView()) {
 					if (rats.getID() == NpcId.DUNGEON_RAT.id()) {
 						rats.remove();

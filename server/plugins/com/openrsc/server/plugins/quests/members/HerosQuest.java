@@ -318,10 +318,14 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 							}
 						} else {
 							npcsay(player, n, "You're a hero?, I've never heard of you");
-							mes("You need to have 55 quest points to file for an application",
-								"You also need to have completed the following quests",
-								"The shield of arrav, the lost city",
-								"Merlin's crystal and dragon slayer\"");
+							mes("You need to have 55 quest points to file for an application");
+							delay(4);
+							mes("You also need to have completed the following quests");
+							delay(4);
+							mes("The shield of arrav, the lost city");
+							delay(4);
+							mes("Merlin's crystal and dragon slayer\"");
+							delay(4);
 						}
 					} else if (opt == 2) {
 						skillcape(player, n);
@@ -401,8 +405,10 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 		if (multi(player, n, "Alright then", "No thank you") == 0) {
 			if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
 				mes("Achetties takes your coins");
+				delay(4);
 				if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
 					mes("And hands you a Strength cape");
+					delay(4);
 					give(player, ItemId.STRENGTH_CAPE.id(), 1);
 					npcsay(player, n, "Here you go",
 						"This cape will help increase your combat efficiency",
@@ -670,9 +676,12 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 			} else {
 				if (!player.getCarriedItems().hasCatalogID(ItemId.CANDLESTICK.id(), Optional.empty())) {
 					give(player, ItemId.CANDLESTICK.id(), 2);
-					mes("You find two candlesticks in the chest",
-						"So that will be one for you",
-						"And one to the person who killed grip for you");
+					mes("You find two candlesticks in the chest");
+					delay(4);
+					mes("So that will be one for you");
+					delay(4);
+					mes("And one to the person who killed grip for you");
+					delay(4);
 					if (player.getQuestStage(this) == 1) {
 						player.updateQuestStage(this, 2);
 					}

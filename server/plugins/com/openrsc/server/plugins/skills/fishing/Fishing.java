@@ -61,8 +61,10 @@ public class Fishing implements OpLocTrigger {
 		if (checkFatigue(player)) return;
 
 		if (object.getID() == 493 && player.getSkills().getExperience(Skills.FISHING) >= 200) {
-			mes("that's enough fishing for now",
-				"go through the next door to continue the tutorial");
+			mes("that's enough fishing for now");
+			delay(4);
+			mes("go through the next door to continue the tutorial");
+			delay(4);
 			return;
 		}
 		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {

@@ -43,9 +43,16 @@ public final class NedInShip implements
 					say(player, n, "Can you take me back to Crandor again?");
 					if (player.getCache().hasKey("ship_fixed")) {
 						npcsay(player, n, "Okie Dokie");
-						mes("You feel the ship begin to move",
-							"You are out at sea", "The ship is sailing",
-							"The ship is sailing", "You feel a crunch");
+						mes("You feel the ship begin to move");
+						delay(4);
+						mes("You are out at sea");
+						delay(4);
+						mes("The ship is sailing");
+						delay(4);
+						mes("The ship is sailing");
+						delay(4);
+						mes("You feel a crunch");
+						delay(4);
 						player.teleport(281, 3472, false);
 						player.getCache().remove("ship_fixed");
 						npcsay(player, n, "Aha we've arrived");
@@ -70,6 +77,7 @@ public final class NedInShip implements
 					boolean gave_map = false;
 					if (player.getCarriedItems().hasCatalogID(ItemId.MAP.id(), Optional.of(false))) {
 						mes("You give the map to ned");
+						delay(4);
 						say(player, n, "Here it is");
 						player.getCarriedItems().remove(new Item(ItemId.MAP.id()));
 						gave_map = true;
@@ -77,6 +85,7 @@ public final class NedInShip implements
 						&& player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_2.id(), Optional.of(false))
 						&& player.getCarriedItems().hasCatalogID(ItemId.MAP_PIECE_3.id(), Optional.of(false))) {
 						mes("You give the parts of the map to ned");
+						delay(4);
 						say(player, n, "Here it is");
 						player.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_1.id()));
 						player.getCarriedItems().remove(new Item(ItemId.MAP_PIECE_2.id()));

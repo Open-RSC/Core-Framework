@@ -14,7 +14,9 @@ public class Skillcape implements OpInvTrigger {
 			|| player.getLocation().isInsideGrandTreeGround()
 			|| (player.getLocation().inModRoom() && !player.isAdmin())) {
 			mes("A mysterious force blocks your teleport!");
+			delay(4);
 			mes("You can't use this teleport after level 30 wilderness");
+			delay(4);
 			return false;
 		}
 		if (player.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
@@ -28,7 +30,9 @@ public class Skillcape implements OpInvTrigger {
 	private void checkPlagueSample(Player player) {
 		if (player.getCarriedItems().hasCatalogID(ItemId.PLAGUE_SAMPLE.id())) {
 			mes("the plague sample is too delicate...");
+			delay(4);
 			mes("it disintegrates in the crossing");
+			delay(4);
 			while (player.getCarriedItems().getInventory().countId(ItemId.PLAGUE_SAMPLE.id()) > 0) {
 				player.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 			}
@@ -39,10 +43,12 @@ public class Skillcape implements OpInvTrigger {
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (command.equalsIgnoreCase("Teleport") && canTeleport(player)) {
 			mes("With a swish of your cape");
+			delay(4);
 			checkPlagueSample(player);
 			if (item.getCatalogId() == ItemId.CRAFTING_CAPE.id()) {
 				player.teleport(347, 599, true);
 				mes("You teleport to the Crafting Guild");
+				delay(4);
 			}
 		}
 	}

@@ -21,7 +21,9 @@ public class TeleportStone implements OpInvTrigger {
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == TELEPORT_STONE) {
 			mes("the stone starts shaking...");
+			delay(4);
 			player.message("a magical portal opens up, where would you like to go?");
+			delay(4);
 			String[] teleLoc = {"Lumbridge", "Draynor", "Falador", "Edgeville", "Varrock", "Alkharid", "Karamja", "Yanille", "Ardougne", "Catherby", "Seers", "Gnome Stronghold", "Stay here"};
 			int menu = multi(player, teleLoc);
 			//if (p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {

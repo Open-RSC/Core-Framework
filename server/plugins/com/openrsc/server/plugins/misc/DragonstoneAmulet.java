@@ -129,9 +129,12 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
 
-		mes("You feel more power emanating from it than before",
-			"you can now rub this amulet to teleport",
-			"Though using it to much means you will need to recharge it");
+		mes("You feel more power emanating from it than before");
+		delay(4);
+		mes("you can now rub this amulet to teleport");
+		delay(4);
+		mes("Though using it to much means you will need to recharge it");
+		delay(4);
 		player.message("It now also means you can find more gems when mining");
 
 		// Repeat

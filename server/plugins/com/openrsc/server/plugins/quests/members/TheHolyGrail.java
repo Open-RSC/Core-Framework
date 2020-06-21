@@ -428,6 +428,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 		if (obj.getID() == 408) {
 			if (player.getQuestStage(this) == 4) {
 				mes("You hear muffled noises from the sack");
+				delay(4);
 				player.message("You open the sack");
 				Npc percival = addnpc(player.getWorld(), NpcId.SIR_PERCIVAL.id(), 328, 446, (int)TimeUnit.SECONDS.toMillis(64));
 				npcsay(player, percival, "Wow thankyou",

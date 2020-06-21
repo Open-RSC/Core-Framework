@@ -32,8 +32,10 @@ public class MasterCrafter implements TalkNpcTrigger {
 					if (multi(player, n, "Yes please", "No thank you") == 0) {
 						if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 99000) {
 							mes("The Master Crafter takes your coins");
+							delay(4);
 							if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 99000)) > -1) {
 								mes("And hands you a Crafting cape");
+								delay(4);
 								give(player, ItemId.CRAFTING_CAPE.id(), 1);
 								npcsay(player, n, "There you are",
 									"This cape will allow you to teleport to this guild as much as you like",

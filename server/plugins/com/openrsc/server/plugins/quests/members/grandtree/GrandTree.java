@@ -106,9 +106,12 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 						say(player, n, "of course narnode");
 						npcsay(player, n, "not here, follow me");
 						player.message("king shareem bends down and places his hands on the stone tile");
-						mes("you here a creak as he turns the tile clockwise",
-							"the tile slides away, revealing a small tunnel",
-							"you follow king shareem down");
+						mes("you here a creak as he turns the tile clockwise");
+						delay(4);
+						mes("the tile slides away, revealing a small tunnel");
+						delay(4);
+						mes("you follow king shareem down");
+						delay(4);
 						teleport(player, 703, 3284);
 						n = ifnearvisnpc(player, NpcId.KING_NARNODE_SHAREEN_UNDERGROUND.id(), 15);
 						if (n != null) {
@@ -342,6 +345,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					if (player.getCarriedItems().hasCatalogID(ItemId.GLOUGHS_NOTES.id(), Optional.of(false))) {
 						say(player, n, "look, i found this at glough's home");
 						mes("you give the king the strategic notes");
+						delay(4);
 						player.getCarriedItems().remove(new Item(ItemId.GLOUGHS_NOTES.id()));
 						npcsay(player, n, "hmmm, these are interesting",
 							"but it's not proof, any one could have made these",
@@ -350,6 +354,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 							"but they found nothing suspicious",
 							"just these old pebbles");
 						mes("narnode gives you four old pebbles");
+						delay(4);
 						give(player, ItemId.PEBBLE_3.id(), 1);
 						give(player, ItemId.PEBBLE_2.id(), 1);
 						give(player, ItemId.PEBBLE_4.id(), 1);
@@ -374,6 +379,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 						say(player, n, "i lost some");
 						npcsay(player, n, "here take these, i don't see how it will help though");
 						mes("narnode replaces your lost pebbles");
+						delay(4);
 						if (player.getCache().hasKey("pebble_1")) {
 							player.getCache().remove("pebble_1");
 						}
@@ -434,15 +440,19 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					say(player, n, "hello");
 					if (player.getCarriedItems().hasCatalogID(ItemId.BARK_SAMPLE.id(), Optional.of(false))) {
 						mes("you give the mage the bark sample");
+						delay(4);
 						player.getCarriedItems().remove(new Item(ItemId.BARK_SAMPLE.id()));
 						mes("the mage speaks in a strange ancient tongue",
 							"he says....");
 						strangeTranslationBox(player);
 						player.updateQuestStage(this, 2);
 					} else {
-						mes("the mage mumbles in an ancient tounge",
-							"you can't understand a word");
+						mes("the mage mumbles in an ancient tounge");
+						delay(4);
+						mes("you can't understand a word");
+						delay(4);
 						mes("you need to give him the bark sample");
+						delay(4);
 					}
 					break;
 				case 2:
@@ -493,13 +503,16 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					say(player, n, "surely not!");
 					npcsay(player, n, "we don't need you're sort around here");
 					mes("he doesn't seem very nice");
+					delay(4);
 					break;
 				case 3:
 					say(player, n, "hello");
 					mes("the gnome is munching on a worm hole");
+					delay(4);
 					npcsay(player, n, "can i help human, can't you see i'm eating?",
 						"these are my favourite");
 					mes("the gnome continues to eat");
+					delay(4);
 					say(player, n, "the king asked me to inform you...",
 						"that the daconia rocks have been taken");
 					npcsay(player, n, "surley not!");
@@ -532,6 +545,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					gnome_guard.remove();
 					npcsay(player, n, "lock him up");
 					mes("the gnome guards take you to the top of the grand tree");
+					delay(4);
 					player.teleport(419, 2992);
 					delay(8);
 					Npc jailCharlie = ifnearvisnpc(player, NpcId.CHARLIE.id(), 5);
@@ -559,6 +573,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 							"i just think he's scared of humans",
 							"let me get you out of there");
 						mes("king shareem opens the cage");
+						delay(4);
 						player.teleport(418, 2993);
 						say(player, narnode, "i don't think you can trust glough, narnode",
 							"he seems to have a unatural hatred for humans");
@@ -817,6 +832,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 								"if the orders going to be finished in time");
 							say(player, HUT_FOREMAN, "ok i'll tell glough");
 							mes("the foreman hands you the invoice");
+							delay(4);
 							give(player, ItemId.INVOICE.id(), 1);
 							player.updateQuestStage(this, 10);
 						}
@@ -854,10 +870,14 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 						say(player, n, "ok, what should i do");
 						npcsay(player, n, "jump in the back of the cart",
 							"it's a food delivery, we should be fine");
-						mes("you hide in the cart",
-							"femi covers you with a sheet...",
-							"...and drags the cart to the gate",
-							"femi pulls you into the stronghold");
+						mes("you hide in the cart");
+						delay(4);
+						mes("femi covers you with a sheet...");
+						delay(4);
+						mes("...and drags the cart to the gate");
+						delay(4);
+						mes("femi pulls you into the stronghold");
+						delay(4);
 						smuggled = true;
 						favor = true;
 					} else {
@@ -875,12 +895,17 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 							if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 1000) {
 								npcsay(player, n, "alright, jump in the back of the cart",
 									"it's a food delivery, we should be fine");
-								mes("you hide in the cart",
-									"femi covers you with a sheet...",
-									"...and drags the cart to the gate");
+								mes("you hide in the cart");
+								delay(4);
+								mes("femi covers you with a sheet...");
+								delay(4);
+								mes("...and drags the cart to the gate");
+								delay(4);
 								mes("you give femi 1000 gold coins");
+								delay(4);
 								player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 1000));
 								mes("femi pulls you into the stronghold");
+								delay(4);
 								smuggled = true;
 							} else {
 								// TODO: Authentic behavior here not known
@@ -921,6 +946,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					npcsay(player, n, "give this key to glough",
 						"he left it here last night");
 					mes("anita gives you a key");
+					delay(4);
 					give(player, ItemId.GLOUGHS_KEY.id(), 1);
 					npcsay(player, n, "thanks a lot");
 					say(player, n, "no, thankyou");
@@ -941,9 +967,12 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					npcsay(player, n, "never, not glough, he's a good gnome at heart",
 						"guard, go and check out that passage way");
 					mes("one of the king's guards runs of up the passage");
+					delay(4);
 					npcsay(player, n, "look, maybe it's stress playing with your mind");
-					mes("the gnome guard returns",
-						"and talks to the king");
+					mes("the gnome guard returns");
+					delay(4);
+					mes("and talks to the king");
+					delay(4);
 					npcsay(player, n, "what?, never, why that little...",
 						"they found glough hiding under a horde of daconia rocks..");
 					say(player, n, "that's what i've been trying to tell you",
@@ -951,6 +980,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					npcsay(player, n, "i..i don't know what to say",
 						"how could i have been so blind");
 					mes("king shareem calls out to another guard");
+					delay(4);
 					npcsay(player, n, "guard, call off the military training",
 						"the humans are not attacking",
 						"you have my full apologies traveller, and my gratitude",
@@ -967,6 +997,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 						say(player, n, "is this it?");
 						npcsay(player, n, "yes, excellent, well done");
 						mes("you give king shareem the daconia rock");
+						delay(4);
 						player.getCarriedItems().remove(new Item(ItemId.DACONIA_ROCK.id()));
 						npcsay(player, n, "it's incredible, the tree's health is improving already",
 							"i don't what to say, we owe you so much",
@@ -1232,12 +1263,15 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				closeCupboard(obj, player, GLOUGHS_CUPBOARD_CLOSED);
 			} else {
 				mes("you search the cupboard");
+				delay(4);
 				if (player.getQuestStage(this) == 6) {
 					mes("inside you find glough's journal");
+					delay(4);
 					give(player, ItemId.GLOUGHS_JOURNAL.id(), 1);
 					player.updateQuestStage(this, 7);
 				} else {
 					mes("but find nothing of interest");
+					delay(4);
 				}
 			}
 		}
@@ -1253,6 +1287,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 			if (player.getY() >= 762) {
 				if (player.getQuestStage(this) >= 8 && player.getQuestStage(this) <= 9) {
 					mes("the gate is locked");
+					delay(4);
 					final Npc worker = ifnearvisnpc(player, NpcId.SHIPYARD_WORKER_ENTRANCE.id(), 5);
 					//Continue
 					if (worker != null) {
@@ -1310,10 +1345,12 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 
 					} else {
 						mes("the gate is locked");
+						delay(4);
 					}
 
 				} else {
 					mes("the gate is locked");
+					delay(4);
 				}
 			} else {
 				player.message("you open the gate");
@@ -1372,8 +1409,10 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 		}
 		else if (obj.getID() == WATCH_TOWER_DOWN) {
 			mes("you climb down the tower");
+			delay(4);
 			player.teleport(712, 1420);
 			mes("and drop to the platform below");
+			delay(4);
 		}
 		// 711  3306 me.
 		// 709 3306 glough.
@@ -1385,7 +1424,9 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				return;
 			}
 			mes("you push down on the pillar");
+			delay(4);
 			player.message("you feel it shift downwards slightly");
+			delay(4);
 			if ((player.getCache().hasKey("pebble_1") && player.getCache().hasKey("pebble_2") && player.getCache().hasKey("pebble_3") && player.getCache().hasKey("pebble_4")) || player.getQuestStage(this) == 14) {
 				if (player.getCache().hasKey("pebble_1")) {
 					player.getCache().remove("pebble_1");
@@ -1403,7 +1444,9 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					player.updateQuestStage(this, 14);
 				}
 				player.message("the pillar shifts back revealing a ladder");
+				delay(4);
 				mes("it seems to lead down through the tree trunk");
+				delay(4);
 				int menu = multi(player, "climb down", "come back later");
 				if (menu == 0) {
 					mes("you squeeze down the inner of the tree trunk",
@@ -1444,25 +1487,32 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 		}
 		else if (obj.getID() == ROOT_ONE || obj.getID() == ROOT_TWO || obj.getID() == ROOT_THREE) {
 			mes("you search the root...");
+			delay(4);
 			if (obj.getID() == ROOT_THREE) {
 				if (player.getQuestStage(this) == 16) {
 					if (!player.getCarriedItems().hasCatalogID(ItemId.DACONIA_ROCK.id(), Optional.empty())) {
 						mes("and find a small glowing rock");
+						delay(4);
 						give(player, ItemId.DACONIA_ROCK.id(), 1);
 					} else {
 						mes("but find nothing");
+						delay(4);
 					}
 				} else {
 					mes("...but find nothing");
+					delay(4);
 				}
 			} else {
 				mes("...but find nothing");
+				delay(4);
 			}
 		}
 		else if (obj.getID() == PUSH_ROOT || obj.getID() == PUSH_ROOT_BACK) { // ACCESS TO GNOME MINE
 			mes("you push the roots");
+			delay(4);
 			if (player.getQuestStage(this) == -1) {
 				mes("they wrap around your arms");
+				delay(4);
 				player.message("and drag you deeper forwards");
 				if (obj.getID() == PUSH_ROOT_BACK) {
 					player.teleport(700, 3280);
@@ -1471,6 +1521,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				}
 			} else {
 				mes("they don't seem to mind");
+				delay(4);
 			}
 		}
 	}
@@ -1499,9 +1550,12 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.SHIPYARD_FOREMAN_HUT.id()) {
 			if (player.getQuestStage(this) == 9) {
-				mes("you kill the foreman",
-					"inside his pocket you find an invoice..",
-					"it seems to be an order for timber");
+				mes("you kill the foreman");
+				delay(4);
+				mes("inside his pocket you find an invoice..");
+				delay(4);
+				mes("it seems to be an order for timber");
+				delay(4);
 				give(player, ItemId.INVOICE.id(), 1);
 				player.updateQuestStage(this, 10);
 			}
@@ -1530,10 +1584,12 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if (obj.getID() == GLOUGH_CHEST_CLOSED && item.getCatalogId() == ItemId.GLOUGHS_KEY.id()) {
 			mes("the key fits the chest");
+			delay(4);
 			player.message("you open the chest");
 			player.message("and search it...");
 			changeloc(obj, config().GAME_TICK * 5, GLOUGH_CHEST_OPEN);
 			mes("inside you find some paper work");
+			delay(4);
 			player.message("and an old gnome tongue translation book");
 			give(player, ItemId.GLOUGHS_NOTES.id(), 1);
 			give(player, ItemId.TREE_GNOME_TRANSLATION.id(), 1);
@@ -1541,15 +1597,22 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				player.updateQuestStage(this, 12);
 			}
 			mes("you close the chest");
+			delay(4);
 		}
 		else if (obj.getID() == WATCH_TOWER_STONE_STAND && (item.getCatalogId() == ItemId.PEBBLE_3.id()
 				|| item.getCatalogId() == ItemId.PEBBLE_2.id() || item.getCatalogId() == ItemId.PEBBLE_4.id() || item.getCatalogId() == ItemId.PEBBLE_1.id())) {
-			mes("on top are four pebble size indents",
-				"they span from left to right",
-				"you place the pebble...");
+			mes("on top are four pebble size indents");
+			delay(4);
+			mes("they span from left to right");
+			delay(4);
+			mes("you place the pebble...");
+			delay(4);
 			int menu = multi(player, "To the far left", "Centre left", "Centre right", "To the far right");
 			if (menu == 0) {
-				mes("you place the pebble in the indent", "it crumbles into dust");
+				mes("you place the pebble in the indent");
+				delay(4);
+				mes("it crumbles into dust");
+				delay(4);
 				player.getCarriedItems().remove(new Item(item.getCatalogId()));
 				if (item.getCatalogId() == ItemId.PEBBLE_1.id()) { // HO
 					if (!player.getCache().hasKey("pebble_1")) {
@@ -1557,7 +1620,10 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					}
 				}
 			} else if (menu == 1) {
-				mes("you place the pebble in the indent", "it crumbles into dust");
+				mes("you place the pebble in the indent");
+				delay(4);
+				mes("it crumbles into dust");
+				delay(4);
 				player.getCarriedItems().remove(new Item(item.getCatalogId()));
 				if (item.getCatalogId() == ItemId.PEBBLE_2.id()) { // NI
 					if (!player.getCache().hasKey("pebble_2")) {
@@ -1565,7 +1631,10 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					}
 				}
 			} else if (menu == 2) {
-				mes("you place the pebble in the indent", "it crumbles into dust");
+				mes("you place the pebble in the indent");
+				delay(4);
+				mes("it crumbles into dust");
+				delay(4);
 				player.getCarriedItems().remove(new Item(item.getCatalogId()));
 				if (item.getCatalogId() == ItemId.PEBBLE_3.id()) { // :::
 					if (!player.getCache().hasKey("pebble_3")) {
@@ -1573,7 +1642,10 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					}
 				}
 			} else if (menu == 3) {
-				mes("you place the pebble in the indent", "it crumbles into dust");
+				mes("you place the pebble in the indent");
+				delay(4);
+				mes("it crumbles into dust");
+				delay(4);
 				player.getCarriedItems().remove(new Item(item.getCatalogId()));
 				if (item.getCatalogId() == ItemId.PEBBLE_4.id()) { // HA
 					if (!player.getCache().hasKey("pebble_4")) {

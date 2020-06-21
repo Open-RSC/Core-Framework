@@ -74,13 +74,18 @@ public class RandomObjects implements OpLocTrigger {
 							player.playerServerMessage(MessageType.QUEST, "And climb down again");
 						} else if (menu == 1) {
 							mes("You think better of clambering over the cart, you might get dirty.");
+							delay(4);
 							say(player, null, "I'd probably have just scraped my knees up as well.");
 						}
 				} else {
-					mes("You approach the cart and see undead creatures gathering by the village gates.",
-							"There is a note attached to the cart.",
-							"The note says,",
-							"@gre@Danger deadly green mist do not enter if you value your life");
+					mes("You approach the cart and see undead creatures gathering by the village gates.");
+					delay(4);
+					mes("There is a note attached to the cart.");
+					delay(4);
+					mes("The note says,");
+					delay(4);
+					mes("@gre@Danger deadly green mist do not enter if you value your life");
+					delay(4);
 					Npc mosol = ifnearvisnpc(player, NpcId.MOSOL.id(), 15);
 					if (mosol != null) {
 						npcsay(player, mosol, "You must be a maniac to go in there!");
@@ -109,6 +114,7 @@ public class RandomObjects implements OpLocTrigger {
 			case 242:
 			case 243:
 				mes("You board the ship");
+				delay(4);
 				player.teleport(263, 660, false);
 				delay(4);
 				player.message("The ship arrives at Port Sarim");
@@ -138,6 +144,7 @@ public class RandomObjects implements OpLocTrigger {
 		// ARDOUGNE WALL GATEWAY FOR BIOHAZARD ETC...
 		if (object.getID() == 450) {
 			mes("you pull on the large wooden doors");
+			delay(4);
 			if (player.getQuestStage(Quests.BIOHAZARD) == -1) {
 				player.message("you open it and walk through");
 				Npc gateMourner = ifnearvisnpc(player, NpcId.MOURNER_BYENTRANCE.id(), 15);

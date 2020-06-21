@@ -47,34 +47,42 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), PILE_OF_MUD_MAP_LEVEL_2)) {
 			if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[0]) {
-				mes("you climb the pile of mud...",
-					"it leads to a small tunnel...");
+				mes("you climb the pile of mud...");
+				delay(4);
+				mes("it leads to a small tunnel...");
+				delay(4);
 				player.teleport(727, 3448);
 				player.message("..ending at the well entrance");
 			}
 			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[1]) {
 				mes("you climb the pile of mud");
+				delay(4);
 				player.teleport(753, 3481);
 			}
 			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[2]) {
 				mes("you climb the pile of mud");
+				delay(4);
 				player.teleport(753, 3475);
 			}
 			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[3]) {
 				mes("you climb the pile of mud");
+				delay(4);
 				player.teleport(743, 3483);
 			}
 			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[4]) {
 				mes("you climb the pile of mud");
+				delay(4);
 				player.teleport(740, 3476);
 			}
 			else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_2[5]) {
 				mes("you climb the pile of mud");
+				delay(4);
 				player.teleport(735, 3478);
 			}
 		}
 		else if (obj.getID() == CRATE) {
 			mes("you search the crate");
+			delay(4);
 			if (!player.getCache().hasKey("crate_food")) {
 				player.message("inside you find some food");
 				give(player, ItemId.SALMON.id(), 2);
@@ -86,11 +94,13 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 		}
 		else if (inArray(obj.getID(), DUG_UP_SOIL)) {
 			mes("under the soil is a tunnel");
+			delay(4);
 			player.message("would you like to enter?");
 			int menu = multi(player,
 				"no, im scared of small spaces", "yep, let's do it");
 			if (menu == 1) {
 				mes("you climb into the small tunnel");
+				delay(4);
 				if (obj.getID() == DUG_UP_SOIL[1])
 					player.teleport(745, 3457);
 				else
@@ -121,15 +131,18 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 		else if (obj.getID() == WALL_GRILL_EAST) {
 			if (!player.getCache().hasKey("rope_wall_grill")) {
 				mes("the wall grill is too high");
+				delay(4);
 				player.message("you can't quite reach");
 			} else {
 				mes("you use the rope tied to the grill to pull yourself up");
+				delay(4);
 				player.message("you then climb across the grill to the otherside");
 				player.teleport(762, 3472);
 			}
 		}
 		else if (obj.getID() == WALL_GRILL_WEST) {
 			mes("you climb across the grill to the otherside");
+			delay(4);
 			player.teleport(766, 3463);
 		}
 		else if (inArray(obj.getID(), ROCKS)) {
@@ -173,6 +186,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 		}
 		else if (obj.getID() == PASSAGE) {
 			mes("you walk down the passage way");
+			delay(4);
 			player.message("you step on a pressure trigger");
 			player.message("it's a trap");
 			if (obj.getX() == 737 || obj.getX() == 735) {
@@ -190,6 +204,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 		else if (obj.getID() == CAGE_REMAINS) {
 			if (player.getQuestStage(Quests.UNDERGROUND_PASS) >= 5 || player.getQuestStage(Quests.UNDERGROUND_PASS) == -1) {
 				mes("you search the cage remains");
+				delay(4);
 				player.message("nothing remains");
 				return;
 			}
@@ -205,6 +220,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 			player.message("you pull on the great door");
 			if ((player.getCache().hasKey("flames_of_zamorak1") && player.getCache().hasKey("flames_of_zamorak2") && (player.getCache().hasKey("flames_of_zamorak3") && player.getCache().getInt("flames_of_zamorak3") >= 2)) || atQuestStages(player, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				mes("from behind the door you hear cry's and moans");
+				delay(4);
 				player.message("the door slowly creeks open");
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 723, obj.getDirection(), obj
 					.getType()));
@@ -223,11 +239,13 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 			addloc(obj.getWorld(), obj.getLoc(), 3000);
 			player.teleport(766, 3417);
 			mes("you open the huge wooden door");
+			delay(4);
 			player.teleport(763, 3417);
 			player.message("and walk through");
 		}
 		else if (obj.getID() == FLAMES_OF_ZAMORAK) {
 			mes("you search the stone structure");
+			delay(4);
 			player.message("on the side you find an old inscription");
 			player.message("it reads...");
 			ActionSender.sendBox(player, "@red@While I sense the soft beating of a good heart I will not open% %@red@Feed me three crests of the blessed warriors, and the%@red@creatures remains% %@red@Throw them to me as an offering, a gift of hatred, a token% %@red@Then finally rejoice as all goodness dies in my flames", true);
@@ -245,6 +263,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 			if (click == 0) {
 				if (obj.getID() == 168) {
 					mes("the cage door has been sealed shut");
+					delay(4);
 					player.message("the poor unicorn can't escape");
 					return;
 				}
@@ -273,6 +292,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 			} else if (click == 1) {
 				if (obj.getID() == 168) {
 					mes("you search the cage");
+					delay(4);
 					if (!player.getCarriedItems().hasCatalogID(ItemId.RAILING.id(), Optional.of(false))) {
 						player.message("you find a loose railing lying on the floor");
 						give(player, ItemId.RAILING.id(), 1);

@@ -231,6 +231,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"where the ground has been blackened",
 									"by the living flame.");
 								mes("You give the Ardrigal to Trufitus");
+								delay(4);
 								player.getCarriedItems().remove(new Item(ItemId.ARDRIGAL.id()));
 								setQuestStage(player, this, 3);
 								player.getCache().store("got_sito_foil", false);
@@ -263,6 +264,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"And it clings to rocks for it's existence",
 									"It is difficult to see, so you must search for it well.");
 								mes("You give the Sito Foil to Trufitus");
+								delay(4);
 								player.getCarriedItems().remove(new Item(ItemId.SITO_FOIL.id()));
 								setQuestStage(player, this, 4);
 								player.getCache().store("got_volencia_moss", false);
@@ -305,6 +307,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"The Northern cliffs of this land",
 									"Take care Bwana as it may be very dangerous");
 								mes("You give the Volencia Moss to Trufitus");
+								delay(4);
 								player.getCarriedItems().remove(new Item(ItemId.VOLENCIA_MOSS.id()));
 								setQuestStage(player, this, 5);
 								player.getCache().store("got_rogues_purse", false);

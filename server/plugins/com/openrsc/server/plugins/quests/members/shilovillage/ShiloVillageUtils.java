@@ -27,8 +27,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			"No thanks, it looks a bit dark!");
 		if (menu == 0) {
 			player.message("You start to contort your body...");
-			mes("With some dificulty you manage to push your body",
-					"through the small crack in the rock.");
+			mes("With some dificulty you manage to push your body");
+			delay(4);
+			mes("through the small crack in the rock.");
+			delay(4);
 			if (!player.getCache().hasKey("SV_DIG_ROPE")) {
 				mes("As you squeeze out of the hole...");
 				player.message("you realise that there is a huge drop underneath you");
@@ -47,9 +49,12 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				say(player, null, "Ugghhhh!!");
 			}
 			else {
-				mes("You squeeze through the fissure in the granite",
-						"And once through, you cleverly use the rope to slowly lower",
-						"yourself to the floor.");
+				mes("You squeeze through the fissure in the granite");
+				delay(4);
+				mes("And once through, you cleverly use the rope to slowly lower");
+				delay(4);
+				mes("yourself to the floor.");
+				delay(4);
 				say(player, null, "Yay!");
 				player.teleport(352, 3650);
 			}
@@ -84,8 +89,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 	private void dropZadimusCorpse(Player player) {
 		mes("You feel an uneartly compunction to bury this corpse!");
 		if (player.getLocation().inBounds(445, 749, 449, 753)) {
-			mes("You hear an unearthly moaning sound as you see",
-				"an apparition materialises right in front of you.");
+			mes("You hear an unearthly moaning sound as you see");
+			delay(4);
+			mes("an apparition materialises right in front of you.");
+			delay(4);
 			Npc zadimus = addnpc(player.getWorld(), NpcId.ZADIMUS.id(), player.getX(), player.getY(), (int)TimeUnit.SECONDS.toMillis(60));
 			delay();
 			if (zadimus != null) {
@@ -98,8 +105,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				npcsay(player, zadimus, "'I am the key, but only kin may approach her.'");
 				mes("The apparition disapears into the ground where you buried the corpse.");
 				zadimus.remove();
-				mes("You see the ground in front of you shake ",
-					"as a shard of bone forces its way to the surface.");
+				mes("You see the ground in front of you shake ");
+				delay(4);
+				mes("as a shard of bone forces its way to the surface.");
+				delay(4);
 				player.message("You take the bone shard and place it in your inventory.");
 				player.getCarriedItems().remove(new Item(ItemId.ZADIMUS_CORPSE.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.BONE_SHARD.id()));
@@ -108,8 +117,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				}
 			}
 		} else {
-			mes("You hear a ghostly wailing sound coming from the corpse",
-				"and a whispering voice says,");
+			mes("You hear a ghostly wailing sound coming from the corpse");
+			delay(4);
+			mes("and a whispering voice says,");
+			delay(4);
 			player.message("'@yel@Zadimus: Let me rest in a sacred place and assist you I will'");
 		}
 	}
@@ -125,8 +136,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 	@Override
 	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.RASHILIYA_CORPSE.id()) {
-			mes("The remains of Rashiliyia look quite delicate.",
-				"You sense that a spirit needs to be put to rest.");
+			mes("The remains of Rashiliyia look quite delicate.");
+			delay(4);
+			mes("You sense that a spirit needs to be put to rest.");
+			delay(4);
 			player.message("Are you sure that you want to drop the remains ?");
 			int menu = multi(player,
 				"Yes, I am sure.",
@@ -142,8 +155,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 					player.getCache().remove("dolmen_ghost");
 				}
 				player.getCarriedItems().remove(new Item(ItemId.RASHILIYA_CORPSE.id()));
-				mes("You drop Rashiliyias remains on the ground.",
-					"The bones turn to dust and forms into the shape of a human figure.");
+				mes("You drop Rashiliyias remains on the ground.");
+				delay(4);
+				mes("The bones turn to dust and forms into the shape of a human figure.");
+				delay(4);
 				Npc rash = addnpc(player.getWorld(), NpcId.RASHILIYIA.id(), player.getX(), player.getY(), (int)TimeUnit.SECONDS.toMillis(30));
 				mes("The figure turns to you and you hear a cackling, croaky voice on the air.");
 				if (rash != null) {
@@ -163,8 +178,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				"Yes, I'm sure.",
 				"Nope, I've had second thoughts.");
 			if (menu == 0) {
-				mes("As the necklace hits the floor, it disintigrates",
-					"into a puff of white powder.");
+				mes("As the necklace hits the floor, it disintigrates");
+				delay(4);
+				mes("into a puff of white powder.");
+				delay(4);
 				player.message("and you start to wonder if it ever really existed?");
 				player.getCarriedItems().remove(new Item(ItemId.BEADS_OF_THE_DEAD.id()));
 			} else if (menu == 1) {
@@ -346,8 +363,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			dropZadimusCorpse(player);
 		}
 		else if (item.getCatalogId() == ItemId.CRUMPLED_SCROLL.id()) {
-			mes("This looks like part of a scroll about Rashiliyia",
-				"Would you like to read it?");
+			mes("This looks like part of a scroll about Rashiliyia");
+			delay(4);
+			mes("Would you like to read it?");
+			delay(4);
 			int menu = multi(player,
 				"Yes please!",
 				"No thanks.");
@@ -383,8 +402,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			}
 		}
 		else if (item.getCatalogId() == ItemId.STONE_PLAQUE.id()) {
-			mes("The markings are very intricate. It's a very strange language.",
-					"The meaning of it evades you though.");
+			mes("The markings are very intricate. It's a very strange language.");
+			delay(4);
+			mes("The meaning of it evades you though.");
+			delay(4);
 		}
 	}
 
@@ -419,8 +440,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 					player.message("You need a level of 20 Crafting to craft this.");
 					return;
 				}
-				mes("Remembering Zadimus' words and the strange bone lock,",
-					"you start to craft the bone.");
+				mes("Remembering Zadimus' words and the strange bone lock,");
+				delay(4);
+				mes("you start to craft the bone.");
+				delay(4);
 				player.message("You succesfully make a key out of the bone shard.");
 				player.getCarriedItems().remove(new Item(ItemId.BONE_SHARD.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.BONE_KEY.id()));
@@ -435,8 +458,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				player.message("You need a level of 20 Crafting to craft this.");
 				return;
 			}
-			mes("You prepare the ivory pommel and the chisel to start crafting...",
-				"You successfully craft some of the ivory into beads.");
+			mes("You prepare the ivory pommel and the chisel to start crafting...");
+			delay(4);
+			mes("You successfully craft some of the ivory into beads.");
+			delay(4);
 			player.message("They may look good as part of a necklace.");
 			player.incExp(Skills.CRAFTING, 35, true);
 			player.getCarriedItems().remove(new Item(ItemId.SWORD_POMMEL.id()));
@@ -457,8 +482,10 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				give(player, ItemId.COINS.id(), 10);
 				player.message("The coins turn to dust in your hand...");
 			} else {
-				mes("As soon as you touch the coins...",
-					"You hear the grinding sound of bones");
+				mes("As soon as you touch the coins...");
+				delay(4);
+				mes("You hear the grinding sound of bones");
+				delay(4);
 				player.message("against stone as you see skeletons and ");
 				delay(2);
 				player.message("Zombies rising up out of the ground.");

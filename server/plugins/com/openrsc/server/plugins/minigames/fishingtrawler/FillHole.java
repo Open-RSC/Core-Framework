@@ -6,8 +6,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-import static com.openrsc.server.plugins.Functions.delloc;
-import static com.openrsc.server.plugins.Functions.mes;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class FillHole implements OpLocTrigger {
 
@@ -15,10 +14,14 @@ public class FillHole implements OpLocTrigger {
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (player.getCarriedItems().remove(new Item(ItemId.SWAMP_PASTE.id())) != -1) {
 			delloc(obj);
-			mes(0, "you fill the hole with swamp paste");
+			mes("you fill the hole with swamp paste");
+			delay(4);
+
 		} else {
-			mes(0, "you'll need some swamp paste to fill that");
+			mes("you'll need some swamp paste to fill that");
+			delay(4);
 		}
+		delay();
 	}
 
 	@Override

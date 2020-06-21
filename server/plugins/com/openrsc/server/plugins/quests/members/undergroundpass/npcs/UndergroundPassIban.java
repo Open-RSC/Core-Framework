@@ -56,9 +56,12 @@ public class UndergroundPassIban implements UseLocTrigger {
 						player.message("amongst ibans remains you find his staff..");
 						mes("...and some runes");
 						player.message("suddenly around you rocks crash to the floor..");
-						mes("...as the ground begins to shake",
-							"the temple walls begin to collapse in",
-							"and you're thrown from the temple platform");
+						mes("...as the ground begins to shake");
+						delay(4);
+						mes("the temple walls begin to collapse in");
+						delay(4);
+						mes("and you're thrown from the temple platform");
+						delay(4);
 						give(player, ItemId.STAFF_OF_IBAN.id(), 1);
 						give(player, ItemId.DEATH_RUNE.id(), 15);
 						give(player, ItemId.FIRE_RUNE.id(), 30);

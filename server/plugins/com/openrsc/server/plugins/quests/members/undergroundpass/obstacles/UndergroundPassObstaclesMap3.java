@@ -53,6 +53,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 					npcsay(player, souless, "kuluf ali monopiate");
 				}
 				mes("you search through the bottom of the cage");
+				delay(4);
 				if (!player.getCache().hasKey("cons_on_doll")) {
 					player.message("but the souless bieng bites into your arm");
 					if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())) {
@@ -83,6 +84,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 					npcsay(player, souless, "kuluf ali monopiate");
 				}
 				mes("you search through the bottom of the cage");
+				delay(4);
 				player.message("but the souless bieng bites into your arm");
 				if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())) {
 					player.message("klanks gaunlett protects you");
@@ -96,10 +98,12 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 		}
 		else if (obj.getID() == DEMONS_CHEST_CLOSED) {
 			mes("you attempt to open the chest");
+			delay(4);
 			if (player.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_OTHAINIAN.id(), Optional.of(false))
 				&& player.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_DOOMION.id(), Optional.of(false))
 				&& player.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_HOLTHION.id(), Optional.of(false)) && !player.getCache().hasKey("shadow_on_doll")) {
 				mes("the three amulets glow red in your satchel");
+				delay(4);
 				player.getCarriedItems().remove(new Item(ItemId.AMULET_OF_OTHAINIAN.id()));
 				player.getCarriedItems().remove(new Item(ItemId.AMULET_OF_DOOMION.id()));
 				player.getCarriedItems().remove(new Item(ItemId.AMULET_OF_HOLTHION.id()));
@@ -118,6 +122,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 				if (player.getQuestStage(Quests.UNDERGROUND_PASS) == -1 &&
 					!config().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
 					mes("the temple is in ruins...");
+					delay(4);
 					player.message("...you cannot enter");
 					return;
 				}
@@ -129,6 +134,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 					delay();
 					player.teleport(795, 3469);
 					mes("you pull open the large doors");
+					delay(4);
 					player.message("and walk into the temple");
 					if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 7 || (player.getCache().hasKey("poison_on_doll") && player.getCache().hasKey("cons_on_doll")
 						&& player.getCache().hasKey("ash_on_doll") && player.getCache().hasKey("shadow_on_doll"))) {
@@ -137,17 +143,24 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 						}
 						player.message("Iban seems to sense danger");
 						mes("@yel@Iban: who dares bring the witches magic into my temple");
+						delay(4);
 						mes("his eyes fixate on you as he raises his arm");
-						mes("@yel@Iban: an imposter dares desecrate this sacred place..",
-							"@yel@Iban: ..home to the only true child of zamorak",
-							"@yel@Iban: join the damned, mortal");
+						delay(4);
+						mes("@yel@Iban: an imposter dares desecrate this sacred place..");
+						delay(4);
+						mes("@yel@Iban: ..home to the only true child of zamorak");
+						delay(4);
+						mes("@yel@Iban: join the damned, mortal");
+						delay(4);
 						player.message("iban raises his staff to the air");
 						mes("a blast of energy comes from ibans staff");
+						delay(4);
 						player.message("you are hit by ibans magic bolt");
 						displayTeleportBubble(player, player.getX() + 1, player.getY(), true);
 						player.damage((int)Math.floor(getCurrentLevel(player, Skills.HITS)/10.0) + 4 + DataConversions.random(-1,1));
 						say(player, null, "aarrgh");
 						mes("@yel@Iban:die foolish mortal");
+						delay(4);
 						long start = System.currentTimeMillis();
 						Area area = Areas.getArea("ibans_room");
 						int ticks = config().GAME_TICK > 600 ? 1 : 2;
@@ -192,6 +205,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 					}
 				} else {
 					mes("The door refuses to open");
+					delay(4);
 					player.message("only followers of zamorak may enter");
 				}
 			} else {

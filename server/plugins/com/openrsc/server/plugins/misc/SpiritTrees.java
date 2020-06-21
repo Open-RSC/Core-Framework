@@ -27,18 +27,24 @@ public class SpiritTrees implements OpLocTrigger {
 		 * **/
 		if (obj.getID() == STRONGHOLD_SPIRIT_TREE) {
 			if (player.getQuestStage(Quests.GRAND_TREE) == -1) {
-				mes("The tree talks in an old tired voice...",
-					"@yel@Spirit Tree: You friend of gnome people, you friend of mine",
-					"@yel@Spirit Tree: Would you like me to take you somewhere?");
+				mes("The tree talks in an old tired voice...");
+				delay(4);
+				mes("@yel@Spirit Tree: You friend of gnome people, you friend of mine");
+				delay(4);
+				mes("@yel@Spirit Tree: Would you like me to take you somewhere?");
+				delay(4);
 				int treeMenu = multi(player, "No thanks old tree",
 					"Where can i go?");
 				if (treeMenu == 0) {
 					say(player, null, "no thanks old tree");
 				} else if (treeMenu == 1) {
 					say(player, null, "where can i go?");
-					mes("The tree talks again..",
-						"@yel@Spirit Tree: You can travel to the trees",
-						"@yel@Spirit Tree: Which are related to myself");
+					mes("The tree talks again..");
+					delay(4);
+					mes("@yel@Spirit Tree: You can travel to the trees");
+					delay(4);
+					mes("@yel@Spirit Tree: Which are related to myself");
+					delay(4);
 					int travelMenu = multi(player,
 						"Battlefield of Khazard",
 						"Forest north of Varrock", "the gnome tree village");
@@ -60,18 +66,24 @@ public class SpiritTrees implements OpLocTrigger {
 		 *  **/
 		else if (obj.getID() == TREE_GNOME_VILLAGE_SPIRIT_TREE) {
 			if (player.getQuestStage(Quests.TREE_GNOME_VILLAGE) == -1) {
-				mes("The tree talks in an old tired voice...",
-					"@yel@Spirit Tree: You friend of gnome people, you friend of mine",
-					"@yel@Spirit Tree: Would you like me to take you somewhere?");
+				mes("The tree talks in an old tired voice...");
+				delay(4);
+				mes("@yel@Spirit Tree: You friend of gnome people, you friend of mine");
+				delay(4);
+				mes("@yel@Spirit Tree: Would you like me to take you somewhere?");
+				delay(4);
 				int treeMenu = multi(player, "No thanks old tree",
 					"Where can i go?");
 				if (treeMenu == 0) {
 					say(player, null, "no thanks old tree");
 				} else if (treeMenu == 1) {
 					say(player, null, "where can i go?");
-					mes("The tree talks again..",
-						"@yel@Spirit Tree: You can travel to the trees",
-						"@yel@Spirit Tree: Which are related to myself");
+					mes("The tree talks again..");
+					delay(4);
+					mes("@yel@Spirit Tree: You can travel to the trees");
+					delay(4);
+					mes("@yel@Spirit Tree: Which are related to myself");
+					delay(4);
 					int travelMenu = multi(player,
 						"Battlefield of Khazard",
 						"Forest north of Varrock", "the gnome stronghold");

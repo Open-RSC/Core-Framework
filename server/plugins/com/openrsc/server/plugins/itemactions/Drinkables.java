@@ -436,7 +436,8 @@ public class Drinkables implements OpInvTrigger {
 			player.message("It tastes sort of strange...like fried oranges...");
 			say(player, null, ".....!.....");
 			delay(2);
-			mes(config().GAME_TICK * 2, "You feel somehow different...");
+			mes("You feel somehow different...");
+			delay(2);
 			say(player, null, "Let's just hope that this isn't a placibo!");
 		} else if (drink == 1) {
 			player.message("You decide against drinking the potion...");

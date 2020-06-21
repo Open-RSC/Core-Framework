@@ -43,16 +43,21 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 			npcsay(player, third_nezikchened, "Now you try to defile my sanctuary...I will teach thee!");
 			if (player.getCache().hasKey("viyeldi_companions") && player.getCache().getInt("viyeldi_companions") <= 3) {
 				npcsay(player, third_nezikchened, "You will pay for your disrespect by meeting some old friends...");
-				mes(third_nezikchened, config().GAME_TICK * 2, "The Demon starts chanting...",
-					"@yel@Nezikchened: Protectors of source, alive in death,",
-					"@yel@Nezikchened: do not rest while this Vacu draws breath!");
+				mes(third_nezikchened, "The Demon starts chanting...");
+				delay(2);
+				mes(third_nezikchened, "@yel@Nezikchened: Protectors of source, alive in death,");
+				delay(2);
+				mes(third_nezikchened, "@yel@Nezikchened: do not rest while this Vacu draws breath!");
+				delay(2);
 				if (third_nezikchened != null) {
 					third_nezikchened.remove();
-					mes(config().GAME_TICK * 2, "The demon is summoning the dead hero's from the Viyeldi caves !");
+					mes("The demon is summoning the dead hero's from the Viyeldi caves !");
+					delay(2);
 					summonViyeldiCompanions(player);
 				}
 			} else if (player.getCache().hasKey("viyeldi_companions") && player.getCache().getInt("viyeldi_companions") == 4) {
-				mes(third_nezikchened, config().GAME_TICK * 2, "The Demon screams in rage...");
+				mes(third_nezikchened, "The Demon screams in rage...");
+				delay(2);
 				npcsay(player, third_nezikchened, "Raarrrrghhhh!",
 					"I'll kill you myself !");
 				third_nezikchened.startCombat(player);
@@ -129,16 +134,22 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 				n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Ha ha ha...I shall return for you when the time is right.", player));
 				delay(3);
 				npcWalkFromPlayer(player, n);
-				mes(config().GAME_TICK, "Your opponent is retreating");
+				mes("Your opponent is retreating");
+				delay();
 				if (n != null) {
 					n.remove();
 				}
-				mes(config().GAME_TICK * 2, "The demon starts an incantation...",
-					"@yel@Nezikchened : But I will leave you with a taste of my power...",
-					"As he finishes the incantation a powerful bolt of energy strikes you.");
+				mes("The demon starts an incantation...");
+				delay(2);
+				mes("@yel@Nezikchened : But I will leave you with a taste of my power...");
+				delay(2);
+				mes("As he finishes the incantation a powerful bolt of energy strikes you.");
+				delay(2);
 				player.damage(7);
-				mes(config().GAME_TICK * 2, "@yel@Nezikchened : Haha hah ha ha ha ha....",
-					"The demon explodes in a powerful burst of flame that scorches you.");
+				mes("@yel@Nezikchened : Haha hah ha ha ha ha....");
+				delay(2);
+				mes("The demon explodes in a powerful burst of flame that scorches you.");
+				delay(2);
 				player.updateQuestStage(Quests.LEGENDS_QUEST, 4);
 				Npc ungadulu = ifnearvisnpc(player, NpcId.UNGADULU.id(), 8);
 				if (ungadulu != null) {
@@ -153,9 +164,12 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 				mes("Your opponent is retreating");
 				npcsay(player, n, "You would bite the hand that feeds you!",
 					"Very well, I will ready myself for our next encounter...");
-				mes(config().GAME_TICK * 2, "The Demon seems very angry now...",
-					"You deliver a final devastating blow to the demon, ",
-					"and it's unearthly frame crumbles into dust.");
+				mes("The Demon seems very angry now...");
+				delay(2);
+				mes("You deliver a final devastating blow to the demon, ");
+				delay(2);
+				mes("and it's unearthly frame crumbles into dust.");
+				delay(2);
 				if (n != null) {
 					n.remove();
 				}
@@ -166,12 +180,17 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 				if (n != null) {
 					n.remove();
 				}
-				mes(config().GAME_TICK * 2, "You deliver the final killing blow to the foul demon.",
-					"The Demon crumbles into a pile of ash.");
+				mes("You deliver the final killing blow to the foul demon.");
+				delay(2);
+				mes("The Demon crumbles into a pile of ash.");
+				delay(2);
 				addobject(ItemId.ASHES.id(), 1, player.getX(), player.getY(), player);
-				mes(config().GAME_TICK * 2, "@yel@Nezikchened: Arrrghhhh.",
-					"@yel@Nezikchened: I am beaten by a mere mortal.",
-					"@yel@Nezikchened: I will revenge myself upon you...");
+				mes("@yel@Nezikchened: Arrrghhhh.");
+				delay(2);
+				mes("@yel@Nezikchened: I am beaten by a mere mortal.");
+				delay(2);
+				mes("@yel@Nezikchened: I will revenge myself upon you...");
+				delay(2);
 				say(player, null, "Yeah, yeah, yeah ! ",
 					"Heard it all before !");
 			}
@@ -201,8 +220,10 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 	public void onAttackNpc(Player player, Npc affectedmob) {
 		if (affectedmob.getID() == NpcId.NEZIKCHENED.id()) {
 			if ((affectedmob.getAttribute("spawnedFor", null) != null && !affectedmob.getAttribute("spawnedFor").equals(player)) || !atQuestStages(player, Quests.LEGENDS_QUEST, 3, 7, 8)) {
-				mes(config().GAME_TICK * 2, "Your attack glides straight through the Demon.");
-				mes(config().GAME_TICK, "as if it wasn't really there.");
+				mes("Your attack glides straight through the Demon.");
+				delay(2);
+				mes("as if it wasn't really there.");
+				delay();
 				if (affectedmob != null)
 					affectedmob.remove();
 			}

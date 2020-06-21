@@ -509,11 +509,18 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 						npcsay(player, n,
 							"the spirit tree has looked over us for centuries",
 							"now we must pay our respects");
-						mes("bolren takes the orbs",
-							"the gnomes begin to chant", "Su tana, en tania",
-							"They continue to chant",
-							"As the king gnome climbs the tree",
-							"placing the two Orbs at the peak of the spirit tree");
+						mes("bolren takes the orbs");
+						delay(4);
+						mes("the gnomes begin to chant");
+						delay(4);
+						mes("Su tana, en tania");
+						delay(4);
+						mes("They continue to chant");
+						delay(4);
+						mes("As the king gnome climbs the tree");
+						delay(4);
+						mes("placing the two Orbs at the peak of the spirit tree");
+						delay(4);
 						player.getCarriedItems().remove(new Item(ItemId.ORBS_OF_PROTECTION.id()));
 						n.displayNpcTeleportBubble(656, 695);
 						delay(2);
@@ -983,14 +990,22 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 		}
 		player.message("You fire the ballista");
 		mes("The huge spear flies through the air");
+		delay(4);
 		if (firstOption && secondOption && thirdOption) {
-			mes("And screams down directly into the Khazard stronghold",
-				"A deafening crash echoes over the battlefield",
-				"The front entrance is reduced to rubble");
+			mes("And screams down directly into the Khazard stronghold");
+			delay(4);
+			mes("A deafening crash echoes over the battlefield");
+			delay(4);
+			mes("The front entrance is reduced to rubble");
+			delay(4);
 			player.updateQuestStage(getQuestId(), 5);
 		} else {
-			mes("Straight over the khazard stronghold",
-				"Into the valleys behond", "You've missed the target");
+			mes("Straight over the khazard stronghold");
+			delay(4);
+			mes("Into the valleys behond");
+			delay(4);
+			mes("You've missed the target");
+			delay(4);
 		}
 	}
 
@@ -1003,9 +1018,12 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.KHAZARD_WARLORD.id()) {
 			if (player.getQuestStage(getQuestId()) == 6) {
-				mes("As he falls to the ground...",
-					"A ghostly vapour floats upwards from his battle worn armour",
-					"Out of sight, you hear a shrill scream in the still air of the valley");
+				mes("As he falls to the ground...");
+				delay(4);
+				mes("A ghostly vapour floats upwards from his battle worn armour");
+				delay(4);
+				mes("Out of sight, you hear a shrill scream in the still air of the valley");
+				delay(4);
 				if (!player.getCarriedItems().hasCatalogID(ItemId.ORBS_OF_PROTECTION.id(), Optional.empty())) {
 					player.message("You search his satchel and find the orbs of protection");
 					give(player, ItemId.ORBS_OF_PROTECTION.id(), 1);

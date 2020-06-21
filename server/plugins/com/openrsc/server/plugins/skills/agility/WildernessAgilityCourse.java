@@ -45,12 +45,15 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 			delay(2);
 			if (failRate == 1) {
 				mes("you lose your footing and fall into the wolf pit");
+				delay(4);
 				teleport(player, 300, 129);
 			} else if (failRate == 2) {
 				mes("you lose your footing and fall into the wolf pit");
+				delay(4);
 				teleport(player, 296, 129);
 			} else {
 				mes("You skillfully balance across the ridge");
+				delay(4);
 				teleport(player, 298, 125);
 				player.incExp(Skills.AGILITY, 50, true);
 			}
@@ -62,13 +65,16 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 			delay(2);
 			if (failRate == 1) {
 				mes("you lose your footing and fall into the wolf pit");
+				delay(4);
 				teleport(player, 300, 129);
 
 			} else if (failRate == 2) {
 				mes("you lose your footing and fall into the wolf pit");
+				delay(4);
 				teleport(player, 296, 129);
 			} else {
 				mes("You skillfully balance across the ridge");
+				delay(4);
 				teleport(player, 298, 134);
 				player.incExp(Skills.AGILITY, 50, true);
 			}
@@ -95,6 +101,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				delay(2);
 				if (passObstacle) {
 					mes("You skillfully swing across the hole");
+					delay(4);
 					boundaryTeleport(player, Point.location(292, 108));
 					player.incExp(Skills.AGILITY, 100, true);
 					AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);

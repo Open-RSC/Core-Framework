@@ -122,6 +122,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 								"take this poisoned animal feed",
 								"give it to the four sheep and they'll peacefully fall asleep");
 							mes("The councillor gives you some sheep poison");
+							delay(4);
 							give(player, ItemId.POISONED_ANIMAL_FEED.id(), 1);
 							player.updateQuestStage(getQuestId(), 1);
 						} else if (menu2 == 1) {
@@ -139,6 +140,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 					if (!player.getCarriedItems().hasCatalogID(ItemId.POISONED_ANIMAL_FEED.id(), Optional.empty())) {
 						say(player, n, "Some more sheep poison might be useful");
 						mes("The councillor gives you some more sheep poison");
+						delay(4);
 						give(player, ItemId.POISONED_ANIMAL_FEED.id(), 1);
 					}
 					break;
@@ -162,8 +164,10 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 						give(player, ItemId.COINS.id(), 3100);
 						npcsay(player, n, "here take one hundred coins to cover the price of your protective clothing");
 						mes("halgrive gives you 100 coins");
+						delay(4);
 						npcsay(player, n, "and another three thousand for your efforts");
 						mes("halgrive gives you another 3000 coins");
+						delay(4);
 					} else {
 						say(player, n, "erm not quite");
 						npcsay(player, n, "not quite's not good enough",
@@ -680,6 +684,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 						}
 					}
 					mes("you give the sheep poisoned sheep feed");
+					delay(4);
 					player.message("the sheep collapses to the floor and dies");
 					plagueSheep.killedBy(player);
 				} else {
@@ -707,6 +712,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 							player.getCarriedItems().remove(new Item(ItemId.PLAGUED_SHEEP_REMAINS_1.id()));
 						} else {
 							mes("You need to kill this sheep yourself");
+							delay(4);
 							return;
 						}
 					} else if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_2.id()) {
@@ -715,6 +721,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 							player.getCarriedItems().remove(new Item(ItemId.PLAGUED_SHEEP_REMAINS_2.id()));
 						} else {
 							mes("You need to kill this sheep yourself");
+							delay(4);
 							return;
 						}
 					} else if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_3.id()) {
@@ -723,6 +730,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 							player.getCarriedItems().remove(new Item(ItemId.PLAGUED_SHEEP_REMAINS_3.id()));
 						} else {
 							mes("You need to kill this sheep yourself");
+							delay(4);
 							return;
 						}
 					} else if (item.getCatalogId() == ItemId.PLAGUED_SHEEP_REMAINS_4.id()) {
@@ -731,6 +739,7 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 							player.getCarriedItems().remove(new Item(ItemId.PLAGUED_SHEEP_REMAINS_4.id()));
 						} else {
 							mes("You need to kill this sheep yourself");
+							delay(4);
 							return;
 						}
 					}
@@ -738,9 +747,11 @@ public class SheepHerder implements QuestInterface, TalkNpcTrigger,
 						"the remains burn to dust");
 				} else {
 					mes("You have already completed this quest");
+					delay(4);
 				}
 			} else {
 				mes("Nothing interesting happens");
+				delay(4);
 			}
 		}
 	}

@@ -76,8 +76,12 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 						"i told Kennith to hide until i returned but i was washed up here",
 						"please go back and get my boy",
 						"you can send help for me later", "traveler wait!");
-					mes("kent reaches behind your neck", "slooop",
-						"he pulls a sea slug from under your top");
+					mes("kent reaches behind your neck");
+					delay(4);
+					mes("slooop");
+					delay(4);
+					mes("he pulls a sea slug from under your top");
+					delay(4);
 					//kent drops slug at 511, 636 and stays for about 12s
 					createGroundItemDelayedRemove(new GroundItem(player.getWorld(), ItemId.SEASLUG.id(), 511, 636, 1, player), 12000);
 					npcsay(player, n,
@@ -627,7 +631,10 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 453) {
 			if (player.getQuestStage(getQuestId()) == 5) {
-				mes("you rotate the crane around", "to the far platform");
+				mes("you rotate the crane around");
+				delay(4);
+				mes("to the far platform");
+				delay(4);
 				GameObject firstRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 5, 0);
 				player.getWorld().replaceGameObject(obj, firstRotation);
@@ -644,9 +651,12 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 				GameObject fourthRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 4, 0);
 				player.getWorld().replaceGameObject(obj, fourthRotation);
-				mes("he climbs onto the fishing net",
-					"you rotate the crane back around",
-					"and lower kennith to the row boat waiting below");
+				mes("he climbs onto the fishing net");
+				delay(4);
+				mes("you rotate the crane back around");
+				delay(4);
+				mes("and lower kennith to the row boat waiting below");
+				delay(4);
 				player.updateQuestStage(getQuestId(), 6);
 				player.getCache().remove("loose_panel");
 				player.getCache().remove("lit_torch");
@@ -667,9 +677,12 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 124) {
 			if (player.getQuestStage(getQuestId()) == 5) {
-				mes("you kick the loose panel",
-					"the wood is rotten and crumbles away",
-					"leaving an opening big enough for kennith to climb through");
+				mes("you kick the loose panel");
+				delay(4);
+				mes("the wood is rotten and crumbles away");
+				delay(4);
+				mes("leaving an opening big enough for kennith to climb through");
+				delay(4);
 				player.getCache().store("loose_panel", true);
 			} else {
 				mes("you kick the loose panal",

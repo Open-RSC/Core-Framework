@@ -25,37 +25,54 @@ public class LegendsQuestDarkMetalGate implements OpLocTrigger, SpellLocTrigger 
 		if (obj.getID() == DARK_METAL_GATE) {
 			if (command.equalsIgnoreCase("open")) {
 				if (player.getY() <= 3715) {
-					mes(config().GAME_TICK * 2, "You open the gates and walk through..");
+					mes("You open the gates and walk through..");
+					delay(2);
 					player.teleport(474, 3720);
 					player.message("You magically appear in another area of the cave system.");
 					return;
 				}
-				mes(config().GAME_TICK * 2, "This gate is fused with rock, it doesn't seem possible to open it.",
-					"But it does look slightly strange in some way.");
+				mes("This gate is fused with rock, it doesn't seem possible to open it.");
+				delay(2);
+				mes("But it does look slightly strange in some way.");
+				delay(2);
 			} else if (command.equalsIgnoreCase("search")) {
-				mes(config().GAME_TICK * 5, "It just looks like a normal gate...");
-				mes(config().GAME_TICK, "At first...");
-				mes(config().GAME_TICK * 2, "And then you notice that some of the bars of metal make up letters.",
-					"After some time you manage to make sense of it...",
-					"Would you like to read it?");
+				mes("It just looks like a normal gate...");
+				delay(5);
+				mes("At first...");
+				delay();
+				mes("And then you notice that some of the bars of metal make up letters.");
+				delay(2);
+				mes("After some time you manage to make sense of it...");
+				delay(2);
+				mes("Would you like to read it?");
+				delay(2);
 				int menu = multi(player,
 					"Yes, I'll read it.",
 					"No, I don't want to read that.",
 					"Search further...");
 				if (menu == 0) {
-					mes(config().GAME_TICK * 2, "You attempt to read the message in the gate...");
+					mes("You attempt to read the message in the gate...");
+					delay(2);
 					ActionSender.sendBox(player, "Gates of metal will not be kind, % %To those who care not for the way of mind. % %To all men of learning and supernatural powers, % %With book and rune spend the long dark hours. % %If passage further you would endure, % %Give me a taste of your power so pure. % %", true);
 				} else if (menu == 1) {
 					player.message("You decide not to read the message.");
 				} else if (menu == 2) {
-					mes(config().GAME_TICK * 2, "You scour the gate for any more clues...",
-						"Something etched into the wall nearby catches your eye...",
-						"It looks like a picture of four pillars or constructions.",
-						"Over the first pillar is a picture of a cloud...",
-						"Over the second pillar are some etched flickering flames...",
-						"Over the third pillar is the carved image of a dew drop or a tear...",
-						"Over the fourth pillar is the likeness of a ploughed field...",
-						"All of these images are contained within a sphere.");
+					mes("You scour the gate for any more clues...");
+					delay(2);
+					mes("Something etched into the wall nearby catches your eye...");
+					delay(2);
+					mes("It looks like a picture of four pillars or constructions.");
+					delay(2);
+					mes("Over the first pillar is a picture of a cloud...");
+					delay(2);
+					mes("Over the second pillar are some etched flickering flames...");
+					delay(2);
+					mes("Over the third pillar is the carved image of a dew drop or a tear...");
+					delay(2);
+					mes("Over the fourth pillar is the likeness of a ploughed field...");
+					delay(2);
+					mes("All of these images are contained within a sphere.");
+					delay(2);
 					say(player, null, "Hmmm, I wonder what they could mean?");
 				}
 			}
@@ -73,14 +90,21 @@ public class LegendsQuestDarkMetalGate implements OpLocTrigger, SpellLocTrigger 
 					if (!SpellHandler.checkAndRemoveRunes(player, spell)) {
 						return;
 					}
-					mes(config().GAME_TICK * 2, "The orb shatters with the power of the magic.",
-						"The spell works and the gates open.");
+					mes("The orb shatters with the power of the magic.");
+					delay(2);
+					mes("The spell works and the gates open.");
+					delay(2);
 					player.teleport(474, 3714);
-					mes(config().GAME_TICK * 8, "You magically appear in a different part of the cave system.");
-					mes(config().GAME_TICK * 2, "It seems that the gate was a test of magical ability.",
-						"As soon as you enter this room, you are filled with dread.",
-						"In the centre of the room is a large gaping hole.",
-						"It goes down a long way...");
+					mes("You magically appear in a different part of the cave system.");
+					delay(8);
+					mes("It seems that the gate was a test of magical ability.");
+					delay(2);
+					mes("As soon as you enter this room, you are filled with dread.");
+					delay(2);
+					mes("In the centre of the room is a large gaping hole.");
+					delay(2);
+					mes("It goes down a long way...");
+					delay(2);
 					break;
 				default:
 					player.message("Nothing interesting happens");

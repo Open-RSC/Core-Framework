@@ -177,13 +177,15 @@ public class DoorAction {
 				break;
 
 			case 154: // Grand Tree: main door (outside)
-				mes(config().GAME_TICK * 3, "you open the door");
+				mes("you open the door");
+				delay(3);
 				player.teleport(703, 455);
 				player.message("and walk through");
 				break;
 
 			case 153: // Grand Tree: main door (inside)
-				mes(config().GAME_TICK * 3, "you open the door");
+				mes("you open the door");
+				delay(3);
 				player.teleport(416, 165);
 				player.message("and walk through");
 				break;
@@ -286,9 +288,11 @@ public class DoorAction {
 									"Good, I see that you have come to your senses.");
 								if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
 									mes("You hand over five gold pieces to Shantay.");
+									delay(4);
 									npcsay(player, shantay,
 										"Great Effendi, now please try to keep the peace.");
 									mes("Shantay unlocks the door to the cell.");
+									delay(4);
 									player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 									player.getCache().remove("shantay_jail");
 								} else {
@@ -331,9 +335,11 @@ public class DoorAction {
 										"Good, I see that you have come to your senses.");
 									if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
 										mes("You hand over five gold pieces to Shantay.");
+										delay(4);
 										npcsay(player, shantay,
 											"Great Effendi, now please try to keep the peace.");
 										mes("Shantay unlocks the door to the cell.");
+										delay(4);
 										player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 										player.getCache().remove("shantay_jail");
 									} else {
@@ -388,9 +394,12 @@ public class DoorAction {
 					player.message("You go through the door");
 					doDoor(obj, player);
 				} else {
-					mes("The fire warrior's eyes glow",
-						"The fire warrior glares at the door",
-						"The door handle is too hot to handle");
+					mes("The fire warrior's eyes glow");
+					delay(4);
+					mes("The fire warrior glares at the door");
+					delay(4);
+					mes("The door handle is too hot to handle");
+					delay(4);
 				}
 				break;
 
@@ -417,9 +426,12 @@ public class DoorAction {
 					player.message("You go through the door");
 					doDoor(obj, player);
 				} else {
-					mes("As you reach to open the door",
-						"A great terror comes over you",
-						"You decide you'll not open this door today");
+					mes("As you reach to open the door");
+					delay(4);
+					mes("A great terror comes over you");
+					delay(4);
+					mes("You decide you'll not open this door today");
+					delay(4);
 				}
 				break;
 
@@ -855,9 +867,12 @@ public class DoorAction {
 
 			case 138: // Biohazard
 				if (!player.getCache().hasKey("rotten_apples") && player.getQuestStage(Quests.BIOHAZARD) == 4) {
-					mes("the door is locked",
-						"inside you can hear the mourners eating",
-						"you need to distract them from their stew");
+					mes("the door is locked");
+					delay(4);
+					mes("inside you can hear the mourners eating");
+					delay(4);
+					mes("you need to distract them from their stew");
+					delay(4);
 				} else if (player.getCache().hasKey("rotten_apples") || player.getQuestStage(Quests.BIOHAZARD) == 5) {
 					if (player.getY() <= 572) {
 						doDoor(obj, player);

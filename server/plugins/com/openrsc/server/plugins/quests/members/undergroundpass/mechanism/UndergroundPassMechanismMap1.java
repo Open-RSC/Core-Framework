@@ -75,9 +75,12 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 						if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 2) {
 							player.updateQuestStage(Quests.UNDERGROUND_PASS, 3);
 						}
-						mes("the arrow impales the wooden bridge, just below the rope support",
-							"the rope catches alight and begins to burn",
-							"the bridge swings down creating a walkway");
+						mes("the arrow impales the wooden bridge, just below the rope support");
+						delay(4);
+						mes("the rope catches alight and begins to burn");
+						delay(4);
+						mes("the bridge swings down creating a walkway");
+						delay(4);
 						player.getWorld().replaceGameObject(obj,
 							new GameObject(obj.getWorld(), obj.getLocation(), 727, obj.getDirection(), obj
 								.getType()));

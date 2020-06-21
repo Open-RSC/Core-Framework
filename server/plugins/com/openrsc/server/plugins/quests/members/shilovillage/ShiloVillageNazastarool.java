@@ -39,8 +39,10 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 					player.message("You find nothing new on the Dolmen.");
 					return;
 				}
-				mes("You search the Dolmen...",
-					"and find the mumified remains of a human female corpse.");
+				mes("You search the Dolmen...");
+				delay(4);
+				mes("and find the mumified remains of a human female corpse.");
+				delay(4);
 				player.message("Do you want to take the corpse?");
 				int menu = multi(player, "Yes, I'll take the remains.", "No, I'll leave them where they are.");
 				if (menu == 0) {

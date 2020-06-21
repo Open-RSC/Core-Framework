@@ -430,6 +430,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					"No not yet");
 				if (menu == 0) {
 					mes("You give the staff to Lucien");
+					delay(4);
 					player.getCarriedItems().remove(new Item(ItemId.STAFF_OF_ARMADYL.id()));
 					npcsay(player, n, "Muhahahaha",
 						"Already I can feel the power of this staff running through my limbs",
@@ -489,9 +490,12 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					player.message("You have activated a trap on the lever");
 					player.damage(DataConversions.roundUp(player.getSkills().getLevel(Skills.HITS) / 5));
 				} else {
-					mes("You pull the lever",
-						"You hear a clunk",
-						"The trap on the lever resets");
+					mes("You pull the lever");
+					delay(4);
+					mes("You hear a clunk");
+					delay(4);
+					mes("The trap on the lever resets");
+					delay(4);
 					if (player.getCache().hasKey("ikovLever")) {
 						player.getCache().remove("ikovLever");
 					}
