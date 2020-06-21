@@ -1294,18 +1294,16 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected void queryExpiredAuction(ExpiredAuction[] expiredAuctions) throws GameDatabaseException {
+	protected void queryExpiredAuction(ExpiredAuction expiredAuction) throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = getConnection().prepareStatement(getQueries().expiredAuction);
-			for (ExpiredAuction expiredAuction : expiredAuctions) {
-				statement.setInt(1, expiredAuction.item_id);
-				statement.setInt(2, expiredAuction.item_amount);
-				statement.setLong(3, expiredAuction.time);
-				statement.setInt(4, expiredAuction.playerID);
-				statement.setString(5, expiredAuction.explanation);
-				statement.addBatch();
-			}
-			try{statement.executeBatch();}
+			statement.setInt(1, expiredAuction.item_id);
+			statement.setInt(2, expiredAuction.item_amount);
+			statement.setLong(3, expiredAuction.time);
+			statement.setInt(4, expiredAuction.playerID);
+			statement.setString(5, expiredAuction.explanation);
+
+			try{statement.executeUpdate();}
 			finally{statement.close();}
 		} catch (final SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
