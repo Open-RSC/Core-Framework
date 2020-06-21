@@ -30,7 +30,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.CHARGED_DRAGONSTONE_AMULET.id()) {
 			player.message("You rub the amulet");
-			delay(config().GAME_TICK);
+			delay();
 			player.message("Where would you like to teleport to?");
 			int menu = multi(player, "Edgeville", "Karamja", "Draynor village", "Al Kharid", "Nowhere");
 			//if(p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
@@ -125,7 +125,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
 		);
 		player.message("You dip the amulet in the fountain");
-		delay(config().GAME_TICK * 2);
+		delay(2);
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
 

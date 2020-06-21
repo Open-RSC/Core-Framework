@@ -129,7 +129,7 @@ public final class Reldo implements TalkNpcTrigger {
 
 	private void shieldOfArravDialog(Player player, Npc n) {
 		npcsay(player, n, "I don't think there's any here");
-		delay(config().GAME_TICK);
+		delay();
 		npcsay(player, n, "Let me think actually",
 			"If you look in a book",
 			"called the shield of Arrav",

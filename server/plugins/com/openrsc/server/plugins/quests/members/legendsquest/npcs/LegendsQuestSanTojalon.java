@@ -50,7 +50,7 @@ public class LegendsQuestSanTojalon implements AttackNpcTrigger, KillNpcTrigger,
 			mes(config().GAME_TICK * 2, "A nerve tingling scream echoes around you as you slay the dead Hero.",
 				"@yel@San Tojalon: Ahhhggggh",
 				"@yel@San Tojalon: Forever must I live in this torment till this beast is slain...");
-			delay(config().GAME_TICK);
+			delay();
 			LegendsQuestNezikchened.demonFight(player);
 		}
 		if (n.getID() == NpcId.SAN_TOJALON.id() && !player.getCache().hasKey("cavernous_opening")) {

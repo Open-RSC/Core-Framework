@@ -102,9 +102,9 @@ public final class WaynesChains extends AbstractShop {
 							if (player.getCarriedItems().remove(new Item(ItemId.DRAGON_METAL_CHAIN.id() ,500)) > -1) {
 								if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 500000)) > -1) {
 									player.message("you hand over the materials and money");
-									delay(config().GAME_TICK * 4);
+									delay(4);
 									player.message("Wayne flashes a smile");
-									delay(config().GAME_TICK * 4);
+									delay(4);
 									npcsay(player, n, "i happen to have one made already",
 										"so there's no need for you to wait");
 									player.message("Wayne hands you a dragon scale mail");

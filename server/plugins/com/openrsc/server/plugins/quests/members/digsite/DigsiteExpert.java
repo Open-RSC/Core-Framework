@@ -159,7 +159,7 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 					npcsay(player, n, "Unusual...",
 						"This object doesn't appear right...",
 						"Hmmmm.....");
-					delay(1500);
+					delay(3);
 					npcsay(player, n, "I wonder...Let me check my guide...",
 						"Could it be ? surely not...",
 						"From the markings on it it seems to be",

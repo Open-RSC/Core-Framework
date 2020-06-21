@@ -177,7 +177,7 @@ public class StrangeBarrels implements OpLocTrigger {
 		int randomizeMonster = DataConversions.random(0, (MONSTER.length - 1));
 		int selectedMonster = MONSTER[randomizeMonster];
 		Npc monster = addnpc(player.getWorld(), selectedMonster, x, y, 60000 * 3); // 3 minutes
-		delay(config().GAME_TICK);
+		delay();
 		if (monster != null) {
 			monster.startCombat(player);
 		}

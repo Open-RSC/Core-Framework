@@ -154,12 +154,12 @@ public final class Apothecary implements
 		player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 		player.getCarriedItems().remove(new Item(ItemId.LIMPWURT_ROOT.id()));
 		player.getCarriedItems().remove(new Item(ItemId.RED_SPIDERS_EGGS.id()));
-		delay(config().GAME_TICK * 3);
+		delay(3);
 		player.message("The Apothecary brews up a potion");
-		delay(config().GAME_TICK * 4);
+		delay(4);
 		player.message("The Apothecary gives you a strength potion");
 		give(player, ItemId.FULL_STRENGTH_POTION.id(), 1);
-		delay(config().GAME_TICK);
+		delay();
 
 		// Repeat
 		updatebatch();

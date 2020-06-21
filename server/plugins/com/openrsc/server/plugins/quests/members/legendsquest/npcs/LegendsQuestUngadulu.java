@@ -697,7 +697,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 					npcsay(player, n, "Please don't try to extinguish...");
 					n = changenpc(n, NpcId.EVIL_UNGADULU.id(), true);
 					npcsay(player, n, "Yes, douse the flames with water, pure water...foo...");
-					delay(config().GAME_TICK);
+					delay();
 					n = changenpc(n, NpcId.UNGADULU.id(), true);
 					npcsay(player, n, "Please, leave now...don't listen to me...",
 						"I beg you,leave now, don't touch the flames...");
@@ -715,7 +715,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 						"Leave these caves and save yourself...");
 					n = changenpc(n, NpcId.EVIL_UNGADULU.id(), true);
 					npcsay(player, n, "Wait...get pure water from the pool...above lands...");
-					delay(config().GAME_TICK);
+					delay();
 					n = changenpc(n, NpcId.UNGADULU.id(), true);
 					npcsay(player, n, "Please Bwana, don't listen to me...run, save yourself...");
 					int menu = multi(player, n,
@@ -850,7 +850,7 @@ public class LegendsQuestUngadulu implements TalkNpcTrigger, AttackNpcTrigger, S
 		if (n.getID() == NpcId.UNGADULU.id()) {
 			n.resetCombatEvent();
 			npcWalkFromPlayer(player, n);
-			delay(config().GAME_TICK);
+			delay();
 			npcsay(player, n, "Run then....run away....",
 				"Save yourself....");
 			player.getSkills().setLevel(Skills.ATTACK, (player.getSkills().getMaxStat(Skills.ATTACK) - 19) + player.getSkills().getLevel(Skills.ATTACK));

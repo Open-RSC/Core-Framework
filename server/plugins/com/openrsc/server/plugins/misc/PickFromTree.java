@@ -41,7 +41,6 @@ public class PickFromTree implements OpLocTrigger {
 	}
 
 	private void batchTreePick(Player player, GameObject tree) {
-		int tick = config().GAME_TICK;
 		int fruitCount = 1;
 		if (player.getCache().hasKey(getFruitName(tree.getID()) + "_pick"))
 			fruitCount = player.getCache().getInt(getFruitName(tree.getID()) + "_pick") + 1;
@@ -53,14 +52,14 @@ public class PickFromTree implements OpLocTrigger {
 
 			if (tree.getID() == BANANA_TREE_ID) player.message("you pick the last banana");
 
-			changeloc(tree, tick * 750, getEmptyTreeId(tree.getID())); // 8 minutes respawn time.
+			changeloc(tree, config().GAME_TICK * 750, getEmptyTreeId(tree.getID())); // 8 minutes respawn time.
 			player.getCache().remove(getFruitName(tree.getID()) + "_pick");
 			return;
 		} else {
 			player.message("you pick a " + getFruitName(tree.getID()));
 		}
 
-		delay(tick);
+		delay();
 
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {

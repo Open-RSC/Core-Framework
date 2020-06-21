@@ -39,7 +39,7 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 	public static void demonFight(Player player) {
 		Npc third_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), player.getX(), player.getY(), (int)TimeUnit.SECONDS.toMillis(500), player);
 		if (third_nezikchened != null) {
-			delay(config().GAME_TICK);
+			delay();
 			npcsay(player, third_nezikchened, "Now you try to defile my sanctuary...I will teach thee!");
 			if (player.getCache().hasKey("viyeldi_companions") && player.getCache().getInt("viyeldi_companions") <= 3) {
 				npcsay(player, third_nezikchened, "You will pay for your disrespect by meeting some old friends...");
@@ -98,12 +98,12 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 						player.getCache().store("ran_from_2nd_nezi", true);
 					}
 					n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Run for your life coward...", player));
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					n.getUpdateFlags().setChatMessage(new ChatMessage(n, "The next time you come, I will be ready for you!", player));
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					n = changenpc(n, NpcId.ECHNED_ZEKIN.id(), true);
 					if (n != null)
-						delay(config().GAME_TICK * 2);
+						delay(2);
 					n.remove();
 					break;
 				case 8:
@@ -127,7 +127,7 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 			// FIRST FIGHT.
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 3 && player.getLocation().isInsideFlameWall()) {
 				n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Ha ha ha...I shall return for you when the time is right.", player));
-				delay(config().GAME_TICK * 3);
+				delay(3);
 				npcWalkFromPlayer(player, n);
 				mes(config().GAME_TICK, "Your opponent is retreating");
 				if (n != null) {

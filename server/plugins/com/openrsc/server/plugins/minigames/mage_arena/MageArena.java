@@ -201,7 +201,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 
 				startKolodionEvent(player);
 				spawnKolodion(player, NpcId.KOLODION_HUMAN.id());
-				delay(config().GAME_TICK);
+				delay();
 			} else if (choice == 1) {
 				npcsay(player, n, "your loss");
 			}

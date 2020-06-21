@@ -309,7 +309,7 @@ public class DigsiteExaminer implements TalkNpcTrigger {
 				case ExaminerNPC.START_EXAM_FINAL:
 					npcsay(player, n, "Okay, that covers level 1 Earthsciences exam",
 						"Let's see how you did...");
-					delay(config().GAME_TICK * 5);
+					delay(5);
 					if (player.getCache().hasKey("student_orange_c")
 						&& player.getCache().hasKey("student_green_c")
 						&& player.getCache().hasKey("student_purple_c") && CORRECT_ANSWERS == 3) {
@@ -444,7 +444,7 @@ public class DigsiteExaminer implements TalkNpcTrigger {
 				case ExaminerNPC.START_EXAM2_FINAL:
 					npcsay(player, n, "Okay, that covers level 2 Earthsciences exam",
 						"Let me add up your total...");
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					if (player.getCache().hasKey("student_orange_exam2")
 						&& player.getCache().hasKey("student_green_exam2")
 						&& player.getCache().hasKey("student_purple_exam2") && CORRECT_ANSWERS == 3) {
@@ -575,7 +575,7 @@ public class DigsiteExaminer implements TalkNpcTrigger {
 				case ExaminerNPC.START_EXAM3_FINAL:
 					npcsay(player, n, "Okay, that concludes level 3 Earthsciences exam",
 						"Let me add up the results...\"");
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					if (player.getCache().hasKey("student_orange_exam3")
 						&& player.getCache().hasKey("student_green_exam3")
 						&& player.getCache().hasKey("student_purple_exam3") && CORRECT_ANSWERS == 3) {

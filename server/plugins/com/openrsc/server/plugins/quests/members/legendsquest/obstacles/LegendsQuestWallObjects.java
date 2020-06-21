@@ -154,7 +154,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 								if (leave == 0) {
 									mes(config().GAME_TICK * 2, "This is quite dangerous, but you find a suitable location to jump.");
 									player.teleport(453, 3705);
-									delay(config().GAME_TICK * 2);
+									delay(2);
 									mes(config().GAME_TICK * 2, "You take a run up...");
 									int burnDegRnd = DataConversions.random(0, 5);
 									if (burnDegRnd <= 2) {

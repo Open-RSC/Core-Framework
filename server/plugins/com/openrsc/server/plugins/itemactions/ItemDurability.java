@@ -44,7 +44,7 @@ public class ItemDurability implements OpInvTrigger {
 			}
 		} else if (command.equalsIgnoreCase("break")) {
 			player.message("Are you sure you want to break your " + item.getDef(player.getWorld()).getName() + "?");
-			delay(300);
+			delay();
 			int choice = multi(player, "Yes", "No");
 			if (choice != 0) return;
 			if (item.getCatalogId() == ItemId.RING_OF_RECOIL.id()) {

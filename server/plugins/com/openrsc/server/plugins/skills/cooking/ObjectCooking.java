@@ -129,10 +129,10 @@ public class ObjectCooking implements UseLocTrigger {
 			}
 			// Some need a RANGE not a FIRE
 			boolean needOven = false;
-			int timeToCook = config().GAME_TICK * 3;
+			int timeToCook = 3;
 			if (isOvenFood(item)) {
 				needOven = true;
-				timeToCook = config().GAME_TICK * 5;
+				timeToCook = 5;
 			}
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.COOKING_CAPE.id()))
 				timeToCook *= 0.7;
@@ -200,7 +200,7 @@ public class ObjectCooking implements UseLocTrigger {
 			// Repeat
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
-				delay(config().GAME_TICK);
+				delay();
 				batchCooking(player, item, timeToCook, cookingDef);
 			}
 		}
@@ -252,7 +252,7 @@ public class ObjectCooking implements UseLocTrigger {
 		}
 
 		// TODO: Add back when `mes` is changed to not use a timer (if it ever is).
-		// delay(config().GAME_TICK);
+		// delay();
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchInedibleCooking(player, itemID, product, hasBubble, messages);

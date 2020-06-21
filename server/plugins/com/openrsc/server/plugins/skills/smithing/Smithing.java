@@ -258,7 +258,7 @@ public class Smithing implements UseLocTrigger {
 			}
 		}
 		player.incExp(Skills.SMITHING, getSmithingExp(item.getCatalogId(), def.getRequiredBars()), true);
-		delay(config().GAME_TICK);
+		delay();
 
 		// Repeat
 		updatebatch();

@@ -336,7 +336,7 @@ public class DemonSlayer implements QuestInterface,
 							player.getCarriedItems().remove(new Item(ItemId.BONES.id()));
 							player.message("You give Traiborn a set of bones");
 							boneCount++;
-							delay(config().GAME_TICK);
+							delay();
 							if (boneCount >= 25)
 								break;
 						}
@@ -534,7 +534,7 @@ public class DemonSlayer implements QuestInterface,
 				mes("The wizard beams");
 				say(player, n, "So do you know what ritual to use?");
 				npcsay(player, n, "Let me think a second");
-				delay(800);
+				delay(2);
 				npcsay(player, n, "Yes a simple drazier style ritual should suffice",
 					"Hmm",
 					"Main problem with that is I'll need 25 sets of bones",
@@ -1067,7 +1067,7 @@ public class DemonSlayer implements QuestInterface,
 			case GypsyConversation.INCANTATION:
 				npcsay(player, n, "Oh yes let me think a second");
 				mes("The gypsy is thinking");
-				delay(config().GAME_TICK * 3);
+				delay(3);
 				npcsay(player, n, "Alright I've got it now I think", "It goes",
 					"Carlem", "Aber", "Camerinthum", "Purchai", "Gabindo",
 					"Have you got that?");
@@ -1089,7 +1089,7 @@ public class DemonSlayer implements QuestInterface,
 				if (choice == 0) {
 					npcsay(player, n, "Oh yes let me think a second");
 					mes("The gypsy is thinking");
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					npcsay(player, n, "Alright I've got it now I think", "It goes",
 						"Carlem", "Aber", "Camerinthum", "Purchai", "Gabindo",
 						"Have you got that?");

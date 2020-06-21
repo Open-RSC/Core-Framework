@@ -69,7 +69,7 @@ public class GemMining implements OpLocTrigger {
 		if (player.click == 1) {
 			player.playSound("prospect");
 			player.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			if (obj.getID() == GEM_ROCK) {
 				player.playerServerMessage(MessageType.QUEST, "You fail to find anything interesting");
 				return;
@@ -107,7 +107,7 @@ public class GemMining implements OpLocTrigger {
 		player.playSound("mine");
 		thinkbubble(new Item(ItemId.IRON_PICKAXE.id()));
 		player.playerServerMessage(MessageType.QUEST, "You have a swing at the rock!");
-		delay(config().GAME_TICK * 3);
+		delay(3);
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {

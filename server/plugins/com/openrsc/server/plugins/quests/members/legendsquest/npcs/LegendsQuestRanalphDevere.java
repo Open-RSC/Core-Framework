@@ -50,7 +50,7 @@ public class LegendsQuestRanalphDevere implements AttackNpcTrigger, KillNpcTrigg
 			mes(config().GAME_TICK * 2, "A nerve tingling scream echoes around you as you slay the dead Hero.",
 				"@yel@Ranalph Devere: Ahhhggggh",
 				"@yel@Ranalph Devere:Forever must I live in this torment till this beast is slain...");
-			delay(config().GAME_TICK);
+			delay();
 			LegendsQuestNezikchened.demonFight(player);
 		}
 		if (n.getID() == NpcId.RANALPH_DEVERE.id() && !player.getCache().hasKey("cavernous_opening")) {

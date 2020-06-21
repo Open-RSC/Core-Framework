@@ -39,7 +39,7 @@ public class LegendsQuestViyeldi implements TalkNpcTrigger, TakeObjTrigger, Atta
 							"To see the source and then depart.");
 					} else {
 						player.message("Viyeldi falls silent...");
-						delay(7000);
+						delay(11);
 						player.message("...and the clothes slump to the floor.");
 						if (n != null)
 							n.remove();

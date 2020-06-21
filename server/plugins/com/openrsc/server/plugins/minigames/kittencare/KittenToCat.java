@@ -285,9 +285,9 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 			player.message("it pounces on the rat...");
 			if (DataConversions.random(0,9) == 0) {
 				n.face(player);
-				delay(config().GAME_TICK);
+				delay();
 				n.remove();
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				//possibly non kosher
 				mes(config().GAME_TICK * 3, "...and quickly gobbles it up",
 						"it returns to your satchel licking it's paws");
@@ -297,9 +297,9 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		} else if (item.getCatalogId() == ItemId.CAT.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
 			player.message("the cat pounces on the rat...");
 			n.face(player);
-			delay(config().GAME_TICK);
+			delay();
 			n.remove();
-			delay(config().GAME_TICK * 2);
+			delay(2);
 			mes(config().GAME_TICK * 3, "...and quickly gobbles it up",
 					"it returns to your satchel licking it's paws");
 		}

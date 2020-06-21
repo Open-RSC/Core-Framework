@@ -60,7 +60,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		else
 			player.playerServerMessage(MessageType.QUEST, "You attempt to steal some " + objectName.replaceAll("stall", "").trim() + " from the " + objectName);
 
-		delay(config().GAME_TICK * 3);
+		delay(3);
 
 		String failNoun = stall.equals(Stall.BAKERS_STALL) ? "cake" : objectName.replaceAll("stall", "").trim();
 		if (!failNoun.endsWith("s")) {
@@ -225,7 +225,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			tempChest.set(new GameObject(player.getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType()));
 			changeloc(obj, tempChest.get());
 		}
-		delay(config().GAME_TICK * 2);
+		delay(2);
 		player.message("You disable the trap");
 
 		mes("You open the chest");
@@ -355,7 +355,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			return;
 		}
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobString + "'s pocket");
-		delay(config().GAME_TICK * 2);
+		delay(2);
 		boolean succeededPickpocket = succeedThieving(player, pickpocket.getRequiredLevel());
 		if (SkillCapes.shouldActivate(player, THIEVING_CAPE, succeededPickpocket)) {
 			succeededPickpocket = true;
@@ -400,7 +400,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				player.getCarriedItems().getInventory().add(selectedLoot);
 			}
 		} else {
-			delay(config().GAME_TICK);
+			delay();
 			player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobString + "'s pocket");
 			npc.getUpdateFlags()
 				.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
@@ -417,7 +417,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				npc.setBusy(false);
 				return;
 			}
-			delay(config().GAME_TICK);
+			delay();
 			batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString);
 		}
 		else {
@@ -649,7 +649,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			// Repeat on failure
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
-				delay(config().GAME_TICK);
+				delay();
 				batchPicklock(player, obj, req, exp, goThrough, requiresLockpick);
 			}
 		}

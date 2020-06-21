@@ -88,7 +88,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					"It slowly congeals into the shape of a body...");
 				echned = addnpc(player, NpcId.ECHNED_ZEKIN.id(), player.getX(), player.getY(), 0, (int)TimeUnit.SECONDS.toMillis(180));
 				if (echned != null) {
-					delay(config().GAME_TICK * 2);
+					delay(2);
 					mes(echned, config().GAME_TICK * 2, "Which slowly floats towards you.");
 					echned.initializeTalkScript(player);
 				}
@@ -156,7 +156,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (menu == 0) {
 				mes(config().GAME_TICK * 2, "You prepare to climb down the rope...");
 				say(player, null, "! Gulp !");
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				if ((player.getQuestStage(Quests.LEGENDS_QUEST) >= 0 && !player.getCache().hasKey("gujuo_potion")) || blockDescendBeamPostQuest(player)) {
 					mes(config().GAME_TICK * 2, "...but a terrible fear grips you...");
 					player.message("And you can go no further.");
@@ -297,7 +297,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 							while (player.getY() > 3707) {
 								player.damage(2);
 								player.teleport(player.getX(), player.getY() - 3);
-								delay(config().GAME_TICK * 3);
+								delay(3);
 							}
 							player.damage(1);
 							player.teleport(442, 3703);
@@ -340,7 +340,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					mes(config().GAME_TICK * 2, "You push the doors open and walk through.");
 					changeloc(obj, config().GAME_TICK * 3, 497);
 					player.teleport(442, 3701);
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					player.message("The doors make a satisfying 'CLICK' sound as they close.");
 				} else {
 					mes(config().GAME_TICK * 2, "You push on the doors...they're really shut..",
@@ -363,17 +363,17 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 						mes(config().GAME_TICK * 2, "You attempt to pick the lock..");
 						player.message("It looks very sophisticated ...");
 						say(player, null, "Hmmm, interesting...");
-						delay(config().GAME_TICK * 2);
+						delay(2);
 						player.message("You carefully insert your lockpick into the lock.");
 						say(player, null, "This will be a challenge...");
-						delay(config().GAME_TICK * 2);
+						delay(2);
 						player.message("You feel for the pins and levers in the mechanism.");
 						say(player, null, "Easy does it....");
-						delay(config().GAME_TICK * 2);
+						delay(2);
 						if (Thieving.succeedPickLockThieving(player, 50)) {
 							mes(config().GAME_TICK * 2, "@gre@'CLICK'");
 							say(player, null, "Easy as pie...");
-							delay(config().GAME_TICK * 2);
+							delay(2);
 							mes(config().GAME_TICK * 2, "You tumble the lock mechanism and the door opens easily.");
 							player.incExp(Skills.THIEVING, 100, true);
 							changeloc(obj, config().GAME_TICK * 3, 497);
@@ -419,7 +419,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (player.getCarriedItems().hasCatalogID(ItemId.SCRAWLED_NOTES.id(), Optional.empty())) {
 				player.message("You cannot find anything else in here.");
 			} else {
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				give(player, ItemId.SCRAWLED_NOTES.id(), 1);
 				mes(config().GAME_TICK * 2, "You find a scrap of paper with nonesense written on it.");
 			}
@@ -429,7 +429,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (player.getCarriedItems().hasCatalogID(ItemId.SCATCHED_NOTES.id(), Optional.empty())) {
 				player.message("You cannot find anything else in here.");
 			} else {
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				give(player, ItemId.SCATCHED_NOTES.id(), 1);
 				mes(config().GAME_TICK * 2, "You find a scrap of paper with spidery writing on it.");
 			}
@@ -439,7 +439,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			if (player.getCarriedItems().hasCatalogID(ItemId.SCRIBBLED_NOTES.id(), Optional.empty())) {
 				player.message("You cannot find anything else in here.");
 			} else {
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				give(player, ItemId.SCRIBBLED_NOTES.id(), 1);
 				mes(config().GAME_TICK * 2, "After some time you find a scrumpled up piece of paper.");
 				player.message("It looks like rubbish...");

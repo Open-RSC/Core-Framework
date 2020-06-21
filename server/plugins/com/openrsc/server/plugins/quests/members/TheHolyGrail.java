@@ -121,7 +121,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 			int menu = multi(player, n, "Ok, have at ye oh evil knight",
 				"Actually I think I'll run away");
 			if (menu == 0) {
-				delay(800);
+				delay(2);
 				n.setChasing(player);
 			}
 		}

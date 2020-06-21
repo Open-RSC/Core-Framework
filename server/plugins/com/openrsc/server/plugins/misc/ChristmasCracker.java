@@ -57,7 +57,7 @@ public class ChristmasCracker implements UsePlayerTrigger {
 			player.message("You pull a christmas cracker");
 			otherPlayer.message("You pull a christmas cracker");
 
-			delay(config().GAME_TICK);
+			delay();
 
 			int phatId = Formulae.weightedRandomChoice(phatIds, phatWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);

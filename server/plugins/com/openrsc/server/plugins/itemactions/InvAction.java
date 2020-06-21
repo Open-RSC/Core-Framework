@@ -235,19 +235,19 @@ public class InvAction implements OpInvTrigger {
 		mes("The official Alfred Grimhand barcrawl");
 		player.message(!player.getCache().hasKey("barone") ?
 			"The jolly boar inn - not completed" : "The jolly boar inn - completed");
-		delay(800);
+		delay(2);
 		player.message(!player.getCache().hasKey("bartwo") ?
 			"The blue moon inn - not completed" : "The blue moon inn - completed");
-		delay(800);
+		delay(2);
 		player.message(!player.getCache().hasKey("barthree") ?
 			"The rising sun - not completed" : "The rising sun - completed");
-		delay(800);
+		delay(2);
 		player.message(!player.getCache().hasKey("barfour") ?
 			"The dead man's chest - not completed" : "The dead man's chest - completed");
-		delay(800);
+		delay(2);
 		player.message(!player.getCache().hasKey("barfive") ?
 			"The forester's arms - not completed" : "The forester's arms - completed");
-		delay(800);
+		delay(2);
 		player.message(!player.getCache().hasKey("barsix") ?
 			"The rusty anchor - not completed" : "The rusty anchor - completed");
 	}

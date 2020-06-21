@@ -47,7 +47,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 			if (obj.getID() == CAGES[1]) {
 				player.message("the man seems to be entranced");
 				mes("the cage is locked");
-				delay(1600);
+				delay(3);
 				Npc souless = ifnearvisnpc(player, NpcId.SOULESS_HUMAN.id(), 6);
 				if (souless != null) {
 					npcsay(player, souless, "kuluf ali monopiate");
@@ -77,7 +77,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 			else if (obj.getID() == CAGES[0]) {
 				player.message("the man seems to be entranced");
 				mes("the cage is locked");
-				delay(1600);
+				delay(3);
 				Npc souless = ifnearvisnpc(player, NpcId.SOULESS_HUMAN.id(), 6);
 				if (souless != null) {
 					npcsay(player, souless, "kuluf ali monopiate");
@@ -106,7 +106,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 				player.message("you place them on the chest and the chest opens");
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), DEMONS_CHEST_OPEN, obj.getDirection(), obj.getType()));
 				addloc(obj.getWorld(), obj.getLoc(), 2000);
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				player.message("inside you find a strange dark liquid");
 				give(player, ItemId.IBANS_SHADOW.id(), 1);
 			} else {
@@ -126,7 +126,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 					changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 914, obj.getDirection(), obj.getType()));
 					addloc(obj.getWorld(), obj.getLoc(), 3000);
 					player.teleport(792, 3469);
-					delay(config().GAME_TICK);
+					delay();
 					player.teleport(795, 3469);
 					mes("you pull open the large doors");
 					player.message("and walk into the temple");
@@ -198,9 +198,9 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 914, obj.getDirection(), obj.getType()));
 				addloc(obj.getWorld(), obj.getLoc(), config().GAME_TICK * 5);
 				player.teleport(794, 3469);
-				delay(config().GAME_TICK);
+				delay();
 				player.teleport(791, 3469);
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				player.message("you pull open the large doors");
 				player.message("and walk out of the temple");
 			}

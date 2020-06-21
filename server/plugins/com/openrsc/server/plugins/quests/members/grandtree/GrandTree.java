@@ -533,7 +533,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 					npcsay(player, n, "lock him up");
 					mes("the gnome guards take you to the top of the grand tree");
 					player.teleport(419, 2992);
-					delay(5000);
+					delay(8);
 					Npc jailCharlie = ifnearvisnpc(player, NpcId.CHARLIE.id(), 5);
 					if (jailCharlie != null) {
 						npcsay(player, jailCharlie, "so, they've got you as well");
@@ -552,7 +552,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 							"...working for glough there'll be trouble",
 							"the sea men use the pass word ka-lu-min");
 						say(player, jailCharlie, "thanks charlie");
-						delay(5000);
+						delay(8);
 						Npc narnode = addnpc(player.getWorld(), NpcId.KING_NARNODE_SHAREEN.id(), 419, 2993, (int)TimeUnit.SECONDS.toMillis(36));
 						npcsay(player, narnode, "adventurer please accept my apologies",
 							"glough had no right to arrest you",
@@ -1364,7 +1364,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 				player.message("you jump up and grab hold of the platform");
 				player.teleport(710, 2364);
 				player.incExp(Skills.AGILITY, 30, true);
-				delay(config().GAME_TICK * 5);
+				delay(5);
 				player.message("and pull yourself up");
 			} else {
 				player.message("You need an agility level of 25 to climb up the platform");

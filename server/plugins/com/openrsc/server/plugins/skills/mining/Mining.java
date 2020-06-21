@@ -153,14 +153,14 @@ public final class Mining implements OpLocTrigger {
 				return;
 			}
 			player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			player.playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");
 			return;
 		}
 		if (player.click == 1) {
 			player.playSound("prospect");
 			player.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			if (rock.getID() == 496) {
 				// Tutorial Island rock handler
 				mes("This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName(),
@@ -207,7 +207,7 @@ public final class Mining implements OpLocTrigger {
 		player.playSound("mine");
 		thinkbubble(new Item(ItemId.IRON_PICKAXE.id()));
 		player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
-		delay(config().GAME_TICK * 3);
+		delay(3);
 
 		final Item ore = new Item(def.getOreId());
 		if (config().WANT_FATIGUE) {

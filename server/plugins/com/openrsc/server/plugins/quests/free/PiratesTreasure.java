@@ -112,7 +112,7 @@ public class PiratesTreasure implements QuestInterface,
 			boolean dig = false;
 			if (wyson != null) {
 				wyson.getUpdateFlags().setChatMessage(new ChatMessage(wyson, "Hey leave off my flowers", player));
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				wyson.setChasing(player);
 				long start = System.currentTimeMillis();
 				while (!player.inCombat()) {
@@ -120,7 +120,7 @@ public class PiratesTreasure implements QuestInterface,
 						dig = true;
 						break;
 					}
-					delay(50);
+					delay();
 				}
 			} else {
 				dig = true;

@@ -106,12 +106,15 @@ public class Functions {
 		player.getUpdateFlags().setActionBubble(bubble);
 	}
 
-	public static void delay(final int delayMs) {
+	public static void delay() {
+		delay(1);
+	}
+
+	public static void delay(final int ticks) {
 		final PluginTask pluginTask = PluginTask.getContextPluginTask();
 		if (pluginTask == null)
 			return;
 		// System.out.println("Sleeping on " + Thread.currentThread().getName());
-		final int ticks = (int)Math.ceil((double)delayMs / (double) pluginTask.getWorld().getServer().getConfig().GAME_TICK);
 		pluginTask.pause(ticks);
 	}
 

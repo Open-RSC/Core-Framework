@@ -129,7 +129,7 @@ public class WoodcutJungle implements OpLocTrigger,
 			player.teleport(obj.getX(), obj.getY());
 			if (player.getY() > 871) {
 				if (obj.getID() == JUNGLE_VINE)
-					delay(config().GAME_TICK * 6);
+					delay(6);
 				player.message("You manage to hack your way into the Kharazi Jungle.");
 			}
 		} else {

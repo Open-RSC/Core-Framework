@@ -34,13 +34,13 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				player.message("you realise that there is a huge drop underneath you");
 				player.message("You begin falling....");
 				player.teleport(380, 3692);
-				delay(config().GAME_TICK);
+				delay();
 				say(player, null, "Ahhhhh!");
 				player.damage(1);
 				player.message("Your body is battered as you hit the cavern walls.");
 				say(player, null, "Ooooff!");
 				player.damage(1);
-				delay(config().GAME_TICK);
+				delay();
 				player.teleport(352, 3650);
 				player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.2 + 10));
 				mes("You hit the floor and it knocks the wind out of you!");
@@ -87,14 +87,14 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			mes("You hear an unearthly moaning sound as you see",
 				"an apparition materialises right in front of you.");
 			Npc zadimus = addnpc(player.getWorld(), NpcId.ZADIMUS.id(), player.getX(), player.getY(), (int)TimeUnit.SECONDS.toMillis(60));
-			delay(config().GAME_TICK);
+			delay();
 			if (zadimus != null) {
 				npcsay(player, zadimus, "You have released me from my torture, and now I shall aid you");
-				delay(config().GAME_TICK);
+				delay();
 				npcsay(player, zadimus, "You seek to dispell the one who tortured and killed me");
-				delay(config().GAME_TICK);
+				delay();
 				npcsay(player, zadimus, "Remember this...");
-				delay(config().GAME_TICK);
+				delay();
 				npcsay(player, zadimus, "'I am the key, but only kin may approach her.'");
 				mes("The apparition disapears into the ground where you buried the corpse.");
 				zadimus.remove();
@@ -285,7 +285,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			if (menu == 0) {
 				if (getCurrentLevel(player, Skills.PRAYER) < 10) {
 					player.message("You have no spiritual energy that the crystal can draw from.");
-					delay(config().GAME_TICK * 2);
+					delay(2);
 					player.message("You need to have at least 10 prayer points for it to work.");
 					return;
 				}
@@ -313,11 +313,11 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 		}
 		else if (item.getCatalogId() == ItemId.BERVIRIUS_TOMB_NOTES.id()) { // read tomb notes
 			player.message("This scroll is a collection of writings..");
-			delay(config().GAME_TICK * 2);
+			delay(2);
 			player.message("Some of them are just scraps of papyrus with what looks like random scribblings.");
-			delay(config().GAME_TICK * 2);
+			delay(2);
 			player.message("Which would you like to read?");
-			delay(config().GAME_TICK * 2);
+			delay(2);
 			int menu = multi(player,
 				"Tattered Yellow papyrus",
 				"Decayed White papyrus",
@@ -460,7 +460,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				mes("As soon as you touch the coins...",
 					"You hear the grinding sound of bones");
 				player.message("against stone as you see skeletons and ");
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				player.message("Zombies rising up out of the ground.");
 				addnpc(player.getWorld(), 40, player.getX() - 1, player.getY() + 1, 60000);
 				addnpc(player.getWorld(), 40, player.getX() - 1, player.getY() - 1, 60000);

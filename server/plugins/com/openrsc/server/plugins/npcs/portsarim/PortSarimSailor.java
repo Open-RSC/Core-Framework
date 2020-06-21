@@ -46,7 +46,7 @@ public final class PortSarimSailor implements OpLocTrigger,
 			if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30)) > -1) {
 				mes("You pay 30 gold", "You board the ship");
 				player.teleport(324, 713, false);
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				mes("The ship arrives at Karamja");
 			} else {
 				say(player, n, "Oh dear I don't seem to have enough money");

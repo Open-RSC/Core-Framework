@@ -358,7 +358,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 									"we have to arrest someone for this and it seems to me that",
 									"only the actual murderer would gain by falsely accusing someone");
 								//kosher: small pause to continue dialogue
-								delay(1500);
+								delay(3);
 								npcsay(player, n, "although having said that",
 									"the butler is kind of shifty looking...");
 							} else if (variableD == 2) {
@@ -393,7 +393,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 											"we have to arrest someone for this and it seems to me that",
 											"only the actual murderer would gain by falsely accusing someone");
 										//kosher: small pause to continue dialogue
-										delay(1500);
+										delay(3);
 										npcsay(player, n, "although having said that",
 											"the butler is kind of shifty looking...");
 									}
@@ -1692,7 +1692,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					player.message("They don't seem to be the same");
 					player.getCarriedItems().remove(new Item(ItemId.DAVIDS_FINGERPRINT.id()));
 					player.message("I guess that clears David of the crime");
-					delay(800);
+					delay(2);
 					player.message("You destroy the useless fingerprint");
 				}
 			} else if (item1.getCatalogId() == ItemId.BOBS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.BOBS_FINGERPRINT.id()) {
@@ -1706,7 +1706,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					player.message("They don't seem to be the same");
 					player.getCarriedItems().remove(new Item(ItemId.BOBS_FINGERPRINT.id()));
 					player.message("I guess that clears Bob of the crime");
-					delay(800);
+					delay(2);
 					player.message("You destroy the useless fingerprint");
 				}
 			} else if (item1.getCatalogId() == ItemId.ELIZABETHS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.ELIZABETHS_FINGERPRINT.id()) {
@@ -1720,7 +1720,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					player.message("They don't seem to be the same");
 					player.getCarriedItems().remove(new Item(ItemId.ELIZABETHS_FINGERPRINT.id()));
 					player.message("I guess that clears Elizabeth of the crime");
-					delay(800);
+					delay(2);
 					player.message("You destroy the useless fingerprint");
 				}
 			} else if (item1.getCatalogId() == ItemId.ANNAS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.ANNAS_FINGERPRINT.id()) {
@@ -1734,7 +1734,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					player.message("They don't seem to be the same");
 					player.getCarriedItems().remove(new Item(ItemId.ANNAS_FINGERPRINT.id()));
 					player.message("I guess that clears Anna of the crime");
-					delay(800);
+					delay(2);
 					player.message("You destroy the useless fingerprint");
 				}
 			} else if (item1.getCatalogId() == ItemId.CAROLS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.CAROLS_FINGERPRINT.id()) {
@@ -1748,7 +1748,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					player.message("They don't seem to be the same");
 					player.getCarriedItems().remove(new Item(ItemId.CAROLS_FINGERPRINT.id()));
 					player.message("I guess that clears Carol of the crime");
-					delay(800);
+					delay(2);
 					player.message("You destroy the useless fingerprint");
 				}
 			} else if (item1.getCatalogId() == ItemId.FRANKS_FINGERPRINT.id() || item2.getCatalogId() == ItemId.FRANKS_FINGERPRINT.id()) {
@@ -1762,7 +1762,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					player.message("They don't seem to be the same");
 					player.getCarriedItems().remove(new Item(ItemId.FRANKS_FINGERPRINT.id()));
 					player.message("I guess that clears Frank of the crime");
-					delay(800);
+					delay(2);
 					player.message("You destroy the useless fingerprint");
 				}
 			}

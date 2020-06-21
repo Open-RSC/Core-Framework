@@ -131,19 +131,19 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			player.teleport(674, 3462);
 			say(player, null, "aargh");
 			player.damage((int) (getCurrentLevel(player, Skills.HITS) / 42) + 1);
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			player.teleport(677, 3462);
-			delay(config().GAME_TICK);
+			delay();
 			player.teleport(680, 3465);
-			delay(config().GAME_TICK);
+			delay();
 			player.teleport(682, 3462);
-			delay(config().GAME_TICK);
+			delay();
 			player.teleport(683, 3465);
-			delay(config().GAME_TICK);
+			delay();
 			player.teleport(685, 3464);
-			delay(config().GAME_TICK);
+			delay();
 			player.teleport(687, 3462);
-			delay(config().GAME_TICK);
+			delay();
 			say(player, null, "aargh");
 			player.damage((int) (getCurrentLevel(player, Skills.HITS) / 42) + 1);
 			player.teleport(690, 3461);
@@ -170,9 +170,9 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			bridge_open.getWorld().registerGameObject(bridge_open);
 			bridge_closed.getWorld().delayedSpawnObject(bridge_closed.getLoc(), 10000);
 			player.teleport(709, 3420);
-			delay(config().GAME_TICK);
+			delay();
 			player.teleport(706, 3420);
-			delay(config().GAME_TICK);
+			delay();
 			player.teleport(703, 3420);
 			player.message("you cross the bridge");
 		}

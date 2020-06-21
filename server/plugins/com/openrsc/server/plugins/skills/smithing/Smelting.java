@@ -64,7 +64,7 @@ public class Smelting implements UseLocTrigger {
 			}
 			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) > -1) {
 				player.message("You smelt the " + item.getDef(player.getWorld()).getName() + "...");
-				delay(config().GAME_TICK * 5);
+				delay(5);
 				player.message("And retrieve " + amount + " dragon bar" + (amount > 1? "s":""));
 				give(player, ItemId.DRAGON_BAR.id(), amount);
 			}
@@ -140,7 +140,7 @@ public class Smelting implements UseLocTrigger {
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
 			player.message("you repeat the process");
-			delay(config().GAME_TICK);
+			delay();
 			handleCannonBallSmelting(player);
 		}
 	}
@@ -251,7 +251,7 @@ public class Smelting implements UseLocTrigger {
 		String barName = player.getWorld().getServer().getEntityHandler().getItemDef(
 			smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", "");
 		player.playerServerMessage(MessageType.QUEST, smeltString(player.getWorld(), smelt, item));
-		delay(config().GAME_TICK * 3);
+		delay(3);
 
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 2

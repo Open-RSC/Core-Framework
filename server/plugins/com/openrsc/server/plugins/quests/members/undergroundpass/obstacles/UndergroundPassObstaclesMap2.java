@@ -111,7 +111,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 				player.message("you take a few paces back...");
 				player.message("and run torwards the ledge...");
 				player.teleport(764, 3461);
-				delay(1600);
+				delay(3);
 				player.message("you land way short of the other platform");
 				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 5) + 5);
 				player.teleport(764, 3467);
@@ -194,7 +194,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 				return;
 			}
 			if (!player.getCarriedItems().hasCatalogID(ItemId.UNDERGROUND_PASS_UNICORN_HORN.id(), Optional.empty())) {
-				delay(1600);
+				delay(3);
 				player.message("all that remains is a damaged horn");
 				give(player, ItemId.UNDERGROUND_PASS_UNICORN_HORN.id(), 1);
 			} else {
@@ -210,7 +210,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 					.getType()));
 				addloc(obj.getWorld(), obj.getLoc(), 3000);
 				player.teleport(766, 3417);
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				player.teleport(770, 3417);
 				player.message("you walk into the darkness");
 			} else {
@@ -268,7 +268,7 @@ public class UndergroundPassObstaclesMap2 implements OpLocTrigger, OpBoundTrigge
 						player.teleport(obj.getX(), obj.getY());
 				}
 				player.incExp(Skills.THIEVING, 15, true);
-				delay(1600);
+				delay(3);
 				player.message("the cage slams shut behind you");
 			} else if (click == 1) {
 				if (obj.getID() == 168) {

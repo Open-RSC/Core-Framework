@@ -301,10 +301,10 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 					if (player.getCache().hasKey("brick_ignite")) {
 						player.message("You strike the tinderbox");
 						player.message("Fizz...");
-						delay(300);
+						delay();
 						say(player, null, "Whoa! this is going to blow!\"",
 							"I'd better run!");
-						delay(1500);
+						delay(3);
 						player.teleport(22, 3379);
 						player.updateQuestStage(Quests.DIGSITE, 6);
 						player.getCache().remove("brick_ignite");

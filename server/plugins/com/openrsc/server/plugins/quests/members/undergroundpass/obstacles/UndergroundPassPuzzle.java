@@ -58,7 +58,7 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 		mes("you step onto the metal grill");
 		player.message("it's a trap");
 		player.teleport(711, 3464);
-		delay(1600);
+		delay(3);
 		mes("you fall onto a pit of spikes");
 		player.teleport(679, 3448);
 		player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.2D));
@@ -67,7 +67,7 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 			new GameObject(obj.getWorld(), obj.getLocation(), 778, obj.getDirection(), obj
 				.getType()));
 		player.getWorld().delayedSpawnObject(obj.getLoc(), 1000);
-		delay(1600);
+		delay(3);
 		player.message("and off the metal grill");
 	}
 

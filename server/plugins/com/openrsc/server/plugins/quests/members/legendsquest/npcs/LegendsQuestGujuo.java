@@ -206,7 +206,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 					case -1:
 						if (!player.getCache().hasKey("rewarded_totem") && player.getQuestStage(Quests.LEGENDS_QUEST) >= 10) {
 							n.resetPath();
-							delay(config().GAME_TICK);
+							delay();
 							npcWalkFromPlayer(player, n);
 							npcsay(player, n, "Greetins Bwana,",
 								"We witnessed your fight with the Demon from some distance away.",
@@ -805,7 +805,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 						player.teleport(397, 865);
 						if (n != null) {
 							n.teleport(398, 865);
-							delay(config().GAME_TICK);
+							delay();
 							npcsay(player, n, "");
 						}
 						mes("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");

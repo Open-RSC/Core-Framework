@@ -65,7 +65,7 @@ public final class BorderGuard implements
 	public static void walkThenTeleport(final Player player, final int x1, final int y1, final int x2, final int y2, final boolean bubble) {
 		player.walk(x1, y1);
 		while (!player.getWalkingQueue().finished()) {
-			delay(1);
+			delay();
 		}
 		player.teleport(x2, y2, bubble);
 	}

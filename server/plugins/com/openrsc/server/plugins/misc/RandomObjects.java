@@ -93,7 +93,7 @@ public class RandomObjects implements OpLocTrigger {
 				}
 				player.message("You twist the stone tile to one side");
 				if (player.getQuestStage(Quests.GRAND_TREE) == -1) {
-					delay(config().GAME_TICK * 2);
+					delay(2);
 					player.message("It reveals a ladder, you climb down");
 					player.teleport(703, 3284, false);
 				} else {
@@ -110,14 +110,14 @@ public class RandomObjects implements OpLocTrigger {
 			case 243:
 				mes("You board the ship");
 				player.teleport(263, 660, false);
-				delay(2200);
+				delay(4);
 				player.message("The ship arrives at Port Sarim");
 				break;
 			case 1241:
 				if (player.getCache().hasKey("scotruth_to_chaos_altar")) {
 					player.message("You step into the tunnel...");
 					player.teleport(331,213, false);
-					delay(4*config().GAME_TICK);
+					delay(4);
 					player.message("And find your way into the wilderness");
 				} else {
 					player.message("You don't have permission to use this");
@@ -125,7 +125,7 @@ public class RandomObjects implements OpLocTrigger {
 				break;
 			case 1242:
 				player.message("You enter the rowboat...");
-				delay(config().GAME_TICK * 3);
+				delay(3);
 				player.teleport(206,449);
 				player.message("And stop in Edgeville");
 				break;

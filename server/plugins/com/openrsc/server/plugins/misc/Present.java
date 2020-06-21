@@ -276,9 +276,9 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 			thinkbubble(item);
 			player.message("You give a present to " + otherPlayer.getUsername());
 			otherPlayer.message(player.getUsername() + " handed you a present...");
-			delay(config().GAME_TICK);
+			delay();
 			otherPlayer.message("You unwrap the present and reach your hand inside...");
-			delay(config().GAME_TICK);
+			delay();
 
 			ArrayList<Item> prizeList = presentDrops.rollItem(false, otherPlayer);
 			if (prizeList.size() <= 0) return;
@@ -287,7 +287,7 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 
 			player.message(otherPlayer.getUsername() + " got a " + prizeName + " from your present!");
 			otherPlayer.message("You take out a " + prizeName + ".");
-			delay(config().GAME_TICK);
+			delay();
 
 			String playerDialogue;
 

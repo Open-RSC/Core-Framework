@@ -30,7 +30,7 @@ public class Cactus implements UseLocTrigger {
 		int[] skins = {ItemId.WATER_SKIN_MOSTLY_FULL.id(), ItemId.WATER_SKIN_MOSTLY_EMPTY.id(),
 				ItemId.WATER_SKIN_MOUTHFUL_LEFT.id(), ItemId.EMPTY_WATER_SKIN.id()};
 		thinkbubble(item);
-		delay(config().GAME_TICK * 2);
+		delay(2);
 		for (int s : skins) {
 			Item toRemove = new Item(s, 1);
 			if (player.getCarriedItems().remove(toRemove) > -1) {

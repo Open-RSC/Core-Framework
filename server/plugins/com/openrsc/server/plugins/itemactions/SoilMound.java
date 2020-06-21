@@ -46,7 +46,7 @@ public class SoilMound implements UseLocTrigger {
 		player.getCarriedItems().remove(bucket);
 		give(player, filledId, 1);
 
-		delay(config().GAME_TICK);
+		delay();
 
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {

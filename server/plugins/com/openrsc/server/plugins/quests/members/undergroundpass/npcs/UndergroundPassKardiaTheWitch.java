@@ -47,7 +47,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 					player.message("you reach to open the door");
 					if (witch != null) {
 						npcsay(player, witch, "get away...far away from here");
-						delay(config().GAME_TICK * 2);
+						delay(2);
 						player.message("the witch raises her hands above her");
 						displayTeleportBubble(player, player.getX(), player.getY(), true);
 						player.damage(((int) getCurrentLevel(player, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.

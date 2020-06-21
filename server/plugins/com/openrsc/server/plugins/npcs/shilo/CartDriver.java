@@ -69,7 +69,7 @@ public class CartDriver implements TalkNpcTrigger, OpLocTrigger {
 				Npc driver = ifnearvisnpc(player, NpcId.CART_DRIVER_SHILO.id(), 10);
 				if (driver != null) {
 					driver.teleport(player.getX(), player.getY());
-					delay(config().GAME_TICK); // 1 tick.
+					delay(); // 1 tick.
 					npcWalkFromPlayer(player, driver);
 					player.message("A nearby man walks over to you.");
 					cartRide(player, driver);

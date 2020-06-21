@@ -150,7 +150,7 @@ public final class Baraek implements
 				for (int i=0; i<count; i++) {
 					player.getCarriedItems().remove(new Item(ItemId.GREY_WOLF_FUR.id()));
 					give(player, ItemId.COINS.id(), 120);
-					delay(config().GAME_TICK);
+					delay();
 				}
 			} else if (wolfmenu == 1) {
 				say(player, n, "No I almost got my throat torn out by a wolf to get this");

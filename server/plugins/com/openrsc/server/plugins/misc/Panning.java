@@ -45,7 +45,7 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 		player.playSound("mix");
 		player.playerServerMessage(MessageType.QUEST, "You scrape the tray along the bottom");
 		mes("You swirl away the excess water");
-		delay(1500);
+		delay(3);
 		thinkbubble(new Item(ItemId.PANNING_TRAY_FULL.id()));
 		player.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
 		player.getCarriedItems().remove(new Item(ItemId.PANNING_TRAY.id()));
@@ -146,7 +146,7 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 			say(player, null, "Err, why am I searching an empty tray ?");
 		} else if (item.getCatalogId() == ItemId.PANNING_TRAY_FULL.id()) {
 			mes("You search the contents of the tray...");
-			delay(1500);
+			delay(3);
 			int randomNumber = DataConversions.random(0, 100);
 			int addItem = -1;
 			int addAmount = 1;

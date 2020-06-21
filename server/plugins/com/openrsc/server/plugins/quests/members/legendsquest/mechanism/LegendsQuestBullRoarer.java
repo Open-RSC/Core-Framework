@@ -61,7 +61,7 @@ public class LegendsQuestBullRoarer implements OpInvTrigger {
 				gujuo.resetPath();
 				gujuo.teleport(player.getX(), player.getY());
 				gujuo.initializeTalkScript(player);
-				delay(config().GAME_TICK);
+				delay();
 				npcWalkFromPlayer(player, gujuo);
 			}
 		} else if (controlRandom == 3) {

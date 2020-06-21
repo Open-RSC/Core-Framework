@@ -86,7 +86,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 						final Npc lepr = addnpc(player.getWorld(), NpcId.LEPRECHAUN.id(), 172, 661, (int)TimeUnit.SECONDS.toMillis(180));
 						lepr.walk(173, 661);
 						try {
-							delay(config().GAME_TICK);
+							delay();
 							lepr.walk(177, 661 + DataConversions.random(0, 10) - 5);
 						} catch (Exception e) {
 							LOGGER.catching(e);
@@ -130,7 +130,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					if (treeSpirit == null) {
 						return;
 					}
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					npcsay(player, treeSpirit, "Stop",
 						"I am the spirit of the Dramen Tree",
 						"You must come through me before touching that tree");
@@ -311,7 +311,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 				"Well that is a risk I will have to take");
 			if (option == 1) {
 				player.message("You climb down the ladder");
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				teleport(player, 427, 3380);
 				/* What is the point of this? */
 				if (getCurrentLevel(player, Skills.PRAYER) <= 3)
@@ -415,7 +415,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == MAGIC_DOOR) {
 			player.teleport(109, 245, true);
-			delay(config().GAME_TICK);
+			delay();
 			player.message("you go through the door and find yourself somewhere else");
 		} else if (obj.getID() == ZANARIS_DOOR) {
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(player, this, 4, -1)) {

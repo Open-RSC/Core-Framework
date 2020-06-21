@@ -97,7 +97,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 									});
 								}
 							});
-						delay(config().GAME_TICK * 2);
+						delay(2);
 						npcsay(player, npc, "Can I see your Shantay Desert Pass please.");
 						player.message("You hand over a Shantay Pass.");
 						player.getCarriedItems().remove(new Item(ItemId.SHANTAY_DESERT_PASS.id()));

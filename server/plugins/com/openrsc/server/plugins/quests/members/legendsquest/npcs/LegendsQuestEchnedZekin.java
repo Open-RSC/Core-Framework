@@ -71,7 +71,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 				}
 				player.getSkills().setLevel(Skills.PRAYER, newPray);
 
-				delay(7000);
+				delay(11);
 				mes(config().GAME_TICK * 2, "The Demon takes out a dark dagger and throws it at you...");
 				if (DataConversions.random(0, 1) == 1) {
 					mes(config().GAME_TICK * 2, "The dagger hits you with an agonising blow...");
@@ -141,7 +141,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 								n.remove();
 							Npc second_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, (int)TimeUnit.SECONDS.toMillis(500), player);
 							if (second_nezikchened != null) {
-								delay(config().GAME_TICK);
+								delay();
 								second_nezikchened.startCombat(player);
 								player.message("You feel a terrible sense of loss...");
 								player.getSkills().setLevel(Skills.PRAYER, 0);

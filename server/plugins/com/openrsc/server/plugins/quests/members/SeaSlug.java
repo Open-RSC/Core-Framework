@@ -631,7 +631,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 				GameObject firstRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 5, 0);
 				player.getWorld().replaceGameObject(obj, firstRotation);
-				delay(config().GAME_TICK);
+				delay();
 				GameObject secondRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 6, 0);
 				player.getWorld().replaceGameObject(obj, secondRotation);
@@ -640,7 +640,7 @@ public class SeaSlug implements QuestInterface, TalkNpcTrigger,
 				GameObject thirdRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 5, 0);
 				player.getWorld().replaceGameObject(obj, thirdRotation);
-				delay(config().GAME_TICK);
+				delay();
 				GameObject fourthRotation = new GameObject(obj.getWorld(), obj.getLocation(),
 					453, 4, 0);
 				player.getWorld().replaceGameObject(obj, fourthRotation);

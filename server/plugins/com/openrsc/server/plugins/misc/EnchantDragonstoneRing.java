@@ -27,7 +27,7 @@ public class EnchantDragonstoneRing implements SpellInvTrigger {
 		if (item == null) return;
 		if (itemID.intValue() == ItemId.DRAGONSTONE_RING.id()) {
 			player.message("What type of dragonstone ring would you like to make?");
-			delay(config().GAME_TICK);
+			delay();
 			int choice = multi(player, "Ring of Wealth", "Ring of Avarice");
 			int i;
 			if (choice == 0) {

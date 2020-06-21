@@ -315,7 +315,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 			player.message("Someone's idea of a joke...");
 			Npc spider = addnpc(player.getWorld(), NpcId.POISON_SPIDER.id(), obj.getX(), obj.getY() + 1, 60000 * 5);
 			spider.startCombat(player);
-			delay(1600);
+			delay(3);
 			player.message("The chest snaps shut");
 		}
 		else if (obj.getID() == ROCK_OVER || obj.getID() == ROCK_BACK) {

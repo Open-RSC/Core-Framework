@@ -41,7 +41,7 @@ public class Sheep implements UseNpcTrigger {
 			return;
 		}
 
-		delay(config().GAME_TICK * 2);
+		delay(2);
 
 		// Repeat
 		updatebatch();

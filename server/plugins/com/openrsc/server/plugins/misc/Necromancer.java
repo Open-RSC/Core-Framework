@@ -24,7 +24,7 @@ public class Necromancer implements AttackNpcTrigger, KillNpcTrigger, SpellNpcTr
 			if (!player.getCache().hasKey("necroSpawn") || (player.getCache().hasKey("necroSpawn") && player.getCache().getInt("necroSpawn") < 7) || (player.getCache().hasKey("killedZomb") && player.getCache().getInt("killedZomb") != 0 && zombie == null)) {
 				npcsay(player, necromancer, "I summon the undead to smite you down");
 				zombie = addnpc(necromancer.getWorld(), NpcId.ZOMBIE_INVOKED.id(), necromancer.getX(), necromancer.getY());
-				delay(1600);
+				delay(3);
 				if (!player.inCombat()) {
 					zombie.startCombat(player);
 				}

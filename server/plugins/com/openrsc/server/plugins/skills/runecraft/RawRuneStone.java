@@ -43,7 +43,7 @@ public class RawRuneStone implements OpLocTrigger {
 		thinkbubble(new Item(ItemId.IRON_PICKAXE.id()));
 		give(player, ItemId.RUNE_STONE.id(), 1);
 		player.incExp(Skills.MINING, 20, true);
-		delay(config().GAME_TICK);
+		delay();
 
 		// Repeat
 		updatebatch();

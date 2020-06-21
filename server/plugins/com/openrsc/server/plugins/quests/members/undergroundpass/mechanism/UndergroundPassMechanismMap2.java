@@ -49,7 +49,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 			player.message("you walk across the wooden planks");
 			player.getCarriedItems().remove(new Item(ItemId.PLANK.id()));
 			player.teleport(735, 3489);
-			delay(850);
+			delay(2);
 			if (obj.getX() == 737) {
 				player.teleport(732, 3489);
 			} else if (obj.getX() == 733) {

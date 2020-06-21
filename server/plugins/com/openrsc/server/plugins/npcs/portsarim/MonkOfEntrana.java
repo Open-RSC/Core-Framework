@@ -102,7 +102,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 				} else {
 					mes("You board the ship");
 					player.teleport(418, 570, false);
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					mes("The ship arrives at Entrana");
 				}
 			}
@@ -114,7 +114,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 
 				mes("You board the ship");
 				player.teleport(264, 660, false);
-				delay(config().GAME_TICK * 3);
+				delay(3);
 				mes("The ship arrives at Port Sarim");
 			}
 			return;

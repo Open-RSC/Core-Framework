@@ -430,9 +430,9 @@ public class DoorAction {
 				} else {
 					player.message("Your weight is too much for the bridge to hold");
 					player.teleport(544, 3330);
-					delay(config().GAME_TICK);
+					delay();
 					player.message("You fall through the bridge");
-					delay(config().GAME_TICK * 2);
+					delay(2);
 					player.message("The lava singes you");
 					player.damage(DataConversions.roundUp(player.getSkills().getLevel(Skills.HITS) / 5));
 				}
@@ -642,7 +642,7 @@ public class DoorAction {
 						if (masterFisher != null) {
 							npcsay(player, masterFisher, "Hello only the top fishers are allowed in here");
 						}
-						delay(config().GAME_TICK * 2);
+						delay(2);
 						player.message("You need a fishing level of 68 to enter");
 					} else {
 						doDoor(obj, player);
@@ -661,7 +661,7 @@ public class DoorAction {
 					if (dwarf != null) {
 						npcsay(player, dwarf, "Sorry only the top miners are allowed in there");
 					}
-					delay(config().GAME_TICK);
+					delay();
 					player.message("You need a mining of level 60 to enter");
 				} else {
 					doDoor(obj, player);
@@ -677,7 +677,7 @@ public class DoorAction {
 					if (master != null) {
 						npcsay(player, master, "Sorry only experienced craftsmen are allowed in here");
 					}
-					delay(config().GAME_TICK);
+					delay();
 					player.message("You need a crafting level of 40 to enter the guild");
 				} else if (!(player.getCarriedItems().getEquipment().hasEquipped(ItemId.BROWN_APRON.id())
 					|| player.getCarriedItems().getEquipment().hasEquipped(ItemId.CRAFTING_CAPE.id()))) {
@@ -700,7 +700,7 @@ public class DoorAction {
 					if (chef != null) {
 						npcsay(player, chef, "Sorry. Only the finest chefs are allowed in here");
 					}
-					delay(config().GAME_TICK);
+					delay();
 					player.message("You need a cooking level of 32 to enter");
 				} else if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.CHEFS_HAT.id())) {
 					Npc chef = player.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
@@ -1197,7 +1197,7 @@ public class DoorAction {
 				}
 				player.message("you open the gate");
 				doGate(player, obj, 357);
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				player.message("and walk through");
 				return;
 
@@ -1219,7 +1219,7 @@ public class DoorAction {
 							if (forester != null) {
 								npcsay(player, forester, "Hello only the top woodcutters are allowed in here");
 							}
-							delay(config().GAME_TICK * 2);
+							delay(2);
 							player.message("You need a woodcutting level of 70 to enter");
 						} else {
 							doGate(player, obj);
@@ -1229,11 +1229,11 @@ public class DoorAction {
 							468, 472);
 						if (forester != null) {
 							npcsay(player, forester, "Hey you can't come through here", "This is private land");
-							delay(config().GAME_TICK * 2);
+							delay(2);
 							player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
 						} else {
 							player.playerServerMessage(MessageType.QUEST, "You will need to find another way in");
-							delay(config().GAME_TICK * 2);
+							delay(2);
 							player.playerServerMessage(MessageType.QUEST, "the gate is locked");
 						}
 					}

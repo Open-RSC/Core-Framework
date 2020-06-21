@@ -26,7 +26,7 @@ public class BabyBlueDragon implements UseNpcTrigger {
 			player.face(npc);
 			thinkbubble(item);
 			player.message("You attempt to put the baby blue dragon in the crystal.");
-			delay(config().GAME_TICK * 2);
+			delay(2);
 			/*Npc nearbyNpc = getMultipleNpcsInArea(player, 5, NpcId.BABY_BLUE_DRAGON.id(), NpcId.BLUE_DRAGON.id(), NpcId.RED_DRAGON.id(), NpcId.DRAGON.id());
 			if (nearbyNpc != null) {
 				int selected = npc.getRandom().nextInt(5);

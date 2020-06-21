@@ -101,19 +101,19 @@ public class AgilityShortcuts implements OpLocTrigger,
 						player.teleport(458, 832);
 						say(player, null, "* Ahhhhhhhhhh! *");
 						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
-						delay(config().GAME_TICK);
+						delay();
 						player.teleport(458, 836);
 						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
-						delay(config().GAME_TICK * 2);
+						delay(2);
 						say(player, null, "* Gulp! *");
-						delay(1500);
+						delay(3);
 						player.teleport(459, 841);
 						say(player, null, "* Gulp! *");
-						delay(config().GAME_TICK * 2);
+						delay(2);
 						player.message("You just manage to drag your pitiful frame onto the river bank.");
 						say(player, null, "* Gasp! *");
 						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
-						delay(config().GAME_TICK * 2);
+						delay(2);
 						player.message("Though you nearly drowned in the river!");
 					}
 				}
@@ -143,7 +143,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 						player.teleport(450, 828);
 						mes("You fall and hurt yourself.");
 						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
-						delay(config().GAME_TICK);
+						delay();
 						player.teleport(449, 828);
 					}
 				} else if (menu == 1) {
@@ -165,7 +165,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				player.message("You grab the vine and try and swing across");
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				teleport(player, 511, 669);
 				player.message("You skillfully swing across the stream");
 				say(player, null, "Aaaaahahah");
@@ -177,7 +177,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				player.message("You grab the vine and try and swing across");
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				teleport(player, 508, 668);
 				player.message("You skillfully swing across the stream");
 				say(player, null, "Aaaaahahah");
@@ -188,7 +188,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 15 to attempt to swing on this rope");
 					return;
 				}
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				teleport(player, 207, 3221);
 				player.message("You skillfully swing across the hole");
 				player.incExp(Skills.AGILITY, 40, true);
@@ -198,7 +198,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.message("You need an agility level of 15 to attempt to swing on this rope");
 					return;
 				}
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				teleport(player, 206, 3225);
 				player.message("You skillfully swing across the hole");
 				player.incExp(Skills.AGILITY, 40, true);
@@ -211,7 +211,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You stand on the slippery log");
 				for (int x = 595; x >= 592; x--) {
 					teleport(player, x, 458);
-					delay(config().GAME_TICK);
+					delay();
 				}
 				player.message("and you walk across");
 				player.incExp(Skills.AGILITY, 34, true);
@@ -224,7 +224,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You stand on the slippery log");
 				for (int x = 595; x <= 598; x++) {
 					teleport(player, x, 458);
-					delay(config().GAME_TICK);
+					delay();
 				}
 				player.message("and you walk across");
 				player.incExp(Skills.AGILITY, 34, true);
@@ -247,7 +247,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					teleport(player, 596, 3534);
 					return;
 				}
-				delay(2200);
+				delay(4);
 				teleport(player, 596, 3581);
 				player.message("You skillfully swing across the hole");
 				player.incExp(Skills.AGILITY, 110, true);
@@ -269,7 +269,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					teleport(player, 598, 3536);
 					return;
 				}
-				delay(2200);
+				delay(4);
 				teleport(player, 598, 3585);
 				player.message("You skillfully swing across the hole");
 				player.incExp(Skills.AGILITY, 110, true);
@@ -287,7 +287,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				player.message("You put your foot on the ledge and try to edge across");
-				delay(2200);
+				delay(4);
 				if (!succeed(player, 40, 65)) {
 					mes("you lose your footing and fall to the level below");
 					teleport(player, 603, 3520);
@@ -309,7 +309,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				player.message("You put your foot on the ledge and try to edge across");
-				delay(2200);
+				delay(4);
 				if (!succeed(player, 40, 65)) {
 					mes("you lose your footing and fall to the level below");
 					teleport(player, 603, 3520);
@@ -356,7 +356,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				player.message("You squeeze through the pipe");
-				delay(2200);
+				delay(4);
 				teleport(player, 608, 3568);
 				player.incExp(Skills.AGILITY, 30, true);
 				break;
@@ -372,7 +372,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					}
 				}
 				player.message("You squeeze through the pipe");
-				delay(2200);
+				delay(4);
 				teleport(player, 605, 3568);
 				player.incExp(Skills.AGILITY, 30, true);
 				break;
@@ -382,14 +382,14 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				player.message("You grab the rope and try and swing across");
-				delay(2200);
+				delay(4);
 				teleport(player, 664, 755);
 				player.message("You skillfully swing across the stream");
 				player.incExp(Skills.AGILITY, 50, true);
 				break;
 			case GREW_ISLAND_SWING_BACK:
 				player.message("You grab the rope and try and swing across");
-				delay(2200);
+				delay(4);
 				teleport(player, 666, 755);
 				player.message("You skillfully swing across the stream");
 				player.incExp(Skills.AGILITY, 50, true);
@@ -400,10 +400,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				player.message("You attempt to walk over the the slippery log..");
-				delay(config().GAME_TICK * 3);
+				delay(3);
 				if (!succeed(player, 32)) {
 					teleport(player, 368, 781);
-					delay(config().GAME_TICK);
+					delay();
 					player.message("@red@You fall into the stream!");
 					player.message("You lose some health");
 					teleport(player, 370, 776);
@@ -412,11 +412,11 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				if (player.getX() <= 367) {
 					teleport(player, 368, 781);
-					delay(config().GAME_TICK);
+					delay();
 					teleport(player, 370, 781);
 				} else {
 					teleport(player, 368, 781);
-					delay(config().GAME_TICK);
+					delay();
 					teleport(player, 366, 781);
 				}
 				player.message("...and make it without any problems!");
@@ -436,9 +436,9 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You jump onto the rock");
 				if (player.getY() <= 805) {
 					teleport(player, 347, 806);
-					delay(config().GAME_TICK);
+					delay();
 					if (!succeed(player, 32)) {
-						delay(900);
+						delay(2);
 						teleport(player, 341, 809);
 						player.message("@red@!!! You Fall !!!");
 						mes("You get washed up on the other side of the river...",
@@ -449,9 +449,9 @@ public class AgilityShortcuts implements OpLocTrigger,
 					teleport(player, 346, 808);
 				} else {
 					teleport(player, 346, 807);
-					delay(config().GAME_TICK);
+					delay();
 					if (!succeed(player, 32)) {
-						delay(900);
+						delay(2);
 						teleport(player, 341, 805);
 						player.message("@red@!!! You Fall !!!");
 						mes("You get washed up on the other side of the river...",
@@ -538,7 +538,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 						return;
 					}
 				}
-				delay(config().GAME_TICK);
+				delay();
 				if (player.getLocation().getY() < 550) {
 					teleport(player, 434, 551);
 					player.incExp(Skills.AGILITY, 15, true);

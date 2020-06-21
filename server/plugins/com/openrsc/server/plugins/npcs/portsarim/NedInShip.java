@@ -85,15 +85,15 @@ public final class NedInShip implements
 					}
 					if (gave_map) {
 						player.message("You feel the ship begin to move");
-						delay(config().GAME_TICK * 3);
+						delay(3);
 						player.message("You are out at sea");
-						delay(config().GAME_TICK * 3);
+						delay(3);
 						player.message("The ship is sailing");
-						delay(config().GAME_TICK * 3);
+						delay(3);
 						player.message("The ship is sailing");
-						delay(config().GAME_TICK * 3);
+						delay(3);
 						player.message("You feel a crunch");
-						delay(config().GAME_TICK * 3);
+						delay(3);
 						player.teleport(281, 3472, false);
 						player.getCache().remove("ship_fixed");
 						npcsay(player, n, "Aha we've arrived");

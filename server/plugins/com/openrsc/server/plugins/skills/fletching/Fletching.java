@@ -216,7 +216,7 @@ public class Fletching implements UseInvTrigger {
 			ActionSender.sendInventory(player);
 			player.incExp(Skills.FLETCHING, experience * timesLooped, true);
 		}
-		delay(config().GAME_TICK);
+		delay();
 
 		// Repeat
 		updatebatch();
@@ -291,7 +291,7 @@ public class Fletching implements UseInvTrigger {
 			ActionSender.sendInventory(player);
 			player.incExp(Skills.FLETCHING, headDef.getExp() * skillCapeMultiplier * timesLooped, true);
 		}
-		delay(config().GAME_TICK);
+		delay();
 
 		// Repeat
 		updatebatch();
@@ -343,12 +343,12 @@ public class Fletching implements UseInvTrigger {
 		player.message("You add a string to the bow");
 		player.getCarriedItems().getInventory().add(new Item(stringDef.getBowID(), 1));
 		player.incExp(Skills.FLETCHING, stringDef.getExp(), true);
-		delay(config().GAME_TICK);
+		delay();
 
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(config().GAME_TICK * 2);
+			delay(2);
 			batchStringing(player, bow, bowString, stringDef);
 		}
 	}
@@ -430,13 +430,13 @@ public class Fletching implements UseInvTrigger {
 			player.message(cutMessage);
 			give(player, id, id == ItemId.ARROW_SHAFTS.id() ? getNumberOfShafts(player, log.getCatalogId()) : 1);
 			player.incExp(Skills.FLETCHING, exp, true);
-			delay(config().GAME_TICK);
+			delay();
 		}
 
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(config().GAME_TICK * 2);
+			delay(2);
 			batchLogCutting(player, log, id, reqLvl, exp, cutMessage);
 		}
 	}
@@ -499,12 +499,12 @@ public class Fletching implements UseInvTrigger {
 		player.message("you chisel the pearls into small bolt tips");
 		give(player, ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amount);
 		player.incExp(Skills.FLETCHING, 100, true);
-		delay(config().GAME_TICK);
+		delay();
 
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(config().GAME_TICK);
+			delay();
 			batchPearlCutting(player, pearl, amount);
 		}
 	}
@@ -564,7 +564,7 @@ public class Fletching implements UseInvTrigger {
 			player.incExp(Skills.FLETCHING, 25 * skillCapeMultiplier * timesLooped, true);
 		}
 
-		delay(config().GAME_TICK);
+		delay();
 
 		// Repeat
 		updatebatch();
