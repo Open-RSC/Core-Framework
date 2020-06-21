@@ -135,7 +135,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 			} else {
 				if (click == TOUCH) {
 					mes("You walk blindly into the intense heat of the supernatural flames.");
-					delay(4);
+					delay(3);
 					if (DataConversions.random(0, 9) <= 3) {
 						mes("The heat is so intense that it burns you.");
 						delay(2);

@@ -176,24 +176,24 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 				if (item.getCatalogId() == ItemId.CABBAGE.id() && player.getQuestStage(this) == 2) {
 					if (player.getCarriedItems().remove(new Item(ItemId.CABBAGE.id())) != -1) {
 						mes("You drop a cabbage down the hole.");
-						delay(4);
+						delay(3);
 						mes("The cabbage lands in the cauldron below.");
-						delay(4);
+						delay(3);
 						mes("The mixture in the cauldron starts to froth and bubble.");
-						delay(4);
+						delay(3);
 						mes("You hear the witch groan in dismay.");
-						delay(4);
+						delay(3);
 						say(player, null,
 							"Right I think that's successfully sabotaged the secret weapon.");
 						player.updateQuestStage(this, 3);
 					}
 				} else if (item.getCatalogId() == ItemId.SPECIAL_DEFENSE_CABBAGE.id() && player.getQuestStage(this) == 2) {
 					mes("This is the wrong sort of cabbage!");
-					delay(4);
+					delay(3);
 					mes("You are meant to be hindering the witch.");
-					delay(4);
+					delay(3);
 					mes("Not helping her.");
-					delay(4);
+					delay(3);
 				} else {
 					say(player, null, "Why would I want to do that?");
 				}

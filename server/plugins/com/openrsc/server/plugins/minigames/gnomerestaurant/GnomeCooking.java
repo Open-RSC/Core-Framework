@@ -245,7 +245,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 			|| player.getCarriedItems().hasCatalogID(ItemId.GNOMEBOWL.id(), Optional.of(false))
 			|| player.getCarriedItems().hasCatalogID(ItemId.GNOMECRUNCHIE.id(), Optional.of(false))) {
 			mes("you need to finish, eat or drop the unfinished dish you hold");
-			delay(4);
+			delay(3);
 			player.message("before you can make another - giannes rules");
 			return false;
 		}

@@ -81,13 +81,14 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 			if (ifheld(player, ItemId.COINS.id(), 10)) {
 				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 10));
 				mes("You buy a pint of Olde Suspiciouse");
-				delay(4);
+				delay(3);
 				mes("You gulp it down");
-				delay(4);
+				delay(3);
 				mes("Your head is spinning");
-				delay(4);
+				delay(3);
 				drinkAle(player);
 				mes("The bartender signs your card");
+				delay(3);
 				player.getCache().store("barone", true);
 				say(player, n, "Thanksh very mush");
 			} else {

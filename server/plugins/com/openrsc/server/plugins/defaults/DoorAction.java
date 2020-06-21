@@ -288,11 +288,11 @@ public class DoorAction {
 									"Good, I see that you have come to your senses.");
 								if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
 									mes("You hand over five gold pieces to Shantay.");
-									delay(4);
+									delay(3);
 									npcsay(player, shantay,
 										"Great Effendi, now please try to keep the peace.");
 									mes("Shantay unlocks the door to the cell.");
-									delay(4);
+									delay(3);
 									player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 									player.getCache().remove("shantay_jail");
 								} else {
@@ -335,11 +335,11 @@ public class DoorAction {
 										"Good, I see that you have come to your senses.");
 									if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 5) {
 										mes("You hand over five gold pieces to Shantay.");
-										delay(4);
+										delay(3);
 										npcsay(player, shantay,
 											"Great Effendi, now please try to keep the peace.");
 										mes("Shantay unlocks the door to the cell.");
-										delay(4);
+										delay(3);
 										player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5));
 										player.getCache().remove("shantay_jail");
 									} else {
@@ -384,8 +384,10 @@ public class DoorAction {
 					player.message("You go through the door");
 					doDoor(obj, player);
 				} else {
-					mes("The door doesn't open",
-						"No one seems to be in");
+					mes("The door doesn't open");
+					delay(3);
+					mes("No one seems to be in");
+					delay(3);
 				}
 				break;
 
@@ -395,11 +397,11 @@ public class DoorAction {
 					doDoor(obj, player);
 				} else {
 					mes("The fire warrior's eyes glow");
-					delay(4);
+					delay(3);
 					mes("The fire warrior glares at the door");
-					delay(4);
+					delay(3);
 					mes("The door handle is too hot to handle");
-					delay(4);
+					delay(3);
 				}
 				break;
 
@@ -427,11 +429,11 @@ public class DoorAction {
 					doDoor(obj, player);
 				} else {
 					mes("As you reach to open the door");
-					delay(4);
+					delay(3);
 					mes("A great terror comes over you");
-					delay(4);
+					delay(3);
 					mes("You decide you'll not open this door today");
-					delay(4);
+					delay(3);
 				}
 				break;
 
@@ -794,6 +796,7 @@ public class DoorAction {
 						npcsay(player, champy,
 							"You have not proven yourself worthy to enter here yet");
 						mes("The door won't open - you need at least 32 quest points");
+						delay(3);
 					}
 					return;
 				}
@@ -868,11 +871,11 @@ public class DoorAction {
 			case 138: // Biohazard
 				if (!player.getCache().hasKey("rotten_apples") && player.getQuestStage(Quests.BIOHAZARD) == 4) {
 					mes("the door is locked");
-					delay(4);
+					delay(3);
 					mes("inside you can hear the mourners eating");
-					delay(4);
+					delay(3);
 					mes("you need to distract them from their stew");
-					delay(4);
+					delay(3);
 				} else if (player.getCache().hasKey("rotten_apples") || player.getQuestStage(Quests.BIOHAZARD) == 5) {
 					if (player.getY() <= 572) {
 						doDoor(obj, player);
@@ -1261,6 +1264,7 @@ public class DoorAction {
 				}
 				if (player.getX() >= 394) {
 					mes("The gate opens smoothly");
+					delay(3);
 					player.teleport(381, 851);
 					player.message("You make your way out of Shilo Village.");
 				} else {
@@ -1279,6 +1283,7 @@ public class DoorAction {
 					return;
 				}
 				mes("The gate feels very cold to your touch!");
+				delay(3);
 				player.message("Are you sure you want to go through?");
 				int menu = multi(player,
 					"Yes, I am fearless!",
@@ -1287,17 +1292,21 @@ public class DoorAction {
 					changeloc(obj, 3000, 612);
 					if (player.getX() >= 388) {
 						mes("The gates open very slowly.");
+						delay(3);
 						player.teleport(387, 852);
 						player.message("You manage to drag your battered body back through the gates.");
 					} else {
 						mes("The gates open very slowly...");
+						delay(3);
 						player.teleport(389, 852);
 						mes("As soon as the gates open, the Zombies grab you and start dragging you inside!");
+						delay(3);
 						player.teleport(391, 852);
 						say(player, null, "Oh no, I'm done for!");
 					}
 				} else if (menu == 1) {
 					mes("You drag your quivering body  away from the gates.");
+					delay(3);
 					player.message("You look around, but you don't think anyone saw you.");
 				}
 				return;
@@ -1398,6 +1407,7 @@ public class DoorAction {
 					say(player, n, "that's ridiculous");
 					npcsay(player, n, "maybe, but that's the orders, I'm sorry");
 					mes("the gnome refuses to open the gate");
+					delay(3);
 					if (spawned) {
 						n.setBusy(false);
 						n.remove();

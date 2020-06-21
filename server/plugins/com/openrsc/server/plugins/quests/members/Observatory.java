@@ -499,8 +499,10 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 			player.message("You search the chest");
 			player.message("You find a small key inside");
 			if (player.getCarriedItems().hasCatalogID(ItemId.KEEP_KEY.id(), Optional.of(false))) {
-				mes("You already have a keep key",
-					"Another one will have no use");
+				mes("You already have a keep key");
+				delay(3);
+				mes("Another one will have no use");
+				delay(3);
 			} else {
 				give(player, ItemId.KEEP_KEY.id(), 1);
 			}

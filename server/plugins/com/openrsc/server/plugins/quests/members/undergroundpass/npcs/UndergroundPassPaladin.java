@@ -86,9 +86,9 @@ public class UndergroundPassPaladin implements TalkNpcTrigger,
 	public void onKillNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.PALADIN_UNDERGROUND_BEARD.id()) {
 			mes("the paladin slumps to the floor");
-			delay(4);
+			delay(3);
 			mes("you search his body");
-			delay(4);
+			delay(3);
 			if (!player.getCarriedItems().hasCatalogID(ItemId.COAT_OF_ARMS_RED.id(), Optional.empty())) {
 				give(player, ItemId.COAT_OF_ARMS_RED.id(), 1);
 				player.message("and find a paladin coat of arms");
@@ -97,8 +97,10 @@ public class UndergroundPassPaladin implements TalkNpcTrigger,
 			}
 		}
 		else if (n.getID() == NpcId.PALADIN_UNDERGROUND.id()) {
-			mes("the paladin slumps to the floor",
-				"you search his body");
+			mes("the paladin slumps to the floor");
+			delay(3);
+			mes("you search his body");
+			delay(3);
 			if (!ifheld(player, ItemId.COAT_OF_ARMS_BLUE.id(), 2)) {
 				give(player, ItemId.COAT_OF_ARMS_BLUE.id(), 1);
 				player.message("and find a paladin coat of arms");

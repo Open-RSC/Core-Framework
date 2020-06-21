@@ -33,13 +33,13 @@ public class BrotherJered implements
 					player.getCarriedItems().remove(new Item(ItemId.UNBLESSED_HOLY_SYMBOL.id()));
 					say(player, n, "Yes Please");
 					mes("You give Jered the symbol");
-					delay(4);
+					delay(3);
 					mes("Jered closes his eyes and places his hand on the symbol");
-					delay(4);
+					delay(3);
 					mes("He softly chants");
-					delay(4);
+					delay(3);
 					mes("Jered passes you the holy symbol");
-					delay(4);
+					delay(3);
 					give(player, ItemId.HOLY_SYMBOL_OF_SARADOMIN.id(), 1);
 				} else if (sub_option == 1) {
 					say(player, n, "No Thankyou");

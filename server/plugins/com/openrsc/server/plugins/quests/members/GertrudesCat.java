@@ -150,7 +150,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 						"fluffs just came back, i think she was just upset...",
 						"...as she couldn't find her kittens");
 					mes("gertrude gives you a hug");
-					delay(4);
+					delay(3);
 					npcsay(player, n,
 						"if you hadn't found her kittens they'd have died out there");
 					say(player, n, "that's ok, i like to do my bit");
@@ -166,9 +166,9 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 						"i hear there's a rat epidemic there..but it's too far",
 						"here you go, look after her and thank you again");
 					mes("gertrude gives you a kitten...");
-					delay(4);
+					delay(3);
 					mes("...and some food");
-					delay(4);
+					delay(3);
 					give(player, ItemId.KITTEN.id(), 1);
 					give(player, ItemId.CHOCOLATE_CAKE.id(), 1);
 					give(player, ItemId.STEW.id(), 1);
@@ -198,7 +198,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 							if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) >= 100) {
 								say(player, n, "thanks");
 								mes("gertrude gives you another kitten");
-								delay(4);
+								delay(3);
 								player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100));
 								player.getCarriedItems().getInventory().add(new Item(ItemId.KITTEN.id()));
 							} else {
@@ -241,7 +241,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 							"w..w..what? y..you wouldn't, a young lad like me",
 							"i'd have you behind bars before nightfall");
 						mes("you decide it's best not to hurt the boy");
-						delay(4);
+						delay(3);
 					} else if (first == 1) {
 						say(player, n, "what will make you tell me?");
 						npcsay(player, n,
@@ -271,7 +271,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 									"well, you'll have to find a broken fence to get in",
 									"i'm sure you can manage that");
 								mes("you give the lad 100 coins");
-								delay(4);
+								delay(3);
 								player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100));
 
 								player.updateQuestStage(getQuestId(), 2);
@@ -300,8 +300,10 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 					say(player, n, "pardon?");
 					npcsay(player, n, "i can beat anyone up");
 					say(player, n, "really");
-					mes("the boy begins to jump around with his fists up",
-						"you decide it's best not to kill him just yet");
+					mes("the boy begins to jump around with his fists up");
+					delay(3);
+					mes("you decide it's best not to kill him just yet");
+					delay(3);
 					break;
 			}
 		}
@@ -342,7 +344,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 		if (i.getID() == ItemId.GERTRUDES_CAT.id() && i.getY() == 2327) {
 			int damage = DataConversions.getRandom().nextInt(2) + 1;
 			mes("you attempt to pick up the cat");
-			delay(4);
+			delay(3);
 			player.message("but the cat scratches you");
 			player.damage(damage);
 
@@ -355,11 +357,11 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 			if (player.getCache().hasKey("cat_sardine")
 				&& player.getCache().hasKey("cat_milk")) {
 				mes("the cats seems afraid to leave");
-				delay(4);
+				delay(3);
 				mes("she keeps meowing");
-				delay(4);
+				delay(3);
 				mes("in the distance you hear kittens purring");
-				delay(4);
+				delay(3);
 			}
 			if (!player.getCache().hasKey("cat_milk")) {
 				player.message("the cats seems to be thirsty");
@@ -393,11 +395,11 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 		}
 		if (myItem.getCatalogId() == ItemId.MILK.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 			mes("you give the cat some milk");
-			delay(4);
+			delay(3);
 			mes("she really enjoys it");
-			delay(4);
+			delay(3);
 			mes("but she now seems to be hungry");
-			delay(4);
+			delay(3);
 			player.getCache().store("cat_milk", true);
 			player.getCarriedItems().remove(new Item(ItemId.MILK.id()));
 
@@ -405,11 +407,11 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 		else if (myItem.getCatalogId() == ItemId.SEASONED_SARDINE.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 			if (player.getCache().hasKey("cat_milk")) {
 				mes("you give the cat the sardine");
-				delay(4);
+				delay(3);
 				mes("the cat gobbles it up");
-				delay(4);
+				delay(3);
 				mes("she still seems scared of leaving");
-				delay(4);
+				delay(3);
 				player.getCache().store("cat_sardine", true);
 				player.getCarriedItems().remove(new Item(ItemId.SEASONED_SARDINE.id()));
 
@@ -417,11 +419,11 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (myItem.getCatalogId() == ItemId.KITTENS.id() && item.getID() == ItemId.GERTRUDES_CAT.id()) {
 			mes("you place the kittens by their mother");
-			delay(4);
+			delay(3);
 			mes("she purrs at you appreciatively");
-			delay(4);
+			delay(3);
 			mes("and then runs off home with her kittens");
-			delay(4);
+			delay(3);
 			player.getCarriedItems().remove(new Item(ItemId.KITTENS.id()));
 			player.updateQuestStage(getQuestId(), 3);
 			player.getCache().remove("cat_milk");
@@ -439,7 +441,7 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.RAW_SARDINE.id(), ItemId.DOOGLE_LEAVES.id())) {
 			mes("you rub the doogle leaves over the sardine");
-			delay(4);
+			delay(3);
 			player.getCarriedItems().remove(new Item(ItemId.DOOGLE_LEAVES.id()));
 			player.getCarriedItems().remove(new Item(ItemId.RAW_SARDINE.id()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.SEASONED_SARDINE.id()));
@@ -455,38 +457,38 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 1039) {
 			mes("you search the crate...");
-			delay(4);
+			delay(3);
 			mes("...but find nothing...");
-			delay(4);
+			delay(3);
 			if (player.getCarriedItems().hasCatalogID(ItemId.KITTENS.id(), Optional.empty()) || !player.getCache().hasKey("cat_sardine")
 				|| player.getQuestStage(getQuestId()) >= 3 || player.getQuestStage(getQuestId()) == -1) {
 				//nothing
 			} else {
 				mes("...you hear a cat's purring close by");
-				delay(4);
+				delay(3);
 			}
 		} else if (obj.getID() == 1041) {
 			mes("you search the barrel...");
-			delay(4);
+			delay(3);
 			mes("...but find nothing...");
-			delay(4);
+			delay(3);
 			if (player.getCarriedItems().hasCatalogID(ItemId.KITTENS.id(), Optional.empty()) || !player.getCache().hasKey("cat_sardine")
 				|| player.getQuestStage(getQuestId()) >= 3 || player.getQuestStage(getQuestId()) == -1) {
 				//nothing
 			} else {
 				mes("...you hear a cat's purring close by");
-				delay(4);
+				delay(3);
 			}
 		} else if (obj.getID() == 1040) {
 			mes("you search the crate...");
-			delay(4);
+			delay(3);
 			if (player.getCarriedItems().hasCatalogID(ItemId.KITTENS.id(), Optional.empty()) || !player.getCache().hasKey("cat_sardine")
 				|| player.getQuestStage(getQuestId()) >= 3 || player.getQuestStage(getQuestId()) == -1) {
 				mes("you find nothing...");
-				delay(4);
+				delay(3);
 			} else {
 				mes("...and find two kittens");
-				delay(4);
+				delay(3);
 				give(player, ItemId.KITTENS.id(), 1);
 			}
 		}
@@ -502,9 +504,9 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.KITTENS.id()) {
 			mes("you drop the kittens");
-			delay(4);
+			delay(3);
 			mes("they run back to the crate");
-			delay(4);
+			delay(3);
 			player.getCarriedItems().remove(new Item(ItemId.KITTENS.id()));
 		}
 	}

@@ -68,9 +68,9 @@ public final class Mining implements OpLocTrigger {
 		} else if (object.getID() == 770) {
 			if (player.getCarriedItems().hasCatalogID(getAxe(player), Optional.of(false))) {
 				mes("you mine the rock");
-				delay(4);
+				delay(3);
 				mes("and break of several large chunks");
-				delay(4);
+				delay(3);
 				give(player, ItemId.ROCKS.id(), 1);
 			} else {
 				player.message("you need a pickaxe to mine this rock");
@@ -152,9 +152,9 @@ public final class Mining implements OpLocTrigger {
 		if (player.click == 0 && (def == null || (def.getRespawnTime() < 1 && rock.getID() != 496) || (def.getOreId() == 315 && player.getQuestStage(Quests.FAMILY_CREST) < 6))) {
 			if (axeId < 0 || reqlvl > mineLvl) {
 				mes("You need a pickaxe to mine this rock");
-				delay(4);
+				delay(3);
 				mes("You do not have a pickaxe which you have the mining level to use");
-				delay(4);
+				delay(3);
 				return;
 			}
 			player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
@@ -185,9 +185,9 @@ public final class Mining implements OpLocTrigger {
 		}
 		if (axeId < 0 || reqlvl > mineLvl) {
 			mes("You need a pickaxe to mine this rock");
-			delay(4);
+			delay(3);
 			mes("You do not have a pickaxe which you have the mining level to use");
-			delay(4);
+			delay(3);
 			return;
 		}
 		if (config().STOP_SKILLING_FATIGUED >= 1

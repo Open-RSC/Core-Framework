@@ -162,6 +162,7 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 				npcsay(player, n, "Arrrgghhhhh, foul Vacu!");
 				n.resetCombatEvent();
 				mes("Your opponent is retreating");
+				delay(3);
 				npcsay(player, n, "You would bite the hand that feeds you!",
 					"Very well, I will ready myself for our next encounter...");
 				mes("The Demon seems very angry now...");

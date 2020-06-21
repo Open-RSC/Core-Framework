@@ -895,7 +895,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 							"fragrant concoction that is immediately recognisable",
 							"across the land as Peter Potters Patented Poison potion");
 						mes("The salesman stops for breath");
-						delay(4);
+						delay(3);
 						npcsay(player, n, "I'd love to sell you some but I've sold out recently",
 							"Thats just how good it is! Three hundred and Twenty",
 							"Eight people in this area alone cannot be wrong!",
@@ -1027,8 +1027,10 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					"helping to prepare Lord Sinclair's meal, and then",
 					"when I took it to his study...",
 					"I saw... oh, it was horrible... he was....");
-				mes("She seems to be on the verge of crying.",
-					"You decide not to push her anymore for details.");
+				mes("She seems to be on the verge of crying.");
+				delay(3);
+				mes("You decide not to push her anymore for details.");
+				delay(3);
 			} else if (n.getID() == NpcId.DONOVAN_THE_HANDYMAN.id()) {
 				npcsay(player, n, "Me? I was sound asleep here in the servants",
 					"Quarters. Its very hard work as a handyman",
@@ -1263,8 +1265,10 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					player.message("You need the guards permission to do that");
 					break;
 				case 1:
-					mes("Some thread seems to have been caught",
-						"on a loose nail on the window");
+					mes("Some thread seems to have been caught");
+					delay(3);
+					mes("on a loose nail on the window");
+					delay(3);
 					if (!player.getCache().hasKey("thread") && !player.getCarriedItems().hasCatalogID(ItemId.THREAD_GREEN.id())
 						&& !player.getCarriedItems().hasCatalogID(ItemId.THREAD_RED.id()) && !player.getCarriedItems().hasCatalogID(ItemId.THREAD_BLUE.id())) {
 						if (player.getCache().hasKey("murder_david")) {
@@ -1281,6 +1285,7 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 							give(player, ItemId.THREAD_RED.id(), 1);
 						}
 						mes("You take the thread");
+						delay(3);
 						player.getCache().store("thread", true);
 						if (!player.getCache().hasKey("thread")) {
 							player.getCache().store("thread", true);
@@ -1301,8 +1306,10 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 						} else if (player.getCache().hasKey("murder_bob")) {
 							give(player, ItemId.THREAD_RED.id(), 1);
 						}
-						mes("Lucky for you theres some thread left",
-							"You should be less careless in future");
+						mes("Lucky for you theres some thread left");
+						delay(3);
+						mes("You should be less careless in future");
+						delay(3);
 					} else {
 						player.message("You have already taken the thread");
 					}
@@ -1407,47 +1414,55 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					} else if (obj.getID() == 1126) {
 						if (player.getCache().hasKey("poison_opt2") && player.getCache().hasKey("murder_anna")) {
 							mes("The compost is teeming with maggots");
-							delay(4);
+							delay(3);
 							mes("Somebody should really do something about it");
-							delay(4);
+							delay(3);
 							mes("Its certainly clear nobodies used poison here.");
-							delay(4);
+							delay(3);
 							player.getCache().store("evidence", true);
 							player.getCache().store("p_anna2", true);
 						} else if (player.getCache().hasKey("poison_opt2") && !player.getCache().hasKey("murder_anna")) {
 							mes("There is a faint smell of poison behind the smell of the compost");
+							delay(3);
 						} else {
 							player.message("Its a heap of Compost");
 						}
 
 					} else if (obj.getID() == 1130) {
 						if (player.getCache().hasKey("poison_opt2") && player.getCache().hasKey("murder_eliz")) {
-							mes("The fountain is swarming with mosquitos",
-								"Theres a nest of them underneath the fountain");
+							mes("The fountain is swarming with mosquitos");
+							delay(3);
+							mes("Theres a nest of them underneath the fountain");
+							delay(3);
 							say(player, null, "I hate mosquitos, they're so annoying");
 							mes("Its certainly clear nobodies used poison here.");
+							delay(3);
 							player.getCache().store("evidence", true);
 							player.getCache().store("p_eliza2", true);
 						} else if (player.getCache().hasKey("poison_opt2") && !player.getCache().hasKey("murder_eliz")) {
 							mes("There are a lot of dead mosquitos around");
-							delay(4);
+							delay(3);
 							mes("the base of the fountain. A faint smell of");
-							delay(4);
+							delay(3);
 							mes("poison is in the air, but the water seems clean");
-							delay(4);
+							delay(3);
 						} else {
 							player.message("A fountain with large numbers of insects around the base");
 						}
 
 					} else if (obj.getID() == 1127) {
 						if (player.getCache().hasKey("poison_opt2") && player.getCache().hasKey("murder_bob")) {
-							mes("The beehive buzzes with activity",
-								"These bees definitely don't seem poisoned at all");
+							mes("The beehive buzzes with activity");
+							delay(3);
+							mes("These bees definitely don't seem poisoned at all");
+							delay(3);
 							player.getCache().store("evidence", true);
 							player.getCache().store("p_bob2", true);
 						} else if (player.getCache().hasKey("poison_opt2") && !player.getCache().hasKey("murder_bob")) {
-							mes("The hive is empty. There are a few dead bees and",
-								"a faint smell of poison");
+							mes("The hive is empty. There are a few dead bees and");
+							delay(3);
+							mes("a faint smell of poison");
+							delay(3);
 						} else {
 							player.message("Its a very old beehive");
 						}
@@ -1455,27 +1470,29 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					} else if (obj.getID() == 1128) {
 						if (player.getCache().hasKey("poison_opt2") && player.getCache().hasKey("murder_carol")) {
 							mes("The drain is totally blocked");
-							delay(4);
+							delay(3);
 							mes("It really stinks. No, it *Really* smells bad.");
-							delay(4);
+							delay(3);
 							mes("Its certainly clear nobodies cleaned it recently.");
-							delay(4);
+							delay(3);
 							player.getCache().store("evidence", true);
 							player.getCache().store("p_carol2", true);
 						} else if (player.getCache().hasKey("poison_opt2") && !player.getCache().hasKey("murder_carol")) {
-							mes("The drain seems to have been recently cleaned",
-								"You can still smell the faint aroma of poison");
+							mes("The drain seems to have been recently cleaned");
+							delay(3);
+							mes("You can still smell the faint aroma of poison");
+							delay(3);
 						} else {
 							player.message("Its the drains from the kitchen");
 						}
 
 					} else if (obj.getID() == 1140) {
 						mes("As you approach the gate the Guard Dog starts barking loudly at you");
-						delay(4);
+						delay(3);
 						mes("There is no way an intruder could have committed the murder");
-						delay(4);
+						delay(3);
 						mes("It must have been someone the dog knew to get past it quietly");
-						delay(4);
+						delay(3);
 					} else if (obj.getID() == 1138) {
 						player.message("A barrel full of finely sifted flour");
 						if (!player.getCarriedItems().hasCatalogID(ItemId.POT.id(), Optional.of(false))
@@ -1488,28 +1505,30 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 
 							player.message("Theres still plenty of flour left");
 						} else if (player.getCarriedItems().hasCatalogID(ItemId.MURDER_SCENE_POT.id(), Optional.of(false))) {
-							mes("You probably shouldn't use evidence from a crime",
-								"scene to keep flour in...");
+							mes("You probably shouldn't use evidence from a crime");
+							delay(3);
+							mes("scene to keep flour in...");
+							delay(3);
 						}
 					} else if (obj.getID() == 1131) {
 						if (player.getCache().hasKey("poison_opt2") && player.getCache().hasKey("murder_frank")) {
 							mes("It looks like the Sinclair Family Crest");
-							delay(4);
+							delay(3);
 							mes("but it is very dirty.");
-							delay(4);
+							delay(3);
 							mes("you can barely make it out under all of the grime");
-							delay(4);
+							delay(3);
 							mes("Its certainly clear nobodies cleaned it recently.");
-							delay(4);
+							delay(3);
 							player.getCache().store("evidence", true);
 							player.getCache().store("p_frank2", true);
 						} else if (player.getCache().hasKey("poison_opt2") && !player.getCache().hasKey("murder_frank")) {
 							mes("The sinclair family crest");
-							delay(4);
+							delay(3);
 							mes("its shiny and freshly polished");
-							delay(4);
+							delay(3);
 							mes("And has a slight smell of poison");
-							delay(4);
+							delay(3);
 						} else {
 							player.message("The Sinclair Family Crest is hung up here");
 						}
@@ -1517,16 +1536,18 @@ public class MurderMystery implements QuestInterface, TalkNpcTrigger,
 					} else if (obj.getID() == 1129) {
 						if (player.getCache().hasKey("poison_opt2") && player.getCache().hasKey("murder_david")) {
 							mes("There is a spiders nest here");
-							delay(4);
+							delay(3);
 							mes("You estimate there must be at least a few hundred spiders ready to hatch");
-							delay(4);
+							delay(3);
 							mes("Its certainly clear nobodies used poison here.");
-							delay(4);
+							delay(3);
 							player.getCache().store("evidence", true);
 							player.getCache().store("p_david2", true);
 						} else if (player.getCache().hasKey("poison_opt2") && !player.getCache().hasKey("murder_david")) {
-							mes("A faint smell of poison and a few dead spiders",
-								"is all that remains of the spiders nest");
+							mes("A faint smell of poison and a few dead spiders");
+							delay(3);
+							mes("is all that remains of the spiders nest");
+							delay(3);
 						} else {
 							player.message("It looks like a Spiders Nest of some kind");
 						}

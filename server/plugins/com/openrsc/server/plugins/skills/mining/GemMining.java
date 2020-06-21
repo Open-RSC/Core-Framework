@@ -83,9 +83,9 @@ public class GemMining implements OpLocTrigger {
 
 		if (axeId < 0 || reqlvl > mineLvl) {
 			mes("You need a pickaxe to mine this rock");
-			delay(4);
+			delay(3);
 			mes("You do not have a pickaxe which you have the mining level to use");
-			delay(4);
+			delay(3);
 			return;
 		}
 

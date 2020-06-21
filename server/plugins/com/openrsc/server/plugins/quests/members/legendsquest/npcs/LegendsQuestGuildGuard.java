@@ -110,7 +110,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 					break;
 				case LegendsGuard.CAN_I_GO_ON_THE_QUEST:
 					mes("The guard gets out a scroll of paper and starts looking through it.");
-					delay(4);
+					delay(3);
 					if (player.getQuestPoints() >= 107
 						&& player.getQuestStage(Quests.HEROS_QUEST) == -1
 						&& player.getQuestStage(Quests.FAMILY_CREST) == -1

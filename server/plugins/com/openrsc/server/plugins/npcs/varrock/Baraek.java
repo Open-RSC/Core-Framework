@@ -131,8 +131,10 @@ public final class Baraek implements
 				"I guess I could give 12 coins to take it off your hands");
 			int opts = multi(player, n, "Yeah that'll do", "I think I'll keep hold of it actually");
 			if (opts == 0) {
-				mes("You give Baraek a fur",
-					"And he gives you twelve coins");
+				mes("You give Baraek a fur");
+				delay(3);
+				mes("And he gives you twelve coins");
+				delay(3);
 				player.getCarriedItems().remove(new Item(ItemId.FUR.id()));
 				give(player, ItemId.COINS.id(), 12);
 			} else if (opts == 1) {

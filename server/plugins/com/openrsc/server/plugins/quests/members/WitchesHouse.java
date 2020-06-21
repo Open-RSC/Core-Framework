@@ -74,7 +74,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				case 0:
 					say(player, n, "Hello young man");
 					mes("The boy sobs");
-					delay(4);
+					delay(3);
 					int first = multi(player, n, "What's the matter?",
 						"Well if you're not going to answer, I'll go");
 					if (first == 0) {
@@ -96,7 +96,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 						}
 					} else if (first == 1) {
 						mes("The boy sniffs slightly");
-						delay(4);
+						delay(3);
 					}
 					break;
 				case 1:
@@ -146,7 +146,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, witch, "Oi what are you doing in my garden?");
 					npcsay(player, witch, "Get out you pesky intruder");
 					mes("Nora begins to cast a spell");
-					delay(4);
+					delay(3);
 
 					player.teleport(347, 616, true);
 					delnpc(witch, false);
@@ -172,14 +172,14 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 			}
 			if (!player.getCache().hasKey("witch_spawned")) {
 				mes("As you reach out to open the door you hear footsteps inside the house");
-				delay(4);
+				delay(3);
 				mes("The footsteps approach the back door");
-				delay(4);
+				delay(3);
 				addnpc(player.getWorld(), NpcId.NORA_T_HAG.id(), 356, 495, 60000);
 				player.getCache().store("witch_spawned", true);
 			} else {
 				mes("The shed door is locked");
-				delay(4);
+				delay(3);
 				if (witch == null) {
 					return;
 				}
@@ -187,7 +187,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				npcsay(player, witch, "Oi what are you doing in my garden?");
 				npcsay(player, witch, "Get out you pesky intruder");
 				mes("Nora begins to cast a spell");
-				delay(4);
+				delay(3);
 
 				player.teleport(347, 616, true);
 				delnpc(witch, false);
@@ -213,9 +213,9 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 					witch.teleport(353, 492);
 					witch.setLocation(Point.location(353, 492), true);
 					mes("The witch passes  back through the garden again");
-					delay(4);
+					delay(3);
 					mes("Leaving the shed door unlocked");
-					delay(4);
+					delay(3);
 
 					delnpc(witch, false);
 					player.getCache().remove("witch_spawned");
@@ -299,7 +299,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				return;
 			}
 			mes("A rat appears from a hole and eats the cheese");
-			delay(4);
+			delay(3);
 			//if there's already a rat, it despawns them in 19 secs
 			final Npc oldRat = ifnearvisnpc(player, NpcId.RAT_WITCHES_HOUSE.id(), 5);
 			if (oldRat != null) {
@@ -332,8 +332,10 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				player.message("You put the magnet on the rat");
 				Npc rat = player.getWorld().getNpcById(NpcId.RAT_WITCHES_HOUSE.id());
 				delnpc(rat, false);
-				mes("The rat runs back into his hole",
-					"You hear a click and whirr");
+				mes("The rat runs back into his hole");
+				delay(3);
+				mes("You hear a click and whirr");
+				delay(3);
 				player.getCarriedItems().remove(new Item(ItemId.MAGNET.id()));
 				player.updateQuestStage(getQuestId(), 2);
 			}

@@ -49,14 +49,14 @@ public final class SeersBartender implements
 				if (ifheld(player, ItemId.COINS.id(), 18)) {
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 18));
 					mes("The bartender gives you a glass of liverbane ale");
-					delay(4);
+					delay(3);
 					mes("You gulp it down");
-					delay(4);
+					delay(3);
 					mes("The room seems to be swaying");
-					delay(4);
+					delay(3);
 					drinkAle(player);
 					mes("The bartender scrawls his signiture on your card");
-					delay(4);
+					delay(3);
 					player.getCache().store("barfive", true);
 				} else {
 					say(player, n, "Sorry I don't have 18 coins");

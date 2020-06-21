@@ -46,8 +46,10 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 								player.message("You need an agility level of 10 to do this");
 								return;
 							}
-							mes("You try to climb down the rope",
-								"You lower yourself into the shaft");
+							mes("You try to climb down the rope");
+							delay(3);
+							mes("You lower yourself into the shaft");
+							delay(3);
 							player.incExp(Skills.AGILITY, 20, true);
 							player.teleport(26, 3346);
 							player.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
@@ -67,8 +69,10 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 								player.message("You need an agility level of 10 to do this");
 								return;
 							}
-							mes("You try to climb down the rope",
-								"You lower yourself into the shaft");
+							mes("You try to climb down the rope");
+							delay(3);
+							mes("You lower yourself into the shaft");
+							delay(3);
 							player.incExp(Skills.AGILITY, 20, true);
 							if (player.getQuestStage(Quests.DIGSITE) >= 6) {
 								player.teleport(19, 3385);

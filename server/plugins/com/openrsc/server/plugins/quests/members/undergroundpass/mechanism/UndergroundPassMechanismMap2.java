@@ -38,6 +38,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 				player.message("you can't reach the grill from here");
 			} else {
 				mes("you tie the rope to the grill...");
+				delay(3);
 				player.message("..and poke it through to the otherside");
 				if (!player.getCache().hasKey("rope_wall_grill")) {
 					player.getCache().store("rope_wall_grill", true);
@@ -57,8 +58,10 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 			}
 		}
 		else if (obj.getID() == BOULDER && item.getCatalogId() == ItemId.RAILING.id()) {
-			mes("you use the pole as leverage...",
-				"..and tip the bolder onto its side");
+			mes("you use the pole as leverage...");
+			delay(3);
+			mes("..and tip the bolder onto its side");
+			delay(3);
 			delloc(obj);
 			addloc(obj.getWorld(), obj.getLoc(), 5000);
 			player.message("it tumbles down the slope");
@@ -68,6 +71,7 @@ public class UndergroundPassMechanismMap2 implements UseLocTrigger {
 		}
 		else if (obj.getID() == UndergroundPassObstaclesMap2.FLAMES_OF_ZAMORAK && inArray(item.getCatalogId(), ITEMS_TO_FLAMES)) {
 			mes("you throw the " + item.getDef(player.getWorld()).getName().toLowerCase() + " into the flames");
+			delay(3);
 			if (!atQuestStages(player, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
 				if (!player.getCache().hasKey("flames_of_zamorak1") && item.getCatalogId() == ItemId.UNDERGROUND_PASS_UNICORN_HORN.id()) {
 					player.getCache().store("flames_of_zamorak1", true);

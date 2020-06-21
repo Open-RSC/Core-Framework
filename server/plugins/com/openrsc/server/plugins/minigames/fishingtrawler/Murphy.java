@@ -163,7 +163,7 @@ public class Murphy implements MiniGameInterface, TalkNpcTrigger {
 			"i'll warn you though, the seas are merciless",
 			"and with out fishing experience you won't catch much");
 		mes("you need a fishing level of 15 or above to catch any fish on the trawler");
-		delay(4);
+		delay(3);
 		npcsay(player, npc, "on occasions the net rip's, so you'll need some rope to repair it");
 		say(player, npc, "rope...ok");
 		npcsay(player, npc, "there's also a slight problem with leaks");

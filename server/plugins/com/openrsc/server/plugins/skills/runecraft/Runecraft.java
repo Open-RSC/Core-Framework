@@ -508,6 +508,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 
 		if (player.getLevel(Skills.RUNECRAFT) < talismanInformation.get(talismanId)[LEVEL_INDEX]) {
 			mes("You must be at least level " + talismanInformation.get(talismanId)[LEVEL_INDEX] + " to imbue that");
+			delay(3);
 			return;
 		}
 
@@ -521,6 +522,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 
 		if (rune.getAmount() < 10) { // 10 runes to imbue a talisman.
 			mes("You do not have enough runes to imbue that talisman!");
+			delay(3);
 			return;
 		}
 

@@ -99,16 +99,16 @@ public class PiratesTreasure implements QuestInterface,
 			player.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 			player.getCarriedItems().remove(new Item(ItemId.CHEST_KEY.id()));
 			mes("All that is in the chest is a message");
-			delay(4);
+			delay(3);
 			mes("You take the message from the chest");
-			delay(4);
+			delay(3);
 			mes("It says dig just behind the south bench in the park");
-			delay(4);
+			delay(3);
 			player.updateQuestStage(this, 3);
 		} else if (item.getCatalogId() == ItemId.SPADE.id() && obj.getID() == 188) {
 			if (player.getQuestStage(this) != 3) {
 				mes("It seems a shame to dig up these nice flowers for no reason");
-				delay(4);
+				delay(3);
 				return;
 			}
 
@@ -131,9 +131,9 @@ public class PiratesTreasure implements QuestInterface,
 			}
 			if (dig) {
 				mes("You dig a hole in the ground");
-				delay(4);
+				delay(3);
 				mes("You find a little bag of treasure");
-				delay(4);
+				delay(3);
 				player.sendQuestComplete(this.getQuestId());
 			}
 		}
@@ -179,7 +179,7 @@ public class PiratesTreasure implements QuestInterface,
 				player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
 
 				mes("Frank happily takes the rum");
-				delay(4);
+				delay(3);
 				npcsay(player,
 					n,
 					"Now a deals a deal, I'll tell ye about the treasure",
@@ -189,7 +189,7 @@ public class PiratesTreasure implements QuestInterface,
 					"Hector was killed along with many of the crew",
 					"I was one of the few to escape", "And I escaped with this");
 				mes("Frank hands you a key");
-				delay(4);
+				delay(3);
 				give(player, ItemId.CHEST_KEY.id(), 1);
 				player.updateQuestStage(this, 2);
 				npcsay(player, n, "This is Hector's key",
@@ -219,7 +219,7 @@ public class PiratesTreasure implements QuestInterface,
 					say(player, n, "I seem to have lost my chest key");
 					npcsay(player, n, "Arrr silly you", "Fortunatly I took the precaution to have another one made");
 					mes("Frank hands you a chest key");
-					delay(4);
+					delay(3);
 					give(player, ItemId.CHEST_KEY.id(), 1);
 				}
 				break;
@@ -354,13 +354,15 @@ public class PiratesTreasure implements QuestInterface,
 				break;
 			case 185:
 				if (player.getCache().hasKey("rum_delivered") && player.getCache().getBoolean("rum_delivered")) {
-					mes("There are a lot of bananas in the crate",
-							"You find your bottle of rum in amoungst the bananas");
+					mes("There are a lot of bananas in the crate");
+					delay(3);
+					mes("You find your bottle of rum in amoungst the bananas");
+					delay(3);
 					player.getCarriedItems().getInventory().add(new Item(ItemId.KARAMJA_RUM.id()));
 					player.getCache().remove("rum_delivered");
 				}
 				mes("Do you want to take a banana?");
-				delay(4);
+				delay(3);
 				int wantabanana = multi(player, "Yes", "No");
 				if (wantabanana == 0) {
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BANANA.id()));

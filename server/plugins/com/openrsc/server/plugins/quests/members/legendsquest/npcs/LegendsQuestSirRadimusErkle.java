@@ -36,7 +36,8 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 	public void handleReward(Player player) {
 		player.message("@gre@Well done - you have completed the Legends Guild Quest!");
 		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.LEGENDS_QUEST), true);
-	mes("@gre@You haved gained 4 quest points!");
+		mes("@gre@You haved gained 4 quest points!");
+		delay(3);
 		/** REMOVE QUEST CACHES **/
 		String[] caches =
 			{

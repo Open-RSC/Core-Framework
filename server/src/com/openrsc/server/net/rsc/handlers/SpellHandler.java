@@ -334,8 +334,10 @@ public class SpellHandler implements PacketHandler {
 		if (affectedNpc.getID() == NpcId.LUCIEN_EDGE.id() && !player.getCarriedItems().getEquipment().hasEquipped(ItemId.PENDANT_OF_ARMADYL.id())) {
 			npcsay(player, affectedNpc, "I'm sure you don't want to attack me really",
 					"I am your friend");
-			mes("You decide you don't want to attack Lucien really",
-					"He is your friend");
+			mes("You decide you don't want to attack Lucien really");
+			delay(3);
+			mes("He is your friend");
+			delay(3);
 			return true;
 		}
 
@@ -1311,8 +1313,10 @@ public class SpellHandler implements PacketHandler {
 		//	return;
 		//}
 		else if (player.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
-			mes("You can't teleport while holding Ana,",
-				"It's just too difficult to concentrate.");
+			mes("You can't teleport while holding Ana,");
+			delay(3);
+			mes("It's just too difficult to concentrate.");
+			delay(3);
 			canTeleport = false;
 		}
 		else if (!player.getCache().hasKey("ardougne_scroll") && id == 26) {

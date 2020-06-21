@@ -296,7 +296,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 		else {
 			thinkbubble(new Item(ItemId.GNOME_BALL.id()));
 			mes("you attempt to tackle the gnome");
-			delay(4);
+			delay(3);
 			if (DataConversions.random(0, 1) == 0) {
 				//successful tackles gives agility xp
 				player.playerServerMessage(MessageType.QUEST, "You skillfully grab the ball");

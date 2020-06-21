@@ -251,10 +251,10 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 					player.getWorld().unregisterGameObject(obj);
 					player.getWorld().delayedSpawnObject(obj.getLoc(), 30000);
 					mes("The employee picks up the crate");
-					delay(4);
+					delay(3);
 					n.teleport(559, 612);
 					mes("And takes it out to be delivered");
-					delay(4);
+					delay(3);
 					player.getCache().remove("label");
 					player.updateQuestStage(this, 2);
 				}
@@ -292,8 +292,10 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 					say(player, n, "Yes, that sounds good",
 						"teleport me");
 					player.teleport(545, 577, false);
-					mes("Cromperty takes out a small box",
-						"Cromperty presses a switch on the box");
+					mes("Cromperty takes out a small box");
+					delay(3);
+					mes("Cromperty presses a switch on the box");
+					delay(3);
 					if (player.getQuestStage(this) == 2 || player.getQuestStage(this) == -1) {
 						player.teleport(560, 588, true);
 					} else {
@@ -316,8 +318,10 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 				say(player, n, "Yes, that sounds good",
 					"teleport me");
 				player.teleport(545, 577, false);
-				mes("Cromperty takes out a small box",
-					"Cromperty presses a switch on the box");
+				mes("Cromperty takes out a small box");
+				delay(3);
+				mes("Cromperty presses a switch on the box");
+				delay(3);
 				if (player.getQuestStage(this) == 2 || player.getQuestStage(this) == -1) {
 					player.teleport(560, 588, true);
 				} else {
@@ -347,57 +351,57 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 329 && obj.getX() == 559 && obj.getY() == 617) {
 			mes("There is a label on this crate");
-			delay(4);
+			delay(3);
 			mes("It says");
-			delay(4);
+			delay(3);
 			mes("to Lord Handelmort");
-			delay(4);
+			delay(3);
 			mes("Handelmort Mansion");
-			delay(4);
+			delay(3);
 			mes("Ardougne");
-			delay(4);
+			delay(3);
 			if (player.getCarriedItems().hasCatalogID(ItemId.ADDRESS_LABEL.id(), Optional.empty()) || player.getCache().hasKey("label")) {
 				mes("It doesn't seem possible to open the crate");
-				delay(4);
+				delay(3);
 			} else {
 				mes("You take the label");
-				delay(4);
+				delay(3);
 				give(player, ItemId.ADDRESS_LABEL.id(), 1);
 			}
 		}
 		else if (obj.getID() == 328 && obj.getX() == 558 && obj.getY() == 617) {
 			if (player.getCache().hasKey("label")) {
 				mes("There is a label on this crate");
-				delay(4);
+				delay(3);
 				mes("It says");
-				delay(4);
+				delay(3);
 				mes("to Lord Handelmort");
-				delay(4);
+				delay(3);
 				mes("Handelmort Mansion");
-				delay(4);
+				delay(3);
 				mes("Ardougne");
-				delay(4);
+				delay(3);
 				return;
 			}
 			mes("Its ready to be delivered");
-			delay(4);
+			delay(3);
 			mes("To the wizard's tower in Misthalin");
-			delay(4);
+			delay(3);
 			mes("It doesn't seem possible to open the crate");
-			delay(4);
+			delay(3);
 		}
 		else if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			if (command.equalsIgnoreCase("Search for traps")) {
 				if (getCurrentLevel(player, Skills.THIEVING) < 21) {
 					mes("You don't find anything interesting");
-					delay(4);
+					delay(3);
 				} else {
 					mes("You find a trap in the stairs");
-					delay(4);
+					delay(3);
 					mes("You make a note of the trap's location");
-					delay(4);
+					delay(3);
 					mes("Ready for next time you go up the stairs");
-					delay(4);
+					delay(3);
 					player.getCache().store("trapy", true);
 				}
 			} else if (command.equalsIgnoreCase("Go up")) {
@@ -407,11 +411,11 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 					player.teleport(563, 1534, false);
 				} else {
 					mes("You here a click beneath you");
-					delay(4);
+					delay(3);
 					mes("You feel yourself falling");
-					delay(4);
+					delay(3);
 					mes("You have fallen through a trap");
-					delay(4);
+					delay(3);
 					player.teleport(563, 3418, false);
 					player.damage(7);
 				}

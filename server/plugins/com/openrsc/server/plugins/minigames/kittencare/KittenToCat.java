@@ -69,18 +69,18 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.KITTEN.id()) {
 			mes("you softly stroke the kitten");
-			delay(4);
+			delay(3);
 			mes("@yel@kitten:..purr..purr..");
-			delay(4);
+			delay(3);
 			mes("the kitten appreciates the attention");
 			delay();
 
 			reduceKittensLoneliness(player);
 		} else if (item.getCatalogId() == ItemId.CAT.id() && config().WANT_EXTENDED_CATS_BEHAVIOR) {
 			mes("you softly stroke the cat");
-			delay(4);
+			delay(3);
 			mes("@yel@cat:..purr..purr..");
-			delay(4);
+			delay(3);
 			mes("it appreciates the attention");
 			delay();
 		}
@@ -90,30 +90,30 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		if (item.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
 			if (!isGrown) {
 				mes("your kitten plays around with the ball of wool");
-				delay(4);
+				delay(3);
 				mes("it seems to love pouncing on it");
-				delay(4);
+				delay(3);
 
 				reduceKittensLoneliness(player);
 			} else {
 				mes("your cat plays around with the ball of wool");
-				delay(4);
+				delay(3);
 				mes("it seems to love pouncing on it");
-				delay(4);
+				delay(3);
 			}
 		} else if (item.getCatalogId() == ItemId.WOOL.id()) {
 			if (!isGrown) {
 				mes("your kitten plays around with the wool");
-				delay(4);
+				delay(3);
 				mes("it seems to be enjoying itself");
-				delay(4);
+				delay(3);
 
 				reduceKittensLoneliness(player);
 			} else {
 				mes("your cat plays around with the wool");
-				delay(4);
+				delay(3);
 				mes("it seems to be enjoying itself");
-				delay(4);
+				delay(3);
 			}
 		}
 	}
@@ -126,14 +126,14 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
 			if(!isGrown) {
 				mes("you give the kitten the milk");
-				delay(4);
+				delay(3);
 				mes("the kitten quickly laps it up then licks his paws");
-				delay(4);
+				delay(3);
 			} else {
 				mes("you give the cat the milk");
-				delay(4);
+				delay(3);
 				mes("the kitten quickly laps it up then licks his paws");
-				delay(4);
+				delay(3);
 			}
 			feeded = true;
 			break;

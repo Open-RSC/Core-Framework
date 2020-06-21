@@ -56,7 +56,7 @@ public class DemonSlayer implements QuestInterface,
 				case 0:
 				case 1:
 					mes("I have no reason to do that.");
-					delay(4);
+					delay(3);
 					break;
 				case 2:
 				case 3:
@@ -65,11 +65,11 @@ public class DemonSlayer implements QuestInterface,
 					//even post-quest was the same thing
 					if (item.getCatalogId() == ItemId.BUCKET_OF_WATER.id()) {
 						mes("You pour the liquid down the drain");
-						delay(4);
+						delay(3);
 						mes("Ok I think I've washed the key down into the sewer");
-						delay(4);
+						delay(3);
 						mes("I'd better go down and get it before someone else finds it");
-						delay(4);
+						delay(3);
 						player.getCarriedItems().remove(new Item(ItemId.BUCKET_OF_WATER.id()));
 						player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
 						player.getWorld().registerItem(
@@ -98,43 +98,43 @@ public class DemonSlayer implements QuestInterface,
 				case 0:
 				case 1:
 					mes("I can see a key but can't quite reach it...");
-					delay(4);
+					delay(3);
 					break;
 				case 2:
 				case 3:
 				case 4:
 					mes("This is the drainpipe");
-					delay(4);
+					delay(3);
 					mes("Running from the kitchen sink to the sewer");
-					delay(4);
+					delay(3);
 					mes("I can see a key just inside the drain");
-					delay(4);
+					delay(3);
 					mes("That must be the key Sir Prysin dropped");
-					delay(4);
+					delay(3);
 					mes("I don't seem to be able to quite reach it");
-					delay(4);
+					delay(3);
 					mes("It's stuck part way down");
-					delay(4);
+					delay(3);
 					mes("I wonder if I can dislodge it somehow");
-					delay(4);
+					delay(3);
 					mes("And knock it down into the sewers");
-					delay(4);
+					delay(3);
 					break;
 				case -1:
 					mes("This is the drainpipe");
-					delay(4);
+					delay(3);
 					mes("Running from the kitchen sink to the sewer");
-					delay(4);
+					delay(3);
 					mes("I can see a key just inside the drain");
-					delay(4);
+					delay(3);
 					mes("I don't seem to be able to quite reach it");
-					delay(4);
+					delay(3);
 					mes("It's stuck part way down");
-					delay(4);
+					delay(3);
 					mes("I wonder if I can dislodge it somehow");
-					delay(4);
+					delay(3);
 					mes("And knock it down into the sewers");
-					delay(4);
+					delay(3);
 					break;
 			}
 		}
@@ -260,7 +260,7 @@ public class DemonSlayer implements QuestInterface,
 					"Which I believe you have one of the keys for");
 				npcsay(player, n, "Yes you're right", "Here you go");
 				mes("Captain Rovin hands you a key");
-				delay(4);
+				delay(3);
 				give(player, ItemId.SILVERLIGHT_KEY_2.id(), 1);
 				break;
 			case CaptainRovin.I_FORGOT:
@@ -365,19 +365,19 @@ public class DemonSlayer implements QuestInterface,
 						if (boneCount >= 25) {
 							npcsay(player, n, "Hurrah! That's all 25 sets of bones");
 							mes("Traiborn places the bones in a circle on the floor");
-							delay(4);
+							delay(3);
 							mes("Traiborn waves his arms about");
-							delay(4);
+							delay(3);
 							npcsay(player, n, "Wings of dark and colour too",
 								"Spreading in the morning dew");
 							mes("The wizard waves his arms some more");
-							delay(4);
+							delay(3);
 							npcsay(player, n, "Locked away I have a key",
 								"Return it now unto me");
 							mes("Traiborn smiles");
-							delay(4);
+							delay(3);
 							mes("Traiborn hands you a key");
-							delay(4);
+							delay(3);
 							player.getCarriedItems().getInventory().add(new Item(ItemId.SILVERLIGHT_KEY_1.id(), 1));
 							player.getCache().store("done_bone_task", true);
 							say(player, n, "Thank you very much");
@@ -449,9 +449,9 @@ public class DemonSlayer implements QuestInterface,
 								"Just tell me if you have the key");
 							if (choice8 == 0) {
 								mes("Traiborn digs around in the pockets of his robes");
-								delay(4);
+								delay(3);
 								mes("Traiborn hands you a spinach roll");
-								delay(4);
+								delay(3);
 								give(player, ItemId.SPINACH_ROLL.id(), 1);
 								say(player, n, "Thank you very much");
 								int choice9 = multi(player, n,
@@ -556,12 +556,12 @@ public class DemonSlayer implements QuestInterface,
 					"Its in my special closet of valuable stuff",
 					"Now how do I get into that?");
 				mes("The wizard scratches his head");
-				delay(4);
+				delay(3);
 				npcsay(player, n, "I sealed it using one of my magic rituals",
 					"so it would make sense that another ritual",
 					"Would open it again");
 				mes("The wizard beams");
-				delay(4);
+				delay(3);
 				say(player, n, "So do you know what ritual to use?");
 				npcsay(player, n, "Let me think a second");
 				delay(2);
@@ -693,14 +693,14 @@ public class DemonSlayer implements QuestInterface,
 			case SirPrysin.GOT_THEM:
 				npcsay(player, n, "Excellent. Now I can give you Silverlight");
 				mes("You give all three keys to Sir Prysin");
-				delay(4);
+				delay(3);
 				player.getCarriedItems().remove(new Item(ItemId.SILVERLIGHT_KEY_1.id()));
 				player.getCarriedItems().remove(new Item(ItemId.SILVERLIGHT_KEY_2.id()));
 				player.getCarriedItems().remove(new Item(ItemId.SILVERLIGHT_KEY_3.id()));
 				mes("Sir Prysin unlocks a long thin box");
-				delay(4);
+				delay(3);
 				mes("Prysin hands you an impressive looking sword");
-				delay(4);
+				delay(3);
 				give(player, ItemId.SILVERLIGHT.id(), 1);
 				player.updateQuestStage(this, 4);
 				break;
@@ -1250,7 +1250,7 @@ public class DemonSlayer implements QuestInterface,
 		if (player.getMenuHandler() == null && !player.getAttribute("delrith", false)) {
 			player.setAttribute("delrith", true);
 			mes("As you strike Delrith a vortex opens up");
-			delay(4);
+			delay(3);
 			say(player, n, "Now what was that incantation again");
 			if (player.inCombat()) {
 				int choice = multi(player, n,

@@ -97,7 +97,7 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 							"and maybe I will be able to get some rest",
 							"..yawn..i'm off to bed, farewell brave traveller.");
 						mes("well done, you have completed part 1 of the monks friend quest");
-						delay(4);
+						delay(3);
 						player.updateQuestStage(getQuestId(), 2);
 					} else {
 						say(player, n, "I'm afraid not");
@@ -176,7 +176,7 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 					say(player, n, "take care old monk");
 					npcsay(player, n, "la..di..da..hic..up..");
 					mes("The monk has had too much to drink");
-					delay(4);
+					delay(3);
 					break;
 				case 3:
 					say(player, n, "Brother Cedric are you okay?");
@@ -241,10 +241,10 @@ public class MonksFriend implements QuestInterface, TalkNpcTrigger,
 				npcsay(player, npc, "oh yes, my head's starting to spin",
 					"gulp...gulp");
 				mes("Brother Cedric drinks the water");
-				delay(4);
+				delay(3);
 				npcsay(player, npc, "aah, that's better");
 				mes("you throw the excess water over brother Cedric");
-				delay(4);
+				delay(3);
 				npcsay(player, npc, "now i just need to fix...",
 					"..this cart..", "..and we can go party",
 					".could you help?");

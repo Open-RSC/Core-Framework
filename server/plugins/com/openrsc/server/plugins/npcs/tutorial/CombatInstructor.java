@@ -30,7 +30,7 @@ public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackN
 			give(player, ItemId.WOODEN_SHIELD.id(), 1); // Add wooden shield to the players inventory
 			give(player, ItemId.BRONZE_LONG_SWORD.id(), 1); // Add bronze long sword to the players inventory
 			mes("The instructor gives you a sword and shield");
-			delay(4);
+			delay(3);
 			npcsay(player, n, "look after these well",
 				"These items will now have appeared in your inventory",
 				"You can access them by selecting the bag icon in the menu bar",
@@ -99,11 +99,11 @@ public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackN
 		)) {
 			if (player.getCache().getInt("tutorial") < 16) {
 				mes("Speak to the combat instructor before killing rats");
-				delay(4);
+				delay(3);
 			}
 			else {
 				mes("That's enough rat killing for now");
-				delay(4);
+				delay(3);
 			}
 		}
 	}
@@ -137,9 +137,9 @@ public class CombatInstructor implements TalkNpcTrigger, KillNpcTrigger, AttackN
 			// GIVE NO XP ACCORDING TO YOUTUBE VIDEOS FOR COMBAT SINCE IT WAS HEAVILY ABUSED IN REAL RSC TO TRAIN ON THOSE RATS.
 			if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 16) {
 				mes("Well done you've killed the rat");
-				delay(4);
+				delay(3);
 				mes("Now speak to the combat instructor again");
-				delay(4);
+				delay(3);
 				player.getCache().set("tutorial", 20);
 			}
 		}

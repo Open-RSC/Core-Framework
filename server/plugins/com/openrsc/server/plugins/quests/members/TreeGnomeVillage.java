@@ -510,17 +510,17 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 							"the spirit tree has looked over us for centuries",
 							"now we must pay our respects");
 						mes("bolren takes the orbs");
-						delay(4);
+						delay(3);
 						mes("the gnomes begin to chant");
-						delay(4);
+						delay(3);
 						mes("Su tana, en tania");
-						delay(4);
+						delay(3);
 						mes("They continue to chant");
-						delay(4);
+						delay(3);
 						mes("As the king gnome climbs the tree");
-						delay(4);
+						delay(3);
 						mes("placing the two Orbs at the peak of the spirit tree");
-						delay(4);
+						delay(3);
 						player.getCarriedItems().remove(new Item(ItemId.ORBS_OF_PROTECTION.id()));
 						n.displayNpcTeleportBubble(656, 695);
 						delay(2);
@@ -913,16 +913,20 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 				player.message("The ballista has been damaged, it is out of use");
 				return;
 			} else if (player.getQuestStage(getQuestId()) < 4) {
-				mes("The ballista is damaged",
-					"It cannot be used until the gnomes have finished their repairs");
+				mes("The ballista is damaged");
+				delay(3);
+				mes("It cannot be used until the gnomes have finished their repairs");
+				delay(3);
 			} else if (player.getQuestStage(getQuestId()) == 4) {
 				fireBallistaMenu(player, obj);
 			}
 		}
 		else if (obj.getID() == 393) {
 			if (player.getQuestStage(getQuestId()) >= 5 || player.getQuestStage(getQuestId()) == -1) {
-				mes("The wall is reduced to",
-					"Rubble, you manage to climb over");
+				mes("The wall is reduced to");
+				delay(3);
+				mes("Rubble, you manage to climb over");
+				delay(3);
 				if (player.getY() >= 633) {
 					player.teleport(659, 632, false);
 					if (!player.getCache().hasKey("over_gnomefield_wall")) {
@@ -940,8 +944,10 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 					player.teleport(659, 633, false);
 				}
 			} else {
-				mes("The wall is damaged",
-					"But not enough to climb through");
+				mes("The wall is damaged");
+				delay(3);
+				mes("But not enough to climb through");
+				delay(3);
 			}
 		}
 		else if (obj.getID() == KHAZARD_CHEST_OPEN || obj.getID() == KHAZARD_CHEST_CLOSED) {
@@ -965,8 +971,10 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 		boolean firstOption = false;
 		boolean secondOption = false;
 		boolean thirdOption = false;
-		mes("To fire the ballista you Must first set the coordinates",
-			"Set the height coordinate to");
+		mes("To fire the ballista you Must first set the coordinates");
+		delay(3);
+		mes("Set the height coordinate to");
+		delay(3);
 		int MenuBallistaOne = multi(player, "coord 1", "coord 2",
 			"coord 3", "coord 4", "coord 5");
 		if (MenuBallistaOne >= 0 || MenuBallistaOne <= 4) {
@@ -990,22 +998,22 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 		}
 		player.message("You fire the ballista");
 		mes("The huge spear flies through the air");
-		delay(4);
+		delay(3);
 		if (firstOption && secondOption && thirdOption) {
 			mes("And screams down directly into the Khazard stronghold");
-			delay(4);
+			delay(3);
 			mes("A deafening crash echoes over the battlefield");
-			delay(4);
+			delay(3);
 			mes("The front entrance is reduced to rubble");
-			delay(4);
+			delay(3);
 			player.updateQuestStage(getQuestId(), 5);
 		} else {
 			mes("Straight over the khazard stronghold");
-			delay(4);
+			delay(3);
 			mes("Into the valleys behond");
-			delay(4);
+			delay(3);
 			mes("You've missed the target");
-			delay(4);
+			delay(3);
 		}
 	}
 
@@ -1019,11 +1027,11 @@ public class TreeGnomeVillage implements QuestInterface, TalkNpcTrigger,
 		if (n.getID() == NpcId.KHAZARD_WARLORD.id()) {
 			if (player.getQuestStage(getQuestId()) == 6) {
 				mes("As he falls to the ground...");
-				delay(4);
+				delay(3);
 				mes("A ghostly vapour floats upwards from his battle worn armour");
-				delay(4);
+				delay(3);
 				mes("Out of sight, you hear a shrill scream in the still air of the valley");
-				delay(4);
+				delay(3);
 				if (!player.getCarriedItems().hasCatalogID(ItemId.ORBS_OF_PROTECTION.id(), Optional.empty())) {
 					player.message("You search his satchel and find the orbs of protection");
 					give(player, ItemId.ORBS_OF_PROTECTION.id(), 1);

@@ -45,8 +45,10 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 				return;
 			}
 			if (player.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
-				mes("You can't teleport while holding Ana,",
-					"It's just too difficult to concentrate.");
+				mes("You can't teleport while holding Ana,");
+				delay(3);
+				mes("It's just too difficult to concentrate.");
+				delay(3);
 				return;
 			}
 			if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (player.getLocation().inKaramja())) {
@@ -130,11 +132,11 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 		player.getCarriedItems().getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
 
 		mes("You feel more power emanating from it than before");
-		delay(4);
+		delay(3);
 		mes("you can now rub this amulet to teleport");
-		delay(4);
+		delay(3);
 		mes("Though using it to much means you will need to recharge it");
-		delay(4);
+		delay(3);
 		player.message("It now also means you can find more gems when mining");
 
 		// Repeat

@@ -21,7 +21,7 @@ public class TeleportStone implements OpInvTrigger {
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == TELEPORT_STONE) {
 			mes("the stone starts shaking...");
-			delay(4);
+			delay(3);
 			player.message("a magical portal opens up, where would you like to go?");
 			delay(4);
 			String[] teleLoc = {"Lumbridge", "Draynor", "Falador", "Edgeville", "Varrock", "Alkharid", "Karamja", "Yanille", "Ardougne", "Catherby", "Seers", "Gnome Stronghold", "Stay here"};
@@ -38,8 +38,10 @@ public class TeleportStone implements OpInvTrigger {
 				return;
 			}
 			if (player.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
-				mes("You can't teleport while holding Ana,",
-					"It's just too difficult to concentrate.");
+				mes("You can't teleport while holding Ana,");
+				delay(3);
+				mes("It's just too difficult to concentrate.");
+				delay(3);
 				return;
 			}
 			if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (player.getLocation().inKaramja())) {

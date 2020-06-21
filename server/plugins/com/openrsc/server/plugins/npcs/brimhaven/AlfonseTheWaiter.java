@@ -43,7 +43,7 @@ public class AlfonseTheWaiter extends AbstractShop {
 				npcsay(player, n, "Hmm ask Charlie the cook round the back",
 					"He may have some Gherkins for you");
 				mes("Alfonse winks");
-				delay(4);
+				delay(3);
 				player.getCache().store("talked_alf", true);
 				player.getCache().remove("pheonix_alf");
 			}

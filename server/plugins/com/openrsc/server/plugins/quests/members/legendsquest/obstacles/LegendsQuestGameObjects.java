@@ -274,6 +274,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 		}
 		else if (obj.getID() == HALF_BURIED_REMAINS) {
 			mes("It looks as if some poor unfortunate soul died here.");
+			delay(3);
 		}
 		else if (obj.getID() == HEAVY_METAL_GATE) {
 			if (command.equalsIgnoreCase("look")) {
@@ -339,11 +340,11 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 						return;
 					} else {
 						mes("You could be stuck here for ages until your mining ability returns.");
-						delay(4);
+						delay(3);
 						mes("Would you like to try to climb out?");
-						delay(4);
+						delay(3);
 						mes("It looks rough going, but at least you won't be stuck here for ages.");
-						delay(4);
+						delay(3);
 						int outmenu = multi(player, "Yes, I'll climb out.", "No, I'll stay here a while.");
 						if (outmenu == 0) {
 							while (player.getY() > 3707) {
@@ -355,6 +356,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 							player.teleport(442, 3703);
 						} else if (outmenu == 1) {
 							mes("You decide to stay where you are.");
+							delay(3);
 						}
 					}
 				}
@@ -386,6 +388,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				}
 			} else {
 				mes("You'll need a pickaxe to smash your way through these boulders.");
+				delay(3);
 			}
 		}
 		else if (obj.getID() == CAVE_ANCIENT_WOODEN_DOORS) {
@@ -458,7 +461,7 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 				player.message("...but find nothing.");
 			} else {
 				mes("You search the desk ...");
-				delay(4);
+				delay(3);
 				give(player, ItemId.SHAMANS_TOME.id(), 1);
 				player.message("You find a book...it looks like an ancient tome...");
 			}
@@ -732,9 +735,9 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 		if (obj.getID() == TOTEM_POLE && item.getCatalogId() == ItemId.TOTEM_POLE.id()) {
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) >= 10 || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
 				mes("You have already replaced the evil totem pole with your own.");
-				delay(4);
+				delay(3);
 				mes("You feel a great sense of accomplishment");
-				delay(4);
+				delay(3);
 				return;
 			}
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 9) {
@@ -746,9 +749,9 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 					player.getCache().set("viyeldi_companions", 1);
 				}
 				mes("You attempt to replace the evil totem pole.");
-				delay(4);
+				delay(3);
 				mes("A black cloud emanates from the evil totem pole.");
-				delay(4);
+				delay(3);
 				player.message("It slowly forms into the dread demon Nezikchened...");
 				LegendsQuestNezikchened.demonFight(player);
 			}
@@ -1163,11 +1166,11 @@ public class LegendsQuestGameObjects implements OpLocTrigger, UseLocTrigger {
 			changeloc(obj, config().GAME_TICK * 16, 1170);
 			player.getCarriedItems().remove(new Item(ItemId.TOTEM_POLE.id()));
 			mes("You remove the evil totem pole.");
-			delay(4);
+			delay(3);
 			mes("And replace it with the one you carved yourself.");
-			delay(4);
+			delay(3);
 			mes("As you do so, you feel a lightness in the air,");
-			delay(4);
+			delay(3);
 			player.message("almost as if the Kharazi jungle were sighing.");
 			player.message("Perhaps Gujuo would like to see the totem pole.");
 			if (calledGujuo) {

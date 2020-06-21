@@ -15,11 +15,11 @@ public class FillHole implements OpLocTrigger {
 		if (player.getCarriedItems().remove(new Item(ItemId.SWAMP_PASTE.id())) != -1) {
 			delloc(obj);
 			mes("you fill the hole with swamp paste");
-			delay(4);
+			delay(3);
 
 		} else {
 			mes("you'll need some swamp paste to fill that");
-			delay(4);
+			delay(3);
 		}
 		delay();
 	}

@@ -44,17 +44,17 @@ public class ObjectCooking implements UseLocTrigger {
 					player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BURNTMEAT.id()));
 					mes("sometimes you will burn food");
-					delay(4);
+					delay(3);
 					mes("As your cooking level increases this will happen less");
-					delay(4);
+					delay(3);
 					mes("Now speak to the cooking instructor again");
-					delay(4);
+					delay(3);
 					player.getCache().set("tutorial", 30);
 				} else if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 30) {
 					final ItemCookingDef cookingDef = item.getCookingDef(player.getWorld());
 					player.playerServerMessage(MessageType.QUEST, "The meat is now nicely cooked");
 					mes("Now speak to the cooking instructor again");
-					delay(4);
+					delay(3);
 					player.incExp(Skills.COOKING, cookingDef.getExp(), true);
 					player.getCache().set("tutorial", 31);
 					player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
@@ -76,11 +76,11 @@ public class ObjectCooking implements UseLocTrigger {
 		else if (item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT.id()) {
 			if (object.getID() == 97 || object.getID() == 274) {
 				mes("You cook the meat on the fire...");
-				delay(4);
+				delay(3);
 			}
 			else {
 				mes("You cook the meat on the stove...");
-				delay(4);
+				delay(3);
 			}
 			delay(2);
 			player.getCarriedItems().remove(new Item(ItemId.RAW_OOMLIE_MEAT.id()));
@@ -94,8 +94,10 @@ public class ObjectCooking implements UseLocTrigger {
 		// Poison (Hazeel Cult)
 		else if (item.getCatalogId() == ItemId.POISON.id() && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
 			if (player.getQuestStage(Quests.THE_HAZEEL_CULT) == 3 && player.getCache().hasKey("evil_side")) {
-				mes("you poor the poison into the hot pot",
-					"the poison desolves into the soup");
+				mes("you poor the poison into the hot pot");
+				delay(3);
+				mes("the poison desolves into the soup");
+				delay(3);
 				player.getCarriedItems().remove(new Item(ItemId.POISON.id()));
 				player.updateQuestStage(Quests.THE_HAZEEL_CULT, 4);
 			} else {

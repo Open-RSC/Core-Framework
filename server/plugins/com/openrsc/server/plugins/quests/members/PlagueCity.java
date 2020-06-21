@@ -136,8 +136,10 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 						"Oh for one of Trudi's hangover cures");
 					if (player.getCarriedItems().hasCatalogID(ItemId.HANGOVER_CURE.id(), Optional.of(false))) {
 						say(player, n, "Try this");
-						mes("You give Bravek the hangover cure",
-							"Bravek gulps down the foul looking liquid");
+						mes("You give Bravek the hangover cure");
+						delay(3);
+						mes("Bravek gulps down the foul looking liquid");
+						delay(3);
 						player.getCarriedItems().remove(new Item(ItemId.HANGOVER_CURE.id()));
 						npcsay(player,
 							n,
@@ -438,11 +440,11 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 					if (player.getCarriedItems().hasCatalogID(ItemId.DWELLBERRIES.id(), Optional.of(false))) {
 						say(player, n, "yes I've got some here");
 						mes("you give the dwellberries to alrena");
-						delay(4);
+						delay(3);
 						mes("alrena crushes the berries into a smooth paste");
-						delay(4);
+						delay(3);
 						mes("she then smears the paste over a strange mask");
-						delay(4);
+						delay(3);
 						player.getCarriedItems().remove(new Item(ItemId.DWELLBERRIES.id()));
 						give(player, ItemId.GASMASK.id(), 1);
 
@@ -641,11 +643,11 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 					say(player, n,
 						"I've tied the other end of this rope to the grill");
 					mes("Edmond gets a good grip on the rope");
-					delay(4);
+					delay(3);
 					mes("together you tug the rope");
-					delay(4);
+					delay(3);
 					mes("you hear a clunk as you both fly backwards");
-					delay(4);
+					delay(3);
 					npcsay(player, n, "that's done the job",
 						"Remember always wear the gasmask",
 						"otherwise you'll die over there for certain",
@@ -789,17 +791,19 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 				if (player.getQuestStage(getQuestId()) == 2) {
 					if (BUCKETS_USED >= 3) {
 						mes("you poor the water onto the soil");
-						delay(4);
+						delay(3);
 						mes("the soil softens slightly");
-						delay(4);
+						delay(3);
 						mes("the soil is soft enough to dig into");
-						delay(4);
+						delay(3);
 						if (!player.getCache().hasKey("soil_soften")) {
 							player.getCache().store("soil_soften", true);
 						}
 					} else {
-						mes("you poor the water onto the soil",
-							"the soil softens slightly");
+						mes("you poor the water onto the soil");
+						delay(3);
+						mes("the soil softens slightly");
+						delay(3);
 					}
 					player.getCarriedItems().remove(new Item(ItemId.BUCKET_OF_WATER.id()));
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
@@ -812,13 +816,13 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 				if (player.getCache().hasKey("soil_soften") || player.getQuestStage(getQuestId()) >= 3
 					|| player.getQuestStage(getQuestId()) == -1) {
 					mes("you dig deep into the soft soil");
-					delay(4);
+					delay(3);
 					mes("Suddenly it crumbles away");
-					delay(4);
+					delay(3);
 					mes("you fall through");
-					delay(4);
+					delay(3);
 					mes("and land in the sewer");
-					delay(4);
+					delay(3);
 					player.teleport(621, 3414, false);
 					player.message("Edmond follows you down the hole");
 					if (player.getCache().hasKey("soil_soften")) {
@@ -829,9 +833,9 @@ public class PlagueCity implements QuestInterface, TalkNpcTrigger,
 					}
 				} else {
 					mes("you dig the soil");
-					delay(4);
+					delay(3);
 					mes("The ground is rather hard");
-					delay(4);
+					delay(3);
 				}
 			}
 		}

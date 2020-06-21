@@ -326,8 +326,10 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 				// castle.
 				player.teleport(490, 651, false);
 			} else {
-				mes("The whistle makes no noise",
-					"It will not work in this location");
+				mes("The whistle makes no noise");
+				delay(3);
+				mes("It will not work in this location");
+				delay(3);
 			}
 		}
 		else if (item.getCatalogId() == ItemId.BELL.id()) {
@@ -408,8 +410,10 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onTakeObj(Player player, GroundItem i) {
 		if (i.getID() == ItemId.HOLY_GRAIL.id() && i.getX() == 418 && i.getY() == 1924) {
-			mes("You feel that the grail shouldn't be moved",
-				"You must complete some task here before you are worthy");
+			mes("You feel that the grail shouldn't be moved");
+			delay(3);
+			mes("You must complete some task here before you are worthy");
+			delay(3);
 		}
 	}
 
@@ -428,7 +432,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 		if (obj.getID() == 408) {
 			if (player.getQuestStage(this) == 4) {
 				mes("You hear muffled noises from the sack");
-				delay(4);
+				delay(3);
 				player.message("You open the sack");
 				Npc percival = addnpc(player.getWorld(), NpcId.SIR_PERCIVAL.id(), 328, 446, (int)TimeUnit.SECONDS.toMillis(64));
 				npcsay(player, percival, "Wow thankyou",
@@ -489,8 +493,10 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 		say(player, percival,
 			"Well I do have the means to get us there - a magic whistle");
 		if (player.getCarriedItems().hasCatalogID(ItemId.MAGIC_WHISTLE.id(), Optional.of(false))) {
-			mes("You give a whistle to Sir Percival",
-				"You tell sir Percival what to do with the whistle");
+			mes("You give a whistle to Sir Percival");
+			delay(3);
+			mes("You tell sir Percival what to do with the whistle");
+			delay(3);
 			player.getCarriedItems().remove(new Item(ItemId.MAGIC_WHISTLE.id()));
 			npcsay(player, percival, "Ok I will see you there then");
 			player.updateQuestStage(this, 5);

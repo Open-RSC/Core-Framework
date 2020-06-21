@@ -430,7 +430,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					"No not yet");
 				if (menu == 0) {
 					mes("You give the staff to Lucien");
-					delay(4);
+					delay(3);
 					player.getCarriedItems().remove(new Item(ItemId.STAFF_OF_ARMADYL.id()));
 					npcsay(player, n, "Muhahahaha",
 						"Already I can feel the power of this staff running through my limbs",
@@ -491,11 +491,11 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					player.damage(DataConversions.roundUp(player.getSkills().getLevel(Skills.HITS) / 5));
 				} else {
 					mes("You pull the lever");
-					delay(4);
+					delay(3);
 					mes("You hear a clunk");
-					delay(4);
+					delay(3);
 					mes("The trap on the lever resets");
-					delay(4);
+					delay(3);
 					if (player.getCache().hasKey("ikovLever")) {
 						player.getCache().remove("ikovLever");
 					}
@@ -509,16 +509,20 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 					player.message("You have not high thieving enough to disable this trap");
 					return;
 				}
-				mes("You find a trap on the lever",
-					"You disable the trap");
+				mes("You find a trap on the lever");
+				delay(3);
+				mes("You disable the trap");
+				delay(3);
 				if (!player.getCache().hasKey("ikovLever")) {
 					player.getCache().store("ikovLever", true);
 				}
 			}
 		}
 		else if (obj.getID() == COMPLETE_LEVER) {
-			mes("You pull the lever",
-				"You hear the door next to you make a clunking noise");
+			mes("You pull the lever");
+			delay(3);
+			mes("You hear the door next to you make a clunking noise");
+			delay(3);
 			if (!player.getCache().hasKey("completeLever") && (player.getQuestStage(this) != -1 || player.getQuestStage(this) != -2)) {
 				player.getCache().store("completeLever", true);
 			}
@@ -551,8 +555,10 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 				delay(2);
 				player.message("Suddenly your surroundings change");
 			} else {
-				mes("You can only take ice arrows from the cave of ice spiders",
-					"In the temple of Ikov");
+				mes("You can only take ice arrows from the cave of ice spiders");
+				delay(3);
+				mes("In the temple of Ikov");
+				delay(3);
 			}
 		}
 		else if (i.getID() == ItemId.STAFF_OF_ARMADYL.id()) {
@@ -649,8 +655,10 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 				} else {
 					npcsay(player, n, "I'm sure you don't want to attack me really",
 						"I am your friend");
-					mes("You decide you don't want to attack Lucien really",
-						"He is your friend");
+					mes("You decide you don't want to attack Lucien really");
+					delay(3);
+					mes("He is your friend");
+					delay(3);
 				}
 			}
 		}
@@ -697,8 +705,10 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.PENDANT_OF_ARMADYL.id())) {
 				npcsay(player, n, "I'm sure you don't want to attack me really",
 					"I am your friend");
-				mes("You decide you don't want to attack Lucien really",
-					"He is your friend");
+				mes("You decide you don't want to attack Lucien really");
+				delay(3);
+				mes("He is your friend");
+				delay(3);
 				return;
 			}
 		}

@@ -38,7 +38,7 @@ public class BoatFromBrimhaven implements TalkNpcTrigger, OpLocTrigger {
 			if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id(), Optional.of(false))) {
 				npcsay(player, n, "Aha trying to smuggle rum are we?");
 				mes("The customs official confiscates your rum");
-				delay(4);
+				delay(3);
 				player.getCarriedItems().remove(new Item(ItemId.KARAMJA_RUM.id()));
 			} else {
 				npcsay(player,
@@ -50,9 +50,9 @@ public class BoatFromBrimhaven implements TalkNpcTrigger, OpLocTrigger {
 					if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 30)) != -1) {
 						say(player, n, "Ok");
 						mes("You pay 30 gold");
-						delay(4);
+						delay(3);
 						mes("You board the ship");
-						delay(4);
+						delay(3);
 						teleport(player, 538, 617);
 						player.message("The ship arrives at Ardougne");
 					} else { // not enough money

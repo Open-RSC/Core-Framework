@@ -40,9 +40,9 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 					return;
 				}
 				mes("You search the Dolmen...");
-				delay(4);
+				delay(3);
 				mes("and find the mumified remains of a human female corpse.");
-				delay(4);
+				delay(3);
 				player.message("Do you want to take the corpse?");
 				int menu = multi(player, "Yes, I'll take the remains.", "No, I'll leave them where they are.");
 				if (menu == 0) {
@@ -86,6 +86,7 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 
 	private void choke(Player player) {
 		mes("@red@You feel invisible hands starting to choke you...");
+		delay(3);
 		player.damage(getCurrentLevel(player, Skills.HITS) / 2);
 	}
 

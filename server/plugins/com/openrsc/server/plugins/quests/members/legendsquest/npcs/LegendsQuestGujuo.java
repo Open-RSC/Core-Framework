@@ -815,6 +815,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 							npcsay(player, n, "");
 						}
 						mes("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
+						delay(3);
 						if (n != null)
 							n.remove();
 					} else if (opt2 == 1) {
@@ -1146,6 +1147,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 			mes("Gujuo places the bowl on the floor in front of you,");
 			delay(2);
 			mes("and leads you into a deep meditation...");
+			delay(3);
 			npcsay(player, npc, "Ohhhhhmmmmmm");
 			say(player, npc, "Oooooommmmmmmmmm");
 			npcsay(player, npc, "Ohhhhhmmmmmm");

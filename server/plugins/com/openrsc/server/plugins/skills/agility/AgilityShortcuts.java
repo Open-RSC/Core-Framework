@@ -77,24 +77,24 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				mes("The bridge beyond this fence looks very unsafe.");
-				delay(4);
+				delay(3);
 				mes("However, you could try to negotiate it if you're feeling very agile.");
-				delay(4);
+				delay(3);
 				player.message("Would you like to try?");
 				int jumpMenu = multi(player,
 					"No thanks! It looks far too dangerous!",
 					"Yes, I'm totally brave and quite agile!");
 				if (jumpMenu == 0) {
 					mes("You decide that common sense is the better part of valour.");
-					delay(4);
+					delay(3);
 					mes("And stop yourself from being hurled to what must be an ");
-					delay(4);
+					delay(3);
 					player.message("inevitable death.");
 				} else if (jumpMenu == 1) {
 					mes("You prepare to negotiate the bridge fence...");
-					delay(4);
+					delay(3);
 					mes("You run and jump...");
-					delay(4);
+					delay(3);
 					if (succeed(player, 32)) {
 						player.message("...and land perfectly on the other side!");
 						if (player.getX() >= 460) { // back
@@ -130,9 +130,9 @@ public class AgilityShortcuts implements OpLocTrigger,
 					return;
 				}
 				mes("These rocks look quite dangerous to climb.");
-				delay(4);
+				delay(3);
 				mes("But you may be able to scale them.");
-				delay(4);
+				delay(3);
 				player.message("Would you like to try?");
 				int menu = multi(player,
 					"Yes, I can easily climb this!",
@@ -140,7 +140,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				if (menu == 0) {
 					if (succeed(player, 32)) {
 						mes("You manage to climb the rocks succesfully and pick");
-						delay(4);
+						delay(3);
 						if (obj.getX() == 450) {
 							player.message("a route though the trecherous embankment to the top.");
 							player.teleport(452, 829);
@@ -151,7 +151,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					} else {
 						player.teleport(450, 828);
 						mes("You fall and hurt yourself.");
-						delay(4);
+						delay(3);
 						player.damage((getCurrentLevel(player, Skills.HITS) / 10));
 						delay();
 						player.teleport(449, 828);
@@ -254,7 +254,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You grab the rope and try and swing across");
 				if (!succeed(player, 57, 77)) {
 					mes("You miss the opposite side and fall to the level below");
-					delay(4);
+					delay(3);
 					teleport(player, 596, 3534);
 					return;
 				}
@@ -277,7 +277,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You grab the rope and try and swing across");
 				if (!succeed(player, 57, 77)) {
 					mes("You miss the opposite side and fall to the level below");
-					delay(4);
+					delay(3);
 					teleport(player, 598, 3536);
 					return;
 				}
@@ -302,7 +302,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				delay(4);
 				if (!succeed(player, 40, 65)) {
 					mes("you lose your footing and fall to the level below");
-					delay(4);
+					delay(3);
 					teleport(player, 603, 3520);
 					return;
 				}
@@ -325,7 +325,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				delay(4);
 				if (!succeed(player, 40, 65)) {
 					mes("you lose your footing and fall to the level below");
-					delay(4);
+					delay(3);
 					teleport(player, 603, 3520);
 					return;
 				}
@@ -456,9 +456,9 @@ public class AgilityShortcuts implements OpLocTrigger,
 						teleport(player, 341, 809);
 						player.message("@red@!!! You Fall !!!");
 						mes("You get washed up on the other side of the river...");
-						delay(4);
+						delay(3);
 						mes("After being nearly half drowned");
-						delay(4);
+						delay(3);
 						player.damage((int) (player.getSkills().getLevel(Skills.HITS) / 4) + 2);
 						return;
 					}
@@ -471,9 +471,9 @@ public class AgilityShortcuts implements OpLocTrigger,
 						teleport(player, 341, 805);
 						player.message("@red@!!! You Fall !!!");
 						mes("You get washed up on the other side of the river...");
-						delay(4);
+						delay(3);
 						mes("After being nearly half drowned");
-						delay(4);
+						delay(3);
 						player.damage((int) (player.getSkills().getLevel(Skills.HITS) / 4) + 2);
 						return;
 					}

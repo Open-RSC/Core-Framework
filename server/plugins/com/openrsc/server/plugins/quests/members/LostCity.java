@@ -100,8 +100,10 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 			case 245:
 				if (atQuestStages(player, this, 4, 3, 2, -1)) {
 					if (getCurrentLevel(player, Skills.WOODCUT) < 36) {
-						mes("You are not a high enough woodcutting level to chop down this tree",
-							"You need a woodcutting level of 36");
+						mes("You are not a high enough woodcutting level to chop down this tree");
+						delay(3);
+						mes("You need a woodcutting level of 36");
+						delay(3);
 						return;
 					}
 					if (getWoodcutAxe(player) == -1) {
@@ -111,6 +113,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 
 					if (atQuestStages(player, this, 4, -1)) {
 						mes("You cut a branch from the Dramen tree");
+						delay(3);
 						give(player, ItemId.DRAMEN_BRANCH.id(), 1);
 						return;
 					}
@@ -396,12 +399,15 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (player.getCarriedItems().hasCatalogID(ItemId.DRAMEN_BRANCH.id(), Optional.of(false))) {
 			if (getCurrentLevel(player, Skills.CRAFTING) < 31) {
-				mes("You are not a high enough crafting level to craft this staff",
-					"You need a crafting level of 31");
+				mes("You are not a high enough crafting level to craft this staff");
+				delay(3);
+				mes("You need a crafting level of 31");
+				delay(3);
 				return;
 			}
 			player.getCarriedItems().remove(new Item(ItemId.DRAMEN_BRANCH.id()));
 			mes("you carve the branch into a staff");
+			delay(3);
 			give(player, ItemId.DRAMEN_STAFF.id(), 1);
 		}
 	}
@@ -419,8 +425,10 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 			player.message("you go through the door and find yourself somewhere else");
 		} else if (obj.getID() == ZANARIS_DOOR) {
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(player, this, 4, -1)) {
-				mes("The world starts to shimmer",
-					"You find yourself in different surroundings");
+				mes("The world starts to shimmer");
+				delay(3);
+				mes("You find yourself in different surroundings");
+				delay(3);
 				if (getQuestStage(player, this) != -1) {
 					teleport(player, 126, 3518);
 					completeQuest(player, this);

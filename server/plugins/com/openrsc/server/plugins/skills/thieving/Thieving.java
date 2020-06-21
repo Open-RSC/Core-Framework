@@ -229,6 +229,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		player.message("You disable the trap");
 
 		mes("You open the chest");
+		delay(3);
 		if (!makeChestStuck && tempChest.get() != null) {
 			openChest(tempChest.get());
 		} else {
@@ -243,11 +244,13 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		}
 		player.incExp(Skills.THIEVING, xp, true);
 		mes("You find treasure inside!");
+		delay(3);
 		if (!makeChestStuck) {
 			changeloc(obj, respawnTime, 340);
 		}
 		if (teleLoc != null) {
 			mes("suddenly a second magical trap triggers");
+			delay(3);
 			player.teleport(teleLoc.getX(), teleLoc.getY(), true);
 		}
 	}
@@ -467,8 +470,10 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 				openChest(obj);
 				mes("You open the chest");
+				delay(3);
 
 				mes("You find a treasure inside!");
+				delay(3);
 
 				player.incExp(Skills.THIEVING, 600, true);
 				give(player, ItemId.COINS.id(), 20);

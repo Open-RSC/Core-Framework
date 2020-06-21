@@ -92,11 +92,11 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 							say(player, n, "Where did you say that scorpion was again?");
 							npcsay(player, n, "Let me look into my looking glass");
 							mes("The seer produces a small mirror");
-							delay(4);
+							delay(3);
 							mes("The seer gazes into the mirror");
-							delay(4);
+							delay(3);
 							mes("The seer smoothes his hair with his hand");
-							delay(4);
+							delay(3);
 							npcsay(player, n,
 								"I can see a scorpion that you seek",
 								"It would appear to be near some  nasty looking spiders",
@@ -146,11 +146,11 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 					"They belong to Thormac the sorceror");
 				npcsay(player, n, "Let me look into my looking glass");
 				mes("The seer produces a small mirror");
-				delay(4);
+				delay(3);
 				mes("The seer gazes into the mirror");
-				delay(4);
+				delay(3);
 				mes("The seer smoothes his hair with his hand");
-				delay(4);
+				delay(3);
 				npcsay(player, n,
 					"I can see a scorpion that you seek",
 					"It would appear to be near some  nasty looking spiders",
@@ -206,7 +206,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 				"No it's to dangerous for me too");
 			if (choice == 0) {
 				mes("Velrak reaches inside his boot and passes you a key");
-				delay(4);
+				delay(3);
 				give(player, ItemId.DUSTY_KEY.id(), 1);
 			}
 
@@ -360,7 +360,7 @@ public class ScorpionCatcher implements QuestInterface, TalkNpcTrigger,
 					"Which you can use to catch them in");
 				give(player, ItemId.SCORPION_CAGE_NONE.id(), 1);
 				mes("Thormac gives you a cage");
-				delay(4);
+				delay(3);
 			} else {
 				npcsay(player, n, "Well you have that scorpion cage I gave you",
 					"Which you can use to catch them in");

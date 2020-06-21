@@ -35,6 +35,7 @@ public final class Apothecary implements
 			} else {
 				npcsay(player, n, "Well done. You have the berries");
 				mes("You hand over the berries");
+				delay(3);
 				player.getCarriedItems().remove(new Item(ItemId.CADAVABERRIES.id()));
 				player.message("Which the apothecary shakes up in vial of strange liquid");
 				npcsay(player, n, "Here is what you need");
@@ -128,6 +129,7 @@ public final class Apothecary implements
 					player.message("you give Apothecary 5,000 gold");
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 5000));
 					mes("Apothecary: starts brewing and fixes to a elixir");
+					delay(3);
 					player.message("Apothecary gives you a mysterious experience elixir.");
 					//TODO: Determine if elixir will be added and indexed ID if so
 					//addItem(p, ItemId.EXPERIENCE_ELIXIR.id(), 1);

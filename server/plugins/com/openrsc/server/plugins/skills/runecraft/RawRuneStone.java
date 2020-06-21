@@ -21,11 +21,13 @@ public class RawRuneStone implements OpLocTrigger {
 		int axeID = Mining.getAxe(player);
 		if (axeID < 0) {
 			mes("You need a pickaxe to mine rune stones");
+			delay(3);
 			return;
 		}
 
 		if (player.getCarriedItems().getInventory().full()) {
 			mes("You cannot mine rune stone with a full inventory.");
+			delay(3);
 			return;
 		}
 

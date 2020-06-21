@@ -169,6 +169,7 @@ public class Smithing implements UseLocTrigger {
 		}*/
 		if (goldOption == 0) {
 			mes("You hammer the metal...");
+			delay(3);
 			if (player.getCarriedItems().getInventory().countId(ItemId.GOLD_BAR.id()) < 2) {
 				player.message("You need two bars of gold to make this item.");
 			} else {

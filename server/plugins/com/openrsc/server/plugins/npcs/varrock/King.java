@@ -27,13 +27,16 @@ public class King implements TalkNpcTrigger {
 				"For the return of the shield of Arrav");
 			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 5) {
 				mes("You show the certificate to the king");
+				delay(3);
 				npcsay(player, n, "My goodness",
 					"This is the claim for a reward put out by my father",
 					"I never thought I'd see anyone claim this reward",
 					"I see you are claiming half the reward",
 					"So that would come to 600 gold coins");
-				mes("You hand over a certificate",
-					"The king gives you 600 coins");
+				mes("You hand over a certificate");
+				delay(3);
+				mes("The king gives you 600 coins");
+				delay(3);
 				player.getCarriedItems().remove(new Item(ItemId.CERTIFICATE.id()));
 				player.sendQuestComplete(Quests.SHIELD_OF_ARRAV);
 				if (isBlackArmGang(player))
@@ -46,8 +49,10 @@ public class King implements TalkNpcTrigger {
 			} else {
 				npcsay(player, n, "You have already claimed the reward",
 					"You can't claim it twice");
-				mes("Why don't you give this certificate",
-					"To whoever helped you get the shield");
+				mes("Why don't you give this certificate");
+				delay(3);
+				mes("To whoever helped you get the shield");
+				delay(3);
 			}
 			return;
 		} else if (player.getCarriedItems().hasCatalogID(ItemId.BROKEN_SHIELD_ARRAV_1.id(), Optional.of(false))

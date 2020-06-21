@@ -193,7 +193,7 @@ public class Eating implements OpInvTrigger {
 			} else if (id == ItemId.ROTTEN_APPLES.id()) {
 				// authentic does not give message to quest tab
 				mes("you eat an apple");
-				delay(4);
+				delay(3);
 				say(player, null, "yuck");
 				player.message("it's rotten, you spit it out");
 			} else

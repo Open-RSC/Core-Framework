@@ -33,6 +33,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 		//not sure if this line is correct
 		//message(player, n, config().GAME_TICK * 2, "You quickly grab the Holy Force Spell and cast it at the Demon.");
 		mes("You thrust the Holy Force spell in front of the spirit.");
+		delay(3);
 		mes(n, "A bright, holy light streams out from the paper spell.");
 		delay(2);
 		if (player.getCache().hasKey("already_cast_holy_spell")) {
@@ -170,8 +171,10 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 						&& !player.getCarriedItems().hasCatalogID(ItemId.GLOWING_DARK_DAGGER.id(), Optional.of(false))
 						&& !player.getCarriedItems().hasCatalogID(ItemId.HOLY_FORCE_SPELL.id(), Optional.of(false))) {
 							mes("The shapeless entity of Echned Zekin appears in front of you.");
+							delay(3);
 							npcsay(player, n, "Why do you return when your task is still incomplete?");
 							mes("There is an undercurrent of anger in his voice.");
+							delay(3);
 							int menu = multi(player, n,
 								"Who am I supposed to kill again?",
 								"Er I've had second thoughts.",

@@ -46,11 +46,11 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void handleReward(Player player) {
 		mes("you have completed the fight arena quest");
-		delay(4);
+		delay(3);
 		mes("Lady Servil gives you 1000 gold coins");
-		delay(4);
+		delay(3);
 		mes("you gain two quest points");
-		delay(4);
+		delay(3);
 		give(player, ItemId.COINS.id(), 1000);
 		player.message("@gre@You haved gained 2 quest points!");
 		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FIGHT_ARENA);
@@ -84,7 +84,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 			}
 			player.message("You kill the ogre");
 			mes("Jeremy's father survives");
-			delay(4);
+			delay(3);
 			Npc justin = ifnearvisnpc(player, NpcId.JUSTIN_SERVIL.id(), 15);
 			if (justin != null) {
 				npcsay(player, justin, "You saved my life and my son's",
@@ -125,11 +125,11 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 				generalAgain.remove();
 			}
 			mes("From above you hear a voice...");
-			delay(4);
+			delay(3);
 			mes("Ladies and gentlemen!");
-			delay(4);
+			delay(3);
 			mes("Todays second round");
-			delay(4);
+			delay(3);
 			addnpc(player.getWorld(), NpcId.BOUNCER.id(), 612, 708, (int)TimeUnit.SECONDS.toMillis(1000));
 			player.message("between the Outsider and bouncer");
 			Npc bouncer = player.getWorld().getNpcById(NpcId.BOUNCER.id());
@@ -149,11 +149,11 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 				npcsay(player, generalAgain,
 					"now you'll suffer traveller, prepare to meet your maker");
 				mes("No, he doesn't look happy at all");
-				delay(4);
+				delay(3);
 				mes("You might want to run for it");
-				delay(4);
+				delay(3);
 				mes("Go back to lady servil to claim your reward");
-				delay(4);
+				delay(3);
 				generalAgain.setChasing(player);
 			}
 			player.updateQuestStage(getQuestId(), 3);
@@ -185,21 +185,21 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 				npcsay(player, n, "Thanks friend..wait..sshh,the guard is coming",
 					"He'll be taking one of us to the arena");
 				mes("A guard approaches the cell");
-				delay(4);
+				delay(3);
 				npcsay(player, n, "Looks like it's you,good luck friend");
 				mes("The guard leads you to the arena");
-				delay(4);
+				delay(3);
 				mes("For your battle");
-				delay(4);
+				delay(3);
 				player.teleport(609, 705, false);
 				mes("From above you hear a voice...");
-				delay(4);
+				delay(3);
 				mes("Ladies and gentlemen!");
-				delay(4);
+				delay(3);
 				mes("Todays first fight between the outsider");
-				delay(4);
+				delay(3);
 				mes("And everyone's favorite scorpion has begun");
-				delay(4);
+				delay(3);
 				addnpc(player.getWorld(), NpcId.KHAZARD_SCORPION.id(), 609, 707, (int)TimeUnit.SECONDS.toMillis(1000));
 				Npc scorp = player.getWorld().getNpcById(NpcId.KHAZARD_SCORPION.id());
 				if (scorp != null) {
@@ -218,8 +218,10 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 				say(player, n, "Jeremy where's your father?");
 				npcsay(player, n, "Quick, help him! that beast will kill him",
 					"He can't fight! he's too old!");
-				mes("You see Jeremy's father Justin",
-					"Trying to escape an ogre");
+				mes("You see Jeremy's father Justin");
+				delay(3);
+				mes("Trying to escape an ogre");
+				delay(3);
 				npcsay(player, n, "Please help him!");
 				addnpc(player.getWorld(), NpcId.KHAZARD_OGRE.id(), 611, 706, (int)TimeUnit.SECONDS.toMillis(1000));
 				Npc ogre = player.getWorld().getNpcById(NpcId.KHAZARD_OGRE.id());
@@ -295,7 +297,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, n, "this area is restricted, leave now",
 						"OUT and don't come back!");
 					mes("the guard has thrown you out");
-					delay(4);
+					delay(3);
 					player.teleport(602, 717, false);
 				}
 				return;
@@ -322,7 +324,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, n, "this area is restricted, leave now",
 						"OUT and don't come back!");
 					mes("the guard has thrown you out");
-					delay(4);
+					delay(3);
 					player.teleport(621, 698, false);
 				}
 				return;
@@ -354,16 +356,16 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 						"this stuff looks good");
 					player.getCarriedItems().remove(new Item(ItemId.KHALI_BREW.id()));
 					mes("the guard takes a mouthful of drink");
-					delay(4);
+					delay(3);
 					npcsay(player, n, "blimey this stuff is pretty good",
 						"it's not too strong is it?");
 					say(player, n, "no, not at all, you'll be fine");
 					mes("the guard finishes the bottle");
-					delay(4);
+					delay(3);
 					npcsay(player, n, "that is some gooood stuff",
 						"yeah... woooh... yeah");
 					mes("the guard seems quite typsy");
-					delay(4);
+					delay(3);
 					say(player, n, "are you alright?");
 					npcsay(player, n, "yeesshh, ooohh, 'hiccup'",
 						"maybe i should relax for a while....");
@@ -374,7 +376,7 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 					say(player, n, "no problem, i'll keep them in line");
 					npcsay(player, n, "zzzzz zzzzz zzzzz");
 					mes("the guard is asleep");
-					delay(4);
+					delay(3);
 					player.getCache().store("guard_sleeping", true);
 					give(player, ItemId.KHAZARD_CELL_KEYS.id(), 1);
 				}
@@ -590,8 +592,10 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, servil, "Wow! Please help me");
 					say(player, servil, "ok, keep quiet");
 					npcsay(player, servil, "Set me free then we can find dad");
-					mes("You use your key to open the cell door",
-						"The gate swings open");
+					mes("You use your key to open the cell door");
+					delay(3);
+					mes("The gate swings open");
+					delay(3);
 					player.playSound("opendoor");
 					player.getWorld().replaceGameObject(obj,
 						new GameObject(obj.getWorld(), obj.getLocation(), 181, obj

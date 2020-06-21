@@ -28,7 +28,7 @@ public class CutWeb implements UseBoundTrigger,
 				return;
 			}
 			mes("You try to destroy the web...");
-			delay(4);
+			delay(3);
 			if (Formulae.cutWeb()) {
 				player.message("You slice through the web");
 				delay(4);
@@ -77,7 +77,7 @@ public class CutWeb implements UseBoundTrigger,
 
 		if (canCut) {
 			mes("You try to destroy the web...");
-			delay(4);
+			delay(3);
 			if (Formulae.cutWeb()) {
 				player.message("You slice through the web");
 				delay(4);

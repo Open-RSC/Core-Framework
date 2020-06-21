@@ -208,7 +208,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseN
 					} else {
 						npcsay(player, n, "???");
 						mes("It seems that was the wrong reply");
-						delay(4);
+						delay(3);
 					}
 				}
 			} else {

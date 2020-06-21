@@ -42,13 +42,18 @@ public final class Barmaid implements
 					"So it will cost you 70 coins");
 				if (ifheld(player, ItemId.COINS.id(), 70)) {
 					mes("You buy a hand of death cocktail");
+					delay(3);
 					player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 70));
-					mes("You drink the cocktail",
-						"You stumble around the room");
+					mes("You drink the cocktail");
+					delay(3);
+					mes("You stumble around the room");
+					delay(3);
 					drinkAle(player);
 					player.damage(DataConversions.getRandom().nextInt(2) + 1);
-					mes("The barmaid giggles",
-						"The barmaid signs your card");
+					mes("The barmaid giggles");
+					delay(3);
+					mes("The barmaid signs your card");
+					delay(3);
 					player.getCache().store("barthree", true);
 				} else {
 					say(player, n, "I don't have that much money on me");

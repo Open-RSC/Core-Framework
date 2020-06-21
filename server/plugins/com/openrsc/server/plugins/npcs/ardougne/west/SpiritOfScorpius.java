@@ -57,7 +57,7 @@ public class SpiritOfScorpius implements TalkNpcTrigger, OpLocTrigger {
 							player.getCarriedItems().remove(new Item(ItemId.UNBLESSED_UNHOLY_SYMBOL_OF_ZAMORAK.id()));
 							player.getCarriedItems().getInventory().add(new Item(ItemId.UNHOLY_SYMBOL_OF_ZAMORAK.id()));
 							mes("The unholy symbol throbs with power");
-							delay(4);
+							delay(3);
 							npcsay(player, n, "The symbol of our lord has been blessed with power!",
 								"My master calls...");
 						} else {

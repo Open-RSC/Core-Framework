@@ -165,21 +165,21 @@ public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
 					} else if (menu == 1) {
 						say(player, n, "what does it say?");
 						mes("@red@it seems to be written by the adventurer Randas, it reads...");
-						delay(4);
+						delay(3);
 						mes("@red@It began as a whisper in my ears. Dismissing the sounds...");
-						delay(4);
+						delay(3);
 						mes("@red@..as the whistling of the wind, I steeled myself against...");
-						delay(4);
+						delay(3);
 						mes("@red@..these forces and continued on my way");
-						delay(4);
+						delay(3);
 						mes("@red@But the whispers became moans...");
-						delay(4);
+						delay(3);
 						mes("@red@at once fearsome and enticing like the call of some beautiful siren");
-						delay(4);
+						delay(3);
 						mes("@red@Join us! The voices cried, Join us!");
-						delay(4);
+						delay(3);
 						mes("@red@Your greatness lies within you, but only Zamorak can unlock your potential..");
-						delay(4);
+						delay(3);
 						say(player, n, "it sounds like randas was losing it");
 					}
 					break;
@@ -306,6 +306,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
 						"follow me, i'll lead you out");
 					say(player, n, "at last!, i've had enough of caves");
 					mes("koftik leads you back up through the winding caverns");
+					delay(3);
 					player.teleport(714, 581);
 					player.message("and back to the cave entrance");
 					break;

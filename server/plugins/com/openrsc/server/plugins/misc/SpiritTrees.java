@@ -28,11 +28,11 @@ public class SpiritTrees implements OpLocTrigger {
 		if (obj.getID() == STRONGHOLD_SPIRIT_TREE) {
 			if (player.getQuestStage(Quests.GRAND_TREE) == -1) {
 				mes("The tree talks in an old tired voice...");
-				delay(4);
+				delay(3);
 				mes("@yel@Spirit Tree: You friend of gnome people, you friend of mine");
-				delay(4);
+				delay(3);
 				mes("@yel@Spirit Tree: Would you like me to take you somewhere?");
-				delay(4);
+				delay(3);
 				int treeMenu = multi(player, "No thanks old tree",
 					"Where can i go?");
 				if (treeMenu == 0) {
@@ -40,17 +40,19 @@ public class SpiritTrees implements OpLocTrigger {
 				} else if (treeMenu == 1) {
 					say(player, null, "where can i go?");
 					mes("The tree talks again..");
-					delay(4);
+					delay(3);
 					mes("@yel@Spirit Tree: You can travel to the trees");
-					delay(4);
+					delay(3);
 					mes("@yel@Spirit Tree: Which are related to myself");
-					delay(4);
+					delay(3);
 					int travelMenu = multi(player,
 						"Battlefield of Khazard",
 						"Forest north of Varrock", "the gnome tree village");
 					if (travelMenu >= 0 && travelMenu <= 2) {
-						mes("You place your hands on the dry tough bark of the spirit tree",
-							"and feel a surge of energy run through your veins");
+						mes("You place your hands on the dry tough bark of the spirit tree");
+						delay(3);
+						mes("and feel a surge of energy run through your veins");
+						delay(3);
 						breakPlagueSample(player);
 						if (travelMenu == 0) player.teleport(629, 629, false);
 						else if (travelMenu == 1) player.teleport(161, 453, false);
@@ -67,11 +69,11 @@ public class SpiritTrees implements OpLocTrigger {
 		else if (obj.getID() == TREE_GNOME_VILLAGE_SPIRIT_TREE) {
 			if (player.getQuestStage(Quests.TREE_GNOME_VILLAGE) == -1) {
 				mes("The tree talks in an old tired voice...");
-				delay(4);
+				delay(3);
 				mes("@yel@Spirit Tree: You friend of gnome people, you friend of mine");
-				delay(4);
+				delay(3);
 				mes("@yel@Spirit Tree: Would you like me to take you somewhere?");
-				delay(4);
+				delay(3);
 				int treeMenu = multi(player, "No thanks old tree",
 					"Where can i go?");
 				if (treeMenu == 0) {
@@ -79,17 +81,19 @@ public class SpiritTrees implements OpLocTrigger {
 				} else if (treeMenu == 1) {
 					say(player, null, "where can i go?");
 					mes("The tree talks again..");
-					delay(4);
+					delay(3);
 					mes("@yel@Spirit Tree: You can travel to the trees");
-					delay(4);
+					delay(3);
 					mes("@yel@Spirit Tree: Which are related to myself");
-					delay(4);
+					delay(3);
 					int travelMenu = multi(player,
 						"Battlefield of Khazard",
 						"Forest north of Varrock", "the gnome stronghold");
 					if (travelMenu >= 0 && travelMenu <= 2) {
-						mes("You place your hands on the dry tough bark of the spirit tree",
-							"and feel a surge of energy run through your veins");
+						mes("You place your hands on the dry tough bark of the spirit tree");
+						delay(3);
+						mes("and feel a surge of energy run through your veins");
+						delay(3);
 						breakPlagueSample(player);
 						if (travelMenu == 0) player.teleport(629, 629, false);
 						else if (travelMenu == 1) player.teleport(161, 453, false);
@@ -105,16 +109,20 @@ public class SpiritTrees implements OpLocTrigger {
 		else if (obj.getID() == YOUNG_SPIRIT_TREES) {
 			if (player.getQuestStage(Quests.TREE_GNOME_VILLAGE) == -1) {
 				player.message("The young spirit tree talks..");
-				mes("@yel@Young Spirit Tree: Hello gnome friend",
-					"@yel@Young Spirit Tree: Would you like to travel to the home of the tree gnomes?");
+				mes("@yel@Young Spirit Tree: Hello gnome friend");
+				delay(3);
+				mes("@yel@Young Spirit Tree: Would you like to travel to the home of the tree gnomes?");
+				delay(3);
 				int treeMenu = multi(player, "No thank you",
 					"Yes please");
 				if (treeMenu == 0) {
 					say(player, null, "No thank you");
 				} else if (treeMenu == 1) {
 					say(player, null, "Yes please");
-					mes("You place your hands on the dry tough bark of the spirit tree",
-						"and feel a surge of energy run through your veins");
+					mes("You place your hands on the dry tough bark of the spirit tree");
+					delay(3);
+					mes("and feel a surge of energy run through your veins");
+					delay(3);
 					breakPlagueSample(player);
 					player.teleport(658, 695, false);
 				}

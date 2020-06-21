@@ -41,7 +41,7 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 			Npc n = ifnearvisnpc(player, NpcId.ECHNED_ZEKIN.id(), 5);
 			if (n != null && player.getQuestStage(Quests.LEGENDS_QUEST) == 7) {
 				mes("You thrust the Holy Force spell in front of the spirit.");
-				delay(4);
+				delay(3);
 				mes(n, "A bright, holy light streams out from the paper spell.");
 				delay(2);
 				if (player.getCache().hasKey("already_cast_holy_spell")) {
@@ -155,9 +155,9 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 					}
 					if (player.getCarriedItems().hasCatalogID(ItemId.EMPTY_VIAL.id(), Optional.of(false))) {
 						mes("The spell is cast perfectly..");
-						delay(4);
+						delay(3);
 						mes("You enchant one of the empty vials.");
-						delay(4);
+						delay(3);
 						player.getCarriedItems().remove(new Item(ItemId.EMPTY_VIAL.id()));
 						player.getCarriedItems().getInventory().add(new Item(ItemId.ENCHANTED_VIAL.id()));
 					} else {
