@@ -156,7 +156,7 @@ public class Functions {
 			if (!message.equalsIgnoreCase("null")) {
 				player.message("@que@" + message);
 			}
-			delay(player.getConfig().GAME_TICK * 3);
+			delay(3);
 		}
 	}
 
@@ -191,13 +191,13 @@ public class Functions {
 				}
 				player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
 			}
-			delay(player.getConfig().GAME_TICK * calcDelay(message));
+			delay(calcDelay(message));
 		}
 	}
 
 	public static void say(final Player player, final String message) {
 		player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, player));
-		delay(player.getConfig().GAME_TICK * calcDelay(message));
+		delay(calcDelay(message));
 	}
 
 	public static int multi(final Player player, final String... options) {
@@ -467,7 +467,7 @@ public class Functions {
 				}
 			}
 
-			delay(player.getConfig().GAME_TICK * calcDelay(message));
+			delay(calcDelay(message));
 		}
 	}
 
@@ -539,7 +539,7 @@ public class Functions {
 			if (enteredPin != "") {
 				break;
 			}
-			delay(player.getConfig().GAME_TICK);
+			delay();
 		}
 		if (enteredPin.equals("cancel")) {
 			ActionSender.sendCloseBankPinInterface(player);
@@ -568,7 +568,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getConfig().GAME_TICK);
+			delay();
 		}
 
 		return true;
@@ -594,7 +594,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getConfig().GAME_TICK);
+			delay();
 		}
 
 		return true;
@@ -628,7 +628,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getConfig().GAME_TICK);
+			delay();
 		}
 
 		return true;
@@ -657,7 +657,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getConfig().GAME_TICK);
+			delay();
 		}
 
 		return player.getAttribute("bankpin", false);
@@ -1322,7 +1322,7 @@ public class Functions {
 			player.message("Failure - Contact an administrator");
 		}
 		player.setSprite(pdir);
-		delay(player.getConfig().GAME_TICK * 2);
+		delay(2);
 		addloc(new GameObject(object.getWorld(), object.getLoc()));
 	}
 
