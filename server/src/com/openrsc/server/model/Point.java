@@ -147,12 +147,12 @@ public class Point {
 			return "Brimhaven";
 		}
 
-		else if (inKaramja()) {
-			return "Karamja";
-		}
-
 		else if (inShiloVillage()) {
 			return "Shilo Village";
+		}
+
+		else if (inKaramja()) {
+			return "Karamja";
 		}
 
 		else if (isInFisherKingRealm()) {
@@ -271,75 +271,75 @@ public class Point {
 	}
 
 	public boolean inVarrock() {
-		return inBounds(50, 180, 444, 565);
+		return inBounds(78, 490, 175, 537) || inBounds(92, 444, 150, 490);
 	}
 
 	public boolean inEdgeville() {
-		return inBounds(180, 245, 427, 472);
+		return inBounds(198, 427, 229, 450) || inBounds(208, 451, 227, 472);
 	}
 
 	public boolean inBarbVillage() {
-		return inBounds(180, 245, 472, 535);
+		return inBounds(209, 491, 247, 529);
 	}
 
 	public boolean inDraynor() {
-		return inBounds(180, 245, 535, 715);
+		return inBounds(210, 608, 233, 659);
 	}
 
 	public boolean inLumbridge() {
-		return inBounds(100, 600, 180, 670);
+		return inBounds(108, 620, 147, 670);
 	}
 
 	public boolean inAlKharid() {
-		return inBounds(47, 94, 578, 733);
+		return inBounds(48, 659, 96, 703);
 	}
 
 	public boolean inFalador() {
-		return inBounds(245, 338, 510, 608);
+		return inBounds(245, 531, 341, 583);
 	}
 
 	public boolean inPortSarim() {
-		return inBounds(245, 355, 608, 693);
+		return inBounds(246, 621, 286, 670);
 	}
 
 	public boolean inTaverly() {
-		return inBounds(338, 384, 430, 576);
+		return inBounds(343, 454, 389, 512);
 	}
 
 	public boolean inEntrana() {
-		return inBounds(395, 441, 525, 573);
+		return inBounds(395, 525, 441, 573);
 	}
 
 	public boolean inCatherby() {
-		return inBounds(399, 477, 476, 513);
+		return inBounds(415, 475, 456, 508);
 	}
 
 	public boolean inSeers() {
-		return inBounds(477, 592, 432, 485);
+		return inBounds(486, 438, 534, 482);
 	}
 
 	public boolean inGnomeStronghold() {
-		return inBounds(673, 751, 432, 537);
+		return inBounds(673, 432, 751, 537);
 	}
 
 	public boolean inArdougne() {
-		return inBounds(500, 600, 537, 708);
+		return inBounds(500, 537, 600, 708);
 	}
 
 	public boolean inYanille() {
-		return inBounds(528, 671, 712, 785);
+		return inBounds(577, 741, 647, 767);
 	}
 
 	public boolean inBrimhaven() {
-		return inBounds(435, 522, 640, 710);
+		return inBounds(435, 644, 477, 709);
 	}
 
 	public boolean inKaramja() {
-		return inBounds(333, 435, 679, 710);
+		return inBounds(323, 644, 679, 908);
 	}
 
 	public boolean inShiloVillage() {
-		return inBounds(384, 431, 815, 860);
+		return inBounds(384, 817, 430, 860);
 	}
 
 	public boolean isInSeersPartyHall() {

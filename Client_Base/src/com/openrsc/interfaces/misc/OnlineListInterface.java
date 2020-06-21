@@ -134,7 +134,10 @@ public class OnlineListInterface extends NComponent {
 				public boolean onMouseDown(int clickX, int clickY, int mButtonDown, int mButtonClick) {
 					if (mButtonClick == 2) {
 						rightClickMenu.hide();
-						final String username = userComp.getText().replaceAll(" ", "_").replace(",", "");
+						final String username = userComp.getText()
+							.replace(", ", "")
+							.replaceAll("\\(.*\\)", "")
+							.replaceAll(" ", "_");
 						NRightClickMenu staffMenu = new NRightClickMenu(OnlineListInterface.this);
 
 						// Moderator menu options
