@@ -554,7 +554,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 						player.getCarriedItems().remove(new Item(ItemId.BOWL_OF_WATER.id()));
 					}
 					Point desertLoc = desertTPPoints[DataConversions.getRandom().nextInt(desertTPPoints.length)];
-					player.teleport(desertLoc.getX(), desertLoc.getX());
+					player.teleport(desertLoc.getX(), desertLoc.getY());
 					break;
 				case Mercenary.PLACE_START:
 					npcsay(player, n, "It's none of your business now get lost.");
@@ -2910,7 +2910,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					}
 					mes("The guards move off in the cart leaving you stranded in the desert.");
 					Point desertLoc = desertTPPoints[DataConversions.getRandom().nextInt(desertTPPoints.length)];
-					player.teleport(desertLoc.getX(), desertLoc.getX());
+					player.teleport(desertLoc.getX(), desertLoc.getY());
 				}
 			} else if (menu == 1) {
 				player.message("You decide not to attack the guard.");
@@ -2992,7 +2992,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 					"Sometime later you're dumped in the middle of the desert.",
 					"The guards move off in the cart leaving you stranded in the desert.");
 				Point desertLoc = desertTPPoints[DataConversions.getRandom().nextInt(desertTPPoints.length)];
-				player.teleport(desertLoc.getX(), desertLoc.getX());
+				player.teleport(desertLoc.getX(), desertLoc.getY());
 			}
 		}
 	}
