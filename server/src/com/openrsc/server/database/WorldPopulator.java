@@ -1,6 +1,5 @@
 package com.openrsc.server.database;
 
-import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.database.struct.SceneryObject;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
@@ -59,21 +58,11 @@ public final class WorldPopulator {
 			LOGGER.info("Loaded {}", box(countOBJ) + " Objects.");
 
 			// LOAD NPC LOCS //
-			loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/NpcLocs.json");
-			if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
-				loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/NpcLocsCustom.json");
-			}
+			loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocs.json");
+			loadCustomLocs(LocType.NPC);
 			// NpcLocation[] npcLocations = getWorld().getServer().getDatabase().getNpcLocs();
 			// for (NpcLocation npcLocation : npcLocations) {
 			for (NPCLoc loc : npclocs) {
-				// Configurable NPCs //
-				int npcID = loc.id;
-				if ((npcID == NpcId.AUCTIONEER.id() || npcID == NpcId.AUCTION_CLERK.id())
-					&& !getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) continue; // Auctioneers & Auction Clerks
-				else if ((npcID == NpcId.IRONMAN.id() || npcID == NpcId.ULTIMATE_IRONMAN.id() || npcID == NpcId.HARDCORE_IRONMAN.id())
-					&& !getWorld().getServer().getConfig().SPAWN_IRON_MAN_NPCS)
-					continue; // Iron Man, Ultimate Iron Man, Hardcore Iron Man
-
 				NPCLoc n = loc;
 
 				// NPCLoc n = new NPCLoc(npcID,
@@ -101,10 +90,8 @@ public final class WorldPopulator {
 
 			/* LOAD GROUND ITEMS */
 			int countGI = 0;
-			loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/GroundItems.json");
-			if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
-				loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/GroundItemsCustom.json");
-			}
+			loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItems.json");
+			loadCustomLocs(LocType.GroundItem);
 			// FloorItem[] groundItems = getWorld().getServer().getDatabase().getGroundItems();
 			// for (FloorItem groundItem : groundItems) {
 			for (ItemLoc loc : itemlocs) {
@@ -145,6 +132,39 @@ public final class WorldPopulator {
 
 	public World getWorld() {
 		return world;
+	}
+
+	private void loadCustomLocs(LocType type) {
+		if (type == LocType.NPC) {
+			if ((getWorld().getServer().getConfig().LOCATION_DATA == 1 || getWorld().getServer().getConfig().LOCATION_DATA == 2)
+				&& getWorld().getServer().getConfig().WANT_FIXED_BROKEN_MECHANICS) {
+				loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsDiscontinued.json");
+			}
+			if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
+				if (getWorld().getServer().getConfig().SPAWN_AUCTION_NPCS) {
+					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsAuction.json");
+				}
+				if (getWorld().getServer().getConfig().SPAWN_IRON_MAN_NPCS) {
+					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsIronman.json");
+				}
+				if (getWorld().getServer().getConfig().WANT_RUNECRAFT) {
+					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsRunecraft.json");
+				}
+				if (getWorld().getServer().getConfig().WANT_HARVESTING) {
+					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsHarvesting.json");
+				}
+				if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
+					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsCustomQuest.json");
+				}
+				loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsOther.json");
+			}
+		} else if (type == LocType.GroundItem) {
+			if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
+				if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
+					loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItemsCustomQuest.json");
+				}
+			}
+		}
 	}
 
 	private void loadNpcLocs(String filename) {
@@ -193,5 +213,9 @@ public final class WorldPopulator {
 		catch (Exception e) {
 			LOGGER.error(e);
 		}
+	}
+
+	enum LocType {
+		NPC, GroundItem
 	}
 }
