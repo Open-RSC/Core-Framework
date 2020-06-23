@@ -70,13 +70,20 @@ public final class InterfaceShopHandler implements PacketHandler {
 		Item tempItem = new Item(catalogID);
 		if (tempItem.getDef(player.getWorld()).isStackable() || tempItem.getNoted()) {
 			// If purchase is valid, proceed to set totals.
-			if (!checkPurchaseValidity(player, shop, def, catalogID, amount, 0)) {
-				totalMoneySpent = amount * shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), amount);
-				totalBought = amount;
+			totalMoneySpent = 0;
+			totalBought = 0;
+			for (int i = 0; i < amount; i++) {
+				if (checkPurchaseValidity(player, shop, def, catalogID, amount, totalMoneySpent)) {
+					break;
+				}
+				totalMoneySpent += shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), i);
+				totalBought += 1;
+			}
 
+			if (totalBought > 0) {
 				shop.removeShopItem(new Item(catalogID, totalBought));
 				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), totalMoneySpent));
-				player.getCarriedItems().getInventory().add(new Item(catalogID, amount));
+				player.getCarriedItems().getInventory().add(new Item(catalogID, totalBought));
 			}
 		}
 
@@ -84,15 +91,13 @@ public final class InterfaceShopHandler implements PacketHandler {
 		else {
 			amount = Math.min(amount, player.getCarriedItems().getInventory().getFreeSlots());
 			for (int i = 0; i < amount; i++) {
-				totalBought++;
-
 				if (checkPurchaseValidity(player, shop, def, catalogID, totalBought, totalMoneySpent)) {
 					break;
 				}
+				totalMoneySpent += shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), totalBought);
+				totalBought++;
 
 				player.getCarriedItems().getInventory().add(new Item(catalogID, 1));
-
-				totalMoneySpent += shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), 1);
 			}
 
 			if (totalMoneySpent > 0) {
@@ -124,7 +129,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			player.message("The shop has ran out of stock");
 			return true;
 		}
-		int price = shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), totalBought);
+		int price = shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), totalBought-1);
 		if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) - totalMoneySpent < price) {
 			player.message("You don't have enough coins");
 			return true;
