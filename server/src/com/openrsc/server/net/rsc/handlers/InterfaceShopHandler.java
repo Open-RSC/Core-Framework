@@ -69,9 +69,8 @@ public final class InterfaceShopHandler implements PacketHandler {
 
 		Item tempItem = new Item(catalogID);
 		if (tempItem.getDef(player.getWorld()).isStackable() || tempItem.getNoted()) {
-
 			// If purchase is valid, proceed to set totals.
-			if (!checkPurchaseValidity(player, shop, def, catalogID, amount)) {
+			if (!checkPurchaseValidity(player, shop, def, catalogID, amount, 0)) {
 				totalMoneySpent = amount * shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), amount);
 				totalBought = amount;
 
@@ -87,7 +86,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			for (int i = 0; i < amount; i++) {
 				totalBought++;
 
-				if (checkPurchaseValidity(player, shop, def, catalogID, totalBought)) {
+				if (checkPurchaseValidity(player, shop, def, catalogID, totalBought, totalMoneySpent)) {
 					break;
 				}
 
@@ -96,8 +95,10 @@ public final class InterfaceShopHandler implements PacketHandler {
 				totalMoneySpent += shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), 1);
 			}
 
-			shop.removeShopItem(new Item(catalogID, totalBought));
-			player.getCarriedItems().remove(new Item(ItemId.COINS.id(), totalMoneySpent));
+			if (totalMoneySpent > 0) {
+				shop.removeShopItem(new Item(catalogID, totalBought));
+				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), totalMoneySpent));
+			}
 		}
 
 		if (totalBought <= 0 && totalMoneySpent <= 0) {
@@ -112,7 +113,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 
 	}
 
-	private boolean checkPurchaseValidity(Player player, Shop shop, ItemDefinition def, int catalogID, int totalBought) {
+	private boolean checkPurchaseValidity(Player player, Shop shop, ItemDefinition def, int catalogID, int totalBought, int totalMoneySpent) {
 		if ((player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 			|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id()))
 			&& shop.getItemCount(catalogID) > shop.getStock(catalogID)) {
@@ -124,7 +125,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			return true;
 		}
 		int price = shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), totalBought);
-		if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < price) {
+		if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) - totalMoneySpent < price) {
 			player.message("You don't have enough coins");
 			return true;
 		}
