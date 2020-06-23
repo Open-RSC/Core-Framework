@@ -14,6 +14,7 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -168,12 +169,23 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							say(player, n, "i'd rather not",
 								"i overheard the cult members talking",
 								"the buttler is really working for them");
-							npcsay(player, n, "that's it, come with me",
-								"we'll sort this out once and for all");
-							mes("you follow ceril up to butler Jones' room");
-							delay(3);
-							player.teleport(613, 1562);
-							Npc ceril = ifnearvisnpc(player, NpcId.CERIL.id(), 10);
+							Npc ceril;
+							if (Formulae.getHeight(n.getLocation()) == 0) {
+								// ceril of ground floor
+								npcsay(player, n, "that's it, come with me",
+									"we'll sort this out once and for all");
+								mes("you follow ceril up to butler Jones' room");
+								delay(3);
+								player.teleport(613, 1562);
+								ceril = ifnearvisnpc(player, NpcId.CERIL.id(), 10);
+							} else {
+								// ceril of 1st floor
+								// unknown from OG RSC but on OSRS doesnt move locations
+								// and excluding the upstairs part, has same dialogue
+								npcsay(player, n, "that's it",
+									"we'll sort this out once and for all");
+								ceril = n;
+							}
 							if (ceril != null) {
 								mes("ceril speaks briefly with Jones");
 								delay(3);
