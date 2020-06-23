@@ -114,7 +114,7 @@ public final class Player extends Mob {
 	private String currentIP = "0.0.0.0";
 	private int incorrectSleepTries = 0;
 	private volatile int questionOption;
-	private List<PluginTask> ownedPlugins = new ArrayList<>();
+	private List<PluginTask> ownedPlugins = Collections.synchronizedList(new ArrayList<>());
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -599,22 +599,21 @@ public final class Player extends Mob {
 	}
 
 	public boolean addOwnedPlugin(final PluginTask plugin) {
-		synchronized(ownedPlugins) {
-			return ownedPlugins.add(plugin);
-		}
+		return ownedPlugins.add(plugin);
 	}
 
 	public boolean removeOwnedPlugin(final PluginTask plugin) {
-		synchronized(ownedPlugins) {
-			return ownedPlugins.remove(plugin);
-		}
+		return ownedPlugins.remove(plugin);
 	}
 
 	public void interruptPlugins() {
-		synchronized(ownedPlugins) {
+		try {
 			for (final PluginTask ownedPlugin : ownedPlugins) {
 				ownedPlugin.getScriptContext().setInterrupted(true);
 			}
+		}
+		catch (ConcurrentModificationException e) {
+			LOGGER.error(e);
 		}
 	}
 
