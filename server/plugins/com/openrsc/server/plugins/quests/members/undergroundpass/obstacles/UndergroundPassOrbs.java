@@ -42,6 +42,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 		if (inArray(obj.getID(), NORTH_PASSAGE)) {
 			if (cmd.equalsIgnoreCase("walk here")) {
 				mes("you walk down the passage way");
+				delay(3);
 				player.message("you step on a pressure trigger");
 				player.message("it's a trap");
 				if (obj.getID() == 825) {
@@ -58,9 +59,12 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 5) + 5);
 				say(player, null, "aaarghh");
 			} else {
-				mes("you search the rocks",
-					"there seems to be some sort of spring activated trap",
-					"you may be able to wedge it open with something?");
+				mes("you search the rocks");
+				delay(3);
+				mes("there seems to be some sort of spring activated trap");
+				delay(3);
+				mes("you may be able to wedge it open with something?");
+				delay(3);
 			}
 		}
 		else if (inArray(obj.getID(), WEST_PASSAGE)) {
@@ -75,19 +79,21 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 				}
 			} else {
 				mes("you search the rocks");
+				delay(3);
 				player.message("you find a trip wire");
 				int menu = multi(player,
 					"step over trip wire", "back away");
 				if (menu == 0) {
 					mes("you carefully step over the trip wire");
+					delay(3);
 					if (DataConversions.getRandom().nextInt(20) <= 2) {
 						player.message("...but you brush against it");
 						if (obj.getX() == player.getX() - 1) {
 							player.teleport(player.getX() - 2, 3446);
-							delay(config().GAME_TICK * 2);
+							delay(2);
 						} else if (obj.getX() == player.getX() - 2) {
 							player.teleport(player.getX() - 3, 3446);
-							delay(config().GAME_TICK * 2);
+							delay(2);
 						}
 						fallBack(player, obj);
 					} else {
@@ -104,9 +110,11 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 		}
 		else if (obj.getID() == SOUTH_WEST_PASSAGE) {
 			player.teleport(742, 3453);
-			delay(config().GAME_TICK * 2);
-			mes("you walk down the passage way",
-				"the floor seems unstable");
+			delay(2);
+			mes("you walk down the passage way");
+			delay(3);
+			mes("the floor seems unstable");
+			delay(3);
 			player.message("suddenly with a huge creek the whole passage way swings down");
 			if (player.getCache().hasKey("stalagmite")) {
 				player.teleport(716, 3481);
@@ -120,27 +128,32 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 		}
 		else if (obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP) {
 			mes("you begin to climb up the grill");
+			delay(3);
 			if (DataConversions.getRandom().nextInt(10) <= 2) { // fail
 				mes("but you fall back to the floor");
+				delay(3);
 				player.message("impailing yourself on the spike's once more");
 				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 5) + 5);
 				say(player, null, "aaarrrgh");
 			} else { // succeed
 				player.teleport(737, 3453);
 				mes("as you pull yourself up you hear a mechanical churning");
+				delay(3);
 				player.message("as the passage raises back to it's original position");
 			}
 		}
 		else if (obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP_ROPE) {
 			player.message("you pull your self up the rope");
 			mes("and climb back into the cavern");
-			delay(config().GAME_TICK);
+			delay();
 			player.teleport(737, 3453);
 			mes("as you pull yourself up you hear a mechanical churning");
+			delay(3);
 			player.message("as the passage raises back to it's original position");
 		}
 		else if (obj.getID() == SOUTH_WEST_STALAGMITE) {
 			mes("you search the stalagmite");
+			delay(3);
 			if (player.getCache().hasKey("stalagmite")) {
 				player.message("you untie your rope and place it in your satchel");
 				give(player, ItemId.ROPE.id(), 1);
@@ -169,7 +182,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 			object.getWorld().registerGameObject(object);
 			object.getWorld().delayedRemoveObject(object, config().GAME_TICK * 5);
 			player.teleport(728, 3438);
-			delay(850);
+			delay(2);
 			if (obj.getID() == NORTH_PASSAGE[0]) {
 				player.teleport(728, 3435);
 			} else if (obj.getID() == NORTH_PASSAGE[2]) {
@@ -177,8 +190,10 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 			}
 		}
 		else if (item.getCatalogId() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE) {
-			mes("you tie one end of the rope to the stalagmite",
-				"and the other around your waist");
+			mes("you tie one end of the rope to the stalagmite");
+			delay(3);
+			mes("and the other around your waist");
+			delay(3);
 			player.getCarriedItems().remove(new Item(ItemId.ROPE.id()));
 			if (!player.getCache().hasKey("stalagmite")) {
 				player.getCache().store("stalagmite", true);
@@ -188,6 +203,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 				ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id()) && obj.getID() == FURNACE) {
 			player.message("you throw the glowing orb into the furnace");
 			mes("its light quickly dims and then dies");
+			delay(3);
 			player.message("you feel a cold shudder run down your spine");
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			if (!atQuestStages(player, Quests.UNDERGROUND_PASS, 7, 8, -1)) {
@@ -267,11 +283,11 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 
 	private void fallBack(Player player, GameObject old) {
 		if (old.getID() == WEST_PASSAGE[0]) {
-			delay(config().GAME_TICK);
+			delay();
 			player.message("you hear a strange mechanical sound");
 			player.teleport(735, 3446);
 			damageOfTrap(player, old, null, -1);
-			delay(1600);
+			delay(3);
 			player.message("You've triggered a trap");
 		} else if (old.getID() == WEST_PASSAGE[1]) {
 			damageOfTrap(player, old, null, -1);
@@ -280,46 +296,46 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 		} else if (old.getID() == WEST_PASSAGE[2]) {
 			damageOfTrap(player, old, null, -1);
 			player.teleport(738, 3446);
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			damageOfTrap(player, old, new GameObject(player.getWorld(), Point.location(739, 3446), 773, 2, 0), 820);
 			player.teleport(735, 3446);
 			firstFallbackTrap(player, old);
 		} else if (old.getID() == WEST_PASSAGE[3]) {
 			damageOfTrap(player, old, null, -1);
 			player.teleport(741, 3446);
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			damageOfTrap(player, old, new GameObject(player.getWorld(), Point.location(742, 3446), 773, 2, 0), 821);
 			player.teleport(738, 3446);
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			damageOfTrap(player, old, new GameObject(player.getWorld(), Point.location(739, 3446), 773, 2, 0), 820);
 			player.teleport(735, 3446);
 			firstFallbackTrap(player, old);
 		} else if (old.getID() == WEST_PASSAGE[4]) {
 			damageOfTrap(player, old, null, -1);
 			player.teleport(744, 3446);
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			damageOfTrap(player, old, new GameObject(player.getWorld(), Point.location(745, 3446), 773, 2, 0), 822);
 			player.teleport(741, 3446);
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			damageOfTrap(player, old, new GameObject(player.getWorld(), Point.location(742, 3446), 773, 2, 0), 821);
 			player.teleport(738, 3446);
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			damageOfTrap(player, old, new GameObject(player.getWorld(), Point.location(739, 3446), 773, 2, 0), 820);
 			player.teleport(735, 3446);
 			firstFallbackTrap(player, old);
 		} else if (old.getID() == WEST_PASSAGE[5]) {
 			damageOfTrap(player, old, null, -1);
 			player.teleport(747, 3446);
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			damageOfTrap(player, old, new GameObject(player.getWorld(), Point.location(748, 3446), 773, 2, 0), 823);
 			player.teleport(744, 3446);
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			damageOfTrap(player, old, new GameObject(player.getWorld(), Point.location(745, 3446), 773, 2, 0), 822);
 			player.teleport(741, 3446);
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			damageOfTrap(player, old, new GameObject(player.getWorld(), Point.location(742, 3446), 773, 2, 0), 821);
 			player.teleport(738, 3446);
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			damageOfTrap(player, old, new GameObject(player.getWorld(), Point.location(739, 3446), 773, 2, 0), 820);
 			player.teleport(735, 3446);
 			firstFallbackTrap(player, old);
@@ -327,10 +343,10 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 	}
 
 	private void firstFallbackTrap(Player player, GameObject old) {
-		delay(config().GAME_TICK * 3);
+		delay(3);
 		player.message("you hear a strange mechanical sound");
 		damageOfTrap(player, old, new GameObject(player.getWorld(), Point.location(736, 3446), 773, 2, 0), 819);
-		delay(1600);
+		delay(3);
 		player.message("You've triggered a trap");
 	}
 

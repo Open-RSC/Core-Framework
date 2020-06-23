@@ -58,7 +58,10 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE2XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_INNER, n.getID())) {
-			mes(config().GAME_TICK * 2, "you can't attack this gnome", "that's cheating");
+			mes("you can't attack this gnome");
+			delay(2);
+			mes("that's cheating");
+			delay(2);
 		}
 	}
 
@@ -68,7 +71,10 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE2XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_INNER, n.getID())) {
-			mes(config().GAME_TICK * 2, "you can't attack this gnome", "that's cheating");
+			mes("you can't attack this gnome");
+			delay(2);
+			mes("that's cheating");
+			delay(2);
 		}
 	}
 
@@ -78,7 +84,10 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE2XP_OUTER, n.getID())
 				|| DataConversions.inArray(GNOME_BALLERS_ZONE1XP_INNER, n.getID())) {
-			mes(config().GAME_TICK * 2, "you can't attack this gnome", "that's cheating");
+			mes("you can't attack this gnome");
+			delay(2);
+			mes("that's cheating");
+			delay(2);
 		}
 	}
 
@@ -181,7 +190,10 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 							"i think you should be fine");
 					player.getCache().store("gnomeball", true);
 					npcsay(player, n, "ready ...  go");
-					mes(config().GAME_TICK * 2, "the ref throws the ball into the air", "you jump up and catch it");
+					mes("the ref throws the ball into the air");
+					delay(2);
+					mes("you jump up and catch it");
+					delay(2);
 					give(player, ItemId.GNOME_BALL.id(), 1);
 				}
 			} else {
@@ -192,7 +204,10 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 					if (inArray(player.getAttribute("gnomeball_npc", -1), 0)) {
 						player.setAttribute("throwing_ball_game", false);
 						npcsay(player, n, "ready ...  go");
-						mes(config().GAME_TICK * 2, "the ref throws the ball into the air", "you jump up and catch it");
+						mes("the ref throws the ball into the air");
+						delay(2);
+						mes("you jump up and catch it");
+						delay(2);
 						give(player, ItemId.GNOME_BALL.id(), 1);
 					}
 					else {
@@ -257,7 +272,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 				player.message("you pass the ball to the gnome");
 				player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
 				npcsay(player, n, "run long..");
-				delay(config().GAME_TICK * 8);
+				delay(8);
 				player.message("the gnome throws you a long ball");
 				give(player, ItemId.GNOME_BALL.id(), 1);
 				player.setAttribute("throwing_ball_game", false);
@@ -281,6 +296,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 		else {
 			thinkbubble(new Item(ItemId.GNOME_BALL.id()));
 			mes("you attempt to tackle the gnome");
+			delay(3);
 			if (DataConversions.random(0, 1) == 0) {
 				//successful tackles gives agility xp
 				player.playerServerMessage(MessageType.QUEST, "You skillfully grab the ball");

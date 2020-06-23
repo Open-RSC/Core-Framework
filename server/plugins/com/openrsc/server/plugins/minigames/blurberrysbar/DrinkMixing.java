@@ -48,7 +48,8 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 			player.getCache().set(dm.cacheName, (next + 1));
 		}
 		if (player.getCarriedItems().hasCatalogID(dm.itemIDOther, Optional.of(false))) {
-			mes(config().GAME_TICK * 3, dm.messages[0]);
+			mes(dm.messages[0]);
+			delay(3);
 			if (dm.itemIDOther == ItemId.MILK.id()) {
 				player.getCarriedItems().remove(new Item(ItemId.MILK.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
@@ -231,7 +232,8 @@ public class DrinkMixing implements UseInvTrigger, OpInvTrigger {
 					player.getCarriedItems().remove(new Item(ItemId.COCKTAIL_GLASS.id()));
 					player.getCarriedItems().getInventory().add(new Item(ItemId.COCKTAIL_GLASS.id()));
 				}
-				mes(config().GAME_TICK, "you pour the contents into a glass");
+				mes("you pour the contents into a glass");
+				delay();
 			} else {
 				player.message("first you'll need a glass to pour the drink into");
 			}

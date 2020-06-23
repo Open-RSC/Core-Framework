@@ -30,7 +30,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.CHARGED_DRAGONSTONE_AMULET.id()) {
 			player.message("You rub the amulet");
-			delay(config().GAME_TICK);
+			delay();
 			player.message("Where would you like to teleport to?");
 			int menu = multi(player, "Edgeville", "Karamja", "Draynor village", "Al Kharid", "Nowhere");
 			//if(p.getLocation().inWilderness() && System.currentTimeMillis() - p.getCombatTimer() < 10000) {
@@ -45,8 +45,10 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 				return;
 			}
 			if (player.getCarriedItems().getInventory().countId(ItemId.ANA_IN_A_BARREL.id()) > 0) {
-				mes("You can't teleport while holding Ana,",
-					"It's just too difficult to concentrate.");
+				mes("You can't teleport while holding Ana,");
+				delay(3);
+				mes("It's just too difficult to concentrate.");
+				delay(3);
 				return;
 			}
 			if (player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id()) && (player.getLocation().inKaramja())) {
@@ -125,13 +127,16 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
 		);
 		player.message("You dip the amulet in the fountain");
-		delay(config().GAME_TICK * 2);
+		delay(2);
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()));
 
-		mes("You feel more power emanating from it than before",
-			"you can now rub this amulet to teleport",
-			"Though using it to much means you will need to recharge it");
+		mes("You feel more power emanating from it than before");
+		delay(3);
+		mes("you can now rub this amulet to teleport");
+		delay(3);
+		mes("Though using it to much means you will need to recharge it");
+		delay(3);
 		player.message("It now also means you can find more gems when mining");
 
 		// Repeat

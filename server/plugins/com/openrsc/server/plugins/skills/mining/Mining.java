@@ -67,7 +67,10 @@ public final class Mining implements OpLocTrigger {
 			}
 		} else if (object.getID() == 770) {
 			if (player.getCarriedItems().hasCatalogID(getAxe(player), Optional.of(false))) {
-				mes("you mine the rock", "and break of several large chunks");
+				mes("you mine the rock");
+				delay(3);
+				mes("and break of several large chunks");
+				delay(3);
 				give(player, ItemId.ROCKS.id(), 1);
 			} else {
 				player.message("you need a pickaxe to mine this rock");
@@ -148,19 +151,21 @@ public final class Mining implements OpLocTrigger {
 
 		if (player.click == 0 && (def == null || (def.getRespawnTime() < 1 && rock.getID() != 496) || (def.getOreId() == 315 && player.getQuestStage(Quests.FAMILY_CREST) < 6))) {
 			if (axeId < 0 || reqlvl > mineLvl) {
-				mes("You need a pickaxe to mine this rock",
-					"You do not have a pickaxe which you have the mining level to use");
+				mes("You need a pickaxe to mine this rock");
+				delay(3);
+				mes("You do not have a pickaxe which you have the mining level to use");
+				delay(3);
 				return;
 			}
 			player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			player.playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");
 			return;
 		}
 		if (player.click == 1) {
 			player.playSound("prospect");
 			player.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			if (rock.getID() == 496) {
 				// Tutorial Island rock handler
 				mes("This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName(),
@@ -179,8 +184,10 @@ public final class Mining implements OpLocTrigger {
 			return;
 		}
 		if (axeId < 0 || reqlvl > mineLvl) {
-			mes("You need a pickaxe to mine this rock",
-				"You do not have a pickaxe which you have the mining level to use");
+			mes("You need a pickaxe to mine this rock");
+			delay(3);
+			mes("You do not have a pickaxe which you have the mining level to use");
+			delay(3);
 			return;
 		}
 		if (config().STOP_SKILLING_FATIGUED >= 1
@@ -207,7 +214,7 @@ public final class Mining implements OpLocTrigger {
 		player.playSound("mine");
 		thinkbubble(new Item(ItemId.IRON_PICKAXE.id()));
 		player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
-		delay(config().GAME_TICK * 3);
+		delay(3);
 
 		final Item ore = new Item(def.getOreId());
 		if (config().WANT_FATIGUE) {

@@ -64,7 +64,7 @@ public class Smelting implements UseLocTrigger {
 			}
 			if (player.getCarriedItems().remove(new Item(item.getCatalogId())) > -1) {
 				player.message("You smelt the " + item.getDef(player.getWorld()).getName() + "...");
-				delay(config().GAME_TICK * 5);
+				delay(5);
 				player.message("And retrieve " + amount + " dragon bar" + (amount > 1? "s":""));
 				give(player, ItemId.DRAGON_BAR.id(), amount);
 			}
@@ -93,11 +93,13 @@ public class Smelting implements UseLocTrigger {
 		}
 
 		thinkbubble(new Item(ItemId.MULTI_CANNON_BALL.id(), 1));
-		int tick = config().GAME_TICK;
-		int messagedelay = config().BATCH_PROGRESSION ? tick : (tick * 2);
-		mes(messagedelay, "you heat the steel bar into a liquid state",
-			"and pour it into your cannon ball mould",
-			"you then leave it to cool for a short while");
+		int messagedelay = config().BATCH_PROGRESSION ? 1 : 2;
+		mes("you heat the steel bar into a liquid state");
+		delay(messagedelay);
+		mes("and pour it into your cannon ball mould");
+		delay(messagedelay);
+		mes("you then leave it to cool for a short while");
+		delay(messagedelay);
 
 		player.getCarriedItems().remove(new Item(ItemId.STEEL_BAR.id()));
 		// If you are fatigued, you should still make the cannonball, it just
@@ -140,7 +142,7 @@ public class Smelting implements UseLocTrigger {
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
 			player.message("you repeat the process");
-			delay(config().GAME_TICK);
+			delay();
 			handleCannonBallSmelting(player);
 		}
 	}
@@ -251,7 +253,7 @@ public class Smelting implements UseLocTrigger {
 		String barName = player.getWorld().getServer().getEntityHandler().getItemDef(
 			smelt.getSmeltBarId()).getName().toLowerCase().replaceAll("bar", "");
 		player.playerServerMessage(MessageType.QUEST, smeltString(player.getWorld(), smelt, item));
-		delay(config().GAME_TICK * 3);
+		delay(3);
 
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 2

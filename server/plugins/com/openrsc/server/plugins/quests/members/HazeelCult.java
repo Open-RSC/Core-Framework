@@ -14,6 +14,7 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -160,6 +161,7 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 								"Look, I've found the armour");
 							npcsay(player, n, "well done i must say i am impressed");
 							mes("you give ceril the family armour");
+							delay(3);
 							player.getCarriedItems().remove(new Item(ItemId.CARNILLEAN_ARMOUR.id()));
 							npcsay(player, n, "before we send you on your way",
 								"i'll get our butler jones",
@@ -167,13 +169,26 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							say(player, n, "i'd rather not",
 								"i overheard the cult members talking",
 								"the buttler is really working for them");
-							npcsay(player, n, "that's it, come with me",
-								"we'll sort this out once and for all");
-							mes("you follow ceril up to butler Jones' room");
-							player.teleport(613, 1562);
-							Npc ceril = ifnearvisnpc(player, NpcId.CERIL.id(), 10);
+							Npc ceril;
+							if (Formulae.getHeight(n.getLocation()) == 0) {
+								// ceril of ground floor
+								npcsay(player, n, "that's it, come with me",
+									"we'll sort this out once and for all");
+								mes("you follow ceril up to butler Jones' room");
+								delay(3);
+								player.teleport(613, 1562);
+								ceril = ifnearvisnpc(player, NpcId.CERIL.id(), 10);
+							} else {
+								// ceril of 1st floor
+								// unknown from OG RSC but on OSRS doesnt move locations
+								// and excluding the upstairs part, has same dialogue
+								npcsay(player, n, "that's it",
+									"we'll sort this out once and for all");
+								ceril = n;
+							}
 							if (ceril != null) {
 								mes("ceril speaks briefly with Jones");
+								delay(3);
 								npcsay(player, ceril, "Well, he assures me that he's a loyal hard working man",
 									"I cannot fathom, why you would believe he is a spy");
 								say(player, ceril, "surely you won't take his word for it?");
@@ -181,12 +196,17 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 									"it is only fair that Jones shall recieve your reward",
 									"you shall recieve payment more suited to your low life personality");
 								mes("ceril gives you 5 gold coins");
+								delay(3);
 								give(player, ItemId.COINS.id(), 5);
 								mes("ceril gives jones 695 gold coins");
+								delay(3);
 								npcsay(player, ceril, "now take it and leave");
-								mes("butler Jones has a slight grin",
-									"You're going to need more than just your word",
-									"To prove Jones' treachary");
+								mes("butler Jones has a slight grin");
+								delay(3);
+								mes("You're going to need more than just your word");
+								delay(3);
+								mes("To prove Jones' treachary");
+								delay(3);
 								player.updateQuestStage(this, 5);
 							}
 						} else {
@@ -221,6 +241,7 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 						npcsay(player, n, "I'm devestated",
 							"i don't know what to do with myself since i lost scruffy");
 						mes("ceril bursts into tears");
+						delay(3);
 						return;
 					}
 					break;
@@ -510,6 +531,7 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 					} else if (player.getCache().hasKey("evil_side")) {
 						say(player, n, "hello youngster");
 						mes("the boy looks very upset");
+						delay(3);
 						npcsay(player, n, "someone killed scruffy",
 							"i liked scruffy",
 							"he never told me off");
@@ -765,9 +787,12 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							npcsay(player, n, "then you're a fool",
 								"go back to your adventures traveller");
 							mes("clivet boards the raft and pushes of down the sewer system");
+							delay(3);
 							n.remove();
-							mes("you hear him call out",
-								"@yel@clivet:you'll never find us...");
+							mes("you hear him call out");
+							delay(3);
+							mes("@yel@clivet:you'll never find us...");
+							delay(3);
 							//SET GOOD SIDE;
 							player.updateQuestStage(this, 3);
 							player.getCache().store("good_side", true);
@@ -786,9 +811,12 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 								npcsay(player, n, "then you're a fool",
 									"go back to your adventures traveller");
 								mes("clivet boards the raft and pushes of down the sewer system");
+								delay(3);
 								n.remove();
-								mes("you hear him call out",
-									"@yel@clivet:you'll never find us...");
+								mes("you hear him call out");
+								delay(3);
+								mes("@yel@clivet:you'll never find us...");
+								delay(3);
 								//SET GOOD SIDE;
 								player.updateQuestStage(this, 3);
 								player.getCache().store("good_side", true);
@@ -838,11 +866,15 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							say(player, n, "You're crazy, i'd never help you");
 							npcsay(player, n, "then you're a fool",
 								"go back to your adventures traveller");
-							mes("the man jumps onto a small raft",
-								"and pushes off down the sewer system");
+							mes("the man jumps onto a small raft");
+							delay(3);
+							mes("and pushes off down the sewer system");
+							delay(3);
 							n.remove();
-							mes("you hear him call out",
-								"@yel@clivet:you'll never find us...");
+							mes("you hear him call out");
+							delay(3);
+							mes("@yel@clivet:you'll never find us...");
+							delay(3);
 							//SET GOOD SIDE;
 							player.updateQuestStage(this, 3);
 							player.getCache().store("good_side", true);
@@ -861,9 +893,12 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 								npcsay(player, n, "then you're a fool",
 									"go back to your adventures traveller");
 								mes("clivet boards the raft and pushes of down the sewer system");
+								delay(3);
 								n.remove();
-								mes("you hear him call out",
-									"@yel@clivet:you'll never find us...");
+								mes("you hear him call out");
+								delay(3);
+								mes("@yel@clivet:you'll never find us...");
+								delay(3);
 								//SET GOOD SIDE;
 								player.updateQuestStage(this, 3);
 								player.getCache().store("good_side", true);
@@ -913,6 +948,7 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							say(player, n, "ok, so what's next?");
 							npcsay(player, n, "first you must wear the sign of hazeel");
 							mes("clivet hands you a small metal amulet");
+							delay(3);
 							give(player, ItemId.MARK_OF_HAZEEL.id(), 1);
 							npcsay(player, n, "the amulet is proof to other cult members that you're one of us",
 								"it is also the key to finding the cult hideout");
@@ -1073,7 +1109,7 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 							"he must be going soft");
 						say(player, n, "so the butler is working for you too?",
 							"Why's it always the Butler? I should have guessed");
-						delay(config().GAME_TICK * 3);
+						delay(3);
 						n.setChasing(player);
 					} else if (player.getCache().hasKey("evil_side")) {
 						say(player, n, "hello");
@@ -1125,20 +1161,28 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 						say(player, n, "yes I have it here");
 						npcsay(player, n, "finally our lord hazeel can return");
 						mes("alomone takes the hazeel script");
+						delay(3);
 						player.getCarriedItems().remove(new Item(ItemId.SCRIPT_OF_HAZEEL.id()));
 						npcsay(player, n, "with these words our lord will return and save us all",
 							"come with me adventurer and let the ceromony begin");
 						player.teleport(580, 3419);
 						n.teleport(580, 3419);
 						npcsay(player, n, "I do this for you lord hazeel and all followers of zamorak");
-						mes("alomone kneels down infront of the shrine",
-							"he begins to read the script");
+						mes("alomone kneels down infront of the shrine");
+						delay(3);
+						mes("he begins to read the script");
+						delay(3);
 						player.message("the language is something you have never heard");
-						mes("alomone reads on",
-							"Alomone finishes the script",
-							"the room is silent",
-							"suddenly a shrill scream comes from the coffin of hazeel",
-							"A shadowy figure appears");
+						mes("alomone reads on");
+						delay(3);
+						mes("Alomone finishes the script");
+						delay(3);
+						mes("the room is silent");
+						delay(3);
+						mes("suddenly a shrill scream comes from the coffin of hazeel");
+						delay(3);
+						mes("A shadowy figure appears");
+						delay(3);
 						Npc lord_hazeel = addnpc(player.getWorld(), NpcId.LORD_HAZEEL.id(), 580, 3420, (int)TimeUnit.SECONDS.toMillis(120));
 						ActionSender.sendTeleBubble(player, 580,
 							3420, true);
@@ -1149,6 +1193,7 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 						lord_hazeel.face(player);
 						player.face(lord_hazeel);
 						mes("the cult begin to chant");
+						delay(3);
 						npcsay(player, lord_hazeel, "my followers i am proud of you all",
 							"I never expected to retun to these lands",
 							"I can see I have much to attend to",
@@ -1207,10 +1252,14 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 		if (n.getID() == NpcId.ALOMONE.id()) {
 			if (player.getCache().hasKey("good_side")) {
 				if (!player.getCarriedItems().hasCatalogID(ItemId.CARNILLEAN_ARMOUR.id(), Optional.empty())) {
-					mes("you have killed alomone",
-						"lying behind his corpse",
-						"you see the carnillean family armour",
-						"you place it in your bag");
+					mes("you have killed alomone");
+					delay(3);
+					mes("lying behind his corpse");
+					delay(3);
+					mes("you see the carnillean family armour");
+					delay(3);
+					mes("you place it in your bag");
+					delay(3);
 					give(player, ItemId.CARNILLEAN_ARMOUR.id(), 1);
 					if (player.getQuestStage(this) == 3) {
 						player.updateQuestStage(this, 4);
@@ -1235,15 +1284,20 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 				closeCupboard(obj, player, BUTLERS_CUPBOARD_CLOSED);
 			} else {
 				mes("you search the cupboard");
+				delay(3);
 				if (player.getQuestStage(this) == 5 && player.getCache().hasKey("good_side")) {
-					mes("you find a bottle of poison",
-						"and a strange amulet");
+					mes("you find a bottle of poison");
+					delay(3);
+					mes("and a strange amulet");
+					delay(3);
 					Npc ceril = ifnearvisnpc(player, NpcId.CERIL.id(), 10);
 					if (ceril != null) {
 						mes("you pass your finds to ceril");
+						delay(3);
 						say(player, ceril, "look what i've found?");
 						npcsay(player, ceril, "what's this for jones?");
 						mes("ceril takes the bottle");
+						delay(3);
 						npcsay(player, ceril, "i don't believe it, it's poison");
 						Npc butler = ifnearvisnpc(player, NpcId.BUTLER.id(), 10);
 						npcsay(player, butler, "mr carnillean, it's for the rats",
@@ -1256,6 +1310,7 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 						npcsay(player, butler, "that's because you're an old fool ceril",
 							"I should have got rid of you and your family weeks ago");
 						mes("ceril calls for the guards");
+						delay(3);
 						npcsay(player, butler, "don't worry ceril",
 							"we'll make sure you and your family pay");
 						npcsay(player, ceril, "looks like i owe you an apology traveller");
@@ -1269,11 +1324,13 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 					}
 				} else {
 					mes("but find nothing");
+					delay(3);
 				}
 			}
 		}
 		else if (obj.getID() == BASEMENT_CRATE) {
 			mes("you search the crate");
+			delay(3);
 			if (player.getQuestStage(this) == 5 && player.getCache().hasKey("evil_side")) {
 				if (!player.getCarriedItems().hasCatalogID(ItemId.CARNILLEAN_KEY.id(), Optional.of(false))) {
 					player.message("under the food packages");
@@ -1288,14 +1345,21 @@ public class HazeelCult implements QuestInterface, TalkNpcTrigger, KillNpcTrigge
 		}
 		else if (obj.getID() == TOP_LEVEL_BOOKCASE) {
 			mes("you search the book case");
+			delay(3);
 			if (player.getQuestStage(this) == 5 && player.getCache().hasKey("evil_side")) {
-				mes("as you pull out one of the books",
-					"the shelves slide to the side",
-					"revealing a secret passage",
-					"you walk through");
+				mes("as you pull out one of the books");
+				delay(3);
+				mes("the shelves slide to the side");
+				delay(3);
+				mes("revealing a secret passage");
+				delay(3);
+				mes("you walk through");
+				delay(3);
 				player.teleport(614, 2504);
-				mes("the passage leads upwards",
-					"to an empty room");
+				mes("the passage leads upwards");
+				delay(3);
+				mes("to an empty room");
+				delay(3);
 			} else {
 				player.message("but find nothing interesting");
 			}

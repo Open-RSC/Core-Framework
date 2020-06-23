@@ -126,13 +126,13 @@ public class HalloweenCracker implements UsePlayerTrigger {
 
 			player.getCarriedItems().remove(item);
 
-			delay(config().GAME_TICK);
+			delay();
 
 			thinkbubble(item);
 			player.message("You pull the cracker with " + otherPlayer.getUsername() + "...");
 			otherPlayer.message(player.getUsername() + " is pulling a cracker with you...");
 
-			delay(config().GAME_TICK);
+			delay();
 
 			int holidayId = Formulae.weightedRandomChoice(holidayIds, holidayWeights);
 			int prizeId = Formulae.weightedRandomChoice(prizeIds, prizeWeights);

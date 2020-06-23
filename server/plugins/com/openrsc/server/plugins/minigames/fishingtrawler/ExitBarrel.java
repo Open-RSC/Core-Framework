@@ -15,8 +15,12 @@ public class ExitBarrel implements OpLocTrigger {
 
 	@Override
 	public void onOpLoc(Player player, GameObject obj, String command) {
-		mes(config().GAME_TICK * 3, "you climb onto the floating barrel", "and begin to kick your way to the shore",
-			"you make it to the shore tired and weary");
+		mes("you climb onto the floating barrel");
+		delay(3);
+		mes("and begin to kick your way to the shore");
+		delay(3);
+		mes("you make it to the shore tired and weary");
+		delay(3);
 		player.teleport(550, 711);
 		player.damage(3);
 	}

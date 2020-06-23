@@ -194,7 +194,7 @@ public class Default implements DefaultHandler,
 
 		// Repeat
 		if (!ifinterrupted() && amountToDrop > 0) {
-			delay(config().GAME_TICK);
+			delay();
 			batchDrop(player, item, fromInventory, amountToDrop);
 		}
 	}

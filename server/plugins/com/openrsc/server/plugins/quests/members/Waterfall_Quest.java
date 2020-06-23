@@ -159,6 +159,7 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 					say(player, n, "maybe i could help?");
 					npcsay(player, n, "if you want to help go and tell my mother that i won't be back for a while");
 					mes("hudon is refusing to leave the waterfall");
+					delay(3);
 					say(player, n, "ok i'll leave you to it");
 					player.updateQuestStage(this, 2);
 					break;
@@ -203,6 +204,7 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 				say(player, n, "really");
 				npcsay(player, n, "the last one was this big");
 				mes("gerald stretches his arms out to full width");
+				delay(3);
 			} else {
 				say(player, n, "hello");
 				npcsay(player, n, "hello traveller",
@@ -228,14 +230,17 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 					"my grandad gave me all sorts of old junk");
 				say(player, n, "do you mind if i have a look?");
 				npcsay(player, n, "no, of course not");
-				mes("mixed with the junk on the floor",
-					"you find glarials pebble");
+				mes("mixed with the junk on the floor");
+				delay(3);
+				mes("you find glarials pebble");
+				delay(3);
 				give(player, ItemId.GLARIALS_PEBBLE.id(), 1);
 				say(player, n, "could i take this old pebble?");
 				npcsay(player, n, "oh that, yes have it",
 					"it's just some old elven junk i believe");
 				player.getCarriedItems().remove(new Item(ItemId.LARGE_KEY.id()));
 				mes("you give golrie the key");
+				delay(3);
 				npcsay(player, n, "well thanks again for the key",
 					"i think i'll wait in here until those goblins get bored and leave");
 				say(player, n, "okay, take care golrie");
@@ -252,8 +257,10 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 				say(player, n, "do you mind if i have a look?");
 				npcsay(player, n, "no, of course not");
 				player.getCarriedItems().remove(new Item(ItemId.LARGE_KEY.id()));
-				mes("you find nothing of interest",
-					"you give golrie the key");
+				mes("you find nothing of interest");
+				delay(3);
+				mes("you give golrie the key");
+				delay(3);
 				npcsay(player, n, "thanks a lot for the key traveller",
 					"i think i'll wait in here until those goblins get bored and leave");
 				say(player, n, "okay, take care golrie");
@@ -278,9 +285,14 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == 464) {
-			mes("you board the small raft", "and push off down stream",
-				"the raft is pulled down stream by strong currents",
-				"you crash into a small land mound");
+			mes("you board the small raft");
+			delay(3);
+			mes("and push off down stream");
+			delay(3);
+			mes("the raft is pulled down stream by strong currents");
+			delay(3);
+			mes("you crash into a small land mound");
+			delay(3);
 			player.teleport(662, 463, false);
 			Npc hudon = player.getWorld().getNpc(NpcId.HUDON.id(), 0, 2000, 0, 2000);
 			if (hudon != null && player.getQuestStage(this) == 1) {
@@ -297,42 +309,56 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 				npcsay(player, hudon, "i'm fine alone");
 				player.updateQuestStage(this, 2);
 				mes("hudon is refusing to leave the waterfall");
+				delay(3);
 			}
 		} else if (obj.getID() == 463 || obj.getID() == 462
 			|| obj.getID() == 482) {
 			if (command.equals("jump to next")) {
-				mes("the tree is too far off to jump to",
-					"you need someway to pull yourself across");
+				mes("the tree is too far off to jump to");
+				delay(3);
+				mes("you need someway to pull yourself across");
+				delay(3);
 			} else if (command.equals("jump off")) {
 				mes("you jump into the wild rapids");
+				delay(3);
 				player.teleport(654, 485, false);
 				player.damage(DataConversions.random(4, 10));
 				say(player, null, "ouch!");
-				mes("you tumble over the water fall",
-					"and are washed up by the river side");
+				mes("you tumble over the water fall");
+				delay(3);
+				mes("and are washed up by the river side");
+				delay(3);
 			}
 		} else if (obj.getID() == 469) {
 			mes("you jump into the wild rapids below");
+			delay(3);
 			player.teleport(654, 485, false);
 			player.damage(DataConversions.random(4, 10));
 			say(player, null, "ouch!");
-			mes("you tumble over the water fall",
-				"and are washed up by the river side");
+			mes("you tumble over the water fall");
+			delay(3);
+			mes("and are washed up by the river side");
+			delay(3);
 		} else if (obj.getID() == 470) {
 			mes("you search the bookcase");
+			delay(3);
 			if (!player.getCarriedItems().hasCatalogID(ItemId.BOOK_ON_BAXTORIAN.id())) {
 				mes("and find a book named 'book on baxtorian'");
+				delay(3);
 				give(player, ItemId.BOOK_ON_BAXTORIAN.id(), 1);
 			} else
 				mes("but find nothing of interest");
+				delay(3);
 		} else if (obj.getID() == 481) {
 			if (player.getQuestStage(this) == 0) {
 				player.message("the crate is empty");
 				return;
 			}
 			mes("you search the crate");
+			delay(3);
 			if (!player.getCarriedItems().hasCatalogID(ItemId.LARGE_KEY.id())) {
 				mes("and find a large key");
+				delay(3);
 				give(player, ItemId.LARGE_KEY.id(), 1);
 			} else {
 				player.message("but find nothing");
@@ -371,12 +397,18 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 			}
 
 		} else if (obj.getID() == 479) {
-			mes("the grave is covered in elven script",
-				"some of the writing is in common tongue, it reads",
-				"here lies glarial, wife of baxtorian",
-				"true friend of nature in life and death",
-				"may she now rest knowing",
-				"only visitors with peaceful intent can enter");
+			mes("the grave is covered in elven script");
+			delay(3);
+			mes("some of the writing is in common tongue, it reads");
+			delay(3);
+			mes("here lies glarial, wife of baxtorian");
+			delay(3);
+			mes("true friend of nature in life and death");
+			delay(3);
+			mes("may she now rest knowing");
+			delay(3);
+			mes("only visitors with peaceful intent can enter");
+			delay(3);
 		} else if (obj.getID() == BAXTORIAN_CUPBOARD_OPEN || obj.getID() == BAXTORIAN_CUPBOARD_CLOSED) {
 			if (command.equalsIgnoreCase("open")) {
 				openGenericObject(obj, player, BAXTORIAN_CUPBOARD_OPEN, "you open the cupboard");
@@ -384,6 +416,7 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 				closeGenericObject(obj, player, BAXTORIAN_CUPBOARD_CLOSED, "you shut the cupboard");
 			} else {
 				mes("you search the cupboard");
+				delay(3);
 				if (!player.getCarriedItems().hasCatalogID(ItemId.GLARIALS_URN.id(), Optional.empty())) {
 					player.message("and find a metel urn");
 					give(player, ItemId.GLARIALS_URN.id(), 1);
@@ -393,31 +426,41 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 			}
 		} else if (obj.getID() == 467) {
 			mes("you search the coffin");
+			delay(3);
 			if (!player.getCarriedItems().hasCatalogID(ItemId.GLARIALS_AMULET.id(), Optional.empty())) {
-				mes("inside you find a small amulet",
-					"you take the amulet and close the coffin");
+				mes("inside you find a small amulet");
+				delay(3);
+				mes("you take the amulet and close the coffin");
+				delay(3);
 				give(player, ItemId.GLARIALS_AMULET.id(), 1);
 			} else {
 				mes("it's empty");
+				delay(3);
 			}
 		} else if (obj.getID() == 471) {
 			mes("the doors begin to open");
-
+			delay(3);
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.GLARIALS_AMULET.id())) {
 				doGate(player, obj, 63);
 				mes("You go through the door");
+				delay(3);
 			} else {
-				mes("suddenly the corridor floods",
-					"flushing you back into the river");
+				mes("suddenly the corridor floods");
+				delay(3);
+				mes("flushing you back into the river");
+				delay(3);
 				player.teleport(654, 485, false);
 				player.damage(DataConversions.random(4, 10));
 				say(player, null, "ouch!");
 				mes("you tumble over the water fall");
+				delay(3);
 			}
 		} else if (obj.getID() == 492) {
 			mes("you search the crate");
+			delay(3);
 			if (!player.getCarriedItems().hasCatalogID(ItemId.AN_OLD_KEY.id())) {
 				mes("you find an old key");
+				delay(3);
 				give(player, ItemId.AN_OLD_KEY.id(), 1);
 			} else {
 				player.message("it is empty");
@@ -425,13 +468,22 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 		} else if (obj.getID() == 135) {
 			player.message("the door is locked");
 		} else if (obj.getID() == 485) {
-			mes("as you touch the chalice it tips over",
-				"it falls to the floor", "you hear a gushing of water",
-				"water floods into the cavern");
+			mes("as you touch the chalice it tips over");
+			delay(3);
+			mes("it falls to the floor");
+			delay(3);
+			mes("you hear a gushing of water");
+			delay(3);
+			mes("water floods into the cavern");
+			delay(3);
 			player.damage(DataConversions.random(1, 10));
 			player.teleport(654, 485, false);
-			mes("ouch!", "you tumble over the water fall",
-				"and are washed up by the river side");
+			mes("ouch!");
+			delay(3);
+			mes("you tumble over the water fall");
+			delay(3);
+			mes("and are washed up by the river side");
+			delay(3);
 		} else if (obj.getID() == 486) {
 			player.message("you walk through the doorway");
 			player.teleport(667, 3279, false);
@@ -661,15 +713,21 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 				doGate(player, obj);
 			}
 		} else if (obj.getID() == 479 && item.getCatalogId() == ItemId.GLARIALS_PEBBLE.id()) {
-			mes("you place the pebble in the gravestones small indent",
-				"it fits perfectly");
+			mes("you place the pebble in the gravestones small indent");
+			delay(3);
+			mes("it fits perfectly");
+			delay(3);
 			if (CANT_GO(player)) {
 				mes("but nothing happens");
+				delay(3);
 				return;
 			} else {
-				mes("You hear a loud creek",
-					"the stone slab slides back revealing a ladder down",
-					"you climb down to an underground passage");
+				mes("You hear a loud creek");
+				delay(3);
+				mes("the stone slab slides back revealing a ladder down");
+				delay(3);
+				mes("you climb down to an underground passage");
+				delay(3);
 				player.teleport(631, 3305, false);
 				if (player.getQuestStage(this) == 3) {
 					player.updateQuestStage(this, 4);
@@ -679,22 +737,33 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 		} else if (obj.getID() == 462 || obj.getID() == 463
 			|| obj.getID() == 462 || obj.getID() == 482
 			&& item.getCatalogId() == ItemId.ROPE.id()) {
-			mes("you tie one end of the rope around the tree",
-				"you tie the other end into a loop",
-				"and throw it towards the other dead tree");
+			mes("you tie one end of the rope around the tree");
+			delay(3);
+			mes("you tie the other end into a loop");
+			delay(3);
+			mes("and throw it towards the other dead tree");
+			delay(3);
 			if (obj.getID() == 462) {
-				mes("the rope loops around the tree",
-					"you lower yourself into the rapidly flowing stream");
+				mes("the rope loops around the tree");
+				delay(3);
+				mes("you lower yourself into the rapidly flowing stream");
+				delay(3);
 				player.teleport(662, 467, false);
 				mes("you manage to pull yourself over to the land mound");
+				delay(3);
 			} else if (obj.getID() == 463) {
-				mes("the rope loops around the tree",
-					"you lower yourself into the rapidly flowing stream");
+				mes("the rope loops around the tree");
+				delay(3);
+				mes("you lower yourself into the rapidly flowing stream");
+				delay(3);
 				player.teleport(659, 471, false);
 				mes("you manage to pull yourself over to the land mound");
+				delay(3);
 			} else if (obj.getID() == 482) {
-				mes("you gently drop to the rock below",
-					"under the waterfall there is a secret passage");
+				mes("you gently drop to the rock below");
+				delay(3);
+				mes("under the waterfall there is a secret passage");
+				delay(3);
 				player.teleport(659, 3305, false);
 			}
 		} else if (obj.getID() == 135 && item.getCatalogId() == ItemId.AN_OLD_KEY.id()) {
@@ -725,20 +794,32 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 				}
 			}
 			if (flag) {
-				mes("you place the amulet around the statue",
-					"nothing happens");
+				mes("you place the amulet around the statue");
+				delay(3);
+				mes("nothing happens");
+				delay(3);
 			} else {
-				mes("you place the amulet around the statue",
-					"you hear a loud rumble beneath you",
-					"the ground raises up before you");
+				mes("you place the amulet around the statue");
+				delay(3);
+				mes("you hear a loud rumble beneath you");
+				delay(3);
+				mes("the ground raises up before you");
+				delay(3);
 				player.teleport(647, 3267, false);
 			}
 		} else if (obj.getID() == 485 && item.getCatalogId() == ItemId.GLARIALS_URN.id()) {
-			mes("you carefully poor the ashes in the chalice",
-				"as you remove the baxtorian treasure",
-				"the chalice remains standing",
-				"inside you find a mithril case", "containing 40 seeds",
-				"two diamond's and two gold bars");
+			mes("you carefully poor the ashes in the chalice");
+			delay(3);
+			mes("as you remove the baxtorian treasure");
+			delay(3);
+			mes("the chalice remains standing");
+			delay(3);
+			mes("inside you find a mithril case");
+			delay(3);
+			mes("containing 40 seeds");
+			delay(3);
+			mes("two diamond's and two gold bars");
+			delay(3);
 			player.getCarriedItems().remove(new Item(ItemId.GLARIALS_URN.id()));
 			player.sendQuestComplete(getQuestId());
 		}
@@ -762,20 +843,24 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 	public void onOpInv(Player player, Integer invIndex, Item i, String command) {
 		if (i.getCatalogId() == ItemId.MITHRIL_SEED.id()) {
 			mes("you open the small mithril case");
+			delay(3);
 			if (player.getViewArea().getGameObject(player.getLocation()) != null) {
 				player.message("you can't plant a tree here");
 				return;
 			}
 			player.getCarriedItems().remove(new Item(ItemId.MITHRIL_SEED.id()));
 			mes("and drop a seed by your feet");
+			delay(3);
 			GameObject object = new GameObject(player.getWorld(), Point.location(player.getX(), player.getY()), 490, 0, 0);
 			player.getWorld().registerGameObject(object);
 			player.getWorld().delayedRemoveObject(object, 60000);
 			player.message("a tree magically sprouts around you");
 		}
 		else if (i.getCatalogId() == ItemId.BOOK_ON_BAXTORIAN.id()) {
-			mes("the book is old with many pages missing",
-				"a few are translated from elven into common tongue");
+			mes("the book is old with many pages missing");
+			delay(3);
+			mes("a few are translated from elven into common tongue");
+			delay(3);
 			if (player.getQuestStage(this) == 2) {
 				player.updateQuestStage(this, 3);
 			}
@@ -844,7 +929,10 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == 135) {
-			mes("the door is locked", "you need a key");
+			mes("the door is locked");
+			delay(3);
+			mes("you need a key");
+			delay(3);
 		}
 	}
 
@@ -859,6 +947,7 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 			mes("you open the door with the key");
 			doDoor(obj, player);
 			mes("You go through the door");
+			delay(3);
 		}
 	}
 

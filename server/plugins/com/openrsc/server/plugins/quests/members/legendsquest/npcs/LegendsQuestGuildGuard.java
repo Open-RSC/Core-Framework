@@ -110,6 +110,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 					break;
 				case LegendsGuard.CAN_I_GO_ON_THE_QUEST:
 					mes("The guard gets out a scroll of paper and starts looking through it.");
+					delay(3);
 					if (player.getQuestPoints() >= 107
 						&& player.getQuestStage(Quests.HEROS_QUEST) == -1
 						&& player.getQuestStage(Quests.FAMILY_CREST) == -1
@@ -218,7 +219,8 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 	public void onTalkNpc(Player player, Npc n) {
 		if (n.getID() == NpcId.LEGENDS_GUILD_GUARD.id()) {
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 0) {
-				mes(config().GAME_TICK * 2, "You approach a nearby guard...");
+				mes("You approach a nearby guard...");
+				delay(2);
 			}
 			legendsGuardDialogue(player, n, -1);
 		}
@@ -242,7 +244,8 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 				switch (player.getQuestStage(Quests.LEGENDS_QUEST)) {
 					case 0:
 						if (legends_guard != null) {
-							mes(config().GAME_TICK * 2, "A nearby guard approaches you...");
+							mes("A nearby guard approaches you...");
+							delay(2);
 							legends_guard.initializeTalkScript(player);
 						} else {
 							player.message("The guards is currently busy.");
@@ -276,10 +279,14 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 				}
 
 			} else if (command.equals("search")) {
-				mes(config().GAME_TICK * 2, "The gates to the Legends Guild are made from wrought Mithril.");
-				mes(config().GAME_TICK * 2, "A small path leads away up to a very grandiose building.");
-				mes(config().GAME_TICK * 2, "To the left is a smaller out building, but it is no less impressive.");
-				mes(config().GAME_TICK * 2, "All the buildings are set in wonderfully landscaped gardens.");
+				mes("The gates to the Legends Guild are made from wrought Mithril.");
+				delay(2);
+				mes("A small path leads away up to a very grandiose building.");
+				delay(2);
+				mes("To the left is a smaller out building, but it is no less impressive.");
+				delay(2);
+				mes("All the buildings are set in wonderfully landscaped gardens.");
+				delay(2);
 				player.message("Two well dressed guards seem to be guarding the gate.");
 			}
 		}

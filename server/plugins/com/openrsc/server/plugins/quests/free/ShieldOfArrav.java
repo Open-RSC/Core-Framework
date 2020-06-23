@@ -95,6 +95,7 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 					say(player, null, "Aha the shield of Arrav");
 					say(player, null, "That was what I was looking for");
 					mes("You take the book from the bookcase");
+					delay(3);
 					give(player, ItemId.BOOK.id(), 1);
 					if (!player.getCache().hasKey("read_arrav")) {
 						player.getCache().store("read_arrav", true);
@@ -112,14 +113,22 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 				} else {
 					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))
 							|| player.getCarriedItems().getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_1.id()))) {
-							mes("You search the chest", "The chest is empty");
+							mes("You search the chest");
+							delay(3);
+							mes("The chest is empty");
+							delay(3);
 							return;
 					} else if (isPhoenixGang(player)) {
-						mes("You search the chest",
-							"You find half a shield which you take");
+						mes("You search the chest");
+						delay(3);
+						mes("You find half a shield which you take");
+						delay(3);
 						give(player, ItemId.BROKEN_SHIELD_ARRAV_1.id(), 1);
 					} else {
-						mes("You search the chest", "The chest is empty");
+						mes("You search the chest");
+						delay(3);
+						mes("The chest is empty");
+						delay(3);
 					}
 				}
 				break;
@@ -132,14 +141,22 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 				} else {
 					if (player.getBank().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))
 						|| player.getCarriedItems().getInventory().contains(new Item(ItemId.BROKEN_SHIELD_ARRAV_2.id()))) {
-						mes("You search the cupboard", "The cupboard is empty");
+						mes("You search the cupboard");
+						delay(3);
+						mes("The cupboard is empty");
+						delay(3);
 						return;
 					} else if (isBlackArmGang(player)) {
-						mes("You search the cupboard",
-							"You find half a shield which you take");
+						mes("You search the cupboard");
+						delay(3);
+						mes("You find half a shield which you take");
+						delay(3);
 						give(player, ItemId.BROKEN_SHIELD_ARRAV_2.id(), 1);
 					} else {
-						mes("You search the cupboard", "The cupboard is empty");
+						mes("You search the cupboard");
+						delay(3);
+						mes("The cupboard is empty");
+						delay(3);
 					}
 				}
 				break;
@@ -428,20 +445,34 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		switch (ItemId.getById(item.getCatalogId())) {
 			case BOOK:
-				mes("The shield of Arrav",
-					"By A.R.Wright",
-					"Arrav is probably the best known hero of the 4th age.",
-					"One surviving artifact from the 4th age is a fabulous shield.",
-					"This shield is believed to have once belonged to Arrav",
-					"And is now indeed known as the shield of Arrav.",
-					"For 150 years it was the prize piece in the royal museum of Varrock.",
-					"However in the year 143 of the 5th age",
-					"A gang of thieves called the phoenix gang broke into the museum",
-					"And stole the shield.",
-					"King Roald the VII put a 1200 gold reward on the return on the shield.",
-					"The thieves who stole the shield",
-					"Have now become the most powerful crime gang in Varrock.",
-					"The reward for the return of the shield still stands.");
+				mes("The shield of Arrav");
+				delay(3);
+				mes("By A.R.Wright");
+				delay(3);
+				mes("Arrav is probably the best known hero of the 4th age.");
+				delay(3);
+				mes("One surviving artifact from the 4th age is a fabulous shield.");
+				delay(3);
+				mes("This shield is believed to have once belonged to Arrav");
+				delay(3);
+				mes("And is now indeed known as the shield of Arrav.");
+				delay(3);
+				mes("For 150 years it was the prize piece in the royal museum of Varrock.");
+				delay(3);
+				mes("However in the year 143 of the 5th age");
+				delay(3);
+				mes("A gang of thieves called the phoenix gang broke into the museum");
+				delay(3);
+				mes("And stole the shield.");
+				delay(3);
+				mes("King Roald the VII put a 1200 gold reward on the return on the shield.");
+				delay(3);
+				mes("The thieves who stole the shield");
+				delay(3);
+				mes("Have now become the most powerful crime gang in Varrock.");
+				delay(3);
+				mes("The reward for the return of the shield still stands.");
+				delay(3);
 				break;
 			default:
 				break;
@@ -544,12 +575,14 @@ public class ShieldOfArrav implements QuestInterface, UseBoundTrigger,
 			&& obj.getY() == 532) {
 			thinkbubble(item);
 			mes("You unlock the door");
+			delay(3);
 			if (player.getY() <= 531) {
 				doDoor(obj, player);
 			} else {
 				doDoor(obj, player);
 			}
 			mes("You go through the door");
+			delay(3);
 		}
 
 	}

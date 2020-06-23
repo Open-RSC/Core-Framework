@@ -29,6 +29,7 @@ public class UndergroundPassDwarfs implements TalkNpcTrigger {
 				case 8:
 				case -1:
 					mes("the dwarf is leaning on a barrel of home made brew");
+					delay(3);
 					player.message("he looks a little drunk");
 					say(player, n, "hi there, you ok?");
 					npcsay(player, n, "ooooh, my head ...im gone");

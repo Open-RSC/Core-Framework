@@ -82,7 +82,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 	private void batchFiremaking(Player player, GroundItem gItem, FiremakingDef def) {
 		thinkbubble(new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
-		delay(config().GAME_TICK * 2);
+		delay(2);
 		if (Formulae.lightLogs(player.getSkills().getLevel(Skills.FIREMAKING))) {
 			if (!gItem.isRemoved()) {
 				player.playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
@@ -112,7 +112,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
 				firemakingWalk(player);
-				delay(config().GAME_TICK * 2);
+				delay(2);
 
 				// Drop new log
 				Item log = player.getCarriedItems().getInventory().get(
@@ -134,7 +134,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			// Repeat on fail
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				batchFiremaking(player, gItem, def);
 			}
 		}
@@ -170,7 +170,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 	private void batchCustomFiremaking(Player player, GroundItem gItem, FiremakingDef def) {
 		thinkbubble(new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
-		delay(config().GAME_TICK * 2);
+		delay(2);
 		if (Formulae.lightCustomLogs(def, player.getSkills().getLevel(Skills.FIREMAKING))) {
 			if (!gItem.isRemoved()) {
 				player.message("The fire catches and the logs begin to burn");
@@ -207,11 +207,11 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 					player.getCarriedItems().getInventory().getLastIndexById(gItem.getID(), Optional.of(false))
 				);
 				if (log == null) return;
-				delay(config().GAME_TICK);
+				delay();
 				player.getCarriedItems().remove(log);
 				gItem = new GroundItem(player.getWorld(), log.getCatalogId(), player.getX(), player.getY(),1, player);
 				player.getWorld().registerItem(gItem);
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				if (player.getViewArea().getGameObject(gItem.getLocation()) != null) {
 					player.playerServerMessage(MessageType.QUEST, "You can't light a fire here");
 					return;
@@ -223,7 +223,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				batchCustomFiremaking(player, gItem, def);
 			}
 		}

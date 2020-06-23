@@ -131,8 +131,10 @@ public final class Baraek implements
 				"I guess I could give 12 coins to take it off your hands");
 			int opts = multi(player, n, "Yeah that'll do", "I think I'll keep hold of it actually");
 			if (opts == 0) {
-				mes("You give Baraek a fur",
-					"And he gives you twelve coins");
+				mes("You give Baraek a fur");
+				delay(3);
+				mes("And he gives you twelve coins");
+				delay(3);
 				player.getCarriedItems().remove(new Item(ItemId.FUR.id()));
 				give(player, ItemId.COINS.id(), 12);
 			} else if (opts == 1) {
@@ -150,7 +152,7 @@ public final class Baraek implements
 				for (int i=0; i<count; i++) {
 					player.getCarriedItems().remove(new Item(ItemId.GREY_WOLF_FUR.id()));
 					give(player, ItemId.COINS.id(), 120);
-					delay(config().GAME_TICK);
+					delay();
 				}
 			} else if (wolfmenu == 1) {
 				say(player, n, "No I almost got my throat torn out by a wolf to get this");

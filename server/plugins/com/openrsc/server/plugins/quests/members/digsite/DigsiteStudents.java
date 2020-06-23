@@ -371,8 +371,10 @@ public class DigsiteStudents implements TalkNpcTrigger, UseNpcTrigger {
 			} else if (cId == Progress.NOT_STARTED) {
 				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_ORANGE.id()) {
 					mes("I am not sure why I am giving this rock to the student...");
+					delay(3);
 				} else {
 					mes("Perhaps I should speak to him first");
+					delay(3);
 				}
 			} else {
 				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_ORANGE.id()) {
@@ -393,8 +395,10 @@ public class DigsiteStudents implements TalkNpcTrigger, UseNpcTrigger {
 			} else if (cId == Progress.NOT_STARTED) {
 				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_GREEN.id()) {
 					mes("I am not sure why I am giving this rock to the student...");
+					delay(3);
 				} else {
 					mes("Perhaps I should speak to him first");
+					delay(3);
 				}
 			} else {
 				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_GREEN.id()) {
@@ -415,8 +419,10 @@ public class DigsiteStudents implements TalkNpcTrigger, UseNpcTrigger {
 			} else if (cId == Progress.NOT_STARTED) {
 				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_PURPLE.id()) {
 					mes("I am not sure why I am giving this rock to the student...");
+					delay(3);
 				} else {
 					mes("Perhaps I should speak to her first");
+					delay(3);
 				}
 			} else {
 				if (item.getCatalogId() == ItemId.ROCK_SAMPLE_PURPLE.id()) {

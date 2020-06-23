@@ -1,0 +1,7763 @@
+{
+	"grounditems": [{
+		"id": 738,
+		"pos": {
+			"X": 426,
+			"Y": 15
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 738,
+		"pos": {
+			"X": 388,
+			"Y": 24
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 738,
+		"pos": {
+			"X": 522,
+			"Y": 15
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 637,
+		"pos": {
+			"X": 129,
+			"Y": 112
+		},
+		"amount": 3,
+		"respawn": 37
+	}, {
+		"id": 637,
+		"pos": {
+			"X": 131,
+			"Y": 112
+		},
+		"amount": 2,
+		"respawn": 37
+	}, {
+		"id": 637,
+		"pos": {
+			"X": 131,
+			"Y": 114
+		},
+		"amount": 3,
+		"respawn": 37
+	}, {
+		"id": 262,
+		"pos": {
+			"X": 265,
+			"Y": 102
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 40,
+		"pos": {
+			"X": 67,
+			"Y": 177
+		},
+		"amount": 3,
+		"respawn": 120
+	}, {
+		"id": 40,
+		"pos": {
+			"X": 69,
+			"Y": 178
+		},
+		"amount": 4,
+		"respawn": 120
+	}, {
+		"id": 164,
+		"pos": {
+			"X": 171,
+			"Y": 161
+		},
+		"amount": 1,
+		"respawn": 603
+	}, {
+		"id": 465,
+		"pos": {
+			"X": 151,
+			"Y": 184
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 465,
+		"pos": {
+			"X": 156,
+			"Y": 190
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 233,
+			"Y": 176
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 36,
+		"pos": {
+			"X": 232,
+			"Y": 177
+		},
+		"amount": 10,
+		"respawn": 37
+	}, {
+		"id": 118,
+		"pos": {
+			"X": 236,
+			"Y": 180
+		},
+		"amount": 1,
+		"respawn": 120
+	}, {
+		"id": 288,
+		"pos": {
+			"X": 245,
+			"Y": 176
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 46,
+		"pos": {
+			"X": 333,
+			"Y": 145
+		},
+		"amount": 3,
+		"respawn": 608
+	}, {
+		"id": 32,
+		"pos": {
+			"X": 329,
+			"Y": 146
+		},
+		"amount": 5,
+		"respawn": 42
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 131,
+			"Y": 201
+		},
+		"amount": 6,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 133,
+			"Y": 203
+		},
+		"amount": 8,
+		"respawn": 60
+	}, {
+		"id": 471,
+		"pos": {
+			"X": 133,
+			"Y": 211
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 471,
+		"pos": {
+			"X": 141,
+			"Y": 214
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 2,
+		"pos": {
+			"X": 120,
+			"Y": 222
+		},
+		"amount": 1,
+		"respawn": 620
+	}, {
+		"id": 41,
+		"pos": {
+			"X": 180,
+			"Y": 200
+		},
+		"amount": 1,
+		"respawn": 126
+	}, {
+		"id": 423,
+		"pos": {
+			"X": 161,
+			"Y": 201
+		},
+		"amount": 1,
+		"respawn": 120
+	}, {
+		"id": 6,
+		"pos": {
+			"X": 242,
+			"Y": 198
+		},
+		"amount": 1,
+		"respawn": 84
+	}, {
+		"id": 63,
+		"pos": {
+			"X": 63,
+			"Y": 256
+		},
+		"amount": 1,
+		"respawn": 622
+	}, {
+		"id": 60,
+		"pos": {
+			"X": 73,
+			"Y": 281
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 35,
+		"pos": {
+			"X": 71,
+			"Y": 284
+		},
+		"amount": 6,
+		"respawn": 37
+	}, {
+		"id": 413,
+		"pos": {
+			"X": 130,
+			"Y": 259
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 412,
+		"pos": {
+			"X": 137,
+			"Y": 261
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 413,
+		"pos": {
+			"X": 123,
+			"Y": 263
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 412,
+		"pos": {
+			"X": 123,
+			"Y": 263
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 413,
+		"pos": {
+			"X": 116,
+			"Y": 268
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 413,
+		"pos": {
+			"X": 131,
+			"Y": 278
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 413,
+		"pos": {
+			"X": 96,
+			"Y": 279
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 83,
+		"pos": {
+			"X": 136,
+			"Y": 279
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 27,
+		"pos": {
+			"X": 131,
+			"Y": 280
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 152,
+		"pos": {
+			"X": 173,
+			"Y": 250
+		},
+		"amount": 1,
+		"respawn": 605
+	}, {
+		"id": 121,
+		"pos": {
+			"X": 166,
+			"Y": 254
+		},
+		"amount": 1,
+		"respawn": 607
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 66,
+			"Y": 317
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 63,
+			"Y": 318
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 62,
+			"Y": 320
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 65,
+			"Y": 320
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 67,
+			"Y": 320
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 63,
+			"Y": 322
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 59,
+			"Y": 324
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 63,
+			"Y": 325
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 68,
+			"Y": 325
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 67,
+		"pos": {
+			"X": 68,
+			"Y": 326
+		},
+		"amount": 1,
+		"respawn": 622
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 71,
+			"Y": 328
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 69,
+			"Y": 329
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 5,
+		"pos": {
+			"X": 170,
+			"Y": 310
+		},
+		"amount": 1,
+		"respawn": 84
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 191,
+			"Y": 312
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 160,
+			"Y": 314
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 166,
+			"Y": 315
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 63,
+		"pos": {
+			"X": 181,
+			"Y": 315
+		},
+		"amount": 1,
+		"respawn": 622
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 191,
+			"Y": 315
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 177,
+			"Y": 316
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 60,
+		"pos": {
+			"X": 183,
+			"Y": 318
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 161,
+			"Y": 320
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 171,
+			"Y": 321
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 187,
+			"Y": 321
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 169,
+			"Y": 322
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 175,
+			"Y": 324
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 183,
+			"Y": 324
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 190,
+		"pos": {
+			"X": 229,
+			"Y": 290
+		},
+		"amount": 2,
+		"respawn": 42
+	}, {
+		"id": 190,
+		"pos": {
+			"X": 228,
+			"Y": 294
+		},
+		"amount": 2,
+		"respawn": 42
+	}, {
+		"id": 190,
+		"pos": {
+			"X": 224,
+			"Y": 295
+		},
+		"amount": 2,
+		"respawn": 42
+	}, {
+		"id": 190,
+		"pos": {
+			"X": 233,
+			"Y": 296
+		},
+		"amount": 2,
+		"respawn": 42
+	}, {
+		"id": 190,
+		"pos": {
+			"X": 222,
+			"Y": 298
+		},
+		"amount": 2,
+		"respawn": 42
+	}, {
+		"id": 320,
+		"pos": {
+			"X": 272,
+			"Y": 289
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 319,
+		"pos": {
+			"X": 273,
+			"Y": 289
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 380,
+		"pos": {
+			"X": 317,
+			"Y": 291
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 314,
+			"Y": 292
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 315,
+			"Y": 292
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 330,
+			"Y": 292
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 376,
+		"pos": {
+			"X": 315,
+			"Y": 293
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 329,
+			"Y": 293
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 313,
+			"Y": 294
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 315,
+			"Y": 294
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 304,
+			"Y": 295
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 303,
+			"Y": 297
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 312,
+			"Y": 298
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 312,
+			"Y": 298
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 322,
+			"Y": 298
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 328,
+			"Y": 298
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 303,
+			"Y": 299
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 303,
+			"Y": 299
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 318,
+			"Y": 299
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 320,
+			"Y": 299
+		},
+		"amount": 1,
+		"respawn": 20
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 323,
+			"Y": 299
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 327,
+			"Y": 299
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 321,
+			"Y": 300
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 380,
+		"pos": {
+			"X": 318,
+			"Y": 301
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 304,
+			"Y": 302
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 307,
+			"Y": 302
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 324,
+			"Y": 302
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 306,
+			"Y": 303
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 320,
+			"Y": 303
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 338,
+		"pos": {
+			"X": 324,
+			"Y": 303
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 301,
+			"Y": 304
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 315,
+			"Y": 304
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 319,
+			"Y": 304
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 314,
+			"Y": 305
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 310,
+			"Y": 306
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 322,
+			"Y": 307
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 326,
+			"Y": 307
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 297,
+			"Y": 309
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 319,
+			"Y": 309
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 321,
+			"Y": 309
+		},
+		"amount": 5,
+		"respawn": 60
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 325,
+			"Y": 309
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 317,
+			"Y": 310
+		},
+		"amount": 4,
+		"respawn": 60
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 320,
+			"Y": 311
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 326,
+			"Y": 311
+		},
+		"amount": 5,
+		"respawn": 60
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 316,
+			"Y": 312
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 326,
+			"Y": 312
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 318,
+			"Y": 313
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 323,
+			"Y": 313
+		},
+		"amount": 4,
+		"respawn": 60
+	}, {
+		"id": 170,
+		"pos": {
+			"X": 220,
+			"Y": 356
+		},
+		"amount": 1,
+		"respawn": 40
+	}, {
+		"id": 11,
+		"pos": {
+			"X": 213,
+			"Y": 364
+		},
+		"amount": 2,
+		"respawn": 20
+	}, {
+		"id": 11,
+		"pos": {
+			"X": 217,
+			"Y": 366
+		},
+		"amount": 2,
+		"respawn": 20
+	}, {
+		"id": 11,
+		"pos": {
+			"X": 212,
+			"Y": 367
+		},
+		"amount": 4,
+		"respawn": 20
+	}, {
+		"id": 11,
+		"pos": {
+			"X": 213,
+			"Y": 367
+		},
+		"amount": 2,
+		"respawn": 20
+	}, {
+		"id": 11,
+		"pos": {
+			"X": 222,
+			"Y": 370
+		},
+		"amount": 4,
+		"respawn": 20
+	}, {
+		"id": 11,
+		"pos": {
+			"X": 215,
+			"Y": 373
+		},
+		"amount": 3,
+		"respawn": 20
+	}, {
+		"id": 41,
+		"pos": {
+			"X": 263,
+			"Y": 345
+		},
+		"amount": 1,
+		"respawn": 126
+	}, {
+		"id": 31,
+		"pos": {
+			"X": 253,
+			"Y": 347
+		},
+		"amount": 1,
+		"respawn": 40
+	}, {
+		"id": 32,
+		"pos": {
+			"X": 255,
+			"Y": 347
+		},
+		"amount": 1,
+		"respawn": 40
+	}, {
+		"id": 33,
+		"pos": {
+			"X": 257,
+			"Y": 347
+		},
+		"amount": 1,
+		"respawn": 40
+	}, {
+		"id": 34,
+		"pos": {
+			"X": 259,
+			"Y": 347
+		},
+		"amount": 1,
+		"respawn": 40
+	}, {
+		"id": 35,
+		"pos": {
+			"X": 261,
+			"Y": 347
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 36,
+		"pos": {
+			"X": 263,
+			"Y": 347
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 36,
+		"pos": {
+			"X": 113,
+			"Y": 385
+		},
+		"amount": 2,
+		"respawn": 37
+	}, {
+		"id": 36,
+		"pos": {
+			"X": 109,
+			"Y": 391
+		},
+		"amount": 2,
+		"respawn": 37
+	}, {
+		"id": 36,
+		"pos": {
+			"X": 109,
+			"Y": 399
+		},
+		"amount": 2,
+		"respawn": 37
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 113,
+			"Y": 405
+		},
+		"amount": 2,
+		"respawn": 60
+	}, {
+		"id": 412,
+		"pos": {
+			"X": 310,
+			"Y": 410
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 412,
+		"pos": {
+			"X": 312,
+			"Y": 412
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 1204,
+		"pos": {
+			"X": 484,
+			"Y": 388
+		},
+		"amount": 1,
+		"respawn": 1
+	}, {
+		"id": 1205,
+		"pos": {
+			"X": 485,
+			"Y": 389
+		},
+		"amount": 1,
+		"respawn": 1
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 497,
+			"Y": 397
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 497,
+			"Y": 398
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 497,
+			"Y": 400
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 497,
+			"Y": 401
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 54,
+			"Y": 433
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 64,
+			"Y": 433
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 69,
+			"Y": 433
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 62,
+			"Y": 435
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 68,
+			"Y": 436
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 71,
+			"Y": 436
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 56,
+			"Y": 438
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 51,
+			"Y": 441
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 67,
+			"Y": 441
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 57,
+			"Y": 444
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 64,
+			"Y": 446
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 70,
+			"Y": 446
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 62,
+			"Y": 448
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 59,
+			"Y": 451
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 43,
+		"pos": {
+			"X": 78,
+			"Y": 451
+		},
+		"amount": 1,
+		"respawn": 124
+	}, {
+		"id": 4,
+		"pos": {
+			"X": 139,
+			"Y": 437
+		},
+		"amount": 1,
+		"respawn": 63
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 121,
+			"Y": 449
+		},
+		"amount": 7,
+		"respawn": 61
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 118,
+			"Y": 452
+		},
+		"amount": 4,
+		"respawn": 61
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 120,
+			"Y": 456
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 251,
+		"pos": {
+			"X": 121,
+			"Y": 465
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 34,
+		"pos": {
+			"X": 146,
+			"Y": 438
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 36,
+		"pos": {
+			"X": 149,
+			"Y": 454
+		},
+		"amount": 2,
+		"respawn": 40
+	}, {
+		"id": 16,
+		"pos": {
+			"X": 217,
+			"Y": 453
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 249,
+			"Y": 453
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 250,
+			"Y": 453
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 251,
+			"Y": 453
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 252,
+			"Y": 453
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 249,
+			"Y": 455
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 250,
+			"Y": 455
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 251,
+			"Y": 455
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 252,
+			"Y": 455
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 249,
+			"Y": 457
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 250,
+			"Y": 457
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 251,
+			"Y": 457
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 252,
+			"Y": 457
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 501,
+		"pos": {
+			"X": 333,
+			"Y": 434
+		},
+		"amount": 1,
+		"respawn": 61
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 320,
+			"Y": 442
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 13,
+		"pos": {
+			"X": 522,
+			"Y": 462
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 765,
+		"pos": {
+			"X": 564,
+			"Y": 443
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 765,
+		"pos": {
+			"X": 544,
+			"Y": 453
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 765,
+		"pos": {
+			"X": 566,
+			"Y": 457
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 765,
+		"pos": {
+			"X": 544,
+			"Y": 460
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 897,
+		"pos": {
+			"X": 724,
+			"Y": 433
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 897,
+		"pos": {
+			"X": 729,
+			"Y": 433
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 897,
+		"pos": {
+			"X": 734,
+			"Y": 433
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 895,
+		"pos": {
+			"X": 721,
+			"Y": 434
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 895,
+		"pos": {
+			"X": 729,
+			"Y": 434
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 897,
+		"pos": {
+			"X": 732,
+			"Y": 434
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 895,
+		"pos": {
+			"X": 733,
+			"Y": 434
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 895,
+		"pos": {
+			"X": 735,
+			"Y": 434
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 897,
+		"pos": {
+			"X": 721,
+			"Y": 435
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 897,
+		"pos": {
+			"X": 724,
+			"Y": 435
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 897,
+		"pos": {
+			"X": 725,
+			"Y": 435
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 895,
+		"pos": {
+			"X": 720,
+			"Y": 436
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 897,
+		"pos": {
+			"X": 724,
+			"Y": 436
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 895,
+		"pos": {
+			"X": 726,
+			"Y": 436
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 897,
+		"pos": {
+			"X": 720,
+			"Y": 437
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 895,
+		"pos": {
+			"X": 728,
+			"Y": 437
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 895,
+		"pos": {
+			"X": 735,
+			"Y": 437
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 895,
+		"pos": {
+			"X": 721,
+			"Y": 438
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 897,
+		"pos": {
+			"X": 720,
+			"Y": 439
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 895,
+		"pos": {
+			"X": 725,
+			"Y": 439
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 895,
+		"pos": {
+			"X": 733,
+			"Y": 439
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 895,
+		"pos": {
+			"X": 721,
+			"Y": 440
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 897,
+		"pos": {
+			"X": 723,
+			"Y": 440
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 897,
+		"pos": {
+			"X": 727,
+			"Y": 440
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 25,
+			"Y": 506
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 13,
+			"Y": 509
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 26,
+			"Y": 518
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 27,
+			"Y": 518
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 14,
+			"Y": 519
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 16,
+			"Y": 522
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 16,
+			"Y": 524
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 23,
+			"Y": 526
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 23,
+			"Y": 527
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 1285,
+		"pos": {
+			"X": 89,
+			"Y": 516
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 0,
+		"pos": {
+			"X": 103,
+			"Y": 484
+		},
+		"amount": 1,
+		"respawn": 613
+	}, {
+		"id": 1,
+		"pos": {
+			"X": 105,
+			"Y": 484
+		},
+		"amount": 1,
+		"respawn": 613
+	}, {
+		"id": 128,
+		"pos": {
+			"X": 106,
+			"Y": 485
+		},
+		"amount": 1,
+		"respawn": 613
+	}, {
+		"id": 6,
+		"pos": {
+			"X": 106,
+			"Y": 487
+		},
+		"amount": 1,
+		"respawn": 613
+	}, {
+		"id": 7,
+		"pos": {
+			"X": 106,
+			"Y": 489
+		},
+		"amount": 1,
+		"respawn": 607
+	}, {
+		"id": 194,
+		"pos": {
+			"X": 110,
+			"Y": 518
+		},
+		"amount": 1,
+		"respawn": 26
+	}, {
+		"id": 135,
+		"pos": {
+			"X": 119,
+			"Y": 523
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 15,
+		"pos": {
+			"X": 107,
+			"Y": 526
+		},
+		"amount": 1,
+		"respawn": 63
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 110,
+			"Y": 526
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 110,
+			"Y": 527
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 337,
+		"pos": {
+			"X": 176,
+			"Y": 480
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 1100,
+		"pos": {
+			"X": 165,
+			"Y": 521
+		},
+		"amount": 1,
+		"respawn": 1
+	}, {
+		"id": 1100,
+		"pos": {
+			"X": 163,
+			"Y": 522
+		},
+		"amount": 1,
+		"respawn": 1
+	}, {
+		"id": 1100,
+		"pos": {
+			"X": 167,
+			"Y": 522
+		},
+		"amount": 1,
+		"respawn": 1
+	}, {
+		"id": 1100,
+		"pos": {
+			"X": 165,
+			"Y": 523
+		},
+		"amount": 1,
+		"respawn": 1
+	}, {
+		"id": 1100,
+		"pos": {
+			"X": 167,
+			"Y": 524
+		},
+		"amount": 1,
+		"respawn": 1
+	}, {
+		"id": 132,
+		"pos": {
+			"X": 231,
+			"Y": 497
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 193,
+		"pos": {
+			"X": 232,
+			"Y": 497
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 193,
+		"pos": {
+			"X": 231,
+			"Y": 500
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 193,
+		"pos": {
+			"X": 233,
+			"Y": 500
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 132,
+		"pos": {
+			"X": 234,
+			"Y": 500
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 135,
+		"pos": {
+			"X": 234,
+			"Y": 507
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 156,
+		"pos": {
+			"X": 231,
+			"Y": 508
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 16,
+		"pos": {
+			"X": 306,
+			"Y": 522
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 211,
+		"pos": {
+			"X": 291,
+			"Y": 524
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 539,
+		"pos": {
+			"X": 351,
+			"Y": 491
+		},
+		"amount": 1,
+		"respawn": 12
+	}, {
+		"id": 603,
+		"pos": {
+			"X": 440,
+			"Y": 484
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 13,
+		"pos": {
+			"X": 509,
+			"Y": 506
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 621,
+		"pos": {
+			"X": 558,
+			"Y": 483
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 548,
+		"pos": {
+			"X": 585,
+			"Y": 519
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 379,
+		"pos": {
+			"X": 588,
+			"Y": 519
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 375,
+		"pos": {
+			"X": 588,
+			"Y": 523
+		},
+		"amount": 1,
+		"respawn": 10
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 17,
+			"Y": 536
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 156,
+		"pos": {
+			"X": 33,
+			"Y": 539
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 140,
+		"pos": {
+			"X": 13,
+			"Y": 541
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 1111,
+		"pos": {
+			"X": 15,
+			"Y": 541
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 35,
+			"Y": 542
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 236,
+		"pos": {
+			"X": 79,
+			"Y": 540
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 55,
+		"pos": {
+			"X": 86,
+			"Y": 542
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 236,
+		"pos": {
+			"X": 90,
+			"Y": 544
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 55,
+		"pos": {
+			"X": 83,
+			"Y": 548
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 236,
+		"pos": {
+			"X": 91,
+			"Y": 551
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 118,
+			"Y": 530
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 119,
+			"Y": 530
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 118,
+			"Y": 532
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 119,
+			"Y": 532
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 118,
+			"Y": 534
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 119,
+			"Y": 534
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 213,
+		"pos": {
+			"X": 208,
+			"Y": 546
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 177,
+		"pos": {
+			"X": 221,
+			"Y": 546
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 228,
+		"pos": {
+			"X": 229,
+			"Y": 548
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 228,
+		"pos": {
+			"X": 230,
+			"Y": 548
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 228,
+		"pos": {
+			"X": 231,
+			"Y": 548
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 228,
+		"pos": {
+			"X": 229,
+			"Y": 549
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 228,
+		"pos": {
+			"X": 230,
+			"Y": 549
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 228,
+		"pos": {
+			"X": 231,
+			"Y": 549
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 228,
+		"pos": {
+			"X": 229,
+			"Y": 550
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 228,
+		"pos": {
+			"X": 230,
+			"Y": 550
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 228,
+		"pos": {
+			"X": 231,
+			"Y": 550
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 144,
+		"pos": {
+			"X": 200,
+			"Y": 551
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 201,
+			"Y": 552
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 211,
+		"pos": {
+			"X": 197,
+			"Y": 554
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 210,
+		"pos": {
+			"X": 408,
+			"Y": 547
+		},
+		"amount": 1,
+		"respawn": 63
+	}, {
+		"id": 621,
+		"pos": {
+			"X": 430,
+			"Y": 559
+		},
+		"amount": 1,
+		"respawn": 75
+	}, {
+		"id": 377,
+		"pos": {
+			"X": 403,
+			"Y": 567
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 622,
+		"pos": {
+			"X": 437,
+			"Y": 536
+		},
+		"amount": 1,
+		"respawn": 74
+	}, {
+		"id": 622,
+		"pos": {
+			"X": 437,
+			"Y": 538
+		},
+		"amount": 1,
+		"respawn": 74
+	}, {
+		"id": 622,
+		"pos": {
+			"X": 437,
+			"Y": 540
+		},
+		"amount": 1,
+		"respawn": 74
+	}, {
+		"id": 622,
+		"pos": {
+			"X": 437,
+			"Y": 543
+		},
+		"amount": 1,
+		"respawn": 74
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 486,
+			"Y": 539
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 485,
+			"Y": 540
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 486,
+			"Y": 540
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 488,
+			"Y": 540
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 341,
+		"pos": {
+			"X": 547,
+			"Y": 531
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 252,
+		"pos": {
+			"X": 561,
+			"Y": 549
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 757,
+		"pos": {
+			"X": 597,
+			"Y": 543
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 801,
+		"pos": {
+			"X": 650,
+			"Y": 564
+		},
+		"amount": 1,
+		"respawn": 10
+	}, {
+		"id": 801,
+		"pos": {
+			"X": 642,
+			"Y": 565
+		},
+		"amount": 1,
+		"respawn": 10
+	}, {
+		"id": 138,
+		"pos": {
+			"X": 644,
+			"Y": 565
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 688,
+			"Y": 567
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 678,
+			"Y": 569
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 687,
+			"Y": 570
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 32,
+		"pos": {
+			"X": 74,
+			"Y": 583
+		},
+		"amount": 4,
+		"respawn": 37
+	}, {
+		"id": 31,
+		"pos": {
+			"X": 67,
+			"Y": 587
+		},
+		"amount": 3,
+		"respawn": 37
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 137,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 139,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 141,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 143,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 19,
+		"pos": {
+			"X": 119,
+			"Y": 603
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 19,
+		"pos": {
+			"X": 122,
+			"Y": 603
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 137,
+			"Y": 603
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 139,
+			"Y": 603
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 141,
+			"Y": 603
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 143,
+			"Y": 603
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 137,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 139,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 141,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 143,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 121,
+			"Y": 607
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 137,
+			"Y": 609
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 139,
+			"Y": 609
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 141,
+			"Y": 609
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 143,
+			"Y": 609
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 137,
+			"Y": 612
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 139,
+			"Y": 612
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 141,
+			"Y": 612
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 143,
+			"Y": 612
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 145,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 147,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 149,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 151,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 153,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 145,
+			"Y": 603
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 147,
+			"Y": 603
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 149,
+			"Y": 603
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 151,
+			"Y": 603
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 153,
+			"Y": 603
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 145,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 147,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 149,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 151,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 153,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 145,
+			"Y": 609
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 147,
+			"Y": 609
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 149,
+			"Y": 609
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 151,
+			"Y": 609
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 153,
+			"Y": 609
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 145,
+			"Y": 612
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 147,
+			"Y": 612
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 149,
+			"Y": 612
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 151,
+			"Y": 612
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 153,
+			"Y": 612
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 241,
+		"pos": {
+			"X": 158,
+			"Y": 621
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 241,
+		"pos": {
+			"X": 160,
+			"Y": 621
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 241,
+		"pos": {
+			"X": 158,
+			"Y": 623
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 241,
+		"pos": {
+			"X": 160,
+			"Y": 623
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 220,
+			"Y": 622
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 221,
+			"Y": 622
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 248,
+			"Y": 596
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 252,
+			"Y": 596
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 256,
+			"Y": 596
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 260,
+			"Y": 596
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 248,
+			"Y": 598
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 252,
+			"Y": 598
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 256,
+			"Y": 598
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 260,
+			"Y": 598
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 248,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 252,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 256,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 260,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 248,
+			"Y": 602
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 252,
+			"Y": 602
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 256,
+			"Y": 602
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 260,
+			"Y": 602
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 248,
+			"Y": 604
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 252,
+			"Y": 604
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 256,
+			"Y": 604
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 260,
+			"Y": 604
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 248,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 252,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 256,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 260,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 469,
+		"pos": {
+			"X": 362,
+			"Y": 602
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 469,
+		"pos": {
+			"X": 361,
+			"Y": 603
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 140,
+		"pos": {
+			"X": 345,
+			"Y": 605
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 167,
+		"pos": {
+			"X": 343,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 294,
+		"pos": {
+			"X": 344,
+			"Y": 606
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 168,
+		"pos": {
+			"X": 343,
+			"Y": 608
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 469,
+		"pos": {
+			"X": 358,
+			"Y": 615
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 776,
+		"pos": {
+			"X": 488,
+			"Y": 609
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 489,
+			"Y": 609
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 487,
+			"Y": 610
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 489,
+			"Y": 610
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 490,
+			"Y": 610
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 489,
+			"Y": 611
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 490,
+			"Y": 611
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 484,
+			"Y": 612
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 485,
+			"Y": 612
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 778,
+		"pos": {
+			"X": 485,
+			"Y": 614
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 487,
+			"Y": 614
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 489,
+			"Y": 614
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 493,
+			"Y": 614
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 496,
+			"Y": 614
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 497,
+			"Y": 614
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 776,
+		"pos": {
+			"X": 482,
+			"Y": 615
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 490,
+			"Y": 615
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 492,
+			"Y": 615
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 495,
+			"Y": 615
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 498,
+			"Y": 615
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 495,
+			"Y": 616
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 488,
+			"Y": 619
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 492,
+			"Y": 619
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 491,
+			"Y": 620
+		},
+		"amount": 1,
+		"respawn": 39
+	}, {
+		"id": 167,
+		"pos": {
+			"X": 543,
+			"Y": 576
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 168,
+		"pos": {
+			"X": 544,
+			"Y": 576
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 799,
+		"pos": {
+			"X": 574,
+			"Y": 583
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 799,
+		"pos": {
+			"X": 574,
+			"Y": 585
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 799,
+		"pos": {
+			"X": 574,
+			"Y": 586
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 706,
+		"pos": {
+			"X": 563,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 0,
+		"pos": {
+			"X": 536,
+			"Y": 601
+		},
+		"amount": 1,
+		"respawn": 350
+	}, {
+		"id": 211,
+		"pos": {
+			"X": 614,
+			"Y": 577
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 767,
+		"pos": {
+			"X": 615,
+			"Y": 577
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 133,
+		"pos": {
+			"X": 586,
+			"Y": 614
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 167,
+		"pos": {
+			"X": 631,
+			"Y": 593
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 13,
+		"pos": {
+			"X": 631,
+			"Y": 595
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 181,
+		"pos": {
+			"X": 634,
+			"Y": 598
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 181,
+		"pos": {
+			"X": 633,
+			"Y": 600
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 181,
+		"pos": {
+			"X": 635,
+			"Y": 601
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 346,
+		"pos": {
+			"X": 742,
+			"Y": 619
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 28,
+		"pos": {
+			"X": 119,
+			"Y": 631
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 11,
+		"pos": {
+			"X": 140,
+			"Y": 648
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 135,
+		"pos": {
+			"X": 134,
+			"Y": 660
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 140,
+		"pos": {
+			"X": 133,
+			"Y": 661
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 13,
+		"pos": {
+			"X": 130,
+			"Y": 667
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 35,
+		"pos": {
+			"X": 138,
+			"Y": 668
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 33,
+		"pos": {
+			"X": 117,
+			"Y": 669
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 33,
+		"pos": {
+			"X": 183,
+			"Y": 649
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 135,
+		"pos": {
+			"X": 176,
+			"Y": 657
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 320,
+		"pos": {
+			"X": 222,
+			"Y": 624
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 319,
+		"pos": {
+			"X": 223,
+			"Y": 624
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 182,
+		"pos": {
+			"X": 278,
+			"Y": 657
+		},
+		"amount": 1,
+		"respawn": 23
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 327,
+			"Y": 627
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 329,
+			"Y": 627
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 331,
+			"Y": 627
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 327,
+			"Y": 629
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 329,
+			"Y": 629
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 331,
+			"Y": 629
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 241,
+		"pos": {
+			"X": 327,
+			"Y": 633
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 241,
+		"pos": {
+			"X": 329,
+			"Y": 633
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 241,
+		"pos": {
+			"X": 331,
+			"Y": 633
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 156,
+		"pos": {
+			"X": 319,
+			"Y": 659
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 11,
+		"pos": {
+			"X": 323,
+			"Y": 667
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 325,
+			"Y": 670
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 326,
+			"Y": 670
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 152,
+		"pos": {
+			"X": 495,
+			"Y": 659
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 335,
+		"pos": {
+			"X": 519,
+			"Y": 663
+		},
+		"amount": 1,
+		"respawn": 10
+	}, {
+		"id": 516,
+		"pos": {
+			"X": 622,
+			"Y": 631
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 616,
+			"Y": 640
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 642,
+			"Y": 630
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 643,
+			"Y": 631
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 646,
+			"Y": 634
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 646,
+			"Y": 638
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 649,
+			"Y": 638
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 634,
+			"Y": 639
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 646,
+			"Y": 639
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 643,
+			"Y": 640
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 650,
+			"Y": 640
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 635,
+			"Y": 641
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 664,
+			"Y": 641
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 644,
+			"Y": 642
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 665,
+			"Y": 643
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 637,
+			"Y": 644
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 638,
+			"Y": 644
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 642,
+			"Y": 645
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 646,
+			"Y": 645
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 667,
+			"Y": 646
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 5,
+		"pos": {
+			"X": 665,
+			"Y": 647
+		},
+		"amount": 1,
+		"respawn": 20
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 640,
+			"Y": 648
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 667,
+			"Y": 648
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 642,
+			"Y": 649
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 663,
+			"Y": 649
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 15,
+		"pos": {
+			"X": 645,
+			"Y": 650
+		},
+		"amount": 1,
+		"respawn": 63
+	}, {
+		"id": 4,
+		"pos": {
+			"X": 650,
+			"Y": 650
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 4,
+		"pos": {
+			"X": 657,
+			"Y": 650
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 643,
+			"Y": 651
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 647,
+			"Y": 653
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 654,
+			"Y": 653
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 134,
+		"pos": {
+			"X": 691,
+			"Y": 640
+		},
+		"amount": 1,
+		"respawn": 10
+	}, {
+		"id": 412,
+		"pos": {
+			"X": 693,
+			"Y": 647
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 700,
+			"Y": 647
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 698,
+			"Y": 648
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 413,
+		"pos": {
+			"X": 700,
+			"Y": 648
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 412,
+		"pos": {
+			"X": 701,
+			"Y": 648
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 690,
+			"Y": 649
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 412,
+		"pos": {
+			"X": 698,
+			"Y": 649
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 412,
+		"pos": {
+			"X": 691,
+			"Y": 650
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 701,
+			"Y": 650
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 691,
+			"Y": 651
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 699,
+			"Y": 651
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 412,
+		"pos": {
+			"X": 700,
+			"Y": 651
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 412,
+		"pos": {
+			"X": 689,
+			"Y": 652
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 690,
+			"Y": 652
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 691,
+			"Y": 652
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 412,
+		"pos": {
+			"X": 692,
+			"Y": 652
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 694,
+			"Y": 652
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 699,
+			"Y": 652
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 692,
+			"Y": 653
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 691,
+			"Y": 654
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 702,
+		"pos": {
+			"X": 703,
+			"Y": 654
+		},
+		"amount": 1,
+		"respawn": 63
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 688,
+			"Y": 655
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 690,
+			"Y": 655
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 691,
+			"Y": 656
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 687,
+			"Y": 657
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 132,
+		"pos": {
+			"X": 743,
+			"Y": 625
+		},
+		"amount": 1,
+		"respawn": 120
+	}, {
+		"id": 357,
+		"pos": {
+			"X": 745,
+			"Y": 626
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 756,
+			"Y": 667
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 60,
+			"Y": 672
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 17,
+		"pos": {
+			"X": 64,
+			"Y": 677
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 140,
+		"pos": {
+			"X": 78,
+			"Y": 693
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 79,
+			"Y": 693
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 94,
+		"pos": {
+			"X": 51,
+			"Y": 718
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 16,
+		"pos": {
+			"X": 116,
+			"Y": 710
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 166,
+			"Y": 674
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 176,
+			"Y": 674
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 152,
+			"Y": 675
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 163,
+			"Y": 675
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 166,
+			"Y": 676
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 171,
+			"Y": 676
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 156,
+			"Y": 678
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 156,
+			"Y": 679
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 163,
+			"Y": 679
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 164,
+			"Y": 679
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 168,
+			"Y": 679
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 173,
+			"Y": 679
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 155,
+			"Y": 680
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 167,
+			"Y": 681
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 170,
+			"Y": 681
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 150,
+			"Y": 682
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 154,
+			"Y": 682
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 174,
+			"Y": 682
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 153,
+			"Y": 683
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 153,
+			"Y": 683
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 163,
+			"Y": 683
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 165,
+			"Y": 683
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 169,
+			"Y": 684
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 169,
+			"Y": 684
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 154,
+			"Y": 685
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 150,
+			"Y": 686
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 157,
+			"Y": 686
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 151,
+			"Y": 687
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 152,
+			"Y": 687
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 146,
+			"Y": 688
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 155,
+			"Y": 688
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 152,
+			"Y": 689
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 170,
+			"Y": 689
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 174,
+			"Y": 689
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 157,
+			"Y": 690
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 160,
+			"Y": 690
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 150,
+			"Y": 691
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 150,
+			"Y": 691
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 152,
+			"Y": 691
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 164,
+			"Y": 691
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 155,
+			"Y": 693
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 169,
+			"Y": 693
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 154,
+			"Y": 694
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 159,
+			"Y": 694
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 163,
+			"Y": 694
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 148,
+			"Y": 695
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 160,
+			"Y": 697
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 156,
+			"Y": 698
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 783,
+		"pos": {
+			"X": 150,
+			"Y": 699
+		},
+		"amount": 6,
+		"respawn": 30
+	}, {
+		"id": 33,
+		"pos": {
+			"X": 339,
+			"Y": 703
+		},
+		"amount": 3,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 470,
+			"Y": 672
+		},
+		"amount": 3,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 470,
+			"Y": 673
+		},
+		"amount": 3,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 468,
+			"Y": 674
+		},
+		"amount": 3,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 471,
+			"Y": 674
+		},
+		"amount": 3,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 470,
+			"Y": 675
+		},
+		"amount": 3,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 591,
+			"Y": 690
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 596,
+			"Y": 695
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 0,
+		"pos": {
+			"X": 602,
+			"Y": 699
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 606,
+			"Y": 700
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 611,
+			"Y": 701
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 600,
+			"Y": 702
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 606,
+			"Y": 703
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 12,
+		"pos": {
+			"X": 609,
+			"Y": 703
+		},
+		"amount": 1,
+		"respawn": 600
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 614,
+			"Y": 703
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 5,
+		"pos": {
+			"X": 602,
+			"Y": 704
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 604,
+			"Y": 706
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 601,
+			"Y": 707
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 0,
+		"pos": {
+			"X": 608,
+			"Y": 707
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 615,
+			"Y": 707
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 608,
+			"Y": 709
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 603,
+			"Y": 711
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 607,
+			"Y": 711
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 625,
+		"pos": {
+			"X": 696,
+			"Y": 678
+		},
+		"amount": 1,
+		"respawn": 20
+	}, {
+		"id": 412,
+		"pos": {
+			"X": 694,
+			"Y": 680
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 1025,
+		"pos": {
+			"X": 715,
+			"Y": 680
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 695,
+			"Y": 681
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 700,
+			"Y": 681
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 695,
+			"Y": 683
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 698,
+			"Y": 683
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 694,
+			"Y": 684
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 696,
+			"Y": 684
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 692,
+			"Y": 686
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 568,
+		"pos": {
+			"X": 698,
+			"Y": 687
+		},
+		"amount": 1,
+		"respawn": 120
+	}, {
+		"id": 568,
+		"pos": {
+			"X": 710,
+			"Y": 695
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 1099,
+		"pos": {
+			"X": 65,
+			"Y": 727
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 1283,
+		"pos": {
+			"X": 256,
+			"Y": 754
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 1283,
+		"pos": {
+			"X": 251,
+			"Y": 755
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 1283,
+		"pos": {
+			"X": 252,
+			"Y": 758
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 1283,
+		"pos": {
+			"X": 258,
+			"Y": 758
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 1283,
+		"pos": {
+			"X": 251,
+			"Y": 760
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 1283,
+		"pos": {
+			"X": 257,
+			"Y": 761
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 1283,
+		"pos": {
+			"X": 304,
+			"Y": 754
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 1283,
+		"pos": {
+			"X": 299,
+			"Y": 755
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 1283,
+		"pos": {
+			"X": 300,
+			"Y": 758
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 1283,
+		"pos": {
+			"X": 306,
+			"Y": 758
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 1283,
+		"pos": {
+			"X": 299,
+			"Y": 760
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 1283,
+		"pos": {
+			"X": 305,
+			"Y": 761
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 659,
+			"Y": 734
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 660,
+			"Y": 735
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 664,
+			"Y": 735
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 601,
+		"pos": {
+			"X": 639,
+			"Y": 737
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 936,
+		"pos": {
+			"X": 663,
+			"Y": 755
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 936,
+		"pos": {
+			"X": 658,
+			"Y": 757
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 936,
+		"pos": {
+			"X": 658,
+			"Y": 760
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 665,
+			"Y": 760
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 936,
+		"pos": {
+			"X": 660,
+			"Y": 762
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 664,
+			"Y": 762
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 141,
+		"pos": {
+			"X": 85,
+			"Y": 800
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 607,
+			"Y": 792
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 604,
+			"Y": 795
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 608,
+			"Y": 796
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 605,
+			"Y": 797
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 605,
+			"Y": 798
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 607,
+			"Y": 798
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 604,
+			"Y": 799
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 607,
+			"Y": 800
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 237,
+		"pos": {
+			"X": 605,
+			"Y": 801
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 608,
+			"Y": 804
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 38,
+		"pos": {
+			"X": 583,
+			"Y": 856
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 661,
+			"Y": 852
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 660,
+			"Y": 853
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 661,
+			"Y": 853
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 659,
+			"Y": 855
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 738,
+		"pos": {
+			"X": 421,
+			"Y": 976
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 738,
+		"pos": {
+			"X": 517,
+			"Y": 976
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 31,
+		"pos": {
+			"X": 460,
+			"Y": 1385
+		},
+		"amount": 2,
+		"respawn": 15
+	}, {
+		"id": 252,
+		"pos": {
+			"X": 176,
+			"Y": 1424
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 252,
+		"pos": {
+			"X": 177,
+			"Y": 1424
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 251,
+		"pos": {
+			"X": 178,
+			"Y": 1424
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 341,
+		"pos": {
+			"X": 180,
+			"Y": 1424
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 338,
+		"pos": {
+			"X": 181,
+			"Y": 1424
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 388,
+		"pos": {
+			"X": 264,
+			"Y": 1402
+		},
+		"amount": 1,
+		"respawn": 63
+	}, {
+		"id": 389,
+		"pos": {
+			"X": 265,
+			"Y": 1402
+		},
+		"amount": 1,
+		"respawn": 23
+	}, {
+		"id": 537,
+		"pos": {
+			"X": 362,
+			"Y": 1437
+		},
+		"amount": 1,
+		"respawn": 100
+	}, {
+		"id": 538,
+		"pos": {
+			"X": 362,
+			"Y": 1439
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 465,
+		"pos": {
+			"X": 429,
+			"Y": 1434
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 251,
+		"pos": {
+			"X": 432,
+			"Y": 1424
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 1046,
+		"pos": {
+			"X": 617,
+			"Y": 1435
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 833,
+		"pos": {
+			"X": 691,
+			"Y": 1401
+		},
+		"amount": 1,
+		"respawn": 68
+	}, {
+		"id": 833,
+		"pos": {
+			"X": 691,
+			"Y": 1401
+		},
+		"amount": 1,
+		"respawn": 68
+	}, {
+		"id": 833,
+		"pos": {
+			"X": 693,
+			"Y": 1403
+		},
+		"amount": 1,
+		"respawn": 68
+	}, {
+		"id": 833,
+		"pos": {
+			"X": 693,
+			"Y": 1403
+		},
+		"amount": 1,
+		"respawn": 68
+	}, {
+		"id": 833,
+		"pos": {
+			"X": 693,
+			"Y": 1404
+		},
+		"amount": 1,
+		"respawn": 68
+	}, {
+		"id": 833,
+		"pos": {
+			"X": 693,
+			"Y": 1404
+		},
+		"amount": 1,
+		"respawn": 68
+	}, {
+		"id": 920,
+		"pos": {
+			"X": 714,
+			"Y": 1418
+		},
+		"amount": 1,
+		"respawn": 10
+	}, {
+		"id": 13,
+		"pos": {
+			"X": 124,
+			"Y": 1458
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 211,
+		"pos": {
+			"X": 127,
+			"Y": 1461
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 17,
+		"pos": {
+			"X": 104,
+			"Y": 1476
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 59,
+		"pos": {
+			"X": 105,
+			"Y": 1476
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 59,
+		"pos": {
+			"X": 107,
+			"Y": 1476
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 62,
+		"pos": {
+			"X": 107,
+			"Y": 1477
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 16,
+		"pos": {
+			"X": 107,
+			"Y": 1478
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 87,
+		"pos": {
+			"X": 310,
+			"Y": 1465
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 132,
+		"pos": {
+			"X": 307,
+			"Y": 1475
+		},
+		"amount": 1,
+		"respawn": 180
+	}, {
+		"id": 183,
+		"pos": {
+			"X": 310,
+			"Y": 1479
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 189,
+		"pos": {
+			"X": 377,
+			"Y": 1446
+		},
+		"amount": 1,
+		"respawn": 620
+	}, {
+		"id": 176,
+		"pos": {
+			"X": 212,
+			"Y": 1497
+		},
+		"amount": 1,
+		"respawn": 6
+	}, {
+		"id": 11,
+		"pos": {
+			"X": 334,
+			"Y": 1509
+		},
+		"amount": 2,
+		"respawn": 60
+	}, {
+		"id": 341,
+		"pos": {
+			"X": 430,
+			"Y": 1502
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 190,
+		"pos": {
+			"X": 277,
+			"Y": 1571
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 190,
+		"pos": {
+			"X": 278,
+			"Y": 1578
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 144,
+		"pos": {
+			"X": 344,
+			"Y": 1545
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 386,
+		"pos": {
+			"X": 345,
+			"Y": 1545
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 295,
+		"pos": {
+			"X": 346,
+			"Y": 1545
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 495,
+			"Y": 1559
+		},
+		"amount": 1,
+		"respawn": 39
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 487,
+			"Y": 1561
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 490,
+			"Y": 1561
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 488,
+			"Y": 1562
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 489,
+			"Y": 1562
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 490,
+			"Y": 1562
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 487,
+			"Y": 1563
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 489,
+			"Y": 1563
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 490,
+			"Y": 1563
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 493,
+			"Y": 1563
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 487,
+			"Y": 1564
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 488,
+			"Y": 1564
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 489,
+			"Y": 1564
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 491,
+			"Y": 1564
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 492,
+			"Y": 1564
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 769,
+		"pos": {
+			"X": 494,
+			"Y": 1564
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 36,
+		"pos": {
+			"X": 77,
+			"Y": 1618
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 62,
+		"pos": {
+			"X": 129,
+			"Y": 1601
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 82,
+		"pos": {
+			"X": 316,
+			"Y": 1608
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 109,
+		"pos": {
+			"X": 450,
+			"Y": 1621
+		},
+		"amount": 1,
+		"respawn": 622
+	}, {
+		"id": 109,
+		"pos": {
+			"X": 450,
+			"Y": 1621
+		},
+		"amount": 1,
+		"respawn": 622
+	}, {
+		"id": 342,
+		"pos": {
+			"X": 84,
+			"Y": 1744
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 746,
+		"pos": {
+			"X": 418,
+			"Y": 1924
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 746,
+		"pos": {
+			"X": 514,
+			"Y": 1924
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 1093,
+		"pos": {
+			"X": 58,
+			"Y": 2327
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 252,
+		"pos": {
+			"X": 175,
+			"Y": 2370
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 140,
+		"pos": {
+			"X": 176,
+			"Y": 2370
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 135,
+		"pos": {
+			"X": 177,
+			"Y": 2370
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 143,
+		"pos": {
+			"X": 181,
+			"Y": 2374
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 166,
+		"pos": {
+			"X": 208,
+			"Y": 2438
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 181,
+		"pos": {
+			"X": 214,
+			"Y": 2439
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 181,
+		"pos": {
+			"X": 212,
+			"Y": 2441
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 139,
+		"pos": {
+			"X": 209,
+			"Y": 2442
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 41,
+		"pos": {
+			"X": 361,
+			"Y": 2458
+		},
+		"amount": 1,
+		"respawn": 126
+	}, {
+		"id": 427,
+		"pos": {
+			"X": 612,
+			"Y": 2488
+		},
+		"amount": 1,
+		"respawn": 120
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 139,
+			"Y": 2536
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 139,
+			"Y": 2537
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 140,
+			"Y": 2537
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 14,
+		"pos": {
+			"X": 140,
+			"Y": 2538
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 8,
+		"pos": {
+			"X": 615,
+			"Y": 2603
+		},
+		"amount": 1,
+		"respawn": 600
+	}, {
+		"id": 12,
+		"pos": {
+			"X": 616,
+			"Y": 2604
+		},
+		"amount": 1,
+		"respawn": 600
+	}, {
+		"id": 3,
+		"pos": {
+			"X": 617,
+			"Y": 2605
+		},
+		"amount": 1,
+		"respawn": 600
+	}, {
+		"id": 0,
+		"pos": {
+			"X": 616,
+			"Y": 2606
+		},
+		"amount": 1,
+		"respawn": 600
+	}, {
+		"id": 1,
+		"pos": {
+			"X": 617,
+			"Y": 2606
+		},
+		"amount": 1,
+		"respawn": 600
+	}, {
+		"id": 6,
+		"pos": {
+			"X": 620,
+			"Y": 2606
+		},
+		"amount": 1,
+		"respawn": 600
+	}, {
+		"id": 476,
+		"pos": {
+			"X": 276,
+			"Y": 2961
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 411,
+		"pos": {
+			"X": 280,
+			"Y": 2963
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 444,
+		"pos": {
+			"X": 269,
+			"Y": 2967
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 671,
+		"pos": {
+			"X": 207,
+			"Y": 3206
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 219,
+		"pos": {
+			"X": 204,
+			"Y": 3232
+		},
+		"amount": 1,
+		"respawn": 127
+	}, {
+		"id": 219,
+		"pos": {
+			"X": 201,
+			"Y": 3234
+		},
+		"amount": 1,
+		"respawn": 127
+	}, {
+		"id": 219,
+		"pos": {
+			"X": 209,
+			"Y": 3236
+		},
+		"amount": 1,
+		"respawn": 127
+	}, {
+		"id": 219,
+		"pos": {
+			"X": 208,
+			"Y": 3240
+		},
+		"amount": 1,
+		"respawn": 127
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 91,
+			"Y": 3301
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 36,
+		"pos": {
+			"X": 129,
+			"Y": 3290
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 35,
+		"pos": {
+			"X": 129,
+			"Y": 3292
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 151,
+			"Y": 3290
+		},
+		"amount": 7,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 158,
+			"Y": 3292
+		},
+		"amount": 8,
+		"respawn": 60
+	}, {
+		"id": 12,
+		"pos": {
+			"X": 161,
+			"Y": 3295
+		},
+		"amount": 1,
+		"respawn": 600
+	}, {
+		"id": 34,
+		"pos": {
+			"X": 146,
+			"Y": 3296
+		},
+		"amount": 6,
+		"respawn": 37
+	}, {
+		"id": 219,
+		"pos": {
+			"X": 160,
+			"Y": 3299
+		},
+		"amount": 1,
+		"respawn": 127
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 150,
+			"Y": 3300
+		},
+		"amount": 7,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 155,
+			"Y": 3301
+		},
+		"amount": 5,
+		"respawn": 60
+	}, {
+		"id": 11,
+		"pos": {
+			"X": 194,
+			"Y": 3267
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 11,
+		"pos": {
+			"X": 197,
+			"Y": 3277
+		},
+		"amount": 3,
+		"respawn": 37
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 223,
+			"Y": 3279
+		},
+		"amount": 4,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 223,
+			"Y": 3280
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 207,
+			"Y": 3283
+		},
+		"amount": 1,
+		"respawn": 24
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 209,
+			"Y": 3283
+		},
+		"amount": 1,
+		"respawn": 24
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 205,
+			"Y": 3288
+		},
+		"amount": 1,
+		"respawn": 24
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 210,
+			"Y": 3288
+		},
+		"amount": 1,
+		"respawn": 24
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 216,
+			"Y": 3289
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 212,
+			"Y": 3292
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 186,
+		"pos": {
+			"X": 204,
+			"Y": 3295
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 216,
+			"Y": 3299
+		},
+		"amount": 1,
+		"respawn": 24
+	}, {
+		"id": 99,
+		"pos": {
+			"X": 198,
+			"Y": 3307
+		},
+		"amount": 1,
+		"respawn": 63
+	}, {
+		"id": 725,
+		"pos": {
+			"X": 540,
+			"Y": 3273
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 342,
+		"pos": {
+			"X": 543,
+			"Y": 3273
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 732,
+		"pos": {
+			"X": 533,
+			"Y": 3302
+		},
+		"amount": 1,
+		"respawn": 10
+	}, {
+		"id": 1284,
+		"pos": {
+			"X": 9,
+			"Y": 3325
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 1284,
+		"pos": {
+			"X": 11,
+			"Y": 3327
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 1284,
+		"pos": {
+			"X": 5,
+			"Y": 3329
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 24,
+			"Y": 3341
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 23,
+			"Y": 3342
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 22,
+			"Y": 3343
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 156,
+		"pos": {
+			"X": 30,
+			"Y": 3345
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 156,
+		"pos": {
+			"X": 30,
+			"Y": 3346
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 156,
+		"pos": {
+			"X": 25,
+			"Y": 3347
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 156,
+		"pos": {
+			"X": 28,
+			"Y": 3347
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 1174,
+		"pos": {
+			"X": 11,
+			"Y": 3348
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 27,
+		"pos": {
+			"X": 8,
+			"Y": 3353
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 27,
+		"pos": {
+			"X": 17,
+			"Y": 3353
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 27,
+		"pos": {
+			"X": 8,
+			"Y": 3354
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 27,
+		"pos": {
+			"X": 6,
+			"Y": 3355
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 27,
+		"pos": {
+			"X": 17,
+			"Y": 3355
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 150,
+			"Y": 3330
+		},
+		"amount": 3,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 149,
+			"Y": 3335
+		},
+		"amount": 42,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 150,
+			"Y": 3335
+		},
+		"amount": 66,
+		"respawn": 60
+	}, {
+		"id": 152,
+		"pos": {
+			"X": 152,
+			"Y": 3335
+		},
+		"amount": 1,
+		"respawn": 610
+	}, {
+		"id": 152,
+		"pos": {
+			"X": 150,
+			"Y": 3336
+		},
+		"amount": 1,
+		"respawn": 610
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 147,
+			"Y": 3337
+		},
+		"amount": 10,
+		"respawn": 60
+	}, {
+		"id": 186,
+		"pos": {
+			"X": 148,
+			"Y": 3337
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 186,
+		"pos": {
+			"X": 149,
+			"Y": 3337
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 152,
+			"Y": 3337
+		},
+		"amount": 10,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 149,
+			"Y": 3339
+		},
+		"amount": 10,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 150,
+			"Y": 3339
+		},
+		"amount": 10,
+		"respawn": 60
+	}, {
+		"id": 251,
+		"pos": {
+			"X": 296,
+			"Y": 3329
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 113,
+		"pos": {
+			"X": 298,
+			"Y": 3344
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 350,
+			"Y": 3322
+		},
+		"amount": 4,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 351,
+			"Y": 3336
+		},
+		"amount": 2,
+		"respawn": 60
+	}, {
+		"id": 467,
+		"pos": {
+			"X": 368,
+			"Y": 3350
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 370,
+			"Y": 3351
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 467,
+		"pos": {
+			"X": 368,
+			"Y": 3352
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 367,
+			"Y": 3354
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 467,
+		"pos": {
+			"X": 372,
+			"Y": 3354
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 467,
+		"pos": {
+			"X": 368,
+			"Y": 3356
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 371,
+			"Y": 3356
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 283,
+		"pos": {
+			"X": 565,
+			"Y": 3317
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 568,
+			"Y": 3317
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 566,
+			"Y": 3318
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 164,
+		"pos": {
+			"X": 567,
+			"Y": 3318
+		},
+		"amount": 1,
+		"respawn": 603
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 569,
+			"Y": 3318
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 566,
+			"Y": 3319
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 566,
+			"Y": 3320
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 567,
+			"Y": 3321
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 569,
+			"Y": 3322
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 566,
+			"Y": 3324
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 566,
+			"Y": 3326
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 569,
+			"Y": 3326
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 724,
+		"pos": {
+			"X": 551,
+			"Y": 3327
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 568,
+			"Y": 3328
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 723,
+		"pos": {
+			"X": 560,
+			"Y": 3352
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 723,
+		"pos": {
+			"X": 563,
+			"Y": 3354
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 1284,
+		"pos": {
+			"X": 9,
+			"Y": 3373
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 1284,
+		"pos": {
+			"X": 11,
+			"Y": 3375
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 1284,
+		"pos": {
+			"X": 5,
+			"Y": 3377
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 1174,
+		"pos": {
+			"X": 11,
+			"Y": 3396
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 27,
+		"pos": {
+			"X": 8,
+			"Y": 3401
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 27,
+		"pos": {
+			"X": 17,
+			"Y": 3401
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 104,
+		"pos": {
+			"X": 206,
+			"Y": 3380
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 208,
+		"pos": {
+			"X": 232,
+			"Y": 3382
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 596,
+		"pos": {
+			"X": 367,
+			"Y": 3372
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 722,
+		"pos": {
+			"X": 543,
+			"Y": 3374
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 133,
+		"pos": {
+			"X": 678,
+			"Y": 3445
+		},
+		"amount": 1,
+		"respawn": 120
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 708,
+			"Y": 3449
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 705,
+			"Y": 3450
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 132,
+		"pos": {
+			"X": 678,
+			"Y": 3451
+		},
+		"amount": 1,
+		"respawn": 120
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 748,
+			"Y": 3426
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 740,
+			"Y": 3427
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 745,
+			"Y": 3427
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 742,
+			"Y": 3429
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 752,
+			"Y": 3430
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 743,
+			"Y": 3432
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 747,
+			"Y": 3432
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 991,
+		"pos": {
+			"X": 728,
+			"Y": 3434
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 993,
+		"pos": {
+			"X": 752,
+			"Y": 3440
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 410,
+		"pos": {
+			"X": 726,
+			"Y": 3442
+		},
+		"amount": 1,
+		"respawn": 5
+	}, {
+		"id": 992,
+		"pos": {
+			"X": 755,
+			"Y": 3442
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 996,
+		"pos": {
+			"X": 726,
+			"Y": 3448
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 138,
+		"pos": {
+			"X": 760,
+			"Y": 3448
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 143,
+		"pos": {
+			"X": 761,
+			"Y": 3448
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 907,
+		"pos": {
+			"X": 759,
+			"Y": 3449
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 60,
+		"pos": {
+			"X": 760,
+			"Y": 3451
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 95,
+		"pos": {
+			"X": 763,
+			"Y": 3451
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 17,
+		"pos": {
+			"X": 141,
+			"Y": 3488
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 18,
+		"pos": {
+			"X": 141,
+			"Y": 3489
+		},
+		"amount": 1,
+		"respawn": 123
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 415,
+			"Y": 3476
+		},
+		"amount": 100,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 419,
+			"Y": 3477
+		},
+		"amount": 100,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 415,
+			"Y": 3483
+		},
+		"amount": 100,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 420,
+			"Y": 3484
+		},
+		"amount": 100,
+		"respawn": 60
+	}, {
+		"id": 727,
+		"pos": {
+			"X": 583,
+			"Y": 3456
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 728,
+		"pos": {
+			"X": 609,
+			"Y": 3465
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 730,
+		"pos": {
+			"X": 579,
+			"Y": 3474
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 7,
+		"pos": {
+			"X": 589,
+			"Y": 3481
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 13,
+		"pos": {
+			"X": 612,
+			"Y": 3482
+		},
+		"amount": 1,
+		"respawn": 10
+	}, {
+		"id": 731,
+		"pos": {
+			"X": 592,
+			"Y": 3483
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 614,
+			"Y": 3483
+		},
+		"amount": 1,
+		"respawn": 12
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 617,
+			"Y": 3483
+		},
+		"amount": 1,
+		"respawn": 61
+	}, {
+		"id": 604,
+		"pos": {
+			"X": 606,
+			"Y": 3484
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 729,
+		"pos": {
+			"X": 616,
+			"Y": 3484
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 612,
+			"Y": 3497
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 616,
+			"Y": 3497
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 612,
+			"Y": 3498
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 613,
+			"Y": 3498
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 622,
+			"Y": 3499
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 716,
+		"pos": {
+			"X": 619,
+			"Y": 3500
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 622,
+			"Y": 3500
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 994,
+		"pos": {
+			"X": 708,
+			"Y": 3473
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 994,
+		"pos": {
+			"X": 715,
+			"Y": 3482
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 237,
+		"pos": {
+			"X": 721,
+			"Y": 3471
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 909,
+		"pos": {
+			"X": 721,
+			"Y": 3493
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 19,
+		"pos": {
+			"X": 126,
+			"Y": 3511
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 21,
+		"pos": {
+			"X": 158,
+			"Y": 3523
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 337,
+		"pos": {
+			"X": 170,
+			"Y": 3532
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 337,
+		"pos": {
+			"X": 171,
+			"Y": 3532
+		},
+		"amount": 1,
+		"respawn": 15
+	}, {
+		"id": 27,
+		"pos": {
+			"X": 218,
+			"Y": 3521
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 219,
+		"pos": {
+			"X": 404,
+			"Y": 3518
+		},
+		"amount": 1,
+		"respawn": 127
+	}, {
+		"id": 31,
+		"pos": {
+			"X": 408,
+			"Y": 3532
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 31,
+		"pos": {
+			"X": 413,
+			"Y": 3534
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 31,
+		"pos": {
+			"X": 405,
+			"Y": 3537
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 31,
+		"pos": {
+			"X": 414,
+			"Y": 3540
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 31,
+		"pos": {
+			"X": 409,
+			"Y": 3543
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 714,
+		"pos": {
+			"X": 580,
+			"Y": 3524
+		},
+		"amount": 1,
+		"respawn": 37
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 714,
+			"Y": 3505
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 712,
+			"Y": 3510
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 673,
+			"Y": 3511
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 696,
+			"Y": 3511
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 711,
+			"Y": 3511
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 698,
+			"Y": 3512
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 713,
+			"Y": 3513
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 692,
+			"Y": 3514
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 711,
+			"Y": 3515
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 690,
+			"Y": 3516
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 709,
+			"Y": 3516
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 713,
+			"Y": 3518
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 168,
+		"pos": {
+			"X": 707,
+			"Y": 3520
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 678,
+			"Y": 3527
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 697,
+			"Y": 3527
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 682,
+			"Y": 3534
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 690,
+			"Y": 3536
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 706,
+			"Y": 3538
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 718,
+			"Y": 3543
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 676,
+			"Y": 3550
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 1003,
+		"pos": {
+			"X": 804,
+			"Y": 3509
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 5,
+		"pos": {
+			"X": 768,
+			"Y": 3523
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 60,
+		"pos": {
+			"X": 775,
+			"Y": 3527
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 60,
+		"pos": {
+			"X": 768,
+			"Y": 3533
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 362,
+		"pos": {
+			"X": 614,
+			"Y": 3564
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 648,
+			"Y": 3557
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 652,
+			"Y": 3557
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 651,
+			"Y": 3559
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 652,
+			"Y": 3559
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 1086,
+		"pos": {
+			"X": 650,
+			"Y": 3560
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 165,
+		"pos": {
+			"X": 642,
+			"Y": 3563
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 165,
+		"pos": {
+			"X": 642,
+			"Y": 3564
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 1036,
+		"pos": {
+			"X": 635,
+			"Y": 3566
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 628,
+			"Y": 3567
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 626,
+			"Y": 3568
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 630,
+			"Y": 3568
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 628,
+			"Y": 3569
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 629,
+			"Y": 3569
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 629,
+			"Y": 3570
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 630,
+			"Y": 3570
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 319,
+		"pos": {
+			"X": 631,
+			"Y": 3583
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 628,
+			"Y": 3589
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 1086,
+		"pos": {
+			"X": 650,
+			"Y": 3592
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 627,
+			"Y": 3593
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 631,
+			"Y": 3594
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 651,
+			"Y": 3594
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 628,
+			"Y": 3595
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 629,
+			"Y": 3595
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 628,
+			"Y": 3596
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 648,
+			"Y": 3596
+		},
+		"amount": 1,
+		"respawn": 45
+	}, {
+		"id": 156,
+		"pos": {
+			"X": 75,
+			"Y": 3622
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 156,
+		"pos": {
+			"X": 75,
+			"Y": 3624
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 156,
+		"pos": {
+			"X": 75,
+			"Y": 3625
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 156,
+		"pos": {
+			"X": 75,
+			"Y": 3626
+		},
+		"amount": 1,
+		"respawn": 30
+	}, {
+		"id": 986,
+		"pos": {
+			"X": 62,
+			"Y": 3641
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 986,
+		"pos": {
+			"X": 63,
+			"Y": 3641
+		},
+		"amount": 1,
+		"respawn": 60
+	}, {
+		"id": 10,
+		"pos": {
+			"X": 358,
+			"Y": 3626
+		},
+		"amount": 10,
+		"respawn": 60
+	}, {
+		"id": 1087,
+		"pos": {
+			"X": 664,
+			"Y": 3614
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 661,
+			"Y": 3615
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 664,
+			"Y": 3616
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 662,
+			"Y": 3617
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 666,
+			"Y": 3617
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 662,
+			"Y": 3618
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 663,
+			"Y": 3618
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 665,
+			"Y": 3618
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 661,
+			"Y": 3619
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 664,
+			"Y": 3619
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 663,
+			"Y": 3620
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 665,
+			"Y": 3620
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 666,
+			"Y": 3632
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 669,
+			"Y": 3633
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 663,
+			"Y": 3634
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 667,
+			"Y": 3634
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 668,
+			"Y": 3634
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 665,
+			"Y": 3635
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 664,
+			"Y": 3636
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 667,
+			"Y": 3636
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 663,
+			"Y": 3637
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 20,
+		"pos": {
+			"X": 666,
+			"Y": 3637
+		},
+		"amount": 1,
+		"respawn": 25
+	}, {
+		"id": 1264,
+		"pos": {
+			"X": 426,
+			"Y": 3708
+		},
+		"amount": 1,
+		"respawn": 30
+	}]
+}

@@ -27,7 +27,7 @@ public class MagicGuildPortals implements OpBoundTrigger {
 			} else if (obj.getID() == MAGIC_PORTALS[2]) {
 				player.teleport(362, 1515);
 			}
-			delay(config().GAME_TICK);
+			delay();
 			displayTeleportBubble(player, player.getX(), player.getY(), false);
 		}
 	}

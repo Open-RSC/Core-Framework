@@ -349,9 +349,9 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 					// Player's Runecraft level is lowered by 15%.
 					player.getCarriedItems().remove(talisman);
 					player.message("The runes crumble to dust");
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					player.message("And your talisman explodes!");
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					player.message("You feel strange");
 
 					int subtractLevel = (int)Math.round(player.getSkills().getLevel(Skills.RUNECRAFT) * 0.15D);
@@ -385,7 +385,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 			return;
 		}
 		player.message("You feel a powerful force take hold of you...");
-		delay(config().GAME_TICK);
+		delay();
 
 		switch(obj.getID())
 		{
@@ -480,7 +480,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 
 		thinkbubble(chisel);
 		player.getCarriedItems().remove(runestone);
-		delay(config().GAME_TICK);
+		delay();
 		player.message("You chisel the rune stone into a talisman.");
 		player.getCarriedItems().getInventory().add(new Item(ItemId.UNCHARGED_TALISMAN.id()));
 		player.incExp(Skills.CRAFTING, 20, true);
@@ -488,7 +488,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(config().GAME_TICK);
+			delay();
 			batchChisel(player, chisel);
 		}
 	}
@@ -508,6 +508,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 
 		if (player.getLevel(Skills.RUNECRAFT) < talismanInformation.get(talismanId)[LEVEL_INDEX]) {
 			mes("You must be at least level " + talismanInformation.get(talismanId)[LEVEL_INDEX] + " to imbue that");
+			delay(3);
 			return;
 		}
 
@@ -521,6 +522,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 
 		if (rune.getAmount() < 10) { // 10 runes to imbue a talisman.
 			mes("You do not have enough runes to imbue that talisman!");
+			delay(3);
 			return;
 		}
 
@@ -529,7 +531,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		thinkbubble(talisman);
 		player.getCarriedItems().remove(talisman);
 		player.getCarriedItems().remove(new Item(rune.getCatalogId(), 10));
-		delay(config().GAME_TICK);
+		delay();
 		player.getCarriedItems().getInventory().add(imbued);
 		player.incExp(Skills.RUNECRAFT, talismanInformation.get(talismanId)[EXP_INDEX], true);
 		player.message("You imbue the uncharged talisman and create a " + imbued.getDef(player.getWorld()).getName());
@@ -537,7 +539,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(config().GAME_TICK);
+			delay();
 			batchImbue(player, rune);
 		}
 	}

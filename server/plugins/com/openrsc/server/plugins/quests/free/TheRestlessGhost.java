@@ -316,6 +316,7 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 		if (obj.getID() == GHOST_COFFIN_OPEN && player.getQuestStage(this) == 3
 			&& item.getCatalogId() == ItemId.QUEST_SKULL.id()) {
 			mes("You put the skull in the coffin");
+			delay(3);
 			player.getCarriedItems().remove(new Item(ItemId.QUEST_SKULL.id()));
 			//on completion cache key no longer needed
 			player.getCache().remove("tried_grab_skull");
@@ -323,8 +324,12 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 			if (npc != null) {
 				npc.remove();
 			}
-			mes("The ghost has vanished",
-				"You think you hear a faint voice in the air", "Thank you");
+			mes("The ghost has vanished");
+			delay(3);
+			mes("You think you hear a faint voice in the air");
+			delay(3);
+			mes("Thank you");
+			delay(3);
 			player.sendQuestComplete(Quests.THE_RESTLESS_GHOST);
 			return;
 		}

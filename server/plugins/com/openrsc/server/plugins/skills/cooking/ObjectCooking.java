@@ -43,14 +43,19 @@ public class ObjectCooking implements UseLocTrigger {
 					player.playerServerMessage(MessageType.QUEST, "You accidentally burn the meat");
 					player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BURNTMEAT.id()));
-					mes("sometimes you will burn food",
-						"As your cooking level increases this will happen less",
-						"Now speak to the cooking instructor again");
+					delay();
+					mes("sometimes you will burn food");
+					delay(3);
+					mes("As your cooking level increases this will happen less");
+					delay(3);
+					mes("Now speak to the cooking instructor again");
+					delay(3);
 					player.getCache().set("tutorial", 30);
 				} else if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 30) {
 					final ItemCookingDef cookingDef = item.getCookingDef(player.getWorld());
 					player.playerServerMessage(MessageType.QUEST, "The meat is now nicely cooked");
 					mes("Now speak to the cooking instructor again");
+					delay(3);
 					player.incExp(Skills.COOKING, cookingDef.getExp(), true);
 					player.getCache().set("tutorial", 31);
 					player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
@@ -70,21 +75,30 @@ public class ObjectCooking implements UseLocTrigger {
 
 		// Raw Oomlie Meat (Always burn)
 		else if (item.getCatalogId() == ItemId.RAW_OOMLIE_MEAT.id()) {
-			if (object.getID() == 97 || object.getID() == 274)
-				mes(config().GAME_TICK * 2, "You cook the meat on the fire...");
-			else
-				mes(config().GAME_TICK * 2, "You cook the meat on the stove...");
+			if (object.getID() == 97 || object.getID() == 274) {
+				mes("You cook the meat on the fire...");
+				delay(3);
+			}
+			else {
+				mes("You cook the meat on the stove...");
+				delay(3);
+			}
+			delay(2);
 			player.getCarriedItems().remove(new Item(ItemId.RAW_OOMLIE_MEAT.id()));
 			give(player, ItemId.BURNTMEAT.id(), 1);
-			mes(config().GAME_TICK * 2, "This meat is too delicate to cook like this.");
-			mes(config().GAME_TICK * 2, "Perhaps you can wrap something around it to protect it from the heat.");
+			mes("This meat is too delicate to cook like this.");
+			delay(2);
+			mes("Perhaps you can wrap something around it to protect it from the heat.");
+			delay(2);
 		}
 
 		// Poison (Hazeel Cult)
 		else if (item.getCatalogId() == ItemId.POISON.id() && object.getID() == 435 && object.getX() == 618 && object.getY() == 3453) {
 			if (player.getQuestStage(Quests.THE_HAZEEL_CULT) == 3 && player.getCache().hasKey("evil_side")) {
-				mes("you poor the poison into the hot pot",
-					"the poison desolves into the soup");
+				mes("you poor the poison into the hot pot");
+				delay(3);
+				mes("the poison desolves into the soup");
+				delay(3);
 				player.getCarriedItems().remove(new Item(ItemId.POISON.id()));
 				player.updateQuestStage(Quests.THE_HAZEEL_CULT, 4);
 			} else {
@@ -98,7 +112,8 @@ public class ObjectCooking implements UseLocTrigger {
 		} else if (item.getCatalogId() == ItemId.COOKEDMEAT.id()) { // Cooked meat to get burnt meat
 			if (player.getQuestStage(Quests.WITCHS_POTION) != -1) {
 				thinkbubble(item);
-				mes(config().GAME_TICK * 3, cookingOnMessage(player, item, object, false));
+				mes(cookingOnMessage(player, item, object, false));
+				delay(3);
 				player.getCarriedItems().remove(new Item(ItemId.COOKEDMEAT.id()));
 				give(player, ItemId.BURNTMEAT.id(), 1);
 				player.playerServerMessage(MessageType.QUEST, "you burn the meat");
@@ -129,10 +144,10 @@ public class ObjectCooking implements UseLocTrigger {
 			}
 			// Some need a RANGE not a FIRE
 			boolean needOven = false;
-			int timeToCook = config().GAME_TICK * 3;
+			int timeToCook = 3;
 			if (isOvenFood(item)) {
 				needOven = true;
-				timeToCook = config().GAME_TICK * 5;
+				timeToCook = 5;
 			}
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.COOKING_CAPE.id()))
 				timeToCook *= 0.7;
@@ -200,7 +215,7 @@ public class ObjectCooking implements UseLocTrigger {
 			// Repeat
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
-				delay(config().GAME_TICK);
+				delay();
 				batchCooking(player, item, timeToCook, cookingDef);
 			}
 		}
@@ -252,7 +267,7 @@ public class ObjectCooking implements UseLocTrigger {
 		}
 
 		// TODO: Add back when `mes` is changed to not use a timer (if it ever is).
-		// delay(config().GAME_TICK);
+		// delay();
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
 			batchInedibleCooking(player, itemID, product, hasBubble, messages);

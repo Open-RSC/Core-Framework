@@ -33,6 +33,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == WITCH_RAILING) {
 			mes("inside you see Kardia the witch");
+			delay(3);
 			player.message("her appearence make's you feel quite ill");
 		}
 		else if (obj.getID() == WITCH_DOOR) {
@@ -41,13 +42,14 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 					player.message("you open the door");
 					doDoor(obj, player);
 					mes("and walk through");
+					delay(3);
 					player.message("the witch is busy talking to the cat");
 				} else {
 					Npc witch = ifnearvisnpc(player, NpcId.KARDIA_THE_WITCH.id(), 5);
 					player.message("you reach to open the door");
 					if (witch != null) {
 						npcsay(player, witch, "get away...far away from here");
-						delay(config().GAME_TICK * 2);
+						delay(2);
 						player.message("the witch raises her hands above her");
 						displayTeleportBubble(player, player.getX(), player.getY(), true);
 						player.damage(((int) getCurrentLevel(player, Skills.HITS) / 5) + 5); // 6 lowest, 25 max.
@@ -60,18 +62,22 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 			} else if (click == 1) {
 				if (player.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false)) && !player.getCache().hasKey("kardia_cat")) {
 					mes("you place the cat by the door");
+					delay(3);
 					player.getCarriedItems().remove(new Item(ItemId.KARDIA_CAT.id()));
 					player.teleport(776, 3535);
 					mes("you knock on the door and hide around the corner");
+					delay(3);
 					player.message("the witch takes the cat inside");
 					if (!player.getCache().hasKey("kardia_cat")) {
 						player.getCache().store("kardia_cat", true);
 					}
 				} else if (player.getCache().hasKey("kardia_cat")) {
 					mes("there is no reply");
+					delay(3);
 					player.message("inside you can hear the witch talking to her cat");
 				} else {
 					mes("you knock on the door");
+					delay(3);
 					player.message("there is no reply");
 				}
 			}
@@ -87,6 +93,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 	public void onTakeObj(Player player, GroundItem i) {
 		if (i.getID() == ItemId.KARDIA_CAT.id() && player.getCarriedItems().hasCatalogID(ItemId.KARDIA_CAT.id(), Optional.of(false))) {
 			mes("it's not very nice to squeeze one cat into a satchel");
+			delay(3);
 			player.message("...two's just plain cruel!");
 		}
 	}
@@ -101,15 +108,18 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 		if (obj.getID() == WITCH_DOOR && item.getCatalogId() == ItemId.KARDIA_CAT.id()) {
 			if (!player.getCache().hasKey("kardia_cat")) {
 				mes("you place the cat by the door");
+				delay(3);
 				player.getCarriedItems().remove(new Item(ItemId.KARDIA_CAT.id()));
 				player.teleport(776, 3535);
 				mes("you knock on the door and hide around the corner");
+				delay(3);
 				player.message("the witch takes the cat inside");
 				if (!player.getCache().hasKey("kardia_cat")) {
 					player.getCache().store("kardia_cat", true);
 				}
 			} else {
 				mes("the witch is busy playing...");
+				delay(3);
 				player.message("with her other cat");
 			}
 		}
@@ -124,6 +134,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (obj.getID() == WITCH_CHEST) {
 			mes("you search the chest");
+			delay(3);
 			if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 6 && !player.getCache().hasKey("doll_of_iban")) {
 				player.message("..inside you find a book a wooden doll..");
 				player.message("...and two potions");

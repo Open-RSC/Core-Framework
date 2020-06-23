@@ -194,7 +194,8 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 		thinkbubble(item);
 		player.playSound("cooking");
 		if (player.getCarriedItems().remove(item) > -1) {
-			mes(config().GAME_TICK * 5, gc.messages[0]);
+			mes(gc.messages[0]);
+			delay(5);
 			if (!burnFood(player, item.getCatalogId(), player.getSkills().getLevel(Skills.COOKING))) {
 				player.message(gc.messages[1]);
 
@@ -244,6 +245,7 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 			|| player.getCarriedItems().hasCatalogID(ItemId.GNOMEBOWL.id(), Optional.of(false))
 			|| player.getCarriedItems().hasCatalogID(ItemId.GNOMECRUNCHIE.id(), Optional.of(false))) {
 			mes("you need to finish, eat or drop the unfinished dish you hold");
+			delay(3);
 			player.message("before you can make another - giannes rules");
 			return false;
 		}
@@ -262,7 +264,8 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 
 				thinkbubble(item);
 				player.getCarriedItems().remove(new Item(item.getCatalogId()));
-				mes(config().GAME_TICK * 5, "you attempt to mould the dough into a gnomebatta");
+				mes("you attempt to mould the dough into a gnomebatta");
+				delay(5);
 				player.message("You manage to make some gnome batta dough");
 				give(player, ItemId.GNOMEBATTA_DOUGH.id(), 1);
 
@@ -277,7 +280,8 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 
 				thinkbubble(item);
 				player.getCarriedItems().remove(new Item(item.getCatalogId()));
-				mes(config().GAME_TICK * 5, "you attempt to mould the dough into a gnome bowl");
+				mes("you attempt to mould the dough into a gnome bowl");
+				delay(5);
 				player.message("You manage to make some gnome bowl dough");
 				give(player, ItemId.GNOMEBOWL_DOUGH.id(), 1);
 
@@ -292,7 +296,8 @@ public class GnomeCooking implements OpInvTrigger, UseLocTrigger {
 
 				thinkbubble(item);
 				player.getCarriedItems().remove(new Item(item.getCatalogId()));
-				mes(config().GAME_TICK * 5, "you attempt to mould the dough into gnome crunchies");
+				mes("you attempt to mould the dough into gnome crunchies");
+				delay(5);
 				player.message("You manage to make some gnome crunchies dough");
 				give(player, ItemId.GNOMECRUNCHIE_DOUGH.id(), 1);
 

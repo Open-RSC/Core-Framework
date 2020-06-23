@@ -193,12 +193,18 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 			}
 
 			if (player.getCache().hasKey("foodtrough") && correctSetup) {
-				mes("In their panic the rats bend and twist",
-						"The cage bars with their teeth",
-						"They're becoming weak, some have collapsed",
-						"The rats are eating the poison",
-						"They're becoming weak, some have collapsed",
-						"The rats are slowly dying");
+				mes("In their panic the rats bend and twist");
+				delay(3);
+				mes("The cage bars with their teeth");
+				delay(3);
+				mes("They're becoming weak, some have collapsed");
+				delay(3);
+				mes("The rats are eating the poison");
+				delay(3);
+				mes("They're becoming weak, some have collapsed");
+				delay(3);
+				mes("The rats are slowly dying");
+				delay(3);
 				for (Npc rats : player.getViewArea().getNpcsInView()) {
 					if (rats.getID() == NpcId.DUNGEON_RAT.id()) {
 						rats.remove();
@@ -314,7 +320,7 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 		if (obj.getID() == 111) {
 			if (player.getCache().hasKey("rats_dead") || atQuestStage(player, this, -1)) {
 				player.message("In a panic to escape, the rats have..");
-				delay(config().GAME_TICK);
+				delay();
 				player.message("..bent the bars, you can just crawl through");
 				if (player.getX() >= 583) {
 					player.setLocation(Point.location(582, 3476), true);
@@ -338,8 +344,10 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onUseObj(Player player, GroundItem item, Item myItem) {
 		if (myItem.getCatalogId() == ItemId.BUCKET_OF_WATER.id() && item.getID() == ItemId.LARGE_COG_BLACK.id()) {
-			mes("You pour water over the cog",
-				"The cog quickly cools down");
+			mes("You pour water over the cog");
+			delay(3);
+			mes("The cog quickly cools down");
+			delay(3);
 			if (player.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
 				|| player.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
 				|| player.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLUE.id(), Optional.empty())
@@ -375,8 +383,10 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 	public void onTakeObj(Player player, GroundItem i) {
 		if (i.getID() == ItemId.LARGE_COG_BLACK.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.ICE_GLOVES.id()) && player.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
-				mes("The ice gloves cool down the cog",
-					"You can carry it now");
+				mes("The ice gloves cool down the cog");
+				delay(3);
+				mes("You can carry it now");
+				delay(3);
 				if (player.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
 					|| player.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
 					|| player.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLUE.id(), Optional.empty())
@@ -387,8 +397,10 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 					give(player, ItemId.LARGE_COG_BLACK.id(), 1);
 				}
 			} else if (player.getCarriedItems().hasCatalogID(ItemId.BUCKET_OF_WATER.id(), Optional.of(false))) {
-				mes("You pour water over the cog",
-					"The cog quickly cools down");
+				mes("You pour water over the cog");
+				delay(3);
+				mes("The cog quickly cools down");
+				delay(3);
 				if (player.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
 					|| player.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
 					|| player.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLUE.id(), Optional.empty())
@@ -400,8 +412,10 @@ public class ClockTower implements QuestInterface, TalkNpcTrigger,
 					player.getCarriedItems().remove(new Item(ItemId.BUCKET_OF_WATER.id()));
 				}
 			} else {
-				mes("The cog is red hot from the flames, too hot to carry",
-					"The cogs are heavy");
+				mes("The cog is red hot from the flames, too hot to carry");
+				delay(3);
+				mes("The cogs are heavy");
+				delay(3);
 				if (player.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLACK.id(), Optional.empty())
 					|| player.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_PURPLE.id(), Optional.empty())
 					|| player.getCarriedItems().hasCatalogID(ItemId.LARGE_COG_BLUE.id(), Optional.empty())

@@ -112,8 +112,9 @@ public class Citizens implements TalkNpcTrigger {
 				// unknown if all 3 citizens in scene weren't found if the line below would have been said
 				if (treason) {
 					npcsay(player, npc, "Tyras will be informed of these words of treason");
-					delay(config().GAME_TICK);
+					delay();
 					mes("Someone throws a tomato at the recruiter");
+					delay(3);
 					player.getWorld().registerItem(new GroundItem(
 						player.getWorld(),
 						ItemId.TOMATO.id(),

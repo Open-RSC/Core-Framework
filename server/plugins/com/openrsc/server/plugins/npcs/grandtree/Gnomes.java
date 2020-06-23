@@ -181,6 +181,7 @@ public class Gnomes implements TalkNpcTrigger {
 				// case 7 hello little man
 				case 8:
 					mes("the gnome is preying");
+					delay(3);
 					npcsay(player, n, "guthix's angels fly so high as to be beyond our sight",
 						"but they are always looking down upon us");
 					say(player, n, "maybe");

@@ -68,6 +68,7 @@ public class SewerValve implements OpLocTrigger {
 		}
 		if (obj.getID() == LOG_RAFT) {
 			mes("you carefully board the small raft");
+			delay(3);
 			if (player.getCache().hasKey("VALVE_1_RIGHT") && player.getCache().hasKey("VALVE_2_LEFT") && player.getCache().hasKey("VALVE_3_RIGHT") && player.getCache().hasKey("VALVE_4_RIGHT") && player.getCache().hasKey("VALVE_5_LEFT")) {
 				player.teleport(587, 3411);
 				player.message("the raft washes up the sewer, the sewer passages end here");

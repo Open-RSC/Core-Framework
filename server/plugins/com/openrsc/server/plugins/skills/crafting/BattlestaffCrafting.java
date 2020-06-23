@@ -44,9 +44,10 @@ public class BattlestaffCrafting implements UseInvTrigger {
 
 		player.getCarriedItems().remove(item1);
 		player.getCarriedItems().remove(item2);
-		delay(config().GAME_TICK);
+		delay();
 		if (combine.messages.length > 1) {
 			mes(combine.messages[0]);
+			delay(3);
 		}
 		else {
 			player.message(combine.messages[0]);

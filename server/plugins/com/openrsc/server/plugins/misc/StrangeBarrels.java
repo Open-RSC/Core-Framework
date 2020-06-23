@@ -160,8 +160,10 @@ public class StrangeBarrels implements OpLocTrigger {
 				} else {
 					if (DataConversions.random(0, 1) != 0) {
 						player.message("You were unable to smash this barrel open.");
-						mes(config().GAME_TICK * 2, "You hit the barrel at the wrong angle.",
-							"You're heavily jarred from the vibrations of the blow.");
+						mes("You hit the barrel at the wrong angle.");
+						delay(2);
+						mes("You're heavily jarred from the vibrations of the blow.");
+						delay(2);
 						int reduceAttack = DataConversions.random(1, 3);
 						player.message("Your attack is reduced by " + reduceAttack + ".");
 						player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - reduceAttack);
@@ -177,7 +179,7 @@ public class StrangeBarrels implements OpLocTrigger {
 		int randomizeMonster = DataConversions.random(0, (MONSTER.length - 1));
 		int selectedMonster = MONSTER[randomizeMonster];
 		Npc monster = addnpc(player.getWorld(), selectedMonster, x, y, 60000 * 3); // 3 minutes
-		delay(config().GAME_TICK);
+		delay();
 		if (monster != null) {
 			monster.startCombat(player);
 		}

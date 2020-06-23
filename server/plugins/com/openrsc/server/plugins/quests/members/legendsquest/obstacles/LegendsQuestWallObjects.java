@@ -44,25 +44,32 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 		if (obj.getID() == ANCIENT_WALL) {
 			if (click == USE) {
 				if ((player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 5) || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-					mes(config().GAME_TICK * 2, "You walk into the darkness of the magical doorway.",
-						"You walk for a short way before pushing open another door.");
+					mes("You walk into the darkness of the magical doorway.");
+					delay(2);
+					mes("You walk for a short way before pushing open another door.");
+					delay(2);
 					if (obj.getX() == 464 && obj.getY() == 3721) {
 						player.message("You appear in a large cavern like room filled with pools of water.");
 						player.teleport(467, 3724);
 					} else {
-						mes(config().GAME_TICK * 2, "You appear in a small walled cavern ");
+						mes("You appear in a small walled cavern ");
+						delay(2);
 						player.message("There seems to be an exit to the south east.");
 						player.teleport(463, 3720);
 					}
 				} else {
-					mes(config().GAME_TICK * 2, "You see no way to use that...");
+					mes("You see no way to use that...");
+					delay(2);
 					player.message("Perhaps you should search it?");
 				}
 			} else if (click == SEARCH) {
-				mes(config().GAME_TICK * 2, "You search the wall...");
+				mes("You search the wall...");
+				delay(2);
 				if ((player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 5) || player.getQuestStage(Quests.LEGENDS_QUEST) == -1) {
-					mes(config().GAME_TICK * 2, "You find the word 'SMELL' marked on the wall.",
-						"The outline of a door appears on the wall.");
+					mes("You find the word 'SMELL' marked on the wall.");
+					delay(2);
+					mes("The outline of a door appears on the wall.");
+					delay(2);
 					player.message("What would you like to do?.");
 					int option = multi(player,
 						"Read the message on the wall.",
@@ -73,10 +80,14 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 						ancientDoorWalkThrough(player, obj);
 					}
 				} else {
-					mes(config().GAME_TICK * 2, "You find five slightly round depressions and some strange markings..",
-						"There is a lot of dirt and mould growing over the markings, but you clear it out.",
-						"After a while you manage to see that it is some form of message.",
-						"Would you like to read it.");
+					mes("You find five slightly round depressions and some strange markings..");
+					delay(2);
+					mes("There is a lot of dirt and mould growing over the markings, but you clear it out.");
+					delay(2);
+					mes("After a while you manage to see that it is some form of message.");
+					delay(2);
+					mes("Would you like to read it.");
+					delay(2);
 					int menu = multi(player,
 						"Yes, I'll read it.",
 						"No, I won't read it.");
@@ -93,14 +104,20 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 				player.message("You need an agility level of 50 to jump this wall");
 				return;
 			}
-			mes(config().GAME_TICK * 2, "You take a run at the wall...");
+			mes("You take a run at the wall...");
+			delay(2);
 			if (ShiloVillageUtils.succeed(player, 50)) {
-				mes(config().GAME_TICK * 2, "You take a good run up and sail majestically over the wall.",
-					"You land perfectly and stand ready for action.");
+				mes("You take a good run up and sail majestically over the wall.");
+				delay(2);
+				mes("You land perfectly and stand ready for action.");
+				delay(2);
 			} else {
-				mes(config().GAME_TICK * 2, "You fail to jump the wall properly and clip the wall with your leg.",
-					"You're spun around mid air and hit the floor heavily.",
-					"The fall knocks the wind out of you.");
+				mes("You fail to jump the wall properly and clip the wall with your leg.");
+				delay(2);
+				mes("You're spun around mid air and hit the floor heavily.");
+				delay(2);
+				mes("The fall knocks the wind out of you.");
+				delay(2);
 				player.damage(6);
 				say(player, null, "Ughhh!");
 			}
@@ -118,13 +135,17 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 			} else {
 				if (click == TOUCH) {
 					mes("You walk blindly into the intense heat of the supernatural flames.");
+					delay(3);
 					if (DataConversions.random(0, 9) <= 3) {
-						mes(config().GAME_TICK * 2, "The heat is so intense that it burns you.");
+						mes("The heat is so intense that it burns you.");
+						delay(2);
 						player.damage((int) Math.ceil((double) player.getSkills().getLevel(Skills.HITS) / 10 + 1));
 						say(player, null, "Owwww!");
 					} else {
-						mes(config().GAME_TICK * 2, "The heat is intense and just before you burn yourself,",
-							"you pull your hand out of the way of the flame.");
+						mes("The heat is intense and just before you burn yourself,");
+						delay(2);
+						mes("you pull your hand out of the way of the flame.");
+						delay(2);
 						say(player, null, "Whew!");
 					}
 				} else if (click == INVESTIGATE) {
@@ -140,9 +161,12 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 						case 10:
 						case 11:
 						case -1:
-							mes(config().GAME_TICK * 2, "You look closely at the flames, they seem to form a straight wall.",
-								"Something about them looks very strange, they look completely supernatural.",
-								"For example, they seem to appear to come from straight out of the ground.");
+							mes("You look closely at the flames, they seem to form a straight wall.");
+							delay(2);
+							mes("Something about them looks very strange, they look completely supernatural.");
+							delay(2);
+							mes("For example, they seem to appear to come from straight out of the ground.");
+							delay(2);
 							say(player, null, "Mmmm, pretty!");
 							if (player.getX() >= 450 && player.getX() <= 455 && player.getY() >= 3704 && player.getY() <= 3711
 								|| player.getX() == 456 && player.getY() >= 3707 && player.getY() <= 3708
@@ -152,22 +176,28 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 									"Leap out of the flaming Octagram...",
 									"Attract Shamans's attention.");
 								if (leave == 0) {
-									mes(config().GAME_TICK * 2, "This is quite dangerous, but you find a suitable location to jump.");
+									mes("This is quite dangerous, but you find a suitable location to jump.");
+									delay(2);
 									player.teleport(453, 3705);
-									delay(config().GAME_TICK * 2);
-									mes(config().GAME_TICK * 2, "You take a run up...");
+									delay(2);
+									mes("You take a run up...");
+									delay(2);
 									int burnDegRnd = DataConversions.random(0, 5);
 									if (burnDegRnd <= 2) {
-										mes(config().GAME_TICK * 2, "You sail over the tops of the flames, just getting slightly burnt by the flames...");
+										mes("You sail over the tops of the flames, just getting slightly burnt by the flames...");
+										delay(2);
 										player.damage(DataConversions.random(3,7));
 									}
 									else if (burnDegRnd <= 4) {
-										mes(config().GAME_TICK * 2, "You get severly burned as you jump across the flames...");
+										mes("You get severly burned as you jump across the flames...");
+										delay(2);
 										player.damage(DataConversions.random(8,17));
 									}
 									else if (burnDegRnd <= 5) {
-										mes(config().GAME_TICK * 2, "You get severly burned as you jump across the flames...",
-												"You feel very un well..");
+										mes("You get severly burned as you jump across the flames...");
+										delay(2);
+										mes("You feel very un well..");
+										delay(2);
 										player.damage(DataConversions.random(18,37));
 									}
 									player.teleport(455, 3702);
@@ -179,7 +209,8 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 									LegendsQuestUngadulu.ungaduluWallDialogue(player, ungadulu, -1);
 								}
 							} else {
-								mes(config().GAME_TICK * 2, "You see a white clad figure in the midst of the flames...");
+								mes("You see a white clad figure in the midst of the flames...");
+								delay(2);
 								Npc ungadulu = ifnearvisnpc(player, NpcId.UNGADULU.id(), 8);
 								if (ungadulu == null) {
 									addnpc(player.getWorld(), NpcId.UNGADULU.id(), 453, 3707);
@@ -227,8 +258,10 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 				case BOWL_OF_WATER:
 				case VIAL:
 				case GOLDEN_BOWL_WITH_PURE_WATER:
-					mes(config().GAME_TICK * 2, "The water seems to evaporate in a cloud of steam",
-						"before it gets anywhere near the flames.");
+					mes("The water seems to evaporate in a cloud of steam");
+					delay(2);
+					mes("before it gets anywhere near the flames.");
+					delay(2);
 					break;
 				default:
 					player.message("Nothing interesting happens");
@@ -258,9 +291,12 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 						ancientDoorWalkThrough(player, obj);
 					} else if (!player.getCache().hasKey("ancient_wall_runes")) {
 						player.getCarriedItems().remove(new Item(ItemId.SOUL_RUNE.id()));
-						mes(config().GAME_TICK * 2, "You slide the Soul-Rune into the first depression...",
-							"It glows slightly and merges with the wall.",
-							"The letter 'S' appears where the Soul-Rune merged with the door.");
+						mes("You slide the Soul-Rune into the first depression...");
+						delay(2);
+						mes("It glows slightly and merges with the wall.");
+						delay(2);
+						mes("The letter 'S' appears where the Soul-Rune merged with the door.");
+						delay(2);
 						player.getCache().put("ancient_wall_runes", 1);
 					} else {
 						runesFail(player, item);
@@ -271,9 +307,12 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 						ancientDoorWalkThrough(player, obj);
 					} else if (player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 1) {
 						player.getCarriedItems().remove(new Item(ItemId.MIND_RUNE.id()));
-						mes(config().GAME_TICK * 2, "You slide the Mind-Rune into the second slot depression...",
-							"It glows slightly and merges with the wall.",
-							"The letter 'M' appears where the Mind-Rune merged with the door.");
+						mes("You slide the Mind-Rune into the second slot depression...");
+						delay(2);
+						mes("It glows slightly and merges with the wall.");
+						delay(2);
+						mes("The letter 'M' appears where the Mind-Rune merged with the door.");
+						delay(2);
 						player.getCache().put("ancient_wall_runes", 2);
 					} else {
 						runesFail(player, item);
@@ -284,9 +323,12 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 						ancientDoorWalkThrough(player, obj);
 					} else if (player.getCache().hasKey("ancient_wall_runes") && player.getCache().getInt("ancient_wall_runes") == 2) {
 						player.getCarriedItems().remove(new Item(ItemId.EARTH_RUNE.id()));
-						mes(config().GAME_TICK * 2, "You slide the Earth-Rune into the third depression...",
-							"It glows slightly and merges with the wall.",
-							"The letter 'E' appears where the Earth-Rune merged with the door.");
+						mes("You slide the Earth-Rune into the third depression...");
+						delay(2);
+						mes("It glows slightly and merges with the wall.");
+						delay(2);
+						mes("The letter 'E' appears where the Earth-Rune merged with the door.");
+						delay(2);
 						player.getCache().put("ancient_wall_runes", 3);
 					} else {
 						runesFail(player, item);
@@ -300,14 +342,20 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 						player.getCarriedItems().remove(new Item(ItemId.LAW_RUNE.id()));
 						if (getRuneCount == 4) {
 							player.getCache().put("ancient_wall_runes", 5);
-							mes(config().GAME_TICK * 2, "You slide the Law-Rune into the fifth depression...",
-								"It glows slightly and merges with the wall.",
-								"The letter 'L' appears where the Law-Rune merged with the door.");
+							mes("You slide the Law-Rune into the fifth depression...");
+							delay(2);
+							mes("It glows slightly and merges with the wall.");
+							delay(2);
+							mes("The letter 'L' appears where the Law-Rune merged with the door.");
+							delay(2);
 							ancientDoorWalkThrough(player, obj);
 						} else {
-							mes(config().GAME_TICK * 2, "You slide the Law-Rune into the fourth depression...",
-								"It glows slightly and merges with the wall.",
-								"The letter 'L' appears where the Law-Rune merged with the door.");
+							mes("You slide the Law-Rune into the fourth depression...");
+							delay(2);
+							mes("It glows slightly and merges with the wall.");
+							delay(2);
+							mes("The letter 'L' appears where the Law-Rune merged with the door.");
+							delay(2);
 							player.getCache().put("ancient_wall_runes", getRuneCount + 1);
 						}
 					} else {
@@ -322,20 +370,25 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 	}
 
 	private void ancientDoorWalkThrough(Player player, GameObject obj) {
-		mes(config().GAME_TICK * 2, "You see a small door outline starting to form in the wall.",
-			"And then a well formed door handle emerges, suddenly the door cracks open.");
+		mes("You see a small door outline starting to form in the wall.");
+		delay(2);
+		mes("And then a well formed door handle emerges, suddenly the door cracks open.");
+		delay(2);
 		player.message("Would you like to go through?");
 		int goThrough = multi(player,
 			"Yes, I'll go through.",
 			"No, I'll stay here.");
 		if (goThrough == 0) {
-			mes(config().GAME_TICK * 2, "You walk into the darkness of the magical doorway.",
-				"You walk for a short way before pushing open another door.");
+			mes("You walk into the darkness of the magical doorway.");
+			delay(2);
+			mes("You walk for a short way before pushing open another door.");
+			delay(2);
 			if (obj.getX() == 464 && obj.getY() == 3721) {
 				player.message("You appear in a large cavern like room filled with pools of water.");
 				player.teleport(467, 3724);
 			} else {
-				mes(config().GAME_TICK * 2, "You appear in a small walled cavern ");
+				mes("You appear in a small walled cavern ");
+				delay(2);
 				player.message("There seems to be an exit to the south east.");
 				player.teleport(463, 3720);
 			}

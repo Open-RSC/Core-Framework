@@ -208,6 +208,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseN
 					} else {
 						npcsay(player, n, "???");
 						mes("It seems that was the wrong reply");
+						delay(3);
 					}
 				}
 			} else {
@@ -1099,7 +1100,7 @@ public class WatchTowerDialogues implements QuestInterface, TalkNpcTrigger, UseN
 
 	private void ogreSpawnAndAttack(Player player, Npc n) {
 		addnpc(player.getWorld(), NpcId.OGRE_GENERAL.id(), player.getX(), player.getY(), 60000 * 3);
-		delay(1600);
+		delay(3);
 		Npc ogre = ifnearvisnpc(player, NpcId.OGRE_GENERAL.id(), 4);
 		if (ogre != null) {
 			ogre.startCombat(player);

@@ -172,7 +172,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		if (gem > 0) {
 			player.getCarriedItems().remove(new Item(Crafting.gems[gem]));
 		}
-		delay(config().GAME_TICK * 2);
+		delay(2);
 
 		Item result = new Item(def.getItemID(), 1);
 
@@ -183,7 +183,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(config().GAME_TICK);
+			delay();
 			batchGoldCrafting(player, item, def, gem);
 		}
 	}
@@ -243,7 +243,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		// Remove silver bar
 		thinkbubble(silver);
 		player.getCarriedItems().remove(silver);
-		delay(config().GAME_TICK * 2);
+		delay(2);
 
 		Item result = new Item(resultId);
 		player.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(player.getWorld()).getName());
@@ -253,7 +253,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(config().GAME_TICK);
+			delay();
 			batchSilverCrafting(player, item, resultId);
 		}
 	}

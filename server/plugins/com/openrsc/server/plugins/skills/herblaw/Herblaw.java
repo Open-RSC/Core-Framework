@@ -127,7 +127,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		player.getCarriedItems().getInventory().add(newItem);
 		player.playerServerMessage(MessageType.QUEST, "This herb is " + newItem.getDef(player.getWorld()).getName());
 		player.incExp(Skills.HERBLAW, herbDef.getExp(), true);
-		delay(config().GAME_TICK * 2);
+		delay(2);
 
 		// Repeat
 		updatebatch();
@@ -426,7 +426,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		player.playerServerMessage(MessageType.QUEST,
 			"You put the " + herb.getDef(player.getWorld()).getName() + " into the vial of water");
 		ci.getInventory().add(new Item(herbDef.getPotionId()));
-		delay(config().GAME_TICK * 2);
+		delay(2);
 
 		// Repeat
 		updatebatch();
@@ -510,7 +510,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		carriedItems.remove(unfinished);
 		carriedItems.getInventory().add(new Item(def.getPotionID(), 1));
 		player.incExp(Skills.HERBLAW, def.getExp(), true);
-		delay(config().GAME_TICK * 2);
+		delay(2);
 
 		// Repeat
 		updatebatch();
@@ -595,7 +595,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		player.getCarriedItems().getInventory().add(new Item(resultId));
 
 		player.incExp(Skills.HERBLAW, xp, true);
-		delay(config().GAME_TICK * 2);
+		delay(2);
 
 		// Repeat
 		updatebatch();
@@ -740,7 +740,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(config().GAME_TICK * 2);
+			delay(2);
 			batchGrind(player, item, newID);
 		}
 	}

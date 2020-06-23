@@ -206,13 +206,14 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 					case -1:
 						if (!player.getCache().hasKey("rewarded_totem") && player.getQuestStage(Quests.LEGENDS_QUEST) >= 10) {
 							n.resetPath();
-							delay(config().GAME_TICK);
+							delay();
 							npcWalkFromPlayer(player, n);
 							npcsay(player, n, "Greetins Bwana,",
 								"We witnessed your fight with the Demon from some distance away.",
 								"My people are so pleased with your heroic efforts.",
 								"Your strength and ability as a warrior are Legendary.");
-							mes(n, config().GAME_TICK * 2, "Gujuo offers you an awe inspiring jungle crafted Totem Pole.");
+							mes(n, "Gujuo offers you an awe inspiring jungle crafted Totem Pole.");
+							delay(2);
 							give(player, ItemId.GILDED_TOTEM_POLE.id(), 1);
 							player.getCache().store("rewarded_totem", true);
 							npcsay(player, n, "Please accept this as a token of our appreciation.",
@@ -273,9 +274,11 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 			switch (cID) {
 				case Gujuo.WHO_IS_VIYELDI:
 					// TODO: check message times
-					mes(n, config().GAME_TICK * 2, "Gujuo scratches his head for a moment.");
+					mes(n, "Gujuo scratches his head for a moment.");
+					delay(2);
 					npcsay(player, n, "Well, I have heard that name before, perhaps from the eldars.");
-					mes(n, config().GAME_TICK * 2, "Gujuo suddenly has an inspiration.");
+					mes(n, "Gujuo suddenly has an inspiration.");
+					delay(2);
 					npcsay(player, n, "Ah, yes, I think that is the name of the wizard who first",
 						"went in search of the source.",
 						"Be wary of him Bwana, he may try to trick you.");
@@ -622,7 +625,8 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 					}
 					break;
 				case Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER:
-					mes(n, config().GAME_TICK * 2, "Gujuo looks very uncomfortable...");
+					mes(n, "Gujuo looks very uncomfortable...");
+					delay(2);
 					npcsay(player, n, "I am not sure...",
 						"But I have heard that deeper in the Catacombs where you found Ungadulu,",
 						"deep underground,",
@@ -649,7 +653,8 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 					}
 					break;
 				case Gujuo.WHERE_IS_THE_SOURCE_OF_THE_SPRING_OF_PURE_WATER2:
-					mes(n, config().GAME_TICK * 2, "Gujuo looks very uncomfortable...");
+					mes(n, "Gujuo looks very uncomfortable...");
+					delay(2);
 					npcsay(player, n, "I am not sure...",
 						"But I have heard that deeper in the Catacombs where you found Ungadulu,",
 						"deep underground,",
@@ -801,14 +806,16 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 						"No thanks...");
 					if (opt2 == 0) {
 						npcsay(player, n, "Follow me...");
-						mes(config().GAME_TICK * 2, "Gujuo takes you out of the jungle...");
+						mes("Gujuo takes you out of the jungle...");
+						delay(2);
 						player.teleport(397, 865);
 						if (n != null) {
 							n.teleport(398, 865);
-							delay(config().GAME_TICK);
+							delay();
 							npcsay(player, n, "");
 						}
 						mes("Gujuo disapears into the Kharazi jungle as swiftly as he appeared...");
+						delay(3);
 						if (n != null)
 							n.remove();
 					} else if (opt2 == 1) {
@@ -841,7 +848,8 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 					gujuoBye(player, n);
 					break;
 				case Gujuo.I_WANT_TO_DEVELOP_FRIENDLY_RELATIONS:
-					mes(n, config().GAME_TICK * 2, "Gujuo smiles and shakes your hand warmly...");
+					mes(n, "Gujuo smiles and shakes your hand warmly...");
+					delay(2);
 					npcsay(player, n, "Very good Bwana...this is indeed a very pleasant gesture.",
 						"However, my people are very distributed throughout the Kharazi jungle.");
 					int opt5 = multi(player, n,
@@ -869,7 +877,8 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 								npcsay(player, n, "First we need to plant a sacred Yommi tree..",
 									"It is a magical tree of great power, however, our Shaman..",
 									"Ungadulu is the only person with the seeds for this tree.");
-								mes(config().GAME_TICK * 2, "Gujuo's expression changes to sadness...");
+								mes("Gujuo's expression changes to sadness...");
+								delay(2);
 								npcsay(player, n, "And I fear that it is impossible to get some seeds.",
 									"He is being held against his will in some caves in ",
 									"north western part of the Kharazi jungle.");
@@ -879,7 +888,8 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 								if (opt8 == 0) {
 									GujuoDialogue(player, n, Gujuo.I_WILL_RELEASE_UNGADULU);
 								} else if (opt8 == 1) {
-									mes(config().GAME_TICK * 2, "Gujuo's expression of sadness deepens...");
+									mes("Gujuo's expression of sadness deepens...");
+									delay(2);
 									npcsay(player, n, "Yes Bwana, perhaps we will become friends sometime in the future...",
 										"But not today...",
 										"Ungadulu has problably lost his mind anyway... ",
@@ -925,7 +935,8 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 					}
 					break;
 				case Gujuo.UNGADULU_CALLED_ME_VACU:
-					mes(config().GAME_TICK * 2, "Gujuo shakes his head slightly in sadness.");
+					mes("Gujuo shakes his head slightly in sadness.");
+					delay(2);
 					npcsay(player, n, "It seems that Ungadulu has started to lose his senses.",
 						"In our native and ancient history, ",
 						"the Vacu were the servants of the evil spirits from the underworld.",
@@ -1002,8 +1013,10 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 					npcsay(player, n, "A vessel made of sun metal, but it can be of any shape.",
 						"However, it must be blessed.");
 					if (!player.getCarriedItems().hasCatalogID(ItemId.ROUGH_SKETCH_OF_A_BOWL.id(), Optional.of(false))) {
-						mes(config().GAME_TICK * 2, "Gujuo takes out a small scroll and some charcoal and draws a rough sketch.",
-							"When he has finished, he gives the sketch to you.");
+						mes("Gujuo takes out a small scroll and some charcoal and draws a rough sketch.");
+						delay(2);
+						mes("When he has finished, he gives the sketch to you.");
+						delay(2);
 						give(player, ItemId.ROUGH_SKETCH_OF_A_BOWL.id(), 1);
 						npcsay(player, n, "Here, have this as an example...I pray that it will help you.");
 					} else {
@@ -1131,16 +1144,20 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 			player.message("You need a prayer ability of 42 to complete this task.");
 		} else {
 			npcsay(player, npc, "Very well Bwana...");
-			mes(config().GAME_TICK * 2, "Gujuo places the bowl on the floor in front of you,");
+			mes("Gujuo places the bowl on the floor in front of you,");
+			delay(2);
 			mes("and leads you into a deep meditation...");
+			delay(3);
 			npcsay(player, npc, "Ohhhhhmmmmmm");
 			say(player, npc, "Oooooommmmmmmmmm");
 			npcsay(player, npc, "Ohhhhhmmmmmm");
 			say(player, npc, "Oooooohhhhmmmmmmmmmm");
 			npcsay(player, npc, "Ohhhhhmmmmmm");
 			if (Formulae.failCalculation(player, Skills.PRAYER, 42)) {
-				mes(config().GAME_TICK * 2, "A totally peacefull aura surrounds you and you ",
-					"bring down the blessings of your god on the bowl.");
+				mes("A totally peacefull aura surrounds you and you ");
+				delay(2);
+				mes("bring down the blessings of your god on the bowl.");
+				delay(2);
 				if (player.getCarriedItems().hasCatalogID(ItemId.GOLDEN_BOWL.id(), Optional.of(false))) {
 					player.getCarriedItems().remove(new Item(ItemId.GOLDEN_BOWL.id()));
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
@@ -1153,8 +1170,10 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 				}
 				GujuoDialogue(player, npc, Gujuo.HOW_GOES_YOUR_QUEST_TO_RELEASE_UNGADULU);
 			} else {
-				mes(config().GAME_TICK * 2, "You were not able to go into a deep enough trance.",
-					"You lose some prayer...");
+				mes("You were not able to go into a deep enough trance.");
+				delay(2);
+				mes("You lose some prayer...");
+				delay(2);
 				player.getSkills().setLevel(Skills.PRAYER, player.getSkills().getLevel(Skills.PRAYER) - 5);
 				npcsay(player, npc, "Would you like to try again.");
 				int failMenu = multi(player, npc, false, //do not send over

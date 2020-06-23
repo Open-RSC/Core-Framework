@@ -55,7 +55,7 @@ public final class Pick implements OpLocTrigger {
 
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(config().GAME_TICK);
+			delay();
 			batchCropPickup(player, objId, pickMessage);
 		}
 	}

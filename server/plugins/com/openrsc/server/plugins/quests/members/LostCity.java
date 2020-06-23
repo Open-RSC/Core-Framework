@@ -86,7 +86,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 						final Npc lepr = addnpc(player.getWorld(), NpcId.LEPRECHAUN.id(), 172, 661, (int)TimeUnit.SECONDS.toMillis(180));
 						lepr.walk(173, 661);
 						try {
-							delay(config().GAME_TICK);
+							delay();
 							lepr.walk(177, 661 + DataConversions.random(0, 10) - 5);
 						} catch (Exception e) {
 							LOGGER.catching(e);
@@ -100,8 +100,10 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 			case 245:
 				if (atQuestStages(player, this, 4, 3, 2, -1)) {
 					if (getCurrentLevel(player, Skills.WOODCUT) < 36) {
-						mes("You are not a high enough woodcutting level to chop down this tree",
-							"You need a woodcutting level of 36");
+						mes("You are not a high enough woodcutting level to chop down this tree");
+						delay(3);
+						mes("You need a woodcutting level of 36");
+						delay(3);
 						return;
 					}
 					if (getWoodcutAxe(player) == -1) {
@@ -111,6 +113,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 
 					if (atQuestStages(player, this, 4, -1)) {
 						mes("You cut a branch from the Dramen tree");
+						delay(3);
 						give(player, ItemId.DRAMEN_BRANCH.id(), 1);
 						return;
 					}
@@ -130,7 +133,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					if (treeSpirit == null) {
 						return;
 					}
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					npcsay(player, treeSpirit, "Stop",
 						"I am the spirit of the Dramen Tree",
 						"You must come through me before touching that tree");
@@ -311,7 +314,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 				"Well that is a risk I will have to take");
 			if (option == 1) {
 				player.message("You climb down the ladder");
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				teleport(player, 427, 3380);
 				/* What is the point of this? */
 				if (getCurrentLevel(player, Skills.PRAYER) <= 3)
@@ -396,12 +399,15 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (player.getCarriedItems().hasCatalogID(ItemId.DRAMEN_BRANCH.id(), Optional.of(false))) {
 			if (getCurrentLevel(player, Skills.CRAFTING) < 31) {
-				mes("You are not a high enough crafting level to craft this staff",
-					"You need a crafting level of 31");
+				mes("You are not a high enough crafting level to craft this staff");
+				delay(3);
+				mes("You need a crafting level of 31");
+				delay(3);
 				return;
 			}
 			player.getCarriedItems().remove(new Item(ItemId.DRAMEN_BRANCH.id()));
 			mes("you carve the branch into a staff");
+			delay(3);
 			give(player, ItemId.DRAMEN_STAFF.id(), 1);
 		}
 	}
@@ -415,12 +421,14 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	public void onOpBound(Player player, GameObject obj, Integer click) {
 		if (obj.getID() == MAGIC_DOOR) {
 			player.teleport(109, 245, true);
-			delay(config().GAME_TICK);
+			delay();
 			player.message("you go through the door and find yourself somewhere else");
 		} else if (obj.getID() == ZANARIS_DOOR) {
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(player, this, 4, -1)) {
-				mes("The world starts to shimmer",
-					"You find yourself in different surroundings");
+				mes("The world starts to shimmer");
+				delay(3);
+				mes("You find yourself in different surroundings");
+				delay(3);
 				if (getQuestStage(player, this) != -1) {
 					teleport(player, 126, 3518);
 					completeQuest(player, this);

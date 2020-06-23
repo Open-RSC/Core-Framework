@@ -201,6 +201,8 @@ public class ServerConfiguration {
 	public List<String> valuableDrops;
 	public boolean WANT_CUSTOM_UI;
 	public int CHARACTER_CREATION_MODE;
+	public int LOCATION_DATA;
+	public boolean WANT_FIXED_BROKEN_MECHANICS;
 	// public boolean CHECK_ADMIN_IP;
 	// public String ADMIN_IP;
 	// public List<String> adminIp;
@@ -324,6 +326,8 @@ public class ServerConfiguration {
 		DWARVEN_RING_USES = tryReadInt("dwarven_ring_uses").orElse(29);
 		DWARVEN_RING_BONUS = tryReadInt("dwarven_ring_bonus").orElse(3);
 		CUSTOM_PROTOCOL = tryReadBool("custom_protocol").orElse(false);
+		LOCATION_DATA = tryReadInt("location_data").orElse(0);
+		WANT_FIXED_BROKEN_MECHANICS = tryReadBool("want_fixed_broken_mechanics").orElse(false);
 		/*
 		CHECK_ADMIN_IP = tryReadBool("check_admin_ip").orElse(false);
 		ADMIN_IP = tryReadString("admin_ip").orElse("127.0.0.0,10.0.0.0,172.16.0.0,192.168.0.0");

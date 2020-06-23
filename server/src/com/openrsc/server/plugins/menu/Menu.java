@@ -65,7 +65,7 @@ public class Menu {
 		ActionSender.sendMenu(player, option);
 		long start = System.currentTimeMillis();
 		while (System.currentTimeMillis() - start <= 19500 && player.getMenu() != null && player.getOption() == -1) {
-			delay(1);
+			delay();
 		}
 
 		doReply(player);

@@ -48,6 +48,7 @@ public final class DukeOfLumbridge implements
 				"Guard this well my friend"
 			);
 			mes("The duke hands you a shield");
+			delay(3);
 			give(player, ItemId.ANTI_DRAGON_BREATH_SHIELD.id(), 1);
 		} else if (option == 1) {
 			say(player, n, "Have you any quests for me?");

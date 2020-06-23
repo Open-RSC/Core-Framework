@@ -49,8 +49,10 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		if (item.getCatalogId() == ItemId.KITTEN.id()) {
 			player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
-			mes(config().GAME_TICK * 2, "you drop the kitten");
-			mes(0, "it's upset and runs away");
+			mes("you drop the kitten");
+			delay(2);
+			mes("it's upset and runs away");
+			delay();
 		}
 
 		KittenState state = new KittenState();
@@ -66,38 +68,52 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.KITTEN.id()) {
-			mes("you softly stroke the kitten",
-				"@yel@kitten:..purr..purr..");
-			mes(config().GAME_TICK, "the kitten appreciates the attention");
+			mes("you softly stroke the kitten");
+			delay(3);
+			mes("@yel@kitten:..purr..purr..");
+			delay(3);
+			mes("the kitten appreciates the attention");
+			delay();
 
 			reduceKittensLoneliness(player);
 		} else if (item.getCatalogId() == ItemId.CAT.id() && config().WANT_EXTENDED_CATS_BEHAVIOR) {
-			mes("you softly stroke the cat",
-				"@yel@cat:..purr..purr..");
-			mes(config().GAME_TICK, "it appreciates the attention");
+			mes("you softly stroke the cat");
+			delay(3);
+			mes("@yel@cat:..purr..purr..");
+			delay(3);
+			mes("it appreciates the attention");
+			delay();
 		}
 	}
 
 	public void entertainCat(Item item, Player player, boolean isGrown) {
 		if (item.getCatalogId() == ItemId.BALL_OF_WOOL.id()) {
 			if (!isGrown) {
-				mes("your kitten plays around with the ball of wool",
-						"it seems to love pouncing on it");
+				mes("your kitten plays around with the ball of wool");
+				delay(3);
+				mes("it seems to love pouncing on it");
+				delay(3);
 
 				reduceKittensLoneliness(player);
 			} else {
-				mes("your cat plays around with the ball of wool",
-						"it seems to love pouncing on it");
+				mes("your cat plays around with the ball of wool");
+				delay(3);
+				mes("it seems to love pouncing on it");
+				delay(3);
 			}
 		} else if (item.getCatalogId() == ItemId.WOOL.id()) {
 			if (!isGrown) {
-				mes("your kitten plays around with the wool",
-					"it seems to be enjoying itself");
+				mes("your kitten plays around with the wool");
+				delay(3);
+				mes("it seems to be enjoying itself");
+				delay(3);
 
 				reduceKittensLoneliness(player);
 			} else {
-				mes("your cat plays around with the wool",
-					"it seems to be enjoying itself");
+				mes("your cat plays around with the wool");
+				delay(3);
+				mes("it seems to be enjoying itself");
+				delay(3);
 			}
 		}
 	}
@@ -109,11 +125,15 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
 			if(!isGrown) {
-				mes("you give the kitten the milk",
-						"the kitten quickly laps it up then licks his paws");
+				mes("you give the kitten the milk");
+				delay(3);
+				mes("the kitten quickly laps it up then licks his paws");
+				delay(3);
 			} else {
-				mes("you give the cat the milk",
-						"the kitten quickly laps it up then licks his paws");
+				mes("you give the cat the milk");
+				delay(3);
+				mes("the kitten quickly laps it up then licks his paws");
+				delay(3);
 			}
 			feeded = true;
 			break;
@@ -223,8 +243,10 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 				player.getCarriedItems().remove(new Item(ItemId.KITTEN.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.CAT.id()));
 				kittenEvents = kittenHunger = kittenLoneliness = 0;
-				mes(config().GAME_TICK * 2, "you're kitten has grown into a healthy cat",
-						"it can hunt for its self now");
+				mes("you're kitten has grown into a healthy cat");
+				delay(2);
+				mes("it can hunt for its self now");
+				delay(2);
 			}
 
 			state.setEvents(kittenEvents);
@@ -285,23 +307,27 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 			player.message("it pounces on the rat...");
 			if (DataConversions.random(0,9) == 0) {
 				n.face(player);
-				delay(config().GAME_TICK);
+				delay();
 				n.remove();
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				//possibly non kosher
-				mes(config().GAME_TICK * 3, "...and quickly gobbles it up",
-						"it returns to your satchel licking it's paws");
+				mes("...and quickly gobbles it up");
+				delay(3);
+				mes("it returns to your satchel licking it's paws");
+				delay(3);
 
 				reduceKittensLoneliness(player);
 			}
 		} else if (item.getCatalogId() == ItemId.CAT.id() && n.getID() == NpcId.RAT_WITCHES_POTION.id()) {
 			player.message("the cat pounces on the rat...");
 			n.face(player);
-			delay(config().GAME_TICK);
+			delay();
 			n.remove();
-			delay(config().GAME_TICK * 2);
-			mes(config().GAME_TICK * 3, "...and quickly gobbles it up",
-					"it returns to your satchel licking it's paws");
+			delay(2);
+			mes("...and quickly gobbles it up");
+			delay(3);
+			mes("it returns to your satchel licking it's paws");
+			delay(3);
 		}
 	}
 }

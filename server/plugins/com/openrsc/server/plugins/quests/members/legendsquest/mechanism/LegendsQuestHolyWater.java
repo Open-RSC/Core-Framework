@@ -30,8 +30,10 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.ENCHANTED_VIAL.id())) {
 			// simple random for the moment
-			mes(0, "You pour some of the sacred water into the enchanted vial.",
-				"You now have a vial of holy water.");
+			mes("You pour some of the sacred water into the enchanted vial.");
+			delay();
+			mes("You now have a vial of holy water.");
+			delay();
 			player.getCarriedItems().remove(new Item(ItemId.ENCHANTED_VIAL.id()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.HOLY_WATER_VIAL.id()));
 			if(!player.getCache().hasKey("remaining_blessed_bowl")) {
@@ -51,8 +53,10 @@ public class LegendsQuestHolyWater implements OpInvTrigger, UseInvTrigger {
 			}
 		} else if (compareItemsIds(item1, item2, ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id(), ItemId.EMPTY_VIAL.id())) {
 			// simple random for the moment
-			mes(0, "You pour some of the water into the empty vial",
-				"The water seems to loose some of it's effervescence.");
+			mes("You pour some of the water into the empty vial");
+			delay();
+			mes("The water seems to loose some of it's effervescence.");
+			delay();
 			player.getCarriedItems().remove(new Item(ItemId.EMPTY_VIAL.id()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.VIAL.id()));
 			if(!player.getCache().hasKey("remaining_blessed_bowl")) {

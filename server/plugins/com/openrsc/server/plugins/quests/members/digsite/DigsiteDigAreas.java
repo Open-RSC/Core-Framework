@@ -181,7 +181,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 				thinkbubble(new Item(ItemId.ROCK_PICK.id()));
 				player.incExp(Skills.MINING, 70, true);
 				mes("You dig through the earth");
-				delay(1500);
+				delay(3);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL2_ITEMS.length - 1));
 				int selectedItem = DIGSITE_LEVEL2_ITEMS[randomize];
 				doDigsiteItemMessages(player, selectedItem);
@@ -198,7 +198,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 				thinkbubble(new Item(ItemId.TROWEL.id()));
 				player.incExp(Skills.MINING, 50, true);
 				mes("You dig with the trowel...");
-				delay(1500);
+				delay(3);
 				int randomize = DataConversions.random(0, (TRAINING_AREA_ITEMS.length - 1));
 				int selectedItem = TRAINING_AREA_ITEMS[randomize];
 				doDigsiteItemMessages(player, selectedItem);
@@ -244,7 +244,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 				thinkbubble(new Item(ItemId.TROWEL.id()));
 				player.incExp(Skills.MINING, 60, true);
 				mes("You dig through the earth");
-				delay(1500);
+				delay(3);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL1_ITEMS.length - 1));
 				int selectedItem = DIGSITE_LEVEL1_ITEMS[randomize];
 				doDigsiteItemMessages(player, selectedItem);
@@ -304,7 +304,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 				thinkbubble(new Item(ItemId.TROWEL.id()));
 				player.incExp(Skills.MINING, 80, true);
 				mes("You dig through the earth");
-				delay(1500);
+				delay(3);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL3_ITEMS.length - 1));
 				int selectedItem = DIGSITE_LEVEL3_ITEMS[randomize];
 				doDigsiteItemMessages(player, selectedItem);

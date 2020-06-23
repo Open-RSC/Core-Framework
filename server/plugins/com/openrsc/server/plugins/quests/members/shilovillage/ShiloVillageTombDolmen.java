@@ -88,8 +88,10 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 				return;
 			}
 			if (command.equalsIgnoreCase("Look")) {
-				mes("The Dolmen is intricately decorated with the family",
-					"symbol of two crossed palm trees .");
+				mes("The Dolmen is intricately decorated with the family");
+				delay(3);
+				mes("symbol of two crossed palm trees .");
+				delay(3);
 				if (player.getQuestStage(Quests.SHILO_VILLAGE) == 8) {
 					player.message("There is nothing on the Dolmen.");
 					return;
@@ -105,34 +107,45 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 				}
 			} else if (command.equalsIgnoreCase("Search")) {
 				mes("The Dolmen is intricately decorated with the symbol of");
+				delay(3);
 				mes("two crossed palm trees. It might be the family crest?");
+				delay(3);
 				if (player.getCarriedItems().hasCatalogID( ItemId.SWORD_POMMEL.id(), Optional.empty())
 					&& player.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) {
 					mes("There is nothing on the Dolmen.");
+					delay(3);
 				} else if (player.getCarriedItems().hasCatalogID(ItemId.SWORD_POMMEL.id(), Optional.empty())
 					|| player.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) {
 					mes("You can see an item on the Dolmen");
+					delay(3);
 				} else {
 					mes("You can see that there are some items on the Dolmen.");
+					delay(3);
 				}
 				if (!player.getCarriedItems().hasCatalogID(ItemId.SWORD_POMMEL.id(), Optional.empty())
 					&& !player.getCarriedItems().hasCatalogID(ItemId.BONE_BEADS.id(), Optional.empty())) { // SWORD POMMEL
 					mes("You find a rusty sword with an ivory pommel.");
+					delay(3);
 					player.message("You take the pommel and place it into your inventory.");
 					give(player, ItemId.SWORD_POMMEL.id(), 1);
-					delay(config().GAME_TICK);
+					delay();
 				}
 				if (!player.getCarriedItems().hasCatalogID(ItemId.LOCATING_CRYSTAL.id(), Optional.empty())) { // crystal
 					mes("You find a Crystal Sphere ");
+					delay(3);
 					give(player, ItemId.LOCATING_CRYSTAL.id(), 1);
 				}
 				mes("You find some writing on the dolmen,");
+				delay(3);
 				if (!player.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.empty()) && player.getCache().hasKey("dropped_writing")) {
 					mes("You would need some Papyrus and Charcoal");
+					delay(3);
 					player.message("to take more notes from this Dolmen!");
 				} else if (!player.getCarriedItems().hasCatalogID(ItemId.BERVIRIUS_TOMB_NOTES.id(), Optional.empty()) && !player.getCache().hasKey("dropped_writing")) {
-					mes("you grab some nearby scraps of delicate paper together ",
-						"and copy the text as best you can and collect");
+					mes("you grab some nearby scraps of delicate paper together ");
+					delay(3);
+					mes("and copy the text as best you can and collect");
+					delay(3);
 					player.message("them together as a scroll");
 					give(player, ItemId.BERVIRIUS_TOMB_NOTES.id(), 1);
 				}
@@ -154,11 +167,13 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 						player.message("You already have Bervirius Tomb Notes in your inventory.");
 					} else {
 						mes("You try to take some new notes on the delicate papyrus.");
+						delay(3);
 						if (!player.getCarriedItems().hasCatalogID(ItemId.A_LUMP_OF_CHARCOAL.id(), Optional.of(false))) {
 							player.message("You need some charcoal to make notes.");
 							return;
 						}
 						mes("You use the charcoal and the Papyrus to make some new notes.");
+						delay(3);
 						player.message("You collect the notes together as a scroll.");
 						player.getCarriedItems().remove(new Item(ItemId.PAPYRUS.id()));
 						player.getCarriedItems().remove(new Item(ItemId.A_LUMP_OF_CHARCOAL.id()));
@@ -168,7 +183,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 				case RASHILIYA_CORPSE: // COMPLETE QUEST - RASHILIYIA CORPSE
 					if (player.getQuestStage(Quests.SHILO_VILLAGE) == 8) {
 						player.message("You carefully place Rashiliyia's remains on the Dolmen.");
-						delay(config().GAME_TICK * 2);
+						delay(2);
 						player.message("You feel a strange vibration in the air.");
 						Npc rash = addnpc(player.getWorld(), NpcId.RASHILIYIA.id(), player.getX(), player.getY(), (int) TimeUnit.SECONDS.toMillis(60));
 						if (rash != null) {
@@ -180,6 +195,7 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 								"I tried too destroy all life...now I am released.",
 								"And am grateful to contemplate eternal rest...");
 							mes("Without warning the spirit of Rashiliyia disapears.");
+							delay(3);
 							rash.remove();
 						}
 						player.getCarriedItems().remove(new Item(ItemId.RASHILIYA_CORPSE.id()));

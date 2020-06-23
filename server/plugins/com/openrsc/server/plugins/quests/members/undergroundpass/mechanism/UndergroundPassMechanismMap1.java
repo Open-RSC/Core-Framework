@@ -65,27 +65,33 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 			if (hasABow(player)) {
 				player.getCarriedItems().remove(new Item(ItemId.LIT_ARROW.id()));
 				if ((getCurrentLevel(player, Skills.RANGED) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
-					mes("you fire the lit arrow at the bridge",
-						"it burns out and has little effect");
+					mes("you fire the lit arrow at the bridge");
+					delay(3);
+					mes("it burns out and has little effect");
+					delay(3);
 				} else {
 					mes("you fire your arrow at the rope supporting the bridge");
+					delay(3);
 					if (DataConversions.getRandom().nextInt(5) == 1) {
 						player.message("the arrow just misses the rope");
 					} else {
 						if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 2) {
 							player.updateQuestStage(Quests.UNDERGROUND_PASS, 3);
 						}
-						mes("the arrow impales the wooden bridge, just below the rope support",
-							"the rope catches alight and begins to burn",
-							"the bridge swings down creating a walkway");
+						mes("the arrow impales the wooden bridge, just below the rope support");
+						delay(3);
+						mes("the rope catches alight and begins to burn");
+						delay(3);
+						mes("the bridge swings down creating a walkway");
+						delay(3);
 						player.getWorld().replaceGameObject(obj,
 							new GameObject(obj.getWorld(), obj.getLocation(), 727, obj.getDirection(), obj
 								.getType()));
 						player.getWorld().delayedSpawnObject(obj.getLoc(), 10000);
 						player.teleport(702, 3420);
-						delay(config().GAME_TICK * 2);
+						delay(2);
 						player.teleport(706, 3420);
-						delay(config().GAME_TICK);
+						delay();
 						player.teleport(709, 3420);
 						player.message("you rush across the bridge");
 					}
@@ -95,8 +101,10 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 			}
 		}
 		else if (item.getCatalogId() == ItemId.ROPE.id() && (obj.getID() == STALACTITE_1 || obj.getID() == STALACTITE_2 || obj.getID() == STALACTITE_2 + 1)) {
-			mes("you lasso the rope around the stalactite",
-				"and pull yourself up");
+			mes("you lasso the rope around the stalactite");
+			delay(3);
+			mes("and pull yourself up");
+			delay(3);
 			if (obj.getID() == STALACTITE_1) {
 				player.teleport(695, 3435);
 			} else if (obj.getID() == STALACTITE_2) {
@@ -108,6 +116,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 		}
 		else if (item.getCatalogId() == ItemId.ROCKS.id() && obj.getID() == SWAMP_CROSS) {
 			mes("you throw the rocks onto the swamp");
+			delay(3);
 			player.message("and carefully tread from one to another");
 			player.getCarriedItems().remove(new Item(ItemId.ROCKS.id()));
 			GameObject object = new GameObject(player.getWorld(), Point.location(697, 3441), 774, 2, 0);
@@ -115,11 +124,11 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 			player.getWorld().delayedRemoveObject(object, 10000);
 			if (player.getX() <= 695) {
 				player.teleport(698, 3441);
-				delay(850);
+				delay(2);
 				player.teleport(700, 3441);
 			} else {
 				player.teleport(698, 3441);
-				delay(850);
+				delay(2);
 				player.teleport(695, 3441);
 			}
 		}

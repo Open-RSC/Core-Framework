@@ -175,18 +175,25 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 			case HOLE:
 				if (item.getCatalogId() == ItemId.CABBAGE.id() && player.getQuestStage(this) == 2) {
 					if (player.getCarriedItems().remove(new Item(ItemId.CABBAGE.id())) != -1) {
-						mes("You drop a cabbage down the hole.",
-							"The cabbage lands in the cauldron below.",
-							"The mixture in the cauldron starts to froth and bubble.",
-							"You hear the witch groan in dismay.");
+						mes("You drop a cabbage down the hole.");
+						delay(3);
+						mes("The cabbage lands in the cauldron below.");
+						delay(3);
+						mes("The mixture in the cauldron starts to froth and bubble.");
+						delay(3);
+						mes("You hear the witch groan in dismay.");
+						delay(3);
 						say(player, null,
 							"Right I think that's successfully sabotaged the secret weapon.");
 						player.updateQuestStage(this, 3);
 					}
 				} else if (item.getCatalogId() == ItemId.SPECIAL_DEFENSE_CABBAGE.id() && player.getQuestStage(this) == 2) {
-					mes("This is the wrong sort of cabbage!",
-						"You are meant to be hindering the witch.",
-						"Not helping her.");
+					mes("This is the wrong sort of cabbage!");
+					delay(3);
+					mes("You are meant to be hindering the witch.");
+					delay(3);
+					mes("Not helping her.");
+					delay(3);
 				} else {
 					say(player, null, "Why would I want to do that?");
 				}

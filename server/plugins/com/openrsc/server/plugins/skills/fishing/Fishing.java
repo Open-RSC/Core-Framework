@@ -61,8 +61,10 @@ public class Fishing implements OpLocTrigger {
 		if (checkFatigue(player)) return;
 
 		if (object.getID() == 493 && player.getSkills().getExperience(Skills.FISHING) >= 200) {
-			mes("that's enough fishing for now",
-				"go through the next door to continue the tutorial");
+			mes("that's enough fishing for now");
+			delay(3);
+			mes("go through the next door to continue the tutorial");
+			delay(3);
 			return;
 		}
 		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
@@ -109,7 +111,7 @@ public class Fishing implements OpLocTrigger {
 		player.playSound("fish");
 		player.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
 		thinkbubble(new Item(netId));
-		delay(config().GAME_TICK * 3);
+		delay(3);
 
 		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
 			player.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel(player.getWorld()) + " "
@@ -211,7 +213,7 @@ public class Fishing implements OpLocTrigger {
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			delay(config().GAME_TICK);
+			delay();
 			batchFishing(player, netId, def, object, command);
 		}
 	}

@@ -106,25 +106,24 @@ public class Functions {
 		player.getUpdateFlags().setActionBubble(bubble);
 	}
 
-	public static void delay(final int delayMs) {
+	public static void delay() {
+		delay(1);
+	}
+
+	public static void delay(final int ticks) {
 		final PluginTask pluginTask = PluginTask.getContextPluginTask();
 		if (pluginTask == null)
 			return;
 		// System.out.println("Sleeping on " + Thread.currentThread().getName());
-		final int ticks = (int)Math.ceil((double)delayMs / (double) pluginTask.getWorld().getServer().getConfig().GAME_TICK);
 		pluginTask.pause(ticks);
 	}
 
 	/**
-	 * Displays server message(s) with 2.2 second delay.
+	 * Displays server message(s)
 	 *
 	 * @param messages
 	 */
-	public static void mes(int delay, final String... messages) {
-		mes(null, delay, messages);
-	}
-
-	public static void mes(final Npc npc, int delay, final String... messages) {
+	public static void mes(final Npc npc, final String... messages) {
 		final Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
 		if (player == null) return;
 		for (final String message : messages) {
@@ -137,12 +136,11 @@ public class Functions {
 				}
 				player.message(message);
 			}
-			delay(delay);
 		}
 	}
 
 	/**
-	 * Displays server message(s) with 2.2 second delay.
+	 * Displays server message(s)
 	 *
 	 * @param messages
 	 */
@@ -153,7 +151,6 @@ public class Functions {
 			if (!message.equalsIgnoreCase("null")) {
 				player.message("@que@" + message);
 			}
-			delay(player.getConfig().GAME_TICK * 3);
 		}
 	}
 
@@ -188,13 +185,13 @@ public class Functions {
 				}
 				player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, (npc == null ? player : npc)));
 			}
-			delay(player.getConfig().GAME_TICK * calcDelay(message));
+			delay(calcDelay(message));
 		}
 	}
 
 	public static void say(final Player player, final String message) {
 		player.getUpdateFlags().setChatMessage(new ChatMessage(player, message, player));
-		delay(player.getConfig().GAME_TICK * calcDelay(message));
+		delay(calcDelay(message));
 	}
 
 	public static int multi(final Player player, final String... options) {
@@ -233,7 +230,7 @@ public class Functions {
 					return -1;
 				}
 
-				delay(1);
+				delay();
 			}
 			player.releaseUnderAttack();
 			return -1;
@@ -464,7 +461,7 @@ public class Functions {
 				}
 			}
 
-			delay(player.getConfig().GAME_TICK * calcDelay(message));
+			delay(calcDelay(message));
 		}
 	}
 
@@ -536,7 +533,7 @@ public class Functions {
 			if (enteredPin != "") {
 				break;
 			}
-			delay(player.getConfig().GAME_TICK);
+			delay();
 		}
 		if (enteredPin.equals("cancel")) {
 			ActionSender.sendCloseBankPinInterface(player);
@@ -565,7 +562,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getConfig().GAME_TICK);
+			delay();
 		}
 
 		return true;
@@ -591,7 +588,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getConfig().GAME_TICK);
+			delay();
 		}
 
 		return true;
@@ -625,7 +622,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getConfig().GAME_TICK);
+			delay();
 		}
 
 		return true;
@@ -654,7 +651,7 @@ public class Functions {
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
 		while(!request.isProcessed()) {
-			delay(player.getConfig().GAME_TICK);
+			delay();
 		}
 
 		return player.getAttribute("bankpin", false);
@@ -1319,7 +1316,7 @@ public class Functions {
 			player.message("Failure - Contact an administrator");
 		}
 		player.setSprite(pdir);
-		delay(player.getConfig().GAME_TICK * 2);
+		delay(2);
 		addloc(new GameObject(object.getWorld(), object.getLoc()));
 	}
 

@@ -28,12 +28,15 @@ public class CutWeb implements UseBoundTrigger,
 				return;
 			}
 			mes("You try to destroy the web...");
+			delay(3);
 			if (Formulae.cutWeb()) {
 				player.message("You slice through the web");
+				delay(4);
 				delloc(obj);
 				addloc(obj.getWorld(), obj.getLoc(), 30000);
 			} else {
 				player.message("You fail to cut through it");
+				delay(4);
 			}
 		}
 	}
@@ -74,14 +77,19 @@ public class CutWeb implements UseBoundTrigger,
 
 		if (canCut) {
 			mes("You try to destroy the web...");
+			delay(3);
 			if (Formulae.cutWeb()) {
 				player.message("You slice through the web");
+				delay(4);
 				delloc(obj);
 				addloc(obj.getWorld(), obj.getLoc(), 30000);
 			} else {
 				player.message("You fail to cut through it");
+				delay(4);
 			}
-		} else
+		} else {
 			player.message("Nothing interesting happens");
+			delay(4);
+		}
 	}
 }

@@ -233,21 +233,22 @@ public class InvAction implements OpInvTrigger {
 
 		}
 		mes("The official Alfred Grimhand barcrawl");
+		delay(3);
 		player.message(!player.getCache().hasKey("barone") ?
 			"The jolly boar inn - not completed" : "The jolly boar inn - completed");
-		delay(800);
+		delay(2);
 		player.message(!player.getCache().hasKey("bartwo") ?
 			"The blue moon inn - not completed" : "The blue moon inn - completed");
-		delay(800);
+		delay(2);
 		player.message(!player.getCache().hasKey("barthree") ?
 			"The rising sun - not completed" : "The rising sun - completed");
-		delay(800);
+		delay(2);
 		player.message(!player.getCache().hasKey("barfour") ?
 			"The dead man's chest - not completed" : "The dead man's chest - completed");
-		delay(800);
+		delay(2);
 		player.message(!player.getCache().hasKey("barfive") ?
 			"The forester's arms - not completed" : "The forester's arms - completed");
-		delay(800);
+		delay(2);
 		player.message(!player.getCache().hasKey("barsix") ?
 			"The rusty anchor - not completed" : "The rusty anchor - completed");
 	}
@@ -256,7 +257,7 @@ public class InvAction implements OpInvTrigger {
 		String[] options;
 		options = new String[]{"Constructing the cannon", "Making ammo", "firing the cannon", "warrenty"};
 		mes("the manual has four pages");
-
+		delay(3);
 		int option = multi(player, options);
 
 		/*if (player.isBusy()) {
@@ -300,8 +301,10 @@ public class InvAction implements OpInvTrigger {
 	}
 
 	private void handleTreeGnomeTranslation(Player player) {
-		mes("the book contains the alphabet...",
-			"translated into the old gnome tounge");
+		mes("the book contains the alphabet...");
+		delay(3);
+		mes("translated into the old gnome tounge");
+		delay(3);
 		// http://i.imgur.com/XmSmukw.png
 		ActionSender.sendBox(player,
 		"@yel@A = @red@:v  @yel@B = @red@x:   @yel@C = @red@za% %"
@@ -335,6 +338,7 @@ public class InvAction implements OpInvTrigger {
 
 	private void handleInvoice(Player player) {
 		mes("you open the invoice");
+		delay(3);
 		ActionSender.sendBox(player,
 			"@red@Order"
 				+ " %" + " %" +
@@ -347,7 +351,10 @@ public class InvAction implements OpInvTrigger {
 	}
 
 	private void handleGloughsNotes(Player player) {
-		mes("the notes contain sketched maps and diagrams", "the text reads");
+		mes("the notes contain sketched maps and diagrams");
+		delay(3);
+		mes("the text reads");
+		delay(3);
 		ActionSender.sendBox(player,
 			"@red@invasion"
 				+ " %" + " %" +
@@ -364,25 +371,41 @@ public class InvAction implements OpInvTrigger {
 	}
 
 	private void handleWarShip(Player player) {
-		mes("you pretend to sail the ship across the floor",
-			"you soon become very bored",
-			"and realise you look quite silly");
+		mes("you pretend to sail the ship across the floor");
+		delay(3);
+		mes("you soon become very bored");
+		delay(3);
+		mes("and realise you look quite silly");
+		delay(3);
 	}
 
 	private void handleDiary(Player player) {
-		mes("Pentember the 3rd",
-			"The experiment is going well - moved it to the wooden shed in the garden",
-			"It does too much damage in the house",
-			"Pentember the 6th",
-			"Don't want people getting in back garden to see the experiment",
-			"A guy called Professer Odenstein is fitting me a new security system",
-			"Pentember the 8th",
-			"The security system is done - by zamorak is it contrived!",
-			"Now to open my own back door",
-			"I lure a rat out of a hole in the back porch",
-			"I fit a magic curved piece of metal to its back",
-			"The rat goes back in the hole, and the door unlocks",
-			"The prof tells me that this is cutting edge technology!");
+		mes("Pentember the 3rd");
+		delay(3);
+		mes("The experiment is going well - moved it to the wooden shed in the garden");
+		delay(3);
+		mes("It does too much damage in the house");
+		delay(3);
+		mes("Pentember the 6th");
+		delay(3);
+		mes("Don't want people getting in back garden to see the experiment");
+		delay(3);
+		mes("A guy called Professer Odenstein is fitting me a new security system");
+		delay(3);
+		mes("Pentember the 8th");
+		delay(3);
+		mes("The security system is done - by zamorak is it contrived!");
+		delay(3);
+		mes("Now to open my own back door");
+		delay(3);
+		mes("I lure a rat out of a hole in the back porch");
+		delay(3);
+		mes("I fit a magic curved piece of metal to its back");
+		delay(3);
+		mes("The rat goes back in the hole, and the door unlocks");
+		delay(3);
+		mes("The prof tells me that this is cutting edge technology!");
+		delay(3);
 	}
 
 	private void handleDrySticks(Player player) {
@@ -393,6 +416,7 @@ public class InvAction implements OpInvTrigger {
 			return;
 		}
 		mes("The sticks catch alight");
+		delay(3);
 		if (player.getCarriedItems().remove(new Item(ItemId.UNLIT_TORCH.id())) != -1) {
 			player.message("you place the smouldering twigs to your torch");
 			player.message("your torch lights");
@@ -407,24 +431,37 @@ public class InvAction implements OpInvTrigger {
 	}
 
 	private void handleScruffyNote(Player player) {
-		mes("The handwriting on this note is very scruffy",
-			"as far as you can make out it says",
-			"Got a bncket of nnlk",
-			"Tlen qrind sorne lhoculate",
-			"vnith a pestal and rnortar",
-			"ald the grourd dlocolate to tho milt",
-			"fnales add 5cme snape gras5",
-			"you guess it really says something slightly different");
+		mes("The handwriting on this note is very scruffy");
+		delay(3);
+		mes("as far as you can make out it says");
+		delay(3);
+		mes("Got a bncket of nnlk");
+		delay(3);
+		mes("Tlen qrind sorne lhoculate");
+		delay(3);
+		mes("vnith a pestal and rnortar");
+		delay(3);
+		mes("ald the grourd dlocolate to tho milt");
+		delay(3);
+		mes("fnales add 5cme snape gras5");
+		delay(3);
+		mes("you guess it really says something slightly different");
+		delay(3);
 	}
 
 	private void handleMagicScroll(Player player) {
 		if (player.getCache().hasKey("ardougne_scroll") && player.getQuestStage(Quests.PLAGUE_CITY) == -1) {
 			mes("The scroll crumbles to dust");
+			delay(3);
 		} else {
-			mes("You memorise what is written on the scroll",
-				"You can now cast the Ardougne teleport spell",
-				"Provided you have the required runes and magic level",
-				"The scroll crumbles to dust");
+			mes("You memorise what is written on the scroll");
+			delay(3);
+			mes("You can now cast the Ardougne teleport spell");
+			delay(3);
+			mes("Provided you have the required runes and magic level");
+			delay(3);
+			mes("The scroll crumbles to dust");
+			delay(3);
 		}
 		player.getCarriedItems().remove(new Item(ItemId.MAGIC_SCROLL.id()));
 		if (!player.getCache().hasKey("ardougne_scroll")) {
@@ -435,11 +472,16 @@ public class InvAction implements OpInvTrigger {
 	private void handleSpellScroll(Player player) {
 		if (player.getCache().hasKey("watchtower_scroll") && player.getQuestStage(Quests.WATCHTOWER) == -1) {
 			mes("The scroll crumbles to dust");
+			delay(3);
 		} else {
-			mes("You memorise what is written on the scroll",
-				"You can now cast the Watchtower teleport spell",
-				"Provided you have the required runes and magic level",
-				"The scroll crumbles to dust");
+			mes("You memorise what is written on the scroll");
+			delay(3);
+			mes("You can now cast the Watchtower teleport spell");
+			delay(3);
+			mes("Provided you have the required runes and magic level");
+			delay(3);
+			mes("The scroll crumbles to dust");
+			delay(3);
 		}
 		player.getCarriedItems().remove(new Item(ItemId.SPELL_SCROLL.id()));
 		if (!player.getCache().hasKey("watchtower_scroll")) {
@@ -449,10 +491,12 @@ public class InvAction implements OpInvTrigger {
 
 	private void handleTouristGuide(Player player) {
 		mes("You read the guide");
+		delay(3);
 		say(player, null, "This book is your guide to the vibrant city of Ardougne",
 			"Ardougne is an exciting modern city",
 			"Located on the sunny south coast of Kandarin");
 		mes("Pick a chapter to read");
+		delay(3);
 		int chapter = multi(player,
 			"Ardougne city of shopping",
 			"Ardougne city of history",
@@ -460,36 +504,63 @@ public class InvAction implements OpInvTrigger {
 			"The area surrounding Ardougne",
 			"I don't want to read this rubbish");
 		if (chapter == 0) {
-			mes("Ardougne city of shopping",
-				"Come sample the delights of the Ardougne market",
-				"The biggest in the known world",
-				"From spices to silk",
-				"There is something here for everyone",
-				"Other popular shops in the area include Zeneshas the armourer",
-				"And the adventurers supply store");
+			mes("Ardougne city of shopping");
+			delay(3);
+			mes("Come sample the delights of the Ardougne market");
+			delay(3);
+			mes("The biggest in the known world");
+			delay(3);
+			mes("From spices to silk");
+			delay(3);
+			mes("There is something here for everyone");
+			delay(3);
+			mes("Other popular shops in the area include Zeneshas the armourer");
+			delay(3);
+			mes("And the adventurers supply store");
+			delay(3);
 		} else if (chapter == 1) {
-			mes("Ardougne, city of history",
-				"Ardougne is an important historical city",
-				"One historic building is the magnificent Handelmort mansion",
-				"Currently owned by Lord Franis Bradley Handelmort",
-				"Ardougne castle in the east side of the city",
-				"Is now open to the public",
-				"and members of the holy order of ardougne paladins",
-				"Still wander the streets");
+			mes("Ardougne, city of history");
+			delay(3);
+			mes("Ardougne is an important historical city");
+			delay(3);
+			mes("One historic building is the magnificent Handelmort mansion");
+			delay(3);
+			mes("Currently owned by Lord Franis Bradley Handelmort");
+			delay(3);
+			mes("Ardougne castle in the east side of the city");
+			delay(3);
+			mes("Is now open to the public");
+			delay(3);
+			mes("and members of the holy order of ardougne paladins");
+			delay(3);
+			mes("Still wander the streets");
+			delay(3);
 		} else if (chapter == 2) {
-			mes("Ardougne city of fun",
-				"If you're looking for entertainment in Ardougne",
-				"Why not pay a visit to Ardougne city zoo",
-				"Or relax for a drink in the flying horse inn",
-				"Or slaughter rats in Ardougne sewers");
+			mes("Ardougne city of fun");
+			delay(3);
+			mes("If you're looking for entertainment in Ardougne");
+			delay(3);
+			mes("Why not pay a visit to Ardougne city zoo");
+			delay(3);
+			mes("Or relax for a drink in the flying horse inn");
+			delay(3);
+			mes("Or slaughter rats in Ardougne sewers");
+			delay(3);
 		} else if (chapter == 3) {
-			mes("The area surrounding Ardougne",
-				"If you want to go further afield",
-				"Why not have a look at the pillars of Zanash",
-				"The mysterious marble pillars west of the city",
-				"Or the town of Brimhaven, on exotic Karamja",
-				"Is only a short boat ride away",
-				"Ships leaving regularily from Ardougne harbour");
+			mes("The area surrounding Ardougne");
+			delay(3);
+			mes("If you want to go further afield");
+			delay(3);
+			mes("Why not have a look at the pillars of Zanash");
+			delay(3);
+			mes("The mysterious marble pillars west of the city");
+			delay(3);
+			mes("Or the town of Brimhaven, on exotic Karamja");
+			delay(3);
+			mes("Is only a short boat ride away");
+			delay(3);
+			mes("Ships leaving regularily from Ardougne harbour");
+			delay(3);
 		} else if (chapter == 4) {
 			say(player, null, "I don't want to read this rubbish");
 		}
@@ -501,9 +572,12 @@ public class InvAction implements OpInvTrigger {
 		if ((player.getCache().hasKey("bird_feed")
 			|| player.getQuestStage(Quests.BIOHAZARD) == 3)
 				&& player.getLocation().inBounds(617, 582, 622, 590)) {
-			mes("the pigeons fly towards the watch tower",
-				"they begin pecking at the bird feed",
-				"the mourners are frantically trying to scare the pigeons away");
+			mes("the pigeons fly towards the watch tower");
+			delay(3);
+			mes("they begin pecking at the bird feed");
+			delay(3);
+			mes("the mourners are frantically trying to scare the pigeons away");
+			delay(3);
 			if (player.getQuestStage(Quests.BIOHAZARD) == 2) {
 				player.updateQuestStage(Quests.BIOHAZARD, 3);
 			}
@@ -519,6 +593,7 @@ public class InvAction implements OpInvTrigger {
 
 	private void handleJangerberries(Player player) {
 		mes("You eat the Jangerberries");
+		delay(3);
 		player.getCarriedItems().remove(new Item(ItemId.JANGERBERRIES.id()));
 		int Attack = player.getSkills().getMaxStat(Skills.ATTACK) + 2;
 		int Strength = player.getSkills().getMaxStat(Skills.STRENGTH) + 1;
@@ -553,20 +628,28 @@ public class InvAction implements OpInvTrigger {
 	}
 
 	private void handleTechnicalPlans(Player player) {
-		mes("The plans look very technical!",
-			"But you can see that this item will require ",
-			"a bronze bar and at least 10 feathers.");
+		mes("The plans look very technical!");
+		delay(3);
+		mes("But you can see that this item will require ");
+		delay(3);
+		mes("a bronze bar and at least 10 feathers.");
+		delay(3);
 	}
 
 	private void handleAnaInABarrel(Player player) {
-		mes("Ana looks pretty angry, she starts shouting at you.",
-			"@gre@Ana: Get me out of here!",
-			"@gre@Ana: Do you hear me!",
-			"@gre@Ana: Get me out of here I say!");
+		mes("Ana looks pretty angry, she starts shouting at you.");
+		delay(3);
+		mes("@gre@Ana: Get me out of here!");
+		delay(3);
+		mes("@gre@Ana: Do you hear me!");
+		delay(3);
+		mes("@gre@Ana: Get me out of here I say!");
+		delay(3);
 	}
 
 	private void handleRandassJournal(Player player) {
 		mes("the journal is old and worn");
+		delay(3);
 		player.message("it reads...");
 		ActionSender.sendBox(player,
 			"@red@I came to cleanse these mountain passes of the dark forces%"
@@ -588,25 +671,34 @@ public class InvAction implements OpInvTrigger {
 
 	private void handleADollOfIban(Player player) {
 		mes("you carefully search the doll");
+		delay(3);
 		if (player.getCache().hasKey("poison_on_doll")) {
 			mes("Blood has been smeared onto the doll");
+			delay(3);
 		}
 		if (player.getCache().hasKey("cons_on_doll")) {
 			mes("Crushed bones have been smeared onto the doll");
+			delay(3);
 		}
 		if (player.getCache().hasKey("ash_on_doll")) {
 			mes("Burnt ash has been smeared onto the doll");
+			delay(3);
 		}
 		if (player.getCache().hasKey("shadow_on_doll")) {
 			mes("A dark liquid has been poured over the doll");
+			delay(3);
 		}
 		player.message("the doll is made from old wood and cloth");
+		delay(4);
 	}
 
 	private void handleStaffOfIban(Player player) {
-		mes("the staff is broken",
-			"you must have a dark mage repair it");
+		mes("the staff is broken");
+		delay(3);
+		mes("you must have a dark mage repair it");
+		delay(3);
 		player.message("before it can be used");
+		delay(4);
 	}
 
 	private void handleNightshade(Player player) {
@@ -622,15 +714,19 @@ public class InvAction implements OpInvTrigger {
 			player.message("You search the robe");
 			if (player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL3.id(), Optional.empty())) {
 				mes("You find nothing");
+				delay(3);
 			} else if (player.getBank().hasItemId(ItemId.POWERING_CRYSTAL3.id())) {
 				say(player, null, "I already have this in my bank");
 			} else {
 				mes("You find a crystal wrapped in the folds of the material");
+				delay(3);
 				give(player, ItemId.POWERING_CRYSTAL3.id(), 1);
 			}
 		} else {
-			mes("You search the robe",
-				"You find nothing");
+			mes("You search the robe");
+			delay(3);
+			mes("You find nothing");
+			delay(3);
 		}
 	}
 
@@ -696,8 +792,10 @@ public class InvAction implements OpInvTrigger {
 			+ "One all items are prepared, seek out Wayne in Falador", true);
 	}
 	private void handleOldJournal(Player player) {
-		mes("the journal is old and covered in dust",
-			"inside are several chapters...");
+		mes("the journal is old and covered in dust");
+		delay(3);
+		mes("inside are several chapters...");
+		delay(3);
 		int chapter = multi(player, "intro", "iban", "the ressurection", "the four elements");
 		int offset;
 		if (chapter == 0) {
@@ -707,8 +805,10 @@ public class InvAction implements OpInvTrigger {
 		} else if (chapter == 2) {
 			readJournalChapter(player, 2);
 		} else if (chapter == 3) {
-			mes("you turn to the page titled 'the four elements'",
-				"there are four more chapters");
+			mes("you turn to the page titled 'the four elements'");
+			delay(3);
+			mes("there are four more chapters");
+			delay(3);
 			offset = multi(player, "flesh", "blood", "shadow", "conscience");
 			if (offset >= 0 && offset <= 3) {
 				readJournalChapter(player, offset + 3);
@@ -775,6 +875,7 @@ public class InvAction implements OpInvTrigger {
 
 		if (chapter >= 3 && chapter <= 6) {
 			mes("there are four more chapters");
+			delay(3);
 			int chapterOpt = multi(player, "flesh", "blood", "shadow", "conscience");
 			if (chapterOpt >= 0)
 				readJournalChapter(player, chapterOpt + 3);

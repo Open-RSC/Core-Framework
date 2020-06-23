@@ -459,6 +459,7 @@ public final class Development implements CommandTrigger {
 	private void testNpcDrops(Player player, String command, String[] args) {
 		if (args.length < 1) {
 			mes("::droptest [npc_id]  or  ::droptest [npc_id] [count]");
+			delay(3);
 			return;
 		}
 		int npcId = Integer.parseInt(args[0]);
@@ -475,6 +476,7 @@ public final class Development implements CommandTrigger {
 		DropTable dropTable = npcDrops.getDropTable(npcId);
 		if (dropTable == null) {
 			mes("No NPC for id: " + npcId);
+			delay(4);
 			return;
 		}
 		HashMap<String, Integer> droppedCount = new HashMap<>();

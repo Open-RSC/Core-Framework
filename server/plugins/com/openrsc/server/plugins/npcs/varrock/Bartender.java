@@ -89,13 +89,13 @@ public class Bartender implements TalkNpcTrigger {
 			if (ifheld(player, ItemId.COINS.id(), 50)) {
 				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 50));
 				player.message("You buy some gutrot");
-				delay(800);
+				delay(2);
 				player.message("You drink the gutrot");
-				delay(800);
+				delay(2);
 				player.message("your insides feel terrible");
 				drinkAle(player);
 				player.damage(DataConversions.getRandom().nextInt(2) + 1);
-				delay(800);
+				delay(2);
 				player.message("The bartender signs your card");
 				player.getCache().store("bartwo", true);
 				say(player, n, "Blearrgh");

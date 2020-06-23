@@ -76,21 +76,21 @@ public class Ladders {
 		} else if (obj.getID() == 487) {
 			player.message("You pull the lever");
 			player.teleport(567, 3330);
-			delay(config().GAME_TICK);
+			delay();
 			if (player.getX() == 567 && player.getY() == 3330) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
 		} else if (obj.getID() == 488) {
 			player.message("You pull the lever");
 			player.teleport(282, 3019);
-			delay(config().GAME_TICK);
+			delay();
 			if (player.getX() == 282 && player.getY() == 3019) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
 		} else if (obj.getID() == 349) {
 			player.playerServerMessage(MessageType.QUEST, "You pull the lever");
 			player.teleport(621, 596);
-			delay(config().GAME_TICK);
+			delay();
 			if (player.getX() == 621 && player.getY() == 596) {
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
 			}
@@ -111,7 +111,7 @@ public class Ladders {
 				player.message("you pull the lever");
 				player.teleport(180, 128);
 				displayTeleportBubble(player, player.getX(), player.getY(), false);
-				delay(config().GAME_TICK);
+				delay();
 				if (player.getX() == 180 && player.getY() == 128) {
 					displayTeleportBubble(player, player.getX(), player.getY(), false);
 				}
@@ -151,7 +151,7 @@ public class Ladders {
 							player.message("You climb up the ladder");
 						} else {
 							npcsay(player, abbot, "No I feel you are not devout enough");
-							delay(config().GAME_TICK * 2);
+							delay(2);
 							player.message("You need a prayer level of 31");
 						}
 					} else if (op == 1) {
@@ -173,7 +173,7 @@ public class Ladders {
 					npcYell(player, dwarf,
 						"Sorry only the top miners are allowed in there");
 				}
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				player.message("You need a mining level of 60 to enter");
 			} else {
 				player.teleport(274, 3397, false);
@@ -181,8 +181,10 @@ public class Ladders {
 		} else if (obj.getID() == 223 && obj.getX() == 312 && obj.getY() == 3348) { // ladder to black hole
 			if (!player.getCarriedItems().hasCatalogID(ItemId.DISK_OF_RETURNING.id(), Optional.of(false))) {
 				mes("you seem to be missing a disk to use the ladder");
+				delay(3);
 			} else {
-				mes(config().GAME_TICK * 2, "You climb down the ladder");
+				mes("You climb down the ladder");
+				delay(2);
 				int offX = DataConversions.random(0,4) - 2;
 				int offY = DataConversions.random(0,4) - 2;
 				player.teleport(305 + offX, 3300 + offY);
@@ -193,7 +195,7 @@ public class Ladders {
 			if (paladinGuard != null) {
 				npcYell(player, paladinGuard, "Stop right there");
 				paladinGuard.setChasing(player);
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				if (player.inCombat()) {
 					return;
 				}

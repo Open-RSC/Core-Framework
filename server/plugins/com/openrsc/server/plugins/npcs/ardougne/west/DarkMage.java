@@ -48,8 +48,10 @@ public class DarkMage implements TalkNpcTrigger {
 						player.message("you don't have enough money");
 						say(player, n, "oops, i'm a bit short");
 					} else {
-						mes("you give the mage 200,000 coins",
-							"and the staff of iban");
+						mes("you give the mage 200,000 coins");
+						delay(3);
+						mes("and the staff of iban");
+						delay(3);
 						player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 200000));
 						player.getCarriedItems().remove(new Item(ItemId.STAFF_OF_IBAN_BROKEN.id()));
 						player.message("the mage fixes the staff and returns it to you");

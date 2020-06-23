@@ -71,7 +71,7 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 
 	private void applyCurse(Player player, Npc zam) {
 		zam.getUpdateFlags().setChatMessage(new ChatMessage(zam, "A curse be upon you", player));
-		delay(2200);
+		delay(4);
 		player.message("You feel slightly weakened");
 		int dmg = (int) Math.ceil(((player.getSkills().getMaxStat(Skills.HITS) + 20) * 0.05));
 		player.damage(dmg);
@@ -83,7 +83,7 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 			final int newStat = Math.max(0, player.getSkills().getLevel(affectedStat) - lowerBy);
 			player.getSkills().setLevel(affectedStat, newStat);
 		}
-		delay(config().GAME_TICK);
+		delay();
 		zam.setChasing(player);
 	}
 

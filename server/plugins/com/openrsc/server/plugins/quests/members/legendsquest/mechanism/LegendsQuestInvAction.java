@@ -32,28 +32,34 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
 		if (item.getCatalogId() == ItemId.GILDED_TOTEM_POLE.id()) {
-			mes(config().GAME_TICK * 2, "This totem pole is utterly awe inspiring.",
-				"Perhaps you should show it to Radimus Erkle...");
+			mes("This totem pole is utterly awe inspiring.");
+			delay(2);
+			mes("Perhaps you should show it to Radimus Erkle...");
+			delay(2);
 		}
 		else if (item.getCatalogId() == ItemId.HOLY_FORCE_SPELL.id()) {
 			Npc n = ifnearvisnpc(player, NpcId.ECHNED_ZEKIN.id(), 5);
 			if (n != null && player.getQuestStage(Quests.LEGENDS_QUEST) == 7) {
 				mes("You thrust the Holy Force spell in front of the spirit.");
-				mes(n, config().GAME_TICK * 2, "A bright, holy light streams out from the paper spell.");
+				delay(3);
+				mes(n, "A bright, holy light streams out from the paper spell.");
+				delay(2);
 				if (player.getCache().hasKey("already_cast_holy_spell")) {
 					npcsay(player, n, "Argghhhhh...not again....!");
 				} else {
 					npcsay(player, n, "Argghhhhh...noooooo!");
 					player.getCache().store("already_cast_holy_spell", true);
 				}
-				mes(n, config().GAME_TICK * 2, "The spirit lets out an unearthly, blood curdling scream...");
+				mes(n, "The spirit lets out an unearthly, blood curdling scream...");
+				delay(2);
 				int formerNpcX = n.getX();
 				int formerNpcY = n.getY();
 				if (n != null)
 					n.remove();
 				Npc second_nezikchened = addnpc(NpcId.NEZIKCHENED.id(), formerNpcX, formerNpcY, (int)TimeUnit.SECONDS.toMillis(500), player);
 				if (second_nezikchened != null) {
-					mes(second_nezikchened, config().GAME_TICK, "The spell seems to weaken the Demon.");
+					mes(second_nezikchened, "The spell seems to weaken the Demon.");
+					delay();
 					second_nezikchened.getSkills().setLevel(Skills.DEFENSE, n.getSkills().getLevel(Skills.DEFENSE) - 5);
 					if (player.getCache().hasKey("ran_from_2nd_nezi")) {
 						second_nezikchened.getUpdateFlags().setChatMessage(new ChatMessage(second_nezikchened, "So you have returned and I am prepared for you now!", player));
@@ -63,35 +69,46 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 					second_nezikchened.startCombat(player);
 					int newPray = (int) Math.ceil((double) player.getSkills().getLevel(Skills.PRAYER) / 2);
 					if (player.getSkills().getLevel(Skills.PRAYER) - newPray < 30) {
-						mes(config().GAME_TICK * 2, "A sense of fear comes over you ",
-							"You feel a sense of loss...");
+						mes("A sense of fear comes over you ");
+						delay(2);
+						mes("You feel a sense of loss...");
+						delay(2);
 					} else {
-						mes(config().GAME_TICK * 2, "An intense sense of fear comes over you ",
-							"You feel a great sense of loss...");
+						mes("An intense sense of fear comes over you ");
+						delay(2);
+						mes("You feel a great sense of loss...");
+						delay(2);
 					}
 					player.getSkills().setLevel(Skills.PRAYER, newPray);
 					if (player.getCache().hasKey("ran_from_2nd_nezi")) {
-						delay(7000);
-						mes(config().GAME_TICK * 2, "The Demon takes out a dark dagger and throws it at you...");
+						delay(11);
+						mes("The Demon takes out a dark dagger and throws it at you...");
+						delay(2);
 						if (DataConversions.random(0, 1) == 1) {
-							mes(config().GAME_TICK * 2, "The dagger hits you with an agonising blow...");
+							mes("The dagger hits you with an agonising blow...");
+							delay(2);
 							player.damage(14);
 						} else {
-							mes(config().GAME_TICK, "But you neatly manage to dodge the attack.");
+							mes("But you neatly manage to dodge the attack.");
+							delay();
 						}
 					}
 				}
 
 			} else {
-				mes(config().GAME_TICK, "There is no suitable candidate to cast this spell on.");
+				mes("There is no suitable candidate to cast this spell on.");
+				delay();
 			}
 		}
 		else if (item.getCatalogId() == ItemId.A_RED_CRYSTAL.id() && !config().WANT_PETS) {
-			mes(config().GAME_TICK * 2, "As the crystal touches your hands a voice inside of your head says..",
-				"@gre@Voice in head: Bring life to the dragons eye.");
+			mes("As the crystal touches your hands a voice inside of your head says..");
+			delay(2);
+			mes("@gre@Voice in head: Bring life to the dragons eye.");
+			delay(2);
 		}
 		else if (item.getCatalogId() == ItemId.GERMINATED_YOMMI_TREE_SEED.id()) {
-			mes(config().GAME_TICK * 2, "These seeds have been germinated in pure water...");
+			mes("These seeds have been germinated in pure water...");
+			delay(2);
 			player.message("They can be planted in fertile soil now...");
 		}
 		else if (item.getCatalogId() == ItemId.YOMMI_TREE_SEED.id()) {
@@ -105,17 +122,22 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 				"Defeati...",
 				"Enchanto...");
 			if (page == 0) {
-				mes(config().GAME_TICK * 2, "You read the section entitled Arcana...");
+				mes("You read the section entitled Arcana...");
+				delay(2);
 				ActionSender.sendBox(player, "Arcana...% % Use holy water to determine possesion, slight changes in appearance may be percieved when doused.% % Legendary Silverlight will help to defeat any demon by weakening it.% % Be wary of any demon, it may have special forms of attack. % % Use an Octagram shape to confine unearthly creatures of the underworld - the perfect geometry confuses them.", true);
 			} else if (page == 1) {
-				mes(config().GAME_TICK * 2, "You read the section entitled Instructo...");
+				mes("You read the section entitled Instructo...");
+				delay(2);
 				ActionSender.sendBox(player, "Instructo...% % To make Holy water enchant small vials to contain the magic water.% % See later chapters for enchantment. Place sacred water into vial and equip as any other missile.", true);
 			} else if (page == 2) {
-				mes(config().GAME_TICK * 2, "You read the section entitled Defeati...");
+				mes("You read the section entitled Defeati...");
+				delay(2);
 				ActionSender.sendBox(player, "Defeati...% %. Hold the book of binding open to the possesed letting the goodlight fall on them completely. Be prepared for as soon as the beast is released it will strike and strike hard.", true);
 			} else if (page == 3) {
-				mes(config().GAME_TICK * 2, "You read the section entitled Enchanto...",
-					"This looks like an enchantment, it requires some magic and prayer to cast.");
+				mes("You read the section entitled Enchanto...");
+				delay(2);
+				mes("This looks like an enchantment, it requires some magic and prayer to cast.");
+				delay(2);
 				player.message("Would you like to try and cast this enchantment?");
 				int opt = multi(player,
 					"Yes, I'll try.",
@@ -132,8 +154,10 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 						return;
 					}
 					if (player.getCarriedItems().hasCatalogID(ItemId.EMPTY_VIAL.id(), Optional.of(false))) {
-						mes("The spell is cast perfectly..",
-								"You enchant one of the empty vials.");
+						mes("The spell is cast perfectly..");
+						delay(3);
+						mes("You enchant one of the empty vials.");
+						delay(3);
 						player.getCarriedItems().remove(new Item(ItemId.EMPTY_VIAL.id()));
 						player.getCarriedItems().getInventory().add(new Item(ItemId.ENCHANTED_VIAL.id()));
 					} else {
@@ -153,12 +177,15 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 			}
 		}
 		else if (item.getCatalogId() == ItemId.ROUGH_SKETCH_OF_A_BOWL.id()) {
-			mes(config().GAME_TICK * 2, "You look at the rough sketch that Gujuo gave you.");
+			mes("You look at the rough sketch that Gujuo gave you.");
+			delay(2);
 			player.message("It looks like a picture of a bowl...");
 		}
 		else if (item.getCatalogId() == ItemId.SHAMANS_TOME.id()) {
-			mes(config().GAME_TICK * 2, "You read the ancient shamans tome.");
-			mes(config().GAME_TICK * 6, "It is written in a strange sort of language but you manage a rough translation.");
+			mes("You read the ancient shamans tome.");
+			delay(2);
+			mes("It is written in a strange sort of language but you manage a rough translation.");
+			delay(6);
 			ActionSender.sendBox(player, "% % ...scattered are my hopes that I will ever be released from this flaming Octagram, it is the only thing which will contain this beast within.% %Although it's grip over me is weakened with magic, it is hopeless to know if a saviour would guess this. % % I am doomed...", true);
 		}
 	}
@@ -178,7 +205,8 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 			player.message("You place the seeds in the pure sacred water...");
 			player.getCarriedItems().remove(new Item(ItemId.BLESSED_GOLDEN_BOWL_WITH_PURE_WATER.id()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BLESSED_GOLDEN_BOWL.id()));
-			mes(config().GAME_TICK * 2, "The pure water in the golden bowl has run out...");
+			mes("The pure water in the golden bowl has run out...");
+			delay(2);
 			player.message("You start to see little shoots growing on the seeds.");
 			if (player.getQuestStage(Quests.LEGENDS_QUEST) == 4) {
 				player.setQuestStage(Quests.LEGENDS_QUEST, 5);

@@ -52,8 +52,10 @@ public class DoctorOrbon implements TalkNpcTrigger {
 					} else if (moreMenu == 1) {
 						say(player, n, "ok i'll take it");
 						if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100)) != -1) {
-							mes("you give doctor orbon 100 coins",
-								"doctor orbon gives you a protective suit");
+							mes("you give doctor orbon 100 coins");
+							delay(3);
+							mes("doctor orbon gives you a protective suit");
+							delay(3);
 							give(player, ItemId.PROTECTIVE_TROUSERS.id(), 1);
 							give(player, ItemId.PROTECTIVE_JACKET.id(), 1);
 							npcsay(player, n,
@@ -88,8 +90,10 @@ public class DoctorOrbon implements TalkNpcTrigger {
 				} else if (menu == 1) {
 					say(player, n, "ok i'll take it");
 					if (player.getCarriedItems().remove(new Item(ItemId.COINS.id(), 100)) != -1) {
-						mes("you give doctor orbon 100 coins",
-							"doctor orbon gives you a protective suit");
+						mes("you give doctor orbon 100 coins");
+						delay(3);
+						mes("doctor orbon gives you a protective suit");
+						delay(3);
 						give(player, ItemId.PROTECTIVE_TROUSERS.id(), 1);
 						give(player, ItemId.PROTECTIVE_JACKET.id(), 1);
 						npcsay(player, n,

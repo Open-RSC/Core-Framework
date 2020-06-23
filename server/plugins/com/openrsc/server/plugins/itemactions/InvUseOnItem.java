@@ -87,7 +87,7 @@ public class InvUseOnItem implements UseInvTrigger {
 			if (player.getCarriedItems().remove(new Item(ItemId.DAMP_STICKS.id())) > -1) {
 				player.message("you hold the glass to the sun");
 				player.message("above the damp sticks");
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				player.message("the glass acts like a lens");
 				player.message("and drys the sticks out");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.DRY_STICKS.id()));

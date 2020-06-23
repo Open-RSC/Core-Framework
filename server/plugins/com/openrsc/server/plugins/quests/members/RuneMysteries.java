@@ -53,6 +53,7 @@ public class RuneMysteries implements QuestInterface {
 						"for such an interesting find");
 					if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
 						mes("The Duke hands you a talisman.");
+						delay(3);
 						give(player, ItemId.AIR_TALISMAN.id(), 1);
 						player.setQuestStage(Quests.RUNE_MYSTERIES, 1);
 					} else {
@@ -152,6 +153,7 @@ public class RuneMysteries implements QuestInterface {
 							return;
 						}
 						mes("You give the talisman to the wizard.");
+						delay(3);
 						npcsay(player, n, "Wow! This is incredible! Th-this talisman you brought me...",
 							"it is the last piece of the puzzle. Finally! the legacy of our",
 							"ancestors will return to us once more! I need time to",
@@ -178,6 +180,7 @@ public class RuneMysteries implements QuestInterface {
 
 							player.getCarriedItems().remove(new Item(ItemId.AIR_TALISMAN.id()));
 							mes("The head wizard gives you a research package.");
+							delay(3);
 							give(player, ItemId.RESEARCH_PACKAGE.id(), 1);
 							npcsay(player, n, "Best of luck with your quest, " + player.getUsername());
 							player.setQuestStage(Quests.RUNE_MYSTERIES, 2);
@@ -192,10 +195,12 @@ public class RuneMysteries implements QuestInterface {
 
 					if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
 						mes("The head wizard gives you a research package.");
+						delay(3);
 						npcsay(player, n, "Be more careful this time");
 						give(player, ItemId.RESEARCH_PACKAGE.id(), 1);
 					} else {
 						mes("The head wizard tried to give you a research package, but your inventory was full.");
+						delay(3);
 					}
 				} else {
 					say(player, n, "What was I supposed to do with this package again?");
@@ -281,6 +286,7 @@ public class RuneMysteries implements QuestInterface {
 					"Now, my research notes, please?");
 				player.getCarriedItems().remove(new Item(ItemId.RESEARCH_NOTES.id()));
 				mes("You hand Sedridor the research notes.");
+				delay(3);
 				give(player, ItemId.AIR_TALISMAN.id(), 1);
 				player.sendQuestComplete(Quests.RUNE_MYSTERIES);
 				break;
@@ -295,6 +301,7 @@ public class RuneMysteries implements QuestInterface {
 				npcsay(player, n, "Really? Surely he can't have...",
 					"Please... let me have it.");
 				mes("You have Aubury the research package.");
+				delay(3);
 				npcsay(player, n, "My gratitude, adventurer, for bringing me this research package.",
 					"Combined with the information I have already collated",
 					"regarding rune stones, I think we have finally",
@@ -307,6 +314,7 @@ public class RuneMysteries implements QuestInterface {
 				give(player, ItemId.RESEARCH_NOTES.id(), 1);
 				player.setQuestStage(Quests.RUNE_MYSTERIES, 3);
 				mes("Aubury gives you his research notes.");
+				delay(3);
 				npcsay(player, n, "Now, I'm sure I can spare a couple of runes for",
 					"such a worthy cause as these notes.",
 					"Do you want me to teleport you back?");
@@ -326,9 +334,11 @@ public class RuneMysteries implements QuestInterface {
 
 				if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
 					mes("Aubury hands you his research notes.");
+					delay(3);
 					give(player, ItemId.RESEARCH_NOTES.id(), 1);
 				} else {
 					mes("Aubury tried to give you notes, but your inventory is full.");
+					delay(3);
 				}
 			} else {
 				say(player, n, "What am I to do with these notes?");

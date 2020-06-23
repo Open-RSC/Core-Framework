@@ -231,6 +231,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"where the ground has been blackened",
 									"by the living flame.");
 								mes("You give the Ardrigal to Trufitus");
+								delay(3);
 								player.getCarriedItems().remove(new Item(ItemId.ARDRIGAL.id()));
 								setQuestStage(player, this, 3);
 								player.getCache().store("got_sito_foil", false);
@@ -263,6 +264,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"And it clings to rocks for it's existence",
 									"It is difficult to see, so you must search for it well.");
 								mes("You give the Sito Foil to Trufitus");
+								delay(3);
 								player.getCarriedItems().remove(new Item(ItemId.SITO_FOIL.id()));
 								setQuestStage(player, this, 4);
 								player.getCache().store("got_volencia_moss", false);
@@ -305,6 +307,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 									"The Northern cliffs of this land",
 									"Take care Bwana as it may be very dangerous");
 								mes("You give the Volencia Moss to Trufitus");
+								delay(3);
 								player.getCarriedItems().remove(new Item(ItemId.VOLENCIA_MOSS.id()));
 								setQuestStage(player, this, 5);
 								player.getCache().store("got_rogues_purse", false);
@@ -654,6 +657,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 		switch (cID) {
 			case Trufitus.DROPED_RASHILIYIA:
 				mes("Trufitus looks at you in amazement...");
+				delay(3);
 				npcsay(player, n, "I am truly speechless bwana.",
 					"How could you have been so careless.",
 					"You will need to get into her tomb again.",
@@ -667,9 +671,12 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 						"sanctify her remains in the manner of her son.",
 						"Remember, 'I am the key, but only kin may approach her.'");
 					mes("The apparition fades into nothingness.");
+					delay(3);
 					if (!player.getCarriedItems().hasCatalogID(ItemId.BONE_SHARD.id())) {
-						mes("A shard of bone appears on the ground in front of you.",
-							"You take the bone shard and place it into your inventory.");
+						mes("A shard of bone appears on the ground in front of you.");
+						delay(3);
+						mes("You take the bone shard and place it into your inventory.");
+						delay(3);
 						give(player, ItemId.BONE_SHARD.id(), 1);
 					}
 					zadimus.remove();
@@ -921,6 +928,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 			case Trufitus.THANKS_FOR_THE_INFORMATION:
 				npcsay(player, n, "What information?");
 				mes("Trufitus looks at you blankly, then wanders off.");
+				delay(3);
 				npcsay(player, n, "Hmmm, well, you are welcome bwana.");
 				break;
 			case Trufitus.AH_ZA_RHOON:
@@ -946,6 +954,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 			case Trufitus.OH_OK:
 				npcsay(player, n, "Yes, it's a bit sad really, I liked that village.");
 				mes("Trufitus seems deeply touched...");
+				delay(3);
 				npcsay(player, n, "Well, I hope you will excuse me, but I need to get back to my studies.");
 				break;
 			case Trufitus.WEAKNESS:
@@ -986,9 +995,11 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 					}
 				} else if (opt10 == 1) {
 					mes("Trufitus looks at you blankly");
+					delay(3);
 					npcsay(player, n, "Surely you mean Minions?");
 					say(player, n, "Yes of course, I mean Minions, what made you think I said Onions?");
 					mes("Trufitus frowns at you but continues about...minions...");
+					delay(3);
 					npcsay(player, n, "Minions are the fiendish undead creatures that Rashiliyia controls.",
 						"She has very few living worshippers, but they need to be dealt with at some point",
 						"Usually a strong creature of some sort will be guarding the bones",
@@ -1106,6 +1117,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				&& !player.getCarriedItems().hasCatalogID(ItemId.SNAKE_WEED.id(), Optional.of(false)) && (player.getQuestStage(Quests.LEGENDS_QUEST) >= 6 ||
 						(!hasCacheKeySetTrue(player, "got_snake_weed") && atQuestStage(player, this, 1)) )) {
 				mes("Small amounts of a herb are growing near this vine");
+				delay(3);
 				addobject(ItemId.UNIDENTIFIED_SNAKE_WEED.id(), 1, obj.getX(), obj
 					.getY(), player);
 				if(atQuestStage(player, this, 1)) {
@@ -1127,6 +1139,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				&& !player.getCarriedItems().hasCatalogID(ItemId.ARDRIGAL.id(), Optional.of(false)) && (player.getQuestStage(Quests.LEGENDS_QUEST) >= 6 ||
 					(!hasCacheKeySetTrue(player, "got_ardigal") && atQuestStage(player, this, 2)) )) {
 				mes("You find a herb plant growing at the base of the palm");
+				delay(3);
 				addobject(ItemId.UNIDENTIFIED_ARDRIGAL.id(), 1, obj.getX(), obj.getY(), player);
 				if(atQuestStage(player, this, 2)) {
 					player.getCache().store("got_ardigal", true);
@@ -1140,6 +1153,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				&& !hasCacheKeySetTrue(player, "got_sito_foil")
 				&& atQuestStage(player, this, 3)) {
 				mes("A small herb plant is growing in the scorched soil.");
+				delay(3);
 				addobject(ItemId.UNIDENTIFIED_SITO_FOIL.id(), 1, obj.getX(), obj
 					.getY(), player);
 				player.getCache().store("got_sito_foil", true);
@@ -1152,6 +1166,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				&& !hasCacheKeySetTrue(player, "got_volencia_moss")
 				&& atQuestStage(player, this, 4)) {
 				mes("Small amounts of herb moss are growing at the base of this rock");
+				delay(3);
 				addobject(ItemId.UNIDENTIFIED_VOLENCIA_MOSS.id(), 1, obj.getX(), obj
 					.getY(), player);
 				player.getCache().store("got_volencia_moss", true);
@@ -1174,6 +1189,7 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 				&& !hasCacheKeySetTrue(player, "got_rogues_purse")
 				&& atQuestStage(player, this, 5)) {
 				mes("Small amounts of herb fungus are growing at the base of this cavern wall");
+				delay(3);
 				addobject(ItemId.UNIDENTIFIED_ROGUES_PURSE.id(), 1, player.getX(),
 					player.getY(), player);
 				player.getCache().store("got_rogues_purse", true);

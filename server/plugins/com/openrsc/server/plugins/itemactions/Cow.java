@@ -24,6 +24,7 @@ public class Cow implements UseNpcTrigger {
 			player.getCarriedItems().remove(new Item(item.getCatalogId()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.MILK.id()));
 		}
-		mes(config().GAME_TICK * 5, "You milk the cow");
+		mes("You milk the cow");
+		delay(5);
 	}
 }

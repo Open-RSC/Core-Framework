@@ -51,7 +51,7 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 				}
 			}
 			player.message("You squeeze through the pipe");
-			delay(config().GAME_TICK * 3);
+			delay(3);
 			if (player.getY() <= 551) {
 				boundaryTeleport(player, Point.location(487, 554));
 			} else {
@@ -71,19 +71,19 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 		switch (obj.getID()) {
 			case SWING:
 				player.message("You grab the rope and try and swing across");
-				delay(config().GAME_TICK * 3);
+				delay(3);
 				if (passObstacle) {
 					player.message("You skillfully swing across the hole");
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					teleport(player, 486, 559);
 					player.incExp(Skills.AGILITY, 80, true);
 					AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 300);
 				} else {
 					player.message("Your hands slip and you fall to the level below");
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					teleport(player, 486, 3389);
 					player.message("You land painfully on the spikes");
-					delay(config().GAME_TICK * 3);
+					delay(3);
 					int swingDamage = (int) Math.round((player.getSkills().getLevel(Skills.HITS)) * 0.15D);
 					player.damage(swingDamage);
 					say(player, "ouch");
@@ -91,12 +91,12 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 				break;
 			case LOG:
 				player.message("you stand on the slippery log");
-				delay(config().GAME_TICK * 3);
+				delay(3);
 				if (passObstacle) {
 					boundaryTeleport(player, Point.location(489, 563));
-					delay(config().GAME_TICK);
+					delay();
 					boundaryTeleport(player, Point.location(490, 563));
-					delay(config().GAME_TICK);
+					delay();
 					player.message("and walk across");
 					boundaryTeleport(player, Point.location(492, 563));
 					player.incExp(Skills.AGILITY, 50, true);
@@ -120,7 +120,7 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 					return;
 				}
 				player.message("You put your foot on the ledge and try to edge across");
-				delay(config().GAME_TICK * 2);
+				delay(2);
 				if (passObstacle) {
 					teleport(player, 501, 1506);
 					player.message("You skillfully balance across the hole");
@@ -159,7 +159,7 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 			}
 		}
 		player.message("You jump over the wall");
-		delay(config().GAME_TICK * 2);
+		delay(2);
 		boundaryTeleport(player, Point.location(player.getX() == obj.getX() ? player.getX() - 1 : player.getX() + 1, player.getY()));
 		player.incExp(Skills.AGILITY, 20, true);
 		AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 300);

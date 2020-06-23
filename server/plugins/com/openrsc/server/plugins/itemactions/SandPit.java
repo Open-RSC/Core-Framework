@@ -41,7 +41,7 @@ public class SandPit implements UseLocTrigger {
 		player.message("you fill the bucket with sand");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.SAND.id()));
-		delay(config().GAME_TICK);
+		delay();
 
 		// Repeat
 		updatebatch();

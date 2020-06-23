@@ -442,8 +442,8 @@ public class Server implements Runnable {
 							for (final Player player : getWorld().getPlayers()) {
 								this.lastIncomingPacketsDuration += bench(player::processIncomingPackets);
 							}
-							this.lastGameStateDuration = getGameUpdater().doUpdates();
 							this.lastEventsDuration = getGameEventHandler().runGameEvents();
+							this.lastGameStateDuration = getGameUpdater().doUpdates();
 							for (final Player player : getWorld().getPlayers()) {
 								this.lastOutgoingPacketsDuration += bench(player::processOutgoingPackets);
 							}

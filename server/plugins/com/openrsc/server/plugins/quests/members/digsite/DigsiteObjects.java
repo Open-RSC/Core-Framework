@@ -80,6 +80,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 		else if (obj.getID() == TENT_CHEST_OPEN) {
 			if (command.equalsIgnoreCase("Search")) {
 				mes("You search the chest");
+				delay(3);
 				player.message("You find some unusual powder inside...");
 				give(player, ItemId.UNIDENTIFIED_POWDER.id(), 1);
 				player.getWorld().registerGameObject(
@@ -133,6 +134,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 				int[] TRAY_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.IRON_DAGGER.id(), ItemId.BROKEN_ARROW.id(), ItemId.BROKEN_GLASS.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.COINS.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
 			player.incExp(Skills.MINING, 4, true);
 			mes("You sift through the earth in the tray");
+			delay(3);
 			int randomize = DataConversions.random(0, (TRAY_ITEMS.length - 1));
 			int chosenItem = TRAY_ITEMS[randomize];
 			DigsiteDigAreas.doDigsiteItemMessages(player, chosenItem);
@@ -301,14 +303,15 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 					if (player.getCache().hasKey("brick_ignite")) {
 						player.message("You strike the tinderbox");
 						player.message("Fizz...");
-						delay(300);
+						delay();
 						say(player, null, "Whoa! this is going to blow!\"",
 							"I'd better run!");
-						delay(1500);
+						delay(3);
 						player.teleport(22, 3379);
 						player.updateQuestStage(Quests.DIGSITE, 6);
 						player.getCache().remove("brick_ignite");
 						mes("\"Bang!!!\"");
+						delay(3);
 						say(player, null, "Wow that was a big explosion!",
 							"...What's that noise I can hear ?",
 							"...Sounds like bones moving or something");
@@ -341,6 +344,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 					// behavior unconfirmed on replay - believed to have similar as rs2+
 					say(player, null, "I'm not sure if this will be useful or not");
 					mes("You scoop some earth with the jar");
+					delay(3);
 					break;
 				case ROCK_PICK:
 				case SPECIMEN_BRUSH:
