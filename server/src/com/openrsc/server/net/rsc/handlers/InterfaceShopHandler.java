@@ -62,7 +62,15 @@ public final class InterfaceShopHandler implements PacketHandler {
 	private void buyShopItem(Player player, Shop shop, ItemDefinition def, int catalogID, int amount) {
 
 		// Normalize amount to the minimum shop count if we are trying to purchase more.
+		int originalAmount = amount;
 		amount = Math.min(amount, shop.getItemCount(catalogID));
+
+		if (amount <= 0) {
+			if (originalAmount > amount) {
+				player.message("You can't hold the objects you are trying to buy!");
+			}
+			return;
+		}
 
 		int totalBought = 0;
 		int totalMoneySpent = 0;
@@ -73,11 +81,11 @@ public final class InterfaceShopHandler implements PacketHandler {
 			totalMoneySpent = 0;
 			totalBought = 0;
 			for (int i = 0; i < amount; i++) {
-				if (checkPurchaseValidity(player, shop, def, catalogID, amount, totalMoneySpent)) {
+				if (checkPurchaseValidity(player, shop, def, catalogID, i, totalMoneySpent)) {
 					break;
 				}
 				totalMoneySpent += shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), i);
-				totalBought += 1;
+				totalBought++;
 			}
 
 			if (totalBought > 0) {
@@ -90,6 +98,12 @@ public final class InterfaceShopHandler implements PacketHandler {
 		// Not a stack.
 		else {
 			amount = Math.min(amount, player.getCarriedItems().getInventory().getFreeSlots());
+			if (amount <= 0) {
+				if (originalAmount > amount) {
+					player.message("You can't hold the objects you are trying to buy!");
+				}
+				return;
+			}
 			for (int i = 0; i < amount; i++) {
 				if (checkPurchaseValidity(player, shop, def, catalogID, totalBought, totalMoneySpent)) {
 					break;
@@ -129,13 +143,13 @@ public final class InterfaceShopHandler implements PacketHandler {
 			player.message("The shop has ran out of stock");
 			return true;
 		}
-		int price = shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), totalBought-1);
+		int price = shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), totalBought);
 		if (player.getCarriedItems().getInventory().countId(ItemId.COINS.id()) - totalMoneySpent < price) {
 			player.message("You don't have enough coins");
 			return true;
 		}
-		Item tempItem = new Item(catalogID);
-		if (!player.getCarriedItems().getInventory().canHold(tempItem, totalBought)) {
+		Item tempItem = new Item(catalogID, totalBought);
+		if (!player.getCarriedItems().getInventory().canHold(tempItem)) {
 			player.message("You can't hold the objects you are trying to buy!");
 			return true;
 		}
