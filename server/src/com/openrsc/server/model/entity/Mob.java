@@ -20,6 +20,7 @@ import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class Mob extends Entity {
@@ -68,7 +69,7 @@ public abstract class Mob extends Entity {
 	/**
 	 * Unique ID for event tracking.
 	 */
-	private String uuid;
+	private UUID uuid;
 	/**
 	 * Timer used to track start and end of combat
 	 */
@@ -502,7 +503,8 @@ public abstract class Mob extends Entity {
 	 * COMBAT
 	 */
 	public void startCombat(final Mob victim) {
-		synchronized (victim) {
+		Mob lock = this.getUUID().compareTo(victim.getUUID()) > 0 ? this : victim;
+		synchronized (lock) {
 			if (this.inCombat() || victim.inCombat()) return;
 			boolean gotUnderAttack = false;
 
@@ -726,11 +728,11 @@ public abstract class Mob extends Entity {
 		return rangeEventNpc;
 	}
 
-	public String getUUID() {
+	public UUID getUUID() {
 		return uuid;
 	}
 
-	public void setUUID(final String u) {
+	public void setUUID(final UUID u) {
 		this.uuid = u;
 	}
 

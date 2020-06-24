@@ -205,9 +205,9 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		return null;
 	}
 
-	public Npc getNpcByUUID(final String id) {
+	public Npc getNpcByUUID(final UUID id) {
 		for (final Npc npc : getNpcs()) {
-			if (npc.getUUID() == id) {
+			if (npc.getUUID().equals(id)) {
 				return npc;
 			}
 		}
@@ -261,7 +261,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	/**
 	 * Gets a player by their UUID
 	 */
-	public Player getPlayerUUID(final String uuid) {
+	public Player getPlayerUUID(final UUID uuid) {
 		for (final Player player : getPlayers()) {
 			if (player.getUUID().equals(uuid)) {
 				return player;
@@ -566,7 +566,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	public boolean registerPlayer(final Player player) {
 		if (!getPlayers().contains(player)) {
-			player.setUUID(UUID.randomUUID().toString());
+			player.setUUID(UUID.randomUUID());
 
 			player.setBusy(false);
 

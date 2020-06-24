@@ -67,7 +67,9 @@ public class GameEventHandler {
 			final UUID uuid = UUID.randomUUID();
 			eventsToAdd.putIfAbsent(className + uuid, event);
 		} else {
-			eventsToAdd.putIfAbsent(className + event.getOwner().getUUID() + (event.getOwner().isPlayer() ? "p" : "n"), event);
+			eventsToAdd.putIfAbsent(
+				className + event.getOwner().getUUID()
+					+ (event.getOwner().isPlayer() ? "p" : "n"), event);
 		}
 	}
 
