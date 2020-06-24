@@ -607,6 +607,7 @@ public class Npc extends Mob {
 					// Take 4 ticks away from the current time to get a 1 tick pause while the npc spawns,
 					// before it is allowed to attack (if aggressive).
 					teleport(loc.startX, loc.startY);
+					face(loc.startX, loc.startY - 1);
 					setCombatTimer(-getConfig().GAME_TICK * 4);
 					setRespawning(false);
 					getSkills().normalize();
