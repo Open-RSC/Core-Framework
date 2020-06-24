@@ -63,15 +63,15 @@ public class Npc extends Mob {
 	/**
 	 * Holds players that did damage with combat
 	 */
-	private Map<String, Integer> combatDamagers = new HashMap<String, Integer>();
+	private Map<UUID, Integer> combatDamagers = new HashMap<UUID, Integer>();
 	/**
 	 * Holds players that did damage with mage
 	 */
-	private Map<String, Integer> mageDamagers = new HashMap<String, Integer>();
+	private Map<UUID, Integer> mageDamagers = new HashMap<UUID, Integer>();
 	/**
 	 * Holds players that did damage with range
 	 */
-	private Map<String, Integer> rangeDamagers = new HashMap<String, Integer>();
+	private Map<UUID, Integer> rangeDamagers = new HashMap<UUID, Integer>();
 
 	public Npc(final World world, final int id, final int x, final int y) {
 		this(world, new NPCLoc(id, x, y, x - 5, x + 5, y - 5, y + 5));
@@ -117,7 +117,7 @@ public class Npc extends Mob {
 		/*
 		  Unique ID for event tracking.
 		 */
-		setUUID(UUID.randomUUID().toString());
+		setUUID(UUID.randomUUID());
 
 		getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());
 	}
@@ -182,7 +182,7 @@ public class Npc extends Mob {
 	 * @param ID uuid of mob
 	 * @return int
 	 */
-	private int getCombatDamageDoneBy(final String ID) {
+	private int getCombatDamageDoneBy(final UUID ID) {
 		if (!combatDamagers.containsKey(ID)) {
 			return 0;
 		}
@@ -195,8 +195,8 @@ public class Npc extends Mob {
 	 *
 	 * @return ArrayList<String>
 	 */
-	private ArrayList<String> getCombatDamagers() {
-		return new ArrayList<String>(combatDamagers.keySet());
+	private ArrayList<UUID> getCombatDamagers() {
+		return new ArrayList<UUID>(combatDamagers.keySet());
 	}
 
 	public int getCombatStyle() {
@@ -217,7 +217,7 @@ public class Npc extends Mob {
 	 * @param ID uuid of mob
 	 * @return int
 	 */
-	private int getMageDamageDoneBy(final String ID) {
+	private int getMageDamageDoneBy(final UUID ID) {
 		if (!mageDamagers.containsKey(ID)) {
 			return 0;
 		}
@@ -230,8 +230,8 @@ public class Npc extends Mob {
 	 *
 	 * @return ArrayList<String>
 	 */
-	private ArrayList<String> getMageDamagers() {
-		return new ArrayList<String>(mageDamagers.keySet());
+	private ArrayList<UUID> getMageDamagers() {
+		return new ArrayList<UUID>(mageDamagers.keySet());
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class Npc extends Mob {
 	 * @param ID uuid of mob
 	 * @return int
 	 */
-	private int getRangeDamageDoneBy(final String ID) {
+	private int getRangeDamageDoneBy(final UUID ID) {
 		if (!rangeDamagers.containsKey(ID)) {
 			return 0;
 		}
@@ -253,8 +253,8 @@ public class Npc extends Mob {
 	 *
 	 * @return ArrayList<String>
 	 */
-	private ArrayList<String> getRangeDamagers() {
-		return new ArrayList<String>(rangeDamagers.keySet());
+	private ArrayList<UUID> getRangeDamagers() {
+		return new ArrayList<UUID>(rangeDamagers.keySet());
 	}
 
 	public int getArmourPoints() {
@@ -304,7 +304,7 @@ public class Npc extends Mob {
 			}
 		}
 
-		String ownerId = handleXpDistribution(mob);
+		UUID ownerId = handleXpDistribution(mob);
 		owner = getWorld().getPlayerUUID(ownerId);
 
 		if (owner == null) {
@@ -509,13 +509,13 @@ public class Npc extends Mob {
 	 * @param attacker the person that "finished off" the npc
 	 * @return the player who did the most damage / should get the loot
 	 */
-	private String handleXpDistribution(final Mob attacker) {
+	private UUID handleXpDistribution(final Mob attacker) {
 		final int totalCombatXP = Formulae.combatExperience(this);
-		String UUIDWithMostDamage = attacker.getUUID();
+		UUID UUIDWithMostDamage = attacker.getUUID();
 		int currentHighestDamage = 0;
 
 		// Melee damagers
-		for (String ID : getCombatDamagers()) {
+		for (UUID ID : getCombatDamagers()) {
 			final int damageDoneByPlayer = getCombatDamageDoneBy(ID);
 
 			if (damageDoneByPlayer > currentHighestDamage) {
@@ -550,7 +550,7 @@ public class Npc extends Mob {
 		}
 
 		// Ranged damagers
-		for (String ID : getRangeDamagers()) {
+		for (UUID ID : getRangeDamagers()) {
 			int damageDoneByPlayer = getRangeDamageDoneBy(ID);
 			if (damageDoneByPlayer > currentHighestDamage) {
 				UUIDWithMostDamage = ID;
@@ -566,7 +566,7 @@ public class Npc extends Mob {
 		}
 
 		// Magic damagers
-		for (String ID : getMageDamagers()) {
+		for (UUID ID : getMageDamagers()) {
 			int dmgDoneByPlayer = getMageDamageDoneBy(ID);
 
 			if (dmgDoneByPlayer > currentHighestDamage) {
