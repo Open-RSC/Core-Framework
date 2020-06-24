@@ -2,7 +2,7 @@ package com.openrsc.server.content.market;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.content.market.task.*;
-import com.openrsc.server.database.struct.ExpiredAuction;
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -25,8 +25,6 @@ public class Market implements Runnable {
 
 	private final World world;
 
-	private final MarketDatabase marketDatabase;
-
 	private Boolean running;
 
 	private ArrayList<MarketItem> auctionItems;
@@ -40,7 +38,6 @@ public class Market implements Runnable {
 		this.auctionItems = new ArrayList<>();
 		this.auctionTaskQueue = new LinkedBlockingQueue<>();
 		this.refreshRequestTasks = new LinkedBlockingQueue<>();
-		this.marketDatabase = new MarketDatabase(this);
 		this.running = false;
 	}
 
@@ -75,39 +72,23 @@ public class Market implements Runnable {
 
 	private void checkAndRemoveExpiredItems() {
 		try {
-			// This is used to handle game logic
 			final LinkedList<MarketItem> expiredItems = new LinkedList<>();
-
-			// This is used to save to the database.
-			final ArrayList<ExpiredAuction> expiredAuctions = new ArrayList<ExpiredAuction>();
 
 			for (final MarketItem auction : auctionItems) {
 				if (auction.hasExpired()) {
 					expiredItems.add(auction);
-
-					// Create an entry to be saved to the database
-					final ExpiredAuction expiredAuction = new ExpiredAuction();
-					expiredAuction.item_id = auction.getCatalogID();
-					expiredAuction.item_amount = auction.getAmountLeft();
-					expiredAuction.time = System.currentTimeMillis() / 1000;
-					expiredAuction.playerID = auction.getSeller();
-					expiredAuction.explanation = "Expired";
-					expiredAuctions.add(expiredAuction);
+					getWorld().getServer().getDatabase().addExpiredAuction("Expired",
+						auction.getCatalogID(), auction.getAmount(), auction.getSeller());
 				}
 			}
 
 			if (expiredItems.size() != 0) {
-				// Save to the database
-				getWorld().getServer().getDatabase()
-					.addExpiredAuction(expiredAuctions.toArray(new ExpiredAuction[expiredAuctions.size()]));
-
-				// Preform game logic
 				for (final MarketItem expiredItem : expiredItems) {
 					final int itemIndex = expiredItem.getCatalogID();
 					final int amount = expiredItem.getAmountLeft();
 
 					final Player sellerPlayer = getWorld().getPlayerID(expiredItem.getSeller());
-					getMarketDatabase().setSoldOut(expiredItem);
+					getWorld().getServer().getDatabase().setSoldOut(expiredItem);
 
 					if (sellerPlayer != null) {
 						ItemDefinition def = sellerPlayer.getWorld().getServer().getEntityHandler().getItemDef(itemIndex);
@@ -146,10 +127,14 @@ public class Market implements Runnable {
 	}
 
 	private void processUpdateAuctionItemCache() {
-		final int activeAuctionCount = getMarketDatabase().getAuctionCount();
-		if (activeAuctionCount == auctionItems.size()) return;
-		auctionItems.clear();
-		auctionItems = getMarketDatabase().getAuctionItemsOnSale();
+		try {
+			final int activeAuctionCount = getWorld().getServer().getDatabase().auctionCount();
+			if (activeAuctionCount == auctionItems.size()) return;
+			auctionItems.clear();
+			auctionItems = getWorld().getServer().getDatabase().getAuctionItems();
+		} catch (GameDatabaseException e) {
+			LOGGER.catching(e);
+		}
 	}
 
 	@Override
@@ -192,9 +177,5 @@ public class Market implements Runnable {
 
 	public World getWorld() {
 		return world;
-	}
-
-	public MarketDatabase getMarketDatabase() {
-		return marketDatabase;
 	}
 }

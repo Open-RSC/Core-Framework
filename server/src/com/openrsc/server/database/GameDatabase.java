@@ -4,6 +4,8 @@ import com.openrsc.server.Server;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.achievement.AchievementReward;
 import com.openrsc.server.content.achievement.AchievementTask;
+import com.openrsc.server.content.market.CollectibleItem;
+import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.database.struct.*;
 import com.openrsc.server.external.*;
@@ -166,7 +168,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract void queryUpdateClanMember(final ClanMember clanMember) throws GameDatabaseException;
 
-	protected abstract void queryExpiredAuction(final ExpiredAuction[] expiredAuctions) throws GameDatabaseException;
+	protected abstract void queryExpiredAuction(final ExpiredAuction expiredAuction) throws GameDatabaseException;
 	protected abstract ExpiredAuction[] queryCollectibleItems(final int playerId) throws GameDatabaseException;
 	protected abstract void queryCollectItems(final ExpiredAuction[] claimedItems) throws GameDatabaseException;
 	protected abstract void queryNewAuction(final AuctionItem auctionItem) throws GameDatabaseException;
@@ -595,19 +597,54 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		queryUpdateClanMember(clanMember);
 	}
 
-	public void addExpiredAuction(final ExpiredAuction[] expiredAuctions) throws GameDatabaseException {
-		queryExpiredAuction(expiredAuctions);
+	public void addExpiredAuction(final String explanation, final int itemIndex, final int amount,
+								  final int playerID) throws GameDatabaseException {
+
+		final String finalExplanation = explanation.replaceAll("'", "");
+
+		// Need to store in an array to pass to the database function;
+		final ExpiredAuction[] expiredAuctions = new ExpiredAuction[1];
+
+		final ExpiredAuction expiredAuction = new ExpiredAuction();
+		expiredAuction.item_id = itemIndex;
+		expiredAuction.item_amount = amount;
+		expiredAuction.time = System.currentTimeMillis() / 1000;
+		expiredAuction.playerID = playerID;
+		expiredAuction.explanation = finalExplanation;
+
+		queryExpiredAuction(expiredAuction);
 	}
 
-	public ExpiredAuction[] getCollectibleItems(final int playerId) throws GameDatabaseException {
-		return queryCollectibleItems(playerId);
+	public ArrayList<CollectibleItem> getCollectibleItems(final int playerId) throws GameDatabaseException {
+		final ArrayList<CollectibleItem> list = new ArrayList<>();
+		final ExpiredAuction expiredAuctions[] = queryCollectibleItems(playerId);
+		for (ExpiredAuction collectible : expiredAuctions) {
+			CollectibleItem item = new CollectibleItem();
+			item.claim_id = collectible.claim_id;
+			item.item_id = collectible.item_id;
+			item.item_amount = collectible.item_amount;
+			item.playerID = collectible.playerID;
+			item.explanation = collectible.explanation;
+			list.add(item);
+		}
+		return list;
 	}
 
 	public void collectItems(final ExpiredAuction[] collectedItems) throws GameDatabaseException {
 		queryCollectItems(collectedItems);
 	}
 
-	public void newAuction(final AuctionItem auctionItem) throws GameDatabaseException {
+	public void newAuction(final MarketItem item) throws GameDatabaseException {
+		final AuctionItem auctionItem = new AuctionItem();
+		auctionItem.itemID = item.getCatalogID();
+		auctionItem.amount = item.getAmount();
+		auctionItem.amount_left = item.getAmountLeft();
+		auctionItem.price = item.getPrice();
+		auctionItem.seller = item.getSeller();
+		auctionItem.seller_username = item.getSellerName();
+		auctionItem.buyer_info = item.getBuyers();
+		auctionItem.time = item.getTime();
+
 		queryNewAuction(auctionItem);
 	}
 
@@ -623,19 +660,45 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		return queryPlayerAuctionCount(playerId);
 	}
 
-	public AuctionItem getAuctionItem(final int auctionId) throws GameDatabaseException {
-		return queryAuctionItem(auctionId);
+	public MarketItem getAuctionItem(final int auctionId) throws GameDatabaseException {
+		MarketItem retVal = null;
+		AuctionItem auctionItem = queryAuctionItem(auctionId);
+		if (auctionItem != null) {
+			retVal = new MarketItem(auctionItem.auctionID, auctionItem.itemID, auctionItem.amount,
+				auctionItem.amount_left, auctionItem.price, auctionItem.seller, auctionItem.seller_username,
+				auctionItem.buyer_info, auctionItem.time);
+		}
+		return retVal;
 	}
 
-	public AuctionItem[] getAuctionItems() throws GameDatabaseException {
-		return queryAuctionItems();
+	public ArrayList<MarketItem> getAuctionItems() throws GameDatabaseException {
+		final ArrayList<MarketItem> marketItems = new ArrayList<>();
+
+		final AuctionItem auctionItems[] = queryAuctionItems();
+		for (AuctionItem item : auctionItems) {
+			MarketItem marketItem = new MarketItem(item.auctionID, item.itemID, item.amount, item.amount_left,
+				item.price, item.seller,item.seller_username,item.buyer_info,item.time);
+			marketItems.add(marketItem);
+		}
+		return marketItems;
 	}
 
-	public void setSoldOut(AuctionItem auctionItem) throws GameDatabaseException {
+	public void setSoldOut(MarketItem item) throws GameDatabaseException {
+		final AuctionItem auctionItem = new AuctionItem();
+		auctionItem.amount_left = item.getAmountLeft();
+		auctionItem.sold_out = 1;
+		auctionItem.buyer_info = item.getBuyers();
+		auctionItem.auctionID = item.getAuctionID();
+
 		querySetSoldOut(auctionItem);
 	}
 
-	public void updateAuction(AuctionItem auctionItem) throws GameDatabaseException {
+	public void updateAuction(final MarketItem item) throws GameDatabaseException {
+		final AuctionItem auctionItem = new AuctionItem();
+		auctionItem.amount_left = item.getAmountLeft();
+		auctionItem.price = item.getPrice();
+		auctionItem.buyer_info = item.getBuyers();
+		auctionItem.auctionID = item.getAuctionID();
 		queryUpdateAuction(auctionItem);
 	}
 

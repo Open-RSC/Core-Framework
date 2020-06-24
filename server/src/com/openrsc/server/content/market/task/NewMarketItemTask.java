@@ -2,15 +2,23 @@ package com.openrsc.server.content.market.task;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.market.MarketItem;
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.DiscordService;
 import com.openrsc.server.net.rsc.ActionSender;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
 public class NewMarketItemTask extends MarketTask {
+
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private MarketItem newItem;
 	private Player owner;
@@ -95,12 +103,12 @@ public class NewMarketItemTask extends MarketTask {
 		for (Item x : this.itemsToAuction) {
 			owner.getCarriedItems().remove(x);
 		}
-
-		if (owner.getWorld().getMarket().getMarketDatabase().add(newItem)) {
-			//ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ Auction has been listed % " + newItem.getAmount() + "x @yel@" + def.getName() + " @whi@for @yel@" + newItem.getPrice() + "gp % @whi@Completed auction fee: @gre@" + feeCost + "gp", false);
-			ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ Auction has been listed % " + newItem.getAmount() + "x @yel@" + def.getName() + " @whi@for @yel@" + newItem.getPrice() + "gp", false);
-			updateDiscord = true;
-		} else {
+		try {
+		owner.getWorld().getServer().getDatabase().newAuction(newItem);
+		//ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ Auction has been listed % " + newItem.getAmount() + "x @yel@" + def.getName() + " @whi@for @yel@" + newItem.getPrice() + "gp % @whi@Completed auction fee: @gre@" + feeCost + "gp", false);
+		ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ Auction has been listed % " + newItem.getAmount() + "x @yel@" + def.getName() + " @whi@for @yel@" + newItem.getPrice() + "gp", false);
+		updateDiscord = true;
+		} catch (GameDatabaseException e) {
 			Item item = new Item(newItem.getCatalogID(), newItem.getAmount());
 			if (item.getDef(owner.getWorld()).isStackable()) {
 				for (int i = 0; i < newItem.getAmount(); i++) {
@@ -110,6 +118,7 @@ public class NewMarketItemTask extends MarketTask {
 				owner.getCarriedItems().getInventory().add(new Item(newItem.getCatalogID(), newItem.getAmount()));
 			}
 			ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ Failed to add item to Auction. % Item(s) have been returned to your inventory.", false);
+			LOGGER.catching(e);
 		}
 		owner.getWorld().getMarket().addRequestOpenAuctionHouseTask(owner);
 		if (updateDiscord) {

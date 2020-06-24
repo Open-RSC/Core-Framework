@@ -26,15 +26,15 @@ public class PlayerCollectItemsTask extends MarketTask {
 
 	@Override
 	public void doTask() {
-		ArrayList<CollectibleItem> list = player.getWorld().getMarket().getMarketDatabase().getCollectibleItemsFor(player.getDatabaseID());
-
-		if (list.size() == 0) {
-			player.message("You have no items to collect.");
-			return;
-		}
-
-		StringBuilder items = new StringBuilder("Following items have been inserted to your bank: % ");
 		try {
+			ArrayList<CollectibleItem> list = player.getWorld().getServer().getDatabase().getCollectibleItems(player.getDatabaseID());
+
+			if (list.size() == 0) {
+				player.message("You have no items to collect.");
+				return;
+			}
+
+			StringBuilder items = new StringBuilder("Following items have been inserted to your bank: % ");
 			ArrayList<ExpiredAuction> dbCollectibleItems = new ArrayList<>();
 			for (CollectibleItem i : list) {
 				ExpiredAuction dbItem = new ExpiredAuction();
@@ -52,9 +52,9 @@ public class PlayerCollectItemsTask extends MarketTask {
 			player.getWorld().getServer().getDatabase()
 				.collectItems(dbCollectibleItems.toArray(new ExpiredAuction[dbCollectibleItems.size()]));
 
+			ActionSender.sendBox(player, items.toString(), true);
 		} catch (GameDatabaseException e) {
 			LOGGER.catching(e);
 		}
-		ActionSender.sendBox(player, items.toString(), true);
 	}
 }

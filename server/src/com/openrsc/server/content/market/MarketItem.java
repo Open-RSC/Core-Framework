@@ -11,7 +11,7 @@ public class MarketItem {
 	private long time;
 	private String sellerName;
 
-	MarketItem(int auctionID, int catalogID, int amount, int amount_left, int price, int seller, String sellerName, String buyers, long t) {
+	public MarketItem(int auctionID, int catalogID, int amount, int amount_left, int price, int seller, String sellerName, String buyers, long t) {
 		this.auctionID = auctionID;
 		this.catalogID = catalogID;
 		this.amount = amount;
