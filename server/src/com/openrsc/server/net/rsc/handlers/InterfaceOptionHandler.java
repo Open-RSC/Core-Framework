@@ -205,6 +205,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 
 			// Auction
 			case 10:
+				if (!player.getConfig().SPAWN_AUCTION_NPCS) return;
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
 					player.message("As an Iron Man, you cannot use the Auction.");
