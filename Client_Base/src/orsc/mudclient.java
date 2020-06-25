@@ -5500,7 +5500,10 @@ public final class mudclient implements Runnable {
 					}
 				} else if (this.inputX_Action == InputXAction.SHOP_BUY) {
 					try {
-						int id = this.shopCategoryID[this.shopSelectedItemIndex];
+						int id = -1;
+						if (this.shopSelectedItemIndex > -1) {
+							id = this.shopCategoryID[this.shopSelectedItemIndex];
+						}
 						if (id != -1) {
 							if (str.length() > 10) {
 								str = str.substring(str.length() - 10);
@@ -5522,7 +5525,10 @@ public final class mudclient implements Runnable {
 					}
 				} else if (this.inputX_Action == InputXAction.SHOP_SELL) {
 					try {
-						int id = this.shopCategoryID[this.shopSelectedItemIndex];
+						int id = -1;
+						if (this.shopSelectedItemIndex > -1) {
+							id = this.shopCategoryID[this.shopSelectedItemIndex];
+						}
 						if (id != -1) {
 							if (str.length() > 10) {
 								str = str.substring(str.length() - 10);
