@@ -14294,6 +14294,8 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().finishPacket();
 						clientPort.setTitle(Config.getServerName());
 						this.logoutTimeout = 1000;
+						modMenu = false;
+						developerMenu = false;
 						// this.createLoginPanels(3845);
 					}
 				} else {
