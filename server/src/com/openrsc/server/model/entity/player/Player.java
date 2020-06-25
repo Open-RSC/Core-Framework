@@ -1873,15 +1873,23 @@ public final class Player extends Mob {
 		}
 	}
 
-	public void addToPacketQueue(final Packet e) {
+	public void addToPacketQueue(final Packet packet) {
 		ping();
-		if ((e.getID() == OpcodeIn.ITEM_COMMAND.getOpcode() || e.getID() == OpcodeIn.NPC_TALK_TO.getOpcode()) && activePackets.contains(e.getID())) {
+		int packetID = packet.getID();
+		if ((packetID != OpcodeIn.ITEM_USE_ITEM.getOpcode()
+				&& packetID != OpcodeIn.BANK_DEPOSIT.getOpcode()
+				&& packetID != OpcodeIn.BANK_WITHDRAW.getOpcode()
+				&& packetID != OpcodeIn.SHOP_BUY.getOpcode()
+				&& packetID != OpcodeIn.SHOP_SELL.getOpcode()
+				&& packetID != OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER.getOpcode()
+				&& packetID != OpcodeIn.DUEL_OFFER_ITEM.getOpcode())
+			&& activePackets.contains(packetID)) {
 			return;
 		}
 		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
 			synchronized (incomingPackets) {
-				incomingPackets.add(e);
-				activePackets.add(e.getID());
+				incomingPackets.add(packet);
+				activePackets.add(packetID);
 			}
 		}
 	}
