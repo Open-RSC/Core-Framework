@@ -1882,7 +1882,9 @@ public final class Player extends Mob {
 				&& packetID != OpcodeIn.SHOP_BUY.getOpcode()
 				&& packetID != OpcodeIn.SHOP_SELL.getOpcode()
 				&& packetID != OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER.getOpcode()
-				&& packetID != OpcodeIn.DUEL_OFFER_ITEM.getOpcode())
+				&& packetID != OpcodeIn.DUEL_OFFER_ITEM.getOpcode()
+				&& packetID != OpcodeIn.PRAYER_ACTIVATED.getOpcode()
+				&& packetID != OpcodeIn.PRAYER_DEACTIVATED.getOpcode())
 			&& activePackets.contains(packetID)) {
 			return;
 		}
