@@ -42,6 +42,9 @@ public final class InterfaceShopHandler implements PacketHandler {
 		int catalogID = packet.readShort();
 		int shopAmount = packet.readUnsignedShort();
 		int amount = packet.readUnsignedShort();
+
+		if (amount <= 0) return;
+
 		ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(catalogID);
 		if (def.isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
@@ -167,13 +170,16 @@ public final class InterfaceShopHandler implements PacketHandler {
 			return;
 		}
 
-		// TODO: How to handle this case?
-		if (amount < 0) return;
-
 		int totalMoney = 0;
 		int totalSold = 0;
 
 		amount = Math.min(amount, player.getCarriedItems().getInventory().countId(catalogID, Optional.empty()));
+
+		if (amount <= 0) {
+			player.message("You don't have that many items");
+			return;
+		}
+
 		Item tempItem = new Item(catalogID);
 		tempItem.getItemStatus().setNoted(player.getCarriedItems().getInventory().countId(catalogID, Optional.of(true)) > 0);
 		if (tempItem.getDef(player.getWorld()).isStackable() || tempItem.getNoted()) {
