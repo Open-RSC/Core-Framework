@@ -12,10 +12,6 @@ import java.util.List;
 
 public final class RSCProtocolDecoder extends ByteToMessageDecoder implements AttributeMap {
 
-	public RSCProtocolDecoder() {
-		setSingleDecode(true);
-	}
-
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf buffer, List<Object> out) throws Exception {
 		if (buffer.readableBytes() > 2) {
