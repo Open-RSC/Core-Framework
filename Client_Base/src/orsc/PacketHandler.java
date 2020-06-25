@@ -1155,8 +1155,10 @@ public class PacketHandler {
 			);
 		}
 
-		props.setProperty("SERVER_IP", ClientPort.loadIP()); // 0
-		props.setProperty("SERVER_PORT", String.valueOf(ClientPort.loadPort())); // 0
+		if (!mc.gotInitialConfigs || Config.isAndroid()) {
+			props.setProperty("SERVER_IP", ClientPort.loadIP()); // 0
+			props.setProperty("SERVER_PORT", String.valueOf(ClientPort.loadPort())); // 0
+		}
 		props.setProperty("SERVER_NAME", serverName); // 1
 		props.setProperty("SERVER_NAME_WELCOME", serverNameWelcome); // 2
 		props.setProperty("S_PLAYER_LEVEL_LIMIT", Integer.toString(playerLevelLimit)); // 3
