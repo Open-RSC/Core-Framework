@@ -20,7 +20,7 @@ import java.util.Optional;
 public class PlayerTradeHandler implements PacketHandler {
 
 	private boolean busy(Player player) {
-		return player.isBusy() || player.isRanging() || player.accessingBank() || player.getDuel().isDuelActive();
+		return player.isBusy() || player.isRanging() || player.accessingBank() || player.getDuel().isDuelActive() || player.inCombat();
 	}
 
 	public void handlePacket(Packet packet, Player player) throws Exception {

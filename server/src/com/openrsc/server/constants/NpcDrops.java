@@ -1605,7 +1605,10 @@ public class NpcDrops {
 	}
 
 	private void createCustomQuestDrops() {
-		this.npcDrops.getOrDefault(NpcId.BALROG.id(), new DropTable("Balrog (809)")).addItemDrop(ItemId.TEDDY_HEAD.id(), 1, 0);
+		DropTable balrog = new DropTable("Balrog (809)");
+		balrog.addItemDrop(ItemId.TEDDY_HEAD.id(), 1, 0);
+		this.npcDrops.put(NpcId.BALROG.id(), balrog);
+		this.ashesNpcs.add(NpcId.BALROG.id());
 	}
 
 	/** Helpers **/

@@ -45,6 +45,12 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 				player.message("As an Iron Man, you cannot use the Auction.");
 				return;
 			}
+			if (player.getTotalLevel() < 100) {
+				npcsay(player, npc, "Sorry, you don't seem trustworthy enough yet.");
+				delay();
+				mes("You must have over 100 total skill to use the auction house.");
+				return;
+			}
 			if(validatebankpin(player)) {
 				npcsay(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
 				player.setAttribute("auctionhouse", true);
@@ -78,6 +84,10 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
+		if (player.getTotalLevel() < 100) {
+			player.message("You must have over 100 total skill to use the auction house.");
+			return;
+		}
 		if (n.getID() == AUCTIONEER) {
 			Npc auctioneer = player.getWorld().getNpc(AUCTIONEER,
 				player.getX() - 2, player.getX() + 2,
