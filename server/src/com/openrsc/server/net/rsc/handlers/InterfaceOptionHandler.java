@@ -293,7 +293,6 @@ public class InterfaceOptionHandler implements PacketHandler {
 	private void auctionBuyItem(Player player, Packet packet) {
 		int auctionBuyID = packet.readInt();
 		int amountBuy = packet.readInt();
-
 		if (System.currentTimeMillis() - player.getLastExchangeTime() < 3000) {
 			ActionSender.sendBox(player, "@ora@[Auction House - Warning] % @whi@ You are acting too quickly, please wait 3 seconds.", false);
 			return;
