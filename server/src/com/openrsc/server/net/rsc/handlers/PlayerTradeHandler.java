@@ -11,6 +11,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.database.impl.mysql.queries.logging.TradeLog;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.List;
@@ -238,6 +239,11 @@ public class PlayerTradeHandler implements PacketHandler {
 								return;
 							}
 
+							if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null
+								|| affectedPlayer.getWorld().getPlayer(DataConversions.usernameToHash(affectedPlayer.getUsername())) == null) {
+								break;
+							}
+
 							for (Item item : myOffer) {
 								Item affectedItem = player.getCarriedItems().getInventory().get(item);
 								if (affectedItem == null) {
@@ -280,10 +286,16 @@ public class PlayerTradeHandler implements PacketHandler {
 							}
 
 							for (Item item : myOffer) {
+								if (affectedPlayer.getWorld().getPlayer(DataConversions.usernameToHash(affectedPlayer.getUsername())) == null) {
+									break;
+								}
 								item = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
 								affectedPlayer.getCarriedItems().getInventory().add(item);
 							}
 							for (Item item : theirOffer) {
+								if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
+									break;
+								}
 								item = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
 								player.getCarriedItems().getInventory().add(item);
 							}

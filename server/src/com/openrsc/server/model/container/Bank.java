@@ -64,6 +64,10 @@ public class Bank {
 					break;
 				}
 
+				if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
+					return false;
+				}
+
 				// There is none of this item in the bank yet - create a new stack.
 				if (existingStack == null) {
 					// Make sure they have room in the bank
@@ -159,6 +163,10 @@ public class Bank {
 				// Check that there's enough in the stack
 				if (bankItem.getAmount() < amount)
 					amount = bankItem.getAmount();
+
+				if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
+					return false;
+				}
 
 				// We are removing all of the itemID from the bank
 				if (bankItem.getAmount() == amount) {

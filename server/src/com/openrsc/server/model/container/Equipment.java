@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.EquipRequest;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -297,6 +298,10 @@ public class Equipment {
 				if (toEquip == null)
 					return false;
 
+				if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
+					return false;
+				}
+
 				// Remove the items from their containers.
 				for (Item item : items) {
 					remove(item, item.getAmount(), updateClient); // Remove from equipment
@@ -355,6 +360,10 @@ public class Equipment {
 					player.getBank().getFirstIndexById(request.item.getCatalogId())
 				);
 				if (toEquip == null) {
+					return false;
+				}
+
+				if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
 					return false;
 				}
 

@@ -188,6 +188,11 @@ public class Default implements DefaultHandler,
 
 		GroundItem groundItem = new GroundItem(player.getWorld(), item.getCatalogId(), player.getX(), player.getY(), removingThisIteration, player, item.getNoted());
 		ActionSender.sendSound(player, "dropobject");
+
+		if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
+			return;
+		}
+
 		player.getWorld().registerItem(groundItem, config().GAME_TICK * 300);
 		player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped " + item.getDef(player.getWorld()).getName() + " x"
 			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));

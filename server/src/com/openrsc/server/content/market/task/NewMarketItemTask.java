@@ -8,6 +8,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.DiscordService;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -74,6 +75,10 @@ public class NewMarketItemTask extends MarketTask {
 			}
 		}*/
 
+		if (owner.getWorld().getPlayer(DataConversions.usernameToHash(owner.getUsername())) == null) {
+			return;
+		}
+
 		// Loop through inventory until quantity has been added.
 		this.itemsToAuction = new ArrayList<>();
 		int totalAuctionCount = 0;
@@ -103,6 +108,7 @@ public class NewMarketItemTask extends MarketTask {
 		for (Item x : this.itemsToAuction) {
 			owner.getCarriedItems().remove(x);
 		}
+
 		try {
 		owner.getWorld().getServer().getDatabase().newAuction(newItem);
 		//ActionSender.sendBox(owner, "@gre@[Auction House - Success] % @whi@ Auction has been listed % " + newItem.getAmount() + "x @yel@" + def.getName() + " @whi@for @yel@" + newItem.getPrice() + "gp % @whi@Completed auction fee: @gre@" + feeCost + "gp", false);
@@ -120,6 +126,7 @@ public class NewMarketItemTask extends MarketTask {
 			ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ Failed to add item to Auction. % Item(s) have been returned to your inventory.", false);
 			LOGGER.catching(e);
 		}
+		owner.save();
 		owner.getWorld().getMarket().addRequestOpenAuctionHouseTask(owner);
 		if (updateDiscord) {
 			DiscordService ds = owner.getWorld().getServer().getDiscordService();

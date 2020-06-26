@@ -278,7 +278,7 @@ public class PlayerDuelHandler implements PacketHandler {
 							attacker = affectedPlayer;
 							opponent = getPlayer();
 						}
-						//TEST
+
 						attacker.getDuel().setDuelActive(true);
 						opponent.getDuel().setDuelActive(true);
 
