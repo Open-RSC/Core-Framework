@@ -65,6 +65,7 @@ public final class Player extends Mob {
 	// so everything is multiplied by 2 to avoid decimals
 	private final int KITTEN_ACTIVITY_THRESHOLD = 50;
 	private int bankSize = 192; //Maximum bank items allowed
+	private int totalLevel = 0;
 	private Queue<PrivateMessage> privateMessageQueue = new LinkedList<PrivateMessage>();
 	private long lastSave = System.currentTimeMillis();
 	private int actionsMouseStill = 0;
@@ -115,6 +116,7 @@ public final class Player extends Mob {
 	private int incorrectSleepTries = 0;
 	private volatile int questionOption;
 	private List<PluginTask> ownedPlugins = Collections.synchronizedList(new ArrayList<>());
+	private long lastExchangeTime = System.currentTimeMillis();
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -587,7 +589,8 @@ public final class Player extends Mob {
 
 	public boolean canLogout() {
 		return !isBusy() && System.currentTimeMillis() - getCombatTimer() > 10000
-			&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000;
+			&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000
+			&& System.currentTimeMillis() - getLastExchangeTime() > 5000;
 	}
 
 	public boolean canReport() {
@@ -3149,5 +3152,21 @@ public final class Player extends Mob {
 			}
 		}
 		return false;
+	}
+
+	public int getTotalLevel() {
+		return this.totalLevel;
+	}
+
+	public void setTotalLevel(int total) {
+		this.totalLevel = total;
+	}
+
+	public long getLastExchangeTime() {
+		return lastExchangeTime;
+	}
+
+	public void setLastExchangeTime() {
+		this.lastExchangeTime = System.currentTimeMillis();
 	}
 }

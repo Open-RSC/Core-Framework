@@ -14,6 +14,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -96,6 +97,10 @@ public class Inventory {
 				ItemDefinition itemDef = itemToAdd.getDef(player.getWorld());
 				if (itemDef == null)
 					return false;
+
+				if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
+					return false;
+				}
 
 				// Confirm an existing stack to add the item to, if item is stackable.
 				Item existingStack = null;

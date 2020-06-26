@@ -8,6 +8,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.DiscordService;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,6 +54,10 @@ public class BuyMarketItemTask extends MarketTask {
 
 			if (playerBuyer.getCarriedItems().getInventory().countId(ItemId.COINS.id()) < auctionPrice) {
 				ActionSender.sendBox(playerBuyer, "@ora@[Auction House - Warning] % @whi@ You don't have enough coins!", false);
+				return;
+			}
+
+			if (playerBuyer.getWorld().getPlayer(DataConversions.usernameToHash(playerBuyer.getUsername())) == null) {
 				return;
 			}
 

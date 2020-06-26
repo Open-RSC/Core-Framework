@@ -7,6 +7,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.DiscordService;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,6 +31,9 @@ public class CancelMarketItemTask extends MarketTask {
 			if (item != null) {
 				int itemIndex = item.getCatalogID();
 				int amount = item.getAmountLeft();
+				if (owner.getWorld().getPlayer(DataConversions.usernameToHash(owner.getUsername())) == null) {
+					return;
+				}
 				ItemDefinition def = owner.getWorld().getServer().getEntityHandler().getItemDef(itemIndex);
 				if (!owner.getCarriedItems().getInventory().full() && (!def.isStackable() && owner.getCarriedItems().getInventory().size() + amount <= 30)) {
 					owner.getWorld().getServer().getDatabase().cancelAuction(item.getAuctionID());
@@ -46,6 +50,8 @@ public class CancelMarketItemTask extends MarketTask {
 					updateDiscord = true;
 				} else
 					ActionSender.sendBox(owner, "@red@[Auction House - Error] % @whi@ Unable to cancel auction! % % @red@Reason: @whi@No space left in your bank or inventory.", false);
+
+				owner.save();
 			}
 			owner.getWorld().getMarket().addRequestOpenAuctionHouseTask(owner);
 			if (updateDiscord) {

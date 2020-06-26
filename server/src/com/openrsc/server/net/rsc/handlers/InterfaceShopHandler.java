@@ -11,6 +11,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
+import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
@@ -48,6 +49,10 @@ public final class InterfaceShopHandler implements PacketHandler {
 		ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(catalogID);
 		if (def.isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
+			return;
+		}
+
+		if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
 			return;
 		}
 
