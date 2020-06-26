@@ -69,13 +69,13 @@ public class BuyMarketItemTask extends MarketTask {
 				else
 					playerBuyer.getCarriedItems().getInventory().add(new Item(item.getCatalogID(), amount, !def.isStackable()));
 				playerBuyer.getCarriedItems().remove(new Item(ItemId.COINS.id(), auctionPrice));
-				ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been placed to your inventory.", false);
+				ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been added to your inventory.", false);
 				updateDiscord = true;
 				playerBuyer.save();
 			} else if (!playerBuyer.getBank().full()) {
 				playerBuyer.getBank().add(new Item(item.getCatalogID(), amount), false);
 				playerBuyer.getCarriedItems().remove(new Item(ItemId.COINS.id(), auctionPrice));
-				ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been placed to your bank.", false);
+				ActionSender.sendBox(playerBuyer, "@gre@[Auction House - Success] % @whi@ The item has been added to your bank.", false);
 				updateDiscord = true;
 				playerBuyer.save();
 			} else {

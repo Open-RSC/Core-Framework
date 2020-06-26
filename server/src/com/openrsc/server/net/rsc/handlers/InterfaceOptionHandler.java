@@ -259,12 +259,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 		}
 
 		if (player.getTotalLevel() < 100) {
-			player.message("You must have 100 total skill before using the auction house.");
-			return;
-		}
-
-		if (player.getLastExchangeTime() < 5000) {
-			player.message("You may only execute one auction house task every 5 seconds.");
+			ActionSender.sendBox(player,"You must have 100 total skill before using the auction house.", false);
 			return;
 		}
 
@@ -299,11 +294,10 @@ public class InterfaceOptionHandler implements PacketHandler {
 		int auctionBuyID = packet.readInt();
 		int amountBuy = packet.readInt();
 
-		if (System.currentTimeMillis() - player.getLastExchangeTime() < 5000) {
-			ActionSender.sendBox(player, "@ora@[Auction House - Warning] % @whi@ You are acting too quickly, please wait 5 seconds.", false);
+		if (System.currentTimeMillis() - player.getLastExchangeTime() < 3000) {
+			ActionSender.sendBox(player, "@ora@[Auction House - Warning] % @whi@ You are acting too quickly, please wait 3 seconds.", false);
 			return;
 		}
-		player.setAttribute("ah_buy_item", System.currentTimeMillis());
 
 		player.getWorld().getMarket().addBuyAuctionItemTask(player, auctionBuyID, amountBuy);
 	}
@@ -312,8 +306,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 		int catalogID = packet.readInt();
 		int amount = packet.readInt();
 		int price = packet.readInt();
-		if (System.currentTimeMillis() - player.getLastExchangeTime() < 5000) {
-			ActionSender.sendBox(player,"@ora@[Auction House - Warning]@whi@ You are acting too quickly, please wait 5 seconds.", false);
+		if (System.currentTimeMillis() - player.getLastExchangeTime() < 3000) {
+			ActionSender.sendBox(player,"@ora@[Auction House - Warning]@whi@ You are acting too quickly, please wait 3 seconds.", false);
 			return;
 		}
 		player.getWorld().getMarket().addNewAuctionItemTask(player, catalogID, amount, price);
@@ -321,19 +315,21 @@ public class InterfaceOptionHandler implements PacketHandler {
 
 	private void auctionCancel(Player player, Packet packet) {
 		int auctionID = packet.readInt();
-		if (System.currentTimeMillis() - player.getLastExchangeTime() < 5000) {
-			ActionSender.sendBox(player,"@ora@[Auction House - Warning]@whi@ You are acting too quickly, please wait 5 seconds.", false);
+		if (System.currentTimeMillis() - player.getLastExchangeTime() < 3000) {
+			ActionSender.sendBox(player,"@ora@[Auction House - Warning]@whi@ You are acting too quickly, please wait 3 seconds.", false);
 			return;
 		}
 		player.getWorld().getMarket().addCancelAuctionItemTask(player, auctionID);
 	}
 
 	private void auctionRefresh(Player player) {
-		if (System.currentTimeMillis() - player.getLastExchangeTime() < 5000) {
+		if (System.currentTimeMillis() - player.getAttribute("ah_refresh", System.currentTimeMillis()) < 5000) {
 			ActionSender.sendBox(player,"@ora@[Auction House - Warning]@whi@ You are acting too quickly, please wait 5 seconds.", false);
 			return;
 		}
+
 		player.setAttribute("ah_refresh", System.currentTimeMillis());
+
 		player.message("@gre@[Auction House]@whi@ List has been refreshed!");
 		ActionSender.sendOpenAuctionHouse(player);
 	}

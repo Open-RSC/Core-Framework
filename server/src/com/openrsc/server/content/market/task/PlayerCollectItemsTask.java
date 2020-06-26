@@ -34,13 +34,13 @@ public class PlayerCollectItemsTask extends MarketTask {
 				return;
 			}
 
-			StringBuilder items = new StringBuilder("Following items have been inserted to your bank: % ");
+			StringBuilder items = new StringBuilder("The following items have been sent to your bank: % ");
 			ArrayList<ExpiredAuction> dbCollectibleItems = new ArrayList<>();
 			for (CollectibleItem i : list) {
 				ExpiredAuction dbItem = new ExpiredAuction();
 				Item item = new Item(i.item_id, i.item_amount);
 				if (!player.getBank().canHold(item)) {
-					items.append("@gre@Rest of the items are still held by auctioneer% make more space in bank and claim.");
+					items.append("@gre@Some items are still being held by the auctioneer.% Make more space in your bank to claim them.");
 					break;
 				}
 				player.getBank().add(item, false);
