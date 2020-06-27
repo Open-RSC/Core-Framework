@@ -203,6 +203,7 @@ public class ServerConfiguration {
 	public int CHARACTER_CREATION_MODE;
 	public int LOCATION_DATA;
 	public boolean WANT_FIXED_BROKEN_MECHANICS;
+	public boolean WANT_DECORATED_MOD_ROOM;
 	// public boolean CHECK_ADMIN_IP;
 	// public String ADMIN_IP;
 	// public List<String> adminIp;
@@ -328,6 +329,7 @@ public class ServerConfiguration {
 		CUSTOM_PROTOCOL = tryReadBool("custom_protocol").orElse(false);
 		LOCATION_DATA = tryReadInt("location_data").orElse(0);
 		WANT_FIXED_BROKEN_MECHANICS = tryReadBool("want_fixed_broken_mechanics").orElse(false);
+		WANT_DECORATED_MOD_ROOM = tryReadBool("want_decorated_mod_room").orElse(false);
 		/*
 		CHECK_ADMIN_IP = tryReadBool("check_admin_ip").orElse(false);
 		ADMIN_IP = tryReadString("admin_ip").orElse("127.0.0.0,10.0.0.0,172.16.0.0,192.168.0.0");
