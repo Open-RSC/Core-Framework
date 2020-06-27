@@ -2232,6 +2232,8 @@ public class EntityHandler {
 			sprites = new int[]{3, 4, 2, -1, -1, -1, 426, -1, 46, -1, -1, -1};
 		}
 		npcs.add(new NPCDef("Robin Banks", "A master thief", "", 34, 32, 37, 33, false, sprites, 1, 2, 3, 15523536, 150, 230, 6, 6, 5, i++));
+		sprites = new int[]{3, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
+		npcs.add(new NPCDef("Mum", "The greatest woman in the world", "", 1, 99, 3, 1, false, sprites, 16752704, 3211263, 14540032, 15523536, 145, 220, 6, 6, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -3781,6 +3783,8 @@ public class EntityHandler {
 			items.add(new ItemDef("Super Runecraft Potion", "2 doses of super runecraft potion", "Drink", 300, -1, "items:436", false, false, 0, 10710783, true, false, true, 1415));
 			items.add(new ItemDef("Super Runecraft Potion", "1 dose of super runecraft potion", "Drink", 200, -1, "items:437", false, false, 0, 10710783, true, false, true, 1416));
 		}
+
+		items.add(new ItemDef("Pizza Bagel", "I sure wish I could make these on my own", "Eat", 50, -1, "items:589", false, false, 0, 0, false, false, true, 1417));
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";

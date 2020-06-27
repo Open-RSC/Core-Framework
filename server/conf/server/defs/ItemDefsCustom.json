@@ -2921,13 +2921,13 @@
     "isNoteable": 1
   },
   {
-	"id": 1410,
-	"name": "Fish oil",
-	"description": "Good for my heart",
+	"id": 1417,
+	"name": "Pizza Bagel",
+	"description": "I sure wish I could make these on my own",
 	"command": "Eat",
 	"isFemaleOnly": 0,
 	"isMembersOnly": 0,
-	"isStackable": 1,
+	"isStackable": 0,
 	"isUntradable": 0,
 	"isWearable": 0,
 	"appearanceID": 0,
@@ -2940,8 +2940,8 @@
 	"weaponPowerBonus": 0,
 	"magicBonus": 0,
 	"prayerBonus": 0,
-	"basePrice": 0,
-	"isNoteable": 0
+	"basePrice": 50,
+	"isNoteable": 1
   }
 ]
 }
