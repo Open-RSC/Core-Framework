@@ -1426,6 +1426,11 @@ public class DoorAction {
 				members = true;
 				break;
 
+			case 260: // Bank Vault Gate
+				members = false;
+				player.playerServerMessage(MessageType.QUEST, "the gate is locked");
+				return;
+
 			case 305: // Members Gate in Edgeville Dungeon (196, 1266)
 				members = true;
 				break;
