@@ -312,9 +312,32 @@ public class Eating implements OpInvTrigger {
 
 	// cakes, pies and pizzas (except plain pizza) are eaten partially
 	private boolean eatenByParts(Player player, Item item) {
-		String itemName = item.getDef(player.getWorld()).getName().toLowerCase();
-		return itemName.contains("cake") || itemName.contains("pie")
-				|| (itemName.contains("pizza") && !itemName.contains("plain pizza"));
+		int eatenByParts[] = {
+			// Cakes
+			ItemId.CAKE.id(),
+			ItemId.PARTIAL_CAKE.id(),
+			ItemId.CHOCOLATE_CAKE.id(),
+			ItemId.PARTIAL_CHOCOLATE_CAKE.id(),
+			ItemId.SLICE_OF_CAKE.id(),
+			ItemId.ROCK_CAKE.id(),
+
+			// Pies
+			ItemId.APPLE_PIE.id(),
+			ItemId.HALF_AN_APPLE_PIE.id(),
+			ItemId.REDBERRY_PIE.id(),
+			ItemId.HALF_A_REDBERRY_PIE.id(),
+			ItemId.MEAT_PIE.id(),
+			ItemId.HALF_A_MEAT_PIE.id(),
+
+			// Pizzas
+			ItemId.MEAT_PIZZA.id(),
+			ItemId.HALF_MEAT_PIZZA.id(),
+			ItemId.ANCHOVIE_PIZZA.id(),
+			ItemId.HALF_ANCHOVIE_PIZZA.id(),
+			ItemId.PINEAPPLE_PIZZA.id(),
+			ItemId.HALF_PINEAPPLE_PIZZA.id()
+		};
+		return DataConversions.inArray(eatenByParts, item.getCatalogId());
 	}
 
 	private void addFoodResult(Player player, int id) {
