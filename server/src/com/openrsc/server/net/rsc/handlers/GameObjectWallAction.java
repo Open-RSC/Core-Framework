@@ -13,9 +13,6 @@ public class GameObjectWallAction implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		int pID = packet.getID();
-		int packetTwo = OpcodeIn.WALL_OBJECT_COMMAND1.getOpcode();
-
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			return;
@@ -26,12 +23,31 @@ public class GameObjectWallAction implements PacketHandler {
 		}
 
 		player.resetAll();
-		final GameObject object = player.getViewArea().getWallObjectWithDir(Point.location(packet.readShort(), packet.readShort()), packet.readByte());
-		final int click = pID == packetTwo ? 0 : 1;
+
+		final int pID = packet.getID();
+
+		if (pID == OpcodeIn.WALL_OBJECT_COMMAND1.getOpcode()) {
+			player.click = 0;
+		}
+		else if (pID == OpcodeIn.WALL_OBJECT_COMMAND2.getOpcode()) {
+			player.click = 1;
+		}
+		else return;
+
+		final short x = packet.readShort();
+		final short y = packet.readShort();
+		final byte dir = packet.readByte();
+		if (x < 0 || y < 0 || dir < 0) {
+			player.setSuspiciousPlayer(true, "bad game object wall coordinates");
+			return;
+		}
+
+		final GameObject object = player.getViewArea().getWallObjectWithDir(Point.location(x, y), dir);
 		if (object == null) {
 			player.setSuspiciousPlayer(true, "game object wall has null object");
 			return;
 		}
+
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
 			public void executeInternal() {
 				DoorDef def = object.getDoorDef();
@@ -47,12 +63,12 @@ public class GameObjectWallAction implements PacketHandler {
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
 					getPlayer(),
 					"OpBound",
-					new Object[]{getPlayer(), object, click}, this)) {
+					new Object[]{getPlayer(), object, getPlayer().click}, this)) {
 					return;
 				}
 
 				getPlayer().resetAll();
-				String command = (click == 0 ? def.getCommand1() : def
+				String command = (getPlayer().click == 0 ? def.getCommand1() : def
 					.getCommand2()).toLowerCase();
 				Point telePoint = getPlayer().getWorld().getServer().getEntityHandler().getObjectTelePoint(
 					object.getLocation(), command);

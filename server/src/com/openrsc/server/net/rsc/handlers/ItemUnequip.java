@@ -19,12 +19,14 @@ public class ItemUnequip implements PacketHandler {
 		OpcodeIn opcode = OpcodeIn.get(packet.getID());
 
 		// Make sure the opcode is valid
-		if (opcode == null)
+		if (opcode == null) {
 			return;
+		}
 
 		// Make sure they're allowed to unequip something atm
-		if (!passCheck(player, opcode))
+		if (!passCheck(player, opcode)) {
 			return;
+		}
 
 		UnequipRequest request = new UnequipRequest();
 		request.player = player;
@@ -43,6 +45,8 @@ public class ItemUnequip implements PacketHandler {
 			request.inventorySlot = inventorySlot;
 			request.requestType = UnequipRequest.RequestType.FROM_INVENTORY;
 		} else if (opcode == OpcodeIn.ITEM_UNEQUIP_FROM_EQUIPMENT) {
+			if (!player.getConfig().WANT_EQUIPMENT_TAB) return;
+
 			player.resetAllExceptDueling();
 
 			request.equipmentSlot = EquipmentSlot.get(packet.readByte());
@@ -56,6 +60,8 @@ public class ItemUnequip implements PacketHandler {
 			// Client index and server index don't match. Find correct index.
 			Equipment.correctIndex(request);
 		} else if (opcode == OpcodeIn.ITEM_REMOVE_TO_BANK) {
+			if (!player.getConfig().WANT_EQUIPMENT_TAB) return;
+
 			player.resetAllExceptBank();
 
 			request.equipmentSlot = EquipmentSlot.get(packet.readByte());

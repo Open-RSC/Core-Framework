@@ -13,6 +13,9 @@ public final class PlayerFollowRequest implements PacketHandler {
 			player.setSuspiciousPlayer(true, "tried following null player");
 			return;
 		}
+		if (player.inCombat()) {
+			return;
+		}
 		if (player.isBusy()) {
 			player.resetPath();
 			return;

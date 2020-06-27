@@ -18,13 +18,15 @@ import java.util.Optional;
 public final class InterfaceShopHandler implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
-
-		int pID = packet.getID();
+		if (player.inCombat()) {
+			return;
+		}
 		if (player.isBusy()) {
 			player.resetShop();
 			return;
 		}
 
+		int pID = packet.getID();
 		final Shop shop = player.getShop();
 		if (shop == null) {
 			player.setSuspiciousPlayer(true, "shop is null");
@@ -47,6 +49,9 @@ public final class InterfaceShopHandler implements PacketHandler {
 		if (amount <= 0) return;
 
 		ItemDefinition def = player.getWorld().getServer().getEntityHandler().getItemDef(catalogID);
+		if (def == null) {
+			return;
+		}
 		if (def.isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
 			player.sendMemberErrorMessage();
 			return;

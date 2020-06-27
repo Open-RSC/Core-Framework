@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
@@ -30,7 +31,6 @@ public class ItemActionHandler implements PacketHandler {
 		}
 
 		if (idx >= player.getCarriedItems().getInventory().size()) {
-			player.setSuspiciousPlayer(true, "idx >= inv size");
 			return;
 		}
 		Item tempitem = null;
@@ -48,7 +48,7 @@ public class ItemActionHandler implements PacketHandler {
 			commandIndex = packet.readByte();
 		}
 
-		if (tempitem == null) return;
+		if (tempitem == null || tempitem.getCatalogId() == ItemId.NOTHING.id()) return;
 
 		final Item item = amount > 1 ? new Item(tempitem.getCatalogId(), amount) : tempitem;
 		if (item == null || item.getDef(player.getWorld()).getCommand() == null

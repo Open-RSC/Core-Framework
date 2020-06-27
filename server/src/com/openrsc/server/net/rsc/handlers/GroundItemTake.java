@@ -21,8 +21,18 @@ public class GroundItemTake implements PacketHandler {
 			return;
 		}
 		player.resetAll();
-		final Point location = Point.location(packet.readShort(), packet.readShort());
+
+		final short x = packet.readShort();
+		final short y = packet.readShort();
+		if (x < 0 || y < 0) return;
+
+		final Point location = Point.location(x, y);
+
 		final int id = packet.readShort();
+		if (id < 0 || id >= player.getWorld().getServer().getEntityHandler().getItemCount()) {
+			return;
+		}
+
 		final GroundItem item = player.getViewArea().getGroundItem(id, location);
 
 		if (item == null) {

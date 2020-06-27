@@ -591,6 +591,10 @@ public final class EntityHandler {
 		return dartTips.get(id);
 	}
 
+	public int getItemCount() {
+		return items.size();
+	}
+
 	/**
 	 * @param id the entities ID
 	 * @return the ItemDef with the given ID

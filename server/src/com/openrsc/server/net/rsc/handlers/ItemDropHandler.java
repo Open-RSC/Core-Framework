@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -35,8 +36,7 @@ public final class ItemDropHandler implements PacketHandler {
 			tempitem = player.getCarriedItems().getInventory().get(idx);
 		}
 
-		if (tempitem == null) {
-			player.setSuspiciousPlayer(true, "item drop null item");
+		if (tempitem == null || tempitem.getCatalogId() == ItemId.NOTHING.id()) {
 			return;
 		}
 		final Item item = new Item(tempitem.getCatalogId(), amount, tempitem.getNoted(), tempitem.getItemId());

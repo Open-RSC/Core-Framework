@@ -22,7 +22,7 @@ public final class BankHandler implements PacketHandler {
 
 		//Make sure they can't access the bank while busy
 		if (player.isBusy() || player.isRanging() || player.getTrade().isTradeActive()
-			|| player.getDuel().isDuelActive()) {
+			|| player.getDuel().isDuelActive() || player.inCombat()) {
 			player.resetBank();
 			return;
 		}
@@ -51,7 +51,9 @@ public final class BankHandler implements PacketHandler {
 				catalogID = packet.readShort();
 				amount = packet.readInt();
 
-				if (catalogID == ItemId.NOTHING.id()) return;
+				if (catalogID < 0 || catalogID >= player.getWorld().getServer().getEntityHandler().getItemCount()) {
+					return;
+				}
 
 				if (player.getConfig().WANT_BANK_NOTES)
 					wantsNotes = packet.readByte() == 1;
@@ -63,7 +65,9 @@ public final class BankHandler implements PacketHandler {
 				catalogID = packet.readShort();
 				amount = packet.readInt();
 
-				if (catalogID == ItemId.NOTHING.id()) return;
+				if (catalogID < 0 || catalogID >= player.getWorld().getServer().getEntityHandler().getItemCount()) {
+					return;
+				}
 
 				amount = Math.min(player.getCarriedItems().getInventory().countId(catalogID), amount);
 				player.getBank().depositItemFromInventory(catalogID, amount, true);

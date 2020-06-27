@@ -10,18 +10,19 @@ import static com.openrsc.server.net.rsc.OpcodeIn.ITEM_EQUIP_FROM_BANK;
 import static com.openrsc.server.net.rsc.OpcodeIn.ITEM_EQUIP_FROM_INVENTORY;
 
 public final class ItemEquip implements PacketHandler {
-	//Packets handled by this class:
-//	bind(OpcodeIn.ITEM_EQUIP_FROM_INVENTORY.getOpcode(), ItemEquip.class);
-//	bind(OpcodeIn.ITEM_EQUIP_FROM_BANK.getOpcode(), ItemEquip.class);
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
 		OpcodeIn opcode = OpcodeIn.get(packet.getID());
-		//Make sure the opcode is valid
-		if (opcode == null)
+
+		// Make sure the opcode is valid
+		if (opcode == null) {
 			return;
+		}
+
 		//Make sure they're allowed to equip something atm
-		if (!passCheck(player, opcode))
+		if (!passCheck(player, opcode)) {
 			return;
+		}
 
 		EquipRequest request = new EquipRequest();
 		request.player = player;
@@ -82,11 +83,10 @@ public final class ItemEquip implements PacketHandler {
 
 
 	public static boolean passCheck(Player player, OpcodeIn opcode) {
-		if (opcode == null)
+		if (opcode == null || player.isBusy()) {
 			return false;
-		if (player.isBusy() && !player.inCombat())
-			return false;
-		if (player.getDuel().isDuelActive() && player.getDuel().getDuelSetting(3)) {
+		}
+		else if (player.getDuel().isDuelActive() && player.getDuel().getDuelSetting(3)) {
 			player.message("No extra items may be worn during this duel!");
 			return false;
 		}

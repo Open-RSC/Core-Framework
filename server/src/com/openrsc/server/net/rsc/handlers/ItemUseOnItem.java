@@ -9,14 +9,16 @@ import com.openrsc.server.net.rsc.PacketHandler;
 public final class ItemUseOnItem implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
-
+		if (player.inCombat()) {
+			return;
+		}
 		if (player.isBusy()) {
 			player.resetPath();
 			return;
 		}
 		player.resetAll();
-		int itemIndex1 = packet.readShort();
-		int itemIndex2 = packet.readShort();
+		final int itemIndex1 = packet.readShort();
+		final int itemIndex2 = packet.readShort();
 		Item item1 = player.getCarriedItems().getInventory().get(itemIndex1);
 		Item item2 = player.getCarriedItems().getInventory().get(itemIndex2);
 

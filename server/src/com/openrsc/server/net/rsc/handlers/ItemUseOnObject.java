@@ -75,12 +75,14 @@ public class ItemUseOnObject implements PacketHandler {
 	}
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
-
-		int pID = packet.getID();
+		if (player.inCombat()) {
+			return;
+		}
 		if (player.isBusy()) {
 			player.resetPath();// sendSound
 			return;
 		}
+		int pID = packet.getID();
 		player.resetAll();
 		GameObject object;
 		Item item;

@@ -13,6 +13,9 @@ import com.openrsc.server.net.rsc.PacketHandler;
 public class ItemUseOnGroundItem implements PacketHandler {
 
 	public void handlePacket(Packet packet, final Player player) throws Exception {
+		if (player.inCombat()) {
+			return;
+		}
 		if (player.isBusy()) {
 			player.resetPath();
 			return;

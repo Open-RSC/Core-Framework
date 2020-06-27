@@ -11,7 +11,9 @@ import com.openrsc.server.net.rsc.PacketHandler;
 public class ItemUseOnNpc implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
-
+		if (player.inCombat()) {
+			return;
+		}
 		if (player.isBusy()) {
 			player.resetPath();
 			return;

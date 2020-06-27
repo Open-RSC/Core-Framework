@@ -13,10 +13,10 @@ public class TutorialHandler implements PacketHandler {
 			return;
 		}
 		if (player.getLocation().onTutorialIsland()) {
+			if (player.inCombat()) {
+				player.message("You cannot do that whilst fighting!");
+			}
 			if (player.isBusy()) {
-				if (player.inCombat()) {
-					player.message("You cannot do that whilst fighting!");
-				}
 				return;
 			}
 			if (player.getCache().hasKey("tutorial")) {

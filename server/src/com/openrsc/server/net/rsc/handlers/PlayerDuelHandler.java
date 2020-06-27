@@ -21,7 +21,7 @@ import com.openrsc.server.util.rsc.MessageType;
 public class PlayerDuelHandler implements PacketHandler {
 
 	private boolean busy(Player player) {
-		return player.isBusy() || player.isRanging() || player.accessingBank() || player.getTrade().isTradeActive();
+		return player.inCombat() || player.isBusy() || player.isRanging() || player.accessingBank() || player.getTrade().isTradeActive();
 	}
 
 	public void handlePacket(Packet packet, Player player) throws Exception {

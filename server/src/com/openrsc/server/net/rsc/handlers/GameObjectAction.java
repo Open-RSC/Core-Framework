@@ -28,15 +28,30 @@ public class GameObjectAction implements PacketHandler {
 			player.resetPath();
 			return;
 		}
-		player.resetAll();
-		final GameObject object = player.getViewArea().getGameObject(Point.location(packet.readShort(), packet.readShort()));
 
-		final int click = pID == OpcodeIn.OBJECT_COMMAND1.getOpcode() ? 0 : 1;
-		player.click = click;
+		if (pID == OpcodeIn.OBJECT_COMMAND1.getOpcode()) {
+			player.click = 0;
+		}
+		else if (pID == OpcodeIn.OBJECT_COMMAND2.getOpcode()) {
+			player.click = 1;
+		}
+		else return;
+
+		player.resetAll();
+
+		final short x = packet.readShort();
+		final short y = packet.readShort();
+		if (x < 0 || y < 0) {
+			player.setSuspiciousPlayer(true, "bad game object coordinates");
+			return;
+		}
+
+		final GameObject object = player.getViewArea().getGameObject(Point.location(x, y));
 		if (object == null) {
 			player.setSuspiciousPlayer(true, "game object action null object");
 			return;
 		}
+
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
 			public void executeInternal() {
 				getPlayer().resetPath();
@@ -46,7 +61,7 @@ public class GameObjectAction implements PacketHandler {
 				}
 
 				getPlayer().resetAll();
-				String command = (click == 0 ? def.getCommand1() : def
+				String command = (getPlayer().click == 0 ? def.getCommand1() : def
 					.getCommand2()).toLowerCase();
 
 				int playerDirection = getPlayer().getSprite();
@@ -56,7 +71,6 @@ public class GameObjectAction implements PacketHandler {
 					new Object[]{getPlayer(), object, command},
 					this)) {
 					getPlayer().setSprite(playerDirection);
-					return;
 				}
 			}
 		});
