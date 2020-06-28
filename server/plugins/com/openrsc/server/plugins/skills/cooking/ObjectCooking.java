@@ -167,11 +167,13 @@ public class ObjectCooking implements UseLocTrigger {
 			}
 
 			startbatch(repeat);
-			batchCooking(player, item, timeToCook, cookingDef);
+			batchCooking(player, item, timeToCook, cookingDef, object);
 		}
 	}
 
-	private void batchCooking(Player player, Item item, int timeToCook, ItemCookingDef cookingDef) {
+	private void batchCooking(Player player, Item item, int timeToCook, ItemCookingDef cookingDef, GameObject gameObject) {
+		if (gameObject.isRemoved()) return;
+
 		if (player.getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
 			String itemName = item.getDef(player.getWorld()).getName().toLowerCase();
 			itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
@@ -216,7 +218,7 @@ public class ObjectCooking implements UseLocTrigger {
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
 				delay();
-				batchCooking(player, item, timeToCook, cookingDef);
+				batchCooking(player, item, timeToCook, cookingDef, gameObject);
 			}
 		}
 	}
