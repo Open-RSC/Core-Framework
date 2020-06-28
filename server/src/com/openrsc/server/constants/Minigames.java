@@ -8,6 +8,7 @@ public final class Minigames {
 	public static final int FISHING_TRAWLER = 4;
 	public static final int GNOME_BALL = 5;
 	public static final int KITTEN_CARE = 6;
+	public static final int MUMS_ASSISTANT = 7;
 
 	private final Constants constants;
 
