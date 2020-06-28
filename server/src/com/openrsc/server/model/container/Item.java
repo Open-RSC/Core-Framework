@@ -74,27 +74,24 @@ public class Item implements Comparable<Item> {
 	}
 	//--------------------------------------------------------------
 	//Class member modifiers----------------------------------------
-	public final void setItemId(GameDatabase database, int itemId) throws GameDatabaseException {
+	public final void setItemId(int itemId) {
 		this.itemId = itemId;
-		database.itemUpdate(this);
 	}
 
-	public void setAmount(GameDatabase database, int amount) throws GameDatabaseException {
+	public void setAmount(int amount) {
 		this.itemStatus.setAmount(amount);
-		database.itemUpdate(this);
 
 	}
 
-	public void changeAmount(GameDatabase database, int delta) throws GameDatabaseException {
-		setAmount(database, getAmount() + delta);
+	public void changeAmount(int delta) {
+		setAmount(getAmount() + delta);
 	}
 
-	public void setNoted(GameDatabase database, boolean noted) throws GameDatabaseException {
+	public void setNoted(boolean noted) {
 		this.itemStatus.setNoted(noted);
-		database.itemUpdate(this);
 	}
 
-	public final void setCatalogId(GameDatabase database, int newid) {
+	public final void setCatalogId(int newid) {
 		itemStatus.setCatalogId(newid);
 	}
 
@@ -102,9 +99,8 @@ public class Item implements Comparable<Item> {
 		this.itemStatus = itemStatus;
 	}
 
-	public void setWielded(GameDatabase database, boolean wielded) throws GameDatabaseException {
+	public void setWielded(boolean wielded) {
 		this.itemStatus.setWielded(wielded);
-		database.itemUpdate(this);
 	}
 	//---------------------------------------------------------------
 	//Class Member Retrievals ----------------------------------------

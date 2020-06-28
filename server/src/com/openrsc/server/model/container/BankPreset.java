@@ -205,5 +205,6 @@ public class BankPreset {
 		ActionSender.sendEquipment(player);
 		ActionSender.sendEquipmentStats(player);
 		player.resetBank();
+		player.save();
  	}
 }

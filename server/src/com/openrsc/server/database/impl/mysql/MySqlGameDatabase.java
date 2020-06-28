@@ -2673,7 +2673,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	public int assignItemID(Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			int itemId = itemCreate(item);
-			item.setItemId(this, itemId);
+			item.setItemId(itemId);
 			itemIDList.add(itemId);
 			return itemId;
 		}

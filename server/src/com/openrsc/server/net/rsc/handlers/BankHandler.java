@@ -87,14 +87,17 @@ public final class BankHandler implements PacketHandler {
 					player.setSuspiciousPlayer(true, "bank load preset on authentic world");
 					return;
 				}
+				if (System.currentTimeMillis() - player.getLastExchangeTime() < 2000) {
+					player.message("You are acting too quickly, please wait 2 seconds between actions");
+					return;
+				}
 				presetSlot = packet.readShort();
 				if (presetSlot < 0 || presetSlot >= BankPreset.PRESET_COUNT) {
 					player.setSuspiciousPlayer(true, "packet seven bank preset slot < 0 or preset slot >= preset count");
 					return;
 				}
+				player.setLastExchangeTime();
 				player.getBank().getBankPreset(presetSlot).attemptPresetLoadout();
-				ActionSender.sendEquipmentStats(player);
-				ActionSender.sendInventory(player);
 				break;
 			case BANK_SAVE_PRESET:
 				if (!player.getConfig().WANT_EQUIPMENT_TAB) {

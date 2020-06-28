@@ -39,101 +39,96 @@ public class Bank {
 
 	public boolean add(Item itemToAdd, boolean updateClient) {
 		synchronized(list) {
-			try {
-				// Check bounds of amount
-				if (itemToAdd.getAmount() <= 0) {
+			// Check bounds of amount
+			if (itemToAdd.getAmount() <= 0) {
+				return false;
+			}
+
+			// Determine if there's already a spot in the bank for this item
+			Item existingStack = null;
+			int index = -1;
+
+			for (Item bankItem : list) {
+				++index;
+				// Check for matching catalog ID's
+				if (bankItem.getCatalogId() != itemToAdd.getCatalogId())
+					continue;
+
+				// Make sure the existing stack has room for more
+				if (bankItem.getAmount() == Integer.MAX_VALUE)
+					continue;
+
+				// An existing stack has been found, exit the loop
+				existingStack = bankItem;
+				break;
+			}
+
+			if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
+				return false;
+			}
+
+			// There is none of this item in the bank yet - create a new stack.
+			if (existingStack == null) {
+				// Make sure they have room in the bank
+				if (list.size() >= player.getBankSize())
 					return false;
+
+				// TODO: Durability
+				itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount());
+
+				// Update the database
+				int itemID = player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
+
+				itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), false, itemID);
+
+				// Update the server bank
+				list.add(itemToAdd);
+
+				// Update the client bank
+				if (updateClient) {
+					ActionSender.updateBankItem(player, list.size() - 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
 				}
 
-				// Determine if there's already a spot in the bank for this item
-				Item existingStack = null;
-				int index = -1;
+			// A stack exists of this item in the bank already.
+			} else {
 
-				for (Item bankItem : list) {
-					++index;
-					// Check for matching catalog ID's
-					if (bankItem.getCatalogId() != itemToAdd.getCatalogId())
-						continue;
+				// We will always update the existing stack, but if it overflows we need a second stack.
+				int remainingSize = Integer.MAX_VALUE - existingStack.getAmount();
 
-					// Make sure the existing stack has room for more
-					if (bankItem.getAmount() == Integer.MAX_VALUE)
-						continue;
+				// In the first case, we have enough space to fit what we are depositing.
+				if (remainingSize >= itemToAdd.getAmount()) {
 
-					// An existing stack has been found, exit the loop
-					existingStack = bankItem;
-					break;
-				}
+					// Update the database and server bank
+					existingStack.changeAmount(itemToAdd.getAmount());
 
-				if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
-					return false;
-				}
+					// Update the client bank
+					if (updateClient) {
+						ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), existingStack.getAmount());
+					}
 
-				// There is none of this item in the bank yet - create a new stack.
-				if (existingStack == null) {
-					// Make sure they have room in the bank
-					if (list.size() >= player.getBankSize())
-						return false;
+				// In the second case, we must made a new stack as well as updating the old one. (First is full.)
+				} else {
 
-					// TODO: Durability
-					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount());
+					// Update the database - first (existing) stack amount to max value
+					existingStack.setAmount(Integer.MAX_VALUE);
 
-					// Update the database
+					// Adjust quantity of second stack to reflect that which was added to the first stack.
+					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount() - remainingSize);
+
+					// Update the database - second stack
 					int itemID = player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
 
 					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), false, itemID);
 
-					// Update the server bank
+					// Update the server bank - second stack
 					list.add(itemToAdd);
 
-					// Update the client bank
+					// Update the client - both stacks
 					if (updateClient) {
+						ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), Integer.MAX_VALUE);
 						ActionSender.updateBankItem(player, list.size() - 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
 					}
-
-				// A stack exists of this item in the bank already.
-				} else {
-
-					// We will always update the existing stack, but if it overflows we need a second stack.
-					int remainingSize = Integer.MAX_VALUE - existingStack.getAmount();
-
-					// In the first case, we have enough space to fit what we are depositing.
-					if (remainingSize >= itemToAdd.getAmount()) {
-
-						// Update the database and server bank
-						existingStack.changeAmount(player.getWorld().getServer().getDatabase(), itemToAdd.getAmount());
-
-						// Update the client bank
-						if (updateClient) {
-							ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), existingStack.getAmount());
-						}
-
-					// In the second case, we must made a new stack as well as updating the old one. (First is full.)
-					} else {
-
-						// Update the database - first (existing) stack amount to max value
-						existingStack.setAmount(player.getWorld().getServer().getDatabase(), Integer.MAX_VALUE);
-
-						// Adjust quantity of second stack to reflect that which was added to the first stack.
-						itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount() - remainingSize);
-
-						// Update the database - second stack
-						int itemID = player.getWorld().getServer().getDatabase().bankAddToPlayer(player, itemToAdd, list.size() - 1);
-
-						itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), false, itemID);
-
-						// Update the server bank - second stack
-						list.add(itemToAdd);
-
-						// Update the client - both stacks
-						if (updateClient) {
-							ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), Integer.MAX_VALUE);
-							ActionSender.updateBankItem(player, list.size() - 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
-						}
-					}
 				}
-			} catch (GameDatabaseException ex) {
-				LOGGER.error(ex.getMessage());
-				return false;
 			}
 			return true;
 		}
@@ -153,53 +148,47 @@ public class Bank {
 
 	public boolean remove(int catalogID, int amount, boolean updateClient) {
 		synchronized(list) {
-			try {
-				int bankIndex = getFirstIndexById(catalogID);
-				Item bankItem = get(bankIndex);
+			int bankIndex = getFirstIndexById(catalogID);
+			Item bankItem = get(bankIndex);
 
-				// Continue until a matching catalogID is found.
-				if (bankItem == null) return false;
+			// Continue until a matching catalogID is found.
+			if (bankItem == null) return false;
 
-				// Check that there's enough in the stack
-				if (bankItem.getAmount() < amount)
-					amount = bankItem.getAmount();
+			// Check that there's enough in the stack
+			if (bankItem.getAmount() < amount)
+				amount = bankItem.getAmount();
 
-				if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
-					return false;
-				}
-
-				// We are removing all of the itemID from the bank
-				if (bankItem.getAmount() == amount) {
-
-					// Update the Server Bank
-					list.remove(bankIndex);
-
-					// Update the Database
-					player.getWorld().getServer().getDatabase().bankRemoveFromPlayer(player, bankItem);
-
-					// Update the Client
-					if (updateClient) {
-						ActionSender.updateBankItem(player, bankIndex, 0, 0);
-					}
-
-				// We are removing only some of the total held in the bank
-				} else {
-
-					// Update the Database and Server Bank
-					bankItem.changeAmount(player.getWorld().getServer().getDatabase(), -amount);
-
-					// Update the Client
-					if (updateClient) {
-						ActionSender.updateBankItem(player, bankIndex, bankItem.getCatalogId(), bankItem.getAmount());
-					}
-				}
-
-				return true;
-
-			} catch (GameDatabaseException ex) {
-				LOGGER.error(ex.getMessage());
+			if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
+				return false;
 			}
-			return false;
+
+			// We are removing all of the itemID from the bank
+			if (bankItem.getAmount() == amount) {
+
+				// Update the Server Bank
+				list.remove(bankIndex);
+
+				// Update the Database
+				player.getWorld().getServer().getDatabase().bankRemoveFromPlayer(player, bankItem);
+
+				// Update the Client
+				if (updateClient) {
+					ActionSender.updateBankItem(player, bankIndex, 0, 0);
+				}
+
+			// We are removing only some of the total held in the bank
+			} else {
+
+				// Update the Database and Server Bank
+				bankItem.changeAmount(-amount);
+
+				// Update the Client
+				if (updateClient) {
+					ActionSender.updateBankItem(player, bankIndex, bankItem.getCatalogId(), bankItem.getAmount());
+				}
+			}
+
+			return true;
 		}
 	}
 

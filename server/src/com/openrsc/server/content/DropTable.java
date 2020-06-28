@@ -200,31 +200,26 @@ public class DropTable {
 	}
 
 	public static boolean handleRingOfAvarice(final Player player, final Item item) {
-		try {
-			int slot = -1;
-			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_AVARICE.id())) {
-				ItemDefinition itemDef = player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId());
-				if (itemDef != null && itemDef.isStackable()) {
-					if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
+		int slot = -1;
+		if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_AVARICE.id())) {
+			ItemDefinition itemDef = player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId());
+			if (itemDef != null && itemDef.isStackable()) {
+				if (player.getCarriedItems().getInventory().hasInInventory(item.getCatalogId())) {
+					player.getCarriedItems().getInventory().add(item);
+					return true;
+				} else if (player.getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
+					Item equipped = player.getCarriedItems().getEquipment().get(slot);
+					equipped.changeAmount(item.getAmount());
+					return true;
+				} else {
+					if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
 						player.getCarriedItems().getInventory().add(item);
 						return true;
-					} else if (player.getConfig().WANT_EQUIPMENT_TAB && (slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId())) != -1) {
-						Item equipped = player.getCarriedItems().getEquipment().get(slot);
-						equipped.changeAmount(player.getWorld().getServer().getDatabase(), item.getAmount());
-						return true;
 					} else {
-						if (player.getCarriedItems().getInventory().getFreeSlots() > 0) {
-							player.getCarriedItems().getInventory().add(item);
-							return true;
-						} else {
-							player.message("Your ring of Avarice tried to activate, but your inventory was full.");
-							return false;
-						}
+						player.message("Your ring of Avarice tried to activate, but your inventory was full.");
 					}
 				}
 			}
-		} catch (GameDatabaseException ex) {
-			LOGGER.error(ex.getMessage());
 		}
 		return false;
 	}
