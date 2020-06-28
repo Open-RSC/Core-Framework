@@ -9,11 +9,11 @@ public interface TalkNpcTrigger {
 	 * Called when a player talks to a npc
 	 *
 	 * @param player
-	 * @param n
+	 * @param npc
 	 */
-	void onTalkNpc(Player player, Npc n);
+	void onTalkNpc(Player player, Npc npc);
 	/**
 	 * Return true to block a player from talking to a npc
 	 */
-	boolean blockTalkNpc(Player player, Npc n);
+	boolean blockTalkNpc(Player player, Npc npc);
 }
