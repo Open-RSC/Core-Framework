@@ -6,21 +6,23 @@ public class GameObjectLoc {
 	/**
 	 * The direction it faces
 	 */
-	private int direction;
+	public int direction;
 	/**
 	 * The id of the gameObject
 	 */
-	private int id;
+	public int id;
 	/**
 	 * Type of object - 0: Object, 1: WallObject
 	 */
-	private int type;
+	public int type;
 	/**
 	 * The objects coords
 	 */
-	private Point location;
+	public Point location;
 
 	private String owner = null;
+
+	public GameObjectLoc() { }
 
 	public GameObjectLoc(final int id, final Point location, final int direction, final int type) {
 		this(id, location, direction, type, null);

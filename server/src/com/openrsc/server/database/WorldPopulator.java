@@ -1,6 +1,6 @@
 package com.openrsc.server.database;
 
-import com.openrsc.server.database.struct.SceneryObject;
+import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.model.Point;
@@ -29,6 +29,8 @@ public final class WorldPopulator {
 
 	private final World world;
 
+	private ArrayList<GameObjectLoc> gameobjlocs = new ArrayList<>();
+
 	private ArrayList<NPCLoc> npclocs = new ArrayList<>();
 
 	private ArrayList<ItemLoc> itemlocs = new ArrayList<>();
@@ -40,16 +42,22 @@ public final class WorldPopulator {
 	@SuppressWarnings("unchecked")
 	public void populateWorld() {
 		try {
-			/* LOAD OBJECTS */
-			SceneryObject objects[] = getWorld().getServer().getDatabase().getObjects();
+			// LOAD OBJECTS //
 			int countOBJ = 0;
-			for (SceneryObject object : objects) {
-				Point point = new Point(object.x, object.y);
-				if (Formulae.isP2P(false, point.getX(), point.getY())
+			loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/BoundaryLocs.json", LocType.Boundary);
+			loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocs.json", LocType.Scenery);
+			loadCustomLocs(LocType.Scenery);
+			// SceneryObject objects[] = getWorld().getServer().getDatabase().getObjects();
+			// for (SceneryObject object : objects) {
+			for (GameObjectLoc loc : gameobjlocs) {
+				GameObjectLoc object = loc;
+
+				// Point point = new Point(object.x, object.y);
+				if (Formulae.isP2P(false, object.getLocation().getX(), object.getLocation().getY())
 					&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
 					continue;
 				}
-				GameObject obj = new GameObject(getWorld(), point, object.id,
+				GameObject obj = new GameObject(getWorld(), object.location, object.id,
 					object.direction, object.type);
 
 				getWorld().registerGameObject(obj);
@@ -88,7 +96,7 @@ public final class WorldPopulator {
 			}
 			LOGGER.info("Loaded {}", box(getWorld().countNpcs()) + " NPC spawns");
 
-			/* LOAD GROUND ITEMS */
+			// LOAD GROUND ITEMS //
 			int countGI = 0;
 			loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItems.json");
 			loadCustomLocs(LocType.GroundItem);
@@ -135,7 +143,27 @@ public final class WorldPopulator {
 	}
 
 	private void loadCustomLocs(LocType type) {
-		if (type == LocType.NPC) {
+		if (type == LocType.Scenery) {
+			if ((getWorld().getServer().getConfig().LOCATION_DATA == 1 || getWorld().getServer().getConfig().LOCATION_DATA == 2)
+				&& getWorld().getServer().getConfig().WANT_FIXED_BROKEN_MECHANICS) {
+				loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsDiscontinued.json", type);
+			}
+			if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
+				if (getWorld().getServer().getConfig().WANT_DECORATED_MOD_ROOM) {
+					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsModRoom.json", type);
+				}
+				if (getWorld().getServer().getConfig().WANT_RUNECRAFT) {
+					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsRunecraft.json", type);
+				}
+				if (getWorld().getServer().getConfig().WANT_HARVESTING) {
+					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsHarvesting.json", type);
+				}
+				if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
+					loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsCustomQuest.json", type);
+				}
+				loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocsOther.json", type);
+			}
+		} else if (type == LocType.NPC) {
 			if ((getWorld().getServer().getConfig().LOCATION_DATA == 1 || getWorld().getServer().getConfig().LOCATION_DATA == 2)
 				&& getWorld().getServer().getConfig().WANT_FIXED_BROKEN_MECHANICS) {
 				loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsDiscontinued.json");
@@ -218,7 +246,32 @@ public final class WorldPopulator {
 		}
 	}
 
+	private void loadGameObjLocs(String filename, LocType type) {
+		try {
+			JSONObject object = new JSONObject(new String(Files.readAllBytes(Paths.get(filename))));
+			JSONArray locDefs = object.getJSONArray(JSONObject.getNames(object)[0]);
+			JSONObject locObj, pos;
+			for (int i = 0; i < locDefs.length(); i++) {
+				GameObjectLoc loc = new GameObjectLoc();
+				locObj = locDefs.getJSONObject(i);
+				loc.id = locObj.getInt("id");
+				pos = locObj.getJSONObject("pos");
+				loc.location = new Point(pos.getInt("X"), pos.getInt("Y"));
+				loc.direction = locObj.getInt("direction");
+				if (type == LocType.Scenery) {
+					loc.type = 0;
+				} else if (type == LocType.Boundary) {
+					loc.type = 1;
+				}
+				gameobjlocs.add(loc);
+			}
+		}
+		catch (Exception e) {
+			LOGGER.error(e);
+		}
+	}
+
 	enum LocType {
-		NPC, GroundItem
+		Boundary, GroundItem, NPC, Scenery
 	}
 }
