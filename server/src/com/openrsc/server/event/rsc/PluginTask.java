@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class PluginTask extends GameTickEvent implements Callable<Integer> {
 	/**
@@ -26,9 +27,9 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		return PluginTask.tasksMap.get(Thread.currentThread().getName());
 	}
 
-	private volatile boolean initialized = false;
-	private volatile boolean threadRunning = false;
-	private volatile boolean tickCompleted = false;
+	private AtomicBoolean initialized = new AtomicBoolean(false);
+	private AtomicBoolean threadRunning = new AtomicBoolean(false);
+	private AtomicBoolean tickCompleted = new AtomicBoolean(false);
 	private volatile Thread pluginThread;
 
 	private final ScriptContext scriptContext;
@@ -112,35 +113,35 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		}
 	}
 
-	public synchronized boolean isInitialized() {
-		return initialized;
+	public boolean isInitialized() {
+		return initialized.get();
 	}
 
-	private synchronized void setInitialized(final boolean started) {
-		initialized = started;
+	private void setInitialized(final boolean started) {
+		initialized.getAndSet(started);
 	}
 
-	public synchronized boolean isThreadRunning() {
-		return threadRunning;
+	public boolean isThreadRunning() {
+		return threadRunning.get();
 	}
 
-	private synchronized void setThreadRunning(boolean threadRunning) {
-		this.threadRunning = threadRunning;
+	private void setThreadRunning(boolean threadRunning) {
+		this.threadRunning.getAndSet(threadRunning);
 	}
 
-	public synchronized boolean isTickCompleted() {
-		return tickCompleted;
+	public boolean isTickCompleted() {
+		return tickCompleted.get();
 	}
 
 	private synchronized void setTickCompleted(boolean tickCompleted) {
-		this.tickCompleted = tickCompleted;
+		this.tickCompleted.getAndSet(tickCompleted);
 	}
 
-	public synchronized Thread getPluginThread() {
+	public Thread getPluginThread() {
 		return pluginThread;
 	}
 
-	public synchronized ScriptContext getScriptContext() {
+	public ScriptContext getScriptContext() {
 		return scriptContext;
 	}
 }
