@@ -53,6 +53,7 @@ public class Mum implements TalkNpcTrigger, MiniGameInterface {
 		final String finalOptions[] = new String[options.size()];
 		int option = multi(player, npc, options.toArray(finalOptions));
 
+		if (option == -1) return;
 		if (options.get(option).equalsIgnoreCase(hello)) {
 			npcsay(player, npc,
 				"Not very well, actually",
