@@ -78,11 +78,14 @@ public class RegionManager {
 	public Collection<GameObject> getLocalObjects(final Mob entity) {
 		LinkedHashSet<GameObject> localObjects = new LinkedHashSet<GameObject>();
 		for (final Iterator<Region> region = getSurroundingRegions(entity.getLocation()).iterator(); region.hasNext(); ) {
-			for (final Iterator<GameObject> o = region.next().getGameObjects().iterator(); o.hasNext(); ) {
-				if (o == null) continue;
-				final GameObject gameObject = o.next();
-				if (gameObject.getLocation().withinGridRange(entity.getLocation(), getWorld().getServer().getConfig().VIEW_DISTANCE)) {
-					localObjects.add(gameObject);
+			Collection<GameObject> objects = region.next().getGameObjects();
+			synchronized (objects) {
+				for (final Iterator<GameObject> o = objects.iterator(); o.hasNext(); ) {
+					if (o == null) continue;
+					final GameObject gameObject = o.next();
+					if (gameObject.getLocation().withinGridRange(entity.getLocation(), getWorld().getServer().getConfig().VIEW_DISTANCE)) {
+						localObjects.add(gameObject);
+					}
 				}
 			}
 		}
