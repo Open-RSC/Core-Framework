@@ -286,17 +286,21 @@ public class NpcBehavior {
 
 	public void retreat() {
 		state = State.RETREAT;
-		npc.getOpponent().setLastOpponent(npc);
-		npc.setLastOpponent(npc.getOpponent());
+		Mob opponent = npc.getOpponent();
+		if (opponent == null) return;
+
+		opponent.setLastOpponent(npc);
+		npc.setLastOpponent(opponent);
 		npc.setCombatTimer();
-		if (npc.getOpponent().isPlayer()) {
-			Player victimPlayer = ((Player) npc.getOpponent());
+		if (opponent.isPlayer()) {
+			Player victimPlayer = ((Player) opponent);
 			victimPlayer.resetAll();
 			victimPlayer.message("Your opponent is retreating");
 			ActionSender.sendSound(victimPlayer, "retreat");
 		}
 		npc.setLastCombatState(CombatState.RUNNING);
-		npc.getOpponent().setLastCombatState(CombatState.WAITING);
+		opponent.setLastCombatState(CombatState.WAITING);
+
 		npc.resetCombatEvent();
 
 		Point walkTo = Point.location(DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX()),
