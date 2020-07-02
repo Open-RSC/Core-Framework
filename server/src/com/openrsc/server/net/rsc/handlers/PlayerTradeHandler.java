@@ -41,6 +41,8 @@ public class PlayerTradeHandler implements PacketHandler {
 			return;
 		}
 
+		player.interruptPlugins();
+
 		OpcodeIn opcode = OpcodeIn.getFromList(packet.getID(),
 			OpcodeIn.PLAYER_INIT_TRADE_REQUEST, OpcodeIn.PLAYER_ACCEPTED_INIT_TRADE_REQUEST,
 			OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER, OpcodeIn.PLAYER_DECLINED_TRADE,
