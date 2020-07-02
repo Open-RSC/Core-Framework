@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.database.struct.PlayerLoginData;
 import com.openrsc.server.database.struct.PlayerRecoveryQuestions;
 import com.openrsc.server.login.CharacterCreateRequest;
 import com.openrsc.server.login.LoginRequest;
@@ -115,7 +116,13 @@ public class LoginPacketHandler {
 					user = getString(packet.getBuffer()).trim();
 					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 
-					int playerID = server.getDatabase().getPlayerLoginData(user).id;
+					PlayerLoginData player = server.getDatabase().getPlayerLoginData(user);
+					if (player == null) {
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+						channel.close();
+						return;
+					}
+					int playerID = player.id;
 
 					String[] questions = new String[5];
 					boolean foundAndHasRecovery = false;
