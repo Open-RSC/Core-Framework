@@ -88,16 +88,25 @@ public class Crafting implements UseInvTrigger,
 				if (inventory.hasInInventory(ItemId.TEDDY_HEAD.id())
 					&& inventory.hasInInventory(ItemId.TEDDY_BOTTOM.id())
 					&& inventory.hasInInventory(ItemId.THREAD.id())) {
-					if (getCurrentLevel(player, Skills.CRAFTING) >= 15) {
-						carriedItems.remove(new Item(ItemId.TEDDY_HEAD.id()));
-						carriedItems.remove(new Item(ItemId.TEDDY_BOTTOM.id()));
-						carriedItems.remove(new Item(ItemId.THREAD.id()));
-						carriedItems.getInventory().add(new Item(ItemId.TEDDY.id()));
-						player.message("You stitch together the teddy parts");
-					} else
+					if (getCurrentLevel(player, Skills.CRAFTING) < 15) {
 						player.message("You need level 15 crafting to fix the teddy");
-				} else
+						return;
+					}
+
+					int stage = player.getCache().hasKey("miniquest_dwarf_youth_rescue") ? player.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
+					if (stage < 1) {
+						player.message("I'd better get these parts back to the kid");
+						return;
+					}
+					carriedItems.remove(new Item(ItemId.TEDDY_HEAD.id()));
+					carriedItems.remove(new Item(ItemId.TEDDY_BOTTOM.id()));
+					carriedItems.remove(new Item(ItemId.THREAD.id()));
+					carriedItems.getInventory().add(new Item(ItemId.TEDDY.id()));
+					player.message("You stitch together the teddy parts");
+
+				} else {
 					player.message("You need the two teddy halves and some thread");
+				}
 			} else {
 				makeLeather(player, item1, item2);
 			}
@@ -106,16 +115,25 @@ public class Crafting implements UseInvTrigger,
 				if (inventory.hasInInventory(ItemId.TEDDY_HEAD.id())
 					&& inventory.hasInInventory(ItemId.TEDDY_BOTTOM.id())
 					&& inventory.hasInInventory(ItemId.THREAD.id())) {
-					if (getCurrentLevel(player, Skills.CRAFTING) >= 15) {
-						carriedItems.remove(new Item(ItemId.TEDDY_HEAD.id()));
-						carriedItems.remove(new Item(ItemId.TEDDY_BOTTOM.id()));
-						carriedItems.remove(new Item(ItemId.THREAD.id()));
-						carriedItems.getInventory().add(new Item(ItemId.TEDDY.id(), 1));
-						player.message("You stitch together the teddy parts");
-					} else
+					if (getCurrentLevel(player, Skills.CRAFTING) < 15) {
 						player.message("You need level 15 crafting to fix the teddy");
-				} else
+						return;
+					}
+
+					int stage = player.getCache().hasKey("miniquest_dwarf_youth_rescue") ? player.getCache().getInt("miniquest_dwarf_youth_rescue") : -1;
+					if (stage < 1) {
+						player.message("I'd better get these parts back to the kid");
+						return;
+					}
+					carriedItems.remove(new Item(ItemId.TEDDY_HEAD.id()));
+					carriedItems.remove(new Item(ItemId.TEDDY_BOTTOM.id()));
+					carriedItems.remove(new Item(ItemId.THREAD.id()));
+					carriedItems.getInventory().add(new Item(ItemId.TEDDY.id()));
+					player.message("You stitch together the teddy parts");
+
+				} else {
 					player.message("You need the two teddy halves and some thread");
+				}
 			} else {
 				makeLeather(player, item2, item1);
 			}
