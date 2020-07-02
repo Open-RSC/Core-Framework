@@ -683,6 +683,13 @@ public class Functions {
 	 * Increments the current batch progress by 1
 	 * @return Returns false if batch is completed
 	 */
+	public static void updatebatchlocation(Point location) {
+		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		if (batch == null) return;
+
+		batch.setLocation(location);
+	}
+
 	public static void updatebatch() {
 		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
 		if (player == null) return;

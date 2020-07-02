@@ -108,11 +108,15 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 				player.incExp(Skills.FIREMAKING, getExp(player.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
 			}
 
-			// Repeat on success
-			updatebatch();
-			if (!ifinterrupted() && !ifbatchcompleted()) {
+			if (config().BATCH_PROGRESSION) {
 				firemakingWalk(player);
 				delay(2);
+			}
+
+			// Repeat on success
+			updatebatchlocation(player.getLocation());
+			updatebatch();
+			if (!ifinterrupted() && !ifbatchcompleted()) {
 
 				// Drop new log
 				Item log = player.getCarriedItems().getInventory().get(
@@ -132,6 +136,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
 
 			// Repeat on fail
+			updatebatchlocation(player.getLocation());
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
 				delay(2);
@@ -196,10 +201,13 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 					});
 
 				player.incExp(Skills.FIREMAKING, def.getExp(), true);
-				firemakingWalk(player);
+				if (config().BATCH_PROGRESSION) {
+					firemakingWalk(player);
+				}
 			}
 
 			// Repeat if success
+			updatebatchlocation(player.getLocation());
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
 				// Drop new log
@@ -221,6 +229,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
 
+			updatebatchlocation(player.getLocation());
 			updatebatch();
 			if (!ifinterrupted() && !ifbatchcompleted()) {
 				delay(2);
