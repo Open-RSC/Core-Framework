@@ -307,7 +307,6 @@ public class ScriptContext {
 		// kill it.
 		if (getBatch() != null) {
 			if (batch.isShowingBar()) {
-				batch.update();
 				batch.stop();
 			}
 			this.batch = null;

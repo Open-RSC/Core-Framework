@@ -537,10 +537,10 @@ public class PacketHandler {
 			mc.initializeBatchProgressVariables(repeatFor, delay);
 			mc.showBatchProgressBar();
 		}
-		if (actionType == 2) {
+		else if (actionType == 2) {
 			mc.resetBatchProgressBar();
 		}
-		if (actionType == 3) {
+		else if (actionType == 3) {
 			int repeat = packetsIncoming.getByte() & 0xff;
 			mc.updateBatchProgressBar(repeat);
 		}

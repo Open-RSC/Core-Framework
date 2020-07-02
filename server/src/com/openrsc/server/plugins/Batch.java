@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins;
 
 import com.openrsc.server.event.SingleEvent;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 
@@ -12,6 +13,7 @@ public class Batch {
 	private int delay;
 	private boolean showingBar = false;
 	private boolean completed;
+	private Point location;
 
 	/**
 	 * Creates a new instance of a Batch bar.
@@ -19,6 +21,7 @@ public class Batch {
 	 */
 	public Batch(Player player) {
 		this.player = player;
+		this.location = player.getLocation();
 	}
 
 	/**
@@ -66,6 +69,10 @@ public class Batch {
 	 * @return Returns false when the batch is complete
 	 */
 	public void update() {
+		if (!getPlayer().getLocation().equals(this.location)) {
+			stop();
+			return;
+		}
 		incrementBatch();
 		if (wantBatching() && isShowingBar()) ActionSender.sendUpdateProgressBar(getPlayer(), getCurrentBatchProgress());
 		if (getCurrentBatchProgress() == getTotalBatch()) {
@@ -81,4 +88,8 @@ public class Batch {
 	private boolean wantBatching() { return getPlayer().getConfig().BATCH_PROGRESSION; }
 	public boolean isShowingBar() { return showingBar; }
 	public boolean isCompleted() { return completed; }
+
+	public void setLocation(Point location) {
+		this.location = location;
+	}
 }
