@@ -189,7 +189,7 @@ public class Fishing implements OpLocTrigger {
 						player.getCache().set("tutorial", 42);
 				}
 			}
-			if (config().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 100) <= def.getDepletion()) {
+			if (config().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 250) <= def.getDepletion()) {
 				obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
 					GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), 668, object.getDirection(), object.getType());
