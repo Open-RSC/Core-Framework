@@ -133,7 +133,7 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		return tickCompleted.get();
 	}
 
-	private synchronized void setTickCompleted(boolean tickCompleted) {
+	private void setTickCompleted(boolean tickCompleted) {
 		this.tickCompleted.getAndSet(tickCompleted);
 	}
 
