@@ -711,7 +711,7 @@ public class NpcDrops {
 		currentNpcDrops.addTableDrop(herbDropTable, 7);
 		currentNpcDrops.addTableDrop(rareDropTable, 1);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 15, 36);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 22);
+		currentNpcDrops.addItemDrop(ItemId.LIMPWURT_ROOT.id(), 1, 22);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 12);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 28, 10);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 62, 4);
