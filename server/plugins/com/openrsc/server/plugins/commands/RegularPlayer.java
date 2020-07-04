@@ -374,8 +374,7 @@ public final class RegularPlayer implements CommandTrigger {
 		int players = 0;
 		for (Player targetPlayer : player.getWorld().getPlayers()) {
 			boolean elevated = targetPlayer.hasElevatedPriveledges();
-			boolean privacy = targetPlayer.getSettings().getPrivacySetting(1) || elevated;
-			if (targetPlayer.isDefaultUser() && !privacy) {
+			if (targetPlayer.isDefaultUser() && !elevated) {
 				players++;
 			}
 		}
@@ -386,8 +385,7 @@ public final class RegularPlayer implements CommandTrigger {
 		ArrayList<String> IP_ADDRESSES = new ArrayList<>();
 		for (Player targetPlayer : player.getWorld().getPlayers()) {
 			boolean elevated = targetPlayer.hasElevatedPriveledges();
-			boolean privacy = targetPlayer.getSettings().getPrivacySetting(1) || elevated;
-			if (!IP_ADDRESSES.contains(targetPlayer.getCurrentIP()) && !privacy)
+			if (!IP_ADDRESSES.contains(targetPlayer.getCurrentIP()) && !elevated)
 				IP_ADDRESSES.add(targetPlayer.getCurrentIP());
 		}
 		player.message(messagePrefix + "There are " + IP_ADDRESSES.size() + " unique players online");
