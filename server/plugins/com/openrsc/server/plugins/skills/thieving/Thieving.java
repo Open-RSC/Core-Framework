@@ -74,7 +74,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		Npc shopkeeper = ifnearvisnpc(player, stall.getOwnerID(), 8);
 		Npc guard = null;
 		if (stall.equals(Stall.BAKERS_STALL)) {
-			guard = ifnearvisnpc(player, 5, NpcId.GUARD_ARDOUGNE.id());
+			guard = ifnearvisnpc(player, NpcId.GUARD_ARDOUGNE.id(), 5);
 		} else if (stall.equals(Stall.SILK_STALL) || stall.equals(Stall.FUR_STALL)) {
 			guard = ifnearvisnpc(player, 5, NpcId.KNIGHT.id(), NpcId.GUARD_ARDOUGNE.id());
 		} else if (stall.equals(Stall.SILVER_STALL) || stall.equals(Stall.SPICES_STALL)) {
