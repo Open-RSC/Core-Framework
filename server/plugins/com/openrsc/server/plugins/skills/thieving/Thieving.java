@@ -636,13 +636,14 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You need a lockpick for this lock");
 			return;
 		}
-		if (config().WANT_FATIGUE) {
-			if (config().STOP_SKILLING_FATIGUED >= 2
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
-				player.message("You are too tired to pick the lock");
-				return;
-			}
-		}
+//		// commented since may get people stuck behind door otherwise
+//		if (config().WANT_FATIGUE) {
+//			if (config().STOP_SKILLING_FATIGUED >= 2
+//				&& player.getFatigue() >= player.MAX_FATIGUE) {
+//				player.message("You are too tired to pick the lock");
+//				return;
+//			}
+//		}
 		if (succeedPickLockThieving(player, req) && !goThrough) {
 			player.playerServerMessage(MessageType.QUEST, "You manage to pick the lock");
 			doDoor(obj, player);

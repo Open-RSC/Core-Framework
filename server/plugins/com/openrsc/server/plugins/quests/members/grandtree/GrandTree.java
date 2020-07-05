@@ -161,8 +161,6 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 								player.message("you follow king shareem up the ladder");
 								teleport(player, 415, 163);
 								player.updateQuestStage(this, 1);
-								//no longer needed
-								player.getCache().remove("helped_femi");
 							}
 						}
 					} else if (option == 1) {
@@ -1620,6 +1618,10 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 			}
 			mes("you close the chest");
 			delay(3);
+			if (player.getCache().hasKey("helped_femi") && player.getQuestStage(this) > 10) {
+				//no longer needed
+				player.getCache().remove("helped_femi");
+			}
 		}
 		else if (obj.getID() == WATCH_TOWER_STONE_STAND && (item.getCatalogId() == ItemId.PEBBLE_3.id()
 				|| item.getCatalogId() == ItemId.PEBBLE_2.id() || item.getCatalogId() == ItemId.PEBBLE_4.id() || item.getCatalogId() == ItemId.PEBBLE_1.id())) {
