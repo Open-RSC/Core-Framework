@@ -14,6 +14,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.player.ScriptContext;
 import com.openrsc.server.model.entity.update.Bubble;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.states.Action;
@@ -95,11 +96,13 @@ public class Functions {
 	 * @param item
 	 */
 	public static void thinkbubble(final Item item) {
-		final Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return;
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 		final Bubble bubble = new Bubble(player, item.getCatalogId());
 		Npc npc;
-		if ((npc = PluginTask.getContextPluginTask().getScriptContext().getInteractingNpc()) != null) {
+		if ((npc = scriptContext.getInteractingNpc()) != null) {
 			npc.face(player);
 			player.face(npc);
 		}
@@ -124,7 +127,9 @@ public class Functions {
 	 * @param messages
 	 */
 	public static void mes(final Npc npc, final String... messages) {
-		final Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return;
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
@@ -145,7 +150,9 @@ public class Functions {
 	 * @param messages
 	 */
 	public static void mes(final String... messages) {
-		final Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return;
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
@@ -162,7 +169,9 @@ public class Functions {
 	 * @param messages
 	 */
 	public static void say(final Player player, Npc npc, final String... messages) {
-		npc = npc != null ? npc : PluginTask.getContextPluginTask().getScriptContext().getInteractingNpc();
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return;
+		npc = npc != null ? npc : scriptContext.getInteractingNpc();
 		if(npc != null) {
 			npc.face(player);
 		}
@@ -391,6 +400,8 @@ public class Functions {
 	 * @return
 	 */
 	public static Npc ifnearvisnpc(Player player, final int npcId, final int radius) {
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return null;
 		final Iterable<Npc> npcsInView = player.getViewArea().getNpcsInView();
 		Npc closestNpc = null;
 		for (int next = 0; next < radius; next++) {
@@ -405,14 +416,16 @@ public class Functions {
 		}
 
 		if(closestNpc != null) {
-			PluginTask.getContextPluginTask().getScriptContext().setCurrentAction(Action.talknpc);
-			PluginTask.getContextPluginTask().getScriptContext().setInteractingNpc(closestNpc);
+			scriptContext.setCurrentAction(Action.talknpc);
+			scriptContext.setInteractingNpc(closestNpc);
 		}
 
 		return closestNpc;
 	}
 
 	public static Npc ifnearvisnpc(Player player, final int radius, final int... npcId) {
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return null;
 		final Iterable<Npc> npcsInView = player.getViewArea().getNpcsInView();
 		Npc closestNpc = null;
 		for (int next = 0; next < radius; next++) {
@@ -426,8 +439,8 @@ public class Functions {
 		}
 
 		if(closestNpc != null) {
-			PluginTask.getContextPluginTask().getScriptContext().setCurrentAction(Action.talknpc);
-			PluginTask.getContextPluginTask().getScriptContext().setInteractingNpc(closestNpc);
+			scriptContext.setCurrentAction(Action.talknpc);
+			scriptContext.setInteractingNpc(closestNpc);
 		}
 
 		return closestNpc;
@@ -658,11 +671,13 @@ public class Functions {
 	}
 
 	public static boolean ifinterrupted() {
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return true;
 		final PluginTask contextPlugin = PluginTask.getContextPluginTask();
 		if(!contextPlugin.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			return false;
 		}
-		return contextPlugin.getScriptContext().getInterrupted();
+		return scriptContext.getInterrupted();
 	}
 
 	/**
@@ -670,13 +685,15 @@ public class Functions {
 	 * @param totalBatch The total repetitions of a task
 	 */
 	public static void startbatch(int totalBatch) {
-		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return;
+		Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 		Batch batch = new Batch(player);
 		batch.initialize(totalBatch);
 		batch.start();
 
-		PluginTask.getContextPluginTask().getScriptContext().setBatch(batch);
+		scriptContext.setBatch(batch);
 	}
 
 	/**
@@ -684,25 +701,31 @@ public class Functions {
 	 * @return Returns false if batch is completed
 	 */
 	public static void updatebatchlocation(Point location) {
-		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return;
+		Batch batch = scriptContext.getBatch();
 		if (batch == null) return;
 
 		batch.setLocation(location);
 	}
 
 	public static void updatebatch() {
-		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return;
+		Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
-		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		Batch batch = scriptContext.getBatch();
 		if (batch == null) return;
 
 		batch.update();
 	}
 
 	public static boolean ifbatchcompleted() {
-		Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return true;
+		Player player = scriptContext.getContextPlayer();
 		if (player == null) return true;
-		Batch batch = PluginTask.getContextPluginTask().getScriptContext().getBatch();
+		Batch batch = scriptContext.getBatch();
 		if (batch == null) return true;
 		return batch.isCompleted();
 	}
@@ -1373,7 +1396,9 @@ public class Functions {
 	}
 
 	public static ServerConfiguration config() {
-		final Player player = PluginTask.getContextPluginTask().getScriptContext().getContextPlayer();
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return null;
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return null;
 		return player.getConfig();
 	}
