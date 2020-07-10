@@ -89,8 +89,7 @@ public final class EntityHandler {
 		NpcId.BOLKOY.id(), NpcId.TAILOR.id(), NpcId.MAGIC_STORE_OWNER.id(),
 		NpcId.JIMINUA.id(), NpcId.SHOP_KEEPER_TRAINING_CAMP.id(), NpcId.FRENITA.id(),
 		NpcId.ROMETTI.id(), NpcId.HECKEL_FUNCH.id(),
-		NpcId.HUDO_GLENFAD.id(), NpcId.GNOME_WAITER.id(),
-		NpcId.GULLUCK.id(), NpcId.FERNAHEI.id(), NpcId.OBLI.id(),
+		NpcId.HUDO_GLENFAD.id(), NpcId.GULLUCK.id(), NpcId.FERNAHEI.id(), NpcId.OBLI.id(),
 		NpcId.CHADWELL.id(), NpcId.OGRE_MERCHANT.id(), NpcId.OGRE_TRADER_GENSTORE.id(),
 		NpcId.OGRE_TRADER_ROCKCAKE.id(), NpcId.OGRE_TRADER_FOOD.id(), NpcId.SHANTAY_PASS_GUARD_MOVING.id(),
 		NpcId.SHANTAY_PASS_GUARD_STANDING.id(), NpcId.ASSISTANT.id(), NpcId.NURMOF.id(),
@@ -234,6 +233,7 @@ public final class EntityHandler {
 				npcs.get(npcId).setCommand1("Trade");
 			}
 
+			npcs.get(NpcId.GNOME_WAITER.id()).setCommand2("Trade");
 			npcs.get(NpcId.BLURBERRY_BARMAN.id()).setCommand2("Trade");
 			if (getServer().getConfig().WANT_RUNECRAFT) {
 				npcs.get(NpcId.AUBURY.id()).setCommand2("Trade");

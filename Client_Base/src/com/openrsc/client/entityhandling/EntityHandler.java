@@ -1606,7 +1606,7 @@ public class EntityHandler {
 		sprites = new int[]{0, 1, 2, -1, -1, -1, 83, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("DeVinci", "He has a colourful personality", "", 32, 33, 27, 26, false, sprites, 16746544, 11189213, 11189213, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 80, 62};
-		npcs.add(new NPCDef("king Lathas", "King Lanthas of east ardounge", shopOption, 15, 60, 30, 15, false, sprites, 1, 16711680, 16777215, 15523536, 145, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("king Lathas", "King Lanthas of east ardounge", "", 15, 60, 30, 15, false, sprites, 1, 16711680, 16777215, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Head wizard", "He runs the wizards guild", "", 20, 15, 3, 10, false, sprites, 1, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};

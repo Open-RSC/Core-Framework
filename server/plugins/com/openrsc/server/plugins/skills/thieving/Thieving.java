@@ -332,7 +332,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		}
 		final ArrayList<LootItem> lootTable = new ArrayList<LootItem>(pickpocket.getLootTable());
 		String thievedMobName = npc.getDef().getName().toLowerCase();
-		//gnome local, child, trainer and barman all known as gnome for the thiev messages
+		//gnome local, child, trainer, waiter and barman all known as gnome for the thiev messages
 		//yanille watchman known simply as watchman
 		final String thievedMobString = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" :
 			thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
@@ -730,6 +730,13 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
 			new LootItem(ItemId.KING_WORM.id(), 1, 20)),
 		GNOME_TRAINER(75, 793, "Get your hands off my valuables human",
+			new LootItem(ItemId.COINS.id(), 200, 22),
+			new LootItem(ItemId.COINS.id(), 400, 18),
+			new LootItem(ItemId.GOLD.id(), 1, 10),
+			new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
+			new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
+			new LootItem(ItemId.KING_WORM.id(), 1, 20)),
+		GNOME_WAITER(75, 793, "Get your hands off my valuables human",
 			new LootItem(ItemId.COINS.id(), 200, 22),
 			new LootItem(ItemId.COINS.id(), 400, 18),
 			new LootItem(ItemId.GOLD.id(), 1, 10),
