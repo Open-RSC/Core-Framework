@@ -1245,15 +1245,15 @@ public class DemonSlayer implements QuestInterface,
 		return false;
 	}
 
-	public void onKillNpc(Player player, Npc n) {
-		n.getSkills().setLevel(Skills.HITS, n.getDef().getHits());
+	public void onKillNpc(Player player, Npc npc) {
+		npc.getSkills().setLevel(Skills.HITS, npc.getDef().getHits());
 		if (player.getMenuHandler() == null && !player.getAttribute("delrith", false)) {
 			player.setAttribute("delrith", true);
 			mes("As you strike Delrith a vortex opens up");
 			delay(3);
-			say(player, n, "Now what was that incantation again");
+			say(player, npc, "Now what was that incantation again");
 			if (player.inCombat()) {
-				int choice = multi(player, n,
+				int choice = multi(player, npc,
 					"Carlem Gabindo Purchai Zaree Camerinthum",
 					"Purchai Zaree Gabindo Carlem Camerinthum",
 					"Purchai Camerinthum Aber Gabindo Carlem",
@@ -1262,7 +1262,7 @@ public class DemonSlayer implements QuestInterface,
 					if (choice == 3) {
 						mes("Delrith is sucked back into the dark demension from which he came");
 						delay(2);
-						n.remove();
+						npc.remove();
 						if (player.getQuestStage(Quests.DEMON_SLAYER) != -1) {
 							//remove flags in case they are present with drop trick
 							player.getCache().remove("done_bone_task");
@@ -1278,6 +1278,7 @@ public class DemonSlayer implements QuestInterface,
 						player.message("That was the wrong incantation");
 					}
 				}
+				npc.killed = false;
 				player.setAttribute("delrith", false);
 			}
 		}

@@ -125,15 +125,15 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onKillNpc(Player player, Npc n) {
-		if (n.getCombatEvent() != null) {
-			n.getCombatEvent().resetCombat();
+	public void onKillNpc(Player player, Npc npc) {
+		if (npc.getCombatEvent() != null) {
+			npc.getCombatEvent().resetCombat();
 		}
-		n.getSkills().setLevel(Skills.HITS, 5);
+		npc.getSkills().setLevel(Skills.HITS, 5);
 		Npc leFaye = addnpc(player.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, (int)TimeUnit.SECONDS.toMillis(63));
 		delay();
 		npcsay(player, leFaye, "Please spare my son");
-		int option = multi(player, n, "Tell me how to untrap Merlin and I might",
+		int option = multi(player, npc, "Tell me how to untrap Merlin and I might",
 			"No he deserves to die", "OK then");
 		if (option == 0) {
 			player.updateQuestStage(this, 3);
@@ -178,11 +178,15 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 					"You will find the magic words at the base of one of the chaos altars");
 				npcsay(player, leFaye, "Which chaos altar I cannot remember");
 			}
+			npc.killed = false;
 		} else if (option == 1) {
 			player.message("You kill Mordred");
-			n.remove();
+			npc.remove();
 		} else if (option == 2) {
 			player.message("Morgan Le Faye vanishes");
+			npc.killed = false;
+		} else if (option == -1) {
+			npc.killed = false;
 		}
 	}
 

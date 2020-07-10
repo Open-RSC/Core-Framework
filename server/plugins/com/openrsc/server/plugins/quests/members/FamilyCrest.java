@@ -790,8 +790,8 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 	 */
 
 	@Override
-	public void onKillNpc(Player player, Npc n) {
-		if (n.getID() == NpcId.CHRONOZON.id()) {
+	public void onKillNpc(Player player, Npc npc) {
+		if (npc.getID() == NpcId.CHRONOZON.id()) {
 			String[] elementals = new String[]{"wind", "water", "earth",
 				"fire"};
 			boolean regenerate = false;
@@ -802,14 +802,15 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 				}
 			}
 			if (regenerate) {
-				n.getSkills().setLevel(Skills.HITS, n.getDef().hits);
+				npc.getSkills().setLevel(Skills.HITS, npc.getDef().hits);
 				player.message("Chronozon regenerates");
+				npc.killed = false;
 			} else {
 				if (player.getQuestStage(this) == 8) {
 					player.getWorld().registerItem(
-						new GroundItem(player.getWorld(), ItemId.CREST_FRAGMENT_THREE.id(), n.getX(), n.getY(), 1, player));
+						new GroundItem(player.getWorld(), ItemId.CREST_FRAGMENT_THREE.id(), npc.getX(), npc.getY(), 1, player));
 				}
-				n.remove();
+				npc.remove();
 			}
 		}
 

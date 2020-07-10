@@ -261,8 +261,8 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onKillNpc(Player player, Npc n) {
-		if (n.getID() == NpcId.COUNT_DRAYNOR.id()) {
+	public void onKillNpc(Player player, Npc npc) {
+		if (npc.getID() == NpcId.COUNT_DRAYNOR.id()) {
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.STAKE.id()) && player.getCarriedItems().hasCatalogID(ItemId.HAMMER.id())) {
 				Item item = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(ItemId.STAKE.id(), Optional.of(false)));
@@ -271,18 +271,22 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 						player.getCarriedItems().getEquipment().searchEquipmentForItem(ItemId.STAKE.id())
 					);
 				}
-				if (item == null) return;
+				if (item == null) {
+					npc.killed = false;
+					return;
+				}
 				player.getCarriedItems().remove(item);
 				player.message("You hammer the stake in to the vampires chest!");
-				n.remove();
+				npc.remove();
 
 				// Completed Vampire Slayer Quest.
 				if (player.getQuestStage(this) == 2) {
 					player.sendQuestComplete(Quests.VAMPIRE_SLAYER);
 				}
 			} else {
-				n.getSkills().setLevel(Skills.HITS, 25);
+				npc.getSkills().setLevel(Skills.HITS, 25);
 				player.message("The vampire seems to regenerate");
+				npc.killed = false;
 			}
 		}
 	}

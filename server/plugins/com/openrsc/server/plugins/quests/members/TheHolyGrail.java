@@ -376,12 +376,12 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onKillNpc(Player player, Npc n) {
-		if (n.getID() == NpcId.BLACK_KNIGHT_TITAN.id()) {
+	public void onKillNpc(Player player, Npc npc) {
+		if (npc.getID() == NpcId.BLACK_KNIGHT_TITAN.id()) {
 			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.EXCALIBUR.id())) {
 				player.getWorld().registerItem(
-					new GroundItem(player.getWorld(), ItemId.BIG_BONES.id(), n.getX(), n.getY(), 1, player));
-				n.remove();
+					new GroundItem(player.getWorld(), ItemId.BIG_BONES.id(), npc.getX(), npc.getY(), 1, player));
+				npc.remove();
 				player.message("Well done you have defeated the black knight titan");
 				player.teleport(414, 11, false);
 			} else {
@@ -390,12 +390,13 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 				Npc otherTitan = ifnearvisnpc(player, NpcId.BLACK_KNIGHT_TITAN.id(), 5);
 				if (otherTitan == null) {
 					Npc newTitan = addnpc(player.getWorld(), NpcId.BLACK_KNIGHT_TITAN.id(), 413, 11);
-					n.remove();
+					npc.remove();
 				} else {
-					n.teleport(413, 11);
-					n.getSkills().setLevel(Skills.HITS, n.getDef().hits);
+					npc.teleport(413, 11);
+					npc.getSkills().setLevel(Skills.HITS, npc.getDef().hits);
 					npcsay(player, otherTitan, "You can't defeat me little man",
 						"I'm invincible!");
+					npc.killed = false;
 				}
 				player.message("Maybe you need something more to beat the titan");
 			}

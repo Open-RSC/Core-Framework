@@ -618,24 +618,25 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public void onKillNpc(Player player, Npc n) {
-		if (n.getID() == NpcId.THE_FIRE_WARRIOR_OF_LESARKUS.id()) {
+	public void onKillNpc(Player player, Npc npc) {
+		if (npc.getID() == NpcId.THE_FIRE_WARRIOR_OF_LESARKUS.id()) {
 			if (!player.getCache().hasKey("killedLesarkus")) {
 				player.getCache().store("killedLesarkus", true);
 			}
 		}
-		else if (n.getID() == NpcId.LUCIEN_EDGE.id()) {
+		else if (npc.getID() == NpcId.LUCIEN_EDGE.id()) {
 			if (player.getQuestStage(this) == -1 || player.getQuestStage(this) == -2) {
 				player.message("You have already completed this quest");
-				n.getSkills().setLevel(Skills.HITS, n.getSkills().getMaxStat(Skills.HITS));
+				npc.getSkills().setLevel(Skills.HITS, npc.getSkills().getMaxStat(Skills.HITS));
+				npc.killed = false;
 				return;
 			}
-			n.getSkills().setLevel(Skills.HITS, n.getSkills().getMaxStat(Skills.HITS));
-			npcsay(player, n, "You may have defeated me for now",
+			npc.getSkills().setLevel(Skills.HITS, npc.getSkills().getMaxStat(Skills.HITS));
+			npcsay(player, npc, "You may have defeated me for now",
 				"But I will be back");
 			player.sendQuestComplete(Quests.TEMPLE_OF_IKOV);
-			n.displayNpcTeleportBubble(n.getX(), n.getY());
-			n.remove();
+			npc.displayNpcTeleportBubble(npc.getX(), npc.getY());
+			npc.remove();
 		}
 	}
 

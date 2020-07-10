@@ -16,7 +16,6 @@ import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.CollisionFlag;
-import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +34,7 @@ public abstract class Mob extends Entity {
 	private final Skills skills = new Skills(this.getWorld(), this);
 	private final WalkingQueue walkingQueue = new WalkingQueue(this);
 	private int killType = 0;
-	protected boolean killed = false;
+	public boolean killed = false;
 	private int combatStyle = com.openrsc.server.constants.Skills.CONTROLLED_MODE;
 	private int poisonDamage = 0;
 	private RangeEventNpc rangeEventNpc;
