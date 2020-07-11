@@ -1276,9 +1276,11 @@ public class DemonSlayer implements QuestInterface,
 						delay(2);
 						player.message("And Delrith is still here");
 						player.message("That was the wrong incantation");
+						npc.killed = false;
 					}
+				} else {
+					npc.killed = false;
 				}
-				npc.killed = false;
 				player.setAttribute("delrith", false);
 			}
 		}
