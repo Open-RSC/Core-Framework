@@ -83,7 +83,7 @@ public final class ItemEquip implements PacketHandler {
 
 
 	public static boolean passCheck(Player player, OpcodeIn opcode) {
-		if (opcode == null || player.isBusy()) {
+		if (opcode == null || (player.isBusy() && !player.inCombat())) {
 			return false;
 		}
 		else if (player.getDuel().isDuelActive() && player.getDuel().getDuelSetting(3)) {
