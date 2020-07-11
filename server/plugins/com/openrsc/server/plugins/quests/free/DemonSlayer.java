@@ -1215,7 +1215,6 @@ public class DemonSlayer implements QuestInterface,
 						affectedmob.getSkills().setLevel(Skills.HITS, affectedmob.getDef().getHits());
 						player.resetMenuHandler();
 						player.setOption(-1);
-						player.setAttribute("delrith", false);
 					}
 					break;
 				case -1:
@@ -1247,43 +1246,42 @@ public class DemonSlayer implements QuestInterface,
 
 	public void onKillNpc(Player player, Npc npc) {
 		npc.getSkills().setLevel(Skills.HITS, npc.getDef().getHits());
-		if (player.getMenuHandler() == null && !player.getAttribute("delrith", false)) {
-			player.setAttribute("delrith", true);
+
+		if (player.getMenuHandler() == null
+			&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.SILVERLIGHT.id())
+			&& player.inCombat()) {
+
 			mes("As you strike Delrith a vortex opens up");
 			delay(3);
 			say(player, npc, "Now what was that incantation again");
-			if (player.inCombat()) {
-				int choice = multi(player, npc,
-					"Carlem Gabindo Purchai Zaree Camerinthum",
-					"Purchai Zaree Gabindo Carlem Camerinthum",
-					"Purchai Camerinthum Aber Gabindo Carlem",
-					"Carlem Aber Camerinthum Purchai Gabindo");
-				if (choice != -1) {
-					if (choice == 3) {
-						mes("Delrith is sucked back into the dark demension from which he came");
-						delay(2);
-						npc.remove();
-						if (player.getQuestStage(Quests.DEMON_SLAYER) != -1) {
-							//remove flags in case they are present with drop trick
-							player.getCache().remove("done_bone_task");
-							player.getCache().remove("traiborn_bones");
-							player.sendQuestComplete(getQuestId());
-						}
-					} else {
-						mes("As you chant, Delrith is sucked towards the vortex");
-						delay(2);
-						mes("Suddenly the vortex closes");
-						delay(2);
-						player.message("And Delrith is still here");
-						player.message("That was the wrong incantation");
-						npc.killed = false;
-					}
-				} else {
-					npc.killed = false;
+			int choice = multi(player, npc,
+				"Carlem Gabindo Purchai Zaree Camerinthum",
+				"Purchai Zaree Gabindo Carlem Camerinthum",
+				"Purchai Camerinthum Aber Gabindo Carlem",
+				"Carlem Aber Camerinthum Purchai Gabindo");
+			if (choice == -1) {
+				npc.killed = false;
+			} else if (choice == 3) {
+				mes("Delrith is sucked back into the dark demension from which he came");
+				delay(2);
+				npc.remove();
+				if (player.getQuestStage(Quests.DEMON_SLAYER) != -1) {
+					//remove flags in case they are present with drop trick
+					player.getCache().remove("done_bone_task");
+					player.getCache().remove("traiborn_bones");
+					player.sendQuestComplete(getQuestId());
 				}
-				player.setAttribute("delrith", false);
+				return;
+			} else {
+				mes("As you chant, Delrith is sucked towards the vortex");
+				delay(2);
+				mes("Suddenly the vortex closes");
+				delay(2);
+				player.message("And Delrith is still here");
+				player.message("That was the wrong incantation");
 			}
 		}
+		npc.killed = false;
 	}
 
 	@Override
