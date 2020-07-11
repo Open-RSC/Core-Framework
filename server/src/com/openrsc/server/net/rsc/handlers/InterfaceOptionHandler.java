@@ -322,7 +322,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 	}
 
 	private void auctionRefresh(Player player) {
-		if (System.currentTimeMillis() - player.getAttribute("ah_refresh", System.currentTimeMillis()) < 5000) {
+		if (System.currentTimeMillis() - player.getAttribute("ah_refresh", (System.currentTimeMillis() - 5000)) < 5000) {
 			ActionSender.sendBox(player,"@ora@[Auction House - Warning]@whi@ You are acting too quickly, please wait 5 seconds.", false);
 			return;
 		}
