@@ -1253,6 +1253,10 @@ public class DemonSlayer implements QuestInterface,
 
 			mes("As you strike Delrith a vortex opens up");
 			delay(3);
+			if (!player.inCombat()) {
+				npc.killed = false;
+				return;
+			}
 			say(player, npc, "Now what was that incantation again");
 			int choice = multi(player, npc,
 				"Carlem Gabindo Purchai Zaree Camerinthum",
