@@ -30,12 +30,25 @@ public class CombatFormula {
 	 * @return The randomized value.
 	 */
 	private static int calculateDamage(final int maxHit) {
+		if (maxHit == 0) return 0;
 		final Random r = DataConversions.getRandom();
 		final double mean = maxHit / 2.0;
-		double value = 1;
-		value = Math.floor(mean + r.nextGaussian() * (maxHit / 3.0));
-		value = value > maxHit ? maxHit : value;
-		value = value < 1 ? 1 : value;
+		double value = 0;
+		int i = 0;
+		do {
+			value = Math.floor(mean + r.nextGaussian() * (maxHit / 3.0));
+			if (++i >= 5) {
+				break;
+			}
+		} while (value < 1 || value > maxHit);
+
+		if (value > maxHit) {
+			value = maxHit;
+		}
+		if (value < 1) {
+			value = 1;
+		}
+
 		return (int)value;
 	}
 
