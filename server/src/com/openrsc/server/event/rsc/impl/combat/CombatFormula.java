@@ -31,13 +31,15 @@ public class CombatFormula {
 	 */
 	private static int calculateDamage(final int maxHit) {
 		if (maxHit == 0) return 0;
+		if (maxHit == 1) return 1;
+
 		final Random r = DataConversions.getRandom();
-		final double mean = maxHit / 2.0;
+		final double mean = maxHit / 2.0D;
 		double value = 0;
 		int i = 0;
 		do {
-			value = Math.floor(mean + r.nextGaussian() * (maxHit / 3.0));
-			if (++i >= 5) {
+			value = Math.floor(mean + r.nextGaussian() * (maxHit / 3.0D));
+			if (++i >= 25) {
 				break;
 			}
 		} while (value < 1 || value > maxHit);
