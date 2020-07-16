@@ -1266,7 +1266,7 @@ public class DemonSlayer implements QuestInterface,
 			if (choice == -1) {
 				npc.killed = false;
 			} else if (choice == 3) {
-				mes("Delrith is sucked back into the dark demension from which he came");
+				mes("Delrith is sucked back into the dark dimension from which he came");
 				delay(2);
 				npc.remove();
 				if (player.getQuestStage(Quests.DEMON_SLAYER) != -1) {
