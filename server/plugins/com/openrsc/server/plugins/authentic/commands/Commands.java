@@ -453,7 +453,7 @@ public class Commands {
 		else {
 			for (Player targetPlayer : player.getWorld().getPlayers()) {
 				boolean privacy = targetPlayer.getSettings().getPrivacySetting(1);
-				if (targetPlayer.isDefaultUser() && !privacy) {
+				if ((targetPlayer.isDefaultUser() || targetPlayer.getGroupID() == Group.PLAYER_MOD) && !privacy) {
 					players.add(targetPlayer);
 					locations.add(""); // No locations for regular players.
 					online++;
