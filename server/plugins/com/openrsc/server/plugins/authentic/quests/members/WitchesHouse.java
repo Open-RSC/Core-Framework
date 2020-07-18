@@ -30,7 +30,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 
 	/**
 	 * INFORMATION Rat appears on coords: 356, 494 Dropping cheese in the whole
-	 * room and rat appears on the same coord Rat is never removed untill you
+	 * room and rat appears on the same coord Rat is never removed until you
 	 * use magnet room inbounds : MIN X: 356 MAX X: 357 MIN Y: 494 MAX Y: 496
 	 */
 
@@ -344,22 +344,22 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 	}
 
 	@Override
-	public boolean blockKillNpc(Player player, Npc n) {
+	public boolean blockKillNpc(Player player, Npc npc) {
 		return DataConversions.inArray(new int[] {NpcId.SHAPESHIFTER_HUMAN.id(), NpcId.SHAPESHIFTER_SPIDER.id(),
-				NpcId.SHAPESHIFTER_BEAR.id(), NpcId.SHAPESHIFTER_WOLF.id()}, n.getID());
+				NpcId.SHAPESHIFTER_BEAR.id(), NpcId.SHAPESHIFTER_WOLF.id()}, npc.getID());
 	}
 
 	@Override
-	public void onKillNpc(Player player, Npc n) {
-		n.resetCombatEvent();
-		if (n.getID() >= NpcId.SHAPESHIFTER_WOLF.id()) {
+	public void onKillNpc(Player player, Npc npc) {
+		npc.resetCombatEvent();
+		if (npc.getID() >= NpcId.SHAPESHIFTER_WOLF.id()) {
 			player.message("You finally kill the shapeshifter once and for all");
 			if (!player.getCache().hasKey("shapeshifter")) {
 				player.getCache().store("shapeshifter", true);
 			}
 			return;
 		}
-		Npc nextShape = addnpc(player.getWorld(), n.getID() + 1, n.getX(), n.getY(), 300000);
+		Npc nextShape = addnpc(player.getWorld(), npc.getID() + 1, npc.getX(), npc.getY(), 300000);
 
 		player.message("The shapeshifer turns into a "
 			+ npcMessage(nextShape.getID()) + "!");

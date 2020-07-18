@@ -1020,9 +1020,14 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				if (!getPlayer().checkAttack(affectedMob, true) && affectedMob.isNpc()) {
-					getPlayer().message("I can't attack that");
-					getPlayer().resetPath();
-					return;
+					if (getPlayer().inCombat() && !(affectedMob.getID() == NpcId.SHAPESHIFTER_SPIDER.id()
+						|| affectedMob.getID() == NpcId.SHAPESHIFTER_BEAR.id()
+						|| affectedMob.getID() == NpcId.SHAPESHIFTER_WOLF.id())) {
+
+						getPlayer().message("I can't attack that");
+						getPlayer().resetPath();
+						return;
+					}
 				}
 				if (affectedMob.isNpc()) {
 					Npc n = (Npc) affectedMob;
