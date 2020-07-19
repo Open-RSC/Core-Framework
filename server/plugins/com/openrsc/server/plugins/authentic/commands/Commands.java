@@ -563,7 +563,7 @@ public class Commands {
 			+ "@whi@::event - to enter an ongoing server event %", true
 		);
 	}
-	
+
 	// Player Moderator
 
 	public static void gmute(Player player, String command, String[] args) {
@@ -702,7 +702,7 @@ public class Commands {
 		} else
 			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [name] [message]");
 	}
-	
+
 	// Event
 
 	public static void tp(Player player, String command, String[] args) {
@@ -1970,7 +1970,7 @@ public class Commands {
 			System.out.println(key + " (" + amount + "): " + entry.getValue() + " / " + finalCount + " (" + ((entry.getValue() / (double)finalCount) * 128) + "/128)");
 		});
 	}
-	
+
 	// Moderator
 
 	public static void say(Player player, String command, String[] args) {
@@ -2110,7 +2110,7 @@ public class Commands {
 		targetPlayer.unregister(true, "You have been kicked by " + player.getUsername());
 		player.message(targetPlayer.getUsername() + " has been kicked.");
 	}
-	
+
 	// Super Moderator
 
 	public static void setcache(Player player, String command, String[] args) {
@@ -2627,8 +2627,12 @@ public class Commands {
 
 		player.message(config().MESSAGE_PREFIX + targetPlayer.getUsername() + " IP address: " + targetPlayer.getCurrentIP() + " has " + count + " connections");
 	}
-	
+
 	// Administrators
+
+	public static void serverstats(Player player, String command, String[] args) {
+		ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
+	}
 
 	public static void saveall(Player player, String command, String[] args) {
 		int count = 0;
