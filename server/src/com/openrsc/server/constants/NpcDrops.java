@@ -789,7 +789,7 @@ public class NpcDrops {
 
 		currentNpcDrops = new DropTable("Wizard (81)");
 		currentNpcDrops.addItemDrop(ItemId.WIZARDS_ROBE.id(), 1, 0);
-		currentNpcDrops.addItemDrop(ItemId.A_BLUE_WIZARDS_HAT.id(), 1, 0);
+		currentNpcDrops.addItemDrop(ItemId.BLUE_WIZARDSHAT.id(), 1, 0);
 		this.npcDrops.put(NpcId.WIZARD.id(), currentNpcDrops);
 
 		currentNpcDrops = new DropTable("Highwayman (89)");
