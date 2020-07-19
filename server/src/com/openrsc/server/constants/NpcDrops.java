@@ -1590,6 +1590,23 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.RAW_OOMLIE_MEAT.id(), 1, 0);
 		this.npcDrops.put(NpcId.OOMLIE_BIRD.id(), currentNpcDrops);
 
+		currentNpcDrops = new DropTable("Shadow Warrior (787)");
+		currentNpcDrops.addTableDrop(herbDropTable, 9);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 8, 47);
+		currentNpcDrops.addItemDrop(ItemId.COSMIC_RUNE.id(), 2, 9);
+		currentNpcDrops.addItemDrop(ItemId.BLOOD_RUNE.id(), 1, 6);
+		currentNpcDrops.addItemDrop(ItemId.AIR_RUNE.id(), 30, 4);
+		currentNpcDrops.addItemDrop(ItemId.DEATH_RUNE.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.MITHRIL_BAR.id(), 1, 4);
+		currentNpcDrops.addItemDrop(ItemId.WEAPON_POISON.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.ADAMANTITE_SPEAR.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.POISONED_BLACK_DAGGER.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.BLACK_THROWING_KNIFE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.BLACK_LONG_SWORD.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.BLACK_ROBE.id(), 1, 1);
+		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
+		this.npcDrops.put(NpcId.SHADOW_WARRIOR.id(), currentNpcDrops);
+
 	}
 
 	/** Custom Drop Tables **/
