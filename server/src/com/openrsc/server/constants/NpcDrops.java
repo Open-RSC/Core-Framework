@@ -1093,7 +1093,7 @@ public class NpcDrops {
 
 		currentNpcDrops = new DropTable("Red Dragon (201)");
 		currentNpcDrops.addTableDrop(herbDropTable, 2);
-		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addTableDrop(rareDropTable, 2);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 196, 40);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 66, 29);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 330, 10);
@@ -1260,7 +1260,7 @@ public class NpcDrops {
 
 		currentNpcDrops = new DropTable("Black Demon (290)");
 		currentNpcDrops.addTableDrop(herbDropTable, 23);
-		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addTableDrop(rareDropTable, 4);
 		currentNpcDrops.addTableDrop(ultraRareDropTable, 1);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 132, 40);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 30, 7);
@@ -1286,11 +1286,11 @@ public class NpcDrops {
 
 		currentNpcDrops = new DropTable("Black Dragon (291)");
 		currentNpcDrops.addTableDrop(herbDropTable, 3);
-		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addTableDrop(rareDropTable, 4);
 		currentNpcDrops.addTableDrop(ultraRareDropTable, 1);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 196, 40);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 66, 19);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 330, 10);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 196, 38);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 66, 17);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 330, 9);
 		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 2, 8);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 16, 7);
 		currentNpcDrops.addItemDrop(ItemId.DEATH_RUNE.id(), 2, 6);
@@ -1362,7 +1362,7 @@ public class NpcDrops {
 
 		currentNpcDrops = new DropTable("Fire Giant (344)");
 		currentNpcDrops.addTableDrop(herbDropTable, 23);
-		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addTableDrop(rareDropTable, 4);
 		currentNpcDrops.addTableDrop(ultraRareDropTable, 1);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 60, 40);
 		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 50, 8);
@@ -1455,8 +1455,8 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.FOURTH_PLAGUE_SHEEP.id(), currentNpcDrops);
 
 		currentNpcDrops = new DropTable("King Black Dragon (477)");
-		currentNpcDrops.addTableDrop(ultraRareDropTable, 1);
-		currentNpcDrops.addTableDrop(rareDropTable, 1);
+		currentNpcDrops.addTableDrop(ultraRareDropTable, 2);
+		currentNpcDrops.addTableDrop(rareDropTable, 6);
 		currentNpcDrops.addItemDrop(ItemId.BLOOD_RUNE.id(), 10, 22);
 		currentNpcDrops.addItemDrop(ItemId.AIR_RUNE.id(), 70, 17);
 		currentNpcDrops.addItemDrop(ItemId.RUBY_AMULET_OF_STRENGTH.id(), 1, 11);
@@ -1472,7 +1472,6 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.IRON_ORE_CERTIFICATE.id(), 20, 2);
 		currentNpcDrops.addItemDrop(ItemId.ADAMANTITE_AXE.id(), 1, 2);
 		currentNpcDrops.addItemDrop(ItemId.OYSTER.id(), 1, 1);
-		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.KING_BLACK_DRAGON.id(), currentNpcDrops);
 
 		DropTable jogreTwoBoneTable = new DropTable("Jogre Two Bones (523)");
