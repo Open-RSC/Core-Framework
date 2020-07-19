@@ -10,6 +10,7 @@ public final class ItemUseOnItem implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
 		if (player.inCombat()) {
+			player.message("You can't do that whilst you are fighting");
 			return;
 		}
 		if (player.isBusy()) {

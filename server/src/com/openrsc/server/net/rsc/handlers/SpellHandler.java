@@ -1293,7 +1293,7 @@ public class SpellHandler implements PacketHandler {
 							|| (getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
 							max += 1;
 
-						int damage = CombatFormula.calculateMagicDamage(max);
+						int damage = CombatFormula.calculateMagicDamage(max + 1) - 1;
 
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damage, 1));
 						getPlayer().setKillType(1);

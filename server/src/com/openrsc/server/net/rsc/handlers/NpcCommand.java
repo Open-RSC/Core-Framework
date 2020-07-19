@@ -14,11 +14,11 @@ public final class NpcCommand implements PacketHandler {
 		int pID = packet.getID();
 		int serverIndex = packet.readShort();
 		if (player == null) return;
-		if (player.isBusy()) {
-			return;
-		}
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
+			return;
+		}
+		if (player.isBusy()) {
 			return;
 		}
 

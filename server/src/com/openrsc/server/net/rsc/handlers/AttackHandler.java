@@ -1,7 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.event.MiniEvent;
 import com.openrsc.server.event.rsc.impl.RangeEvent;
 import com.openrsc.server.event.rsc.impl.ThrowingEvent;
 import com.openrsc.server.model.action.WalkToMobAction;
@@ -16,13 +15,13 @@ public class AttackHandler implements PacketHandler {
 	public void handlePacket(Packet packet, Player player) throws Exception {
 		int pID = packet.getID();
 
-		if (player.isBusy()) {
+		if (player.inCombat()) {
+			player.message("You are already busy fighting");
 			player.resetPath();
 			return;
 		}
 
-		if (player.inCombat()) {
-			player.message("You are already busy fighting");
+		if (player.isBusy()) {
 			player.resetPath();
 			return;
 		}
