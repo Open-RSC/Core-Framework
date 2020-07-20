@@ -1020,10 +1020,19 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				if (!getPlayer().checkAttack(affectedMob, true) && affectedMob.isNpc()) {
-					if (!(getPlayer().inCombat() && affectedMob.getID() == NpcId.SHAPESHIFTER_SPIDER.id()
-						|| affectedMob.getID() == NpcId.SHAPESHIFTER_BEAR.id()
-						|| affectedMob.getID() == NpcId.SHAPESHIFTER_WOLF.id())) {
-
+					// Exception for shapeshifter in Witch's House quest.
+					// Want to make sure that player is in combat with shifter, and that
+					// they are casting on the shapeshifter that they are fighting.
+					boolean inCombat = getPlayer().inCombat();
+					boolean castingOnOpponent = getPlayer().getOpponent() != null
+						&& getPlayer().getOpponent().getUUID() == affectedMob.getUUID();
+					boolean isShifter = inArray(affectedMob.getID(),
+						new int[]{
+							NpcId.SHAPESHIFTER_SPIDER.id(),
+							NpcId.SHAPESHIFTER_BEAR.id(),
+							NpcId.SHAPESHIFTER_WOLF.id()});
+					boolean shouldCastSpell = inCombat && castingOnOpponent && isShifter;
+					if (!shouldCastSpell) {
 						getPlayer().message("I can't attack that");
 						getPlayer().resetPath();
 						return;
