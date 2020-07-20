@@ -618,21 +618,6 @@ public final class Formulae {
 		return defaultReturn;
 	}
 
-	public static int calculateGoldDrop(int[] goldValues) throws InvalidParameterException {
-		int[] weights = new int[]{100};
-		if (goldValues.length == 2) weights = new int[]{67, 33};
-		else if (goldValues.length == 3) weights = new int[]{45, 33, 22};
-		else if (goldValues.length == 4) weights = new int[]{33, 27, 22, 18};
-		else if (goldValues.length == 5) weights = new int[]{26, 33, 19, 13, 9};
-		else if (goldValues.length == 6) weights = new int[]{24, 30, 19, 14, 8, 5};
-		else if (goldValues.length == 7) weights = new int[]{18, 28, 24, 13, 9, 6, 2};
-		else if (goldValues.length == 8) weights = new int[]{18, 23, 27, 13, 9, 7, 2, 1};
-		else if (goldValues.length == 9) weights = new int[]{12, 17, 27, 23, 8, 6, 4, 2, 1};
-
-
-		return weightedRandomChoice(goldValues, weights, goldValues[0]);
-	}
-
 	public static int getSplendorBoost(int amount) {
 		int boost = amount * 9;
 		return Math.min(boost, 1000);
