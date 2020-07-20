@@ -4,6 +4,7 @@ import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 
+import javax.lang.model.SourceVersion;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -78,6 +79,7 @@ public class CommandRouter implements CommandTrigger {
 		// Event.java
 		put("tp", eventModerator);
 		put("go", eventModerator);
+		put("goto", eventModerator);
 		put("blink", eventModerator);
 		put("dismiss", eventModerator);
 		put("invulnerable", eventModerator);
@@ -195,8 +197,13 @@ public class CommandRouter implements CommandTrigger {
 
 	@Override
 	public void onCommand(final Player player, String command, String[] args) {
+		String methodCommand = command;
 		try {
-			Method toExecute = Commands.class.getMethod(command, Player.class, String.class, String[].class);
+			// if command is reserved keyword append "_" to end to match java method
+			if (SourceVersion.isKeyword(command)) {
+				methodCommand += "_";
+			}
+			Method toExecute = Commands.class.getMethod(methodCommand, Player.class, String.class, String[].class);
 			toExecute.invoke(null, player, command, args);
 		}
 		catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {

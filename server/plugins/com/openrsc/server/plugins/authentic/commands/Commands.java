@@ -709,6 +709,10 @@ public class Commands {
 		go(player, command, args);
 	}
 
+	public static void goto_(Player player, String command, String[] args) {
+		go(player, command, args);
+	}
+
 	public static void go(Player player, String command, String[] args) {
 		if (args.length < 1) {
 			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [town/player] OR ");
@@ -1971,6 +1975,10 @@ public class Commands {
 		});
 	}
 
+	public static void serverstats(Player player, String command, String[] args) {
+		ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
+	}
+
 	// Moderator
 
 	public static void say(Player player, String command, String[] args) {
@@ -2629,10 +2637,6 @@ public class Commands {
 	}
 
 	// Administrators
-
-	public static void serverstats(Player player, String command, String[] args) {
-		ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
-	}
 
 	public static void saveall(Player player, String command, String[] args) {
 		int count = 0;
