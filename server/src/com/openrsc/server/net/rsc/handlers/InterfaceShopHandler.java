@@ -94,7 +94,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			totalMoneySpent = 0;
 			totalBought = 0;
 			for (int i = 0; i < amount; i++) {
-				if (checkPurchaseValidity(player, shop, def, catalogID, i, totalMoneySpent)) {
+				if (checkPurchaseValidity(player, shop, def, catalogID, i, totalMoneySpent, i)) {
 					break;
 				}
 				totalMoneySpent += shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), i);
@@ -118,7 +118,8 @@ public final class InterfaceShopHandler implements PacketHandler {
 				return;
 			}
 			for (int i = 0; i < amount; i++) {
-				if (checkPurchaseValidity(player, shop, def, catalogID, totalBought, totalMoneySpent)) {
+				System.out.println(i + " " + amount + " " + totalBought + " " + totalMoneySpent);
+				if (checkPurchaseValidity(player, shop, def, catalogID, totalBought, totalMoneySpent, 1)) {
 					break;
 				}
 				totalMoneySpent += shop.getItemBuyPrice(catalogID, def.getDefaultPrice(), totalBought);
@@ -145,7 +146,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 
 	}
 
-	private boolean checkPurchaseValidity(Player player, Shop shop, ItemDefinition def, int catalogID, int totalBought, int totalMoneySpent) {
+	private boolean checkPurchaseValidity(Player player, Shop shop, ItemDefinition def, int catalogID, int totalBought, int totalMoneySpent, int buyingNow) {
 		if ((player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 			|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id()))
 			&& shop.getItemCount(catalogID) > shop.getStock(catalogID)) {
@@ -161,7 +162,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			player.message("You don't have enough coins");
 			return true;
 		}
-		Item tempItem = new Item(catalogID, totalBought);
+		Item tempItem = new Item(catalogID, buyingNow);
 		if (!player.getCarriedItems().getInventory().canHold(tempItem)) {
 			player.message("You can't hold the objects you are trying to buy!");
 			return true;
