@@ -293,17 +293,24 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 			for (int i = 0; i < skillsSize; i++) {
 				SkillDef skill = getServer().getConstants().getSkills().getSkill(i);
-
 				skills[i] = new PlayerSkills();
 				skills[i].skillId = i;
 				skills[i].skillCurLevel = skill.getMinLevel();
 
 				experiences[i] = new PlayerExperience();
 				experiences[i].skillId = i;
-				if (skill.getMinLevel() == 1)
+
+				if (skill.getMinLevel() == 1) {
 					experiences[i].experience = 0;
-				else
-					experiences[i].experience = getServer().getConstants().getSkills().experienceCurves.get(skill.getExpCurve())[skill.getMinLevel() - 2];
+				}
+				else {
+					if (i == 3) { // Hits
+						experiences[i].experience = 4000;
+					}
+					else {
+						experiences[i].experience = getServer().getConstants().getSkills().experienceCurves.get(skill.getExpCurve())[skill.getMinLevel() - 2];
+					}
+				}
 			}
 			querySavePlayerSkills(playerId, skills);
 			querySavePlayerExperience(playerId, experiences);

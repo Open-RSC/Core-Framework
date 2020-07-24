@@ -10,6 +10,8 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.Formulae;
 
+import static com.openrsc.server.constants.Skills.HITS;
+
 
 public class Skills {
 	private final Mob mob;
@@ -89,7 +91,7 @@ public class Skills {
 		}
 		sendUpdate(skill);
 		if (skill != com.openrsc.server.constants.Skills.PRAYER
-			&& skill != com.openrsc.server.constants.Skills.HITS && !fromRestoreEvent) {
+			&& skill != HITS && !fromRestoreEvent) {
 			mob.tryResyncStatEvent();
 		} else if (skill == com.openrsc.server.constants.Skills.PRAYER && mob.isPlayer()) {
 			((Player)mob).setPrayerStatePoints(level * 120);
@@ -212,7 +214,11 @@ public class Skills {
 
 	public int getMaxStat(int skill) {
 		if (getMob() instanceof Player) {
-			return getLevelForExperience(getExperience(skill), getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT);
+			int level = getLevelForExperience(getExperience(skill), getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT);
+			if (skill == HITS) {
+				return Math.max(level, 10);
+			}
+			return level;
 		} else {
 			return maxStatsMob[skill];
 		}
