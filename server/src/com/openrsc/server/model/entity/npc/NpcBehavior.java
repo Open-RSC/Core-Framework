@@ -83,6 +83,7 @@ public class NpcBehavior {
 		// NPC is in combat or busy, do not set them to ROAM.
 		if (npc.inCombat()) {
 			state = State.COMBAT;
+			target = npc.getOpponent();
 			return;
 		} else if (npc.isBusy() || npc.isRespawning()) {
 			return;
