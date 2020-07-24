@@ -2,9 +2,11 @@ package com.openrsc.server.content;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
@@ -144,6 +146,7 @@ public class DropTable {
 				} else if (drop.type == dropType.TABLE) {
 					if (ringOfWealth && drop.table.rare) {
 						owner.playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
+						owner.playSound("foundgem");
 					}
 
 					DropTable newTable = drop.table.clone();
@@ -241,9 +244,13 @@ public class DropTable {
 			if (amount > 1) {
 				owner.message("@red@Valuable drop: " + amount + " x " + temp.getDef(owner.getWorld()).getName() + " (" +
 					(temp.getDef(owner.getWorld()).getDefaultPrice() * amount) + " coins)");
+				owner.getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(owner, "has obtained " + amount
+					+ " x " + temp.getDef(owner.getWorld()).getName() + "!"));
 			} else {
 				owner.message("@red@Valuable drop: " + temp.getDef(owner.getWorld()).getName() + " (" +
 					(temp.getDef(owner.getWorld()).getDefaultPrice()) + " coins)");
+				owner.getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(owner, "has obtained a "
+					+ temp.getDef(owner.getWorld()).getName() + "!"));
 			}
 		}
 	}

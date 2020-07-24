@@ -176,8 +176,8 @@ public class Skills {
 					getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player,
 						"has achieved level-" + newLevel + " in " + skillName + "!"));
 				} else if (newLevel == getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT) {
-					getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, "has achieved the maximum level of " + newLevel
-						+ " in " + skillName + ", congratulations!"));
+					getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, "has achieved level-" + newLevel
+						+ " in " + skillName + ", the maximum possible! Congratulations!"));
 				}
 				player.message("@gre@You just advanced " + levelDiff + " " + skillName + " level"
 					/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
