@@ -1591,6 +1591,7 @@ public class NpcDrops {
 
 		currentNpcDrops = new DropTable("Shadow Warrior (787)");
 		currentNpcDrops.addTableDrop(herbDropTable, 9);
+		currentNpcDrops.addTableDrop(rareDropTable, 1);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 8, 47);
 		currentNpcDrops.addItemDrop(ItemId.COSMIC_RUNE.id(), 2, 9);
 		currentNpcDrops.addItemDrop(ItemId.BLOOD_RUNE.id(), 1, 6);
