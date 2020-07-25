@@ -1020,18 +1020,26 @@ public class SpellHandler implements PacketHandler {
 					return;
 				}
 				if (!getPlayer().checkAttack(affectedMob, true) && affectedMob.isNpc()) {
-					// Exception for shapeshifter in Witch's House quest.
-					// Want to make sure that player is in combat with shifter, and that
-					// they are casting on the shapeshifter that they are fighting.
+					// Exception for certain non-attackable mobs that attack you
+					// Want to make sure that player is in combat with mob, and that
+					// they are casting on the mob that they are in combat with.
 					boolean inCombat = getPlayer().inCombat();
 					boolean castingOnOpponent = getPlayer().getOpponent() != null
 						&& getPlayer().getOpponent().getUUID() == affectedMob.getUUID();
-					boolean isShifter = inArray(affectedMob.getID(),
+					boolean isRightMob = inArray(affectedMob.getID(),
 						new int[]{
 							NpcId.SHAPESHIFTER_SPIDER.id(),
 							NpcId.SHAPESHIFTER_BEAR.id(),
-							NpcId.SHAPESHIFTER_WOLF.id()});
-					boolean shouldCastSpell = inCombat && castingOnOpponent && isShifter;
+							NpcId.SHAPESHIFTER_WOLF.id(),
+							NpcId.THRANTAX.id(),
+							NpcId.GUARDIAN_OF_ARMADYL_FEMALE.id(),
+							NpcId.GUARDIAN_OF_ARMADYL_MALE.id(),
+							NpcId.OGRE_TRADER_FOOD.id(),
+							NpcId.OGRE_TRADER_ROCKCAKE.id(),
+							NpcId.OGRE_TRADER_FOOD.id(),
+							NpcId.CITY_GUARD.id(),
+							NpcId.TOBAN.id()});
+					boolean shouldCastSpell = inCombat && castingOnOpponent && isRightMob;
 					if (!shouldCastSpell) {
 						getPlayer().message("I can't attack that");
 						getPlayer().resetPath();
