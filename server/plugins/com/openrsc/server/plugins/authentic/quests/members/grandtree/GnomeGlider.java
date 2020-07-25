@@ -2,14 +2,26 @@ package com.openrsc.server.plugins.authentic.quests.members.grandtree;
 
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class GnomeGlider implements TalkNpcTrigger {
+public class GnomeGlider implements TalkNpcTrigger, OpLocTrigger {
+
+	@Override
+	public boolean blockOpLoc(Player n, GameObject obj, String command) {
+		return obj.getID() == 618;
+	}
+
+	@Override
+	public void onOpLoc(Player player, GameObject obj, String command) {
+		mes("only the gnomes can fly these");
+	}
 
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
