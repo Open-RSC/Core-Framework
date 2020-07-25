@@ -46,7 +46,7 @@ public final class DataConversions {
 		')', '-', '&', '*', '\\', '\'', '@', '#', '+', '=', '\243', '$',
 		'%', '"', '[', ']', '{', '}', '~', 'A', 'B', 'C', 'D', 'E', 'F', 'G',
 		'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-		'U', 'V', 'W', 'X', 'Y', 'Z', '<', '>', '^', '_',};
+		'U', 'V', 'W', 'X', 'Y', 'Z', '<', '>', '^', '_', '|', '/'};
 	private static final int bcryptWorkFactor = 10;
 	private static final String bcryptTest = "$2y$"+bcryptWorkFactor+"$";
 	private static SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yy");
@@ -280,7 +280,8 @@ public final class DataConversions {
 			if (c.equals('.') || c.equals('!') || c.equals('?') ||
 				((Character.isWhitespace(array[i - 1])
 						|| c.equals('\'') || c.equals(':') || c.equals('_')
-						|| c.equals('#') || c.equals('@') || c.equals('-'))
+						|| c.equals('#') || c.equals('@') || c.equals('-')
+						|| c.equals('/') || c.equals('\\') || c.equals('|'))
 					&& Character.isUpperCase(array[i]))
 				) {
 				s.append(String.valueOf(Character.toUpperCase(array[i])));
