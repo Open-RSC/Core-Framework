@@ -20,7 +20,7 @@ public class OpenRSC extends ORSCApplet {
 		try {
 			jframe = new JFrame(Config.getServerNameWelcome());
 			final Applet applet = new OpenRSC();
-			applet.setPreferredSize(new Dimension(512, 334 + 12));
+			applet.setPreferredSize(new Dimension(512, 346));
 			jframe.getContentPane().setLayout(new BorderLayout());
 			jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			jframe.setIconImage(Utils.getImage("icon.png").getImage());
@@ -30,7 +30,7 @@ public class OpenRSC extends ORSCApplet {
 			jframe.setVisible(true);
 			//jframe.setAlwaysOnTop(true);
 			jframe.setBackground(Color.black);
-			jframe.setMinimumSize(new Dimension(512, 334 + 12));
+			jframe.setMinimumSize(new Dimension(528, 385));
 			jframe.pack();
 			jframe.setLocationRelativeTo(null);
 			applet.init();
