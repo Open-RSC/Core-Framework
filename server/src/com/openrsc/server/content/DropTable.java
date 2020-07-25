@@ -117,14 +117,17 @@ public class DropTable {
 	}
 
 	public ArrayList<Item> rollItem(boolean ringOfWealth, Player owner) {
-		DropTable rollTable = ringOfWealth ? modifyTable(this) : this;
+		DropTable rollTable = this;
 		int hit = DataConversions.random(0, rollTable.totalWeight - 1);
 		int sum = 0;
 		ArrayList<Item> items = new ArrayList<>();
 		for (Drop drop : rollTable.drops) {
 			sum += drop.weight;
 			if (sum > hit) {
-				if (drop.type == dropType.NOTHING) {
+				// If it's not a reroll, and the user is wearing a ring of wealth,
+				// We let them roll once more for a second chance at goodies.
+				if (drop.type == dropType.NOTHING && ringOfWealth) {
+					items.addAll(rollItem(false, owner));
 					break;
 				}
 				else if (drop.type == dropType.ITEM) {
@@ -154,7 +157,7 @@ public class DropTable {
 					items.addAll(newTable.invariableItems(owner));
 
 					if (newTable.getTotalWeight() > 0) {
-						items.addAll(newTable.rollItem(ringOfWealth, owner));
+						items.addAll(newTable.rollItem(false, owner));
 					}
 					break;
 				}
@@ -185,21 +188,6 @@ public class DropTable {
 			}
 		}
 		return items;
-	}
-
-	// Removes the empty slots from a table
-	private DropTable modifyTable(DropTable table) {
-		DropTable modifiedTable = new DropTable();
-		for (Drop drop : table.drops) {
-			if (drop.type == dropType.NOTHING)
-				continue;
-			else if (drop.type == dropType.ITEM) {
-				modifiedTable.addItemDrop(drop.id, drop.amount, drop.weight, drop.noted);
-			} else if (drop.type == dropType.TABLE) {
-				modifiedTable.addTableDrop(drop.table, drop.weight);
-			}
-		}
-		return modifiedTable;
 	}
 
 	public static boolean handleRingOfAvarice(final Player player, final Item item) {
