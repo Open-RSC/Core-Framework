@@ -1776,7 +1776,7 @@ public final class Player extends Mob {
 				getWorld().sendKilledUpdate(this.getUsernameHash(), player.getUsernameHash(), id);
 				player.incKills();
 				this.incDeaths();
-				getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, "has PKed <strong>" + this.getUsername() + "</strong>"));
+				getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, "has PKed " + this.getUsername()));
 			}/* else if (stake) { // disables duel spam in activity feed
 				getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player,
 					"has just won a stake against <strong>" + this.getUsername() + "</strong>"));
@@ -2177,16 +2177,16 @@ public final class Player extends Mob {
 			updateQuestStage(questId, -1);
 			ActionSender.sendStats(this);
 			getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this,
-				"just completed <strong><font color=#00FF00>" + getWorld().getQuest(questId).getQuestName()
-					+ "</font></strong> quest! They now have <strong><font color=#E1E100>" + this.getQuestPoints()
-					+ "</font></strong> quest points"));
+				"has completed the " + getWorld().getQuest(questId).getQuestName()
+					+ " quest and now has " + this.getQuestPoints() + " quest points!"));
 		}
 	}
 
 	public void sendMiniGameComplete(final int miniGameId, final Optional<String> message) {
 		getWorld().getMiniGame(miniGameId).handleReward(this);
-		getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this, "just completed <strong><font color=#00FF00>" + getWorld().getMiniGame(miniGameId).getMiniGameName()
-			+ "</font></strong> minigame! " + (message.orElse(""))));
+		getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this,
+			"has completed the " + getWorld().getMiniGame(miniGameId).getMiniGameName()
+			+ " minigame! " + (message.orElse(""))));
 	}
 
 	public void setAccessingBank(final boolean b) {

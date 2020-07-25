@@ -20,7 +20,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
-import com.openrsc.server.util.rsc.GoldDrops;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -452,14 +451,9 @@ public class Npc extends Mob {
 
 	private void dropStackItem(final int dropID, int amount, Player owner) {
 		// Gold Drops
-		if (dropID == com.openrsc.server.constants.ItemId.COINS.id()) {
-			amount = Formulae.calculateGoldDrop(
-				GoldDrops.drops.getOrDefault(this.getID(), new int[]{1})
-			);
-			if (owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_SPLENDOR.id())) {
-				amount += Formulae.getSplendorBoost(amount);
-				owner.message("Your ring of splendor shines brightly!");
-			}
+		if (dropID == ItemId.COINS.id() && owner.getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_SPLENDOR.id())) {
+			amount += Formulae.getSplendorBoost(amount);
+			owner.message("Your ring of splendor shines brightly!");
 		}
 
 		try {
