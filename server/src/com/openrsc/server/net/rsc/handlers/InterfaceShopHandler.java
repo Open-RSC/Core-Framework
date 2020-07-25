@@ -118,7 +118,6 @@ public final class InterfaceShopHandler implements PacketHandler {
 				return;
 			}
 			for (int i = 0; i < amount; i++) {
-				System.out.println(i + " " + amount + " " + totalBought + " " + totalMoneySpent);
 				if (checkPurchaseValidity(player, shop, def, catalogID, totalBought, totalMoneySpent, 1)) {
 					break;
 				}
