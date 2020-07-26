@@ -11920,6 +11920,11 @@ public final class mudclient implements Runnable {
 				showLoginScreenStatus("Username must be 2-12", "characters long!");
 				return;
 			}
+
+			if (registerResponse == 8) {
+				showLoginScreenStatus("Username cannot contain", "\"Mod!\"");
+				return;
+			}
 			showLoginScreenStatus("Error unable to login.", "Unrecognised response code");
 		} catch (Exception e) {
 			this.showLoginScreenStatus("Sorry! Unable to connect.", "Check internet settings");
