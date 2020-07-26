@@ -85,6 +85,14 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				return;
 			}
 
+			if (!getServer().getConfig().CHAR_NAME_CAN_CONTAIN_MOD
+				&& getUsername().toLowerCase().startsWith("mod")) {
+
+				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 8).toPacket());
+				getChannel().close();
+				return;
+			}
+
 			if (getPassword().length() < 4 || getPassword().length() > 64) {
 				getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 8).toPacket());
 				getChannel().close();

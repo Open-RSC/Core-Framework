@@ -204,6 +204,7 @@ public class ServerConfiguration {
 	public int LOCATION_DATA;
 	public boolean WANT_FIXED_BROKEN_MECHANICS;
 	public boolean WANT_DECORATED_MOD_ROOM;
+	public boolean CHAR_NAME_CAN_CONTAIN_MOD;
 	// public boolean CHECK_ADMIN_IP;
 	// public String ADMIN_IP;
 	// public List<String> adminIp;
@@ -355,6 +356,7 @@ public class ServerConfiguration {
 		WANT_EMAIL = tryReadBool("want_email").orElse(false);
 		ALLOW_RESIZE = tryReadBool("allow_resize").orElse(false);
 		LENIENT_CONTACT_DETAILS = tryReadBool("lenient_contact_details").orElse(false);
+		CHAR_NAME_CAN_CONTAIN_MOD = tryReadBool("char_name_can_contain_mod").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);
