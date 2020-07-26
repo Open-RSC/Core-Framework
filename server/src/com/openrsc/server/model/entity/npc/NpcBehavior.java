@@ -226,7 +226,7 @@ public class NpcBehavior {
 			npc.setExecutedAggroScript(false);
 
 			// If there is a valid target and NPC is aggressive, set AGGRO and target.
-			if (canAggro(target)) {
+			if (canAggro(target) && target == npc.getLastOpponent()) {
 				if (target.isPlayer()) {
 					setChasing((Player)target);
 				}
@@ -339,12 +339,11 @@ public class NpcBehavior {
 		boolean playerCombatTimeoutExceeded = checkCombatTimer(player.getCombatTimer(), numTicks);
 
 		boolean isAggressive = aggressiveCheck(player);
-		boolean chasingLastOpponent = npc.getLastOpponent() == player && !shouldRetreat(npc);
 
 		boolean impervious = player instanceof Player
 			&& (((Player) player).isInvulnerableTo(npc) || ((Player) player).isInvisibleTo(npc));
 
-		return (isAggressive || chasingLastOpponent)
+		return isAggressive
 			&& !impervious
 			&& !outOfBounds
 			&& !playerInCombat
