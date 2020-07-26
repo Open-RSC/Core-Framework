@@ -185,7 +185,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 	}
 
 	private boolean succeed(Player player) {
-		return Formulae.calcProductionSuccessful(52, getCurrentLevel(player, Skills.AGILITY), true, 102);
+		return Formulae.calcProductionSuccessful(52, getCurrentLevel(player, Skills.AGILITY), false, 77);
 	}
 
 	private int failRate() {
