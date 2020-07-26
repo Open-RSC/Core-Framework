@@ -2636,6 +2636,23 @@ public class Commands {
 		player.message(config().MESSAGE_PREFIX + targetPlayer.getUsername() + " IP address: " + targetPlayer.getCurrentIP() + " has " + count + " connections");
 	}
 
+	public static void newmod(Player player, String command, String[] args) {
+		if (config().CHAR_NAME_CAN_CONTAIN_MOD) {
+			player.message("Players can already create characters with \"mod\" in the name.");
+			return;
+		}
+		player.message("Players can now create characters with \"mod\" in the name.");
+		player.message("This will last for 2 minutes.");
+		config().CHAR_NAME_CAN_CONTAIN_MOD = true;
+		player.getWorld().getServer().getGameEventHandler().add(
+			new SingleEvent(player.getWorld(), null, 120000, "Create New Mods") {
+				public void action() {
+					player.getConfig().CHAR_NAME_CAN_CONTAIN_MOD = false;
+					player.message("Players can no longer create new characters with \"mod\" in the name.");
+				}
+			});
+	}
+
 	// Administrators
 
 	public static void saveall(Player player, String command, String[] args) {
