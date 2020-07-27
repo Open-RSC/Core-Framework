@@ -11384,8 +11384,7 @@ public final class mudclient implements Runnable {
 						this.inputTextFinal = "";
 					}
 
-					if (this.lastMouseButtonDown == 1 && this.mouseY > 275 - (isAndroid() ? 110 : 0) && this.mouseY < 310 - (isAndroid() ? 110 : 0) && this.mouseX > 56
-						&& this.mouseX < 456) {
+					if (didClickForNewCaptcha()) {
 						this.packetHandler.getClientStream().newPacket(45);
 						if (!this.sleepWordDelay) {
 							this.packetHandler.getClientStream().bufferBits.putByte(0);
@@ -11408,6 +11407,14 @@ public final class mudclient implements Runnable {
 		} catch (RuntimeException var9) {
 			throw GenUtil.makeThrowable(var9, "client.RD(" + "dummy" + ')');
 		}
+	}
+
+	private boolean didClickForNewCaptcha() {
+		// When the Player sleeps the Sleep screen is displayed at the center-top of the game client.
+		// We'll say the Player clicked for a new Captcha if they clicked in the region of the "click here" text.
+		return this.lastMouseButtonDown == 1
+			&& (this.halfGameWidth() - 100 < this.mouseX && this.halfGameWidth() - 20 > this.mouseX)
+			&& (290 < this.mouseY && this.mouseY < 320);
 	}
 
 	public void saveZoomDistance() {
