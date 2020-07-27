@@ -12,8 +12,8 @@ import com.openrsc.server.plugins.AbstractShop;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class FishingGuildGeneralShop extends AbstractShop {
-	private final Shop shop = new Shop(true, 15000, 100, 70, 2,
+public class FishingGuildShop extends AbstractShop {
+	private final Shop shop = new Shop(false, 15000, 100, 70, 2,
 		new Item(ItemId.FISHING_BAIT.id(), 200), new Item(ItemId.FEATHER.id(), 200), new Item(ItemId.RAW_COD.id(), 0),
 		new Item(ItemId.RAW_MACKEREL.id(), 0), new Item(ItemId.RAW_BASS.id(), 0), new Item(ItemId.RAW_TUNA.id(), 0),
 		new Item(ItemId.RAW_LOBSTER.id(), 0), new Item(ItemId.RAW_SWORDFISH.id(), 0), new Item(ItemId.COD.id(), 0),
