@@ -64,6 +64,8 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract String queryUsernameFromPlayerId(final int playerId) throws GameDatabaseException;
 
+	protected abstract void queryRenamePlayer(final int playerId, final String newName) throws GameDatabaseException;
+
 	protected abstract String queryBanPlayer(String userNameToBan, Player bannedBy, long bannedForMinutes) throws GameDatabaseException;
 
 	protected abstract NpcLocation[] queryNpcLocations() throws GameDatabaseException;
@@ -402,6 +404,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		return queryPlayerExists(username);
 	}
 
+	public int playerIdFromUsername(final String username) throws GameDatabaseException {
+		return queryPlayerIdFromUsername(username);
+	}
+
 	public String usernameFromId(final int playerId) throws GameDatabaseException {
 		return queryUsernameFromPlayerId(playerId);
 	}
@@ -436,6 +442,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	public void removeItemSpawn(final ItemLoc loc) throws GameDatabaseException {
 		queryDeleteItemSpawn(loc);
+	}
+
+	public void renamePlayer(final int playerId, final String newName) throws GameDatabaseException {
+		queryRenamePlayer(playerId, newName);
 	}
 
 	public String banPlayer(String userNameToBan, Player bannedBy, long bannedForMinutes) {

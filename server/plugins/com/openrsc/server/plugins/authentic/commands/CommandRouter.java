@@ -133,7 +133,7 @@ public class CommandRouter implements CommandTrigger {
 		put("viewipbans", superModerator);
 		put("ipban", superModerator);
 		put("ipcount", superModerator);
-		put("newmod", superModerator);
+		put("renameplayer", superModerator);
 
 		// Admins.java
 		put("saveall", gameAdministrator);

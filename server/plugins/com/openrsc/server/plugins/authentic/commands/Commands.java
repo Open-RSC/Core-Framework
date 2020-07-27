@@ -2636,21 +2636,43 @@ public class Commands {
 		player.message(config().MESSAGE_PREFIX + targetPlayer.getUsername() + " IP address: " + targetPlayer.getCurrentIP() + " has " + count + " connections");
 	}
 
-	public static void newmod(Player player, String command, String[] args) {
-		if (config().CHAR_NAME_CAN_CONTAIN_MOD) {
-			player.message("Players can already create characters with \"mod\" in the name.");
+	public static void renameplayer(Player player, String command, String[] args) {
+		// Make sure we have received both arguments
+		if (args.length < 2) {
+			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [CurrentName] [NewName]");
+			player.message("(underscores will become spaces)");
 			return;
 		}
-		player.message("Players can now create characters with \"mod\" in the name.");
-		player.message("This will last for 2 minutes.");
-		config().CHAR_NAME_CAN_CONTAIN_MOD = true;
-		player.getWorld().getServer().getGameEventHandler().add(
-			new SingleEvent(player.getWorld(), null, 120000, "Create New Mods") {
-				public void action() {
-					player.getConfig().CHAR_NAME_CAN_CONTAIN_MOD = false;
-					player.message("Players can no longer create new characters with \"mod\" in the name.");
-				}
-			});
+
+		// Get the player whose name we are going to change.
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		if (targetPlayer != null) {
+			player.message("Player " + args[0] + " cannot be online.");
+			return;
+		}
+
+		// Do some string stuff
+		String targetPlayerUsername = args[0].replaceAll("_", " ");
+		String newUsername = args[1].replaceAll("_", " ");
+
+		try {
+			final int targetPlayerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(targetPlayerUsername);
+
+			// Check the database to see if the new name is already in use.
+			if (player.getWorld().getServer().getDatabase().playerExists(newUsername)) {
+				player.message("The name \"" + newUsername + "\" is already in use.");
+				return;
+			}
+
+			// Do the rename
+			player.getWorld().getServer().getDatabase().renamePlayer(targetPlayerId, newUsername);
+
+			player.message(targetPlayerUsername + " has been renamed to " + newUsername + ".");
+
+		} catch (GameDatabaseException ex) {
+			player.message("A database error has occurred.");
+			LOGGER.catching(ex);
+		}
 	}
 
 	// Administrators

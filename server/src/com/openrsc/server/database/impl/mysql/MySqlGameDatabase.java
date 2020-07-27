@@ -147,7 +147,22 @@ public class MySqlGameDatabase extends GameDatabase {
 		return null;
 	}
 
-	@Override
+    @Override
+    protected void queryRenamePlayer(final int playerId, final String newName) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().renamePlayer);
+			statement.setString(1, newName);
+			statement.setInt(2, playerId);
+
+			try { statement.executeUpdate(); }
+			finally { statement.close(); }
+
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+    }
+
+    @Override
 	protected String queryBanPlayer(String userNameToBan, Player bannedBy, long bannedForMinutes) throws GameDatabaseException {
 		try {
 			final PreparedStatement statement;
