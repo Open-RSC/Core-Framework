@@ -11922,7 +11922,7 @@ public final class mudclient implements Runnable {
 			}
 
 			if (registerResponse == 8) {
-				showLoginScreenStatus("Username cannot contain", "\"Mod!\"");
+				showLoginScreenStatus("Username cannot", "contain \"Mod\"!");
 				return;
 			}
 			showLoginScreenStatus("Error unable to login.", "Unrecognised response code");
