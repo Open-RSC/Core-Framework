@@ -11413,8 +11413,8 @@ public final class mudclient implements Runnable {
 		// When the Player sleeps the Sleep screen is displayed at the center-top of the game client.
 		// We'll say the Player clicked for a new Captcha if they clicked in the region of the "click here" text.
 		return this.lastMouseButtonDown == 1
-			&& (this.halfGameWidth() - 100 < this.mouseX && this.halfGameWidth() - 20 > this.mouseX)
-			&& (290 < this.mouseY && this.mouseY < 320);
+			&& (this.halfGameWidth() - 200 < this.mouseX && this.halfGameWidth() + 200 > this.mouseX)
+			&& (275 < this.mouseY - (isAndroid() ? 110 : 0) && this.mouseY < 320 - (isAndroid() ? 110 : 0));
 	}
 
 	public void saveZoomDistance() {
