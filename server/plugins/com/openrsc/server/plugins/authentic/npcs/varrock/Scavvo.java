@@ -14,12 +14,10 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class Scavvo extends AbstractShop {
 
-	private final Shop scavvosShop = new Shop(false, 300000, 100, 60, 2,
-		new Item(ItemId.RUNE_SKIRT.id(), 1), new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id(), 1), new Item(ItemId.RUNE_MACE.id(), 1),
-		new Item(ItemId.RUNE_CHAIN_MAIL_BODY.id(), 1), new Item(ItemId.RUNE_LONG_SWORD.id(), 1), new Item(ItemId.RUNE_SHORT_SWORD.id(), 1));
+	private Shop scavvosShop = null;
 
 	@Override
-	public Shop[] getShops(World world) { return new Shop[]{scavvosShop}; }
+	public Shop[] getShops(World world) { return new Shop[]{getShop(world)}; }
 
 	@Override
 	public boolean isMembers() { return false; }
@@ -47,5 +45,19 @@ public class Scavvo extends AbstractShop {
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
 		return n.getID() == NpcId.SCAVVO.id();
+	}
+
+	public Shop getShop(World world) {
+		if(scavvosShop == null) {
+			scavvosShop = (world.getServer().getConfig().WANT_CHAIN_LEGS) ?
+				new Shop(false, 300000, 100, 60, 2, new Item(ItemId.RUNE_SKIRT.id(), 1),
+					new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id(), 1), new Item(ItemId.RUNE_MACE.id(), 1), new Item(ItemId.RUNE_CHAIN_MAIL_BODY.id(), 1),
+					new Item(ItemId.RUNE_CHAIN_MAIL_LEGS.id(), 1), new Item(ItemId.RUNE_LONG_SWORD.id(), 1), new Item(ItemId.RUNE_SHORT_SWORD.id(), 1)) :
+				new Shop(false, 300000, 100, 60, 2,
+					new Item(ItemId.RUNE_SKIRT.id(), 1), new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id(), 1), new Item(ItemId.RUNE_MACE.id(), 1),
+					new Item(ItemId.RUNE_CHAIN_MAIL_BODY.id(), 1), new Item(ItemId.RUNE_LONG_SWORD.id(), 1), new Item(ItemId.RUNE_SHORT_SWORD.id(), 1));
+		}
+
+		return scavvosShop;
 	}
 }

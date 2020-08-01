@@ -14,6 +14,8 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.ArrayList;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Smithing implements UseLocTrigger {
@@ -211,7 +213,7 @@ public class Smithing implements UseLocTrigger {
 			return;
 		}
 
-		final ItemSmithingDef def = player.getWorld().getServer().getEntityHandler().getSmithingDef((getBarType(item.getCatalogId()) * 21) + toMake);
+		final ItemSmithingDef def = player.getWorld().getServer().getEntityHandler().getSmithingDef((getBarType(item.getCatalogId()) * 22) + toMake);
 
 		if (def == null) {
 			// No definition found
@@ -450,6 +452,7 @@ public class Smithing implements UseLocTrigger {
 			// Arrowheads
 		else if (secondType == 8) return 18;
 
+		// Dart tips
 		else if (secondType == 9) {
 			if (player.getQuestStage(Quests.TOURIST_TRAP) >= 8 || player.getQuestStage(Quests.TOURIST_TRAP) == -1) {
 				return 20;
@@ -499,9 +502,25 @@ public class Smithing implements UseLocTrigger {
 
 	private int armourChoice(Player player) {
 		player.message("What sort of armour do you want to make?");
-		int option = multi(player, "Chain mail body (3 bars)",
-			"Plate mail body (5 bars)",
-			"Plate mail legs (3 bars)", "Plated Skirt (3 bars)");
+		final boolean chainLegs = config().WANT_CHAIN_LEGS;
+		ArrayList<String> options = new ArrayList<>();
+		if (chainLegs) {
+			options.add("Chain mail legs (2 bars)");
+		}
+		options.add("Chain mail body (3 bars)");
+		options.add("Plate mail body (5 bars)");
+		options.add("Plate mail legs (3 bars)");
+		options.add("Plated Skirt (3 bars)");
+
+		String[] finalOptions = new String[options.size()];
+
+		int option = multi(player, options.toArray(finalOptions));
+
+		if (chainLegs && option >=0) {
+			if (option == 0) return 21; // Chain Mail Legs
+			else option -= 1;
+		}
+
 		if (option == 0) return 14; // Chain Mail Body
 		else if (option == 1) return 15; // Plate Mail Body
 		else if (option == 2) return 16; // Plate Mail Legs

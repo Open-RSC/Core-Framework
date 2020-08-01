@@ -205,6 +205,7 @@ public class ServerConfiguration {
 	public boolean WANT_FIXED_BROKEN_MECHANICS;
 	public boolean WANT_DECORATED_MOD_ROOM;
 	public boolean CHAR_NAME_CAN_CONTAIN_MOD;
+	public boolean WANT_CHAIN_LEGS;
 	// public boolean CHECK_ADMIN_IP;
 	// public String ADMIN_IP;
 	// public List<String> adminIp;
@@ -412,6 +413,7 @@ public class ServerConfiguration {
 		WANT_BETTER_JEWELRY_CRAFTING = tryReadBool("want_better_jewelry_crafting").orElse(false);
 		MORE_SHAFTS_PER_BETTER_LOG = tryReadBool("more_shafts_per_better_log").orElse(false);
 		FASTER_YOHNUS = tryReadBool("faster_yohnus").orElse(false);
+		WANT_CHAIN_LEGS = tryReadBool("want_chain_legs").orElse(false);
 
 		// Bank
 		RIGHT_CLICK_BANK = tryReadBool("right_click_bank").orElse(false);

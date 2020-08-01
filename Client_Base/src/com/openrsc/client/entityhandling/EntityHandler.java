@@ -3726,8 +3726,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Dwarf Smithy Note", "Details how to make the Dragon Scale Mail", "read", 1, 234, "items:234", false, false, 0, 0, true, true, false, 1369));
 
 		//New leather items
-		items.add(new ItemDef("Leather chaps", "They seem like decent protection", "", 14, -1, "items:512", false, true, 644, 0, false, false, true, 1370));
-		items.add(new ItemDef("Leather top", "Stylish leather top", "", 21, -1, "items:511", false, true, 322, 0, false, false, true, 1371));
+		items.add(new ItemDef("Leather chaps", "They seem like decent protection", "", 14, -1, "items:512", false, true, 128, 0, false, false, true, 1370));
+		items.add(new ItemDef("Leather top", "Stylish leather top", "", 21, -1, "items:511", false, true, 64, 0, false, false, true, 1371));
 		items.add(new ItemDef("Leather skirt", "A ladies skirt made of leather", "", 14, -1, "items:513", false, true, 128, 0, false, false, true, 1372));
 
 		//Skill Cape Batch One
@@ -3785,6 +3785,14 @@ public class EntityHandler {
 		}
 
 		items.add(new ItemDef("Pizza Bagel", "I sure wish I could make these on my own", "Eat", 50, -1, "items:589", false, false, 0, 0, false, false, true, 1417));
+
+		items.add(new ItemDef("Bronze Chain Mail Legs", "A series of connected metal rings", "", 30, -1, "items:590", false, true, 128, 16737817, false, false, true, 1418));
+		items.add(new ItemDef("Iron Chain Mail Legs", "A series of connected metal rings", "", 105, -1, "items:590", false, true, 128, 15654365, false, false, true, 1419));
+		items.add(new ItemDef("Steel Chain Mail Legs", "A series of connected metal rings", "", 375, -1, "items:590", false, true, 128, 15658734, false, false, true, 1420));
+		items.add(new ItemDef("Mithril Chain Mail Legs", "A series of connected metal rings", "", 975, -1, "items:590", false, true, 128, 10072780, false, false, true, 1421));
+		items.add(new ItemDef("Adamantite Chain Mail Legs", "A series of connected metal rings", "", 2400, -1, "items:590", false, true, 128, 11717785, false, false, true, 1422));
+		items.add(new ItemDef("Rune Chain Mail Legs", "A series of connected metal rings", "", 37500, -1, "items:590", false, true, 128, 65535, false, false, true, 1423));
+		items.add(new ItemDef("Black Chain Mail Legs", "A series of connected metal rings", "", 720, -1, "items:590", false, true, 128, 3158064, false, false, true, 1424));
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
@@ -4316,11 +4324,11 @@ public class EntityHandler {
 
 			//New Leather Items
 			//Chaps
-			animations.add(new AnimationDef("leatherchaps", "equipment", 0, 0, 0, true, false, 0)); //426
+			animations.add(new AnimationDef("leatherchaps", "equipment", 3, 0, 0, true, false, 0)); //426
 			//Female Top
 			animations.add(new AnimationDef("fleatherbody", "equipment", 0, 0, 0, true, false, 0)); //427
 			//Female Skirt
-			animations.add(new AnimationDef("leatherskirt", "equipment", 0, 0, 0, true, false, 0)); //428
+			animations.add(new AnimationDef("leatherskirt", "equipment", 3, 0, 0, true, false, 0)); //428
 
 			//Skill Cape Batch One
 			//animations.add(new AnimationDef("attackcape", "equipment", 0, 0, true, false, 0)); //315
@@ -4347,6 +4355,15 @@ public class EntityHandler {
 			// animations.add(new AnimationDef("smithingcape", "equipment", 0, 0, true, false, 0)); //384 smithing cape
 			animations.add(new AnimationDef("magiccape", "equipment", 0, 0, true, false, 0)); // 440
 			animations.add(new AnimationDef("craftingcape", "equipment", 0, 0, true, false, 0)); // 441
+
+			// Chainmail leg
+			animations.add(new AnimationDef("chainmaillegs", "equipment", 16737817, 0, true, false, 0)); // bronze 442
+			animations.add(new AnimationDef("chainmaillegs", "equipment", 15654365, 0, true, false, 0)); // iron 443
+			animations.add(new AnimationDef("chainmaillegs", "equipment", 15658734, 0, true, false, 0)); // steel 444
+			animations.add(new AnimationDef("chainmaillegs", "equipment", 10072780, 0, true, false, 0)); // mithril 445
+			animations.add(new AnimationDef("chainmaillegs", "equipment", 11717785, 0, true, false, 0)); // adamant 446
+			animations.add(new AnimationDef("chainmaillegs", "equipment", 65535, 0, true, false, 0)); // rune 447
+			animations.add(new AnimationDef("chainmaillegs", "equipment", 3158064, 0, true, false, 0)); //black 448
 
 		}
 	}

@@ -490,6 +490,13 @@ public final class EntityHandler {
 			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_EARTH.id()).setAppearanceId(424);
 			items.get(ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id()).setAppearanceId(425);
 
+			items.get(ItemId.BRONZE_CHAIN_MAIL_LEGS.id()).setAppearanceId(442);
+			items.get(ItemId.IRON_CHAIN_MAIL_LEGS.id()).setAppearanceId(443);
+			items.get(ItemId.STEEL_CHAIN_MAIL_LEGS.id()).setAppearanceId(444);
+			items.get(ItemId.MITHRIL_CHAIN_MAIL_LEGS.id()).setAppearanceId(445);
+			items.get(ItemId.ADAMANTITE_CHAIN_MAIL_LEGS.id()).setAppearanceId(446);
+			items.get(ItemId.RUNE_CHAIN_MAIL_LEGS.id()).setAppearanceId(447);
+			items.get(ItemId.BLACK_CHAIN_MAIL_LEGS.id()).setAppearanceId(448);
 
 		}
 	}

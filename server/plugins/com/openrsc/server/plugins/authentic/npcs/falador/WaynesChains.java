@@ -17,9 +17,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class WaynesChains extends AbstractShop {
 
-	private final Shop shop = new Shop(false, 25000, 100, 65, 1, new Item(ItemId.BRONZE_CHAIN_MAIL_BODY.id(),
-		3), new Item(ItemId.IRON_CHAIN_MAIL_BODY.id(), 2), new Item(ItemId.STEEL_CHAIN_MAIL_BODY.id(), 1), new Item(ItemId.BLACK_CHAIN_MAIL_BODY.id(), 1),
-		new Item(ItemId.MITHRIL_CHAIN_MAIL_BODY.id(), 1), new Item(ItemId.ADAMANTITE_CHAIN_MAIL_BODY.id(), 1));
+	private Shop shop = null;
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc n) {
@@ -28,7 +26,7 @@ public final class WaynesChains extends AbstractShop {
 
 	@Override
 	public Shop[] getShops(World world) {
-		return new Shop[]{shop};
+		return new Shop[]{getShop(world)};
 	}
 
 	@Override
@@ -38,6 +36,22 @@ public final class WaynesChains extends AbstractShop {
 
 	@Override
 	public Shop getShop() {
+		return shop;
+	}
+
+	public Shop getShop(World world) {
+		if(shop == null) {
+			shop = (world.getServer().getConfig().WANT_CHAIN_LEGS) ?
+				new Shop(false, 25000, 100, 65, 1, new Item(ItemId.BRONZE_CHAIN_MAIL_LEGS.id(),
+					3), new Item(ItemId.IRON_CHAIN_MAIL_LEGS.id(), 2), new Item(ItemId.STEEL_CHAIN_MAIL_LEGS.id(), 1), new Item(ItemId.BLACK_CHAIN_MAIL_LEGS.id(), 1),
+					new Item(ItemId.MITHRIL_CHAIN_MAIL_LEGS.id(), 1), new Item(ItemId.ADAMANTITE_CHAIN_MAIL_LEGS.id(), 1), new Item(ItemId.BRONZE_CHAIN_MAIL_BODY.id(), 3),
+					new Item(ItemId.IRON_CHAIN_MAIL_BODY.id(), 2), new Item(ItemId.STEEL_CHAIN_MAIL_BODY.id(), 1), new Item(ItemId.BLACK_CHAIN_MAIL_BODY.id(), 1),
+					new Item(ItemId.MITHRIL_CHAIN_MAIL_BODY.id(), 1), new Item(ItemId.ADAMANTITE_CHAIN_MAIL_BODY.id(), 1)) :
+				new Shop(false, 25000, 100, 65, 1, new Item(ItemId.BRONZE_CHAIN_MAIL_BODY.id(),
+					3), new Item(ItemId.IRON_CHAIN_MAIL_BODY.id(), 2), new Item(ItemId.STEEL_CHAIN_MAIL_BODY.id(), 1), new Item(ItemId.BLACK_CHAIN_MAIL_BODY.id(), 1),
+					new Item(ItemId.MITHRIL_CHAIN_MAIL_BODY.id(), 1), new Item(ItemId.ADAMANTITE_CHAIN_MAIL_BODY.id(), 1));
+		}
+
 		return shop;
 	}
 
