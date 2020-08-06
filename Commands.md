@@ -314,6 +314,10 @@ Super/Senior Moderator Commands
   - Usage: `::ban [name] [time in minutes, -1 for permanent, 0 to unban]`
   - Bans the specified player.
   - You can not ban a staff member of equal or greater rank.
+- renameplayer
+  - Usage: '::renameplayer [old_name] [new_name]'
+  - Renames a specified player. Please note that ALL underscores will be replaced with spaces
+  - Also note that renaming a player will mess up anyone's friend list that has them added, so it's best to only use this command to rename Mod players.
 ------------------------
 Moderator Commands
 ------------------------

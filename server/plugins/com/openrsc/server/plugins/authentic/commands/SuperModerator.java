@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.authentic.commands;
 
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
@@ -7,13 +8,18 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.StringUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.text.DateFormat;
-import java.util.*;
+import java.util.Map;
+import java.util.Random;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.config;
 
 public final class SuperModerator implements CommandTrigger {
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
@@ -64,6 +70,8 @@ public final class SuperModerator implements CommandTrigger {
 			banPlayerIP(player, command, args);
 		} else if (command.equalsIgnoreCase("ipcount")) {
 			countOnlineByIP(player, command, args);
+		} else if (command.equalsIgnoreCase("renameplayer")) {
+			renameplayer(player, command, args);
 		}
 	}
 
@@ -580,5 +588,43 @@ public final class SuperModerator implements CommandTrigger {
 		}
 
 		player.message(messagePrefix + targetPlayer.getUsername() + " IP address: " + targetPlayer.getCurrentIP() + " has " + count + " connections");
+	}
+
+	public static void renameplayer(Player player, String command, String[] args) {
+		// Make sure we have received both arguments
+		if (args.length < 2) {
+			player.message(config().BAD_SYNTAX_PREFIX + command.toUpperCase() + " [CurrentName] [NewName]");
+			player.message("(underscores will become spaces)");
+			return;
+		}
+		// Get the player whose name we are going to change.
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		if (targetPlayer != null) {
+			player.message("Player " + args[0] + " cannot be online.");
+			return;
+		}
+
+		// Do some string stuff
+		String targetPlayerUsername = args[0].replaceAll("_", " ");
+		String newUsername = args[1].replaceAll("_", " ");
+
+		try {
+			final int targetPlayerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(targetPlayerUsername);
+
+			// Check the database to see if the new name is already in use.
+			if (player.getWorld().getServer().getDatabase().playerExists(newUsername)) {
+				player.message("The name \"" + newUsername + "\" is already in use.");
+				return;
+			}
+
+			// Do the rename
+			player.getWorld().getServer().getDatabase().renamePlayer(targetPlayerId, newUsername);
+
+			player.message(targetPlayerUsername + " has been renamed to " + newUsername + ".");
+
+		} catch (GameDatabaseException ex) {
+			player.message("A database error has occurred.");
+			LOGGER.catching(ex);
+		}
 	}
 }
