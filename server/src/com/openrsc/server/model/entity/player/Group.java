@@ -12,7 +12,7 @@ public class Group {
 	public static final int DEV = 5;
 	public static final int EVENT = 7;
 	public static final int PLAYER_MOD = 8;
-	public static final int TESTER = 9;
+	private static final int TESTER = 9;
 	public static final int USER = 10;
 
 	public static final int DEFAULT_GROUP = Group.USER;

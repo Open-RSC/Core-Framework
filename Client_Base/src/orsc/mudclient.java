@@ -12480,21 +12480,21 @@ public final class mudclient implements Runnable {
 					break;
 				}
 				case DEV_ADD_NPC: {
-					sendCommandString("npc " + devMenuNpcID + " 1 " + (indexOrX + midRegionBaseX) + " "
+					sendCommandString("cnpc " + devMenuNpcID + " 1 " + (indexOrX + midRegionBaseX) + " "
 						+ (idOrZ + midRegionBaseZ) + "");
 					break;
 				}
 				case DEV_REMOVE_NPC: {
-					sendCommandString("removenpc " + indexOrX + "");
+					sendCommandString("rpc " + indexOrX + "");
 					break;
 				}
 				case DEV_ADD_OBJECT: {
-					sendCommandString("object " + devMenuNpcID + " " + (indexOrX + midRegionBaseX) + " "
+					sendCommandString("aobject " + devMenuNpcID + " " + (indexOrX + midRegionBaseX) + " "
 						+ (idOrZ + midRegionBaseZ) + "");
 					break;
 				}
 				case DEV_REMOVE_OBJECT: {
-					sendCommandString("removeobject " + (indexOrX + midRegionBaseX) + " "
+					sendCommandString("robject " + (indexOrX + midRegionBaseX) + " "
 						+ (idOrZ + midRegionBaseZ) + "");
 					break;
 				}
@@ -12524,7 +12524,7 @@ public final class mudclient implements Runnable {
 				case MOD_GOTO_PLAYER: {
 					String playerName = var9;
 					playerName = playerName.replaceAll(" ", "_");
-					sendCommandString("tp " + playerName);
+					sendCommandString("goto " + playerName);
 					break;
 				}
 				case MOD_PUT_PLAYER_JAIL: {
@@ -12548,7 +12548,7 @@ public final class mudclient implements Runnable {
 				case MOD_TELEPORT: {
 					int clickX = indexOrX + midRegionBaseX;
 					int clickY = idOrZ + midRegionBaseZ;
-					sendCommandString("tp " + (clickX) + " " + (clickY));
+					sendCommandString("teleport " + (clickX) + " " + (clickY));
 					break;
 				}
 				case CLAN_MENU_KICK: {
