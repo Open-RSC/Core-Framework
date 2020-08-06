@@ -19,25 +19,29 @@ Admin Commands
   - Performs a global holiday drop. More than one item may be specified by putting spaces between item IDs.
 - stopholidaydrop
   - Usage: `::stopholidaydrop`
+  - Alias: `::cancelholidaydrop`
   - Stops the currently running holiday drop.
-- checkholidaydrop
-  - Usage: `::checkholidaydrop`
+- getholidaydrop
+  - Usage: `::getholidaydrop`
+  - Alias: `::checkholidaydrop`
   - Gets information about the currently running holiday drop.
 - restart
   - Usage: `::restart`
   - Restarts the server.
 - grounditem
   - Usage: `::grounditem [id] (respawn_time) (amount) (x) (y)`
+  - Alias: `::gi` or `::gitem`
   - Puts a database entry for a ground item to spawn with specified ID, amount, and respawn time.
   - If no respawn time is supplied, then 188 seconds is used.
   - If no amount is supplied, then 1 is used.
   - If no coordinates are supplied, then the current player's coordinates are used. 
 - removegrounditem
   - Usage: `::removegrounditem (x) (y)`
+  - Alias: `::rgi` or `::rgitem` or `::removegi` or `::removegitem` or `::rgrounditem`
   - Removes from the database a ground item spawn entry.
   - If no coordinates are supplied, then the current player's coordinates are used.
 - shutdown
-  - Usage: `::shutdown`
+  - Usage: `::shutdown 
   - Shuts down the server immediately.
 - update
   - Usage: `::update (reason)`
@@ -50,15 +54,27 @@ Admin Commands
   - For non-stackable items, only up to 30 may be spawned at one time.
 - bankitem
   - Usage: `::bankitem [id] (amount) (player)`
+  - Alias: `::bitem` or `::addbank`
   - Spawns an item into the bank of the specified player.
   - If no amount is specified, then 1 is used.
   - If no player is specified, then it adds to the bank of the current player.
-- hp
-  - Usage: `::hp [name] [hp]`
+- heal
+  - Usage: `::heal (player)`
+  - Sets the specified player's current hits value to their maximum hits value.
+  - If no player is specified, then the current player is healed.
+- recharge
+  - Usage: `::recharge (player)`
+  - Alias: `::healprayer` or `::healp`
+  - Sets the specified player's current prayer value to their maximum prayer value.
+  - If no player is specified, then the current player is recharged.
+- sethp
+  - Usage: `::sethp [name] [hp]`
+  - Alias: `::hp` or `::hits`
   - Sets the specified player's current hits value to the specified value.
   - You can not set hits of a staff member of equal or greater rank.
-- prayer
-  - Usage: `::prayer [name] [prayer]`
+- setprayer
+  - Usage: `::setprayer [name] [prayer]`
+  - Alias: `::prayer`
   - Sets the specified player's current prayer value to the specified value.
   - You can not set prayer of a staff member of equal or greater rank.
 - kill
@@ -67,10 +83,12 @@ Admin Commands
   - You can not kill a staff member of equal or greater rank.
 - damage
   - Usage: `::damage [name] [amount]`
+  - Alias: `::dmg`
   - Damages the specified player for the specified amount of hits levels.
   - You can not damage a staff member of equal or greater rank.
-- wipeinv
-  - Usage: `::wipeinv [name]`
+- wipeinventory
+  - Usage: `::wipeinventory [name]`
+  - Alias: `::wipeinv`
   - Removes all items from the specified player's inventory.
   - You can not wipe the inventory of a staff member of equal or greater rank.
 - wipebank
@@ -94,8 +112,9 @@ Admin Commands
   - Usage: `::playertalk [name] [msg]`
   - Causes the specified player to say the specified message to all players in the area.
   - You can not talk as a staff member of equal or greater rank.
-- damagenpc
-  - Usage: `::damagenpc [npc_id] (damage)`
+- smitenpc
+  - Usage: `::smitenpc [npc_id] (damage)`
+  - Alias: `::damagenpc` or `::dmgnpc`
   - Damages the specified NPC for the specified amount of damage.
   - If no damage is specified, then it does enough damage to kill the NPC.
 - npcevent
@@ -111,9 +130,11 @@ Admin Commands
   - The NPC is chickens and the loot is coins.
 - stopnpcevent
   - Usage: `::stopnpcevent`
+  - Alias: `::cancelnpcevent`
   - Stops the currently running HourlyNpcLootEvent.
-- checknpcevent
-  - Usage: `::checknpcevent`
+- getnpcevent
+  - Usage: `::getnpcevent`
+  - Alias: `::checknpcevent`
   - Gets information about the currently running HourlyNpcLootEvent.
 - wildrule
   - Usage: `::wildrule [god/members] [startLevel] [endLevel]`
@@ -128,6 +149,7 @@ Admin Commands
   - Displays the logged in player's bank window.
 - freezeexperience
   - Usage: `::freezeexperience [player] (boolean)`
+  - Alias: `::freezeexp` or `::freezexp`
   - Freezes the specified player's experience such that they can not gain anymore experience until the freeze is lifted.
   - If no boolean is supplied, then this command works as a toggle.
 - skull
@@ -184,23 +206,27 @@ Admin Commands
 ------------------------
 Developer Commands
 ------------------------
-- npc
-  - Usage: `::npc [id] [radius] (x) (y)`
+- createnpc
+  - Usage: `::createnpc [id] [radius] (x) (y)`
+  - Alias: `::radiusnpc` or `::cnpc` or `::cpc`
   - Creates a new permanent NPC with the given details into the database.
   - If no coordinates are supplied, then the position of the current player is used.
 - removenpc
   - Usage: `::removenpc [npc_instance_id]`
+  - Alias: `::rnpc` or `::rpc`
   - Removes the specified NPC permanently from the database.
 - removeobject
   - Usage: `::removeobject (x) (y)`
+  - Alias: `::robject`
   - Removes the object permanently from the database at the specified coordinates.
   - If no coordinates are supplied, then the current player's position is used.
-- object
-  - Usage: `::object [id] (x) (y)`
+- createobject
+  - Usage: `::createobject [id] (x) (y)`
+  - Alias: `::cobject` or `::addobject` or `::aobject`
   - Adds the specified object to the database permanently at the specified coordinates.
   - If no coordinates are supplied, then the current player's position is used.
 - rotateobject
-  - Usage: `::rotateobject (x) (y) (direction)`
+  - Usage: `::createobject (x) (y) (direction)`
   - Rotates the object at the specified coordinates permanently in the database.
   - If no direction is specified, then the next incremental number is used looping from 0 to 8.
   - If no coordinates are supplied, then the current player's position is used.
@@ -226,28 +252,38 @@ Super/Senior Moderator Commands
 ------------------------
 - setcache
   - Usage: `::setcache (name) [cache_key] [cache_value]`
+  - Alias: `::scache` or `::storecache`
   - Sets a cache value for the specified player.
   - If no player is specified, then the current player's cache is modified.
 - getcache
   - Usage: `::getcache (name) [cache_key]`
+  - Alias: `::gcache` or `::checkcache`
   - Display the cache contents for the specified player.
   - If no player is specified, then the current player's cache is modified.
-- removecache
-  - Usage: `::removecache (name) [cache_key]`
+- deletecache
+  - Usage: `::getcache (name) [cache_key]`
+  - Alias: `::dcache` or `::removecache` or `::rcache`
   - Remove the cache contents of a specified key for the specified player.
   - If no player is specified, then the current player's cache is modified.
 - setquest
   - Usage: `::setquest [player] [questId] (stage)`
+  - Alias: `::queststage` or `::setqueststage` or `::resetquest` or `::resetq`
   - Sets the quest stage for the specified quest to the specified stage for the specified player.
   - If no quest stage is supplied, then 0 is used.
-- completequest
-  - Usage: `::completequest [player] [questId]`
+- questcomplete
+  - Usage: `::setquest [player] [questId]`
+  - Alias: `::questcom`
   - Sets the specified quest to completed for the specified player.
-- getquest
-  - Usage: `::getquest  [player] [questId]`
+- quest
+  - Usage: `::quest  [player] [questId]`
+  - Alias: `::getquest` or `::checkquest`
   - Display the quest stage for the specified user for the specified quest.
+- reloaddrops
+  - Usage: `::reloaddrops`
+  - Reloads NPC drop tables.
 - reloadworld
   - Usage: `::reloadworld`
+  - Alias: `::reloadland`
   - Reloads landscape.
 - summonall
   - Usage: `::summonall (width) (height)`
@@ -255,8 +291,8 @@ Super/Senior Moderator Commands
   - Clears any previous summon flag.
   - Width and height define a rectangle that the summon players will be placed into.
   - If width and height is not supplied then all players are summoned to the same square as the current player.
-- dismissall
-  - Usage: `::dismissall`
+- returnall
+  - Usage: `::returnall`
   - Returns all non-staff members who have been summoned.
 - fatigue
   - Usage: `::fatigue [player] (percentage)`
@@ -283,14 +319,15 @@ Moderator Commands
 ------------------------
 - info
   - Usage: `::info (player)`
+  - Alias: `::about`
   - Shows information about the specified player.
   - If no player is specified, then it show info about the current player.
-- checkinv
-  - Usage: `::checkinv (player)`
+- inventory
+  - Usage: `::inventory (player)`
   - Shows inventory information about the specified player.
   - If no player is specified, then it show inventory info about the current player.
-- checkbank
-  - Usage: `::checkbank (player)`
+- bank
+  - Usage: `::bank (player)`
   - Shows bank information for the specified player.
   - If no player is specified, then it show bank info about the current player.
 - summon
@@ -303,8 +340,9 @@ Moderator Commands
 - say
   - Usage `::say [message]`
   - Talk in global chat. This is never turned off for moderators.
-- announce
-  - Usage `::announce [message]`
+- announcement
+  - Usage `::announcement [message]`
+  - Alias: `::announce` or `::anouncement` or `::anounce`
   - Send an important message to every player on the server.
 - kick
   - Usage: `::kick [player]`
@@ -314,16 +352,16 @@ Moderator Commands
 Event Commands
 ------------------------
 - teleport
-  - Usage: `::tp [town/player]` to teleport to a specified town or player
-  - Usage: `::tp [player] [town/player]` to teleport the specified player to the specified town or destination player.
-  - Usage: `::tp [x] [y]` to teleport to the specified coordinates
-  - Usage: `::tp [player] [x] [y]` to teleport the specified player to the specified coordinates.
-  - Alias: `::go`
+  - Usage: `::teleport [town/player]` to teleport to a specified town or player
+  - Usage: `::teleport [player] [town/player]` to teleport the specified player to the specified town or destination player.
+  - Usage: `::teleport [x] [y]` to teleport to the specified coordinates
+  - Usage: `::teleport [player] [x] [y]` to teleport the specified player to the specified coordinates.
+  - Alias: `::tp` or `::town` or `::goto` or `::tpto` or `::teleportto`
   - Teleports the specified player.
   - You can not teleport while you are jailed.
   - You can not teleport a staff member of equal or greater rank.
-- dismiss
-  - Usage: `::dismiss (player)`
+- return
+  - Usage: `::return (player)`
   - Return the player to their previous location before being summoned and clear the summoned flag.
   - Event role can only use return on themselves.
   - You can not return a staff member of equal or greater rank.
@@ -333,19 +371,22 @@ Event Commands
   - Turn on single click teleportation.
 - invisible
   - Usage: `::invisible (player) (boolean)`
+  - Alias: `::invis`
   - Turn the specified player invisinble.
   - If no player is specified, then the current player is turned invisible.
   - If no boolean is supplied, then this command works as a toggle.
 - invulnerable
   - Usage: `::invulnerable (player) (boolean)`
+  - Alias: `::invul`
   - Turn the specified player invulnerable.
   - If no player is specified, then the current player is turned invulnerable.
   - If no boolean is supplied, then this command works as a toggle.
 - check
   - Usage: `::check (player)`
   - Shows all of the characters that were created by the same IP address.
-- partyhall
-  - Usage: `::partyhall (time_in_minutes)`
+- togglepartyhall
+  - Usage: `::togglepartyhall (time_in_minutes)`
+  - Alias: `::seers` or `::toggleseers` or `::partyhall`
   - Turns on or off based on a toggle the seers party hall chest for the specified amount of time.
   - If no duration is specified, then 60 minutes is used.
   - You must be in the Seers party hall upstairs or downstairs to use this command.
@@ -355,28 +396,32 @@ Event Commands
   - Stops the currently running PK event.
 - startpvpevent
   - Usage: `::startpvpevent [x] [y] [minCb] [maxCb]`
+  - Alias: `::setpvpevent`
   - Starts a PK event with the specified location and specified min and max combat levels.
-- group
-  - Usage: `::group [name]` to read a group
-  - Usage: `::group [name] [group_id/group_name]` to write a group
+- setgroup
+  - Usage: `::setgroup [name]` to read a group
+  - Usage: `::setgroup [name] [group_id/group_name]` to write a group
+  - Alias: `::setrank` or `::group` or `::rank`
   - Read or write the group of the specified player.
   - Only users of the rank Admin or above may change a player's rank.
   - You may never change a players rank to be equal to or greater than your own.
   - If no player is specified, then the current player is targeted.
-- stat
-  - Usage: `::stat [player] [level]` to set all of the specified player's stats to the specified level.
-  - Usage: `::stat [player]` to set all of your stats to the specified level
-  - Usage: `::stat [player] [level] [stat]` to set the specified player's specified stat to the specified level.
-  - Usage: `::stat [level] [stat]` to set your specified stat to the specified level
+- setstats
+  - Usage: `::setstats [player] [level]` to set all of the specified player's stats to the specified level.
+  - Usage: `::setstats [player]` to set all of your stats to the specified level
+  - Usage: `::setstats [player] [level] [stat]` to set the specified player's specified stat to the specified level.
+  - Usage: `::setstats [level] [stat]` to set your specified stat to the specified level
+  - Alias: `::stats` or `::stat` or ::setstat`
   - Set the specified stats of the specified player to the specified level.
   - Accepts name or stat id of the specified stat.
   - If no player is specified, then the current player is targeted.
   - If no stat is specified, then all stats are modified.
-- curstat
-  - Usage: `::curstat [player] [level]` to set all of the specified player's stats to the specified level.
-  - Usage: `::curstat [player]` to set all of your stats to the specified level
-  - Usage: `::curstat [player] [level] [stat]` to set the specified player's specified stat to the specified level.
-  - Usage: `::curstat [level] [stat]` to set your specified stat to the specified level
+- setcurrentstats
+  - Usage: `::setcurrentstats [player] [level]` to set all of the specified player's stats to the specified level.
+  - Usage: `::setcurrentstats [player]` to set all of your stats to the specified level
+  - Usage: `::setcurrentstats [player] [level] [stat]` to set the specified player's specified stat to the specified level.
+  - Usage: `::setcurrentstats [level] [stat]` to set your specified stat to the specified level
+  - Alias: `::currentstats` or `::currentstat` or ::setcurrentstat` or `::curstat` or `::curstats` or `::setcurstat` or `::setcurstats`
   - Set the specified current stats of the specified player to the specified level.
   - Accepts name or stat id of the specified stat.
   - If no player is specified, then the current player is targeted.
@@ -445,7 +490,9 @@ Regular Player Commands
   - You must meet the PK Event requirements to join.
 - g
   - Usage: `::g [message]`
-  - Send a message to global chat.
+  - Alias: `::p`
+  - Send a message to global or PK chat.
+  - `::g` is for global and `::p` is for PK chat.
   - You can only send one global chat message per 15 seconds.
 - online
   - Usage: `::online`
@@ -458,9 +505,11 @@ Regular Player Commands
   - Shows a list of online players.
 - groups
   - Usage: `::groups`
+  - Alias: `::ranks`
   - List the permissions groups available on the server.
 - time
   - Usage: `::time`
+  - Alias: `::date` or `::datetime`
   - Shows the current date and time of the server.
 - commands
   - Usage: `::commands`
