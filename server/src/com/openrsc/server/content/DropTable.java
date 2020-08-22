@@ -1,12 +1,10 @@
 package com.openrsc.server.content;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
@@ -147,17 +145,17 @@ public class DropTable {
 					items.add(new Item(drop.id, drop.amount, drop.noted));
 					break;
 				} else if (drop.type == dropType.TABLE) {
-					if (ringOfWealth && drop.table.rare) {
-						owner.playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
-						owner.playSound("foundgem");
-					}
-
 					DropTable newTable = drop.table.clone();
 
 					items.addAll(newTable.invariableItems(owner));
 
 					if (newTable.getTotalWeight() > 0) {
-						items.addAll(newTable.rollItem(false, owner));
+						ArrayList<Item> itemsToAdd = newTable.rollItem(false, owner);
+						if (itemsToAdd.size() > 0) {
+							owner.playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
+							owner.playSound("foundgem");
+						}
+						items.addAll(itemsToAdd);
 					}
 					break;
 				}
