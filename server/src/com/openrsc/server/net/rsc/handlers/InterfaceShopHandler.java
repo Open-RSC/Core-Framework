@@ -2,15 +2,14 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -127,6 +126,8 @@ public final class InterfaceShopHandler implements PacketHandler {
 				player.getCarriedItems().getInventory().add(new Item(catalogID, 1));
 			}
 
+			// TODO: See if removing this breaks stuff, as it currently allows for a dupe
+			// Items that have basePrice of 0 will not deplete from the store when bought.
 			if (totalMoneySpent > 0) {
 				shop.removeShopItem(new Item(catalogID, totalBought));
 				player.getCarriedItems().remove(new Item(ItemId.COINS.id(), totalMoneySpent));

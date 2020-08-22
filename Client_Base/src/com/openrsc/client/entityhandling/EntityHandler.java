@@ -3632,19 +3632,19 @@ public class EntityHandler {
 
 		if (Config.S_WANT_RUNECRAFT) {
 			// Runecraft
-			items.add(new ItemDef("Rune stone", "An uncharged runestone", "", 0, -1, "items:443", false, false, 0, 0, false, false, true, 1299));
-			items.add(new ItemDef("Air talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:445", false, false, 0, 0, false, false, true, 1300));
-			items.add(new ItemDef("Mind talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:464", false, false, 0, 0, false, false, true, 1301));
-			items.add(new ItemDef("Water talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:446", false, false, 0, 0, false, false, true, 1302));
-			items.add(new ItemDef("Earth talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:448", false, false, 0, 0, false, false, true, 1303));
-			items.add(new ItemDef("Fire talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:447", false, false, 0, 0, false, false, true, 1304));
-			items.add(new ItemDef("Body talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:444", false, false, 0, 0, false, false, true, 1305));
-			items.add(new ItemDef("Cosmic talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:451", false, false, 0, 0, false, false, true, 1306));
-			items.add(new ItemDef("Chaos talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:452", false, false, 0, 0, false, false, true, 1307));
-			items.add(new ItemDef("Nature talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:449", false, false, 0, 0, false, false, true, 1308));
-			items.add(new ItemDef("Law talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:450", false, false, 0, 0, false, false, true, 1309));
-			items.add(new ItemDef("Death talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:453", false, false, 0, 0, false, false, true, 1310));
-			items.add(new ItemDef("Blood talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:454", false, false, 0, 0, false, false, true, 1311));
+			items.add(new ItemDef("Rune stone", "An uncharged runestone", "", 4, -1, "items:443", false, false, 0, 0, false, false, true, 1299));
+			items.add(new ItemDef("Air talisman", "A mysterious power emanates from the talisman...", "Locate", 40, -1, "items:445", false, false, 0, 0, false, false, true, 1300));
+			items.add(new ItemDef("Mind talisman", "A mysterious power emanates from the talisman...", "Locate", 30, -1, "items:464", false, false, 0, 0, false, false, true, 1301));
+			items.add(new ItemDef("Water talisman", "A mysterious power emanates from the talisman...", "Locate", 40, -1, "items:446", false, false, 0, 0, false, false, true, 1302));
+			items.add(new ItemDef("Earth talisman", "A mysterious power emanates from the talisman...", "Locate", 40, -1, "items:448", false, false, 0, 0, false, false, true, 1303));
+			items.add(new ItemDef("Fire talisman", "A mysterious power emanates from the talisman...", "Locate", 40, -1, "items:447", false, false, 0, 0, false, false, true, 1304));
+			items.add(new ItemDef("Body talisman", "A mysterious power emanates from the talisman...", "Locate", 30, -1, "items:444", false, false, 0, 0, false, false, true, 1305));
+			items.add(new ItemDef("Cosmic talisman", "A mysterious power emanates from the talisman...", "Locate", 150, -1, "items:451", false, false, 0, 0, false, false, true, 1306));
+			items.add(new ItemDef("Chaos talisman", "A mysterious power emanates from the talisman...", "Locate", 100, -1, "items:452", false, false, 0, 0, false, false, true, 1307));
+			items.add(new ItemDef("Nature talisman", "A mysterious power emanates from the talisman...", "Locate", 70, -1, "items:449", false, false, 0, 0, false, false, true, 1308));
+			items.add(new ItemDef("Law talisman", "A mysterious power emanates from the talisman...", "Locate", 120, -1, "items:450", false, false, 0, 0, false, false, true, 1309));
+			items.add(new ItemDef("Death talisman", "A mysterious power emanates from the talisman...", "Locate", 200, -1, "items:453", false, false, 0, 0, false, false, true, 1310));
+			items.add(new ItemDef("Blood talisman", "A mysterious power emanates from the talisman...", "Locate", 250, -1, "items:454", false, false, 0, 0, false, false, true, 1311));
 			items.add(new ItemDef("Research package", "This contains some vital research results.", "", 0, -1, "items:330", false, false, 0, 0, true, true, false, 1312));
 			items.add(new ItemDef("Research notes", "These make no sense at all.", "", 0, -1, "items:427", false, false, 0, 0, true, true, false, 1313));
 		}
@@ -3660,22 +3660,22 @@ public class EntityHandler {
 		items.add(new ItemDef("Opal ring", "A valuable ring", "", 1050, -1, "items:123", false, false, 0, 16777124, false, false, true, 1321));
 
 		// Wolf masks
-		items.add(new ItemDef("White wolf mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 16777215, 16777215, false, false, true, 1322));
-		items.add(new ItemDef("Blood wolf mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 10878976, 1513239, false, false, true, 1323));
-		items.add(new ItemDef("Black wolf mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 1513239, 10878976, false, false, true, 1324));
-		items.add(new ItemDef("Pink wolf mask", "Awoooo", "", 0, 86, "items:509", false, true, 32, 16759039, 16777215, false, false, true, 1325));
+		items.add(new ItemDef("White wolf mask", "Awoooo", "", 1, 86, "items:509", false, true, 32, 16777215, 16777215, false, false, true, 1322));
+		items.add(new ItemDef("Blood wolf mask", "Awoooo", "", 1, 86, "items:509", false, true, 32, 10878976, 1513239, false, false, true, 1323));
+		items.add(new ItemDef("Black wolf mask", "Awoooo", "", 1, 86, "items:509", false, true, 32, 1513239, 10878976, false, false, true, 1324));
+		items.add(new ItemDef("Pink wolf mask", "Awoooo", "", 1, 86, "items:509", false, true, 32, 16759039, 16777215, false, false, true, 1325));
 
 		// Unicorn masks
-		items.add(new ItemDef("White unicorn mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 16777215, 16777215, false, false, true, 1326));
-		items.add(new ItemDef("Blood unicorn mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 10878976, 1513239, false, false, true, 1327));
-		items.add(new ItemDef("Black unicorn mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 1513239, 10878976, false, false, true, 1328));
-		items.add(new ItemDef("Pink unicorn mask", "I'm so fluffy I'm gonne die!!", "", 0, 86, "items:510", false, true, 32, 16759039, 16777215, false, false, true, 1329));
+		items.add(new ItemDef("White unicorn mask", "I'm so fluffy I'm gonne die!!", "", 1, 86, "items:510", false, true, 32, 16777215, 16777215, false, false, true, 1326));
+		items.add(new ItemDef("Blood unicorn mask", "I'm so fluffy I'm gonne die!!", "", 1, 86, "items:510", false, true, 32, 10878976, 1513239, false, false, true, 1327));
+		items.add(new ItemDef("Black unicorn mask", "I'm so fluffy I'm gonne die!!", "", 1, 86, "items:510", false, true, 32, 1513239, 10878976, false, false, true, 1328));
+		items.add(new ItemDef("Pink unicorn mask", "I'm so fluffy I'm gonne die!!", "", 1, 86, "items:510", false, true, 32, 16759039, 16777215, false, false, true, 1329));
 
 		// Halloween cracker
 		items.add(new ItemDef("Trick or treat cracker", "Use on another player to pull it", "", 0, 515, "items:515", false, false, 0, 0, false, false, true, 1330));
 
 		// Fox mask
-		items.add(new ItemDef("Fox mask", "Struttin' like a fox", "", 0, 86, "items:509", false, true, 32, 16730368, 16446686, false, false, true, 1331));
+		items.add(new ItemDef("Fox mask", "Struttin' like a fox", "", 1, 86, "items:509", false, true, 32, 16730368, 16446686, false, false, true, 1331));
 
 		// Xmas items
 		items.add(new ItemDef("Christmas cape", "A cape worn on the holidays", "", 3, -1, "items:516", false, true, 2048, 16711680, false, false, true, 1332));
@@ -3738,8 +3738,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Mining cape", "The cape worn by masters of mining", "", 99000, -1, "items:490", false, true, 2048, 0, false, false, false, 1377));
 
 		// 2020 April Fools Items
-		items.add(new ItemDef("Pestilence Mask", "You wouldn't want to be seen in this! Stay the cabbage home!", "", 0, -1, "items:555", false, true, 32, 0, false, false, true, 1378));
-		items.add(new ItemDef("Rubber Chicken Cap", "Wow. That was some very in-depth research on the 'chicken or the egg' question.", "", 0, -1, "items:548", false, true, 32, 0, false, false, true, 1379));
+		items.add(new ItemDef("Pestilence Mask", "You wouldn't want to be seen in this! Stay the cabbage home!", "", 1, -1, "items:555", false, true, 32, 0, false, false, true, 1378));
+		items.add(new ItemDef("Rubber Chicken Cap", "Wow. That was some very in-depth research on the 'chicken or the egg' question.", "", 1, -1, "items:548", false, true, 32, 0, false, false, true, 1379));
 
 		// Skill Cape Batch Two
 		items.add(new ItemDef("Fishing cape", "The cape worn by the best fishermen", "", 99000, -1, "items:485", false, true, 2048, 0, false, false, false, 1380));
@@ -3750,32 +3750,32 @@ public class EntityHandler {
 
 		if (Config.S_WANT_RUNECRAFT) {
 			// Runecraft Update Items
-			items.add(new ItemDef("Uncharged talisman", "This needs charging to work properly...", "", 0, -1, "items:558", false, false, 0, 0, false, false, true, 1385));
-			items.add(new ItemDef("Cursed air talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:559", false, false, 0, 0, false, false, false, 1386));
-			items.add(new ItemDef("Cursed mind talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:560", false, false, 0, 0, false, false, false, 1387));
-			items.add(new ItemDef("Cursed water talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:561", false, false, 0, 0, false, false, false, 1388));
-			items.add(new ItemDef("Cursed earth talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:562", false, false, 0, 0, false, false, false, 1389));
-			items.add(new ItemDef("Cursed fire talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:563", false, false, 0, 0, false, false, false, 1390));
-			items.add(new ItemDef("Cursed body talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:564", false, false, 0, 0, false, false, false, 1391));
-			items.add(new ItemDef("Cursed cosmic talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:565", false, false, 0, 0, false, false, false, 1392));
-			items.add(new ItemDef("Cursed chaos talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:566", false, false, 0, 0, false, false, false, 1393));
-			items.add(new ItemDef("Cursed nature talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:567", false, false, 0, 0, false, false, false, 1394));
-			items.add(new ItemDef("Cursed law talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:568", false, false, 0, 0, false, false, false, 1395));
-			items.add(new ItemDef("Cursed death talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:569", false, false, 0, 0, false, false, false, 1396));
-			items.add(new ItemDef("Cursed blood talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:570", false, false, 0, 0, false, false, false, 1397));
-			items.add(new ItemDef("Enfeebled air talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:573", false, false, 0, 0, false, false, false, 1398));
-			items.add(new ItemDef("Enfeebled mind talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:574", false, false, 0, 0, false, false, false, 1399));
-			items.add(new ItemDef("Enfeebled water talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:575", false, false, 0, 0, false, false, false, 1400));
-			items.add(new ItemDef("Enfeebled earth talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:576", false, false, 0, 0, false, false, false, 1401));
-			items.add(new ItemDef("Enfeebled fire talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:577", false, false, 0, 0, false, false, false, 1402));
-			items.add(new ItemDef("Enfeebled body talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:578", false, false, 0, 0, false, false, false, 1403));
-			items.add(new ItemDef("Enfeebled cosmic talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:579", false, false, 0, 0, false, false, false, 1404));
-			items.add(new ItemDef("Enfeebled chaos talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:580", false, false, 0, 0, false, false, false, 1405));
-			items.add(new ItemDef("Enfeebled nature talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:581", false, false, 0, 0, false, false, false, 1406));
-			items.add(new ItemDef("Enfeebled law talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:582", false, false, 0, 0, false, false, false, 1407));
-			items.add(new ItemDef("Enfeebled death talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:583", false, false, 0, 0, false, false, false, 1408));
-			items.add(new ItemDef("Enfeebled blood talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:584", false, false, 0, 0, false, false, false, 1409));
-			items.add(new ItemDef("Fish oil", "Good for my heart", "Eat", 0, -1, "items:587", true, false, 0, 0, false, false, false, 1410));
+			items.add(new ItemDef("Uncharged talisman", "This needs charging to work properly...", "", 4, -1, "items:558", false, false, 0, 0, false, false, true, 1385));
+			items.add(new ItemDef("Cursed air talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:559", false, false, 0, 0, false, true, false, 1386));
+			items.add(new ItemDef("Cursed mind talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:560", false, false, 0, 0, false, true, false, 1387));
+			items.add(new ItemDef("Cursed water talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:561", false, false, 0, 0, false, true, false, 1388));
+			items.add(new ItemDef("Cursed earth talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:562", false, false, 0, 0, false, true, false, 1389));
+			items.add(new ItemDef("Cursed fire talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:563", false, false, 0, 0, false, true, false, 1390));
+			items.add(new ItemDef("Cursed body talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:564", false, false, 0, 0, false, true, false, 1391));
+			items.add(new ItemDef("Cursed cosmic talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:565", false, false, 0, 0, false, true, false, 1392));
+			items.add(new ItemDef("Cursed chaos talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:566", false, false, 0, 0, false, true, false, 1393));
+			items.add(new ItemDef("Cursed nature talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:567", false, false, 0, 0, false, true, false, 1394));
+			items.add(new ItemDef("Cursed law talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:568", false, false, 0, 0, false, true, false, 1395));
+			items.add(new ItemDef("Cursed death talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:569", false, false, 0, 0, false, true, false, 1396));
+			items.add(new ItemDef("Cursed blood talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:570", false, false, 0, 0, false, true, false, 1397));
+			items.add(new ItemDef("Enfeebled air talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:573", false, false, 0, 0, false, true, false, 1398));
+			items.add(new ItemDef("Enfeebled mind talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:574", false, false, 0, 0, false, true, false, 1399));
+			items.add(new ItemDef("Enfeebled water talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:575", false, false, 0, 0, false, true, false, 1400));
+			items.add(new ItemDef("Enfeebled earth talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:576", false, false, 0, 0, false, true, false, 1401));
+			items.add(new ItemDef("Enfeebled fire talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:577", false, false, 0, 0, false, true, false, 1402));
+			items.add(new ItemDef("Enfeebled body talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:578", false, false, 0, 0, false, true, false, 1403));
+			items.add(new ItemDef("Enfeebled cosmic talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:579", false, false, 0, 0, false, true, false, 1404));
+			items.add(new ItemDef("Enfeebled chaos talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:580", false, false, 0, 0, false, true, false, 1405));
+			items.add(new ItemDef("Enfeebled nature talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:581", false, false, 0, 0, false, true, false, 1406));
+			items.add(new ItemDef("Enfeebled law talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:582", false, false, 0, 0, false, true, false, 1407));
+			items.add(new ItemDef("Enfeebled death talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:583", false, false, 0, 0, false, true, false, 1408));
+			items.add(new ItemDef("Enfeebled blood talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:584", false, false, 0, 0, false, true, false, 1409));
+			items.add(new ItemDef("Fish oil", "Good for my heart", "Eat", 1, -1, "items:587", true, false, 0, 0, false, false, false, 1410));
 			items.add(new ItemDef("Runecraft Potion", "3 doses of runecraft potion", "Drink", 200, -1, "items:48", false, false, 0, 7547378, true, false, true, 1411));
 			items.add(new ItemDef("Runecraft Potion", "2 doses of runecraft potion", "Drink", 150, -1, "items:436", false, false, 0, 7547378, true, false, true, 1412));
 			items.add(new ItemDef("Runecraft Potion", "1 dose of runecraft potion", "Drink", 100, -1, "items:437", false, false, 0, 7547378, true, false, true, 1413));
