@@ -79,6 +79,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	@Override
 	public void channelRegistered(final ChannelHandlerContext ctx) {
 		final String hostAddress = ((InetSocketAddress) ctx.channel().remoteAddress()).getAddress().getHostAddress();
+		ctx.attr(attachment).set(new ConnectionAttachment());
 
 		if (!getServer().getPacketFilter().shouldAllowConnection(ctx.channel(), hostAddress, false)) {
 			getServer().getPacketFilter().ipBanHost(hostAddress, System.currentTimeMillis() + ServerConfiguration.NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "not should allow connection");

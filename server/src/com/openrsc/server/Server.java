@@ -18,6 +18,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.*;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.net.rsc.Crypto;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.rsc.CollisionFlag;
@@ -311,6 +312,8 @@ public class Server implements Runnable {
 				getPacketFilter().load();
 				LOGGER.info("Packet Filter Completed");
 
+                Crypto.init();
+
 				maxItemId = getDatabase().getMaxItemID();
 				LOGGER.info("Set max item ID to : " + maxItemId);
 
@@ -339,6 +342,8 @@ public class Server implements Runnable {
 					getPluginHandler().handlePlugin(getWorld(), "Startup", new Object[]{});
 					serverChannel = bootstrap.bind(new InetSocketAddress(getConfig().SERVER_PORT)).sync();
 					LOGGER.info("Game world is now online on port {}!", box(getConfig().SERVER_PORT));
+                    LOGGER.info("RSA exponent: " + Crypto.getPublicExponent());
+                    LOGGER.info("RSA modulus: " + Crypto.getPublicModulus());
 				} catch (final InterruptedException e) {
 					LOGGER.catching(e);
 				}

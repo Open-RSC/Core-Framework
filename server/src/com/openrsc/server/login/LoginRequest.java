@@ -136,7 +136,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
-			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin) {
+			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin && getClientVersion() != 235) {
 				return (byte) LoginResponse.CLIENT_UPDATED;
 			}
 

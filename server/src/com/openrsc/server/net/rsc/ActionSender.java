@@ -546,8 +546,8 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR + " 78");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
-		ConnectionAttachment attachment = new ConnectionAttachment();
-		channel.attr(RSCConnectionHandler.attachment).set(attachment);
+		// ConnectionAttachment attachment = new ConnectionAttachment();
+		// channel.attr(RSCConnectionHandler.attachment).set(attachment);
 		channel.writeAndFlush(s.toPacket());
 		channel.close();
 	}
@@ -1322,7 +1322,22 @@ public class ActionSender {
 	static void sendLogin(Player player) {
 		try {
 			if (player.getWorld().registerPlayer(player)) {
+                sendPrivacySettings(player);
+                sendMessage(player, null, 0, MessageType.QUEST, "Welcome to " + player.getConfig().SERVER_NAME + "!", 0);
+                sendGameSettings(player);
 				sendWorldInfo(player);
+                sendQuestInfo(player);
+                sendPlayerOnTutorial(player);
+                sendLoginBox(player);
+
+                sendInventory(player);
+                player.checkEquipment();
+
+                sendStats(player);
+                sendEquipmentStats(player);
+                sendPrayers(player, player.getPrayers().getActivePrayers());
+                sendFatigue(player);
+
 				player.getWorld().getServer().getGameUpdater().sendUpdatePackets(player);
 				long timeTillShutdown = player.getWorld().getServer().getTimeUntilShutdown();
 				if (timeTillShutdown > -1)
@@ -1332,7 +1347,7 @@ public class ActionSender {
 				if (elixir > -1)
 					sendElixirTimer(player, player.getElixir());
 
-				sendPlayerOnTutorial(player);
+
 				sendPlayerOnBlackHole(player);
 				if (player.getLastLogin() == 0L) {
 					sendAppearanceScreen(player);
@@ -1345,10 +1360,9 @@ public class ActionSender {
 				}
 
 				sendWakeUp(player, false, true);
-				sendGameSettings(player);
-				sendLoginBox(player);
 
-				sendMessage(player, null, 0, MessageType.QUEST, "Welcome to " + player.getConfig().SERVER_NAME + "!", 0);
+
+
 				if (player.isMuted()) {
 					sendMessage(player, "You are muted for "
 						+ (double) (System.currentTimeMillis() - player.getMuteExpires()) / 3600000D + " hours.");
@@ -1358,18 +1372,13 @@ public class ActionSender {
 					sendBox(player, "@gre@Welcome to the " + player.getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
-				sendPrivacySettings(player);
 
-				sendStats(player);
-				sendEquipmentStats(player);
-				sendFatigue(player);
+
 				sendNpcKills(player);
 
 				sendCombatStyle(player);
 				sendIronManMode(player);
 
-				sendInventory(player);
-				player.checkEquipment();
 
 				if (player.getConfig().WANT_BANK_PRESETS)
 					sendBankPresets(player);
@@ -1387,7 +1396,6 @@ public class ActionSender {
 					}
 				}
 
-				sendQuestInfo(player);
 				//AchievementSystem.achievementListGUI(p);
 				sendFriendList(player);
 				sendIgnoreList(player);
@@ -1599,16 +1607,6 @@ public class ActionSender {
 	}
 
 	public enum Opcode {
-		/**
-		 * int slot = this.packetsIncoming.getUnsignedByte();
-		 * --this.inventoryItemCount;
-		 * <p>
-		 * for (int index = slot; this.inventoryItemCount > index; ++index) {
-		 * this.inventoryItemID[index] = this.inventoryItemID[index + 1];
-		 * this.inventoryItemSize[index] = this.inventoryItemSize[index + 1];
-		 * this.inventoryItemEquipped[index] = this.inventoryItemEquipped[index
-		 * + 1]; }
-		 */
 		SEND_LOGOUT(4),
 		SEND_QUESTS(5),
 		SEND_DUEL_OPPONENTS_ITEMS(6),
@@ -1633,8 +1631,8 @@ public class ActionSender {
 		SEND_INVENTORY_UPDATEITEM(90),
 		SEND_TRADE_WINDOW(92),
 		SEND_TRADE_OTHER_ITEMS(97),
-		SEND_SHOP_OPEN(101),
 		SEND_EXPSHARED(98),
+        SEND_SHOP_OPEN(101),
 		SEND_IGNORE_LIST(109),
 		SEND_INPUT_BOX(110),
 		SEND_ON_TUTORIAL(111),
@@ -1671,6 +1669,7 @@ public class ActionSender {
 		SEND_DUEL_WINDOW(176),
 		SEND_WELCOME_INFO(182),
 		SEND_CANT_LOGOUT(183),
+        SEND_PLAYER_COORDS(191),
 		SEND_SLEEPWORD_INCORRECT(194),
 		SEND_BANK_CLOSE(203),
 		SEND_PLAY_SOUND(204),

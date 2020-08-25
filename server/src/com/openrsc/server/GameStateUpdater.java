@@ -168,7 +168,7 @@ public final class GameStateUpdater {
 
 	protected void updatePlayers(final Player playerToUpdate) {
 		final com.openrsc.server.net.PacketBuilder positionBuilder = new com.openrsc.server.net.PacketBuilder();
-		positionBuilder.setID(191);
+		positionBuilder.setID(ActionSender.Opcode.SEND_PLAYER_COORDS.opcode);
 		positionBuilder.startBitAccess();
 		positionBuilder.writeBits(playerToUpdate.getX(), 11);
 		positionBuilder.writeBits(playerToUpdate.getY(), 13);

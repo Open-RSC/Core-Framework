@@ -95,7 +95,11 @@ public class Packet {
 
 
 	public byte[] readBytes(int length) {
-		return payload.readBytes(length).array();
+        byte[] bytes = new byte[length];
+        for (int i = 0; i < length; i++) {
+            bytes[i] = payload.readByte();
+        }
+	    return bytes;
 	}
 
 	/**

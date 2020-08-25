@@ -1,6 +1,6 @@
 package com.openrsc.server.net.rsc;
 
-import com.openrsc.server.util.rsc.ISAACCipher;
+import com.openrsc.server.login.ISAACCipher;
 
 public class ISAACContainer {
 
@@ -13,10 +13,10 @@ public class ISAACContainer {
 	}
 
 	public int encodeOpcode(int opcode) {
-		return opcode /*+ outCipher.nextInt() & 0xFF*/;
+		return (opcode + outCipher.getNextValue()) & 0xFF;
 	}
 
 	public int decodeOpcode(int opcode) {
-		return opcode /*- inCipher.nextInt() & 0xFF*/;
+		return (opcode - inCipher.getNextValue()) & 0xFF;
 	}
 }

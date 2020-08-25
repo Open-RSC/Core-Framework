@@ -156,7 +156,7 @@ public class RSCPacketFilter {
 		final int pps = getServer().getPacketFilter().getPacketsPerSecond(connection);
 		final boolean allowPacket = isHostAdmin(hostAddress) || pps <= getServer().getConfig().MAX_PACKETS_PER_SECOND;
 
-		//LOGGER.info("Channel Read: " + hostAddress + ", Allowed: " + allowPacket + ", PPS: " + pps);
+		LOGGER.info("Channel Read: " + hostAddress + ", Allowed: " + allowPacket + ", PPS: " + pps);
 
 		if(!allowPacket) {
 			LOGGER.info(hostAddress + " (" + player + ") filtered for reaching the PPS limit: " + pps);
@@ -165,7 +165,7 @@ public class RSCPacketFilter {
 			}
 		}
 
-		//LOGGER.info("Packet, pps: " + pps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", isHostAdmin: " + isHostAdmin(hostAddress));
+		LOGGER.info("Packet, pps: " + pps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", isHostAdmin: " + isHostAdmin(hostAddress));
 
 		return allowPacket;
 	}
@@ -216,7 +216,7 @@ public class RSCPacketFilter {
 		final int lps = getLoginsPerSecond(hostAddress);
 		final boolean allowConnection = isHostAdmin(hostAddress) || lps <= getServer().getConfig().MAX_LOGINS_PER_SECOND;
 
-		//LOGGER.info("Login, lps: " + lps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", isHostAdmin: " + isHostAdmin(hostAddress));
+		LOGGER.info("Login, lps: " + lps + ", isHostIpBanned: " + isHostIpBanned(hostAddress) + ", isHostAdmin: " + isHostAdmin(hostAddress));
 
 		return allowConnection;
 	}
