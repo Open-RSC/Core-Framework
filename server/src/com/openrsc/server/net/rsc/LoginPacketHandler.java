@@ -146,6 +146,8 @@ public class LoginPacketHandler {
                                 loadedPlayer.setChangingAppearance(true);
                             }
 
+                            loadedPlayer.setClientVersion(clientVersion);
+
                             server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
                             ActionSender.sendLogin(loadedPlayer);
                         }
@@ -186,6 +188,8 @@ public class LoginPacketHandler {
                                 loadedPlayer.setInitialLocation(Point.location(216, 744));
                                 loadedPlayer.setChangingAppearance(true);
                             }
+
+                            loadedPlayer.setClientVersion(clientVersion);
 
                             server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
                             ActionSender.sendLogin(loadedPlayer);

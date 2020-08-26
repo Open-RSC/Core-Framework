@@ -117,6 +117,7 @@ public final class Player extends Mob {
 	private volatile int questionOption;
 	private List<PluginTask> ownedPlugins = Collections.synchronizedList(new ArrayList<>());
 	private long lastExchangeTime = System.currentTimeMillis();
+	private int clientVersion = 0;
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -3168,5 +3169,11 @@ public final class Player extends Mob {
 
 	public void setLastExchangeTime() {
 		this.lastExchangeTime = System.currentTimeMillis();
+	}
+
+	public void setClientVersion(int cv) { this.clientVersion = cv; }
+
+	public boolean isUsingAuthenticClient() {
+		return this.clientVersion == 235;
 	}
 }
