@@ -106,10 +106,12 @@ public class ActionSender {
 	}
 
 	public static void sendPlayerOnBlackHole(Player player) {
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_ON_BLACK_HOLE.opcode);
-		s.writeByte((byte) (player.getLocation().onBlackHole() ? 1 : 0));
-		player.write(s.toPacket());
+	    if (!player.isUsingAuthenticClient()) {
+            com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+            s.setID(Opcode.SEND_ON_BLACK_HOLE.opcode);
+            s.writeByte((byte) (player.getLocation().onBlackHole() ? 1 : 0));
+            player.write(s.toPacket());
+        }
 	}
 
 	/**
@@ -338,10 +340,12 @@ public class ActionSender {
 	}
 
 	public static void sendNpcKills(Player player) {
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_NPC_KILLS.opcode);
-		s.writeShort(player.getNpcKills());
-		player.write(s.toPacket());
+	    if (!player.isUsingAuthenticClient()) {
+            com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+            s.setID(Opcode.SEND_NPC_KILLS.opcode);
+            s.writeShort(player.getNpcKills());
+            player.write(s.toPacket());
+        }
 	}
 
 	public static void sendExpShared(Player player) {
@@ -658,10 +662,17 @@ public class ActionSender {
 		s.writeByte((byte) player.getSocial().getIgnoreList().size());
 		for (long usernameHash : player.getSocial().getIgnoreList()) {
 			String username = DataConversions.hashToUsername(usernameHash);
-			s.writeString(username);
-			s.writeString(username);
-			s.writeString(username);
-			s.writeString(username);
+			if (player.isUsingAuthenticClient()) {
+			    s.writeZeroQuotedString(username); // Username
+                s.writeZeroQuotedString(username); // Username Duplicate
+                s.writeZeroQuotedString(""); // Old Username
+                s.writeZeroQuotedString(""); // Old Username Duplicate
+            } else {
+                s.writeString(username);
+                s.writeString(username);
+                s.writeString(username);
+                s.writeString(username);
+            }
 		}
 		player.write(s.toPacket());
 	}
@@ -1516,38 +1527,46 @@ public class ActionSender {
 	}
 
 	public static void showFishingTrawlerInterface(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
-		pb.writeByte(6);
-		pb.writeByte(0);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
+            pb.writeByte(6);
+            pb.writeByte(0);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void hideFishingTrawlerInterface(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
-		pb.writeByte(6);
-		pb.writeByte(2);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
+            pb.writeByte(6);
+            pb.writeByte(2);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void updateFishingTrawler(Player player, int waterLevel, int minutesLeft, int fishCaught,
 											boolean netBroken) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
-		pb.writeByte(6);
-		pb.writeByte(1);
-		pb.writeShort(waterLevel);
-		pb.writeShort(fishCaught);
-		pb.writeByte(minutesLeft);
-		pb.writeByte(netBroken ? 1 : 0);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
+            pb.writeByte(6);
+            pb.writeByte(1);
+            pb.writeShort(waterLevel);
+            pb.writeShort(fishCaught);
+            pb.writeByte(minutesLeft);
+            pb.writeByte(netBroken ? 1 : 0);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendKillUpdate(Player player, long killedHash, long killerHash, int type) {
-		if (!player.getConfig().WANT_KILL_FEED) return;
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_KILL_ANNOUNCEMENT.opcode);
-		pb.writeString(DataConversions.hashToUsername(killedHash));
-		pb.writeString(DataConversions.hashToUsername(killerHash));
-		pb.writeInt(type);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            if (!player.getConfig().WANT_KILL_FEED) return;
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_KILL_ANNOUNCEMENT.opcode);
+            pb.writeString(DataConversions.hashToUsername(killedHash));
+            pb.writeString(DataConversions.hashToUsername(killerHash));
+            pb.writeInt(type);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendOpenAuctionHouse(final Player player) {
@@ -1555,150 +1574,176 @@ public class ActionSender {
 	}
 
 	public static void sendClan(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
-		pb.writeByte(0);
-		pb.writeString(player.getClan().getClanName());
-		pb.writeString(player.getClan().getClanTag());
-		pb.writeString(player.getClan().getLeader().getUsername());
-		pb.writeByte(player.getClan().getLeader().getUsername().equalsIgnoreCase(player.getUsername()) ? 1 : 0);
-		pb.writeByte(player.getClan().getPlayers().size());
-		for (ClanPlayer m : player.getClan().getPlayers()) {
-			pb.writeString(m.getUsername());
-			pb.writeByte(m.getRank().getRankIndex());
-			pb.writeByte(m.isOnline() ? 1 : 0);
-		}
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
+            pb.writeByte(0);
+            pb.writeString(player.getClan().getClanName());
+            pb.writeString(player.getClan().getClanTag());
+            pb.writeString(player.getClan().getLeader().getUsername());
+            pb.writeByte(player.getClan().getLeader().getUsername().equalsIgnoreCase(player.getUsername()) ? 1 : 0);
+            pb.writeByte(player.getClan().getPlayers().size());
+            for (ClanPlayer m : player.getClan().getPlayers()) {
+                pb.writeString(m.getUsername());
+                pb.writeByte(m.getRank().getRankIndex());
+                pb.writeByte(m.isOnline() ? 1 : 0);
+            }
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendParty(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
-		pb.writeByte(0);
-		pb.writeString(player.getParty().getLeader().getUsername());
-		pb.writeByte(player.getParty().getLeader().getUsername().equalsIgnoreCase(player.getUsername()) ? 1 : 0);
-		pb.writeByte(player.getParty().getPlayers().size());
-		for (PartyPlayer m : player.getParty().getPlayers()) {
-			pb.writeString(m.getUsername());
-			pb.writeByte(m.getRank().getRankIndex());
-			pb.writeByte(m.isOnline() ? 1 : 0);
-			pb.writeByte(m.getCurHp());
-			pb.writeByte(m.getMaxHp());
-			pb.writeByte(m.getCbLvl());
-			pb.writeByte(m.getSkull());
-			pb.writeByte(m.getPartyMemberDead());
-			pb.writeByte(m.getShareLoot());
-			pb.writeByte(m.getPartyMembersTotal());
-			pb.writeByte(m.getInCombat());
-			pb.writeByte(m.getShareExp());
-			pb.writeLong(m.getExpShared2());
-		}
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+            pb.writeByte(0);
+            pb.writeString(player.getParty().getLeader().getUsername());
+            pb.writeByte(player.getParty().getLeader().getUsername().equalsIgnoreCase(player.getUsername()) ? 1 : 0);
+            pb.writeByte(player.getParty().getPlayers().size());
+            for (PartyPlayer m : player.getParty().getPlayers()) {
+                pb.writeString(m.getUsername());
+                pb.writeByte(m.getRank().getRankIndex());
+                pb.writeByte(m.isOnline() ? 1 : 0);
+                pb.writeByte(m.getCurHp());
+                pb.writeByte(m.getMaxHp());
+                pb.writeByte(m.getCbLvl());
+                pb.writeByte(m.getSkull());
+                pb.writeByte(m.getPartyMemberDead());
+                pb.writeByte(m.getShareLoot());
+                pb.writeByte(m.getPartyMembersTotal());
+                pb.writeByte(m.getInCombat());
+                pb.writeByte(m.getShareExp());
+                pb.writeLong(m.getExpShared2());
+            }
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendClans(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
-		pb.writeByte(4);
-		pb.writeShort(player.getWorld().getClanManager().getClans().size());
-		int rank = 1;
-		player.getWorld().getClanManager().getClans().sort(ClanManager.CLAN_COMPERATOR);
-		for (Clan c : player.getWorld().getClanManager().getClans()) {
-			pb.writeShort(c.getClanID());
-			pb.writeString(c.getClanName());
-			pb.writeString(c.getClanTag());
-			pb.writeByte(c.getPlayers().size());
-			pb.writeByte(c.getAllowSearchJoin());
-			pb.writeInt(c.getClanPoints());
-			pb.writeShort(rank++);
-		}
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
+            pb.writeByte(4);
+            pb.writeShort(player.getWorld().getClanManager().getClans().size());
+            int rank = 1;
+            player.getWorld().getClanManager().getClans().sort(ClanManager.CLAN_COMPERATOR);
+            for (Clan c : player.getWorld().getClanManager().getClans()) {
+                pb.writeShort(c.getClanID());
+                pb.writeString(c.getClanName());
+                pb.writeString(c.getClanTag());
+                pb.writeByte(c.getPlayers().size());
+                pb.writeByte(c.getAllowSearchJoin());
+                pb.writeInt(c.getClanPoints());
+                pb.writeShort(rank++);
+            }
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendParties(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
-		pb.writeByte(4);
-		pb.writeShort(player.getWorld().getPartyManager().getParties().size());
-		int rank = 1;
-		player.getWorld().getPartyManager().getParties().sort(PartyManager.PARTY_COMPERATOR);
-		for (Party c : player.getWorld().getPartyManager().getParties()) {
-			pb.writeShort(c.getPartyID());
-			pb.writeByte(c.getPlayers().size());
-			pb.writeByte(c.getAllowSearchJoin());
-			pb.writeInt(c.getPartyPoints());
-			pb.writeShort(rank++);
-		}
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+            pb.writeByte(4);
+            pb.writeShort(player.getWorld().getPartyManager().getParties().size());
+            int rank = 1;
+            player.getWorld().getPartyManager().getParties().sort(PartyManager.PARTY_COMPERATOR);
+            for (Party c : player.getWorld().getPartyManager().getParties()) {
+                pb.writeShort(c.getPartyID());
+                pb.writeByte(c.getPlayers().size());
+                pb.writeByte(c.getAllowSearchJoin());
+                pb.writeInt(c.getPartyPoints());
+                pb.writeShort(rank++);
+            }
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendLeaveClan(Player playerReference) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
-		pb.writeByte(1);
-		playerReference.write(pb.toPacket());
+        if (!playerReference.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
+            pb.writeByte(1);
+            playerReference.write(pb.toPacket());
+        }
 	}
 
 	public static void sendLeaveParty(Player playerReference) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
-		pb.writeByte(1);
-		playerReference.write(pb.toPacket());
+        if (!playerReference.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+            pb.writeByte(1);
+            playerReference.write(pb.toPacket());
+        }
 	}
 
 	public static void sendClanInvitationGUI(Player invited, String name, String username) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
-		pb.writeByte(2);
-		pb.writeString(username);
-		pb.writeString(name);
-		invited.write(pb.toPacket());
+        if (!invited.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
+            pb.writeByte(2);
+            pb.writeString(username);
+            pb.writeString(name);
+            invited.write(pb.toPacket());
+        }
 	}
 
 	public static void sendPartyInvitationGUI(Player invited, String name, String username) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
-		pb.writeByte(2);
-		pb.writeString(username);
-		pb.writeString(name);
-		invited.write(pb.toPacket());
+        if (!invited.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+            pb.writeByte(2);
+            pb.writeString(username);
+            pb.writeString(name);
+            invited.write(pb.toPacket());
+        }
 	}
 
 	public static void sendClanSetting(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
-		pb.writeByte(3);
-		pb.writeByte(player.getClan().getKickSetting());
-		pb.writeByte(player.getClan().getInviteSetting());
-		pb.writeByte(player.getClan().getAllowSearchJoin());
-		pb.writeByte(player.getClan().isAllowed(0, player) ? 1 : 0);
-		pb.writeByte(player.getClan().isAllowed(1, player) ? 1 : 0);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
+            pb.writeByte(3);
+            pb.writeByte(player.getClan().getKickSetting());
+            pb.writeByte(player.getClan().getInviteSetting());
+            pb.writeByte(player.getClan().getAllowSearchJoin());
+            pb.writeByte(player.getClan().isAllowed(0, player) ? 1 : 0);
+            pb.writeByte(player.getClan().isAllowed(1, player) ? 1 : 0);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendPartySetting(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
-		pb.writeByte(3);
-		pb.writeByte(player.getParty().getKickSetting());
-		pb.writeByte(player.getParty().getInviteSetting());
-		pb.writeByte(player.getParty().getAllowSearchJoin());
-		pb.writeByte(player.getParty().isAllowed(0, player) ? 1 : 0);
-		pb.writeByte(player.getParty().isAllowed(1, player) ? 1 : 0);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+            pb.writeByte(3);
+            pb.writeByte(player.getParty().getKickSetting());
+            pb.writeByte(player.getParty().getInviteSetting());
+            pb.writeByte(player.getParty().getAllowSearchJoin());
+            pb.writeByte(player.getParty().isAllowed(0, player) ? 1 : 0);
+            pb.writeByte(player.getParty().isAllowed(1, player) ? 1 : 0);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendIronManMode(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
-		pb.writeByte(2);
-		pb.writeByte(0);
-		pb.writeByte((byte) player.getIronMan());
-		pb.writeByte((byte) player.getIronManRestriction());
-		player.write(pb.toPacket());
+	    if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
+            pb.writeByte(2);
+            pb.writeByte(0);
+            pb.writeByte((byte) player.getIronMan());
+            pb.writeByte((byte) player.getIronManRestriction());
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendIronManInterface(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
-		pb.writeByte(2);
-		pb.writeByte(1);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
+            pb.writeByte(2);
+            pb.writeByte(1);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendHideIronManInterface(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
-		pb.writeByte(2);
-		pb.writeByte(2);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
+            pb.writeByte(2);
+            pb.writeByte(2);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public enum Opcode {
