@@ -409,41 +409,97 @@ public final class GameStateUpdater {
 
 			if (updateSize > 0) {
 				final PacketBuilder appearancePacket = new PacketBuilder();
-				appearancePacket.setID(234);
-				appearancePacket.writeShort(updateSize);
+				appearancePacket.setID(ActionSender.Opcode.SEND_UPDATE_PLAYERS.opcode);
+				appearancePacket.writeShort(updateSize); // This is how many updates there are in this packet
+
+				// Note: The order that these updates are written to packet 234 is not authentic.
+				// Probably the correct way to handle it is *not* having different arrays for every type of update.
+				// It looks more like "playersNeedingXXXUpdate" would just be one array where mixed update types are put as-acquired.
+				// There is no consistent order of update types in the real server's data.
+				// Also it is not consistent in order of PID. I suspect that they are ordered "as acquired and processed".
+				// TODO: entire server structure regarding how UpdateFlags are used is probably wrong, but it doesn't matter much.
+				// It'll be frame-accurate anyway. -- 2020-08-26 Logg
+
+				// Update Type 0, Bubble
 				Bubble b;
 				while ((b = bubblesNeedingDisplayed.poll()) != null) {
 					appearancePacket.writeShort(b.getOwner().getIndex());
 					appearancePacket.writeByte((byte) 0);
 					appearancePacket.writeShort(b.getID());
 				}
+
+				// Update Type 1: Chat Message
+				// AND
+				// Update Type 6: Quest Chat Message
 				ChatMessage cm;
 				while ((cm = chatMessagesNeedingDisplayed.poll()) != null) {
 					Player sender = (Player) cm.getSender();
 					boolean tutorialPlayer = sender.getLocation().onTutorialIsland() && !sender.hasElevatedPriveledges();
 					boolean muted = sender.isMuted();
 
-					int chatType = cm.getRecipient() == null ? (tutorialPlayer || muted ? 7 : 1)
-						: cm.getRecipient() instanceof Player ? (tutorialPlayer || muted ? 7 : 6) : 6;
-					appearancePacket.writeShort(cm.getSender().getIndex());
-					appearancePacket.writeByte(chatType);
-
-					if (chatType == 1 || chatType == 7) {
-						if (cm.getSender() != null && cm.getSender() instanceof Player)
-							appearancePacket.writeInt(sender.getIcon());
-					}
-
-					if (chatType == 7) {
-						appearancePacket.writeByte(sender.isMuted() ? 1 : 0);
-						appearancePacket.writeByte(sender.getLocation().onTutorialIsland() ? 1 : 0);
-					}
-
-					if (chatType != 7 || player.isAdmin()) {
-						appearancePacket.writeString(cm.getMessageString());
+					// Determine Update Type
+					int updateType;
+					if (cm.getRecipient() == null) {
+						if (tutorialPlayer || muted) {
+							updateType = 7; // Not authentic! There is no update type 7.
+						} else {
+							updateType = 1; // Public Chat
+						}
 					} else {
-						appearancePacket.writeString("");
+						if (cm.getRecipient() instanceof Player) {
+							if (tutorialPlayer || muted) {
+								updateType = 7; // Not authentic! There is no update type 7.
+							} else {
+								updateType = 6; // Quest Chat
+							}
+						} else {
+							updateType = 6; // Quest Chat
+						}
+					}
+
+					if (player.isUsingAuthenticClient()) {
+						String message = cm.getMessageString();
+						if (updateType == 7) {
+							if (player.isAdmin() || player.isMod()) {
+								// Just prepend "Muted" to message, could be faked but doesn't matter.
+								message = "(Muted) " + message;
+								if (cm.getRecipient() == null) {
+									updateType = 1;
+								} else {
+									updateType = 6;
+								}
+							}
+						}
+						if (updateType != 7) {
+							appearancePacket.writeShort(cm.getSender().getIndex());
+							appearancePacket.writeByte(updateType);
+							appearancePacket.writeRSCString(message);
+						}
+
+					} else {
+						// Non Authentic OpenRSC client
+						appearancePacket.writeShort(cm.getSender().getIndex());
+						appearancePacket.writeByte(updateType);
+
+						if (updateType == 1 || updateType == 7) {
+							if (cm.getSender() != null && cm.getSender() instanceof Player)
+								appearancePacket.writeInt(sender.getIcon());
+						}
+
+						if (updateType == 7) {
+							appearancePacket.writeByte(sender.isMuted() ? 1 : 0);
+							appearancePacket.writeByte(sender.getLocation().onTutorialIsland() ? 1 : 0);
+						}
+
+						if (updateType != 7 || player.isAdmin()) {
+							appearancePacket.writeString(cm.getMessageString());
+						} else {
+							appearancePacket.writeString("");
+						}
 					}
 				}
+
+				// Update Type 2: Damage Update
 				Damage playerNeedingHitsUpdate;
 				while ((playerNeedingHitsUpdate = playersNeedingDamageUpdate.poll()) != null) {
 					appearancePacket.writeShort(playerNeedingHitsUpdate.getIndex());
@@ -452,6 +508,8 @@ public final class GameStateUpdater {
 					appearancePacket.writeByte((byte) playerNeedingHitsUpdate.getCurHits());
 					appearancePacket.writeByte((byte) playerNeedingHitsUpdate.getMaxHits());
 				}
+
+				// Update Types 3 & 4: Projectile Update (draws the projectile)
 				Projectile projectile;
 				while ((projectile = projectilesNeedingDisplayed.poll()) != null) {
 					Entity victim = projectile.getVictim();
@@ -467,45 +525,63 @@ public final class GameStateUpdater {
 						appearancePacket.writeShort(((Player) victim).getIndex());
 					}
 				}
+
+				// Update Type 5: Player appearance and identity
 				Player playerNeedingAppearanceUpdate;
 				while ((playerNeedingAppearanceUpdate = playersNeedingAppearanceUpdate.poll()) != null) {
 					PlayerAppearance appearance = playerNeedingAppearanceUpdate.getSettings().getAppearance();
 
 					appearancePacket.writeShort((short) playerNeedingAppearanceUpdate.getIndex());
 					appearancePacket.writeByte((byte) 5);
-					//appearancePacket.writeShort(0);
-					appearancePacket.writeString(playerNeedingAppearanceUpdate.getUsername());
-					//appearancePacket.writeString(playerNeedingAppearanceUpdate.getUsername());
+					if (player.isUsingAuthenticClient()) {
+						appearancePacket.writeShort(0); // This is unused by authentic client, but is thought to be "shooter index"; kind of a second PID?
+					}
+					if (player.isUsingAuthenticClient()) {
+						appearancePacket.writeZeroQuotedString(playerNeedingAppearanceUpdate.getUsername());
+						appearancePacket.writeZeroQuotedString(playerNeedingAppearanceUpdate.getUsername()); // Pretty sure this is unnecessary & always redundant authentically.
+					} else {
+						appearancePacket.writeString(playerNeedingAppearanceUpdate.getUsername());
+					}
 
 					appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getWornItems().length);
 					for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
-						appearancePacket.writeShort(i);
+						if (player.isUsingAuthenticClient()) {
+							appearancePacket.writeByte(i & 0xFF);
+						} else {
+							appearancePacket.writeShort(i);
+						}
 					}
 					appearancePacket.writeByte(appearance.getHairColour());
 					appearancePacket.writeByte(appearance.getTopColour());
 					appearancePacket.writeByte(appearance.getTrouserColour());
 					appearancePacket.writeByte(appearance.getSkinColour());
 					appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getCombatLevel());
-					appearancePacket.writeByte((byte) (playerNeedingAppearanceUpdate.getSkullType()));
+					appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getSkullType());
 
-					if (playerNeedingAppearanceUpdate.getClan() != null) {
-						appearancePacket.writeByte(1);
-						appearancePacket.writeString(playerNeedingAppearanceUpdate.getClan().getClanTag());
-					} else {
-						appearancePacket.writeByte(0);
+					if (!player.isUsingAuthenticClient()) {
+						if (playerNeedingAppearanceUpdate.getClan() != null) {
+							appearancePacket.writeByte(1);
+							appearancePacket.writeString(playerNeedingAppearanceUpdate.getClan().getClanTag());
+						} else {
+							appearancePacket.writeByte(0);
+						}
+
+						appearancePacket.writeByte(playerNeedingAppearanceUpdate.stateIsInvisible() ? 1 : 0);
+						appearancePacket.writeByte(playerNeedingAppearanceUpdate.stateIsInvulnerable() ? 1 : 0);
+						appearancePacket.writeByte(playerNeedingAppearanceUpdate.getGroupID());
+						appearancePacket.writeInt(playerNeedingAppearanceUpdate.getIcon());
 					}
-
-					appearancePacket.writeByte(playerNeedingAppearanceUpdate.stateIsInvisible() ? 1 : 0);
-					appearancePacket.writeByte(playerNeedingAppearanceUpdate.stateIsInvulnerable() ? 1 : 0);
-					appearancePacket.writeByte(playerNeedingAppearanceUpdate.getGroupID());
-					appearancePacket.writeInt(playerNeedingAppearanceUpdate.getIcon());
 				}
-				HpUpdate playerNeedingHpUpdate;
-				while ((playerNeedingHpUpdate = playersNeedingHpUpdate.poll()) != null) {
-					appearancePacket.writeShort(playerNeedingHpUpdate.getIndex());
-					appearancePacket.writeByte((byte) 9);
-					appearancePacket.writeByte((byte) playerNeedingHpUpdate.getCurHits());
-					appearancePacket.writeByte((byte) playerNeedingHpUpdate.getMaxHits());
+
+				if (!player.isUsingAuthenticClient()) {
+					// Non authentic type 9. In authentic network protocol, this information is just in type 2.
+					HpUpdate playerNeedingHpUpdate;
+					while ((playerNeedingHpUpdate = playersNeedingHpUpdate.poll()) != null) {
+						appearancePacket.writeShort(playerNeedingHpUpdate.getIndex());
+						appearancePacket.writeByte((byte) 9);
+						appearancePacket.writeByte((byte) playerNeedingHpUpdate.getCurHits());
+						appearancePacket.writeByte((byte) playerNeedingHpUpdate.getMaxHits());
+					}
 				}
 
 				player.write(appearancePacket.toPacket());

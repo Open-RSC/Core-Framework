@@ -88,7 +88,7 @@ public class PacketBuilder {
 	/**
 	 * Writes an integer if number cannot be contained in a short
 	 *
-	 * @param s The number
+	 * @param value The number
 	 * @return The PacketBuilder instance, for chaining.
 	 */
 	public PacketBuilder writeUnsignedShortInt(int value) {
