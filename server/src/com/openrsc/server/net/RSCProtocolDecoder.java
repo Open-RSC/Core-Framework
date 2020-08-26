@@ -66,18 +66,22 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                             if (att != null && att.ISAAC != null) {
                                 ISAACContainer isaacContainer = att.ISAAC.get();
                                 if (isaacContainer != null) {
+                                    System.out.println("all good");
                                     opcode = (isaacContainer.decodeOpcode(buffer.readByte()) & 0xFF);
                                 } else {
+                                    System.out.println("eh good");
                                     opcode = (buffer.readByte()) & 0xFF;
                                 }
                             } else {
+                                System.out.println("no good");
                                 opcode = (buffer.readByte()) & 0xFF;
                             }
-                            System.out.println(String.format("recieved opcode %d", opcode)); // TODO: remove
+                            System.out.println(String.format("recieved authentic opcode %d", opcode)); // TODO: remove
                             length -= 1;
                             ByteBuf data = Unpooled.buffer(length);
                             buffer.readBytes(data, length);
                             Packet packet = new Packet(opcode, data);
+                            Packet.printPacket(packet, "Incoming");
                             out.add(packet);
 
                         } else {
@@ -118,6 +122,7 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                             ByteBuf data = Unpooled.buffer(length);
                             buffer.readBytes(data, length);
                             Packet packet = new Packet(opcode, data);
+                            Packet.printPacket(packet, "Incoming");
                             out.add(packet);
 
                         } else {
@@ -145,6 +150,7 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                                         ByteBuf data = Unpooled.buffer(loginLength);
                                         buffer.readBytes(data, loginLength);
                                         Packet packet = new Packet(opcode, data);
+                                        Packet.printPacket(packet, "Incoming");
                                         out.add(packet);
                                     } else {
                                         System.out.println("reset reader index type 2");
@@ -158,9 +164,9 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                         }
                     }
                     break;
-                }
             }
         }
+    }
 
 	@Override
 	public <T> Attribute<T> attr(AttributeKey<T> attributeKey) {

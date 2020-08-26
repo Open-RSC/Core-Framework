@@ -53,25 +53,35 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
                 int packetLength = message.getBuffer().readableBytes() + 1; // + 1 for opcode
 
                 ByteBuf buffer;
+                int encodedOpcode;
                 if (packetLength >= 160) {
-                    System.out.println("BIG outgoing packet");
                     buffer = Unpooled.buffer(packetLength + 2); // + 2 to hold length
                     buffer.writeByte((byte) (packetLength / 256 + 160));
                     buffer.writeByte((byte) (packetLength & 0xFF));
+
+                    encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
+                    buffer.writeByte(encodedOpcode);
+
+                    buffer.writeBytes(message.getBuffer());
+
                 } else {
-                    System.out.println("SMALL outgoing packet");
-                    buffer = Unpooled.buffer(packetLength + 2); // + 2 to hold length
+                    buffer = Unpooled.buffer(packetLength + 1); // + 1 to hold length
                     buffer.writeByte((byte) packetLength);
-                    buffer.writeByte((byte) 0);
+                    int bufferLen = message.getBuffer().readableBytes();
+
+                    // Strangely, the last byte of the Payload goes between length and encoded opcode
+                    buffer.writeByte(message.getBuffer().slice(bufferLen - 1, bufferLen).readByte());
+
+                    encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
+                    buffer.writeByte(encodedOpcode);
+
+                    buffer.writeBytes(message.getBuffer().slice(0, bufferLen - 1));
+
                 }
+                // TODO: remove all this debug info
+                System.out.println(String.format("OPCODE CLEAR: %d; CODED: %d", message.getID(), encodedOpcode));
+                Packet.printBuffer(buffer, "Outgoing");
 
-                System.out.println(String.format("sending before opcode %d", message.getID()));
-
-                int encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
-
-                System.out.println(String.format("encoded outgoing opcode %d", encodedOpcode));
-                buffer.writeByte(encodedOpcode);
-                buffer.writeBytes(message.getBuffer());
                 outBuffer.writeBytes(buffer);
             }
 		} else {
