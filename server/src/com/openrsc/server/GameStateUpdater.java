@@ -592,8 +592,8 @@ public final class GameStateUpdater {
 	protected void updateGameObjects(final Player playerToUpdate) {
 		boolean changed = false;
 		final PacketBuilder packet = new PacketBuilder();
-		packet.setID(48);
-		// TODO: This is not handled correctly.
+		packet.setID(ActionSender.Opcode.SEND_SCENERY_HANDLER.opcode);
+		// TODO: Unloading scenery is not handled correctly.
 		//       According to RSC+ replays, the server never tells the client to unload objects until
 		//       a region is unloaded. It then instructs the client to only unload the region.
 		for (final Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext(); ) {
@@ -606,7 +606,9 @@ public final class GameStateUpdater {
 					packet.writeShort(60000);
 					packet.writeByte(offsetX);
 					packet.writeByte(offsetY);
-					packet.writeByte(o.getDirection());
+					if (!playerToUpdate.isUsingAuthenticClient()) {
+						packet.writeByte(o.getDirection());
+					}
 					it$.remove();
 					changed = true;
 				} else {
@@ -629,7 +631,9 @@ public final class GameStateUpdater {
 			final int offsetY = newObject.getY() - playerToUpdate.getY();
 			packet.writeByte(offsetX);
 			packet.writeByte(offsetY);
-			packet.writeByte(newObject.getDirection());
+			if (!playerToUpdate.isUsingAuthenticClient()) {
+				packet.writeByte(newObject.getDirection());
+			}
 			playerToUpdate.getLocalGameObjects().add(newObject);
 			changed = true;
 		}
