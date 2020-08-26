@@ -430,35 +430,37 @@ public class ActionSender {
 		s.writeByte((byte) (player.getSettings().getGameSetting(0) ? 1 : 0)); // Camera Auto Angle 0
 		s.writeByte((byte) (player.getSettings().getGameSetting(1) ? 1 : 0)); // Mouse buttons 1
 		s.writeByte((byte) (player.getSettings().getGameSetting(2) ? 1 : 0)); // Sound Effects 2
-		s.writeByte((byte) player.getCombatStyle());
-		s.writeByte(player.getGlobalBlock()); // 9
-		s.writeByte((byte) (player.getClanInviteSetting() ? 0 : 1)); // 11
-		s.writeByte((byte) (player.getVolumeToRotate() ? 1 : 0)); // 16
-		s.writeByte((byte) (player.getSwipeToRotate() ? 1 : 0)); // 17
-		s.writeByte((byte) (player.getSwipeToScroll() ? 1 : 0)); // 18
-		s.writeByte(player.getLongPressDelay()); // 19
-		s.writeByte(player.getFontSize()); // 20
-		s.writeByte((byte) (player.getHoldAndChoose() ? 1 : 0)); // 21
-		s.writeByte((byte) (player.getSwipeToZoom() ? 1 : 0)); // 22
-		s.writeByte(player.getLastZoom()); // 23
-		s.writeByte((byte) (player.getBatchProgressBar() ? 1 : 0)); // 24
-		s.writeByte((byte) (player.getExperienceDrops() ? 1 : 0)); // 25
-		s.writeByte((byte) (player.getHideRoofs() ? 1 : 0)); // 26
-		s.writeByte((byte) (player.getHideFog() ? 1 : 0)); // 27
-		s.writeByte(player.getGroundItemsToggle()); // 28
-		s.writeByte((byte) (player.getAutoMessageSwitch() ? 1 : 0)); // 29
-		s.writeByte((byte) (player.getHideSideMenu() ? 1 : 0)); // 30
-		s.writeByte((byte) (player.getHideKillFeed() ? 1 : 0)); // 31
-		s.writeByte(player.getFightModeSelectorToggle()); // 32
-		s.writeByte(player.getExperienceCounterToggle()); // 33
-		s.writeByte((byte) (player.getHideInventoryCount() ? 1 : 0)); // 34
-		s.writeByte((byte) (player.getHideNameTag() ? 1 : 0)); // 35
-		s.writeByte((byte) (player.getPartyInviteSetting() ? 1 : 0)); // 36
-		s.writeByte((byte) (player.getAndroidInvToggle() ? 1 : 0)); //37
-		s.writeByte((byte) (player.getShowNPCKC() ? 1 : 0)); //38
-		s.writeByte((byte) (player.getCustomUI() ? 1 : 0)); // 39
-		s.writeByte((byte) (player.getHideLoginBox() ? 1 : 0)); // 40
-		s.writeByte((byte) (player.getBlockGlobalFriend() ? 1 : 0)); //41
+        if (!player.isUsingAuthenticClient()) {
+            s.writeByte((byte) player.getCombatStyle());
+            s.writeByte(player.getGlobalBlock()); // 9
+            s.writeByte((byte) (player.getClanInviteSetting() ? 0 : 1)); // 11
+            s.writeByte((byte) (player.getVolumeToRotate() ? 1 : 0)); // 16
+            s.writeByte((byte) (player.getSwipeToRotate() ? 1 : 0)); // 17
+            s.writeByte((byte) (player.getSwipeToScroll() ? 1 : 0)); // 18
+            s.writeByte(player.getLongPressDelay()); // 19
+            s.writeByte(player.getFontSize()); // 20
+            s.writeByte((byte) (player.getHoldAndChoose() ? 1 : 0)); // 21
+            s.writeByte((byte) (player.getSwipeToZoom() ? 1 : 0)); // 22
+            s.writeByte(player.getLastZoom()); // 23
+            s.writeByte((byte) (player.getBatchProgressBar() ? 1 : 0)); // 24
+            s.writeByte((byte) (player.getExperienceDrops() ? 1 : 0)); // 25
+            s.writeByte((byte) (player.getHideRoofs() ? 1 : 0)); // 26
+            s.writeByte((byte) (player.getHideFog() ? 1 : 0)); // 27
+            s.writeByte(player.getGroundItemsToggle()); // 28
+            s.writeByte((byte) (player.getAutoMessageSwitch() ? 1 : 0)); // 29
+            s.writeByte((byte) (player.getHideSideMenu() ? 1 : 0)); // 30
+            s.writeByte((byte) (player.getHideKillFeed() ? 1 : 0)); // 31
+            s.writeByte(player.getFightModeSelectorToggle()); // 32
+            s.writeByte(player.getExperienceCounterToggle()); // 33
+            s.writeByte((byte) (player.getHideInventoryCount() ? 1 : 0)); // 34
+            s.writeByte((byte) (player.getHideNameTag() ? 1 : 0)); // 35
+            s.writeByte((byte) (player.getPartyInviteSetting() ? 1 : 0)); // 36
+            s.writeByte((byte) (player.getAndroidInvToggle() ? 1 : 0)); //37
+            s.writeByte((byte) (player.getShowNPCKC() ? 1 : 0)); //38
+            s.writeByte((byte) (player.getCustomUI() ? 1 : 0)); // 39
+            s.writeByte((byte) (player.getHideLoginBox() ? 1 : 0)); // 40
+            s.writeByte((byte) (player.getBlockGlobalFriend() ? 1 : 0)); //41
+        }
 		player.write(s.toPacket());
 	}
 
@@ -841,13 +843,30 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		List<QuestInterface> quests = player.getWorld().getQuests();
 		s.setID(Opcode.SEND_QUESTS.opcode);
-		s.writeByte((byte) 0);
-		s.writeByte((byte) quests.size());
-		for (QuestInterface q : quests) {
-			s.writeInt(q.getQuestId());
-			s.writeInt(player.getQuestStage(q));
-			s.writeString(q.getQuestName());
-		}
+		if (!player.isUsingAuthenticClient()) {
+            s.writeByte((byte) 0);
+            s.writeByte((byte) quests.size());
+            for (QuestInterface q : quests) {
+                s.writeInt(q.getQuestId());
+                s.writeInt(player.getQuestStage(q));
+                s.writeString(q.getQuestName());
+            }
+		} else {
+            // Authentic client always will have 50 quests. Otherwise there is an inauthentic quest that the client can't display in its menu.
+
+            // Sort from alphabetical order to quest ID order...!
+            QuestInterface[] orderedQuests = new QuestInterface[50];
+            for (QuestInterface q : quests) {
+                if (q.getQuestId() < 50 && q.getQuestId() >= 0) {
+                    orderedQuests[q.getQuestId()] = q;
+                }
+            }
+
+            for (int i = 0; i < 50; i++) {
+                s.writeByte(player.getQuestStage(orderedQuests[i]) < 0 ? 1 : 0);
+            }
+        }
+
 		player.write(s.toPacket());
 	}
 
