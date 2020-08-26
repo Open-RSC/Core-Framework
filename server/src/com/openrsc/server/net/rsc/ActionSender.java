@@ -684,17 +684,30 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_INVENTORY.opcode);
 		s.writeByte((byte) player.getCarriedItems().getInventory().size());
-		synchronized(player.getCarriedItems().getInventory().getItems()) {
-			for (Item item : player.getCarriedItems().getInventory().getItems()) {
-				s.writeShort(item.getCatalogId());
-				s.writeByte((byte) (item.isWielded() ? 1 : 0));
-				if (player.getConfig().CUSTOM_PROTOCOL) {
-					s.writeByte((byte)(item.getNoted() ? 1 : 0));
-				}
-				if (item.getDef(player.getWorld()).isStackable() || item.getNoted())
-					s.writeInt(item.getAmount());
-			}
-		}
+		if (player.isUsingAuthenticClient()) {
+            synchronized (player.getCarriedItems().getInventory().getItems()) {
+                for (Item item : player.getCarriedItems().getInventory().getItems()) {
+                    s.writeShort(((item.isWielded() ? 1 : 0) << 15) & // First bit is if it is wielded or not
+                        item.getCatalogId());
+
+                    if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) { // Inauthentic Note support
+                        s.writeUnsignedShortInt(item.getAmount());
+                    }
+                }
+            }
+        } else {
+            synchronized (player.getCarriedItems().getInventory().getItems()) {
+                for (Item item : player.getCarriedItems().getInventory().getItems()) {
+                    s.writeShort(item.getCatalogId());
+                    s.writeByte((byte) (item.isWielded() ? 1 : 0));
+                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                    }
+                    if (item.getDef(player.getWorld()).isStackable() || item.getNoted())
+                        s.writeInt(item.getAmount());
+                }
+            }
+        }
 		player.write(s.toPacket());
 	}
 
@@ -810,14 +823,57 @@ public class ActionSender {
 	private static void sendLoginBox(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_WELCOME_INFO.opcode);
-		s.writeString(player.getLastIP());
-		s.writeShort(player.getDaysSinceLastLogin());
-		if (player.getDaysSinceLastRecoveryChangeRequest() < 14) {
-			s.writeShort(14 - player.getDaysSinceLastRecoveryChangeRequest());
-		} else {
-			s.writeShort(0);
-		}
-		//s.writeShort(player.getUnreadMessages());
+		if (player.isUsingAuthenticClient()) {
+
+		    // Send 4 byte IP Address
+            String ipString = player.getLastIP(); // Open RSC stores IP address as a string which must be converted
+            if (ipString.indexOf(":") == -1) {
+                // IPv4
+                String[] ipSplit = ipString.split(".");
+                if (ipSplit.length == 4) {
+                    for (int i = 0; i < 4; i++) {
+                        s.writeByte(Integer.parseInt(ipSplit[i]) & 0xFF);
+                    }
+                } else {
+                    // Failed to parse IP address, just send 0.0.0.0, it doesn't matter that much that this is accurate.
+                    for (int i = 0; i < 4; i++) {
+                        s.writeByte(0);
+                    }
+                }
+            } else {
+                // IPv6
+                // Authentic server sends IP address as an 32 bit integer, IPv6 is not compatible here
+                // Going to concat IPv6 address to just last 3 "characters", and use 0 as first byte to mark "not IPv4"
+                s.writeByte(0);
+                int ipLen = ipString.length();
+                for (int i = ipLen - 3; i < ipLen; i++) {
+                    s.writeByte(Integer.parseInt(ipString.substring(i-1, i), 16) & 0xFF);
+                }
+            }
+
+            // TODO: this format may not be exactly compatible.
+            s.writeShort(player.getDaysSinceLastLogin());
+
+            // TODO: This needs to be looked at to send 200 if recovery questions are not set.
+            if (player.getDaysSinceLastRecoveryChangeRequest() < 14) {
+                s.writeByte(14 - player.getDaysSinceLastRecoveryChangeRequest());
+            } else {
+                s.writeByte((byte)201);
+            }
+
+            // TODO: if player.getUnreadMessages is implemented, implement that here
+            s.writeShort(1); // Number of messages gets subtracted by 1 by the client; 1 here means "0 unread messages"
+
+        } else {
+            s.writeString(player.getLastIP());
+            s.writeShort(player.getDaysSinceLastLogin());
+            if (player.getDaysSinceLastRecoveryChangeRequest() < 14) {
+                s.writeShort(14 - player.getDaysSinceLastRecoveryChangeRequest());
+            } else {
+                s.writeShort(0);
+            }
+            //s.writeShort(player.getUnreadMessages());
+        }
 		player.write(s.toPacket());
 	}
 

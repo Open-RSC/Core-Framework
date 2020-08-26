@@ -50,6 +50,7 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
                 outBuffer.writeBytes(buffer);
 
             } else {
+                // Authentic Packet Handling
                 int packetLength = message.getBuffer().readableBytes() + 1; // + 1 for opcode
 
                 ByteBuf buffer;

@@ -84,6 +84,22 @@ public class PacketBuilder {
 		return this;
 	}
 
+
+	/**
+	 * Writes an integer if number cannot be contained in a short
+	 *
+	 * @param s The number
+	 * @return The PacketBuilder instance, for chaining.
+	 */
+	public PacketBuilder writeUnsignedShortInt(int value) {
+		value &= Integer.MAX_VALUE;
+		if (value <= Short.MAX_VALUE)
+			writeShort(value);
+		else
+			writeInt(Integer.MIN_VALUE + value);
+		return this;
+	}
+
 	/**
 	 * Writes an integer.
 	 *
