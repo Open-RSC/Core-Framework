@@ -877,33 +877,53 @@ public class ActionSender {
 	}
 
 	public static void sendMessage(Player player, String message) {
-		sendMessage(player, null, 0, MessageType.GAME, message, 0);
+		sendMessage(player, null, MessageType.GAME, message, 0, null);
 	}
 
 	public static void sendPlayerServerMessage(Player player, MessageType type, String message) {
-		sendMessage(player, null, 0, type, message, 0);
+		sendMessage(player, null, type, message, 0, null);
 	}
 
-	public static void sendMessage(Player player, Player sender, int prefix, MessageType type, String message,
-								   int iconSprite) {
+	public static void sendMessage(Player player, Player sender, MessageType type, String message,
+								   int iconSprite, String colorString) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_MESSAGE.opcode);
-		s.writeInt(iconSprite);
-		s.writeByte(type.getRsID());
-		/*
-		  This is actually a controller which check if we should present
-		  (SENDER USERNAME, CLAN TAG OR COLOR) 0 = nothing, 1 = SENDER & CLAN,
-		  2 = COLOR
-		 */
-		s.writeByte(prefix);// Used for clan/color/sender.
-		s.writeString(message);
-		if ((prefix & 1) != 0) {
-			s.writeString(sender.getUsername());
-			s.writeString(sender.getUsername());
-		}
-		if ((prefix & 2) != 0) {
-			s.writeString((String) null); // Interpreted as colour by the client.
-		}
+
+        if (!player.isUsingAuthenticClient()) {
+            s.writeInt(iconSprite);
+        }
+
+        s.writeByte(type.getRsID());
+
+        byte infoContained = 0;
+        if (sender != null) {
+            infoContained += 1;
+        }
+        if (colorString != null && !colorString.equals("")) {
+            infoContained += 2;
+        }
+        s.writeByte(infoContained);
+
+        if (!player.isUsingAuthenticClient()) {
+            s.writeString(message);
+            if ((infoContained & 1) != 0) {
+                s.writeString(sender.getUsername());
+                s.writeString(sender.getUsername()); // This is authentic; all recorded instances it's just the same username twice.
+            }
+            if ((infoContained & 2) != 0) {
+                s.writeString(colorString);
+            }
+        } else {
+            s.writeZeroQuotedString(message);
+            if ((infoContained & 1) != 0) {
+                s.writeZeroQuotedString(sender.getUsername());
+                s.writeZeroQuotedString(sender.getUsername()); // This is authentic; all recorded instances it's just the same username twice.
+            }
+            if ((infoContained & 2) != 0) {
+                s.writeZeroQuotedString(colorString);
+            }
+        }
+
 		player.write(s.toPacket());
 	}
 
@@ -1323,7 +1343,7 @@ public class ActionSender {
 		try {
 			if (player.getWorld().registerPlayer(player)) {
                 sendPrivacySettings(player);
-                sendMessage(player, null, 0, MessageType.QUEST, "Welcome to " + player.getConfig().SERVER_NAME + "!", 0);
+                sendMessage(player, null,  MessageType.QUEST, "Welcome to " + player.getConfig().SERVER_NAME + "!", 0, null);
                 sendGameSettings(player);
 				sendWorldInfo(player);
                 sendQuestInfo(player);

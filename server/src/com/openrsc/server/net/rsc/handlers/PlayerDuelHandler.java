@@ -122,15 +122,15 @@ public class PlayerDuelHandler implements PacketHandler {
 				ActionSender.sendDuelWindowOpen(player);
 				ActionSender.sendDuelWindowOpen(affectedPlayer);
 			} else {
-				ActionSender.sendMessage(player, null, 0, MessageType.INVENTORY, affectedPlayer.getDuel().isDuelActive()
-					? affectedPlayer.getUsername() + " is already in a duel" : "Sending duel request", 0);
+				ActionSender.sendMessage(player, null, MessageType.INVENTORY, affectedPlayer.getDuel().isDuelActive()
+					? affectedPlayer.getUsername() + " is already in a duel" : "Sending duel request", 0, null);
 				ActionSender
-					.sendMessage(affectedPlayer, null, 0, MessageType.INVENTORY,
+					.sendMessage(affectedPlayer, null, MessageType.INVENTORY,
 						player.getUsername() + " "
 							+ Formulae.getLvlDiffColour(
 							affectedPlayer.getCombatLevel() - player.getCombatLevel())
 							+ "(level-" + player.getCombatLevel() + ")@whi@ wishes to duel with you",
-						player.getIcon());
+						player.getIcon(), null);
 			}
 		} else if (pID == duelFirstAccept) { // Duel accepted
 			affectedPlayer = player.getDuel().getDuelRecipient();

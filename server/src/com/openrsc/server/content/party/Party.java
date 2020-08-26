@@ -158,7 +158,7 @@ public class Party {
 		for (PartyPlayer cMember : getPlayers()) {
 			if (cMember.getPlayerReference() != null) {
 				Player partyPlayer = cMember.getPlayerReference();
-				ActionSender.sendMessage(partyPlayer, player, 1, MessageType.CLAN_CHAT, "" + string, player.getIcon());
+				ActionSender.sendMessage(partyPlayer, player, MessageType.CLAN_CHAT, "" + string, player.getIcon(), null);
 			}
 		}
 	}

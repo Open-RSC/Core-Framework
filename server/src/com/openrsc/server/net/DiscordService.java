@@ -323,7 +323,7 @@ public class DiscordService implements Runnable{
 				final String strMessage = EmojiParser.parseToAliases(message.getContentRaw());
 
 				for (Player p : this.server.getWorld().getPlayers()) {
-					ActionSender.sendMessage(p, null, 0, MessageType.GLOBAL_CHAT, "@whi@[@gr2@D>G@whi@] @or1@" + message.getAuthor().getName() + "@yel@: " + strMessage, 0);
+					ActionSender.sendMessage(p, null, MessageType.GLOBAL_CHAT, "@whi@[@gr2@D>G@whi@] @or1@" + message.getAuthor().getName() + "@yel@: " + strMessage, 0, null);
 				}
 			} else {
 				if (message.getContentRaw().startsWith("!help")) {

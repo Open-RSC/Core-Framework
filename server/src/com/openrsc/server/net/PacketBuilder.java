@@ -275,6 +275,12 @@ public class PacketBuilder {
 
 	}
 
+	public void writeZeroQuotedString(String string) {
+		payload.writeByte(0);
+		payload.writeBytes(string.getBytes());
+		payload.writeByte(0);
+	}
+
 	/*public void writeRSCString(String string) {
 		string = DataConversions.formatToRSCString(string);
 		byte[] data = DataConversions.stringToBytes(string);

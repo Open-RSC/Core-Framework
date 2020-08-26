@@ -119,10 +119,10 @@ public class PlayerTradeHandler implements PacketHandler {
 					ActionSender.sendTradeWindowOpen(player);
 					ActionSender.sendTradeWindowOpen(affectedPlayer);
 				} else {
-					ActionSender.sendMessage(player, null, 0, MessageType.INVENTORY, affectedPlayer.getTrade().isTradeActive()
-						? affectedPlayer.getUsername() + " is already in a trade" : "Sending trade request", 0);
+					ActionSender.sendMessage(player, null,  MessageType.INVENTORY, affectedPlayer.getTrade().isTradeActive()
+						? affectedPlayer.getUsername() + " is already in a trade" : "Sending trade request", 0, null);
 
-					ActionSender.sendMessage(affectedPlayer, player, 1, MessageType.TRADE, "", player.getIcon());
+					ActionSender.sendMessage(affectedPlayer, player,  MessageType.TRADE, "", player.getIcon(), null);
 
 				}
 				break;
