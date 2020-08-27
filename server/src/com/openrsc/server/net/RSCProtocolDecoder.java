@@ -53,11 +53,14 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                     if (buffer.readableBytes() > 2) {
                         buffer.markReaderIndex();
                         int length = buffer.readUnsignedByte();
+                        int lengthLength;
                         if (length >= 160) {
                             System.out.println("long decoding!");
                             length = 256 * length - (40960 - buffer.readUnsignedByte());
+                            lengthLength = 2;
                         } else {
                             System.out.println("short decoding!");
+                            lengthLength = 1;
                         }
 
                         if (buffer.readableBytes() >= length && length > 0) {
@@ -66,8 +69,37 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                             if (att != null && att.ISAAC != null) {
                                 ISAACContainer isaacContainer = att.ISAAC.get();
                                 if (isaacContainer != null) {
+                                    if (lengthLength == 1) {
+                                        ByteBuf bufferOrdered = Unpooled.buffer(length);
+                                        byte lastByte = buffer.readByte();
+                                        buffer.readBytes(bufferOrdered, length - 1);
+                                        bufferOrdered.writeByte(lastByte);
+
+                                        int encodedOpcode = bufferOrdered.readByte() & 0xFF;
+
+                                        opcode = (isaacContainer.decodeOpcode(encodedOpcode) & 0xFF);
+
+                                        if (opcode != 67) {
+                                            System.out.println(String.format("Incoming Op before & after: %d; %d; %d; %d", encodedOpcode, opcode, length, lengthLength));
+                                            System.out.println(String.format("recieved authentic opcode %d", opcode)); // TODO: remove
+                                            Packet.printBuffer(buffer, "IN unordeder");
+                                            Packet.printBuffer(bufferOrdered, "IN ordereded");
+                                        }
+
+                                        Packet packet = new Packet(opcode, bufferOrdered);
+                                        out.add(packet);
+                                        return;
+
+                                    } else {
+                                        int encodedOpcode = buffer.readByte() & 0xFF;
+                                        opcode = (isaacContainer.decodeOpcode(encodedOpcode) & 0xFF);
+                                    }
+
+
+
+
                                     System.out.println("all good");
-                                    opcode = (isaacContainer.decodeOpcode(buffer.readByte()) & 0xFF);
+
                                 } else {
                                     System.out.println("eh good");
                                     opcode = (buffer.readByte()) & 0xFF;
@@ -76,13 +108,14 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                                 System.out.println("no good");
                                 opcode = (buffer.readByte()) & 0xFF;
                             }
-                            System.out.println(String.format("recieved authentic opcode %d", opcode)); // TODO: remove
                             length -= 1;
+
                             ByteBuf data = Unpooled.buffer(length);
                             buffer.readBytes(data, length);
                             Packet packet = new Packet(opcode, data);
-                            Packet.printPacket(packet, "Incoming");
                             out.add(packet);
+                            //Packet.printPacket(packet, "Incoming");
+
 
                         } else {
                             System.out.println("reset reader index");
@@ -110,7 +143,9 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                             if (att != null && att.ISAAC != null) {
                                 ISAACContainer isaacContainer = att.ISAAC.get();
                                 if (isaacContainer != null) {
-                                    opcode = (isaacContainer.decodeOpcode(buffer.readByte()) & 0xFF);
+                                    int encodedOpcode = buffer.readByte();
+                                    opcode = (isaacContainer.decodeOpcode(encodedOpcode) & 0xFF);
+                                    System.out.println(String.format("Incoming Op before & after: %d; %d", encodedOpcode, opcode));
                                 } else {
                                     opcode = (buffer.readByte()) & 0xFF;
                                 }
