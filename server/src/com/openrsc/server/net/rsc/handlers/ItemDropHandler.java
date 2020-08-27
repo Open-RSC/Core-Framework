@@ -22,8 +22,13 @@ public final class ItemDropHandler implements PacketHandler {
 		}
 
 		player.resetAll();
-		int idx = (int) packet.readShort();
-		int amount = packet.readInt();
+		int idx = (int) packet.readShort(); // Inventory slot
+		int amount;
+		if (!player.isUsingAuthenticClient()) {
+			amount = packet.readInt();
+		} else {
+			amount = 0;
+		}
 
 		if (idx < -1 || idx >= player.getCarriedItems().getInventory().size()) {
 			player.setSuspiciousPlayer(true, "item drop item idx < -1 or idx >= inv size");
@@ -32,13 +37,18 @@ public final class ItemDropHandler implements PacketHandler {
 		Item tempitem = null;
 
 		//User wants to drop the item from equipment tab
-		if (idx == -1) {
+		if (idx == -1 && !player.isUsingAuthenticClient()) {
 			int realid = (int) packet.readShort();
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(realid);
 			if (slot != -1)
 				tempitem = player.getCarriedItems().getEquipment().get(slot);
 		} else {
-			tempitem = player.getCarriedItems().getInventory().get(idx);
+			if (idx != -1) {
+				tempitem = player.getCarriedItems().getInventory().get(idx);
+				if (player.isUsingAuthenticClient()) {
+					amount = tempitem.getAmount();
+				}
+			}
 		}
 
 		if (tempitem == null || tempitem.getCatalogId() == ItemId.NOTHING.id()) {
