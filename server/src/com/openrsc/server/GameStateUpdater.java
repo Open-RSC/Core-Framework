@@ -699,7 +699,7 @@ public final class GameStateUpdater {
 	protected void updateWallObjects(final Player playerToUpdate) {
 		boolean changed = false;
 		final PacketBuilder packet = new PacketBuilder();
-		packet.setID(91);
+		packet.setID(ActionSender.Opcode.SEND_BOUNDARY_HANDLER.opcode);
 
 		for (final Iterator<GameObject> it$ = playerToUpdate.getLocalWallObjects().iterator(); it$.hasNext(); ) {
 			final GameObject o = it$.next();
@@ -707,10 +707,16 @@ public final class GameStateUpdater {
 				final int offsetX = o.getX() - playerToUpdate.getX();
 				final int offsetY = o.getY() - playerToUpdate.getY();
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
-					packet.writeShort(60000);
-					packet.writeByte(offsetX);
-					packet.writeByte(offsetY);
-					packet.writeByte(o.getDirection());
+					if (playerToUpdate.isUsingAuthenticClient()) {
+						packet.writeByte(0xFF);
+						packet.writeByte(offsetX);
+						packet.writeByte(offsetY);
+					} else {
+						packet.writeShort(60000);
+						packet.writeByte(offsetX);
+						packet.writeByte(offsetY);
+						packet.writeByte(o.getDirection());
+					}
 					it$.remove();
 					changed = true;
 				} else {
