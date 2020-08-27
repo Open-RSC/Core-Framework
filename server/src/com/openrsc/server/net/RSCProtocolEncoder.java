@@ -80,8 +80,10 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
 
                 }
                 // TODO: remove all this debug info
-                System.out.println(String.format("OPCODE CLEAR: %d; CODED: %d", message.getID(), encodedOpcode));
-                Packet.printBuffer(buffer, "Outgoing");
+                if (message.getID() != 191 && message.getID() != 79) {
+                    System.out.println(String.format("OPCODE CLEAR: %d; CODED: %d", message.getID(), encodedOpcode));
+                    Packet.printBuffer(buffer, "Outgoing");
+                }
 
                 outBuffer.writeBytes(buffer);
             }

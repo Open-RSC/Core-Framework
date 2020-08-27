@@ -698,7 +698,7 @@ public class ActionSender {
 		if (player.isUsingAuthenticClient()) {
             synchronized (player.getCarriedItems().getInventory().getItems()) {
                 for (Item item : player.getCarriedItems().getInventory().getItems()) {
-                    s.writeShort(((item.isWielded() ? 1 : 0) << 15) & // First bit is if it is wielded or not
+                    s.writeShort(((item.isWielded() ? 1 : 0) << 15) | // First bit is if it is wielded or not
                         item.getCatalogId());
 
                     if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) { // Inauthentic Note support
@@ -1083,7 +1083,12 @@ public class ActionSender {
 	public static void sendSound(Player player, String soundName) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PLAY_SOUND.opcode);
-		s.writeString(soundName);
+		if (player.isUsingAuthenticClient()) {
+		    s.writeZeroQuotedString(soundName);
+		    System.out.println(soundName);
+        } else {
+            s.writeString(soundName);
+        }
 		player.write(s.toPacket());
 	}
 
