@@ -298,8 +298,8 @@ public final class RegularPlayer implements CommandTrigger {
 			}
 			if (p.getGlobalBlock() != 2) {
 				String header = "";
-				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
-					+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon());
+				ActionSender.sendMessage(p, player,  MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
+					+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon(), null);
 			}
 		}
 		if (command.equalsIgnoreCase("g")) {
@@ -358,7 +358,7 @@ public final class RegularPlayer implements CommandTrigger {
 			if (p.getSocial().isIgnoring(player.getUsernameHash()))
 				continue;
 			if (p.getParty() == player.getParty()) {
-				ActionSender.sendMessage(p, player, 1, MessageType.CLAN_CHAT, channelPrefix + "" + player.getUsername() + ": @or1@" + newStr, player.getIcon());
+				ActionSender.sendMessage(p, player, MessageType.CLAN_CHAT, channelPrefix + "" + player.getUsername() + ": @or1@" + newStr, player.getIcon(), null);
 			}
 		}
 		if (command.equalsIgnoreCase("g")) {
@@ -527,7 +527,7 @@ public final class RegularPlayer implements CommandTrigger {
 			player.getWorld().getServer().getDiscordService().sendMessage("[InGame] " + player.getUsername() + ": " + message);
 
 			for (Player p : player.getWorld().getPlayers()) {
-				ActionSender.sendMessage(p, null, 0, MessageType.GLOBAL_CHAT, "@whi@[@gr2@G>D@whi@] @or1@" + player.getUsername() + "@yel@: " + message, 0);
+				ActionSender.sendMessage(p, null, MessageType.GLOBAL_CHAT, "@whi@[@gr2@G>D@whi@] @or1@" + player.getUsername() + "@yel@: " + message, 0, null);
 			}
 		} else
 			player.message("Discord bot disabled");

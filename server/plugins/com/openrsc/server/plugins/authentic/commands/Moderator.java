@@ -60,7 +60,7 @@ public final class Moderator implements CommandTrigger {
 		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
 		newStr.insert(0, player.getStaffName() + ": @yel@");
 		for (Player playerToUpdate : player.getWorld().getPlayers()) {
-			ActionSender.sendMessage(playerToUpdate, player, 1, MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon());
+			ActionSender.sendMessage(playerToUpdate, player,  MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon(), null);
 		}
 	}
 
@@ -164,7 +164,7 @@ public final class Moderator implements CommandTrigger {
 		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
 
 		for (Player playerToUpdate : player.getWorld().getPlayers()) {
-			ActionSender.sendMessage(playerToUpdate, player, 1, MessageType.GLOBAL_CHAT, "ANNOUNCEMENT: " + player.getStaffName() + ":@yel@ " + newStr.toString(), player.getIcon());
+			ActionSender.sendMessage(playerToUpdate, player,  MessageType.GLOBAL_CHAT, "ANNOUNCEMENT: " + player.getStaffName() + ":@yel@ " + newStr.toString(), player.getIcon(), null);
 		}
 	}
 

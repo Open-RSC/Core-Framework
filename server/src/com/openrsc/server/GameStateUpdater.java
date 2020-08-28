@@ -416,7 +416,7 @@ public final class GameStateUpdater {
 				// Probably the correct way to handle it is *not* having different arrays for every type of update.
 				// It looks more like "playersNeedingXXXUpdate" would just be one array where mixed update types are put as-acquired.
 				// There is no consistent order of update types in the real server's data.
-				// Also it is not consistent in order of PID. I suspect that they are ordered "as acquired and processed".
+				// It is also not consistent in order of PID. I suspect that they are ordered "as acquired and processed".
 				// TODO: entire server structure regarding how UpdateFlags are used is probably wrong, but it doesn't matter much.
 				// It'll be frame-accurate anyway. -- 2020-08-26 Logg
 
@@ -473,6 +473,7 @@ public final class GameStateUpdater {
 						if (updateType != 7) {
 							appearancePacket.writeShort(cm.getSender().getIndex());
 							appearancePacket.writeByte(updateType);
+							appearancePacket.writeByte(sender.getIconAuthentic());
 							appearancePacket.writeRSCString(message);
 						}
 

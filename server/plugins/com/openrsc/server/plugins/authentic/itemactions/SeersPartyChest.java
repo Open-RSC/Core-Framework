@@ -32,7 +32,7 @@ public class SeersPartyChest implements UseLocTrigger {
 			return;
 		}
 
-		ActionSender.sendMessage(player, null, 0, MessageType.QUEST, "You place the item into the chest...", 0);
+		ActionSender.sendMessage(player, null, MessageType.QUEST, "You place the item into the chest...", 0, null);
 		player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), player, DataConversions.random(0,5000), "Seers Party Hall Drop Delay", true) {
 			@Override
 			public void action() {
@@ -54,7 +54,7 @@ public class SeersPartyChest implements UseLocTrigger {
 
 				for (Player p : player.getWorld().getPlayers()) {
 					if((upstairs && p.getLocation().isInSeersPartyHallUpstairs()) || (!upstairs && p.getLocation().isInSeersPartyHallDownstairs())) {
-						ActionSender.sendMessage(p, null, 0, MessageType.QUEST, getOwner().getStaffName() + "@whi@ just dropped: @gre@" + item.getDef(player.getWorld()).getName() + (item.getAmount() > 1 ? " @whi@(" + DataConversions.numberFormat(item.getAmount()) + ")" : ""), 0);
+						ActionSender.sendMessage(p, null, MessageType.QUEST, getOwner().getStaffName() + "@whi@ just dropped: @gre@" + item.getDef(player.getWorld()).getName() + (item.getAmount() > 1 ? " @whi@(" + DataConversions.numberFormat(item.getAmount()) + ")" : ""), 0, null);
 					}
 				}
 			}

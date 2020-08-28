@@ -32,6 +32,8 @@ public final class PlayerModerator implements CommandTrigger {
 			mutePlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("alert")) {
 			showPlayerAlertBox(player, command, args);
+		} else if (command.equalsIgnoreCase("set_icon")) {
+			setIcon(player, args);
 		}
 	}
 
@@ -171,4 +173,16 @@ public final class PlayerModerator implements CommandTrigger {
 		} else
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [message]");
 	}
+
+	private void setIcon(Player player, String[] args) {
+		int icon = -1;
+		try {
+			icon = Integer.parseInt(args[0]);
+		} catch (Exception e) {
+			player.message("Could not parse integer.");
+			player.message("Usage: @mag@::set_icon [integer]");
+		}
+		player.preferredIcon = icon;
+	}
+
 }

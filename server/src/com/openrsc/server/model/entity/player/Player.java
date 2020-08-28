@@ -118,6 +118,7 @@ public final class Player extends Mob {
 	private List<PluginTask> ownedPlugins = Collections.synchronizedList(new ArrayList<>());
 	private long lastExchangeTime = System.currentTimeMillis();
 	private int clientVersion = 0;
+	public int preferredIcon = -1;
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -2778,6 +2779,12 @@ public final class Player extends Mob {
 	}
 
 	public int getIcon() {
+		if (preferredIcon != -1) {
+			if (isAdmin()) {
+				return preferredIcon;
+			}
+		}
+
 		if (getWorld().getServer().getConfig().WANT_CUSTOM_RANK_DISPLAY) {
 			if (isAdmin())
 				return 0x0100FF00;
@@ -2802,6 +2809,42 @@ public final class Player extends Mob {
 
 		if (isMod())
 			return 0x03FFFFFF;
+
+		if (isPlayerMod())
+			return 0x03FFFFFF;
+
+		return 0;
+	}
+
+	public byte getIconAuthentic() {
+		if (preferredIcon != -1) {
+			// You can choose icon > 2 for cool effect e.g. 15 is a Log icon.
+			if (isAdmin() || isMod() || isDev() || isEvent()) {
+				return (byte)(preferredIcon & 0xFF);
+			}
+			if (isPlayerMod()) {
+				// Don't allow PMod to pose as admin. :-)
+				// but otherwise it is cool for them to have a weird tree icon if they want
+				if ((byte)(preferredIcon & 0xFF) != 2) {
+					return (byte)(preferredIcon & 0xFF);
+				}
+			}
+		}
+
+		if (isAdmin())
+			return 2;
+
+		if (isMod())
+			return 2;
+
+		if (isDev())
+			return 2;
+
+		if (isEvent())
+			return 2;
+
+		if (isPlayerMod())
+			return 1;
 
 		return 0;
 	}
