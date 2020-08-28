@@ -174,7 +174,9 @@ public class Skills {
 			if (getMob().isPlayer()) {
 				Player player = (Player) getMob();
 				skillName = getWorld().getServer().getConstants().getSkills().getSkill(skill).getShortName().toLowerCase();
-				if (newLevel >= getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT - 19 && newLevel <= getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT - 1) {
+				if (newLevel >= getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT - (getWorld().getServer().getConfig().SKILLING_EXP_RATE > 1.0 && !player.isOneXp() ? 9 : 19)
+					&& newLevel <= getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT - 1) {
+
 					getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player,
 						"has achieved level-" + newLevel + " in " + skillName + "!"));
 				} else if (newLevel == getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT) {
