@@ -151,7 +151,7 @@ public class DropTable {
 
 					if (newTable.getTotalWeight() > 0) {
 						ArrayList<Item> itemsToAdd = newTable.rollItem(false, owner);
-						if (itemsToAdd.size() > 0) {
+						if (itemsToAdd.size() > 0 && ringOfWealth && drop.table.rare) {
 							owner.playerServerMessage(MessageType.QUEST, "@ora@Your ring of wealth shines brightly!");
 							owner.playSound("foundgem");
 						}
