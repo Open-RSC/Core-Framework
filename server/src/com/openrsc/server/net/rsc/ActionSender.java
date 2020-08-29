@@ -235,9 +235,11 @@ public class ActionSender {
 			s.writeByte((byte) items.size());
 			for (Item item : items) {
 				s.writeShort(item.getCatalogId());
-				if (player.getConfig().CUSTOM_PROTOCOL) {
-					s.writeByte((byte)(item.getNoted() ? 1 : 0));
-				}
+				if (!player.isUsingAuthenticClient()) {
+                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                    }
+                }
 				s.writeInt(item.getAmount());
 			}
 
@@ -1185,6 +1187,7 @@ public class ActionSender {
 		player.write(pb.toPacket());
 	}
 
+	// authentically, this function is only called to confirm cancellation of previous trade acceptance (new items added)
 	public static void sendOwnTradeAcceptUpdate(Player player) {
 		Player with = player.getTrade().getTradeRecipient();
 		if (with == null) { // This shouldn't happen
@@ -1831,7 +1834,7 @@ public class ActionSender {
 		SEND_DUEL_CLOSE(225),
 		SEND_OPEN_DETAILS(232), // inauthentic
         SEND_UPDATE_PLAYERS(234),
-        SEND_UPDATE_IGNORE_BECAUSE_NAME_CHANGE(237),
+        SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE(237),
 		SEND_GAME_SETTINGS(240),
 		SEND_SLEEP_FATIGUE(244),
 		SEND_OPTIONS_MENU_OPEN(245),

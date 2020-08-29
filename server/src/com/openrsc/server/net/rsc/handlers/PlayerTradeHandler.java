@@ -153,12 +153,17 @@ public class PlayerTradeHandler implements PacketHandler {
 					player.getTrade().resetAll();
 					return;
 				}
-
-				player.getTrade().setTradeAccepted(false);
+				
+				if (player.getTrade().isTradeAccepted()) {
+					player.getTrade().setTradeAccepted(false);
+					ActionSender.sendOwnTradeAcceptUpdate(player);
+				}
+				if (affectedPlayer.getTrade().isTradeAccepted()) {
+					affectedPlayer.getTrade().setTradeAccepted(false);
+					ActionSender.sendOwnTradeAcceptUpdate(affectedPlayer);
+				}
 				player.getTrade().setTradeConfirmAccepted(false);
-				affectedPlayer.getTrade().setTradeAccepted(false);
 				affectedPlayer.getTrade().setTradeConfirmAccepted(false);
-
 
 				player.getTrade().resetOffer();
 				int count = (int) packet.readByte();
