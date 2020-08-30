@@ -120,7 +120,7 @@ public final class GameStateUpdater {
 
 	protected void updateNpcs(final Player playerToUpdate) {
 		final com.openrsc.server.net.PacketBuilder packet = new com.openrsc.server.net.PacketBuilder();
-		packet.setID(79);
+		packet.setID(ActionSender.Opcode.SEND_NPC_COORDS.opcode);
 		packet.startBitAccess();
 		packet.writeBits(playerToUpdate.getLocalNpcs().size(), 8);
 		for (final Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext(); ) {
@@ -155,8 +155,13 @@ public final class GameStateUpdater {
 			}
 			final byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
 			packet.writeBits(newNPC.getIndex(), 12);
-			packet.writeBits(offsets[0], 6);
-			packet.writeBits(offsets[1], 6);
+			if (playerToUpdate.isUsingAuthenticClient()) {
+				packet.writeBits(offsets[0], 5);
+				packet.writeBits(offsets[1], 5);
+			} else {
+				packet.writeBits(offsets[0], 6);
+				packet.writeBits(offsets[1], 6);
+			}
 			packet.writeBits(newNPC.getSprite(), 4);
 			packet.writeBits(newNPC.getID(), 10);
 
@@ -276,7 +281,7 @@ public final class GameStateUpdater {
 			+ npcProjectilesNeedingDisplayed.size() + npcSkullsNeedingDisplayed.size() + npcWieldsNeedingDisplayed.size() + npcBubblesNeedingDisplayed.size();
 		if (updateSize > 0) {
 			final PacketBuilder npcAppearancePacket = new PacketBuilder();
-			npcAppearancePacket.setID(104);
+			npcAppearancePacket.setID(ActionSender.Opcode.SEND_UPDATE_NPC.opcode);
 			npcAppearancePacket.writeShort(updateSize);
 
 			ChatMessage chatMessage;
@@ -284,7 +289,11 @@ public final class GameStateUpdater {
 				npcAppearancePacket.writeShort(chatMessage.getSender().getIndex());
 				npcAppearancePacket.writeByte((byte) 1);
 				npcAppearancePacket.writeShort(chatMessage.getRecipient() == null ? -1 : chatMessage.getRecipient().getIndex());
-				npcAppearancePacket.writeString(chatMessage.getMessageString());
+				if (player.isUsingAuthenticClient()) {
+					npcAppearancePacket.writeRSCString(chatMessage.getMessageString());
+				} else {
+					npcAppearancePacket.writeString(chatMessage.getMessageString());
+				}
 			}
 			Damage npcNeedingHitsUpdate;
 			while ((npcNeedingHitsUpdate = npcsNeedingHitsUpdate.poll()) != null) {
@@ -294,39 +303,41 @@ public final class GameStateUpdater {
 				npcAppearancePacket.writeByte((byte) npcNeedingHitsUpdate.getCurHits());
 				npcAppearancePacket.writeByte((byte) npcNeedingHitsUpdate.getMaxHits());
 			}
-			Projectile projectile;
-			while ((projectile = npcProjectilesNeedingDisplayed.poll()) != null) {
-				Entity victim = projectile.getVictim();
-				if (victim.isNpc()) {
-					npcAppearancePacket.writeShort(projectile.getCaster().getIndex());
-					npcAppearancePacket.writeByte((byte) 3);
-					npcAppearancePacket.writeShort(projectile.getType());
-					npcAppearancePacket.writeShort(((Npc) victim).getIndex());
-				} else if (victim.isPlayer()) {
-					npcAppearancePacket.writeShort(projectile.getCaster().getIndex());
-					npcAppearancePacket.writeByte((byte) 4);
-					npcAppearancePacket.writeShort(projectile.getType());
-					npcAppearancePacket.writeShort(((Player) victim).getIndex());
+			if (!player.isUsingAuthenticClient()) {
+				Projectile projectile;
+				while ((projectile = npcProjectilesNeedingDisplayed.poll()) != null) {
+					Entity victim = projectile.getVictim();
+					if (victim.isNpc()) {
+						npcAppearancePacket.writeShort(projectile.getCaster().getIndex());
+						npcAppearancePacket.writeByte((byte) 3);
+						npcAppearancePacket.writeShort(projectile.getType());
+						npcAppearancePacket.writeShort(((Npc) victim).getIndex());
+					} else if (victim.isPlayer()) {
+						npcAppearancePacket.writeShort(projectile.getCaster().getIndex());
+						npcAppearancePacket.writeByte((byte) 4);
+						npcAppearancePacket.writeShort(projectile.getType());
+						npcAppearancePacket.writeShort(((Player) victim).getIndex());
+					}
 				}
-			}
-			Skull npcNeedingSkullUpdate;
-			while ((npcNeedingSkullUpdate = npcSkullsNeedingDisplayed.poll()) != null) {
-				npcAppearancePacket.writeShort(npcNeedingSkullUpdate.getIndex());
-				npcAppearancePacket.writeByte((byte) 5);
-				npcAppearancePacket.writeByte((byte) npcNeedingSkullUpdate.getSkull());
-			}
-			Wield npcNeedingWieldUpdate;
-			while ((npcNeedingWieldUpdate = npcWieldsNeedingDisplayed.poll()) != null) {
-				npcAppearancePacket.writeShort(npcNeedingWieldUpdate.getIndex());
-				npcAppearancePacket.writeByte((byte) 6);
-				npcAppearancePacket.writeByte((byte) npcNeedingWieldUpdate.getWield());
-				npcAppearancePacket.writeByte((byte) npcNeedingWieldUpdate.getWield2());
-			}
-			BubbleNpc npcNeedingBubbleUpdate;
-			while ((npcNeedingBubbleUpdate = npcBubblesNeedingDisplayed.poll()) != null) {
-				npcAppearancePacket.writeShort(npcNeedingBubbleUpdate.getOwner().getIndex());
-				npcAppearancePacket.writeByte((byte) 7);
-				npcAppearancePacket.writeShort(npcNeedingBubbleUpdate.getID());
+				Skull npcNeedingSkullUpdate;
+				while ((npcNeedingSkullUpdate = npcSkullsNeedingDisplayed.poll()) != null) {
+					npcAppearancePacket.writeShort(npcNeedingSkullUpdate.getIndex());
+					npcAppearancePacket.writeByte((byte) 5);
+					npcAppearancePacket.writeByte((byte) npcNeedingSkullUpdate.getSkull());
+				}
+				Wield npcNeedingWieldUpdate;
+				while ((npcNeedingWieldUpdate = npcWieldsNeedingDisplayed.poll()) != null) {
+					npcAppearancePacket.writeShort(npcNeedingWieldUpdate.getIndex());
+					npcAppearancePacket.writeByte((byte) 6);
+					npcAppearancePacket.writeByte((byte) npcNeedingWieldUpdate.getWield());
+					npcAppearancePacket.writeByte((byte) npcNeedingWieldUpdate.getWield2());
+				}
+				BubbleNpc npcNeedingBubbleUpdate;
+				while ((npcNeedingBubbleUpdate = npcBubblesNeedingDisplayed.poll()) != null) {
+					npcAppearancePacket.writeShort(npcNeedingBubbleUpdate.getOwner().getIndex());
+					npcAppearancePacket.writeByte((byte) 7);
+					npcAppearancePacket.writeShort(npcNeedingBubbleUpdate.getID());
+				}
 			}
 			player.write(npcAppearancePacket.toPacket());
 		}
@@ -478,7 +489,9 @@ public final class GameStateUpdater {
 						if (updateType != 7) {
 							appearancePacket.writeShort(cm.getSender().getIndex());
 							appearancePacket.writeByte(updateType);
-							appearancePacket.writeByte(sender.getIconAuthentic());
+							if (updateType != 6) {
+								appearancePacket.writeByte(sender.getIconAuthentic());
+							}
 							appearancePacket.writeRSCString(message);
 						}
 

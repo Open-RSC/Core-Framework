@@ -432,15 +432,24 @@ public class ActionSender {
 
 		s.setID(Opcode.SEND_FRIEND_UPDATE.opcode);
 
-		s.writeString(username);
+		if (player.isUsingAuthenticClient()) {
+            s.writeZeroQuotedString(username);
+            s.writeZeroQuotedString(""); // TODO: Allow name changes to fill this variable.
 
-		// TODO: Allow name changes to fill this variable.
-		s.writeString("");
+            s.writeByte(onlineStatus);
 
-		s.writeByte(onlineStatus);
+            if ((onlineStatus & 4) != 0)
+                s.writeZeroQuotedString("OpenRSC");
 
-		if ((onlineStatus & 4) != 0)
-			s.writeString("OpenRSC");
+        } else {
+            s.writeString(username);
+            s.writeString(""); // TODO: Allow name changes to fill this variable.
+
+            s.writeByte(onlineStatus);
+
+            if ((onlineStatus & 4) != 0)
+                s.writeString("OpenRSC");
+        }
 
 		player.write(s.toPacket());
 	}
@@ -976,9 +985,15 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_OPTIONS_MENU_OPEN.opcode);
 		s.writeByte((byte) options.length);
-		for (String option : options) {
-			s.writeString(option);
-		}
+		if (player.isUsingAuthenticClient()) {
+            for (String option : options) {
+                s.writeZeroQuotedString(option);
+            }
+        } else {
+            for (String option : options) {
+                s.writeString(option);
+            }
+        }
 		player.write(s.toPacket());
 	}
 
@@ -1062,19 +1077,32 @@ public class ActionSender {
 	public static void sendPrivateMessageReceived(Player player, Player sender, String message, boolean isGlobal) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PRIVATE_MESSAGE.opcode);
-		if (!isGlobal) {
-			s.writeString(sender.getUsername());
-			s.writeString(sender.getUsername());// former name
-		}
-		else {
-			if (player.getBlockGlobalFriend())
-				return;
+		if (player.isUsingAuthenticClient()) {
+            if (!isGlobal) {
+                s.writeZeroQuotedString(sender.getUsername());
+                s.writeZeroQuotedString(sender.getUsername()); // former name
+            } else {
+                if (player.getBlockGlobalFriend())
+                    return;
 
-			s.writeString("Global$" + sender.getUsername());
-			s.writeString("Global$" + sender.getUsername());
-		}
-		s.writeInt(sender.getIcon());
-		s.writeRSCString(message);
+                s.writeString("Global$" + sender.getUsername());
+                s.writeString("Global$" + sender.getUsername());
+            }
+
+        } else {
+            if (!isGlobal) {
+                s.writeString(sender.getUsername());
+                s.writeString(sender.getUsername());// former name
+            } else {
+                if (player.getBlockGlobalFriend())
+                    return;
+
+                s.writeString("Global$" + sender.getUsername());
+                s.writeString("Global$" + sender.getUsername());
+            }
+            s.writeInt(sender.getIcon());
+            s.writeRSCString(message);
+        }
 		player.write(s.toPacket());
 	}
 
@@ -1371,22 +1399,13 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_BANK_OPEN.opcode);
 		if (player.isUsingAuthenticClient()) {
-            s.writeShort(player.getBank().size()); // Items in player's bank
-            s.writeShort(player.getBankSize()); // Maximum amount of items in a player's bank
-            synchronized (player.getBank().getItems()) {
-                for (Item i : player.getBank().getItems()) {
-                    s.writeShort(i.getCatalogId());
-                    s.writeInt(i.getAmount());
-                }
-            }
-        } else {
             int itemsInBank = player.getBank().size();
-		    s.writeByte(itemsInBank > 255 ? (byte)255 : itemsInBank & 0xFF);
-		    if (itemsInBank > 192) {
-		        sendMessage(player, "Warning: Unable to display all items in bank!");
+            s.writeByte(itemsInBank > 255 ? (byte)255 : itemsInBank & 0xFF);
+            if (itemsInBank > 192) {
+                sendMessage(player, "Warning: Unable to display all items in bank!");
             }
-		    s.writeByte(player.getBankSize() > 255 ? (byte)255 : player.getBankSize() & 0xFF);
-		    // If bank is filled to page 4 and bank size reports supporting more than 4 pages
+            s.writeByte(player.getBankSize() > 255 ? (byte)255 : player.getBankSize() & 0xFF);
+            // If bank is filled to page 4 and bank size reports supporting more than 4 pages
             if (itemsInBank > (192 - 48) && player.getBankSize() > 192) {
                 sendMessage(player, "Warning: Bank is unauthentically large. Deposited items may not be visible to be withdrawn!");
             }
@@ -1395,6 +1414,15 @@ public class ActionSender {
                 for (Item i : player.getBank().getItems()) {
                     s.writeShort(i.getCatalogId());
                     s.writeUnsignedShortInt(i.getAmount());
+                }
+            }
+        } else {
+            s.writeShort(player.getBank().size()); // Items in player's bank
+            s.writeShort(player.getBankSize()); // Maximum amount of items in a player's bank
+            synchronized (player.getBank().getItems()) {
+                for (Item i : player.getBank().getItems()) {
+                    s.writeShort(i.getCatalogId());
+                    s.writeInt(i.getAmount());
                 }
             }
         }
@@ -1610,7 +1638,7 @@ public class ActionSender {
 
 	public static void sendOnlineList(Player player, ArrayList<Player> players, ArrayList<String> locations, int online) {
 	    if (player.isUsingAuthenticClient()) {
-	        String outString = "@lre@Players online: ";
+	        String outString = String.format("@lre@Players online@gre@(%d)@lre@: ", online);
             for (int i = 0; i < players.size(); i++) {
                 outString += String.format("@whi@%s @yel@(%s)%s", players.get(i).getUsername(), locations.get(i), i + 1 == players.size() ? "" : "@mag@;");
             }
@@ -1867,6 +1895,7 @@ public class ActionSender {
 		SEND_INVENTORY(53),
 		SEND_ELIXIR(54), // inauthentic
 		SEND_APPEARANCE_CHANGE(59),
+        SEND_NPC_COORDS(79),
 		SEND_DEATH(83),
 		SEND_STOPSLEEP(84),
 		SEND_PRIVATE_MESSAGE_SENT(87),
@@ -1878,6 +1907,7 @@ public class ActionSender {
 		SEND_EXPSHARED(98), // inauthentic
         SEND_GROUND_ITEM_HANDLER(99),
         SEND_SHOP_OPEN(101),
+        SEND_UPDATE_NPC(104),
 		SEND_IGNORE_LIST(109),
 		SEND_INPUT_BOX(110), // inauthentic
 		SEND_ON_TUTORIAL(111),
