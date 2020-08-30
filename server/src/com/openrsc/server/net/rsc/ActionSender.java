@@ -259,10 +259,10 @@ public class ActionSender {
 	public static void sendDuelSettingUpdate(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_DUEL_SETTINGS.opcode);
-		s.writeByte((byte) (player.getDuel().getDuelSetting(0) ? 1 : 0));
-		s.writeByte((byte) (player.getDuel().getDuelSetting(1) ? 1 : 0));
-		s.writeByte((byte) (player.getDuel().getDuelSetting(2) ? 1 : 0));
-		s.writeByte((byte) (player.getDuel().getDuelSetting(3) ? 1 : 0));
+		s.writeByte((byte) (player.getDuel().getDuelSetting(0) ? 1 : 0)); // retreat allowed?
+		s.writeByte((byte) (player.getDuel().getDuelSetting(1) ? 1 : 0)); // magic allowed?
+		s.writeByte((byte) (player.getDuel().getDuelSetting(2) ? 1 : 0)); // prayer allowed?
+		s.writeByte((byte) (player.getDuel().getDuelSetting(3) ? 1 : 0)); // weapons allowed?
 		player.write(s.toPacket());
 	}
 
@@ -1171,7 +1171,7 @@ public class ActionSender {
 	public static void sendTeleBubble(Player player, int x, int y, boolean grab) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_BUBBLE.opcode);
-		s.writeByte((byte) (grab ? 1 : 0));
+		s.writeByte((byte) (grab ? 1 : 0)); // 1 for telegrab/Iban's magic; 0 for teleportation
 		s.writeByte((byte) (x - player.getX()));
 		s.writeByte((byte) (y - player.getY()));
 		player.write(s.toPacket());
@@ -1354,7 +1354,7 @@ public class ActionSender {
 		s.writeByte((byte) (shop.isGeneral() ? 1 : 0));
 		s.writeByte((byte) shop.getSellModifier());
 		s.writeByte((byte) shop.getBuyModifier());
-		s.writeByte((byte) shop.getPriceModifier()); // price modifier?
+		s.writeByte((byte) shop.getPriceModifier()); // This is how much being over/understock affects the price
 
 		for (int i = 0; i < shop.getShopSize(); i++) {
 			Item item = shop.getShopItem(i);
