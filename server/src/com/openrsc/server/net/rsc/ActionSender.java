@@ -324,12 +324,14 @@ public class ActionSender {
 		s.writeByte(player.getPrayerPoints());
 		player.write(s.toPacket());
 
-		if (player.getConfig().WANT_EQUIPMENT_TAB) {
-			if (slot == -1)
-				sendEquipment(player);
-			else
-				updateEquipmentSlot(player, slot);
-		}
+		if (!player.isUsingAuthenticClient()) {
+            if (player.getConfig().WANT_EQUIPMENT_TAB) {
+                if (slot == -1)
+                    sendEquipment(player);
+                else
+                    updateEquipmentSlot(player, slot);
+            }
+        }
 	}
 
 
