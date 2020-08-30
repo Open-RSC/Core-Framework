@@ -166,6 +166,22 @@ public class Packet {
 	}
 
 	/**
+	 * Reads a RuneScape string.
+	 *
+	 * @return The string.
+	 */
+	public String readZeroPaddedString() {
+		StringBuilder bldr = new StringBuilder();
+		byte b;
+		if (payload.readByte() != 0) {
+			return "";
+		}
+		while (payload.readableBytes() > 0 && (b = payload.readByte()) != 0)
+			bldr.append((char) b);
+		return bldr.toString();
+	}
+
+	/**
 	 * Reads a series of bytes.
 	 *
 	 * @param is     The tarread byte array.

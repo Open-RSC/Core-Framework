@@ -9,7 +9,12 @@ public final class CommandHandler implements PacketHandler {
 		if (System.currentTimeMillis() - player.getLastCommand() < 1000 && !player.isAdmin()) {
 			player.message(player.getConfig().MESSAGE_PREFIX + "There's a second delay between using commands");
 		} else {
-			String s = packet.readString();
+			String s;
+			if (player.isUsingAuthenticClient()) {
+				s = packet.readZeroPaddedString();
+			} else {
+				s = packet.readString();
+			}
 			int firstSpace = s.indexOf(" ");
 			String cmd = s;
 			String[] args = new String[0];

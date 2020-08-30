@@ -19,7 +19,12 @@ public final class FriendHandler implements PacketHandler {
 	public void handlePacket(Packet packet, Player player) {
 		int pID = packet.getID();
 
-		String friendName = packet.readString();
+		String friendName;
+		if (player.isUsingAuthenticClient()) {
+			friendName = packet.readZeroPaddedString();
+		} else {
+			friendName = packet.readString();
+		}
 		long friend = DataConversions.usernameToHash(friendName);
 
 		int packetOne = OpcodeIn.SOCIAL_ADD_FRIEND.getOpcode();
