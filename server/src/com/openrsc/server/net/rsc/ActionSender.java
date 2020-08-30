@@ -1077,6 +1077,10 @@ public class ActionSender {
 	public static void sendPrivateMessageReceived(Player player, Player sender, String message, boolean isGlobal) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PRIVATE_MESSAGE.opcode);
+
+		// TODO: we won't be able to reach across servers like this to access incrementPrivateMessages if there's more than one server
+        // It will need to be rewritten when there is a proper login server managing private messages.
+        int pmsSent = sender.getWorld().getServer().incrementPrivateMessagesSent();
 		if (player.isUsingAuthenticClient()) {
             if (!isGlobal) {
                 s.writeZeroQuotedString(sender.getUsername());
@@ -1085,10 +1089,23 @@ public class ActionSender {
                 if (player.getBlockGlobalFriend())
                     return;
 
-                s.writeString("Global$" + sender.getUsername());
-                s.writeString("Global$" + sender.getUsername());
+                s.writeZeroQuotedString("Global$" + sender.getUsername());
+                s.writeZeroQuotedString("Global$" + sender.getUsername());
             }
 
+            s.writeByte(sender.getIconAuthentic());
+
+            // 8 byte "Message ID" field is next
+            s.writeByte(0); // Unused Padding
+            s.writeByte(0); // Unused Padding
+            s.writeByte(0); // Unused Padding
+            s.writeShort(sender.getWorld().getServer().getConfig().WORLD_NUMBER);
+            // 24 bit value for number of private messages sent on server since restart
+            s.writeByte((pmsSent & 0x00FF0000) >> 16);
+            s.writeByte((pmsSent & 0x0000FF00) >> 8);
+            s.writeByte((pmsSent & 0x000000FF));
+
+            s.writeRSCString(message);
         } else {
             if (!isGlobal) {
                 s.writeString(sender.getUsername());

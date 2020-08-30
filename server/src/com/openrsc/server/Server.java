@@ -92,6 +92,7 @@ public class Server implements Runnable {
 	private final HashMap<Integer, Integer> incomingCountPerPacketOpcode = new HashMap<>();
 	private final HashMap<Integer, Long> outgoingTimePerPacketOpcode = new HashMap<>();
 	private final HashMap<Integer, Integer> outgoingCountPerPacketOpcode = new HashMap<>();
+	private int privateMessagesSent = 0;
 
 	private volatile int maxItemId;
 
@@ -736,6 +737,10 @@ public class Server implements Runnable {
 
 	public synchronized int incrementMaxItemID() {
 		return ++maxItemId;
+	}
+
+	public synchronized int incrementPrivateMessagesSent() {
+		return ++privateMessagesSent;
 	}
 
 	class JPanel2 extends JPanel {
