@@ -1334,14 +1334,34 @@ public class ActionSender {
 	public static void showBank(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_BANK_OPEN.opcode);
-		s.writeShort(player.getBank().size());
-		s.writeShort(player.getBankSize());
-		synchronized(player.getBank().getItems()) {
-			for (Item i : player.getBank().getItems()) {
-				s.writeShort(i.getCatalogId());
-				s.writeInt(i.getAmount());
-			}
-		}
+		if (player.isUsingAuthenticClient()) {
+            s.writeShort(player.getBank().size()); // Items in player's bank
+            s.writeShort(player.getBankSize()); // Maximum amount of items in a player's bank
+            synchronized (player.getBank().getItems()) {
+                for (Item i : player.getBank().getItems()) {
+                    s.writeShort(i.getCatalogId());
+                    s.writeInt(i.getAmount());
+                }
+            }
+        } else {
+            int itemsInBank = player.getBank().size();
+		    s.writeByte(itemsInBank > 255 ? (byte)255 : itemsInBank & 0xFF);
+		    if (itemsInBank > 192) {
+		        sendMessage(player, "Warning: Unable to display all items in bank!");
+            }
+		    s.writeByte(player.getBankSize() > 255 ? (byte)255 : player.getBankSize() & 0xFF);
+		    // If bank is filled to page 4 and bank size reports supporting more than 4 pages
+            if (itemsInBank > (192 - 48) && player.getBankSize() > 192) {
+                sendMessage(player, "Warning: Bank is unauthentically large. Deposited items may not be visible to be withdrawn!");
+            }
+
+            synchronized (player.getBank().getItems()) {
+                for (Item i : player.getBank().getItems()) {
+                    s.writeShort(i.getCatalogId());
+                    s.writeUnsignedShortInt(i.getAmount());
+                }
+            }
+        }
 		player.write(s.toPacket());
 	}
 
