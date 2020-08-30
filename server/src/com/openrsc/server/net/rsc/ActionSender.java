@@ -70,7 +70,11 @@ public class ActionSender {
 	public static void sendBox(Player player, String message, boolean big) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(big ? Opcode.SEND_BOX.opcode : Opcode.SEND_BOX2.opcode);
-		s.writeString(message);
+		if (player.isUsingAuthenticClient()) {
+		    s.writeZeroQuotedString(message);
+        } else {
+            s.writeString(message);
+        }
 		player.write(s.toPacket());
 	}
 
