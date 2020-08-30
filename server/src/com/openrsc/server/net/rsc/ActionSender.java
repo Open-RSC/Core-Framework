@@ -1184,21 +1184,41 @@ public class ActionSender {
 		}
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_TRADE_OPEN_CONFIRM.opcode);
-		s.writeString(with.getUsername());
+		if (player.isUsingAuthenticClient()) {
+		    s.writeZeroQuotedString(with.getUsername());
+        } else {
+            s.writeString(with.getUsername());
+        }
 		s.writeByte((byte) with.getTrade().getTradeOffer().getItems().size());
 		for (Item item : with.getTrade().getTradeOffer().getItems()) {
-			s.writeShort(item.getCatalogId());
-			if (player.getConfig().CUSTOM_PROTOCOL) {
-				s.writeByte((byte)(item.getNoted() ? 1 : 0));
-			}
+            if (player.isUsingAuthenticClient()) {
+                if (item.getCatalogId() <= ItemId.maxAuthentic) {
+                    s.writeShort(item.getCatalogId());
+                } else {
+                    sendMessage(player, String.format("Cannot handle inauthentic item ID %d", item.getItemId()));
+                    sendMessage(with, String.format("Other player cannot handle inauthentic item ID %d", item.getItemId()));
+                    player.getTrade().setTradeActive(false);
+                    with.getTrade().setTradeActive(false);
+                    sendTradeWindowClose(player);
+                    sendTradeWindowClose(with);
+                    return;
+                }
+            } else {
+                s.writeShort(item.getCatalogId());
+                if (player.getConfig().CUSTOM_PROTOCOL) {
+                    s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                }
+            }
 			s.writeInt(item.getAmount());
 		}
 		s.writeByte((byte) player.getTrade().getTradeOffer().getItems().size());
 		for (Item item : player.getTrade().getTradeOffer().getItems()) {
 			s.writeShort(item.getCatalogId());
-			if (player.getConfig().CUSTOM_PROTOCOL) {
-				s.writeByte((byte)(item.getNoted() ? 1 : 0));
-			}
+			if (!player.isUsingAuthenticClient()) {
+                if (player.getConfig().CUSTOM_PROTOCOL) {
+                    s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                }
+            }
 			s.writeInt(item.getAmount());
 		}
 		player.write(s.toPacket());
@@ -1290,12 +1310,22 @@ public class ActionSender {
 		s.writeByte((byte) slot);
 		if (item != null) {
 			s.writeShort(item.getCatalogId() + (item.isWielded() ? 32768 : 0));
-			s.writeByte(item.getNoted() ? 1 : 0);
-			if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
-				s.writeInt(item.getAmount());
-			}
+			if (player.isUsingAuthenticClient()) {
+                if (item.getDef(player.getWorld()).isStackable()) {
+                    // Unfortunately, noted items will just appear as one item
+                    // there's no way to show a stack of an unstackable item in authentic protocol
+                    s.writeUnsignedShortInt(item.getAmount());
+                }
+            } else {
+                s.writeByte(item.getNoted() ? 1 : 0);
+                if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
+                    s.writeInt(item.getAmount());
+                }
+            }
+
 		}
 		else {
+		    LOGGER.warn(String.format("Null item in %s's inventory! (slot %d)", player.getUsername(), slot ));
 			s.writeShort(0);
 			s.writeShort(0);
 			s.writeInt(0);
