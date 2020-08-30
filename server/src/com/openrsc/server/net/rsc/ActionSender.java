@@ -1241,22 +1241,26 @@ public class ActionSender {
 			s.writeByte((byte) items.size());
 			for (Item item : items) {
 				s.writeShort(item.getCatalogId());
-				if (player.getConfig().CUSTOM_PROTOCOL) {
-					s.writeByte((byte)(item.getNoted() ? 1 : 0));
-				}
+				if (!player.isUsingAuthenticClient()) {
+                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                    }
+                }
 				s.writeInt(item.getAmount());
 			}
 
-			// Our items second
-			items = player.getTrade().getTradeOffer().getItems();
-			s.writeByte((byte) items.size());
-			for (Item item : items) {
-				s.writeShort(item.getCatalogId());
-				if (player.getConfig().CUSTOM_PROTOCOL) {
-					s.writeByte((byte)(item.getNoted() ? 1 : 0));
-				}
-				s.writeInt(item.getAmount());
-			}
+			if (!player.isUsingAuthenticClient()) {
+                // Our items second
+                items = player.getTrade().getTradeOffer().getItems();
+                s.writeByte((byte) items.size());
+                for (Item item : items) {
+                    s.writeShort(item.getCatalogId());
+                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                    }
+                    s.writeInt(item.getAmount());
+                }
+            }
 
 			player.write(s.toPacket());
 		}
