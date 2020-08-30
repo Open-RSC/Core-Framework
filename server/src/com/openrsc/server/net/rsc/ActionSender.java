@@ -1351,11 +1351,13 @@ public class ActionSender {
 	 * Sends the elixir timer
 	 */
 	public static void sendElixirTimer(Player player, int seconds) {
-		if (!player.getConfig().WANT_EXPERIENCE_ELIXIRS) return;
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_ELIXIR.opcode);
-		s.writeShort((int) (((double) seconds / 32D) * 50));
-		player.write(s.toPacket());
+	    if (!player.isUsingAuthenticClient()) {
+            if (!player.getConfig().WANT_EXPERIENCE_ELIXIRS) return;
+            com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+            s.setID(Opcode.SEND_ELIXIR.opcode);
+            s.writeShort((int) (((double) seconds / 32D) * 50));
+            player.write(s.toPacket());
+        }
 	}
 
 	/**
