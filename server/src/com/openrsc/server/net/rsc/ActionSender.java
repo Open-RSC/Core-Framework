@@ -1480,7 +1480,11 @@ public class ActionSender {
 		s.setID(Opcode.SEND_BANK_UPDATE.opcode);
 		s.writeByte((byte) slot);
 		s.writeShort(newId);
-		s.writeInt(amount);
+		if (player.isUsingAuthenticClient()) {
+		    s.writeUnsignedShortInt(amount);
+        } else {
+            s.writeInt(amount);
+        }
 		player.write(s.toPacket());
 	}
 
