@@ -1607,15 +1607,23 @@ public class ActionSender {
 	}
 
 	public static void sendOnlineList(Player player, ArrayList<Player> players, ArrayList<String> locations, int online) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
-		pb.writeShort(online);
-		for (int i = 0; i < players.size(); i++) {
-			Player friend = players.get(i);
-			pb.writeString(friend.getUsername());
-			pb.writeInt(friend.getIcon());
-			pb.writeString(locations.get(i));
-		}
-		player.write(pb.toPacket());
+	    if (player.isUsingAuthenticClient()) {
+	        String outString = "@lre@Players online: ";
+            for (int i = 0; i < players.size(); i++) {
+                outString += String.format("@whi@%s @yel@(%s)%s", players.get(i).getUsername(), locations.get(i), i + 1 == players.size() ? "" : "@mag@;");
+            }
+            sendMessage(player, outString);
+        } else {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
+            pb.writeShort(online);
+            for (int i = 0; i < players.size(); i++) {
+                Player friend = players.get(i);
+                pb.writeString(friend.getUsername());
+                pb.writeInt(friend.getIcon());
+                pb.writeString(locations.get(i));
+            }
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void showFishingTrawlerInterface(Player player) {
