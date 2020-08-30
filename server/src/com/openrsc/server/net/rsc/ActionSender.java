@@ -341,7 +341,13 @@ public class ActionSender {
 	public static void sendFatigue(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_FATIGUE.opcode);
-		s.writeShort(player.getFatigue() / 1500);
+		if (player.isUsingAuthenticClient()) {
+            // authentic client has range from 0 to 750
+            s.writeShort(player.getFatigue() / (player.MAX_FATIGUE / 750));
+        } else {
+            // inauthentic client has range from 0 to 100
+            s.writeShort(player.getFatigue() / (player.MAX_FATIGUE / 100));
+        }
 		player.write(s.toPacket());
 	}
 
@@ -370,7 +376,13 @@ public class ActionSender {
 	public static void sendSleepFatigue(Player player, int fatigue) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SLEEP_FATIGUE.opcode);
-		s.writeShort(fatigue / 1500);
+        if (player.isUsingAuthenticClient()) {
+            // authentic client has range from 0 to 750
+            s.writeShort(fatigue / (player.MAX_FATIGUE / 750));
+        } else {
+            // inauthentic client has range from 0 to 100
+            s.writeShort(fatigue/ (player.MAX_FATIGUE / 100));
+        }
 		player.write(s.toPacket());
 	}
 
