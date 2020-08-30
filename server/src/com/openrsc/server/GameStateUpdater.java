@@ -215,8 +215,13 @@ public final class GameStateUpdater {
 				final byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
 					playerToUpdate.getLocation());
 				positionBuilder.writeBits(otherPlayer.getIndex(), 11);
-				positionBuilder.writeBits(offsets[0], 6);
-				positionBuilder.writeBits(offsets[1], 6);
+				if (playerToUpdate.isUsingAuthenticClient()) {
+					positionBuilder.writeBits(offsets[0], 5);
+					positionBuilder.writeBits(offsets[1], 5);
+				} else {
+					positionBuilder.writeBits(offsets[0], 6);
+					positionBuilder.writeBits(offsets[1], 6);
+				}
 				positionBuilder.writeBits(otherPlayer.getSprite(), 4);
 				playerToUpdate.getLocalPlayers().add(otherPlayer);
 				if (playerToUpdate.getLocalPlayers().size() >= 255) {
@@ -645,7 +650,7 @@ public final class GameStateUpdater {
 	protected void updateGroundItems(final Player playerToUpdate) {
 		boolean changed = false;
 		final PacketBuilder packet = new PacketBuilder();
-		packet.setID(99);
+		packet.setID(ActionSender.Opcode.SEND_GROUND_ITEM_HANDLER.opcode);
 		for (final Iterator<GroundItem> it$ = playerToUpdate.getLocalGroundItems().iterator(); it$.hasNext(); ) {
 			final GroundItem groundItem = it$.next();
 			final int offsetX = (groundItem.getX() - playerToUpdate.getX());
@@ -656,8 +661,10 @@ public final class GameStateUpdater {
 					packet.writeByte(255);
 					packet.writeByte(offsetX);
 					packet.writeByte(offsetY);
-					if (getServer().getConfig().WANT_BANK_NOTES)
-						packet.writeByte(groundItem.getNoted() ? 1 : 0);
+					if (!playerToUpdate.isUsingAuthenticClient()) {
+						if (getServer().getConfig().WANT_BANK_NOTES)
+							packet.writeByte(groundItem.getNoted() ? 1 : 0);
+					}
 				} else {
 					playerToUpdate.getLocationsToClear().add(groundItem.getLocation());
 				}
@@ -667,8 +674,10 @@ public final class GameStateUpdater {
 				packet.writeShort(groundItem.getID() + 32768);
 				packet.writeByte(offsetX);
 				packet.writeByte(offsetY);
-				if (getServer().getConfig().WANT_BANK_NOTES)
-					packet.writeByte(groundItem.getNoted() ? 1 : 0);
+				if (!playerToUpdate.isUsingAuthenticClient()) {
+					if (getServer().getConfig().WANT_BANK_NOTES)
+						packet.writeByte(groundItem.getNoted() ? 1 : 0);
+				}
 				//System.out.println("Removing " + groundItem + " with isRemoved() remove: " + offsetX + ", " + offsetY);
 				it$.remove();
 				changed = true;
@@ -686,8 +695,10 @@ public final class GameStateUpdater {
 			final int offsetY = groundItem.getY() - playerToUpdate.getY();
 			packet.writeByte(offsetX);
 			packet.writeByte(offsetY);
-			if (getServer().getConfig().WANT_BANK_NOTES) {
-				packet.writeByte(groundItem.getNoted() ? 1 : 0);
+			if (!playerToUpdate.isUsingAuthenticClient()) {
+				if (getServer().getConfig().WANT_BANK_NOTES) {
+					packet.writeByte(groundItem.getNoted() ? 1 : 0);
+				}
 			}
 			playerToUpdate.getLocalGroundItems().add(groundItem);
 			changed = true;
