@@ -1079,12 +1079,21 @@ public class ActionSender {
 	public static void sendPrivateMessageSent(Player player, long usernameHash, String message, boolean isGlobal) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PRIVATE_MESSAGE_SENT.opcode);
-		if(!isGlobal) {
-			s.writeString(DataConversions.hashToUsername(usernameHash));
-		} else {
-			s.writeString("Global$");
-		}
-		s.writeRSCString(message);
+		if (player.isUsingAuthenticClient()) {
+            if (!isGlobal) {
+                s.writeZeroQuotedString(DataConversions.hashToUsername(usernameHash));
+            } else {
+                s.writeZeroQuotedString("Global$");
+            }
+            s.writeRSCString(message);
+        } else {
+            if (!isGlobal) {
+                s.writeString(DataConversions.hashToUsername(usernameHash));
+            } else {
+                s.writeString("Global$");
+            }
+            s.writeRSCString(message);
+        }
 		player.write(s.toPacket());
 	}
 
