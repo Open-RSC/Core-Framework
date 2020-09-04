@@ -17,6 +17,7 @@ import orsc.mudclient;
 import orsc.multiclient.ClientPort;
 import orsc.osConfig;
 import orsc.Config;
+import orsc.util.Utils;
 
 public class GameActivity extends Activity implements ClientPort {
 
@@ -54,6 +55,7 @@ public class GameActivity extends Activity implements ClientPort {
 
         setInputImpl(new InputImpl(mudclient, gameView));
 
+		Utils.context = getApplicationContext();
     }
 
     @Override
