@@ -3,6 +3,7 @@ package com.openrsc.client.android;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.openrsc.android.render.InputImpl;
@@ -12,11 +13,11 @@ import com.openrsc.client.model.Sprite;
 import java.io.ByteArrayInputStream;
 import java.util.Objects;
 
+import orsc.Config;
 import orsc.PacketHandler;
 import orsc.mudclient;
 import orsc.multiclient.ClientPort;
 import orsc.osConfig;
-import orsc.Config;
 import orsc.util.Utils;
 
 public class GameActivity extends Activity implements ClientPort {
@@ -56,6 +57,15 @@ public class GameActivity extends Activity implements ClientPort {
         setInputImpl(new InputImpl(mudclient, gameView));
 
 		Utils.context = getApplicationContext();
+
+		// Hide the bars and stuff
+		getWindow().getDecorView().setSystemUiVisibility(
+			View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+				| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+				| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+				| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+				| View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+				| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
     @Override
