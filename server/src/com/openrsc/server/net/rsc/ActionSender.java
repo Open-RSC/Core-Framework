@@ -164,14 +164,20 @@ public class ActionSender {
 		}
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_DUEL_CONFIRMWINDOW.opcode);
-		s.writeString(with.getUsername());
+		if (player.isUsingAuthenticClient()) {
+            s.writeZeroQuotedString(with.getUsername());
+        } else {
+            s.writeString(with.getUsername());
+        }
 		synchronized(with.getDuel().getDuelOffer().getItems()) {
 			s.writeByte((byte) with.getDuel().getDuelOffer().getItems().size());
 			for (Item item : with.getDuel().getDuelOffer().getItems()) {
 				s.writeShort(item.getCatalogId());
-				if (player.getConfig().CUSTOM_PROTOCOL) {
-					s.writeByte((byte)(item.getNoted() ? 1 : 0));
-				}
+				if (!player.isUsingAuthenticClient()) {
+                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                    }
+                }
 				s.writeInt(item.getAmount());
 			}
 		}
@@ -179,17 +185,19 @@ public class ActionSender {
 			s.writeByte((byte) player.getDuel().getDuelOffer().getItems().size());
 			for (Item item : player.getDuel().getDuelOffer().getItems()) {
 				s.writeShort(item.getCatalogId());
-				if (player.getConfig().CUSTOM_PROTOCOL) {
-					s.writeByte((byte)(item.getNoted() ? 1 : 0));
-				}
+                if (!player.isUsingAuthenticClient()) {
+                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                    }
+                }
 				s.writeInt(item.getAmount());
 			}
 		}
 
-		s.writeByte((byte) (player.getDuel().getDuelSetting(0) ? 1 : 0));
-		s.writeByte((byte) (player.getDuel().getDuelSetting(1) ? 1 : 0));
-		s.writeByte((byte) (player.getDuel().getDuelSetting(2) ? 1 : 0));
-		s.writeByte((byte) (player.getDuel().getDuelSetting(3) ? 1 : 0));
+		s.writeByte((byte) (player.getDuel().getDuelSetting(0) ? 1 : 0)); // retreating is impossible if 1
+		s.writeByte((byte) (player.getDuel().getDuelSetting(1) ? 1 : 0)); // magic may be used if 1
+		s.writeByte((byte) (player.getDuel().getDuelSetting(2) ? 1 : 0)); // prayer may be used if 1
+		s.writeByte((byte) (player.getDuel().getDuelSetting(3) ? 1 : 0)); // weapons may be used if 1
 
 		player.write(s.toPacket());
 	}
