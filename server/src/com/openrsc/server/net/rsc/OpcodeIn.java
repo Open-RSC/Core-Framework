@@ -1,7 +1,7 @@
 package com.openrsc.server.net.rsc;
 
 public enum OpcodeIn {
-	PING(67),
+	HEARTBEAT(67),
 	WALK_TO_ENTITY(16),
 	WALK_TO_POINT(187),
 	CONFIRM_LOGOUT(31),
@@ -101,7 +101,7 @@ public enum OpcodeIn {
 
 	SLEEPWORD_ENTERED(45),
 
-	ON_TUTORIAL_ISLAND(84),
+	SKIP_TUTORIAL(84),
 	ON_BLACK_HOLE(86),
 	NPC_DEFINITION_REQUEST(89),
 	;

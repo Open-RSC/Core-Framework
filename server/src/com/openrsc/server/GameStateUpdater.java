@@ -65,15 +65,31 @@ public final class GameStateUpdater {
 	public void sendUpdatePackets(final Player player) {
 		// TODO: Should be private
 		try {
-			updatePlayers(player);
-			updatePlayerAppearances(player);
-			updateNpcs(player);
-			updateNpcAppearances(player);
-			updateGameObjects(player);
-			updateWallObjects(player);
-			updateGroundItems(player);
-			sendClearLocations(player);
-			updateTimeouts(player);
+			if (player.isUsingAuthenticClient()) {
+				if (player.isChangingAppearance()) {
+					sendAppearanceKeepalive(player);
+				} else {
+					updatePlayers(player);
+					updatePlayerAppearances(player);
+					updateNpcs(player);
+					updateNpcAppearances(player);
+					updateGameObjects(player);
+					updateWallObjects(player);
+					updateGroundItems(player);
+					sendClearLocations(player);
+					updateTimeouts(player);
+				}
+			} else {
+				updatePlayers(player);
+				updatePlayerAppearances(player);
+				updateNpcs(player);
+				updateNpcAppearances(player);
+				updateGameObjects(player);
+				updateWallObjects(player);
+				updateGroundItems(player);
+				sendClearLocations(player);
+				updateTimeouts(player);
+			}
 		} catch (final Exception e) {
 			LOGGER.catching(e);
 			player.unregister(true, "Exception while updating player " + player.getUsername());
@@ -772,9 +788,15 @@ public final class GameStateUpdater {
 		}
 	}
 
+	protected void sendAppearanceKeepalive(final Player player) {
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(ActionSender.Opcode.SEND_APPEARANCE_KEEPALIVE.opcode); // 213
+		player.write(s.toPacket());
+	}
+
 	protected void sendClearLocations(final Player player) {
 		if (player.getLocationsToClear().size() > 0) {
-			final PacketBuilder packetBuilder = new PacketBuilder(211);
+			final PacketBuilder packetBuilder = new PacketBuilder(ActionSender.Opcode.SEND_REMOVE_WORLD_ENTITY.opcode);
 			for (final Point point : player.getLocationsToClear()) {
 				final int offsetX = point.getX() - player.getX();
 				final int offsetY = point.getY() - player.getY();

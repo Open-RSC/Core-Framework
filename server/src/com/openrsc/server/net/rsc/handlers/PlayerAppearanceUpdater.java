@@ -28,9 +28,13 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 		int topColour = packet.readByte();
 		int trouserColour = packet.readByte();
 		int skinColour = packet.readByte();
+		int playerMode1 = -1;
+		int playerMode2 = -1;
 
-		int playerMode1 = packet.readByte();
-		int playerMode2 = packet.readByte();
+		if (!player.isUsingAuthenticClient()) {
+			playerMode1 = packet.readByte();
+			playerMode2 = packet.readByte();
+		}
 
 		int headSprite = headType + 1;
 		int bodySprite = bodyGender + 1;

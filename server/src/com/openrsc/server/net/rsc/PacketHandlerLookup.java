@@ -13,7 +13,7 @@ public class PacketHandlerLookup {
 	private static final Logger LOGGER = LogManager.getLogger();
 	static {
 
-		bind(OpcodeIn.PING.getOpcode(), Ping.class);
+		bind(OpcodeIn.HEARTBEAT.getOpcode(), Ping.class);
 
 		bind(OpcodeIn.WALK_TO_ENTITY.getOpcode(), WalkRequest.class);
 		bind(OpcodeIn.WALK_TO_POINT.getOpcode(), WalkRequest.class);
@@ -119,7 +119,7 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER.getOpcode(), PlayerTradeHandler.class);
 
 		bind(OpcodeIn.SLEEPWORD_ENTERED.getOpcode(), SleepHandler.class);
-		bind(OpcodeIn.ON_TUTORIAL_ISLAND.getOpcode(), TutorialHandler.class);
+		bind(OpcodeIn.SKIP_TUTORIAL.getOpcode(), TutorialHandler.class);
 		bind(OpcodeIn.ON_BLACK_HOLE.getOpcode(), BlackHoleHandler.class);
 
 		bind(OpcodeIn.COMBAT_STYLE_CHANGED.getOpcode(), StyleHandler.class);
