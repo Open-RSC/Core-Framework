@@ -16615,7 +16615,12 @@ public final class mudclient implements Runnable {
 		} else if (skillGuideChosen.equalsIgnoreCase("Defense")) {
 			skillGuideChosenTabs.add("Armour");
 		} else if (skillGuideChosen.equalsIgnoreCase("Hits")) {
-			skillGuideChosenTabs.add("Food");
+			skillGuideChosenTabs.add("Fish");
+			skillGuideChosenTabs.add("Pies");
+			skillGuideChosenTabs.add("Produce");
+			skillGuideChosenTabs.add("Gnome Food");
+			skillGuideChosenTabs.add("Drinks");
+			skillGuideChosenTabs.add("Other");
 		} else if (skillGuideChosen.equalsIgnoreCase("Ranged")) {
 			skillGuideChosenTabs.add("Bows");
 			skillGuideChosenTabs.add("Crossbows");
