@@ -276,54 +276,118 @@ public final class SkillGuideInterface {
 		if (mc.getSkillGuideChosen().equals("Hits")) {
 			boolean harvesting = Config.S_WANT_HARVESTING && Config.S_WANT_CUSTOM_SPRITES;
 			boolean runecraft = Config.S_WANT_RUNECRAFT && Config.S_WANT_CUSTOM_SPRITES;
-			skillMenuEntries.add(new SkillMenuItem(193, "", "Beer - Heals 1"));
-			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1352, "", "Red Cabbage - Heals 1"));
-			if (runecraft) skillMenuEntries.add(new SkillMenuItem(1410, "", "Fish oil - 50% chance to heal 1"));
-			skillMenuEntries.add(new SkillMenuItem(350, "", "Shrimp - Heals 2"));
-			skillMenuEntries.add(new SkillMenuItem(352, "", "Anchovies - Heals 2"));
-			skillMenuEntries.add(new SkillMenuItem(249, "", "Banana - Heals 2"));
-			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1349, "", "grapefruit - Heals 2"));
-			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1359, "", "grapefruit slices - Heals 2"));
-			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1360, "", "Diced grapefruit - Heals 2"));
-			skillMenuEntries.add(new SkillMenuItem(132, "", "Cooked Meat - Heals 3"));
-			skillMenuEntries.add(new SkillMenuItem(355, "", "Sardine - Heals 4"));
-			skillMenuEntries.add(new SkillMenuItem(138, "", "Bread - Heals 4"));
-			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1348, "", "red apple - Heals 4"));
-			skillMenuEntries.add(new SkillMenuItem(362, "", "Herring - Heals 5"));
-			skillMenuEntries.add(new SkillMenuItem(718, "", "Giant Carp - Heals 6"));
-			skillMenuEntries.add(new SkillMenuItem(553, "", "Mackerel - Heals 6"));
-			skillMenuEntries.add(new SkillMenuItem(258, "", "Redberry Pie - Heals 6"));
-			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1353, "", "Corn - Heals 6"));
-			skillMenuEntries.add(new SkillMenuItem(359, "", "Trout - Heals 7"));
-			skillMenuEntries.add(new SkillMenuItem(551, "", "Cod - Heals 7"));
-			skillMenuEntries.add(new SkillMenuItem(364, "", "Pike - Heals 8"));
-			skillMenuEntries.add(new SkillMenuItem(259, "", "Meat Pie - Heals 8"));
-			skillMenuEntries.add(new SkillMenuItem(1269, "", "Oomlie Meat Parcel - Heals 8"));
-			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1350, "", "papaya - Heals 8"));
-			skillMenuEntries.add(new SkillMenuItem(357, "", "Salmon - Heals 9"));
-			skillMenuEntries.add(new SkillMenuItem(346, "", "Stew - Heals 9"));
-			skillMenuEntries.add(new SkillMenuItem(367, "", "Tuna - Heals 10"));
-			skillMenuEntries.add(new SkillMenuItem(325, "", "Plain Pizza - Heals 10"));
-			skillMenuEntries.add(new SkillMenuItem(257, "", "Apple Pie - Heals 10"));
-			if (harvesting) skillMenuEntries.add(new SkillMenuItem(1354, "", "White Pumpkin - Heals 10"));
-			skillMenuEntries.add(new SkillMenuItem(142, "", "Wine - Heals 11"));
-			skillMenuEntries.add(new SkillMenuItem(373, "", "Lobster - Heals 12"));
-			skillMenuEntries.add(new SkillMenuItem(330, "", "Cake - Heals 12"));
-			skillMenuEntries.add(new SkillMenuItem(555, "", "Bass - Heals 13"));
-			skillMenuEntries.add(new SkillMenuItem(370, "", "Swordfish - Heals 14"));
-			skillMenuEntries.add(new SkillMenuItem(590, "", "Lava Eel - Heals 14"));
-			skillMenuEntries.add(new SkillMenuItem(326, "", "Meat Pizza - Heals 14"));
-			skillMenuEntries.add(new SkillMenuItem(332, "", "Chocolate Cake - Heals 15"));
-			skillMenuEntries.add(new SkillMenuItem(327, "", "Anchovie Pizza - Heals 16"));
-			skillMenuEntries.add(new SkillMenuItem(709, "", "Curry - Heals 19"));
-			skillMenuEntries.add(new SkillMenuItem(1102, "", "Tasty Ugthanki Kebab - Heals 19"));
-			skillMenuEntries.add(new SkillMenuItem(546, "", "Shark - Heals 20"));
-			skillMenuEntries.add(new SkillMenuItem(750, "", "Pineapple Pizza - Heals 20"));
-			skillMenuEntries.add(new SkillMenuItem(1193, "", "Sea Turtle - Heals 20"));
-			skillMenuEntries.add(new SkillMenuItem(1191, "", "Manta Ray - Heals 20"));
-			/*if (Config.S_WANT_CUSTOM_SPRITES) {
-				skillMenuEntries.add(new SkillMenuItem(2319, "99", "Cape"));
-			}*/
+			boolean customSprites = Config.S_WANT_CUSTOM_SPRITES;
+			if (curTab == 0) { // Fish
+				skillMenuEntries.add(new SkillMenuItem(350, "", "Shrimp - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(352, "", "Anchovies - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(355, "", "Sardine - Heals 4"));
+				skillMenuEntries.add(new SkillMenuItem(362, "", "Herring - Heals 5"));
+				skillMenuEntries.add(new SkillMenuItem(718, "", "Giant Carp - Heals 6"));
+				skillMenuEntries.add(new SkillMenuItem(553, "", "Mackerel - Heals 6"));
+				skillMenuEntries.add(new SkillMenuItem(359, "", "Trout - Heals 7"));
+				skillMenuEntries.add(new SkillMenuItem(551, "", "Cod - Heals 7"));
+				skillMenuEntries.add(new SkillMenuItem(364, "", "Pike - Heals 8"));
+				skillMenuEntries.add(new SkillMenuItem(357, "", "Salmon - Heals 9"));
+				skillMenuEntries.add(new SkillMenuItem(367, "", "Tuna - Heals 10"));
+				skillMenuEntries.add(new SkillMenuItem(373, "", "Lobster - Heals 12"));
+				skillMenuEntries.add(new SkillMenuItem(555, "", "Bass - Heals 13"));
+				skillMenuEntries.add(new SkillMenuItem(370, "", "Swordfish - Heals 14"));
+				skillMenuEntries.add(new SkillMenuItem(590, "", "Lava Eel - Heals 14"));
+				skillMenuEntries.add(new SkillMenuItem(546, "", "Shark - Heals 20"));
+				skillMenuEntries.add(new SkillMenuItem(1193, "", "Sea Turtle - Heals 20"));
+				skillMenuEntries.add(new SkillMenuItem(1191, "", "Manta Ray - Heals 20"));
+			} else if (curTab == 1) { // Pies
+				skillMenuEntries.add(new SkillMenuItem(258, "", "Redberry Pie - Heals 6 (3 per slice)"));
+				skillMenuEntries.add(new SkillMenuItem(259, "", "Meat Pie - Heals 8 (4 per slice)"));
+				skillMenuEntries.add(new SkillMenuItem(257, "", "Apple Pie - Heals 10 (5 per slice)"));
+				skillMenuEntries.add(new SkillMenuItem(325, "", "Plain Pizza - Heals 11"));
+				skillMenuEntries.add(new SkillMenuItem(326, "", "Meat Pizza - Heals 14 (7 per slice)"));
+				skillMenuEntries.add(new SkillMenuItem(327, "", "Anchovie Pizza - Heals 16 (8 per slice)"));
+				skillMenuEntries.add(new SkillMenuItem(750, "", "Pineapple Pizza - Heals 20 (10 per slice)"));
+			} else if (curTab == 2) { // Produce
+				skillMenuEntries.add(new SkillMenuItem(18, "", "Cabbage - Heals 1"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1352, "", "Red Cabbage - Heals 1"));
+				skillMenuEntries.add(new SkillMenuItem(765, "", "Dwellberries - Heals 1"));
+				skillMenuEntries.add(new SkillMenuItem(855, "", "Lemon - Heals 1"));
+				skillMenuEntries.add(new SkillMenuItem(856, "", "Lemon slices - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(860, "", "Diced lemon - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(320, "", "Tomato - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(249, "", "Banana - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(857, "", "orange - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(858, "", "Orange slices - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(859, "", "Diced orange - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(748, "", "Fresh Pineapple - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(749, "", "Pineapple ring - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(862, "", "Pineapple chunks - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(936, "", "Jangerberries - Heals 2"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1349, "", "grapefruit - Heals 2"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1359, "", "grapefruit slices - Heals 2"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1360, "", "Diced grapefruit - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(1245, "", "Edible seaweed - Heals 4"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1348, "", "red apple - Heals 4"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1353, "", "Corn - Heals 6"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1350, "", "papaya - Heals 8"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1354, "", "White Pumpkin - Heals 10"));
+				skillMenuEntries.add(new SkillMenuItem(422, "", "Pumpkin - Heals 14"));
+			} else if (curTab == 3) { // Gnome Food
+				skillMenuEntries.add(new SkillMenuItem(897, "", "King worm - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(896, "", "Toad legs - Heals 3"));
+				skillMenuEntries.add(new SkillMenuItem(911, "", "Choc crunchies - Heals 7"));
+				skillMenuEntries.add(new SkillMenuItem(914, "", "Spice crunchies - Heals 7"));
+				skillMenuEntries.add(new SkillMenuItem(912, "", "Worm crunchies - Heals 8"));
+				skillMenuEntries.add(new SkillMenuItem(913, "", "Toad crunchies - Heals 8"));
+				skillMenuEntries.add(new SkillMenuItem(901, "", "Cheese and tomato batta - Heals 11"));
+				skillMenuEntries.add(new SkillMenuItem(905, "", "Fruit batta - Heals 11"));
+				skillMenuEntries.add(new SkillMenuItem(902, "", "Toad batta - Heals 11"));
+				skillMenuEntries.add(new SkillMenuItem(906, "", "Veg batta - Heals 11"));
+				skillMenuEntries.add(new SkillMenuItem(904, "", "Worm batta - Heals 11"));
+				skillMenuEntries.add(new SkillMenuItem(908, "", "Vegball - Heals 12"));
+				skillMenuEntries.add(new SkillMenuItem(909, "", "Worm hole - Heals 12"));
+				skillMenuEntries.add(new SkillMenuItem(907, "", "Chocolate bomb - Heals 15"));
+				skillMenuEntries.add(new SkillMenuItem(910, "", "Tangled toads legs - Heals 15"));
+			} else if (curTab == 4) { // Drinks
+				skillMenuEntries.add(new SkillMenuItem(193, "", "Beer - Heals 1"));
+				skillMenuEntries.add(new SkillMenuItem(269, "", "Dwarven Stout - Heals 1"));
+				skillMenuEntries.add(new SkillMenuItem(830, "", "Greenmans ale - Heals 1"));
+				skillMenuEntries.add(new SkillMenuItem(268, "", "Wizard's Mind Bomb - Heals 1"));
+				skillMenuEntries.add(new SkillMenuItem(267, "", "Asgarnian Ale - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(739, "", "Cup of tea - Heals 2-3"));
+				skillMenuEntries.add(new SkillMenuItem(598, "", "Grog - Heals 3"));
+				skillMenuEntries.add(new SkillMenuItem(870, "", "gin - Heals 4"));
+				skillMenuEntries.add(new SkillMenuItem(869, "", "vodka - Heals 4"));
+				skillMenuEntries.add(new SkillMenuItem(868, "", "Whisky - Heals 4"));
+				skillMenuEntries.add(new SkillMenuItem(770, "", "chocolaty milk - Heals 4"));
+				skillMenuEntries.add(new SkillMenuItem(876, "", "brandy - Heals 5"));
+				skillMenuEntries.add(new SkillMenuItem(877, "", "blurberry special - Heals 5"));
+				skillMenuEntries.add(new SkillMenuItem(875, "", "Chocolate saturday - Heals 5"));
+				skillMenuEntries.add(new SkillMenuItem(872, "", "Drunk dragon - Heals 5"));
+				skillMenuEntries.add(new SkillMenuItem(874, "", "SGG - Heals 5"));
+				skillMenuEntries.add(new SkillMenuItem(878, "", "wizard blizzard - Heals 5"));
+				skillMenuEntries.add(new SkillMenuItem(866, "", "fruit blast - Heals 8"));
+				skillMenuEntries.add(new SkillMenuItem(879, "", "pineapple punch - Heals 9"));
+				skillMenuEntries.add(new SkillMenuItem(142, "", "wine - Heals 11"));
+				skillMenuEntries.add(new SkillMenuItem(737, "", "Poison chalice - ???"));
+			} else if (curTab == 5) { // Other
+				if (runecraft) skillMenuEntries.add(new SkillMenuItem(1410, "", "Fish oil - 50% chance to heal 1"));
+				skillMenuEntries.add(new SkillMenuItem(319, "", "Cheese - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(179, "", "spinach roll - Heals 2"));
+				if (customSprites) skillMenuEntries.add(new SkillMenuItem(1417, "", "Pizza Bagel - Heals 2"));
+				skillMenuEntries.add(new SkillMenuItem(132, "", "cookedmeat - Heals 3"));
+				skillMenuEntries.add(new SkillMenuItem(337, "", "Chocolate Bar - Heals 3"));
+				skillMenuEntries.add(new SkillMenuItem(138, "", "Bread - Heals 4"));
+				skillMenuEntries.add(new SkillMenuItem(1269, "", "Oomlie meat Parcel - Heals 8"));
+				skillMenuEntries.add(new SkillMenuItem(346, "", "Stew - Heals 9"));
+				skillMenuEntries.add(new SkillMenuItem(677, "", "Easter egg - Heals 12"));
+				skillMenuEntries.add(new SkillMenuItem(330, "", "Cake - Heals 12 (4 per slice)"));
+				skillMenuEntries.add(new SkillMenuItem(332, "", "Chocolate Cake - Heals 15 (5 per slice)"));
+				skillMenuEntries.add(new SkillMenuItem(709, "", "Curry - Heals 19"));
+				skillMenuEntries.add(new SkillMenuItem(1102, "", "Tasty Ugthanki Kebab - Heals 19"));
+				skillMenuEntries.add(new SkillMenuItem(210, "", "Kebab - ???"));
+				skillMenuEntries.add(new SkillMenuItem(923, "", "Ugthanki Kebab - ???"));
+				/*if (Config.S_WANT_CUSTOM_SPRITES) {
+					skillMenuEntries.add(new SkillMenuItem(2319, "99", "Cape"));
+				}*/
+			}
 		}
 		if (mc.getSkillGuideChosen().equals("Ranged")) {
 			if (curTab == 0) {
