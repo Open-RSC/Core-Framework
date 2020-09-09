@@ -2020,11 +2020,11 @@ public class EntityHandler {
 		sprites = new int[]{5, 1, 2, -1, 49, 70, 22, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Rowdy Guard", "He looks as if he's spoiling for trouble", "", 48, 60, 60, 32, true, sprites, 1, 11379585, 14858776, 11766848, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, 49, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Shantay Pass Guard", "He seems to be guarding the Shantay Pass", shopOption, 32, 32, 32, 32, true, sprites, 1, 11379585, 8421376, 11766848, 145, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Shantay Pass Guard", "He seems to be guarding the Shantay Pass", "", 32, 32, 32, 32, true, sprites, 1, 11379585, 8421376, 11766848, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, -1, -1, 213, 214, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Rowdy Slave", "A slave who's looking for trouble.", "", 17, 15, 16, 18, true, sprites, 16777130, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, i++));
 		sprites = new int[]{5, 1, 2, -1, 49, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Shantay Pass Guard", "He seems to be guarding the Shantay Pass", shopOption, 32, 32, 32, 32, false, sprites, 1, 11379585, 8421376, 11766848, 145, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Shantay Pass Guard", "He seems to be guarding the Shantay Pass", "", 32, 32, 32, 32, false, sprites, 1, 11379585, 8421376, 11766848, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
 		npcs.add(new NPCDef("Assistant", "He is an assistant to Shantay and helps him to run the pass.", shopOption, 0, 0, 3, 0, false, sprites, 1, 8409120, 8409120, 15523536, 120, 220, 6, 6, 5, i++));
 		sprites = new int[]{216, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
