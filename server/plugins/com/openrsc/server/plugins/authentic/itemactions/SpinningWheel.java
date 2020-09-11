@@ -84,11 +84,11 @@ public class SpinningWheel implements UseLocTrigger {
 		player.message(resultString);
 		player.getCarriedItems().getInventory().add(new Item(resultCatalogID, 1));
 		player.incExp(Skills.CRAFTING, experience, true);
-		delay();
 
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
+			delay();
 			batchSpin(player, item, resultString, resultCatalogID, requiredLevel, experience);
 		}
 	}
