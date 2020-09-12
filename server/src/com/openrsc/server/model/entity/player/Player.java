@@ -365,6 +365,8 @@ public final class Player extends Mob {
 		playerSettings = new PlayerSettings(this);
 		social = new Social(this);
 		prayers = new Prayers(this);
+
+		bankSize = getConfig().WANT_CUSTOM_BANKS ? 240 : 192;
 	}
 
 	public int getIronMan() {

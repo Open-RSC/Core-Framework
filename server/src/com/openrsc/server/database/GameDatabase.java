@@ -788,7 +788,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_MOUSE_BUTTONS, playerData.oneMouse);
 		player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_SOUND_EFFECTS, playerData.soundOff);
 
-		player.setBankSize(playerData.bankSize);
+		//player.setBankSize(playerData.bankSize);
 
 		PlayerAppearance pa = new PlayerAppearance(
 			playerData.hairColour,
