@@ -328,7 +328,6 @@ public final class SkillGuideInterface {
 				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1353, "", "Corn - Heals 6"));
 				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1350, "", "papaya - Heals 8"));
 				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1354, "", "White Pumpkin - Heals 10"));
-				skillMenuEntries.add(new SkillMenuItem(422, "", "Pumpkin - Heals 14"));
 			} else if (curTab == 3) { // Gnome Food
 				skillMenuEntries.add(new SkillMenuItem(897, "", "King worm - Heals 2"));
 				skillMenuEntries.add(new SkillMenuItem(896, "", "Toad legs - Heals 3"));
@@ -379,6 +378,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(346, "", "Stew - Heals 9"));
 				skillMenuEntries.add(new SkillMenuItem(677, "", "Easter egg - Heals 12"));
 				skillMenuEntries.add(new SkillMenuItem(330, "", "Cake - Heals 12 (4 per slice)"));
+				skillMenuEntries.add(new SkillMenuItem(422, "", "Pumpkin - Heals 14"));
 				skillMenuEntries.add(new SkillMenuItem(332, "", "Chocolate Cake - Heals 15 (5 per slice)"));
 				skillMenuEntries.add(new SkillMenuItem(709, "", "Curry - Heals 19"));
 				skillMenuEntries.add(new SkillMenuItem(1102, "", "Tasty Ugthanki Kebab - Heals 19"));
