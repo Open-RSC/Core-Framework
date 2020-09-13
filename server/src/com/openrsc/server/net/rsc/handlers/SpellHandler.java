@@ -998,7 +998,7 @@ public class SpellHandler implements PacketHandler {
 		}
 
 		// Do not cast if the mob is too far away and we are already in a fight.
-		if (!player.withinRange(affectedMob) && player.inCombat()) return;
+		if (!player.withinRange(affectedMob, 4) && player.inCombat()) return;
 
 		player.setFollowing(affectedMob);
 		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4, false) {
@@ -1046,6 +1046,7 @@ public class SpellHandler implements PacketHandler {
 						return;
 					}
 				}
+				boolean setChasing = true;
 				if (affectedMob.isNpc()) {
 					Npc n = (Npc) affectedMob;
 					if (n.getID() == NpcId.DRAGON.id() || n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
@@ -1070,6 +1071,11 @@ public class SpellHandler implements PacketHandler {
 							int newLevel = getCurrentLevel(getPlayer(), Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayer());
 							getPlayer().getSkills().setLevel(Skills.RANGED, newLevel);
 						}
+					} else if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
+						NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id(), NpcId.BATTLE_MAGE_GUTHIX.id(),
+						NpcId.BATTLE_MAGE_ZAMORAK.id(), NpcId.BATTLE_MAGE_SARADOMIN.id()) && getPlayer().getLocation().inMageArena()) {
+						setChasing = false;
+						getPlayer().setAttribute("maged_kolodion", true);
 					}
 
 				}
@@ -1125,7 +1131,7 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 						final int stat = affectsStat;
-						getPlayer().getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, 1) {
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, 1, setChasing) {
 							@Override
 							public void doSpell() {
 								affectedMob.getSkills().setLevel(stat, newStat);
@@ -1153,7 +1159,7 @@ public class SpellHandler implements PacketHandler {
 						if (DataConversions.random(0, 8) == 2)
 							damaga = 0;
 
-						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damaga, 1));
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damaga, 1, setChasing));
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						return;
 
@@ -1179,7 +1185,7 @@ public class SpellHandler implements PacketHandler {
 							int casts = getPlayer().getCache().getInt(spell.getName() + "_casts");
 							getPlayer().getCache().set(spell.getName() + "_casts", casts - 1);
 						}
-						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateIbanSpellDamage(), 1));
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateIbanSpellDamage(), 1, setChasing));
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
 					case 33: // Guthix cast
@@ -1234,7 +1240,7 @@ public class SpellHandler implements PacketHandler {
 						if (affectedMob.getRegion().getGameObject(affectedMob.getX(), affectedMob.getY(), getPlayer()) == null) {
 							godSpellObject(getPlayer(), affectedMob, spellID);
 						}
-						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateGodSpellDamage(getPlayer()), 1));
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateGodSpellDamage(getPlayer()), 1, setChasing));
 
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
@@ -1312,7 +1318,7 @@ public class SpellHandler implements PacketHandler {
 
 						int damage = CombatFormula.calculateMagicDamage(max + 1) - 1;
 
-						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damage, 1));
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damage, 1, setChasing));
 						getPlayer().setKillType(1);
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
