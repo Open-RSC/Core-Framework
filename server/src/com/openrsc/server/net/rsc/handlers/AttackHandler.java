@@ -11,6 +11,8 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 
+import static com.openrsc.server.plugins.Functions.inArray;
+
 public class AttackHandler implements PacketHandler {
 	public void handlePacket(Packet packet, Player player) throws Exception {
 		int pID = packet.getID();
@@ -71,6 +73,10 @@ public class AttackHandler implements PacketHandler {
 					player.message("these ogres are for range combat training only");
 					return;
 				}
+			} else if (inArray(n.getID(), NpcId.BATTLE_MAGE_GUTHIX.id(), NpcId.BATTLE_MAGE_ZAMORAK.id(), NpcId.BATTLE_MAGE_SARADOMIN.id())
+				&& (!player.getCache().hasKey("mage_arena") || player.getCache().getInt("mage_arena") < 2)) {
+				player.message("you are not yet ready to fight the battle mages");
+				return;
 			}
 		}
 

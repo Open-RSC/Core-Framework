@@ -8,14 +8,18 @@ import com.openrsc.server.model.world.World;
 public abstract class CustomProjectileEvent extends ProjectileEvent {
 
 	protected CustomProjectileEvent(World world, Mob caster, Mob opponent, int type) {
-		super(world, caster, opponent, 0, type);
+		this(world, caster, opponent, type, true);
+	}
+
+	protected CustomProjectileEvent(World world, Mob caster, Mob opponent, int type, boolean setChasing) {
+		super(world, caster, opponent, 0, type, setChasing);
 	}
 
 	@Override
 	public void action() {
 		if (!canceled) {
 			doSpell();
-			if (opponent.isNpc() && caster.isPlayer())
+			if (opponent.isNpc() && caster.isPlayer() && this.shouldChase)
 				((Npc) opponent).setChasing((Player) caster);
 		}
 	}
