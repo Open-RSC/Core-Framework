@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -76,7 +77,7 @@ public class Fishing implements OpLocTrigger {
 			return;
 		}
 		final int netId = def.getNetId();
-		if (player.getCarriedItems().getInventory().countId(netId) <= 0) {
+		if (player.getCarriedItems().getInventory().countId(netId, Optional.of(false)) <= 0) {
 			player.playerServerMessage(MessageType.QUEST,
 				"You need a "
 					+ player.getWorld().getServer().getEntityHandler()
@@ -91,7 +92,7 @@ public class Fishing implements OpLocTrigger {
 		}
 		final int baitId = def.getBaitId();
 		if (baitId >= 0) {
-			if (player.getCarriedItems().getInventory().countId(baitId) <= 0) {
+			if (player.getCarriedItems().getInventory().countId(baitId, Optional.of(false)) <= 0) {
 				player.playerServerMessage(MessageType.QUEST,
 					"You don't have any " + player.getWorld().getServer().getEntityHandler().getItemDef(baitId).getName().toLowerCase() + " left");
 				return;
@@ -123,7 +124,7 @@ public class Fishing implements OpLocTrigger {
 		}
 		final int baitId = def.getBaitId();
 		if (baitId >= 0) {
-			if (player.getCarriedItems().getInventory().countId(baitId) <= 0) {
+			if (player.getCarriedItems().getInventory().countId(baitId, Optional.of(false)) <= 0) {
 				player.playerServerMessage(MessageType.QUEST, "You don't have any " + player.getWorld().getServer().getEntityHandler().getItemDef(baitId).getName().toLowerCase()
 					+ " left");
 				return;
@@ -143,7 +144,7 @@ public class Fishing implements OpLocTrigger {
 				return;
 			} else {
 				if (baitId >= 0) {
-					int idx = player.getCarriedItems().getInventory().getLastIndexById(baitId);
+					int idx = player.getCarriedItems().getInventory().getLastIndexById(baitId, Optional.of(false));
 					Item bait = player.getCarriedItems().getInventory().get(idx);
 					if (bait == null) return;
 					player.getCarriedItems().remove(new Item(bait.getCatalogId(), 1, false, bait.getItemId()));
