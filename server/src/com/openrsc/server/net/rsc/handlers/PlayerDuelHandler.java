@@ -156,9 +156,7 @@ public class PlayerDuelHandler implements PacketHandler {
 				affectedPlayer = player.getDuel().getDuelRecipient();
 				if (affectedPlayer == null || busy(affectedPlayer) || !player.getDuel().isDuelActive()
 					|| !affectedPlayer.getDuel().isDuelActive() || !player.getDuel().isDuelAccepted()
-					|| !affectedPlayer.getDuel().isDuelAccepted()) { // This
-					// shouldn't
-					// happen
+					|| !affectedPlayer.getDuel().isDuelAccepted()) { // This shouldn't happen
 					player.setSuspiciousPlayer(true, "duel confirmed null or busy player");
 					player.getDuel().resetAll();
 					return;

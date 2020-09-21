@@ -26,7 +26,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			return;
 		}
 
-		int pID = packet.getID();
+		int packetID = packet.getID();
 		final Shop shop = player.getShop();
 		if (shop == null) {
 			player.setSuspiciousPlayer(true, "shop is null");
@@ -38,11 +38,12 @@ public final class InterfaceShopHandler implements PacketHandler {
 		int buyItem = OpcodeIn.SHOP_BUY.getOpcode();
 		int sellItem = OpcodeIn.SHOP_SELL.getOpcode();
 
-		if (pID == closeShop) { // Close shop
+		if (packetID == closeShop) { // Close shop
 			player.resetShop();
 			return;
 		}
 		int catalogID = packet.readShort();
+		// TODO: there should probably be a sanity check here to make sure the client is in sync and selling/buying at the agreed-on price
 		int shopAmount = packet.readUnsignedShort();
 		int amount = packet.readUnsignedShort();
 
@@ -62,12 +63,12 @@ public final class InterfaceShopHandler implements PacketHandler {
 		}
 
 		// Buy item
-		if (pID == buyItem) {
+		if (packetID == buyItem) {
 			buyShopItem(player, shop, def, catalogID, amount);
 		}
 
 		// Sell item
-		else if (pID == sellItem) {
+		else if (packetID == sellItem) {
 			sellShopItem(player, shop, def, catalogID, amount);
 		}
 	}

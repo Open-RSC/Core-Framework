@@ -35,6 +35,8 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.*;
 import java.util.Map.Entry;
 
+import static com.openrsc.server.net.rsc.OpcodeIn.CAST_ON_SELF;
+import static com.openrsc.server.net.rsc.OpcodeIn.PLAYER_CAST_SPELL;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class SpellHandler implements PacketHandler {
@@ -119,35 +121,19 @@ public class SpellHandler implements PacketHandler {
 		return items;
 	}
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
-
-		if ((player.isBusy() && !player.inCombat()) || player.isRanging()) {
-			return;
-		}
-		if (!canCast(player)) {
-			return;
-		}
-		int pID = packet.getID();
-		int CAST_ON_SELF = OpcodeIn.CAST_ON_SELF.getOpcode();
-		int CAST_ON_PLAYER = OpcodeIn.PLAYER_CAST_SPELL.getOpcode();
-		int CAST_ON_NPC = OpcodeIn.NPC_CAST_SPELL.getOpcode();
-		int CAST_ON_INV_ITEM = OpcodeIn.ITEM_CAST_SPELL.getOpcode();
-		int CAST_ON_DOOR = OpcodeIn.WALL_OBJECT_CAST.getOpcode();
-		int CAST_ON_GAME_OBJECT = OpcodeIn.OBJECT_CAST.getOpcode();
-		int CAST_ON_GROUNDITEM = OpcodeIn.GROUND_ITEM_CAST_SPELL.getOpcode();
-		int CAST_ON_LAND = OpcodeIn.CAST_ON_LAND.getOpcode();
-
-		player.resetAllExceptDueling();
-		int idx = packet.readShort();
-		if (idx < 0 || idx >= 49) {
+	// Check all prohibiting factors that would prevent spell from being cast
+	// If all good, return correct spell
+	private SpellDef spellSanityChecks(int spellIdx, Player player, OpcodeIn opcode) {
+		if (spellIdx < 0 || spellIdx >= 49) {
 			player.setSuspiciousPlayer(true, "idx < 0 or idx >= 49");
-			return;
+			return null;
 		}
-		SpellDef spell = player.getWorld().getServer().getEntityHandler().getSpellDef(idx);
+
+		SpellDef spell = player.getWorld().getServer().getEntityHandler().getSpellDef(spellIdx);
 		if (spell.isMembers() && !player.getConfig().MEMBER_WORLD) {
 			player.message("You need to login to a members world to use this spell");
 			player.resetPath();
-			return;
+			return null;
 		}
 
 		// Services.lookup(DatabaseManager.class).addQuery(new
@@ -159,137 +145,166 @@ public class SpellHandler implements PacketHandler {
 			player.setSuspiciousPlayer(true, "player magic ability not high enough");
 			player.message("Your magic ability is not high enough for this spell.");
 			player.resetPath();
-			return;
+			return null;
 		}
 
 		// Ensure player is allowed to teleport.
-		if (pID == CAST_ON_SELF && spell.getSpellType() == 0 && !canTeleport(player, spell, idx)) {
-			return;
+		if (opcode == CAST_ON_SELF && spell.getSpellType() == 0 && !canTeleport(player, spell, spellIdx)) {
+			return null;
 		}
 
 		// You can't cast on things other than your opponent, while in a duel.
-		if (pID != CAST_ON_PLAYER && player.getDuel().isDuelActive()) {
+		if (opcode != PLAYER_CAST_SPELL && player.getDuel().isDuelActive()) {
 			player.message("You can't do that during a duel!");
-			return;
+			return null;
 		}
 
+		return spell;
+	}
+
+	private boolean spellSuccessCheck(Player player, SpellDef spell) {
 		// Check for failed spell.
 		if (!Formulae.castSpell(spell, player.getSkills().getLevel(Skills.MAGIC), player.getMagicPoints())) {
 			player.message("The spell fails! You may try again in 20 seconds");
 			player.playSound("spellfail");
 			player.setSpellFail();
 			player.resetPath();
+			return false;
+		}
+		return true;
+	}
+
+	public void handlePacket(Packet packet, Player player) throws Exception {
+
+		if ((player.isBusy() && !player.inCombat()) || player.isRanging()) {
+			return;
+		}
+		if (!canCast(player)) {
 			return;
 		}
 
-		// Cast on self
-		if (pID == CAST_ON_SELF) {
-			if (spell.getSpellType() == 0) {
-				handleTeleport(player, spell, idx);
-				return;
-			}
-			handleGroundCast(player, spell, idx);
-		}
+		OpcodeIn opcode = OpcodeIn.getFromList(packet.getID(),
+			CAST_ON_SELF, OpcodeIn.PLAYER_CAST_SPELL,
+			OpcodeIn.NPC_CAST_SPELL, OpcodeIn.ITEM_CAST_SPELL,
+			OpcodeIn.WALL_OBJECT_CAST, OpcodeIn.OBJECT_CAST,
+			OpcodeIn.GROUND_ITEM_CAST_SPELL, OpcodeIn.CAST_ON_LAND);
 
-		// Cast on player
-		else if (pID == CAST_ON_PLAYER) {
-			if (spell.getSpellType() == 1 || spell.getSpellType() == 2) {
-				Player affectedPlayer = player.getWorld().getPlayer(packet.readShort());
-				if (affectedPlayer == null) {
-					player.resetPath();
-					return;
-				}
+		if (opcode == null)
+			return;
 
-				if (checkCastOnPlayer(player, affectedPlayer, idx)) return;
+		player.resetAllExceptDueling();
 
-				handleMobCast(player, affectedPlayer, idx);
-			}
-		}
+		if (player.isUsingAuthenticClient()) {
+			player.message("Authentic spells not implemented yet...!");
 
-		// Cast on Npc
-		else if (pID == CAST_ON_NPC) {
-			if (spell.getSpellType() == 2) {
-				Npc affectedNpc = player.getWorld().getNpc(packet.readShort());
-				if (affectedNpc == null) {
-					player.resetPath();
-					return;
-				}
+		} else {
+			int idx = packet.readShort();
 
-				if (checkCastOnNpc(player, affectedNpc, spell)) return;
-
-				handleMobCast(player, affectedNpc, idx);
-			}
-		}
-
-		// Cast on Inventory Item
-		else if (pID == CAST_ON_INV_ITEM) {
-			// Have to throw in ugly exceptions for curse and enfeeble
-			boolean runecraft = player.getConfig().WANT_RUNECRAFT;
-			int curse = 9;
-			int enfeeble = 44;
-
-			if (spell.getSpellType() == 3
-				|| (runecraft && (idx == curse || idx == enfeeble))) {
-
-				int invIndex = packet.readShort();
-				Item item = player.getCarriedItems().getInventory().get(invIndex);
-				if (item == null) {
-					player.resetPath();
-					return;
-				}
-
-				// Swap these lines to allow alchemy on notes.
-				/*if ((idx == 10 || idx == 28) && item.getNoted()) {*/
-				if (item.getNoted()) {
-					player.message("Nothing interesting happens");
-					return;
-				}
-
-				// Attempt to find a spell in a plugin, otherwise use this file.
-				if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellInv",
-						new Object[]{player, invIndex, item.getCatalogId(), idx})) {
-					return;
-				}
-				handleItemCast(player, spell, idx, item);
-			}
-		}
-
-		// Cast on door
-		else if (pID == CAST_ON_DOOR) {
-			player.message("@or1@This type of spell is not yet implemented.");
-		}
-
-		// Cast on game object
-		else if (pID == CAST_ON_GAME_OBJECT) {
-			int objectX = packet.readShort();
-			int objectY = packet.readShort();
-			GameObject gameObject = player.getViewArea().getGameObject(Point.location(objectX, objectY));
-			if (gameObject == null) {
+			SpellDef spell = spellSanityChecks(idx, player, opcode);
+			if (spell == null) {
 				return;
 			}
 
-			if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellLoc",
-				new Object[]{player, gameObject, spell})) {
+			if (!spellSuccessCheck(player, spell)) {
 				return;
 			}
 
-			handleChargeOrb(player, gameObject, idx, spell);
-		}
+			switch (opcode) {
+				case CAST_ON_SELF:
+					if (spell.getSpellType() == 0) {
+						handleTeleport(player, spell, idx);
+						return;
+					}
+					handleGroundCast(player, spell, idx);
+					break;
+				case PLAYER_CAST_SPELL:
+					if (spell.getSpellType() == 1 || spell.getSpellType() == 2) {
+						Player affectedPlayer = player.getWorld().getPlayer(packet.readShort());
+						if (affectedPlayer == null) {
+							player.resetPath();
+							return;
+						}
 
-		// Cast on ground item
-		else if (pID == CAST_ON_GROUNDITEM) {
-			Point location = Point.location(packet.readShort(), packet.readShort());
-			int itemId = packet.readShort();
-			GroundItem affectedItem = player.getViewArea().getGroundItem(itemId, location);
-			if (affectedItem == null) {
-				return;
+						if (checkCastOnPlayer(player, affectedPlayer, idx)) return;
+
+						handleMobCast(player, affectedPlayer, idx);
+					}
+					break;
+				case NPC_CAST_SPELL:
+					if (spell.getSpellType() == 2) {
+						Npc affectedNpc = player.getWorld().getNpc(packet.readShort());
+						if (affectedNpc == null) {
+							player.resetPath();
+							return;
+						}
+
+						if (checkCastOnNpc(player, affectedNpc, spell)) return;
+
+						handleMobCast(player, affectedNpc, idx);
+					}
+					break;
+				case ITEM_CAST_SPELL:
+					// Have to throw in ugly exceptions for curse and enfeeble
+					boolean runecraft = player.getConfig().WANT_RUNECRAFT;
+					int curse = 9;
+					int enfeeble = 44;
+
+					if (spell.getSpellType() == 3
+						|| (runecraft && (idx == curse || idx == enfeeble))) {
+
+						int invIndex = packet.readShort();
+						Item item = player.getCarriedItems().getInventory().get(invIndex);
+						if (item == null) {
+							player.resetPath();
+							return;
+						}
+
+						// Swap these lines to allow alchemy on notes.
+						/*if ((idx == 10 || idx == 28) && item.getNoted()) {*/
+						if (item.getNoted()) {
+							player.message("Nothing interesting happens");
+							return;
+						}
+
+						// Attempt to find a spell in a plugin, otherwise use this file.
+						if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellInv",
+							new Object[]{player, invIndex, item.getCatalogId(), idx})) {
+							return;
+						}
+						handleItemCast(player, spell, idx, item);
+					}
+					break;
+				case WALL_OBJECT_CAST:
+					player.message("@or1@This type of spell is not yet implemented.");
+					break;
+				case OBJECT_CAST:
+					int objectX = packet.readShort();
+					int objectY = packet.readShort();
+					GameObject gameObject = player.getViewArea().getGameObject(Point.location(objectX, objectY));
+					if (gameObject == null) {
+						return;
+					}
+
+					if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellLoc",
+						new Object[]{player, gameObject, spell})) {
+						return;
+					}
+
+					handleChargeOrb(player, gameObject, idx, spell);
+					break;
+				case GROUND_ITEM_CAST_SPELL:
+					Point location = Point.location(packet.readShort(), packet.readShort());
+					int itemId = packet.readShort();
+					GroundItem affectedItem = player.getViewArea().getGroundItem(itemId, location);
+					if (affectedItem == null) {
+						return;
+					}
+					handleItemCast(player, spell, idx, affectedItem);
+					break;
+				case CAST_ON_LAND:
+					handleGroundCast(player, spell, idx);
+
 			}
-			handleItemCast(player, spell, idx, affectedItem);
-		}
-
-		// Cast on location
-		else if (pID == CAST_ON_LAND) {
-			handleGroundCast(player, spell, idx);
 		}
 	}
 
