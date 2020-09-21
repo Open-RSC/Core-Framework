@@ -31,12 +31,14 @@ import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.Map.Entry;
 
 import static com.openrsc.server.net.rsc.OpcodeIn.CAST_ON_SELF;
-import static com.openrsc.server.net.rsc.OpcodeIn.PLAYER_CAST_SPELL;
+import static com.openrsc.server.net.rsc.OpcodeIn.PLAYER_CAST_PVP;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class SpellHandler implements PacketHandler {
@@ -47,6 +49,11 @@ public class SpellHandler implements PacketHandler {
 	private static final String NECKLACE = "necklace";
 	private static final String DEFAULT = "";
 	private static final int[] elementalRunes = new int[4];
+
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	static {
 		staffs.put(ItemId.FIRE_RUNE.id(), new Item[]{new Item(ItemId.STAFF_OF_FIRE.id()), new Item(ItemId.BATTLESTAFF_OF_FIRE.id()), new Item(ItemId.ENCHANTED_BATTLESTAFF_OF_FIRE.id())}); // Fire-Rune
@@ -154,7 +161,7 @@ public class SpellHandler implements PacketHandler {
 		}
 
 		// You can't cast on things other than your opponent, while in a duel.
-		if (opcode != PLAYER_CAST_SPELL && player.getDuel().isDuelActive()) {
+		if (opcode != PLAYER_CAST_PVP && player.getDuel().isDuelActive()) {
 			player.message("You can't do that during a duel!");
 			return null;
 		}
@@ -184,10 +191,10 @@ public class SpellHandler implements PacketHandler {
 		}
 
 		OpcodeIn opcode = OpcodeIn.getFromList(packet.getID(),
-			CAST_ON_SELF, OpcodeIn.PLAYER_CAST_SPELL,
-			OpcodeIn.NPC_CAST_SPELL, OpcodeIn.ITEM_CAST_SPELL,
-			OpcodeIn.WALL_OBJECT_CAST, OpcodeIn.OBJECT_CAST,
-			OpcodeIn.GROUND_ITEM_CAST_SPELL, OpcodeIn.CAST_ON_LAND);
+			CAST_ON_SELF, OpcodeIn.PLAYER_CAST_PVP,
+			OpcodeIn.CAST_ON_NPC, OpcodeIn.CAST_ON_INVENTORY_ITEM,
+			OpcodeIn.CAST_ON_BOUNDARY, OpcodeIn.CAST_ON_SCENERY,
+			OpcodeIn.CAST_ON_GROUND_ITEM, OpcodeIn.CAST_ON_LAND);
 
 		if (opcode == null)
 			return;
@@ -195,9 +202,191 @@ public class SpellHandler implements PacketHandler {
 		player.resetAllExceptDueling();
 
 		if (player.isUsingAuthenticClient()) {
-			player.message("Authentic spells not implemented yet...!");
+			int idx;
+			SpellDef spell;
+
+			switch (opcode) {
+				case CAST_ON_SELF:
+					idx = packet.readShort();
+					spell = spellSanityChecks(idx, player, opcode);
+					if (spell == null) {
+						return;
+					}
+					if (!spellSuccessCheck(player, spell)) {
+						return;
+					}
+
+					if (spell.getSpellType() == 0) {
+						handleTeleport(player, spell, idx);
+						return;
+					}
+					handleGroundCast(player, spell, idx);
+					break;
+				case PLAYER_CAST_PVP:
+					Player affectedPlayer = player.getWorld().getPlayer(packet.readShort());
+
+					idx = packet.readShort();
+					spell = spellSanityChecks(idx, player, opcode);
+					if (spell == null) {
+						return;
+					}
+					if (!spellSuccessCheck(player, spell)) {
+						return;
+					}
+
+					if (spell.getSpellType() == 1 || spell.getSpellType() == 2) {
+
+						if (affectedPlayer == null) {
+							player.resetPath();
+							return;
+						}
+
+						if (checkCastOnPlayer(player, affectedPlayer, idx)) return;
+
+						handleMobCast(player, affectedPlayer, idx);
+					}
+					break;
+				case CAST_ON_NPC:
+					Npc affectedNpc = player.getWorld().getNpc(packet.readShort());
+
+					idx = packet.readShort();
+					spell = spellSanityChecks(idx, player, opcode);
+					if (spell == null) {
+						return;
+					}
+					if (!spellSuccessCheck(player, spell)) {
+						return;
+					}
+
+					if (spell.getSpellType() == 2) {
+
+						if (affectedNpc == null) {
+							player.resetPath();
+							return;
+						}
+
+						if (checkCastOnNpc(player, affectedNpc, spell)) return;
+
+						handleMobCast(player, affectedNpc, idx);
+					}
+					break;
+				case CAST_ON_INVENTORY_ITEM:
+					// Have to throw in ugly exceptions for curse and enfeeble
+					boolean runecraft = player.getConfig().WANT_RUNECRAFT;
+					int curse = 9;
+					int enfeeble = 44;
+
+					int invIndex = packet.readShort();
+					Item item = player.getCarriedItems().getInventory().get(invIndex);
+
+					idx = packet.readShort();
+					spell = spellSanityChecks(idx, player, opcode);
+					if (spell == null) {
+						return;
+					}
+					if (!spellSuccessCheck(player, spell)) {
+						return;
+					}
+
+					if (spell.getSpellType() == 3
+						|| (runecraft && (idx == curse || idx == enfeeble))) {
+
+						if (item == null) {
+							player.resetPath();
+							return;
+						}
+
+						// Swap these lines to allow alchemy on notes.
+						/*if ((idx == 10 || idx == 28) && item.getNoted()) {*/
+						if (item.getNoted()) {
+							player.message("Nothing interesting happens");
+							return;
+						}
+
+						// Attempt to find a spell in a plugin, otherwise use this file.
+						if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellInv",
+							new Object[]{player, invIndex, item.getCatalogId(), idx})) {
+							return;
+						}
+						handleItemCast(player, spell, idx, item);
+					}
+					break;
+				case CAST_ON_BOUNDARY:
+					/* TODO:
+					  -- 180c -- CLIENT_OPCODE_CAST_ON_BOUNDARY
+					  elseif (clientOpcodeValue == 180) then
+						-- standalone, doesn't require data from other opcodes
+						opcodeField:add(clientCastOnBoundaryXCoord, buffer(1, 2))
+						opcodeField:add(clientCastOnBoundaryYCoord, buffer(3, 2))
+						opcodeField:add(clientCastOnBoundaryAlignment, buffer(5, 1))
+						local spellField = opcodeField:add(clientCastOnGroundSpell, buffer(6, 2))
+					 */
+					player.message("@or1@This type of spell is not yet implemented.");
+					break;
+				case CAST_ON_SCENERY:
+					int objectX = packet.readShort();
+					int objectY = packet.readShort();
+
+					idx = packet.readShort();
+					spell = spellSanityChecks(idx, player, opcode);
+					if (spell == null) {
+						return;
+					}
+					if (!spellSuccessCheck(player, spell)) {
+						return;
+					}
+
+					GameObject gameObject = player.getViewArea().getGameObject(Point.location(objectX, objectY));
+					if (gameObject == null) {
+						return;
+					}
+
+					if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellLoc",
+						new Object[]{player, gameObject, spell})) {
+						return;
+					}
+
+					handleChargeOrb(player, gameObject, idx, spell);
+					break;
+				case CAST_ON_GROUND_ITEM:
+					Point location = Point.location(packet.readShort(), packet.readShort());
+					int itemId = packet.readShort();
+
+					idx = packet.readShort();
+					spell = spellSanityChecks(idx, player, opcode);
+					if (spell == null) {
+						return;
+					}
+					if (!spellSuccessCheck(player, spell)) {
+						return;
+					}
+
+					GroundItem affectedItem = player.getViewArea().getGroundItem(itemId, location);
+					if (affectedItem == null) {
+						return;
+					}
+					handleItemCast(player, spell, idx, affectedItem);
+					break;
+				case CAST_ON_LAND:
+					Point locationLand = Point.location(packet.readShort(), packet.readShort());
+					idx = packet.readShort();
+					spell = spellSanityChecks(idx, player, opcode);
+					if (spell == null) {
+						return;
+					}
+					if (!spellSuccessCheck(player, spell)) {
+						return;
+					}
+
+					handleGroundCast(player, spell, idx);
+					break;
+				default:
+					LOGGER.error("Wrong OPCODE passed to Spell Handler.");
+					break;
+			}
 
 		} else {
+			// Inauthentic client conveniently places Spell ID at the front for all Spell related packets.
 			int idx = packet.readShort();
 
 			SpellDef spell = spellSanityChecks(idx, player, opcode);
@@ -217,7 +406,7 @@ public class SpellHandler implements PacketHandler {
 					}
 					handleGroundCast(player, spell, idx);
 					break;
-				case PLAYER_CAST_SPELL:
+				case PLAYER_CAST_PVP:
 					if (spell.getSpellType() == 1 || spell.getSpellType() == 2) {
 						Player affectedPlayer = player.getWorld().getPlayer(packet.readShort());
 						if (affectedPlayer == null) {
@@ -230,7 +419,7 @@ public class SpellHandler implements PacketHandler {
 						handleMobCast(player, affectedPlayer, idx);
 					}
 					break;
-				case NPC_CAST_SPELL:
+				case CAST_ON_NPC:
 					if (spell.getSpellType() == 2) {
 						Npc affectedNpc = player.getWorld().getNpc(packet.readShort());
 						if (affectedNpc == null) {
@@ -243,7 +432,7 @@ public class SpellHandler implements PacketHandler {
 						handleMobCast(player, affectedNpc, idx);
 					}
 					break;
-				case ITEM_CAST_SPELL:
+				case CAST_ON_INVENTORY_ITEM:
 					// Have to throw in ugly exceptions for curse and enfeeble
 					boolean runecraft = player.getConfig().WANT_RUNECRAFT;
 					int curse = 9;
@@ -274,10 +463,10 @@ public class SpellHandler implements PacketHandler {
 						handleItemCast(player, spell, idx, item);
 					}
 					break;
-				case WALL_OBJECT_CAST:
+				case CAST_ON_BOUNDARY:
 					player.message("@or1@This type of spell is not yet implemented.");
 					break;
-				case OBJECT_CAST:
+				case CAST_ON_SCENERY:
 					int objectX = packet.readShort();
 					int objectY = packet.readShort();
 					GameObject gameObject = player.getViewArea().getGameObject(Point.location(objectX, objectY));
@@ -292,7 +481,7 @@ public class SpellHandler implements PacketHandler {
 
 					handleChargeOrb(player, gameObject, idx, spell);
 					break;
-				case GROUND_ITEM_CAST_SPELL:
+				case CAST_ON_GROUND_ITEM:
 					Point location = Point.location(packet.readShort(), packet.readShort());
 					int itemId = packet.readShort();
 					GroundItem affectedItem = player.getViewArea().getGroundItem(itemId, location);
@@ -303,7 +492,10 @@ public class SpellHandler implements PacketHandler {
 					break;
 				case CAST_ON_LAND:
 					handleGroundCast(player, spell, idx);
-
+					break;
+				default:
+					LOGGER.error("Wrong OPCODE passed to Spell Handler.");
+					break;
 			}
 		}
 	}

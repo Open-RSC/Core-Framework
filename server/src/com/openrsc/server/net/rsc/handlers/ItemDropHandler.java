@@ -22,7 +22,7 @@ public final class ItemDropHandler implements PacketHandler {
 		}
 
 		player.resetAll();
-		int idx = (int) packet.readShort(); // Inventory slot
+		int inventorySlot = (int) packet.readShort();
 		int amount;
 		if (!player.isUsingAuthenticClient()) {
 			amount = packet.readInt();
@@ -30,21 +30,21 @@ public final class ItemDropHandler implements PacketHandler {
 			amount = 0;
 		}
 
-		if (idx < -1 || idx >= player.getCarriedItems().getInventory().size()) {
-			player.setSuspiciousPlayer(true, "item drop item idx < -1 or idx >= inv size");
+		if (inventorySlot < -1 || inventorySlot >= player.getCarriedItems().getInventory().size()) {
+			player.setSuspiciousPlayer(true, "item drop item inventorySlot < -1 or inventorySlot >= inv size");
 			return;
 		}
 		Item tempitem = null;
 
 		//User wants to drop the item from equipment tab
-		if (idx == -1 && !player.isUsingAuthenticClient()) {
+		if (inventorySlot == -1 && !player.isUsingAuthenticClient()) {
 			int realid = (int) packet.readShort();
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(realid);
 			if (slot != -1)
 				tempitem = player.getCarriedItems().getEquipment().get(slot);
 		} else {
-			if (idx != -1) {
-				tempitem = player.getCarriedItems().getInventory().get(idx);
+			if (inventorySlot != -1) {
+				tempitem = player.getCarriedItems().getInventory().get(inventorySlot);
 				if (player.isUsingAuthenticClient()) {
 					amount = tempitem.getAmount();
 				}
@@ -60,23 +60,23 @@ public final class ItemDropHandler implements PacketHandler {
 			return;
 		}
 
-		if (idx != -1) {
+		if (inventorySlot != -1) {
 			if (amount > player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()))) {
 				amount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()));
 			}
 		}
 
-		final boolean fromInventory = idx != -1;
+		final boolean fromInventory = inventorySlot != -1;
 
 		// Set temporary amount until event executes and double checks.
 		item.getItemStatus().setAmount(amount);
 
 		// Set up our player to drop an item after walking
 		if (!player.getWalkingQueue().finished()) {
-			player.setDropItemEvent(idx, item);
+			player.setDropItemEvent(inventorySlot, item);
 		}
 		else {
-			player.setDropItemEvent(idx, item);
+			player.setDropItemEvent(inventorySlot, item);
 			player.runDropEvent(fromInventory);
 		}
 	}

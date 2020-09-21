@@ -323,7 +323,10 @@ public class PlayerDuelHandler implements PacketHandler {
 				for (int slot = 0; slot < count; slot++) {
 					int catalogID = packet.readShort();
 					int amount = packet.readInt();
-					int noted = packet.readShort();
+					int noted = 0;
+					if (!player.isUsingAuthenticClient()) {
+						noted = packet.readShort();
+					}
 					Item tItem = new Item(catalogID, amount, noted == 1);
 					if (tItem.getAmount() < 1) {
 						player.setSuspiciousPlayer(true, "duel item amount < 1");

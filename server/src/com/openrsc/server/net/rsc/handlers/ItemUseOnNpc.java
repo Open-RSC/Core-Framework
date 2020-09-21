@@ -22,12 +22,12 @@ public class ItemUseOnNpc implements PacketHandler {
 		player.resetAll();
 		int npcIndex = packet.readShort();
 		final Npc affectedNpc = player.getWorld().getNpc(npcIndex);
-		int itemID = packet.readShort();
-		if (player.getConfig().WANT_EQUIPMENT_TAB && itemID > Inventory.MAX_SIZE) {
+		int slotIndex = packet.readShort();
+		if (player.getConfig().WANT_EQUIPMENT_TAB && slotIndex > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;
 		}
-		final Item item = player.getCarriedItems().getInventory().get(itemID);
+		final Item item = player.getCarriedItems().getInventory().get(slotIndex);
 		if (affectedNpc == null || item == null) {
 			return;
 		}

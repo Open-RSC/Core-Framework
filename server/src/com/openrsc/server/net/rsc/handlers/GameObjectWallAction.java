@@ -26,10 +26,10 @@ public class GameObjectWallAction implements PacketHandler {
 
 		final int pID = packet.getID();
 
-		if (pID == OpcodeIn.WALL_OBJECT_COMMAND1.getOpcode()) {
+		if (pID == OpcodeIn.INTERACT_WITH_BOUNDARY.getOpcode()) {
 			player.click = 0;
 		}
-		else if (pID == OpcodeIn.WALL_OBJECT_COMMAND2.getOpcode()) {
+		else if (pID == OpcodeIn.INTERACT_WITH_BOUNDARY2.getOpcode()) {
 			player.click = 1;
 		}
 		else return;
