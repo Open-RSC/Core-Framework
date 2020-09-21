@@ -70,14 +70,19 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
                     buffer.writeByte((byte) packetLength);
                     int bufferLen = message.getBuffer().readableBytes();
 
-                    // Strangely, the last byte of the Payload goes between length and encoded opcode
-                    buffer.writeByte(message.getBuffer().slice(bufferLen - 1, bufferLen).readByte());
+                    if (packetLength != 1) {
+                        // Strangely, the last byte of the Payload goes between length and encoded opcode
+                        buffer.writeByte(message.getBuffer().slice(bufferLen - 1, bufferLen).readByte());
 
-                    encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
-                    buffer.writeByte(encodedOpcode);
+                        encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
+                        buffer.writeByte(encodedOpcode);
 
-                    buffer.writeBytes(message.getBuffer().slice(0, bufferLen - 1));
-
+                        buffer.writeBytes(message.getBuffer().slice(0, bufferLen - 1));
+                    } else {
+                        // single opcode payload
+                        encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
+                        buffer.writeByte(encodedOpcode);
+                    }
                 }
                 // TODO: remove all this debug info
                 if (message.getID() != 191 && message.getID() != 79) {

@@ -50,7 +50,7 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                     }
                     break;
                 case 1: // Authentic Client
-                    if (buffer.readableBytes() > 2) {
+                    if (buffer.readableBytes() >= 2) {
                         buffer.markReaderIndex();
                         int length = buffer.readUnsignedByte();
                         int lengthLength;
