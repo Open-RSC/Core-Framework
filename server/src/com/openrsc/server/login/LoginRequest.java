@@ -99,7 +99,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 			final Player loadedPlayer = getServer().getDatabase().loadPlayer(this);
 			loadedPlayer.setLoggedIn(true);
 
-			LOGGER.info("Player Loaded: " + getUsername());
+			LOGGER.info("Player Loaded: " + getUsername() +  String.format("; Client Version: %d", clientVersion));
 
 			getServer().getGameEventHandler().add(new ImmediateEvent(getServer().getWorld(), "Login Player") {
 				@Override

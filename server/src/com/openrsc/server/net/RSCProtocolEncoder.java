@@ -84,17 +84,18 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
                         buffer.writeByte(encodedOpcode);
                     }
                 }
-                // TODO: remove all this debug info
+
+                /*
                 if (message.getID() != 191 && message.getID() != 79) {
                     System.out.println(String.format("OPCODE CLEAR: %d; CODED: %d", message.getID(), encodedOpcode));
                     Packet.printBuffer(buffer, "Outgoing");
                 }
+                */
 
                 outBuffer.writeBytes(buffer);
             }
 		} else {
             outBuffer.writeBytes(message.getBuffer());
-		    System.out.println("Some like it raw.");
 		}
 	}
 

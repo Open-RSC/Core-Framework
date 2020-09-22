@@ -62,7 +62,6 @@ public class LoginPacketHandler {
                     authenticClient = 127;
                 }
 			    if (authenticClient != 0) {
-                    System.out.println("Logging in!");
                     LoginInfo loginInfo = new LoginInfo();
 
                     byte opcode = packet.readByte(); // TODO: this should not be needed
@@ -70,7 +69,6 @@ public class LoginPacketHandler {
                     // Handle login packet
                     loginInfo.reconnecting = packet.readByte() == 1;
                     int clientVersion = packet.readInt();
-                    System.out.println(String.format("Client version: %d", clientVersion));
 
                     // Decrypt login block
                     int rsaLength = packet.readUnsignedShort();
@@ -177,8 +175,6 @@ public class LoginPacketHandler {
                             getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
 
                             ConnectionAttachment attachment = channel.attr(RSCConnectionHandler.attachment).get();
-                            // attachment.ISAAC.set(new ISAACContainer(incomingCipher,
-                            // outgoingCipher));
                             attachment.player.set(loadedPlayer);
 
                             /* Server Configs */

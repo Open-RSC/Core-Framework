@@ -86,12 +86,12 @@ public class ISAACCipher {
      * @param seed The seed.
      */
     public void setKeys(int[] seed) {
-        System.out.print("Setting keys: "); // TODO: REMOVE
+        System.out.print("Setting keys: ");
         for(int i = 0; i < seed.length; i++) {
-            System.out.print(String.format("%d ", seed[i])); // TODO: REMOVE
+            System.out.print(String.format("%d ", seed[i]));
             results[i] = seed[i];
         }
-        System.out.println(); // TODO: REMOVE
+        System.out.println();
         init(true);
     }
 
