@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -86,7 +87,7 @@ public class Bank {
 
 				// Update the client bank
 				if (updateClient) {
-					ActionSender.updateBankItem(player, list.size() - 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
+					ActionSender.updateBankItem(player, list.size() - 1, itemToAdd, itemToAdd.getAmount());
 				}
 
 			// A stack exists of this item in the bank already.
@@ -103,7 +104,7 @@ public class Bank {
 
 					// Update the client bank
 					if (updateClient) {
-						ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), existingStack.getAmount());
+						ActionSender.updateBankItem(player, index, existingStack, existingStack.getAmount());
 					}
 
 				// In the second case, we must made a new stack as well as updating the old one. (First is full.)
@@ -125,8 +126,8 @@ public class Bank {
 
 					// Update the client - both stacks
 					if (updateClient) {
-						ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), Integer.MAX_VALUE);
-						ActionSender.updateBankItem(player, list.size() - 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
+						ActionSender.updateBankItem(player, index, existingStack, Integer.MAX_VALUE);
+						ActionSender.updateBankItem(player, list.size() - 1, itemToAdd, itemToAdd.getAmount());
 					}
 				}
 			}
@@ -173,7 +174,7 @@ public class Bank {
 
 				// Update the Client
 				if (updateClient) {
-					ActionSender.updateBankItem(player, bankIndex, 0, 0);
+					ActionSender.updateBankItem(player, bankIndex, null, 0);
 				}
 
 			// We are removing only some of the total held in the bank
@@ -184,7 +185,7 @@ public class Bank {
 
 				// Update the Client
 				if (updateClient) {
-					ActionSender.updateBankItem(player, bankIndex, bankItem.getCatalogId(), bankItem.getAmount());
+					ActionSender.updateBankItem(player, bankIndex, bankItem, bankItem.getAmount());
 				}
 			}
 
@@ -488,7 +489,12 @@ public class Bank {
 
 				// Ensure they have the item in their inventory.
 				requestedAmount = Math.min(requestedAmount, player.getCarriedItems().getInventory().countId(catalogID));
-				if (requestedAmount < 0) return;
+				if (requestedAmount <= 0) {
+					if (player.isUsingAuthenticClient() && catalogID == 1030) { //shantay pass placeholder item
+						player.playerServerMessage(MessageType.QUEST, "Try using the note on the Banker instead.");
+					}
+					return;
+				}
 
 				Item depositItem = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(catalogID)

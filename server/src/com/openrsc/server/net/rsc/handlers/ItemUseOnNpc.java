@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
@@ -7,6 +8,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
+
+import static com.openrsc.server.plugins.Functions.inArray;
 
 public class ItemUseOnNpc implements PacketHandler {
 
@@ -43,10 +46,15 @@ public class ItemUseOnNpc implements PacketHandler {
 				}
 				getPlayer().resetAll();
 				getPlayer().face(affectedNpc);
-				if (item.getNoted()) {
+
+				// Lazy bugfix for "notes shouldn't be able to be used on NPCs... except for the bankers!"
+				int[] BANKERS = {NpcId.BANKER_GEN1.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_GEN2.id(),
+					NpcId.GNOME_BANKER.id(), NpcId.JUNGLE_BANKER.id()};
+				if (item.getNoted() && !inArray(affectedNpc.getID(), BANKERS)) {
 					getPlayer().message("Nothing interesting happens");
 					return;
 				}
+
 				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
 					&& !getPlayer().getConfig().MEMBER_WORLD) {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);

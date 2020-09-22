@@ -173,6 +173,11 @@ public class ActionSender {
 			s.writeByte((byte) with.getDuel().getDuelOffer().getItems().size());
 			for (Item item : with.getDuel().getDuelOffer().getItems()) {
 				s.writeShort(item.getCatalogId());
+                if (item.getNoted() && player.isUsingAuthenticClient()) {
+                    String itemName = item.getDef(player.getWorld()).getName();
+                    player.playerServerMessage(MessageType.QUEST,
+                        String.format("@ran@Please Confirm: @whi@Other player is staking @gre@%d @yel@%s", item.getAmount(), itemName));
+                }
 				if (!player.isUsingAuthenticClient()) {
                     if (player.getConfig().CUSTOM_PROTOCOL) {
                         s.writeByte((byte) (item.getNoted() ? 1 : 0));
@@ -245,15 +250,26 @@ public class ActionSender {
 			com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 			s.setID(Opcode.SEND_DUEL_OPPONENTS_ITEMS.opcode);
 			s.writeByte((byte) items.size());
-			for (Item item : items) {
-				s.writeShort(item.getCatalogId());
-				if (!player.isUsingAuthenticClient()) {
+			if (player.isUsingAuthenticClient()) {
+                for (Item item : items) {
+                    s.writeShort(item.getCatalogIdAuthenticNoting());
+                    s.writeInt(item.getAmount());
+                    if (item.getNoted()) {
+                        String itemName = item.getDef(player.getWorld()).getName();
+                        player.playerServerMessage(MessageType.QUEST,
+                            String.format("@whi@Other player is staking @gre@%d @yel@%s", item.getAmount(), itemName));
+                    }
+                }
+            } else {
+                for (Item item : items) {
+                    s.writeShort(item.getCatalogId());
                     if (player.getConfig().CUSTOM_PROTOCOL) {
                         s.writeByte((byte) (item.getNoted() ? 1 : 0));
                     }
+
+                    s.writeInt(item.getAmount());
                 }
-				s.writeInt(item.getAmount());
-			}
+            }
 
 			player.write(s.toPacket());
 		}
@@ -736,9 +752,9 @@ public class ActionSender {
             synchronized (player.getCarriedItems().getInventory().getItems()) {
                 for (Item item : player.getCarriedItems().getInventory().getItems()) {
                     s.writeShort(((item.isWielded() ? 1 : 0) << 15) | // First bit is if it is wielded or not
-                        item.getCatalogId());
+                        item.getCatalogIdAuthenticNoting());
 
-                    if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) { // Inauthentic Note support
+                    if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
                         s.writeUnsignedShortInt(item.getAmount());
                     }
                 }
@@ -1167,7 +1183,6 @@ public class ActionSender {
 		s.setID(Opcode.SEND_PLAY_SOUND.opcode);
 		if (player.isUsingAuthenticClient()) {
 		    s.writeZeroQuotedString(soundName);
-		    System.out.println(soundName);
         } else {
             s.writeString(soundName);
         }
@@ -1240,15 +1255,16 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_TRADE_OPEN_CONFIRM.opcode);
 		if (player.isUsingAuthenticClient()) {
-		    s.writeZeroQuotedString(with.getUsername());
-        } else {
-            s.writeString(with.getUsername());
-        }
-		s.writeByte((byte) with.getTrade().getTradeOffer().getItems().size());
-		for (Item item : with.getTrade().getTradeOffer().getItems()) {
-            if (player.isUsingAuthenticClient()) {
+            s.writeZeroQuotedString(with.getUsername());
+            s.writeByte((byte) with.getTrade().getTradeOffer().getItems().size());
+            for (Item item : with.getTrade().getTradeOffer().getItems()) {
                 if (item.getCatalogId() <= ItemId.maxAuthentic) {
                     s.writeShort(item.getCatalogId());
+                    if (item.getNoted()) {
+                        String itemName = item.getDef(player.getWorld()).getName();
+                        player.playerServerMessage(MessageType.QUEST,
+                            String.format("@ran@Please Confirm: @whi@Other player is offering @gre@%d @yel@%s", item.getAmount(), itemName));
+                    }
                 } else {
                     sendMessage(player, String.format("Cannot handle inauthentic item ID %d", item.getItemId()));
                     sendMessage(with, String.format("Other player cannot handle inauthentic item ID %d", item.getItemId()));
@@ -1258,24 +1274,33 @@ public class ActionSender {
                     sendTradeWindowClose(with);
                     return;
                 }
-            } else {
+
+                s.writeInt(item.getAmount());
+            }
+            s.writeByte((byte) player.getTrade().getTradeOffer().getItems().size());
+            for (Item item : player.getTrade().getTradeOffer().getItems()) {
+                s.writeShort(item.getCatalogId());
+                s.writeInt(item.getAmount());
+            }
+        } else { //inauthentic client handling
+            s.writeString(with.getUsername());
+            s.writeByte((byte) with.getTrade().getTradeOffer().getItems().size());
+            for (Item item : with.getTrade().getTradeOffer().getItems()) {
                 s.writeShort(item.getCatalogId());
                 if (player.getConfig().CUSTOM_PROTOCOL) {
                     s.writeByte((byte) (item.getNoted() ? 1 : 0));
                 }
+                s.writeInt(item.getAmount());
             }
-			s.writeInt(item.getAmount());
-		}
-		s.writeByte((byte) player.getTrade().getTradeOffer().getItems().size());
-		for (Item item : player.getTrade().getTradeOffer().getItems()) {
-			s.writeShort(item.getCatalogId());
-			if (!player.isUsingAuthenticClient()) {
+            s.writeByte((byte) player.getTrade().getTradeOffer().getItems().size());
+            for (Item item : player.getTrade().getTradeOffer().getItems()) {
+                s.writeShort(item.getCatalogId());
                 if (player.getConfig().CUSTOM_PROTOCOL) {
                     s.writeByte((byte) (item.getNoted() ? 1 : 0));
                 }
+                s.writeInt(item.getAmount());
             }
-			s.writeInt(item.getAmount());
-		}
+        }
 		player.write(s.toPacket());
 	}
 
@@ -1312,20 +1337,34 @@ public class ActionSender {
 			com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 			s.setID(Opcode.SEND_TRADE_OTHER_ITEMS.opcode);
 
-			// Other player's items first
-			s.writeByte((byte) items.size());
-			for (Item item : items) {
-				s.writeShort(item.getCatalogId());
-				if (!player.isUsingAuthenticClient()) {
+			if (player.isUsingAuthenticClient()) {
+			    // authentic client
+                s.writeByte((byte) items.size());
+                for (Item item : items) {
+                    s.writeShort(item.getCatalogIdAuthenticNoting());
+                    s.writeInt(item.getAmount());
+                    if (item.getNoted()) {
+                        String itemName = item.getDef(player.getWorld()).getName();
+                        player.playerServerMessage(MessageType.QUEST,
+                            String.format("@whi@Other player offered @gre@%d @yel@%s", item.getAmount(), itemName));
+                    }
+                }
+
+            } else { // inauthentic client
+
+                // Other player's items first
+                s.writeByte((byte) items.size());
+                for (Item item : items) {
+                    s.writeShort(item.getCatalogId());
+
                     if (player.getConfig().CUSTOM_PROTOCOL) {
                         s.writeByte((byte) (item.getNoted() ? 1 : 0));
                     }
-                }
-				s.writeInt(item.getAmount());
-			}
 
-			if (!player.isUsingAuthenticClient()) {
-                // Our items second
+                    s.writeInt(item.getAmount());
+                }
+
+                // Our items second (only needed in inauthentic client)
                 items = player.getTrade().getTradeOffer().getItems();
                 s.writeByte((byte) items.size());
                 for (Item item : items) {
@@ -1364,14 +1403,13 @@ public class ActionSender {
 		s.setID(Opcode.SEND_INVENTORY_UPDATEITEM.opcode);
 		s.writeByte((byte) slot);
 		if (item != null) {
-			s.writeShort(item.getCatalogId() + (item.isWielded() ? 32768 : 0));
 			if (player.isUsingAuthenticClient()) {
-                if (item.getDef(player.getWorld()).isStackable()) {
-                    // Unfortunately, noted items will just appear as one item
-                    // there's no way to show a stack of an unstackable item in authentic protocol
+                s.writeShort(item.getCatalogIdAuthenticNoting() + (item.isWielded() ? 32768 : 0));
+                if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
                     s.writeUnsignedShortInt(item.getAmount());
                 }
             } else {
+                s.writeShort(item.getCatalogId() + (item.isWielded() ? 32768 : 0));
                 s.writeByte(item.getNoted() ? 1 : 0);
                 if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
                     s.writeInt(item.getAmount());
@@ -1437,11 +1475,11 @@ public class ActionSender {
 
             synchronized (player.getBank().getItems()) {
                 for (Item i : player.getBank().getItems()) {
-                    s.writeShort(i.getCatalogId());
+                    s.writeShort(i.getCatalogIdAuthenticNoting());
                     s.writeUnsignedShortInt(i.getAmount());
                 }
             }
-        } else {
+        } else { // inauthentic client
             s.writeShort(player.getBank().size()); // Items in player's bank
             s.writeShort(player.getBankSize()); // Maximum amount of items in a player's bank
             synchronized (player.getBank().getItems()) {
@@ -1465,13 +1503,22 @@ public class ActionSender {
 		s.writeByte((byte) shop.getBuyModifier());
 		s.writeByte((byte) shop.getPriceModifier()); // This is how much being over/understock affects the price
 
-		for (int i = 0; i < shop.getShopSize(); i++) {
-			Item item = shop.getShopItem(i);
-			s.writeShort(item.getCatalogId());
-			s.writeShort(item.getAmount());
-			s.writeShort(shop.getStock(item.getCatalogId()));
-		}
-		player.write(s.toPacket());
+        if (player.isUsingAuthenticClient()) {
+            for (int i = 0; i < shop.getShopSize(); i++) {
+                Item item = shop.getShopItem(i);
+                s.writeShort(item.getCatalogIdAuthenticNoting());
+                s.writeShort(item.getAmount());
+                s.writeShort(shop.getStock(item.getCatalogId()));
+            }
+        } else {
+            for (int i = 0; i < shop.getShopSize(); i++) {
+                Item item = shop.getShopItem(i);
+                s.writeShort(item.getCatalogId());
+                s.writeShort(item.getAmount());
+                s.writeShort(shop.getStock(item.getCatalogId()));
+            }
+        }
+        player.write(s.toPacket());
 	}
 
 	/**
@@ -1500,15 +1547,26 @@ public class ActionSender {
 	/**
 	 * Updates the id and amount of an item in the bank
 	 */
-	public static void updateBankItem(Player player, int slot, int newId, int amount) {
+	public static void updateBankItem(Player player, int slot, Item newId, int amount) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_BANK_UPDATE.opcode);
 		s.writeByte((byte) slot);
-		s.writeShort(newId);
-		if (player.isUsingAuthenticClient()) {
-		    s.writeUnsignedShortInt(amount);
+		if (newId == null) {
+            if (player.isUsingAuthenticClient()) {
+                s.writeShort(0);
+                s.writeUnsignedShortInt(0);
+            } else {
+                s.writeShort(0);
+                s.writeInt(0);
+            }
         } else {
-            s.writeInt(amount);
+            if (player.isUsingAuthenticClient()) {
+                s.writeShort(newId.getCatalogId());
+                s.writeUnsignedShortInt(amount);
+            } else {
+                s.writeShort(newId.getCatalogId());
+                s.writeInt(amount);
+            }
         }
 		player.write(s.toPacket());
 	}

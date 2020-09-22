@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -131,17 +132,17 @@ public class Certer implements TalkNpcTrigger {
 			if (player.getBank().canHold(bankItem)) {
 				if (player.getCarriedItems().remove(new Item(certID, certAmount)) > -1) {
 					if (player.getBank().add(bankItem, false)) {
-						player.message("You exchange the certificates, "
+						player.playerServerMessage(MessageType.QUEST, "You exchange the certificates, "
 							+ bankItem.getAmount() + " "
 							+ bankItem.getDef(player.getWorld()).getName()
 							+ " is added to your bank");
 					} else {
-						player.message("There was a problem uncerting. Your certs are returned.");
+						player.playerServerMessage(MessageType.QUEST, "There was a problem uncerting. Your certs are returned.");
 						player.getCarriedItems().getInventory().add(new Item(certID, certAmount));
 					}
 				}
 			} else {
-				player.message("Your bank seems to be too full to uncert to bank at this time.");
+				player.playerServerMessage(MessageType.QUEST, "Your bank seems to be too full to uncert to bank at this time.");
 			}
 		} else {
 			certAmount += 1;
