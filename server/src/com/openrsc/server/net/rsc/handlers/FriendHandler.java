@@ -81,7 +81,7 @@ public final class FriendHandler implements PacketHandler {
 			String message = DataConversions.upperCaseAllFirst(
 				DataConversions.stripBadCharacters(
 					DataConversions.getEncryptedString(packet, 32576)));
-			if (friendName.toLowerCase().equals("global$") && player.getConfig().WANT_GLOBAL_FRIEND) {
+			if (friendName.toLowerCase().startsWith("global$") && player.getConfig().WANT_GLOBAL_FRIEND) {
 				player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 			}
 			else {
