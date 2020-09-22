@@ -5,6 +5,7 @@ import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.content.party.PartyRank;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
+import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
@@ -21,9 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import static com.openrsc.server.plugins.Functions.config;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isPhoenixGang;
-import static com.openrsc.server.plugins.Functions.*;
 
 public final class RegularPlayer implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(RegularPlayer.class);
@@ -84,7 +85,7 @@ public final class RegularPlayer implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("time") || command.equalsIgnoreCase("date") || command.equalsIgnoreCase("datetime")) {
 			player.message(messagePrefix + " the current time/date is:@gre@ " + new java.util.Date().toString());
 		} else if (config().NPC_KILL_LIST && command.equalsIgnoreCase("kills")) {
-			queryKillList(player);
+			queryKillList(player, args);
 		} else if (command.equalsIgnoreCase("pair")) {
 			pairDiscordID(player);
 		} else if (command.equalsIgnoreCase("d")) {
@@ -472,16 +473,41 @@ public final class RegularPlayer implements CommandTrigger {
 		ActionSender.sendBox(player, "@whi@Server Groups:%" + StringUtils.join(groups, "%"), true);
 	}
 
-	private void queryKillList(Player player) {
-		StringBuilder kills = new StringBuilder("NPC Kill List for " + player.getUsername() + " % %");
-		//PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
-		//	"SELECT * FROM `" + config().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
-		//statement.setInt(1, player.getDatabaseID());
-		//ResultSet result = statement.executeQuery();
-		for (Map.Entry<Integer, Integer> entry : player.getKillCache().entrySet()) {
-			kills.append("NPC: ").append(player.getWorld().getServer().getEntityHandler().getNpcDef(entry.getKey()).getName()).append(" - Kill Count: ").append(entry.getValue()).append("%");
+	private void queryKillList(Player player, String[] args) {
+		if (args.length == 0) {
+			StringBuilder kills = new StringBuilder("NPC Kill List for " + player.getUsername() + " % %");
+			//PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
+			//	"SELECT * FROM `" + config().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
+			//statement.setInt(1, player.getDatabaseID());
+			//ResultSet result = statement.executeQuery();
+			int i=1;
+			for (Map.Entry<Integer, Integer> entry : player.getKillCache().entrySet()) {
+				NPCDef npc = player.getWorld().getServer().getEntityHandler().getNpcDef(entry.getKey());
+				kills.append(npc.getName())
+					.append(" (level ")
+					.append(npc.combatLevel)
+					.append("): ")
+					.append(entry.getValue())
+					.append((i%2==0 ? "%" : ", "));
+				i++;
+			}
+			ActionSender.sendBox(player, kills.substring(0, kills.length()-2).toString(), true);
+		} else {
+			String npcName = String.join(" ", args).toLowerCase();
+			for (Map.Entry<Integer, Integer> entry : player.getKillCache().entrySet()) {
+				NPCDef npc = player.getWorld().getServer().getEntityHandler().getNpcDef(entry.getKey());
+				if (npc.getName().toLowerCase().equals(npcName)) {
+					StringBuilder kill = new StringBuilder();
+					kill.append("NPC Kills for ")
+						.append(npc.getName())
+						.append(" (level ")
+						.append(npc.combatLevel)
+						.append("): ")
+						.append(entry.getValue());
+					player.message(kill.toString());
+				}
+			}
 		}
-		ActionSender.sendBox(player, kills.toString(), true);
 	}
 
 	private void pairDiscordID(Player player) {
