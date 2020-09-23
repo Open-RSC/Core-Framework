@@ -1,7 +1,6 @@
 package com.openrsc.server.model.container;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.UnequipRequest;
@@ -500,6 +499,7 @@ public class Bank {
 				// has been toggled.
 				int itemToAddCatalogId = depositItem.getCatalogId();
 				int itemToAddAmount = requestedAmount;
+
 				if (player.getAttribute("swap_cert", false)) {
 					itemToAddCatalogId = uncertedID(itemToAddCatalogId);
 
@@ -507,7 +507,9 @@ public class Bank {
 						itemToAddAmount *= 5;
 					}
 
-					player.setAttribute("swap_cert", false);
+					// With this line in place, players can only swap certs once per client session
+					// Not sure why it's here... commenting it out
+					//player.setAttribute("swap_cert", false);
 				}
 
 				Item itemToAdd = new Item(itemToAddCatalogId, itemToAddAmount);
