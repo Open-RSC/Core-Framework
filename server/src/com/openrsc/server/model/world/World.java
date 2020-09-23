@@ -573,7 +573,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 			getPlayers().add(player);
 			player.updateRegion();
 			getServer().getGameLogger().run(new PlayerOnlineFlagQuery(getServer(), player.getDatabaseID(), player.getCurrentIP(), true));
-			getServer().getGameLogger().addQuery(new LoginLog(player.getWorld(), player.getDatabaseID(), player.getCurrentIP()));
+			getServer().getGameLogger().addQuery(new LoginLog(player.getWorld(), player.getDatabaseID(), player.getCurrentIP(), player.getClientVersion()));
 			for (Player other : getPlayers()) {
 				other.getSocial().alertOfLogin(player);
 			}

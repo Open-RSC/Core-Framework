@@ -755,6 +755,9 @@ public class Server implements Runnable {
 	// This is used to modify the database when new features may break SQL compatibility while upgrading
 	private boolean checkForDatabaseStructureChanges() {
 		try {
+			if (!getDatabase().columnExists("logins", "clientVersion")) {
+				getDatabase().addColumn("logins", "clientVersion", "INT (11)");
+			}
 			return true;
 		} catch (GameDatabaseException e) {
 			LOGGER.error(e.toString());

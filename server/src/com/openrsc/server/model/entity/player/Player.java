@@ -3216,6 +3216,8 @@ public final class Player extends Mob {
 
 	public void setClientVersion(int cv) { this.clientVersion = cv; }
 
+	public int getClientVersion() { return this.clientVersion; }
+
 	public boolean isUsingAuthenticClient() {
 		return this.clientVersion == 235;
 	}
