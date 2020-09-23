@@ -5,6 +5,7 @@ import com.openrsc.server.external.SkillDef;
 
 public class MySqlQueries {
 	public final String PREFIX;
+	public final String NAME;
 
 	public String updateExperience, updateStats, playerExp, playerCurExp;
 	public final String createPlayer, recentlyRegistered, initStats, initExp;
@@ -25,6 +26,7 @@ public class MySqlQueries {
 	public final String clans, clanMembers, newClan, saveClanMember, deleteClan, deleteClanMembers, updateClan, updateClanMember;
 	public final String expiredAuction, collectibleItems, collectItem, newAuction, cancelAuction, auctionCount, playerAuctionCount, auctionItem, auctionItems, auctionSellOut, updateAuction;
 	public final String discordIdToPlayerId, playerIdFromPairToken, pairDiscord, deleteTokenFromCache, watchlist, watchlists, updateWatchlist, deleteWatchlist;
+	public final String checkColumnExists, addColumn;
 
 	private final Server server;
 
@@ -35,6 +37,7 @@ public class MySqlQueries {
 	public MySqlQueries(final Server server) {
 		this.server = server;
 		PREFIX = getServer().getConfig().DB_TABLE_PREFIX;
+		NAME = getServer().getConfig().DB_NAME;
 
 		updateExperience = "UPDATE `" + PREFIX + "experience` SET ";
 		updateStats = "UPDATE `" + PREFIX + "curstats` SET ";
@@ -195,6 +198,9 @@ public class MySqlQueries {
 		watchlists = "SELECT `value`, `key` FROM `" + PREFIX + "player_cache` WHERE `key` LIKE 'watchlist_%'";
 		updateWatchlist = "UPDATE `" + PREFIX + "player_cache` SET `value`=? WHERE `key`=`watchlist_?`";
 		deleteWatchlist = "DELETE FROM `" + PREFIX + "player_cache` WHERE `key`=`watchlist_?`";
+
+		checkColumnExists = "SELECT COUNT(*) AS exist FROM (SELECT `COLUMN_NAME` FROM INFORMATION_SCHEMA.COLUMNS WHERE `TABLE_SCHEMA` LIKE '" + NAME + "' AND `TABLE_NAME` LIKE " + PREFIX + "? AND `COLUMN_NAME` LIKE ?) AS columnCountRowCountYes";
+		addColumn = "ALTER TABLE `" + NAME + "`.`" + PREFIX + "%s` ADD %s %s";
 
 		//unreadMessages = "SELECT COUNT(*) FROM `messages` WHERE showed=0 AND show_message=1 AND owner=?";
 		//teleportStones = "SELECT `teleport_stone` FROM `users` WHERE id=?";

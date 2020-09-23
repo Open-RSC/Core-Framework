@@ -258,6 +258,11 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract void removeItemFromPlayer(Item item);
 
+	// Database Management
+	protected abstract boolean queryColumnExists(final String table, final String column) throws GameDatabaseException;
+
+	protected abstract void queryAddColumn(String table, String newColumn, String dataType) throws GameDatabaseException;
+
 	public void open() {
 		synchronized (open) {
 			try {
@@ -1311,5 +1316,14 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	protected void queryBankRemove(final Player player, final Item item) throws GameDatabaseException {
 		queryBankRemove(player.getDatabaseID(), item);
 	}
+
+	public boolean columnExists(String table, String column) throws GameDatabaseException {
+		return queryColumnExists(table, column);
+	}
+
+	public void addColumn(String table, String newColumn, String dataType) throws GameDatabaseException {
+		queryAddColumn(table, newColumn, dataType);
+	}
+
 }
 
