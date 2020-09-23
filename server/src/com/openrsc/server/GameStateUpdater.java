@@ -930,6 +930,8 @@ public final class GameStateUpdater {
 		while((gm = getServer().getWorld().getNextGlobalMessage()) != null) {
 			for (final Player player : getServer().getWorld().getPlayers()) {
 				if (player == gm.getPlayer()) {
+					player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), gm.getMessage(),
+						"Global$"));
 					ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
 				}
 				else if (!player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES)
