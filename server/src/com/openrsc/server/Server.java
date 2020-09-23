@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.database.GameDatabase;
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
 import com.openrsc.server.database.impl.mysql.MySqlGameLogger;
 import com.openrsc.server.event.rsc.GameTickEvent;
@@ -266,6 +267,14 @@ public class Server implements Runnable {
 					System.exit(1);
 				}
 				LOGGER.info("Database Connection Completed");
+
+				LOGGER.info("Checking For Database Structure Changes...");
+				if (checkForDatabaseStructureChanges()) {
+					LOGGER.info("Database Structure Changes Good");
+				} else {
+					LOGGER.error("Unable to change database structure!");
+					System.exit(1);
+				}
 
 				LOGGER.info("Loading Game Definitions...");
 				getEntityHandler().load();
@@ -741,6 +750,16 @@ public class Server implements Runnable {
 
 	public synchronized int incrementPrivateMessagesSent() {
 		return ++privateMessagesSent;
+	}
+
+	// This is used to modify the database when new features may break SQL compatibility while upgrading
+	private boolean checkForDatabaseStructureChanges() {
+		try {
+			return true;
+		} catch (GameDatabaseException e) {
+			LOGGER.error(e.toString());
+			return false;
+		}
 	}
 
 	class JPanel2 extends JPanel {
