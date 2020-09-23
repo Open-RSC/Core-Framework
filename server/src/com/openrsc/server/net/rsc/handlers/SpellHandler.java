@@ -121,7 +121,10 @@ public class SpellHandler implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		if ((player.isBusy() && !player.inCombat()) || player.isRanging()) {
+		int idx = packet.readShort();
+		SpellDef spell = player.getWorld().getServer().getEntityHandler().getSpellDef(idx);
+
+		if ((player.isBusy() && !player.inCombat()) || (player.isRanging() && spell.getSpellType() != 0)) {
 			return;
 		}
 		if (!canCast(player)) {
@@ -138,12 +141,12 @@ public class SpellHandler implements PacketHandler {
 		int CAST_ON_LAND = OpcodeIn.CAST_ON_LAND.getOpcode();
 
 		player.resetAllExceptDueling();
-		int idx = packet.readShort();
+
 		if (idx < 0 || idx >= 49) {
 			player.setSuspiciousPlayer(true, "idx < 0 or idx >= 49");
 			return;
 		}
-		SpellDef spell = player.getWorld().getServer().getEntityHandler().getSpellDef(idx);
+
 		if (spell.isMembers() && !player.getConfig().MEMBER_WORLD) {
 			player.message("You need to login to a members world to use this spell");
 			player.resetPath();
