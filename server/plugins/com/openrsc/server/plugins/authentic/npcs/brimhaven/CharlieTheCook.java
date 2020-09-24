@@ -19,9 +19,9 @@ public class CharlieTheCook implements TalkNpcTrigger {
 				"I'm a fellow member of the phoenix gang",
 				"Just exploring");
 			if (menu == 0) {
-				fellowPheonix(player, n);
+				fellowPhoenix(player, n);
 			} else if (menu == 1) {
-				fellowPheonix(player, n);
+				fellowPhoenix(player, n);
 			} else if (menu == 2) {
 				npcsay(player, n, "This kitchen isn't for exploring",
 					"It's a private establishment, now get out");
@@ -29,7 +29,7 @@ public class CharlieTheCook implements TalkNpcTrigger {
 		}
 	}
 
-	private void fellowPheonix(Player player, Npc n) {
+	private void fellowPhoenix(Player player, Npc n) {
 		npcsay(player, n, "Aha a fellow phoenix",
 			"What brings you to Brimhaven?");
 		int menu2 = multi(player, n,

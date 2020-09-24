@@ -547,7 +547,7 @@ public final class RegularPlayer implements CommandTrigger {
 			+ "@whi@::claninvite <name> - invite player to clan %"
 			+ "@whi@::clankick <name> - kick player from clan %"
 			+ "@whi@::clanaccept - accept clan invitation %"
-			+ "@whi@::gang - shows if you are 'Pheonix' or 'Black arm' gang %"
+			+ "@whi@::gang - shows if you are 'Phoenix' or 'Black arm' gang %"
 			+ "@whi@::groups - shows available ranks on the server %"
 			+ "@whi@::wilderness - shows the wilderness activity %"
 			+ "@whi@::time - shows the current server time %"

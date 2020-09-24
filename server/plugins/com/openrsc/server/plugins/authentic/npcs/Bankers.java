@@ -67,7 +67,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				return;
 			}
 
-			if(validatebankpin(player)) {
+			if(validatebankpin(player, npc)) {
 				if (npc.getID() == NpcId.GNOME_BANKER.id()) {
 					npcsay(player, npc, "absolutely sir");
 				} else {
@@ -99,14 +99,17 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 		} else if (menu == 2 && config().WANT_BANK_PINS) {
 			int bankPinMenu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 			if (bankPinMenu == 0) {
-				setbankpin(player);
+				if (player.isUsingAuthenticClient()) {
+					npcsay(player, npc, "ok but i have to warn you that this is going to be pretty annoying.");
+				}
+				setbankpin(player, npc);
 			} else if (bankPinMenu == 1) {
-				changebankpin(player);
+				changebankpin(player, npc);
 			} else if (bankPinMenu == 2) {
-				removebankpin(player);
+				removebankpin(player, npc);
 			}
 		} else if ((menu == 2 || menu == 3) && config().SPAWN_AUCTION_NPCS) {
-			if(validatebankpin(player)) {
+			if(validatebankpin(player, npc)) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			}
 		}
@@ -183,7 +186,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 			return;
 		}
 
-		if(validatebankpin(player)) {
+		if(validatebankpin(player, npc)) {
 			if (auction) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			} else {
