@@ -590,6 +590,9 @@ public final class Player extends Mob {
 	}
 
 	public boolean canLogout() {
+		if (menuHandler != null) {
+			return true;
+		}
 		return !isBusy() && System.currentTimeMillis() - getCombatTimer() > 10000
 			&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000
 			&& System.currentTimeMillis() - getLastExchangeTime() > 3000;
