@@ -174,7 +174,7 @@ public class Bank {
 
 				// Update the Client
 				if (updateClient) {
-					ActionSender.updateBankItem(player, bankIndex, null, 0);
+					ActionSender.updateBankItem(player, bankIndex, bankItem, 0);
 				}
 
 			// We are removing only some of the total held in the bank
@@ -191,6 +191,20 @@ public class Bank {
 
 			return true;
 		}
+	}
+
+	public boolean canRemoveAtLeast1(int catalogID) {
+		int bankIndex = getFirstIndexById(catalogID);
+		Item bankItem = get(bankIndex);
+
+		// Continue until a matching catalogID is found.
+		if (bankItem == null) return false;
+
+		if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public boolean canHold(Item item) {
@@ -474,10 +488,37 @@ public class Bank {
 
 				withdrawItem = new Item(withdrawItem.getCatalogId(), requestedAmount, withdrawNoted, withdrawItem.getItemId());
 
-				// Remove the item from the bank (or fail out).
-				if (!remove(withdrawItem, updateClient)) return;
+				if (!player.isUsingAuthenticClient()) {
+					// Remove the item from the bank (or fail out).
+					if (!remove(withdrawItem, updateClient)) return;
+				} else {
+					// The authentic client needs the bank update to happen AFTER inventory is added, or else it won't display properly
+					if(!canRemoveAtLeast1(withdrawItem.getCatalogId())) return;
+				}
 
 				addToInventory(withdrawItem, withdrawDef, requestedAmount, updateClient);
+
+				// TODO: there are safeguards here which might be fine, but it may be better to
+				// implement a way to sort the packets in Player.outgoingPackets instead?
+				// Not sure how Jagex would have done it.
+				if (player.isUsingAuthenticClient()) {
+					boolean successfulRemove = false;
+					try {
+						successfulRemove = remove(withdrawItem, updateClient);
+					} catch (Exception e) {
+						// Possibly the database is unavailable?
+						// Not sure, but it's important to not halt execution mid-remove() if an exception happens.
+						LOGGER.error("Exception after canRemoveAtLeast1!!");
+						LOGGER.error(e.toString());
+						removeFromInventory(withdrawItem, withdrawDef, requestedAmount, updateClient);
+					}
+
+					if (!successfulRemove) {
+						// This should not happen unless canRemoveAtLeast1 is flawed, but good to check
+						LOGGER.error("error in canRemoveAtLeast1!!");
+						removeFromInventory(withdrawItem, withdrawDef, requestedAmount, updateClient);
+					}
+				}
 			}
 		}
 	}
@@ -527,6 +568,10 @@ public class Bank {
 				// Attempt to add the item to the bank (or fail out).
 				if (!add(itemToAdd, updateClient)) return;
 
+				// TODO: technically, similar to withdrawItemFromInventory, the authentic client
+				// should have the bank_update & inventory_update packets reversed here
+				// but it actually shouldn't visually matter, so it's a TODO.
+
 				// Check the item definition
 				ItemDefinition depositDef = depositItem.getDef(player.getWorld());
 				if (depositDef == null) return;
@@ -554,13 +599,13 @@ public class Bank {
 			// Add the item to the inventory (or fail and place it back into the bank).
 			if (!player.getCarriedItems().getInventory().add(item, updateClient)) {
 				add(item);
-				if (updateClient) {
+				if (updateClient && !player.isUsingAuthenticClient()) {
 					ActionSender.sendInventory(player);
 				}
 				return;
 			}
 		}
-		if (updateClient) {
+		if (updateClient && !player.isUsingAuthenticClient()) {
 			ActionSender.sendInventory(player);
 		}
 	}

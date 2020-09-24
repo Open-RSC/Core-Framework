@@ -1551,9 +1551,9 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_BANK_UPDATE.opcode);
 		s.writeByte((byte) slot);
-		if (newId == null) {
+		if (amount == 0) {
             if (player.isUsingAuthenticClient()) {
-                s.writeShort(0);
+                s.writeShort(newId.getCatalogId());
                 s.writeUnsignedShortInt(0);
             } else {
                 s.writeShort(0);

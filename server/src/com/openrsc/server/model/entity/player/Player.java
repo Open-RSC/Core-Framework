@@ -91,7 +91,7 @@ public final class Player extends Mob {
 	private Party party;
 	private ClanInvite activeClanInvitation;
 	private PartyInvite activePartyInvitation;
-	public final int MAX_FATIGUE = 150000; // TODO: this is inauthentic, max should be 75,000
+	public final int MAX_FATIGUE = 150000;
 	public final String MEMBER_MESSAGE = "This feature is only available for members only";
 	private final Map<Integer, Integer> killCache = new HashMap<>();
 	private boolean killCacheUpdated = false;
