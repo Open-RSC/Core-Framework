@@ -24,8 +24,17 @@ public class ItemUseOnGroundItem implements PacketHandler {
 
 		player.resetAll();
 		Point location = Point.location(packet.readShort(), packet.readShort());
-		final int inventorySlot = packet.readShort();
-		final int groundItemId = packet.readShort();
+
+		int groundItemId;
+		int inventorySlot;
+
+		if (player.isUsingAuthenticClient()) {
+			groundItemId = packet.readShort();
+			inventorySlot = packet.readShort();
+		} else { // inauthentic has them swapped.
+			inventorySlot = packet.readShort();
+			groundItemId = packet.readShort();
+		}
 		if (player.getConfig().WANT_EQUIPMENT_TAB && inventorySlot > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;
