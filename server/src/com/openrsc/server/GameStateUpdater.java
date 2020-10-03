@@ -631,35 +631,72 @@ public final class GameStateUpdater {
 		// TODO: Unloading scenery is not handled correctly.
 		//       According to RSC+ replays, the server never tells the client to unload objects until
 		//       a region is unloaded. It then instructs the client to only unload the region.
-		for (final Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext(); ) {
-			final GameObject o = it$.next();
-			if (!playerToUpdate.withinGridRange(o) || o.isRemoved() || o.isInvisibleTo(playerToUpdate)) {
-				final int offsetX = o.getX() - playerToUpdate.getX();
-				final int offsetY = o.getY() - playerToUpdate.getY();
-				//If the object is close enough we can use regular way to remove:
-				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
-					packet.writeShort(60000);
-					packet.writeByte(offsetX);
-					packet.writeByte(offsetY);
-					if (!playerToUpdate.isUsingAuthenticClient()) {
-						packet.writeByte(o.getDirection());
+
+		if (playerToUpdate.isUsingAuthenticClient()) {
+			// authentic client; remove scenery
+			// 2020-10-03; still not authentic, but should be a better experience
+			for (final Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext(); ) {
+				final GameObject o = it$.next();
+				if (!playerToUpdate.within5GridRange(o) || o.isRemoved() || o.isInvisibleTo(playerToUpdate)) {
+					final int offsetX = o.getX() - playerToUpdate.getX();
+					final int offsetY = o.getY() - playerToUpdate.getY();
+					if (o.isRemoved() && offsetX > -16 && offsetY > -16 && offsetX < 16 && offsetY < 16) {
+						packet.writeShort(60000);
+						packet.writeByte(offsetX);
+						packet.writeByte(offsetY);
+						it$.remove();
+						changed = true;
+					} else {
+						//If it's not close enough we need to use the region clean packet
+						playerToUpdate.getLocationsToClear().add(o.getLocation());
+						it$.remove();
+						changed = true;
 					}
-					it$.remove();
-					changed = true;
-				} else {
-					//If it's not close enough we need to use the region clean packet
-					playerToUpdate.getLocationsToClear().add(o.getLocation());
-					it$.remove();
-					changed = true;
+				}
+			}
+		} else { // non-authentic client; remove scenery
+			for (final Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext(); ) {
+				final GameObject o = it$.next();
+				if (!playerToUpdate.withinGridRange(o) || o.isRemoved() || o.isInvisibleTo(playerToUpdate)) {
+					final int offsetX = o.getX() - playerToUpdate.getX();
+					final int offsetY = o.getY() - playerToUpdate.getY();
+					//If the object is close enough we can use regular way to remove:
+					if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
+						packet.writeShort(60000);
+						packet.writeByte(offsetX);
+						packet.writeByte(offsetY);
+						if (!playerToUpdate.isUsingAuthenticClient()) {
+							packet.writeByte(o.getDirection());
+						}
+						it$.remove();
+						changed = true;
+					} else {
+						//If it's not close enough we need to use the region clean packet
+						playerToUpdate.getLocationsToClear().add(o.getLocation());
+						it$.remove();
+						changed = true;
+					}
 				}
 			}
 		}
 
+		// Add scenery
 		for (final GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
-			if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
-				|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 0
-				|| playerToUpdate.getLocalGameObjects().contains(newObject)) {
-				continue;
+			if (playerToUpdate.isUsingAuthenticClient()) {
+				// Server in current state doesn't really know anything about what scenery the client remembers.
+				// Let's just add all scenery every tick!
+				// This is very bad, but also an improvement.
+				// TODO: HANDLE SCENERY
+
+				if (newObject.getType() != 0) { // this one is pretty funny if you omit it. Trees in every open doorway!
+					continue;
+				}
+			} else {
+				if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
+					|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 0
+					|| playerToUpdate.getLocalGameObjects().contains(newObject)) {
+					continue;
+				}
 			}
 			packet.writeShort(newObject.getID());
 			final int offsetX = newObject.getX() - playerToUpdate.getX();

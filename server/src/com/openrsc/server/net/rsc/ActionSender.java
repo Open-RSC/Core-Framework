@@ -1639,6 +1639,13 @@ public class ActionSender {
 			if (player.getWorld().registerPlayer(player)) {
                 sendPrivacySettings(player);
                 sendMessage(player, null,  MessageType.QUEST, "Welcome to " + player.getConfig().SERVER_NAME + "!", 0, null);
+
+                // This warning must not be removed until the Scenery Handler is handled correctly & server-client ISAAC is ALWAYS synced.
+                if (player.isUsingAuthenticClient()) {
+					sendMessage(player, null,  MessageType.QUEST, "Authentic client support is currently in beta.", 0, null);
+					sendMessage(player, null,  MessageType.QUEST, "Please report any issues, and thanks for understanding.", 0, null);
+				}
+
                 sendGameSettings(player);
 				sendWorldInfo(player);
                 sendQuestInfo(player);
