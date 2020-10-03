@@ -298,8 +298,14 @@ public final class RegularPlayer implements CommandTrigger {
 			}
 			if (p.getGlobalBlock() != 2) {
 				String header = "";
-				ActionSender.sendMessage(p, player,  MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
-					+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon(), null);
+				if (p.isUsingAuthenticClient()) {
+					ActionSender.sendMessage(p, player, MessageType.PRIVATE_RECIEVE, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
+						+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIconAuthentic(), null);
+
+				} else {
+					ActionSender.sendMessage(p, player, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
+						+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon(), null);
+				}
 			}
 		}
 		if (command.equalsIgnoreCase("g")) {

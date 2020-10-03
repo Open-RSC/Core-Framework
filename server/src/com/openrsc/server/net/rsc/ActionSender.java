@@ -1642,8 +1642,8 @@ public class ActionSender {
 
                 // This warning must not be removed until the Scenery Handler is handled correctly & server-client ISAAC is ALWAYS synced.
                 if (player.isUsingAuthenticClient()) {
-					sendMessage(player, null,  MessageType.QUEST, "Authentic client support is currently in beta.", 0, null);
-					sendMessage(player, null,  MessageType.QUEST, "Please report any issues, and thanks for understanding.", 0, null);
+					sendMessage(player, null,  MessageType.QUEST, "Authentic client support is currently in beta.", 0, "@lre@");
+					sendMessage(player, null,  MessageType.QUEST, "Please report any issues, and thanks for understanding.", 0, "@lre@");
 				}
 
                 sendGameSettings(player);
