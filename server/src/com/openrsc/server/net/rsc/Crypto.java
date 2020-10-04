@@ -34,7 +34,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
-import javax.xml.bind.DatatypeConverter;
 import java.io.StringWriter;
 import java.io.FileWriter;
 
@@ -157,7 +156,7 @@ public class Crypto {
         StringWriter sw = new StringWriter();
         try {
             sw.write(String.format("-----BEGIN %s KEY-----\n", type));
-            sw.write(DatatypeConverter.printBase64Binary(certBytes).replaceAll("(.{64})", "$1\n"));
+            sw.write(Base64.encodeBase64String(certBytes).replaceAll("(.{64})", "$1\n"));
             sw.write(String.format("\n-----END %s KEY-----\n", type));
         } catch (Exception e) {
             e.printStackTrace();
