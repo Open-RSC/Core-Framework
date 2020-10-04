@@ -87,10 +87,10 @@ public class ItemUseOnObject implements PacketHandler {
 		player.resetAll();
 		GameObject object;
 		Item item;
-		int packetOne = OpcodeIn.WALL_USE_ITEM.getOpcode();
-		int packetTwo = OpcodeIn.OBJECT_USE_ITEM.getOpcode();
+		int packetOne = OpcodeIn.USE_WITH_BOUNDARY.getOpcode();
+		int packetTwo = OpcodeIn.USE_ITEM_ON_SCENERY.getOpcode();
 
-		if (pID == packetOne) { // Use Item on Door
+		if (pID == packetOne) { // Use Item on Boundary
 			object = player.getViewArea().getWallObjectWithDir(Point.location(packet.readShort(), packet.readShort()), packet.readByte());
 			if (object == null) {
 				player.setSuspiciousPlayer(true, "item on null door");
@@ -102,13 +102,18 @@ public class ItemUseOnObject implements PacketHandler {
 			if (player.getConfig().WANT_EQUIPMENT_TAB && slotID == -1)
 			{
 				//they used the item from their equipment slot
-				int itemID = packet.readShort();
-				int realSlot = player.getCarriedItems().getEquipment().searchEquipmentForItem(itemID);
-				if (realSlot == -1)
+				if (!player.isUsingAuthenticClient()) {
+					int itemID = packet.readShort();
+					int realSlot = player.getCarriedItems().getEquipment().searchEquipmentForItem(itemID);
+					if (realSlot == -1)
+						return;
+					item = player.getCarriedItems().getEquipment().get(realSlot);
+					if (item == null)
+						return;
+				} else {
+					player.message("authentic client can't use item from non-existent equipment slot.");
 					return;
-				item = player.getCarriedItems().getEquipment().get(realSlot);
-				if (item == null)
-					return;
+				}
 			} else
 				item = player.getCarriedItems().getInventory().get(slotID);
 			if (object.getType() == 0 || item == null || item.getItemStatus().getNoted()) { // This
@@ -116,7 +121,7 @@ public class ItemUseOnObject implements PacketHandler {
 				return;
 			}
 			handleDoor(player, object.getLocation(), object, dir, item);
-		} else if (pID == packetTwo) { // Use Item on GameObject
+		} else if (pID == packetTwo) { // Use Item on Scenery
 			object = player.getViewArea().getGameObject(Point.location(packet.readShort(), packet.readShort()));
 			if (object == null) {
 				player.setSuspiciousPlayer(true, "item on null GameObject");

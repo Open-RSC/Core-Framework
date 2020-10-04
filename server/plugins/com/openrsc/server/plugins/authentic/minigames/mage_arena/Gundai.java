@@ -46,7 +46,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 				return;
 			}
 
-			if(validatebankpin(player)) {
+			if(validatebankpin(player, n)) {
 				npcsay(player, n, "no problem");
 				player.setAccessingBank(true);
 				ActionSender.showBank(player);
@@ -54,14 +54,17 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 		} else if (options.get(option).equalsIgnoreCase(optionPin)) {
 			int menu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 			if (menu == 0) {
-				setbankpin(player);
+				if (player.isUsingAuthenticClient()) {
+					npcsay(player, n, "ok but i have to warn you that this is going to be pretty annoying.");
+				}
+				setbankpin(player, n);
 			} else if (menu == 1) {
-				changebankpin(player);
+				changebankpin(player, n);
 			} else if (menu == 2) {
-				removebankpin(player);
+				removebankpin(player, n);
 			}
 		} else if (options.get(option).equalsIgnoreCase(optionCollect)) {
-			if(validatebankpin(player)) {
+			if(validatebankpin(player, n)) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			}
 		} else if (options.get(option).equalsIgnoreCase(optionGoodbye)) {
@@ -106,7 +109,7 @@ public class Gundai implements TalkNpcTrigger, OpNpcTrigger {
 			return;
 		}
 
-		if(validatebankpin(player)) {
+		if(validatebankpin(player, npc)) {
 			if (config().SPAWN_AUCTION_NPCS && auction) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			} else {

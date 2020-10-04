@@ -33,6 +33,7 @@
         <javac srcdir="${src}" destdir="${build}" debug="on" includeantruntime="false" target="${javac.target}"
                source="${javac.source}">
             <classpath>
+                <pathelement location="${lib}/commons-codec-1.14.jar"/>
                 <pathelement location="${lib}/netty-all-4.1.33.Final.jar"/>
                 <pathelement location="${lib}/netty-3.4.6.final.jar"/>
                 <pathelement location="${lib}/log4j-api-2.8.jar"/>
@@ -67,7 +68,7 @@
             <!-- Uncomment the below section to run multiple worlds on the same server process (comment out default.conf above first)-->
             <!--<arg value="openrsc.conf"/>
             <arg value="rsccabbage.conf"/>-->
-            <jvmarg line="-XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=64m"/>
+            <jvmarg line="-Xdiag -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=64m"/>
             <classpath>
                 <pathelement location="${lib}/netty-all-4.1.8.Final.jar"/>
                 <pathelement location="${lib}/disruptor-3.3.0.jar"/>
@@ -80,6 +81,7 @@
                 <pathelement location="${lib}/disruptor-3.3.5.jar"/>
                 <pathelement location="${lib}/commons-lang-2.6.jar"/>
                 <pathelement location="${lib}/*"/>
+                <pathelement location="${lib}/commons-codec-1.14.jar"/>
                 <pathelement path="${jar}/"/>
             </classpath>
         </java>

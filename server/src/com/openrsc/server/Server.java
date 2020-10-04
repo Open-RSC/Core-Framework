@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.database.GameDatabase;
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
 import com.openrsc.server.database.impl.mysql.MySqlGameLogger;
 import com.openrsc.server.event.rsc.GameTickEvent;
@@ -18,6 +19,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.*;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.net.rsc.Crypto;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.rsc.CollisionFlag;
@@ -91,6 +93,7 @@ public class Server implements Runnable {
 	private final HashMap<Integer, Integer> incomingCountPerPacketOpcode = new HashMap<>();
 	private final HashMap<Integer, Long> outgoingTimePerPacketOpcode = new HashMap<>();
 	private final HashMap<Integer, Integer> outgoingCountPerPacketOpcode = new HashMap<>();
+	private int privateMessagesSent = 0;
 
 	private volatile int maxItemId;
 
@@ -265,6 +268,14 @@ public class Server implements Runnable {
 				}
 				LOGGER.info("Database Connection Completed");
 
+				LOGGER.info("Checking For Database Structure Changes...");
+				if (checkForDatabaseStructureChanges()) {
+					LOGGER.info("Database Structure Changes Good");
+				} else {
+					LOGGER.error("Unable to change database structure!");
+					System.exit(1);
+				}
+
 				LOGGER.info("Loading Game Definitions...");
 				getEntityHandler().load();
 				LOGGER.info("Definitions Completed");
@@ -311,6 +322,8 @@ public class Server implements Runnable {
 				getPacketFilter().load();
 				LOGGER.info("Packet Filter Completed");
 
+                Crypto.init();
+
 				maxItemId = getDatabase().getMaxItemID();
 				LOGGER.info("Set max item ID to : " + maxItemId);
 
@@ -339,6 +352,8 @@ public class Server implements Runnable {
 					getPluginHandler().handlePlugin(getWorld(), "Startup", new Object[]{});
 					serverChannel = bootstrap.bind(new InetSocketAddress(getConfig().SERVER_PORT)).sync();
 					LOGGER.info("Game world is now online on port {}!", box(getConfig().SERVER_PORT));
+                    LOGGER.info("RSA exponent: " + Crypto.getPublicExponent());
+                    LOGGER.info("RSA modulus: " + Crypto.getPublicModulus());
 				} catch (final InterruptedException e) {
 					LOGGER.catching(e);
 				}
@@ -731,6 +746,23 @@ public class Server implements Runnable {
 
 	public synchronized int incrementMaxItemID() {
 		return ++maxItemId;
+	}
+
+	public synchronized int incrementPrivateMessagesSent() {
+		return ++privateMessagesSent;
+	}
+
+	// This is used to modify the database when new features may break SQL compatibility while upgrading
+	private boolean checkForDatabaseStructureChanges() {
+		try {
+			if (!getDatabase().columnExists("logins", "clientVersion")) {
+				getDatabase().addColumn("logins", "clientVersion", "INT (11)");
+			}
+			return true;
+		} catch (GameDatabaseException e) {
+			LOGGER.error(e.toString());
+			return false;
+		}
 	}
 
 	class JPanel2 extends JPanel {

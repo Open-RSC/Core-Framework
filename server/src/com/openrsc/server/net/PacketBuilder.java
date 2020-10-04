@@ -84,6 +84,22 @@ public class PacketBuilder {
 		return this;
 	}
 
+
+	/**
+	 * Writes an integer if number cannot be contained in a short
+	 *
+	 * @param value The number
+	 * @return The PacketBuilder instance, for chaining.
+	 */
+	public PacketBuilder writeUnsignedShortInt(int value) {
+		value &= Integer.MAX_VALUE;
+		if (value <= Short.MAX_VALUE)
+			writeShort(value);
+		else
+			writeInt(Integer.MIN_VALUE + value);
+		return this;
+	}
+
 	/**
 	 * Writes an integer.
 	 *
@@ -273,6 +289,12 @@ public class PacketBuilder {
 		DataConversions.encryption.encryptString(data.length, packet, pointer, data, 0);
 		payload.writeBytes(packet);
 
+	}
+
+	public void writeZeroQuotedString(String string) {
+		payload.writeByte(0);
+		payload.writeBytes(string.getBytes());
+		payload.writeByte(0);
 	}
 
 	/*public void writeRSCString(String string) {

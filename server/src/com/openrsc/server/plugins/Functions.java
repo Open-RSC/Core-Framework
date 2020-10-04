@@ -537,25 +537,120 @@ public class Functions {
 	 * Functions below here are Runescript API added to support custom features
 	 */
 
-	private static String showbankpin(Player player) {
-		ActionSender.sendBankPinInterface(player);
-		player.setAttribute("bank_pin_entered", "");
+	private static String showbankpin(Player player, final Npc n) {
 		String enteredPin = null;
-		while (true) {
-			enteredPin = player.getAttribute("bank_pin_entered", "");
-			if (enteredPin != "") {
-				break;
+		if (!player.isUsingAuthenticClient()) {
+			ActionSender.sendBankPinInterface(player);
+			player.setAttribute("bank_pin_entered", "");
+			while (true) {
+				enteredPin = player.getAttribute("bank_pin_entered", "");
+				if (enteredPin != "") {
+					break;
+				}
+				delay();
 			}
-			delay();
+			if (enteredPin.equals("cancel")) {
+				ActionSender.sendCloseBankPinInterface(player);
+				return null;
+			}
+		} else {
+			npcsay(player, n, "whisper in my ear the bank pin, ok?");
+			enteredPin = "";
+			int pinNum = 0;
+			boolean bankerIsAnnoyed = false;
+			for (int i = 0; i < 4; i++) {
+				boolean playerSatisfied = false;
+
+				while (!playerSatisfied) {
+					if (!bankerIsAnnoyed) {
+						switch (enteredPin.length()) {
+							case 0:
+								npcsay(player, n, "first number?");
+								break;
+							case 1:
+								npcsay(player, n, "ok, second number?");
+								break;
+							case 2:
+								npcsay(player, n, "third number?");
+								break;
+							case 3:
+								npcsay(player, n, "aaand final number?");
+								break;
+							default:
+								npcsay(player, n, "all mathematical reason has failed.");
+								npcsay(player, n, "goodbye.");
+								return null;
+						}
+					} else {
+						switch (enteredPin.length()) {
+							case 0:
+								npcsay(player, n, "what's the first number, then?");
+								break;
+							case 1:
+								npcsay(player, n, "what was the second number?");
+								break;
+							case 2:
+								npcsay(player, n, "third number?");
+								break;
+							case 3:
+								npcsay(player, n, "final number.");
+								break;
+							default:
+								npcsay(player, n, "all mathematical reason has failed.");
+								npcsay(player, n, "goodbye.");
+								return null;
+						}
+						bankerIsAnnoyed = false;
+					}
+					// authentic client can only show 5 options at once.
+					pinNum = Functions.multi(player, "1 (one)", "2 (two)", "3 (three)", "4 (four)", "-- more --") + 1;
+					if (pinNum == 5) {
+						pinNum = Functions.multi(player, "5 (five)", "6 (six)", "7 (seven)", "8 (eight)", "-- more --") + 1;
+						if (pinNum == 5) {
+							pinNum = Functions.multi(player, "9 (nine)", "0 (zero)", "cycle back to 1", "please cancel", "i love you") + 1;
+							switch (pinNum) {
+								case 1:
+									pinNum = 9;
+									playerSatisfied = true;
+									break;
+								case 2:
+									pinNum = 0;
+									playerSatisfied = true;
+									break;
+								case 3:
+									npcsay(player, n, "ok no big deal, all good");
+									bankerIsAnnoyed = true;
+									continue;
+								case 4:
+									player.resetMenuHandler();
+									return null;
+								case 5:
+									// if you remove this feature the entire client breaks
+									npcsay(player, n, "@red@*blushes*");
+									return null;
+								default:
+									break;
+							}
+						} else {
+							pinNum += 4;
+							playerSatisfied = true;
+						}
+					} else {
+						playerSatisfied = true;
+					}
+				}
+
+				if (pinNum < 0 || pinNum > 9) {
+					return null;
+				}
+				enteredPin += String.format("%d", pinNum);
+			}
 		}
-		if (enteredPin.equals("cancel")) {
-			ActionSender.sendCloseBankPinInterface(player);
-			return null;
-		}
+
 		return enteredPin;
 	}
 
-	public static boolean removebankpin(final Player player) {
+	public static boolean removebankpin(final Player player, final Npc n) {
 		BankPinChangeRequest request;
 		String oldPin;
 
@@ -564,7 +659,7 @@ public class Functions {
 			return false;
 		}
 
-		oldPin = showbankpin(player);
+		oldPin = showbankpin(player, n);
 
 		if(oldPin == null) {
 			player.playerServerMessage(MessageType.QUEST, "You have cancelled removing your bank pin");
@@ -581,7 +676,7 @@ public class Functions {
 		return true;
 	}
 
-	public static boolean setbankpin(final Player player) {
+	public static boolean setbankpin(final Player player, final Npc n) {
 		BankPinChangeRequest request;
 		String newPin;
 
@@ -590,7 +685,7 @@ public class Functions {
 			return false;
 		}
 
-		newPin = showbankpin(player);
+		newPin = showbankpin(player, n);
 
 		if(newPin == null) {
 			player.playerServerMessage(MessageType.QUEST, "You have cancelled creating your bank pin");
@@ -607,7 +702,7 @@ public class Functions {
 		return true;
 	}
 
-	public static boolean changebankpin(final Player player) {
+	public static boolean changebankpin(final Player player, final Npc n) {
 		BankPinChangeRequest request;
 		String newPin;
 		String oldPin;
@@ -617,14 +712,18 @@ public class Functions {
 			return false;
 		}
 
-		oldPin = showbankpin(player);
+		oldPin = showbankpin(player, n);
 
 		if(oldPin == null) {
 			player.playerServerMessage(MessageType.QUEST, "You have cancelled changing your bankpin");
 			return false;
 		}
 
-		newPin = showbankpin(player);
+		if (player.isUsingAuthenticClient()) {
+			npcsay(player, n, "ok now the new one.");
+		}
+
+		newPin = showbankpin(player, n);
 
 		if(newPin == null) {
 			player.playerServerMessage(MessageType.QUEST, "You have cancelled changing your bankpin");
@@ -641,7 +740,7 @@ public class Functions {
 		return true;
 	}
 
-	public static boolean validatebankpin(final Player player) {
+	public static boolean validatebankpin(final Player player, final Npc n) {
 		BankPinVerifyRequest request;
 		String pin;
 
@@ -658,7 +757,7 @@ public class Functions {
 			return true;
 		}
 
-		pin = showbankpin(player);
+		pin = showbankpin(player, n);
 		if (pin == null) return false;
 		request = new BankPinVerifyRequest(player.getWorld().getServer(), player, pin);
 		player.getWorld().getServer().getLoginExecutor().add(request);

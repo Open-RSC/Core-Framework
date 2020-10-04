@@ -13,13 +13,13 @@ public class PacketHandlerLookup {
 	private static final Logger LOGGER = LogManager.getLogger();
 	static {
 
-		bind(OpcodeIn.PING.getOpcode(), Ping.class);
+		bind(OpcodeIn.HEARTBEAT.getOpcode(), Ping.class);
 
 		bind(OpcodeIn.WALK_TO_ENTITY.getOpcode(), WalkRequest.class);
 		bind(OpcodeIn.WALK_TO_POINT.getOpcode(), WalkRequest.class);
 
-		bind(OpcodeIn.WALL_OBJECT_COMMAND1.getOpcode(), GameObjectWallAction.class);
-		bind(OpcodeIn.WALL_OBJECT_COMMAND2.getOpcode(), GameObjectWallAction.class);
+		bind(OpcodeIn.INTERACT_WITH_BOUNDARY.getOpcode(), GameObjectWallAction.class);
+		bind(OpcodeIn.INTERACT_WITH_BOUNDARY2.getOpcode(), GameObjectWallAction.class);
 
 		bind(OpcodeIn.QUESTION_DIALOG_ANSWER.getOpcode(), MenuReplyHandler.class);
 
@@ -40,13 +40,13 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.NPC_TALK_TO.getOpcode(), NpcTalkTo.class);
 		bind(OpcodeIn.NPC_ATTACK1.getOpcode(), AttackHandler.class);
 		bind(OpcodeIn.CAST_ON_SELF.getOpcode(), SpellHandler.class);
-		bind(OpcodeIn.PLAYER_CAST_SPELL.getOpcode(), SpellHandler.class);
+		bind(OpcodeIn.PLAYER_CAST_PVP.getOpcode(), SpellHandler.class);
 		bind(OpcodeIn.PLAYER_USE_ITEM.getOpcode(), ItemUseOnPlayer.class);
-		bind(OpcodeIn.NPC_CAST_SPELL.getOpcode(), SpellHandler.class);
-		bind(OpcodeIn.ITEM_CAST_SPELL.getOpcode(), SpellHandler.class);
-		bind(OpcodeIn.WALL_OBJECT_CAST.getOpcode(), SpellHandler.class);
-		bind(OpcodeIn.OBJECT_CAST.getOpcode(), SpellHandler.class);
-		bind(OpcodeIn.GROUND_ITEM_CAST_SPELL.getOpcode(), SpellHandler.class);
+		bind(OpcodeIn.CAST_ON_NPC.getOpcode(), SpellHandler.class);
+		bind(OpcodeIn.CAST_ON_INVENTORY_ITEM.getOpcode(), SpellHandler.class);
+		bind(OpcodeIn.CAST_ON_BOUNDARY.getOpcode(), SpellHandler.class);
+		bind(OpcodeIn.CAST_ON_SCENERY.getOpcode(), SpellHandler.class);
+		bind(OpcodeIn.CAST_ON_GROUND_ITEM.getOpcode(), SpellHandler.class);
 		bind(OpcodeIn.CAST_ON_LAND.getOpcode(), SpellHandler.class);
 
 		bind(OpcodeIn.PLAYER_ATTACK.getOpcode(), AttackHandler.class);
@@ -56,8 +56,8 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.ITEM_USE_ITEM.getOpcode(), ItemUseOnItem.class);
 		bind(OpcodeIn.NPC_USE_ITEM.getOpcode(), ItemUseOnNpc.class);
 		bind(OpcodeIn.ITEM_COMMAND.getOpcode(), ItemActionHandler.class);
-		bind(OpcodeIn.OBJECT_USE_ITEM.getOpcode(), ItemUseOnObject.class);
-		bind(OpcodeIn.WALL_USE_ITEM.getOpcode(), ItemUseOnObject.class);
+		bind(OpcodeIn.USE_ITEM_ON_SCENERY.getOpcode(), ItemUseOnObject.class);
+		bind(OpcodeIn.USE_WITH_BOUNDARY.getOpcode(), ItemUseOnObject.class);
 
 		bind(OpcodeIn.GROUND_ITEM_TAKE.getOpcode(), GroundItemTake.class);
 
@@ -119,7 +119,7 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER.getOpcode(), PlayerTradeHandler.class);
 
 		bind(OpcodeIn.SLEEPWORD_ENTERED.getOpcode(), SleepHandler.class);
-		bind(OpcodeIn.ON_TUTORIAL_ISLAND.getOpcode(), TutorialHandler.class);
+		bind(OpcodeIn.SKIP_TUTORIAL.getOpcode(), TutorialHandler.class);
 		bind(OpcodeIn.ON_BLACK_HOLE.getOpcode(), BlackHoleHandler.class);
 
 		bind(OpcodeIn.COMBAT_STYLE_CHANGED.getOpcode(), StyleHandler.class);

@@ -20,6 +20,10 @@ public class Prayers {
 		return activatedPrayers[pID];
 	}
 
+	public boolean[] getActivePrayers() {
+	    return activatedPrayers;
+    }
+
 	public void setPrayer(int pID, boolean b) {
 		activatedPrayers[pID] = b;
 		ActionSender.sendPrayers(player, activatedPrayers);

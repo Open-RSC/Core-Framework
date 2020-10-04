@@ -99,7 +99,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 			final Player loadedPlayer = getServer().getDatabase().loadPlayer(this);
 			loadedPlayer.setLoggedIn(true);
 
-			LOGGER.info("Player Loaded: " + getUsername());
+			LOGGER.info("Player Loaded: " + getUsername() +  String.format("; Client Version: %d", clientVersion));
 
 			getServer().getGameEventHandler().add(new ImmediateEvent(getServer().getWorld(), "Login Player") {
 				@Override
@@ -136,7 +136,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
-			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin) {
+			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin && getClientVersion() != 235) {
 				return (byte) LoginResponse.CLIENT_UPDATED;
 			}
 

@@ -51,7 +51,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 				mes("You must have over 100 total skill to use the auction house.");
 				return;
 			}
-			if(validatebankpin(player)) {
+			if(validatebankpin(player, npc)) {
 				npcsay(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
 				player.setAttribute("auctionhouse", true);
 				ActionSender.sendOpenAuctionHouse(player);
@@ -99,7 +99,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 					player.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
-				if(validatebankpin(player)) {
+				if(validatebankpin(player, n)) {
 					player.message("Welcome to the auction house " + (player.isMale() ? "Sir" : "Miss") + "!");
 					player.setAttribute("auctionhouse", true);
 					ActionSender.sendOpenAuctionHouse(player);
@@ -116,7 +116,7 @@ public class Auctioneers implements TalkNpcTrigger, OpNpcTrigger {
 					player.message("As an Iron Man, you cannot use the Auction.");
 					return;
 				}
-				if(validatebankpin(player)) {
+				if(validatebankpin(player, n)) {
 					player.message("Welcome to the auction house " + (player.isMale() ? "Sir" : "Miss") + "!");
 					player.setAttribute("auctionhouse", true);
 					ActionSender.sendOpenAuctionHouse(player);

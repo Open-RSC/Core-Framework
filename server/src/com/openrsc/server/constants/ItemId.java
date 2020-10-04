@@ -1467,6 +1467,8 @@ public enum ItemId {
 
 	private int itemId;
 
+	public static final int maxAuthentic = 1289;
+
 	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();
 
 	static {

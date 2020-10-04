@@ -86,7 +86,16 @@ public final class GameSettingHandler implements PacketHandler {
 			return;
 		}
 
-		player.getSettings().setGameSetting(idx, value == 1);
+		if (player.isUsingAuthenticClient()) {
+			// setting 1 is unused :-)
+			if (idx == 0) { // Camera Mode Auto
+				player.getSettings().setGameSetting(idx, value == 1);
+			} else { // 2: Number of Mouse Buttons & 3: Sound Enabled
+				player.getSettings().setGameSetting(idx - 1, value == 1);
+			}
+		} else {
+			player.getSettings().setGameSetting(idx, value == 1);
+		}
 		ActionSender.sendGameSettings(player);
 	}
 }

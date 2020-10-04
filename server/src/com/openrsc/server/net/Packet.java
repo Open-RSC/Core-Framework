@@ -95,7 +95,11 @@ public class Packet {
 
 
 	public byte[] readBytes(int length) {
-		return payload.readBytes(length).array();
+        byte[] bytes = new byte[length];
+        for (int i = 0; i < length; i++) {
+            bytes[i] = payload.readByte();
+        }
+	    return bytes;
 	}
 
 	/**
@@ -162,6 +166,22 @@ public class Packet {
 	}
 
 	/**
+	 * Reads a RuneScape string.
+	 *
+	 * @return The string.
+	 */
+	public String readZeroPaddedString() {
+		StringBuilder bldr = new StringBuilder();
+		byte b;
+		if (payload.readByte() != 0) {
+			return "";
+		}
+		while (payload.readableBytes() > 0 && (b = payload.readByte()) != 0)
+			bldr.append((char) b);
+		return bldr.toString();
+	}
+
+	/**
 	 * Reads a series of bytes.
 	 *
 	 * @param is     The tarread byte array.
@@ -194,5 +214,27 @@ public class Packet {
 
 	public static long getNextPacketNumber() {
 		return nextPacketNumber++;
+	}
+
+	public static void printPacket(Packet packet, String direction) {
+		int length = packet.getReadableBytes();
+		int opcode = packet.getID();
+		ByteBuf buffer = packet.getBuffer();
+		System.out.print(String.format("%s Packet Opcode %d:", direction, opcode));
+		for (int i=0; i < length; i++) {
+			System.out.print(String.format(" %d", Byte.toUnsignedInt(buffer.readByte())));
+		}
+		System.out.println();
+		buffer.resetReaderIndex();
+	}
+	public static void printBuffer(ByteBuf buffer, String direction) {
+		ByteBuf bufferDup = buffer.duplicate();
+		bufferDup.resetReaderIndex();
+		int length = bufferDup.readableBytes();
+		System.out.print(String.format("%s Packet:", direction));
+		for (int i=0; i < length; i++) {
+			System.out.print(String.format(" %d", Byte.toUnsignedInt(bufferDup.readByte())));
+		}
+		System.out.println();
 	}
 }

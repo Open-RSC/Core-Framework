@@ -1,4 +1,4 @@
-[![pipeline status](https://orsc.dev/open-rsc/Game/badges/master/pipeline.svg)](https://orsc.dev/open-rsc/Game/-/commits/master)
+[![pipeline status](https://gitlab.com/open-runescape-classic/core/badges/master/pipeline.svg)](https://gitlab.com/open-runescape-classic/core/-/commits/master)
 
 # Open RuneScape Classic
 
@@ -16,8 +16,6 @@ Runescape Classic was shut down and abandoned after 17 years on August 6th, 2018
 
 
 ## How to Play<a name="play"></a>
-<a href="https://orsc.dev/open-rsc/Single-Player">Windows Single Player</a>
-
 <b>Run your own server:</b>
 
 Download <a href="https://www.jetbrains.com/idea/download/#section=mac">IntelliJ IDEA Community</a> and <a href="https://downloads.mariadb.org/">MariaDB (MySQL) server</a>.
@@ -53,7 +51,7 @@ or
 ## Bug Reports, Discord, and Reddit<a name="bugs"></a>
 Feel free to submit bug reports in the repository issues section! If you would like to chat with developers and players of this project, join our Discord server!
 
-- <a href="https://orsc.dev/open-rsc/Game/issues">GitLab Issue Submission</a>
+- <a href="https://gitlab.com/open-runescape-classic/core/issues">GitLab Issue Submission</a>
 
 - <a href="https://discordapp.com/invite/94vVKND">Discord</a>
 
@@ -64,7 +62,7 @@ Feel free to submit bug reports in the repository issues section! If you would l
 
 ## In-Game Commands<a name="commands"></a>
 
-#### <a href="https://orsc.dev/open-rsc/Game/blob/master/Commands.md">Click here for in-game command documentation.</a>
+#### <a href="https://gitlab.com/open-runescape-classic/core/-/blob/master/Commands.md">Click here for in-game command documentation.</a>
 
 
 ## Thank You<a name="thankyou"></a>
