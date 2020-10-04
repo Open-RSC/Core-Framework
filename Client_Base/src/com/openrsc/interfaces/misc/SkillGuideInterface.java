@@ -1045,12 +1045,12 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1301, "2", "Imbue Mind talisman"));
 				skillMenuEntries.add(new SkillMenuItem(1302, "5", "Imbue Water talisman"));
 				skillMenuEntries.add(new SkillMenuItem(1386, "8", "Cursed air talisman"));
-				skillMenuEntries.add(new SkillMenuItem(1387, "8", "Cursed mind talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1387, "9", "Cursed mind talisman"));
 				skillMenuEntries.add(new SkillMenuItem(1303, "9", "Imbue Earth talisman"));
 				skillMenuEntries.add(new SkillMenuItem(1388, "12", "Cursed water talisman"));
 				skillMenuEntries.add(new SkillMenuItem(1304, "14", "Imbue Fire talisman"));
 				skillMenuEntries.add(new SkillMenuItem(1398, "15", "Enfeebled air talisman"));
-				skillMenuEntries.add(new SkillMenuItem(1399, "15", "Enfeebled mind talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1399, "16", "Enfeebled mind talisman"));
 				skillMenuEntries.add(new SkillMenuItem(1389, "16", "Cursed earth talisman"));
 				skillMenuEntries.add(new SkillMenuItem(1400, "19", "Enfeebled water talisman"));
 				skillMenuEntries.add(new SkillMenuItem(1305, "20", "Imbue Body talisman"));
@@ -1065,9 +1065,9 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1404, "41", "Enfeebled cosmic talisman"));
 				skillMenuEntries.add(new SkillMenuItem(1393, "42", "Cursed chaos talisman"));
 				skillMenuEntries.add(new SkillMenuItem(1308, "44", "Imbue Nature talisman"));
-				skillMenuEntries.add(new SkillMenuItem(1394, "49", "Cursed nature talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1394, "51", "Cursed nature talisman"));
 				skillMenuEntries.add(new SkillMenuItem(1405, "49", "Enfeebled chaos talisman"));
-				skillMenuEntries.add(new SkillMenuItem(1406, "56", "Enfeebled nature talisman"));
+				skillMenuEntries.add(new SkillMenuItem(1406, "58", "Enfeebled nature talisman"));
 
 			}
 		}

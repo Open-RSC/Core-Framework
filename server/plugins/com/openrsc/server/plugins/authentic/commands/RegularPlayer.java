@@ -577,7 +577,8 @@ public final class RegularPlayer implements CommandTrigger {
 			+ "@whi@::groups - shows available ranks on the server %"
 			+ "@whi@::wilderness - shows the wilderness activity %"
 			+ "@whi@::time - shows the current server time %"
-			+ "@whi@::event - to enter an ongoing server event %", true
+			+ "@whi@::event - to enter an ongoing server event %"
+			+ "@whi@::kills <name(optional)> - shows kill counts of npcs", true
 		);
 	}
 }
