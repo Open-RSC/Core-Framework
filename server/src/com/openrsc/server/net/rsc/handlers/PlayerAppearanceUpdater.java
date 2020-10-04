@@ -14,26 +14,39 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 	public void handlePacket(Packet packet, Player player) throws Exception {
 
 		if (!player.isChangingAppearance()) {
-			player.setSuspiciousPlayer(true, "player update packet without changing appearance");
+			player.setSuspiciousPlayer(true, "player appearance packet without changing appearance");
 			return;
 		}
 		player.setChangingAppearance(false);
-		byte headGender = packet.readByte();
+		byte headRestrictions = packet.readByte();
 		byte headType = packet.readByte();
-		byte bodyGender = packet.readByte();
+		byte bodyType = packet.readByte();
 
-		packet.readByte(); // wtf is this?
+		// This value is always "2" and is not very useful.
+		// I looked in the  v40 client deob, and the 4th byte is also always 2 there.
+		// I looked in the v127 client deob, and the 4th byte is also always 2 there.
+		// I looked in the v204 client deob, and the 4th byte is also always 2 there.
+		// I looked in the v233 client deob, and the 4th byte is also always 2 there.
+		byte mustEqual2 = packet.readByte();
+		if (mustEqual2 != 2) {
+			player.setSuspiciousPlayer(true, "4th byte of player appearance packet wasn't equal to 2");
+			return;
+		}
 
 		int hairColour = packet.readByte();
 		int topColour = packet.readByte();
 		int trouserColour = packet.readByte();
 		int skinColour = packet.readByte();
+		int playerMode1 = -1;
+		int playerMode2 = -1;
 
-		int playerMode1 = packet.readByte();
-		int playerMode2 = packet.readByte();
+		if (!player.isUsingAuthenticClient()) {
+			playerMode1 = packet.readByte();
+			playerMode2 = packet.readByte();
+		}
 
 		int headSprite = headType + 1;
-		int bodySprite = bodyGender + 1;
+		int bodySprite = bodyType + 1;
 
 		PlayerAppearance appearance = new PlayerAppearance(hairColour,
 			topColour, trouserColour, skinColour, headSprite, bodySprite);
@@ -42,7 +55,7 @@ public class PlayerAppearanceUpdater implements PacketHandler {
 			return;
 		}
 
-		player.setMale(headGender == 1);
+		player.setMale(headRestrictions == 1); // TODO: expand gender preferences
 
 		if (player.isMale()) {
 			if (player.getConfig().WANT_EQUIPMENT_TAB) {

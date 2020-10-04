@@ -3,9 +3,7 @@ package com.openrsc.server.net.rsc;
 import com.openrsc.server.Server;
 import com.openrsc.server.database.struct.PlayerLoginData;
 import com.openrsc.server.database.struct.PlayerRecoveryQuestions;
-import com.openrsc.server.login.CharacterCreateRequest;
-import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.login.RecoveryAttemptRequest;
+import com.openrsc.server.login.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.ConnectionAttachment;
@@ -36,55 +34,167 @@ public class LoginPacketHandler {
 		return bldr.toString();
 	}
 
+	public int bytesToInt(byte b1, byte b2, byte b3, byte b4) {
+        long val = Byte.toUnsignedInt(b1) << 24;
+        val += Byte.toUnsignedInt(b2) << 16;
+        val += Byte.toUnsignedInt(b3) << 8;
+        val += Byte.toUnsignedInt(b4);
+	    return (int)val;
+    }
+
 	public void processLogin(Packet packet, Channel channel, Server server) {
 		final String IP = ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
-
+		ConnectionAttachment attachment = channel.attr(RSCConnectionHandler.attachment).get();
+        //ConnectionAttachment attachment = new ConnectionAttachment();
+        //channel.attr(RSCConnectionHandler.attachment).set(attachment);
 		switch (packet.getID()) {
 
 			/* Logging in */
 			case 0:
-				boolean reconnecting = packet.readByte() == 1;
-				int clientVersion = packet.readInt();
+                byte authenticClient;
+                try {
+                    if (attachment.authenticClient.get()) {
+                        authenticClient = 1;
+                    } else {
+                        authenticClient = 0;
+                    }
+                } catch (NullPointerException e) {
+                    authenticClient = 127;
+                }
+			    if (authenticClient != 0) {
+                    LoginInfo loginInfo = new LoginInfo();
 
-				final String username = getString(packet.getBuffer()).trim();
-				final String password = getString(packet.getBuffer()).trim();
+                    byte opcode = packet.readByte(); // TODO: this should not be needed
 
-				ConnectionAttachment attachment = new ConnectionAttachment();
-				channel.attr(RSCConnectionHandler.attachment).set(attachment);
+                    // Handle login packet
+                    loginInfo.reconnecting = packet.readByte() == 1;
+                    int clientVersion = packet.readInt();
 
-				final LoginRequest request = new LoginRequest(server, channel, username, password, clientVersion) {
-					@Override
-					public void loginValidated(int response) {
-						Channel channel = getChannel();
-						channel.writeAndFlush(new PacketBuilder().writeByte((byte) response).toPacket());
-						if ((response & 0x40) == LoginResponse.LOGIN_UNSUCCESSFUL) {
-							channel.close();
-						}
-					}
+                    // Decrypt login block
+                    int rsaLength = packet.readUnsignedShort();
+                    byte[] loginBlock = Crypto.decryptRSA(packet.readBytes(rsaLength), 0, rsaLength);
 
-					@Override
-					public void loadingComplete(Player loadedPlayer) {
-						getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
+                    // Handle login block
+                    int checksum = loginBlock[0];
+                    if (checksum != 10) { // Authentic client will only send 10 here, probably as a 99.6% reliable "checksum" that it was able to decrypt correctly
+                        // return LOGIN_REJECT;
+                    }
+                    loginInfo.keys[0] = bytesToInt(loginBlock[1], loginBlock[2], loginBlock[3], loginBlock[4]);
+                    loginInfo.keys[1] = bytesToInt(loginBlock[5], loginBlock[6], loginBlock[7], loginBlock[8]);
+                    loginInfo.keys[2] = bytesToInt(loginBlock[9], loginBlock[10], loginBlock[11], loginBlock[12]);
+                    loginInfo.keys[3] = bytesToInt(loginBlock[13], loginBlock[14], loginBlock[15], loginBlock[16]);
+                    String password = "";
+                    try {
+                        // Fun fact: password is always 20 characters long, with spaces at the end.
+                        // Spaces in your password are converted to underscores.
+                        password = new String(loginBlock, 17, 20, "UTF8").trim();
+                    } catch (Exception e) {
+                        LOGGER.info("error parsing password in login block");
+                        e.printStackTrace();
+                    }
+                    // TODO: there are ignored nonces at the end of the login block.
+                    // If we cared about the cryptographic security gained by checking that those nonces haven't been used before,
+                    // we would want that logic here.
 
-						ConnectionAttachment attachment = channel.attr(RSCConnectionHandler.attachment).get();
-						// attachment.ISAAC.set(new ISAACContainer(incomingCipher,
-						// outgoingCipher));
-						attachment.player.set(loadedPlayer);
+                    // Decrypt XTEA block
+                    int xteaLength = packet.readUnsignedShort() - 1;
+                    byte[] xteaBlock = Crypto.decryptXTEA(packet.readBytes(xteaLength), 0, xteaLength, loginInfo.keys);
 
-						/* Server Configs */
-						ActionSender.sendServerConfigs(loadedPlayer);
+                    // TODO: there are also ignored nonces at the beginning of the xtea block
 
-						if (loadedPlayer.getLastLogin() == 0L) {
-							loadedPlayer.setInitialLocation(Point.location(216, 744));
-							loadedPlayer.setChangingAppearance(true);
-						}
+                    String username = "";
+                    try {
+                        username = new String(xteaBlock, 25, xteaBlock.length - 25, "UTF8").trim();
+                    } catch (Exception e) {
+                        LOGGER.info("error parsing username in xtea block");
+                        e.printStackTrace();
+                    }
 
-						server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
-						ActionSender.sendLogin(loadedPlayer);
-					}
-				};
-				server.getLoginExecutor().add(request);
-				break;
+                    final LoginRequest request = new LoginRequest(server, channel, username, password, clientVersion) {
+                        @Override
+                        public void loginValidated(int response) {
+                            Channel channel = getChannel();
+                            channel.writeAndFlush(new PacketBuilder().writeByte((byte) response).toPacket());
+                            if ((response & 0x40) == LoginResponse.LOGIN_UNSUCCESSFUL) {
+                                channel.close();
+                            }
+                        }
+
+                        @Override
+                        public void loadingComplete(Player loadedPlayer) {
+                            ISAACCipher incomingCipher = new ISAACCipher();
+                            incomingCipher.setKeys(loginInfo.keys);
+                            ISAACCipher outgoingCipher = new ISAACCipher();
+                            outgoingCipher.setKeys(loginInfo.keys);
+                            attachment.ISAAC.set(new ISAACContainer(incomingCipher, outgoingCipher));
+
+                            getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
+                            attachment.player.set(loadedPlayer);
+
+                            /* Server Configs */
+                            if (clientVersion != 235) {
+                                attachment.authenticClient.set(false);
+                                ActionSender.sendServerConfigs(loadedPlayer);
+                            } else {
+                                attachment.authenticClient.set(true);
+                            }
+
+                            if (loadedPlayer.getLastLogin() == 0L) {
+                                loadedPlayer.setInitialLocation(Point.location(216, 744));
+                                loadedPlayer.setChangingAppearance(true);
+                            }
+
+                            loadedPlayer.setClientVersion(clientVersion);
+
+                            server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
+                            ActionSender.sendLogin(loadedPlayer);
+                        }
+                    };
+                    server.getLoginExecutor().add(request);
+                    break;
+                } else {
+			        // Inauthentic client
+                    boolean reconnecting = packet.readByte() == 1;
+                    int clientVersion = packet.readInt();
+
+                    final String username = getString(packet.getBuffer()).trim();
+                    final String password = getString(packet.getBuffer()).trim();
+
+                    final LoginRequest request = new LoginRequest(server, channel, username, password, clientVersion) {
+                        @Override
+                        public void loginValidated(int response) {
+                            Channel channel = getChannel();
+                            channel.writeAndFlush(new PacketBuilder().writeByte((byte) response).toPacket());
+                            if ((response & 0x40) == LoginResponse.LOGIN_UNSUCCESSFUL) {
+                                channel.close();
+                            }
+                        }
+
+                        @Override
+                        public void loadingComplete(Player loadedPlayer) {
+                            getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
+
+                            ConnectionAttachment attachment = channel.attr(RSCConnectionHandler.attachment).get();
+                            attachment.player.set(loadedPlayer);
+
+                            /* Server Configs */
+                            ActionSender.sendServerConfigs(loadedPlayer);
+
+                            if (loadedPlayer.getLastLogin() == 0L) {
+                                loadedPlayer.setInitialLocation(Point.location(216, 744));
+                                loadedPlayer.setChangingAppearance(true);
+                            }
+
+                            loadedPlayer.setClientVersion(clientVersion);
+
+                            server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
+                            ActionSender.sendLogin(loadedPlayer);
+                        }
+                    };
+                    server.getLoginExecutor().add(request);
+                    break;
+
+                }
 
 			/* Registering */
 			case 78:

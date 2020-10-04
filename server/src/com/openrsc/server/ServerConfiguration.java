@@ -32,7 +32,7 @@ public class ServerConfiguration {
 	public String MESSAGE_PREFIX = "@gre@Runescape Classic:@whi@ ";
 	public String BAD_SYNTAX_PREFIX = MESSAGE_PREFIX +" Invalid Syntax: ::";
 	public boolean MEMBER_WORLD;
-	private int WORLD_NUMBER;
+	public int WORLD_NUMBER;
 	public int CLIENT_VERSION;
 	public int MAX_PLAYERS;
 	public int MAX_PLAYERS_PER_IP;

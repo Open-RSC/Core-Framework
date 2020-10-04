@@ -11,4 +11,7 @@ public class ConnectionAttachment {
 
 	public AtomicReference<ISAACContainer> ISAAC = new AtomicReference<ISAACContainer>();
 
+	public AtomicReference<Boolean> authenticClient = new AtomicReference<Boolean>();
+
+
 }

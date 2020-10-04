@@ -50,13 +50,17 @@ public final class BankHandler implements PacketHandler {
 			case BANK_WITHDRAW:
 				catalogID = packet.readShort();
 				amount = packet.readInt();
+				// authentic client also sends magic constant 4 byte number that never changes & is not very useful.
+				// possibly a relic if WITHDRAW & DEPOSIT didn't have their own opcodes in the past.
 
 				if (catalogID < 0 || catalogID >= player.getWorld().getServer().getEntityHandler().getItemCount()) {
 					return;
 				}
 
-				if (player.getConfig().WANT_BANK_NOTES)
-					wantsNotes = packet.readByte() == 1;
+				if (!player.isUsingAuthenticClient()) {
+					if (player.getConfig().WANT_BANK_NOTES)
+						wantsNotes = packet.readByte() == 1;
+				}
 
 				amount = Math.min(player.getBank().countId(catalogID), amount);
 				player.getBank().withdrawItemToInventory(catalogID, amount, wantsNotes);
@@ -64,6 +68,8 @@ public final class BankHandler implements PacketHandler {
 			case BANK_DEPOSIT:
 				catalogID = packet.readShort();
 				amount = packet.readInt();
+				// authentic client also sends magic constant 4 byte number that never changes & is not very useful.
+				// possibly a relic if WITHDRAW & DEPOSIT didn't have their own opcodes in the past.
 
 				if (catalogID < 0 || catalogID >= player.getWorld().getServer().getEntityHandler().getItemCount()) {
 					return;

@@ -10,9 +10,14 @@ import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 public final class SleepHandler implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
-
-		String sleepword = packet.readString().trim();
-		if (sleepword.equalsIgnoreCase("-null-")) {
+		String sleepWord;
+		if (player.isUsingAuthenticClient()) {
+			int sleepDelay = packet.readUnsignedByte(); // TODO: use this somehow
+			sleepWord = packet.readZeroPaddedString().trim();
+		} else {
+			sleepWord = packet.readString().trim();
+		}
+		if (sleepWord.equalsIgnoreCase("-null-")) {
 			player.incrementSleepTries();
 
 			player.getWorld().getServer()
@@ -28,7 +33,8 @@ public final class SleepHandler implements PacketHandler {
 			if (!player.isSleeping()) {
 				return;
 			}
-			if (sleepword.equalsIgnoreCase(player.getSleepword())) {
+			// TODO: once sleepwords are implemented, remove this condition that allows authentic client users to always guess sleepword correctly
+			if (sleepWord.equalsIgnoreCase(player.getSleepword()) || player.isUsingAuthenticClient()) {
 				ActionSender.sendWakeUp(player, true, false);
 				player.resetSleepTries();
 				// Advance the fatigue expert part of tutorial island

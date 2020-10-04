@@ -119,10 +119,10 @@ public class PlayerTradeHandler implements PacketHandler {
 					ActionSender.sendTradeWindowOpen(player);
 					ActionSender.sendTradeWindowOpen(affectedPlayer);
 				} else {
-					ActionSender.sendMessage(player, null, 0, MessageType.INVENTORY, affectedPlayer.getTrade().isTradeActive()
-						? affectedPlayer.getUsername() + " is already in a trade" : "Sending trade request", 0);
+					ActionSender.sendMessage(player, null,  MessageType.INVENTORY, affectedPlayer.getTrade().isTradeActive()
+						? affectedPlayer.getUsername() + " is already in a trade" : "Sending trade request", 0, null);
 
-					ActionSender.sendMessage(affectedPlayer, player, 1, MessageType.TRADE, "", player.getIcon());
+					ActionSender.sendMessage(affectedPlayer, player,  MessageType.TRADE, "", player.getIcon(), null);
 
 				}
 				break;
@@ -153,17 +153,27 @@ public class PlayerTradeHandler implements PacketHandler {
 					player.getTrade().resetAll();
 					return;
 				}
-
-				player.getTrade().setTradeAccepted(false);
+				
+				if (player.getTrade().isTradeAccepted()) {
+					player.getTrade().setTradeAccepted(false);
+					ActionSender.sendOwnTradeAcceptUpdate(player);
+				}
+				if (affectedPlayer.getTrade().isTradeAccepted()) {
+					affectedPlayer.getTrade().setTradeAccepted(false);
+					ActionSender.sendOwnTradeAcceptUpdate(affectedPlayer);
+				}
 				player.getTrade().setTradeConfirmAccepted(false);
-				affectedPlayer.getTrade().setTradeAccepted(false);
 				affectedPlayer.getTrade().setTradeConfirmAccepted(false);
-
 
 				player.getTrade().resetOffer();
 				int count = (int) packet.readByte();
 				for (int slot = 0; slot < count; slot++) {
-					Item tItem = new Item(packet.readShort(), packet.readInt(), packet.readShort() == 1);
+					Item tItem;
+					if (player.isUsingAuthenticClient()) {
+						tItem = new Item(packet.readShort(), packet.readInt(), false);
+					} else {
+						tItem = new Item(packet.readShort(), packet.readInt(), packet.readShort() == 1);
+					}
 
 					if (tItem.getAmount() < 1) {
 						player.setSuspiciousPlayer(true, "item less than 0");

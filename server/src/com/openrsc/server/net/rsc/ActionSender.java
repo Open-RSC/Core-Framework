@@ -70,7 +70,11 @@ public class ActionSender {
 	public static void sendBox(Player player, String message, boolean big) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(big ? Opcode.SEND_BOX.opcode : Opcode.SEND_BOX2.opcode);
-		s.writeString(message);
+		if (player.isUsingAuthenticClient()) {
+		    s.writeZeroQuotedString(message);
+        } else {
+            s.writeString(message);
+        }
 		player.write(s.toPacket());
 	}
 
@@ -106,10 +110,12 @@ public class ActionSender {
 	}
 
 	public static void sendPlayerOnBlackHole(Player player) {
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_ON_BLACK_HOLE.opcode);
-		s.writeByte((byte) (player.getLocation().onBlackHole() ? 1 : 0));
-		player.write(s.toPacket());
+	    if (!player.isUsingAuthenticClient()) {
+            com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+            s.setID(Opcode.SEND_ON_BLACK_HOLE.opcode);
+            s.writeByte((byte) (player.getLocation().onBlackHole() ? 1 : 0));
+            player.write(s.toPacket());
+        }
 	}
 
 	/**
@@ -158,14 +164,25 @@ public class ActionSender {
 		}
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_DUEL_CONFIRMWINDOW.opcode);
-		s.writeString(with.getUsername());
+		if (player.isUsingAuthenticClient()) {
+            s.writeZeroQuotedString(with.getUsername());
+        } else {
+            s.writeString(with.getUsername());
+        }
 		synchronized(with.getDuel().getDuelOffer().getItems()) {
 			s.writeByte((byte) with.getDuel().getDuelOffer().getItems().size());
 			for (Item item : with.getDuel().getDuelOffer().getItems()) {
 				s.writeShort(item.getCatalogId());
-				if (player.getConfig().CUSTOM_PROTOCOL) {
-					s.writeByte((byte)(item.getNoted() ? 1 : 0));
-				}
+                if (item.getNoted() && player.isUsingAuthenticClient()) {
+                    String itemName = item.getDef(player.getWorld()).getName();
+                    player.playerServerMessage(MessageType.QUEST,
+                        String.format("@ran@Please Confirm: @whi@Other player is staking @gre@%d @yel@%s", item.getAmount(), itemName));
+                }
+				if (!player.isUsingAuthenticClient()) {
+                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                    }
+                }
 				s.writeInt(item.getAmount());
 			}
 		}
@@ -173,17 +190,19 @@ public class ActionSender {
 			s.writeByte((byte) player.getDuel().getDuelOffer().getItems().size());
 			for (Item item : player.getDuel().getDuelOffer().getItems()) {
 				s.writeShort(item.getCatalogId());
-				if (player.getConfig().CUSTOM_PROTOCOL) {
-					s.writeByte((byte)(item.getNoted() ? 1 : 0));
-				}
+                if (!player.isUsingAuthenticClient()) {
+                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                    }
+                }
 				s.writeInt(item.getAmount());
 			}
 		}
 
-		s.writeByte((byte) (player.getDuel().getDuelSetting(0) ? 1 : 0));
-		s.writeByte((byte) (player.getDuel().getDuelSetting(1) ? 1 : 0));
-		s.writeByte((byte) (player.getDuel().getDuelSetting(2) ? 1 : 0));
-		s.writeByte((byte) (player.getDuel().getDuelSetting(3) ? 1 : 0));
+		s.writeByte((byte) (player.getDuel().getDuelSetting(0) ? 1 : 0)); // retreating is impossible if 1
+		s.writeByte((byte) (player.getDuel().getDuelSetting(1) ? 1 : 0)); // magic may be used if 1
+		s.writeByte((byte) (player.getDuel().getDuelSetting(2) ? 1 : 0)); // prayer may be used if 1
+		s.writeByte((byte) (player.getDuel().getDuelSetting(3) ? 1 : 0)); // weapons may be used if 1
 
 		player.write(s.toPacket());
 	}
@@ -231,13 +250,26 @@ public class ActionSender {
 			com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 			s.setID(Opcode.SEND_DUEL_OPPONENTS_ITEMS.opcode);
 			s.writeByte((byte) items.size());
-			for (Item item : items) {
-				s.writeShort(item.getCatalogId());
-				if (player.getConfig().CUSTOM_PROTOCOL) {
-					s.writeByte((byte)(item.getNoted() ? 1 : 0));
-				}
-				s.writeInt(item.getAmount());
-			}
+			if (player.isUsingAuthenticClient()) {
+                for (Item item : items) {
+                    s.writeShort(item.getCatalogIdAuthenticNoting());
+                    s.writeInt(item.getAmount());
+                    if (item.getNoted()) {
+                        String itemName = item.getDef(player.getWorld()).getName();
+                        player.playerServerMessage(MessageType.QUEST,
+                            String.format("@whi@Other player is staking @gre@%d @yel@%s", item.getAmount(), itemName));
+                    }
+                }
+            } else {
+                for (Item item : items) {
+                    s.writeShort(item.getCatalogId());
+                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                    }
+
+                    s.writeInt(item.getAmount());
+                }
+            }
 
 			player.write(s.toPacket());
 		}
@@ -251,10 +283,10 @@ public class ActionSender {
 	public static void sendDuelSettingUpdate(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_DUEL_SETTINGS.opcode);
-		s.writeByte((byte) (player.getDuel().getDuelSetting(0) ? 1 : 0));
-		s.writeByte((byte) (player.getDuel().getDuelSetting(1) ? 1 : 0));
-		s.writeByte((byte) (player.getDuel().getDuelSetting(2) ? 1 : 0));
-		s.writeByte((byte) (player.getDuel().getDuelSetting(3) ? 1 : 0));
+		s.writeByte((byte) (player.getDuel().getDuelSetting(0) ? 1 : 0)); // retreat allowed?
+		s.writeByte((byte) (player.getDuel().getDuelSetting(1) ? 1 : 0)); // magic allowed?
+		s.writeByte((byte) (player.getDuel().getDuelSetting(2) ? 1 : 0)); // prayer allowed?
+		s.writeByte((byte) (player.getDuel().getDuelSetting(3) ? 1 : 0)); // weapons allowed?
 		player.write(s.toPacket());
 	}
 
@@ -316,12 +348,14 @@ public class ActionSender {
 		s.writeByte(player.getPrayerPoints());
 		player.write(s.toPacket());
 
-		if (player.getConfig().WANT_EQUIPMENT_TAB) {
-			if (slot == -1)
-				sendEquipment(player);
-			else
-				updateEquipmentSlot(player, slot);
-		}
+		if (!player.isUsingAuthenticClient()) {
+            if (player.getConfig().WANT_EQUIPMENT_TAB) {
+                if (slot == -1)
+                    sendEquipment(player);
+                else
+                    updateEquipmentSlot(player, slot);
+            }
+        }
 	}
 
 
@@ -333,15 +367,23 @@ public class ActionSender {
 	public static void sendFatigue(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_FATIGUE.opcode);
-		s.writeShort(player.getFatigue() / 1500);
+		if (player.isUsingAuthenticClient()) {
+            // authentic client has range from 0 to 750
+            s.writeShort(player.getFatigue() / (player.MAX_FATIGUE / 750));
+        } else {
+            // inauthentic client has range from 0 to 100
+            s.writeShort(player.getFatigue() / (player.MAX_FATIGUE / 100));
+        }
 		player.write(s.toPacket());
 	}
 
 	public static void sendNpcKills(Player player) {
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_NPC_KILLS.opcode);
-		s.writeShort(player.getNpcKills());
-		player.write(s.toPacket());
+	    if (!player.isUsingAuthenticClient()) {
+            com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+            s.setID(Opcode.SEND_NPC_KILLS.opcode);
+            s.writeShort(player.getNpcKills());
+            player.write(s.toPacket());
+        }
 	}
 
 	public static void sendExpShared(Player player) {
@@ -360,7 +402,13 @@ public class ActionSender {
 	public static void sendSleepFatigue(Player player, int fatigue) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SLEEP_FATIGUE.opcode);
-		s.writeShort(fatigue / 1500);
+        if (player.isUsingAuthenticClient()) {
+            // authentic client has range from 0 to 750
+            s.writeShort(fatigue / (player.MAX_FATIGUE / 750));
+        } else {
+            // inauthentic client has range from 0 to 100
+            s.writeShort(fatigue/ (player.MAX_FATIGUE / 100));
+        }
 		player.write(s.toPacket());
 	}
 
@@ -408,15 +456,24 @@ public class ActionSender {
 
 		s.setID(Opcode.SEND_FRIEND_UPDATE.opcode);
 
-		s.writeString(username);
+		if (player.isUsingAuthenticClient()) {
+            s.writeZeroQuotedString(username);
+            s.writeZeroQuotedString(""); // TODO: Allow name changes to fill this variable.
 
-		// TODO: Allow name changes to fill this variable.
-		s.writeString("");
+            s.writeByte(onlineStatus);
 
-		s.writeByte(onlineStatus);
+            if ((onlineStatus & 4) != 0)
+                s.writeZeroQuotedString("OpenRSC");
 
-		if ((onlineStatus & 4) != 0)
-			s.writeString("OpenRSC");
+        } else {
+            s.writeString(username);
+            s.writeString(""); // TODO: Allow name changes to fill this variable.
+
+            s.writeByte(onlineStatus);
+
+            if ((onlineStatus & 4) != 0)
+                s.writeString("OpenRSC");
+        }
 
 		player.write(s.toPacket());
 	}
@@ -430,35 +487,37 @@ public class ActionSender {
 		s.writeByte((byte) (player.getSettings().getGameSetting(0) ? 1 : 0)); // Camera Auto Angle 0
 		s.writeByte((byte) (player.getSettings().getGameSetting(1) ? 1 : 0)); // Mouse buttons 1
 		s.writeByte((byte) (player.getSettings().getGameSetting(2) ? 1 : 0)); // Sound Effects 2
-		s.writeByte((byte) player.getCombatStyle());
-		s.writeByte(player.getGlobalBlock()); // 9
-		s.writeByte((byte) (player.getClanInviteSetting() ? 0 : 1)); // 11
-		s.writeByte((byte) (player.getVolumeToRotate() ? 1 : 0)); // 16
-		s.writeByte((byte) (player.getSwipeToRotate() ? 1 : 0)); // 17
-		s.writeByte((byte) (player.getSwipeToScroll() ? 1 : 0)); // 18
-		s.writeByte(player.getLongPressDelay()); // 19
-		s.writeByte(player.getFontSize()); // 20
-		s.writeByte((byte) (player.getHoldAndChoose() ? 1 : 0)); // 21
-		s.writeByte((byte) (player.getSwipeToZoom() ? 1 : 0)); // 22
-		s.writeByte(player.getLastZoom()); // 23
-		s.writeByte((byte) (player.getBatchProgressBar() ? 1 : 0)); // 24
-		s.writeByte((byte) (player.getExperienceDrops() ? 1 : 0)); // 25
-		s.writeByte((byte) (player.getHideRoofs() ? 1 : 0)); // 26
-		s.writeByte((byte) (player.getHideFog() ? 1 : 0)); // 27
-		s.writeByte(player.getGroundItemsToggle()); // 28
-		s.writeByte((byte) (player.getAutoMessageSwitch() ? 1 : 0)); // 29
-		s.writeByte((byte) (player.getHideSideMenu() ? 1 : 0)); // 30
-		s.writeByte((byte) (player.getHideKillFeed() ? 1 : 0)); // 31
-		s.writeByte(player.getFightModeSelectorToggle()); // 32
-		s.writeByte(player.getExperienceCounterToggle()); // 33
-		s.writeByte((byte) (player.getHideInventoryCount() ? 1 : 0)); // 34
-		s.writeByte((byte) (player.getHideNameTag() ? 1 : 0)); // 35
-		s.writeByte((byte) (player.getPartyInviteSetting() ? 1 : 0)); // 36
-		s.writeByte((byte) (player.getAndroidInvToggle() ? 1 : 0)); //37
-		s.writeByte((byte) (player.getShowNPCKC() ? 1 : 0)); //38
-		s.writeByte((byte) (player.getCustomUI() ? 1 : 0)); // 39
-		s.writeByte((byte) (player.getHideLoginBox() ? 1 : 0)); // 40
-		s.writeByte((byte) (player.getBlockGlobalFriend() ? 1 : 0)); //41
+        if (!player.isUsingAuthenticClient()) {
+            s.writeByte((byte) player.getCombatStyle());
+            s.writeByte(player.getGlobalBlock()); // 9
+            s.writeByte((byte) (player.getClanInviteSetting() ? 0 : 1)); // 11
+            s.writeByte((byte) (player.getVolumeToRotate() ? 1 : 0)); // 16
+            s.writeByte((byte) (player.getSwipeToRotate() ? 1 : 0)); // 17
+            s.writeByte((byte) (player.getSwipeToScroll() ? 1 : 0)); // 18
+            s.writeByte(player.getLongPressDelay()); // 19
+            s.writeByte(player.getFontSize()); // 20
+            s.writeByte((byte) (player.getHoldAndChoose() ? 1 : 0)); // 21
+            s.writeByte((byte) (player.getSwipeToZoom() ? 1 : 0)); // 22
+            s.writeByte(player.getLastZoom()); // 23
+            s.writeByte((byte) (player.getBatchProgressBar() ? 1 : 0)); // 24
+            s.writeByte((byte) (player.getExperienceDrops() ? 1 : 0)); // 25
+            s.writeByte((byte) (player.getHideRoofs() ? 1 : 0)); // 26
+            s.writeByte((byte) (player.getHideFog() ? 1 : 0)); // 27
+            s.writeByte(player.getGroundItemsToggle()); // 28
+            s.writeByte((byte) (player.getAutoMessageSwitch() ? 1 : 0)); // 29
+            s.writeByte((byte) (player.getHideSideMenu() ? 1 : 0)); // 30
+            s.writeByte((byte) (player.getHideKillFeed() ? 1 : 0)); // 31
+            s.writeByte(player.getFightModeSelectorToggle()); // 32
+            s.writeByte(player.getExperienceCounterToggle()); // 33
+            s.writeByte((byte) (player.getHideInventoryCount() ? 1 : 0)); // 34
+            s.writeByte((byte) (player.getHideNameTag() ? 1 : 0)); // 35
+            s.writeByte((byte) (player.getPartyInviteSetting() ? 1 : 0)); // 36
+            s.writeByte((byte) (player.getAndroidInvToggle() ? 1 : 0)); //37
+            s.writeByte((byte) (player.getShowNPCKC() ? 1 : 0)); //38
+            s.writeByte((byte) (player.getCustomUI() ? 1 : 0)); // 39
+            s.writeByte((byte) (player.getHideLoginBox() ? 1 : 0)); // 40
+            s.writeByte((byte) (player.getBlockGlobalFriend() ? 1 : 0)); //41
+        }
 		player.write(s.toPacket());
 	}
 
@@ -546,8 +605,8 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR + " 78");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
-		ConnectionAttachment attachment = new ConnectionAttachment();
-		channel.attr(RSCConnectionHandler.attachment).set(attachment);
+		// ConnectionAttachment attachment = new ConnectionAttachment();
+		// channel.attr(RSCConnectionHandler.attachment).set(attachment);
 		channel.writeAndFlush(s.toPacket());
 		channel.close();
 	}
@@ -656,10 +715,17 @@ public class ActionSender {
 		s.writeByte((byte) player.getSocial().getIgnoreList().size());
 		for (long usernameHash : player.getSocial().getIgnoreList()) {
 			String username = DataConversions.hashToUsername(usernameHash);
-			s.writeString(username);
-			s.writeString(username);
-			s.writeString(username);
-			s.writeString(username);
+			if (player.isUsingAuthenticClient()) {
+			    s.writeZeroQuotedString(username); // Username
+                s.writeZeroQuotedString(username); // Username Duplicate
+                s.writeZeroQuotedString(""); // Old Username
+                s.writeZeroQuotedString(""); // Old Username Duplicate
+            } else {
+                s.writeString(username);
+                s.writeString(username);
+                s.writeString(username);
+                s.writeString(username);
+            }
 		}
 		player.write(s.toPacket());
 	}
@@ -682,17 +748,30 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_INVENTORY.opcode);
 		s.writeByte((byte) player.getCarriedItems().getInventory().size());
-		synchronized(player.getCarriedItems().getInventory().getItems()) {
-			for (Item item : player.getCarriedItems().getInventory().getItems()) {
-				s.writeShort(item.getCatalogId());
-				s.writeByte((byte) (item.isWielded() ? 1 : 0));
-				if (player.getConfig().CUSTOM_PROTOCOL) {
-					s.writeByte((byte)(item.getNoted() ? 1 : 0));
-				}
-				if (item.getDef(player.getWorld()).isStackable() || item.getNoted())
-					s.writeInt(item.getAmount());
-			}
-		}
+		if (player.isUsingAuthenticClient()) {
+            synchronized (player.getCarriedItems().getInventory().getItems()) {
+                for (Item item : player.getCarriedItems().getInventory().getItems()) {
+                    s.writeShort(((item.isWielded() ? 1 : 0) << 15) | // First bit is if it is wielded or not
+                        item.getCatalogIdAuthenticNoting());
+
+                    if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
+                        s.writeUnsignedShortInt(item.getAmount());
+                    }
+                }
+            }
+        } else {
+            synchronized (player.getCarriedItems().getInventory().getItems()) {
+                for (Item item : player.getCarriedItems().getInventory().getItems()) {
+                    s.writeShort(item.getCatalogId());
+                    s.writeByte((byte) (item.isWielded() ? 1 : 0));
+                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                    }
+                    if (item.getDef(player.getWorld()).isStackable() || item.getNoted())
+                        s.writeInt(item.getAmount());
+                }
+            }
+        }
 		player.write(s.toPacket());
 	}
 
@@ -808,14 +887,57 @@ public class ActionSender {
 	private static void sendLoginBox(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_WELCOME_INFO.opcode);
-		s.writeString(player.getLastIP());
-		s.writeShort(player.getDaysSinceLastLogin());
-		if (player.getDaysSinceLastRecoveryChangeRequest() < 14) {
-			s.writeShort(14 - player.getDaysSinceLastRecoveryChangeRequest());
-		} else {
-			s.writeShort(0);
-		}
-		//s.writeShort(player.getUnreadMessages());
+		if (player.isUsingAuthenticClient()) {
+
+		    // Send 4 byte IP Address
+            String ipString = player.getLastIP(); // Open RSC stores IP address as a string which must be converted
+            if (ipString.indexOf(":") == -1) {
+                // IPv4
+                String[] ipSplit = ipString.split(".");
+                if (ipSplit.length == 4) {
+                    for (int i = 0; i < 4; i++) {
+                        s.writeByte(Integer.parseInt(ipSplit[i]) & 0xFF);
+                    }
+                } else {
+                    // Failed to parse IP address, just send 0.0.0.0, it doesn't matter that much that this is accurate.
+                    for (int i = 0; i < 4; i++) {
+                        s.writeByte(0);
+                    }
+                }
+            } else {
+                // IPv6
+                // Authentic server sends IP address as an 32 bit integer, IPv6 is not compatible here
+                // Going to concat IPv6 address to just last 3 "characters", and use 0 as first byte to mark "not IPv4"
+                s.writeByte(0);
+                int ipLen = ipString.length();
+                for (int i = ipLen - 3; i < ipLen; i++) {
+                    s.writeByte(Integer.parseInt(ipString.substring(i-1, i), 16) & 0xFF);
+                }
+            }
+
+            // TODO: this format may not be exactly compatible.
+            s.writeShort(player.getDaysSinceLastLogin());
+
+            // TODO: This needs to be looked at to send 200 if recovery questions are not set.
+            if (player.getDaysSinceLastRecoveryChangeRequest() < 14) {
+                s.writeByte(14 - player.getDaysSinceLastRecoveryChangeRequest());
+            } else {
+                s.writeByte((byte)201);
+            }
+
+            // TODO: if player.getUnreadMessages is implemented, implement that here
+            s.writeShort(1); // Number of messages gets subtracted by 1 by the client; 1 here means "0 unread messages"
+
+        } else {
+            s.writeString(player.getLastIP());
+            s.writeShort(player.getDaysSinceLastLogin());
+            if (player.getDaysSinceLastRecoveryChangeRequest() < 14) {
+                s.writeShort(14 - player.getDaysSinceLastRecoveryChangeRequest());
+            } else {
+                s.writeShort(0);
+            }
+            //s.writeShort(player.getUnreadMessages());
+        }
 		player.write(s.toPacket());
 	}
 
@@ -841,13 +963,30 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		List<QuestInterface> quests = player.getWorld().getQuests();
 		s.setID(Opcode.SEND_QUESTS.opcode);
-		s.writeByte((byte) 0);
-		s.writeByte((byte) quests.size());
-		for (QuestInterface q : quests) {
-			s.writeInt(q.getQuestId());
-			s.writeInt(player.getQuestStage(q));
-			s.writeString(q.getQuestName());
-		}
+		if (!player.isUsingAuthenticClient()) {
+            s.writeByte((byte) 0);
+            s.writeByte((byte) quests.size());
+            for (QuestInterface q : quests) {
+                s.writeInt(q.getQuestId());
+                s.writeInt(player.getQuestStage(q));
+                s.writeString(q.getQuestName());
+            }
+		} else {
+            // Authentic client always will have 50 quests. Otherwise there is an inauthentic quest that the client can't display in its menu.
+
+            // Sort from alphabetical order to quest ID order...!
+            QuestInterface[] orderedQuests = new QuestInterface[50];
+            for (QuestInterface q : quests) {
+                if (q.getQuestId() < 50 && q.getQuestId() >= 0) {
+                    orderedQuests[q.getQuestId()] = q;
+                }
+            }
+
+            for (int i = 0; i < 50; i++) {
+                s.writeByte(player.getQuestStage(orderedQuests[i]) < 0 ? 1 : 0);
+            }
+        }
+
 		player.write(s.toPacket());
 	}
 
@@ -870,40 +1009,66 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_OPTIONS_MENU_OPEN.opcode);
 		s.writeByte((byte) options.length);
-		for (String option : options) {
-			s.writeString(option);
-		}
+		if (player.isUsingAuthenticClient()) {
+            for (String option : options) {
+                s.writeZeroQuotedString(option);
+            }
+        } else {
+            for (String option : options) {
+                s.writeString(option);
+            }
+        }
 		player.write(s.toPacket());
 	}
 
 	public static void sendMessage(Player player, String message) {
-		sendMessage(player, null, 0, MessageType.GAME, message, 0);
+		sendMessage(player, null, MessageType.GAME, message, 0, null);
 	}
 
 	public static void sendPlayerServerMessage(Player player, MessageType type, String message) {
-		sendMessage(player, null, 0, type, message, 0);
+		sendMessage(player, null, type, message, 0, null);
 	}
 
-	public static void sendMessage(Player player, Player sender, int prefix, MessageType type, String message,
-								   int iconSprite) {
+	public static void sendMessage(Player player, Player sender, MessageType type, String message,
+								   int iconSprite, String colorString) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_SERVER_MESSAGE.opcode);
-		s.writeInt(iconSprite);
-		s.writeByte(type.getRsID());
-		/*
-		  This is actually a controller which check if we should present
-		  (SENDER USERNAME, CLAN TAG OR COLOR) 0 = nothing, 1 = SENDER & CLAN,
-		  2 = COLOR
-		 */
-		s.writeByte(prefix);// Used for clan/color/sender.
-		s.writeString(message);
-		if ((prefix & 1) != 0) {
-			s.writeString(sender.getUsername());
-			s.writeString(sender.getUsername());
-		}
-		if ((prefix & 2) != 0) {
-			s.writeString((String) null); // Interpreted as colour by the client.
-		}
+
+        if (!player.isUsingAuthenticClient()) {
+            s.writeInt(iconSprite);
+        }
+
+        s.writeByte(type.getRsID());
+
+        byte infoContained = 0;
+        if (sender != null) {
+            infoContained += 1;
+        }
+        if (colorString != null && !colorString.equals("")) {
+            infoContained += 2;
+        }
+        s.writeByte(infoContained);
+
+        if (!player.isUsingAuthenticClient()) {
+            s.writeString(message);
+            if ((infoContained & 1) != 0) {
+                s.writeString(sender.getUsername());
+                s.writeString(sender.getUsername()); // This is authentic; all recorded instances it's just the same username twice.
+            }
+            if ((infoContained & 2) != 0) {
+                s.writeString(colorString);
+            }
+        } else {
+            s.writeZeroQuotedString(message);
+            if ((infoContained & 1) != 0) {
+                s.writeZeroQuotedString(sender.getUsername());
+                s.writeZeroQuotedString(sender.getUsername()); // This is authentic; all recorded instances it's just the same username twice.
+            }
+            if ((infoContained & 2) != 0) {
+                s.writeZeroQuotedString(colorString);
+            }
+        }
+
 		player.write(s.toPacket());
 	}
 
@@ -936,31 +1101,70 @@ public class ActionSender {
 	public static void sendPrivateMessageReceived(Player player, Player sender, String message, boolean isGlobal) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PRIVATE_MESSAGE.opcode);
-		if (!isGlobal) {
-			s.writeString(sender.getUsername());
-			s.writeString(sender.getUsername());// former name
-		}
-		else {
-			if (player.getBlockGlobalFriend())
-				return;
 
-			s.writeString("Global$" + sender.getUsername());
-			s.writeString("Global$" + sender.getUsername());
-		}
-		s.writeInt(sender.getIcon());
-		s.writeRSCString(message);
+		// TODO: we won't be able to reach across servers like this to access incrementPrivateMessages if there's more than one server
+        // It will need to be rewritten when there is a proper login server managing private messages.
+        int pmsSent = sender.getWorld().getServer().incrementPrivateMessagesSent();
+		if (player.isUsingAuthenticClient()) {
+            if (!isGlobal) {
+                s.writeZeroQuotedString(sender.getUsername());
+                s.writeZeroQuotedString(sender.getUsername()); // former name
+            } else {
+                if (player.getBlockGlobalFriend())
+                    return;
+
+                s.writeZeroQuotedString("Global$" + sender.getUsername());
+                s.writeZeroQuotedString("Global$" + sender.getUsername());
+            }
+
+            s.writeByte(sender.getIconAuthentic());
+
+            // 8 byte "Message ID" field is next
+            s.writeByte(0); // Unused Padding
+            s.writeByte(0); // Unused Padding
+            s.writeByte(0); // Unused Padding
+            s.writeShort(sender.getWorld().getServer().getConfig().WORLD_NUMBER);
+            // 24 bit value for number of private messages sent on server since restart
+            s.writeByte((pmsSent & 0x00FF0000) >> 16);
+            s.writeByte((pmsSent & 0x0000FF00) >> 8);
+            s.writeByte((pmsSent & 0x000000FF));
+
+            s.writeRSCString(message);
+        } else {
+            if (!isGlobal) {
+                s.writeString(sender.getUsername());
+                s.writeString(sender.getUsername());// former name
+            } else {
+                if (player.getBlockGlobalFriend())
+                    return;
+
+                s.writeString("Global$" + sender.getUsername());
+                s.writeString("Global$" + sender.getUsername());
+            }
+            s.writeInt(sender.getIcon());
+            s.writeRSCString(message);
+        }
 		player.write(s.toPacket());
 	}
 
 	public static void sendPrivateMessageSent(Player player, long usernameHash, String message, boolean isGlobal) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PRIVATE_MESSAGE_SENT.opcode);
-		if(!isGlobal) {
-			s.writeString(DataConversions.hashToUsername(usernameHash));
-		} else {
-			s.writeString("Global$");
-		}
-		s.writeRSCString(message);
+		if (player.isUsingAuthenticClient()) {
+            if (!isGlobal) {
+                s.writeZeroQuotedString(DataConversions.hashToUsername(usernameHash));
+            } else {
+                s.writeZeroQuotedString("Global$");
+            }
+            s.writeRSCString(message);
+        } else {
+            if (!isGlobal) {
+                s.writeString(DataConversions.hashToUsername(usernameHash));
+            } else {
+                s.writeString("Global$");
+            }
+            s.writeRSCString(message);
+        }
 		player.write(s.toPacket());
 	}
 
@@ -977,7 +1181,11 @@ public class ActionSender {
 	public static void sendSound(Player player, String soundName) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PLAY_SOUND.opcode);
-		s.writeString(soundName);
+		if (player.isUsingAuthenticClient()) {
+		    s.writeZeroQuotedString(soundName);
+        } else {
+            s.writeString(soundName);
+        }
 		player.write(s.toPacket());
 	}
 
@@ -995,6 +1203,7 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
+	// TODO: this should be used
 	public static void sendExperience(Player player, int stat) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EXPERIENCE.opcode);
@@ -1004,10 +1213,12 @@ public class ActionSender {
 	}
 
 	public static void sendExperienceToggle(Player player) {
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_EXPERIENCE_TOGGLE.opcode);
-		s.writeByte((byte) (player.isExperienceFrozen() ? 1 : 0));
-		player.write(s.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+            s.setID(Opcode.SEND_EXPERIENCE_TOGGLE.opcode);
+            s.writeByte((byte) (player.isExperienceFrozen() ? 1 : 0));
+            player.write(s.toPacket());
+        }
 	}
 
 	/**
@@ -1030,7 +1241,7 @@ public class ActionSender {
 	public static void sendTeleBubble(Player player, int x, int y, boolean grab) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_BUBBLE.opcode);
-		s.writeByte((byte) (grab ? 1 : 0));
+		s.writeByte((byte) (grab ? 1 : 0)); // 1 for telegrab/Iban's magic; 0 for teleportation
 		s.writeByte((byte) (x - player.getX()));
 		s.writeByte((byte) (y - player.getY()));
 		player.write(s.toPacket());
@@ -1043,23 +1254,53 @@ public class ActionSender {
 		}
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_TRADE_OPEN_CONFIRM.opcode);
-		s.writeString(with.getUsername());
-		s.writeByte((byte) with.getTrade().getTradeOffer().getItems().size());
-		for (Item item : with.getTrade().getTradeOffer().getItems()) {
-			s.writeShort(item.getCatalogId());
-			if (player.getConfig().CUSTOM_PROTOCOL) {
-				s.writeByte((byte)(item.getNoted() ? 1 : 0));
-			}
-			s.writeInt(item.getAmount());
-		}
-		s.writeByte((byte) player.getTrade().getTradeOffer().getItems().size());
-		for (Item item : player.getTrade().getTradeOffer().getItems()) {
-			s.writeShort(item.getCatalogId());
-			if (player.getConfig().CUSTOM_PROTOCOL) {
-				s.writeByte((byte)(item.getNoted() ? 1 : 0));
-			}
-			s.writeInt(item.getAmount());
-		}
+		if (player.isUsingAuthenticClient()) {
+            s.writeZeroQuotedString(with.getUsername());
+            s.writeByte((byte) with.getTrade().getTradeOffer().getItems().size());
+            for (Item item : with.getTrade().getTradeOffer().getItems()) {
+                if (item.getCatalogId() <= ItemId.maxAuthentic) {
+                    s.writeShort(item.getCatalogId());
+                    if (item.getNoted()) {
+                        String itemName = item.getDef(player.getWorld()).getName();
+                        player.playerServerMessage(MessageType.QUEST,
+                            String.format("@ran@Please Confirm: @whi@Other player is offering @gre@%d @yel@%s", item.getAmount(), itemName));
+                    }
+                } else {
+                    sendMessage(player, String.format("Cannot handle inauthentic item ID %d", item.getItemId()));
+                    sendMessage(with, String.format("Other player cannot handle inauthentic item ID %d", item.getItemId()));
+                    player.getTrade().setTradeActive(false);
+                    with.getTrade().setTradeActive(false);
+                    sendTradeWindowClose(player);
+                    sendTradeWindowClose(with);
+                    return;
+                }
+
+                s.writeInt(item.getAmount());
+            }
+            s.writeByte((byte) player.getTrade().getTradeOffer().getItems().size());
+            for (Item item : player.getTrade().getTradeOffer().getItems()) {
+                s.writeShort(item.getCatalogId());
+                s.writeInt(item.getAmount());
+            }
+        } else { //inauthentic client handling
+            s.writeString(with.getUsername());
+            s.writeByte((byte) with.getTrade().getTradeOffer().getItems().size());
+            for (Item item : with.getTrade().getTradeOffer().getItems()) {
+                s.writeShort(item.getCatalogId());
+                if (player.getConfig().CUSTOM_PROTOCOL) {
+                    s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                }
+                s.writeInt(item.getAmount());
+            }
+            s.writeByte((byte) player.getTrade().getTradeOffer().getItems().size());
+            for (Item item : player.getTrade().getTradeOffer().getItems()) {
+                s.writeShort(item.getCatalogId());
+                if (player.getConfig().CUSTOM_PROTOCOL) {
+                    s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                }
+                s.writeInt(item.getAmount());
+            }
+        }
 		player.write(s.toPacket());
 	}
 
@@ -1074,6 +1315,7 @@ public class ActionSender {
 		player.write(pb.toPacket());
 	}
 
+	// authentically, this function is only called to confirm cancellation of previous trade acceptance (new items added)
 	public static void sendOwnTradeAcceptUpdate(Player player) {
 		Player with = player.getTrade().getTradeRecipient();
 		if (with == null) { // This shouldn't happen
@@ -1095,26 +1337,44 @@ public class ActionSender {
 			com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 			s.setID(Opcode.SEND_TRADE_OTHER_ITEMS.opcode);
 
-			// Other player's items first
-			s.writeByte((byte) items.size());
-			for (Item item : items) {
-				s.writeShort(item.getCatalogId());
-				if (player.getConfig().CUSTOM_PROTOCOL) {
-					s.writeByte((byte)(item.getNoted() ? 1 : 0));
-				}
-				s.writeInt(item.getAmount());
-			}
+			if (player.isUsingAuthenticClient()) {
+			    // authentic client
+                s.writeByte((byte) items.size());
+                for (Item item : items) {
+                    s.writeShort(item.getCatalogIdAuthenticNoting());
+                    s.writeInt(item.getAmount());
+                    if (item.getNoted()) {
+                        String itemName = item.getDef(player.getWorld()).getName();
+                        player.playerServerMessage(MessageType.QUEST,
+                            String.format("@whi@Other player offered @gre@%d @yel@%s", item.getAmount(), itemName));
+                    }
+                }
 
-			// Our items second
-			items = player.getTrade().getTradeOffer().getItems();
-			s.writeByte((byte) items.size());
-			for (Item item : items) {
-				s.writeShort(item.getCatalogId());
-				if (player.getConfig().CUSTOM_PROTOCOL) {
-					s.writeByte((byte)(item.getNoted() ? 1 : 0));
-				}
-				s.writeInt(item.getAmount());
-			}
+            } else { // inauthentic client
+
+                // Other player's items first
+                s.writeByte((byte) items.size());
+                for (Item item : items) {
+                    s.writeShort(item.getCatalogId());
+
+                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                    }
+
+                    s.writeInt(item.getAmount());
+                }
+
+                // Our items second (only needed in inauthentic client)
+                items = player.getTrade().getTradeOffer().getItems();
+                s.writeByte((byte) items.size());
+                for (Item item : items) {
+                    s.writeShort(item.getCatalogId());
+                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
+                    }
+                    s.writeInt(item.getAmount());
+                }
+            }
 
 			player.write(s.toPacket());
 		}
@@ -1143,13 +1403,22 @@ public class ActionSender {
 		s.setID(Opcode.SEND_INVENTORY_UPDATEITEM.opcode);
 		s.writeByte((byte) slot);
 		if (item != null) {
-			s.writeShort(item.getCatalogId() + (item.isWielded() ? 32768 : 0));
-			s.writeByte(item.getNoted() ? 1 : 0);
-			if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
-				s.writeInt(item.getAmount());
-			}
+			if (player.isUsingAuthenticClient()) {
+                s.writeShort(item.getCatalogIdAuthenticNoting() + (item.isWielded() ? 32768 : 0));
+                if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
+                    s.writeUnsignedShortInt(item.getAmount());
+                }
+            } else {
+                s.writeShort(item.getCatalogId() + (item.isWielded() ? 32768 : 0));
+                s.writeByte(item.getNoted() ? 1 : 0);
+                if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
+                    s.writeInt(item.getAmount());
+                }
+            }
+
 		}
 		else {
+		    LOGGER.warn(String.format("Null item in %s's inventory! (slot %d)", player.getUsername(), slot ));
 			s.writeShort(0);
 			s.writeShort(0);
 			s.writeInt(0);
@@ -1192,14 +1461,34 @@ public class ActionSender {
 	public static void showBank(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_BANK_OPEN.opcode);
-		s.writeShort(player.getBank().size());
-		s.writeShort(player.getBankSize());
-		synchronized(player.getBank().getItems()) {
-			for (Item i : player.getBank().getItems()) {
-				s.writeShort(i.getCatalogId());
-				s.writeInt(i.getAmount());
-			}
-		}
+		if (player.isUsingAuthenticClient()) {
+            int itemsInBank = player.getBank().size();
+            s.writeByte(itemsInBank > 255 ? (byte)255 : itemsInBank & 0xFF);
+            if (itemsInBank > 192) {
+                sendMessage(player, "Warning: Unable to display all items in bank!");
+            }
+            s.writeByte(player.getBankSize() > 255 ? (byte)255 : player.getBankSize() & 0xFF);
+            // If bank is filled to page 4 and bank size reports supporting more than 4 pages
+            if (itemsInBank > (192 - 48) && player.getBankSize() > 192) {
+                sendMessage(player, "Warning: Bank is unauthentically large. Deposited items may not be visible to be withdrawn!");
+            }
+
+            synchronized (player.getBank().getItems()) {
+                for (Item i : player.getBank().getItems()) {
+                    s.writeShort(i.getCatalogIdAuthenticNoting());
+                    s.writeUnsignedShortInt(i.getAmount());
+                }
+            }
+        } else { // inauthentic client
+            s.writeShort(player.getBank().size()); // Items in player's bank
+            s.writeShort(player.getBankSize()); // Maximum amount of items in a player's bank
+            synchronized (player.getBank().getItems()) {
+                for (Item i : player.getBank().getItems()) {
+                    s.writeShort(i.getCatalogId());
+                    s.writeInt(i.getAmount());
+                }
+            }
+        }
 		player.write(s.toPacket());
 	}
 
@@ -1212,15 +1501,24 @@ public class ActionSender {
 		s.writeByte((byte) (shop.isGeneral() ? 1 : 0));
 		s.writeByte((byte) shop.getSellModifier());
 		s.writeByte((byte) shop.getBuyModifier());
-		s.writeByte((byte) shop.getPriceModifier()); // price modifier?
+		s.writeByte((byte) shop.getPriceModifier()); // This is how much being over/understock affects the price
 
-		for (int i = 0; i < shop.getShopSize(); i++) {
-			Item item = shop.getShopItem(i);
-			s.writeShort(item.getCatalogId());
-			s.writeShort(item.getAmount());
-			s.writeShort(shop.getStock(item.getCatalogId()));
-		}
-		player.write(s.toPacket());
+        if (player.isUsingAuthenticClient()) {
+            for (int i = 0; i < shop.getShopSize(); i++) {
+                Item item = shop.getShopItem(i);
+                s.writeShort(item.getCatalogIdAuthenticNoting());
+                s.writeShort(item.getAmount());
+                s.writeShort(shop.getStock(item.getCatalogId()));
+            }
+        } else {
+            for (int i = 0; i < shop.getShopSize(); i++) {
+                Item item = shop.getShopItem(i);
+                s.writeShort(item.getCatalogId());
+                s.writeShort(item.getAmount());
+                s.writeShort(shop.getStock(item.getCatalogId()));
+            }
+        }
+        player.write(s.toPacket());
 	}
 
 	/**
@@ -1237,22 +1535,39 @@ public class ActionSender {
 	 * Sends the elixir timer
 	 */
 	public static void sendElixirTimer(Player player, int seconds) {
-		if (!player.getConfig().WANT_EXPERIENCE_ELIXIRS) return;
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_ELIXIR.opcode);
-		s.writeShort((int) (((double) seconds / 32D) * 50));
-		player.write(s.toPacket());
+	    if (!player.isUsingAuthenticClient()) {
+            if (!player.getConfig().WANT_EXPERIENCE_ELIXIRS) return;
+            com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+            s.setID(Opcode.SEND_ELIXIR.opcode);
+            s.writeShort((int) (((double) seconds / 32D) * 50));
+            player.write(s.toPacket());
+        }
 	}
 
 	/**
 	 * Updates the id and amount of an item in the bank
 	 */
-	public static void updateBankItem(Player player, int slot, int newId, int amount) {
+	public static void updateBankItem(Player player, int slot, Item newId, int amount) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_BANK_UPDATE.opcode);
 		s.writeByte((byte) slot);
-		s.writeShort(newId);
-		s.writeInt(amount);
+		if (amount == 0) {
+            if (player.isUsingAuthenticClient()) {
+                s.writeShort(newId.getCatalogId());
+                s.writeUnsignedShortInt(0);
+            } else {
+                s.writeShort(0);
+                s.writeInt(0);
+            }
+        } else {
+            if (player.isUsingAuthenticClient()) {
+                s.writeShort(newId.getCatalogId());
+                s.writeUnsignedShortInt(amount);
+            } else {
+                s.writeShort(newId.getCatalogId());
+                s.writeInt(amount);
+            }
+        }
 		player.write(s.toPacket());
 	}
 
@@ -1322,7 +1637,29 @@ public class ActionSender {
 	static void sendLogin(Player player) {
 		try {
 			if (player.getWorld().registerPlayer(player)) {
+                sendPrivacySettings(player);
+                sendMessage(player, null,  MessageType.QUEST, "Welcome to " + player.getConfig().SERVER_NAME + "!", 0, null);
+
+                // This warning must not be removed until the Scenery Handler is handled correctly & server-client ISAAC is ALWAYS synced.
+                if (player.isUsingAuthenticClient()) {
+					sendMessage(player, null,  MessageType.QUEST, "Authentic client support is currently in beta.", 0, "@lre@");
+					sendMessage(player, null,  MessageType.QUEST, "Please report any issues, and thanks for understanding.", 0, "@lre@");
+				}
+
+                sendGameSettings(player);
 				sendWorldInfo(player);
+                sendQuestInfo(player);
+                sendPlayerOnTutorial(player);
+                sendLoginBox(player);
+
+                sendInventory(player);
+                player.checkEquipment();
+
+                sendStats(player);
+                sendEquipmentStats(player);
+                sendPrayers(player, player.getPrayers().getActivePrayers());
+                sendFatigue(player);
+
 				player.getWorld().getServer().getGameUpdater().sendUpdatePackets(player);
 				long timeTillShutdown = player.getWorld().getServer().getTimeUntilShutdown();
 				if (timeTillShutdown > -1)
@@ -1332,7 +1669,7 @@ public class ActionSender {
 				if (elixir > -1)
 					sendElixirTimer(player, player.getElixir());
 
-				sendPlayerOnTutorial(player);
+
 				sendPlayerOnBlackHole(player);
 				if (player.getLastLogin() == 0L) {
 					sendAppearanceScreen(player);
@@ -1345,10 +1682,9 @@ public class ActionSender {
 				}
 
 				sendWakeUp(player, false, true);
-				sendGameSettings(player);
-				sendLoginBox(player);
 
-				sendMessage(player, null, 0, MessageType.QUEST, "Welcome to " + player.getConfig().SERVER_NAME + "!", 0);
+
+
 				if (player.isMuted()) {
 					sendMessage(player, "You are muted for "
 						+ (double) (System.currentTimeMillis() - player.getMuteExpires()) / 3600000D + " hours.");
@@ -1358,18 +1694,13 @@ public class ActionSender {
 					sendBox(player, "@gre@Welcome to the " + player.getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
 
-				sendPrivacySettings(player);
 
-				sendStats(player);
-				sendEquipmentStats(player);
-				sendFatigue(player);
+
 				sendNpcKills(player);
 
 				sendCombatStyle(player);
 				sendIronManMode(player);
 
-				sendInventory(player);
-				player.checkEquipment();
 
 				if (player.getConfig().WANT_BANK_PRESETS)
 					sendBankPresets(player);
@@ -1387,7 +1718,6 @@ public class ActionSender {
 					}
 				}
 
-				sendQuestInfo(player);
 				//AchievementSystem.achievementListGUI(p);
 				sendFriendList(player);
 				sendIgnoreList(player);
@@ -1401,50 +1731,66 @@ public class ActionSender {
 	}
 
 	public static void sendOnlineList(Player player, ArrayList<Player> players, ArrayList<String> locations, int online) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
-		pb.writeShort(online);
-		for (int i = 0; i < players.size(); i++) {
-			Player friend = players.get(i);
-			pb.writeString(friend.getUsername());
-			pb.writeInt(friend.getIcon());
-			pb.writeString(locations.get(i));
-		}
-		player.write(pb.toPacket());
+	    if (player.isUsingAuthenticClient()) {
+	        String outString = String.format("@lre@Players online@gre@(%d)@lre@: ", online);
+            for (int i = 0; i < players.size(); i++) {
+                outString += String.format("@whi@%s @yel@(%s)%s", players.get(i).getUsername(), locations.get(i), i + 1 == players.size() ? "" : "@mag@;");
+            }
+            sendMessage(player, outString);
+        } else {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
+            pb.writeShort(online);
+            for (int i = 0; i < players.size(); i++) {
+                Player friend = players.get(i);
+                pb.writeString(friend.getUsername());
+                pb.writeInt(friend.getIcon());
+                pb.writeString(locations.get(i));
+            }
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void showFishingTrawlerInterface(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
-		pb.writeByte(6);
-		pb.writeByte(0);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
+            pb.writeByte(6);
+            pb.writeByte(0);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void hideFishingTrawlerInterface(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
-		pb.writeByte(6);
-		pb.writeByte(2);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
+            pb.writeByte(6);
+            pb.writeByte(2);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void updateFishingTrawler(Player player, int waterLevel, int minutesLeft, int fishCaught,
 											boolean netBroken) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
-		pb.writeByte(6);
-		pb.writeByte(1);
-		pb.writeShort(waterLevel);
-		pb.writeShort(fishCaught);
-		pb.writeByte(minutesLeft);
-		pb.writeByte(netBroken ? 1 : 0);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_FISHING_TRAWLER.opcode);
+            pb.writeByte(6);
+            pb.writeByte(1);
+            pb.writeShort(waterLevel);
+            pb.writeShort(fishCaught);
+            pb.writeByte(minutesLeft);
+            pb.writeByte(netBroken ? 1 : 0);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendKillUpdate(Player player, long killedHash, long killerHash, int type) {
-		if (!player.getConfig().WANT_KILL_FEED) return;
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_KILL_ANNOUNCEMENT.opcode);
-		pb.writeString(DataConversions.hashToUsername(killedHash));
-		pb.writeString(DataConversions.hashToUsername(killerHash));
-		pb.writeInt(type);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            if (!player.getConfig().WANT_KILL_FEED) return;
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_KILL_ANNOUNCEMENT.opcode);
+            pb.writeString(DataConversions.hashToUsername(killedHash));
+            pb.writeString(DataConversions.hashToUsername(killerHash));
+            pb.writeInt(type);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendOpenAuctionHouse(final Player player) {
@@ -1452,242 +1798,269 @@ public class ActionSender {
 	}
 
 	public static void sendClan(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
-		pb.writeByte(0);
-		pb.writeString(player.getClan().getClanName());
-		pb.writeString(player.getClan().getClanTag());
-		pb.writeString(player.getClan().getLeader().getUsername());
-		pb.writeByte(player.getClan().getLeader().getUsername().equalsIgnoreCase(player.getUsername()) ? 1 : 0);
-		pb.writeByte(player.getClan().getPlayers().size());
-		for (ClanPlayer m : player.getClan().getPlayers()) {
-			pb.writeString(m.getUsername());
-			pb.writeByte(m.getRank().getRankIndex());
-			pb.writeByte(m.isOnline() ? 1 : 0);
-		}
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
+            pb.writeByte(0);
+            pb.writeString(player.getClan().getClanName());
+            pb.writeString(player.getClan().getClanTag());
+            pb.writeString(player.getClan().getLeader().getUsername());
+            pb.writeByte(player.getClan().getLeader().getUsername().equalsIgnoreCase(player.getUsername()) ? 1 : 0);
+            pb.writeByte(player.getClan().getPlayers().size());
+            for (ClanPlayer m : player.getClan().getPlayers()) {
+                pb.writeString(m.getUsername());
+                pb.writeByte(m.getRank().getRankIndex());
+                pb.writeByte(m.isOnline() ? 1 : 0);
+            }
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendParty(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
-		pb.writeByte(0);
-		pb.writeString(player.getParty().getLeader().getUsername());
-		pb.writeByte(player.getParty().getLeader().getUsername().equalsIgnoreCase(player.getUsername()) ? 1 : 0);
-		pb.writeByte(player.getParty().getPlayers().size());
-		for (PartyPlayer m : player.getParty().getPlayers()) {
-			pb.writeString(m.getUsername());
-			pb.writeByte(m.getRank().getRankIndex());
-			pb.writeByte(m.isOnline() ? 1 : 0);
-			pb.writeByte(m.getCurHp());
-			pb.writeByte(m.getMaxHp());
-			pb.writeByte(m.getCbLvl());
-			pb.writeByte(m.getSkull());
-			pb.writeByte(m.getPartyMemberDead());
-			pb.writeByte(m.getShareLoot());
-			pb.writeByte(m.getPartyMembersTotal());
-			pb.writeByte(m.getInCombat());
-			pb.writeByte(m.getShareExp());
-			pb.writeLong(m.getExpShared2());
-		}
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+            pb.writeByte(0);
+            pb.writeString(player.getParty().getLeader().getUsername());
+            pb.writeByte(player.getParty().getLeader().getUsername().equalsIgnoreCase(player.getUsername()) ? 1 : 0);
+            pb.writeByte(player.getParty().getPlayers().size());
+            for (PartyPlayer m : player.getParty().getPlayers()) {
+                pb.writeString(m.getUsername());
+                pb.writeByte(m.getRank().getRankIndex());
+                pb.writeByte(m.isOnline() ? 1 : 0);
+                pb.writeByte(m.getCurHp());
+                pb.writeByte(m.getMaxHp());
+                pb.writeByte(m.getCbLvl());
+                pb.writeByte(m.getSkull());
+                pb.writeByte(m.getPartyMemberDead());
+                pb.writeByte(m.getShareLoot());
+                pb.writeByte(m.getPartyMembersTotal());
+                pb.writeByte(m.getInCombat());
+                pb.writeByte(m.getShareExp());
+                pb.writeLong(m.getExpShared2());
+            }
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendClans(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
-		pb.writeByte(4);
-		pb.writeShort(player.getWorld().getClanManager().getClans().size());
-		int rank = 1;
-		player.getWorld().getClanManager().getClans().sort(ClanManager.CLAN_COMPERATOR);
-		for (Clan c : player.getWorld().getClanManager().getClans()) {
-			pb.writeShort(c.getClanID());
-			pb.writeString(c.getClanName());
-			pb.writeString(c.getClanTag());
-			pb.writeByte(c.getPlayers().size());
-			pb.writeByte(c.getAllowSearchJoin());
-			pb.writeInt(c.getClanPoints());
-			pb.writeShort(rank++);
-		}
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
+            pb.writeByte(4);
+            pb.writeShort(player.getWorld().getClanManager().getClans().size());
+            int rank = 1;
+            player.getWorld().getClanManager().getClans().sort(ClanManager.CLAN_COMPERATOR);
+            for (Clan c : player.getWorld().getClanManager().getClans()) {
+                pb.writeShort(c.getClanID());
+                pb.writeString(c.getClanName());
+                pb.writeString(c.getClanTag());
+                pb.writeByte(c.getPlayers().size());
+                pb.writeByte(c.getAllowSearchJoin());
+                pb.writeInt(c.getClanPoints());
+                pb.writeShort(rank++);
+            }
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendParties(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
-		pb.writeByte(4);
-		pb.writeShort(player.getWorld().getPartyManager().getParties().size());
-		int rank = 1;
-		player.getWorld().getPartyManager().getParties().sort(PartyManager.PARTY_COMPERATOR);
-		for (Party c : player.getWorld().getPartyManager().getParties()) {
-			pb.writeShort(c.getPartyID());
-			pb.writeByte(c.getPlayers().size());
-			pb.writeByte(c.getAllowSearchJoin());
-			pb.writeInt(c.getPartyPoints());
-			pb.writeShort(rank++);
-		}
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+            pb.writeByte(4);
+            pb.writeShort(player.getWorld().getPartyManager().getParties().size());
+            int rank = 1;
+            player.getWorld().getPartyManager().getParties().sort(PartyManager.PARTY_COMPERATOR);
+            for (Party c : player.getWorld().getPartyManager().getParties()) {
+                pb.writeShort(c.getPartyID());
+                pb.writeByte(c.getPlayers().size());
+                pb.writeByte(c.getAllowSearchJoin());
+                pb.writeInt(c.getPartyPoints());
+                pb.writeShort(rank++);
+            }
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendLeaveClan(Player playerReference) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
-		pb.writeByte(1);
-		playerReference.write(pb.toPacket());
+        if (!playerReference.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
+            pb.writeByte(1);
+            playerReference.write(pb.toPacket());
+        }
 	}
 
 	public static void sendLeaveParty(Player playerReference) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
-		pb.writeByte(1);
-		playerReference.write(pb.toPacket());
+        if (!playerReference.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+            pb.writeByte(1);
+            playerReference.write(pb.toPacket());
+        }
 	}
 
 	public static void sendClanInvitationGUI(Player invited, String name, String username) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
-		pb.writeByte(2);
-		pb.writeString(username);
-		pb.writeString(name);
-		invited.write(pb.toPacket());
+        if (!invited.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
+            pb.writeByte(2);
+            pb.writeString(username);
+            pb.writeString(name);
+            invited.write(pb.toPacket());
+        }
 	}
 
 	public static void sendPartyInvitationGUI(Player invited, String name, String username) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
-		pb.writeByte(2);
-		pb.writeString(username);
-		pb.writeString(name);
-		invited.write(pb.toPacket());
+        if (!invited.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+            pb.writeByte(2);
+            pb.writeString(username);
+            pb.writeString(name);
+            invited.write(pb.toPacket());
+        }
 	}
 
 	public static void sendClanSetting(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
-		pb.writeByte(3);
-		pb.writeByte(player.getClan().getKickSetting());
-		pb.writeByte(player.getClan().getInviteSetting());
-		pb.writeByte(player.getClan().getAllowSearchJoin());
-		pb.writeByte(player.getClan().isAllowed(0, player) ? 1 : 0);
-		pb.writeByte(player.getClan().isAllowed(1, player) ? 1 : 0);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_CLAN.opcode);
+            pb.writeByte(3);
+            pb.writeByte(player.getClan().getKickSetting());
+            pb.writeByte(player.getClan().getInviteSetting());
+            pb.writeByte(player.getClan().getAllowSearchJoin());
+            pb.writeByte(player.getClan().isAllowed(0, player) ? 1 : 0);
+            pb.writeByte(player.getClan().isAllowed(1, player) ? 1 : 0);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendPartySetting(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
-		pb.writeByte(3);
-		pb.writeByte(player.getParty().getKickSetting());
-		pb.writeByte(player.getParty().getInviteSetting());
-		pb.writeByte(player.getParty().getAllowSearchJoin());
-		pb.writeByte(player.getParty().isAllowed(0, player) ? 1 : 0);
-		pb.writeByte(player.getParty().isAllowed(1, player) ? 1 : 0);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_PARTY.opcode);
+            pb.writeByte(3);
+            pb.writeByte(player.getParty().getKickSetting());
+            pb.writeByte(player.getParty().getInviteSetting());
+            pb.writeByte(player.getParty().getAllowSearchJoin());
+            pb.writeByte(player.getParty().isAllowed(0, player) ? 1 : 0);
+            pb.writeByte(player.getParty().isAllowed(1, player) ? 1 : 0);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendIronManMode(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
-		pb.writeByte(2);
-		pb.writeByte(0);
-		pb.writeByte((byte) player.getIronMan());
-		pb.writeByte((byte) player.getIronManRestriction());
-		player.write(pb.toPacket());
+	    if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
+            pb.writeByte(2);
+            pb.writeByte(0);
+            pb.writeByte((byte) player.getIronMan());
+            pb.writeByte((byte) player.getIronManRestriction());
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendIronManInterface(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
-		pb.writeByte(2);
-		pb.writeByte(1);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
+            pb.writeByte(2);
+            pb.writeByte(1);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public static void sendHideIronManInterface(Player player) {
-		PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
-		pb.writeByte(2);
-		pb.writeByte(2);
-		player.write(pb.toPacket());
+        if (!player.isUsingAuthenticClient()) {
+            PacketBuilder pb = new PacketBuilder(Opcode.SEND_IRONMAN.opcode);
+            pb.writeByte(2);
+            pb.writeByte(2);
+            player.write(pb.toPacket());
+        }
 	}
 
 	public enum Opcode {
-		/**
-		 * int slot = this.packetsIncoming.getUnsignedByte();
-		 * --this.inventoryItemCount;
-		 * <p>
-		 * for (int index = slot; this.inventoryItemCount > index; ++index) {
-		 * this.inventoryItemID[index] = this.inventoryItemID[index + 1];
-		 * this.inventoryItemSize[index] = this.inventoryItemSize[index + 1];
-		 * this.inventoryItemEquipped[index] = this.inventoryItemEquipped[index
-		 * + 1]; }
-		 */
-		SEND_LOGOUT(4),
+        SEND_LOGOUT_REQUEST_CONFIRM(4),
 		SEND_QUESTS(5),
 		SEND_DUEL_OPPONENTS_ITEMS(6),
 		SEND_TRADE_ACCPETED(15),
-		SEND_SERVER_CONFIGS(19),
+		SEND_SERVER_CONFIGS(19), // inauthentic
 		SEND_TRADE_OPEN_CONFIRM(20),
 		SEND_WORLD_INFO(25),
 		SEND_DUEL_SETTINGS(30),
 		SEND_EXPERIENCE(33),
-		SEND_EXPERIENCE_TOGGLE(34),
-		SEND_BUBBLE(36),
+		SEND_EXPERIENCE_TOGGLE(34), // inauthentic
+		SEND_BUBBLE(36), // used for teleport, telegrab, and iban's magic
 		SEND_BANK_OPEN(42),
+        SEND_SCENERY_HANDLER(48),
 		SEND_PRIVACY_SETTINGS(51),
 		SEND_SYSTEM_UPDATE(52),
 		SEND_INVENTORY(53),
-		SEND_ELIXIR(54),
+		SEND_ELIXIR(54), // inauthentic
 		SEND_APPEARANCE_CHANGE(59),
+        SEND_NPC_COORDS(79),
 		SEND_DEATH(83),
 		SEND_STOPSLEEP(84),
 		SEND_PRIVATE_MESSAGE_SENT(87),
 		SEND_BOX2(89),
 		SEND_INVENTORY_UPDATEITEM(90),
+        SEND_BOUNDARY_HANDLER(91),
 		SEND_TRADE_WINDOW(92),
 		SEND_TRADE_OTHER_ITEMS(97),
-		SEND_SHOP_OPEN(101),
-		SEND_EXPSHARED(98),
+		SEND_EXPSHARED(98), // inauthentic
+        SEND_GROUND_ITEM_HANDLER(99),
+        SEND_SHOP_OPEN(101),
+        SEND_UPDATE_NPC(104),
 		SEND_IGNORE_LIST(109),
-		SEND_INPUT_BOX(110),
+		SEND_INPUT_BOX(110), // inauthentic
 		SEND_ON_TUTORIAL(111),
-		SEND_CLAN(112),
-		SEND_PARTY(116),
-		SEND_IRONMAN(113),
-		SEND_NPC_KILLS(147),
+		SEND_CLAN(112), // inauthentic
+		SEND_IRONMAN(113), // inauthentic
+        SEND_PARTY(116), // inauthentic
 		SEND_FATIGUE(114),
 		SEND_ON_BLACK_HOLE(115),
 		SEND_SLEEPSCREEN(117),
-		SEND_KILL_ANNOUNCEMENT(118),
+		SEND_KILL_ANNOUNCEMENT(118), // inauthentic
 		SEND_PRIVATE_MESSAGE(120),
 		SEND_INVENTORY_REMOVE_ITEM(123),
 		SEND_DUEL_CANCEL_ACCEPTED(128),
 		SEND_TRADE_CLOSE(128),
 		SEND_SERVER_MESSAGE(131),
-		SEND_AUCTION_PROGRESS(132),
-		SEND_FISHING_TRAWLER(133),
-		SEND_PROGRESS_BAR(134),
-		SEND_UPDATE_PROGRESS_BAR(134),
-		SEND_REMOVE_PROGRESS_BAR(134),
-		SEND_BANK_PIN_INTERFACE(135),
-		SEND_ONLINE_LIST(136),
+		SEND_AUCTION_PROGRESS(132), // inauthentic
+		SEND_FISHING_TRAWLER(133), // inauthentic
+		SEND_PROGRESS_BAR(134), // inauthentic
+		SEND_UPDATE_PROGRESS_BAR(134), // inauthentic
+		SEND_REMOVE_PROGRESS_BAR(134), // inauthentic
+		SEND_BANK_PIN_INTERFACE(135), // inauthentic
+		SEND_ONLINE_LIST(136), // inauthentic
 		SEND_SHOP_CLOSE(137),
+        SEND_NPC_KILLS(147), // inauthentic
 		SEND_FRIEND_UPDATE(149),
-		SEND_BANK_PRESET(150),
+		SEND_BANK_PRESET(150), // inauthentic
 		SEND_EQUIPMENT_STATS(153),
 		SEND_STATS(156),
 		SEND_STAT(159),
 		SEND_UPDATE_STAT(159),
 		SEND_TRADE_OTHER_ACCEPTED(162),
-		SEND_LOGOUT_REQUEST_CONFIRM(165),
+        SEND_LOGOUT(165),
 		SEND_DUEL_CONFIRMWINDOW(172),
 		SEND_DUEL_WINDOW(176),
 		SEND_WELCOME_INFO(182),
 		SEND_CANT_LOGOUT(183),
+        SEND_28_BYTES_UNUSED(189),
+        SEND_PLAYER_COORDS(191),
 		SEND_SLEEPWORD_INCORRECT(194),
 		SEND_BANK_CLOSE(203),
 		SEND_PLAY_SOUND(204),
 		SEND_PRAYERS_ACTIVE(206),
 		SEND_DUEL_ACCEPTED(210),
+        SEND_REMOVE_WORLD_ENTITY(211),
+        SEND_APPEARANCE_KEEPALIVE(213),
 		SEND_BOX(222),
-		SEND_OPEN_RECOVERY(224),
+		SEND_OPEN_RECOVERY(224), // inauthentic
 		SEND_DUEL_CLOSE(225),
-		SEND_OPEN_DETAILS(232),
+		SEND_OPEN_DETAILS(232), // inauthentic
+        SEND_UPDATE_PLAYERS(234),
+        SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE(237),
 		SEND_GAME_SETTINGS(240),
 		SEND_SLEEP_FATIGUE(244),
 		SEND_OPTIONS_MENU_OPEN(245),
 		SEND_BANK_UPDATE(249),
 		SEND_OPTIONS_MENU_CLOSE(252),
 		SEND_DUEL_OTHER_ACCEPTED(253),
-		SEND_EQUIPMENT(254),
-		SEND_EQUIPMENT_UPDATE(255);
+		SEND_EQUIPMENT(254), // inauthentic
+		SEND_EQUIPMENT_UPDATE(255); // inauthentic
 
 		public int opcode;
 

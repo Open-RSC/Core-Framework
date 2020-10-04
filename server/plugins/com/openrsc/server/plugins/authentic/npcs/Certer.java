@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -118,7 +119,7 @@ public class Certer implements TalkNpcTrigger {
 		int itemID = certerDef.getItemID(index);
 		if (certAmount == 5) {
 			if (player.isIronMan(IronmanMode.Ultimate.id())) {
-				player.message("As an Ultimate Iron Man. you cannot use certer bank exchange.");
+				player.message("As an Ultimate Iron Man, you cannot use certer bank exchange.");
 				return;
 			}
 			certAmount = player.getCarriedItems().getInventory().countId(certID);
@@ -128,12 +129,20 @@ public class Certer implements TalkNpcTrigger {
 				return;
 			}
 			Item bankItem = new Item(itemID, certAmount * 5);
-			if (player.getCarriedItems().remove(new Item(certID, certAmount)) > -1) {
-				player.message("You exchange the certificates, "
-					+ bankItem.getAmount() + " "
-					+ bankItem.getDef(player.getWorld()).getName()
-					+ " is added to your bank");
-				player.getBank().add(bankItem, false);
+			if (player.getBank().canHold(bankItem)) {
+				if (player.getCarriedItems().remove(new Item(certID, certAmount)) > -1) {
+					if (player.getBank().add(bankItem, false)) {
+						player.playerServerMessage(MessageType.QUEST, "You exchange the certificates, "
+							+ bankItem.getAmount() + " "
+							+ bankItem.getDef(player.getWorld()).getName()
+							+ " is added to your bank");
+					} else {
+						player.playerServerMessage(MessageType.QUEST, "There was a problem uncerting. Your certs are returned.");
+						player.getCarriedItems().getInventory().add(new Item(certID, certAmount));
+					}
+				}
+			} else {
+				player.playerServerMessage(MessageType.QUEST, "Your bank seems to be too full to uncert to bank at this time.");
 			}
 		} else {
 			certAmount += 1;

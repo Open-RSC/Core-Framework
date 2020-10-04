@@ -1,18 +1,22 @@
 package com.openrsc.server.plugins.authentic.npcs;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.OpNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
+import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
+public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Bankers.class);
 	public static int[] BANKERS = {NpcId.BANKER_GEN1.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_GEN2.id(),
 		NpcId.GNOME_BANKER.id(), NpcId.JUNGLE_BANKER.id()};
@@ -63,7 +67,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 				return;
 			}
 
-			if(validatebankpin(player)) {
+			if(validatebankpin(player, npc)) {
 				if (npc.getID() == NpcId.GNOME_BANKER.id()) {
 					npcsay(player, npc, "absolutely sir");
 				} else {
@@ -95,14 +99,17 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 		} else if (menu == 2 && config().WANT_BANK_PINS) {
 			int bankPinMenu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 			if (bankPinMenu == 0) {
-				setbankpin(player);
+				if (player.isUsingAuthenticClient()) {
+					npcsay(player, npc, "ok but i have to warn you that this is going to be pretty annoying.");
+				}
+				setbankpin(player, npc);
 			} else if (bankPinMenu == 1) {
-				changebankpin(player);
+				changebankpin(player, npc);
 			} else if (bankPinMenu == 2) {
-				removebankpin(player);
+				removebankpin(player, npc);
 			}
 		} else if ((menu == 2 || menu == 3) && config().SPAWN_AUCTION_NPCS) {
-			if(validatebankpin(player)) {
+			if(validatebankpin(player, npc)) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			}
 		}
@@ -134,13 +141,52 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger {
 		return false;
 	}
 
+	@Override
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return player.isUsingAuthenticClient() && inArray(npc.getID(), BANKERS) && item.getNoted();
+	}
+
+	@Override
+	public void onUseNpc(Player player, Npc npc, Item item) {
+		npcsay(player, npc, "Is that a Shantay pass?");
+		npcsay(player, npc, "What do you want me to do with this?");
+		say(player, npc, "Yeah it is, but look at the back.");
+		delay(1);
+		player.playerServerMessage(MessageType.QUEST, "The Banker flips the paper over to examine the other side.");
+		delay(4);
+		npcsay(player, npc, String.format("Ohhh, it's %d noted %s", item.getAmount(), item.getDef(player.getWorld()).getName()));
+		npcsay(player, npc, "I can take these from you.");
+		say(player, npc, "Thankyou");
+
+		if (player.getBank().canHold(item)) {
+			if (player.getCarriedItems().remove(item) > -1) {
+				if (player.getBank().add(item, false)) {
+					player.playerServerMessage(MessageType.QUEST, "The "
+						+ item.getAmount() + " "
+						+ item.getDef(player.getWorld()).getName()
+						+ String.format(" %s added to your bank", item.getAmount() == 1 ? "is" : "are"));
+				} else {
+					npcsay(player, npc, "...");
+					npcsay(player, npc, "actually nevermind. idk what happened but i can't do it right now.");
+					say(player, npc, "ok i understand. can I have my stuff back?");
+					npcsay(player, npc, "of course");
+					player.getCarriedItems().getInventory().add(item);
+				}
+			}
+		} else {
+			npcsay(player, npc, "actually nevermind. Sorry, but you just don't have room for this right now.");
+			delay(1);
+			player.playerServerMessage(MessageType.QUEST, "Your bank seems to be too full to deposit these notes at this time.");
+		}
+	}
+
 	private void quickFeature(Npc npc, Player player, boolean auction) {
 		if (player.isIronMan(IronmanMode.Ultimate.id())) {
 			player.message("As an Ultimate Iron Man, you cannot use the bank.");
 			return;
 		}
 
-		if(validatebankpin(player)) {
+		if(validatebankpin(player, npc)) {
 			if (auction) {
 				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
 			} else {
