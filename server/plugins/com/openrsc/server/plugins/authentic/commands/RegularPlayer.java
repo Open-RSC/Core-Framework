@@ -497,6 +497,7 @@ public final class RegularPlayer implements CommandTrigger {
 					.append((i%2==0 ? "%" : ", "));
 				i++;
 			}
+			kills.append("%Total Kills: ").append(player.getNpcKills());
 			ActionSender.sendBox(player, kills.substring(0, kills.length()-2).toString(), true);
 		} else {
 			String npcName = String.join(" ", args).toLowerCase();

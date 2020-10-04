@@ -91,12 +91,22 @@ public class ActionSender {
 	}
 
 	public static void sendRecoveryScreen(Player player) {
+		if (player.isUsingAuthenticClient()) {
+			ActionSender.sendMessage(player, "Account Recovery dialogue is not implemented for the authentic client at this time.");
+			return;
+		}
+
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_OPEN_RECOVERY.opcode);
 		player.write(s.toPacket());
 	}
 
 	public static void sendDetailsScreen(Player player) {
+		if (player.isUsingAuthenticClient()) {
+			ActionSender.sendMessage(player, "Contact Details are not implemented for the authentic client at this time.");
+			return;
+		}
+
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_OPEN_DETAILS.opcode);
 		player.write(s.toPacket());
@@ -378,15 +388,23 @@ public class ActionSender {
 	}
 
 	public static void sendNpcKills(Player player) {
-	    if (!player.isUsingAuthenticClient()) {
-            com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-            s.setID(Opcode.SEND_NPC_KILLS.opcode);
-            s.writeShort(player.getNpcKills());
-            player.write(s.toPacket());
-        }
+	    if (player.isUsingAuthenticClient()) {
+	    	// this would probably be annoying, since it seems to be sent every time you kill a monster.
+			// ActionSender.sendMessage(player, String.format("You've killed %d mobs", player.getNpcKills()));
+
+			// better approach is just to use ::kills command
+	    	return;
+		}
+		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_NPC_KILLS.opcode);
+		s.writeShort(player.getNpcKills());
+		player.write(s.toPacket());
 	}
 
 	public static void sendExpShared(Player player) {
+		if (player.isUsingAuthenticClient())
+			return;
+
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EXPSHARED.opcode);
 		s.writeShort(player.getExpShared());
@@ -796,6 +814,10 @@ public class ActionSender {
 		if (player == null || slot >= BankPreset.PRESET_COUNT || slot < 0)
 			return;
 
+		//Not desired if using authentic client.
+		if (player.isUsingAuthenticClient())
+			return;
+
 		//Start building the packet
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_BANK_PRESET.opcode);
@@ -843,10 +865,15 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
-	//Sends the player's equipment
+	// Sends the player's equipment
 	public static void sendEquipment(Player player) {
 		if (player == null)
 			return;
+
+		// Player doesn't actually really need this information
+		if (player.isUsingAuthenticClient())
+			return;
+
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EQUIPMENT.opcode);
 		s.writeByte(player.getCarriedItems().getEquipment().equipCount());
@@ -866,6 +893,10 @@ public class ActionSender {
 	public static void updateEquipmentSlot(Player player, int slot) {
 		if (player == null)
 			return;
+
+		if (player.isUsingAuthenticClient())
+			return;
+
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EQUIPMENT_UPDATE.opcode);
 		s.writeByte(slot);
@@ -1572,6 +1603,8 @@ public class ActionSender {
 	}
 
 	public static void sendRemoveProgressBar(Player player) {
+		if (player.isUsingAuthenticClient())
+			return;
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_REMOVE_PROGRESS_BAR.opcode);
 		s.writeByte(2); // interface ID
@@ -1580,6 +1613,9 @@ public class ActionSender {
 	}
 
 	public static void sendProgressBar(Player player, int delay, int repeatFor) {
+		// TODO: it could be cool to abuse a textbox for this, or send an NPC with a health bar. :-)
+		if (player.isUsingAuthenticClient())
+			return;
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PROGRESS_BAR.opcode);
 		s.writeByte(1); // interface ID
@@ -1590,6 +1626,8 @@ public class ActionSender {
 	}
 
 	public static void sendUpdateProgressBar(Player player, int repeatFor) {
+		if (player.isUsingAuthenticClient())
+			return;
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_UPDATE_PROGRESS_BAR.opcode);
 		s.writeByte(3); // interface ID
@@ -1599,6 +1637,8 @@ public class ActionSender {
 	}
 
 	public static void sendProgress(Player player, long repeated) {
+		if (player.isUsingAuthenticClient())
+			return;
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_AUCTION_PROGRESS.opcode);
 		s.writeByte(0); // interface ID
@@ -1620,6 +1660,11 @@ public class ActionSender {
 	}
 
 	public static void sendInputBox(Player player, String s) {
+		if (player.isUsingAuthenticClient()) {
+			sendMessage(player, "@lre@Input Box not implemented for the authentic client.");
+			sendMessage(player, "@lre@Server asked the following: @whi@" + s);
+			return;
+		}
 		com.openrsc.server.net.PacketBuilder pb = new com.openrsc.server.net.PacketBuilder();
 		pb.setID(Opcode.SEND_INPUT_BOX.opcode);
 		pb.writeString(s);
