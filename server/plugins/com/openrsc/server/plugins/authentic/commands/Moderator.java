@@ -61,9 +61,9 @@ public final class Moderator implements CommandTrigger {
 		newStr.insert(0, player.getStaffName() + ": @yel@");
 		for (Player playerToUpdate : player.getWorld().getPlayers()) {
 			if (playerToUpdate.isUsingAuthenticClient()) {
-				ActionSender.sendMessage(playerToUpdate, player, MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon(), null);
-			} else {
 				ActionSender.sendMessage(playerToUpdate, null, MessageType.QUEST, newStr.toString(), player.getIcon(), null);
+			} else {
+				ActionSender.sendMessage(playerToUpdate, player, MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon(), null);
 			}
 		}
 	}
