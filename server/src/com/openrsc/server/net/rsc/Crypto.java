@@ -34,6 +34,9 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
+import javax.xml.bind.DatatypeConverter;
+import java.io.StringWriter;
+import java.io.FileWriter;
 
 public class Crypto {
 
@@ -95,24 +98,22 @@ public class Crypto {
             File serverKeyFile = new File("server.pem");
 
             if(!clientKeyFile.exists() || !serverKeyFile.exists()) {
-                LOGGER.error("RSA Keys do not exist!");
+                LOGGER.warn("RSA Keys do not exist!");
 
-                // TODO: it would be nice if we could work in automatic key generation
+				LOGGER.warn("Generating new client.pem & server.pem files!");
 
-                /* BouncyCastle key generation implementation
                 KeyPairGenerator keyPairGenerator;
                 keyPairGenerator = KeyPairGenerator.getInstance("RSA");
                 keyPairGenerator.initialize(512);
                 KeyPair keyPair = keyPairGenerator.genKeyPair();
-                PemObject pemObject = new PemObject("PUBLIC KEY", keyPair.getPublic().getEncoded());
-                PemWriter output = new PemWriter(new OutputStreamWriter(new FileOutputStream(clientKeyFile)));
-                output.writeObject(pemObject);
-                output.close();
-                pemObject = new PemObject("PRIVATE KEY", keyPair.getPrivate().getEncoded());
-                output = new PemWriter(new OutputStreamWriter(new FileOutputStream(serverKeyFile)));
-                output.writeObject(pemObject);
-                output.close();
-                */
+
+                FileWriter publicKeyFile = new FileWriter("client.pem");
+				publicKeyFile.write(certToString(keyPair.getPublic().getEncoded(), "PUBLIC"));
+				publicKeyFile.close();
+
+				FileWriter privateKeyFile = new FileWriter("server.pem");
+				privateKeyFile.write(certToString(keyPair.getPrivate().getEncoded(), "PRIVATE"));
+				privateKeyFile.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -152,4 +153,16 @@ public class Crypto {
         return Base64.decodeBase64(fileString);
 
     }
+
+	public static String certToString(byte[] certBytes, String type) {
+		StringWriter sw = new StringWriter();
+		try {
+			sw.write(String.format("-----BEGIN %s KEY-----\n", type));
+			sw.write(DatatypeConverter.printBase64Binary(certBytes).replaceAll("(.{64})", "$1\n"));
+			sw.write(String.format("\n-----END %s KEY-----\n", type));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return sw.toString();
+	}
 }
