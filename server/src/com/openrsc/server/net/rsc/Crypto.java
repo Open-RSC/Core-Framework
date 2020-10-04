@@ -99,7 +99,6 @@ public class Crypto {
 
             if(!clientKeyFile.exists() || !serverKeyFile.exists()) {
                 LOGGER.warn("RSA Keys do not exist!");
-
                 LOGGER.warn("Generating new client.pem & server.pem files!");
 
                 KeyPairGenerator keyPairGenerator;
