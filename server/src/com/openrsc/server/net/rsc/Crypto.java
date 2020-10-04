@@ -100,7 +100,7 @@ public class Crypto {
             if(!clientKeyFile.exists() || !serverKeyFile.exists()) {
                 LOGGER.warn("RSA Keys do not exist!");
 
-				LOGGER.warn("Generating new client.pem & server.pem files!");
+                LOGGER.warn("Generating new client.pem & server.pem files!");
 
                 KeyPairGenerator keyPairGenerator;
                 keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -108,12 +108,12 @@ public class Crypto {
                 KeyPair keyPair = keyPairGenerator.genKeyPair();
 
                 FileWriter publicKeyFile = new FileWriter("client.pem");
-				publicKeyFile.write(certToString(keyPair.getPublic().getEncoded(), "PUBLIC"));
-				publicKeyFile.close();
+                publicKeyFile.write(certToString(keyPair.getPublic().getEncoded(), "PUBLIC"));
+                publicKeyFile.close();
 
-				FileWriter privateKeyFile = new FileWriter("server.pem");
-				privateKeyFile.write(certToString(keyPair.getPrivate().getEncoded(), "PRIVATE"));
-				privateKeyFile.close();
+                FileWriter privateKeyFile = new FileWriter("server.pem");
+                privateKeyFile.write(certToString(keyPair.getPrivate().getEncoded(), "PRIVATE"));
+                privateKeyFile.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -154,15 +154,15 @@ public class Crypto {
 
     }
 
-	public static String certToString(byte[] certBytes, String type) {
-		StringWriter sw = new StringWriter();
-		try {
-			sw.write(String.format("-----BEGIN %s KEY-----\n", type));
-			sw.write(DatatypeConverter.printBase64Binary(certBytes).replaceAll("(.{64})", "$1\n"));
-			sw.write(String.format("\n-----END %s KEY-----\n", type));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return sw.toString();
-	}
+    public static String certToString(byte[] certBytes, String type) {
+        StringWriter sw = new StringWriter();
+        try {
+            sw.write(String.format("-----BEGIN %s KEY-----\n", type));
+            sw.write(DatatypeConverter.printBase64Binary(certBytes).replaceAll("(.{64})", "$1\n"));
+            sw.write(String.format("\n-----END %s KEY-----\n", type));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sw.toString();
+    }
 }
