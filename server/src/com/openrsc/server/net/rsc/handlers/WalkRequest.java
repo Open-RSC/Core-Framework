@@ -69,7 +69,7 @@ public class WalkRequest implements PacketHandler {
 			} else {
 				return;
 			}
-		} else if (player.isBusy()) {
+		} else if (player.isBusy() && player.getMenuHandler() == null) {
 			if (player.getConfig().BATCH_PROGRESSION) {
 				player.interruptPlugins();
 			}

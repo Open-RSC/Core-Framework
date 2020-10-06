@@ -210,7 +210,7 @@ public final class Harvesting implements OpLocTrigger {
 			return;
 		}
 
-		if (player.getCarriedItems().getInventory().countId(ItemId.HERB_CLIPPERS.id()) <= 0) {
+		if (player.getCarriedItems().getInventory().countId(ItemId.HERB_CLIPPERS.id(), Optional.of(false)) <= 0) {
 			player.playerServerMessage(MessageType.QUEST,
 				"You need some "
 					+ player.getWorld().getServer().getEntityHandler()

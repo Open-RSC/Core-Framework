@@ -2536,6 +2536,43 @@ public class MySqlGameDatabase extends GameDatabase {
 		}
 	}
 
+	@Override
+	protected boolean queryColumnExists(String table, String column) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(getQueries().checkColumnExists);
+			statement.setString(1, table);
+			statement.setString(2, column);
+			statement.execute();
+			ResultSet result = statement.getResultSet();
+			try {
+				if (result.next()) {
+					return result.getInt("exist") == 1;
+				}
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+		return true; // Do not want to continue adding column if can't determine if column exists
+	}
+
+	@Override
+	protected void queryAddColumn(String table, String newColumn, String dataType) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = getConnection().prepareStatement(
+				String.format(getQueries().addColumn, table, newColumn, dataType));
+			try {
+				statement.executeUpdate();
+			} finally {
+				statement.close();
+			}
+		} catch (SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
 	private int[] fetchLevels(int playerID) throws SQLException {
 		final PreparedStatement statement = statementFromInteger(getQueries().playerCurExp, playerID);
 		final ResultSet result = statement.executeQuery();

@@ -18,7 +18,6 @@ import android.view.SurfaceView;
 import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-import android.view.inputmethod.InputMethodManager;
 
 import com.openrsc.client.android.GameActivity;
 import com.openrsc.client.model.Sprite;
@@ -85,11 +84,10 @@ public abstract class RSCBitmapSurfaceView extends SurfaceView implements Surfac
 			post(new Runnable() {
 				@Override
 				public void run() {
-					InputMethodManager imm = (InputMethodManager) gameActivity
-						.getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-					if (imm.isAcceptingText()) { // REMOVE?
-						osConfig.F_SHOWING_KEYBOARD = !osConfig.F_SHOWING_KEYBOARD;
+					if (osConfig.F_SHOWING_KEYBOARD) {
+						gameActivity.closeKeyboard();
+					} else {
+						gameActivity.drawKeyboard();
 					}
 				}
 			});

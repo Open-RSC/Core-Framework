@@ -1,12 +1,11 @@
 package com.openrsc.server.constants;
 
-import com.openrsc.server.content.DropTable;
 import com.openrsc.server.ServerConfiguration;
+import com.openrsc.server.content.DropTable;
 import com.openrsc.server.model.world.World;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 public class NpcDrops {
 
@@ -203,6 +202,7 @@ public class NpcDrops {
 		this.bonelessNpcs.add(NpcId.POISON_SPIDER.id());
 		this.bonelessNpcs.add(NpcId.ANIMATED_AXE.id());
 		this.bonelessNpcs.add(NpcId.SHADOW_SPIDER.id());
+		this.bonelessNpcs.add(NpcId.KHAZARD_OGRE.id());
 		this.bonelessNpcs.add(NpcId.KHAZARD_SCORPION.id());
 		this.bonelessNpcs.add(NpcId.FIRST_PLAGUE_SHEEP.id());
 		this.bonelessNpcs.add(NpcId.SECOND_PLAGUE_SHEEP.id());
@@ -211,12 +211,19 @@ public class NpcDrops {
 		this.bonelessNpcs.add(NpcId.RAT_TUTORIAL.id());
 		this.bonelessNpcs.add(NpcId.JUNGLE_SPIDER.id());
 		this.bonelessNpcs.add(NpcId.ZADIMUS.id());
+		this.bonelessNpcs.add(NpcId.NAZASTAROOL_ZOMBIE.id());
+		this.bonelessNpcs.add(NpcId.NAZASTAROOL_SKELETON.id());
 		this.bonelessNpcs.add(NpcId.NAZASTAROOL_GHOST.id());
 		this.bonelessNpcs.add(NpcId.BLESSED_SPIDER.id());
 		this.bonelessNpcs.add(NpcId.GHOST_SCORPIUS.id());
 		this.bonelessNpcs.add(NpcId.SPIRIT_OF_SCORPIUS.id());
 		this.bonelessNpcs.add(NpcId.SCORPION_GRAVE.id());
 		this.bonelessNpcs.add(NpcId.PIT_SCORPION.id());
+		this.bonelessNpcs.add(NpcId.KOLODION_HUMAN.id());
+		this.bonelessNpcs.add(NpcId.KOLODION_OGRE.id());
+		this.bonelessNpcs.add(NpcId.KOLODION_SPIDER.id());
+		this.bonelessNpcs.add(NpcId.KOLODION_SOULESS.id());
+		this.bonelessNpcs.add(NpcId.KOLODION_DEMON.id());
 	}
 
 	private void generateBatBoneNpcs() {
@@ -227,7 +234,6 @@ public class NpcDrops {
 		// NPCs that only drop Big Bones
 		this.bigBoneNpcs.add(NpcId.BABY_BLUE_DRAGON.id());
 		this.bigBoneNpcs.add(NpcId.OGRE.id());
-		this.bigBoneNpcs.add(NpcId.KHAZARD_OGRE.id());
 		this.bigBoneNpcs.add(NpcId.OGRE_TRAINING_CAMP.id());
 		this.bigBoneNpcs.add(NpcId.OGRE_CHIEFTAN.id());
 		this.bigBoneNpcs.add(NpcId.GOBLIN_GUARD.id());

@@ -32,7 +32,7 @@ public class ServerConfiguration {
 	public String MESSAGE_PREFIX = "@gre@Runescape Classic:@whi@ ";
 	public String BAD_SYNTAX_PREFIX = MESSAGE_PREFIX +" Invalid Syntax: ::";
 	public boolean MEMBER_WORLD;
-	private int WORLD_NUMBER;
+	public int WORLD_NUMBER;
 	public int CLIENT_VERSION;
 	public int MAX_PLAYERS;
 	public int MAX_PLAYERS_PER_IP;
@@ -206,6 +206,7 @@ public class ServerConfiguration {
 	public boolean WANT_DECORATED_MOD_ROOM;
 	public boolean CHAR_NAME_CAN_CONTAIN_MOD;
 	public boolean WANT_CHAIN_LEGS;
+	public boolean WANT_APOTHECARY_QOL;
 	// public boolean CHECK_ADMIN_IP;
 	// public String ADMIN_IP;
 	// public List<String> adminIp;
@@ -414,6 +415,7 @@ public class ServerConfiguration {
 		MORE_SHAFTS_PER_BETTER_LOG = tryReadBool("more_shafts_per_better_log").orElse(false);
 		FASTER_YOHNUS = tryReadBool("faster_yohnus").orElse(false);
 		WANT_CHAIN_LEGS = tryReadBool("want_chain_legs").orElse(false);
+		WANT_APOTHECARY_QOL = tryReadBool("want_apothecary_qol").orElse(false);
 
 		// Bank
 		RIGHT_CLICK_BANK = tryReadBool("right_click_bank").orElse(false);

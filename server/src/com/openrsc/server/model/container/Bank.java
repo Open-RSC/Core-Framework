@@ -1,12 +1,12 @@
 package com.openrsc.server.model.container;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -86,7 +86,7 @@ public class Bank {
 
 				// Update the client bank
 				if (updateClient) {
-					ActionSender.updateBankItem(player, list.size() - 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
+					ActionSender.updateBankItem(player, list.size() - 1, itemToAdd, itemToAdd.getAmount());
 				}
 
 			// A stack exists of this item in the bank already.
@@ -103,7 +103,7 @@ public class Bank {
 
 					// Update the client bank
 					if (updateClient) {
-						ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), existingStack.getAmount());
+						ActionSender.updateBankItem(player, index, existingStack, existingStack.getAmount());
 					}
 
 				// In the second case, we must made a new stack as well as updating the old one. (First is full.)
@@ -125,8 +125,8 @@ public class Bank {
 
 					// Update the client - both stacks
 					if (updateClient) {
-						ActionSender.updateBankItem(player, index, existingStack.getCatalogId(), Integer.MAX_VALUE);
-						ActionSender.updateBankItem(player, list.size() - 1, itemToAdd.getCatalogId(), itemToAdd.getAmount());
+						ActionSender.updateBankItem(player, index, existingStack, Integer.MAX_VALUE);
+						ActionSender.updateBankItem(player, list.size() - 1, itemToAdd, itemToAdd.getAmount());
 					}
 				}
 			}
@@ -173,7 +173,7 @@ public class Bank {
 
 				// Update the Client
 				if (updateClient) {
-					ActionSender.updateBankItem(player, bankIndex, 0, 0);
+					ActionSender.updateBankItem(player, bankIndex, bankItem, 0);
 				}
 
 			// We are removing only some of the total held in the bank
@@ -184,12 +184,26 @@ public class Bank {
 
 				// Update the Client
 				if (updateClient) {
-					ActionSender.updateBankItem(player, bankIndex, bankItem.getCatalogId(), bankItem.getAmount());
+					ActionSender.updateBankItem(player, bankIndex, bankItem, bankItem.getAmount());
 				}
 			}
 
 			return true;
 		}
+	}
+
+	public boolean canRemoveAtLeast1(int catalogID) {
+		int bankIndex = getFirstIndexById(catalogID);
+		Item bankItem = get(bankIndex);
+
+		// Continue until a matching catalogID is found.
+		if (bankItem == null) return false;
+
+		if (player.getWorld().getPlayer(DataConversions.usernameToHash(player.getUsername())) == null) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public boolean canHold(Item item) {
@@ -473,10 +487,37 @@ public class Bank {
 
 				withdrawItem = new Item(withdrawItem.getCatalogId(), requestedAmount, withdrawNoted, withdrawItem.getItemId());
 
-				// Remove the item from the bank (or fail out).
-				if (!remove(withdrawItem, updateClient)) return;
+				if (!player.isUsingAuthenticClient()) {
+					// Remove the item from the bank (or fail out).
+					if (!remove(withdrawItem, updateClient)) return;
+				} else {
+					// The authentic client needs the bank update to happen AFTER inventory is added, or else it won't display properly
+					if(!canRemoveAtLeast1(withdrawItem.getCatalogId())) return;
+				}
 
 				addToInventory(withdrawItem, withdrawDef, requestedAmount, updateClient);
+
+				// TODO: there are safeguards here which might be fine, but it may be better to
+				// implement a way to sort the packets in Player.outgoingPackets instead?
+				// Not sure how Jagex would have done it.
+				if (player.isUsingAuthenticClient()) {
+					boolean successfulRemove = false;
+					try {
+						successfulRemove = remove(withdrawItem, updateClient);
+					} catch (Exception e) {
+						// Possibly the database is unavailable?
+						// Not sure, but it's important to not halt execution mid-remove() if an exception happens.
+						LOGGER.error("Exception after canRemoveAtLeast1!!");
+						LOGGER.error(e.toString());
+						removeFromInventory(withdrawItem, withdrawDef, requestedAmount, updateClient);
+					}
+
+					if (!successfulRemove) {
+						// This should not happen unless canRemoveAtLeast1 is flawed, but good to check
+						LOGGER.error("error in canRemoveAtLeast1!!");
+						removeFromInventory(withdrawItem, withdrawDef, requestedAmount, updateClient);
+					}
+				}
 			}
 		}
 	}
@@ -488,7 +529,12 @@ public class Bank {
 
 				// Ensure they have the item in their inventory.
 				requestedAmount = Math.min(requestedAmount, player.getCarriedItems().getInventory().countId(catalogID));
-				if (requestedAmount < 0) return;
+				if (requestedAmount <= 0) {
+					if (player.isUsingAuthenticClient() && catalogID == 1030) { //shantay pass placeholder item
+						player.playerServerMessage(MessageType.QUEST, "Try using the note on the Banker instead.");
+					}
+					return;
+				}
 
 				Item depositItem = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(catalogID)
@@ -500,6 +546,7 @@ public class Bank {
 				// has been toggled.
 				int itemToAddCatalogId = depositItem.getCatalogId();
 				int itemToAddAmount = requestedAmount;
+
 				if (player.getAttribute("swap_cert", false)) {
 					itemToAddCatalogId = uncertedID(itemToAddCatalogId);
 
@@ -507,7 +554,9 @@ public class Bank {
 						itemToAddAmount *= 5;
 					}
 
-					player.setAttribute("swap_cert", false);
+					// With this line in place, players can only swap certs once per client session
+					// Not sure why it's here... commenting it out
+					//player.setAttribute("swap_cert", false);
 				}
 
 				Item itemToAdd = new Item(itemToAddCatalogId, itemToAddAmount);
@@ -520,6 +569,10 @@ public class Bank {
 
 				// Attempt to add the item to the bank (or fail out).
 				if (!add(itemToAdd, updateClient)) return;
+
+				// TODO: technically, similar to withdrawItemFromInventory, the authentic client
+				// should have the bank_update & inventory_update packets reversed here
+				// but it actually shouldn't visually matter, so it's a TODO.
 
 				// Check the item definition
 				ItemDefinition depositDef = depositItem.getDef(player.getWorld());
@@ -548,13 +601,13 @@ public class Bank {
 			// Add the item to the inventory (or fail and place it back into the bank).
 			if (!player.getCarriedItems().getInventory().add(item, updateClient)) {
 				add(item);
-				if (updateClient) {
+				if (updateClient && !player.isUsingAuthenticClient()) {
 					ActionSender.sendInventory(player);
 				}
 				return;
 			}
 		}
-		if (updateClient) {
+		if (updateClient && !player.isUsingAuthenticClient()) {
 			ActionSender.sendInventory(player);
 		}
 	}

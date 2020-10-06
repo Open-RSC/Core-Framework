@@ -117,6 +117,8 @@ public final class Player extends Mob {
 	private volatile int questionOption;
 	private List<PluginTask> ownedPlugins = Collections.synchronizedList(new ArrayList<>());
 	private long lastExchangeTime = System.currentTimeMillis();
+	private int clientVersion = 0;
+	public int preferredIcon = -1;
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -365,6 +367,8 @@ public final class Player extends Mob {
 		playerSettings = new PlayerSettings(this);
 		social = new Social(this);
 		prayers = new Prayers(this);
+
+		bankSize = getConfig().WANT_CUSTOM_BANKS ? 240 : 192;
 	}
 
 	public int getIronMan() {
@@ -588,6 +592,9 @@ public final class Player extends Mob {
 	}
 
 	public boolean canLogout() {
+		if (menuHandler != null) {
+			return true;
+		}
 		return !isBusy() && System.currentTimeMillis() - getCombatTimer() > 10000
 			&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000
 			&& System.currentTimeMillis() - getLastExchangeTime() > 3000;
@@ -2777,6 +2784,12 @@ public final class Player extends Mob {
 	}
 
 	public int getIcon() {
+		if (preferredIcon != -1) {
+			if (isAdmin()) {
+				return preferredIcon;
+			}
+		}
+
 		if (getWorld().getServer().getConfig().WANT_CUSTOM_RANK_DISPLAY) {
 			if (isAdmin())
 				return 0x0100FF00;
@@ -2801,6 +2814,42 @@ public final class Player extends Mob {
 
 		if (isMod())
 			return 0x03FFFFFF;
+
+		if (isPlayerMod())
+			return 0x03FFFFFF;
+
+		return 0;
+	}
+
+	public byte getIconAuthentic() {
+		if (preferredIcon != -1) {
+			// You can choose icon > 2 for cool effect e.g. 15 is a Log icon.
+			if (isAdmin() || isMod() || isDev() || isEvent()) {
+				return (byte)(preferredIcon & 0xFF);
+			}
+			if (isPlayerMod()) {
+				// Don't allow PMod to pose as admin. :-)
+				// but otherwise it is cool for them to have a weird tree icon if they want
+				if ((byte)(preferredIcon & 0xFF) != 2) {
+					return (byte)(preferredIcon & 0xFF);
+				}
+			}
+		}
+
+		if (isAdmin())
+			return 2;
+
+		if (isMod())
+			return 2;
+
+		if (isDev())
+			return 2;
+
+		if (isEvent())
+			return 2;
+
+		if (isPlayerMod())
+			return 1;
 
 		return 0;
 	}
@@ -3168,5 +3217,13 @@ public final class Player extends Mob {
 
 	public void setLastExchangeTime() {
 		this.lastExchangeTime = System.currentTimeMillis();
+	}
+
+	public void setClientVersion(int cv) { this.clientVersion = cv; }
+
+	public int getClientVersion() { return this.clientVersion; }
+
+	public boolean isUsingAuthenticClient() {
+		return this.clientVersion == 235;
 	}
 }

@@ -79,33 +79,15 @@ public class ApplicationUpdater extends Activity {
         alertDialogBuilder.setTitle("New version available!");
         alertDialogBuilder
                 .setMessage("There is a new app update available,"
-                        + " please go ahead and install it.")
-                .setCancelable(false).setPositiveButton("Install", (dialog, id) -> {
+                        + " please install the newest version from the website.")
+                .setCancelable(false).setPositiveButton("Go to website", (dialog, id) -> {
 					try {
-						if(Build.VERSION.SDK_INT>=24){
-							try{
-								Method m = StrictMode.class.getMethod("disableDeathOnFileUriExposure");
-								m.invoke(null);
-							}catch(Exception e){
-								e.printStackTrace();
-							}
-						}
-						tv1.setText("Downloading update...");
-						new DownloadApplication().execute().get();
-
-						File downloadedFile = new File(getFilesDir() + File.separator + "openrsc.apk");
-						downloadedFile.setReadable(true, false);
-
-						Uri fileLoc = Uri.fromFile(downloadedFile);
-						Intent intent = new Intent(Intent.ACTION_VIEW);
-						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						intent.setDataAndType(fileLoc, "application/vnd.android.package-archive");
-						startActivity(intent);
-						finish();
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://runescapeclassic.dev/download"));
+                        startActivity(browserIntent);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				}).setNegativeButton("Do not install", (dialog, id) -> {
+				}).setNegativeButton("No thanks", (dialog, id) -> {
 					Intent mainIntent = new Intent(ApplicationUpdater.this, CacheUpdater.class);
 					mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 					startActivity(mainIntent);
@@ -216,5 +198,4 @@ public class ApplicationUpdater extends Activity {
             super.onProgressUpdate(values);
         }
     }
-
 }

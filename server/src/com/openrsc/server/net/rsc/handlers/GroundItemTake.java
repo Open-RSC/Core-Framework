@@ -28,12 +28,12 @@ public class GroundItemTake implements PacketHandler {
 
 		final Point location = Point.location(x, y);
 
-		final int id = packet.readShort();
-		if (id < 0 || id >= player.getWorld().getServer().getEntityHandler().getItemCount()) {
+		final int itemId = packet.readShort();
+		if (itemId < 0 || itemId >= player.getWorld().getServer().getEntityHandler().getItemCount()) {
 			return;
 		}
 
-		final GroundItem item = player.getViewArea().getGroundItem(id, location);
+		final GroundItem item = player.getViewArea().getGroundItem(itemId, location);
 
 		if (item == null) {
 			player.resetPath();
@@ -51,7 +51,7 @@ public class GroundItemTake implements PacketHandler {
 		player.setWalkToAction(new WalkToPointAction(player, item.getLocation(), distance) {
 			public void executeInternal() {
 				if (getPlayer().isBusy() || getPlayer().isRanging() || item == null || item.isRemoved()
-					|| getPlayer().getRegion().getItem(id, getLocation(), getPlayer()) == null || !getPlayer().canReach(item)
+					|| getPlayer().getRegion().getItem(itemId, getLocation(), getPlayer()) == null || !getPlayer().canReach(item)
 					|| item.getAmount() < 1) {
 					return;
 				}

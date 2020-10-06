@@ -173,7 +173,7 @@ public class StringUtil {
 
 				int strRight = str.length();
 				while (strRight > strLeft && isCharSpacing(str.charAt(strLeft))) {
-
+					strLeft++;
 				}
 
 				while (strRight > strLeft && isCharSpacing(str.charAt(strRight - 1))) {

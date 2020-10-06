@@ -335,6 +335,13 @@ public abstract class Mob extends Entity {
 		return false;
 	}
 
+	public boolean within5GridRange(final Entity e) {
+		if (e != null) {
+			return getLocation().withinGridRange(e.getLocation(), 5);
+		}
+		return false;
+	}
+
 	public void face(final Entity entity) {
 		if (entity != null && entity.getLocation() != null) {
 			final int dir = Formulae.getDirection(this, entity.getX(), entity.getY());

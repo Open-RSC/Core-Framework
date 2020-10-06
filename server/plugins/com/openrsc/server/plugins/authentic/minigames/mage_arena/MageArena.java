@@ -72,10 +72,10 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					return;
 				}
 				teleport(player, 229, 130);
-				setCurrentLevel(player, 0, 0);
-				setCurrentLevel(player, 2, 0);
-				spawnKolodion(player, player.getCache().getInt("kolodion_stage"));
-				startKolodionEvent(player);
+				delay();
+				setCurrentLevel(player, Skills.ATTACK, 0);
+				setCurrentLevel(player, Skills.STRENGTH, 0);
+				spawnKolodion(player, player.getCache().getInt("kolodion_stage"), true);
 
 			} else if (stage == 2) {
 				say(player, n, "hello kolodion");
@@ -202,12 +202,12 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					player.getCache().set("mage_arena", 1);
 				}
 				teleport(player, 229, 130);
+				delay();
 				setCurrentLevel(player, Skills.ATTACK, 0);
 				setCurrentLevel(player, Skills.STRENGTH, 0);
 
-				startKolodionEvent(player);
-				spawnKolodion(player, NpcId.KOLODION_HUMAN.id());
-				delay();
+				// first time
+				spawnKolodion(player, NpcId.KOLODION_HUMAN.id(), false);
 			} else if (choice == 1) {
 				npcsay(player, n, "your loss");
 			}
@@ -219,6 +219,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		DelayedEvent mageArenaEvent = new DelayedEvent(player.getWorld(), player, config().GAME_TICK * 3, "Mage Arena Learn Spell Event") {
 			@Override
 			public void run() {
+				boolean recentMaged = getOwner().getAttribute("maged_kolodion", false);
 				/* Player logged out. */
 				if (!getOwner().isLoggedIn() || getOwner().isRemoved()) {
 					stop();
@@ -231,14 +232,22 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				if (getOwner().inCombat()) {
 					return;
 				}
+				if (!recentMaged) {
+					return;
+				}
+				if (random(0, 1) == 1) {
+					getOwner().setAttribute("maged_kolodion", false);
+					return;
+				}
 				if (getOwner().getSkills().getLevel(Skills.ATTACK) > 0 || getOwner().getSkills().getLevel(Skills.STRENGTH) > 0) {
 					getOwner().getSkills().setLevel(Skills.ATTACK, 0);
 					getOwner().getSkills().setLevel(Skills.STRENGTH, 0);
 				}
 				Npc Guthix = ifnearvisnpc(player, NpcId.BATTLE_MAGE_GUTHIX.id(), 2);
-				Npc Zamorak = ifnearvisnpc(player, NpcId.BATTLE_MAGE_ZAMAROK.id(), 2);
+				Npc Zamorak = ifnearvisnpc(player, NpcId.BATTLE_MAGE_ZAMORAK.id(), 2);
 				Npc Saradomin = ifnearvisnpc(player, NpcId.BATTLE_MAGE_SARADOMIN.id(), 2);
 				String[] randomMessage = {"@yel@zamorak mage: feel the wrath of zamarok", "@yel@Saradomin mage: feel the wrath of Saradomin", "@yel@guthix mage: feel the wrath of guthix"};
+				getOwner().setAttribute("maged_kolodion", false);
 				if (Guthix != null && Guthix.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 33);
 					player.message(randomMessage[2]);
@@ -283,6 +292,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 			@Override
 			public void run() {
 				Npc npc = getOwner().getAttribute("spawned_kolodion");
+				boolean recentMaged = getOwner().getAttribute("maged_kolodion", false);
 				if (npc == null) {
 					return;
 				}
@@ -309,13 +319,15 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				if (!npc.withinRange(getOwner(), 8)) {
 					return;
 				}
-				if (random(0, 5) != 2) {
+				if ((random(1, 100) != 1 && !recentMaged)) {
 					return;
 				}
-				if (DataConversions.getRandom().nextBoolean()) {
+				if (random(0, 1) == 1 && recentMaged) {
 					// just message
 					getOwner().message(DataConversions.getRandom().nextBoolean()
 						? "@yel@kolodion: die you foolish mortal" : "@yel@kolodion: the bigger the better");
+
+					getOwner().setAttribute("maged_kolodion", false);
 					return;
 				}
 				int transformStage = 0;
@@ -362,10 +374,16 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					// replace message of flames of zamorak
 					messages.set(2, new String[]{"@yel@kolodion: burn fool ....burn", "you burst into flames"});
 				}
-				mes(messages.get(spell_type));
+				getOwner().setAttribute("maged_kolodion", false);
+				// mes throwing currently error here
+				//mes(messages.get(spell_type));
+				// temporary below
+				for(String message : messages.get(spell_type)) {
+					getOwner().message(message);
+					delay(2);
+				}
 				delay(3);
 				getOwner().damage((int) Math.ceil(Math.max(getCurrentLevel(getOwner(), Skills.HITS) + (transformStage - 1.0) * shiftPerPhase, 0) / reciprocalSlope) + 1);
-
 			}
 		};
 		if (kolE != null) {
@@ -379,13 +397,21 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		}
 	}
 
+	// new kolodion stage
 	public void spawnKolodion(Player player, int id) {
+		this.spawnKolodion(player, id, false);
+	}
+
+	// kolodion from new attempt
+	public void spawnKolodion(Player player, int id, boolean isContinue) {
 		player.setAttribute("spawned_kolodion", addnpc(id, 227, 130, (int)TimeUnit.SECONDS.toMillis(516), player));
-		player.getCache().set("kolodion_stage", id);
-		player.message("kolodion blasts you " + (id == NpcId.KOLODION_HUMAN.id() ? "with his staff" : "again"));
-		player.damage(random(7, 15));
+		if (!isContinue) {
+			player.getCache().set("kolodion_stage", id);
+			player.message("kolodion blasts you " + ((id == NpcId.KOLODION_HUMAN.id() || id == NpcId.KOLODION_OGRE.id()) ? "with his staff" : "again"));
+			player.damage(random(7, 15));
+			ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
+		}
 		startKolodionEvent(player);
-		ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);
 	}
 
 	private boolean cantGo(Player player) {
@@ -498,6 +524,9 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 			if (!n.getAttribute("spawnedFor", null).equals(player)) {
 				player.message("that mage is busy.");
 			}
+		} else if (inArray(n.getID(), NpcId.BATTLE_MAGE_GUTHIX.id(), NpcId.BATTLE_MAGE_ZAMORAK.id(), NpcId.BATTLE_MAGE_SARADOMIN.id())
+			&& (!player.getCache().hasKey("mage_arena") || player.getCache().getInt("mage_arena") < 2)) {
+			player.message("you are not yet ready to fight the battle mages");
 		}
 	}
 
@@ -508,6 +537,9 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 			if (!n.getAttribute("spawnedFor", null).equals(player)) {
 				return true;
 			}
+		} else if (inArray(n.getID(), NpcId.BATTLE_MAGE_GUTHIX.id(), NpcId.BATTLE_MAGE_ZAMORAK.id(), NpcId.BATTLE_MAGE_SARADOMIN.id())
+			&& (!player.getCache().hasKey("mage_arena") || player.getCache().getInt("mage_arena") < 2)) {
+			return true;
 		}
 		return false;
 	}
@@ -684,8 +716,14 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 
 	@Override
 	public void onAttackNpc(Player player, Npc affectedmob) {
-		if (!affectedmob.getAttribute("spawnedFor", null).equals(player)) {
-			player.message("that mage is busy.");
+		if (inArray(affectedmob.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
+			NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id())) {
+			if (!affectedmob.getAttribute("spawnedFor", null).equals(player)) {
+				player.message("that mage is busy.");
+			}
+		} else if (inArray(affectedmob.getID(), NpcId.BATTLE_MAGE_GUTHIX.id(), NpcId.BATTLE_MAGE_ZAMORAK.id(), NpcId.BATTLE_MAGE_SARADOMIN.id())
+			&& (!player.getCache().hasKey("mage_arena") || player.getCache().getInt("mage_arena") <= 2)) {
+			player.message("you are not yet ready to fight the battle mages");
 		}
 	}
 
@@ -696,6 +734,9 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 			if(!n.getAttribute("spawnedFor", null).equals(player)) {
 				return true;
 			}
+		} else if (inArray(n.getID(), NpcId.BATTLE_MAGE_GUTHIX.id(), NpcId.BATTLE_MAGE_ZAMORAK.id(), NpcId.BATTLE_MAGE_SARADOMIN.id())
+			&& (!player.getCache().hasKey("mage_arena") || player.getCache().getInt("mage_arena") <= 2)) {
+			return true;
 		}
 
 		return false;

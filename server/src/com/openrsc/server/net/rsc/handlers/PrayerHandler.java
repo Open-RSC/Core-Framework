@@ -72,7 +72,7 @@ public class PrayerHandler implements PacketHandler {
 			return;
 		}
 		if (prayerID == 8 && player.isIronMan(IronmanMode.Ultimate.id())) {
-			player.message("Ultimate Iron Mens, cannot protect items");
+			player.message("Ultimate Ironmen cannot protect items.");
 			player.getPrayers().resetPrayers();
 			return;
 		}

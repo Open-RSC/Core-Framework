@@ -24,13 +24,22 @@ public class ItemUseOnGroundItem implements PacketHandler {
 
 		player.resetAll();
 		Point location = Point.location(packet.readShort(), packet.readShort());
-		final int id = packet.readShort();
-		final int groundItemId = packet.readShort();
-		if (player.getConfig().WANT_EQUIPMENT_TAB && id > Inventory.MAX_SIZE) {
+
+		int groundItemId;
+		int inventorySlot;
+
+		if (player.isUsingAuthenticClient()) {
+			groundItemId = packet.readShort();
+			inventorySlot = packet.readShort();
+		} else { // inauthentic has them swapped.
+			inventorySlot = packet.readShort();
+			groundItemId = packet.readShort();
+		}
+		if (player.getConfig().WANT_EQUIPMENT_TAB && inventorySlot > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;
 		}
-		final Item myItem = player.getCarriedItems().getInventory().get(id);
+		final Item myItem = player.getCarriedItems().getInventory().get(inventorySlot);
 		if (myItem == null)
 			return;
 

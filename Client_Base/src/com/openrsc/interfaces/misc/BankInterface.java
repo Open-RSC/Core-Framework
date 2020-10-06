@@ -3,15 +3,14 @@ package com.openrsc.interfaces.misc;
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
 import com.openrsc.client.entityhandling.instances.Item;
-
-import java.util.ArrayList;
-
 import orsc.Config;
 import orsc.enumerations.InputXAction;
 import orsc.graphics.gui.InputXPrompt;
 import orsc.graphics.gui.Panel;
 import orsc.mudclient;
 import orsc.util.BankUtil;
+
+import java.util.ArrayList;
 
 public class BankInterface {
 	public static mudclient mc;
@@ -380,7 +379,7 @@ public class BankInterface {
 		int amount = currentItems.get(this.selectedBankSlot).getAmount();
 
 		int quantityColour = 0xffffff;
-		if (amount > 0) {
+		if (getBankItemByID(itemID) != null && getBankItemByID(itemID).getAmount() > 0) {
 			drawString(
 				"Withdraw " + EntityHandler.getItemDef(itemID).getName(),
 				relativeX + 2, relativeY + 248, 1, 0xffffff);

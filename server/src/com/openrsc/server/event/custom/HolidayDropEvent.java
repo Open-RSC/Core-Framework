@@ -73,7 +73,7 @@ public class HolidayDropEvent extends HourlyEvent  {
 
 		if(getEventMessage() != null) {
 			for (Player p : getWorld().getPlayers())
-				ActionSender.sendMessage(p, null, 0, MessageType.QUEST, getEventMessage(), 0);
+				ActionSender.sendMessage(p, null, MessageType.QUEST, getEventMessage(), 0, null);
 		}
 	}
 

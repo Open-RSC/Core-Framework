@@ -152,7 +152,7 @@ public class Clan {
 		for (ClanPlayer cMember : getPlayers()) {
 			if (cMember.getPlayerReference() != null) {
 				Player clanPlayer = cMember.getPlayerReference();
-				ActionSender.sendMessage(clanPlayer, player, 1, MessageType.CLAN_CHAT, "@whi@[@cla@" + getClanName() + "@whi@] " + string, player.getIcon());
+				ActionSender.sendMessage(clanPlayer, player, MessageType.CLAN_CHAT, "@whi@[@cla@" + getClanName() + "@whi@] " + string, player.getIcon(), null);
 			}
 		}
 	}

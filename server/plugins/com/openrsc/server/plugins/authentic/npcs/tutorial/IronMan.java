@@ -47,7 +47,7 @@ public class IronMan implements
 					mes(n, "Enter your Bank PIN to downgrade your Iron Man status.");
 					delay(2);
 
-					if (!validatebankpin(player)) {
+					if (!validatebankpin(player, n)) {
 						ActionSender.sendBox(player, "Incorrect bank pin", false);
 						player.setAttribute("ironman_delete", false);
 						ActionSender.sendIronManInterface(player);
@@ -73,7 +73,7 @@ public class IronMan implements
 				if (menu != -1) {
 					if (menu == 0) {
 						if (!player.getCache().hasKey("bank_pin")) {
-							if(setbankpin(player)) {
+							if(setbankpin(player, n)) {
 								player.setIronManRestriction(0);
 								ActionSender.sendIronManMode(player);
 								ActionSender.sendIronManInterface(player);

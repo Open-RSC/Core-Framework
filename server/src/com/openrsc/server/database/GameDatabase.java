@@ -258,6 +258,11 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract void removeItemFromPlayer(Item item);
 
+	// Database Management
+	protected abstract boolean queryColumnExists(final String table, final String column) throws GameDatabaseException;
+
+	protected abstract void queryAddColumn(String table, String newColumn, String dataType) throws GameDatabaseException;
+
 	public void open() {
 		synchronized (open) {
 			try {
@@ -788,7 +793,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_MOUSE_BUTTONS, playerData.oneMouse);
 		player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_SOUND_EFFECTS, playerData.soundOff);
 
-		player.setBankSize(playerData.bankSize);
+		//player.setBankSize(playerData.bankSize);
 
 		PlayerAppearance pa = new PlayerAppearance(
 			playerData.hairColour,
@@ -1311,5 +1316,14 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	protected void queryBankRemove(final Player player, final Item item) throws GameDatabaseException {
 		queryBankRemove(player.getDatabaseID(), item);
 	}
+
+	public boolean columnExists(String table, String column) throws GameDatabaseException {
+		return queryColumnExists(table, column);
+	}
+
+	public void addColumn(String table, String newColumn, String dataType) throws GameDatabaseException {
+		queryAddColumn(table, newColumn, dataType);
+	}
+
 }
 

@@ -18,8 +18,11 @@ public class ItemActionHandler implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
 		int idx = packet.readShort();
-		int amount = packet.readInt();
-		int commandIndex;
+		int amount = 1;
+		if (!player.isUsingAuthenticClient()) {
+			amount = packet.readInt();
+		}
+		int commandIndex = 0;
 
 		if (player == null || player.getCarriedItems().getInventory() == null) {
 			return;
@@ -35,8 +38,9 @@ public class ItemActionHandler implements PacketHandler {
 		}
 		Item tempitem = null;
 
+
 		//User wants to use the item from equipment tab
-		if (idx == -1) {
+		if (idx == -1 && !player.isUsingAuthenticClient()) {
 			idx = packet.readShort();
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(idx);
 			if (slot != -1) {
@@ -45,7 +49,9 @@ public class ItemActionHandler implements PacketHandler {
 			commandIndex = packet.readByte();
 		} else {
 			tempitem = player.getCarriedItems().getInventory().get(idx);
-			commandIndex = packet.readByte();
+			if (!player.isUsingAuthenticClient()) {
+				commandIndex = packet.readByte();
+			}
 		}
 
 		if (tempitem == null || tempitem.getCatalogId() == ItemId.NOTHING.id()) return;

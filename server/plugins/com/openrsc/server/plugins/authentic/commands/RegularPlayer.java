@@ -5,6 +5,7 @@ import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.content.party.PartyRank;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
+import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Chatlog;
@@ -21,9 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import static com.openrsc.server.plugins.Functions.config;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isPhoenixGang;
-import static com.openrsc.server.plugins.Functions.*;
 
 public final class RegularPlayer implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(RegularPlayer.class);
@@ -84,7 +85,7 @@ public final class RegularPlayer implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("time") || command.equalsIgnoreCase("date") || command.equalsIgnoreCase("datetime")) {
 			player.message(messagePrefix + " the current time/date is:@gre@ " + new java.util.Date().toString());
 		} else if (config().NPC_KILL_LIST && command.equalsIgnoreCase("kills")) {
-			queryKillList(player);
+			queryKillList(player, args);
 		} else if (command.equalsIgnoreCase("pair")) {
 			pairDiscordID(player);
 		} else if (command.equalsIgnoreCase("d")) {
@@ -298,8 +299,14 @@ public final class RegularPlayer implements CommandTrigger {
 			}
 			if (p.getGlobalBlock() != 2) {
 				String header = "";
-				ActionSender.sendMessage(p, player, 1, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
-					+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon());
+				if (p.isUsingAuthenticClient()) {
+					ActionSender.sendMessage(p, player, MessageType.PRIVATE_RECIEVE, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
+						+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIconAuthentic(), null);
+
+				} else {
+					ActionSender.sendMessage(p, player, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
+						+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon(), null);
+				}
 			}
 		}
 		if (command.equalsIgnoreCase("g")) {
@@ -358,7 +365,7 @@ public final class RegularPlayer implements CommandTrigger {
 			if (p.getSocial().isIgnoring(player.getUsernameHash()))
 				continue;
 			if (p.getParty() == player.getParty()) {
-				ActionSender.sendMessage(p, player, 1, MessageType.CLAN_CHAT, channelPrefix + "" + player.getUsername() + ": @or1@" + newStr, player.getIcon());
+				ActionSender.sendMessage(p, player, MessageType.CLAN_CHAT, channelPrefix + "" + player.getUsername() + ": @or1@" + newStr, player.getIcon(), null);
 			}
 		}
 		if (command.equalsIgnoreCase("g")) {
@@ -472,16 +479,42 @@ public final class RegularPlayer implements CommandTrigger {
 		ActionSender.sendBox(player, "@whi@Server Groups:%" + StringUtils.join(groups, "%"), true);
 	}
 
-	private void queryKillList(Player player) {
-		StringBuilder kills = new StringBuilder("NPC Kill List for " + player.getUsername() + " % %");
-		//PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
-		//	"SELECT * FROM `" + config().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
-		//statement.setInt(1, player.getDatabaseID());
-		//ResultSet result = statement.executeQuery();
-		for (Map.Entry<Integer, Integer> entry : player.getKillCache().entrySet()) {
-			kills.append("NPC: ").append(player.getWorld().getServer().getEntityHandler().getNpcDef(entry.getKey()).getName()).append(" - Kill Count: ").append(entry.getValue()).append("%");
+	private void queryKillList(Player player, String[] args) {
+		if (args.length == 0) {
+			StringBuilder kills = new StringBuilder("NPC Kill List for " + player.getUsername() + " % %");
+			//PreparedStatement statement = player.getWorld().getServer().getDatabaseConnection().prepareStatement(
+			//	"SELECT * FROM `" + config().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
+			//statement.setInt(1, player.getDatabaseID());
+			//ResultSet result = statement.executeQuery();
+			int i=1;
+			for (Map.Entry<Integer, Integer> entry : player.getKillCache().entrySet()) {
+				NPCDef npc = player.getWorld().getServer().getEntityHandler().getNpcDef(entry.getKey());
+				kills.append(npc.getName())
+					.append(" (level ")
+					.append(npc.combatLevel)
+					.append("): ")
+					.append(entry.getValue())
+					.append((i%2==0 ? "%" : ", "));
+				i++;
+			}
+			kills.append("%Total Kills: ").append(player.getNpcKills());
+			ActionSender.sendBox(player, kills.substring(0, kills.length()-2).toString(), true);
+		} else {
+			String npcName = String.join(" ", args).toLowerCase();
+			for (Map.Entry<Integer, Integer> entry : player.getKillCache().entrySet()) {
+				NPCDef npc = player.getWorld().getServer().getEntityHandler().getNpcDef(entry.getKey());
+				if (npc.getName().toLowerCase().equals(npcName)) {
+					StringBuilder kill = new StringBuilder();
+					kill.append("NPC Kills for ")
+						.append(npc.getName())
+						.append(" (level ")
+						.append(npc.combatLevel)
+						.append("): ")
+						.append(entry.getValue());
+					player.message(kill.toString());
+				}
+			}
 		}
-		ActionSender.sendBox(player, kills.toString(), true);
 	}
 
 	private void pairDiscordID(Player player) {
@@ -527,7 +560,7 @@ public final class RegularPlayer implements CommandTrigger {
 			player.getWorld().getServer().getDiscordService().sendMessage("[InGame] " + player.getUsername() + ": " + message);
 
 			for (Player p : player.getWorld().getPlayers()) {
-				ActionSender.sendMessage(p, null, 0, MessageType.GLOBAL_CHAT, "@whi@[@gr2@G>D@whi@] @or1@" + player.getUsername() + "@yel@: " + message, 0);
+				ActionSender.sendMessage(p, null, MessageType.GLOBAL_CHAT, "@whi@[@gr2@G>D@whi@] @or1@" + player.getUsername() + "@yel@: " + message, 0, null);
 			}
 		} else
 			player.message("Discord bot disabled");
@@ -547,11 +580,12 @@ public final class RegularPlayer implements CommandTrigger {
 			+ "@whi@::claninvite <name> - invite player to clan %"
 			+ "@whi@::clankick <name> - kick player from clan %"
 			+ "@whi@::clanaccept - accept clan invitation %"
-			+ "@whi@::gang - shows if you are 'Pheonix' or 'Black arm' gang %"
+			+ "@whi@::gang - shows if you are 'Phoenix' or 'Black arm' gang %"
 			+ "@whi@::groups - shows available ranks on the server %"
 			+ "@whi@::wilderness - shows the wilderness activity %"
 			+ "@whi@::time - shows the current server time %"
-			+ "@whi@::event - to enter an ongoing server event %", true
+			+ "@whi@::event - to enter an ongoing server event %"
+			+ "@whi@::kills <name(optional)> - shows kill counts of npcs", true
 		);
 	}
 }

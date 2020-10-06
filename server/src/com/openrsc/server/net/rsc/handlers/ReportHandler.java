@@ -12,23 +12,28 @@ public final class ReportHandler implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
 
-		String hash = packet.readString();
+		String playerName;
+		if (player.isUsingAuthenticClient()) {
+			playerName = packet.readZeroPaddedString();
+		} else {
+			playerName = packet.readString();
+		}
 		byte reason = packet.readByte();
 		byte suggestsOrMutes = packet.readByte();
 
-		if (hash.equalsIgnoreCase(player.getUsername())) {
+		if (playerName.equalsIgnoreCase(player.getUsername())) {
 			player.message("You can't report yourself!!");
 			return;
 		}
 
-		if (reason < 0 || reason > 13) {
-			player.setSuspiciousPlayer(true, "report reason < 0 or reason > 13");
+		if (reason < 0 || reason > 14) {
+			player.setSuspiciousPlayer(true, "report reason < 0 or reason > 14");
 		}
 		if (reason != 4 && reason != 6) {
 			Iterator<Snapshot> i = player.getWorld().getSnapshots().iterator();
 			if (i.hasNext()) {
 				Snapshot s = i.next();
-				if (!s.getOwner().equalsIgnoreCase(hash)) {
+				if (!s.getOwner().equalsIgnoreCase(playerName)) {
 					player.message("For that rule you can only report players who have spoken or traded recently.");
 					return;
 				}
@@ -46,7 +51,7 @@ public final class ReportHandler implements PacketHandler {
 			return;
 		}
 
-		boolean playerExists = player.getWorld().getServer().getDatabase().playerExists(hash);
+		boolean playerExists = player.getWorld().getServer().getDatabase().playerExists(playerName);
 
 		if (!playerExists) {
 			player.message("Invalid player name.");
@@ -54,11 +59,11 @@ public final class ReportHandler implements PacketHandler {
 		}
 
 		player.message("Thank-you, your abuse report has been received.");
-		player.getWorld().getServer().getGameLogger().addQuery(new GameReport(player, hash, reason, suggestsOrMutes != 0, player.isMod()));
+		player.getWorld().getServer().getGameLogger().addQuery(new GameReport(player, playerName, reason, suggestsOrMutes != 0, player.isMod()));
 		player.setLastReport();
 
 		if (suggestsOrMutes != 0 && player.isMod()) {
-			muteCommand(player, "mute " + hash + " -1");
+			muteCommand(player, "mute " + playerName + " -1");
 		}
 	}
 

@@ -459,7 +459,7 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 				delay(3);
 				player.getCache().store("shantay-chest", true);
 			}
-			if(validatebankpin(player)) {
+			if(validatebankpin(player, null)) {
 				player.setAccessingBank(true);
 				ActionSender.showBank(player);
 			}
