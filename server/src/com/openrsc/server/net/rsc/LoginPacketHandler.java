@@ -63,9 +63,7 @@ public class LoginPacketHandler {
                 }
 			    if (authenticClient != 0) {
                     LoginInfo loginInfo = new LoginInfo();
-
-                    byte opcode = packet.readByte(); // TODO: this should not be needed
-
+                    
                     // Handle login packet
                     loginInfo.reconnecting = packet.readByte() == 1;
                     int clientVersion = packet.readInt();
