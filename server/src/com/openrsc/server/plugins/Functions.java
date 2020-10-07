@@ -156,7 +156,7 @@ public class Functions {
 		if (player == null) return;
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
-				player.message("@que@" + message);
+				player.playerServerMessage(MessageType.QUEST, message);
 			}
 		}
 	}
