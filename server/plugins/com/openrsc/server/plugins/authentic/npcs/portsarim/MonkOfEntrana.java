@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.authentic.npcs.portsarim;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
@@ -53,21 +54,41 @@ public final class MonkOfEntrana implements OpLocTrigger,
 	};
 
 	final private int[] allowedItems = {
-		ItemId.ICE_GLOVES.id()
+		// ice gloves for heroes quest
+		ItemId.ICE_GLOVES.id(),
+		// basic staves
+		ItemId.STAFF.id(),
+		ItemId.MAGIC_STAFF.id(),
+		ItemId.STAFF_OF_AIR.id(),
+		ItemId.STAFF_OF_EARTH.id(),
+		ItemId.STAFF_OF_FIRE.id(),
+		ItemId.STAFF_OF_EARTH.id()
 	};
 
 	private boolean BLOCK_ITEM(Player player, Item item) {
-		if (config().WANT_EQUIPMENT_TAB
-			&& item.getCatalogId() == ItemId.BRONZE_PICKAXE.id()) return false;
-		if (item.isWieldable(player.getWorld()) && !DataConversions.inArray(allowedItems, item.getCatalogId())) return true;
+		if (DataConversions.inArray(allowedItems, item.getCatalogId())) return false;
 		if (DataConversions.inArray(blockedItems, item.getCatalogId())) return true;
+		ItemDefinition def = item.getDef(player.getWorld());
+		if (def.isWieldable()) {
+			// allow anything in neck and cape slot
+			if (def.getWieldPosition() == 8 || def.getWieldPosition() == 11) return false;
+			// don't allow anything with a ranged level requirement
+			if (def.getRequiredSkillIndex() == 4) return true;
+			// allow anything without melee combat stats, otherwise block
+			if (def.getWeaponPowerBonus() == 0 && def.getWeaponAimBonus() == 0)  return false;
+				else return true;
+		}
+		// default: allow
 		return false;
 	}
 
 	private boolean CANT_GO(Player player) {
 		synchronized(player.getCarriedItems().getInventory().getItems()) {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
-				if (BLOCK_ITEM(player, item)) return true;
+				if (BLOCK_ITEM(player, item)) {
+					System.out.println("Monk blocked item " + item.getCatalogId());
+					return true;
+				}
 			}
 		}
 
