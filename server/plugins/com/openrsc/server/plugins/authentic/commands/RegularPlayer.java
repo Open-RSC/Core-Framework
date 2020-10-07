@@ -486,6 +486,7 @@ public final class RegularPlayer implements CommandTrigger {
 			//	"SELECT * FROM `" + config().MYSQL_TABLE_PREFIX + "npckills` WHERE playerID = ? ORDER BY killCount DESC LIMIT 16");
 			//statement.setInt(1, player.getDatabaseID());
 			//ResultSet result = statement.executeQuery();
+			kills.append("Total Kills: ").append(player.getNpcKills()).append("%");
 			int i=1;
 			for (Map.Entry<Integer, Integer> entry : player.getKillCache().entrySet()) {
 				NPCDef npc = player.getWorld().getServer().getEntityHandler().getNpcDef(entry.getKey());
@@ -497,8 +498,8 @@ public final class RegularPlayer implements CommandTrigger {
 					.append((i%2==0 ? "%" : ", "));
 				i++;
 			}
-			kills.append("%Total Kills: ").append(player.getNpcKills());
-			ActionSender.sendBox(player, kills.substring(0, kills.length()-2).toString(), true);
+			kills.delete(kills.length() - 2, kills.length());
+			ActionSender.sendBox(player, kills.toString(), true);
 		} else {
 			String npcName = String.join(" ", args).toLowerCase();
 			for (Map.Entry<Integer, Integer> entry : player.getKillCache().entrySet()) {
