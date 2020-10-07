@@ -110,34 +110,68 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                     // We can find out pretty quickly if it's inauthentic, because the inauthentic Open RSC Client should ask for server configs immediately.
                     if (buffer.readableBytes() > 2) {
                         buffer.markReaderIndex();
-                        int length = buffer.readUnsignedByte();
-                        if (length >= 160) {
-                            length = 256 * length - (40960 - buffer.readUnsignedByte());
-                        }
+						int length = buffer.readUnsignedByte();
+						int lengthLength;
+						if (length >= 160) {
+							length = 256 * length - (40960 - buffer.readUnsignedByte());
+							lengthLength = 2;
+						} else {
+							lengthLength = 1;
+						}
 
-                        if (buffer.readableBytes() >= length && length > 0) {
-                            att.authenticClient.set(true);
-                            int opcode;
+						if (buffer.readableBytes() >= length && length > 0) {
+							int opcode;
 
-                            if (att != null && att.ISAAC != null) {
-                                ISAACContainer isaacContainer = att.ISAAC.get();
-                                if (isaacContainer != null) {
-                                    int encodedOpcode = buffer.readByte();
-                                    opcode = (isaacContainer.decodeOpcode(encodedOpcode) & 0xFF);
-                                } else {
-                                    opcode = (buffer.readByte()) & 0xFF;
-                                }
-                            } else {
-                                opcode = (buffer.readByte()) & 0xFF;
-                            }
-                            length -= 1;
-                            ByteBuf data = Unpooled.buffer(length);
-                            buffer.readBytes(data, length);
-                            Packet packet = new Packet(opcode, data);
-                            // Packet.printPacket(packet, "Incoming");
-                            out.add(packet);
+							if (att != null && att.ISAAC != null) {
+								ISAACContainer isaacContainer = att.ISAAC.get();
+								if (isaacContainer != null) {
+									if (lengthLength == 1) {
+										ByteBuf bufferOrdered = Unpooled.buffer(length);
+										byte lastByte = buffer.readByte();
+										buffer.readBytes(bufferOrdered, length - 1);
+										bufferOrdered.writeByte(lastByte);
 
-                        } else {
+										int encodedOpcode = bufferOrdered.readByte() & 0xFF;
+
+										opcode = (isaacContainer.decodeOpcode(encodedOpcode) & 0xFF);
+
+										Packet packet = new Packet(opcode, bufferOrdered);
+										out.add(packet);
+										return;
+
+									} else {
+										int encodedOpcode = buffer.readByte() & 0xFF;
+										opcode = (isaacContainer.decodeOpcode(encodedOpcode) & 0xFF);
+									}
+								} else {
+									if (lengthLength == 1) {
+										ByteBuf bufferOrdered = Unpooled.buffer(length);
+										byte lastByte = buffer.readByte();
+										buffer.readBytes(bufferOrdered, length - 1);
+										bufferOrdered.writeByte(lastByte);
+
+										opcode = bufferOrdered.readByte() & 0xFF;
+
+										Packet packet = new Packet(opcode, bufferOrdered);
+										//Packet.printPacket(packet, "Incoming");
+										out.add(packet);
+										return;
+									} else {
+										opcode = (buffer.readByte()) & 0xFF;
+									}
+								}
+							} else {
+								opcode = (buffer.readByte()) & 0xFF;
+							}
+							length -= 1;
+
+							ByteBuf data = Unpooled.buffer(length);
+							buffer.readBytes(data, length);
+							Packet packet = new Packet(opcode, data);
+							out.add(packet);
+							//Packet.printPacket(packet, "Incoming");
+
+						} else {
                             att.authenticClient.set(false);
                             if (buffer.readableBytes() > 0) {
                                 byte bLength = buffer.readByte();

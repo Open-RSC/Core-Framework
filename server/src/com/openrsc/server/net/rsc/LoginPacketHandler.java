@@ -97,7 +97,7 @@ public class LoginPacketHandler {
                     // we would want that logic here.
 
                     // Decrypt XTEA block
-                    int xteaLength = packet.readUnsignedShort() - 1;
+                    int xteaLength = packet.readUnsignedShort();
                     byte[] xteaBlock = Crypto.decryptXTEA(packet.readBytes(xteaLength), 0, xteaLength, loginInfo.keys);
 
                     // TODO: there are also ignored nonces at the beginning of the xtea block
