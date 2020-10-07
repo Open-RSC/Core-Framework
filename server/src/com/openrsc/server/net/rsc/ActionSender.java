@@ -1025,12 +1025,19 @@ public class ActionSender {
 	 * Sends quest stage
 	 */
 	public static void sendQuestInfo(Player player, int questID, int stage) {
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_QUESTS.opcode);
-		s.writeByte((byte) 1);
-		s.writeInt(questID);
-		s.writeInt(stage);
-		player.write(s.toPacket());
+		if (player.isUsingAuthenticClient()) {
+			// authentic client does not care unless quest is complete.
+			if (stage < 0) {
+				sendQuestInfo(player);
+			}
+		} else {
+			com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+			s.setID(Opcode.SEND_QUESTS.opcode);
+			s.writeByte((byte) 1);
+			s.writeInt(questID);
+			s.writeInt(stage);
+			player.write(s.toPacket());
+		}
 	}
 
 	/**
