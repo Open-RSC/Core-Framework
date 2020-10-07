@@ -1144,8 +1144,8 @@ public class ActionSender {
                 if (player.getBlockGlobalFriend())
                     return;
 
-                s.writeZeroQuotedString("Global$" + sender.getUsername());
-                s.writeZeroQuotedString("Global$" + sender.getUsername());
+                s.writeZeroQuotedString("Global$"); // client can't handle > 12 character usernames here, so we can't combine unfortunately.
+                s.writeZeroQuotedString("Global$");
             }
 
             s.writeByte(sender.getIconAuthentic());
@@ -1160,7 +1160,11 @@ public class ActionSender {
             s.writeByte((pmsSent & 0x0000FF00) >> 8);
             s.writeByte((pmsSent & 0x000000FF));
 
-            s.writeRSCString(message);
+            if (!isGlobal) {
+				s.writeRSCString(message);
+			} else {
+            	s.writeRSCString("@ora@[@gre@" + sender.getUsername() + "@ora@]:@cya@ " + message);
+			}
         } else {
             if (!isGlobal) {
                 s.writeString(sender.getUsername());
