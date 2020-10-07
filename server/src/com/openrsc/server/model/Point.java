@@ -447,6 +447,32 @@ public class Point {
 				|| inBounds(456, 882, 470, 896);
 	}
 
+	// note: every bank in the game is conveniently perfectly rectangular except for zanaris
+	public boolean isInBank() {
+		return inBounds(87, 689, 93, 700) // Al Kharid
+			|| inBounds(437, 491, 443, 496) // Catherby
+			|| inBounds(216, 634, 223, 638) // Draynor
+			|| inBounds(577, 572, 585, 576) // East Ardougne North
+			|| inBounds(551, 609, 554, 616) // East Ardougne South
+			|| inBounds(212, 448, 220, 453) // Edgeville
+			|| inBounds(280, 564, 286, 573) // Falador East
+			|| inBounds(328, 549, 334, 557) // Falador West
+			|| inBounds(714, 1399, 718, 1403) // Grand Tree Second Floor
+			|| inBounds(451, 3376, 457, 3380) // Mage Arena
+			|| inBounds(498, 447, 504, 453) // Seer's Village
+			|| inBounds(59, 731, 59, 731) // Shantay Pass (1 square)
+			|| inBounds(399, 848, 404, 854) // Shilo Village
+			|| inBounds(196, 746, 203, 754) // Tutorial Island
+			|| inBounds(712, 1450, 716, 1454) // Tree Gnome Stronghold (south, near spinning wheel)
+			|| inBounds(98, 510, 106, 515) // Varrock East
+			|| inBounds(147, 498, 153, 506) // Varrock West
+			|| inBounds(585, 750, 590, 758) // Yanille
+			|| inBounds(172, 3521, 176, 3528) // Zanaris Box 1
+			|| inBounds(172, 3529, 174, 3529) // Zanaris Box 2
+			|| inBounds(170, 3521, 171, 3525) // Zanaris Box 3
+		;
+	}
+
 	public boolean inArea(Area area) {
 		return area.inBounds(this);
 	}
