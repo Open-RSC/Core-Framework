@@ -691,6 +691,10 @@ public final class GameStateUpdater {
 				if (newObject.getType() != 0) { // this one is pretty funny if you omit it. Trees in every open doorway!
 					continue;
 				}
+				// Hopefully don't add the Sails of a windmill too often.
+				if (newObject.getID() == 74 && playerToUpdate.getLocalGameObjects().contains(newObject)) {
+					continue;
+				}
 			} else {
 				if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
 					|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 0

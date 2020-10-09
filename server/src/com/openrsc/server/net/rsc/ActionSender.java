@@ -1025,12 +1025,19 @@ public class ActionSender {
 	 * Sends quest stage
 	 */
 	public static void sendQuestInfo(Player player, int questID, int stage) {
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(Opcode.SEND_QUESTS.opcode);
-		s.writeByte((byte) 1);
-		s.writeInt(questID);
-		s.writeInt(stage);
-		player.write(s.toPacket());
+		if (player.isUsingAuthenticClient()) {
+			// authentic client does not care unless quest is complete.
+			if (stage < 0) {
+				sendQuestInfo(player);
+			}
+		} else {
+			com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+			s.setID(Opcode.SEND_QUESTS.opcode);
+			s.writeByte((byte) 1);
+			s.writeInt(questID);
+			s.writeInt(stage);
+			player.write(s.toPacket());
+		}
 	}
 
 	/**
@@ -1144,8 +1151,8 @@ public class ActionSender {
                 if (player.getBlockGlobalFriend())
                     return;
 
-                s.writeZeroQuotedString("Global$" + sender.getUsername());
-                s.writeZeroQuotedString("Global$" + sender.getUsername());
+                s.writeZeroQuotedString("Global$"); // client can't handle > 12 character usernames here, so we can't combine unfortunately.
+                s.writeZeroQuotedString("Global$");
             }
 
             s.writeByte(sender.getIconAuthentic());
@@ -1160,7 +1167,11 @@ public class ActionSender {
             s.writeByte((pmsSent & 0x0000FF00) >> 8);
             s.writeByte((pmsSent & 0x000000FF));
 
-            s.writeRSCString(message);
+            if (!isGlobal) {
+				s.writeRSCString(message);
+			} else {
+            	s.writeRSCString("@ora@[@gre@" + sender.getUsername() + "@ora@]:@cya@ " + message);
+			}
         } else {
             if (!isGlobal) {
                 s.writeString(sender.getUsername());

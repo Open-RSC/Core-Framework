@@ -1,7 +1,9 @@
 package com.openrsc.server.model.container;
 
+import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.ItemDefinition;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -11,6 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+
+import static com.openrsc.server.plugins.Functions.validatebankpin;
 
 
 public class Bank {
@@ -714,4 +718,20 @@ public class Bank {
 	}
 
 	public BankPreset getBankPreset(int slot) { return this.bankPresets[slot]; }
+
+	public void quickFeature(Npc npc, Player player, boolean auction) {
+		if (player.isIronMan(IronmanMode.Ultimate.id())) {
+			player.message("As an Ultimate Iron Man, you cannot use the bank.");
+			return;
+		}
+
+		if(validatebankpin(player, npc)) {
+			if (auction) {
+				player.getWorld().getMarket().addPlayerCollectItemsTask(player);
+			} else {
+				player.setAccessingBank(true);
+				ActionSender.showBank(player);
+			}
+		}
+	}
 }
