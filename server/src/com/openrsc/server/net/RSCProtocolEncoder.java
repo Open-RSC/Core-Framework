@@ -79,11 +79,9 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
                     if (packetLength != 1) {
                         // Strangely, the last byte of the Payload goes between length and encoded opcode
 						try {
-							buffer.writeByte(message.getBuffer().slice(bufferLen - 1, bufferLen).readByte());
+							buffer.writeByte(message.getBuffer().slice(bufferLen - 1, 1).readByte());
 						} catch (IndexOutOfBoundsException e) {
-							// TODO: it would be nice to know why this is ever able to go out of bounds.
-							// This failed when accessing a certain user's bank when packet length was 131
-							// As a work-around, using a backup function that seems to work here, but not generally.
+							// This should probably never happen, but "Just In Case" it is good to handle it b/c otherwise it fails silently
 							System.out.println(String.format("Warning: index out of bounds on sending last byte of opcode %d", message.getID()));
 							System.out.println(e.toString());
 							if (message.getBuffer().hasArray()) {
