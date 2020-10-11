@@ -85,10 +85,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 	private boolean CANT_GO(Player player) {
 		synchronized(player.getCarriedItems().getInventory().getItems()) {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
-				if (BLOCK_ITEM(player, item)) {
-					System.out.println("Monk blocked item " + item.getCatalogId());
-					return true;
-				}
+				if (BLOCK_ITEM(player, item)) return true;
 			}
 		}
 
