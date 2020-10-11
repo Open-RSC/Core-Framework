@@ -143,40 +143,45 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
-		return player.isUsingAuthenticClient() && inArray(npc.getID(), BANKERS) && item.getNoted();
+		return (player.isUsingAuthenticClient() && inArray(npc.getID(), BANKERS) && item.getNoted())
+			|| (inArray(npc.getID(), BANKERS) && player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK);
 	}
 
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
-		npcsay(player, npc, "Is that a Shantay pass?");
-		npcsay(player, npc, "What do you want me to do with this?");
-		say(player, npc, "Yeah it is, but look at the back.");
-		delay(1);
-		player.playerServerMessage(MessageType.QUEST, "The Banker flips the paper over to examine the other side.");
-		delay(4);
-		npcsay(player, npc, String.format("Ohhh, it's %d noted %s", item.getAmount(), item.getDef(player.getWorld()).getName()));
-		npcsay(player, npc, "I can take these from you.");
-		say(player, npc, "Thankyou");
-
-		if (player.getBank().canHold(item)) {
-			if (player.getCarriedItems().remove(item) > -1) {
-				if (player.getBank().add(item, false)) {
-					player.playerServerMessage(MessageType.QUEST, "The "
-						+ item.getAmount() + " "
-						+ item.getDef(player.getWorld()).getName()
-						+ String.format(" %s added to your bank", item.getAmount() == 1 ? "is" : "are"));
-				} else {
-					npcsay(player, npc, "...");
-					npcsay(player, npc, "actually nevermind. idk what happened but i can't do it right now.");
-					say(player, npc, "ok i understand. can I have my stuff back?");
-					npcsay(player, npc, "of course");
-					player.getCarriedItems().getInventory().add(item);
-				}
-			}
-		} else {
-			npcsay(player, npc, "actually nevermind. Sorry, but you just don't have room for this right now.");
+		if (item.getNoted() && player.isUsingAuthenticClient()) {
+			npcsay(player, npc, "Is that a Shantay pass?");
+			npcsay(player, npc, "What do you want me to do with this?");
+			say(player, npc, "Yeah it is, but look at the back.");
 			delay(1);
-			player.playerServerMessage(MessageType.QUEST, "Your bank seems to be too full to deposit these notes at this time.");
+			player.playerServerMessage(MessageType.QUEST, "The Banker flips the paper over to examine the other side.");
+			delay(4);
+			npcsay(player, npc, String.format("Ohhh, it's %d noted %s", item.getAmount(), item.getDef(player.getWorld()).getName()));
+			npcsay(player, npc, "I can take these from you.");
+			say(player, npc, "Thankyou");
+
+			if (player.getBank().canHold(item)) {
+				if (player.getCarriedItems().remove(item) > -1) {
+					if (player.getBank().add(item, false)) {
+						player.playerServerMessage(MessageType.QUEST, "The "
+							+ item.getAmount() + " "
+							+ item.getDef(player.getWorld()).getName()
+							+ String.format(" %s added to your bank", item.getAmount() == 1 ? "is" : "are"));
+					} else {
+						npcsay(player, npc, "...");
+						npcsay(player, npc, "actually nevermind. idk what happened but i can't do it right now.");
+						say(player, npc, "ok i understand. can I have my stuff back?");
+						npcsay(player, npc, "of course");
+						player.getCarriedItems().getInventory().add(item);
+					}
+				}
+			} else {
+				npcsay(player, npc, "actually nevermind. Sorry, but you just don't have room for this right now.");
+				delay(1);
+				player.playerServerMessage(MessageType.QUEST, "Your bank seems to be too full to deposit these notes at this time.");
+			}
+		} else if (player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
+			quickFeature(npc, player, false);
 		}
 	}
 

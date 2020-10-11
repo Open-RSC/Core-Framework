@@ -53,6 +53,12 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
                 // Authentic Packet Handling
                 int packetLength = message.getBuffer().readableBytes() + 1; // + 1 for opcode
 
+				/* debug info
+				if (message.getID() != 191 && message.getID() != 79 && message.getID() != 48) {
+					System.out.println(String.format("starting to handle opcode %d", message.getID()));
+				}
+				*/
+
                 ByteBuf buffer;
                 int encodedOpcode;
                 if (packetLength >= 160) {
@@ -72,7 +78,17 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
 
                     if (packetLength != 1) {
                         // Strangely, the last byte of the Payload goes between length and encoded opcode
-                        buffer.writeByte(message.getBuffer().slice(bufferLen - 1, bufferLen).readByte());
+						try {
+							buffer.writeByte(message.getBuffer().slice(bufferLen - 1, 1).readByte());
+						} catch (IndexOutOfBoundsException e) {
+							// This should probably never happen, but "Just In Case" it is good to handle it b/c otherwise it fails silently
+							System.out.println(String.format("Warning: index out of bounds on sending last byte of opcode %d", message.getID()));
+							System.out.println(e.toString());
+							if (message.getBuffer().hasArray()) {
+								byte[] bArr = message.getBuffer().array();
+								buffer.writeByte(bArr[bArr.length - 1]);
+							}
+						}
 
                         encodedOpcode = att.ISAAC.get().encodeOpcode(message.getID());
                         buffer.writeByte(encodedOpcode);
@@ -85,8 +101,9 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
                     }
                 }
 
-                /*
-                if (message.getID() != 191 && message.getID() != 79) {
+
+                /* debug info
+                if (message.getID() != 191 && message.getID() != 79 && message.getID() != 48) {
                     System.out.println(String.format("OPCODE CLEAR: %d; CODED: %d", message.getID(), encodedOpcode));
                     Packet.printBuffer(buffer, "Outgoing");
                 }

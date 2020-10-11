@@ -156,7 +156,7 @@ public class Functions {
 		if (player == null) return;
 		for (final String message : messages) {
 			if (!message.equalsIgnoreCase("null")) {
-				player.message("@que@" + message);
+				player.playerServerMessage(MessageType.QUEST, message);
 			}
 		}
 	}
@@ -554,7 +554,11 @@ public class Functions {
 				return null;
 			}
 		} else {
-			npcsay(player, n, "whisper in my ear the bank pin, ok?");
+			if (n != null) {
+				npcsay(player, n, "whisper in my ear the bank pin, ok?");
+			} else {
+				player.playerServerMessage(MessageType.QUEST, "Please enter your Bank PIN");
+			}
 			enteredPin = "";
 			int pinNum = 0;
 			boolean bankerIsAnnoyed = false;
@@ -562,45 +566,47 @@ public class Functions {
 				boolean playerSatisfied = false;
 
 				while (!playerSatisfied) {
-					if (!bankerIsAnnoyed) {
-						switch (enteredPin.length()) {
-							case 0:
-								npcsay(player, n, "first number?");
-								break;
-							case 1:
-								npcsay(player, n, "ok, second number?");
-								break;
-							case 2:
-								npcsay(player, n, "third number?");
-								break;
-							case 3:
-								npcsay(player, n, "aaand final number?");
-								break;
-							default:
-								npcsay(player, n, "all mathematical reason has failed.");
-								npcsay(player, n, "goodbye.");
-								return null;
+					if (n != null) {
+						if (!bankerIsAnnoyed) {
+							switch (enteredPin.length()) {
+								case 0:
+									npcsay(player, n, "first number?");
+									break;
+								case 1:
+									npcsay(player, n, "ok, second number?");
+									break;
+								case 2:
+									npcsay(player, n, "third number?");
+									break;
+								case 3:
+									npcsay(player, n, "aaand final number?");
+									break;
+								default:
+									npcsay(player, n, "all mathematical reason has failed.");
+									npcsay(player, n, "goodbye.");
+									return null;
+							}
+						} else {
+							switch (enteredPin.length()) {
+								case 0:
+									npcsay(player, n, "what's the first number, then?");
+									break;
+								case 1:
+									npcsay(player, n, "what was the second number?");
+									break;
+								case 2:
+									npcsay(player, n, "third number?");
+									break;
+								case 3:
+									npcsay(player, n, "final number.");
+									break;
+								default:
+									npcsay(player, n, "all mathematical reason has failed.");
+									npcsay(player, n, "goodbye.");
+									return null;
+							}
+							bankerIsAnnoyed = false;
 						}
-					} else {
-						switch (enteredPin.length()) {
-							case 0:
-								npcsay(player, n, "what's the first number, then?");
-								break;
-							case 1:
-								npcsay(player, n, "what was the second number?");
-								break;
-							case 2:
-								npcsay(player, n, "third number?");
-								break;
-							case 3:
-								npcsay(player, n, "final number.");
-								break;
-							default:
-								npcsay(player, n, "all mathematical reason has failed.");
-								npcsay(player, n, "goodbye.");
-								return null;
-						}
-						bankerIsAnnoyed = false;
 					}
 					// authentic client can only show 5 options at once.
 					pinNum = Functions.multi(player, "1 (one)", "2 (two)", "3 (three)", "4 (four)", "-- more --") + 1;
@@ -618,15 +624,21 @@ public class Functions {
 									playerSatisfied = true;
 									break;
 								case 3:
-									npcsay(player, n, "ok no big deal, all good");
-									bankerIsAnnoyed = true;
+									if (n != null) {
+										npcsay(player, n, "ok no big deal, all good");
+										bankerIsAnnoyed = true;
+									}
 									continue;
 								case 4:
 									player.resetMenuHandler();
 									return null;
 								case 5:
 									// if you remove this feature the entire client breaks
-									npcsay(player, n, "@red@*blushes*");
+									if (n != null) {
+										npcsay(player, n, "@red@*blushes*");
+									} else {
+										player.playerServerMessage(MessageType.QUEST, "You call out your love to the void, but no one answers.");
+									}
 									return null;
 								default:
 									break;

@@ -114,6 +114,7 @@ public final class Admins implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("quickauction")) {
 			openAuctionHouse(player, args);
 		} else if (command.equalsIgnoreCase("quickbank")) { // Show the bank screen to yourself
+			// warning: does not check UIM or bank PIN!
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);
 		} else if (command.equalsIgnoreCase("beastmode")) {
