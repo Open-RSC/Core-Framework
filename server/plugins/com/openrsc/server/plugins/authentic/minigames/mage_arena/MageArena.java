@@ -711,6 +711,16 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				}
 			}
 		}
+		if (config().WANT_EQUIPMENT_TAB) {
+			synchronized (player.getCarriedItems().getEquipment().getList()) {
+				for (Item item : player.getCarriedItems().getEquipment().getList()) {
+					if (item.getCatalogId() == ItemId.ZAMORAK_CAPE.id() || item.getCatalogId() == ItemId.SARADOMIN_CAPE.id()
+						|| item.getCatalogId() == ItemId.GUTHIX_CAPE.id()) {
+						return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
 
