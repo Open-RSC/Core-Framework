@@ -181,36 +181,37 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				delay(3);
 				return;
 			}
-			if (!player.getCache().hasKey("witch_spawned")) {
+			Npc witch = ifnearvisnpc(player, NpcId.NORA_T_HAG.id(), 10);
+			// first time or witch went away
+			if (!player.getCache().hasKey("witch_spawned") || witch == null) {
 				mes("As you reach out to open the door you hear footsteps inside the house");
 				delay(3);
 				mes("The footsteps approach the back door");
 				delay(3);
 				addnpc(player.getWorld(), NpcId.NORA_T_HAG.id(), 356, 495, 60000);
-				player.getCache().store("witch_spawned", true);
+				if (!player.getCache().hasKey("witch_spawned")) {
+					player.getCache().store("witch_spawned", true);
+				}
 			} else {
 				mes("The shed door is locked");
 				delay(3);
-				Npc witch = ifnearvisnpc(player, NpcId.NORA_T_HAG.id(), 10);
-				if (witch != null) {
-					witch.teleport(355, 494);
-					npcsay(player, witch, "Oi what are you doing in my garden?");
-					npcsay(player, witch, "Get out you pesky intruder");
-					mes("Nora begins to cast a spell");
-					delay(3);
+				witch.teleport(355, 494);
+				npcsay(player, witch, "Oi what are you doing in my garden?");
+				npcsay(player, witch, "Get out you pesky intruder");
+				mes("Nora begins to cast a spell");
+				delay(3);
 
-					player.teleport(347, 616, true);
-					delnpc(witch, false);
-					player.updateQuestStage(this, 1);
-					player.getCache().remove("found_magnet");
-				}
+				player.teleport(347, 616, true);
+				delnpc(witch, false);
+				player.updateQuestStage(this, 1);
+				player.getCache().remove("found_magnet");
 			}
 		}
 		else if (obj.getID() == 72 && obj.getX() == 356) {
 			boolean fromGarden = player.getX() <= 355;
 			doDoor(obj, player);
-			if (fromGarden && player.getCache().hasKey("witch_spawned")) {
-				Npc witch = ifnearvisnpc(player, NpcId.NORA_T_HAG.id(), 5);
+			Npc witch = ifnearvisnpc(player, NpcId.NORA_T_HAG.id(), 5);
+			if (fromGarden && player.getCache().hasKey("witch_spawned") && witch != null) {
 				//witch.setBusy(true);
 				delay(3);
 				player.message("Through a crack in the door, you see a witch enter the garden");
