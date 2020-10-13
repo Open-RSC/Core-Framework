@@ -139,25 +139,33 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 71 && obj.getY() == 495) {
 			if (player.getCache().hasKey("witch_spawned") && player.getQuestStage(getQuestId()) == 2) {
-				Npc witch = player.getWorld().getNpcById(NpcId.NORA_T_HAG.id());
-				if (witch != null) {
-					witch.teleport(355, 494);
+				// inside house for some reason
+				if (player.getX() > 355) {
+					doDoor(obj, player);
+				} else {
+					Npc witch = ifnearvisnpc(player, NpcId.NORA_T_HAG.id(), 5);
+					if (witch != null) {
+						witch.teleport(355, 494);
 
-					npcsay(player, witch, "Oi what are you doing in my garden?");
-					npcsay(player, witch, "Get out you pesky intruder");
-					mes("Nora begins to cast a spell");
-					delay(3);
+						npcsay(player, witch, "Oi what are you doing in my garden?");
+						npcsay(player, witch, "Get out you pesky intruder");
+						mes("Nora begins to cast a spell");
+						delay(3);
 
-					player.teleport(347, 616, true);
-					delnpc(witch, false);
+						player.teleport(347, 616, true);
+						delnpc(witch, false);
 
-					player.getCache().remove("witch_spawned");
-					player.updateQuestStage(this, 1);
-					player.getCache().remove("found_magnet");
+						player.getCache().remove("witch_spawned");
+						player.updateQuestStage(this, 1);
+						player.getCache().remove("found_magnet");
+					} else {
+						doDoor(obj, player);
+						player.getCache().remove("witch_spawned");
+					}
 				}
 				return;
 			}
-			if (player.getQuestStage(this) == 2 || player.getQuestStage(getQuestId()) == -1 || player.getX() == 355) {
+			if (player.getQuestStage(this) > 1 || player.getQuestStage(getQuestId()) == -1 || player.getX() == 355) {
 				doDoor(obj, player);
 			} else {
 				player.message("The door won't open");
@@ -165,9 +173,12 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 		}
 
 		else if (obj.getID() == 73 && obj.getX() == 351) {
-			Npc witch =player. getWorld().getNpcById(NpcId.NORA_T_HAG.id());
 			if (player.getQuestStage(this) == 3 || player.getQuestStage(getQuestId()) == -1) {
 				doDoor(obj, player);
+				return;
+			} else if (player.getQuestStage(this) < 2) {
+				mes("The shed door is locked");
+				delay(3);
 				return;
 			}
 			if (!player.getCache().hasKey("witch_spawned")) {
@@ -180,50 +191,47 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 			} else {
 				mes("The shed door is locked");
 				delay(3);
-				if (witch == null) {
-					return;
-				}
-				witch.teleport(355, 494);
-				npcsay(player, witch, "Oi what are you doing in my garden?");
-				npcsay(player, witch, "Get out you pesky intruder");
-				mes("Nora begins to cast a spell");
-				delay(3);
+				Npc witch = ifnearvisnpc(player, NpcId.NORA_T_HAG.id(), 10);
+				if (witch != null) {
+					witch.teleport(355, 494);
+					npcsay(player, witch, "Oi what are you doing in my garden?");
+					npcsay(player, witch, "Get out you pesky intruder");
+					mes("Nora begins to cast a spell");
+					delay(3);
 
-				player.teleport(347, 616, true);
-				delnpc(witch, false);
-				player.updateQuestStage(this, 1);
-				player.getCache().remove("found_magnet");
+					player.teleport(347, 616, true);
+					delnpc(witch, false);
+					player.updateQuestStage(this, 1);
+					player.getCache().remove("found_magnet");
+				}
 			}
 		}
 		else if (obj.getID() == 72 && obj.getX() == 356) {
-			if (player.getX() <= 355) {
-				doDoor(obj, player);
-				if (player.getCache().hasKey("witch_spawned")) {
-					Npc witch = player.getWorld().getNpcById(NpcId.NORA_T_HAG.id());
-					witch.setBusy(true);
-					delay(3);
-					player.message("Through a crack in the door, you see a witch enter the garden");
-					witch.teleport(353, 492);
-					delay(4);
-					witch.teleport(351, 491);
-					player.message("The witch disappears into the shed");
-					npcsay(player, witch, "How are you tonight my pretty?",
-						"Would you like some food?",
-						"Just wait there while I get some");
-					witch.teleport(353, 492);
-					witch.setLocation(Point.location(353, 492), true);
-					mes("The witch passes  back through the garden again");
-					delay(3);
-					mes("Leaving the shed door unlocked");
-					delay(3);
+			boolean fromGarden = player.getX() <= 355;
+			doDoor(obj, player);
+			if (fromGarden && player.getCache().hasKey("witch_spawned")) {
+				Npc witch = ifnearvisnpc(player, NpcId.NORA_T_HAG.id(), 5);
+				//witch.setBusy(true);
+				delay(3);
+				player.message("Through a crack in the door, you see a witch enter the garden");
+				witch.teleport(353, 492);
+				delay(4);
+				witch.teleport(351, 491);
+				player.message("The witch disappears into the shed");
+				npcsay(player, witch, "How are you tonight my pretty?",
+					"Would you like some food?",
+					"Just wait there while I get some");
+				witch.teleport(353, 492);
+				witch.setLocation(Point.location(353, 492), true);
+				mes("The witch passes  back through the garden again");
+				delay(3);
+				mes("Leaving the shed door unlocked");
+				delay(3);
 
-					delnpc(witch, false);
-					player.getCache().remove("witch_spawned");
+				delnpc(witch, false);
+				player.getCache().remove("witch_spawned");
 
-					player.updateQuestStage(this, 3);
-				}
-			} else {
-				player.teleport(355, 492, false);
+				player.updateQuestStage(this, 3);
 			}
 		}
 	}
@@ -298,6 +306,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				say(player, null, "I would rather eat it to be honest");
 				return;
 			}
+			player.getCarriedItems().remove(new Item(ItemId.CHEESE.id()));
 			mes("A rat appears from a hole and eats the cheese");
 			delay(3);
 			//if there's already a rat, it despawns them in 19 secs
@@ -330,8 +339,8 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 				player.message("You need to get the magnet yourself to do this quest");
 			} else {
 				player.message("You put the magnet on the rat");
-				Npc rat = player.getWorld().getNpcById(NpcId.RAT_WITCHES_HOUSE.id());
-				delnpc(rat, false);
+				//Npc rat = ifnearvisnpc(player, NpcId.RAT_WITCHES_HOUSE.id(), 2);
+				delnpc(npc, false);
 				mes("The rat runs back into his hole");
 				delay(3);
 				mes("You hear a click and whirr");
@@ -443,11 +452,13 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 		ItemId.BRONZE_PLATE_MAIL_BODY.id(), ItemId.IRON_PLATE_MAIL_BODY.id(), ItemId.STEEL_PLATE_MAIL_BODY.id(), ItemId.MITHRIL_PLATE_MAIL_BODY.id(), ItemId.ADAMANTITE_PLATE_MAIL_BODY.id(), ItemId.BLACK_PLATE_MAIL_BODY.id(), ItemId.RUNE_PLATE_MAIL_BODY.id(),
 		//plate tops
 		ItemId.BRONZE_PLATE_MAIL_TOP.id(), ItemId.IRON_PLATE_MAIL_TOP.id(), ItemId.STEEL_PLATE_MAIL_TOP.id(), ItemId.MITHRIL_PLATE_MAIL_TOP.id(), ItemId.ADAMANTITE_PLATE_MAIL_TOP.id(), ItemId.BLACK_PLATE_MAIL_TOP.id(), ItemId.RUNE_PLATE_MAIL_TOP.id(),
-		//chains
-		ItemId.BRONZE_CHAIN_MAIL_BODY.id(), ItemId.IRON_CHAIN_MAIL_BODY.id(), ItemId.STEEL_CHAIN_MAIL_BODY.id(), ItemId.MITHRIL_CHAIN_MAIL_BODY.id(), ItemId.ADAMANTITE_CHAIN_MAIL_BODY.id(), ItemId.BLACK_CHAIN_MAIL_BODY.id(), ItemId.RUNE_CHAIN_MAIL_BODY.id(),
-		//legs
+		//chain bodies
+		ItemId.BRONZE_CHAIN_MAIL_BODY.id(), ItemId.IRON_CHAIN_MAIL_BODY.id(), ItemId.STEEL_CHAIN_MAIL_BODY.id(), ItemId.MITHRIL_CHAIN_MAIL_BODY.id(), ItemId.ADAMANTITE_CHAIN_MAIL_BODY.id(), ItemId.BLACK_CHAIN_MAIL_BODY.id(), ItemId.RUNE_CHAIN_MAIL_BODY.id(), ItemId.DRAGON_SCALE_MAIL.id(),
+		//chain legs
+		ItemId.BRONZE_CHAIN_MAIL_LEGS.id(), ItemId.IRON_CHAIN_MAIL_LEGS.id(), ItemId.STEEL_CHAIN_MAIL_LEGS.id(), ItemId.MITHRIL_CHAIN_MAIL_LEGS.id(), ItemId.ADAMANTITE_CHAIN_MAIL_LEGS.id(), ItemId.BLACK_CHAIN_MAIL_LEGS.id(), ItemId.RUNE_CHAIN_MAIL_LEGS.id(),
+		//plate legs
 		ItemId.BRONZE_PLATE_MAIL_LEGS.id(), ItemId.IRON_PLATE_MAIL_LEGS.id(), ItemId.STEEL_PLATE_MAIL_LEGS.id(), ItemId.MITHRIL_PLATE_MAIL_LEGS.id(), ItemId.ADAMANTITE_PLATE_MAIL_LEGS.id(), ItemId.BLACK_PLATE_MAIL_LEGS.id(), ItemId.RUNE_PLATE_MAIL_LEGS.id(),
-		//skirts
+		//plate skirts
 		ItemId.BRONZE_PLATED_SKIRT.id(), ItemId.IRON_PLATED_SKIRT.id(), ItemId.STEEL_PLATED_SKIRT.id(), ItemId.MITHRIL_PLATED_SKIRT.id(), ItemId.ADAMANTITE_PLATED_SKIRT.id(), ItemId.BLACK_PLATED_SKIRT.id(), ItemId.RUNE_SKIRT.id(),
 		//medium helmets
 		ItemId.MEDIUM_BRONZE_HELMET.id(), ItemId.MEDIUM_IRON_HELMET.id(), ItemId.MEDIUM_STEEL_HELMET.id(), ItemId.MEDIUM_MITHRIL_HELMET.id(), ItemId.MEDIUM_ADAMANTITE_HELMET.id(), ItemId.MEDIUM_BLACK_HELMET.id(), ItemId.MEDIUM_RUNE_HELMET.id(), ItemId.DRAGON_MEDIUM_HELMET.id(),
