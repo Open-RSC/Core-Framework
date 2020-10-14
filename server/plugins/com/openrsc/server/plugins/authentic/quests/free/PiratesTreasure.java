@@ -105,7 +105,7 @@ public class PiratesTreasure implements QuestInterface,
 			mes("It says dig just behind the south bench in the park");
 			delay(3);
 			player.updateQuestStage(this, 3);
-		} else if (item.getCatalogId() == ItemId.SPADE.id() && obj.getID() == 188) {
+		} else if (item.getCatalogId() == ItemId.SPADE.id() && obj.getID() == 188) { // It is authentic to not be able to activate spade to dig here. activate spade also produces no message.
 			if (player.getQuestStage(this) != 3) {
 				mes("It seems a shame to dig up these nice flowers for no reason");
 				delay(3);
