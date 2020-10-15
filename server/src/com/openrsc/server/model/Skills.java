@@ -168,6 +168,8 @@ public class Skills {
 		int levelDiff = newLevel - oldLevel;
 		String skillName;
 
+		sendExperience(skill);
+
 		if (levelDiff > 0) {
 			levels[skill] += levelDiff;
 			// TODO: Maybe a level up listener?
@@ -183,21 +185,28 @@ public class Skills {
 					getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, "has achieved level-" + newLevel
 						+ " in " + skillName + ", the maximum possible! Congratulations!"));
 				}
+				ActionSender.sendSound((Player) getMob(), "advance");
 				player.message("@gre@You just advanced " + levelDiff + " " + skillName + " level"
 					/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
-				ActionSender.sendSound((Player) getMob(), "advance");
+				sendUpdate(skill);
 			}
 
 			getMob().getUpdateFlags().setAppearanceChanged(true);
 		}
 
-		sendUpdate(skill);
 	}
 
 	private void sendUpdate(int skill) {
 		if (getMob().isPlayer()) {
 			Player player = (Player) getMob();
 			ActionSender.sendStat(player, skill);
+		}
+	}
+
+	private void sendExperience(int skill) {
+		if (getMob().isPlayer()) {
+			Player player = (Player) getMob();
+			ActionSender.sendExperience(player, skill);
 		}
 	}
 
