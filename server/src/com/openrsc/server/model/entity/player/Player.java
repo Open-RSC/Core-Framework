@@ -1480,7 +1480,6 @@ public final class Player extends Mob {
 				if (fatigue > this.MAX_FATIGUE) {
 					fatigue = this.MAX_FATIGUE;
 				}
-				ActionSender.sendFatigue(this);
 			}
 		}
 
@@ -1534,6 +1533,11 @@ public final class Player extends Mob {
 			// effective multiplier
 			skillXP *= multipliers.get(1);
 			getSkills().addExperience(skill, (int) skillXP);
+		}
+		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (useFatigue) {
+				ActionSender.sendFatigue(this);
+			}
 		}
 		// ActionSender.sendExperience(this, skill);
 	}
