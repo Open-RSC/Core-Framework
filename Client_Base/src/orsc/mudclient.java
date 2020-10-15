@@ -7635,6 +7635,18 @@ public final class mudclient implements Runnable {
 				this.getSurface().drawBoxAlpha(xOffset, yOffset, 245, 204, this.clearBox, 128);
 				this.getSurface().drawBoxAlpha(xOffset, yOffset + 228, 245, 45, this.clearBox, 128);
 				Sprite todraw = null;
+
+				if (S_ITEMS_ON_DEATH_MENU) {
+					todraw = spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.KEPT_ON_DEATH.id()));
+					this.getSurface().drawSpriteClipping(todraw,
+						xOffset + 10,
+						yOffset + 10,
+						todraw.getWidth(), todraw.getHeight(),
+						0, 0, 0, false, 0,
+						var1 ^ -15251, 0x80FFFFFF
+					);
+				}
+
 				for (int i = 0; i < S_PLAYER_SLOT_COUNT; i++) {
 					if (this.equippedItems[i] == null) {
 						todraw = spriteSelect(EntityHandler.GUIparts.get(GUIPARTS.EQUIPSLOT_HELM.id() + i));
@@ -7710,6 +7722,15 @@ public final class mudclient implements Runnable {
 							}
 						}
 
+					}
+					// Click the Items kept on death button
+					if (S_ITEMS_ON_DEATH_MENU) {
+						if (xOffset + 10 < this.mouseX && xOffset + 50 > this.mouseX
+							&& yOffset + 10 < this.mouseY && this.mouseY < yOffset + 35) {
+							if (!C_CUSTOM_UI)
+								this.showUiTab = 0;
+							lostOnDeathInterface.setVisible(true);
+						}
 					}
 				}
 
@@ -9098,6 +9119,7 @@ public final class mudclient implements Runnable {
 		y = 275;
 		if (C_CUSTOM_UI)
 			y = var4 + 214;
+		/*
 		if (S_ITEMS_ON_DEATH_MENU) {
 			int onDeathColor = 0xFFFFFF;
 			if (x < this.mouseX && x + boxWidth > this.mouseX && y - 12 < this.mouseY && this.mouseY < 4 + y) {
@@ -9105,7 +9127,8 @@ public final class mudclient implements Runnable {
 			}
 			this.getSurface().drawString("Items on death", baseX + 3, y, onDeathColor, 1);
 		} else
-			this.getSurface().drawString("Always logout when you finish", x, y, 0, 1);
+			*/
+		this.getSurface().drawString("Always logout when you finish", x, y, 0, 1);
 
 		// logout menu option
 		y += 15;
