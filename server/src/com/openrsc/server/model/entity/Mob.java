@@ -600,6 +600,7 @@ public abstract class Mob extends Entity {
 			getWorld().getServer().getGameEventHandler().add(combatEvent);
 			if (gotUnderAttack) {
 				if (victim.isPlayer()) {
+					// packet order is authentic here
 					((Player) victim).message("You are under attack!");
 					ActionSender.sendSound((Player) victim, "underattack");
 				}

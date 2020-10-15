@@ -1534,6 +1534,9 @@ public final class Player extends Mob {
 			skillXP *= multipliers.get(1);
 			getSkills().addExperience(skill, (int) skillXP);
 		}
+
+		// packet order; fatigue update comes after XP update authentically.
+		// still, will need to check fatigue is not too high before awarding XP, so this check is in 2 places
 		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 			if (useFatigue) {
 				ActionSender.sendFatigue(this);
