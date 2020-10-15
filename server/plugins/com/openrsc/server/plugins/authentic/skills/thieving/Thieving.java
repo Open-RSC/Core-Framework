@@ -358,7 +358,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			return;
 		}
 		player.playerServerMessage(MessageType.QUEST, "You attempt to pick the " + thievedMobString + "'s pocket");
-		delay();
+		delay(2);
 		boolean succeededPickpocket = succeedThieving(player, pickpocket.getRequiredLevel());
 		if (SkillCapes.shouldActivate(player, THIEVING_CAPE, succeededPickpocket)) {
 			succeededPickpocket = true;
@@ -374,7 +374,8 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				}
 			}
 
-			player.incExp(Skills.THIEVING, pickpocket.getXp(), true);
+			player.playerServerMessage(MessageType.QUEST, "You pick the " + thievedMobString + "'s pocket");
+
 			Item selectedLoot = null;
 			int total = 0;
 			for (LootItem loot : lootTable) {
@@ -398,14 +399,17 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				}
 				total += loot.getChance();
 			}
-			player.playerServerMessage(MessageType.QUEST, "You pick the " + thievedMobString + "'s pocket");
+
 			if (selectedLoot != null) {
 				player.getCarriedItems().getInventory().add(selectedLoot);
 			}
+
+			player.incExp(Skills.THIEVING, pickpocket.getXp(), true);
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobString + "'s pocket");
 			npc.getUpdateFlags()
 				.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
+			delay();
 			npc.startCombat(player);
 			npc.setBusy(false);
 			return;
