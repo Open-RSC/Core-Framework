@@ -86,6 +86,7 @@ public class Batch {
 	private void incrementBatch() { current++; }
 	private int getCurrentBatchProgress() { return current; }
 	private boolean wantBatching() { return getPlayer().getConfig().BATCH_PROGRESSION; }
+	public boolean getBeginningBatch() { return current == 0; }
 	public boolean isShowingBar() { return showingBar; }
 	public boolean isCompleted() { return completed; }
 

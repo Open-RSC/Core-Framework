@@ -212,9 +212,13 @@ public final class Mining implements OpLocTrigger {
 
 	private void batchMining(Player player, GameObject rock, ObjectMiningDef def, int axeId, int mineLvl) {
 		player.playSound("mine");
-		thinkbubble(new Item(ItemId.IRON_PICKAXE.id()));
+		thinkbubble(new Item(ItemId.IRON_PICKAXE.id())); // authentic to only show the original pickaxe sprite
 		player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
 		delay(3);
+
+		if (ifbeginningbatch()) {
+			delay(1); // work around b/c for some reason it doesn't actually delay 3 ticks the first time
+		}
 
 		final Item ore = new Item(def.getOreId());
 		if (config().WANT_FATIGUE) {
