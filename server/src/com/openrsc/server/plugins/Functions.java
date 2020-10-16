@@ -841,6 +841,16 @@ public class Functions {
 		return batch.isCompleted();
 	}
 
+	public static boolean ifbeginningbatch() {
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return false;
+		Player player = scriptContext.getContextPlayer();
+		if (player == null) return false;
+		Batch batch = scriptContext.getBatch();
+		if (batch == null) return false;
+		return batch.getBeginningBatch();
+	}
+
 	/**
 	 * Functions below here are not Runescript API
 	 */
