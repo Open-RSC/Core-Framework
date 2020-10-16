@@ -48,6 +48,8 @@ public class WalkRequest implements PacketHandler {
 					player.setLastCombatState(CombatState.RUNNING);
 					opponent.setLastCombatState(CombatState.WAITING);
 					player.resetCombatEvent();
+					ActionSender.sendSound(player, "retreat");
+					
 					if (player.getConfig().WANT_PARTIES) {
 						if(player.getParty() != null){
 							player.getParty().sendParty();
