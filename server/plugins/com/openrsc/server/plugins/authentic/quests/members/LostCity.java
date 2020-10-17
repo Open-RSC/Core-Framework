@@ -137,6 +137,10 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, treeSpirit, "Stop",
 						"I am the spirit of the Dramen Tree",
 						"You must come through me before touching that tree");
+				} else {
+					mes("the tree seems to have a ominous aura to it",
+						"you do not feel like chopping it down");
+					delay(3);
 				}
 		}
 	}
