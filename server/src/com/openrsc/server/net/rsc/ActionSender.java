@@ -1245,7 +1245,6 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
-	// TODO: this should be used
 	public static void sendExperience(Player player, int stat) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_EXPERIENCE.opcode);

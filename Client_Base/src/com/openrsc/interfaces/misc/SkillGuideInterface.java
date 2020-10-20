@@ -252,7 +252,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(593, "60", "Dragon"));
 			} else if (curTab == 1) {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(1374, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1374, "99", "Attack Cape"));
 				}
 			}
 		}
@@ -270,7 +270,7 @@ public final class SkillGuideInterface {
 		if (mc.getSkillGuideChosen().equals("Strength")) {
 			skillMenuEntries.add(new SkillMenuItem(90, "", "Strength raises your max hit with melee"));
 			if (Config.S_WANT_CUSTOM_SPRITES) {
-				skillMenuEntries.add(new SkillMenuItem(1381, "99", "Cape"));
+				skillMenuEntries.add(new SkillMenuItem(1381, "99", "Strength Cape"));
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Hits")) {
@@ -491,7 +491,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(702, "1", "Robes of Zamorak"));
 				skillMenuEntries.add(new SkillMenuItem(1215, "60", "God capes"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(1382, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1382, "99", "Magic Cape"));
 				}
 			} else if (curTab == 2) {
 				skillMenuEntries.add(new SkillMenuItem(101, "1", "Basic staves"));
@@ -560,7 +560,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1269, "50", "Oomlie Meat Parcel"));
 				skillMenuEntries.add(new SkillMenuItem(1102, "58", "Tasty Ugthanki Kebab"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(1373, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1373, "99", "Cooking Cape"));
 				}
 			}
 		}
@@ -578,6 +578,13 @@ public final class SkillGuideInterface {
 		}
 		if (mc.getSkillGuideChosen().equals("Fletching")) {
 			if (curTab == 0) {
+				skillMenuEntries.add(new SkillMenuItem(14, "1", "Logs - 10 arrow shafts"));
+				skillMenuEntries.add(new SkillMenuItem(632, "15", "Oak logs - 15 arrow shafts"));
+				skillMenuEntries.add(new SkillMenuItem(633, "30", "Willow logs - 20 arrow shafts"));
+				skillMenuEntries.add(new SkillMenuItem(634, "45", "Maple logs - 25 arrow shafts"));
+				skillMenuEntries.add(new SkillMenuItem(635, "60", "Yew logs - 30 arrow shafts"));
+				skillMenuEntries.add(new SkillMenuItem(636, "75", "Magic logs - 35 arrow shafts"));
+			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(11, "1", "Bronze Arrows"));
 				skillMenuEntries.add(new SkillMenuItem(638, "15", "Iron Arrows"));
 				skillMenuEntries.add(new SkillMenuItem(640, "30", "Steel Arrows"));
@@ -585,7 +592,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(642, "45", "Mithril Arrows"));
 				skillMenuEntries.add(new SkillMenuItem(644, "60", "Adamantite Arrows"));
 				skillMenuEntries.add(new SkillMenuItem(646, "75", "Rune Arrows"));
-			} else if (curTab == 1) {
+			} else if (curTab == 2) {
 				skillMenuEntries.add(new SkillMenuItem(189, "5", "Shortbows"));
 				skillMenuEntries.add(new SkillMenuItem(188, "10", "Longbows"));
 				skillMenuEntries.add(new SkillMenuItem(649, "20", "Oak shortbows"));
@@ -598,14 +605,14 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(654, "70", "Yew longbows"));
 				skillMenuEntries.add(new SkillMenuItem(657, "80", "Magic shortbows"));
 				skillMenuEntries.add(new SkillMenuItem(656, "85", "Magic longbows"));
-			} else if (curTab == 2) {
+			} else if (curTab == 3) {
 				skillMenuEntries.add(new SkillMenuItem(1013, "1", "Bronze throwing dart"));
 				skillMenuEntries.add(new SkillMenuItem(1015, "22", "Iron throwing dart"));
 				skillMenuEntries.add(new SkillMenuItem(1024, "37", "Steel throwing dart"));
 				skillMenuEntries.add(new SkillMenuItem(1068, "52", "Mithril throwing dart"));
 				skillMenuEntries.add(new SkillMenuItem(1069, "67", "Adamantite throwing dart"));
 				skillMenuEntries.add(new SkillMenuItem(1070, "82", "Rune throwing dart"));
-			} else if (curTab == 3) {
+			} else if (curTab == 4) {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1376, "99", "Fletching Cape"));
 				}
@@ -632,7 +639,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1190, "81", "Manta Ray - Fishing Trawler"));
 			} else if (curTab == 1) {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(1380, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1380, "99", "Fishing Cape"));
 				}
 			}
 		}
@@ -652,7 +659,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(17, "7", "Boots"));
 				skillMenuEntries.add(new SkillMenuItem(15, "14", "Leather Armour"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(1384, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1384, "99", "Crafting Cape"));
 				}
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(135, "1", "Pot"));
@@ -724,7 +731,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(408, "85", "Runite - 8 Coal & 1 runite ore"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1365, "90", "Dragon - 1 dragon axe or 1 dragon sword"));
-					skillMenuEntries.add(new SkillMenuItem(1383, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1383, "99", "Smithing Cape"));
 				}
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(62, "1", "Bronze Daggers - 1 Bar"));
@@ -876,7 +883,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1262, "41", "Rune Pickaxe"));
 			} else if (curTab == 2) {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(1377, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1377, "99", "Mining Cape"));
 				}
 			}
 		}
@@ -929,7 +936,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(410, "15", "Edgeville dungeon ropeswing"));
 				skillMenuEntries.add(new SkillMenuItem(410, "15", "Yanille North climbing rocks"));
 				skillMenuEntries.add(new SkillMenuItem(410, "18", "Yanille watchtower handholds"));
-				skillMenuEntries.add(new SkillMenuItem(410, "20", "North-west of McGrouber's Woods log balance"));
+				skillMenuEntries.add(new SkillMenuItem(410, "20", "North-west of McGruber's Woods log balance"));
 				skillMenuEntries.add(new SkillMenuItem(410, "25", "Lum river stepping stone"));
 				skillMenuEntries.add(new SkillMenuItem(410, "25", "Glough's watch tower"));
 				skillMenuEntries.add(new SkillMenuItem(410, "30", "Southern Gu'Tanoth bridge rock"));
@@ -993,7 +1000,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(714, "82", "Yanille Agility Dungeon"));
 			} else if (curTab == 4) {
 				if (Config.S_WANT_CUSTOM_SPRITES) {
-					skillMenuEntries.add(new SkillMenuItem(1375, "99", "Cape"));
+					skillMenuEntries.add(new SkillMenuItem(1375, "99", "Thieving Cape"));
 				}
 			}
 		}
