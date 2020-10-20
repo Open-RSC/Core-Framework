@@ -400,7 +400,8 @@ public class EntityHandler {
 		EQUIPSLOT_HIGHLIGHT(49),
 		BANK_EQUIP_BAG(50),
 		BANK_EQUIP_HELM(51),
-		BANK_PRESET_OPTIONS(52);
+		BANK_PRESET_OPTIONS(52),
+		KEPT_ON_DEATH(53);
 
 		private final int value;
 
@@ -471,6 +472,7 @@ public class EntityHandler {
 		GUIparts.add(new SpriteDef("bank toggle for inventory mode", -1, "GUI:40", 50));
 		GUIparts.add(new SpriteDef("bank toggle for equipment mode", -1, "GUI:41", 51));
 		GUIparts.add(new SpriteDef("bank preset options gear", -1, "GUI:42", 52));
+		GUIparts.add(new SpriteDef("items kept on death", -1, "GUI:43", 53));
 	}
 
 	public enum CROWN_TYPES {
