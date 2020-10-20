@@ -142,10 +142,10 @@ public class Default implements DefaultHandler,
 
 		// Get the amount to drop from our temporary item construct.
 		int amountToDrop = item.getAmount();
-		batchDrop(player, item, fromInventory, amountToDrop);
+		batchDrop(player, item, fromInventory, amountToDrop, amountToDrop);
 	}
 
-	private void batchDrop(Player player, Item item, Boolean fromInventory, int amountToDrop) {
+	private void batchDrop(Player player, Item item, Boolean fromInventory, int amountToDrop, int totalToDrop) {
 
 		// Grab the last item by the ID we are trying to drop.
 		if (fromInventory) {
@@ -197,10 +197,15 @@ public class Default implements DefaultHandler,
 		player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped " + item.getDef(player.getWorld()).getName() + " x"
 			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
 
+		if (totalToDrop > 1) {
+			player.message("Dropping " + (totalToDrop - amountToDrop) + "/" + totalToDrop
+				+ " " + player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).getName());
+		}
+
 		// Repeat
 		if (!ifinterrupted() && amountToDrop > 0) {
 			delay();
-			batchDrop(player, item, fromInventory, amountToDrop);
+			batchDrop(player, item, fromInventory, amountToDrop, totalToDrop);
 		}
 	}
 

@@ -74,8 +74,8 @@ public final class MonkOfEntrana implements OpLocTrigger,
 			if (def.getWieldPosition() == 8 || def.getWieldPosition() == 11) return false;
 			// don't allow anything with a ranged level requirement
 			if (def.getRequiredSkillIndex() == 4) return true;
-			// allow anything without melee combat stats, otherwise block
-			if (def.getWeaponPowerBonus() == 0 && def.getWeaponAimBonus() == 0)  return false;
+			// allow anything without melee combat stats and armor, otherwise block
+			if (def.getWeaponPowerBonus() == 0 && def.getWeaponAimBonus() == 0 && def.getArmourBonus() == 0)  return false;
 				else return true;
 		}
 		// default: allow

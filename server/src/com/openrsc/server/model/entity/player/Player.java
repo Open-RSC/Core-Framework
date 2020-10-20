@@ -1480,7 +1480,6 @@ public final class Player extends Mob {
 				if (fatigue > this.MAX_FATIGUE) {
 					fatigue = this.MAX_FATIGUE;
 				}
-				ActionSender.sendFatigue(this);
 			}
 		}
 
@@ -1534,6 +1533,14 @@ public final class Player extends Mob {
 			// effective multiplier
 			skillXP *= multipliers.get(1);
 			getSkills().addExperience(skill, (int) skillXP);
+		}
+
+		// packet order; fatigue update comes after XP update authentically.
+		// still, will need to check fatigue is not too high before awarding XP, so this check is in 2 places
+		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+			if (useFatigue) {
+				ActionSender.sendFatigue(this);
+			}
 		}
 		// ActionSender.sendExperience(this, skill);
 	}
