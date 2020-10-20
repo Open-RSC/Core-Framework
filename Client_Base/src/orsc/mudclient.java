@@ -16644,6 +16644,7 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Trees");
 			skillGuideChosenTabs.add("Axes");
 		} else if (skillGuideChosen.equalsIgnoreCase("Fletching")) {
+			skillGuideChosenTabs.add("Arrow Shafts");
 			skillGuideChosenTabs.add("Ammo");
 			skillGuideChosenTabs.add("Bows");
 			skillGuideChosenTabs.add("Darts");
