@@ -168,7 +168,14 @@ public class Skills {
 		int levelDiff = newLevel - oldLevel;
 		String skillName;
 
-		sendExperience(skill);
+		if (getMob().isPlayer()) {
+			Player player = (Player) getMob();
+			if (player.isUsingAuthenticClient()) {
+				sendExperience(skill);
+			} else {
+				sendUpdate(skill);
+			}
+		}
 
 		if (levelDiff > 0) {
 			levels[skill] += levelDiff;
