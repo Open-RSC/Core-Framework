@@ -76,9 +76,12 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 
                                         int encodedOpcode = bufferOrdered.readByte() & 0xFF;
 
-										// TODO: it would be very nice if mitigation for when the client opcode is recieved improperly were not needed.
+										// TODO: it would be very nice if mitigation for when the client opcode is received improperly were not needed.
 										// Ideally, it should just always sync all by itself without opcodeTries & its loop.
-										// Possibly something is wrong with the way the server flushes out data.
+										// Possibly something is wrong with the way the server starts accepting data, it may open that channel too late or be busy.
+										//
+										// There is a benefit to keeping this mitigation code too though. If the user's internet disappears for a moment
+										// then ISAAC would be unavoidably desynced. This code will resync in that case as well.
                                         int opcodeTries = 0;
                                         while (opcodeTries < 256) { // after 256 tries, it would have looped all the way around. Unlikely to happen, but need a place to stop.
 											opcode = (isaacContainer.decodeOpcode(encodedOpcode) & 0xFF);
