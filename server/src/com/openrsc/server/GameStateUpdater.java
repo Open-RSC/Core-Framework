@@ -493,7 +493,7 @@ public final class GameStateUpdater {
 					if (player.isUsingAuthenticClient()) {
 						String message = cm.getMessageString();
 						if (updateType == 7) {
-							if (player.isAdmin() || player.isMod()) {
+							if (player.hasElevatedPriveledges()) {
 								// Just prepend "Muted" to message, could be faked but doesn't matter.
 								message = "(Muted) " + message;
 								if (cm.getRecipient() == null) {

@@ -1787,11 +1787,21 @@ public class ActionSender {
 
 	public static void sendOnlineList(Player player, ArrayList<Player> players, ArrayList<String> locations, int online) {
 	    if (player.isUsingAuthenticClient()) {
-	        String outString = String.format("@lre@Players online@gre@(%d)@lre@: ", online);
-            for (int i = 0; i < players.size(); i++) {
-                outString += String.format("@whi@%s @yel@(%s)%s", players.get(i).getUsername(), locations.get(i), i + 1 == players.size() ? "" : "@mag@;");
-            }
-            sendMessage(player, outString);
+	    	StringBuilder onlinePlayers = new StringBuilder(String.format("@lre@Players online @gre@(%d) %%", online));
+			for (int i = 0; i < players.size(); i++) {
+				onlinePlayers.append("@whi@");
+				onlinePlayers.append(players.get(i).getUsername());
+				if (locations.get(i).length() > 0) {
+					onlinePlayers.append(" @yel@(");
+					onlinePlayers.append(locations.get(i));
+					onlinePlayers.append(")");
+				}
+				if (i + 1 != players.size()) {
+					onlinePlayers.append(" @mag@; ");
+				}
+			}
+
+			ActionSender.sendBox(player, onlinePlayers.toString(), true);
         } else {
             PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
             pb.writeShort(online);
