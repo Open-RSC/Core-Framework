@@ -381,7 +381,8 @@ public final class GameStateUpdater {
 		}
 		if (player.getUpdateFlags().hasChatMessage()) {
 			ChatMessage chatMessage = player.getUpdateFlags().getChatMessage();
-			chatMessagesNeedingDisplayed.add(chatMessage);
+			if (!chatMessage.getMuted() || player.hasElevatedPriveledges())
+				chatMessagesNeedingDisplayed.add(chatMessage);
 		}
 		if (player.getUpdateFlags().hasTakenDamage()) {
 			Damage damage = player.getUpdateFlags().getDamage().get();
@@ -411,7 +412,8 @@ public final class GameStateUpdater {
 			}
 			if (updateFlags.hasChatMessage() && !player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES)) {
 				ChatMessage chatMessage = updateFlags.getChatMessage();
-				chatMessagesNeedingDisplayed.add(chatMessage);
+				if (!chatMessage.getMuted() || player.hasElevatedPriveledges())
+					chatMessagesNeedingDisplayed.add(chatMessage);
 			}
 			if (updateFlags.hasTakenDamage()) {
 				Damage damage = updateFlags.getDamage().get();
