@@ -1683,11 +1683,11 @@ public final class Player extends Mob {
 		if (isMod() || isAdmin() || isDev() || isEvent()) {
 			denyAllLogoutRequests = !denyAllLogoutRequests;
 			if (denyAllLogoutRequests) {
-				playerServerMessage(MessageType.QUEST, "All logout requests will now be denied.");
-				playerServerMessage(MessageType.QUEST, "type ::stayin to toggle this.");
+				playerServerMessage(MessageType.QUEST, "All logout requests will now be @red@denied.");
+				playerServerMessage(MessageType.QUEST, "Type @or2@::stayin@whi@ to toggle this.");
 			} else {
-				playerServerMessage(MessageType.QUEST, "Logout requests will now be possible to fulfil.");
-				playerServerMessage(MessageType.QUEST, "type ::stayin to toggle this.");
+				playerServerMessage(MessageType.QUEST, "Logout requests will now be @gre@possible to fulfill.");
+				playerServerMessage(MessageType.QUEST, "Type @or2@::stayin@whi@ to toggle this.");
 			}
 		}
 	}
