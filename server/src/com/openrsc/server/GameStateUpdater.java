@@ -510,6 +510,8 @@ public final class GameStateUpdater {
 								appearancePacket.writeByte(sender.getIconAuthentic());
 							}
 							appearancePacket.writeRSCString(message);
+						} else {
+							LOGGER.error("extraneous chat update packet will crash the authentic client...!");
 						}
 
 					} else {
