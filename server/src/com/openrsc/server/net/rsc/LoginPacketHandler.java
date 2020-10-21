@@ -47,10 +47,15 @@ public class LoginPacketHandler {
 		ConnectionAttachment attachment = channel.attr(RSCConnectionHandler.attachment).get();
         //ConnectionAttachment attachment = new ConnectionAttachment();
         //channel.attr(RSCConnectionHandler.attachment).set(attachment);
-		switch (packet.getID()) {
+		OpcodeIn opcode = OpcodeIn.getFromList(packet.getID(),
+			OpcodeIn.LOGIN, OpcodeIn.REGISTER_ACCOUNT,
+			OpcodeIn.FORGOT_PASSWORD, OpcodeIn.RECOVERY_ATTEMPT);
+		if (opcode == null)
+			return;
+		switch (opcode) {
 
 			/* Logging in */
-			case 0:
+			case LOGIN:
                 byte authenticClient;
                 try {
                     if (attachment.authenticClient.get()) {
@@ -63,7 +68,7 @@ public class LoginPacketHandler {
                 }
 			    if (authenticClient != 0) {
                     LoginInfo loginInfo = new LoginInfo();
-                    
+
                     // Handle login packet
                     loginInfo.reconnecting = packet.readByte() == 1;
                     int clientVersion = packet.readInt();
@@ -195,7 +200,7 @@ public class LoginPacketHandler {
                 }
 
 			/* Registering */
-			case 78:
+			case REGISTER_ACCOUNT:
 				LOGGER.info("Registration attempt from: " + IP);
 
 				String user = getString(packet.getBuffer()).trim();
@@ -213,7 +218,7 @@ public class LoginPacketHandler {
 				break;
 
 			/* Forgot password */
-			case 5:
+			case FORGOT_PASSWORD:
 				try {
 					if (!server.getPacketFilter().shouldAllowPacket(channel, true)) {
 						channel.close();
@@ -269,7 +274,7 @@ public class LoginPacketHandler {
 				break;
 
 			/* Attempt recover */
-			case 7:
+			case RECOVERY_ATTEMPT:
 				user = getString(packet.getBuffer()).trim();
 				user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 				String oldPass = getString(packet.getBuffer()).trim();

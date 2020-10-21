@@ -94,7 +94,7 @@ public enum OpcodeIn {
 	CHANGE_PASS(25), // inauthentic
 	CANCEL_RECOVERY_REQUEST(196), // inauthentic
 	CHANGE_RECOVERY(200), // inauthentic
-	SET_RECOVERY(208), // inauthentic
+	SET_RECOVERY(208), // part of RSC127 protocol, would like available even on 235 setting
 	CHANGE_DETAILS(201), // inauthentic
 	SET_DETAILS(253), // inauthentic
 
@@ -103,6 +103,12 @@ public enum OpcodeIn {
 	SKIP_TUTORIAL(84),
 	ON_BLACK_HOLE(86), // inauthentic
 	NPC_DEFINITION_REQUEST(89), // inauthentic
+
+	LOGIN(0),
+	REGISTER_ACCOUNT(2), // part of RSC127 protocol, would like available even on 235 setting
+	FORGOT_PASSWORD(5), // inauthentic
+	RECOVERY_ATTEMPT(7), // this should be refactored to share opcode 8 with duel settings. It is opcode 8 in RSC127 protocol
+
 	;
 
 	private int opcode;
