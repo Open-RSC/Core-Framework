@@ -52,8 +52,8 @@ public enum OpcodeIn {
 	ITEM_UNEQUIP_FROM_INVENTORY(170),
 	ITEM_EQUIP_FROM_INVENTORY(169),
 	ITEM_UNEQUIP_FROM_EQUIPMENT(168), // inauthentic
-	ITEM_EQUIP_FROM_BANK(172),
-	ITEM_REMOVE_TO_BANK(173),
+	ITEM_EQUIP_FROM_BANK(172), // inauthentic
+	ITEM_REMOVE_TO_BANK(173), // inauthentic
 	ITEM_COMMAND(90),
 	ITEM_DROP(246),
 
@@ -85,23 +85,24 @@ public enum OpcodeIn {
 	BANK_CLOSE(212),
 	BANK_WITHDRAW(22),
 	BANK_DEPOSIT(23),
-	BANK_DEPOSIT_ALL_FROM_INVENTORY(24),
-	BANK_DEPOSIT_ALL_FROM_EQUIPMENT(26),
-	BANK_SAVE_PRESET(27),
-	BANK_LOAD_PRESET(28),
-	INTERFACE_OPTIONS(199),
-	CHANGE_PASS(25),
-	CANCEL_RECOVERY_REQUEST(196),
-	CHANGE_RECOVERY(200),
-	SET_RECOVERY(208),
-	CHANGE_DETAILS(201),
-	SET_DETAILS(253),
+
+	BANK_DEPOSIT_ALL_FROM_INVENTORY(24), // inauthentic
+	BANK_DEPOSIT_ALL_FROM_EQUIPMENT(26), // inauthentic
+	BANK_SAVE_PRESET(27), // inauthentic
+	BANK_LOAD_PRESET(28), // inauthentic
+	INTERFACE_OPTIONS(199), // inauthentic
+	CHANGE_PASS(25), // inauthentic
+	CANCEL_RECOVERY_REQUEST(196), // inauthentic
+	CHANGE_RECOVERY(200), // inauthentic
+	SET_RECOVERY(208), // inauthentic
+	CHANGE_DETAILS(201), // inauthentic
+	SET_DETAILS(253), // inauthentic
 
 	SLEEPWORD_ENTERED(45),
 
 	SKIP_TUTORIAL(84),
-	ON_BLACK_HOLE(86),
-	NPC_DEFINITION_REQUEST(89),
+	ON_BLACK_HOLE(86), // inauthentic
+	NPC_DEFINITION_REQUEST(89), // inauthentic
 	;
 
 	private int opcode;
@@ -132,5 +133,244 @@ public enum OpcodeIn {
 				return opcodeIn;
 		}
 		return null;
+	}
+
+	// a basic check is done on authentic opcodes against their possible lengths
+	public static boolean isPossiblyValid(int opcode, int length, int protocolVer) {
+		// TODO: remove this if checking valid for other protocol vers is implemented e.g. 127
+		if (protocolVer != 235) {
+			return true;
+		}
+		int payloadLength = length - 1; // subtract off opcode length.
+
+		if (protocolVer == 235) {
+			switch (opcode) {
+				// HEARTBEAT
+				case 67:
+					return payloadLength == 0;
+				// WALK_TO_ENTITY
+				case 16:
+					return payloadLength >= 4;
+				// WALK_TO_POINT
+				case 187:
+					return payloadLength >= 4;
+				// CONFIRM_LOGOUT
+				case 31:
+					return payloadLength == 0;
+				// LOGOUT
+				case 102:
+					return payloadLength == 0;
+				// ADMIN_TELEPORT
+				case 59:
+					return payloadLength == 4;
+				// COMBAT_STYLE_CHANGE
+				case 29:
+					return payloadLength == 1;
+				// QUESTION_DIALOG_ANSWER
+				case 116:
+					return payloadLength == 1;
+
+				// PLAYER-APPEARANCE_CHANGE
+				case 235:
+					return payloadLength == 8;
+				// SOCIAL_ADD_IGNORE
+				case 132:
+					return payloadLength >= 3 && payloadLength <=22;
+				// SOCIAL_ADD_FRIEND
+				case 195:
+					return payloadLength >= 3 && payloadLength <=22;
+				// SOCIAL_SEND_PRIVATE_MESSAGE
+				case 218:
+					return payloadLength >= 6;
+				// SOCIAL_REMOVE_FRIEND
+				case 167:
+					return payloadLength >= 3 && payloadLength <=22;
+				// SOCIAL_REMOVE_IGNORE
+				case 241:
+					return payloadLength >= 3 && payloadLength <=22;
+
+				// DUEL_FIRST_SETTINGS_CHANGED
+				case 8:
+					return payloadLength == 4;
+				// DUEL_FIRST_ACCEPTED
+				case 176:
+					return payloadLength == 0;
+				// DUEL_DECLINED
+				case 197:
+					return payloadLength == 0;
+				// DUEL_OFFER_ITEM
+				case 33:
+					return payloadLength >= 1;
+				// DUEL_SECOND_ACCEPTED
+				case 77:
+					return payloadLength == 0;
+
+				// INTERACT_WITH_BOUNDARY
+				case 14:
+					return payloadLength == 5;
+				// INTERACT_WITH_BOUNDARY2
+				case 127:
+					return payloadLength == 5;
+				// CAST_ON_BOUNDARY
+				case 180:
+					return payloadLength == 7;
+				// USE_WITH_BOUNDARY
+				case 161:
+					return payloadLength == 7;
+
+				// NPC_TALK_TO
+				case 153:
+					return payloadLength == 2;
+				// NPC_COMMAND1
+				case 202:
+					return payloadLength == 2;
+				// NPC_ATTACK1
+				case 190:
+					return payloadLength == 2;
+				// CAST_ON_NPC
+				case 50:
+					return payloadLength == 4;
+				// NPC_USE_ITEM
+				case 135:
+					return payloadLength == 4;
+
+				// PLAYER_CAST_PVP
+				case 229:
+					return payloadLength == 4;
+				// PLAYER_USE_ITEM
+				case 113:
+					return payloadLength == 4;
+				// PLAYER_ATTACK
+				case 171:
+					return payloadLength == 2;
+				// PLAYER_DUEL
+				case 103:
+					return payloadLength == 2;
+				// PLAYER_INIT_TRADE_REQUEST
+				case 142:
+					return payloadLength == 2;
+				// PLAYER_FOLLOW
+				case 165:
+					return payloadLength == 2;
+
+				// CAST_ON_GROUND_ITEM
+				case 249:
+					return payloadLength == 8;
+				// GROUND_ITEM_USE_ITEM
+				case 53:
+					return payloadLength == 8;
+				// GROUND_ITEM_TAKE
+				case 247:
+					return payloadLength == 6;
+
+				// CAST_ON_INVENTORY_ITEM
+				case 4:
+					return payloadLength == 4;
+				// ITEM_USE_ITEM
+				case 91:
+					return payloadLength == 4;
+				// ITEM_UNEQUIP_FROM_INVENTORY
+				case 170:
+					return payloadLength == 2;
+				// ITEM_EQUIP_FROM_INVENTORY
+				case 169:
+					return payloadLength == 2;
+				// ITEM_COMMAND
+				case 90:
+					return payloadLength == 2;
+				// ITEM_DROP
+				case 246:
+					return payloadLength == 2;
+
+				// CAST_ON_SELF
+				case 137:
+					return payloadLength == 2;
+				// CAST_ON_LAND
+				case 158:
+					return payloadLength == 6;
+
+				// OBJECT_COMMAND1
+				case 136:
+					return payloadLength == 4;
+				// OBJECT_COMMAND2
+				case 79:
+					return payloadLength == 4;
+				// CAST_ON_SCENERY
+				case 99:
+					return payloadLength == 6;
+				// USE_ITEM_ON_SCENERY
+				case 115:
+					return payloadLength == 6;
+
+				// SHOP_CLOSE
+				case 166:
+					return payloadLength == 0;
+				// SHOP_BUY
+				case 236:
+					return payloadLength == 6;
+				// SHOP_SELL
+				case 221:
+					return payloadLength == 6;
+
+				// PLAYER_ACCEPTED_INIT_TRADE_REQUEST
+				case 55:
+					return payloadLength == 0;
+				// PLAYER_DECLINED_TRADE
+				case 230:
+					return payloadLength == 0;
+				// PLAYER_ADDED_ITEMS_TO_TRADE_OFFER
+				case 46:
+					return payloadLength >= 1;
+				// PLAYER_ACCEPTED_TRADE
+				case 104:
+					return payloadLength == 0;
+
+				// PRAYER_ACTIVATED
+				case 60:
+					return payloadLength == 1;
+				// PRAYER_DEACTIVATED
+				case 254:
+					return payloadLength == 1;
+
+				// GAME_SETTINGS_CHANGED
+				case 111:
+					return payloadLength == 1;
+				// CHAT_MESSAGE
+				case 216:
+					return payloadLength >= 2;
+				// COMMAND
+				case 38:
+					return payloadLength >= 3;
+				// PRIVACY_SETTINGS_CHANGED
+				case 64:
+					return payloadLength == 4;
+				// REPORT_ABUSE
+				case 206:
+					return payloadLength >= 5 && payloadLength <= 24;
+				// BANK_CLOSE
+				case 212:
+					return payloadLength == 0;
+				// BANK_WITHDRAW
+				case 22:
+					return payloadLength == 10;
+				// BANK_DEPOSIT
+				case 23:
+					return payloadLength == 10;
+
+				// SLEEPWORD_ENTERED
+				case 45:
+					return payloadLength >= 3;
+
+				// SKIP_TUTORIAL
+				case 84:
+					return payloadLength == 0;
+
+				// Unknown OPCODE
+				default:
+					System.out.println(String.format("Received inauthentic opcode %d from authentic claiming client", opcode));
+					return false;
+			}
+		}
+		return false;
 	}
 }

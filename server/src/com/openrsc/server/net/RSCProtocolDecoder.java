@@ -1,6 +1,7 @@
 package com.openrsc.server.net;
 
 import com.openrsc.server.net.rsc.ISAACContainer;
+import com.openrsc.server.net.rsc.OpcodeIn;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -75,10 +76,27 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 
                                         int encodedOpcode = bufferOrdered.readByte() & 0xFF;
 
-                                        opcode = (isaacContainer.decodeOpcode(encodedOpcode) & 0xFF);
+										// TODO: it would be very nice if mitigation for when the client opcode is recieved improperly were not needed.
+										// Ideally, it should just always sync all by itself without opcodeTries & its loop.
+										// Possibly something is wrong with the way the server flushes out data.
+                                        int opcodeTries = 0;
+                                        while (opcodeTries < 256) { // after 256 tries, it would have looped all the way around. Unlikely to happen, but need a place to stop.
+											opcode = (isaacContainer.decodeOpcode(encodedOpcode) & 0xFF);
+											opcodeTries++;
 
-                                        Packet packet = new Packet(opcode, bufferOrdered);
-                                        out.add(packet);
+											// A check on whether or not the opcode's length is known invalid should be considered a good thing & retained,
+											// even if this problem of getting good ISAAC sync on login is fixed.
+											boolean isPossiblyValid = OpcodeIn.isPossiblyValid(opcode, length, 235);
+											if (isPossiblyValid) {
+												Packet packet = new Packet(opcode, bufferOrdered);
+												out.add(packet);
+												// Packet.printPacket(packet, "Incoming");
+												return;
+											} else {
+												System.out.println(String.format("Caught invalid incoming opcode;; enc: %d; dec: %d; len: %d; isPossiblyValid: %b; opcodeTries: %d", encodedOpcode, opcode, length, isPossiblyValid, opcodeTries));
+											}
+										}
+										// return without writing out any packet.
                                         return;
 
                                     } else {
@@ -97,7 +115,7 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                             buffer.readBytes(data, length);
                             Packet packet = new Packet(opcode, data);
                             out.add(packet);
-                            //Packet.printPacket(packet, "Incoming");
+                            // Packet.printPacket(packet, "Incoming");
 
 
                         } else {
