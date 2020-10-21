@@ -112,8 +112,8 @@ public final class GameStateUpdater {
 			player.setLastSaveTime(curTime);
 		}
 
-		if (curTime - player.getLastPing() >= 30000) {
-			player.unregister(false, "Ping time-out");
+		if (curTime - player.getLastClientActivity() >= 30000) {
+			player.unregister(false, "Client activity time-out");
 		}
 
 		if (player.warnedToMove()) {

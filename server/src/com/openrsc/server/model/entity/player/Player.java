@@ -211,9 +211,9 @@ public final class Player extends Mob {
 	 */
 	private long lastRecoveryChangeRequest = 0;
 	/**
-	 * Last time a 'ping' was received
+	 * Last time a client activity was received
 	 */
-	private long lastPing = System.currentTimeMillis();
+	private long lastClientActivity = System.currentTimeMillis();
 	/**
 	 * Time last report was sent, used to throttle reports
 	 */
@@ -596,7 +596,7 @@ public final class Player extends Mob {
 		if (menuHandler != null) {
 			return true;
 		}
-		if (denyAllLogoutRequests && System.currentTimeMillis() - getLastPing() < 30000) {
+		if (denyAllLogoutRequests && System.currentTimeMillis() - getLastClientActivity() < 30000) {
 			return false;
 		}
 		return !isBusy() && System.currentTimeMillis() - getCombatTimer() > 10000
@@ -1058,8 +1058,8 @@ public final class Player extends Mob {
 		lastLogin = l;
 	}
 
-	public long getLastPing() {
-		return lastPing;
+	public long getLastClientActivity() {
+		return lastClientActivity;
 	}
 
 	public Menu getMenu() {
@@ -1912,7 +1912,7 @@ public final class Player extends Mob {
 	}
 
 	public void addToPacketQueue(final Packet packet) {
-		ping();
+		updateClientActivity();
 		int packetID = packet.getID();
 		if ((packetID != OpcodeIn.ITEM_USE_ITEM.getOpcode()
 				&& packetID != OpcodeIn.BANK_DEPOSIT.getOpcode()
@@ -1934,8 +1934,8 @@ public final class Player extends Mob {
 		}
 	}
 
-	public void ping() {
-		lastPing = System.currentTimeMillis();
+	public void updateClientActivity() {
+		lastClientActivity = System.currentTimeMillis();
 	}
 
 	public void playSound(final String sound) {
