@@ -119,6 +119,7 @@ public final class Player extends Mob {
 	private long lastExchangeTime = System.currentTimeMillis();
 	private int clientVersion = 0;
 	public int preferredIcon = -1;
+	private boolean denyAllLogoutRequests = false;
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -594,6 +595,9 @@ public final class Player extends Mob {
 	public boolean canLogout() {
 		if (menuHandler != null) {
 			return true;
+		}
+		if (denyAllLogoutRequests && System.currentTimeMillis() - getLastPing() < 30000) {
+			return false;
 		}
 		return !isBusy() && System.currentTimeMillis() - getCombatTimer() > 10000
 			&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000
@@ -1673,6 +1677,23 @@ public final class Player extends Mob {
 			getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());
 		}
 		this.loggedIn = loggedIn;
+	}
+
+	public void toggleDenyAllLogoutRequests() {
+		if (isMod() || isAdmin() || isDev() || isEvent()) {
+			denyAllLogoutRequests = !denyAllLogoutRequests;
+			if (denyAllLogoutRequests) {
+				playerServerMessage(MessageType.QUEST, "All logout requests will now be denied.");
+				playerServerMessage(MessageType.QUEST, "type ::stayin to toggle this.");
+			} else {
+				playerServerMessage(MessageType.QUEST, "Logout requests will now be possible to fulfil.");
+				playerServerMessage(MessageType.QUEST, "type ::stayin to toggle this.");
+			}
+		}
+	}
+
+	public boolean getDenyAllLogoutRequests() {
+		return denyAllLogoutRequests;
 	}
 
 	public boolean isMale() {
