@@ -106,8 +106,8 @@ public enum OpcodeIn {
 
 	LOGIN(0),
 	REGISTER_ACCOUNT(2), // part of RSC127 protocol, would like available even on 235 setting
-	FORGOT_PASSWORD(5), // inauthentic
-	RECOVERY_ATTEMPT(7), // this should be refactored to share opcode 8 with duel settings. It is opcode 8 in RSC127 protocol
+	FORGOT_PASSWORD(5), // this should be refactored to share opcode 4 with cast_on_inventory_item. It is opcode 4 in RSC127 protocol
+	RECOVERY_ATTEMPT(7), // this should be refactored to share opcode 8 with duel_settings. It is opcode 8 in RSC127 protocol
 
 	;
 
