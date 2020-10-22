@@ -1,13 +1,13 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.event.rsc.impl.combat.scripts.CombatPoisonScript;
+import com.openrsc.server.event.rsc.impl.combat.scripts.CombatSideEffectScript;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 
-public class NpcPoisonPlayerScript implements CombatPoisonScript {
+public class NpcPoisonPlayerScript implements CombatSideEffectScript {
 
 	@Override
 	public void executeScript(Mob attacker, Mob victim) {
