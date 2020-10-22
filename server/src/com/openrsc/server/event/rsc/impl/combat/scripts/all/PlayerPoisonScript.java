@@ -1,13 +1,13 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
-import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScript;
+import com.openrsc.server.event.rsc.impl.combat.scripts.CombatPoisonScript;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.DataConversions;
 
-public class PlayerPoisonScript implements CombatScript {
+public class PlayerPoisonScript implements CombatPoisonScript {
 
 	@Override
 	public void executeScript(Mob attacker, Mob victim) {
@@ -23,7 +23,7 @@ public class PlayerPoisonScript implements CombatScript {
 
 	@Override
 	public boolean shouldExecute(Mob attacker, Mob victim) {
-		if (attacker.isPlayer() && DataConversions.random(0, 100) <= 10) {
+		if (attacker.isPlayer() && victim.isPlayer() && DataConversions.random(0, 100) <= 10) {
 			Player player = (Player) attacker;
 			if (player.getDuel().isDuelActive()) {
 				return false;

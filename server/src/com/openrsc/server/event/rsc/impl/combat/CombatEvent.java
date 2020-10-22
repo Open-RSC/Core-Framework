@@ -128,10 +128,12 @@ public class CombatEvent extends GameTickEvent {
 	private void inflictDamage(final Mob hitter, final Mob target, int damage) {
 		hitter.incHitsMade();
 
-		// Paralyze monster stops NPC from damaging players.
+		// poison is regardless protect
+		hitter.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatPoisonScript(hitter, target);
 		if (hitter.isNpc() && target.isPlayer()) {
 			Player targetPlayer = (Player) target;
-			if (targetPlayer.getPrayers().isPrayerActivated(Prayers.PARALYZE_MONSTER)) {
+			// Paralyze monster stops NPC from damaging players.
+			if (!targetPlayer.getPrayers().isPrayerActivated(Prayers.PARALYZE_MONSTER)) {
 				hitter.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatScript(hitter, target);
 				return;
 			}
