@@ -170,3 +170,5 @@ server/inc/databases/
 inc/logs/
 
 Backups/
+
+Android_Client/.idea/
