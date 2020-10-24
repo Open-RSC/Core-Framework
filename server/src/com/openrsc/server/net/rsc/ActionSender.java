@@ -1707,6 +1707,17 @@ public class ActionSender {
                 sendPlayerOnTutorial(player);
                 sendLoginBox(player);
 
+				sendPlayerOnBlackHole(player);
+				if (player.getLastLogin() == 0L) {
+					sendAppearanceScreen(player);
+					for (int itemId : player.getWorld().getServer().getConstants().STARTER_ITEMS) {
+						Item i = new Item(itemId);
+						player.getCarriedItems().getInventory().add(i, false);
+					}
+					//Block PK chat by default.
+					player.getCache().set("setting_block_global", 3);
+				}
+
                 sendInventory(player);
                 player.checkEquipment();
 
@@ -1724,21 +1735,7 @@ public class ActionSender {
 				if (elixir > -1)
 					sendElixirTimer(player, player.getElixir());
 
-
-				sendPlayerOnBlackHole(player);
-				if (player.getLastLogin() == 0L) {
-					sendAppearanceScreen(player);
-					for (int itemId : player.getWorld().getServer().getConstants().STARTER_ITEMS) {
-						Item i = new Item(itemId);
-						player.getCarriedItems().getInventory().add(i, false);
-					}
-					//Block PK chat by default.
-					player.getCache().set("setting_block_global", 3);
-				}
-
 				sendWakeUp(player, false, true);
-
-
 
 				if (player.isMuted()) {
 					sendMessage(player, "You are muted for "
@@ -1748,8 +1745,6 @@ public class ActionSender {
 				if (player.getLocation().inTutorialLanding()) {
 					sendBox(player, "@gre@Welcome to the " + player.getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
-
-
 
 				sendNpcKills(player);
 
