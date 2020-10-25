@@ -23,11 +23,14 @@ public final class ChatHandler implements PacketHandler {
 			DataConversions.stripBadCharacters(
 				DataConversions.getEncryptedString(packet, Short.MAX_VALUE)));
 
-		ChatMessage chatMessage = new ChatMessage(sender, message);
+
+		boolean mutedChat = (sender.getLocation().onTutorialIsland() || sender.isMuted()) && !sender.hasElevatedPriveledges();
+
+		ChatMessage chatMessage = new ChatMessage(sender, message, mutedChat);
 		sender.getUpdateFlags().setChatMessage(chatMessage);
 
 		// We do not want muted/tutorial chat to be logged
-		if(sender.getLocation().onTutorialIsland() || sender.isMuted()) {
+		if (mutedChat) {
 			return;
 		}
 

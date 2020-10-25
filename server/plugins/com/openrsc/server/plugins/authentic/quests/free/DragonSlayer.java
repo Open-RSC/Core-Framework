@@ -62,7 +62,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.teleport(410, 3481, false);
-		player.message("Well done you have completed the dragon slayer quest!");
+		player.message("Well done you have completed the dragon slayer quest");
 		player.message("@gre@You haved gained 2 quest points!");
 		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DRAGON_SLAYER);
 		//keep order kosher

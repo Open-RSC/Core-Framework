@@ -112,8 +112,8 @@ public final class GameStateUpdater {
 			player.setLastSaveTime(curTime);
 		}
 
-		if (curTime - player.getLastPing() >= 30000) {
-			player.unregister(false, "Ping time-out");
+		if (curTime - player.getLastClientActivity() >= 30000) {
+			player.unregister(false, "Client activity time-out");
 		}
 
 		if (player.warnedToMove()) {
@@ -381,7 +381,8 @@ public final class GameStateUpdater {
 		}
 		if (player.getUpdateFlags().hasChatMessage()) {
 			ChatMessage chatMessage = player.getUpdateFlags().getChatMessage();
-			chatMessagesNeedingDisplayed.add(chatMessage);
+			if (!chatMessage.getMuted() || player.hasElevatedPriveledges())
+				chatMessagesNeedingDisplayed.add(chatMessage);
 		}
 		if (player.getUpdateFlags().hasTakenDamage()) {
 			Damage damage = player.getUpdateFlags().getDamage().get();
@@ -411,7 +412,8 @@ public final class GameStateUpdater {
 			}
 			if (updateFlags.hasChatMessage() && !player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES)) {
 				ChatMessage chatMessage = updateFlags.getChatMessage();
-				chatMessagesNeedingDisplayed.add(chatMessage);
+				if (!chatMessage.getMuted() || player.hasElevatedPriveledges())
+					chatMessagesNeedingDisplayed.add(chatMessage);
 			}
 			if (updateFlags.hasTakenDamage()) {
 				Damage damage = updateFlags.getDamage().get();
@@ -491,7 +493,7 @@ public final class GameStateUpdater {
 					if (player.isUsingAuthenticClient()) {
 						String message = cm.getMessageString();
 						if (updateType == 7) {
-							if (player.isAdmin() || player.isMod()) {
+							if (player.hasElevatedPriveledges()) {
 								// Just prepend "Muted" to message, could be faked but doesn't matter.
 								message = "(Muted) " + message;
 								if (cm.getRecipient() == null) {
@@ -508,6 +510,8 @@ public final class GameStateUpdater {
 								appearancePacket.writeByte(sender.getIconAuthentic());
 							}
 							appearancePacket.writeRSCString(message);
+						} else {
+							LOGGER.error("extraneous chat update packet will crash the authentic client...!");
 						}
 
 					} else {
@@ -789,9 +793,11 @@ public final class GameStateUpdater {
 				final int offsetY = o.getY() - playerToUpdate.getY();
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
 					if (playerToUpdate.isUsingAuthenticClient()) {
-						packet.writeByte(0xFF);
-						packet.writeByte(offsetX);
-						packet.writeByte(offsetY);
+						if (shouldSendRemovalEver(o)) {
+							packet.writeByte(0xFF);
+							packet.writeByte(offsetX);
+							packet.writeByte(offsetY);
+						}
 					} else {
 						packet.writeShort(60000);
 						packet.writeByte(offsetX);
@@ -825,6 +831,31 @@ public final class GameStateUpdater {
 		}
 		if (changed) {
 			playerToUpdate.write(packet.toPacket());
+		}
+	}
+
+	protected boolean shouldSendRemovalEver(GameObject o) {
+		int id = o.getID();
+		switch (id) {
+			case 11: // empty doorframe
+			case 75: // tutorial island door
+			case 76: // tutorial island door
+			case 77: // tutorial island door
+			case 78: // tutorial island door
+			case 80: // tutorial island door
+			case 81: // tutorial island door
+			case 82: // tutorial island door
+			case 83: // tutorial island door
+			case 84: // tutorial island door
+			case 85: // tutorial island door
+			case 88: // tutorial island door
+			case 89: // tutorial island door
+			case 90: // tutorial island door
+			case 24: // spider web
+			case 16: // blank placeholder
+				return false;
+			default:
+				return true;
 		}
 	}
 

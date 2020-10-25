@@ -217,7 +217,7 @@ public final class Mining implements OpLocTrigger {
 		delay(3);
 
 		if (ifbeginningbatch()) {
-			delay(1); // work around b/c for some reason it doesn't actually delay 3 ticks the first time
+			delay(); // work around b/c for some reason it doesn't actually delay 3 ticks the first time
 		}
 
 		final Item ore = new Item(def.getOreId());

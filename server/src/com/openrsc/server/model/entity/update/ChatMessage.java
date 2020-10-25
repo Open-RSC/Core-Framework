@@ -17,10 +17,12 @@ public class ChatMessage {
 	 */
 	private Mob sender;
 	private String messageString;
+	private boolean muted;
 
 	public ChatMessage(Mob sender, byte[] message) {
 		this.sender = sender;
 		this.setMessage(message);
+		this.muted = false;
 	}
 
 	public ChatMessage(Mob sender, String message, Mob recipient) {
@@ -28,12 +30,21 @@ public class ChatMessage {
 		this.setMessageString(message);
 		this.setMessage(message.getBytes());
 		this.recipient = recipient;
+		this.muted = false;
 	}
 
 	public ChatMessage(Player sender2, String readString) {
 		this.sender = sender2;
 		this.setMessageString(readString);
 		this.setMessage(readString.getBytes());
+		this.muted = false;
+	}
+
+	public ChatMessage(Player sender2, String readString, boolean muted) {
+		this.sender = sender2;
+		this.setMessageString(readString);
+		this.setMessage(readString.getBytes());
+		this.muted = muted;
 	}
 
 	public int getLength() {
@@ -58,6 +69,10 @@ public class ChatMessage {
 
 	public String getMessageString() {
 		return messageString;
+	}
+
+	public boolean getMuted() {
+		return muted;
 	}
 
 	public void setMessageString(String messageString) {
