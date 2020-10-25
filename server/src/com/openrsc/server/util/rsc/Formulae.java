@@ -323,6 +323,10 @@ public final class Formulae {
 	}
 
 	public static boolean calcProductionSuccessful(int levelReq, int skillLevel, boolean stopsFailing, int levelStopFail) {
+		return calcProductionSuccessful(levelReq, skillLevel, stopsFailing, levelStopFail, 1);
+	}
+
+	public static boolean calcProductionSuccessful(int levelReq, int skillLevel, boolean stopsFailing, int levelStopFail, int minFailChance) {
 		int roll = DataConversions.random(1, 256);
 
 		if (skillLevel < levelReq)
@@ -330,7 +334,7 @@ public final class Formulae {
 
 		// min chance is 64/256
 		// skillLevel is the effective one
-		int maxThreshold = stopsFailing ? 256 : 255;
+		int maxThreshold = stopsFailing ? 256 : 256 - minFailChance;
 		int threshold = Math.min(maxThreshold, (int) Math.floor(64 + (skillLevel - 1) * (19200.0D / (levelStopFail * 98))));
 		return roll <= threshold;
 	}
