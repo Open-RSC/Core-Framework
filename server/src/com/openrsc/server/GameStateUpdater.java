@@ -793,9 +793,11 @@ public final class GameStateUpdater {
 				final int offsetY = o.getY() - playerToUpdate.getY();
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
 					if (playerToUpdate.isUsingAuthenticClient()) {
-						packet.writeByte(0xFF);
-						packet.writeByte(offsetX);
-						packet.writeByte(offsetY);
+						if (shouldSendRemovalEver(o)) {
+							packet.writeByte(0xFF);
+							packet.writeByte(offsetX);
+							packet.writeByte(offsetY);
+						}
 					} else {
 						packet.writeShort(60000);
 						packet.writeByte(offsetX);
@@ -829,6 +831,31 @@ public final class GameStateUpdater {
 		}
 		if (changed) {
 			playerToUpdate.write(packet.toPacket());
+		}
+	}
+
+	protected boolean shouldSendRemovalEver(GameObject o) {
+		int id = o.getID();
+		switch (id) {
+			case 11: // empty doorframe
+			case 75: // tutorial island door
+			case 76: // tutorial island door
+			case 77: // tutorial island door
+			case 78: // tutorial island door
+			case 80: // tutorial island door
+			case 81: // tutorial island door
+			case 82: // tutorial island door
+			case 83: // tutorial island door
+			case 84: // tutorial island door
+			case 85: // tutorial island door
+			case 88: // tutorial island door
+			case 89: // tutorial island door
+			case 90: // tutorial island door
+			case 24: // spider web
+			case 16: // blank placeholder
+				return false;
+			default:
+				return true;
 		}
 	}
 
