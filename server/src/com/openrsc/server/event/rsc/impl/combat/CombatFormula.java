@@ -373,39 +373,39 @@ public class CombatFormula {
 		// Everything in this function is just a guess except for Magic longbow.
 		switch (ItemId.getById(bowId)) {
 			case BRONZE_THROWING_DART:
-				return 3;
+				return 33;
 			case IRON_THROWING_DART:
 			case BRONZE_THROWING_KNIFE:
 			case CROSSBOW:
 			case PHOENIX_CROSSBOW:
 			case LONGBOW:
 			case SHORTBOW:
-				return 13;
+				return 38;
 			case STEEL_THROWING_DART:
 			case IRON_THROWING_KNIFE:
 			case BRONZE_SPEAR:
 			case OAK_LONGBOW:
 			case OAK_SHORTBOW:
-				return 23;
+				return 43;
 			case MITHRIL_THROWING_DART:
 			case BLACK_THROWING_KNIFE:
 			case STEEL_THROWING_KNIFE:
 			case IRON_SPEAR:
 			case WILLOW_LONGBOW:
 			case WILLOW_SHORTBOW:
-				return 33;
+				return 48;
 			case ADAMANTITE_THROWING_DART:
 			case MITHRIL_THROWING_KNIFE:
 			case STEEL_SPEAR:
 			case MAPLE_LONGBOW:
 			case MAPLE_SHORTBOW:
-				return 43;
+				return 53;
 			case RUNE_THROWING_DART:
 			case ADAMANTITE_THROWING_KNIFE:
 			case MITHRIL_SPEAR:
 			case YEW_LONGBOW:
 			case YEW_SHORTBOW:
-				return 53;
+				return 58;
 			case RUNE_THROWING_KNIFE:
 			case ADAMANTITE_SPEAR:
 			case MAGIC_LONGBOW:
