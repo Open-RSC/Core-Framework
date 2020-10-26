@@ -89,6 +89,12 @@ public class Cache {
 			throw new NoSuchElementException("No object found for that key: " + key);
 
 		Object value = storage.get(key);
+
+		// in case cache is set with ::setcache
+		if (value instanceof String) {
+			value = Integer.parseInt((String)value);
+		}
+
 		if (!(value instanceof Integer)) {
 			throw new IllegalArgumentException(
 				"Object found, but not an Integer: " + key);

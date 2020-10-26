@@ -28,7 +28,8 @@ public class Bones implements OpInvTrigger {
 
 			int buryAmount = 1;
 			if (config().BATCH_PROGRESSION) {
-				buryAmount = item.getAmount();
+				int invAmount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
+				buryAmount = (item.getAmount() > invAmount) ? invAmount : item.getAmount();
 			}
 
 			startbatch(buryAmount);

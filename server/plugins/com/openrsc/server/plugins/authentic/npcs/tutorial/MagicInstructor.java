@@ -71,6 +71,8 @@ public class MagicInstructor implements TalkNpcTrigger {
 				}
 			}
 		} else {
+			// it is authentic that there is no real check on whether or not the user has cast magic.
+			// the trigger for advancing is as shown here... just talk to the Magic Instructor a bunch.
 			npcsay(player, n, "Well done",
 					"As you get a higher magic level",
 					"You will be able to cast all sorts of interesting spells",

@@ -48,6 +48,8 @@ public final class Moderator implements CommandTrigger {
 			sendAnnouncement(player, command, args);
 		} else if (command.equalsIgnoreCase("kick")) {
 			kickPlayer(player, command, args);
+		} else if (command.equalsIgnoreCase("stayin")) {
+			player.toggleDenyAllLogoutRequests();
 		}
 	}
 
