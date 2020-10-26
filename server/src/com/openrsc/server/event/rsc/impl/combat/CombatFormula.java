@@ -324,42 +324,70 @@ public class CombatFormula {
 		// Most of this is guessed and extrapolated downward from Rune items. We have good guesses on all of the Rune equipment. We also know Bronze arrows.
 		switch (ItemId.getById(arrowId)) {
 			case BRONZE_THROWING_DART:
+			case POISONED_BRONZE_THROWING_DART:
 				return 15;
 			case IRON_THROWING_DART:
+			case POISONED_IRON_THROWING_DART:
 				return 19;
 			case STEEL_THROWING_DART:
+			case POISONED_STEEL_THROWING_DART:
 				return 23;
 			case MITHRIL_THROWING_DART:
+			case POISONED_MITHRIL_THROWING_DART:
 			case BRONZE_ARROWS:
+			case POISON_BRONZE_ARROWS:
+			case CROSSBOW_BOLTS:
+			case POISON_CROSSBOW_BOLTS:
 				return 27;
 			case BRONZE_THROWING_KNIFE:
+			case POISONED_BRONZE_THROWING_KNIFE:
 			case IRON_ARROWS:
+			case POISON_IRON_ARROWS:
 			case ADAMANTITE_THROWING_DART:
+			case POISONED_ADAMANTITE_THROWING_DART:
 				return 31;
 			case STEEL_ARROWS:
+			case POISON_STEEL_ARROWS:
 			case IRON_THROWING_KNIFE:
+			case POISONED_IRON_THROWING_KNIFE:
 			case RUNE_THROWING_DART:
+			case POISONED_RUNE_THROWING_DART:
 			case BRONZE_SPEAR:
+			case POISONED_BRONZE_SPEAR:
 				return 35;
 			case MITHRIL_ARROWS:
+			case POISON_MITHRIL_ARROWS:
 			case STEEL_THROWING_KNIFE:
+			case POISONED_STEEL_THROWING_KNIFE:
 			case BLACK_THROWING_KNIFE:
+			case POISONED_BLACK_THROWING_KNIFE:
+			case OYSTER_PEARL_BOLTS:
 				return 39;
 			case ADAMANTITE_ARROWS:
+			case POISON_ADAMANTITE_ARROWS:
 			case MITHRIL_THROWING_KNIFE:
+			case POISONED_MITHRIL_THROWING_KNIFE:
 			case IRON_SPEAR:
+			case POISONED_IRON_SPEAR:
 				return 43;
 			case RUNE_ARROWS:
+			case POISON_RUNE_ARROWS:
 			case ADAMANTITE_THROWING_KNIFE:
+			case POISONED_ADAMANTITE_THROWING_KNIFE:
 				return 47;
 			case RUNE_THROWING_KNIFE:
+			case POISONED_RUNE_THROWING_KNIFE:
 			case STEEL_SPEAR:
+			case POISONED_STEEL_SPEAR:
 				return 51;
 			case MITHRIL_SPEAR:
+			case POISONED_MITHRIL_SPEAR:
 				return 59;
 			case ADAMANTITE_SPEAR:
+			case POISONED_ADAMANTITE_SPEAR:
 				return 67;
 			case RUNE_SPEAR:
+			case POISONED_RUNE_SPEAR:
 				return 75;
 			default:
 				return 0;
@@ -373,45 +401,64 @@ public class CombatFormula {
 		// Everything in this function is just a guess except for Magic longbow.
 		switch (ItemId.getById(bowId)) {
 			case BRONZE_THROWING_DART:
+			case POISONED_BRONZE_THROWING_DART:
 				return 33;
 			case IRON_THROWING_DART:
+			case POISONED_IRON_THROWING_DART:
 			case BRONZE_THROWING_KNIFE:
+			case POISONED_BRONZE_THROWING_KNIFE:
 			case CROSSBOW:
 			case PHOENIX_CROSSBOW:
 			case LONGBOW:
 			case SHORTBOW:
 				return 38;
 			case STEEL_THROWING_DART:
+			case POISONED_STEEL_THROWING_DART:
 			case IRON_THROWING_KNIFE:
+			case POISONED_IRON_THROWING_KNIFE:
 			case BRONZE_SPEAR:
+			case POISONED_BRONZE_SPEAR:
 			case OAK_LONGBOW:
 			case OAK_SHORTBOW:
 				return 43;
 			case MITHRIL_THROWING_DART:
+			case POISONED_MITHRIL_THROWING_DART:
 			case BLACK_THROWING_KNIFE:
+			case POISONED_BLACK_THROWING_KNIFE:
 			case STEEL_THROWING_KNIFE:
+			case POISONED_STEEL_THROWING_KNIFE:
 			case IRON_SPEAR:
+			case POISONED_IRON_SPEAR:
 			case WILLOW_LONGBOW:
 			case WILLOW_SHORTBOW:
 				return 48;
 			case ADAMANTITE_THROWING_DART:
+			case POISONED_ADAMANTITE_THROWING_DART:
 			case MITHRIL_THROWING_KNIFE:
+			case POISONED_MITHRIL_THROWING_KNIFE:
 			case STEEL_SPEAR:
+			case POISONED_STEEL_SPEAR:
 			case MAPLE_LONGBOW:
 			case MAPLE_SHORTBOW:
 				return 53;
 			case RUNE_THROWING_DART:
+			case POISONED_RUNE_THROWING_DART:
 			case ADAMANTITE_THROWING_KNIFE:
+			case POISONED_ADAMANTITE_THROWING_KNIFE:
 			case MITHRIL_SPEAR:
+			case POISONED_MITHRIL_SPEAR:
 			case YEW_LONGBOW:
 			case YEW_SHORTBOW:
 				return 58;
 			case RUNE_THROWING_KNIFE:
+			case POISONED_RUNE_THROWING_KNIFE:
 			case ADAMANTITE_SPEAR:
+			case POISONED_ADAMANTITE_SPEAR:
 			case MAGIC_LONGBOW:
 			case MAGIC_SHORTBOW:
 				return 63;
 			case RUNE_SPEAR:
+			case POISONED_RUNE_SPEAR:
 				return 73;
 			default:
 				return 0;
