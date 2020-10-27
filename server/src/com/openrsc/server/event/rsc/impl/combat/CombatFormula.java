@@ -96,7 +96,7 @@ public class CombatFormula {
 	 * @return The randomized value.
 	 */
 	public static int calculateGodSpellDamage(final Player source) {
-		return calculateDamage(source.isCharged() ? 18 : 25);
+		return calculateDamage(source.isCharged() ? 25 : 18);
 	}
 
 	/**
