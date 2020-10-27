@@ -132,10 +132,16 @@ public class CombatEvent extends GameTickEvent {
 			Player targetPlayer = (Player) target;
 			// side effects that may occur during combat (like poison) are regardless protect
 			hitter.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatSideEffectScript(hitter, target);
-			// Paralyze monster stops NPC from damaging players.
-			if (hitter.isNpc() && targetPlayer.getPrayers().isPrayerActivated(Prayers.PARALYZE_MONSTER)) {
-				hitter.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatScript(hitter, target);
-				return;
+
+			if (hitter.isNpc()) {
+				// If the hitter is an NPC, we want to check and execute their combat script
+				// However if the player has the paralyze prayer on, we just want to return
+				// so that the NPC is stopped from damaging the player.
+				if (targetPlayer.getPrayers().isPrayerActivated(Prayers.PARALYZE_MONSTER)) {
+					return;
+				} else {
+					hitter.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatScript(hitter, target);
+				}
 			}
 		}
 
