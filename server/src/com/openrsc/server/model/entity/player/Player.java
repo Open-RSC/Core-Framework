@@ -3184,7 +3184,7 @@ public final class Player extends Mob {
 		if (this.isPlayer() && getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_LIFE.id())
 			&& (!this.getLocation().inWilderness()
 			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
-			if (((float) this.getSkills().getLevel(3)) / ((float) this.getSkills().getMaxStat(3)) <= 0.1f) {
+			if (((float) this.getSkills().getLevel(Skills.HITS)) / ((float) this.getSkills().getMaxStat(Skills.HITS)) <= 0.1f) {
 				this.resetCombatEvent();
 				this.resetRange();
 				this.resetAll();

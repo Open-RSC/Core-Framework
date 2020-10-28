@@ -170,7 +170,7 @@ public class CombatEvent extends GameTickEvent {
 			updateParty((Player)hitter);
 		}
 
-		if (target.getSkills().getLevel(3) > 0) {
+		if (target.getSkills().getLevel(Skills.HITS) > 0) {
 
 			// NPCs can run special combat scripts.
 			// Custom: Ring of Life execution

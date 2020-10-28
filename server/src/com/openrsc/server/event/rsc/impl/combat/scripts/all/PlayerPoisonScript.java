@@ -16,14 +16,14 @@ public class PlayerPoisonScript implements CombatSideEffectScript {
 			if (player.isAntidoteProtected()) {
 				return;
 			}
-			player.setPoisonDamage(player.getSkills().getLevel(3));
+			player.setPoisonDamage(48);
 			player.startPoisonEvent();
 		}
 	}
 
 	@Override
 	public boolean shouldExecute(Mob attacker, Mob victim) {
-		if (attacker.isPlayer() && victim.isPlayer() && DataConversions.random(0, 100) <= 10) {
+		if (attacker.isPlayer() && victim.isPlayer() && DataConversions.random(1, 4) == 1) {
 			Player player = (Player) attacker;
 			if (player.getDuel().isDuelActive()) {
 				return false;

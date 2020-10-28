@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -81,11 +82,11 @@ public class PrayerHandler implements PacketHandler {
 		int packetOne = OpcodeIn.PRAYER_ACTIVATED.getOpcode();
 		int packetTwo = OpcodeIn.PRAYER_DEACTIVATED.getOpcode();
 		if (pID == packetOne) {
-			if (player.getSkills().getMaxStat(5) < prayer.getReqLevel()) {
+			if (player.getSkills().getMaxStat(Skills.PRAYER) < prayer.getReqLevel()) {
 				player.setSuspiciousPlayer(true, "max stat prayer < req level");
 				player.message("Your prayer ability is not high enough to use this prayer");
 			}
-			if (player.getSkills().getLevel(5) <= 0) {
+			if (player.getSkills().getLevel(Skills.PRAYER) <= 0) {
 				player.getPrayers().setPrayer(prayerID, false);
 				player.message("You have run out of prayer points. Return to a church to recharge");
 			}
