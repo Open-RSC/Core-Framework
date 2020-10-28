@@ -197,7 +197,9 @@ public class Default implements DefaultHandler,
 		player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " dropped " + item.getDef(player.getWorld()).getName() + " x"
 			+ DataConversions.numberFormat(groundItem.getAmount()) + " at " + player.getLocation().toString()));
 
-		if (totalToDrop > 1) {
+		// Display the Dropping x/y message only if we want batching,
+		// we're dropping more than one item, and the item isn't a stack.
+		if (config().BATCH_PROGRESSION && totalToDrop > 1 && removingThisIteration == 1) {
 			player.message("Dropping " + (totalToDrop - amountToDrop) + "/" + totalToDrop
 				+ " " + player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).getName());
 		}
