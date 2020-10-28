@@ -120,6 +120,7 @@ public final class Player extends Mob {
 	private int clientVersion = 0;
 	public int preferredIcon = -1;
 	private boolean denyAllLogoutRequests = false;
+	private boolean qolOptOutWarned = false;
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -3254,4 +3255,19 @@ public final class Player extends Mob {
 	public boolean isUsingAuthenticClient() {
 		return this.clientVersion == 235;
 	}
+
+	public boolean getQolOptOutWarned() {
+		return this.qolOptOutWarned;
+	}
+	public void setQolOptOutWarned(boolean warned) {
+		this.qolOptOutWarned = warned;
+	}
+
+	public void setQolOptOut() {
+		getCache().store("qol_optout", true);
+	}
+	public boolean getQolOptOut() {
+		return getCache().hasKey("qol_optout");
+	}
+
 }

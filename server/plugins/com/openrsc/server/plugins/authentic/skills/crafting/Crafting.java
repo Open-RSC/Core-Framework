@@ -208,7 +208,7 @@ public class Crafting implements UseInvTrigger,
 		boolean furnace = obj.getID() == 118 || obj.getID() == 813;
 		boolean furnaceItem = DataConversions.inArray(itemsFurnance, item.getCatalogId());
 		boolean jewelryBar = item.getCatalogId() == ItemId.SILVER_BAR.id() || item.getCatalogId() == ItemId.GOLD_BAR.id();
-		boolean wantBetterJewelryCrafting = player.getConfig().WANT_BETTER_JEWELRY_CRAFTING;
+		boolean wantBetterJewelryCrafting = player.getConfig().WANT_BETTER_JEWELRY_CRAFTING && !player.getQolOptOut();
 		boolean potteryOven = obj.getID() == 178;
 		boolean potteryItem = DataConversions.inArray(itemsOven, item.getCatalogId());
 		boolean spinningWheel = obj.getID() == 179;
