@@ -3,7 +3,6 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.Point;
-import com.openrsc.server.model.action.WalkToPointAction;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -48,35 +47,32 @@ public class GroundItemTake implements PacketHandler {
 		if (PathValidation.isMobBlocking(player, location.getX(), location.getY())) {
 			distance = 1;
 		}
-		player.setWalkToAction(new WalkToPointAction(player, item.getLocation(), distance) {
-			public void executeInternal() {
-				if (getPlayer().isBusy() || getPlayer().isRanging() || item == null || item.isRemoved()
-					|| getPlayer().getRegion().getItem(itemId, getLocation(), getPlayer()) == null || !getPlayer().canReach(item)
-					|| item.getAmount() < 1) {
-					return;
-				}
 
-				if (item.getDef().isMembersOnly() && !getPlayer().getConfig().MEMBER_WORLD) {
-					getPlayer().sendMemberErrorMessage();
-					return;
-				}
-				if (item.getLocation().inWilderness() && !item.belongsTo(getPlayer()) && item.getAttribute("playerKill", false)
-					&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
-					|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
-					getPlayer().message("You're an Iron Man, so you can't loot items from players.");
-					return;
-				}
-				if (!item.belongsTo(getPlayer())
-					&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
-					|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
-					getPlayer().message("You're an Iron Man, so you can't take items that other players have dropped.");
-					return;
-				}
+		if (player.isBusy() || player.isRanging() || item == null || item.isRemoved()
+			|| player.getRegion().getItem(itemId, location, player) == null || !player.canReach(item)
+			|| item.getAmount() < 1) {
+			return;
+		}
 
-				getPlayer().resetAll();
+		if (item.getDef().isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
+			player.sendMemberErrorMessage();
+			return;
+		}
+		if (item.getLocation().inWilderness() && !item.belongsTo(player) && item.getAttribute("playerKill", false)
+			&& (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+			|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id()))) {
+			player.message("You're an Iron Man, so you can't loot items from players.");
+			return;
+		}
+		if (!item.belongsTo(player)
+			&& (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
+			|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id()))) {
+			player.message("You're an Iron Man, so you can't take items that other players have dropped.");
+			return;
+		}
 
-				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TakeObj", new Object[]{getPlayer(), item}, this);
-			}
-		});
+		player.resetAll();
+
+		player.getWorld().getServer().getPluginHandler().handlePlugin(player, "TakeObj", new Object[]{player, item});
 	}
 }
