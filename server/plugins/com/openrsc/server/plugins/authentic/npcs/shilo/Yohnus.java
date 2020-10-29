@@ -33,7 +33,7 @@ public class Yohnus implements TalkNpcTrigger, OpBoundTrigger {
 	}
 
 	private void yohnusChat(Player player, Npc n) {
-		boolean fastPayConfig = player.getWorld().getServer().getConfig().FASTER_YOHNUS;
+		boolean fastPayConfig = player.getWorld().getServer().getConfig().FASTER_YOHNUS && !player.getQolOptOut();
 		ArrayList<String> options = new ArrayList<>();
 		// Authentic options
 		options.add("Use Furnace - 20 Gold");
@@ -91,7 +91,7 @@ public class Yohnus implements TalkNpcTrigger, OpBoundTrigger {
 			}
 
 			// Custom fast pay feature
-			boolean fastPayConfig = player.getWorld().getServer().getConfig().FASTER_YOHNUS;
+			boolean fastPayConfig = player.getWorld().getServer().getConfig().FASTER_YOHNUS && !player.getQolOptOut();
 			boolean fastPay = (boolean)player.getAttribute("fast_yohnus", false);
 			if (fastPayConfig && fastPay) {
 				if (takeFromBank(player)) {

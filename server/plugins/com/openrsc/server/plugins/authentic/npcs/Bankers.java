@@ -123,7 +123,12 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				player.getY() - 2, player.getY() + 2);
 			if (banker == null) return;
 			if (command.equalsIgnoreCase("Bank") && config().RIGHT_CLICK_BANK) {
-				quickFeature(n, player, false);
+				if (!player.getQolOptOut()) {
+					quickFeature(n, player, false);
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "Right click banking is a QoL feature which you are opted out of.");
+					player.playerServerMessage(MessageType.QUEST, "Consider using RSC+ so that you don't see the option.");
+				}
 			} else if (command.equalsIgnoreCase("Collect") && config().SPAWN_AUCTION_NPCS) {
 				quickFeature(n, player, true);
 			}
@@ -181,7 +186,11 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				player.playerServerMessage(MessageType.QUEST, "Your bank seems to be too full to deposit these notes at this time.");
 			}
 		} else if (player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
-			quickFeature(npc, player, false);
+			if (!player.getQolOptOut()) {
+				quickFeature(npc, player, false);
+			} else {
+				player.playerServerMessage(MessageType.QUEST, "Using an item on a banker to open the bank is a QoL feature which you are opted out of.");
+			}
 		}
 	}
 

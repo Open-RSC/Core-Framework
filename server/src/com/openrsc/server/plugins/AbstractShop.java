@@ -7,6 +7,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.OpNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.util.rsc.MessageType;
 
 public abstract class AbstractShop implements OpNpcTrigger, TalkNpcTrigger {
 
@@ -23,9 +24,14 @@ public abstract class AbstractShop implements OpNpcTrigger, TalkNpcTrigger {
 			player.getY() - 2, player.getY() + 2);
 		if (storeOwner == null) return;
 		if (command.equalsIgnoreCase("Trade") && player.getConfig().RIGHT_CLICK_TRADE) {
-			Shop shop = getShop();
-			player.setAccessingShop(shop);
-			ActionSender.showShop(player, shop);
+			if (!player.getQolOptOut()) {
+				Shop shop = getShop();
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
+			} else {
+				player.playerServerMessage(MessageType.QUEST, "Right click trading is a QoL feature which you are opted out of.");
+				player.playerServerMessage(MessageType.QUEST, "Consider using RSC+ so that you don't see the option.");
+			}
 		}
 	}
 
