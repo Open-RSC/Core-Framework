@@ -138,7 +138,7 @@ public class ItemUseOnObject implements PacketHandler {
 				return;
 			}
 
-			// Players can't use notes on anything
+			// Currently, using notes on scenery is not supported.
 			if (item.getItemStatus().getNoted())
 			{
 				player.message("Nothing interesting happens");
