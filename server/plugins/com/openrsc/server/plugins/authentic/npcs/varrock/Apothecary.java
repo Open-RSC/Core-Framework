@@ -65,7 +65,7 @@ public final class Apothecary implements
 		options.add("Do you know a potion to make hair fall out?");
 		options.add("Have you got any good potions to give way?");
 
-		if (config().WANT_APOTHECARY_QOL) {
+		if (config().WANT_APOTHECARY_QOL && !player.getQolOptOut()) {
 			options.add("Could you empty these vials?");
 			options.add("Could you fill these vials with water?");
 		}
@@ -115,7 +115,7 @@ public final class Apothecary implements
 					npcsay(player, npc, "Sorry, charity is not my strong point");
 				}
 			}
-		} else if (option == 3) { // Empty vials
+		} else if (option == 3 && !player.getQolOptOut()) { // Empty vials
 			int costPerVial = 50;
 
 			int potionIds[] = {
@@ -233,7 +233,7 @@ public final class Apothecary implements
 					"Unfortunately, it looks like you don't have enough gold to cover the costs",
 					"Feel free to come back when you have more gold or less potions");
 			}
-		} else if (option == 4) { // Fill with water
+		} else if (option == 4 && !player.getQolOptOut()) { // Fill with water
 			int costPerVial = 50;
 			npcsay(player, npc, "Yes, but I'll have to charge you "
 				+ costPerVial + " gold per vial to cover my water bill");

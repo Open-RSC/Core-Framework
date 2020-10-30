@@ -169,7 +169,9 @@ public class DoorAction {
 		switch (obj.getID()) {
 
 			case 54: // Dragon Slayer: Door out of maze near entrance
-				if (player.getX() == 339) {
+				// + escape doors of basement
+				// all are openable from east (inside room) and locked on west side (outside room)
+				if (player.getX() == obj.getX() - 1) {
 					doDoor(obj, player);
 				} else {
 					player.message("this door is locked");

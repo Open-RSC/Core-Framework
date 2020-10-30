@@ -1685,7 +1685,7 @@ public final class Admins implements CommandTrigger {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id]");
 			return;
 		}
-		player.message(j.getSkills().getLevel(0) + " " + j.getSkills().getLevel(1) + " " + j.getSkills().getLevel(2) + " " + j.getSkills().getLevel(3) + " ");
+		player.message(j.getSkills().getLevel(Skills.ATTACK) + " " + j.getSkills().getLevel(Skills.DEFENSE) + " " + j.getSkills().getLevel(Skills.STRENGTH) + " " + j.getSkills().getLevel(Skills.HITS) + " ");
 		player.message(j.getCombatLevel() + " cb");
 	}
 
@@ -1710,7 +1710,7 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 		//j.setStrPotEventNpc(new StrPotEventNpc(j));
-		player.message(j.getSkills().getLevel(0) + " " + j.getSkills().getLevel(1) + " " + j.getSkills().getLevel(2) + " " + j.getSkills().getLevel(3) + " ");
+		player.message(j.getSkills().getLevel(Skills.ATTACK) + " " + j.getSkills().getLevel(Skills.DEFENSE) + " " + j.getSkills().getLevel(Skills.STRENGTH) + " " + j.getSkills().getLevel(Skills.HITS) + " ");
 		player.message(j.getCombatLevel() + " cb");
 	}
 
@@ -1768,11 +1768,11 @@ public final class Admins implements CommandTrigger {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc id] [att lvl] [def lvl] [str lvl] [hits lvl]");
 			return;
 		}
-		j.getSkills().setLevel(0, att);
-		j.getSkills().setLevel(1, def);
-		j.getSkills().setLevel(2, str);
-		j.getSkills().setLevel(3, hp);
-		player.message(j.getSkills().getLevel(0) + " " + j.getSkills().getLevel(1) + " " + j.getSkills().getLevel(2) + " " + j.getSkills().getLevel(3) + " ");
+		j.getSkills().setLevel(Skills.ATTACK, att);
+		j.getSkills().setLevel(Skills.DEFENSE, def);
+		j.getSkills().setLevel(Skills.STRENGTH, str);
+		j.getSkills().setLevel(Skills.HITS, hp);
+		player.message(j.getSkills().getLevel(Skills.ATTACK) + " " + j.getSkills().getLevel(Skills.DEFENSE) + " " + j.getSkills().getLevel(Skills.STRENGTH) + " " + j.getSkills().getLevel(Skills.HITS) + " ");
 	}
 
 	private void playerSkull(Player player, String command, String[] args) {

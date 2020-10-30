@@ -218,6 +218,11 @@ public class PathValidation {
 		return false; // No collisions
 	}
 
+	// returns true if the point is *not* blocked by anything
+	static boolean checkPoint(World world, Point point) {
+		return (world.getTile(point.getX(), point.getY()).traversalMask & CollisionFlag.FULL_BLOCK) == 0;
+	}
+
 	private static boolean checkNortheast(World world, Point curPoint) {
 
 		int x = curPoint.getX();

@@ -1707,6 +1707,17 @@ public class ActionSender {
                 sendPlayerOnTutorial(player);
                 sendLoginBox(player);
 
+				sendPlayerOnBlackHole(player);
+				if (player.getLastLogin() == 0L) {
+					sendAppearanceScreen(player);
+					for (int itemId : player.getWorld().getServer().getConstants().STARTER_ITEMS) {
+						Item i = new Item(itemId);
+						player.getCarriedItems().getInventory().add(i, false);
+					}
+					//Block PK chat by default.
+					player.getCache().set("setting_block_global", 3);
+				}
+
                 sendInventory(player);
                 player.checkEquipment();
 
@@ -1724,21 +1735,7 @@ public class ActionSender {
 				if (elixir > -1)
 					sendElixirTimer(player, player.getElixir());
 
-
-				sendPlayerOnBlackHole(player);
-				if (player.getLastLogin() == 0L) {
-					sendAppearanceScreen(player);
-					for (int itemId : player.getWorld().getServer().getConstants().STARTER_ITEMS) {
-						Item i = new Item(itemId);
-						player.getCarriedItems().getInventory().add(i, false);
-					}
-					//Block PK chat by default.
-					player.getCache().set("setting_block_global", 3);
-				}
-
 				sendWakeUp(player, false, true);
-
-
 
 				if (player.isMuted()) {
 					sendMessage(player, "You are muted for "
@@ -1748,8 +1745,6 @@ public class ActionSender {
 				if (player.getLocation().inTutorialLanding()) {
 					sendBox(player, "@gre@Welcome to the " + player.getConfig().SERVER_NAME + " tutorial.% %Most actions are performed with the mouse. To walk around left click on the ground where you want to walk. To interact with something, first move your mouse pointer over it. Then left click or right click to perform different actions% %Try left clicking on one of the guides to talk to her. She will tell you more about how to play", true);
 				}
-
-
 
 				sendNpcKills(player);
 
@@ -1787,11 +1782,21 @@ public class ActionSender {
 
 	public static void sendOnlineList(Player player, ArrayList<Player> players, ArrayList<String> locations, int online) {
 	    if (player.isUsingAuthenticClient()) {
-	        String outString = String.format("@lre@Players online@gre@(%d)@lre@: ", online);
-            for (int i = 0; i < players.size(); i++) {
-                outString += String.format("@whi@%s @yel@(%s)%s", players.get(i).getUsername(), locations.get(i), i + 1 == players.size() ? "" : "@mag@;");
-            }
-            sendMessage(player, outString);
+	    	StringBuilder onlinePlayers = new StringBuilder(String.format("@lre@Players online @gre@(%d) %%", online));
+			for (int i = 0; i < players.size(); i++) {
+				onlinePlayers.append("@whi@");
+				onlinePlayers.append(players.get(i).getUsername());
+				if (locations.get(i).length() > 0) {
+					onlinePlayers.append(" @yel@(");
+					onlinePlayers.append(locations.get(i));
+					onlinePlayers.append(")");
+				}
+				if (i + 1 != players.size()) {
+					onlinePlayers.append(" @mag@; ");
+				}
+			}
+
+			ActionSender.sendBox(player, onlinePlayers.toString(), true);
         } else {
             PacketBuilder pb = new PacketBuilder(Opcode.SEND_ONLINE_LIST.opcode);
             pb.writeShort(online);

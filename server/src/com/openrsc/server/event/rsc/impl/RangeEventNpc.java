@@ -155,8 +155,8 @@ public class RangeEventNpc extends GameTickEvent {
 						((Player) target).message(getOwner() + " is shooting at you!");
 					}
 					if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(11).getName().toLowerCase().contains("poison") && target.isPlayer()) {
-						if (DataConversions.random(0, 100) <= 10) {
-							target.setPoisonDamage(target.getSkills().getMaxStat(Skills.HITS));
+						if (DataConversions.random(1, 8) == 1) {
+							target.setPoisonDamage(20);
 							target.startPoisonEvent();
 						}
 					}

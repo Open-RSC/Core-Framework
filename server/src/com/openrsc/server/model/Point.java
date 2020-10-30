@@ -3,6 +3,8 @@ package com.openrsc.server.model;
 import com.openrsc.server.model.entity.WildernessLocation;
 import com.openrsc.server.model.entity.WildernessLocation.WildState;
 import com.openrsc.server.model.world.Area;
+import com.openrsc.server.model.world.World;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.ArrayList;
@@ -475,5 +477,72 @@ public class Point {
 
 	public boolean inArea(Area area) {
 		return area.inBounds(this);
+	}
+
+	public Point furthestWalkableTile(World world, int radius) {
+		Point candidatePoint = new Point(this.x, this.y);
+		int xOffset = radius;
+		int yOffset = radius;
+
+		// 1st check if we can go directly adjacent at the requested radius. (this is considered friendly)
+		// 2nd check if we can go to one of the corners.
+		// 3rd, reduce radius & try again.
+		// no need to check every single square in the radius. If these aren't possible, probably it is not possible.
+		int initialDir = DataConversions.random(0, 3);
+		for (; radius > 0; radius--) {
+			for (int attempt = 0; attempt < 8; attempt++) {
+				switch ((initialDir + attempt) % 4) {
+					case 0:
+						if (attempt < 4) {
+							xOffset = radius;
+							yOffset = 0;
+						} else {
+							xOffset = radius;
+							yOffset = radius;
+						}
+						break;
+					case 1:
+						if (attempt < 4) {
+							xOffset = -radius;
+							yOffset = 0;
+						} else {
+							xOffset = -radius;
+							yOffset = radius;
+						}
+						break;
+					case 2:
+						if (attempt < 4) {
+							xOffset = 0;
+							yOffset = radius;
+						} else {
+							xOffset = radius;
+							yOffset = -radius;
+						}
+						break;
+					case 3:
+						if (attempt < 4) {
+							xOffset = 0;
+							yOffset = -radius;
+						} else {
+							xOffset = -radius;
+							yOffset = -radius;
+						}
+						break;
+					default:
+						// not possible to reach default
+						xOffset = radius;
+						yOffset = radius;
+						break;
+				}
+				candidatePoint = new Point(this.x + xOffset, this.y + yOffset);
+
+				if (PathValidation.checkPath(world, candidatePoint, this) && PathValidation.checkPoint(world, candidatePoint)) {
+					return candidatePoint;
+				}
+			}
+		}
+
+		// Finally, no possible tile is walkable. We will agree to teleport directly at the player
+		return this;
 	}
 }

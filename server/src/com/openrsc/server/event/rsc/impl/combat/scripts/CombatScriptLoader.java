@@ -21,6 +21,7 @@ public class CombatScriptLoader {
 	private final Map<String, CombatScript> combatScripts = new HashMap<String, CombatScript>();
 	private final Map<String, OnCombatStartScript> combatStartScripts = new HashMap<String, OnCombatStartScript>();
 	private final Map<String, CombatAggroScript> combatAggroScripts = new HashMap<String, CombatAggroScript>();
+	private final Map<String, CombatSideEffectScript> combatSideEffectScripts = new HashMap<String, CombatSideEffectScript>();
 
 	private final Server server;
 
@@ -43,6 +44,10 @@ public class CombatScriptLoader {
 				CombatAggroScript script = (CombatAggroScript) classInstance;
 				combatAggroScripts.put(classInstance.getClass().getName(), script);
 			}
+			if (classInstance instanceof CombatSideEffectScript) {
+				CombatSideEffectScript script = (CombatSideEffectScript) classInstance;
+				combatSideEffectScripts.put(classInstance.getClass().getName(), script);
+			}
 		}
 	}
 
@@ -63,6 +68,14 @@ public class CombatScriptLoader {
 			}
 		} catch (final Throwable e) {
 			LOGGER.catching(e);
+		}
+	}
+
+	public void checkAndExecuteCombatSideEffectScript(final Mob attacker, final Mob victim) {
+		for (final CombatSideEffectScript script : combatSideEffectScripts.values()) {
+			if (script.shouldExecute(attacker, victim)) {
+				script.executeScript(attacker, victim);
+			}
 		}
 	}
 
@@ -103,6 +116,7 @@ public class CombatScriptLoader {
 		combatScripts.clear();
 		combatStartScripts.clear();
 		combatAggroScripts.clear();
+		combatSideEffectScripts.clear();
 	}
 
 	public Server getServer() {

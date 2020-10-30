@@ -56,7 +56,7 @@ public final class Event implements CommandTrigger {
 			badSyntaxPrefix = config().BAD_SYNTAX_PREFIX;
 		}
 
-		if (command.equalsIgnoreCase("teleport") || command.equalsIgnoreCase("tp") || command.equalsIgnoreCase("tele") || command.equalsIgnoreCase("town") || command.equalsIgnoreCase("goto") || command.equalsIgnoreCase("tpto") || command.equalsIgnoreCase("teleportto")) {
+		if (command.equalsIgnoreCase("teleport") || command.equalsIgnoreCase("tp") || command.equalsIgnoreCase("tele") || command.equalsIgnoreCase("town") || command.equalsIgnoreCase("goto") || command.equalsIgnoreCase("tpto") || command.equalsIgnoreCase("teleportto") || command.equalsIgnoreCase("tpat")) {
 			teleportCommand(player, command, args);
 		}
 		else if (command.equalsIgnoreCase("return")) {
@@ -103,15 +103,17 @@ public final class Event implements CommandTrigger {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [town/player] OR ");
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [town/player] OR ");
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [x] [y] OR");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [radius] OR");
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [x] [y]");
 			return;
 		}
 
 		Player targetPlayer = null;
-		boolean isTownOrPlayer = false;
+		boolean isTownOrPlayer = false; // false if input is an X & Y coordinate.
 		String town = "";
 		int x = -1;
 		int y = -1;
+		int radius = 3;
 		Point originalLocation;
 		Point teleportTo;
 
@@ -136,7 +138,19 @@ public final class Event implements CommandTrigger {
 			}
 			catch(NumberFormatException ex) {
 				targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
-				town = args[1];
+				try {
+					radius = Integer.parseInt(args[1]);
+					if (radius < 0) {
+						radius = 0;
+					}
+					if (radius > 16) {
+						radius = 16;
+					}
+					town = args[0];
+					targetPlayer = player;
+				} catch (NumberFormatException ex1) {
+					town = args[1];
+				}
 				isTownOrPlayer = true;
 			}
 		}
@@ -200,8 +214,11 @@ public final class Event implements CommandTrigger {
 					player.message(messagePrefix + "You can not teleport to an invisible player.");
 					return;
 				}
-
-				teleportTo = tpTo.getLocation();
+				if (command.equalsIgnoreCase("tpat") || radius == 0) {
+					teleportTo = tpTo.getLocation();
+				} else {
+					teleportTo = tpTo.getLocation().furthestWalkableTile(player.getWorld(), radius);
+				}
 			}
 		}
 		else {

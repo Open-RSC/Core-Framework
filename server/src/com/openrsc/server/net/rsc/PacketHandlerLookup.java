@@ -13,7 +13,7 @@ public class PacketHandlerLookup {
 	private static final Logger LOGGER = LogManager.getLogger();
 	static {
 
-		bind(OpcodeIn.HEARTBEAT.getOpcode(), Ping.class);
+		bind(OpcodeIn.HEARTBEAT.getOpcode(), Heatbeat.class);
 
 		bind(OpcodeIn.WALK_TO_ENTITY.getOpcode(), WalkRequest.class);
 		bind(OpcodeIn.WALK_TO_POINT.getOpcode(), WalkRequest.class);

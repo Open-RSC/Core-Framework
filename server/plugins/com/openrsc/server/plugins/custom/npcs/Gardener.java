@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.AbstractShop;
+import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -99,9 +100,14 @@ public final class Gardener extends AbstractShop {
 			player.getY() - 2, player.getY() + 2);
 		if (gardener == null) return;
 		if (command.equalsIgnoreCase("Trade") && config().RIGHT_CLICK_TRADE) {
-			Shop shop = getShop();
-			player.setAccessingShop(shop);
-			ActionSender.showShop(player, shop);
+			if (!player.getQolOptOut()) {
+				Shop shop = getShop();
+				player.setAccessingShop(shop);
+				ActionSender.showShop(player, shop);
+			} else {
+				player.playerServerMessage(MessageType.QUEST, "Right click trading is a QoL feature which you are opted out of.");
+				player.playerServerMessage(MessageType.QUEST, "Consider using RSC+ so that you don't see the option.");
+			}
 		}
 	}
 

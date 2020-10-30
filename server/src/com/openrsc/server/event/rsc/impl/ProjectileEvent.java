@@ -65,7 +65,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (opponent.isPlayer()) {
 				if (((Player) opponent).getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_RECOIL.id())) {
 					recoilDamage((Player) opponent, caster, damage);
-				} else if (opponent.getSkills().getLevel(3) > 0) {
+				} else if (opponent.getSkills().getLevel(Skills.HITS) > 0) {
 					if (((Player) opponent).checkRingOfLife(caster))
 						return;
 				}

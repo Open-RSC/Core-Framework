@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.UseBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.util.rsc.Formulae;
@@ -31,9 +32,8 @@ public class CutWeb implements UseBoundTrigger,
 			delay(3);
 			if (Formulae.cutWeb()) {
 				player.message("You slice through the web");
-				delay();
-				delloc(obj);
-				addloc(obj.getWorld(), obj.getLoc(), 30000);
+				ActionSender.sendSound(player, "combat1");
+				changeloc(obj, 30000, 16);
 			} else {
 				player.message("You fail to cut through it");
 				delay();

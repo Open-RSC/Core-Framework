@@ -133,10 +133,17 @@ public class ItemUseOnObject implements PacketHandler {
 				item = player.getCarriedItems().getEquipment().get(slotID - Inventory.MAX_SIZE);
 			} else
 				item = player.getCarriedItems().getInventory().get(slotID);
-			if (object.getType() == 1 || item == null || item.getItemStatus().getNoted()) { // This
+			if (object.getType() == 1 || item == null) { // This
 				player.setSuspiciousPlayer(true, "null item or object");
 				return;
 			}
+
+			// Currently, using notes on scenery is not supported.
+			if (item.getItemStatus().getNoted())
+			{
+				player.message("Nothing interesting happens");
+			}
+
 			handleObject(player, object.getLocation(), object, item);
 		}
 	}

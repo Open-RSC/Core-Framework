@@ -8,6 +8,7 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.util.rsc.MessageType;
 
 public final class BankHandler implements PacketHandler {
 
@@ -58,8 +59,16 @@ public final class BankHandler implements PacketHandler {
 				}
 
 				if (!player.isUsingAuthenticClient()) {
-					if (player.getConfig().WANT_BANK_NOTES)
+					if (player.getConfig().WANT_BANK_NOTES) {
 						wantsNotes = packet.readByte() == 1;
+						if (player.getQolOptOut()) {
+							if (wantsNotes) {
+								player.playerServerMessage(MessageType.QUEST, "Sorry, but you may not withdraw bank notes, as your account is opted out of QoL features.");
+								player.playerServerMessage(MessageType.QUEST, "Consider using RSC+ so that you don't see the option.");
+								wantsNotes = false;
+							}
+						}
+					}
 				}
 
 				amount = Math.min(player.getBank().countId(catalogID), amount);
