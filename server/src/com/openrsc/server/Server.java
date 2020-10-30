@@ -758,6 +758,9 @@ public class Server implements Runnable {
 			if (!getDatabase().columnExists("logins", "clientVersion")) {
 				getDatabase().addColumn("logins", "clientVersion", "INT (11)");
 			}
+			if (!getDatabase().columnExists("players", "transfer")) {
+				getDatabase().addColumn("players", "transfer", "INT (11)");
+			}
 			return true;
 		} catch (GameDatabaseException e) {
 			LOGGER.error(e.toString());

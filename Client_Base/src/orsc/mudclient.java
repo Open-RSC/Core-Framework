@@ -11909,7 +11909,7 @@ public final class mudclient implements Runnable {
 				this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 				this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 			}
-			this.packetHandler.getClientStream().newPacket(78);
+			this.packetHandler.getClientStream().newPacket(2);
 			this.packetHandler.getClientStream().bufferBits.putString(user);
 			this.packetHandler.getClientStream().bufferBits.putString(pass);
 			if (wantEmail()) {
@@ -11955,7 +11955,6 @@ public final class mudclient implements Runnable {
 				showLoginScreenStatus("Username must be 2-12", "characters long!");
 				return;
 			}
-
 			if (registerResponse == 8) {
 				showLoginScreenStatus("Username cannot", "contain \"Mod\"!");
 				return;

@@ -23,7 +23,7 @@ services:
       - ./server/inc/databases:/var/lib/mysql
       - ./server/inc/innodb.cnf:/etc/mysql/conf.d/innodb.cnf:ro
 
-networks:
+networks: # Required for connectivity with seperate docker-compose web framework
   default:
     external:
       name: database

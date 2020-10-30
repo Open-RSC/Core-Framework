@@ -60,7 +60,9 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 					ActionSender.sendInitialServerConfigs(getServer(), channel);
 				} else {
-					loginHandler.processLogin(packet, channel, getServer());
+					if (packet.getLength() > 20) {
+						loginHandler.processLogin(packet, channel, getServer());
+					}
 				}
 			} else {
 				if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel(), true)) {

@@ -128,12 +128,20 @@ public class CombatEvent extends GameTickEvent {
 	private void inflictDamage(final Mob hitter, final Mob target, int damage) {
 		hitter.incHitsMade();
 
-		// Paralyze monster stops NPC from damaging players.
-		if (hitter.isNpc() && target.isPlayer()) {
+		if (target.isPlayer()) {
 			Player targetPlayer = (Player) target;
-			if (targetPlayer.getPrayers().isPrayerActivated(Prayers.PARALYZE_MONSTER)) {
-				hitter.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatScript(hitter, target);
-				return;
+			// side effects that may occur during combat (like poison) are regardless protect
+			hitter.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatSideEffectScript(hitter, target);
+
+			if (hitter.isNpc()) {
+				// If the hitter is an NPC, we want to check and execute their combat script
+				// However if the player has the paralyze prayer on, we just want to return
+				// so that the NPC is stopped from damaging the player.
+				if (targetPlayer.getPrayers().isPrayerActivated(Prayers.PARALYZE_MONSTER)) {
+					return;
+				} else {
+					hitter.getWorld().getServer().getCombatScriptLoader().checkAndExecuteCombatScript(hitter, target);
+				}
 			}
 		}
 
@@ -162,7 +170,7 @@ public class CombatEvent extends GameTickEvent {
 			updateParty((Player)hitter);
 		}
 
-		if (target.getSkills().getLevel(3) > 0) {
+		if (target.getSkills().getLevel(Skills.HITS) > 0) {
 
 			// NPCs can run special combat scripts.
 			// Custom: Ring of Life execution

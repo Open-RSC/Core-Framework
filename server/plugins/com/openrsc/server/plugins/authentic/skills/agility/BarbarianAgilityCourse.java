@@ -166,7 +166,7 @@ public class BarbarianAgilityCourse implements OpBoundTrigger,
 	}
 
 	private boolean succeed(Player player) {
-		return Formulae.calcProductionSuccessful(35, getCurrentLevel(player, Skills.AGILITY), true, 50);
+		return Formulae.calcProductionSuccessful(35, getCurrentLevel(player, Skills.AGILITY), false, 50, 4);
 	}
 
 }

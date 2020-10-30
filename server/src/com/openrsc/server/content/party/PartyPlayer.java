@@ -58,7 +58,7 @@ public class PartyPlayer {
 	}
 
 	public int getCurHp() {
-		return playerReference.getSkills().getLevel(3);
+		return playerReference.getSkills().getLevel(Skills.HITS);
 	}
 
 	public int getShareLoot() {
@@ -87,7 +87,7 @@ public class PartyPlayer {
 	public void setShareExp(int shareExp) {
 		this.shareExp = shareExp;
 	}
-	
+
 	public void setExpShared2(long expShared2) {
 		this.expShared2 = expShared2;
 	}

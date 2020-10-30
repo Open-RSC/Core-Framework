@@ -119,6 +119,8 @@ public final class Player extends Mob {
 	private long lastExchangeTime = System.currentTimeMillis();
 	private int clientVersion = 0;
 	public int preferredIcon = -1;
+	private boolean denyAllLogoutRequests = false;
+	private boolean qolOptOutWarned = false;
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -210,9 +212,9 @@ public final class Player extends Mob {
 	 */
 	private long lastRecoveryChangeRequest = 0;
 	/**
-	 * Last time a 'ping' was received
+	 * Last time a client activity was received
 	 */
-	private long lastPing = System.currentTimeMillis();
+	private long lastClientActivity = System.currentTimeMillis();
 	/**
 	 * Time last report was sent, used to throttle reports
 	 */
@@ -594,6 +596,9 @@ public final class Player extends Mob {
 	public boolean canLogout() {
 		if (menuHandler != null) {
 			return true;
+		}
+		if (denyAllLogoutRequests && System.currentTimeMillis() - getLastClientActivity() < 30000) {
+			return false;
 		}
 		return !isBusy() && System.currentTimeMillis() - getCombatTimer() > 10000
 			&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000
@@ -1054,8 +1059,8 @@ public final class Player extends Mob {
 		lastLogin = l;
 	}
 
-	public long getLastPing() {
-		return lastPing;
+	public long getLastClientActivity() {
+		return lastClientActivity;
 	}
 
 	public Menu getMenu() {
@@ -1675,6 +1680,23 @@ public final class Player extends Mob {
 		this.loggedIn = loggedIn;
 	}
 
+	public void toggleDenyAllLogoutRequests() {
+		if (isMod() || isAdmin() || isDev() || isEvent()) {
+			denyAllLogoutRequests = !denyAllLogoutRequests;
+			if (denyAllLogoutRequests) {
+				playerServerMessage(MessageType.QUEST, "All logout requests will now be @red@denied.");
+				playerServerMessage(MessageType.QUEST, "Type @or2@::stayin@whi@ to toggle this.");
+			} else {
+				playerServerMessage(MessageType.QUEST, "Logout requests will now be @gre@possible to fulfill.");
+				playerServerMessage(MessageType.QUEST, "Type @or2@::stayin@whi@ to toggle this.");
+			}
+		}
+	}
+
+	public boolean getDenyAllLogoutRequests() {
+		return denyAllLogoutRequests;
+	}
+
 	public boolean isMale() {
 		return maleGender;
 	}
@@ -1891,7 +1913,7 @@ public final class Player extends Mob {
 	}
 
 	public void addToPacketQueue(final Packet packet) {
-		ping();
+		updateClientActivity();
 		int packetID = packet.getID();
 		if ((packetID != OpcodeIn.ITEM_USE_ITEM.getOpcode()
 				&& packetID != OpcodeIn.BANK_DEPOSIT.getOpcode()
@@ -1913,8 +1935,8 @@ public final class Player extends Mob {
 		}
 	}
 
-	public void ping() {
-		lastPing = System.currentTimeMillis();
+	public void updateClientActivity() {
+		lastClientActivity = System.currentTimeMillis();
 	}
 
 	public void playSound(final String sound) {
@@ -3163,7 +3185,7 @@ public final class Player extends Mob {
 		if (this.isPlayer() && getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_LIFE.id())
 			&& (!this.getLocation().inWilderness()
 			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
-			if (((float) this.getSkills().getLevel(3)) / ((float) this.getSkills().getMaxStat(3)) <= 0.1f) {
+			if (((float) this.getSkills().getLevel(Skills.HITS)) / ((float) this.getSkills().getMaxStat(Skills.HITS)) <= 0.1f) {
 				this.resetCombatEvent();
 				this.resetRange();
 				this.resetAll();
@@ -3233,4 +3255,19 @@ public final class Player extends Mob {
 	public boolean isUsingAuthenticClient() {
 		return this.clientVersion == 235;
 	}
+
+	public boolean getQolOptOutWarned() {
+		return this.qolOptOutWarned;
+	}
+	public void setQolOptOutWarned(boolean warned) {
+		this.qolOptOutWarned = warned;
+	}
+
+	public void setQolOptOut() {
+		getCache().store("qol_optout", true);
+	}
+	public boolean getQolOptOut() {
+		return getCache().hasKey("qol_optout");
+	}
+
 }

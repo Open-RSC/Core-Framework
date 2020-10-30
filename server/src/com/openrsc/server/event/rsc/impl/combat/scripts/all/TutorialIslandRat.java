@@ -5,11 +5,17 @@ import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScript;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.Mob;
 
-public class TutorialIslandScriptIGuess implements CombatScript {
+public class TutorialIslandRat implements CombatScript {
 
 	@Override
 	public void executeScript(Mob attacker, Mob victim) {
-		victim.getSkills().setLevel(Skills.HITS, victim.getSkills().getLevel(Skills.HITS) + 3);
+		// This seems inauthentic
+		// victim.getSkills().setLevel(Skills.HITS, victim.getSkills().getLevel(Skills.HITS) + 3);
+
+		// Add a safety net so that the player can't die to the tutorial island rat.
+		// This seems more congruent to what Jagex actually would have done.
+		// This is unlikely to ever be ran anyways, considering rats can't even hit you
+		attacker.damage(attacker.getSkills().getLevel(Skills.HITS));
 	}
 
 	@Override

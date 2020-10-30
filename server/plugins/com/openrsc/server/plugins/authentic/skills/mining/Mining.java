@@ -216,10 +216,6 @@ public final class Mining implements OpLocTrigger {
 		player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
 		delay(3);
 
-		if (ifbeginningbatch()) {
-			delay(1); // work around b/c for some reason it doesn't actually delay 3 ticks the first time
-		}
-
 		final Item ore = new Item(def.getOreId());
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1

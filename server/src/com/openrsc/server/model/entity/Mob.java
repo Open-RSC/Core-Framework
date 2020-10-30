@@ -703,11 +703,11 @@ public abstract class Mob extends Entity {
 				killedBy(combatWith);
 			}
 		} else {
-			skills.setLevel(3, newHp);
+			skills.setLevel(com.openrsc.server.constants.Skills.HITS, newHp);
 		}
 		if (this.isPlayer()) {
 			Player player = (Player) this;
-			ActionSender.sendStat(player, 3);
+			ActionSender.sendStat(player, com.openrsc.server.constants.Skills.HITS);
 		}
 		getUpdateFlags().setDamage(new Damage(this, damage));
 	}

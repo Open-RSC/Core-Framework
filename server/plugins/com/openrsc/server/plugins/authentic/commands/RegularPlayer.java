@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Random;
 
 import static com.openrsc.server.plugins.Functions.config;
+import static com.openrsc.server.plugins.Functions.delay;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isPhoenixGang;
 
@@ -93,11 +94,19 @@ public final class RegularPlayer implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("commands")) {
 			queryCommands(player);
 		} else if (command.equalsIgnoreCase("b") && config().RIGHT_CLICK_BANK) {
-			if (player.getLocation().isInBank()) {
-				player.getBank().quickFeature(null, player, false);
+			if (!player.getQolOptOut()) {
+				if (player.getLocation().isInBank()) {
+					player.getBank().quickFeature(null, player, false);
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "You are not inside a bank.");
+				}
 			} else {
-				player.playerServerMessage(MessageType.QUEST, "You are not inside a bank.");
+				player.playerServerMessage(MessageType.QUEST, "Quick banking is a QoL feature which you are opted out of.");
 			}
+		} else if (command.equalsIgnoreCase("qoloptout")) {
+			handleQOLOptOut(player);
+		} else if (command.equalsIgnoreCase("qoloptoutconfirm")) {
+			confirmQOLOptOut(player);
 		}
 	}
 
@@ -477,6 +486,95 @@ public final class RegularPlayer implements CommandTrigger {
 		ActionSender.sendOnlineList(player, players, locations, online);
 	}
 
+	private void confirmQOLOptOut(Player player) {
+		if (player.getQolOptOut()) {
+			player.playerServerMessage(MessageType.QUEST,"You are already opted out of QoL features.");
+			return;
+		}
+
+		if (player.getQolOptOutWarned()) {
+			player.setQolOptOut();
+			player.playerServerMessage(MessageType.QUEST, "@ran@Congratulations! @whi@You have successfully opted out of QoL features.");
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "Please read the warning first with @lre@::qoloptout@whi@.");
+		}
+	}
+
+	private void handleQOLOptOut(Player player) {
+		if (serverHasQOLEnabled()) {
+			StringBuilder qolExplanation = new StringBuilder("@lre@Quality of Life Opt-Out%");
+
+			if (player.getQolOptOut()) {
+				qolExplanation.append(" %@red@ Your account has been opted out of QoL features!% %");
+			}
+			qolExplanation.append("@yel@When opted out of QoL the following applies:%");
+
+			int disablableCount = 0;
+			if (config().RIGHT_CLICK_BANK) {
+				++disablableCount;
+				qolExplanation.append(String.format("@lre@%d) @whi@Accessing the bank more quickly is disabled.%%", disablableCount));
+			}
+			if (config().RIGHT_CLICK_TRADE) {
+				++disablableCount;
+				qolExplanation.append(String.format("@lre@%d) @whi@Right click NPCs to trade with them is disabled.%%", disablableCount));
+			}
+			if (config().WANT_BANK_NOTES) {
+				++disablableCount;
+				qolExplanation.append(String.format("@lre@%d) @whi@Ability to withdraw items as bank notes is disabled.%%", disablableCount));
+			}
+			if (config().FASTER_YOHNUS) {
+				++disablableCount;
+				qolExplanation.append(String.format("@lre@%d) @whi@Yohnus, who owns the shilo furnace, will not be faster.%%", disablableCount));
+			}
+			if (config().WANT_APOTHECARY_QOL) {
+				++disablableCount;
+				qolExplanation.append(String.format("@lre@%d) @whi@The Apothecary will no longer offer to combine vials.%%", disablableCount));
+			}
+			if (config().WANT_BETTER_JEWELRY_CRAFTING) {
+				++disablableCount;
+				qolExplanation.append(String.format("@lre@%d) @whi@Jewelry crafting will always show all options.%%", disablableCount));
+			}
+
+			if (!player.getQolOptOut()) {
+				if (disablableCount <= 5) {
+					// we have room to insert a newline if not every option is enabled.
+					qolExplanation.insert("@lre@Quality of Life Opt-Out%".length(), " %");
+				}
+			}
+
+			// Warning: If more features are added to QoL opt out, you may have to remove some of the following lines to make room.
+			// The entire box height is already filled with text. (6 optout options at time of writing this comment)
+			// Alternatively, you can try to detect how many newlines are in qolExplanation & limit text displayed based off that.
+
+			qolExplanation.append(" %@red@");
+			qolExplanation.append(player.getQolOptOut() ? "Notice:" : "Warning:");
+			qolExplanation.append("@lre@ you will not be able to opt back in%@lre@to QoL features without manual intervention ");
+			qolExplanation.append("from an @or1@administrator@lre@, who may or may not fulfil your request%@lre@to opt back in to QoL features.% %");
+			if (!player.getQolOptOut()) {
+				qolExplanation.append("@whi@If you have read this warning and still wish to opt out,% type @lre@::qoloptoutconfirm @whi@to opt out.% %");
+				qolExplanation.append("@red@If you don't wish to opt out,%@red@ you should @dre@log out now@red@ to avoid accidentally opting out.");
+			}
+
+			ActionSender.sendBox(player, qolExplanation.toString(), true);
+			if (player.getQolOptOut()) {
+				player.playerServerMessage(MessageType.QUEST, "@ran@Congratulations! @whi@Your account is already opted out of QoL features.");
+			} else {
+				player.setQolOptOutWarned(true);
+			}
+
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "@lre@This server doesn't have any QoL features enabled.");
+		}
+	}
+	private boolean serverHasQOLEnabled() {
+		return config().RIGHT_CLICK_BANK
+			|| config().RIGHT_CLICK_TRADE
+			|| config().WANT_BANK_NOTES
+			|| config().FASTER_YOHNUS
+			|| config().WANT_APOTHECARY_QOL
+			|| config().WANT_BETTER_JEWELRY_CRAFTING;
+	}
+
 	private void queryGroupIDs(Player player) {
 		ArrayList<String> groups = new ArrayList<>();
 		for (HashMap.Entry<Integer, String> entry : Group.GROUP_NAMES.entrySet()) {
@@ -575,7 +673,8 @@ public final class RegularPlayer implements CommandTrigger {
 	private void queryCommands(Player player) {
 		ActionSender.sendBox(player, ""
 			+ "@yel@Commands available: %"
-			+ "Type :: before you enter your command, see the list below. % %"
+			+ "@lre@Type :: before you enter your command, see the list below. %"
+			// + " %" // Uncomment when this command is refactored
 			+ "@whi@::gameinfo - shows player and server information %"
 			+ "@whi@::online - shows players currently online %"
 			+ "@whi@::uniqueonline - shows number of unique IPs logged in %"
@@ -591,7 +690,8 @@ public final class RegularPlayer implements CommandTrigger {
 			+ "@whi@::wilderness - shows the wilderness activity %"
 			+ "@whi@::time - shows the current server time %"
 			+ "@whi@::event - to enter an ongoing server event %"
-			+ "@whi@::kills <name(optional)> - shows kill counts of npcs", true
+			+ "@whi@::kills <name(optional)> - shows kill counts of npcs %"
+			+ "@whi@::qoloptout - opts you out of Quality of Life features", true
 		);
 	}
 }
