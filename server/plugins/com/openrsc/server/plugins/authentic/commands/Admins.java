@@ -86,11 +86,13 @@ public final class Admins implements CommandTrigger {
 		if (command.equalsIgnoreCase("saveall")) {
 			saveAll(player);
 		} else if (command.equalsIgnoreCase("holidaydrop")) {
-			startHolidayDrop(player, command, args);
-		} else if (command.equalsIgnoreCase("stopholidaydrop") || command.equalsIgnoreCase("cancelholidaydrop")) {
+			startHolidayDrop(player, command, args, false);
+		} else if (command.equalsIgnoreCase("stopholidaydrop") || command.equalsIgnoreCase("cancelholidaydrop") || command.equalsIgnoreCase("christmasiscancelled")) {
 			stopHolidayDrop(player);
-		} else if (command.equalsIgnoreCase("getholidaydrop") || command.equalsIgnoreCase("checkholidaydrop")) {
+		} else if (command.equalsIgnoreCase("getholidaydrop") || command.equalsIgnoreCase("checkholidaydrop") || command.equalsIgnoreCase("checkholidayevent")) {
 			checkHolidayDrop(player);
+		} else if (command.equalsIgnoreCase("cabbagehalloweendrop")) {
+			cabbageHalloweenDrop(player, command, args);
 		} else if (command.equalsIgnoreCase("npckills")) {
 			npcKills(player, args);
 		} else if (command.equalsIgnoreCase("restart")) {
@@ -206,7 +208,64 @@ public final class Admins implements CommandTrigger {
 		player.message(messagePrefix + "Saved " + count + " players on server!");
 	}
 
-	private void startHolidayDrop(Player player, String command, String[] args) {
+	private void cabbageHalloweenDrop(Player player, String command, String[] args) {
+		if (!config().BATCH_PROGRESSION) { // TODO: this should actually check if max item id allows halloween cracker
+			player.message("This command is only for cabbage config.");
+			return;
+		}
+
+		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		for (GameTickEvent event : events.values()) {
+			if (!(event instanceof HolidayDropEvent)) continue;
+
+			player.message(messagePrefix + "There is already a holiday drop running!");
+			return;
+		}
+
+		// Check syntax is OK
+		if (args.length < 2 || args.length > 3) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [hours] [minute] (delay)");
+			return;
+		}
+		int count = 0;
+		try {
+			count = Integer.parseInt(args[0]);
+		} catch (NumberFormatException ex) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [hours] [minute] (delay)");
+			return;
+		}
+		int minute = 0;
+		try {
+			minute = Integer.parseInt(args[1]);
+		} catch (NumberFormatException ex) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [hours] [minute] (delay)");
+			return;
+		}
+
+		// Run Holiday Events
+		String[] newArgs = new String[3];
+		newArgs[0] = args[0];
+		newArgs[1] = args[1];
+		newArgs[2] = "1289"; // Scythe
+		startHolidayDrop(player, command, newArgs, true);
+
+		int delay = 30;
+		try {
+			delay = Integer.parseInt(args[2]);
+
+			if (delay < 0 || delay > 60) {
+				delay = 30;
+				player.message("Bad value sent for delay. Using 30 minutes instead. ::stopholidaydrop if this is not acceptable.");
+			}
+		} catch (NumberFormatException ex) {
+		}
+
+		newArgs[1] = String.format("%d", (minute + delay) % 60);
+		newArgs[2] = "1330"; // Halloween Cracker
+		startHolidayDrop(player, command,  newArgs, true);
+	}
+
+	private void startHolidayDrop(Player player, String command, String[] args, boolean allowMultiple) {
 		if (args.length < 3) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [hours] [minute] [item_id] ...");
 			return;
@@ -245,11 +304,13 @@ public final class Admins implements CommandTrigger {
 		}
 
 		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
-		for (GameTickEvent event : events.values()) {
-			if (!(event instanceof HolidayDropEvent)) continue;
+		if (!allowMultiple) {
+			for (GameTickEvent event : events.values()) {
+				if (!(event instanceof HolidayDropEvent)) continue;
 
-			player.message(messagePrefix + "There is already a holiday drop running!");
-			return;
+				player.message(messagePrefix + "There is already a holiday drop running!");
+				return;
+			}
 		}
 
 		player.getWorld().getServer().getGameEventHandler().add(new HolidayDropEvent(player.getWorld(), executionCount, minute, player, items));
@@ -265,25 +326,30 @@ public final class Admins implements CommandTrigger {
 			event.stop();
 			player.message(messagePrefix + "Stopping holiday drop!");
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Stopped holiday drop"));
-			return;
 		}
 	}
 
 	private void checkHolidayDrop(Player player) {
+		boolean foundEvent = false;
+		StringBuilder eventDetails = new StringBuilder();
 		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
 		for (GameTickEvent event : events.values()) {
 			if (!(event instanceof HolidayDropEvent)) continue;
 
+			foundEvent = true;
 			HolidayDropEvent holidayEvent = (HolidayDropEvent) event;
 
-			player.message(messagePrefix + "There is currently an Holiday Drop Event running:");
-			player.message(messagePrefix + "Occurs on minute " + holidayEvent.getMinute() + " of each hour");
-			player.message(messagePrefix + "Total Hours: " + holidayEvent.getLifeTime() + ", Elapsed Hours: " + holidayEvent.getElapsedHours() + ", Hours Left: " + Math.abs(holidayEvent.getLifeTimeLeft()));
-			player.message(messagePrefix + "Items: " + StringUtils.join(holidayEvent.getItems(), ", "));
-			return;
+			eventDetails.append("@yel@There is currently an Holiday Drop Event running:%");
+			eventDetails.append("@lre@Occurs on minute @gre@" + holidayEvent.getMinute() + "@lre@ of each hour%");
+			eventDetails.append("@lre@Total Hours: @gre@" + holidayEvent.getLifeTime() + "@lre@, Elapsed Hours: @gre@" + holidayEvent.getElapsedHours() + ", Hours Left: " + Math.abs(holidayEvent.getLifeTimeLeft()));
+			eventDetails.append("%@lre@Items: @gre@" + StringUtils.join(holidayEvent.getItems(), "@lre@, @gre@"));
+			eventDetails.append("% %");
 		}
-
-		player.message(messagePrefix + "There is no running Holiday Drop Event");
+		if (foundEvent) {
+			ActionSender.sendBox(player, eventDetails.toString(), true);
+		} else {
+			player.message(messagePrefix + "There is no running Holiday Drop Event");
+		}
 	}
 
 	private void npcKills(Player player, String[] args) {
