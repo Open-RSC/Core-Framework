@@ -663,30 +663,30 @@ public final class Admins implements CommandTrigger {
 			p = player;
 		}
 
-		if (player == null) {
+		if (p == null) {
 			player.message(messagePrefix + "Invalid name or player is not online");
 			return;
 		}
 
-		if (player.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
-			player.getCarriedItems().getInventory().add(new Item(id, amount));
-		} else if (noted && player.getWorld().getServer().getEntityHandler().getItemDef(id).isNoteable()) {
-			player.getCarriedItems().getInventory().add(new Item(id, amount, true));
+		if (p.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
+			p.getCarriedItems().getInventory().add(new Item(id, amount));
+		} else if (noted && p.getWorld().getServer().getEntityHandler().getItemDef(id).isNoteable()) {
+			p.getCarriedItems().getInventory().add(new Item(id, amount, true));
 		} else {
 			for (int i = 0; i < amount; i++) {
-				if (!player.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
+				if (!p.getWorld().getServer().getEntityHandler().getItemDef(id).isStackable()) {
 					if (amount > 30) { // Prevents too many un-stackable items from being spawned and crashing clients in the local area.
 						player.message(messagePrefix + "Invalid amount specified. Please spawn 30 or less of that item.");
 						return;
 					}
 				}
-				player.getCarriedItems().getInventory().add(new Item(id, 1));
+				p.getCarriedItems().getInventory().add(new Item(id, 1));
 			}
 		}
 
-		player.message(messagePrefix + "You have spawned " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + player.getUsername());
-		if (player.getUsernameHash() != player.getUsernameHash()) {
-			player.message(messagePrefix + "A staff member has given you " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
+		player.message(messagePrefix + "You have spawned " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + p.getUsername());
+		if (player.getUsernameHash() != p.getUsernameHash()) {
+			p.message(messagePrefix + "A staff member has given you " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
 		}
 	}
 
@@ -723,16 +723,16 @@ public final class Admins implements CommandTrigger {
 			p = player;
 		}
 
-		if (player == null) {
+		if (p == null) {
 			player.message(messagePrefix + "Invalid name or player is not online");
 			return;
 		}
 
-		player.getBank().add(new Item(id, amount));
+		p.getBank().add(new Item(id, amount));
 
-		player.message(messagePrefix + "You have spawned to bank " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + player.getUsername());
-		if (player.getUsernameHash() != player.getUsernameHash()) {
-			player.message(messagePrefix + "A staff member has added to your bank " + amount + " " + player.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
+		player.message(messagePrefix + "You have spawned to bank " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName() + " to " + p.getUsername());
+		if (player.getUsernameHash() != p.getUsernameHash()) {
+			p.message(messagePrefix + "A staff member has added to your bank " + amount + " " + p.getWorld().getServer().getEntityHandler().getItemDef(id).getName());
 		}
 	}
 
