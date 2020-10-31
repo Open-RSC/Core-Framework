@@ -258,6 +258,7 @@ public final class Admins implements CommandTrigger {
 				player.message("Bad value sent for delay. Using 30 minutes instead. ::stopholidaydrop if this is not acceptable.");
 			}
 		} catch (NumberFormatException ex) {
+		} catch (ArrayIndexOutOfBoundsException ex) {
 		}
 
 		newArgs[1] = String.format("%d", (minute + delay) % 60);
@@ -341,7 +342,7 @@ public final class Admins implements CommandTrigger {
 
 			eventDetails.append("@yel@There is currently an Holiday Drop Event running:%");
 			eventDetails.append("@lre@Occurs on minute @gre@" + holidayEvent.getMinute() + "@lre@ of each hour%");
-			eventDetails.append("@lre@Total Hours: @gre@" + holidayEvent.getLifeTime() + "@lre@, Elapsed Hours: @gre@" + holidayEvent.getElapsedHours() + ", Hours Left: " + Math.abs(holidayEvent.getLifeTimeLeft()));
+			eventDetails.append("@lre@Total Hours: @gre@" + holidayEvent.getLifeTime() + "@lre@, Elapsed Hours: @gre@" + holidayEvent.getElapsedHours() + "@lre@, Hours Left: @gre@" + Math.abs(holidayEvent.getLifeTimeLeft()));
 			eventDetails.append("%@lre@Items: @gre@" + StringUtils.join(holidayEvent.getItems(), "@lre@, @gre@"));
 			eventDetails.append("% %");
 		}
