@@ -3547,22 +3547,22 @@ public class EntityHandler {
 			loadCustomItemDefinitions();
 
 		if (Config.S_SHOW_UNIDENTIFIED_HERB_NAMES) {
-			items.get(165).name = "Muddy Guam";
-			items.get(435).name = "Muddy Marrentill";
-			items.get(436).name = "Muddy Tarromin";
-			items.get(437).name = "Muddy Harralander";
-			items.get(438).name = "Muddy Ranarr Weed";
-			items.get(439).name = "Muddy Irit Leaf";
-			items.get(440).name = "Muddy Avantoe";
-			items.get(441).name = "Muddy Kwuarm";
-			items.get(442).name = "Muddy Cadantine";
-			items.get(443).name = "Muddy Dwarf Weed";
-			items.get(815).name = "Muddy Snake Weed";
-			items.get(817).name = "Muddy Ardrigal";
-			items.get(819).name = "Muddy Sito Foil";
-			items.get(821).name = "Muddy Volencia Moss";
-			items.get(823).name = "Muddy Rogues Purse";
-			items.get(933).name = "Muddy Torstol";
+			items.get(165).name = "Undefined Guam";
+			items.get(435).name = "Undefined Marrentill";
+			items.get(436).name = "Undefined Tarromin";
+			items.get(437).name = "Undefined Harralander";
+			items.get(438).name = "Undefined Ranarr Weed";
+			items.get(439).name = "Undefined Irit Leaf";
+			items.get(440).name = "Undefined Avantoe";
+			items.get(441).name = "Undefined Kwuarm";
+			items.get(442).name = "Undefined Cadantine";
+			items.get(443).name = "Undefined Dwarf Weed";
+			items.get(815).name = "Undefined Snake Weed";
+			items.get(817).name = "Undefined Ardrigal";
+			items.get(819).name = "Undefined Sito Foil";
+			items.get(821).name = "Undefined Volencia Moss";
+			items.get(823).name = "Undefined Rogues Purse";
+			items.get(933).name = "Undefined Torstol";
 		}
 
 		/*try {

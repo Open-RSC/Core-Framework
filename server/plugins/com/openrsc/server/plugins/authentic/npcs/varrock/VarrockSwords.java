@@ -24,8 +24,7 @@ public final class VarrockSwords extends AbstractShop {
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc n) {
-		return (n.getID() == NpcId.SHOPKEEPER_VARROCK_SWORD.id() || n.getID() == NpcId.SHOP_ASSISTANT_VARROCK_SWORD.id())
-				&& player.getLocation().inBounds(133, 522, 138, 527);
+		return (n.getID() == NpcId.SHOPKEEPER_VARROCK_SWORD.id() || n.getID() == NpcId.SHOP_ASSISTANT_VARROCK_SWORD.id());
 	}
 
 	@Override
@@ -45,8 +44,7 @@ public final class VarrockSwords extends AbstractShop {
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
-		if (n.getID() == NpcId.SHOPKEEPER_VARROCK_SWORD.id() || n.getID() == NpcId.SHOP_ASSISTANT_VARROCK_SWORD.id()
-			&& player.getLocation().inBounds(133, 522, 138, 527)) {
+		if (n.getID() == NpcId.SHOPKEEPER_VARROCK_SWORD.id() || n.getID() == NpcId.SHOP_ASSISTANT_VARROCK_SWORD.id()) {
 			npcsay(player, n, "Hello bold adventurer",
 				"Can I interest you in some swords?");
 

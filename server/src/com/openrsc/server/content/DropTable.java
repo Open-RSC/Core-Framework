@@ -147,7 +147,14 @@ public class DropTable {
 				} else if (drop.type == dropType.TABLE) {
 					DropTable newTable = drop.table.clone();
 
-					items.addAll(newTable.invariableItems(owner));
+					ArrayList<Item> invariableItemsToAdd = newTable.invariableItems(owner);
+					items.addAll(invariableItemsToAdd);
+
+					// We need to check if no "always drop" items were added.
+					// If there weren't, and the totalWeight is 0, that means
+					// that the new drop table ONLY contains additional drop tables.
+					// This is probably only a special case for Chaos Druids.
+					boolean onlyTables = invariableItemsToAdd.isEmpty() && newTable.getTotalWeight() == 0;
 
 					if (newTable.getTotalWeight() > 0) {
 						ArrayList<Item> itemsToAdd = newTable.rollItem(false, owner);
@@ -156,7 +163,15 @@ public class DropTable {
 							owner.playSound("foundgem");
 						}
 						items.addAll(itemsToAdd);
+					} else if (onlyTables) {
+						for (Drop table : newTable.drops) {
+							if (table.type == dropType.TABLE)
+							{
+								items.addAll(table.table.rollItem(ringOfWealth, owner));
+							}
+						}
 					}
+
 					break;
 				}
 			}

@@ -12,6 +12,8 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.AbstractShop;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 
+import java.util.ArrayList;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class ThessaliasClothes extends AbstractShop implements TakeObjTrigger {
@@ -47,83 +49,46 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 		say(player, n, "Hello");
 		npcsay(player, n, "Do you want to buy any fine clothes?");
 
-		String[] options;
-		int extraOptions = 0;
-		int skip = 0;
 		boolean ears = player.getCarriedItems().hasCatalogID(ItemId.BUNNY_EARS.id()) || player.getBank().countId(ItemId.BUNNY_EARS.id()) > 0;
 		boolean scythe = player.getCarriedItems().hasCatalogID(ItemId.SCYTHE.id()) || player.getBank().countId(ItemId.SCYTHE.id()) > 0;
-		if (player.getCache().hasKey("bunny_ears") && player.getCache().hasKey("scythe") && !scythe && !ears) {
-			options = new String[]{
-				"I have lost my scythe can I get another one please?",
-				"I have lost my bunny ears can I get some more please?",
-				"What have you got?",
-				"No, thank you"
-			};
-			extraOptions = 3;
-			skip = 2;
-		} else if (player.getCache().hasKey("scythe") && !scythe) {
-			options = new String[]{
-				"I have lost my scythe can I get another one please?",
-				"What have you got?",
-				"No, thank you"
-			};
-			extraOptions = 2;
-			skip = 1;
-		} else if (player.getCache().hasKey("bunny_ears") && !ears) {
-			options = new String[]{
-				"I have lost my bunny ears can I get some more please?",
-				"What have you got?",
-				"No, thank you"
-			};
-			extraOptions = 1;
-			skip = 1;
-		} else {
-			options = new String[]{
-				"What have you got?",
-				"No, thank you"
-			};
-		}
-		int option = multi(player, n, false, options);
-		if (extraOptions > 0) {
-			int item = 0;
-			switch (extraOptions) {
-				case 0:
-					break;
-				case 1: // Bunny Ears
-					item = 1;
-					break;
-				case 2: // Scythe
-					item = 2;
-					break;
-				case 3:
-					if (option == 0) item = 2; // Scythe
-					else if (option == 1) item = 1; // Ears
-					break;
 
-			}
-			if (item == 1) {
-				say(player, n, "I have lost my bunny ears can I get some more please?");
-				npcsay(player, n, "Ohh you poor dear, I have some more here");
-				player.message("Thessalia gives you some new bunny ears");
-				give(player, ItemId.BUNNY_EARS.id(), 1);
-				return;
-			} else if (item == 2) {
-				say(player, n, "I have lost my scythe can I get another please?");
-				npcsay(player, n, "Ohh you poor dear, I have another here");
-				player.message("Thessalia gives you a new scythe");
-				give(player, ItemId.SCYTHE.id(), 1);
-				return;
-			} else if (option >= skip) {
-				option = option - skip;
-			}
+		ArrayList<String> options = new ArrayList<String>();
 
+		String optionScythe = "I have lost my scythe can I get another one please?";
+		if (player.getCache().hasKey("scythe") && !scythe) {
+			options.add(optionScythe);
 		}
 
-		if (option == 0) {
+		String optionEars = "I have lost my bunny ears can I get some more please?";
+		if (player.getCache().hasKey("bunny_ears") && !ears) {
+			options.add(optionEars);
+		}
+
+		String optionShop = "What have you got?";
+		options.add(optionShop);
+
+		String optionBye = "No, thank you";
+		options.add(optionBye);
+
+		int option = multi(player, n, false, options.toArray(new String[options.size()]));
+
+		if (option == -1) return;
+
+		if (options.get(option).equalsIgnoreCase(optionScythe)) {
+			say(player, n, "I have lost my scythe can I get another please?");
+			npcsay(player, n, "Ohh you poor dear, I have another here");
+			player.message("Thessalia gives you a new scythe");
+			give(player, ItemId.SCYTHE.id(), 1);
+		} else if (options.get(option).equalsIgnoreCase(optionEars)) {
+			say(player, n, "I have lost my bunny ears can I get some more please?");
+			npcsay(player, n, "Ohh you poor dear, I have some more here");
+			player.message("Thessalia gives you some new bunny ears");
+			give(player, ItemId.BUNNY_EARS.id(), 1);
+		} else if (options.get(option).equalsIgnoreCase(optionShop)) {
 			say(player, n, "What have you got?");
 			player.setAccessingShop(shop);
 			ActionSender.showShop(player, shop);
-		} else if (option == 1) {
+		} else {
 			say(player, n, "No, thank you");
 		}
 	}
