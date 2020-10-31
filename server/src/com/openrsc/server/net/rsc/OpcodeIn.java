@@ -340,7 +340,7 @@ public enum OpcodeIn {
 
 				// GAME_SETTINGS_CHANGED
 				case 111:
-					return payloadLength == 1;
+					return payloadLength == 2;
 				// CHAT_MESSAGE
 				case 216:
 					return payloadLength >= 2;
