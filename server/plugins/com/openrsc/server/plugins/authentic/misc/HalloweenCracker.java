@@ -32,10 +32,9 @@ public class HalloweenCracker implements UsePlayerTrigger {
 		ItemId.PESTILENCE_MASK.id(),
 	};
 
-	private static final int[] prizeWeights = {36, 36, 24, 12, 12, 20, 48, 48, 12, 8};
+	private static final int[] prizeWeights = {48, 48, 12, 12, 20, 48, 48, 12, 8};
 	private static final int[] prizeIds = {
 		ItemId.PUMPKIN.id(),
-		ItemId.SCYTHE.id(),
 		ItemId.CHOCOLATE_BAR.id(),
 
 		ItemId.ROBE_OF_ZAMORAK_TOP.id(),
