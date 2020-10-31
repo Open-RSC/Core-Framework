@@ -364,11 +364,10 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.HEAD_THIEF.id(), currentNpcDrops); // (352)
 		this.npcDrops.put(NpcId.ROGUE.id(), currentNpcDrops); // (342)
 
-		currentNpcDrops = new DropTable("Rat Level 8 (19, 47, 177, 241, 367)");
+		currentNpcDrops = new DropTable("Rat Level 8 (19, 47, 177, 367)");
 		currentNpcDrops.addItemDrop(ItemId.RAW_RAT_MEAT.id(), 1, 0);
 		this.npcDrops.put(NpcId.RAT_LVL8.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.RAT_LVL13.id(), currentNpcDrops);
-		this.npcDrops.put(NpcId.RAT_WITCHES_HOUSE.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.DUNGEON_RAT.id(), currentNpcDrops);
 
 		currentNpcDrops = currentNpcDrops.clone("Rat (Maze)");
