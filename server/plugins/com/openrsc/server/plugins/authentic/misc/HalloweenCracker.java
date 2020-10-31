@@ -12,7 +12,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class HalloweenCracker implements UsePlayerTrigger {
 
-	private static final int[] holidayWeights = {9, 10, 8, 5, 9, 10, 8, 5, 64, 64, 64};
+	private static final int[] holidayWeights = {9, 10, 8, 5, 9, 10, 8, 5, 44, 44, 44, 30, 30};
 	private static final int[] holidayIds = {
 		ItemId.WHITE_UNICORN_MASK.id(),
 		ItemId.BLOOD_UNICORN_MASK.id(),
@@ -27,11 +27,15 @@ public class HalloweenCracker implements UsePlayerTrigger {
 		ItemId.GREEN_HALLOWEEN_MASK.id(),
 		ItemId.RED_HALLOWEEN_MASK.id(),
 		ItemId.BLUE_HALLOWEEN_MASK.id(),
+
+		ItemId.FOX_MASK.id(),
+		ItemId.PESTILENCE_MASK.id(),
 	};
 
-	private static final int[] prizeWeights = {48, 48, 12, 12, 20, 48, 48, 12, 8};
+	private static final int[] prizeWeights = {36, 36, 24, 12, 12, 20, 48, 48, 12, 8};
 	private static final int[] prizeIds = {
 		ItemId.PUMPKIN.id(),
+		ItemId.SCYTHE.id(),
 		ItemId.CHOCOLATE_BAR.id(),
 
 		ItemId.ROBE_OF_ZAMORAK_TOP.id(),
