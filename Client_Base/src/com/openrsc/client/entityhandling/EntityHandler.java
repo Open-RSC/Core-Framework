@@ -3740,7 +3740,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Mining cape", "The cape worn by masters of mining", "", 99000, -1, "items:490", false, true, 2048, 0, false, false, false, 1377));
 
 		// 2020 April Fools Items
-		items.add(new ItemDef("Pestilence Mask", "You wouldn't want to be seen in this! Stay the cabbage home!", "", 1, -1, "items:555", false, true, 32, 0, false, false, true, 1378));
+		items.add(new ItemDef("Pestilence Mask", "You wouldn't want to be seen in this! Stay the cabbage home!", "", 1, -1, "items:556", false, true, 32, 0, false, false, true, 1378));
 		items.add(new ItemDef("Rubber Chicken Cap", "Wow. That was some very in-depth research on the 'chicken or the egg' question.", "", 1, -1, "items:548", false, true, 32, 0, false, false, true, 1379));
 
 		// Skill Cape Batch Two
