@@ -44,6 +44,11 @@ public final class FriendHandler implements PacketHandler {
 				return;
 			}
 
+			if (friendName.equalsIgnoreCase("Global$")) {
+				player.getSocial().addGlobalFriend(player);
+				return;
+			}
+
 			player.getSocial().addFriend(friend, 0, DataConversions.hashToUsername(friend));
 			ActionSender.sendFriendUpdate(player, friend);
 			if (affectedPlayer != null && affectedPlayer.loggedIn()) {
@@ -55,6 +60,11 @@ public final class FriendHandler implements PacketHandler {
 				}
 			}
 		} else if (pID == packetTwo) { // Remove friend
+			if (friendName.equalsIgnoreCase("Global$")) {
+				player.getSocial().removeGlobalFriend(player);
+				return;
+			}
+
 			player.getSocial().removeFriend(friend);
 			if (affectedPlayer != null && affectedPlayer.loggedIn()) {
 				if (player.getSettings().getPrivacySetting(1) && affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {

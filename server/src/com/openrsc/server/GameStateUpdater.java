@@ -1004,10 +1004,13 @@ public final class GameStateUpdater {
 					player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), gm.getMessage(),
 						"Global$"));
 					ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
-				}
-				else if (!player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES)
-						&& !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
-					ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);
+				} else {
+					if (!player.getBlockGlobalFriend()) {
+						if (!player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES)
+							&& !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
+							ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);
+						}
+					}
 				}
 			}
 		}

@@ -22,6 +22,9 @@ public class Casket implements OpInvTrigger {
 
 			int randomChanceOpen = DataConversions.random(0, 1081);
 
+			// Only 3 additional casket opens in replays,
+			// 40gp twice from Tylerbeg, 1 uncut sapphire from Luis
+
 			mes("you open the casket");
 			delay(2);
 			player.playerServerMessage(MessageType.QUEST, "you find some treasure inside!");

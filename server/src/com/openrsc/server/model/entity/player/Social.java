@@ -3,10 +3,12 @@ package com.openrsc.server.model.entity.player;
 import com.openrsc.server.database.struct.PlayerFriend;
 import com.openrsc.server.database.struct.PlayerIgnore;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.TreeMap;
 
 public class Social {
@@ -102,5 +104,42 @@ public class Social {
 		if (friendList.containsKey(player.getUsernameHash())) {
 			ActionSender.sendFriendUpdate(this.player, player.getUsernameHash());
 		}
+	}
+
+	public void addGlobalFriend(Player player) {
+		player.getCache().store("setting_block_global_friend", false);
+		player.playerServerMessage(MessageType.QUEST, "@whi@You will now be able to see & participate in Global chat features!");
+
+		// Long.MIN_VALUE is the usernameHash of the global friend
+		ActionSender.sendFriendUpdate(player, Long.MIN_VALUE);
+	}
+
+	public void removeGlobalFriend(Player player) {
+		player.getCache().store("setting_block_global_friend", true);
+		player.playerServerMessage(MessageType.QUEST, "@whi@You will no longer see any Global chat.");
+		player.playerServerMessage(MessageType.QUEST, "@whi@Add @gre@Global$@whi@ as a friend if this was a mistake.");
+
+		// Long.MIN_VALUE is the usernameHash of the global friend
+		ActionSender.sendFriendUpdate(player, Long.MIN_VALUE);
+	}
+
+	public void toggleGlobalFriend(Player player) {
+		boolean currentSetting;
+		try {
+			currentSetting = player.getCache().getBoolean("setting_block_global_friend");
+		} catch (NoSuchElementException e) {
+			currentSetting = false;
+		}
+
+		if (currentSetting) {
+			player.playerServerMessage(MessageType.QUEST, "You will now be able to see & participate in Global chat features.");
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You will no longer see any Global chat.");
+			player.playerServerMessage(MessageType.QUEST, "Manually remove the Global$ friend or relog.");
+		}
+		player.getCache().store("setting_block_global_friend", !currentSetting);
+
+		// Long.MIN_VALUE is the usernameHash of the global friend
+		ActionSender.sendFriendUpdate(player, Long.MIN_VALUE);
 	}
 }

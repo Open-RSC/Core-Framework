@@ -107,6 +107,8 @@ public final class RegularPlayer implements CommandTrigger {
 			handleQOLOptOut(player);
 		} else if (command.equalsIgnoreCase("qoloptoutconfirm")) {
 			confirmQOLOptOut(player);
+		} else if (command.equalsIgnoreCase("toggleglobalchat")) {
+			player.getSocial().toggleGlobalFriend(player);
 		}
 	}
 

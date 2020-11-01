@@ -457,6 +457,7 @@ public class ActionSender {
 		String username = DataConversions.hashToUsername(usernameHash);
 
 		if (usernameHash == Long.MIN_VALUE && player.getConfig().WANT_GLOBAL_FRIEND) {
+			if (player.getBlockGlobalFriend()) return;
 			onlineStatus = 6;
 			username = "Global$";
 		}
