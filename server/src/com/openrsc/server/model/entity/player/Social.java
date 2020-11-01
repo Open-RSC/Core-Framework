@@ -107,39 +107,45 @@ public class Social {
 	}
 
 	public void addGlobalFriend(Player player) {
-		player.getCache().store("setting_block_global_friend", false);
-		player.playerServerMessage(MessageType.QUEST, "@whi@You will now be able to see & participate in Global chat features!");
+		if (player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
+			player.getCache().store("setting_block_global_friend", false);
+			player.playerServerMessage(MessageType.QUEST, "@whi@You will now be able to see & participate in Global chat features!");
 
-		// Long.MIN_VALUE is the usernameHash of the global friend
-		ActionSender.sendFriendUpdate(player, Long.MIN_VALUE);
+			// Long.MIN_VALUE is the usernameHash of the global friend
+			ActionSender.sendFriendUpdate(player, Long.MIN_VALUE);
+		}
 	}
 
 	public void removeGlobalFriend(Player player) {
-		player.getCache().store("setting_block_global_friend", true);
-		player.playerServerMessage(MessageType.QUEST, "@whi@You will no longer see any Global chat.");
-		player.playerServerMessage(MessageType.QUEST, "@whi@Add @gre@Global$@whi@ as a friend if this was a mistake.");
+		if (player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
+			player.getCache().store("setting_block_global_friend", true);
+			player.playerServerMessage(MessageType.QUEST, "@whi@You will no longer see any Global chat.");
+			player.playerServerMessage(MessageType.QUEST, "@whi@Add @gre@Global$@whi@ as a friend if this was a mistake.");
 
-		// Long.MIN_VALUE is the usernameHash of the global friend
-		ActionSender.sendFriendUpdate(player, Long.MIN_VALUE);
+			// Long.MIN_VALUE is the usernameHash of the global friend
+			ActionSender.sendFriendUpdate(player, Long.MIN_VALUE);
+		}
 	}
 
 	public void toggleGlobalFriend(Player player) {
-		boolean currentSetting;
-		try {
-			currentSetting = player.getCache().getBoolean("setting_block_global_friend");
-		} catch (NoSuchElementException e) {
-			currentSetting = false;
-		}
+		if (player.getWorld().getServer().getConfig().WANT_GLOBAL_FRIEND) {
+			boolean currentSetting;
+			try {
+				currentSetting = player.getCache().getBoolean("setting_block_global_friend");
+			} catch (NoSuchElementException e) {
+				currentSetting = false;
+			}
 
-		if (currentSetting) {
-			player.playerServerMessage(MessageType.QUEST, "You will now be able to see & participate in Global chat features.");
-		} else {
-			player.playerServerMessage(MessageType.QUEST, "You will no longer see any Global chat.");
-			player.playerServerMessage(MessageType.QUEST, "Manually remove the Global$ friend or relog.");
-		}
-		player.getCache().store("setting_block_global_friend", !currentSetting);
+			if (currentSetting) {
+				player.playerServerMessage(MessageType.QUEST, "You will now be able to see & participate in Global chat features.");
+			} else {
+				player.playerServerMessage(MessageType.QUEST, "You will no longer see any Global chat.");
+				player.playerServerMessage(MessageType.QUEST, "Manually remove the Global$ friend or relog.");
+			}
+			player.getCache().store("setting_block_global_friend", !currentSetting);
 
-		// Long.MIN_VALUE is the usernameHash of the global friend
-		ActionSender.sendFriendUpdate(player, Long.MIN_VALUE);
+			// Long.MIN_VALUE is the usernameHash of the global friend
+			ActionSender.sendFriendUpdate(player, Long.MIN_VALUE);
+		}
 	}
 }
