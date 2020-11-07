@@ -2,7 +2,7 @@
 
 ## Step 1
 
-First, you will need to install Homebrew for Mac in Terminal via <a href="https://brew.sh">https://brew.sh</a>
+First, you will need to install Homebrew for Mac in Terminal via <a href="https://brew.sh">https://brew.sh </a>
 
 To do so, open Terminal, copy and paste the following, and then press enter:
 ```
@@ -14,7 +14,7 @@ Now copy and paste the following in Terminal and press enter:
 brew install adoptopenjdk/openjdk
 ```
 
-This installs Open JDK 12. If you have an earlier version of Java installed, such as Oracle Java 8, it is highly suggested to uninstall that first. Next, copy and paste the following in Terminal and press enter:
+This installs Open JDK. Next, copy and paste the following in Terminal and press enter:
 ```
 brew install docker docker-compose
 ```

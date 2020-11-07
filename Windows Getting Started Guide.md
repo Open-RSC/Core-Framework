@@ -1,25 +1,18 @@
 ### Guide for running Open RuneScape Classic on Windows
 
-## Single Player
+## Install Java Development Kit (JDK)
 
-First, download the latest release of Open RSC Single Player as this is designed for Windows with virtually zero set up required:
+The Open RuneScape Classic project team recommends developers download Open JDK. A MSI installer for Windows is the simplest option. Any Java version 8 or later will work.
 
-https://orsc.dev/open-rsc/Single-Player/-/releases
+<a href="https://www.azul.com/downloads/zulu-community/?architecture=x86-64-bit&package=jdk">Download Zulu Builds of OpenJDK</a>
 
-## Installing Java
+- or
 
-Download Open JDK 12 for Windows (MSI installer version) and if you already have Java installed (ex: Oracle Java 8), then it is highly suggested that you first uninstall it. Oracle will not be supporting non-enterprise Java much longer and Open JDK is the future.
-<a href="https://cdn.azul.com/zulu/bin/zulu12.2.3-ca-jdk12.0.1-win_x64.msi">https://cdn.azul.com/zulu/bin/zulu12.2.3-ca-jdk12.0.1-win_x64.msi</a>
-
-For the latest version of Open JDK: (Windows users will want to pick the MSI installer version)
-
-<a href="https://www.azul.com/downloads/zulu/">Zulu OpenJDK 13</a>
-or
-<a href="https://adoptopenjdk.net/releases.html?variant=openjdk13&jvmVariant=hotspot">Adopt OpenJDK 13</a>
+<a href="https://adoptopenjdk.net/releases.html?variant=openjdk13&jvmVariant=hotspot">Download Adopt OpenJDK</a>
 
 ## Starting the game
 
-You are now ready to double click on "Start-Windows.cmd"
+You are now ready to launch "Start-Windows.cmd"
 
 Once open, press 1 and then press enter. This is for the option of "Start the game"
 
@@ -29,10 +22,10 @@ If you become stuck on Tutorial Island or just wish to skip it, there is a link 
 
 ## Changing game features and configuration
 
-At this point, you may wish to use different game features than the default RSC ones. This requires you to fully exit the game client and the game server (use choice #2 to exit in the command prompt window) to fully shut it down.
+At this point, you may wish to use different game features than the default RSC ones. This requires you to fully exit the game client, and the game server (use choice #2 to exit in the command prompt window) to fully shut it down.
 
 
-Now navigate to "Single-Player -> server" and delete the existing file named "local.conf", then make a copy of "rsccabbage.conf", renaming the duplicate file "local.conf". Same applies for "openrsc.conf" and the other files in that directory. If "local.conf" exists, the game server will override the settings that are in "default.conf". Think of "openrsc.conf" and "rsccabbage.conf" as ready to go config presets.
+Now navigate to "core -> server" and delete the existing file named "local.conf", then make a copy of "rsccabbage.conf", renaming the duplicate file "local.conf". Same applies for "openrsc.conf" and the other files in that directory. If "local.conf" exists, the game server will override the settings that are in "default.conf". Think of "openrsc.conf" and "rsccabbage.conf" as ready to go config presets.
 
 
 If you opt to use different named databases, edit the following line in your "local.conf" (or default.conf) to match the name of your database:
@@ -40,16 +33,12 @@ If you opt to use different named databases, edit the following line in your "lo
 <entry key = "mysql_db">cabbage</entry>
 ```
 
-Depending on which configuration is used, your server port may differ. If 43594 is instead now 43595 because "rsccabbage.conf" is being used and you do not wish to edit it any, you will need to go into "Single-Player -> client -> Cache" and edit "port.txt" to reflect the new port being used by the game server.
+Depending on server configuration, your server port may differ. If 43594 is instead now 43595 because "rsccabbage.conf" is being used, and you do not wish to edit it any, you will need to go into "core -> Client_Base -> Cache" and edit "port.txt" to reflect the new port being used by the game server.
 
-It is strongly suggested that you do not edit "default.conf" and instead make a copy of whatever .conf file, rename it to "local.conf" and edit that instead. That way, you always have working config to fall back on if something doesn't work the way you wish.
+Developers should avoid editing "default.conf" and instead make a copy the chosen .conf file, rename it to "local.conf" and use that instead. That way, they always have working config to fall back on if something doesn't work the way they expect.
 
 Last but not least, always restart the game server after fully exiting it when you have made changes to your "local.conf" in order to have them be applied. An already running server will not read any changes to the file.
 
 ## Changing a player's role
 
-Are you ready to set a player role as an admin, moderator, or back to a player? It is possible to set the role / group ID while in-game using a command but you can also use the main menu option of "Change a player's in-game role"
-
-## Upgrading
-
-If you opt to not use git for pulling updated code from the repository, then the most efficient way to upgrade is to use the main menu option of "Backup game database" to create a database backup export file. Download and extract from the .zip the latest Single Player release and copy your database backup export file over to there. Run the "Start-Windows.cmd" script and from the main menu, select "Restore game database". Lastly, you will want to select "Upgrade the database" from the main menu to ensure the database has been fully upgraded.
+Are you ready to set a player role as an admin, moderator, or back to a player? It is possible to set the role / group ID while in-game using a command, but you can also use the main menu option of "Change a player's in-game role"
