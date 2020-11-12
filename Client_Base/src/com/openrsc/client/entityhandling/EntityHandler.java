@@ -86,7 +86,7 @@ public class EntityHandler {
 			if (it.id != id) continue;
 			if (!isNote) {
 				return it;
-			} else{
+			} else {
 				return ItemDef.asNote(it);
 			}
 		}
@@ -787,7 +787,7 @@ public class EntityHandler {
 			sprites = new int[]{6, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1};
 		}
 		npcs.add(new NPCDef("Head chef", "He looks after the chef's guild", "", 20, 20, 3, 20, false, sprites, 1, 16777215, 16711680, 15523536, 150, 220, 6, 6, 5, i++));
-		if(Config.S_WANT_CUSTOM_SPRITES) {
+		if (Config.S_WANT_CUSTOM_SPRITES) {
 			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 383};
 		} else {
 			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
@@ -4061,12 +4061,12 @@ public class EntityHandler {
 
 			// Kite shields
 			animations.add(new AnimationDef("kiteshield", "equipment", 0xBB4B12, 0, true, false, 0)); //237 - bronze kite
-			animations.add(new AnimationDef("kiteshield", "equipment", 0xAFA2A2, 0, true, false, 0));
-			animations.add(new AnimationDef("kiteshield", "equipment", 0xAFAFAF, 0, true, false, 0));
-			animations.add(new AnimationDef("kiteshield", "equipment", 0x708396, 0, true, false, 0));
-			animations.add(new AnimationDef("kiteshield", "equipment", 0x839670, 0, true, false, 0));
-			animations.add(new AnimationDef("kiteshield", "equipment", 48059, 0, true, false, 0));
-			animations.add(new AnimationDef("kiteshield", "equipment", 0x232323, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", "equipment", 0xAFA2A2, 0, true, false, 0)); //238 - iron kite
+			animations.add(new AnimationDef("kiteshield", "equipment", 0xAFAFAF, 0, true, false, 0)); //239 - steel kite
+			animations.add(new AnimationDef("kiteshield", "equipment", 0x708396, 0, true, false, 0)); //240 - black kite
+			animations.add(new AnimationDef("kiteshield", "equipment", 0x839670, 0, true, false, 0)); //241 - mith kite
+			animations.add(new AnimationDef("kiteshield", "equipment", 48059, 0, true, false, 0)); //242 - addy kite
+			animations.add(new AnimationDef("kiteshield", "equipment", 0x232323, 0, true, false, 0)); //243 - rune kite
 
 			// Dragon items
 			animations.add(new AnimationDef("dragonshield", "equipment", 0, 0, true, false, 0)); //244 - dragon square
