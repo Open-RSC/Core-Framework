@@ -151,7 +151,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 			}
 
 			if(getServer().getWorld().getPlayers().size() >= getServer().getConfig().MAX_PLAYERS && !isAdmin) {
-				return (byte) LoginResponse.WORLD_IS_FULL;
+					return (byte) LoginResponse.WORLD_IS_FULL;
 			}
 
 			if (getServer().getWorld().getPlayer(getUsernameHash()) != null) {

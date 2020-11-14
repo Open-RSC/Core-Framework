@@ -44,7 +44,7 @@ cmake-build-*/
 .idea/**/mongoSettings.xml
 
 # File-based project format
-*.iws
+#*.iws
 
 # IntelliJ
 out/
@@ -88,90 +88,37 @@ fabric.properties
 \.DS_Store
 build/
 
-client/*.jar
-client/out/
-client.properties
-
-Launcher/Cache/
-Launcher/*.jar
-Launcher/out/
-
 server/avatars/*.png
 server/*.jar
 server/out/
 server/local.conf
 
-db/
-
-Tools/RSC Map Generator/dist/
-Tools/Sprite Editor/unpack/
-Tools/Sprite Editor/spriteeditor.jar
-Tools/Sprite Editor/nbproject/
-Tools/RSC Map Generator/map.png
-
-Website/
-
-etc/nginx/logs/*.log
 etc/logs/mariadb/*
 !etc/logs/mariadb/.gitsave
 gameserver.log
 
-Tools/Map Generator/map\.png
-
-Tools/Map Generator/spriteeditor\.jar
-
-client/Cache/credentials\.txt
-
-client/Cache/hideIp\.txt
-
-Android/Open RSC Android Client/release/
-
 local.properties
-
-Android/.idea/dictionaries/
 
 server/logs/
 
 Client_Base/Open_RSC_Client.jar
-
 Client_Base/Cache/credentials.txt
 
 Android_Client/import-summary.txt
+Android_Client/.idea/
 
 .github/
 
 PC_Launcher/OpenRSC.jar
-
 PC_Launcher/Cache/
 
-Game_Server/core.jar
-
-Game_Server/plugins.jar
-
-Game_Server/local.conf
-
-PC_Launcher/Windows Executable/OpenRSC/Cache/
-
-PC_Launcher/Windows Executable/OpenRSC/OpenRSC.jar
-
-PC_Launcher/Windows Executable/OpenRSC/zulu11.35.13-ca-jre11.0.5-win_x64/
-
-PC_Launcher/Windows Executable/OpenRSC Launcher.exe
-
-PC_Launcher/Windows Executable/OpenRSC/zulu8.42.0.21-ca-jre8.0.232-win_x64/
 server/.idea/
-
-dataSources/64d555fe-68dc-4c79-b296-00b1f45f8970/storage_v2/_src_/schema/
 
 .ideaDataSources/
 
 server/inc/databases/
 
-inc/logs/
-
 Backups/*.sql
-
-Android_Client/.idea/
 
 *.pem
 
