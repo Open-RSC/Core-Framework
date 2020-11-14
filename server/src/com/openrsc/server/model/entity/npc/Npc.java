@@ -274,7 +274,7 @@ public class Npc extends Mob {
 	@Override
 	public void killedBy(Mob mob) {
 		if (this.killed) return;
-		this.killed = true;
+		//this.killed = true; remove() assures everything went fine, and set killed to true
 
 		Player owner = getWorld().getPlayerUUID(mob.getUUID());
 		if (owner == null) {
@@ -583,6 +583,7 @@ public class Npc extends Mob {
 	}
 
 	public void remove() {
+		this.killed = true;
 		double respawnMult = getConfig().NPC_RESPAWN_MULTIPLIER;
 		resetCombatEvent();
 		this.setLastOpponent(null);
