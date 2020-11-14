@@ -378,6 +378,7 @@ public final class EntityHandler {
 			items.get(ItemId.RUNE_PICKAXE.id()).setAppearanceId(439);
 		}
 
+		// This enables overrides for existing authentic items so replacement custom equipment animations may be used instead
 		if (getServer().getConfig().WANT_CUSTOM_SPRITES) {
 			// Set custom appearance IDs in ascending order.
 			items.get(ItemId.BRONZE_AXE.id()).setAppearanceId(230);
@@ -498,6 +499,9 @@ public final class EntityHandler {
 			items.get(ItemId.RUNE_CHAIN_MAIL_LEGS.id()).setAppearanceId(447);
 			items.get(ItemId.BLACK_CHAIN_MAIL_LEGS.id()).setAppearanceId(448);
 
+			items.get(ItemId.ZAMORAK_CAPE.id()).setAppearanceId(465);
+			items.get(ItemId.SARADOMIN_CAPE.id()).setAppearanceId(464);
+			items.get(ItemId.GUTHIX_CAPE.id()).setAppearanceId(463);
 		}
 	}
 

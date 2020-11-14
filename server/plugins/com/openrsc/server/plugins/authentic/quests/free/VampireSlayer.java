@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
@@ -277,6 +278,8 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 				}
 				player.getCarriedItems().remove(item);
 				player.message("You hammer the stake in to the vampires chest!");
+				player.getWorld().registerItem(
+					new GroundItem(player.getWorld(), ItemId.BONES.id(), npc.getX(), npc.getY(), 1, player));
 				npc.remove();
 
 				// Completed Vampire Slayer Quest.

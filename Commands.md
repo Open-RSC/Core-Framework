@@ -14,12 +14,17 @@ Admin Commands
 - saveall
   - Usage: `::saveall`
   - Saves all users currently logged in.
+- cabbagehalloweendrop
+  - Usage: `::cabbagehalloweendrop [total hours] [minute of hour to drop scythes] [drop delay in minutes after scythes to drop halloween crackers]`
+  - Drops scythes and halloween crackers at the specified times. 
+  - May be checked with ::checkholidaydrop or cancelled with ::cancelholidaydrop.
+  - Should only be used on server configurations supporting custom items.
 - holidaydrop
   - Usage: `::holidaydrop [total hours] [minute of hour] [item id] ...`
   - Performs a global holiday drop. More than one item may be specified by putting spaces between item IDs.
 - stopholidaydrop
   - Usage: `::stopholidaydrop`
-  - Alias: `::cancelholidaydrop`
+  - Alias: `::cancelholidaydrop` or `::christmasiscancelled`
   - Stops the currently running holiday drop.
 - getholidaydrop
   - Usage: `::getholidaydrop`

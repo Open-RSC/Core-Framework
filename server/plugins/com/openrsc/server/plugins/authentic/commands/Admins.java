@@ -1373,8 +1373,14 @@ public final class Admins implements CommandTrigger {
 		player.getWorld().delayedRemoveObject(sara, 600);
 		n.getUpdateFlags().setDamage(new Damage(n, damage));
 		n.getSkills().subtractLevel(Skills.HITS, damage);
-		if (n.getSkills().getLevel(Skills.HITS) < 1)
+		if (n.getSkills().getLevel(Skills.HITS) < 1) {
+			if (n.killed) {
+				// visible npc but killed flag is true
+				// if ever occurs, reset it for damageNpc to work
+				n.killed = false;
+			}
 			n.killedBy(player);
+		}
 	}
 
 	private void startNpcEvent(Player player, String command, String[] args) {

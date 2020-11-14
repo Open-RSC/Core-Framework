@@ -8,7 +8,7 @@ If you are okay with Docker running on your Linux OS, the installation script th
 
 ## Installing Java
 
-You will need to have Java 1.8 or above installed in order to run the game server and client. We recommend the latest version of OpenJDK.
+You will need to have Java 8 or above installed in order to run the game server and client. We recommend the latest version of OpenJDK.
 
 ## Database Server
 
@@ -51,9 +51,9 @@ If you opt to use different named databases, edit the following line in your "lo
 <entry key = "mysql_db">cabbage</entry>
 ```
 
-Depending on which configuration is used, your server port may differ. If 43594 is instead now 43595 because "rsccabbage.conf" is being used and you do not wish to edit it any, you will need to go into "client/Cache" and edit "port.txt" to reflect the new port being used by the game server.
+Depending on server configuration, your server port may differ. If 43594 is instead now 43595 because "rsccabbage.conf" is being used, and you do not wish to edit it any, you will need to go into "core -> Client_Base -> Cache" and edit "port.txt" to reflect the new port being used by the game server.
 
-It is strongly suggested that you do not edit "default.conf" and instead make a copy of whatever .conf file, rename it to "local.conf" and edit that instead. That way, you always have working config to fall back on if something doesn't work the way you wish.
+Developers should avoid editing "default.conf" and instead make a copy the chosen .conf file, rename it to "local.conf" and use that instead. That way, they always have working config to fall back on if something doesn't work the way they expect.
 
 Last but not least, always restart the game server after fully exiting it when you have made changes to your "local.conf" in order to have them be applied. An already running server will not read any changes to the file.
 
@@ -62,22 +62,4 @@ Last but not least, always restart the game server after fully exiting it when y
 Are you ready to set a player role as an admin, moderator, or back to a player? It is possible to set the role / group ID while in-game using a command but you can also use the make command of:
 ```
 make rank db=cabbage group=0 username=wolf
-```
-
-## Upgrading
-
-If you opt to not use git for pulling updated code from the repository, then the most efficient way to upgrade is to use the make command as shown below. It will create a timestamp-database name.sql.zip file in the "Backups" folder.
-```
-make backup db=openrsc
-```
-
-Download and extract from the .zip the latest Single Player release and copy your database backup export file over to the new location's "Backups" folder. Run the following make command from the new folder location: (updated as needed!)
-```
-make restore name=20191017-0226-EDT-cabbage.zip db=cabbage
-```
-Lastly, you will want to use the following make command to ensure the database has been fully upgraded:
-```
-make upgrade db=openrsc
-make upgrade db=cabbage
-make upgrade db=preservation
 ```

@@ -41,12 +41,6 @@ public class ServerConfiguration {
 	int AUTO_SAVE;
 	private String SERVER_LOCATION;
 	private String HMAC_PRIVATE_KEY;
-	public int RESTART_HOUR;
-	public int RESTART_HOUR_2;
-	public int RESTART_MINUTE;
-	public int RESTART_MINUTE_2;
-	public int RESTART_DELAY;
-	public int RESTART_DELAY_2;
 	public int AGGRO_RANGE;
 	public DatabaseType DB_TYPE;
 	public String DB_HOST;
@@ -138,8 +132,6 @@ public class ServerConfiguration {
 	public boolean WANT_CUSTOM_LANDSCAPE;
 	public boolean PLAYER_COMMANDS;
 	public boolean WANT_PETS;
-	public boolean AUTO_SERVER_RESTART;
-	public boolean AUTO_SERVER_RESTART_2;
 	public int MAX_WALKING_SPEED;
 	public boolean SHOW_UNIDENTIFIED_HERB_NAMES;
 	public boolean WANT_QUEST_STARTED_INDICATOR;
@@ -221,7 +213,7 @@ public class ServerConfiguration {
 	public String configFile;
 	private String[] deprecatedKeys = new String[]{
 		"bank_size", "want_password_massage", "mysql_db",
-		"mysql_host", "mysql_user", "mysql_pass", "mysql_table_prefix", "AUTO_SERVER_RESTART", "AUTO_SERVER_RESTART_2"
+		"mysql_host", "mysql_user", "mysql_pass", "mysql_table_prefix"
 	};
 
 	/**
@@ -315,14 +307,6 @@ public class ServerConfiguration {
 		CONNECTION_TIMEOUT = tryReadInt("connection_timeout").orElse(15);
 		WANT_FATIGUE = tryReadBool("want_fatigue").orElse(true);
 		STOP_SKILLING_FATIGUED = tryReadInt("stop_skilling_fatigued").orElse(1);
-		AUTO_SERVER_RESTART = tryReadBool("auto_server_restart").orElse(false);
-		RESTART_HOUR = tryReadInt("restart_hour").orElse(23);
-		RESTART_MINUTE = tryReadInt("restart_minute").orElse(55);
-		RESTART_DELAY = tryReadInt("restart_delay").orElse(300);
-		AUTO_SERVER_RESTART_2 = tryReadBool("auto_server_restart_2").orElse(false);
-		RESTART_HOUR_2 = tryReadInt("restart_hour_2").orElse(11);
-		RESTART_MINUTE_2 = tryReadInt("restart_minute_2").orElse(55);
-		RESTART_DELAY_2 = tryReadInt("restart_delay_2").orElse(300);
 		AGGRO_RANGE = tryReadInt("aggro_range").orElse(1);
 		CHARACTER_CREATION_MODE = tryReadInt("character_creation_mode").orElse(0);
 		RING_OF_RECOIL_LIMIT = tryReadInt("ring_of_recoil_limit").orElse(40);
