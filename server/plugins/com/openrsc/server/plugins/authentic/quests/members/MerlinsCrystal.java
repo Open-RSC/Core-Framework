@@ -129,8 +129,12 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 		if (npc.getCombatEvent() != null) {
 			npc.getCombatEvent().resetCombat();
 		}
-		npc.getSkills().setLevel(Skills.HITS, 5);
-		Npc leFaye = addnpc(player.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, (int)TimeUnit.SECONDS.toMillis(63));
+		// from replay should do full heal
+		npc.getSkills().setLevel(Skills.HITS, npc.getDef().hits);
+		Npc leFaye = ifnearvisnpc(player, NpcId.MORGAN_LE_FAYE.id(), 8);
+		if (leFaye == null) {
+			leFaye = addnpc(player.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, (int)TimeUnit.SECONDS.toMillis(63));
+		}
 		delay();
 		npcsay(player, leFaye, "Please spare my son");
 		int option = multi(player, npc, "Tell me how to untrap Merlin and I might",
@@ -182,12 +186,14 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 		} else if (option == 1) {
 			player.message("You kill Mordred");
 			npc.remove();
+			return;
 		} else if (option == 2) {
 			player.message("Morgan Le Faye vanishes");
 			npc.killed = false;
 		} else if (option == -1) {
 			npc.killed = false;
 		}
+		npc.killed = false;
 	}
 
 	@Override
