@@ -12,12 +12,15 @@ import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.LoginResponse;
+import com.openrsc.server.util.rsc.RegisterResponse;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class LoginPacketHandler {
 
@@ -52,11 +55,11 @@ public class LoginPacketHandler {
 			OpcodeIn.FORGOT_PASSWORD, OpcodeIn.RECOVERY_ATTEMPT);
 		if (opcode == null)
 			return;
+		byte authenticClient;
 		switch (opcode) {
 
 			/* Logging in */
 			case LOGIN:
-                byte authenticClient;
                 try {
                     if (attachment.authenticClient.get()) {
                         authenticClient = 1;
@@ -82,10 +85,13 @@ public class LoginPacketHandler {
                     if (checksum != 10) { // Authentic client will only send 10 here, probably as a 99.6% reliable "checksum" that it was able to decrypt correctly
                         // return LOGIN_REJECT;
                     }
-                    loginInfo.keys[0] = bytesToInt(loginBlock[1], loginBlock[2], loginBlock[3], loginBlock[4]);
-                    loginInfo.keys[1] = bytesToInt(loginBlock[5], loginBlock[6], loginBlock[7], loginBlock[8]);
-                    loginInfo.keys[2] = bytesToInt(loginBlock[9], loginBlock[10], loginBlock[11], loginBlock[12]);
-                    loginInfo.keys[3] = bytesToInt(loginBlock[13], loginBlock[14], loginBlock[15], loginBlock[16]);
+                    for (int i = 0; i < 4; i++) {
+						loginInfo.keys[i] = bytesToInt(loginBlock[1 + i * 4], loginBlock[2 + i * 4], loginBlock[3 + i * 4], loginBlock[4 + i * 4]);
+					}
+//                    loginInfo.keys[0] = bytesToInt(loginBlock[1], loginBlock[2], loginBlock[3], loginBlock[4]);
+//                    loginInfo.keys[1] = bytesToInt(loginBlock[5], loginBlock[6], loginBlock[7], loginBlock[8]);
+//                    loginInfo.keys[2] = bytesToInt(loginBlock[9], loginBlock[10], loginBlock[11], loginBlock[12]);
+//                    loginInfo.keys[3] = bytesToInt(loginBlock[13], loginBlock[14], loginBlock[15], loginBlock[16]);
                     String password = "";
                     try {
                         // Fun fact: password is always 20 characters long, with spaces at the end.
@@ -198,25 +204,85 @@ public class LoginPacketHandler {
                     break;
 
                 }
-
 			/* Registering */
 			case REGISTER_ACCOUNT:
 				LOGGER.info("Registration attempt from: " + IP);
-
-				String user = getString(packet.getBuffer()).trim();
-				String pass = getString(packet.getBuffer()).trim();
-
-				user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
-				//pass = pass.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", "");
-
-				String email = getString(packet.getBuffer()).trim();
-
-				if (server.getPacketFilter().shouldAllowLogin(IP, true)) {
-					CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, user, pass, email);
-					server.getLoginExecutor().add(characterCreateRequest);
+				try {
+					if (attachment.authenticClient.get()) {
+						authenticClient = 1;
+					} else {
+						authenticClient = 0;
+					}
+				} catch (NullPointerException e) {
+					authenticClient = 127;
 				}
-				break;
+				if (authenticClient != 0) {
+					// Handle register packet
+					int clientVersion = packet.readUnsignedShort();
+					long userHash = packet.readLong();
+					final String username = DataConversions.hashToUsername(userHash);
 
+					// Get encrypted block
+					// password is always 20 characters long, with spaces at the end.
+					// each blocks having encrypted 7 chars of password
+					int blockLen;
+					byte[] decBlock; // current decrypted block
+					int session = -1; // TODO: should be TCP session to check if request should be processed
+					int receivedSession;
+					boolean errored = false;
+					byte[] passData = new byte[21];
+					for (int i = 0; i < 3; i++) {
+						blockLen = packet.readByte();
+						decBlock = Crypto.decryptRSA(packet.readBytes(blockLen), 0, blockLen);
+						receivedSession = ByteBuffer.wrap(Arrays.copyOfRange(decBlock, 4, 8)).getInt();
+						if (session == -1 && decBlock.length == 15) {
+							session = receivedSession;
+						} else if (session != receivedSession || decBlock.length != 15) {
+							errored = true; // decryption error occurred
+						}
+
+						if (!errored) {
+							System.arraycopy(decBlock, 8, passData, i * 7, 7);
+						}
+					}
+
+					String password = "";
+					try {
+						password = new String(passData, "UTF8").trim();
+					} catch (Exception e) {
+						LOGGER.info("error parsing password in register block");
+						e.printStackTrace();
+					}
+
+					packet.readInt(); // hashed random.dat associated to user request
+
+					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket()); // not known what this should write
+
+					if (server.getPacketFilter().shouldAllowLogin(IP, true) && !errored) {
+						CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, username, password, true, clientVersion);
+						server.getLoginExecutor().add(characterCreateRequest);
+					} else {
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) RegisterResponse.REGISTER_UNSUCCESSFUL).toPacket());
+						channel.close();
+					}
+
+					break;
+				} else {
+					// Inauthentic client
+					String user = getString(packet.getBuffer()).trim();
+					String pass = getString(packet.getBuffer()).trim();
+
+					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
+					//pass = pass.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", "");
+
+					String email = getString(packet.getBuffer()).trim();
+
+					if (server.getPacketFilter().shouldAllowLogin(IP, true)) {
+						CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, user, pass, email, server.getConfig().CLIENT_VERSION);
+						server.getLoginExecutor().add(characterCreateRequest);
+					}
+					break;
+				}
 			/* Forgot password */
 			case FORGOT_PASSWORD:
 				try {
@@ -226,7 +292,7 @@ public class LoginPacketHandler {
 						return;
 					}
 
-					user = getString(packet.getBuffer()).trim();
+					String user = getString(packet.getBuffer()).trim();
 					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 
 					PlayerLoginData player = server.getDatabase().getPlayerLoginData(user);
@@ -275,7 +341,7 @@ public class LoginPacketHandler {
 
 			/* Attempt recover */
 			case RECOVERY_ATTEMPT:
-				user = getString(packet.getBuffer()).trim();
+				String user = getString(packet.getBuffer()).trim();
 				user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
 				String oldPass = getString(packet.getBuffer()).trim();
 				String newPass = getString(packet.getBuffer()).trim();
