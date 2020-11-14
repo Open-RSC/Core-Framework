@@ -169,8 +169,10 @@ server/inc/databases/
 
 inc/logs/
 
-Backups/
+Backups/*.sql
 
 Android_Client/.idea/
 
 *.pem
+
+Portable_Windows/HeidiSQL_11.1_64_Portable/Backups/

@@ -86,7 +86,7 @@ public class EntityHandler {
 			if (it.id != id) continue;
 			if (!isNote) {
 				return it;
-			} else{
+			} else {
 				return ItemDef.asNote(it);
 			}
 		}
@@ -787,7 +787,7 @@ public class EntityHandler {
 			sprites = new int[]{6, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1};
 		}
 		npcs.add(new NPCDef("Head chef", "He looks after the chef's guild", "", 20, 20, 3, 20, false, sprites, 1, 16777215, 16711680, 15523536, 150, 220, 6, 6, 5, i++));
-		if(Config.S_WANT_CUSTOM_SPRITES) {
+		if (Config.S_WANT_CUSTOM_SPRITES) {
 			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 383};
 		} else {
 			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
@@ -3463,9 +3463,9 @@ public class EntityHandler {
 		items.add(new ItemDef("Davids fingerprint", "An impression of Davids fingerprint", "", 1, 416, "items:416", false, false, 0, 14540253, true, true, false, 1210));
 		items.add(new ItemDef("Elizabeths fingerprint", "An impression of Elizabeths fingerprint", "", 1, 416, "items:416", false, false, 0, 14540253, true, true, false, 1211));
 		items.add(new ItemDef("Franks fingerprint", "An impression of Franks fingerprint", "", 1, 416, "items:416", false, false, 0, 14540253, true, true, false, 1212));
-		items.add(new ItemDef("Zamorak Cape", "A cape from the almighty zamorak", "", 100, 59, "items:59", false, true, 2048, 16711680, true, true, true, 1213));
-		items.add(new ItemDef("Saradomin Cape", "A cape from the almighty saradomin", "", 100, 59, "items:59", false, true, 2048, 4210926, true, true, true, 1214));
-		items.add(new ItemDef("Guthix Cape", "A cape from the almighty guthix", "", 100, 59, "items:59", false, true, 2048, 4246592, true, true, true, 1215));
+		items.add(new ItemDef("Zamorak Cape", "A cape from the almighty zamorak", "", 100, Config.S_WANT_CUSTOM_SPRITES ? 553 : 59, Config.S_WANT_CUSTOM_SPRITES ? "items:553" : "items:59", false, true, 2048, 16711680, true, true, true, 1213));
+		items.add(new ItemDef("Saradomin Cape", "A cape from the almighty saradomin", "", 100, Config.S_WANT_CUSTOM_SPRITES ? 552 : 59, Config.S_WANT_CUSTOM_SPRITES ? "items:552" : "items:59", false, true, 2048, 4210926, true, true, true, 1214));
+		items.add(new ItemDef("Guthix Cape", "A cape from the almighty guthix", "", 100, Config.S_WANT_CUSTOM_SPRITES ? 551 : 59, Config.S_WANT_CUSTOM_SPRITES ? "items:551" : "items:59", false, true, 2048, 4246592, true, true, true, 1215));
 		items.add(new ItemDef("Staff of zamorak", "It's a stick of the gods", "", 80000, 337, "items:337", false, true, 16, 0, true, true, true, 1216));
 		items.add(new ItemDef("Staff of guthix", "It's a stick of the gods", "", 80000, 85, "items:85", false, true, 16, 10072780, true, true, true, 1217));
 		items.add(new ItemDef("Staff of Saradomin", "It's a stick of the gods", "", 80000, 414, "items:414", false, true, 16, 10072780, true, true, true, 1218));
@@ -3695,9 +3695,29 @@ public class EntityHandler {
 		items.add(new ItemDef("Antlers with red-nose", "Im Rudolph the reindeer!!!", "", 3, -1, "items:468", false, true, 32, 0, false, false, true, 1344));
 		items.add(new ItemDef("Beverage glass", "A glass left after a tasty drink", "", 1, -1, "items:525", false, false, 0, 0, false, false, true, 1345));
 
-		//New KBD Drops
-		items.add(new ItemDef("dragon 2-handed Sword", "A massive sword", "", 5000000, -1, "items:dragon2hander", false, true, 8216, 0, false, false, true, 1346));
+		//Dragon items
+		items.add(new ItemDef("Dragon 2-handed Sword", "A massive sword", "", 5000000, -1, "items:dragon2hander", false, true, 8216, 0, false, false, true, 1346));
 		items.add(new ItemDef("King Black Dragon scale", "Taken from a monstrous beast", "", 2500, 146, "items:kbdscale", false, false, 0, 0, true, false, true, 1347));
+		items.add(new ItemDef("Large Dragon Helmet", "A full face helmet", "", 5000000, -1, "items:501", false, true, 33, 0, false, false, true, 1425));
+		items.add(new ItemDef("Dragon Kite Shield", "An ancient and powerful looking Dragon Kite shield", "", 5000000, -1, "items:501", false, true, 8, 0, false, false, true, 1426));
+		items.add(new ItemDef("Dragon Plate Mail Body", "Provides excellent protection", "", 5000000, -1, "items:501", false, true, 322, 0, false, false, true, 1427));
+		items.add(new ItemDef("Dragon Plate Mail Top", "Armour designed for females", "", 5000000, -1, "items:501", false, true, 322, 0, false, false, true, 1428));
+		items.add(new ItemDef("Dragon Plate Mail Legs", "These look pretty heavy", "", 5000000, -1, "items:501", false, true, 644, 0, false, false, true, 1429));
+		items.add(new ItemDef("Dragon Plated Skirt", "Designer leg protection", "", 5000000, -1, "items:501", false, true, 640, 0, false, false, true, 1430));
+
+		items.add(new ItemDef("White CTF Flag", "White Capture the flag banner", "", 1, -1, "items:554", false, true, 16, 0, false, false, true, 1431));
+		items.add(new ItemDef("Guthix CTF Flag", "Guthix capture the flag banner", "", 1, -1, "items:554", false, true, 16, 4246592, false, false, true, 1432));
+		items.add(new ItemDef("Saradomin CTF Flag", "Saradomin capture the flag banner", "", 1, -1, "items:554", false, true, 16, 4210926, false, false, true, 1433));
+		items.add(new ItemDef("Zamorak CTF Flag", "Zamorak capture the flag banner", "", 1, -1, "items:554", false, true, 16, 16711680, false, false, true, 1434));
+		items.add(new ItemDef("White Wings", "White Wings", "", 0, -1, "items:501", false, true, 2048, 0, false, false, true, 1435));
+		items.add(new ItemDef("Medium Valkyrie Helmet", "A medium sized Valkyrie helmet", "", 1, -1, "items:501", false, true, 32, 0, false, false, true, 1436));
+		items.add(new ItemDef("Medium Guthix Valkyrie Helmet", "A medium sized Guthix Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1437));
+		items.add(new ItemDef("Medium Saradomin Valkyrie Helmet", "A medium sized Saradomin Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1438));
+		items.add(new ItemDef("Medium Zamorak Valkyrie Helmet", "A medium sized Zamorak Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1439));
+		items.add(new ItemDef("Large Valkyrie Helmet", "A large sized Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1440));
+		items.add(new ItemDef("Large Guthix Valkyrie Helmet", "A large sized Guthix Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1441));
+		items.add(new ItemDef("Large Saradomin Valkyrie Helmet", "A large sized Saradomin Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1442));
+		items.add(new ItemDef("Large Zamorak Valkyrie Helmet", "A large sized Zamorak Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1443));
 
 		if (Config.S_WANT_HARVESTING) {
 			//Harvesting
@@ -4050,6 +4070,9 @@ public class EntityHandler {
 		 */
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
+			// God capes
+
+
 			// Hatchets
 			animations.add(new AnimationDef("hatchet", "equipment", 16737817, 0, true, false, 0)); //230 - bronze hatchet
 			animations.add(new AnimationDef("hatchet", "equipment", 15654365, 0, true, false, 0));
@@ -4061,12 +4084,12 @@ public class EntityHandler {
 
 			// Kite shields
 			animations.add(new AnimationDef("kiteshield", "equipment", 0xBB4B12, 0, true, false, 0)); //237 - bronze kite
-			animations.add(new AnimationDef("kiteshield", "equipment", 0xAFA2A2, 0, true, false, 0));
-			animations.add(new AnimationDef("kiteshield", "equipment", 0xAFAFAF, 0, true, false, 0));
-			animations.add(new AnimationDef("kiteshield", "equipment", 0x708396, 0, true, false, 0));
-			animations.add(new AnimationDef("kiteshield", "equipment", 0x839670, 0, true, false, 0));
-			animations.add(new AnimationDef("kiteshield", "equipment", 48059, 0, true, false, 0));
-			animations.add(new AnimationDef("kiteshield", "equipment", 0x232323, 0, true, false, 0));
+			animations.add(new AnimationDef("kiteshield", "equipment", 0xAFA2A2, 0, true, false, 0)); //238 - iron kite
+			animations.add(new AnimationDef("kiteshield", "equipment", 0xAFAFAF, 0, true, false, 0)); //239 - steel kite
+			animations.add(new AnimationDef("kiteshield", "equipment", 0x708396, 0, true, false, 0)); //240 - black kite
+			animations.add(new AnimationDef("kiteshield", "equipment", 0x839670, 0, true, false, 0)); //241 - mith kite
+			animations.add(new AnimationDef("kiteshield", "equipment", 48059, 0, true, false, 0)); //242 - addy kite
+			animations.add(new AnimationDef("kiteshield", "equipment", 0x232323, 0, true, false, 0)); //243 - rune kite
 
 			// Dragon items
 			animations.add(new AnimationDef("dragonshield", "equipment", 0, 0, true, false, 0)); //244 - dragon square
@@ -4141,12 +4164,12 @@ public class EntityHandler {
 			animations.add(new AnimationDef("dragonfullhelm", "equipment", 11189164, 0, true, false, 0)); //295 - dragon large
 			animations.add(new AnimationDef("dragonbody", "equipment", 11189164, 0, true, false, 0)); //296 - dragon plate
 			animations.add(new AnimationDef("dragonlegs", "equipment", 11189164, 0, true, false, 0)); //297 - dragon legs
-			animations.add(new AnimationDef("fullhelm", "equipment", 16768685, 0, true, false, 0)); //298 -
-			animations.add(new AnimationDef("fdragontop", "equipment", 16768685, 0, true, false, 0)); //299 -
-			animations.add(new AnimationDef("dragonskirt", "equipment", 16768685, 0, true, false, 0)); //300 -
-			animations.add(new AnimationDef("fullhelm", "equipment", 10027084, 0, true, false, 0)); //301 -
-			animations.add(new AnimationDef("platemailtop", "equipment", 10027084, 0, true, false, 0)); //302 -
-			animations.add(new AnimationDef("hatchet", "equipment", 0, 0, true, false, 0)); // 303 -
+			animations.add(new AnimationDef("fullhelm", "equipment", 16768685, 0, true, false, 0)); //298 - (does not alter)
+			animations.add(new AnimationDef("fdragontop", "equipment", 16768685, 0, true, false, 0)); //299 - female dragon top
+			animations.add(new AnimationDef("dragonskirt", "equipment", 16768685, 0, true, false, 0)); //300 - dragon skirt
+			animations.add(new AnimationDef("fullhelm", "equipment", 10027084, 0, true, false, 0)); //301 - (does not alter)
+			animations.add(new AnimationDef("platemailtop", "equipment", 10027084, 0, true, false, 0)); //302 - (does not alter)
+			animations.add(new AnimationDef("hatchet", "equipment", 0, 0, true, false, 0)); // 303 - (does not alter)
 
 			// Pumpkin head masks (missing, using wolf instead)
 			animations.add(new AnimationDef("wolf", "npc", 2039583, 0, true, false, 0)); //304 - orange pumpkin head (missing, was using charColour 0)
@@ -4367,6 +4390,26 @@ public class EntityHandler {
 			animations.add(new AnimationDef("chainmaillegs", "equipment", 65535, 0, true, false, 0)); // rune 447
 			animations.add(new AnimationDef("chainmaillegs", "equipment", 3158064, 0, true, false, 0)); //black 448
 
+			// Additional dragon items
+			animations.add(new AnimationDef("dragonkiteshield", "equipment", 0, 0, true, false, 0)); //449 - dragon kite shield
+
+			// CTF
+			animations.add(new AnimationDef("ctfflag", "equipment", 0, 0, true, false, 0)); //450 - white ctf flag
+			animations.add(new AnimationDef("ctfflag", "equipment", 4246592, 0, true, false, 0)); //451 - guthix ctf flag
+			animations.add(new AnimationDef("ctfflag", "equipment", 4210926, 0, true, false, 0)); //452 - saradomin ctf flag
+			animations.add(new AnimationDef("ctfflag", "equipment", 16711680, 0, true, false, 0)); //453 - zamorak ctf flag
+			animations.add(new AnimationDef("wings", "equipment", 0, 0, true, false, 0)); //454 - white wings
+			animations.add(new AnimationDef("mvalkyriehelm", "equipment", 0, 0, true, false, 0)); //455 - medium valkyrie helmet
+			animations.add(new AnimationDef("mvalkyriehelm", "equipment", 4246592, 0, true, false, 0)); //456 - medium guthix valkyrie helmet
+			animations.add(new AnimationDef("mvalkyriehelm", "equipment", 4210926, 0, true, false, 0)); //457 - medium saradomin valkyrie helmet
+			animations.add(new AnimationDef("mvalkyriehelm", "equipment", 16711680, 0, true, false, 0)); //458 - medium zamorak valkyrie helmet
+			animations.add(new AnimationDef("valkyriehelm", "equipment", 0, 0, true, false, 0)); //459 - large valkyrie helmet
+			animations.add(new AnimationDef("valkyriehelm", "equipment", 4246592, 0, true, false, 0)); //460 - large guthix valkyrie helmet
+			animations.add(new AnimationDef("valkyriehelm", "equipment", 4210926, 0, true, false, 0)); //461 - large saradomin valkyrie helmet
+			animations.add(new AnimationDef("valkyriehelm", "equipment", 16711680, 0, true, false, 0)); //462 - large zamorak valkyrie helmet
+			animations.add(new AnimationDef("guthixcape", "equipment", 0, 0, true, false, 0)); //463 - guthix cape
+			animations.add(new AnimationDef("saracape", "equipment", 0, 0, true, false, 0)); //464 - saradomin cape
+			animations.add(new AnimationDef("zammycape", "equipment", 0, 0, true, false, 0)); //465 - zamorak cape
 		}
 	}
 
