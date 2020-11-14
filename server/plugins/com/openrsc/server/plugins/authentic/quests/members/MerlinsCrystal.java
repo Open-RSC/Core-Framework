@@ -7,6 +7,7 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
@@ -121,79 +122,87 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public boolean blockKillNpc(Player player, Npc n) {
-		return n.getID() == NpcId.SIR_MORDRED.id() && player.getQuestStage(this) == 2;
+		return n.getID() == NpcId.SIR_MORDRED.id();
 	}
 
 	@Override
 	public void onKillNpc(Player player, Npc npc) {
-		if (npc.getCombatEvent() != null) {
-			npc.getCombatEvent().resetCombat();
-		}
-		// from replay should do full heal
-		npc.getSkills().setLevel(Skills.HITS, npc.getDef().hits);
-		Npc leFaye = ifnearvisnpc(player, NpcId.MORGAN_LE_FAYE.id(), 8);
-		if (leFaye == null) {
-			leFaye = addnpc(player.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, (int)TimeUnit.SECONDS.toMillis(63));
-		}
-		delay();
-		npcsay(player, leFaye, "Please spare my son");
-		int option = multi(player, npc, "Tell me how to untrap Merlin and I might",
-			"No he deserves to die", "OK then");
-		if (option == 0) {
-			player.updateQuestStage(this, 3);
-			npcsay(player, leFaye,
-				"You have guessed correctly that I'm responsible for that");
-			npcsay(player, leFaye,
-				"I suppose I can live with that fool Merlin being loose");
-			npcsay(player, leFaye, "for the sake of my son");
-			npcsay(player, leFaye, "Setting him free won't be easy though");
-			npcsay(player, leFaye,
-				"You will need to find a pentagram as close to the crystal as you can find");
-			npcsay(player, leFaye,
-				"You will need to drop some bats bones in the pentagram");
-			npcsay(player, leFaye, "while holding a black candle");
-			npcsay(player, leFaye, "This will summon the demon Thrantax");
-			npcsay(player, leFaye, "You will need to bind him with magic words");
-			npcsay(player, leFaye,
-				"Then you will need the sword Excalibur with which the spell was bound");
-			npcsay(player, leFaye, "Shatter the crystal with Excalibur");
-			int sub_opt = multi(player, leFaye, "So where can I find Excalibur?",
-				"OK I will do all that", "What are the magic words?");
-			if (sub_opt == 0) {
-				npcsay(player, leFaye, "The lady of the lake has it");
-				npcsay(player, leFaye, "I don't know if she will give it you though");
-				npcsay(player, leFaye, "She can be rather temperamental");
-				int sub_opt2 = multi(player, leFaye, false, //do not send over
-					"OK I will go do all that",
-					"What are the magic words?");
-				if (sub_opt2 == 0) {
-					say(player, leFaye, "OK I will do all that");
+		if (player.getQuestStage(this) > 0) {
+			if (npc.getCombatEvent() != null) {
+				npc.getCombatEvent().resetCombat();
+			}
+			// from replay should do full heal
+			npc.getSkills().setLevel(Skills.HITS, npc.getDef().hits);
+			Npc leFaye = ifnearvisnpc(player, NpcId.MORGAN_LE_FAYE.id(), 8);
+			if (leFaye == null) {
+				leFaye = addnpc(player.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, (int)TimeUnit.SECONDS.toMillis(63));
+			}
+			delay();
+			npcsay(player, leFaye, "Please spare my son");
+			int option = multi(player, npc, "Tell me how to untrap Merlin and I might",
+				"No he deserves to die", "OK then");
+			if (option == 0) {
+				if (player.getQuestStage(this) == 2) {
+					player.updateQuestStage(this, 3);
+				}
+				npcsay(player, leFaye,
+					"You have guessed correctly that I'm responsible for that");
+				npcsay(player, leFaye,
+					"I suppose I can live with that fool Merlin being loose");
+				npcsay(player, leFaye, "for the sake of my son");
+				npcsay(player, leFaye, "Setting him free won't be easy though");
+				npcsay(player, leFaye,
+					"You will need to find a pentagram as close to the crystal as you can find");
+				npcsay(player, leFaye,
+					"You will need to drop some bats bones in the pentagram");
+				npcsay(player, leFaye, "while holding a black candle");
+				npcsay(player, leFaye, "This will summon the demon Thrantax");
+				npcsay(player, leFaye, "You will need to bind him with magic words");
+				npcsay(player, leFaye,
+					"Then you will need the sword Excalibur with which the spell was bound");
+				npcsay(player, leFaye, "Shatter the crystal with Excalibur");
+				int sub_opt = multi(player, leFaye, "So where can I find Excalibur?",
+					"OK I will do all that", "What are the magic words?");
+				if (sub_opt == 0) {
+					npcsay(player, leFaye, "The lady of the lake has it");
+					npcsay(player, leFaye, "I don't know if she will give it you though");
+					npcsay(player, leFaye, "She can be rather temperamental");
+					int sub_opt2 = multi(player, leFaye, false, //do not send over
+						"OK I will go do all that",
+						"What are the magic words?");
+					if (sub_opt2 == 0) {
+						say(player, leFaye, "OK I will do all that");
+						player.message("Morgan Le Faye vanishes");
+					} else if (sub_opt2 == 1) {
+						say(player, leFaye, "What are the magic words?");
+						npcsay(player, leFaye,
+							"You will find the magic words at the base of one of the chaos altars");
+						npcsay(player, leFaye, "Which chaos altar I cannot remember");
+					}
+				} else if (sub_opt == 1) {
 					player.message("Morgan Le Faye vanishes");
-				} else if (sub_opt2 == 1) {
-					say(player, leFaye, "What are the magic words?");
+				} else if (sub_opt == 2) {
 					npcsay(player, leFaye,
 						"You will find the magic words at the base of one of the chaos altars");
 					npcsay(player, leFaye, "Which chaos altar I cannot remember");
 				}
-			} else if (sub_opt == 1) {
+				npc.killed = false;
+			} else if (option == 1) {
+				player.message("You kill Mordred");
+				npc.remove();
+				return;
+			} else if (option == 2) {
 				player.message("Morgan Le Faye vanishes");
-			} else if (sub_opt == 2) {
-				npcsay(player, leFaye,
-					"You will find the magic words at the base of one of the chaos altars");
-				npcsay(player, leFaye, "Which chaos altar I cannot remember");
+				npc.killed = false;
+			} else if (option == -1) {
+				npc.killed = false;
 			}
 			npc.killed = false;
-		} else if (option == 1) {
-			player.message("You kill Mordred");
+		} else {
+			player.getWorld().registerItem(
+				new GroundItem(player.getWorld(), ItemId.BONES.id(), npc.getX(), npc.getY(), 1, player));
 			npc.remove();
-			return;
-		} else if (option == 2) {
-			player.message("Morgan Le Faye vanishes");
-			npc.killed = false;
-		} else if (option == -1) {
-			npc.killed = false;
 		}
-		npc.killed = false;
 	}
 
 	@Override

@@ -806,6 +806,8 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 				player.message("Chronozon regenerates");
 				npc.killed = false;
 			} else {
+				player.getWorld().registerItem(
+					new GroundItem(player.getWorld(), ItemId.ASHES.id(), npc.getX(), npc.getY(), 1, player));
 				if (player.getQuestStage(this) == 8) {
 					player.getWorld().registerItem(
 						new GroundItem(player.getWorld(), ItemId.CREST_FRAGMENT_THREE.id(), npc.getX(), npc.getY(), 1, player));
