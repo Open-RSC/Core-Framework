@@ -5,7 +5,6 @@ import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.struct.PlayerLoginData;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.util.rsc.LoginResponse;
 import com.openrsc.server.util.rsc.RegisterResponse;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
@@ -199,19 +198,19 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			boolean isAdmin = getServer().getPacketFilter().isHostAdmin(getIpAddress());
 
 			if (getServer().getPacketFilter().getPasswordAttemptsCount(getIpAddress()) >= getServer().getConfig().MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES && !isAdmin) {
-				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
+				return (byte) RegisterResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}
 
 			if (getServer().getPacketFilter().isHostIpBanned(getIpAddress()) && !isAdmin) {
-				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
+				return (byte) RegisterResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
 			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin && getClientVersion() != 235) {
-				return (byte) LoginResponse.CLIENT_UPDATED;
+				return (byte) RegisterResponse.CLIENT_UPDATED;
 			}
 
 			if(getServer().getWorld().getPlayers().size() >= getServer().getConfig().MAX_PLAYERS && !isAdmin) {
-				return (byte) LoginResponse.WORLD_IS_FULL;
+				return (byte) RegisterResponse.WORLD_IS_FULL;
 			}
 
 			if (getServer().getDatabase().playerExists(getUsername())) {
@@ -219,21 +218,21 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			}
 
 			if (getServer().getWorld().getPlayer(DataConversions.usernameToHash(getUsername())) != null) {
-				return (byte) LoginResponse.ACCOUNT_LOGGEDIN;
+				return (byte) RegisterResponse.ACCOUNT_LOGGEDIN;
 			}
 
 			if(getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
-				return (byte) LoginResponse.IP_IN_USE;
+				return (byte) RegisterResponse.IP_IN_USE;
 			}
 
 			final long banExpires = playerData != null ? playerData.banned : 0;
 			if (banExpires == -1 && !isAdmin) {
-				return (byte) LoginResponse.ACCOUNT_PERM_DISABLED;
+				return (byte) RegisterResponse.ACCOUNT_PERM_DISABLED;
 			}
 
 			final double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
 			if (timeBanLeft >= 1 && !isAdmin) {
-				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
+				return (byte) RegisterResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
 			if (!getServer().getConfig().CHAR_NAME_CAN_CONTAIN_MOD
@@ -246,7 +245,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				boolean recentlyRegistered = getServer().getDatabase().checkRecentlyRegistered(getIpAddress());
 				if (recentlyRegistered) {
 					LOGGER.info(getIpAddress() + " - Registration failed: Registered recently.");
-					return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED; // closest match for authentic client
+					return (byte) RegisterResponse.LOGIN_ATTEMPTS_EXCEEDED; // closest match for authentic client
 				}
 			}
 
