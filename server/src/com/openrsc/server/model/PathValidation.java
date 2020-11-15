@@ -11,6 +11,8 @@ import com.openrsc.server.util.rsc.CollisionFlag;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PathValidation {
 
@@ -542,8 +544,15 @@ public class PathValidation {
 		if (mob.getX() == x && mob.getY() == y)
 			return false;
 
+		// all npcs on loc, may include dead (not visible) ones
 		ArrayList<Npc> npcsOnLoc = mob.getWorld().getNpcPositions().getOrDefault(x + "," + y,null);
-		Npc npc = npcsOnLoc != null && npcsOnLoc.size() > 0 ? npcsOnLoc.get(0) : null;
+		// visible (&alive) npcs
+		List<Npc> visibleNpcsOnLoc = new ArrayList<>();
+		Npc npc = null;
+		if (npcsOnLoc != null) {
+			visibleNpcsOnLoc = npcsOnLoc.stream().filter(n -> !n.isRemoved() && !n.killed).collect(Collectors.toList());
+		}
+		npc = visibleNpcsOnLoc.size() > 0 ? visibleNpcsOnLoc.get(0) : null;
 
 		/*
 		 * NPC blocking config controlled
