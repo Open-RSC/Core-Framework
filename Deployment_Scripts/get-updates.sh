@@ -22,7 +22,7 @@ ant -f server/build.xml compile_core
 ant -f server/build.xml compile_plugins
 ant -f Client_Base/build.xml compile
 ant -f PC_Launcher/build.xml compile
-#gradle -b Android_Client/Open\ RSC\ Android\ Client/build.gradle assembleDebug
+gradle -b Android_Client/Open\ RSC\ Android\ Client/build.gradle assembleDebug
 
 # Launcher
 echo ""
@@ -44,7 +44,8 @@ elif [ "$compiling" == "2" ]; then
     yes | sudo cp -f Client_Base/*.jar ../Website/site/public/downloads/
 
     # Android client
-    #yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/site/public/downloads/
+    yes | sudo find . -type f -path '*Android_Client*/*Open RSC Android Client*/*' -name \*.apk | xargs -I {} sudo cp "{}" ../Website/site/public/downloads/
+    ##yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/site/public/downloads/
 
     # Launcher
     yes | sudo cp -rf PC_Launcher/*.jar ../Website/site/public/downloads/
@@ -52,6 +53,7 @@ elif [ "$compiling" == "2" ]; then
     # Set file permissions within the Website downloads folder
     sudo chmod +x ../Website/site/public/downloads/*.jar
     sudo chmod +x ../Website/site/public/downloads/*.jar
+    sudo chmod +x ../Website/site/public/downloads/*.apk
     sudo chmod -R 777 ../Website/site/public/downloads
 
     # Cache copy and file permissions
@@ -67,7 +69,8 @@ elif [ "$compiling" == "3" ]; then
     yes | sudo cp -f Client_Base/Open_RSC_Client_dev.jar ../Website/site/public/downloads/
 
     # Android client
-    #yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/site/public/downloads/
+    yes | sudo find . -type f -path '*Android_Client*/*Open RSC Android Client*/*' -name \*.apk | xargs -I {} sudo cp "{}" ../Website/site/public/downloads/
+    ##yes | sudo cp -f Android_Client/Open\ RSC\ Android\ Client/*.apk ../Website/site/public/downloads/
 
     # Launcher
     #yes | sudo cp -rf PC_Launcher/*.jar ../Website/site/public/downloads/
@@ -75,6 +78,7 @@ elif [ "$compiling" == "3" ]; then
     # Set file permissions within the Website downloads folder
     sudo chmod +x ../Website/site/public/downloads/*.jar
     sudo chmod +x ../Website/site/public/downloads/*.jar
+    sudo chmod +x ../Website/site/public/downloads/*.apk
     sudo chmod -R 777 ../Website/site/public/downloads
 
     # Cache copy and file permissions
