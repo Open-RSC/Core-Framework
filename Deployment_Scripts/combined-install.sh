@@ -16,13 +16,16 @@ NC=$(tput sgr0) # No Color
   # Java related
   echo ""
   echo ""
-  echo "Installing OpenJDK 13, Gradle, and Apache ant. Please wait."
+  echo "Installing OpenJDK, Gradle, and Apache ant. Please wait."
   sleep 3
   echo ""
+  sudo apt install default-jdk -y
+  sudo apt install ant -y
+  sudo apt install android-sdk -y
   sudo add-apt-repository ppa:cwchien/gradle -y
-  sudo apt install openjdk-13-jdk ant gradle -y
-  export JAVA_HOME=/usr/lib/jvm/java-13-openjdk-amd64
-  export PATH=$PATH:$JAVA_HOME/bin
+  sudo apt install gradle -y
+  #export JAVA_HOME=/usr/lib/jvm/java-13-openjdk-amd64
+  #export PATH=$PATH:$JAVA_HOME/bin
 
   # UFW Firewall configuration
   echo ""
