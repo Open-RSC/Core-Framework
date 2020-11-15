@@ -22,6 +22,24 @@ ant -f server/build.xml compile_core
 ant -f server/build.xml compile_plugins
 ant -f Client_Base/build.xml compile
 ant -f PC_Launcher/build.xml compile
+
+# Export the Android SDK path 
+export ANDROID_SDK_ROOT=/usr/lib/android-sdk
+export PATH=$ANDROID_SDK_ROOT/cmdline-tools/tools/bin:$PATH
+
+ANDROID_COMPILE_SDK="29"
+ANDROID_BUILD_TOOLS="29.0.3"
+ANDROID_SDK_TOOLS="6200805"
+
+echo y | sdkmanager --version &>/dev/null
+echo y | sdkmanager --update &>/dev/null
+yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses &>/dev/null
+echo y | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platforms;android-$ANDROID_COMPILE_SDK" &>/dev/null
+echo y | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" &>/dev/null
+echo y | sdkmanager --sdk_root=$ANDROID_SDK_ROOT "build-tools;$ANDROID_BUILD_TOOLS" &>/dev/null
+export PATH=$PATH:$ANDROID_SDK_ROOT/platform-tools/
+
+# Gradle compile Android client
 gradle -b Android_Client/Open\ RSC\ Android\ Client/build.gradle assembleDebug
 
 # Launcher
