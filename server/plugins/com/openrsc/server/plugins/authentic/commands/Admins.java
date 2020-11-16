@@ -784,13 +784,12 @@ public final class Admins implements CommandTrigger {
 			List<Item> bisList;
 			if (config().WANT_CUSTOM_SPRITES) {
 				bisList = newArrayList(
-					new Item(ItemId.DRAGON_MEDIUM_HELMET.id()),
-					new Item(ItemId.DRAGON_SCALE_MAIL.id()),
-					new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id()),
+					new Item(ItemId.LARGE_DRAGON_HELMET.id()),
+					player.isMale() ? new Item(ItemId.DRAGON_PLATE_MAIL_BODY.id()) : new Item(ItemId.DRAGON_PLATE_MAIL_TOP.id()),
+					player.isMale() ? new Item(ItemId.DRAGON_PLATE_MAIL_LEGS.id()) : new Item(ItemId.DRAGON_PLATED_SKIRT.id()),
 					new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()),
-					new Item(ItemId.ATTACK_CAPE.id()),
+					new Item(ItemId.ZAMARAK_WINGS.id()),
 					new Item(ItemId.RING_OF_WEALTH.id()),
-					new Item(ItemId.KLANKS_GAUNTLETS.id()),
 					new Item(ItemId.DRAGON_2_HANDED_SWORD.id())
 				);
 			} else {

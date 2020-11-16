@@ -123,3 +123,5 @@ Backups/*.sql
 *.pem
 
 Portable_Windows/HeidiSQL_11.1_64_Portable/Backups/
+
+.idea/workspace.xml
