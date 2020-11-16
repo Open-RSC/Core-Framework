@@ -48,6 +48,14 @@ public class DragonFireBreath implements OnCombatStartScript {
 				reduction -= 0.1;
 				player.playerServerMessage(MessageType.QUEST, "Your scale mail prevents some of the damage from the flames");
 			}
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_PLATE_MAIL_BODY.id())) {
+				reduction -= 0.15;
+				player.playerServerMessage(MessageType.QUEST, "Your armour prevents some of the damage from the flames");
+			}
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_KITE.id())) {
+				reduction -= 0.6;
+				player.playerServerMessage(MessageType.QUEST, "Your kite shield prevents some of the damage from the flames");
+			}
 			maxHit = (int) Math.ceil(maxHit * reduction);
 			if (player.isRanging() && (dragon.getID() == NpcId.DRAGON.id() || dragon.getID() == NpcId.KING_BLACK_DRAGON.id())) {
 				if (reduction == 1.0) {

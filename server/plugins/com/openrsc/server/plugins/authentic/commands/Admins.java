@@ -818,9 +818,9 @@ public final class Admins implements CommandTrigger {
 				Skills.MAGIC
 			);
 			for (Integer skill : skillsToLevel) {
-				if (player.getSkills().getMaxStat(skill) < 99) {
-					player.getSkills().setLevelTo(skill, 99);
-					player.getSkills().setLevel(skill, 99);
+				if (player.getSkills().getMaxStat(skill) < player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT) {
+					player.getSkills().setLevelTo(skill, player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT);
+					player.getSkills().setLevel(skill, player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT);
 				}
 			}
 			for (Integer quest : questsToComplete) {

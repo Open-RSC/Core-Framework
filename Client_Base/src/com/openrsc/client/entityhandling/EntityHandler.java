@@ -3695,32 +3695,8 @@ public class EntityHandler {
 		items.add(new ItemDef("Antlers with red-nose", "Im Rudolph the reindeer!!!", "", 3, -1, "items:468", false, true, 32, 0, false, false, true, 1344));
 		items.add(new ItemDef("Beverage glass", "A glass left after a tasty drink", "", 1, -1, "items:525", false, false, 0, 0, false, false, true, 1345));
 
-		//Dragon items
 		items.add(new ItemDef("Dragon 2-handed Sword", "A massive sword", "", 5000000, -1, "items:dragon2hander", false, true, 8216, 0, false, false, true, 1346));
 		items.add(new ItemDef("King Black Dragon scale", "Taken from a monstrous beast", "", 2500, 146, "items:kbdscale", false, false, 0, 0, true, false, true, 1347));
-		items.add(new ItemDef("Large Dragon Helmet", "A full face helmet", "", 5000000, -1, "items:501", false, true, 33, 0, false, false, true, 1425));
-		items.add(new ItemDef("Dragon Kite Shield", "An ancient and powerful looking Dragon Kite shield", "", 5000000, -1, "items:dragonkite", false, true, 8, 0, false, false, true, 1426));
-		items.add(new ItemDef("Dragon Plate Mail Body", "Provides excellent protection", "", 5000000, -1, "items:498", false, true, 322, 0, false, false, true, 1427));
-		items.add(new ItemDef("Dragon Plate Mail Top", "Armour designed for females", "", 5000000, -1, "items:500", false, true, 322, 0, false, false, true, 1428));
-		items.add(new ItemDef("Dragon Plate Mail Legs", "These look pretty heavy", "", 5000000, -1, "items:499", false, true, 644, 0, false, false, true, 1429));
-		items.add(new ItemDef("Dragon Plated Skirt", "Designer leg protection", "", 5000000, -1, "items:88", false, true, 640, 16711748, false, false, true, 1430));
-
-		items.add(new ItemDef("White CTF Flag", "White Capture the flag banner", "", 1, -1, "items:554", false, true, 16, 0, false, false, true, 1431));
-		items.add(new ItemDef("Guthix CTF Flag", "Guthix capture the flag banner", "", 1, -1, "items:554", false, true, 16, 4246592, false, false, true, 1432));
-		items.add(new ItemDef("Saradomin CTF Flag", "Saradomin capture the flag banner", "", 1, -1, "items:554", false, true, 16, 4210926, false, false, true, 1433));
-		items.add(new ItemDef("Zamorak CTF Flag", "Zamorak capture the flag banner", "", 1, -1, "items:554", false, true, 16, 16711680, false, false, true, 1434));
-		items.add(new ItemDef("White Wings", "White Wings", "", 0, -1, "items:whitewings", false, true, 2048, 0, false, false, true, 1435));
-		items.add(new ItemDef("Medium Valkyrie Helmet", "A medium sized Valkyrie helmet", "", 1, -1, "items:501", false, true, 32, 0, false, false, true, 1436));
-		items.add(new ItemDef("Medium Guthix Valkyrie Helmet", "A medium sized Guthix Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1437));
-		items.add(new ItemDef("Medium Saradomin Valkyrie Helmet", "A medium sized Saradomin Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1438));
-		items.add(new ItemDef("Medium Zamorak Valkyrie Helmet", "A medium sized Zamorak Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1439));
-		items.add(new ItemDef("Large Valkyrie Helmet", "A large sized Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1440));
-		items.add(new ItemDef("Large Guthix Valkyrie Helmet", "A large sized Guthix Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1441));
-		items.add(new ItemDef("Large Saradomin Valkyrie Helmet", "A large sized Saradomin Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1442));
-		items.add(new ItemDef("Large Zamorak Valkyrie Helmet", "A large sized Zamorak Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1443));
-		items.add(new ItemDef("Guthix Wings", "Guthix Wings", "", 0, -1, "items:guthixwings", false, true, 2048, 0, false, false, true, 1444));
-		items.add(new ItemDef("Saradomin Wings", "Saradomin Wings", "", 0, -1, "items:sarawings", false, true, 2048, 0, false, false, true, 1445));
-		items.add(new ItemDef("Zamarak Wings", "Zamarak Wings", "", 0, -1, "items:zammywings", false, true, 2048, 0, false, false, true, 1446));
 
 		if (Config.S_WANT_HARVESTING) {
 			//Harvesting
@@ -3818,6 +3794,30 @@ public class EntityHandler {
 		items.add(new ItemDef("Adamantite Chain Mail Legs", "A series of connected metal rings", "", 2400, -1, "items:590", false, true, 128, 11717785, false, false, true, 1422));
 		items.add(new ItemDef("Rune Chain Mail Legs", "A series of connected metal rings", "", 37500, -1, "items:590", false, true, 128, 65535, false, false, true, 1423));
 		items.add(new ItemDef("Black Chain Mail Legs", "A series of connected metal rings", "", 720, -1, "items:590", false, true, 128, 3158064, false, false, true, 1424));
+
+		items.add(new ItemDef("Large Dragon Helmet", "A full face helmet", "", 5000000, -1, "items:501", false, true, 33, 0, false, false, true, 1425));
+		items.add(new ItemDef("Dragon Kite Shield", "An ancient and powerful looking Dragon Kite shield", "", 5000000, -1, "items:dragonkite", false, true, 8, 0, false, false, true, 1426));
+		items.add(new ItemDef("Dragon Plate Mail Body", "Provides excellent protection", "", 5000000, -1, "items:498", false, true, 322, 0, false, false, true, 1427));
+		items.add(new ItemDef("Dragon Plate Mail Top", "Armour designed for females", "", 5000000, -1, "items:500", false, true, 322, 0, false, false, true, 1428));
+		items.add(new ItemDef("Dragon Plate Mail Legs", "These look pretty heavy", "", 5000000, -1, "items:499", false, true, 644, 0, false, false, true, 1429));
+		items.add(new ItemDef("Dragon Plated Skirt", "Designer leg protection", "", 5000000, -1, "items:88", false, true, 640, 16711748, false, false, true, 1430));
+
+		items.add(new ItemDef("White CTF Flag", "White Capture the flag banner", "", 1, -1, "items:554", false, true, 16, 0, false, false, true, 1431));
+		items.add(new ItemDef("Guthix CTF Flag", "Guthix capture the flag banner", "", 1, -1, "items:554", false, true, 16, 4246592, false, false, true, 1432));
+		items.add(new ItemDef("Saradomin CTF Flag", "Saradomin capture the flag banner", "", 1, -1, "items:554", false, true, 16, 4210926, false, false, true, 1433));
+		items.add(new ItemDef("Zamorak CTF Flag", "Zamorak capture the flag banner", "", 1, -1, "items:554", false, true, 16, 16711680, false, false, true, 1434));
+		items.add(new ItemDef("White Wings", "White Wings", "", 0, -1, "items:whitewings", false, true, 2048, 0, false, false, true, 1435));
+		items.add(new ItemDef("Medium Valkyrie Helmet", "A medium sized Valkyrie helmet", "", 1, -1, "items:501", false, true, 32, 0, false, false, true, 1436));
+		items.add(new ItemDef("Medium Guthix Valkyrie Helmet", "A medium sized Guthix Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1437));
+		items.add(new ItemDef("Medium Saradomin Valkyrie Helmet", "A medium sized Saradomin Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1438));
+		items.add(new ItemDef("Medium Zamorak Valkyrie Helmet", "A medium sized Zamorak Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1439));
+		items.add(new ItemDef("Large Valkyrie Helmet", "A large sized Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1440));
+		items.add(new ItemDef("Large Guthix Valkyrie Helmet", "A large sized Guthix Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1441));
+		items.add(new ItemDef("Large Saradomin Valkyrie Helmet", "A large sized Saradomin Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1442));
+		items.add(new ItemDef("Large Zamorak Valkyrie Helmet", "A large sized Zamorak Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1443));
+		items.add(new ItemDef("Guthix Wings", "Guthix Wings", "", 0, -1, "items:guthixwings", false, true, 2048, 0, false, false, true, 1444));
+		items.add(new ItemDef("Saradomin Wings", "Saradomin Wings", "", 0, -1, "items:sarawings", false, true, 2048, 0, false, false, true, 1445));
+		items.add(new ItemDef("Zamarak Wings", "Zamarak Wings", "", 0, -1, "items:zammywings", false, true, 2048, 0, false, false, true, 1446));
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";

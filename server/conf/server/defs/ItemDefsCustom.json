@@ -3125,7 +3125,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 5000000,
+            "basePrice": 2000000,
             "isNoteable": 1
         },
         {
@@ -3166,9 +3166,9 @@
             "wearSlot": 1,
             "requiredLevel": 60,
             "requiredSkillID": 2,
-            "armourBonus": 60,
-            "weaponAimBonus": 0,
-            "weaponPowerBonus": 0,
+            "armourBonus": 125,
+            "weaponAimBonus": 10,
+            "weaponPowerBonus": 6,
             "magicBonus": 0,
             "prayerBonus": 0,
             "basePrice": 5000000,
@@ -3189,7 +3189,7 @@
             "wearSlot": 1,
             "requiredLevel": 60,
             "requiredSkillID": 2,
-            "armourBonus": 60,
+            "armourBonus": 125,
             "weaponAimBonus": 0,
             "weaponPowerBonus": 0,
             "magicBonus": 0,
@@ -3212,7 +3212,7 @@
             "wearSlot": 2,
             "requiredLevel": 60,
             "requiredSkillID": 2,
-            "armourBonus": 60,
+            "armourBonus": 76,
             "weaponAimBonus": 0,
             "weaponPowerBonus": 0,
             "magicBonus": 0,
@@ -3235,7 +3235,7 @@
             "wearSlot": 7,
             "requiredLevel": 60,
             "requiredSkillID": 2,
-            "armourBonus": 60,
+            "armourBonus": 76,
             "weaponAimBonus": 0,
             "weaponPowerBonus": 0,
             "magicBonus": 0,
@@ -3263,7 +3263,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 5000,
             "isNoteable": 1
         },
         {
@@ -3286,7 +3286,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 5000,
             "isNoteable": 1
         },
         {
@@ -3309,7 +3309,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 5000,
             "isNoteable": 1
         },
         {
@@ -3332,7 +3332,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 5000,
             "isNoteable": 1
         },
         {
@@ -3355,7 +3355,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 1000000,
             "isNoteable": 1
         },
         {
@@ -3378,7 +3378,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 500,
             "isNoteable": 1
         },
         {
@@ -3401,7 +3401,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 500,
             "isNoteable": 1
         },
         {
@@ -3424,7 +3424,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 500,
             "isNoteable": 1
         },
         {
@@ -3447,7 +3447,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 500,
             "isNoteable": 1
         },
         {
@@ -3470,7 +3470,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 1000,
             "isNoteable": 1
         },
         {
@@ -3493,7 +3493,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 1000,
             "isNoteable": 1
         },
         {
@@ -3516,7 +3516,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 1000,
             "isNoteable": 1
         },
         {
@@ -3539,7 +3539,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 1000,
             "isNoteable": 1
         },
         {
@@ -3562,7 +3562,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 1000000,
             "isNoteable": 1
         },
         {
@@ -3585,7 +3585,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 1000000,
             "isNoteable": 1
         },
         {
@@ -3608,7 +3608,7 @@
             "weaponPowerBonus": 0,
             "magicBonus": 0,
             "prayerBonus": 0,
-            "basePrice": 0,
+            "basePrice": 1000000,
             "isNoteable": 1
         }
     ]
