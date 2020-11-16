@@ -74,7 +74,7 @@ public final class ItemDefinition extends EntityDef {
 	 * or a <code>GroundItem</code> represented by
 	 * this <code>ItemDefinition</code>.
 	 */
-	private int armourBonus;
+	private long armourBonus;
 
 	/**
 	 * The default price for an <code>InventoryItem</code>,
@@ -181,7 +181,7 @@ public final class ItemDefinition extends EntityDef {
 	 */
 	public ItemDefinition(int id, String name, String description, String[] command, boolean isFemaleOnly, boolean isMembersOnly,
 						  boolean isStackable, boolean isUntradable, boolean isWearable, int appearanceID, int wearableID,
-						  int wearSlot, int requiredLevel, int requiredSkillID, int armourBonus, int weaponAimBonus,
+						  int wearSlot, int requiredLevel, int requiredSkillID, long armourBonus, int weaponAimBonus,
 						  int weaponPowerBonus, int magicBonus, int prayerBonus, int basePrice, boolean isNoteable) {
 		this.id = id;
 		this.name = name;
@@ -319,7 +319,7 @@ public final class ItemDefinition extends EntityDef {
 	 *
 	 * @return Returns the armour-bonus.
 	 */
-	public final int getArmourBonus() {
+	public final long getArmourBonus() {
 		return armourBonus;
 	}
 

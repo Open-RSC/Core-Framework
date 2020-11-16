@@ -15,7 +15,7 @@ public class ItemDef {
 	public int wearSlot;
 	public int requiredLevel;
 	public int requiredSkillID;
-	public int armourBonus;
+	public long armourBonus;
 	public int weaponAimBonus;
 	public int weaponPowerBonus;
 	public int magicBonus;

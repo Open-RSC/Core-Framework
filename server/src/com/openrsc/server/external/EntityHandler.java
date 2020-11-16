@@ -268,7 +268,7 @@ public final class EntityHandler {
 					item.getInt("wearSlot"),
 					item.getInt("requiredLevel"),
 					item.getInt("requiredSkillID"),
-					item.getInt("armourBonus"),
+					item.getLong("armourBonus"),
 					item.getInt("weaponAimBonus"),
 					item.getInt("weaponPowerBonus"),
 					item.getInt("magicBonus"),
