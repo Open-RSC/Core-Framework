@@ -41,7 +41,8 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			ItemId.BRONZE_PLATED_SKIRT.id(), ItemId.IRON_PLATED_SKIRT.id(), ItemId.STEEL_PLATED_SKIRT.id(),
 			ItemId.BLACK_PLATED_SKIRT.id(), ItemId.MITHRIL_PLATED_SKIRT.id(), ItemId.ADAMANTITE_PLATED_SKIRT.id(), ItemId.RUNE_SKIRT.id(),
 			ItemId.BRONZE_PLATE_MAIL_LEGS.id(), ItemId.IRON_PLATE_MAIL_LEGS.id(), ItemId.STEEL_PLATE_MAIL_LEGS.id(),
-			ItemId.BLACK_PLATE_MAIL_LEGS.id(), ItemId.MITHRIL_PLATE_MAIL_LEGS.id(), ItemId.ADAMANTITE_PLATE_MAIL_LEGS.id(), ItemId.RUNE_PLATE_MAIL_LEGS.id())) {
+			ItemId.BLACK_PLATE_MAIL_LEGS.id(), ItemId.MITHRIL_PLATE_MAIL_LEGS.id(), ItemId.ADAMANTITE_PLATE_MAIL_LEGS.id(), ItemId.RUNE_PLATE_MAIL_LEGS.id(),
+			ItemId.DRAGON_PLATE_MAIL_BODY.id(), ItemId.DRAGON_PLATE_MAIL_TOP.id(), ItemId.DRAGON_PLATE_MAIL_LEGS.id(), ItemId.DRAGON_PLATED_SKIRT.id())) {
 			int newID = getNewID(item);
 			Item changedItem = new Item(newID);
 			String itemLower, changedItemLower;
@@ -95,6 +96,9 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			case RUNE_PLATE_MAIL_TOP:
 				newID = ItemId.RUNE_PLATE_MAIL_BODY.id();
 				break;
+			case DRAGON_PLATE_MAIL_TOP:
+				newID = ItemId.DRAGON_PLATE_MAIL_BODY.id();
+				break;
 			case BRONZE_PLATE_MAIL_BODY:
 				newID = ItemId.BRONZE_PLATE_MAIL_TOP.id();
 				break;
@@ -115,6 +119,9 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 				break;
 			case RUNE_PLATE_MAIL_BODY:
 				newID = ItemId.RUNE_PLATE_MAIL_TOP.id();
+				break;
+			case DRAGON_PLATE_MAIL_BODY:
+				newID = ItemId.DRAGON_PLATE_MAIL_TOP.id();
 				break;
 			case BRONZE_PLATED_SKIRT:
 				newID = ItemId.BRONZE_PLATE_MAIL_LEGS.id();
@@ -137,6 +144,9 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 			case RUNE_SKIRT:
 				newID = ItemId.RUNE_PLATE_MAIL_LEGS.id();;
 				break;
+			case DRAGON_PLATED_SKIRT:
+				newID = ItemId.DRAGON_PLATE_MAIL_LEGS.id();
+				break;
 			case BRONZE_PLATE_MAIL_LEGS:
 				newID = ItemId.BRONZE_PLATED_SKIRT.id();
 				break;
@@ -157,6 +167,9 @@ public class Thrander implements TalkNpcTrigger, UseNpcTrigger {
 				break;
 			case RUNE_PLATE_MAIL_LEGS:
 				newID = ItemId.RUNE_SKIRT.id();
+				break;
+			case DRAGON_PLATE_MAIL_LEGS:
+				newID = ItemId.DRAGON_PLATED_SKIRT.id();
 				break;
 			default:
 				break;

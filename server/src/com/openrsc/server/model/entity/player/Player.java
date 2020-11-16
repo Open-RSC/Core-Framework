@@ -64,7 +64,7 @@ public final class Player extends Mob {
 	// 1 walked step is +1 activity, 1 5-min warn to move is +25 activity (saved each 30 secs => 2.5 per save)
 	// so everything is multiplied by 2 to avoid decimals
 	private final int KITTEN_ACTIVITY_THRESHOLD = 50;
-	private int bankSize = 192; //Maximum bank items allowed
+	public int bankSize = getConfig().WANT_CUSTOM_BANKS ? ItemId.maxCustom : 192; //Maximum bank items allowed
 	private int totalLevel = 0;
 	private Queue<PrivateMessage> privateMessageQueue = new LinkedList<PrivateMessage>();
 	private long lastSave = System.currentTimeMillis();
@@ -369,8 +369,6 @@ public final class Player extends Mob {
 		playerSettings = new PlayerSettings(this);
 		social = new Social(this);
 		prayers = new Prayers(this);
-
-		bankSize = getConfig().WANT_CUSTOM_BANKS ? 240 : 192;
 	}
 
 	public int getIronMan() {

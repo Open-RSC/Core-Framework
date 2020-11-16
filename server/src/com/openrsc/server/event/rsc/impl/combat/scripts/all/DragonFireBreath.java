@@ -52,7 +52,7 @@ public class DragonFireBreath implements OnCombatStartScript {
 				reduction -= 0.15;
 				player.playerServerMessage(MessageType.QUEST, "Your armour prevents some of the damage from the flames");
 			}
-			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_KITE.id())) {
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_KITE_SHIELD.id())) {
 				reduction -= 0.6;
 				player.playerServerMessage(MessageType.QUEST, "Your kite shield prevents some of the damage from the flames");
 			}

@@ -9,3 +9,6 @@ CREATE TABLE IF NOT EXISTS `bankpresets`
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
+
+ALTER TABLE `players` CHANGE `bank_size` `bank_size` INT(10) UNSIGNED NOT NULL DEFAULT '2000';
+UPDATE `players` SET `bank_size`= 2000;

@@ -738,7 +738,7 @@ public final class Admins implements CommandTrigger {
 	}
 
 	private void spawnItemBankFill(Player player) {
-		for (int i = 0; i < player.getBankSize() - player.getBank().size(); i++) {
+		for (int i = 0; i < (player.getWorld().getServer().getConfig().WANT_CUSTOM_BANKS ? ItemId.maxCustom : 192); i++) {
 			player.getBank().add(new Item(i, 50), false);
 		}
 		player.message("Added bank items.");
@@ -788,7 +788,7 @@ public final class Admins implements CommandTrigger {
 					player.isMale() ? new Item(ItemId.DRAGON_PLATE_MAIL_BODY.id()) : new Item(ItemId.DRAGON_PLATE_MAIL_TOP.id()),
 					player.isMale() ? new Item(ItemId.DRAGON_PLATE_MAIL_LEGS.id()) : new Item(ItemId.DRAGON_PLATED_SKIRT.id()),
 					new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()),
-					new Item(ItemId.ZAMARAK_WINGS.id()),
+					new Item(ItemId.ATTACK_CAPE.id()),
 					new Item(ItemId.RING_OF_WEALTH.id()),
 					new Item(ItemId.DRAGON_2_HANDED_SWORD.id())
 				);
