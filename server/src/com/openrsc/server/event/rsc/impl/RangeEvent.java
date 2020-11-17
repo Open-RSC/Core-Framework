@@ -56,14 +56,15 @@ public class RangeEvent extends GameTickEvent {
 			ItemId.STEEL_ARROWS.id(), ItemId.POISON_STEEL_ARROWS.id(), ItemId.MITHRIL_ARROWS.id(), ItemId.POISON_MITHRIL_ARROWS.id(),
 			ItemId.ADAMANTITE_ARROWS.id(), ItemId.POISON_ADAMANTITE_ARROWS.id(), ItemId.RUNE_ARROWS.id(), ItemId.POISON_RUNE_ARROWS.id(), ItemId.ICE_ARROWS.id()}, // Magic
 		// Longbow
-		{ItemId.MAGIC_LONGBOW.id(), ItemId.BRONZE_ARROWS.id(), ItemId.POISON_BRONZE_ARROWS.id(), ItemId.IRON_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id(),
+		{ItemId.DRAGON_LONGBOW.id(), ItemId.BRONZE_ARROWS.id(), ItemId.POISON_BRONZE_ARROWS.id(), ItemId.IRON_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id(),
 			ItemId.STEEL_ARROWS.id(), ItemId.POISON_STEEL_ARROWS.id(), ItemId.MITHRIL_ARROWS.id(), ItemId.POISON_MITHRIL_ARROWS.id(),
 			ItemId.ADAMANTITE_ARROWS.id(), ItemId.POISON_ADAMANTITE_ARROWS.id(), ItemId.RUNE_ARROWS.id(), ItemId.POISON_RUNE_ARROWS.id(), ItemId.ICE_ARROWS.id(), ItemId.DRAGON_ARROWS.id(), ItemId.POISON_DRAGON_ARROWS.id()} // Dragon
 	};
 
 	private int[][] allowedBolts = {
 		{ItemId.CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id()},
-		{ItemId.PHOENIX_CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id(), ItemId.DRAGON_BOLTS.id(), ItemId.POISON_DRAGON_BOLTS.id()}
+		{ItemId.PHOENIX_CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id()},
+		{ItemId.DRAGON_CROSSBOW.id(), ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id(), ItemId.DRAGON_BOLTS.id(), ItemId.POISON_DRAGON_BOLTS.id()}
 	};
 	private Mob target;
 
@@ -139,13 +140,13 @@ public class RangeEvent extends GameTickEvent {
 		}
 
 		if (target.isNpc()) {
-			if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(),"PlayerRangeNpc", new Object[]{getOwner(), (Npc)target})) {
+			if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(), "PlayerRangeNpc", new Object[]{getOwner(), (Npc) target})) {
 				getPlayerOwner().resetRange();
 				stop();
 				return;
 			}
-		} else if(target.isPlayer()) {
-			if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(),"PlayerRangePlayer", new Object[]{getOwner(), (Player)target})) {
+		} else if (target.isPlayer()) {
+			if (target.getWorld().getServer().getPluginHandler().handlePlugin(getPlayerOwner(), "PlayerRangePlayer", new Object[]{getOwner(), (Player) target})) {
 				getPlayerOwner().resetRange();
 				stop();
 				return;
@@ -153,11 +154,9 @@ public class RangeEvent extends GameTickEvent {
 		}
 		boolean xbow = DataConversions.inArray(Formulae.xbowIDs, bowID);
 		int arrowID = -1;
-		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB)
-		{
+		if (getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			Item ammo = getPlayerOwner().getCarriedItems().getEquipment().getAmmoItem();
-			if (ammo == null || ammo.getDef(getOwner().getWorld()) == null)
-			{
+			if (ammo == null || ammo.getDef(getOwner().getWorld()) == null) {
 				getPlayerOwner().message("you don't have any ammo equipped");
 				getPlayerOwner().resetRange();
 				return;
@@ -186,9 +185,20 @@ public class RangeEvent extends GameTickEvent {
 					break;
 			}
 			if (!canFire) {
-				getPlayerOwner().message("Your ammo is too powerful for your bow");
-				getPlayerOwner().resetRange();
-				return;
+				if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_BOLTS.id())) {
+					getPlayerOwner().message("Your bolts are too powerful for your crossbow.");
+					getPlayerOwner().resetRange();
+					return;
+				}
+				if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.POISON_DRAGON_BOLTS.id())) {
+					getPlayerOwner().message("Your bolts are too powerful for your crossbow.");
+					getPlayerOwner().resetRange();
+					return;
+				} else {
+					getPlayerOwner().message("Your ammo is too powerful for your bow");
+					getPlayerOwner().resetRange();
+					return;
+				}
 			}
 			getPlayerOwner().getCarriedItems().getEquipment().remove(ammo, 1);
 			ActionSender.updateEquipmentSlot(getPlayerOwner(), 12);
@@ -205,10 +215,23 @@ public class RangeEvent extends GameTickEvent {
 				arrowID = aID;
 				if (!getWorld().getServer().getConfig().MEMBER_WORLD) {
 					if (arrowID != 11 && arrowID != 190) {
-						getPlayerOwner().message("You don't have enough ammo in your quiver");
-						getPlayerOwner().resetRange();
-						stop();
-						return;
+						if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_BOLTS.id())) {
+							getPlayerOwner().message("You don't have enough ammo in your bolt holder");
+							getPlayerOwner().resetRange();
+							stop();
+							return;
+						}
+						if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.POISON_DRAGON_BOLTS.id())) {
+							getPlayerOwner().message("You don't have enough ammo in your bolt holder");
+							getPlayerOwner().resetRange();
+							stop();
+							return;
+						} else {
+							getPlayerOwner().message("You don't have enough ammo in your quiver");
+							getPlayerOwner().resetRange();
+							stop();
+							return;
+						}
 					}
 
 				}
@@ -237,7 +260,11 @@ public class RangeEvent extends GameTickEvent {
 							canFire = true;
 
 					if (!canFire) {
-						getPlayerOwner().message("Your arrows are too powerful for your Bow.");
+						if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_BOLTS.id())) {
+							getPlayerOwner().message("Your bolts are too powerful for your crossbow.");
+						} else {
+							getPlayerOwner().message("Your arrows are too powerful for your Bow.");
+						}
 						getPlayerOwner().resetRange();
 						return;
 					}
@@ -284,7 +311,7 @@ public class RangeEvent extends GameTickEvent {
 					getPlayerOwner().getSkills().setLevel(Skills.RANGED, newLevel);
 				}
 			}
-		} else if(target.isPlayer() && damage > 0) {
+		} else if (target.isPlayer() && damage > 0) {
 			getPlayerOwner().incExp(Skills.RANGED, Formulae.rangedHitExperience(target, damage), true);
 		}
 		if (Formulae.looseArrow(damage)) {
