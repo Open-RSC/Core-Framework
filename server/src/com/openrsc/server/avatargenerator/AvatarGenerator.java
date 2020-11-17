@@ -576,6 +576,39 @@ public final class AvatarGenerator {
 		animations.add(new AnimationDef("magiccape", "equipment", 0, 0, true, false, 0)); // 440
 		animations.add(new AnimationDef("craftingcape", "equipment", 0, 0, true, false, 0)); // 441
 
+		// Chainmail leg
+		animations.add(new AnimationDef("chainmaillegs", "equipment", 16737817, 0, true, false, 0)); // bronze 442
+		animations.add(new AnimationDef("chainmaillegs", "equipment", 15654365, 0, true, false, 0)); // iron 443
+		animations.add(new AnimationDef("chainmaillegs", "equipment", 15658734, 0, true, false, 0)); // steel 444
+		animations.add(new AnimationDef("chainmaillegs", "equipment", 10072780, 0, true, false, 0)); // mithril 445
+		animations.add(new AnimationDef("chainmaillegs", "equipment", 11717785, 0, true, false, 0)); // adamant 446
+		animations.add(new AnimationDef("chainmaillegs", "equipment", 65535, 0, true, false, 0)); // rune 447
+		animations.add(new AnimationDef("chainmaillegs", "equipment", 3158064, 0, true, false, 0)); //black 448
+
+		// Additional dragon items
+		animations.add(new AnimationDef("dragonkiteshield", "equipment", 0, 0, true, false, 0)); //449 - dragon kite shield
+
+		// CTF
+		animations.add(new AnimationDef("ctfflag", "equipment", 0, 0, true, false, 0)); //450 - white ctf flag
+		animations.add(new AnimationDef("ctfflag", "equipment", 4246592, 0, true, false, 0)); //451 - guthix ctf flag
+		animations.add(new AnimationDef("ctfflag", "equipment", 4210926, 0, true, false, 0)); //452 - saradomin ctf flag
+		animations.add(new AnimationDef("ctfflag", "equipment", 16711680, 0, true, false, 0)); //453 - zamorak ctf flag
+		animations.add(new AnimationDef("wings", "equipment", 0, 0, true, false, 0)); //454 - white wings
+		animations.add(new AnimationDef("mvalkyriehelm", "equipment", 0, 0, true, false, 0)); //455 - medium valkyrie helmet
+		animations.add(new AnimationDef("mvalkyriehelm", "equipment", 4246592, 0, true, false, 0)); //456 - medium guthix valkyrie helmet
+		animations.add(new AnimationDef("mvalkyriehelm", "equipment", 4210926, 0, true, false, 0)); //457 - medium saradomin valkyrie helmet
+		animations.add(new AnimationDef("mvalkyriehelm", "equipment", 16711680, 0, true, false, 0)); //458 - medium zamorak valkyrie helmet
+		animations.add(new AnimationDef("valkyriehelm", "equipment", 0, 0, true, false, 0)); //459 - large valkyrie helmet
+		animations.add(new AnimationDef("valkyriehelm", "equipment", 4246592, 0, true, false, 0)); //460 - large guthix valkyrie helmet
+		animations.add(new AnimationDef("valkyriehelm", "equipment", 4210926, 0, true, false, 0)); //461 - large saradomin valkyrie helmet
+		animations.add(new AnimationDef("valkyriehelm", "equipment", 16711680, 0, true, false, 0)); //462 - large zamorak valkyrie helmet
+		animations.add(new AnimationDef("guthixcape", "equipment", 0, 0, true, false, 0)); //463 - guthix cape
+		animations.add(new AnimationDef("saracape", "equipment", 0, 0, true, false, 0)); //464 - saradomin cape
+		animations.add(new AnimationDef("zammycape", "equipment", 0, 0, true, false, 0)); //465 - zamorak cape
+		animations.add(new AnimationDef("wings", "equipment", 4246592, 1513239, 0, true, false, 0)); //466 - guthix wings
+		animations.add(new AnimationDef("wings", "equipment", 4210926, 1513239, 0, true, false, 0)); //467 - saradomin wings
+		animations.add(new AnimationDef("wings", "equipment", 16711680, 1513239, 0, true, false, 0)); //468 - zamorak wings
+
 		LOGGER.info("Unpacking sprite archive");
 		File workspaceFile = new File("conf" + File.separator + "server" + File.separator + "data" + File.separator + "Custom_Sprites.osar");
 		if (workspaceFile.exists()) {
