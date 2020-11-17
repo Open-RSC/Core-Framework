@@ -3821,13 +3821,12 @@ public class EntityHandler {
 
 		items.add(new ItemDef("Dragon dagger", "Short but pointy", "", 200000, 80, "items:80", false, true, 16, 16711748, false, false, true, 1447));
 		items.add(new ItemDef("Poisoned dragon dagger", "Short but pointy", "", 300000, 80, "items:514", false, true, 16, 16711748, true, false, true, 1448));
-		items.add(new ItemDef("Dragon arrows", "Venomous looking arrows", "", 3000, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 16711748, true, false, false, 1449));
-		items.add(new ItemDef("Poison dragon arrows", "Venomous looking arrows", "", 3000, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 16711748, true, false, false, 1450));
-		items.add(new ItemDef("Dragon bolts", "Great if you have a crossbow!", "", 3000, -1, "items:dragonbolts", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1001 : 0, 16711748, true, false, false, 1451));
-		items.add(new ItemDef("Poison dragon bolts", "Good if you have a crossbow!", "", 3000, -1, "items:poisondragonbolts", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1001 : 0, 16711748, true, false, false, 1452));
-		items.add(new ItemDef("Dragon crossbow", "This fires crossbow bolts", "", 300000, 49, "items:49", false, true, 16, 16711748, 16711748, true, false, true, 1453));
-		items.add(new ItemDef("Dragon longbow", "A nice sturdy bow", "", 300000, 54, "items:54", false, true, 24, 16711748, 16711748, true, false, true, 1454));
-
+		items.add(new ItemDef("Dragon arrows", "Large arrows for the dragon longbow", "", 3000, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 16711748, true, false, false, 1449));
+		items.add(new ItemDef("Poison dragon arrows", "Venomous large arrows for the dragon longbow", "", 3000, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 16711748, true, false, false, 1450));
+		items.add(new ItemDef("Dragon bolts", "Great if you have a dragon crossbow!", "", 3000, -1, "items:dragonbolts", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1001 : 0, 16711748, 8257536, true, false, true, 1451));
+		items.add(new ItemDef("Poison dragon bolts", "Good if you have a dragon crossbow!", "", 3000, -1, "items:poisondragonbolts", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1001 : 0, 16711748, 8257536, true, false, true, 1452));
+		items.add(new ItemDef("Dragon crossbow", "This fires crossbow bolts", "", 300000, -1, "items:dragoncrossbow", false, true, 16, 16711748, 8257536, true, false, true, 1453));
+		items.add(new ItemDef("Dragon longbow", "A nice sturdy bow", "", 300000, 54, "items:54", false, true, 24, 8257536, 16711748, true, false, true, 1454));
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
