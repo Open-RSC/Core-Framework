@@ -3817,7 +3817,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Large Zamorak Valkyrie Helmet", "A large sized Zamorak Valkyrie helmet", "", 0, -1, "items:501", false, true, 32, 0, false, false, true, 1443));
 		items.add(new ItemDef("Guthix Wings", "Guthix Wings", "", 0, -1, "items:guthixwings", false, true, 2048, 0, false, false, true, 1444));
 		items.add(new ItemDef("Saradomin Wings", "Saradomin Wings", "", 0, -1, "items:sarawings", false, true, 2048, 0, false, false, true, 1445));
-		items.add(new ItemDef("Zamarak Wings", "Zamarak Wings", "", 0, -1, "items:zammywings", false, true, 2048, 0, false, false, true, 1446));
+		items.add(new ItemDef("Zamorak Wings", "Zamorak Wings", "", 0, -1, "items:zammywings", false, true, 2048, 0, false, false, true, 1446));
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
@@ -4415,7 +4415,7 @@ public class EntityHandler {
 			animations.add(new AnimationDef("zammycape", "equipment", 0, 0, true, false, 0)); //465 - zamorak cape
 			animations.add(new AnimationDef("wings", "equipment", 4246592, 1513239, 0, true, false, 0)); //466 - guthix wings
 			animations.add(new AnimationDef("wings", "equipment", 4210926, 1513239, 0, true, false, 0)); //467 - saradomin wings
-			animations.add(new AnimationDef("wings", "equipment", 16711680, 1513239, 0, true, false, 0)); //468 - zamarak wings
+			animations.add(new AnimationDef("wings", "equipment", 16711680, 1513239, 0, true, false, 0)); //468 - zamorak wings
 		}
 	}
 
