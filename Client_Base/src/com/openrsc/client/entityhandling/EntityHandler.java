@@ -3819,6 +3819,9 @@ public class EntityHandler {
 		items.add(new ItemDef("Saradomin Wings", "Saradomin Wings", "", 0, -1, "items:sarawings", false, true, 2048, 0, false, false, true, 1445));
 		items.add(new ItemDef("Zamorak Wings", "Zamorak Wings", "", 0, -1, "items:zammywings", false, true, 2048, 0, false, false, true, 1446));
 
+		items.add(new ItemDef("Dragon dagger", "Short but pointy", "", 8000, 80, "items:80", false, true, 16, 16711748, false, false, true, 1447));
+		items.add(new ItemDef("Poisoned dragon dagger", "Short but pointy", "", 800, 80, "items:514", false, true, 16, 16711748, true, false, true, 1448));
+
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
 		items.get(435).spriteLocation = "items:588";
@@ -4073,9 +4076,6 @@ public class EntityHandler {
 		 */
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
-			// God capes
-
-
 			// Hatchets
 			animations.add(new AnimationDef("hatchet", "equipment", 16737817, 0, true, false, 0)); //230 - bronze hatchet
 			animations.add(new AnimationDef("hatchet", "equipment", 15654365, 0, true, false, 0));
