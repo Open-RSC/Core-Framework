@@ -11,9 +11,9 @@
             filepattern="logs/%d{YYYYMMddHHmmss}-gameserver.log">
             <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n" />
             <Policies>
-                <SizeBasedTriggeringPolicy size="3 MB" />
+                <SizeBasedTriggeringPolicy size="10 MB" />
             </Policies>
-            <DefaultRolloverStrategy max="4" />
+            <DefaultRolloverStrategy max="10" />
         </RollingFile>
     </Appenders>
 
