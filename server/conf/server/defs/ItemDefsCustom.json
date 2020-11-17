@@ -3752,7 +3752,7 @@
         {
             "id": 1453,
             "name": "Dragon crossbow",
-            "description": "This fires crossbow bolts",
+            "description": "This fires dragon crossbow bolts",
             "command": "",
             "isFemaleOnly": 0,
             "isMembersOnly": 0,
@@ -3775,7 +3775,7 @@
         {
             "id": 1454,
             "name": "Dragon longbow",
-            "description": "A nice sturdy bow",
+            "description": "A dragon reinforced bow",
             "command": "",
             "isFemaleOnly": 0,
             "isMembersOnly": 1,

@@ -3208,12 +3208,12 @@ public final class Player extends Mob {
 		return this.carriedItems.get();
 	}
 
+	// Ensures crossbows and shortbows have a shorter radius of 4 instead of the default 5 (see Mob and AttackHandler classes for default of 5)
 	public int getProjectileRadius(int radius) {
-		if (getRangeEquip() == ItemId.PHOENIX_CROSSBOW.id() || getRangeEquip() == ItemId.CROSSBOW.id())
+		if (getRangeEquip() == ItemId.PHOENIX_CROSSBOW.id() || getRangeEquip() == ItemId.CROSSBOW.id() || getRangeEquip() == ItemId.DRAGON_CROSSBOW.id())
 			radius = 4;
 		if (getRangeEquip() == ItemId.SHORTBOW.id())
 			radius = 4;
-
 		return radius;
 	}
 

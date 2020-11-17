@@ -422,6 +422,7 @@ public final class EntityHandler {
 			items.get(ItemId.MAGIC_LONGBOW.id()).setAppearanceId(258);
 			items.get(ItemId.MAGIC_SHORTBOW.id()).setAppearanceId(258);
 			items.get(ItemId.DRAGON_LONGBOW.id()).setAppearanceId(472);
+			items.get(ItemId.DRAGON_CROSSBOW.id()).setAppearanceId(471);
 
 			items.get(ItemId.BRONZE_SHORT_SWORD.id()).setAppearanceId(259);
 			items.get(ItemId.IRON_SHORT_SWORD.id()).setAppearanceId(260);
