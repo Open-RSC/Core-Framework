@@ -608,6 +608,10 @@ public final class AvatarGenerator {
 		animations.add(new AnimationDef("wings", "equipment", 4246592, 1513239, 0, true, false, 0)); //466 - guthix wings
 		animations.add(new AnimationDef("wings", "equipment", 4210926, 1513239, 0, true, false, 0)); //467 - saradomin wings
 		animations.add(new AnimationDef("wings", "equipment", 16711680, 1513239, 0, true, false, 0)); //468 - zamorak wings
+		animations.add(new AnimationDef("dagger", "equipment", 16711748, 0, true, false, 0)); //469 - dragon dagger
+		animations.add(new AnimationDef("poisoneddagger", "equipment", 16711748, 0, true, false, 0)); //470 - poison dragon dagger
+		animations.add(new AnimationDef("crossbow", "equipment", 16711748, 0, true, false, 0)); //471 - dragon crossbow
+		animations.add(new AnimationDef("longbow", "equipment", 16711748, 0, false, false, 0)); //472 - dragon longbow
 
 		LOGGER.info("Unpacking sprite archive");
 		File workspaceFile = new File("conf" + File.separator + "server" + File.separator + "data" + File.separator + "Custom_Sprites.osar");

@@ -3821,6 +3821,13 @@ public class EntityHandler {
 
 		items.add(new ItemDef("Dragon dagger", "Short but pointy", "", 8000, 80, "items:80", false, true, 16, 16711748, false, false, true, 1447));
 		items.add(new ItemDef("Poisoned dragon dagger", "Short but pointy", "", 800, 80, "items:514", false, true, 16, 16711748, true, false, true, 1448));
+		items.add(new ItemDef("Dragon arrows", "Venomous looking arrows", "", 800, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 16711748, true, false, false, 1449));
+		items.add(new ItemDef("Poison dragon arrows", "Venomous looking arrows", "", 800, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 16711748, true, false, false, 1450));
+		items.add(new ItemDef("Dragon bolts", "Great if you have a crossbow!", "", 110, 266, "items:266", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1001 : 0, 0, true, false, false, 1451));
+		items.add(new ItemDef("Poison dragon bolts", "Good if you have a crossbow!", "", 3, 56, "items:56", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1001 : 0, 16711748, true, false, false, 1452));
+		items.add(new ItemDef("Dragon crossbow", "This fires crossbow bolts", "", 70, 49, "items:49", false, true, 16, 16711748, false, false, true, 1453));
+		items.add(new ItemDef("Dragon longbow", "A nice sturdy bow", "", 2560, 54, "items:54", false, true, 24, 16711748, 16711748, true, false, true, 1454));
+
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
@@ -4416,6 +4423,10 @@ public class EntityHandler {
 			animations.add(new AnimationDef("wings", "equipment", 4246592, 1513239, 0, true, false, 0)); //466 - guthix wings
 			animations.add(new AnimationDef("wings", "equipment", 4210926, 1513239, 0, true, false, 0)); //467 - saradomin wings
 			animations.add(new AnimationDef("wings", "equipment", 16711680, 1513239, 0, true, false, 0)); //468 - zamorak wings
+			animations.add(new AnimationDef("dagger", "equipment", 16711748, 0, true, false, 0)); //469 - dragon dagger
+			animations.add(new AnimationDef("poisoneddagger", "equipment", 16711748, 0, true, false, 0)); //470 - poison dragon dagger
+			animations.add(new AnimationDef("crossbow", "equipment", 16711748, 0, true, false, 0)); //471 - dragon crossbow
+			animations.add(new AnimationDef("longbow", "equipment", 16711748, 0, false, false, 0)); //472 - dragon longbow
 		}
 	}
 

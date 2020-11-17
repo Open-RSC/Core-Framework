@@ -389,6 +389,11 @@ public class CombatFormula {
 			case RUNE_SPEAR:
 			case POISONED_RUNE_SPEAR:
 				return 75;
+			case DRAGON_ARROWS:
+			case POISON_DRAGON_ARROWS:
+			case DRAGON_BOLTS:
+			case POISON_DRAGON_BOLTS:
+				return 60;
 			default:
 				return 0;
 		}
@@ -456,6 +461,7 @@ public class CombatFormula {
 			case POISONED_ADAMANTITE_SPEAR:
 			case MAGIC_LONGBOW:
 			case MAGIC_SHORTBOW:
+			case DRAGON_CROSSBOW:
 				return 63;
 			case RUNE_SPEAR:
 			case POISONED_RUNE_SPEAR:

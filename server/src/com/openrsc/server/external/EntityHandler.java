@@ -298,7 +298,7 @@ public final class EntityHandler {
 				ItemId.MITHRIL_ARROWS.id(), ItemId.POISON_MITHRIL_ARROWS.id(),
 				ItemId.ADAMANTITE_ARROWS.id(), ItemId.POISON_ADAMANTITE_ARROWS.id(),
 				ItemId.RUNE_ARROWS.id(), ItemId.POISON_RUNE_ARROWS.id(),
-				ItemId.ICE_ARROWS.id()
+				ItemId.ICE_ARROWS.id(), ItemId.DRAGON_ARROWS.id(), ItemId.POISON_DRAGON_ARROWS.id()
 			};
 			for (int itemId : wieldableArrows) {
 				items.get(itemId).setWieldable(true);
@@ -310,7 +310,7 @@ public final class EntityHandler {
 
 			// Make bolts wieldable.
 			int[] wieldableBolts = new int[] {
-				ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id()
+				ItemId.CROSSBOW_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(), ItemId.OYSTER_PEARL_BOLTS.id(), ItemId.POISON_DRAGON_BOLTS.id(), ItemId.DRAGON_BOLTS.id()
 			};
 			for (int itemId : wieldableBolts) {
 				items.get(itemId).setWieldable(true);
@@ -421,6 +421,7 @@ public final class EntityHandler {
 			items.get(ItemId.YEW_SHORTBOW.id()).setAppearanceId(257);
 			items.get(ItemId.MAGIC_LONGBOW.id()).setAppearanceId(258);
 			items.get(ItemId.MAGIC_SHORTBOW.id()).setAppearanceId(258);
+			items.get(ItemId.DRAGON_LONGBOW.id()).setAppearanceId(472);
 
 			items.get(ItemId.BRONZE_SHORT_SWORD.id()).setAppearanceId(259);
 			items.get(ItemId.IRON_SHORT_SWORD.id()).setAppearanceId(260);
@@ -437,6 +438,7 @@ public final class EntityHandler {
 			items.get(ItemId.ADAMANTITE_DAGGER.id()).setAppearanceId(270);
 			items.get(ItemId.RUNE_DAGGER.id()).setAppearanceId(271);
 			items.get(ItemId.BLACK_DAGGER.id()).setAppearanceId(272);
+			items.get(ItemId.DRAGON_DAGGER.id()).setAppearanceId(469);
 
 			items.get(ItemId.POISONED_BRONZE_DAGGER.id()).setAppearanceId(273);
 			items.get(ItemId.POISONED_IRON_DAGGER.id()).setAppearanceId(274);
@@ -445,6 +447,7 @@ public final class EntityHandler {
 			items.get(ItemId.POISONED_RUNE_DAGGER.id()).setAppearanceId(277);
 			items.get(ItemId.POISONED_ADAMANTITE_DAGGER.id()).setAppearanceId(278);
 			items.get(ItemId.POISONED_BLACK_DAGGER.id()).setAppearanceId(279);
+			items.get(ItemId.POISONED_DRAGON_DAGGER.id()).setAppearanceId(470);
 
 			items.get(ItemId.BRONZE_2_HANDED_SWORD.id()).setAppearanceId(280);
 			items.get(ItemId.IRON_2_HANDED_SWORD.id()).setAppearanceId(281);
