@@ -421,8 +421,6 @@ public final class EntityHandler {
 			items.get(ItemId.YEW_SHORTBOW.id()).setAppearanceId(257);
 			items.get(ItemId.MAGIC_LONGBOW.id()).setAppearanceId(258);
 			items.get(ItemId.MAGIC_SHORTBOW.id()).setAppearanceId(258);
-			items.get(ItemId.DRAGON_LONGBOW.id()).setAppearanceId(472);
-			items.get(ItemId.DRAGON_CROSSBOW.id()).setAppearanceId(471);
 
 			items.get(ItemId.BRONZE_SHORT_SWORD.id()).setAppearanceId(259);
 			items.get(ItemId.IRON_SHORT_SWORD.id()).setAppearanceId(260);
@@ -506,6 +504,9 @@ public final class EntityHandler {
 			items.get(ItemId.ZAMORAK_CAPE.id()).setAppearanceId(465);
 			items.get(ItemId.SARADOMIN_CAPE.id()).setAppearanceId(464);
 			items.get(ItemId.GUTHIX_CAPE.id()).setAppearanceId(463);
+
+			items.get(ItemId.DRAGON_LONGBOW.id()).setAppearanceId(472);
+			items.get(ItemId.DRAGON_CROSSBOW.id()).setAppearanceId(471);
 		}
 	}
 

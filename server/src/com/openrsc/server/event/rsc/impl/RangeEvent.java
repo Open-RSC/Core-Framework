@@ -173,6 +173,16 @@ public class RangeEvent extends GameTickEvent {
 					getPlayerOwner().message("Your bolts are too powerful for your crossbow.");
 					getPlayerOwner().resetRange();
 					return;
+				}
+				if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_CROSSBOW.id())) {
+					getPlayerOwner().message("Your bolts will not fit in the dragon crossbow.");
+					getPlayerOwner().resetRange();
+					return;
+				}
+				if (getPlayerOwner().getCarriedItems().getEquipment().hasEquipped(ItemId.DRAGON_LONGBOW.id())) {
+					getPlayerOwner().message("Your arrows will not fit the dragon longbow.");
+					getPlayerOwner().resetRange();
+					return;
 				} else {
 					getPlayerOwner().message("Your ammo is too powerful for your bow");
 					getPlayerOwner().resetRange();
