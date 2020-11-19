@@ -95,6 +95,10 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 												out.add(packet);
 												// Packet.printPacket(packet, "Incoming");
 												return;
+											} else if (OpcodeIn.isPossiblyValid(opcode, length, 175)) {
+												Packet packet = new Packet(opcode, bufferOrdered);
+												out.add(packet);
+												return;
 											} else {
 												System.out.println(String.format("Caught invalid incoming opcode;; enc: %d; dec: %d; len: %d; isPossiblyValid: %b; opcodeTries: %d", encodedOpcode, opcode, length, isPossiblyValid, opcodeTries));
 											}

@@ -47,7 +47,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 			LOGGER.info(player.getCurrentIP() + " - Cancel recovery request successful");
 
 			break;
-		case 200: //send recovery questions screen
+		case 197: //send recovery questions screen
 			PlayerRecoveryQuestions recoveryQuestions = player.getWorld().getServer().getDatabase().getPlayerChangeRecoveryData(player.getID());
 			if (recoveryQuestions == null || DataConversions.getDaysSinceTime(recoveryQuestions.dateSet) >= 14) {
 				//no pending recovery questions change or wait time past, allow
@@ -57,7 +57,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 			}
 
 			break;
-		case 201: //send contact details screen
+		case 247: //send contact details screen
 			PlayerContactDetails contactDetails = player.getWorld().getServer().getDatabase().getContactDetails(player.getID());
 			if (contactDetails == null || DataConversions.getDaysSinceTime(contactDetails.dateModified) >= 1) {
 				//details not set or wait time past, allow

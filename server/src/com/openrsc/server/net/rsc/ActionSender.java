@@ -14,9 +14,7 @@ import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
-import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.PacketBuilder;
-import com.openrsc.server.net.RSCConnectionHandler;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -2109,9 +2107,9 @@ public class ActionSender {
         SEND_REMOVE_WORLD_ENTITY(211),
         SEND_APPEARANCE_KEEPALIVE(213),
 		SEND_BOX(222),
-		SEND_OPEN_RECOVERY(224), // inauthentic
+		SEND_OPEN_RECOVERY(224), // part of RSC127 protocol, would like available even on 235 setting
 		SEND_DUEL_CLOSE(225),
-		SEND_OPEN_DETAILS(232), // inauthentic
+		SEND_OPEN_DETAILS(232), // part of RSC175 protocol, would like available even on 235 setting
         SEND_UPDATE_PLAYERS(234),
         SEND_UPDATE_IGNORE_LIST_BECAUSE_NAME_CHANGE(237),
 		SEND_GAME_SETTINGS(240),

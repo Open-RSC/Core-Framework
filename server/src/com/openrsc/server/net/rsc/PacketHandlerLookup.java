@@ -59,7 +59,7 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.USE_ITEM_ON_SCENERY.getOpcode(), ItemUseOnObject.class);
 		bind(OpcodeIn.USE_WITH_BOUNDARY.getOpcode(), ItemUseOnObject.class);
 
-		bind(OpcodeIn.GROUND_ITEM_TAKE.getOpcode(), GroundItemTake.class);
+		bind(OpcodeIn.GROUND_ITEM_TAKE.getOpcode(), PacketConflictHandler.class);
 
 		bind(OpcodeIn.SHOP_BUY.getOpcode(), InterfaceShopHandler.class);
 		bind(OpcodeIn.SHOP_SELL.getOpcode(), InterfaceShopHandler.class);
@@ -81,7 +81,7 @@ public class PacketHandlerLookup {
 		bind(OpcodeIn.PLAYER_DUEL.getOpcode(), PlayerDuelHandler.class);
 		bind(OpcodeIn.DUEL_FIRST_SETTINGS_CHANGED.getOpcode(), PlayerDuelHandler.class);
 		bind(OpcodeIn.DUEL_FIRST_ACCEPTED.getOpcode(), PlayerDuelHandler.class);
-		bind(OpcodeIn.DUEL_DECLINED.getOpcode(), PlayerDuelHandler.class);
+		bind(OpcodeIn.DUEL_DECLINED.getOpcode(), PacketConflictHandler.class);
 		bind(OpcodeIn.DUEL_OFFER_ITEM.getOpcode(), PlayerDuelHandler.class);
 		bind(OpcodeIn.DUEL_SECOND_ACCEPTED.getOpcode(), PlayerDuelHandler.class);
 
@@ -107,8 +107,8 @@ public class PacketHandlerLookup {
 
 		bind(OpcodeIn.CHANGE_PASS.getOpcode(), SecuritySettingsHandler.class);
 		bind(OpcodeIn.CANCEL_RECOVERY_REQUEST.getOpcode(), SecuritySettingsHandler.class);
-		bind(OpcodeIn.CHANGE_RECOVERY.getOpcode(), SecuritySettingsHandler.class);
-		bind(OpcodeIn.CHANGE_DETAILS.getOpcode(), SecuritySettingsHandler.class);
+		bind(OpcodeIn.CHANGE_RECOVERY_REQUEST.getOpcode(), PacketConflictHandler.class);
+		bind(OpcodeIn.CHANGE_DETAILS_REQUEST.getOpcode(), PacketConflictHandler.class);
 		bind(OpcodeIn.SET_RECOVERY.getOpcode(), SecuritySettingsHandler.class);
 		bind(OpcodeIn.SET_DETAILS.getOpcode(), SecuritySettingsHandler.class);
 
