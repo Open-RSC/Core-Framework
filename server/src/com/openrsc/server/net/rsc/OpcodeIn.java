@@ -91,12 +91,6 @@ public enum OpcodeIn {
 	BANK_SAVE_PRESET(27), // inauthentic
 	BANK_LOAD_PRESET(28), // inauthentic
 	INTERFACE_OPTIONS(199), // inauthentic
-	CHANGE_PASS(25), // inauthentic
-	CANCEL_RECOVERY_REQUEST(196), // inauthentic
-	CHANGE_RECOVERY(200), // inauthentic
-	SET_RECOVERY(208), // part of RSC127 protocol, would like available even on 235 setting
-	CHANGE_DETAILS(201), // inauthentic
-	SET_DETAILS(253), // inauthentic
 
 	SLEEPWORD_ENTERED(45),
 
@@ -106,8 +100,17 @@ public enum OpcodeIn {
 
 	LOGIN(0),
 	REGISTER_ACCOUNT(2), // part of RSC127 protocol, would like available even on 235 setting
-	FORGOT_PASSWORD(5), // this should be refactored to share opcode 4 with cast_on_inventory_item. It is opcode 4 in RSC127 protocol
-	RECOVERY_ATTEMPT(7), // this should be refactored to share opcode 8 with duel_settings. It is opcode 8 in RSC127 protocol
+	FORGOT_PASSWORD(4), // part of RSC127 protocol, shares opcode 4 with cast_on_inventory_item. Does not require conflict handler since its outside game
+	RECOVERY_ATTEMPT(8), // part of RSC127 protocol, shares opcode 8 with duel_settings. Does not require conflict handler since its outside game
+
+	CHANGE_RECOVERY_REQUEST(197), // part of RSC127 protocol, shares opcode 197 with duel_declined. Uses conflict handler
+	CHANGE_DETAILS_REQUEST(247), // part of RSC127 protocol, shares opcode 247 with ground_item_take. Uses conflict handler
+
+	CHANGE_PASS(25), // part of RSC127 protocol, would like available even on 235 setting
+	SET_RECOVERY(208), // part of RSC127 protocol, would like available even on 235 setting
+	SET_DETAILS(253), // part of RSC175 protocol, would like available even on 235 setting
+
+	CANCEL_RECOVERY_REQUEST(196), // part of RSC127 protocol, would like available even on 235 setting
 
 	;
 
@@ -144,11 +147,38 @@ public enum OpcodeIn {
 	// a basic check is done on authentic opcodes against their possible lengths
 	public static boolean isPossiblyValid(int opcode, int length, int protocolVer) {
 		// TODO: remove this if checking valid for other protocol vers is implemented e.g. 127
-		if (protocolVer != 235) {
+		if (protocolVer < 127 || (protocolVer > 175 && protocolVer != 235)) {
 			return true;
 		}
 		int payloadLength = length - 1; // subtract off opcode length.
 
+		if (protocolVer <= 175) {
+			switch (opcode) {
+				// CHANGE_RECOVERY_REQUEST
+				case 197:
+					return payloadLength == 0;
+				// CHANGE_DETAILS_REQUEST
+				case 247:
+					return payloadLength == 0;
+				// CHANGE_PASS
+				case 25:
+					return payloadLength > 0;
+				// SET_RECOVERY
+				case 208:
+					return payloadLength >= 15; // 5 sets of at least 3 for question-answer
+				// SET_DETAILS
+				case 253:
+					return payloadLength >= 8; // 4 sets of at least 2 per each
+				// CANCEL_RECOVERY_REQUEST
+				case 196:
+					return payloadLength == 0;
+
+				// Unknown OPCODE
+				default:
+					System.out.println(String.format("Received inauthentic opcode %d from authentic claiming client", opcode));
+					return false;
+			}
+		}
 		if (protocolVer == 235) {
 			switch (opcode) {
 				// HEARTBEAT

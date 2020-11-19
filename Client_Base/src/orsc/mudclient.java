@@ -1622,12 +1622,12 @@ public final class mudclient implements Runnable {
 
 				while (true) {
 					if (var3 >= 5) {
-						int var6;
-						for (int var9 = 0; var9 < 5; ++var9) {
-							String var5 = this.panelSetRecoveryQuestion.getControlText(this.controlSetAnswer[var9]);
+						int innerIdx;
+						for (int outerIdx = 0; outerIdx < 5; ++outerIdx) {
+							String var5 = this.panelSetRecoveryQuestion.getControlText(this.controlSetAnswer[outerIdx]);
 
-							for (var6 = 0; var6 < var9; ++var6) {
-								String var7 = this.panelSetRecoveryQuestion.getControlText(this.controlSetAnswer[var6]);
+							for (innerIdx = 0; innerIdx < outerIdx; ++innerIdx) {
+								String var7 = this.panelSetRecoveryQuestion.getControlText(this.controlSetAnswer[innerIdx]);
 								if (var5.equalsIgnoreCase(var7)) {
 									this.panelSetRecoveryQuestion.setText(this.controlRecoveryInstruction, "@yel@Each question must have a different answer");
 									return;
@@ -1665,11 +1665,11 @@ public final class mudclient implements Runnable {
 
 						this.packetHandler.getClientStream().finishPacket();
 
-						for (var6 = 0; var6 < 5; ++var6) {
-							this.recoveryQAindices[var6] = var6;
-							this.jfb[var6] = "~:" + this.recoveryQAindices[var6];
-							this.panelSetRecoveryQuestion.setText(this.controlSetAnswer[var6], "");
-							this.panelSetRecoveryQuestion.setText(this.controlSetQuestion[var6], var6 + 1 + ": " + this.questions[this.recoveryQAindices[var6]]);
+						for (innerIdx = 0; innerIdx < 5; ++innerIdx) {
+							this.recoveryQAindices[innerIdx] = innerIdx;
+							this.jfb[innerIdx] = "~:" + this.recoveryQAindices[innerIdx];
+							this.panelSetRecoveryQuestion.setText(this.controlSetAnswer[innerIdx], "");
+							this.panelSetRecoveryQuestion.setText(this.controlSetQuestion[innerIdx], innerIdx + 1 + ": " + this.questions[this.recoveryQAindices[innerIdx]]);
 						}
 
 						this.panelSetRecoveryQuestion.setFocus(this.controlSetAnswer[0]);
@@ -9540,7 +9540,7 @@ public final class mudclient implements Runnable {
 		yFromTopDistance += 15;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12 && this.mouseY < yFromTopDistance + 4
 			&& mouseButtonClick == 1) {
-			this.packetHandler.getClientStream().newPacket(200);
+			this.packetHandler.getClientStream().newPacket(197);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9548,7 +9548,7 @@ public final class mudclient implements Runnable {
 		yFromTopDistance += 15;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12 && this.mouseY < yFromTopDistance + 4
 			&& mouseButtonClick == 1) {
-			this.packetHandler.getClientStream().newPacket(201);
+			this.packetHandler.getClientStream().newPacket(247);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -11696,7 +11696,7 @@ public final class mudclient implements Runnable {
 								this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 							}
 
-							this.packetHandler.getClientStream().newPacket(5);
+							this.packetHandler.getClientStream().newPacket(4);
 							this.packetHandler.getClientStream().bufferBits.putString(getUsername());
 							this.packetHandler.getClientStream().finishPacketAndFlush();
 							int var11 = this.packetHandler.getClientStream().read();
@@ -11791,7 +11791,7 @@ public final class mudclient implements Runnable {
 
 							String pPass = DataOperations.addCharacters(this.panelRecovery.getControlText(this.controlPreviousPassword), 20);
 							String nPass = DataOperations.addCharacters(this.panelRecovery.getControlText(this.controlNewPassword), 20);
-							this.packetHandler.getClientStream().newPacket(7);
+							this.packetHandler.getClientStream().newPacket(8);
 							this.packetHandler.getClientStream().bufferBits.putString(getUsername());
 							this.packetHandler.getClientStream().bufferBits.putString(pPass);
 							this.packetHandler.getClientStream().bufferBits.putString(nPass);
