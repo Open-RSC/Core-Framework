@@ -124,8 +124,10 @@ public class DropTable {
 			if (sum > hit) {
 				// If it's not a reroll, and the user is wearing a ring of wealth,
 				// We let them roll once more for a second chance at goodies.
-				if (drop.type == dropType.NOTHING && ringOfWealth) {
-					items.addAll(rollItem(false, owner));
+				if (drop.type == dropType.NOTHING) {
+					if (ringOfWealth) {
+						items.addAll(rollItem(false, owner));
+					}
 					break;
 				}
 				else if (drop.type == dropType.ITEM) {
