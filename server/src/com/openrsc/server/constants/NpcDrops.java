@@ -1620,9 +1620,9 @@ public class NpcDrops {
 		//KBD Specific table
 		kbdTableCustom = new DropTable("KBD Rare Drop Table", true);
 		kbdTableCustom.addAccessor(NpcId.KING_BLACK_DRAGON.id(), 1673, 51200);
-		kbdTableCustom.addEmptyDrop(1273);
 		kbdTableCustom.addItemDrop(ItemId.DRAGON_2_HANDED_SWORD.id(), 1, 25, false);
 		kbdTableCustom.addItemDrop(ItemId.KING_BLACK_DRAGON_SCALE.id(), 1, 2048, false);
+		kbdTableCustom.addEmptyDrop(1273);
 	}
 
 	private void createCustomQuestDrops() {
