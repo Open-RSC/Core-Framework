@@ -48,12 +48,12 @@ public class PacketConflictHandler implements PacketHandler {
 				break;
 			case GROUND_ITEM_TAKE:
 			case CHANGE_DETAILS_REQUEST:
-				if (length == 0) {
-					// redirect to SecuritySettingsHandler
-					get(unique(pID,2)).handlePacket(packet, player);
-				} else {
+				if (length > 1) {
 					// redirect to GroundItemTake
 					get(unique(pID,1)).handlePacket(packet, player);
+				} else {
+					// redirect to SecuritySettingsHandler
+					get(unique(pID,2)).handlePacket(packet, player);
 				}
 				break;
 			default:

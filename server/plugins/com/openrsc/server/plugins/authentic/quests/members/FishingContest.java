@@ -693,7 +693,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 					if (player.getQuestStage(this) == 0) {
 						npcsay(player, dwarf, "Hoi there, halt",
 							"You can't come in here");
-						int stairMenu = multi(player, dwarf,
+						int stairMenu = multi(player, dwarf, false, //do not send over
 							"why not?",
 							"Oh sorry I hadn't realised it was private",
 							"I'm bigger than you let me by");
@@ -703,8 +703,9 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 						} else if (stairMenu == 1) {
 							say(player, dwarf, "Oh sorry I hadn't realised it was private");
 						} else if (stairMenu == 2) {
-							say(player, dwarf, "I was just stopping to say hello");
-							npcsay(player, dwarf, "Hello then");
+							say(player, dwarf, "I'm bigger than you",
+								"Let me by");
+							npcsay(player, dwarf, "Go away", "You're not going to bully your way in here");
 						}
 					} else {
 						mountainDwarfDialogue(player, dwarf);
