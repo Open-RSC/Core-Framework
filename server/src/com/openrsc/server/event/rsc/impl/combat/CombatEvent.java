@@ -158,15 +158,11 @@ public class CombatEvent extends GameTickEvent {
 
 		// Update players sound and party.
 		if (target.isPlayer()) {
-			if (hitter.isNpc()) {
-				sendSound((Player)target, (Npc)hitter, damage > 0);
-			}
+			sendSound((Player)target, hitter, damage > 0);
 			updateParty((Player)target);
 		}
 		if (hitter.isPlayer()) {
-			if (target.isNpc()) {
-				sendSound((Player)hitter, (Npc)target, damage > 0);
-			}
+			sendSound((Player)hitter, target, damage > 0);
 			updateParty((Player)hitter);
 		}
 
@@ -191,12 +187,14 @@ public class CombatEvent extends GameTickEvent {
 	}
 
 	// Players in combat with an NPC will receive unique NPC
-	// sounds dependent on npc type.
-	private void sendSound(Player player, Npc npc, boolean damaged) {
+	// sounds dependent on npc type. Against Player is always combat2
+	private void sendSound(Player player, Mob mob, boolean damaged) {
 		String combatSound;
-		if (DataConversions.inArray(Constants.ARMOR_NPCS, npc.getID())) {
+		boolean isNpc = mob.isNpc();
+		boolean isPlayer = mob.isPlayer();
+		if (isPlayer || DataConversions.inArray(Constants.ARMOR_NPCS, ((Npc)mob).getID())) {
 			combatSound = damaged ? "combat2b" : "combat2a";
-		} else if (DataConversions.inArray(Constants.UNDEAD_NPCS, npc.getID())) {
+		} else if (isNpc && DataConversions.inArray(Constants.UNDEAD_NPCS, ((Npc)mob).getID())) {
 			combatSound = damaged ? "combat3b" : "combat3a";
 		} else {
 			combatSound = damaged ? "combat1b" : "combat1a";
