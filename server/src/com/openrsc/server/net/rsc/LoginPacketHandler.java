@@ -11,6 +11,7 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.ForgotPasswordResponse;
 import com.openrsc.server.util.rsc.LoginResponse;
 import com.openrsc.server.util.rsc.RegisterResponse;
 import io.netty.buffer.ByteBuf;
@@ -288,60 +289,126 @@ public class LoginPacketHandler {
 				}
 			/* Forgot password */
 			case FORGOT_PASSWORD:
+				LOGGER.info("Forgot password attempt from: " + IP);
 				try {
-					if (!server.getPacketFilter().shouldAllowPacket(channel, true)) {
-						channel.close();
+					if (attachment.authenticClient.get()) {
+						authenticClient = 1;
+					} else {
+						authenticClient = 0;
+					}
+				} catch (NullPointerException e) {
+					authenticClient = 127;
+				}
 
-						return;
+				if (authenticClient != 0) {
+					// Handle forgot password packet
+					long userHash = packet.readLong();
+					final String username = DataConversions.hashToUsername(userHash);
+
+					PlayerLoginData playerData = null;
+					PlayerRecoveryQuestions recoveryQuestions = null;
+					boolean errored = false;
+
+					try {
+						playerData = server.getDatabase().getPlayerLoginData(username);
+					} catch(Exception e) {
+						LOGGER.info("error - trying to recover from non existent user");
+						errored = true;
 					}
 
-					String user = getString(packet.getBuffer()).trim();
-					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
-
-					PlayerLoginData player = server.getDatabase().getPlayerLoginData(user);
-					if (player == null) {
-						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
-						channel.close();
-						return;
+					if (playerData != null) {
+						int playerID = playerData.id;
+						try {
+							recoveryQuestions = server.getDatabase().getPlayerRecoveryData(playerID);
+						} catch(Exception e) {
+							LOGGER.info("error - trying to recover from user without questions set");
+							errored = true;
+						}
 					}
-					int playerID = player.id;
+					errored = errored || (recoveryQuestions == null);
 
-					String[] questions = new String[5];
-					boolean foundAndHasRecovery = false;
-					PlayerRecoveryQuestions recoveryQuestions = server.getDatabase().getPlayerRecoveryData(playerID);
+					channel.writeAndFlush(new PacketBuilder().writeShort((short) 0).toPacket()); // not known what this should write
 
-					if (recoveryQuestions != null) {
+					if (server.getPacketFilter().shouldAllowLogin(IP, true) && !errored) {
+						String[] questions = new String[5];
+
 						questions[0] = recoveryQuestions.question1;
 						questions[1] = recoveryQuestions.question2;
 						questions[2] = recoveryQuestions.question3;
 						questions[3] = recoveryQuestions.question4;
 						questions[4] = recoveryQuestions.question5;
 
-						foundAndHasRecovery = true;
-					}
-
-					if (!foundAndHasRecovery) {
-						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
-					} else {
-						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 1).toPacket());
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) ForgotPasswordResponse.FORGOT_PASSWORD_SUCCESSFUL).toPacket());
 						com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 						String st;
 						for (int n = 0; n < 5; ++n) {
 							st = questions[n];
-							s.writeByte((byte) st.length() + 1);
-							s.writeString(st);
+							s.writeByte((byte) st.length());
+							s.writeBytes(st.getBytes());
 						}
 						channel.writeAndFlush(s.toPacket());
+						channel.close();
+					} else {
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) ForgotPasswordResponse.FORGOT_PASSWORD_UNSUCCESSFUL).toPacket());
+						channel.close();
 					}
-					channel.close();
+					break;
+				} else {
+					// Inauthentic client
+					try {
+						if (!server.getPacketFilter().shouldAllowPacket(channel, true)) {
+							channel.close();
 
-				} catch (Exception e) {
-					LOGGER.catching(e);
-					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
-					channel.close();
+							return;
+						}
+
+						String user = getString(packet.getBuffer()).trim();
+						user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
+
+						PlayerLoginData player = server.getDatabase().getPlayerLoginData(user);
+						if (player == null) {
+							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+							channel.close();
+							return;
+						}
+						int playerID = player.id;
+
+						String[] questions = new String[5];
+						boolean foundAndHasRecovery = false;
+						PlayerRecoveryQuestions recoveryQuestions = server.getDatabase().getPlayerRecoveryData(playerID);
+
+						if (recoveryQuestions != null) {
+							questions[0] = recoveryQuestions.question1;
+							questions[1] = recoveryQuestions.question2;
+							questions[2] = recoveryQuestions.question3;
+							questions[3] = recoveryQuestions.question4;
+							questions[4] = recoveryQuestions.question5;
+
+							foundAndHasRecovery = true;
+						}
+
+						if (!foundAndHasRecovery) {
+							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+						} else {
+							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 1).toPacket());
+							com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+							String st;
+							for (int n = 0; n < 5; ++n) {
+								st = questions[n];
+								s.writeByte((byte) st.length() + 1);
+								s.writeString(st);
+							}
+							channel.writeAndFlush(s.toPacket());
+						}
+						channel.close();
+
+					} catch (Exception e) {
+						LOGGER.catching(e);
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket());
+						channel.close();
+					}
+					break;
 				}
-				break;
-
 			/* Attempt recover */
 			case RECOVERY_ATTEMPT:
 				String user = getString(packet.getBuffer()).trim();

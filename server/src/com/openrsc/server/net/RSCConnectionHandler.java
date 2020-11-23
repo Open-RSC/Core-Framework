@@ -60,7 +60,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 					ActionSender.sendInitialServerConfigs(getServer(), channel);
 				} else {
-					if (packet.getLength() > 20) {
+					if (packet.getLength() > 20 || (packet.getID() == 4 && packet.getLength() > 8)) {
 						loginHandler.processLogin(packet, channel, getServer());
 					}
 				}
