@@ -10,10 +10,7 @@ import com.openrsc.server.net.ConnectionAttachment;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.RSCConnectionHandler;
-import com.openrsc.server.util.rsc.DataConversions;
-import com.openrsc.server.util.rsc.ForgotPasswordResponse;
-import com.openrsc.server.util.rsc.LoginResponse;
-import com.openrsc.server.util.rsc.RegisterResponse;
+import com.openrsc.server.util.rsc.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
@@ -233,7 +230,7 @@ public class LoginPacketHandler {
 					boolean errored = false;
 					byte[] passData = new byte[21];
 					for (int i = 0; i < 3; i++) {
-						blockLen = packet.readByte();
+						blockLen = packet.readUnsignedByte();
 						decBlock = Crypto.decryptRSA(packet.readBytes(blockLen), 0, blockLen);
 						// TODO: there are ignored nonces at the beginning of the decrypted block
 						receivedSession = ByteBuffer.wrap(Arrays.copyOfRange(decBlock, 4, 8)).getInt();
@@ -411,19 +408,121 @@ public class LoginPacketHandler {
 				}
 			/* Attempt recover */
 			case RECOVERY_ATTEMPT:
-				String user = getString(packet.getBuffer()).trim();
-				user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
-				String oldPass = getString(packet.getBuffer()).trim();
-				String newPass = getString(packet.getBuffer()).trim();
-				Long uid = packet.getBuffer().readLong();
-				String answers[] = new String[5];
-				for (int j = 0; j < 5; j++) {
-					answers[j] = DataConversions.normalize(getString(packet.getBuffer()).trim(), 50);
+				LOGGER.info("Recovery attempt from: " + IP);
+				try {
+					if (attachment.authenticClient.get()) {
+						authenticClient = 1;
+					} else {
+						authenticClient = 0;
+					}
+				} catch (NullPointerException e) {
+					authenticClient = 127;
 				}
 
-				RecoveryAttemptRequest recoveryAttemptRequest = new RecoveryAttemptRequest(server, channel, user, oldPass, newPass, answers);
-				server.getLoginExecutor().add(recoveryAttemptRequest);
-				break;
+				if (authenticClient != 0) {
+					// Handle recovery packet
+					long userHash = packet.readLong();
+					final String username = DataConversions.hashToUsername(userHash);
+
+					packet.readInt(); // hashed random.dat associated to user request
+
+					// Get encrypted block
+					// old + new password is always 40 characters long, with spaces at the end.
+					// each blocks having encrypted 7 chars of password
+					int blockLen;
+					byte[] decBlock; // current decrypted block
+					int session = -1; // TODO: should be TCP session to check if request should be processed
+					int receivedSession;
+					boolean errored = false;
+					byte[] concatPassData = new byte[42];
+					for (int i = 0; i < 6; i++) {
+						blockLen = packet.readUnsignedByte();
+						decBlock = Crypto.decryptRSA(packet.readBytes(blockLen), 0, blockLen);
+						// TODO: there are ignored nonces at the beginning of the decrypted block
+						receivedSession = ByteBuffer.wrap(Arrays.copyOfRange(decBlock, 4, 8)).getInt();
+						// decrypted packet must be of length 15
+						if (session == -1 && decBlock.length == 15) {
+							session = receivedSession;
+						} else if (session != receivedSession || decBlock.length != 15) {
+							errored = true; // decryption error occurred
+						}
+
+						if (!errored) {
+							System.arraycopy(decBlock, 8, concatPassData, i * 7, 7);
+						}
+					}
+
+					String oldPassword = "";
+					String newPassword = "";
+					try {
+						oldPassword = new String(Arrays.copyOfRange(concatPassData, 0, 20), "UTF8").trim();
+						newPassword = new String(Arrays.copyOfRange(concatPassData, 20, 42), "UTF8").trim();
+					} catch (Exception e) {
+						LOGGER.info("error parsing concat passwords in recovery block");
+						errored = true;
+						e.printStackTrace();
+					}
+
+					// Get the 5 recovery answers
+					int answerLen = 0;
+					int expBlocks = 0;
+					byte[] answerData;
+					String answers[] = new String[5];
+					for (int i = 0; i < 5; i++) {
+						answerLen = packet.readUnsignedByte();
+						expBlocks = (int)Math.ceil(answerLen / 7.0);
+						answerData = new byte[expBlocks * 7];
+						for (int j = 0; j < expBlocks; j++) {
+							blockLen = packet.readUnsignedByte();
+							decBlock = Crypto.decryptRSA(packet.readBytes(blockLen), 0, blockLen);
+							// TODO: there are ignored nonces at the beginning of the decrypted block
+							receivedSession = ByteBuffer.wrap(Arrays.copyOfRange(decBlock, 4, 8)).getInt();
+							// decrypted packet must be of length 15
+							if (session != receivedSession || decBlock.length != 15) {
+								errored = true; // decryption error occurred
+							}
+
+							if (!errored) {
+								System.arraycopy(decBlock, 8, answerData, j * 7, 7);
+							}
+						}
+
+						try {
+							answers[i] = new String(answerData, "UTF8").trim();
+						} catch (Exception e) {
+							LOGGER.info("error parsing answer " + i + " in recover block");
+							errored = true;
+							e.printStackTrace();
+						}
+					}
+
+					channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket()); // not known what this should write
+
+					if (server.getPacketFilter().shouldAllowLogin(IP, true) && !errored) {
+						RecoveryAttemptRequest recoveryAttemptRequest = new RecoveryAttemptRequest(server, channel, username, oldPassword, newPassword, answers);
+						server.getLoginExecutor().add(recoveryAttemptRequest);
+					} else {
+						channel.writeAndFlush(new PacketBuilder().writeByte((byte) RecoverResponse.RECOVER_UNSUCCESSFUL).toPacket());
+						channel.close();
+					}
+
+					break;
+				} else {
+					// Inauthentic client
+					String user = getString(packet.getBuffer()).trim();
+					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
+					String oldPass = getString(packet.getBuffer()).trim();
+					String newPass = getString(packet.getBuffer()).trim();
+					Long uid = packet.getBuffer().readLong();
+					String answers[] = new String[5];
+					for (int j = 0; j < 5; j++) {
+						answers[j] = DataConversions.normalize(getString(packet.getBuffer()).trim(), 50);
+					}
+
+					RecoveryAttemptRequest recoveryAttemptRequest = new RecoveryAttemptRequest(server, channel, user, oldPass, newPass, answers);
+					server.getLoginExecutor().add(recoveryAttemptRequest);
+					break;
+				}
 		}
 	}
 }
