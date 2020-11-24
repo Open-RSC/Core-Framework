@@ -458,7 +458,7 @@ public class LoginPacketHandler {
 						oldPassword = new String(Arrays.copyOfRange(concatPassData, 0, 20), "UTF8").trim();
 						newPassword = new String(Arrays.copyOfRange(concatPassData, 20, 42), "UTF8").trim();
 					} catch (Exception e) {
-						LOGGER.info("error parsing concat passwords in recovery block");
+						LOGGER.info("error parsing passwords in recovery block");
 						errored = true;
 						e.printStackTrace();
 					}

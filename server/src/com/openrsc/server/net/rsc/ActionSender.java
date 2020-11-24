@@ -89,22 +89,12 @@ public class ActionSender {
 	}
 
 	public static void sendRecoveryScreen(Player player) {
-		if (player.isUsingAuthenticClient()) {
-			ActionSender.sendMessage(player, "Account Recovery dialogue is not implemented for the authentic client at this time.");
-			return;
-		}
-
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_OPEN_RECOVERY.opcode);
 		player.write(s.toPacket());
 	}
 
 	public static void sendDetailsScreen(Player player) {
-		if (player.isUsingAuthenticClient()) {
-			ActionSender.sendMessage(player, "Contact Details are not implemented for the authentic client at this time.");
-			return;
-		}
-
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_OPEN_DETAILS.opcode);
 		player.write(s.toPacket());
