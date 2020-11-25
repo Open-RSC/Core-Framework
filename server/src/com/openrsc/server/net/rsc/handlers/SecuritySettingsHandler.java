@@ -135,9 +135,11 @@ public class SecuritySettingsHandler implements PacketHandler {
 				String answers[] = new String[5];
 				for (int i = 0; i < 5; i++) {
 					questLen = packet.readUnsignedByte();
-					questions[i] = packet.readString();
-					if (questions[i].length() != questLen) errored = true;
-					answerLen = packet.readUnsignedByte();
+					questions[i] = new String(packet.readBytes(questLen));
+					answerLen = packet.readUnsignedByte(); //unsure why may read 0 here from client
+					if (answerLen == 0) {
+						answerLen = packet.readUnsignedByte();
+					}
 					// Get encrypted block for answers
 					expBlocks = (int)Math.ceil(answerLen / 7.0);
 					answerData = new byte[expBlocks * 7];
@@ -194,7 +196,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 			if (player.isUsingAuthenticClient()) {
 				for (int i = 0; i < 4; i++) {
 					expLen = packet.readUnsignedByte();
-					details[i] = packet.readString();
+					details[i] = new String(packet.readBytes(expLen));
 					if (details[i].length() != expLen) errored = true;
 				}
 				fullName = details[0];

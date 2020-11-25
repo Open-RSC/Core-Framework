@@ -11,8 +11,6 @@ import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.net.InetSocketAddress;
-
 /**
  * Used to recovery character passwords on the Login thread
  */
@@ -38,7 +36,7 @@ public class RecoveryAttemptRequest extends LoginExecutorProcess{
 		this.setNewPassword(newPassword);
 		this.setOldPassword(oldPassword);
 		this.setAnswers(answers);
-		this.setIpAddress(((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress());
+		this.setIpAddress(getChannel().remoteAddress().toString());
 	}
 
 	public String getIpAddress() {
