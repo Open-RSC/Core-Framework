@@ -31,31 +31,31 @@ public class DoorAction {
 		}
 
 		// Tutorial Doors
-		if (obj.getID() == 75 && obj.getX() == 222 && obj.getY() == 743) {
+		if (obj.getID() == 125 && obj.getX() == 222 && obj.getY() == 743) {
 			return true;
-		} else if (obj.getID() == 76 && obj.getX() == 224 && obj.getY() == 737) {
+		} else if (obj.getID() == 143 && obj.getX() == 224 && obj.getY() == 737) {
 			return true;
-		} else if (obj.getID() == 77 && obj.getX() == 220 && obj.getY() == 727) {
+		} else if (obj.getID() == 130 && obj.getX() == 220 && obj.getY() == 727) {
 			return true;
-		} else if (obj.getID() == 78 && obj.getX() == 212 && obj.getY() == 729) {
+		} else if (obj.getID() == 129 && obj.getX() == 212 && obj.getY() == 729) {
 			return true;
-		} else if (obj.getID() == 80 && obj.getX() == 206 && obj.getY() == 730) {
+		} else if (obj.getID() == 134 && obj.getX() == 206 && obj.getY() == 730) {
 			return true;
-		} else if (obj.getID() == 81 && obj.getX() == 201 && obj.getY() == 734) {
+		} else if (obj.getID() == 131 && obj.getX() == 201 && obj.getY() == 734) {
 			return true;
-		} else if (obj.getID() == 82 && obj.getX() == 198 && obj.getY() == 746) {
+		} else if (obj.getID() == 132 && obj.getX() == 198 && obj.getY() == 746) {
 			return true;
-		} else if (obj.getID() == 83 && obj.getX() == 204 && obj.getY() == 752) {
+		} else if (obj.getID() == 133 && obj.getX() == 204 && obj.getY() == 752) {
 			return true;
-		} else if (obj.getID() == 84 && obj.getX() == 209 && obj.getY() == 754) {
+		} else if (obj.getID() == 136 && obj.getX() == 209 && obj.getY() == 754) {
 			return true;
-		} else if (obj.getID() == 85 && obj.getX() == 217 && obj.getY() == 760) {
+		} else if (obj.getID() == 139 && obj.getX() == 217 && obj.getY() == 760) {
 			return true;
-		} else if (obj.getID() == 88 && obj.getX() == 222 && obj.getY() == 760) {
+		} else if (obj.getID() == 140 && obj.getX() == 222 && obj.getY() == 760) {
 			return true;
-		} else if (obj.getID() == 89 && obj.getX() == 226 && obj.getY() == 760) {
+		} else if (obj.getID() == 213 && obj.getX() == 226 && obj.getY() == 760) {
 			return true;
-		} else if (obj.getID() == 90 && obj.getX() == 230 && obj.getY() == 759) {
+		} else if (obj.getID() == 142 && obj.getX() == 230 && obj.getY() == 759) {
 			return true;
 		}
 
@@ -72,91 +72,91 @@ public class DoorAction {
 		}
 
 		// Tutorial Doors
-		if (obj.getID() == 75 && obj.getX() == 222 && obj.getY() == 743) {
+		if (obj.getID() == 125 && obj.getX() == 222 && obj.getY() == 743) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 10) {
 				doDoor(obj, player);
 			} else {
 				player.message("You should speak to a guide before going through this door");
 			}
-		} else if (obj.getID() == 76 && obj.getX() == 224 && obj.getY() == 737) {
+		} else if (obj.getID() == 143 && obj.getX() == 224 && obj.getY() == 737) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 15) {
 				doDoor(obj, player);
 			} else {
 				player.message("Speak to the controls guide before going through this door");
 			}
-		} else if (obj.getID() == 77 && obj.getX() == 220 && obj.getY() == 727) {
+		} else if (obj.getID() == 130 && obj.getX() == 220 && obj.getY() == 727) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 25) {
 				doDoor(obj, player);
 			} else {
 				player.message("Speak to the combat instructor before going through this door");
 			}
-		} else if (obj.getID() == 78 && obj.getX() == 212 && obj.getY() == 729) {
+		} else if (obj.getID() == 129 && obj.getX() == 212 && obj.getY() == 729) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 35) {
 				doDoor(obj, player);
 			} else {
 				player.message("You should speak to a cooking instructor before going through this door");
 			}
-		} else if (obj.getID() == 80 && obj.getX() == 206 && obj.getY() == 730) {
+		} else if (obj.getID() == 134 && obj.getX() == 206 && obj.getY() == 730) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 40) {
 				doDoor(obj, player);
 			} else {
 				player.message("You should speak to a finance advisor before going through this door");
 			}
-		} else if (obj.getID() == 81 && obj.getX() == 201 && obj.getY() == 734) {
+		} else if (obj.getID() == 131 && obj.getX() == 201 && obj.getY() == 734) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 45) {
 				doDoor(obj, player);
 			} else {
 				player.message("You should speak to the fishing instructor before going through this door");
 			}
-		} else if (obj.getID() == 82 && obj.getX() == 198 && obj.getY() == 746) {
+		} else if (obj.getID() == 132 && obj.getX() == 198 && obj.getY() == 746) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 55) {
 				doDoor(obj, player);
 			} else {
 				player.message("You should speak to the mining instructor before going through this door");
 			}
-		} else if (obj.getID() == 83 && obj.getX() == 204 && obj.getY() == 752) {
+		} else if (obj.getID() == 133 && obj.getX() == 204 && obj.getY() == 752) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 60) {
 				doDoor(obj, player);
 			} else {
 				player.message("You should speak to a bank assistant before going through this door");
 			}
-		} else if (obj.getID() == 84 && obj.getX() == 209 && obj.getY() == 754) {
+		} else if (obj.getID() == 136 && obj.getX() == 209 && obj.getY() == 754) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 65) {
 				doDoor(obj, player);
 			} else {
 				player.message("You should speak to the quest advisor before going through this door");
 			}
-		} else if (obj.getID() == 85 && obj.getX() == 217 && obj.getY() == 760) {
+		} else if (obj.getID() == 139 && obj.getX() == 217 && obj.getY() == 760) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 70) {
 				doDoor(obj, player);
 			} else {
 				player.message("You should speak to the wilderness guide before going through this door");
 			}
-		} else if (obj.getID() == 88 && obj.getX() == 222 && obj.getY() == 760) {
+		} else if (obj.getID() == 140 && obj.getX() == 222 && obj.getY() == 760) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 80) {
 				doDoor(obj, player);
 			} else {
 				player.message("You should speak to a magic instructor before going through this door");
 			}
-		} else if (obj.getID() == 89 && obj.getX() == 226 && obj.getY() == 760) {
+		} else if (obj.getID() == 213 && obj.getX() == 226 && obj.getY() == 760) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 90) {
 				doDoor(obj, player);
 			} else {
 				player.message("You should speak to a fatigue expert before going through this door");
 			}
-		} else if (obj.getID() == 90 && obj.getX() == 230 && obj.getY() == 759) {
+		} else if (obj.getID() == 142 && obj.getX() == 230 && obj.getY() == 759) {
 			if (player.getCache().hasKey("tutorial")
 				&& player.getCache().getInt("tutorial") >= 100) {
 				doDoor(obj, player);
@@ -1359,7 +1359,11 @@ public class DoorAction {
 				members = true;
 				break;
 
-			case 347: //
+			case 346: // Members Gate of Frozen Waste Plateau (331,142)
+				members = true;
+				break;
+
+			case 347: // Members Gate NW of Greaters (111,142)
 				members = true;
 				break;
 

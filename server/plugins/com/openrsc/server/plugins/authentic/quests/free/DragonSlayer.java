@@ -490,7 +490,8 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	@Override
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if ((obj.getID() == 226 || obj.getID() == 232) && item.getCatalogId() == ItemId.PLANK.id()) {
-			if (player.getCache().hasKey("lumb_lady") && player.getCache().getInt("lumb_lady") == CRANDOR) {
+			// 226 hole of port sarim ship, 232 hole of crandor ship
+			if (obj.getID() == 232) {
 				player.message("The ship doesn't seem easily repairable at the moment");
 			} else {
 				if (player.getCache().hasKey("crandor_shortcut")) {
