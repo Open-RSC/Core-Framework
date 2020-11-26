@@ -47,7 +47,7 @@ public class Point {
 		}
 		return new Point(x, y);
 	}
-	
+
 	public String returnLocationName() {
 		if (inHeroQuestRangeRoom()) {
 			return "Hero's Quest Range Room";
@@ -447,6 +447,11 @@ public class Point {
 		return inBounds(360, 881, 374, 895)
 				|| inBounds(388, 889, 402, 903)
 				|| inBounds(456, 882, 470, 896);
+	}
+
+	public boolean isInWatchtowerPedestal() {
+		return (x == 490 && y == 3520) || (x == 495 && y == 3520)
+			|| (x == 490 && y == 3525) || (x == 495 && y == 3525);
 	}
 
 	// note: every bank in the game is conveniently perfectly rectangular except for zanaris

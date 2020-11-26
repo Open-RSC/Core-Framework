@@ -1117,6 +1117,10 @@ public class SpellHandler implements PacketHandler {
 							getPlayer().message("You can't cast this spell within the vicinity of the party hall");
 							return;
 						}
+						if (affectedItem.getLocation().isInWatchtowerPedestal()) {
+							getPlayer().playerServerMessage(MessageType.QUEST, "I can't see the object from here");
+							return;
+						}
 						if (affectedItem.getID() == ItemId.A_BLUE_WIZARDS_HAT.id()) {
 							getPlayer().message("The spell fizzles as the magical hat resists your spell.");
 							return;

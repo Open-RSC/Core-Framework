@@ -356,9 +356,7 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 		}
 		else if (i.getID() == ItemId.POWERING_CRYSTAL1.id() || i.getID() == ItemId.POWERING_CRYSTAL2.id()
 				|| i.getID() == ItemId.POWERING_CRYSTAL3.id() || i.getID() == ItemId.POWERING_CRYSTAL4.id()) {
-			if (player.getQuestStage(Quests.WATCHTOWER) == -1
-				|| (i.getX() == 490 && i.getY() == 3520) || (i.getX() == 495 && i.getY() == 3520)
-				|| (i.getX() == 490 && i.getY() == 3525) || (i.getX() == 495 && i.getY() == 3525)) {
+			if (player.getQuestStage(Quests.WATCHTOWER) == -1 || i.getLocation().isInWatchtowerPedestal()) {
 				mes("You try and take the crystal but its stuck solid!");
 				delay(3);
 				mes("You feel magic power coursing through the crystal...");

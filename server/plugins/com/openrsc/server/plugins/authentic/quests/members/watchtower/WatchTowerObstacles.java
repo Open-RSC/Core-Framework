@@ -114,7 +114,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 			player.message("The lever is stuck in the down position");
 		}
 		else if (obj.getID() == WATCHTOWER_LEVER) {
-			changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 1015, obj.getDirection(), obj.getType()));
+			changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), WATCHTOWER_LEVER_DOWNPOSITION, obj.getDirection(), obj.getType()));
 			addloc(obj.getWorld(), obj.getLoc(), 2000);
 			player.message("You pull the lever");
 			if (player.getQuestStage(Quests.WATCHTOWER) == 10) {
