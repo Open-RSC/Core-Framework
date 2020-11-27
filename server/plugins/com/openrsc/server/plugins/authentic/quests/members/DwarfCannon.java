@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -780,6 +781,7 @@ public class DwarfCannon
 						mes("after some tinkering you manage to fix it");
 						delay(3);
 						player.getCache().store("pipe", true);
+						player.incExp(Skills.CRAFTING, 5, true);
 					}
 				} else if (cannonMenu == 1) {
 					if (player.getCache().hasKey("barrel")) {
@@ -798,6 +800,7 @@ public class DwarfCannon
 						mes("after some tinkering you manage to fix it");
 						delay(3);
 						player.getCache().store("barrel", true);
+						player.incExp(Skills.CRAFTING, 5, true);
 					}
 				} else if (cannonMenu == 2) {
 					if (player.getCache().hasKey("axle")) {
@@ -816,6 +819,7 @@ public class DwarfCannon
 						mes("after some tinkering you manage to fix it");
 						delay(3);
 						player.getCache().store("axle", true);
+						player.incExp(Skills.CRAFTING, 5, true);
 					}
 				} else if (cannonMenu == 3) {
 					if (player.getCache().hasKey("shaft")) {
@@ -834,6 +838,7 @@ public class DwarfCannon
 						mes("after some tinkering you manage to fix it");
 						delay(3);
 						player.getCache().store("shaft", true);
+						player.incExp(Skills.CRAFTING, 5, true);
 					}
 				} else if (cannonMenu == 4) {
 					// nothing
