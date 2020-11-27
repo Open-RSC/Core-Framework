@@ -838,19 +838,19 @@ public final class GameStateUpdater {
 		int id = o.getID();
 		switch (id) {
 			case 11: // empty doorframe
-			case 75: // tutorial island door
-			case 76: // tutorial island door
-			case 77: // tutorial island door
-			case 78: // tutorial island door
-			case 80: // tutorial island door
-			case 81: // tutorial island door
-			case 82: // tutorial island door
-			case 83: // tutorial island door
-			case 84: // tutorial island door
-			case 85: // tutorial island door
-			case 88: // tutorial island door
-			case 89: // tutorial island door
-			case 90: // tutorial island door
+			case 125: // tutorial island door
+			case 143: // tutorial island door
+			case 130: // tutorial island door
+			case 129: // tutorial island door
+			case 134: // tutorial island door
+			case 131: // tutorial island door
+			case 132: // tutorial island door
+			case 133: // tutorial island door
+			case 136: // tutorial island door
+			case 139: // tutorial island door
+			case 140: // tutorial island door
+			case 213: // tutorial island door
+			case 142: // tutorial island door
 			case 24: // spider web
 			case 16: // blank placeholder
 				return false;
