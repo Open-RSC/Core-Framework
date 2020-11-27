@@ -999,7 +999,7 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Bandit", "A wilderness outlaw", "", 32, 33, 27, 26, true, sprites, 1, 221, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, 8, -1, -1, -1, -1, 9, -1};
 		npcs.add(new NPCDef("Fat Tony", "A Gourmet Pizza chef", shopOption, 20, 20, 3, 20, false, sprites, 1, 16777215, 16711680, 15523536, 160, 220, 6, 6, 5, i++));
-		sprites = new int[]{5, 4, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+		sprites = new int[]{5, 1, 2, 49, 98, -1, -1, -1, -1, -1, -1, 62};
 		npcs.add(new NPCDef("Donny the lad", "A bandit leader", "", 42, 43, 37, 36, true, sprites, 16752704, 8060928, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{3, 4, 2, 109, 98, -1, -1, -1, -1, -1, -1, 62};
 		npcs.add(new NPCDef("Black Heather", "A bandit leader", "", 42, 43, 37, 36, true, sprites, 1, 8060928, 3, 15523536, 145, 220, 6, 6, 5, i++));
