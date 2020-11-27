@@ -491,7 +491,8 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 	public void onUseLoc(Player player, GameObject obj, Item item) {
 		if ((obj.getID() == 226 || obj.getID() == 232) && item.getCatalogId() == ItemId.PLANK.id()) {
 			// 226 hole of port sarim ship, 232 hole of crandor ship
-			if (obj.getID() == 232) {
+			// however there are some odd teleports authentically and hence only viable check is with cache key
+			if (player.getCache().hasKey("lumb_lady") && player.getCache().getInt("lumb_lady") == CRANDOR) {
 				player.message("The ship doesn't seem easily repairable at the moment");
 			} else {
 				if (player.getCache().hasKey("crandor_shortcut")) {

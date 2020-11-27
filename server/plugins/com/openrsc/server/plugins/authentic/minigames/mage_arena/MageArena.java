@@ -695,33 +695,15 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 	}
 
 	private boolean alreadyHasCape(Player player) {
-		synchronized(player.getCarriedItems().getInventory().getItems()) {
-			for (Item item : player.getCarriedItems().getInventory().getItems()) {
-				if (item.getCatalogId() == ItemId.ZAMORAK_CAPE.id() || item.getCatalogId() == ItemId.SARADOMIN_CAPE.id()
-					|| item.getCatalogId() == ItemId.GUTHIX_CAPE.id()) {
-					return true;
-				}
-			}
-		}
-		synchronized(player.getBank().getItems()) {
-			for (Item item : player.getBank().getItems()) {
-				if (item.getCatalogId() == ItemId.ZAMORAK_CAPE.id() || item.getCatalogId() == ItemId.SARADOMIN_CAPE.id()
-					|| item.getCatalogId() == ItemId.GUTHIX_CAPE.id()) {
-					return true;
-				}
-			}
-		}
-		if (config().WANT_EQUIPMENT_TAB) {
-			synchronized (player.getCarriedItems().getEquipment().getList()) {
-				for (Item item : player.getCarriedItems().getEquipment().getList()) {
-					if (item.getCatalogId() == ItemId.ZAMORAK_CAPE.id() || item.getCatalogId() == ItemId.SARADOMIN_CAPE.id()
-						|| item.getCatalogId() == ItemId.GUTHIX_CAPE.id()) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
+		boolean isCarryingCape = player.getCarriedItems().hasCatalogID(ItemId.ZAMORAK_CAPE.id(), Optional.empty())
+			|| player.getCarriedItems().hasCatalogID(ItemId.SARADOMIN_CAPE.id(), Optional.empty())
+			|| player.getCarriedItems().hasCatalogID(ItemId.GUTHIX_CAPE.id(), Optional.empty());
+
+		boolean hasBankedCape = player.getBank().hasItemId(ItemId.ZAMORAK_CAPE.id())
+			|| player.getBank().hasItemId(ItemId.SARADOMIN_CAPE.id())
+			|| player.getBank().hasItemId(ItemId.GUTHIX_CAPE.id());
+
+		return isCarryingCape || hasBankedCape;
 	}
 
 	@Override
