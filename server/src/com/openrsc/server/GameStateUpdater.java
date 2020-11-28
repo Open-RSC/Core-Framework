@@ -786,6 +786,7 @@ public final class GameStateUpdater {
 		final PacketBuilder packet = new PacketBuilder();
 		packet.setID(ActionSender.Opcode.SEND_BOUNDARY_HANDLER.opcode);
 
+		// remove all boundaries that need to be removed
 		for (final Iterator<GameObject> it$ = playerToUpdate.getLocalWallObjects().iterator(); it$.hasNext(); ) {
 			final GameObject o = it$.next();
 			if (!playerToUpdate.withinGridRange(o) || (o.isRemoved() || o.isInvisibleTo(playerToUpdate))) {
@@ -793,19 +794,45 @@ public final class GameStateUpdater {
 				final int offsetY = o.getY() - playerToUpdate.getY();
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
 					if (playerToUpdate.isUsingAuthenticClient()) {
-						if (shouldSendRemovalEver(o)) {
-							packet.writeByte(0xFF);
-							packet.writeByte(offsetX);
-							packet.writeByte(offsetY);
-						}
+                        // The authentic server does not really send removals for boundaries.
+                        // The client is able to handle having boundaries overwritten by new boundaries, but
+                        // it doesn't correctly handle having boundaries outright removed.
+                        //
+                        // The RSC server may have sent proper removals at one time, the structure is there in the client,
+                        // but in 2018, the server does something which confuses me, and it should be considered a bug in the server.
+                        //
+                        // Sometimes when adding a boundary, it will send a removal for some unrelated coordinate first.
+                        // The coordinate it specifies for boundary removal *does not* have a boundary at that location.
+                        // If it did have a boundary, it would cause erroneous extraneous removals of nearby boundaries.
+                        // I haven't spent a lot of time looking at it to discern any further pattern, if there is one. Sorry.
+                        //
+                        // TODO: determine the pattern that the server uses to send its buggy "random" boundary removal instructions
+                        // Until this is implemented, the server will not be 100% authentic to 2018 RSC.
+                        // (Also, removals & additions are intertwined, not in a removal block & addition block, as structured here)
+                        //
+                        // I went through the effort of writing code in the RSCMinus scraper to check if the boundary removal command
+                        // *ever* successfully removed a boundary.
+                        // ...
+                        // **It never does.**
+                        // ...
+                        // Because X & Y coordinates never match with the coordinate of a boundary that has been added,
+                        // all instances where 0xFF removal are invoked are effectively NO-OPs.
+                        // Therefore, no buggy behaviour from omitting the ability to remove boundaries should arise.
+
+                        /* RSC235 Compatible removal code, shouldn't be used
+                        packet.writeByte(0xFF);
+                        packet.writeByte(offsetX);
+                        packet.writeByte(offsetY);
+                        */
+
 					} else {
 						packet.writeShort(60000);
 						packet.writeByte(offsetX);
 						packet.writeByte(offsetY);
 						packet.writeByte(o.getDirection());
+                        changed = true;
 					}
 					it$.remove();
-					changed = true;
 				} else {
 					playerToUpdate.getLocationsToClear().add(o.getLocation());
 					it$.remove();
@@ -813,6 +840,8 @@ public final class GameStateUpdater {
 				}
 			}
 		}
+
+		// add all new boundaries to be added
 		for (final GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
 			if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
 				|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 1
@@ -831,31 +860,6 @@ public final class GameStateUpdater {
 		}
 		if (changed) {
 			playerToUpdate.write(packet.toPacket());
-		}
-	}
-
-	protected boolean shouldSendRemovalEver(GameObject o) {
-		int id = o.getID();
-		switch (id) {
-			case 11: // empty doorframe
-			case 125: // tutorial island door
-			case 143: // tutorial island door
-			case 130: // tutorial island door
-			case 129: // tutorial island door
-			case 134: // tutorial island door
-			case 131: // tutorial island door
-			case 132: // tutorial island door
-			case 133: // tutorial island door
-			case 136: // tutorial island door
-			case 139: // tutorial island door
-			case 140: // tutorial island door
-			case 213: // tutorial island door
-			case 142: // tutorial island door
-			case 24: // spider web
-			case 16: // blank placeholder
-				return false;
-			default:
-				return true;
 		}
 	}
 
