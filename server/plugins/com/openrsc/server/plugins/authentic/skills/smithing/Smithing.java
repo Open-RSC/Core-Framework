@@ -392,7 +392,7 @@ public class Smithing implements UseLocTrigger {
 		player.getCarriedItems().remove(new Item(ItemId.STEEL_BAR.id()));
 		player.playerServerMessage(MessageType.QUEST, "You hammer the metal and make some nails");
 		player.getCarriedItems().getInventory().add(new Item(ItemId.NAILS.id(), 2));
-		player.incExp(Skills.SMITHING, 70, true);
+		player.incExp(Skills.SMITHING, 150, true);
 	}
 
 	private void makeWire(Item item, Player player) {
