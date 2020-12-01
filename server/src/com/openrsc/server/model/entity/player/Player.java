@@ -309,6 +309,16 @@ public final class Player extends Mob {
 	 */
 	private long sessionStart;
 
+	/**
+	 * Controls if were allowed to accept recovery updates
+	 */
+	private boolean changingRecovery = false;
+
+	/**
+	 * Controls if were allowed to accept contact details updates
+	 */
+	private boolean changingDetails = false;
+
 	/*
 	 * Restricts P2P stuff in F2P wilderness.
 	 */
@@ -1644,6 +1654,22 @@ public final class Player extends Mob {
 
 	public void setChangingAppearance(boolean b) {
 		changingAppearance = b;
+	}
+
+	public boolean isChangingRecovery() {
+		return changingRecovery;
+	}
+
+	public void setChangingRecovery(boolean b) {
+		changingRecovery = b;
+	}
+
+	public boolean isChangingDetails() {
+		return changingDetails;
+	}
+
+	public void setChangingDetails(boolean b) {
+		changingDetails = b;
 	}
 
 	public boolean isAntidoteProtected() {

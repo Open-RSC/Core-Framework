@@ -90,6 +90,11 @@ public class SecuritySettingsHandler implements PacketHandler {
 				LOGGER.info(player.getCurrentIP() + " - Cancel recovery failed: Could not find player info in database.");
 				return;
 			}
+			PlayerRecoveryQuestions recoveryData = player.getWorld().getServer().getDatabase().getPlayerChangeRecoveryData(player.getID());
+			if (recoveryData == null || DataConversions.getDaysSinceTime(recoveryData.dateSet) >= 14) {
+				LOGGER.info(player.getCurrentIP() + " - Cancel recovery failed: Recovery questions not set or they are not recent");
+				return;
+			}
 			player.getWorld().getServer().getDatabase().cancelRecoveryChangeRequest(playerID);
 			player.getWorld().getServer().getGameLogger().addQuery(new SecurityChangeLog(player, ChangeEvent.RECOVERY_QUESTIONS_CHANGE, "Player canceled pending request"));
 			ActionSender.sendMessage(player, "You no longer have pending recovery question changes.");
@@ -117,6 +122,11 @@ public class SecuritySettingsHandler implements PacketHandler {
 
 			break;
 		case 208: //change/set recovery questions
+			if (!player.isChangingRecovery()) {
+				player.setSuspiciousPlayer(true, "player recovery questions packet without changing recovery");
+				return;
+			}
+			player.setChangingRecovery(false);
 			LOGGER.info("Change recovery questions request from: " + player.getCurrentIP());
 			player.getWorld().getServer().getPacketFilter().shouldAllowLogin(player.getCurrentIP(), true);
 
@@ -184,6 +194,11 @@ public class SecuritySettingsHandler implements PacketHandler {
 				break;
 			}
 		case 253: //change/set contact details
+			if (!player.isChangingDetails()) {
+				player.setSuspiciousPlayer(true, "player contact details packet without change details");
+				return;
+			}
+			player.setChangingDetails(false);
 			LOGGER.info("Change contact details request from: " + player.getCurrentIP());
 			String fullName, zipCode, country, email;
 			boolean errored = false;

@@ -89,12 +89,14 @@ public class ActionSender {
 	}
 
 	public static void sendRecoveryScreen(Player player) {
+		player.setChangingRecovery(true);
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_OPEN_RECOVERY.opcode);
 		player.write(s.toPacket());
 	}
 
 	public static void sendDetailsScreen(Player player) {
+		player.setChangingDetails(true);
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_OPEN_DETAILS.opcode);
 		player.write(s.toPacket());
