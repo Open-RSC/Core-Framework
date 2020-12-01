@@ -951,8 +951,8 @@ public class MySqlGameDatabase extends GameDatabase {
 	@Override
 	protected PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId, String tableName) throws GameDatabaseException {
 		HashMap<String, String> queries = new HashMap<String, String>(){{
-			put("player_recovery", getQueries().playerRecoveryInfo);
-			put("player_change_recovery", getQueries().playerChangeRecoveryInfo);
+			put("player_recovery", getQueries().playerRecoveryInfo); // attempt recovery (forgot password)
+			put("player_change_recovery", getQueries().playerChangeRecoveryInfo); // set or change recovery (ingame)
 		}};
 		try {
 			PlayerRecoveryQuestions recoveryQuestions = new PlayerRecoveryQuestions();
@@ -971,10 +971,12 @@ public class MySqlGameDatabase extends GameDatabase {
 					for (int i = 0; i < 5; i++) {
 						recoveryQuestions.answers[i] = resultSet.getString("answer" + (i + 1));
 					}
+					if (!tableName.contains("change")) { // forgot password recovery
+						recoveryQuestions.previousPass = resultSet.getString("previous_pass");
+						recoveryQuestions.earlierPass = resultSet.getString("earlier_pass");
+					}
 					recoveryQuestions.dateSet = resultSet.getInt("date_set");
 					recoveryQuestions.ipSet = resultSet.getString("ip_set");
-					recoveryQuestions.previousPass = resultSet.getString("previous_pass");
-					recoveryQuestions.earlierPass = resultSet.getString("earlier_pass");
 
 					return recoveryQuestions;
 				}

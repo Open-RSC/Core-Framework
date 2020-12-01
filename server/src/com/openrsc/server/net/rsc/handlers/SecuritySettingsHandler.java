@@ -136,10 +136,7 @@ public class SecuritySettingsHandler implements PacketHandler {
 				for (int i = 0; i < 5; i++) {
 					questLen = packet.readUnsignedByte();
 					questions[i] = new String(packet.readBytes(questLen));
-					answerLen = packet.readUnsignedByte(); //unsure why may read 0 here from client
-					if (answerLen == 0) {
-						answerLen = packet.readUnsignedByte();
-					}
+					answerLen = packet.readUnsignedByte();
 					// Get encrypted block for answers
 					expBlocks = (int)Math.ceil(answerLen / 7.0);
 					answerData = new byte[expBlocks * 7];
