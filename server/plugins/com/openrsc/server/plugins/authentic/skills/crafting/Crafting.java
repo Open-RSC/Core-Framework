@@ -17,6 +17,7 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Optional;
 import java.util.Random;
@@ -231,7 +232,7 @@ public class Crafting implements UseInvTrigger,
 			return;
 		}
 
-		player.message("What would you like to make?");
+		player.playerServerMessage(MessageType.QUEST,"what would you like to make");
 
 		if (item.getCatalogId() == ItemId.GOLD_BAR.id() || item.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id()) {
 			doGoldJewelry(item, player);
@@ -247,26 +248,38 @@ public class Crafting implements UseInvTrigger,
 
 		// select type
 		String[] options = new String[]{
-			"Ring",
+			"ring",
 			"Necklace",
-			"Amulet"
+			"amulet"
 		};
+
+        thinkbubble(new Item(ItemId.GOLD_BAR.id())); // bubble will be displayed after menu
 		int type = multi(player, options);
 		if (type < 0 || type > 2) {
 			return;
 		}
 		reply.set(options[type]);
 
+		boolean putAGemInIt = true;
+        if (!config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect Cabbage server config
+            player.playerServerMessage(MessageType.QUEST,
+                "Would you like to put a gem in the " + options[type].toLowerCase() + "?");
+            options = new String[]{
+                "Yes",
+                "No"
+            };
+            putAGemInIt = multi(player, options) == 1;
+        }
+
 		// select gem
 		options = new String[]{
-			"Gold",
 			"Sapphire",
 			"Emerald",
 			"Ruby",
 			"Diamond"
 		};
 		if (config().MEMBER_WORLD) {
-			if (config().WANT_EQUIPMENT_TAB) {
+			if (config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect Cabbage server config
 				options = new String[]{
 					"Gold",
 					"Sapphire",
@@ -278,27 +291,43 @@ public class Crafting implements UseInvTrigger,
 				};
 			} else {
 				options = new String[]{
-					"Gold",
 					"Sapphire",
 					"Emerald",
 					"Ruby",
 					"Diamond",
-					"Dragonstone"
+					"dragonstone"
 				};
+
+				// Dragonstone should be capitalized only when making a Necklace
+				if (type == 1) {
+                    options[4] = "Dragonstone";
+                }
 			}
 		}
 		if (player.getCarriedItems().getInventory().countId(gold_moulds[type], Optional.of(false)) < 1) {
-			player.message("You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(gold_moulds[type]).getName() + " to make a " + reply.get());
+			player.playerServerMessage(MessageType.QUEST,"You need a " + player.getWorld().getServer().getEntityHandler().getItemDef(gold_moulds[type]).getName() + " to make a " + reply.get());
 			return;
 		}
-		player.message("What type of " + reply.get() + " would you like to make?");
+        int gem = 0;
+		if (!putAGemInIt) {
+            player.playerServerMessage(MessageType.QUEST, "what sort of gem do you want to put in the " + reply.get() + "?");
+            gem = multi(player, options);
 
-		int gem = multi(player, options);
+            if (gem < 0 || gem > options.length)
+                return;
 
-		if (gem < 0 || gem > (config().MEMBER_WORLD ? 5 + (config().WANT_EQUIPMENT_TAB ? 1 : 0) : 4)) {
-			return;
-		}
-		reply.set(options[gem]);
+            reply.set(options[gem]);
+
+            if (options.length < 6) {
+                gem++; // translate past the "Gold" gem
+            }
+
+            if (gem < 0 || gem > (config().MEMBER_WORLD ? 5 + (config().WANT_EQUIPMENT_TAB ? 1 : 0) : 4)) {
+                return;
+            }
+        } else {
+            reply.set("Gold");
+        }
 
 		ItemCraftingDef def = player.getWorld().getServer().getEntityHandler().getCraftingDef((gem * 3) + type);
 		if (def == null) {
@@ -308,6 +337,7 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		if (def.itemID == ItemId.NOTHING.id()) {
+		    // not an authentic message
 			player.message("You have no reason to make that item.");
 			return;
 		}
@@ -339,44 +369,66 @@ public class Crafting implements UseInvTrigger,
 		}
 		if (checkFatigue(player)) return;
 
-		// Get last gem in inventory.
+        // Get last gold bar in inventory.
+        Item goldBar = player.getCarriedItems().getInventory().get(
+            player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
+        );
+        if (goldBar == null) {
+            // this message is inauthentic; authentically can't happen b/c there's no batching
+            player.message("You don't have a " + reply.get());
+            return;
+        }
+
+        Item result;
+        if (goldBar.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
+            result = new Item(ItemId.RUBY_RING_FAMILYCREST.id(), 1);
+        } else if (goldBar.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 1) {
+            result = new Item(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
+        } else {
+            result = new Item(def.getItemID(), 1);
+        }
+
+        String resultString = "You make ";
+        String connector = "a ";
+        String itemName = result.getDef(player.getWorld()).getName().toLowerCase();
+        if (itemName.contains("emerald")) {
+            itemName = StringUtils.capitalize(itemName);
+            connector = "an ";
+        }
+
+        // Get last gem in inventory.
 		Item gemItem;
 		if (gem != 0) {
 			gemItem = player.getCarriedItems().getInventory().get(
 				player.getCarriedItems().getInventory().getLastIndexById(gems[gem], Optional.of(false))
 			);
 			if (gemItem == null) {
-				player.message("You don't have a " + reply.get() + ".");
+			    String cut = "cut ";
+
+			    if (def.getItemID() == ItemId.UNSTRUNG_DRAGONSTONE_AMULET.id()) {
+			        cut = ""; // there may be others where this string is omitted, but no evidence currently known
+                }
+                String gemName = reply.get().toLowerCase();
+			    if (gemName.contains("emerald")) {
+			        gemName = "Emerald";
+                }
+
+                player.playerServerMessage(MessageType.QUEST, "You do not have a " + cut + gemName + " to make a " + itemName);
 				return;
 			}
 		}
 
-		// Get last gold bar in inventory.
-		Item goldBar = player.getCarriedItems().getInventory().get(
-			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false))
-		);
-		if (goldBar == null) {
-			player.message("You don't have a " + reply.get() + ".");
-			return;
-		}
+        if (itemName.contains("sapphire")) {
+            itemName = StringUtils.capitalize(itemName);
+        }
 
 		// Remove items
-		thinkbubble(goldBar);
+        delay();
+        player.playerServerMessage(MessageType.QUEST, resultString + connector + itemName);
 		player.getCarriedItems().remove(goldBar);
 		if (gem > 0) {
 			player.getCarriedItems().remove(new Item(gems[gem]));
 		}
-		delay(2);
-
-		Item result;
-		if (goldBar.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 0) {
-			result = new Item(ItemId.RUBY_RING_FAMILYCREST.id(), 1);
-		} else if (goldBar.getCatalogId() == ItemId.GOLD_BAR_FAMILYCREST.id() && gem == 3 && type == 1) {
-			result = new Item(ItemId.RUBY_NECKLACE_FAMILYCREST.id(), 1);
-		} else {
-			result = new Item(def.getItemID(), 1);
-		}
-		player.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(player.getWorld()).getName());
 		player.getCarriedItems().getInventory().add(result);
 		player.incExp(Skills.CRAFTING, def.getExp(), true);
 
@@ -824,7 +876,17 @@ public class Crafting implements UseInvTrigger,
 			}
 		} else {
 			player.getCarriedItems().getInventory().add(cutGem, true);
-			player.message("You cut the " + cutGem.getDef(player.getWorld()).getName().toLowerCase());
+			String gemName = cutGem.getDef(player.getWorld()).getName();
+            if (!DataConversions.inArray(gemsThatFail, gem.getCatalogId())) {
+                gemName.toLowerCase();
+            } else {
+                if (gemName.equals("red topaz")) {
+                    gemName = "Red Topaz";
+                } else {
+                    gemName = StringUtils.capitalize(gemName);
+                }
+            }
+			player.message("You cut the " + gemName);
 			player.playSound("chisel");
 			player.incExp(Skills.CRAFTING, gemDef.getExp(), true);
 		}
