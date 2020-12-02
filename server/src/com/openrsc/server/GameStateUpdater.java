@@ -572,7 +572,9 @@ public final class GameStateUpdater {
 					appearancePacket.writeShort((short) playerNeedingAppearanceUpdate.getIndex());
 					appearancePacket.writeByte((byte) 5);
 					if (player.isUsingAuthenticClient()) {
-						appearancePacket.writeShort(0); // This is unused by authentic client, but is thought to be "shooter index"; kind of a second PID?
+                        // This is unused by the authentic 233+ clients, but is meant to be "Appearance ID", which changes when the player's appearance changes
+                        // TODO: look into this more
+						appearancePacket.writeShort(0);
 					}
 					if (player.isUsingAuthenticClient()) {
 						appearancePacket.writeZeroQuotedString(playerNeedingAppearanceUpdate.getUsername());
@@ -581,20 +583,103 @@ public final class GameStateUpdater {
 						appearancePacket.writeString(playerNeedingAppearanceUpdate.getUsername());
 					}
 
-					appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getWornItems().length);
-					for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
-						if (player.isUsingAuthenticClient()) {
-							appearancePacket.writeByte(i & 0xFF);
-						} else {
-							appearancePacket.writeShort(i);
-						}
-					}
-					appearancePacket.writeByte(appearance.getHairColour());
-					appearancePacket.writeByte(appearance.getTopColour());
-					appearancePacket.writeByte(appearance.getTrouserColour());
-					appearancePacket.writeByte(appearance.getSkinColour());
-					appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getCombatLevel());
-					appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getSkullType());
+
+                    // Handle Invisibility & Invulnerability in the authentic client
+					if (player.isUsingAuthenticClient() &&
+                        (playerNeedingAppearanceUpdate.stateIsInvisible() ||
+                            playerNeedingAppearanceUpdate.stateIsInvulnerable())) {
+                        int[] wornItems = playerNeedingAppearanceUpdate.getWornItems();
+
+                        // All possible boots to choose from
+                        final int regularBoots = 12;
+                        final int redGnomeBoots = 204;
+                        final int greenGnomeBoots = 205;
+                        final int blueGnomeBoots = 206;
+                        final int yellowGnomeBoots = 207;
+                        final int skyBlueGnomeBoots = 208;
+                        final int desertBoots = 212;
+                        final int shadowWarriorBoots = 227;
+                        int bootColour = shadowWarriorBoots; // default
+                        if (wornItems[9] != 0) {
+                            // if player is already wearing boots, we can let them choose their colour. :-)
+                            bootColour = wornItems[9];
+                        }
+
+                        final int runeShieldSprite = 103;
+                        final int dragonShieldSprite = 225;
+                        int shieldSprite = 0; // default to invisible
+                        if (playerNeedingAppearanceUpdate.stateIsInvulnerable()) {
+                            if (wornItems[3] == dragonShieldSprite) {
+                                shieldSprite = runeShieldSprite;
+                            } else {
+                                shieldSprite = dragonShieldSprite;
+                            }
+                        }
+
+                        // these two gloves are the only ones that exist.
+                        final int lightGloves = 47;
+                        final int darkGloves = 156;
+                        int gloveColour = lightGloves; // default
+                        if (wornItems[8] != 0) {
+                            // if player is already wearing gloves, we can let them choose their colour. :-)
+                            gloveColour = wornItems[8];
+                        }
+
+                        // if player is just invulnerable & not invisible, give them a dark-robed appearance
+                        int headSprite = 0; // default to invisible
+                        int hatSprite = 0;
+                        int bodySprite = 0;
+                        int legSprite = 0;
+                        int pantsSprite = 0;
+                        int shirtSprite = 0;
+                        int amuletSprite = 0;
+                        if (!playerNeedingAppearanceUpdate.stateIsInvisible()) {
+                            headSprite = wornItems[0];
+                            if (wornItems[5] == 0) {
+                                hatSprite = 19; // black helm
+                                headSprite = 0;
+                            } else {
+                                hatSprite = wornItems[5];
+                            }
+
+                            // dark robes
+                            bodySprite = 183;
+                            legSprite = 184;
+                            pantsSprite = 3;
+                            shirtSprite = 5;
+                            amuletSprite = 172; // amulet of lucien
+                        }
+
+                        appearancePacket.writeByte((byte) 11); // Equipment count
+                        appearancePacket.writeByte((byte) headSprite);
+                        appearancePacket.writeByte((byte) shirtSprite);
+                        appearancePacket.writeByte((byte) pantsSprite);
+                        appearancePacket.writeByte((byte) shieldSprite);  // Shield is used to denote if invulnerable while invisible
+                        appearancePacket.writeByte((byte) wornItems[4]);  // Weapon can stay
+                        appearancePacket.writeByte((byte) hatSprite);
+                        appearancePacket.writeByte((byte) bodySprite);
+                        appearancePacket.writeByte((byte) legSprite);
+                        appearancePacket.writeByte((byte) gloveColour);
+                        appearancePacket.writeByte((byte) bootColour);
+                        appearancePacket.writeByte((byte) amuletSprite);
+                        // No Cape
+                    } else {
+                        appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getWornItems().length);
+                        for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
+                            if (player.isUsingAuthenticClient()) {
+                                appearancePacket.writeByte(i & 0xFF);
+                            } else {
+                                appearancePacket.writeShort(i);
+                            }
+                        }
+                    }
+
+                    appearancePacket.writeByte(appearance.getHairColour());
+                    appearancePacket.writeByte(appearance.getTopColour());
+                    appearancePacket.writeByte(appearance.getTrouserColour());
+                    appearancePacket.writeByte(appearance.getSkinColour());
+                    appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getCombatLevel());
+                    appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getSkullType());
 
 					if (!player.isUsingAuthenticClient()) {
 						if (playerNeedingAppearanceUpdate.getClan() != null) {
