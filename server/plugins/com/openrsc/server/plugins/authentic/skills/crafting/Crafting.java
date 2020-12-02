@@ -321,10 +321,6 @@ public class Crafting implements UseInvTrigger,
             if (options.length < 6) {
                 gem++; // translate past the "Gold" gem
             }
-
-            if (gem < 0 || gem > (config().MEMBER_WORLD ? 5 + (config().WANT_EQUIPMENT_TAB ? 1 : 0) : 4)) {
-                return;
-            }
         } else {
             reply.set("Gold");
         }

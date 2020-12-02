@@ -1046,7 +1046,7 @@ public class ActionSender {
 
             if (options.length > 5) {
                 LOGGER.error("Truncated options menu for authentic client! This is an error in programming!");
-                player.playerServerMessage(MessageType.QUEST, "There is a bug in the server which prevented you from seeing all options.");
+                player.playerServerMessage(MessageType.QUEST, "@red@There is a bug in the server which prevented you from seeing all options.");
                 player.playerServerMessage(MessageType.QUEST, "@ran@Please report this! @whi@You are missing these options:");
 
                 for (int i = 5; i < options.length; i++) {
