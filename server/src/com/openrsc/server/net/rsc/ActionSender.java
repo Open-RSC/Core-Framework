@@ -26,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -915,7 +916,7 @@ public class ActionSender {
             String ipString = player.getLastIP(); // Open RSC stores IP address as a string which must be converted
             if (ipString.indexOf(":") == -1) {
                 // IPv4
-                String[] ipSplit = ipString.split(".");
+                String[] ipSplit = ipString.split("\\.");
                 if (ipSplit.length == 4) {
                     for (int i = 0; i < 4; i++) {
                         s.writeByte(Integer.parseInt(ipSplit[i]) & 0xFF);
@@ -940,10 +941,14 @@ public class ActionSender {
             // TODO: this format may not be exactly compatible.
             s.writeShort(player.getDaysSinceLastLogin());
 
-            // TODO: This needs to be looked at to send 200 if recovery questions are not set.
-            if (player.getDaysSinceLastRecoveryChangeRequest() < 14) {
-                s.writeByte(14 - player.getDaysSinceLastRecoveryChangeRequest());
-            } else {
+			// when player hasn't set recovery questions, getDays will return
+			// Calendar.getInstance().getTimeInMillis() / (1000 * 86400)
+			long currently = Calendar.getInstance().getTimeInMillis() / (1000 * 86400);
+            if (player.getDaysSinceLastRecoveryChangeRequest() - currently == 0) {
+				s.writeByte((byte)200);
+            } else if (player.getDaysSinceLastRecoveryChangeRequest() < 14) {
+				s.writeByte(14 - player.getDaysSinceLastRecoveryChangeRequest());
+			} else {
                 s.writeByte((byte)201);
             }
 
