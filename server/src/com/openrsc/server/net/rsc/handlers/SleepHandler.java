@@ -6,6 +6,7 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
+import com.openrsc.server.util.rsc.CaptchaGenerator;
 
 public final class SleepHandler implements PacketHandler {
 
@@ -33,8 +34,21 @@ public final class SleepHandler implements PacketHandler {
 			if (!player.isSleeping()) {
 				return;
 			}
-			// TODO: once sleepwords are implemented, remove this condition that allows authentic client users to always guess sleepword correctly
-			if (sleepWord.equalsIgnoreCase(player.getSleepword()) || player.isUsingAuthenticClient()) {
+			String correctWord;
+			boolean knowCorrectWord = true;
+			if (CaptchaGenerator.usingPrerenderedSleepwords) {
+			    knowCorrectWord = CaptchaGenerator.prerenderedSleepwords.get(player.getPrerenderedSleepwordIndex()).knowTheCorrectWord;
+			    if (knowCorrectWord) {
+			        correctWord = CaptchaGenerator.prerenderedSleepwords.get(player.getPrerenderedSleepwordIndex()).correctWord;
+                } else {
+                    correctWord = "-null-";
+                    // CaptchaGenerator.prerenderedSleepwords.get(player.getPrerenderedSleepwordIndex()).userGuesses.add(sleepWord);
+                    player.getWorld().getServer().getGameLogger().addQuery(new GenericLog(player.getWorld(), player.getUsername() + " guessed !_" + sleepWord + "_! for filename:: " + CaptchaGenerator.prerenderedSleepwords.get(player.getPrerenderedSleepwordIndex()).filename));
+                }
+            } else {
+			    correctWord = player.getSleepword();
+            }
+			if (sleepWord.equalsIgnoreCase(correctWord) || !knowCorrectWord) {
 				ActionSender.sendWakeUp(player, true, false);
 				player.resetSleepTries();
 				// Advance the fatigue expert part of tutorial island

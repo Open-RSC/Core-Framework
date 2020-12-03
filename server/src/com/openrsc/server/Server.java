@@ -22,6 +22,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.Crypto;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.NamedThreadFactory;
+import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.MessageType;
 import io.netty.bootstrap.ServerBootstrap;
@@ -275,6 +276,10 @@ public class Server implements Runnable {
 					LOGGER.error("Unable to change database structure!");
 					System.exit(1);
 				}
+
+				LOGGER.info("Loading Prerendered Sleepword Images...");
+                CaptchaGenerator.loadPrerenderedCaptchas();
+                LOGGER.info("Loaded " + CaptchaGenerator.prerenderedSleepwordsSize + " Prerendered Sleepword Images");
 
 				LOGGER.info("Loading Game Definitions...");
 				getEntityHandler().load();

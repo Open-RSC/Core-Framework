@@ -1,6 +1,7 @@
 package com.openrsc.server.util.rsc;
 
 import com.openrsc.server.model.entity.player.Player;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +23,13 @@ public class CaptchaGenerator {
 	private static List<Color> colors = new ArrayList<>();
 	private static List<String> words = new ArrayList<>();
 	private static String fontFolder = "." + File.separator + "conf" + File.separator + "server" + File.separator + "fonts" + File.separator;
+    private static String sleepwordsFolder = "." + File.separator + "conf" + File.separator + "server" + File.separator + "data" + File.separator + "sleepwords" + File.separator;
 	private static Font loadedFonts[];
+	public static int prerenderedSleepwordsSize = 0;
+	public static boolean usingPrerenderedSleepwords = false; // TODO: this needs to be a server config option
+	public static List<PrerenderedSleepword> prerenderedSleepwords = new ArrayList<PrerenderedSleepword>();
 
+	// used for inauthentic RSCL captchas
 	static {
 		loadFonts();
 		colors.clear();
@@ -36,39 +43,244 @@ public class CaptchaGenerator {
 	}
 
 	public static byte[] generateCaptcha(Player player) {
-		if (player.isUsingAuthenticClient()) {
-			// TODO: pre-rendered image of word "ASLEEP". Proper sleepwords must be implemented.
-			return new byte[]{(byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0x2A, (byte)0x00, (byte)0x00, (byte)0x40, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x05, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0F, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x6D, (byte)0x29, (byte)0x03, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x3F, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x00, (byte)0x6A, (byte)0x2C, (byte)0x05, (byte)0x00, (byte)0x10, (byte)0x40, (byte)0x00, (byte)0x00, (byte)0x0D, (byte)0x69, (byte)0x28, (byte)0x02, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0F, (byte)0x00, (byte)0x00, (byte)0x2A, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x06, (byte)0x08, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x68, (byte)0x15, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0E, (byte)0x02, (byte)0x07, (byte)0x00, (byte)0x0A, (byte)0x00, (byte)0x00, (byte)0x16, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0E, (byte)0x1B, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x6C, (byte)0x45, (byte)0x19, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0F, (byte)0x1D, (byte)0x6B, (byte)0x14, (byte)0x04, (byte)0x24, (byte)0x06, (byte)0xB9, (byte)0x13, (byte)0x02, (byte)0x02, (byte)0x0D, (byte)0x1C, (byte)0x15, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xA0, (byte)0x11, (byte)0x00, (byte)0x17, (byte)0x14, (byte)0x00, (byte)0x03, (byte)0x1A, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x99, (byte)0x14, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x0D, (byte)0x03, (byte)0x00, (byte)0x14, (byte)0x34, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x08, (byte)0x02, (byte)0x09, (byte)0x6B, (byte)0x16, (byte)0x02, (byte)0x0D, (byte)0x05, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x44, (byte)0x08, (byte)0x10, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x03, (byte)0x68, (byte)0x0F, (byte)0x00, (byte)0x02, (byte)0x05, (byte)0x0E, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x46, (byte)0x17, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x06, (byte)0x69, (byte)0x12, (byte)0x03, (byte)0x02, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x10, (byte)0x02, (byte)0x10, (byte)0x02, (byte)0x1D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x15, (byte)0x6A, (byte)0x0D, (byte)0x00, (byte)0x07, (byte)0x18, (byte)0x1B, (byte)0x0D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x18, (byte)0x18, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x6B, (byte)0x11, (byte)0x20, (byte)0x18, (byte)0x00, (byte)0x11, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x26, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x70, (byte)0x0B, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x18, (byte)0x02, (byte)0x10, (byte)0x02, (byte)0x03, (byte)0x00, (byte)0x3B, (byte)0x02, (byte)0x74, (byte)0x14, (byte)0x00, (byte)0x31, (byte)0x00, (byte)0x00, (byte)0x0F, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x14, (byte)0x8C, (byte)0x09, (byte)0x00, (byte)0x03, (byte)0x00, (byte)0x00, (byte)0x15, (byte)0x07, (byte)0x14, (byte)0x09, (byte)0x10, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x9B, (byte)0x0C, (byte)0x00, (byte)0x03, (byte)0x00, (byte)0x14, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x16, (byte)0x0A, (byte)0x28, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x81, (byte)0x13, (byte)0x00, (byte)0x00, (byte)0x16, (byte)0x00, (byte)0x03, (byte)0x10, (byte)0x07, (byte)0x00, (byte)0x00, (byte)0xB2, (byte)0x07, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x0C, (byte)0x0D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x16, (byte)0x00, (byte)0x00, (byte)0xB5, (byte)0x07, (byte)0x10, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x14, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x30, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x81, (byte)0x08, (byte)0x00, (byte)0x0C, (byte)0x5C, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x11, (byte)0x02, (byte)0x73, (byte)0x16, (byte)0x42, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x14, (byte)0x16, (byte)0x00, (byte)0x00, (byte)0x73, (byte)0x5E, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x99, (byte)0xFF, (byte)0x56, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xA1, (byte)0x16, (byte)0x47, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x99 };
-		} else {
-			final BufferedImage image = new BufferedImage(255 - 10, 40, BufferedImage.TYPE_INT_RGB);
-			final Graphics2D gfx = image.createGraphics();
-			final String captcha = words.get(DataConversions.random(0, words.size()));
-			gfx.setColor(Color.BLACK);
-			gfx.fillRect(0, 0, 255, 40);
-			int currentX = 10;
-			for (int i = 0; i <= captcha.length() - 1; i++) {
-				gfx.setColor(colors.get(DataConversions.random(0, colors.size() - 1)));
-				gfx.setFont(loadedFonts[DataConversions.random(0, loadedFonts.length - 1)]);
-				gfx.drawString(String.valueOf(captcha.charAt(i)), currentX, DataConversions.random(25, 35));
-				currentX += gfx.getFontMetrics().charWidth(captcha.charAt(i)) + (DataConversions.random(5, 10));
-			}
-			player.setSleepword(captcha);
-			try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-				ImageIO.setUseCache(false);
-				ImageIO.write(image, "PNG", baos);
-				return baos.toByteArray();
-			} catch (final IOException e) {
-				LOGGER.catching(e);
-			} finally {
-				gfx.dispose();
-				image.flush();
-			}
-			return null;
-		}
+	    if (usingPrerenderedSleepwords) {
+	        int rand = DataConversions.random(0, prerenderedSleepwordsSize - 1);
+            player.setSleepword(rand);
+	        if (player.isUsingAuthenticClient()) {
+                return prerenderedSleepwords.get(rand).rleData;
+            } else {
+	            return prerenderedSleepwords.get(rand).pngData;
+            }
+        } else {
+	        return generateRSCLCaptcha(player);
+        }
 	}
+
+	private static byte[] generateRSCLCaptcha(Player player) {
+        if (player.isUsingAuthenticClient()) {
+            // fallback to pre-rendered image of word "ASLEEP"
+            player.setSleepword("asleep");
+            return new byte[]{(byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0x2A, (byte)0x00, (byte)0x00, (byte)0x40, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x05, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0F, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x6D, (byte)0x29, (byte)0x03, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x3F, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x00, (byte)0x6A, (byte)0x2C, (byte)0x05, (byte)0x00, (byte)0x10, (byte)0x40, (byte)0x00, (byte)0x00, (byte)0x0D, (byte)0x69, (byte)0x28, (byte)0x02, (byte)0x01, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0F, (byte)0x00, (byte)0x00, (byte)0x2A, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x06, (byte)0x08, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x68, (byte)0x15, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0E, (byte)0x02, (byte)0x07, (byte)0x00, (byte)0x0A, (byte)0x00, (byte)0x00, (byte)0x16, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0E, (byte)0x1B, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x6C, (byte)0x45, (byte)0x19, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x0F, (byte)0x1D, (byte)0x6B, (byte)0x14, (byte)0x04, (byte)0x24, (byte)0x06, (byte)0xB9, (byte)0x13, (byte)0x02, (byte)0x02, (byte)0x0D, (byte)0x1C, (byte)0x15, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xA0, (byte)0x11, (byte)0x00, (byte)0x17, (byte)0x14, (byte)0x00, (byte)0x03, (byte)0x1A, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x99, (byte)0x14, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x0D, (byte)0x03, (byte)0x00, (byte)0x14, (byte)0x34, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x08, (byte)0x02, (byte)0x09, (byte)0x6B, (byte)0x16, (byte)0x02, (byte)0x0D, (byte)0x05, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x44, (byte)0x08, (byte)0x10, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x03, (byte)0x68, (byte)0x0F, (byte)0x00, (byte)0x02, (byte)0x05, (byte)0x0E, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x46, (byte)0x17, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x06, (byte)0x69, (byte)0x12, (byte)0x03, (byte)0x02, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x10, (byte)0x02, (byte)0x10, (byte)0x02, (byte)0x1D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x15, (byte)0x6A, (byte)0x0D, (byte)0x00, (byte)0x07, (byte)0x18, (byte)0x1B, (byte)0x0D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x18, (byte)0x18, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x6B, (byte)0x11, (byte)0x20, (byte)0x18, (byte)0x00, (byte)0x11, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x26, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x70, (byte)0x0B, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x00, (byte)0x02, (byte)0x18, (byte)0x02, (byte)0x10, (byte)0x02, (byte)0x03, (byte)0x00, (byte)0x3B, (byte)0x02, (byte)0x74, (byte)0x14, (byte)0x00, (byte)0x31, (byte)0x00, (byte)0x00, (byte)0x0F, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x14, (byte)0x8C, (byte)0x09, (byte)0x00, (byte)0x03, (byte)0x00, (byte)0x00, (byte)0x15, (byte)0x07, (byte)0x14, (byte)0x09, (byte)0x10, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x9B, (byte)0x0C, (byte)0x00, (byte)0x03, (byte)0x00, (byte)0x14, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x16, (byte)0x0A, (byte)0x28, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x81, (byte)0x13, (byte)0x00, (byte)0x00, (byte)0x16, (byte)0x00, (byte)0x03, (byte)0x10, (byte)0x07, (byte)0x00, (byte)0x00, (byte)0xB2, (byte)0x07, (byte)0x00, (byte)0x01, (byte)0x00, (byte)0x0C, (byte)0x0D, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x04, (byte)0x00, (byte)0x16, (byte)0x00, (byte)0x00, (byte)0xB5, (byte)0x07, (byte)0x10, (byte)0x12, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x14, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x30, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x81, (byte)0x08, (byte)0x00, (byte)0x0C, (byte)0x5C, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x11, (byte)0x02, (byte)0x73, (byte)0x16, (byte)0x42, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x14, (byte)0x16, (byte)0x00, (byte)0x00, (byte)0x73, (byte)0x5E, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x99, (byte)0xFF, (byte)0x56, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0xA1, (byte)0x16, (byte)0x47, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x99 };
+        } else {
+            final String captcha = words.get(DataConversions.random(0, words.size()));
+            player.setSleepword(captcha);
+
+            return makeColourfulRSCLCaptcha(captcha);
+        }
+    }
+
+
+	public static void loadPrerenderedCaptchas() {
+	    if (prerenderedSleepwordsSize > 0) {
+	        return; // currently don't support loading more than once
+        }
+
+	    File sleepwordDataDir = new File(sleepwordsFolder);
+        File[] sleepwordFiles = sleepwordDataDir.listFiles();
+        if (sleepwordFiles == null) {
+            // server owner doesn't have a sleepwords directory
+            return;
+        }
+        for (File fname : sleepwordFiles) {
+            String correctWord = "-null-";
+            boolean knowTheWord = false;
+
+
+            int endOfWordIndex = fname.getName().indexOf('_', 6);
+            if (endOfWordIndex < 6) {
+                // filename parsed is not of the expected format. assuming all characters except last 4 are the correct word.
+                knowTheWord = true;
+                correctWord = fname.getName().substring(0, fname.getName().length() - 4); // remove 4 character file extension
+            } else {
+                // example filenames:
+                // sleep_!INCORRECT!instar__flying sno_flying sno (redacted chat) replays_bot204_dist_bot204_replay_penuslarge1_06-18-2018 06.23.47_455.png
+                // sleep_crushing_Logg_Tylerbeg_06-13-2018 20.09.59 high alch from 55 to 60 and I got a dmed lol_70.png
+                // see: https://github.com/2003scape/rsc-captcha-archives/tree/master/rscplus-replay-sleepwords
+
+                String candidateWord = fname.getName().substring(6, fname.getName().indexOf('_', 6));
+                knowTheWord = !(candidateWord.contains("!INCORRECT!") ||
+                    candidateWord.contains("!SUDDENLY-AWOKE!"));
+                if (knowTheWord) {
+                    correctWord = candidateWord;
+                }
+            }
+
+            prerenderedSleepwords.add(
+                new PrerenderedSleepword(
+                    fname.getName(),
+                    correctWord,
+                    knowTheWord,
+                    readFull(fname),
+                    imageFileToRLE(fname)
+                )
+            );
+        }
+
+        prerenderedSleepwordsSize = prerenderedSleepwords.size();
+
+        if (prerenderedSleepwordsSize > 0) {
+            usingPrerenderedSleepwords = true;
+        }
+    }
+
+    private static byte[] readFull(File f) {
+        try {
+            return Files.readAllBytes(f.toPath());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Reads a compatible image format into one that can be displayed by
+     * the authentic RSC235 client. PNG and BMP are known compatible.
+     *
+     * Images will be resized from any arbitrary resolution and
+     * colour depth will be reduced to 1 bit.
+     *
+     * @param fname filename
+     * @return run length encoded image byte data
+     */
+    private static byte[] imageFileToRLE(File fname) {
+	    return booleansToRLE(loadImageFileToBooleanImage(fname));
+    }
+
+    /**
+     * @param fname filename
+     * @return ██ █ ██ █ ██ █ █
+     *         █ █ █  █ █ ██ ██ 255 x 40
+     *          ███ ██ ███ ██ █ boolean style image
+     */
+    private static boolean[][] loadImageFileToBooleanImage(File fname) {
+        int WIDTH = 255;
+        int HEIGHT = 40;
+        boolean[][] imageArray = new boolean[WIDTH][HEIGHT];
+
+        // the last column is buggy if used (due to client bug), so just avoid it by limiting to 254 wide
+        // imageArray will still be 255 wide but full of "off" pixels.
+        WIDTH--;
+
+        try {
+            BufferedImage image = resize(ImageIO.read(fname), WIDTH, HEIGHT);
+            int imgHeight = image.getHeight();
+            int imgWidth = image.getWidth();
+
+            boolean drawToConsole = false; // fun option, but obviously not necessary. :-)
+
+            for (int y = 0; y < HEIGHT; y += 1) {
+                for (int x = 0; x < WIDTH; x += 1) {
+
+                    // disabled by default
+					if (drawToConsole) {
+                        if (image.getRGB(x, y) > -5000) {
+                            System.out.print("█");
+                        } else {
+                            System.out.print(" ");
+                        }
+                    }
+
+                    // hopefully your images are 254x40 but if not, we can squash them.
+                    imageArray[x][y] = image.getRGB(x * (WIDTH / imgWidth), y * (HEIGHT / imgHeight)) > -5000;
+                }
+                if (drawToConsole) System.out.println();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return imageArray;
+    }
+
+    /**
+     * @param imageData in "custom" boolean[][] format
+     * @return bytes that are safe to send to authentic client as image data
+     */
+    private static byte[] booleansToRLE(boolean[][] imageData) {
+        int WIDTH = 255; // Warning: don't try to use the last column, it is buggy in authentic client
+        int HEIGHT = 40;
+        int x = 0;
+        int y = 0;
+        boolean lastColour = false;
+        int length = 0;
+        ArrayList<Byte> image = new ArrayList<Byte>();
+
+        // first row uses RLE horizontally
+        // whatever colour is in the last pixel of the row will be used for that entire column
+        for (; x < WIDTH; x += 1) {
+            if (imageData[x][y] == lastColour) {
+                length += 1;
+            } else {
+                image.add((byte)length);
+                length = 1;
+                lastColour = !lastColour;
+            }
+        }
+        image.add((byte)length);
+
+        // subsequent rows look at the pixel above and use RLE vertically
+        for (y = 1; y < HEIGHT; y += 1) {
+            length = 0;
+            for(x = 0; x < WIDTH; x += 1) {
+                if (imageData[x][y] == imageData[x][y - 1]) {
+                    length += 1;
+                } else {
+                    image.add((byte) length);
+                    length = 0;
+                }
+            }
+            image.add((byte)length);
+        }
+
+        Byte[] imageBytes = new Byte[image.size()];
+        imageBytes = image.toArray(imageBytes);
+        return ArrayUtils.toPrimitive(imageBytes);
+    }
+    private static BufferedImage resize(BufferedImage img, int newW, int newH) {
+        Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+        BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = dimg.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+
+        return dimg;
+    }
+
+    /**
+     * Makes inauthentic & bizarre colourful RSCL captcha.
+     * Returns image bytes in PNG format.
+     * @param captcha
+     * @return
+     */
+	private static byte[] makeColourfulRSCLCaptcha(String captcha) {
+        final BufferedImage image = new BufferedImage(255 - 10, 40, BufferedImage.TYPE_INT_RGB);
+        final Graphics2D gfx = image.createGraphics();
+
+        gfx.setColor(Color.BLACK);
+        gfx.fillRect(0, 0, 255, 40);
+        int currentX = 10;
+        for (int i = 0; i <= captcha.length() - 1; i++) {
+            gfx.setColor(colors.get(DataConversions.random(0, colors.size() - 1)));
+            gfx.setFont(loadedFonts[DataConversions.random(0, loadedFonts.length - 1)]);
+            gfx.drawString(String.valueOf(captcha.charAt(i)), currentX, DataConversions.random(25, 35));
+            currentX += gfx.getFontMetrics().charWidth(captcha.charAt(i)) + (DataConversions.random(5, 10));
+        }
+        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ImageIO.setUseCache(false);
+            ImageIO.write(image, "PNG", baos);
+            return baos.toByteArray();
+        } catch (final IOException e) {
+            LOGGER.catching(e);
+        } finally {
+            gfx.dispose();
+            image.flush();
+        }
+        return null;
+    }
 
 	/**
 	 * Loads fonts from a folder to a font array
+     * This is used later in makeColourfulRSCLCaptcha()
 	 */
 	private static void loadFonts() {
 		words.clear();
