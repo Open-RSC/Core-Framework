@@ -178,7 +178,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		delay(3);
 		if (Formulae.lightCustomLogs(def, player.getSkills().getLevel(Skills.FIREMAKING))) {
 			if (!gItem.isRemoved()) {
-				player.message("The fire catches and the logs begin to burn");
+				player.playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
 				player.getWorld().unregisterItem(gItem);
 
 				final GameObject fire = new GameObject(player.getWorld(), gItem.getLocation(), 97, 0, 0);
