@@ -1037,12 +1037,25 @@ public class ActionSender {
 	public static void sendMenu(Player player, String[] options) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_OPTIONS_MENU_OPEN.opcode);
-		s.writeByte((byte) options.length);
+
 		if (player.isUsingAuthenticClient()) {
-            for (String option : options) {
-                s.writeZeroQuotedString(option);
+            s.writeByte((byte) (options.length <= 5 ? options.length : 5));
+            for (int i = 0; i < 5 && i < options.length; i++){
+                s.writeZeroQuotedString(options[i]);
             }
+
+            if (options.length > 5) {
+                LOGGER.error("Truncated options menu for authentic client! This is an error in programming!");
+                player.playerServerMessage(MessageType.QUEST, "@red@There is a bug in the server which prevented you from seeing all options.");
+                player.playerServerMessage(MessageType.QUEST, "@ran@Please report this! @whi@You are missing these options:");
+
+                for (int i = 5; i < options.length; i++) {
+                    player.playerServerMessage(MessageType.QUEST, "@ora@" + (i + 1) + ") @whi@" + options[i]);
+                }
+            }
+
         } else {
+            s.writeByte((byte) options.length);
             for (String option : options) {
                 s.writeString(option);
             }
