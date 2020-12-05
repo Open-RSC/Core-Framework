@@ -947,7 +947,7 @@ public class ActionSender {
             if (player.getDaysSinceLastRecoveryChangeRequest() - currently == 0) {
 				s.writeByte((byte)200);
             } else if (player.getDaysSinceLastRecoveryChangeRequest() < 14) {
-				s.writeByte(14 - player.getDaysSinceLastRecoveryChangeRequest());
+				s.writeByte(player.getDaysSinceLastRecoveryChangeRequest());
 			} else {
                 s.writeByte((byte)201);
             }
@@ -959,6 +959,7 @@ public class ActionSender {
             s.writeString(player.getLastIP());
             s.writeShort(player.getDaysSinceLastLogin());
             if (player.getDaysSinceLastRecoveryChangeRequest() < 14) {
+            	//in rsc175 and earlier was sent days till activation (14 - days since change request)
                 s.writeShort(14 - player.getDaysSinceLastRecoveryChangeRequest());
             } else {
                 s.writeShort(0);
