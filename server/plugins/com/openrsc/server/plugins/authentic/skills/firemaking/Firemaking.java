@@ -82,7 +82,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 	private void batchFiremaking(Player player, GroundItem gItem, FiremakingDef def) {
 		thinkbubble(new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
-		delay(2);
+		delay(3);
 		if (Formulae.lightLogs(player.getSkills().getLevel(Skills.FIREMAKING))) {
 			if (!gItem.isRemoved()) {
 				player.playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
@@ -175,10 +175,10 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 	private void batchCustomFiremaking(Player player, GroundItem gItem, FiremakingDef def) {
 		thinkbubble(new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
-		delay(2);
+		delay(3);
 		if (Formulae.lightCustomLogs(def, player.getSkills().getLevel(Skills.FIREMAKING))) {
 			if (!gItem.isRemoved()) {
-				player.message("The fire catches and the logs begin to burn");
+				player.playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
 				player.getWorld().unregisterItem(gItem);
 
 				final GameObject fire = new GameObject(player.getWorld(), gItem.getLocation(), 97, 0, 0);
