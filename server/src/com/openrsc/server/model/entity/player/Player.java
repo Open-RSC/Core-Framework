@@ -40,6 +40,7 @@ import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
+import com.openrsc.server.util.rsc.PrerenderedSleepword;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -287,6 +288,11 @@ public final class Player extends Mob {
 	 * Player sleep word
 	 */
 	private String sleepword;
+
+    /**
+     * Player sleep word
+     */
+    private int prerenderedSleepwordIndex;
 
 	/**
 	 * If the player has been sending suspicious packets
@@ -1300,9 +1306,17 @@ public final class Player extends Mob {
 		return sleepword;
 	}
 
+    public int getPrerenderedSleepwordIndex() {
+        return prerenderedSleepwordIndex;
+    }
+
 	public void setSleepword(final String sleepword) {
 		this.sleepword = sleepword;
 	}
+
+    public void setSleepword(int sleepwordIndex) {
+        this.prerenderedSleepwordIndex = sleepwordIndex;
+    }
 
 	public int getSpellWait() {
 		return Math.min(DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D), 20);
