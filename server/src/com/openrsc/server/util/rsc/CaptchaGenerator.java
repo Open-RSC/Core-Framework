@@ -239,7 +239,7 @@ public class CaptchaGenerator {
         // if image is approximately the correct size, won't scale image & will just truncate to top left corner
         // but we must correct column 255 (the last column) so it doesn't change in value from top row
         if (imgWidth <= 260 && imgHeight <= 45) {
-            if (imgWidth < buggyColumn) {
+            if (imgWidth <= buggyColumn) {
                 return img;
             }
     		int topRowColour = img.getRGB(buggyColumn, 0);
