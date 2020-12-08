@@ -156,33 +156,27 @@ public class CaptchaGenerator {
         int HEIGHT = 40;
         boolean[][] imageArray = new boolean[WIDTH][HEIGHT];
 
-        // the last column is buggy if used (due to client bug), so just avoid it by limiting to 254 wide
-        // imageArray will still be 255 wide but full of "off" pixels.
-        WIDTH--;
-
         try {
-            BufferedImage image = resize(ImageIO.read(fname), WIDTH, HEIGHT);
+            BufferedImage image = resizeSanitize(ImageIO.read(fname));
             int imgHeight = image.getHeight();
             int imgWidth = image.getWidth();
 
             boolean drawToConsole = false; // fun option, but obviously not necessary. :-)
 
-            for (int y = 0; y < HEIGHT; y += 1) {
-                for (int x = 0; x < WIDTH; x += 1) {
+            for (int y = 0; y < imgHeight && y < HEIGHT; y += 1) {
+                for (int x = 0; x < imgWidth && x < WIDTH; x += 1) {
+                    imageArray[x][y] = image.getRGB(x, y) > -5000;
 
                     // disabled by default
-					if (drawToConsole) {
-                        if (image.getRGB(x, y) > -5000) {
+                    if (drawToConsole) {
+                        if (imageArray[x][y]) {
                             System.out.print("█");
                         } else {
                             System.out.print(" ");
                         }
                     }
-
-                    // hopefully your images are 254x40 but if not, we can squash them.
-                    imageArray[x][y] = image.getRGB(x * (WIDTH / imgWidth), y * (HEIGHT / imgHeight)) > -5000;
                 }
-                if (drawToConsole) System.out.println();
+                if (drawToConsole) System.out.println("/");
             }
 
         } catch (Exception e) {
@@ -235,15 +229,38 @@ public class CaptchaGenerator {
         imageBytes = image.toArray(imageBytes);
         return ArrayUtils.toPrimitive(imageBytes);
     }
-    private static BufferedImage resize(BufferedImage img, int newW, int newH) {
-        Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
-        BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
 
-        Graphics2D g2d = dimg.createGraphics();
-        g2d.drawImage(tmp, 0, 0, null);
-        g2d.dispose();
+    // ensure image can be displayed at 255x40 or fall back to 254x40 scaled
+    private static BufferedImage resizeSanitize(BufferedImage img) {
+        int imgHeight = img.getHeight();
+        int imgWidth = img.getWidth();
+        int buggyColumn = 254;
 
-        return dimg;
+        // if image is approximately the correct size, won't scale image & will just truncate to top left corner
+        // but we must correct column 255 (the last column) so it doesn't change in value from top row
+        if (imgWidth <= 260 && imgHeight <= 45) {
+            if (imgWidth < buggyColumn) {
+                return img;
+            }
+    		int topRowColour = img.getRGB(buggyColumn, 0);
+    		for (int y = 1; y < imgHeight; y++) {
+                img.setRGB(buggyColumn, y, topRowColour);
+			}
+			return img;
+		} else {
+            // image is grossly large & we would like to scale/stretch it down.
+            int newWidth = buggyColumn; // limits image to before the buggy column
+            int newHeight = 40;
+
+            Image tmp = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+            BufferedImage dimg = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D g2d = dimg.createGraphics();
+            g2d.drawImage(tmp, 0, 0, null);
+            g2d.dispose();
+
+            return dimg;
+        }
     }
 
     /**
