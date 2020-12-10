@@ -27,8 +27,8 @@ public abstract class GameTickEvent implements Callable<Integer> {
 	public GameTickEvent(final World world, final Mob owner, final long ticks, final String descriptor, final boolean uniqueEvent) {
 		this.world = world;
 		this.owner = owner;
-		this.descriptor = descriptor;
 		this.uniqueEvent = uniqueEvent;
+		this.setDescriptor(descriptor);
 		this.setDelayTicks(ticks);
 		this.resetCountdown();
 	}
@@ -128,6 +128,10 @@ public abstract class GameTickEvent implements Callable<Integer> {
 
 	public String getDescriptor() {
 		return descriptor;
+	}
+
+	protected void setDescriptor(final String descriptor) {
+		this.descriptor = descriptor;
 	}
 
 	public World getWorld() {

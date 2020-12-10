@@ -335,7 +335,7 @@ public final class PluginHandler {
 				try {
 					final Method m = cls.getClass().getMethod("on" + interfce, dataClasses);
 					final String pluginName = cls.getClass().getSimpleName() + "." + m.getName();
-					final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, walkToAction, new PluginTask(world, owner, interfce, data) {
+					final PluginTask task = new PluginTask(world, owner, interfce, data) {
 						@Override
 						public int action() {
 							try {
@@ -356,7 +356,8 @@ public final class PluginHandler {
 								return 0;
 							}
 						}
-					});
+					};
+					final PluginTickEvent e = new PluginTickEvent(world, owner, pluginName, walkToAction, task);
 
 					getServer().getGameEventHandler().add(e);
 				} catch (final NoSuchMethodException ex) {

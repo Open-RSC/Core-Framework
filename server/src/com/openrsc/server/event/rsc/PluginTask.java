@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class PluginTask extends GameTickEvent implements Callable<Integer> {
@@ -29,12 +30,13 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 
 	private AtomicBoolean initialized = new AtomicBoolean(false);
 	private AtomicBoolean threadRunning = new AtomicBoolean(false);
-	private AtomicBoolean tickCompleted = new AtomicBoolean(false);
 	private volatile Thread pluginThread;
 
 	private final ScriptContext scriptContext;
 	private final Object[] data;
 	private final Action action;
+	private PluginTickEvent pluginTickEvent;
+	private Future<Integer> future = null;
 
 	public PluginTask(final World world, final Player owner, final String pluginInterface, final Object[] data) {
 		super(world, owner, 0, null, true);
@@ -49,7 +51,6 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 
 	public synchronized Integer call() {
 		try {
-			setInitialized(true);
 			registerPluginThread();
 			final int result = action();
 			stop();
@@ -64,15 +65,20 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	public abstract int action();
 
 	public void run() {
+		// Submitting in run because we want to only run game code on tick bounds so we start the execution inside of a tick
+		if(getFuture() == null) {
+			submit();
+		}
+
 		setDelayTicks(0);
 		setThreadRunning(true);
-		setTickCompleted(false);
 		notifyAll();
 	}
 
 	@Override
 	public synchronized void stop() {
 		super.stop();
+		cancel(false);
 		unregisterPluginThread();
 	}
 
@@ -80,10 +86,8 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		try {
 			setDelayTicks(ticks);
 			setThreadRunning(false);
-			setTickCompleted(true);
 			wait();
 			setThreadRunning(true);
-			setTickCompleted(false);
 		} catch (final InterruptedException ex) {
 			throw new PluginInterruptedException("pause() was interrupted", ex);
 		}
@@ -92,8 +96,8 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	private synchronized void registerPluginThread() {
 		pluginThread = Thread.currentThread();
 		final String threadName = getPluginThread().getName();
+		setInitialized(true);
 		setThreadRunning(true);
-		setTickCompleted(false);
 		tasksMap.put(threadName, this);
 		getScriptContext().startScript(action, data);
 	}
@@ -104,13 +108,30 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 
 		if(thread != null) {
 			setThreadRunning(false);
-			setTickCompleted(false);
+			setInitialized(false);
+			setFuture(null);
 			tasksMap.remove(thread.getName());
 			pluginThread = null;
 			getScriptContext().endScript();
 
 			thread.interrupt();
 		}
+	}
+
+	public synchronized Future<Integer> submit() {
+		final Future<Integer> future = getWorld().getServer().getPluginHandler().submitPluginTask(this);
+		setFuture(future);
+		return future;
+	}
+
+	public synchronized void cancel(final boolean mayInterruptIfRunning) {
+		if (getFuture() != null && !isInitialized()) {
+			getFuture().cancel(mayInterruptIfRunning);
+		}
+	}
+
+	public synchronized boolean isComplete() {
+		return getFuture() == null ? false : getFuture().isDone();
 	}
 
 	public boolean isInitialized() {
@@ -125,16 +146,8 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		return threadRunning.get();
 	}
 
-	private void setThreadRunning(boolean threadRunning) {
+	private void setThreadRunning(final boolean threadRunning) {
 		this.threadRunning.getAndSet(threadRunning);
-	}
-
-	public boolean isTickCompleted() {
-		return tickCompleted.get();
-	}
-
-	private void setTickCompleted(boolean tickCompleted) {
-		this.tickCompleted.getAndSet(tickCompleted);
 	}
 
 	public Thread getPluginThread() {
@@ -143,5 +156,22 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 
 	public ScriptContext getScriptContext() {
 		return scriptContext;
+	}
+
+	public synchronized PluginTickEvent getPluginTickEvent() {
+		return pluginTickEvent;
+	}
+
+	protected void setPluginTickEvent(final PluginTickEvent pluginTickEvent) {
+		this.pluginTickEvent = pluginTickEvent;
+		this.setDescriptor(getPluginTickEvent().getDescriptor() + "-Task");
+	}
+
+	private synchronized Future<Integer> getFuture() {
+		return future;
+	}
+
+	private synchronized void setFuture(final Future<Integer> future) {
+		this.future = future;
 	}
 }
