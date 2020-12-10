@@ -11,9 +11,9 @@ import java.util.Collection;
 
 public class ViewArea {
 
-	private Mob mob;
+	private final Mob mob;
 
-	public ViewArea(Mob mob) {
+	public ViewArea(final Mob mob) {
 		this.mob = mob;
 	}
 
@@ -33,8 +33,8 @@ public class ViewArea {
 		return mob.getWorld().getRegionManager().getLocalPlayers(mob);
 	}
 
-	public GameObject getGameObject(Point location) {
-		for (GameObject o : getGameObjectsInView()) {
+	public GameObject getGameObject(final Point location) {
+		for (final GameObject o : getGameObjectsInView()) {
 			if (o.getLocation().equals(location) && o.getType() != 1) {
 				return o;
 			}
@@ -42,8 +42,8 @@ public class ViewArea {
 		return null;
 	}
 
-	public GameObject getGameObject(int id, int x, int y) {
-		for (GameObject o : getGameObjectsInView()) {
+	public GameObject getGameObject(final int id, final int x, final int y) {
+		for (final GameObject o : getGameObjectsInView()) {
 			if (o.getID() == id && o.getX() == x && o.getY() == y) {
 				return o;
 			}
@@ -57,7 +57,7 @@ public class ViewArea {
 	 * @param location
 	 * @return FACT: RSC uses direction for wall objects, so that it doesn't collapse.
 	 */
-	public GameObject getWallObjectWithDir(Point location, int dir) {
+	public GameObject getWallObjectWithDir(final Point location, final int dir) {
 		for (GameObject o : getGameObjectsInView()) {
 			if (o.getDirection() == dir && o.getLocation().equals(location) && (o.getType() != 0)) {
 				return o;
@@ -66,8 +66,8 @@ public class ViewArea {
 		return null;
 	}
 
-	public GroundItem getGroundItem(Point location) {
-		for (GroundItem o : getItemsInView()) {
+	public GroundItem getGroundItem(final Point location) {
+		for (final GroundItem o : getItemsInView()) {
 			if (o.getLocation().equals(location)) {
 				return o;
 			}
@@ -75,13 +75,12 @@ public class ViewArea {
 		return null;
 	}
 
-	public GroundItem getGroundItem(int id, Point location) {
-		for (GroundItem o : getItemsInView()) {
+	public GroundItem getGroundItem(final int id, final Point location) {
+		for (final GroundItem o : getItemsInView()) {
 			if (o.getID() == id && o.getLocation().equals(location)) {
 				return o;
 			}
 		}
 		return null;
 	}
-
 }
