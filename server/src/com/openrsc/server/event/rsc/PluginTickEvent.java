@@ -6,8 +6,6 @@ import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.concurrent.Future;
-
 public class PluginTickEvent extends GameTickEvent {
 	/**
 	 * The asynchronous logger.
@@ -35,15 +33,11 @@ public class PluginTickEvent extends GameTickEvent {
 
 		// Restart the plugin thread if it has waited long enough
 		synchronized(getPluginTask()) {
-			getPluginTask().tick();
-
-			if(getPluginTask().shouldRun() && !getPluginTask().isComplete()) {
-				getPluginTask().run();
-			}
+			getPluginTask().doRun();
 		}
 
 		// Wait for the plugin to get to a pause point or finish completely. This also waits for the PluginTask to start which is also intended to run plugin code on tick bounds.
-		while((!getPluginTask().isInitialized() || (getPluginTask().isThreadRunning() && !getPluginTask().isThreadRunning())) && !getPluginTask().isComplete()) {
+		while((!getPluginTask().isInitialized() || getPluginTask().isThreadRunning()) && !getPluginTask().isComplete()) {
 			try {
 				Thread.sleep(1);
 			} catch (final InterruptedException ex) {

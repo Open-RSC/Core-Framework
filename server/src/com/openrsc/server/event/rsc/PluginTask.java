@@ -65,14 +65,16 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 	public abstract int action();
 
 	public void run() {
-		// Submitting in run because we want to only run game code on tick bounds so we start the execution inside of a tick
-		if(getFuture() == null) {
-			submit();
-		}
+		if(!isComplete()) {
+			// Submitting in run because we want to only run game code on tick bounds so we start the execution inside of a tick
+			if(getFuture() == null) {
+				submit();
+			}
 
-		setDelayTicks(0);
-		setThreadRunning(true);
-		notifyAll();
+			resetCountdown();
+			setThreadRunning(true);
+			notifyAll();
+		}
 	}
 
 	@Override
@@ -106,14 +108,12 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		// Save the original thread to interrupt it after closing down data for the Plugin representation
 		final Thread thread = getPluginThread();
 
-		if(thread != null) {
-			setThreadRunning(false);
-			setInitialized(false);
-			setFuture(null);
-			tasksMap.remove(thread.getName());
-			pluginThread = null;
-			getScriptContext().endScript();
+		setThreadRunning(false);
+		pluginThread = null;
+		getScriptContext().endScript();
 
+		if(thread != null) {
+			tasksMap.remove(thread.getName());
 			thread.interrupt();
 		}
 	}
