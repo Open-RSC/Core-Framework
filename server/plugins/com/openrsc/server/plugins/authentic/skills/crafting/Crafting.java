@@ -260,15 +260,15 @@ public class Crafting implements UseInvTrigger,
 		}
 		reply.set(options[type]);
 
-		boolean putAGemInIt = true;
-        if (!config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect Cabbage server config
+		boolean noGemInIt = false;
+        if (!config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect other than Cabbage server config
             player.playerServerMessage(MessageType.QUEST,
                 "Would you like to put a gem in the " + options[type].toLowerCase() + "?");
             options = new String[]{
                 "Yes",
                 "No"
             };
-            putAGemInIt = multi(player, options) == 1;
+            noGemInIt = multi(player, options) == 1;
         }
 
 		// select gem
@@ -309,7 +309,7 @@ public class Crafting implements UseInvTrigger,
 			return;
 		}
         int gem = 0;
-		if (!putAGemInIt) {
+		if (!noGemInIt) {
             player.playerServerMessage(MessageType.QUEST, "what sort of gem do you want to put in the " + reply.get() + "?");
             gem = multi(player, options);
 
