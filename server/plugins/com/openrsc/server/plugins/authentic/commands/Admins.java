@@ -314,7 +314,7 @@ public final class Admins implements CommandTrigger {
 			}
 		}
 
-		player.getWorld().getServer().getGameEventHandler().add(new HolidayDropEvent(player.getWorld(), executionCount, minute, player, items));
+		player.getWorld().getServer().getGameEventHandler().add(new HolidayDropEvent(player.getWorld(), executionCount, minute, items));
 		player.message(messagePrefix + "Starting holiday drop!");
 		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Started holiday drop"));
 	}
