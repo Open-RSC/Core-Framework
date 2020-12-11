@@ -33,29 +33,29 @@ public class SeersPartyChest implements UseLocTrigger {
 		}
 
 		ActionSender.sendMessage(player, null, MessageType.QUEST, "You place the item into the chest...", 0, null);
-		player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), player, DataConversions.random(0,5000), "Seers Party Hall Drop Delay", true) {
+		final boolean upstairs = player.getLocation().isInSeersPartyHallUpstairs();
+		for (Player p : player.getWorld().getPlayers()) {
+			if((upstairs && p.getLocation().isInSeersPartyHallUpstairs()) || (!upstairs && p.getLocation().isInSeersPartyHallDownstairs())) {
+				ActionSender.sendMessage(p, null, MessageType.QUEST, player.getStaffName() + "@whi@ just dropped: @gre@" + item.getDef(player.getWorld()).getName() + (item.getAmount() > 1 ? " @whi@(" + DataConversions.numberFormat(item.getAmount()) + ")" : ""), 0, null);
+			}
+		}
+
+		player.getWorld().getServer().getGameEventHandler().add(new SingleEvent(player.getWorld(), player, DataConversions.random(1000,5000), "Seers Party Hall Drop Delay", true) {
 			@Override
 			public void action() {
-				Random rand = DataConversions.getRandom();
-				boolean upstairs = getOwner().getLocation().isInSeersPartyHallUpstairs();
+				final Random rand = DataConversions.getRandom();
 
 				while(true) {
-					Point location = upstairs ?
+					final Point location = upstairs ?
 						new Point(rand.nextInt(11) + 490, rand.nextInt(8) + 1408) :
 						new Point(rand.nextInt(11) + 490, rand.nextInt(8) + 464);
 
-					if ((player.getWorld().getTile(location).traversalMask & 64) != 0) {
+					if ((getOwner().getWorld().getTile(location).traversalMask & 64) != 0) {
 						continue;
 					}
 
-					player.getWorld().registerItem(new GroundItem(player.getWorld(), item.getCatalogId(), location.getX(), location.getY(), item.getAmount(), (Player) null));
+					getOwner().getWorld().registerItem(new GroundItem(getOwner().getWorld(), item.getCatalogId(), location.getX(), location.getY(), item.getAmount(), null, item.getNoted()));
 					break;
-				}
-
-				for (Player p : player.getWorld().getPlayers()) {
-					if((upstairs && p.getLocation().isInSeersPartyHallUpstairs()) || (!upstairs && p.getLocation().isInSeersPartyHallDownstairs())) {
-						ActionSender.sendMessage(p, null, MessageType.QUEST, getOwner().getStaffName() + "@whi@ just dropped: @gre@" + item.getDef(player.getWorld()).getName() + (item.getAmount() > 1 ? " @whi@(" + DataConversions.numberFormat(item.getAmount()) + ")" : ""), 0, null);
-					}
 				}
 			}
 		});
