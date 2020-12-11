@@ -139,9 +139,10 @@ public class ItemUseOnObject implements PacketHandler {
 			}
 
 			// Currently, using notes on scenery is not supported.
-			if (item.getItemStatus().getNoted())
-			{
+			// However, we do allow it for the custom Seers Party Chest
+			if (item.getItemStatus().getNoted() && !((object.getID() == 18 || object.getID() == 17) && object.getLocation().isInSeersPartyHall())) {
 				player.message("Nothing interesting happens");
+				return;
 			}
 
 			handleObject(player, object.getLocation(), object, item);

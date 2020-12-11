@@ -22,6 +22,7 @@ public class ItemUseOnPlayer implements PacketHandler {
 		final Player affectedPlayer = player.getWorld().getPlayer(packet.readShort());
 		final Item item = player.getCarriedItems().getInventory().get(packet.readShort());
 		if (affectedPlayer == null || item == null || item.getItemStatus().getNoted()) {
+			player.message("Nothing interesting happens");
 			return;
 		}
 		if (System.currentTimeMillis() - affectedPlayer.getCombatTimer() < player.getConfig().GAME_TICK * 5) {
