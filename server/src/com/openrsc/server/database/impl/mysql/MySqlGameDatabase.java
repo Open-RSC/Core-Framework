@@ -441,6 +441,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 				playerData.playerId = result.getInt("id");
 				playerData.groupId = result.getInt("group_id");
+				playerData.username = result.getString("username"); // correct capitalization from database
 				playerData.combatStyle = (byte) result.getInt("combatstyle");
 				playerData.combatLevel = result.getInt("combat");
 				playerData.totalLevel = result.getInt("skill_total");
