@@ -767,6 +767,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		player.setOwner(playerData.playerId);
 		player.setDatabaseID(playerData.playerId);
 		player.setGroupID(playerData.groupId);
+		player.setUsername(playerData.username);
 		player.setTotalLevel(playerData.totalLevel);
 		player.setCombatStyle((byte) playerData.combatStyle);
 		player.setLastLogin(playerData.loginDate);
