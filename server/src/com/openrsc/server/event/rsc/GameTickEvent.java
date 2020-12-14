@@ -110,7 +110,7 @@ public abstract class GameTickEvent implements Callable<Integer> {
 		return owner != null && owner.isPlayer() ? (Player) owner : null;
 	}
 
-	public int getPlayerID() {
+	public int getPriority() {
 		final Player owner = getPlayerOwner();
 		if (owner == null)
 			return -1;

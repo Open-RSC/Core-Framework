@@ -105,7 +105,7 @@ public class GameEventHandler {
 
 		// Sort events by PID in order to achieve PID priority.
 		final List<GameTickEvent> eventsByPID = new ArrayList<>(events.values());
-		Collections.sort(eventsByPID, Comparator.comparing(GameTickEvent::getPlayerID));
+		Collections.sort(eventsByPID, Comparator.comparing(GameTickEvent::getPriority));
 
 		try {
 			executor.invokeAll(eventsByPID);
