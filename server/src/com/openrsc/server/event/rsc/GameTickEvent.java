@@ -110,6 +110,13 @@ public abstract class GameTickEvent implements Callable<Integer> {
 		return owner != null && owner.isPlayer() ? (Player) owner : null;
 	}
 
+	public int getPlayerID() {
+		final Player owner = getPlayerOwner();
+		if (owner == null)
+			return -1;
+		return owner.getIndex();
+	}
+
 	public Npc getNpcOwner() {
 		return owner != null && owner.isNpc() ? (Npc) owner : null;
 	}

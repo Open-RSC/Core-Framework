@@ -21,8 +21,8 @@ public class GameEventHandler {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	private final ConcurrentHashMap<String, GameTickEvent> events = new ConcurrentHashMap<String, GameTickEvent>();
-	private final ConcurrentHashMap<String, GameTickEvent> eventsToAdd = new ConcurrentHashMap<String, GameTickEvent>();
+	private final ConcurrentHashMap<String, GameTickEvent> events = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String, GameTickEvent> eventsToAdd = new ConcurrentHashMap<>();
 
 	private final ConcurrentHashMap<String, Integer> eventsCounts = new ConcurrentHashMap<String, Integer>();
 	private final ConcurrentHashMap<String, Long> eventsDurations = new ConcurrentHashMap<String, Long>();
@@ -36,8 +36,7 @@ public class GameEventHandler {
 	}
 
 	public void load() {
-		final int coreThreads = Runtime.getRuntime().availableProcessors();
-		executor = new ThreadPoolExecutor(coreThreads, coreThreads * 2, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new NamedThreadFactory(getServer().getName() + " : EventHandler"));
+		executor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), new NamedThreadFactory(getServer().getName() + " : EventHandler"));
 		executor.prestartAllCoreThreads();
 	}
 
@@ -96,17 +95,21 @@ public class GameEventHandler {
 	private void processEvents() {
 		// Update the number of threads in the pool. More servers could have been started so we want to allocate the right amount of threads.
 		final int maxThreads = (Runtime.getRuntime().availableProcessors() * 2) / (Server.serversList.size() > 0 ? Server.serversList.size() : 1);
-		executor.setCorePoolSize(maxThreads / 2);
 		executor.setMaximumPoolSize(maxThreads);
+		executor.setCorePoolSize(maxThreads / 2);
 
 		if (eventsToAdd.size() > 0) {
 			events.putAll(eventsToAdd);
 			eventsToAdd.clear();
 		}
 
+		// Sort events by PID in order to achieve PID priority.
+		final List<GameTickEvent> eventsByPID = new ArrayList<>(events.values());
+		Collections.sort(eventsByPID, Comparator.comparing(GameTickEvent::getPlayerID));
+
 		try {
-			executor.invokeAll(events.values());
-		} catch (Exception e) {
+			executor.invokeAll(eventsByPID);
+		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
 
@@ -114,7 +117,7 @@ public class GameEventHandler {
 		eventsDurations.clear();
 
 		events.entrySet().removeIf((eventBox) -> {
-			GameTickEvent event = eventBox.getValue();
+			final GameTickEvent event = eventBox.getValue();
 			eventsCounts.put(event.getDescriptor(),
 				eventsCounts.containsKey(event.getDescriptor()) ?
 					eventsCounts.get(event.getDescriptor()) + 1 :
@@ -231,20 +234,20 @@ public class GameEventHandler {
 		return new LinkedHashMap<>(events);
 	}
 
-	public void remove(GameTickEvent event) {
+	public void remove(final GameTickEvent event) {
 		events.remove(event);
 	}
 
-	public void removePlayersEvents(Player player) {
+	public void removePlayersEvents(final Player player) {
 		try {
-			Iterator<Map.Entry<String, GameTickEvent>> iterator = events.entrySet().iterator();
+			final Iterator<Map.Entry<String, GameTickEvent>> iterator = events.entrySet().iterator();
 			while (iterator.hasNext()) {
 				GameTickEvent event = iterator.next().getValue();
 				if (event.belongsTo(player)) {
 					iterator.remove();
 				}
 			}
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
 	}
