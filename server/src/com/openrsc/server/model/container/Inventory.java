@@ -586,6 +586,13 @@ public class Inventory {
 	}
 	//----------------------------------------------------------------
 	//Methods that check the list-------------------------------------
+	//Methods that check the list-------------------------------------
+	public boolean canHold(int itemCatelogId, int amount) {
+		synchronized (list) {
+			return (MAX_SIZE - list.size()) >= getRequiredSlots(itemCatelogId, amount, false);
+		}
+	}
+
 	public boolean canHold(Item item) {
 		synchronized (list) {
 			return (MAX_SIZE - list.size()) >= getRequiredSlots(item);
@@ -620,19 +627,27 @@ public class Inventory {
 		synchronized(list) {
 			// Check item definition
 			ItemDefinition itemDef = item.getDef(player.getWorld());
+			return getRequiredSlots(item.getCatalogId(), item.getAmount(), item.getNoted());
+		}
+	}
+
+	public int getRequiredSlots(int itemCatalogId, int amount, boolean isNoted) {
+		synchronized(list) {
+			// Check item definition
+			ItemDefinition itemDef =  player.getWorld().getServer().getEntityHandler().getItemDef(itemCatalogId);
 			if (itemDef == null)
 				return Integer.MAX_VALUE;
 
 			// Check if the item is a stackable
-			if (itemDef.isStackable() || item.getNoted()) {
+			if (itemDef.isStackable() || isNoted) {
 				// Check if there's a stack that can be added to
 				for (Item inventoryItem : list) {
 					// Check for matching catalogID
-					if (inventoryItem.getCatalogId() != item.getCatalogId())
+					if (inventoryItem.getCatalogId() != itemCatalogId)
 						continue;
 
 					// Check for matching noted status
-					if (inventoryItem.getNoted() != item.getNoted())
+					if (inventoryItem.getNoted() != isNoted)
 						continue;
 
 					// Make sure there's room in the stack
@@ -641,13 +656,13 @@ public class Inventory {
 
 					// Check if all of the stack can fit in the existing stack
 					int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
-					return remainingSize < item.getAmount() ? 1 : 0;
+					return remainingSize < amount ? 1 : 0;
 				}
 
 				// Theres no stack found
 				return 1;
 			} else {
-				return item.getAmount();
+				return amount;
 			}
 		}
 	}

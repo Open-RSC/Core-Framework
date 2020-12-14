@@ -163,8 +163,7 @@ public final class InterfaceShopHandler implements PacketHandler {
 			player.message("You don't have enough coins");
 			return true;
 		}
-		Item tempItem = new Item(catalogID, buyingNow);
-		if (!player.getCarriedItems().getInventory().canHold(tempItem)) {
+		if (!player.getCarriedItems().getInventory().canHold(catalogID, buyingNow)) {
 			player.message("You can't hold the objects you are trying to buy!");
 			return true;
 		}
