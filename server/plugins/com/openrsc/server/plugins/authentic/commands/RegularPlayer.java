@@ -460,7 +460,7 @@ public final class RegularPlayer implements CommandTrigger {
 		}
 	}
 
-	private void queryOnlinePlayers(Player player) {
+	public static void queryOnlinePlayers(Player player) {
 		int online = 0;
 		ArrayList<Player> players = new ArrayList<>();
 		ArrayList<String> locations = new ArrayList<>();
