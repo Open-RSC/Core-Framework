@@ -16,6 +16,7 @@ import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.NPCLoc;
 import com.openrsc.server.io.WorldLoader;
 import com.openrsc.server.model.GlobalMessage;
+import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.entity.GameObject;
@@ -28,10 +29,7 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.util.EntityList;
-import com.openrsc.server.util.IPTracker;
-import com.openrsc.server.util.SimpleSubscriber;
-import com.openrsc.server.util.ThreadSafeIPTracker;
+import com.openrsc.server.util.*;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
@@ -84,7 +82,9 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	private ConcurrentMap<Player, Boolean> playerUnderAttackMap;
 	private ConcurrentMap<Npc, Boolean> npcUnderAttackMap;
 
-	private Queue<GlobalMessage> globalMessageQueue = new LinkedList<GlobalMessage>();
+	private Queue<GlobalMessage> globalMessageQueue = new LinkedList<>();
+
+	private PathfindingDebug pathfindingDebug = null;
 
 	public NpcDrops npcDrops;
 
@@ -348,6 +348,10 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 			getRegionManager().load();
 			getWorldLoader().getWorldPopulator().populateWorld();
 			getNpcDrops().load();
+
+			if (PathValidation.DEBUG) {
+				pathfindingDebug = new PathfindingDebug(this);
+			}
 		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
@@ -368,6 +372,11 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 			p.unregister(true, "Server shutting down.");
 		}
 		LOGGER.info("Players saved");
+
+		if (pathfindingDebug != null) {
+			pathfindingDebug.destroy();
+			pathfindingDebug = null;
+		}
 
 		getClanManager().uninitialize();
 		getPartyManager().uninitialize();
