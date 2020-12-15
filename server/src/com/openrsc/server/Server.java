@@ -458,22 +458,15 @@ public class Server implements Runnable {
 					// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 					this.lastTickDuration = bench(() -> {
 						try {
-							this.lastIncomingPacketsDuration = this.lastOutgoingPacketsDuration = 0L;
-							for (final Player player : getWorld().getPlayers()) {
-								this.lastIncomingPacketsDuration += bench(player::processIncomingPackets);
-							}
+							this.lastIncomingPacketsDuration = processIncomingPackets();
 							this.lastEventsDuration = getGameEventHandler().runGameEvents();
 							this.lastGameStateDuration = getGameUpdater().doUpdates();
-							for (final Player player : getWorld().getPlayers()) {
-								this.lastOutgoingPacketsDuration += bench(player::processOutgoingPackets);
-							}
+							this.lastOutgoingPacketsDuration = processOutgoingPackets();
 						} catch (final Throwable t) {
 							LOGGER.catching(t);
 						}
 					});
 
-					// Storing the current tick because we will update the time stamp in either monitorTickPerformance or afterward which will cause getCurrentTick() to return the next tick
-					final long currentTick = getCurrentTick();
 					monitorTickPerformance();
 
 					// Set us to be in the next tick.
@@ -503,6 +496,22 @@ public class Server implements Runnable {
 				LOGGER.catching(t);
 			}
 		}
+	}
+
+	private long processIncomingPackets() {
+		return bench(() -> {
+			for (final Player player : getWorld().getPlayers()) {
+				player.processIncomingPackets();
+			}
+		});
+	}
+
+	private long processOutgoingPackets() {
+		return bench(() -> {
+			for (final Player player : getWorld().getPlayers()) {
+				player.processOutgoingPackets();
+			}
+		});
 	}
 
 	private void monitorTickPerformance() {
