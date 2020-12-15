@@ -34,6 +34,7 @@ public class PlayerData {
 	public int headSprite;
 	public int bodySprite;
 	public boolean male;
+	public String username;
 	public String pass;
 	public String salt;
 	public long banned;
