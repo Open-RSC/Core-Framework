@@ -3,6 +3,7 @@ package com.openrsc.server.model.entity.player;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -158,10 +159,38 @@ public class ScriptContext {
 		return getContextPlayer().getCarriedItems().getInventory().get(interactingIndex);
 	}
 
+	private Entity getInteractingEntity() {
+		switch (getEntityType()) {
+			case PLAYER:
+				return getInteractingPlayer();
+			case NPC:
+				return getInteractingNpc();
+			case LOCATION:
+				return getInteractingLocation();
+			case BOUNDARY:
+				return getInteractingBoundary();
+			case GROUND_ITEM:
+				return getInteractingGroundItem();
+			default:
+				// Not descended from Entity class.
+				return null;
+		}
+	}
+
+	public void lock() {
+
+	}
+
+	public void unlock() {
+
+	}
+
 	public void setInteractingCoordinate(final Point coordinate) {
 		if(getContextPlayer() == null) {
 			return;
 		}
+
+		unlock();
 
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
@@ -171,12 +200,16 @@ public class ScriptContext {
 		this.interactingIndex = null;
 		this.interactingCoordinate = coordinate;
 		setEntityType(EntityType.COORDINATE);
+
+		lock();
 	}
 
 	public void setInteractingNpc(final Npc npc) {
 		if(getContextPlayer() == null) {
 			return;
 		}
+
+		unlock();
 
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
@@ -187,12 +220,16 @@ public class ScriptContext {
 		this.interactingIndex = npc.getIndex();
 		this.interactingCoordinate = npc.getLocation();
 		setEntityType(EntityType.NPC);
+
+		lock();
 	}
 
 	public void setInteractingPlayer(final Player player) {
 		if(getContextPlayer() == null) {
 			return;
 		}
+
+		unlock();
 
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
@@ -202,12 +239,16 @@ public class ScriptContext {
 		this.interactingIndex = player.getIndex();
 		this.interactingCoordinate = player.getLocation();
 		setEntityType(EntityType.PLAYER);
+
+		lock();
 	}
 
 	public void setInteractingGroundItem(final GroundItem groundItem) {
 		if(getContextPlayer() == null) {
 			return;
 		}
+
+		unlock();
 
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
@@ -217,12 +258,16 @@ public class ScriptContext {
 		this.interactingIndex = groundItem.getID();
 		this.interactingCoordinate = groundItem.getLocation();
 		setEntityType(EntityType.GROUND_ITEM);
+
+		lock();
 	}
 
 	public void setInteractingLocation(final GameObject location) {
 		if(getContextPlayer() == null) {
 			return;
 		}
+
+		unlock();
 
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
@@ -232,12 +277,16 @@ public class ScriptContext {
 		this.interactingIndex = null;
 		this.interactingCoordinate = location.getLocation();
 		setEntityType(EntityType.LOCATION);
+
+		lock();
 	}
 
 	public void setInteractingBoundary(final GameObject boundary) {
 		if(getContextPlayer() == null) {
 			return;
 		}
+
+		unlock();
 
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
@@ -247,12 +296,16 @@ public class ScriptContext {
 		this.interactingIndex = null;
 		this.interactingCoordinate = boundary.getLocation();
 		setEntityType(EntityType.BOUNDARY);
+
+		lock();
 	}
 
 	public void setInteractingInventory(final Integer index) {
 		if(getContextPlayer() == null) {
 			return;
 		}
+
+		unlock();
 
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
@@ -262,12 +315,16 @@ public class ScriptContext {
 		this.interactingIndex = index;
 		this.interactingCoordinate = getContextPlayer().getLocation();
 		setEntityType(EntityType.INVENTORY_ITEM);
+
+		lock();
 	}
 
 	public void setInteractingNothing() {
 		if(getContextPlayer() == null) {
 			return;
 		}
+
+		unlock();
 
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
@@ -277,6 +334,8 @@ public class ScriptContext {
 		this.interactingIndex = null;
 		this.interactingCoordinate = getContextPlayer().getLocation();
 		setEntityType(EntityType.NONE);
+
+		lock();
 	}
 
 	public void setInteractingObject(final EntityType entityType, final Object interactingObject) {
