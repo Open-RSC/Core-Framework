@@ -10,7 +10,7 @@ public enum EntityType {
     PLAYER(6),
     COORDINATE(7);
 
-    private int entityType;
+    private final int entityType;
 
     EntityType(final int entityType) {
         this.entityType = entityType;

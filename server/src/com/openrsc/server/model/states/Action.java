@@ -53,10 +53,10 @@ public enum Action {
 	}
 
 	private String description;
-	private EntityType entityType;
+	private EntityType defaultEntityType;
 
-	Action(final EntityType entityType, final String description) {
-		this.entityType = entityType;
+	Action(final EntityType defaultEntityType, final String description) {
+		this.defaultEntityType = defaultEntityType;
 		this.description = description;
 	}
 
@@ -64,8 +64,8 @@ public enum Action {
 		return description;
 	}
 
-	public EntityType getEntityType() {
-		return entityType;
+	public EntityType getDefaultEntityType() {
+		return defaultEntityType;
 	}
 
 	public String getDescription() { return description; }

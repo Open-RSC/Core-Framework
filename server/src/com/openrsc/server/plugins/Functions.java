@@ -17,7 +17,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.ScriptContext;
 import com.openrsc.server.model.entity.update.Bubble;
 import com.openrsc.server.model.entity.update.ChatMessage;
-import com.openrsc.server.model.states.Action;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -416,7 +415,6 @@ public class Functions {
 		}
 
 		if(closestNpc != null) {
-			scriptContext.setCurrentAction(Action.talknpc);
 			scriptContext.setInteractingNpc(closestNpc);
 		}
 
@@ -439,7 +437,6 @@ public class Functions {
 		}
 
 		if(closestNpc != null) {
-			scriptContext.setCurrentAction(Action.talknpc);
 			scriptContext.setInteractingNpc(closestNpc);
 		}
 

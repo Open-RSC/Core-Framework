@@ -13,17 +13,34 @@
       <module name="Open RSC Android Client" />
     </loaded-modules>
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="aac60d61-673a-4ad4-8ee5-46e19413f987" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Open RSC.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.ipr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Open RSC.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Open RSC.iws" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/misc/Present.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/plugins/com/openrsc/server/plugins/misc/Present.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/GameEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/GameEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/player/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/player/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/net/DiscordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/net/DiscordService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/ItemActionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/net/rsc/handlers/ItemActionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/Entity.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/Entity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/player/ScriptContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/entity/player/ScriptContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/states/Action.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/states/Action.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/model/states/EntityType.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/model/states/EntityType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/plugins/Functions.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/plugins/Functions.java" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -141,7 +158,6 @@
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -151,7 +167,7 @@
     <property name="jdk.selected.JAVA_MODULE" value="13" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/server/build.xml" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
@@ -171,19 +187,7 @@
       <command value="gradle Game" />
     </option>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
-  <component name="RunManager" selected="Ant Target.Run Server">
+  <component name="RunManager" selected="Ant Target.Run Client">
     <configuration name="Game Launcher" type="AntRunConfiguration" singleton="false">
       <antsettings antfile="file://$PROJECT_DIR$/PC_Launcher/build.xml" target="compile-and-run" />
       <method v="2" />
@@ -196,15 +200,24 @@
       <antsettings antfile="file://$PROJECT_DIR$/server/build.xml" target="compile-and-run" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Ant Target.Game Launcher" />
       <item itemvalue="Ant Target.Run Client" />
       <item itemvalue="Ant Target.Run Server" />
     </list>
   </component>
-  <component name="StructureViewFactory">
-    <option name="ACTIVE_ACTIONS" value=",ALPHA_COMPARATOR" />
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -252,11 +265,20 @@
       <workItem from="1590372358383" duration="7906000" />
       <workItem from="1590384695635" duration="315000" />
       <workItem from="1590422662727" duration="4745000" />
+      <workItem from="1607614847596" duration="1932000" />
+      <workItem from="1607640197208" duration="15889000" />
+      <workItem from="1607911158433" duration="421000" />
+      <workItem from="1607911599372" duration="712000" />
+      <workItem from="1607963983750" duration="3882000" />
+      <workItem from="1607990092348" duration="863000" />
+      <workItem from="1607991524046" duration="1132000" />
+      <workItem from="1607992673090" duration="807000" />
+      <workItem from="1608067431837" duration="5248000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -273,19 +295,30 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="743" y="391" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1585178794330">
+    <state x="440" y="94" key="#Project_Structure" timestamp="1607911674339">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="743" y="391" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1920.1040/1920.3.1920.1040@0.0.1920.1040" timestamp="1585178794330" />
+    <state x="440" y="94" key="#Project_Structure/0.0.1920.1040@0.0.1920.1040" timestamp="1607911674339" />
+    <state x="664" y="277" key="#com.intellij.refactoring.encapsulateFields.EncalpsulateFieldsDialog" timestamp="1608081954894">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="664" y="277" key="#com.intellij.refactoring.encapsulateFields.EncalpsulateFieldsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1608081954894" />
+    <state x="667" y="253" width="585" height="534" key="find.popup" timestamp="1608082079188">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="667" y="253" width="585" height="534" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1608082079188" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1608080299967">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1608080299967" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -304,11 +337,6 @@
           <url>file://$PROJECT_DIR$/client/src/com/openrsc/client/entityhandling/EntityHandler.java</url>
           <line>4883</line>
           <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/server/src/com/openrsc/server/event/rsc/PluginTask.java</url>
-          <line>112</line>
-          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
