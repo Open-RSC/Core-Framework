@@ -7,8 +7,8 @@ import java.util.*;
 public final class EntityList<T extends Entity> extends AbstractCollection<T> {
 
 	private static final int DEFAULT_CAPACITY = 2000;
-	private final Set<Integer> indicies = Collections
-		.synchronizedSet(new HashSet<Integer>());
+	private final Set<Integer> indices = Collections
+		.synchronizedSet(new HashSet<>());
 	private int capacity;
 	private Object[] entities;
 	private int curIndex = 0;
@@ -17,34 +17,38 @@ public final class EntityList<T extends Entity> extends AbstractCollection<T> {
 		this(DEFAULT_CAPACITY);
 	}
 
-	public EntityList(int capacity) {
-		entities = new Object[capacity];
+	public EntityList(final int capacity) {
+		this.entities = new Object[capacity];
 		this.capacity = capacity;
 	}
 
-	public boolean add(T entity) {
+	public boolean add(final T entity) {
 		if (entities[curIndex] != null) {
 			increaseIndex();
 			add(entity);
 		} else {
 			entities[curIndex] = entity;
 			entity.setIndex(curIndex);
-			indicies.add(curIndex);
+			indices.add(curIndex);
 			increaseIndex();
 		}
 		return true;
 	}
 
-	public boolean contains(T entity) {
+	public boolean contains(final T entity) {
 		return indexOf(entity) > -1;
 	}
 
 	public int count() {
-		return indicies.size();
+		return indices.size();
+	}
+
+	public int size() {
+		return indices.size();
 	}
 
 	@SuppressWarnings("unchecked")
-	public T get(int index) {
+	public T get(final int index) {
 		return (T) entities[index];
 	}
 
@@ -55,8 +59,8 @@ public final class EntityList<T extends Entity> extends AbstractCollection<T> {
 		}
 	}
 
-	private int indexOf(T entity) {
-		for (int index : indicies) {
+	private int indexOf(final T entity) {
+		for (int index : indices) {
 			if (entities[index].equals(entity)) {
 				return index;
 			}
@@ -65,23 +69,19 @@ public final class EntityList<T extends Entity> extends AbstractCollection<T> {
 	}
 
 	public Iterator<T> iterator() {
-		return new EntityListIterator<T>(entities, indicies, this);
+		return new EntityListIterator<T>(entities, indices, this);
 	}
 
 	@SuppressWarnings("unchecked")
-	public T remove(int index) {
+	public T remove(final int index) {
 		Object temp = entities[index];
 		entities[index] = null;
-		indicies.remove(index);
+		indices.remove(index);
 		return (T) temp;
 	}
 
-	public void remove(T entity) {
+	public void remove(final T entity) {
 		entities[entity.getIndex()] = null;
-		indicies.remove(entity.getIndex());
-	}
-
-	public int size() {
-		return indicies.size();
+		indices.remove(entity.getIndex());
 	}
 }
