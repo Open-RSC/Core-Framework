@@ -28,6 +28,7 @@ public class ScriptContext {
 	private volatile Integer ownerIndex;
 	private volatile Action currentAction;
 	private volatile EntityType entityType;
+	private volatile Point entityInteractingCoordinate;
 	private volatile Integer interactingIndex;
 	private volatile Point interactingCoordinate;
 
@@ -55,8 +56,21 @@ public class ScriptContext {
 	}
 
 	public Point getInteractingCoordinate() {
-		// This one is special as the interaction coordinate is always available.
-		return interactingCoordinate;
+		if (interactingCoordinate != null) {
+			return interactingCoordinate;
+		}
+
+		final Entity entity = getInteractingEntity();
+		if (entity != null) {
+			return entity.getLocation();
+		}
+
+		final Player contextPlayer = getContextPlayer();
+		if (contextPlayer != null) {
+			return contextPlayer.getLocation();
+		}
+
+		return null;
 	}
 
 	public Npc getInteractingNpc() {
@@ -108,7 +122,7 @@ public class ScriptContext {
 			return null;
 		}
 
-		return getContextPlayer().getRegion().getItem(interactingIndex, interactingCoordinate, getContextPlayer());
+		return getContextPlayer().getRegion().getItem(interactingIndex, entityInteractingCoordinate, getContextPlayer());
 	}
 
 	public GameObject getInteractingLocation() {
@@ -124,7 +138,7 @@ public class ScriptContext {
 			return null;
 		}
 
-		return getContextPlayer().getRegion().getGameObject(interactingCoordinate, getContextPlayer());
+		return getContextPlayer().getRegion().getGameObject(entityInteractingCoordinate, getContextPlayer());
 	}
 
 	public GameObject getInteractingBoundary() {
@@ -140,7 +154,7 @@ public class ScriptContext {
 			return null;
 		}
 
-		return getContextPlayer().getRegion().getWallGameObject(interactingCoordinate, getContextPlayer());
+		return getContextPlayer().getRegion().getWallGameObject(entityInteractingCoordinate, getContextPlayer());
 	}
 
 	public Item getInteractingInventory() {
@@ -190,18 +204,7 @@ public class ScriptContext {
 			return;
 		}
 
-		unlock();
-
-		final Npc oldNpc = getInteractingNpc();
-		if(oldNpc != null) {
-			oldNpc.setBusy(false);
-		}
-
-		this.interactingIndex = null;
 		this.interactingCoordinate = coordinate;
-		setEntityType(EntityType.COORDINATE);
-
-		lock();
 	}
 
 	public void setInteractingNpc(final Npc npc) {
@@ -209,18 +212,16 @@ public class ScriptContext {
 			return;
 		}
 
-		unlock();
-
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
 
+		unlock();
 		npc.setBusy(true);
 		this.interactingIndex = npc.getIndex();
-		this.interactingCoordinate = npc.getLocation();
+		this.entityInteractingCoordinate = null;
 		setEntityType(EntityType.NPC);
-
 		lock();
 	}
 
@@ -229,17 +230,15 @@ public class ScriptContext {
 			return;
 		}
 
-		unlock();
-
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
 
+		unlock();
 		this.interactingIndex = player.getIndex();
-		this.interactingCoordinate = player.getLocation();
+		this.entityInteractingCoordinate = null;
 		setEntityType(EntityType.PLAYER);
-
 		lock();
 	}
 
@@ -248,17 +247,15 @@ public class ScriptContext {
 			return;
 		}
 
-		unlock();
-
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
 
+		unlock();
 		this.interactingIndex = groundItem.getID();
-		this.interactingCoordinate = groundItem.getLocation();
+		this.entityInteractingCoordinate = groundItem.getLocation();
 		setEntityType(EntityType.GROUND_ITEM);
-
 		lock();
 	}
 
@@ -267,17 +264,15 @@ public class ScriptContext {
 			return;
 		}
 
-		unlock();
-
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
 
+		unlock();
 		this.interactingIndex = null;
-		this.interactingCoordinate = location.getLocation();
+		this.entityInteractingCoordinate = location.getLocation();
 		setEntityType(EntityType.LOCATION);
-
 		lock();
 	}
 
@@ -286,17 +281,15 @@ public class ScriptContext {
 			return;
 		}
 
-		unlock();
-
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
 
+		unlock();
 		this.interactingIndex = null;
-		this.interactingCoordinate = boundary.getLocation();
+		this.entityInteractingCoordinate = boundary.getLocation();
 		setEntityType(EntityType.BOUNDARY);
-
 		lock();
 	}
 
@@ -305,17 +298,15 @@ public class ScriptContext {
 			return;
 		}
 
-		unlock();
-
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
 
+		unlock();
 		this.interactingIndex = index;
-		this.interactingCoordinate = getContextPlayer().getLocation();
+		this.entityInteractingCoordinate = getContextPlayer().getLocation();
 		setEntityType(EntityType.INVENTORY_ITEM);
-
 		lock();
 	}
 
@@ -324,17 +315,15 @@ public class ScriptContext {
 			return;
 		}
 
-		unlock();
-
 		final Npc oldNpc = getInteractingNpc();
 		if(oldNpc != null) {
 			oldNpc.setBusy(false);
 		}
 
+		unlock();
 		this.interactingIndex = null;
-		this.interactingCoordinate = getContextPlayer().getLocation();
+		this.entityInteractingCoordinate = null;
 		setEntityType(EntityType.NONE);
-
 		lock();
 	}
 
@@ -359,6 +348,7 @@ public class ScriptContext {
 				setInteractingInventory((Integer)interactingObject);
 				break;
 			case COORDINATE:
+				setEntityType(EntityType.NONE);
 				setInteractingCoordinate((Point)interactingObject);
 			case NONE:
 				setInteractingNothing();
@@ -393,6 +383,7 @@ public class ScriptContext {
 
 		this.currentAction = Action.idle;
 		this.interactingIndex = null;
+		this.entityInteractingCoordinate = null;
 		this.interactingCoordinate = null;
 
 		// Check to see if a batch is running and if so,
