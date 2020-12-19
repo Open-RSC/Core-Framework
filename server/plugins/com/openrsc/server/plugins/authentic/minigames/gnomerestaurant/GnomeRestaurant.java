@@ -46,221 +46,106 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 	}
 
 	@Override
-	public void onTalkNpc(Player player, Npc n) {
-		if (n.getID() == NpcId.ALUFT_GIANNE.id()) {
+	public void onTalkNpc(Player player, Npc npc) {
+		if (npc.getID() == NpcId.ALUFT_GIANNE.id()) {
 			if (!player.getCache().hasKey("gnome_cooking")) {
-				say(player, n, "hello");
-				npcsay(player, n, "well hello there,you hungry..",
-					"you come to the right place",
-					"eat green, eat gnome cruisine",
-					"my waiter will be glad to take your order");
-				say(player, n, "thanks");
-				npcsay(player, n, "on the other hand if you looking for some work",
-					"i have a cook's position available");
-				int menu = multi(player, n, "no thanks i'm no cook", "ok i'll give it a go");
-				if (menu == 0) {
-					npcsay(player, n, "in that case please, eat and enjoy");
-				} else if (menu == 1) {
-					npcsay(player, n, "well that's great",
-						"of course i'll have to see what you're like first",
-						"here, have a look at our menu");
-					player.message("Aluft gives you a cook book");
-					give(player, ItemId.GIANNE_COOK_BOOK.id(), 1);
-					player.getCache().set("gnome_cooking", 1);
-					npcsay(player, n, "when you've had a look come back...",
-						"... and i'll let you prepare a few dishes");
-					say(player, n, "good stuff");
-				}
+				startGnomeRestaurant(player, npc);
 			} else {
 				int stage = player.getCache().getInt("gnome_cooking");
 				switch (stage) {
+
+					// Assigns Cheese and Tomato Batta
 					case 1:
-						say(player, n, "hi mr gianne");
-						npcsay(player, n, "hello my good friend",
-							"what did you think");
-						say(player, n, "I'm not too sure about toads legs");
-						npcsay(player, n, "they're a gnome delicacy, you'll love them",
-							"but we'll start with something simple",
-							"can you make me a cheese and tomato gnome batta");
-						npcsay(player, n, "here's what you need");
-						mes("aluft gives you one tomato, some cheese...");
-						delay(2);
-						give(player, ItemId.TOMATO.id(), 1);
-						give(player, ItemId.CHEESE.id(), 1);
-						player.message("...some equa leaves and some plain dough");
-						give(player, ItemId.EQUA_LEAVES.id(), 1);
-						give(player, ItemId.GIANNE_DOUGH.id(), 1);
-						player.getCache().set("gnome_cooking", 2);
-						say(player, n, "thanks");
-						npcsay(player, n, "Let me know how you get on");
+						assignCheeseTomatoBatta(player, npc);
 						break;
+
+					// Returns Cheese and Tomato Batta, Assigns Chocolate Bomb
 					case 2:
-						say(player, n, "Hi mr gianne");
-						npcsay(player, n, "call me aluft");
-						say(player, n, "ok");
-						npcsay(player, n, "so how did you get on?");
+						say(player, npc, "Hi mr gianne");
+						npcsay(player, npc, "call me aluft");
+						say(player, npc, "ok");
+						npcsay(player, npc, "so how did you get on?");
 						if (player.getCarriedItems().hasCatalogID(ItemId.CHEESE_AND_TOMATO_BATTA.id(), Optional.of(false))) {
-							say(player, n, "no problem, it was easy");
-							mes("you give aluft the gnome batta");
-							delay(3);
-							player.getCarriedItems().remove(new Item(ItemId.CHEESE_AND_TOMATO_BATTA.id()));
-							player.message("he takes a bite");
-							npcsay(player, n, "not bad...not bad at all",
-								"ok now for something a little harder",
-								"try and make me a choc bomb.. they're my favorite",
-								"here's what you need");
-							mes("aluft gives you four bars of chocolate");
-							delay(2);
-							give(player, ItemId.CHOCOLATE_BAR.id(), 4);
-							mes("some equa leaves, some chocolate dust...");
-							delay(2);
-							give(player, ItemId.EQUA_LEAVES.id(), 1);
-							give(player, ItemId.CHOCOLATE_DUST.id(), 1);
-							player.message("...some gianne dough and some cream");
-							give(player, ItemId.GIANNE_DOUGH.id(), 1);
-							give(player, ItemId.CREAM.id(), 2);
-							say(player, n, "ok aluft, i'll be back soon");
-							npcsay(player, n, "good stuff");
-							player.getCache().set("gnome_cooking", 3);
+							assignChocolateBomb(player, npc);
 						} else {
-							say(player, n, "erm.. not quite done yet");
-							npcsay(player, n, "ok, let me know when you are",
+							say(player, npc, "erm.. not quite done yet");
+							npcsay(player, npc, "ok, let me know when you are",
 								"i need one cheese and tomato batta");
 						}
 						break;
+
+					// Returns Chocolate Bomb, Assigns Toad Batta
 					case 3:
-						say(player, n, "hi aluft");
-						npcsay(player, n, "hello there, how did you get on");
+						say(player, npc, "hi aluft");
+						npcsay(player, npc, "hello there, how did you get on");
 						if (player.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_BOMB.id(), Optional.of(false))) {
-							say(player, n, "here you go");
-							player.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_BOMB.id()));
-							mes("you give aluft the choc bomb");
-							delay(2);
-							player.message("he takes a bite");
-							npcsay(player, n, "yes, yes, yes, that's superb",
-								"i'm really impressed");
-							say(player, n, "i'm glad");
-							npcsay(player, n, "ok then, now can you make me a toad batta",
-								"here's what you need");
-							give(player, ItemId.GIANNE_DOUGH.id(), 1);
-							give(player, ItemId.EQUA_LEAVES.id(), 1);
-							give(player, ItemId.GNOME_SPICE.id(), 1);
-							mes("mr gianne gives you some dough, some equaleaves...");
-							delay(3);
-							player.message("...and some gnome spice");
-							npcsay(player, n, "i'm afraid all are toads legs are served fresh");
-							say(player, n, "nice!");
-							npcsay(player, n, "so you'll need to go to the swamp on ground level",
-								"and catch a toad",
-								"let me know when the batta's ready");
-							player.getCache().set("gnome_cooking", 4);
+							assignToadBatta(player, npc);
 						} else {
-							say(player, n, "i haven't made it yet");
-							npcsay(player, n, "just follow the instructions carefully",
+							say(player, npc, "i haven't made it yet");
+							npcsay(player, npc, "just follow the instructions carefully",
 								"i need one choc bomb");
 						}
 						break;
+
+					// Returns Toad Batta, Assigns Worm Hole
 					case 4:
-						say(player, n, "hi mr gianne");
-						npcsay(player, n, "aluft");
-						say(player, n, "sorry, aluft");
-						npcsay(player, n, "so where's my toad batta?");
+						say(player, npc, "hi mr gianne");
+						npcsay(player, npc, "aluft");
+						say(player, npc, "sorry, aluft");
+						npcsay(player, npc, "so where's my toad batta?");
 						if (player.getCarriedItems().hasCatalogID(ItemId.TOAD_BATTA.id(), Optional.of(false))) {
-							say(player, n, "here you go, easy");
-							mes("you give mr gianne the toad batta");
-							delay(3);
-							player.getCarriedItems().remove(new Item(ItemId.TOAD_BATTA.id()));
-							player.message("he takes a bite");
-							npcsay(player, n, "ooh, that's some good toad",
-								"very nice",
-								"let's see if you can make a worm hole");
-							say(player, n, "a wormhole?");
-							npcsay(player, n, "yes, it's in the cooking guide i gave you",
-								"you'll have to get the worms from the swamp",
-								"but here's everything else you'll need",
-								"let me know when your done");
-							give(player, ItemId.GIANNE_DOUGH.id(), 1);
-							give(player, ItemId.ONION.id(), 2);
-							give(player, ItemId.EQUA_LEAVES.id(), 1);
-							player.getCache().set("gnome_cooking", 5);
+							assignWormHole(player, npc);
 						} else {
-							say(player, n, "i'm not done yet");
-							npcsay(player, n, "ok, quick as you can though");
-							say(player, n, "no problem");
+							say(player, npc, "i'm not done yet");
+							npcsay(player, npc, "ok, quick as you can though");
+							say(player, npc, "no problem");
 						}
 						break;
+
+					// Returns Worm Hole, Assigns Toad Crunchies
 					case 5:
-						say(player, n, "hello again aluft");
-						npcsay(player, n, "hello traveller, how did you do?");
+						say(player, npc, "hello again aluft");
+						npcsay(player, npc, "hello traveller, how did you do?");
 						if (player.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
-							say(player, n, "here, see what you think");
-							mes("you give mr gianne the worm hole");
-							delay(3);
-							player.getCarriedItems().remove(new Item(ItemId.WORM_HOLE.id()));
-							player.message("he takes a bite");
-							npcsay(player, n, "hmm, that's actually really good",
-								"how about you make me some toad crunchies for desert",
-								"then i'll decide whether i can take you on");
-							say(player, n, "toad crunchies?");
-							npcsay(player, n, "that's right, here's all you need",
-								"except the toad");
-							give(player, ItemId.GIANNE_DOUGH.id(), 1);
-							give(player, ItemId.EQUA_LEAVES.id(), 1);
-							player.message("mr gianne gives you some gianne dough and some equa leaves");
-							npcsay(player, n, "let me know when your done");
-							player.getCache().set("gnome_cooking", 6);
+							assignToadCrunchies(player, npc);
 						} else {
-							say(player, n, "i'm not done yet");
-							npcsay(player, n, "ok, quick as you can though",
+							say(player, npc, "i'm not done yet");
+							npcsay(player, npc, "ok, quick as you can though",
 								"i need one worm hole");
-							say(player, n, "no problem");
+							say(player, npc, "no problem");
 						}
 						break;
+
+					// Returns Toad Crunchies
 					case 6:
-						say(player, n, "hi aluft\"");
-						npcsay(player, n, "hello, how are you getting on?");
+						say(player, npc, "hi aluft\"");
+						npcsay(player, npc, "hello, how are you getting on?");
 						if (player.getCarriedItems().hasCatalogID(ItemId.TOAD_CRUNCHIES.id(), Optional.of(false))) {
-							say(player, n, "here, try it");
-							mes("you give mr gianne the toad crunchie");
-							delay(3);
-							player.getCarriedItems().remove(new Item(ItemId.TOAD_CRUNCHIES.id()));
-							player.message("he takes a bite");
-							npcsay(player, n, "well for a human you certainly can cook",
-								"i'd love to have you on the team",
-								"if you ever want to make some money",
-								"or want to improve your cooking skills just come and see me",
-								"i'll tell you what meals i need, and if you can, you make them");
-							say(player, n, "what about ingredients?");
-							npcsay(player, n, "well you know where to find toads and worms",
-								"you can buy the rest from hudo glenfad the grocer",
-								"i'll always pay you much more for the meal than you paid for the ingredients",
-								"and it's a great way to improve your cooking skills");
-							player.getCache().set("gnome_cooking", 7); // COMPLETED JOB!
+							completeGnomeRestaurant(player, npc);
 						} else {
-							say(player, n, "no luck so for");
-							npcsay(player, n, "ok then but don't take too long",
+							say(player, npc, "no luck so for");
+							npcsay(player, npc, "ok then but don't take too long",
 								"i need one toad crunchie");
 						}
 						break;
+
+					// Current Job
 					case 7:
-						/**
-						 * Completed and hired for job.
-						 */
 						if (player.getCache().hasKey("gnome_restaurant_job")) {
-							say(player, n, "hi aluft");
-							myCurrentJob(player, n);
+							say(player, npc, "hi aluft");
+							myCurrentJob(player, npc);
 						} else {
-							say(player, n, "hello again aluft");
-							npcsay(player, n, "well hello there traveller",
+							say(player, npc, "hello again aluft");
+							npcsay(player, npc, "well hello there traveller",
 								"have you come to help me out?");
-							int menu = multi(player, n,
+							int menu = multi(player, npc,
 								"sorry aluft, i'm too busy",
 								"i would be glad to help");
 							if (menu == 0) {
-								npcsay(player, n, "no worries, let me know when you're free");
+								npcsay(player, npc, "no worries, let me know when you're free");
 							} else if (menu == 1) {
-								npcsay(player, n, "good stuff");
-								randomizeJob(player, n);
+								npcsay(player, npc, "good stuff");
+								randomizeJob(player, npc);
 							}
 						}
 						break;
@@ -269,13 +154,52 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 		}
 	}
 
+	private void randomizeJob(Player player, Npc n) {
+		int randomize = DataConversions.random(0, 8);
+		if (randomize == 0) {
+			npcsay(player, n, "can you make me a two worm batta's, one toad batta...",
+				"...and one veg batta please");
+			say(player, n, "ok then");
+		} else if (randomize == 1) {
+			npcsay(player, n, "ok, i need a choc bomb, two choc crunchies and two toad crunchies");
+			say(player, n, "no problem");
+		} else if (randomize == 2) {
+			npcsay(player, n, "i need two portions of choc crunchies please");
+			say(player, n, "no problem");
+		} else if (randomize == 3) {
+			npcsay(player, n, "i just need one choc bomb and two choc crunchies please");
+			say(player, n, "no problem");
+		} else if (randomize == 4) {
+			npcsay(player, n, "excellent, i need two veg batta's and one worm hole");
+			say(player, n, "no problem");
+		} else if (randomize == 5) {
+			npcsay(player, n, "can you make me a one veg ball, one twisted toads legs...",
+				"...and one worm hole please");
+			say(player, n, "ok then");
+		} else if (randomize == 6) {
+			npcsay(player, n, "i need one cheese and tomato batta,one veg ball...",
+				"...and two portions of worm crunchies please");
+			say(player, n, "ok, i'll do my best");
+		} else if (randomize == 7) {
+			npcsay(player, n, "can you make a two spice crunchies, one fruit batta...",
+				"...a choc bomb and a veg ball please chef");
+			say(player, n, "i'll try");
+		} else if (randomize == 8) {
+			npcsay(player, n, "i just need one tangled toads legs and two worm crunchies please");
+			say(player, n, "ok, i'll do my best");
+		}
+		if (!player.getCache().hasKey("gnome_restaurant_job")) {
+			player.getCache().set("gnome_restaurant_job", randomize);
+		}
+	}
+
 	private void myCurrentJob(Player player, Npc n) {
 		int job = player.getCache().getInt("gnome_restaurant_job");
 		if (job == 0) {
 			npcsay(player, n, "hello again, are the dishes ready?");
 			if (ifheld(player, ItemId.WORM_BATTA.id(), 2)
-					&& player.getCarriedItems().hasCatalogID(ItemId.VEG_BATTA.id(), Optional.of(false))
-					&& player.getCarriedItems().hasCatalogID(ItemId.TOAD_BATTA.id(), Optional.of(false))) {
+				&& player.getCarriedItems().hasCatalogID(ItemId.VEG_BATTA.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.TOAD_BATTA.id(), Optional.of(false))) {
 				say(player, n, "all done, here you go");
 				mes("you give aluft two worm batta's a veg batta and a toad batta");
 				delay(3);
@@ -299,8 +223,8 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 		} else if (job == 1) {
 			npcsay(player, n, "hello again, are the dishes ready?");
 			if (player.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_BOMB.id(), Optional.of(false))
-					&& ifheld(player, ItemId.CHOC_CRUNCHIES.id(), 2)
-					&& ifheld(player, ItemId.TOAD_CRUNCHIES.id(), 2)) {
+				&& ifheld(player, ItemId.CHOC_CRUNCHIES.id(), 2)
+				&& ifheld(player, ItemId.TOAD_CRUNCHIES.id(), 2)) {
 				say(player, n, "here you go aluft");
 				mes("you give aluft choc bomb, two choc crunchies and two toad crunchies");
 				delay(3);
@@ -346,7 +270,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 		} else if (job == 3) {
 			npcsay(player, n, "hello again traveller how did you do?");
 			if (player.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_BOMB.id(), Optional.of(false))
-					&& ifheld(player, ItemId.CHOC_CRUNCHIES.id(), 2)) {
+				&& ifheld(player, ItemId.CHOC_CRUNCHIES.id(), 2)) {
 				say(player, n, "here you go aluft");
 				mes("you give aluft one choc bomb and two choc crunchies");
 				delay(3);
@@ -367,7 +291,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 		} else if (job == 4) {
 			npcsay(player, n, "hello again traveller how did you do?");
 			if (ifheld(player, ItemId.VEG_BATTA.id(), 2)
-					&& player.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
+				&& player.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
 				say(player, n, "here you go aluft");
 				mes("you give aluft two veg batta's and a worm hole");
 				delay(3);
@@ -390,8 +314,8 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 		} else if (job == 5) {
 			npcsay(player, n, "hello again, are the dishes ready?");
 			if (player.getCarriedItems().hasCatalogID(ItemId.VEGBALL.id(), Optional.of(false))
-					&& player.getCarriedItems().hasCatalogID(ItemId.TANGLED_TOADS_LEGS.id(), Optional.of(false))
-					&& player.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
+				&& player.getCarriedItems().hasCatalogID(ItemId.TANGLED_TOADS_LEGS.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.WORM_HOLE.id(), Optional.of(false))) {
 				say(player, n, "all done, here you go");
 				mes("you give aluft one veg ball, one twisted toads legs and one worm hole");
 				delay(3);
@@ -412,8 +336,8 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 		} else if (job == 6) {
 			npcsay(player, n, "hello again traveller how did you do?");
 			if (player.getCarriedItems().hasCatalogID(ItemId.CHEESE_AND_TOMATO_BATTA.id(), Optional.of(false))
-					&& player.getCarriedItems().hasCatalogID(ItemId.VEGBALL.id(), Optional.of(false))
-					&& ifheld(player, ItemId.WORM_CRUNCHIES.id(), 2)) {
+				&& player.getCarriedItems().hasCatalogID(ItemId.VEGBALL.id(), Optional.of(false))
+				&& ifheld(player, ItemId.WORM_CRUNCHIES.id(), 2)) {
 				mes("you give one cheese and tomato batta,one veg ball...");
 				delay(3);
 				mes("...and two portions of worm crunchies");
@@ -438,9 +362,9 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 			// intentional glitch on minigame, see https://youtu.be/jtc97eKmFWc?t=806
 			npcsay(player, n, "hello again, are the dishes ready?");
 			if (ifheld(player, ItemId.SPICE_CRUNCHIES.id(), 2)
-					&& player.getCarriedItems().hasCatalogID(ItemId.FRUIT_BATTA.id(), Optional.of(false))
-					&& player.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_BOMB.id(), Optional.of(false))
-					&& player.getCarriedItems().hasCatalogID(ItemId.VEGBALL.id(), Optional.of(false))) {
+				&& player.getCarriedItems().hasCatalogID(ItemId.FRUIT_BATTA.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.CHOCOLATE_BOMB.id(), Optional.of(false))
+				&& player.getCarriedItems().hasCatalogID(ItemId.VEGBALL.id(), Optional.of(false))) {
 				say(player, n, "all done, here you go");
 				mes("you give aluft the tangled toads legs and two worm crunchies");
 				delay(3);
@@ -467,7 +391,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 			// made it intentionally glitched
 			npcsay(player, n, "hello again, are the dishes ready?");
 			if (player.getCarriedItems().hasCatalogID(ItemId.TANGLED_TOADS_LEGS.id(), Optional.of(false))
-					&& ifheld(player, ItemId.WORM_CRUNCHIES.id(), 2)) {
+				&& ifheld(player, ItemId.WORM_CRUNCHIES.id(), 2)) {
 				say(player, n, "all done, here you go");
 				mes("you give aluft one choc bomb and two choc crunchies");
 				delay(3);
@@ -492,7 +416,24 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 			player.getCache().set("gnome_jobs_completed", 1);
 		} else {
 			int completedJobs = player.getCache().getInt("gnome_jobs_completed");
-			player.getCache().set("gnome_jobs_completed", (completedJobs + 1));
+			player.getCache().set("gnome_jobs_completed", ++completedJobs);
+			if (completedJobs >= 250) {
+				if (player.getConfig().WANT_GIANNE_BADGE) {
+					boolean carrryingBadge = player.getCarriedItems().hasCatalogID(ItemId.GIANNE_BADGE.id(), Optional.empty());
+					boolean bankedBadge = player.getBank().hasItemId(ItemId.GIANNE_BADGE.id());
+					if (!carrryingBadge && !bankedBadge) {
+						npcsay(player, n, "my my, what a good chef you have become",
+							"i have this special badge for the services you have offered");
+						give(player, ItemId.GIANNE_BADGE.id(), 1);
+						delay();
+						player.message("you are given a special badge");
+					}
+				}
+				if (!player.getCache().hasKey("gianne_complete_feed")) {
+					player.sendMiniGameComplete(this.getMiniGameId(), Optional.of("They have completed over 250 orders!"));
+					player.getCache().store("gianne_complete_feed", true);
+				}
+			}
 		}
 		npcsay(player, n, "can you stay and make another dish?");
 		int menu = multi(player, n,
@@ -503,45 +444,6 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 		} else if (menu == 1) {
 			npcsay(player, n, "your a life saver");
 			randomizeJob(player, n);
-		}
-	}
-
-	private void randomizeJob(Player player, Npc n) {
-		int randomize = DataConversions.random(0, 8);
-		if (randomize == 0) {
-			npcsay(player, n, "can you make me a two worm batta's, one toad batta...",
-				"...and one veg batta please");
-			say(player, n, "ok then");
-		} else if (randomize == 1) {
-			npcsay(player, n, "ok, i need a choc bomb, two choc crunchies and two toad crunchies");
-			say(player, n, "no problem");
-		} else if (randomize == 2) {
-			npcsay(player, n, "i need two portions of choc crunchies please");
-			say(player, n, "no problem");
-		} else if (randomize == 3) {
-			npcsay(player, n, "i just need one choc bomb and two choc crunchies please");
-			say(player, n, "no problem");
-		} else if (randomize == 4) {
-			npcsay(player, n, "excellent, i need two veg batta's and one worm hole");
-			say(player, n, "no problem");
-		} else if (randomize == 5) {
-			npcsay(player, n, "can you make me a one veg ball, one twisted toads legs...",
-				"...and one worm hole please");
-			say(player, n, "ok then");
-		} else if (randomize == 6) {
-			npcsay(player, n, "i need one cheese and tomato batta,one veg ball...",
-				"...and two portions of worm crunchies please");
-			say(player, n, "ok, i'll do my best");
-		} else if (randomize == 7) {
-			npcsay(player, n, "can you make a two spice crunchies, one fruit batta...",
-				"...a choc bomb and a veg ball please chef");
-			say(player, n, "i'll try");
-		} else if (randomize == 8) {
-			npcsay(player, n, "i just need one tangled toads legs and two worm crunchies please");
-			say(player, n, "ok, i'll do my best");
-		}
-		if (!player.getCache().hasKey("gnome_restaurant_job")) {
-			player.getCache().set("gnome_restaurant_job", randomize);
 		}
 	}
 
@@ -621,5 +523,159 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 	@Override
 	public boolean blockDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
 		return false;
+	}
+
+	private void startGnomeRestaurant(Player player, Npc npc) {
+		say(player, npc, "hello");
+		npcsay(player, npc, "well hello there,you hungry..",
+			"you come to the right place",
+			"eat green, eat gnome cruisine",
+			"my waiter will be glad to take your order");
+		say(player, npc, "thanks");
+		npcsay(player, npc, "on the other hand if you looking for some work",
+			"i have a cook's position available");
+		int menu = multi(player, npc, "no thanks i'm no cook", "ok i'll give it a go");
+		if (menu == 0) {
+			npcsay(player, npc, "in that case please, eat and enjoy");
+		} else if (menu == 1) {
+			npcsay(player, npc, "well that's great",
+				"of course i'll have to see what you're like first",
+				"here, have a look at our menu");
+			player.message("Aluft gives you a cook book");
+			give(player, ItemId.GIANNE_COOK_BOOK.id(), 1);
+			player.getCache().set("gnome_cooking", 1);
+			npcsay(player, npc, "when you've had a look come back...",
+				"... and i'll let you prepare a few dishes");
+			say(player, npc, "good stuff");
+		}
+	}
+
+	private void assignCheeseTomatoBatta(Player player, Npc npc) {
+		say(player, npc, "hi mr gianne");
+		npcsay(player, npc, "hello my good friend",
+			"what did you think");
+		say(player, npc, "I'm not too sure about toads legs");
+		npcsay(player, npc, "they're a gnome delicacy, you'll love them",
+			"but we'll start with something simple",
+			"can you make me a cheese and tomato gnome batta");
+		npcsay(player, npc, "here's what you need");
+		mes("aluft gives you one tomato, some cheese...");
+		delay(2);
+		give(player, ItemId.TOMATO.id(), 1);
+		give(player, ItemId.CHEESE.id(), 1);
+		player.message("...some equa leaves and some plain dough");
+		give(player, ItemId.EQUA_LEAVES.id(), 1);
+		give(player, ItemId.GIANNE_DOUGH.id(), 1);
+		player.getCache().set("gnome_cooking", 2);
+		say(player, npc, "thanks");
+		npcsay(player, npc, "Let me know how you get on");
+	}
+
+	private void assignChocolateBomb(Player player, Npc npc) {
+		say(player, npc, "no problem, it was easy");
+		mes("you give aluft the gnome batta");
+		delay(3);
+		player.getCarriedItems().remove(new Item(ItemId.CHEESE_AND_TOMATO_BATTA.id()));
+		player.message("he takes a bite");
+		npcsay(player, npc, "not bad...not bad at all",
+			"ok now for something a little harder",
+			"try and make me a choc bomb.. they're my favorite",
+			"here's what you need");
+		mes("aluft gives you four bars of chocolate");
+		delay(2);
+		give(player, ItemId.CHOCOLATE_BAR.id(), 4);
+		mes("some equa leaves, some chocolate dust...");
+		delay(2);
+		give(player, ItemId.EQUA_LEAVES.id(), 1);
+		give(player, ItemId.CHOCOLATE_DUST.id(), 1);
+		player.message("...some gianne dough and some cream");
+		give(player, ItemId.GIANNE_DOUGH.id(), 1);
+		give(player, ItemId.CREAM.id(), 2);
+		say(player, npc, "ok aluft, i'll be back soon");
+		npcsay(player, npc, "good stuff");
+		player.getCache().set("gnome_cooking", 3);
+	}
+
+	private void assignToadBatta(Player player, Npc npc) {
+		say(player, npc, "here you go");
+		player.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_BOMB.id()));
+		mes("you give aluft the choc bomb");
+		delay(2);
+		player.message("he takes a bite");
+		npcsay(player, npc, "yes, yes, yes, that's superb",
+			"i'm really impressed");
+		say(player, npc, "i'm glad");
+		npcsay(player, npc, "ok then, now can you make me a toad batta",
+			"here's what you need");
+		give(player, ItemId.GIANNE_DOUGH.id(), 1);
+		give(player, ItemId.EQUA_LEAVES.id(), 1);
+		give(player, ItemId.GNOME_SPICE.id(), 1);
+		mes("mr gianne gives you some dough, some equaleaves...");
+		delay(3);
+		player.message("...and some gnome spice");
+		npcsay(player, npc, "i'm afraid all are toads legs are served fresh");
+		say(player, npc, "nice!");
+		npcsay(player, npc, "so you'll need to go to the swamp on ground level",
+			"and catch a toad",
+			"let me know when the batta's ready");
+		player.getCache().set("gnome_cooking", 4);
+	}
+
+	private void assignWormHole(Player player, Npc npc) {
+		say(player, npc, "here you go, easy");
+		mes("you give mr gianne the toad batta");
+		delay(3);
+		player.getCarriedItems().remove(new Item(ItemId.TOAD_BATTA.id()));
+		player.message("he takes a bite");
+		npcsay(player, npc, "ooh, that's some good toad",
+			"very nice",
+			"let's see if you can make a worm hole");
+		say(player, npc, "a wormhole?");
+		npcsay(player, npc, "yes, it's in the cooking guide i gave you",
+			"you'll have to get the worms from the swamp",
+			"but here's everything else you'll need",
+			"let me know when your done");
+		give(player, ItemId.GIANNE_DOUGH.id(), 1);
+		give(player, ItemId.ONION.id(), 2);
+		give(player, ItemId.EQUA_LEAVES.id(), 1);
+		player.getCache().set("gnome_cooking", 5);
+	}
+
+	private void assignToadCrunchies(Player player, Npc npc) {
+		say(player, npc, "here, see what you think");
+		mes("you give mr gianne the worm hole");
+		delay(3);
+		player.getCarriedItems().remove(new Item(ItemId.WORM_HOLE.id()));
+		player.message("he takes a bite");
+		npcsay(player, npc, "hmm, that's actually really good",
+			"how about you make me some toad crunchies for desert",
+			"then i'll decide whether i can take you on");
+		say(player, npc, "toad crunchies?");
+		npcsay(player, npc, "that's right, here's all you need",
+			"except the toad");
+		give(player, ItemId.GIANNE_DOUGH.id(), 1);
+		give(player, ItemId.EQUA_LEAVES.id(), 1);
+		player.message("mr gianne gives you some gianne dough and some equa leaves");
+		npcsay(player, npc, "let me know when your done");
+		player.getCache().set("gnome_cooking", 6);
+	}
+
+	private void completeGnomeRestaurant(Player player, Npc npc) {
+		say(player, npc, "here, try it");
+		mes("you give mr gianne the toad crunchie");
+		delay(3);
+		player.getCarriedItems().remove(new Item(ItemId.TOAD_CRUNCHIES.id()));
+		player.message("he takes a bite");
+		npcsay(player, npc, "well for a human you certainly can cook",
+			"i'd love to have you on the team",
+			"if you ever want to make some money",
+			"or want to improve your cooking skills just come and see me",
+			"i'll tell you what meals i need, and if you can, you make them");
+		say(player, npc, "what about ingredients?");
+		npcsay(player, npc, "well you know where to find toads and worms",
+			"you can buy the rest from hudo glenfad the grocer",
+			"i'll always pay you much more for the meal than you paid for the ingredients",
+			"and it's a great way to improve your cooking skills");
+		player.getCache().set("gnome_cooking", 7); // COMPLETED TUTORIAL!
 	}
 }

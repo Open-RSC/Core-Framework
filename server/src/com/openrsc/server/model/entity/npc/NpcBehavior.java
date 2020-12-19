@@ -125,7 +125,8 @@ public class NpcBehavior {
 
 		// Check for tackle
 		if (System.currentTimeMillis() - lastTackleAttempt > npc.getConfig().GAME_TICK * 5 &&
-			npc.getDef().getName().toLowerCase().equals("gnome baller")
+			checkCombatTimer(npc.getCombatTimer(), 5)
+			&& npc.getDef().getName().toLowerCase().equals("gnome baller")
 			&& !(npc.getID() == NpcId.GNOME_BALLER_TEAMNORTH.id() || npc.getID() == NpcId.GNOME_BALLER_TEAMSOUTH.id())) {
 			for (Player player : npc.getViewArea().getPlayersInView()) {
 				int range = 1;
@@ -262,8 +263,8 @@ public class NpcBehavior {
 		if ((!inArray(otherNpcId, -1, 0) && npc.getID() != otherNpcId) || player.getAttribute("throwing_ball_game", false)) {
 			return;
 		}
-		lastTackleAttempt = System.currentTimeMillis();
-		thinkbubble(new Item(ItemId.GNOME_BALL.id()));
+		//TODO: FIXME: solve the thinkbubble requiring context
+		//thinkbubble(new Item(ItemId.GNOME_BALL.id()));
 		player.message("the gnome trys to tackle you");
 		if (DataConversions.random(0, 1) == 0) {
 			//successful avoiding tackles gives agility xp
@@ -280,9 +281,10 @@ public class NpcBehavior {
 			player.playerServerMessage(MessageType.QUEST, "he takes the ball...");
 			player.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
 			player.damage((int) (Math.ceil(player.getSkills().getLevel(Skills.HITS) * 0.05)));
-			say(player, null, "ouch");
+			say(player, "ouch");
 			npcYell(player, npc, "yeah");
 		}
+		lastTackleAttempt = System.currentTimeMillis();
 	}
 
 	public void retreat() {

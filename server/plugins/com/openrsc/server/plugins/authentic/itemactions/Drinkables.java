@@ -82,121 +82,121 @@ public class Drinkables implements OpInvTrigger {
 			handlePoisonChalice(player, item);
 
 		else if (id == ItemId.FULL_STRENGTH_POTION.id())
-			useNormalPotion(player, item, 2, 10, 2, ItemId.THREE_STRENGTH_POTION.id(), 3);
+			useNormalPotion(player, item, Skills.STRENGTH, 10, 2, ItemId.THREE_STRENGTH_POTION.id(), 3);
 
 		else if (id == ItemId.THREE_STRENGTH_POTION.id())
-			useNormalPotion(player, item, 2, 10, 2, ItemId.TWO_STRENGTH_POTION.id(), 2);
+			useNormalPotion(player, item, Skills.STRENGTH, 10, 2, ItemId.TWO_STRENGTH_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_STRENGTH_POTION.id())
-			useNormalPotion(player, item, 2, 10, 2, ItemId.ONE_STRENGTH_POTION.id(), 1);
+			useNormalPotion(player, item, Skills.STRENGTH, 10, 2, ItemId.ONE_STRENGTH_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_STRENGTH_POTION.id())
-			useNormalPotion(player, item, 2, 10, 2, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skills.STRENGTH, 10, 2, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_ATTACK_POTION.id())
-			useNormalPotion(player, item, 0, 10, 2, 475, 2);
+			useNormalPotion(player, item, Skills.ATTACK, 10, 2, ItemId.TWO_ATTACK_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_ATTACK_POTION.id())
-			useNormalPotion(player, item, 0, 10, 2, 476, 1);
+			useNormalPotion(player, item, Skills.ATTACK, 10, 2, ItemId.ONE_ATTACK_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_ATTACK_POTION.id())
-			useNormalPotion(player, item, 0, 10, 2, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skills.ATTACK, 10, 2, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_STAT_RESTORATION_POTION.id())
-			useStatRestorePotion(player, item, 478, 2);
+			useStatRestorePotion(player, item, ItemId.TWO_STAT_RESTORATION_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_STAT_RESTORATION_POTION.id())
-			useStatRestorePotion(player, item, 479, 1);
+			useStatRestorePotion(player, item, ItemId.ONE_STAT_RESTORATION_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_STAT_RESTORATION_POTION.id())
 			useStatRestorePotion(player, item, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_DEFENSE_POTION.id())
-			useNormalPotion(player, item, 1, 10, 2, 481, 2);
+			useNormalPotion(player, item, Skills.DEFENSE, 10, 2, ItemId.TWO_DEFENSE_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_DEFENSE_POTION.id())
-			useNormalPotion(player, item, 1, 10, 2, 482, 1);
+			useNormalPotion(player, item, Skills.DEFENSE, 10, 2, ItemId.ONE_DEFENSE_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_DEFENSE_POTION.id())
-			useNormalPotion(player, item, 1, 10, 2, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skills.DEFENSE, 10, 2, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_RESTORE_PRAYER_POTION.id())
-			usePrayerPotion(player, item, 484, 2);
+			usePrayerPotion(player, item, ItemId.TWO_RESTORE_PRAYER_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_RESTORE_PRAYER_POTION.id())
-			usePrayerPotion(player, item, 485, 1);
+			usePrayerPotion(player, item, ItemId.ONE_RESTORE_PRAYER_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_RESTORE_PRAYER_POTION.id())
 			usePrayerPotion(player, item, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_SUPER_ATTACK_POTION.id())
-			useNormalPotion(player, item, 0, 15, 4, 487, 2);
+			useNormalPotion(player, item, Skills.ATTACK, 15, 4, ItemId.TWO_SUPER_ATTACK_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_SUPER_ATTACK_POTION.id())
-			useNormalPotion(player, item, 0, 15, 4, 488, 1);
+			useNormalPotion(player, item, Skills.ATTACK, 15, 4, ItemId.ONE_SUPER_ATTACK_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_SUPER_ATTACK_POTION.id())
-			useNormalPotion(player, item, 0, 15, 4, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skills.ATTACK, 15, 4, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_FISHING_POTION.id())
-			useFishingPotion(player, item, 490, 2);
+			useFishingPotion(player, item, ItemId.TWO_FISHING_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_FISHING_POTION.id())
-			useFishingPotion(player, item, 491, 1);
+			useFishingPotion(player, item, ItemId.ONE_FISHING_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_FISHING_POTION.id())
 			useFishingPotion(player, item, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_SUPER_STRENGTH_POTION.id())
-			useNormalPotion(player, item, 2, 15, 4, 493, 2);
+			useNormalPotion(player, item, Skills.STRENGTH, 15, 4, ItemId.TWO_SUPER_STRENGTH_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_SUPER_STRENGTH_POTION.id())
-			useNormalPotion(player, item, 2, 15, 4, 494, 1);
+			useNormalPotion(player, item, Skills.STRENGTH, 15, 4, ItemId.ONE_SUPER_STRENGTH_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_SUPER_STRENGTH_POTION.id())
-			useNormalPotion(player, item, 2, 15, 4, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skills.STRENGTH, 15, 4, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_SUPER_DEFENSE_POTION.id())
-			useNormalPotion(player, item, 1, 15, 4, 496, 2);
+			useNormalPotion(player, item, Skills.DEFENSE, 15, 4, ItemId.TWO_SUPER_DEFENSE_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_SUPER_DEFENSE_POTION.id())
-			useNormalPotion(player, item, 1, 15, 4, 497, 1);
+			useNormalPotion(player, item, Skills.DEFENSE, 15, 4, ItemId.ONE_SUPER_DEFENSE_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_SUPER_DEFENSE_POTION.id())
-			useNormalPotion(player, item, 1, 15, 4, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skills.DEFENSE, 15, 4, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_RANGING_POTION.id())
-			useNormalPotion(player, item, 4, 10, 2, 499, 2);
+			useNormalPotion(player, item, Skills.RANGED, 10, 3, ItemId.TWO_RANGING_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_RANGING_POTION.id())
-			useNormalPotion(player, item, 4, 10, 2, 500, 1);
+			useNormalPotion(player, item, Skills.RANGED, 10, 3, ItemId.ONE_RANGING_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_RANGING_POTION.id())
-			useNormalPotion(player, item, 4, 10, 2, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skills.RANGED, 10, 3, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_CURE_POISON_POTION.id())
-			useCurePotion(player, item, 567, 2);
+			useCurePotion(player, item, ItemId.TWO_CURE_POISON_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_CURE_POISON_POTION.id())
-			useCurePotion(player, item, 568, 1);
+			useCurePotion(player, item, ItemId.ONE_CURE_POISON_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_CURE_POISON_POTION.id())
 			useCurePotion(player, item, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_POISON_ANTIDOTE.id())
-			usePoisonAntidotePotion(player, item, 570, 2);
+			usePoisonAntidotePotion(player, item, ItemId.TWO_POISON_ANTIDOTE.id(), 2);
 
 		else if (id == ItemId.TWO_POISON_ANTIDOTE.id())
-			usePoisonAntidotePotion(player, item, 571, 1);
+			usePoisonAntidotePotion(player, item, ItemId.ONE_POISON_ANTIDOTE.id(), 1);
 
 		else if (id == ItemId.ONE_POISON_ANTIDOTE.id())
 			usePoisonAntidotePotion(player, item, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_POTION_OF_ZAMORAK.id())
-			useZamorakPotion(player, item, 964, 2);
+			useZamorakPotion(player, item, ItemId.TWO_POTION_OF_ZAMORAK.id(), 2);
 
 		else if (id == ItemId.TWO_POTION_OF_ZAMORAK.id())
-			useZamorakPotion(player, item, 965, 1);
+			useZamorakPotion(player, item, ItemId.ONE_POTION_OF_ZAMORAK.id(), 1);
 
 		else if (id == ItemId.ONE_POTION_OF_ZAMORAK.id())
 			useZamorakPotion(player, item, ItemId.EMPTY_VIAL.id(), 0);
@@ -223,7 +223,7 @@ public class Drinkables implements OpInvTrigger {
 
 			else if (id == ItemId.ONE_SUPER_RUNECRAFT_POTION.id())
 				useRunecraftPotion(player, item, ItemId.EMPTY_VIAL.id(), true, 0);
-			
+
 			else
 				player.message("Nothing interesting happens");
 		}
@@ -291,66 +291,39 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void useZamorakPotion(Player player, final Item item, final int newItem, final int left) {
-		player.message("You drink some of your zamorak potion");
+		player.message("You drink some of the foul liquid");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(newItem));
-		int attackBoost = (int) 22.5;
-		int strengthBoost = 15;
-		int defenceDecrease = (int) 12.5;
-		int hitsDecrease = 10;
+		boolean isLastDose = item.getCatalogId() == ItemId.ONE_POTION_OF_ZAMORAK.id();
+		int[] affectedStats = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH, Skills.HITS, Skills.PRAYER};
+		int[] percentageIncrease = {20, -10, 12, -10, 10};
+		int[] modifier = {1, -1, 1, 0, 0};
+		if (isLastDose) {
+			for (int i=0; i<3; i++) modifier[i] *= 3;
+		}
 
-		if (player.getSkills().getLevel(Skills.ATTACK) > player.getSkills().getMaxStat(Skills.ATTACK)) {
-			int baseStat = player.getSkills().getMaxStat(Skills.ATTACK);
-			int newStat = baseStat + DataConversions.roundUp(player.getSkills().getMaxStat(Skills.ATTACK) / 100D * attackBoost);
-			if (newStat > player.getSkills().getLevel(Skills.ATTACK)) {
-				player.getSkills().setLevel(Skills.ATTACK, newStat);
-			}
-		} else {
-			int baseStat = player.getSkills().getLevel(Skills.ATTACK);
-			int newStat = baseStat + DataConversions.roundUp(player.getSkills().getMaxStat(Skills.ATTACK) / 100D * attackBoost);
-			if (newStat > player.getSkills().getLevel(Skills.ATTACK)) {
-				player.getSkills().setLevel(Skills.ATTACK, newStat);
-			}
-		}
-		if (player.getSkills().getLevel(Skills.STRENGTH) > player.getSkills().getMaxStat(Skills.STRENGTH)) {
-			int baseStat = player.getSkills().getMaxStat(Skills.STRENGTH);
-			int newStat = baseStat + DataConversions.roundUp(player.getSkills().getMaxStat(Skills.STRENGTH) / 100D * strengthBoost);
-			if (newStat > player.getSkills().getLevel(Skills.STRENGTH)) {
-				player.getSkills().setLevel(Skills.STRENGTH, newStat);
-			}
-		} else {
-			int baseStat = player.getSkills().getLevel(Skills.STRENGTH);
-			int newStat = baseStat + DataConversions.roundUp(player.getSkills().getMaxStat(Skills.STRENGTH) / 100D * strengthBoost);
-			if (newStat > player.getSkills().getLevel(Skills.STRENGTH)) {
-				player.getSkills().setLevel(Skills.STRENGTH, newStat);
+		for (int i=0; i<affectedStats.length; i++) {
+			boolean isBoost = percentageIncrease[i] >= 0;
+			if (isBoost) {
+				int baseStat = player.getSkills().getLevel(affectedStats[i]) > player.getSkills().getMaxStat(affectedStats[i]) ? player.getSkills().getMaxStat(affectedStats[i]) : player.getSkills().getLevel(affectedStats[i]);
+				int newStat = baseStat
+					+ DataConversions.roundUp((player.getSkills().getMaxStat(affectedStats[i]) / 100D) * percentageIncrease[i])
+					+ modifier[i];
+				newStat = affectedStats[i] != Skills.PRAYER ? newStat : Math.min(newStat, player.getSkills().getMaxStat(Skills.PRAYER));
+				if (newStat > player.getSkills().getLevel(affectedStats[i])) {
+					player.getSkills().setLevel(affectedStats[i], newStat);
+				}
+			} else {
+				int baseStat = player.getSkills().getLevel(affectedStats[i]) < player.getSkills().getMaxStat(affectedStats[i]) ? player.getSkills().getMaxStat(affectedStats[i]) : player.getSkills().getLevel(affectedStats[i]);
+				int newStat = baseStat
+					- DataConversions.roundUp((player.getSkills().getMaxStat(affectedStats[i]) / 100D) * -1 * percentageIncrease[i])
+					- (-1 * modifier[i]);
+				if (newStat < player.getSkills().getLevel(affectedStats[i])) {
+					player.getSkills().setLevel(affectedStats[i], newStat);
+				}
 			}
 		}
-		if (player.getSkills().getLevel(Skills.DEFENSE) < player.getSkills().getMaxStat(Skills.DEFENSE)) {
-			int baseStat = player.getSkills().getMaxStat(Skills.DEFENSE);
-			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(Skills.DEFENSE) / 100D * defenceDecrease);
-			if (newStat < player.getSkills().getLevel(Skills.DEFENSE)) {
-				player.getSkills().setLevel(Skills.DEFENSE, newStat);
-			}
-		} else {
-			int baseStat = player.getSkills().getLevel(Skills.DEFENSE);
-			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(Skills.DEFENSE) / 100D * defenceDecrease);
-			if (newStat < player.getSkills().getLevel(Skills.DEFENSE)) {
-				player.getSkills().setLevel(Skills.DEFENSE, newStat);
-			}
-		}
-		if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
-			int baseStat = player.getSkills().getMaxStat(Skills.HITS);
-			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(Skills.HITS) / 100D * hitsDecrease);
-			if (newStat < player.getSkills().getLevel(Skills.HITS)) {
-				player.getSkills().setLevel(Skills.HITS, newStat);
-			}
-		} else {
-			int baseStat = player.getSkills().getLevel(Skills.HITS);
-			int newStat = baseStat - DataConversions.roundUp(player.getSkills().getMaxStat(Skills.HITS) / 100D * hitsDecrease);
-			if (newStat < player.getSkills().getLevel(Skills.HITS)) {
-				player.getSkills().setLevel(Skills.HITS, newStat);
-			}
-		}
+
 		delay(2);
 		if (left <= 0) {
 			player.message("You have finished your potion");

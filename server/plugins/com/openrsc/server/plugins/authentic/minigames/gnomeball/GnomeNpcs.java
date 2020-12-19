@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.authentic.minigames.gnomeball;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.rsc.impl.BallProjectileEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -272,10 +273,16 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 				player.message("you pass the ball to the gnome");
 				player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
 				npcsay(player, n, "run long..");
-				delay(8);
-				player.message("the gnome throws you a long ball");
-				give(player, ItemId.GNOME_BALL.id(), 1);
-				player.setAttribute("throwing_ball_game", false);
+				player.getWorld().getServer().getGameEventHandler().add(
+					new SingleEvent(player.getWorld(), player, config().GAME_TICK * 8, "Gnome Ball Pass Event") {
+						@Override
+						public void action() {
+							getOwner().message("the gnome throws you a long ball");
+							give(getOwner(), ItemId.GNOME_BALL.id(), 1);
+							getOwner().setAttribute("throwing_ball_game", false);
+						}
+					}
+				);
 			}
 		}
 		else {
@@ -305,6 +312,7 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 				give(player, ItemId.GNOME_BALL.id(), 1);
 				player.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0,1)], true);
 				player.setAttribute("gnomeball_npc", 0);
+				n.setCombatTimer(-player.getConfig().GAME_TICK * 4);
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You're pushed away by the gnome");
 				say(player, n, "ouch");

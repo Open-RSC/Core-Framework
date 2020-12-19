@@ -178,8 +178,8 @@ public class ServerConfiguration {
 	private int CONNECTION_LIMIT;
 	private int CONNECTION_TIMEOUT;
 	//quest-minigame related
-	private boolean WANT_GIANNE_BADGE;
-	private boolean WANT_BLURBERRY_BADGE;
+	public boolean WANT_GIANNE_BADGE;
+	public boolean WANT_BLURBERRY_BADGE;
 	public boolean WANT_EXTENDED_CATS_BEHAVIOR;
 	public boolean WANT_BARTER_WORMBRAINS;
 	public boolean LOCKED_POST_QUEST_REGIONS_ACCESSIBLE;

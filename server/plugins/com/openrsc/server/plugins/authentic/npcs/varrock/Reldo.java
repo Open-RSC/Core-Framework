@@ -12,29 +12,38 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public final class Reldo implements TalkNpcTrigger {
 	@Override
-	public boolean blockTalkNpc(Player player, Npc n) {
-		return n.getID() == NpcId.RELDO.id();
+	public boolean blockTalkNpc(Player player, Npc npc) {
+		return npc.getID() == NpcId.RELDO.id();
 	}
 
 	@Override
-	public void onTalkNpc(final Player player, final Npc n) {
+	public void onTalkNpc(final Player player, final Npc npc) {
 		if (player.getCache().hasKey("read_arrav")
 			&& player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1 || player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 2) {
-			say(player, n, "OK I've read the book",
-				"Do you know where I can find the Phoenix Gang");
-			npcsay(player, n, "No I don't",
-				"I think I know someone who will though",
-				"Talk to Baraek, the fur trader in the market place",
-				"I've heard he has connections with the Phoenix Gang");
-			say(player, n, "Thanks, I'll try that");
-			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1) {
-				player.updateQuestStage(Quests.SHIELD_OF_ARRAV, 2);
+			if (player.getQuestStage(Quests.THE_KNIGHTS_SWORD) != 1) {
+				// player doesn't need to know on the Imcando dwarves
+				shieldArravDialog(player, npc);
+			} else {
+				ArrayList<String> menuOptions = new ArrayList<>();
+				menuOptions.add("Do you know where I can find the Phoenix Gang?");
+				menuOptions.add("What do you know about the Imcando dwarves?");
+
+				String[] choiceOptions = new String[menuOptions.size()];
+				int option = multi(player, npc, false, //do not send over
+					menuOptions.toArray(choiceOptions));
+
+				if (option == 0) {
+					shieldArravDialog(player, npc);
+				} else if (option == 1) {
+					say(player, npc, "What do you know about the Imcando Dwarves?");
+					knightsSwordDialog(player, npc);
+				}
 			}
 			return;
 		}
 
-		say(player, n, "Hello");
-		npcsay(player, n, "Hello stranger");
+		say(player, npc, "Hello");
+		npcsay(player, npc, "Hello stranger");
 
 		ArrayList<String> options = new ArrayList<>();
 		if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
@@ -46,43 +55,43 @@ public final class Reldo implements TalkNpcTrigger {
 			options.add("What do you know about the Imcando dwarves?");
 		}
 		String[] finalOptions = new String[options.size()];
-		int option = multi(player, n, false, //do not send over
+		int option = multi(player, npc, false, //do not send over
 			options.toArray(finalOptions));
 
 		if (option == 3) {
 			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0
 				&& player.getQuestStage(Quests.THE_KNIGHTS_SWORD) == 1) {
-				say(player, n, "What do you know about the Imcando Dwarves?");
-				knightsSwordDialog(player, n);
+				say(player, npc, "What do you know about the Imcando Dwarves?");
+				knightsSwordDialog(player, npc);
 			}
 		}
 
 		else if (option == 2) {
 			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
-				say(player, n, "What do you do?");
-				npcsay(player, n, "I'm the palace librarian");
-				say(player, n, "Ah that's why you're in the library then");
-				npcsay(player, n, "Yes",
+				say(player, npc, "What do you do?");
+				npcsay(player, npc, "I'm the palace librarian");
+				say(player, npc, "Ah that's why you're in the library then");
+				npcsay(player, npc, "Yes",
 					"Though I might be in here even if I didn't work here",
 					"I like reading");
 			}
 			else if (player.getQuestStage(Quests.THE_KNIGHTS_SWORD) == 1) {
-				say(player, n, "What do you know about the Imcando Dwarves?");
-				knightsSwordDialog(player, n);
+				say(player, npc, "What do you know about the Imcando Dwarves?");
+				knightsSwordDialog(player, npc);
 			}
 		}
 
 		else if (option == 1) {
 			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
-				say(player, n, "Do you have anything to trade?");
-				npcsay(player, n, "No, sorry. I'm not the trading type");
-				say(player, n, "ah well");
+				say(player, npc, "Do you have anything to trade?");
+				npcsay(player, npc, "No, sorry. I'm not the trading type");
+				say(player, npc, "ah well");
 			}
 			else {
-				say(player, n, "What do you do?");
-				npcsay(player, n, "I'm the palace librarian");
-				say(player, n, "Ah that's why you're in the library then");
-				npcsay(player, n, "Yes",
+				say(player, npc, "What do you do?");
+				npcsay(player, npc, "I'm the palace librarian");
+				say(player, npc, "Ah that's why you're in the library then");
+				npcsay(player, npc, "Yes",
 					"Though I might be in here even if I didn't work here",
 					"I like reading");
 			}
@@ -90,30 +99,30 @@ public final class Reldo implements TalkNpcTrigger {
 
 		else if (option == 0) {
 			if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 0) {
-				say(player, n, "I'm in search of a quest");
-				shieldOfArravDialog(player, n);
+				say(player, npc, "I'm in search of a quest");
+				shieldOfArravStartDialog(player, npc);
 			}
 
 			else {
-				say(player, n, "Do you have anything to trade?");
-				npcsay(player, n, "No, sorry. I'm not the trading type");
-				say(player, n, "ah well");
+				say(player, npc, "Do you have anything to trade?");
+				npcsay(player, npc, "No, sorry. I'm not the trading type");
+				say(player, npc, "ah well");
 			}
 		}
 	}
 
-	private void knightsSwordDialog(Player player, Npc n) {
+	private void knightsSwordDialog(Player player, Npc npc) {
 		npcsay(player,
-			n,
+			npc,
 			"The Imcando Dwarves, you say?",
 			"They were the world's most skilled smiths about a hundred years ago",
 			"They used secret knowledge",
 			"Which they passed down from generation to generation",
 			"Unfortunatly about a century ago the once thriving race",
 			"Was wiped out during the barbarian invasions of that time");
-		say(player, n, "So are there any Imcando left at all?");
+		say(player, npc, "So are there any Imcando left at all?");
 		npcsay(player,
-			n,
+			npc,
 			"A few of them survived",
 			"But with the bulk of their population destroyed",
 			"Their numbers have dwindled even further",
@@ -127,16 +136,29 @@ public final class Reldo implements TalkNpcTrigger {
 		player.updateQuestStage(Quests.THE_KNIGHTS_SWORD, 2);
 	}
 
-	private void shieldOfArravDialog(Player player, Npc n) {
-		npcsay(player, n, "I don't think there's any here");
+	private void shieldArravDialog(Player player, Npc npc) {
+		say(player, npc, "OK I've read the book",
+			"Do you know where I can find the Phoenix Gang");
+		npcsay(player, npc, "No I don't",
+			"I think I know someone who will though",
+			"Talk to Baraek, the fur trader in the market place",
+			"I've heard he has connections with the Phoenix Gang");
+		say(player, npc, "Thanks, I'll try that");
+		if (player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 1) {
+			player.updateQuestStage(Quests.SHIELD_OF_ARRAV, 2);
+		}
+	}
+
+	private void shieldOfArravStartDialog(Player player, Npc npc) {
+		npcsay(player, npc, "I don't think there's any here");
 		delay();
-		npcsay(player, n, "Let me think actually",
+		npcsay(player, npc, "Let me think actually",
 			"If you look in a book",
 			"called the shield of Arrav",
 			"You'll find a quest in there",
 			"I'm not sure where the book is mind you",
 			"I'm sure it's somewhere in here");
-		say(player, n, "Thankyou");
+		say(player, npc, "Thankyou");
 		player.updateQuestStage(Quests.SHIELD_OF_ARRAV, 1);
 	}
 }

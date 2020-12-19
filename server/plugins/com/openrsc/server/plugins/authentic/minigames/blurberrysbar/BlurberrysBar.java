@@ -277,7 +277,24 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 			player.getCache().set("blurberry_jobs_completed", 1);
 		} else {
 			int completedJobs = player.getCache().getInt("blurberry_jobs_completed");
-			player.getCache().set("blurberry_jobs_completed", (completedJobs + 1));
+			player.getCache().set("blurberry_jobs_completed", ++completedJobs);
+			if (completedJobs >= 250) {
+				if (player.getConfig().WANT_BLURBERRY_BADGE) {
+					boolean carrryingBadge = player.getCarriedItems().hasCatalogID(ItemId.BLURBERRY_BADGE.id(), Optional.empty());
+					boolean bankedBadge = player.getBank().hasItemId(ItemId.BLURBERRY_BADGE.id());
+					if (!carrryingBadge && !bankedBadge) {
+						npcsay(player, n, "my my, what a good cocktail maker you have become",
+							"i have this special badge for the services you have offered");
+						give(player, ItemId.BLURBERRY_BADGE.id(), 1);
+						delay();
+						player.message("you are given a special badge");
+					}
+				}
+				if (!player.getCache().hasKey("blurberry_complete_feed")) {
+					player.sendMiniGameComplete(this.getMiniGameId(), Optional.of("They have completed over 250 orders!"));
+					player.getCache().store("blurberry_complete_feed", true);
+				}
+			}
 		}
 		npcsay(player, n, "could you make me another order");
 		int menu = multi(player, n, false, //do not send over
@@ -516,6 +533,6 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 			"but you can buy them from heckel funch the grocer",
 			"I'll always pay you more for the cocktail than you paid for the ingredients",
 			"and it's a great way to learn how to prepare food and drink");
-		player.getCache().set("blurberrys_bar", 7);
+		player.getCache().set("blurberrys_bar", 7);  // COMPLETED TUTORIAL!
 	}
 }

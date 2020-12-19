@@ -12,11 +12,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
+import com.openrsc.server.plugins.authentic.minigames.gnomeball.GnomeField.Zone;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
-import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
-import com.openrsc.server.plugins.authentic.minigames.gnomeball.GnomeField.Zone;
+import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -102,66 +102,70 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 			player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, goalie, 3) {
 				@Override
 				public void doSpell() {
-					//logic to try to score from 1xp
-					thinkbubble(new Item(ItemId.GNOME_BALL.id()));
-					mes("you throw the ball at the goal");
-					delay(3);
-					player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
-					int random = DataConversions.random(0, 4);
-					if (random < 2 + (playerZone == Zone.ZONE_1XP_INNER ? 2 : 0)) {
-						mes("it flys through the net...");
-						delay(3);
-						mes("into the hands of the goal catcher");
-						delay(3);
-						Npc cheerleader = ifnearvisnpc(player, GnomeNpcs.CHEERLEADER, 10);
-						if (cheerleader != null) {
-							cheerLeaderCelebrate(player, cheerleader);
-						}
-						handleScore(player, 0);
-					} else {
-						if (DataConversions.random(0, 2) < 2 || playerZone == Zone.ZONE_1XP_OUTER) {
-							mes("the ball flys way over the net");
-							delay(3);
-						} else {
-							mes("the ball just misses the net");
-							delay(3);
-						}
-					}
+
 				}
 			});
+
+			//logic to try to score from 1xp
+			thinkbubble(new Item(ItemId.GNOME_BALL.id()));
+			mes("you throw the ball at the goal");
+			delay(3);
+			player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
+			int random = DataConversions.random(0, 4);
+			if (random < 2 + (playerZone == Zone.ZONE_1XP_INNER ? 2 : 0)) {
+				mes("it flys through the net...");
+				delay(3);
+				mes("into the hands of the goal catcher");
+				delay(3);
+				Npc cheerleader = ifnearvisnpc(player, GnomeNpcs.CHEERLEADER, 10);
+				if (cheerleader != null) {
+					cheerLeaderCelebrate(player, cheerleader);
+				}
+				handleScore(player, 0);
+			} else {
+				if (DataConversions.random(0, 2) < 2 || playerZone == Zone.ZONE_1XP_OUTER) {
+					mes("the ball flys way over the net");
+					delay(3);
+				} else {
+					mes("the ball just misses the net");
+					delay(3);
+				}
+			}
 		} else if (playerZone == Zone.ZONE_2XP_OUTER || playerZone == Zone.ZONE_2XP_INNER) {
 			player.setAttribute("throwing_ball_game", true);
 			Npc goalie = ifnearvisnpc(player, GnomeNpcs.GOALIE, 15);
 			player.getWorld().getServer().getGameEventHandler().add(new BallProjectileEvent(player.getWorld(), player, goalie, 3) {
 				@Override
 				public void doSpell() {
-					//logic to try to score from 2xp
-					thinkbubble(new Item(ItemId.GNOME_BALL.id()));
-					mes("you throw the ball at the goal");
-					delay(3);
-					player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
-					int random = DataConversions.random(0, 9);
-					if (random < 4 + (playerZone == Zone.ZONE_2XP_INNER ? 2 : 0)) {
-						mes("it flys through the net...");
-						delay(3);
-						mes("into the hands of the goal catcher");
-						delay(3);
-						Npc cheerleader = ifnearvisnpc(player, GnomeNpcs.CHEERLEADER, 10);
-						if (cheerleader != null) {
-							cheerLeaderCelebrate(player, cheerleader);
-						}
-						handleScore(player, 1);
-					} else {
-						if (DataConversions.random(0, 2) < 2 || playerZone == Zone.ZONE_2XP_OUTER) {
-							mes("you miss by a mile!");
-							delay(3);
-						} else {
-							mes("the ball flys way over the net");
-							delay(3);
-						}
-					}
+
 				}
 			});
+
+			//logic to try to score from 2xp
+			thinkbubble(new Item(ItemId.GNOME_BALL.id()));
+			mes("you throw the ball at the goal");
+			delay(3);
+			player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
+			int random = DataConversions.random(0, 9);
+			if (random < 4 + (playerZone == Zone.ZONE_2XP_INNER ? 2 : 0)) {
+				mes("it flys through the net...");
+				delay(3);
+				mes("into the hands of the goal catcher");
+				delay(3);
+				Npc cheerleader = ifnearvisnpc(player, GnomeNpcs.CHEERLEADER, 10);
+				if (cheerleader != null) {
+					cheerLeaderCelebrate(player, cheerleader);
+				}
+				handleScore(player, 1);
+			} else {
+				if (DataConversions.random(0, 2) < 2 || playerZone == Zone.ZONE_2XP_OUTER) {
+					mes("you miss by a mile!");
+					delay(3);
+				} else {
+					mes("the ball flys way over the net");
+					delay(3);
+				}
+			}
 		} else if (playerZone == Zone.ZONE_NOT_VISIBLE || playerZone == Zone.ZONE_OUTSIDE_THROWABLE) {
 			thinkbubble(new Item(ItemId.GNOME_BALL.id()));
 			mes("you throw the ball at the goal");
