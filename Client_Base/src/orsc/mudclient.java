@@ -1275,7 +1275,7 @@ public final class mudclient implements Runnable {
 					this.menuCommon.addCharacterItem(player.serverIndex, levelDelta >= 0 && levelDelta < 5
 							? MenuItemAction.PLAYER_ATTACK_SIMILAR : MenuItemAction.PLAYER_ATTACK_DIVERGENT, "Attack",
 						"@whi@" + name + level);
-				} else {
+				} else if (wantMembers()) {
 					this.menuCommon.addCharacterItem(player.serverIndex, MenuItemAction.PLAYER_DUEL, "Duel with",
 						"@whi@" + name + level);
 				}
