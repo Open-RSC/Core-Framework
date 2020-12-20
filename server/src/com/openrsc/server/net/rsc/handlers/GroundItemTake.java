@@ -56,10 +56,11 @@ public class GroundItemTake implements PacketHandler {
 					return;
 				}
 
-				if (item.getDef().isMembersOnly() && !getPlayer().getConfig().MEMBER_WORLD) {
-					getPlayer().sendMemberErrorMessage();
-					return;
-				}
+				// not authentic, member objects should be able to be picked up in f2p
+				// if (item.getDef().isMembersOnly() && !getPlayer().getConfig().MEMBER_WORLD) {
+				//	getPlayer().sendMemberErrorMessage();
+				//	return;
+				// }
 				if (item.getLocation().inWilderness() && !item.belongsTo(getPlayer()) && item.getAttribute("playerKill", false)
 					&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
 					|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {

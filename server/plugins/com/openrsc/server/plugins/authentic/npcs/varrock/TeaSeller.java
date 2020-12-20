@@ -59,6 +59,9 @@ public final class TeaSeller extends AbstractShop implements TakeObjTrigger {
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			return;
+		}
 		npcsay(player, n, "Greetings!",
 			"Are you in need of refreshment ?");
 

@@ -286,6 +286,10 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			freePlayerDialogue(player, n);
+			return;
+		}
 		if (n.getID() == NpcId.DIMINTHEIS.id()) {
 			dimintheisDialogue(player, n, -1);
 		}
@@ -520,6 +524,18 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 					npcsay(player, n, "My family now considers you a hero");
 				}
 			}
+		}
+	}
+
+	// All recreated/reconstructed
+	private void freePlayerDialogue(Player player, Npc n) {
+		if (n.getID() == NpcId.DIMINTHEIS.id()) {
+			npcsay(player, n, "Hello traveller, can't talk now",
+				"maybe you can come back later");
+		} else if (n.getID() == NpcId.JOHNATHON.id()) {
+			npcsay(player, n, "I am so very tired, leave me to rest");
+		} else if (n.getID() == NpcId.AVAN.id()) {
+			npcsay(player, n, "Can't you see I'm busy?");
 		}
 	}
 

@@ -385,11 +385,6 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 					give(player, ItemId.QUEST_SKULL.id(), 1);
 				}
 
-			}
-			// allow wild if post-quest
-			else if (player.getQuestStage(Quests.THE_RESTLESS_GHOST) == -1 && i.getY() <= 425) {
-				player.getWorld().unregisterItem(i);
-				give(player, ItemId.QUEST_SKULL.id(), 1);
 			} else {
 				say(player, null, "That skull is scary", "I've got no reason to take it", "I think I'll leave it alone");
 				return;

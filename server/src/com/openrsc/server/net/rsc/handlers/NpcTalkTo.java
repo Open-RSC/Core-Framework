@@ -65,6 +65,10 @@ public final class NpcTalkTo implements PacketHandler {
 				}
 
 				getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(getPlayer(), "TalkNpc", new Object[]{getPlayer(), n});
+				if (!getPlayer().getWorld().getServer().getConfig().MEMBER_WORLD
+					&& getPlayer().getWorld().getServer().getEntityHandler().getNpcDef(n.getID()).isMembers()) {
+					getPlayer().message("you must be on a members' world to do that");
+				}
 			}
 
 			private Point canWalk(World world, int x, int y) {

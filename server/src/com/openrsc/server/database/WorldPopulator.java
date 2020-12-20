@@ -54,7 +54,8 @@ public final class WorldPopulator {
 
 				// Point point = new Point(object.x, object.y);
 				if (Formulae.isP2P(false, object.getLocation().getX(), object.getLocation().getY())
-					&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
+					&& !getWorld().getServer().getConfig().MEMBER_WORLD
+					&& !getWorld().getServer().getEntityHandler().getGameObjectDef(object.getId()).description.contains("members server")) {
 					continue;
 				}
 				GameObject obj = new GameObject(getWorld(), object.location, object.id,
@@ -78,12 +79,12 @@ public final class WorldPopulator {
 				//	npcLocation.minX, npcLocation.maxX,
 				//	npcLocation.minY, npcLocation.maxY);
 
-				if (!getWorld().getServer().getConfig().MEMBER_WORLD) {
-					if (getWorld().getServer().getEntityHandler().getNpcDef(n.id).isMembers()) {
-						continue;
-					}
-				}
-				if (Formulae.isP2P(false, n)
+				// if (!getWorld().getServer().getConfig().MEMBER_WORLD) {
+				// 	if (getWorld().getServer().getEntityHandler().getNpcDef(n.id).isMembers()) {
+				// 		continue;
+				// 	}
+				// }
+				if (Formulae.isP2P(false, n.startX(), n.startY())
 					&& !getWorld().getServer().getConfig().MEMBER_WORLD) {
 					n = null;
 					continue;

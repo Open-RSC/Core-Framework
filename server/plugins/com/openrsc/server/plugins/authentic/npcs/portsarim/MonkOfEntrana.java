@@ -107,6 +107,9 @@ public final class MonkOfEntrana implements OpLocTrigger,
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			return;
+		}
 		if (n.getID() == NpcId.MONK_OF_ENTRANA_PORTSARIM.id()) {
 			npcsay(player, n, "Are you looking to take passage to our holy island?",
 					"If so your weapons and armour must be left behind");

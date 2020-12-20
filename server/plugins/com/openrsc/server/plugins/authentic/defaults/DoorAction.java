@@ -1461,7 +1461,8 @@ public class DoorAction {
 				return;
 		}
 		if (members && !config().MEMBER_WORLD) {
-			player.sendMemberErrorMessage();
+			player.message(
+				"You need to be a member to use this gate");
 			return;
 		}
 		player.message("you go through the gate");

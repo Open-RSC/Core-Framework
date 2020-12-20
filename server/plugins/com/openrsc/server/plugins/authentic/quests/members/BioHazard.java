@@ -74,6 +74,10 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			freePlayerDialogue(player, n);
+			return;
+		}
 		if (n.getID() == NpcId.ELENA_HOUSE.id()) {
 			switch (player.getQuestStage(this)) {
 				case 0:
@@ -1007,6 +1011,34 @@ public class BioHazard implements QuestInterface, TalkNpcTrigger,
 			} else if (menu == 1) {
 				say(player, n, "Oh, nothing, I was just going to bless your room, and I've done that now. Goodbye");
 			}
+		}
+	}
+
+	// All recreated/reconstructed
+	private void freePlayerDialogue(Player player, Npc n) {
+		if (n.getID() == NpcId.CHEMIST.id()) {
+			npcsay(player, n, "It's very nice that you've come",
+				"all the way down here",
+				"but I really don't have time to talk at the moment",
+				"Maybe if you come back later I'll be able to help");
+		} else if (n.getID() == NpcId.DEVINCI.id() || n.getID() == NpcId.DEVINCI_BAR.id()) {
+			npcsay(player, n, "Bah!",
+				"A great artist such as myself should not have to",
+				"suffer the HUMILIATION of spending time where the",
+				"likes of you wander everywhere!");
+		} else if (n.getID() == NpcId.HOPS.id() || n.getID() == NpcId.HOPS_BAR.id()) {
+			npcsay(player, n, "Hops don't wanna talk now");
+		} else if (n.getID() == NpcId.CHANCY.id() || n.getID() == NpcId.CHANCY_BAR.id()) {
+			say(player, n, "Hello!",
+				"Playing solitaire?");
+			npcsay(player, n, "Hush",
+				"I'm trying to perfect the art of",
+				"dealing off the bottom of the deck",
+				"Whatever you want",
+				"come back later and I'll speak to you then");
+		} else if (n.getID() == NpcId.GUIDORS_WIFE.id()) {
+			npcsay(player, n, "Oh dear! Oh dear!",
+				"I don't have time to chat!");
 		}
 	}
 

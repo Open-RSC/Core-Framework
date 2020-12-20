@@ -34,7 +34,7 @@ public final class Baraek implements
 		if (hasFur) {
 			options.add("Would you like to buy my fur?");
 		}
-		if (hasWolfFur) {
+		if (hasWolfFur && player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			if (!hasFur) {
 				skip = start + 2; // skip option of fur
 			}

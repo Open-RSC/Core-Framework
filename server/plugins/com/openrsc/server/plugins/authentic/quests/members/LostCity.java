@@ -74,7 +74,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 					monk.initializeTalkScript(player);
 				break;
 			case 237:
-				if (atQuestStage(player, this, 0)) {
+				if (atQuestStage(player, this, 0) || !player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 					player.message("There is nothing in this tree");
 				} else if (getQuestStage(player, this) >= 1
 					&& getQuestStage(player, this) <= 3) {
@@ -153,6 +153,10 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			freePlayerDialogue(player, n);
+			return;
+		}
 		if (n.getID() == NpcId.LEPRECHAUN.id()) {
 			if (atQuestStage(player, this, 0)) {
 				npcsay(player, n, "Ay you big elephant", "You have caught me",
@@ -331,6 +335,16 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 		}
 	}
 
+	// All recreated/reconstructed
+	private void freePlayerDialogue(Player player, Npc n) {
+		if (DataConversions.inArray(new int[] {NpcId.ADVENTURER_ARCHER.id(), NpcId.ADVENTURER_CLERIC.id(),
+			NpcId.ADVENTURER_WARRIOR.id(), NpcId.ADVENTURER_WIZARD.id()}, n.getID())) {
+			npcsay(player, n, "hello adventurer",
+				"can't talk here",
+				"meet me in a members world so we can talk");
+		}
+	}
+
 	public void ZANARIS_MENU(Player player, Npc n) {
 		int next_option = multi(player, n,
 			"If it's hidden how are you planning to find it",
@@ -428,7 +442,8 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 			delay();
 			player.message("you go through the door and find yourself somewhere else");
 		} else if (obj.getID() == ZANARIS_DOOR) {
-			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(player, this, 4, -1)) {
+			if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DRAMEN_STAFF.id()) && atQuestStages(player, this, 4, -1)
+			&& player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 				mes("The world starts to shimmer");
 				delay(3);
 				mes("You find yourself in different surroundings");

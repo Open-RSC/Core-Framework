@@ -23,6 +23,11 @@ public abstract class AbstractShop implements OpNpcTrigger, TalkNpcTrigger {
 			player.getX() - 2, player.getX() + 2,
 			player.getY() - 2, player.getY() + 2);
 		if (storeOwner == null) return;
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD
+			&& player.getWorld().getServer().getEntityHandler().getNpcDef(n.getID()).isMembers()) {
+			player.message("you must be on a members' world to do that");
+			return;
+		}
 		if (command.equalsIgnoreCase("Trade") && player.getConfig().RIGHT_CLICK_TRADE) {
 			if (!player.getQolOptOut()) {
 				Shop shop = getShop();

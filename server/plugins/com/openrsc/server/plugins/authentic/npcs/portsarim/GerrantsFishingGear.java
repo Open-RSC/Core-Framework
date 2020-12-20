@@ -51,7 +51,8 @@ public final class GerrantsFishingGear extends AbstractShop {
 			"We'll also buy anything you catch off you");
 
 		String[] options;
-		if (player.getQuestStage(Quests.HEROS_QUEST) >= 1) {
+		if (player.getQuestStage(Quests.HEROS_QUEST) >= 1
+			&& player.getWorld().getServer().getConfig().MEMBER_WORLD) {
 			options = new String[]{"Let's see what you've got then",
 				"Sorry, I'm not interested",
 				"I want to find out how to catch a lava eel"};

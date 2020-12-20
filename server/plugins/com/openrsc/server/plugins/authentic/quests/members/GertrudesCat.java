@@ -54,6 +54,10 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			freePlayerDialogue(player, n);
+			return;
+		}
 		if (n.getID() == NpcId.KANEL.id() || n.getID() == NpcId.PHILOP.id()) {
 			player.message("The boy's busy playing");
 		}
@@ -306,6 +310,20 @@ public class GertrudesCat implements QuestInterface, TalkNpcTrigger,
 					delay(3);
 					break;
 			}
+		}
+	}
+
+	// All recreated/reconstructed
+	private void freePlayerDialogue(Player player, Npc n) {
+		if (n.getID() == NpcId.GERTRUDE.id()) {
+			npcsay(player, n, "Hello again, adventurer",
+				"i'm a bit busy now",
+				"come back another time, please");
+		} else if (n.getID() == NpcId.SHILOP.id() || n.getID() == NpcId.WILOUGH.id()) {
+			npcsay(player, n, "i'm busy",
+				"don't bother me around");
+		} else if (n.getID() == NpcId.KANEL.id() || n.getID() == NpcId.PHILOP.id()) {
+			// probably nothing
 		}
 	}
 
