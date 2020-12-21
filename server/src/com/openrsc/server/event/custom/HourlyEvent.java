@@ -32,7 +32,6 @@ public class HourlyEvent extends DelayedEvent {
 		// Exact hour of start time offset by minute
 		short currentMinute = (short)((now % 3600) / 60D);
 		short currentSecond = (short)(now % 60);
-		System.out.println("currentSecond: " + currentSecond + "now: " + now);
 		this.timestamp = this.started = now - (currentMinute * 60) - ((60 - minute) * 60) - currentSecond + (currentMinute > minute ? 3600 : 0);
 		this.minute = minute;
 	}
