@@ -72,7 +72,7 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 							otherPlayer.getCarriedItems().getInventory().add(item);
 							otherPlayer.message("Warning! " + player.getUsername() + " is shooting at you!");
 							otherPlayer.message("you catch the ball");
-							say(player, null, "good catch");
+							say(player, "good catch");
 						}
 					}
 				});
