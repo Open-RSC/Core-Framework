@@ -29,7 +29,7 @@ public class ScriptContext {
 	private volatile Action currentAction;
 	private volatile EntityType entityType;
 	private volatile Point entityInteractingCoordinate;
-	private volatile Integer interactingIndex;
+	private volatile Integer entityInteractingIndex;
 	private volatile Point interactingCoordinate;
 
 	// Batching related
@@ -42,7 +42,7 @@ public class ScriptContext {
 		this.pluginTask = pluginTask;
 		this.currentAction = Action.idle;
 		this.entityType = Action.idle.getDefaultEntityType();
-		this.interactingIndex = null;
+		this.entityInteractingIndex = null;
 		this.interactingCoordinate = null;
 		this.interrupted = false;
 		this.batch = null;
@@ -82,11 +82,11 @@ public class ScriptContext {
 			return null;
 		}
 
-		if(interactingIndex == null) {
+		if(entityInteractingIndex == null) {
 			return null;
 		}
 
-		return getWorld().getNpc(interactingIndex);
+		return getWorld().getNpc(entityInteractingIndex);
 	}
 
 	public Player getInteractingPlayer() {
@@ -98,11 +98,11 @@ public class ScriptContext {
 			return null;
 		}
 
-		if(interactingIndex == null) {
+		if(entityInteractingIndex == null) {
 			return null;
 		}
 
-		return getWorld().getPlayer(interactingIndex);
+		return getWorld().getPlayer(entityInteractingIndex);
 	}
 
 	public GroundItem getInteractingGroundItem() {
@@ -114,7 +114,7 @@ public class ScriptContext {
 			return null;
 		}
 
-		if(interactingIndex == null) {
+		if(entityInteractingIndex == null) {
 			return null;
 		}
 
@@ -122,7 +122,7 @@ public class ScriptContext {
 			return null;
 		}
 
-		return getContextPlayer().getRegion().getItem(interactingIndex, entityInteractingCoordinate, getContextPlayer());
+		return getContextPlayer().getRegion().getItem(entityInteractingIndex, entityInteractingCoordinate, getContextPlayer());
 	}
 
 	public GameObject getInteractingLocation() {
@@ -166,11 +166,11 @@ public class ScriptContext {
 			return null;
 		}
 
-		if(interactingIndex == null) {
+		if(entityInteractingIndex == null) {
 			return null;
 		}
 
-		return getContextPlayer().getCarriedItems().getInventory().get(interactingIndex);
+		return getContextPlayer().getCarriedItems().getInventory().get(entityInteractingIndex);
 	}
 
 	private Entity getInteractingEntity() {
@@ -219,7 +219,7 @@ public class ScriptContext {
 
 		unlock();
 		npc.setBusy(true);
-		this.interactingIndex = npc.getIndex();
+		this.entityInteractingIndex = npc.getIndex();
 		this.entityInteractingCoordinate = null;
 		setEntityType(EntityType.NPC);
 		lock();
@@ -236,7 +236,7 @@ public class ScriptContext {
 		}
 
 		unlock();
-		this.interactingIndex = player.getIndex();
+		this.entityInteractingIndex = player.getIndex();
 		this.entityInteractingCoordinate = null;
 		setEntityType(EntityType.PLAYER);
 		lock();
@@ -253,7 +253,7 @@ public class ScriptContext {
 		}
 
 		unlock();
-		this.interactingIndex = groundItem.getID();
+		this.entityInteractingIndex = groundItem.getID();
 		this.entityInteractingCoordinate = groundItem.getLocation();
 		setEntityType(EntityType.GROUND_ITEM);
 		lock();
@@ -270,7 +270,7 @@ public class ScriptContext {
 		}
 
 		unlock();
-		this.interactingIndex = null;
+		this.entityInteractingIndex = location.getID();
 		this.entityInteractingCoordinate = location.getLocation();
 		setEntityType(EntityType.LOCATION);
 		lock();
@@ -287,7 +287,7 @@ public class ScriptContext {
 		}
 
 		unlock();
-		this.interactingIndex = null;
+		this.entityInteractingIndex = boundary.getID();
 		this.entityInteractingCoordinate = boundary.getLocation();
 		setEntityType(EntityType.BOUNDARY);
 		lock();
@@ -304,7 +304,7 @@ public class ScriptContext {
 		}
 
 		unlock();
-		this.interactingIndex = index;
+		this.entityInteractingIndex = index;
 		this.entityInteractingCoordinate = getContextPlayer().getLocation();
 		setEntityType(EntityType.INVENTORY_ITEM);
 		lock();
@@ -321,13 +321,13 @@ public class ScriptContext {
 		}
 
 		unlock();
-		this.interactingIndex = null;
+		this.entityInteractingIndex = null;
 		this.entityInteractingCoordinate = null;
 		setEntityType(EntityType.NONE);
 		lock();
 	}
 
-	public void setInteractingObject(final EntityType entityType, final Object interactingObject) {
+	public void setInitialInteraction(final EntityType entityType, final Object interactingObject) {
 		switch(entityType) {
 			case PLAYER:
 				setInteractingPlayer((Player)interactingObject);
@@ -366,15 +366,12 @@ public class ScriptContext {
 		}
 
 		if(scriptData.length > 1) {
-			setInteractingObject(action.getDefaultEntityType(), scriptData[1]);
+			setInitialInteraction(action.getDefaultEntityType(), scriptData[1]);
 		}
 	}
 
 	public void endScript() {
-		final Npc npc = getInteractingNpc();
-		if(npc != null) {
-			npc.setBusy(false);
-		}
+		setInteractingNothing();
 
 		if(getContextPlayer() != null) {
 			getContextPlayer().removeOwnedPlugin(getPluginTask());
@@ -382,8 +379,6 @@ public class ScriptContext {
 		}
 
 		this.currentAction = Action.idle;
-		this.interactingIndex = null;
-		this.entityInteractingCoordinate = null;
 		this.interactingCoordinate = null;
 
 		// Check to see if a batch is running and if so,
@@ -416,7 +411,7 @@ public class ScriptContext {
 		this.currentAction = currentAction;
 	}
 
-	public void setEntityType(EntityType entityType) {
+	public void setEntityType(final EntityType entityType) {
 		this.entityType = entityType;
 	}
 
