@@ -288,7 +288,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		}
 	}
 
-	public int getExp(int level, int baseExp) {
+	public static int getExp(int level, int baseExp) {
 		return (int) ((baseExp + (level * 1.75)) * 4);
 	}
 }
