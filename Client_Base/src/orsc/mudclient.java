@@ -8835,10 +8835,12 @@ public final class mudclient implements Runnable {
 
 		// block duel
 		y += 15;
-		if (this.settingsBlockDuel != 0) {
-			this.getSurface().drawString("Block duel requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
-		} else {
-			this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+		if (wantMembers()) {
+			if (this.settingsBlockDuel != 0) {
+				this.getSurface().drawString("Block duel requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+			} else {
+				this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			}
 		}
 
 		//Display Online List
@@ -8927,12 +8929,14 @@ public final class mudclient implements Runnable {
 		}
 
 		// sound effects
-		if (optionSoundDisabled) {
-			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Sound effects - @red@off", 2, null, null);
-		} else {
-			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Sound effects - @gre@on", 2, null, null);
+		if (wantMembers()) {
+			if (optionSoundDisabled) {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Sound effects - @red@off", 2, null, null);
+			} else {
+				this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+					"@whi@Sound effects - @gre@on", 2, null, null);
+			}
 		}
 
 		// custom UI
@@ -9787,10 +9791,12 @@ public final class mudclient implements Runnable {
 
 		// sound effects - byte index 2
 		y += 15;
-		if (optionSoundDisabled) {
-			this.getSurface().drawString("@whi@Sound effects - @red@off", 3 + baseX, y, 0, 1);
-		} else {
-			this.getSurface().drawString("@whi@Sound effects - @gre@on", 3 + baseX, y, 0, 1);
+		if (wantMembers()) {
+			if (optionSoundDisabled) {
+				this.getSurface().drawString("@whi@Sound effects - @red@off", 3 + baseX, y, 0, 1);
+			} else {
+				this.getSurface().drawString("@whi@Sound effects - @gre@on", 3 + baseX, y, 0, 1);
+			}
 		}
 
 		// security settings section
@@ -9868,10 +9874,12 @@ public final class mudclient implements Runnable {
 
 		// block duel toggle
 		y += 15;
-		if (this.settingsBlockDuel != 0) {
-			this.getSurface().drawString("Block duel requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
-		} else {
-			this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+		if (wantMembers()) {
+			if (this.settingsBlockDuel != 0) {
+				this.getSurface().drawString("Block duel requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+			} else {
+				this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			}
 		}
 
 		// skip tutorial button or exit blackhole button

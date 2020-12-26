@@ -1232,6 +1232,11 @@ public class ActionSender {
 	 * Sends a sound effect
 	 */
 	public static void sendSound(Player player, String soundName) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			// F2P does not have sound effects
+			return;
+		}
+
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PLAY_SOUND.opcode);
 		if (player.isUsingAuthenticClient()) {
