@@ -66,41 +66,35 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public int godSpellsStart = 1;
 	public int godSpellsMax = 5;
 
+	private final Server server;
 	private final RegionManager regionManager;
 	private final EntityList<Npc> npcs;
-	private HashMap<String, ArrayList<Npc>> npcPositions;
 	private final EntityList<Player> players;
+
 	private final List<QuestInterface> quests;
 	private final List<MiniGameInterface> minigames;
 	private final List<Shop> shops;
-	private final ConcurrentMap<TrawlerBoat, FishingTrawler> fishingTrawler;
 	private final PartyManager partyManager;
 	private final ClanManager clanManager;
 	private final Market market;
 	private final WorldLoader worldLoader;
+	private HashMap<String, ArrayList<Npc>> npcPositions;
+	private final ConcurrentMap<TrawlerBoat, FishingTrawler> fishingTrawler;
 
 	private ConcurrentMap<Player, Boolean> playerUnderAttackMap;
 	private ConcurrentMap<Npc, Boolean> npcUnderAttackMap;
-
 	private Queue<GlobalMessage> globalMessageQueue = new LinkedList<>();
-
 	private PathfindingDebug pathfindingDebug = null;
-
 	public NpcDrops npcDrops;
-
-	/**
-	 * Double ended queue to store snapshots into
-	 */
 	private Deque<Snapshot> snapshots;
 
-	private final Server server;
 
 	public World(final Server server) {
 		this.server = server;
 		this.npcs = new EntityList<>(4000);
+		this.players = new EntityList<>(2000);
 		this.npcPositions = new HashMap<>();
 		this.npcDrops = new NpcDrops(this);
-		this.players = new EntityList<>(2000);
 		this.quests = Collections.synchronizedList( new LinkedList<>() );
 		this.minigames = Collections.synchronizedList( new LinkedList<>() );
 		this.shops = Collections.synchronizedList( new ArrayList<>() );

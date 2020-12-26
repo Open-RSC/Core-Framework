@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.authentic.skills.firemaking.Firemaking;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -421,7 +422,7 @@ public class InvAction implements OpInvTrigger {
 			player.message("you place the smouldering twigs to your torch");
 			player.message("your torch lights");
 			player.getCarriedItems().getInventory().add(new Item(ItemId.LIT_TORCH.id()));
-			player.incExp(Skills.FIREMAKING, 450, true);
+			player.incExp(Skills.FIREMAKING, Firemaking.getExp(player.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
 			if (player.getQuestStage(Quests.SEA_SLUG) == 5 && !player.getCache().hasKey("lit_torch")) {
 				player.getCache().store("lit_torch", true);
 			}

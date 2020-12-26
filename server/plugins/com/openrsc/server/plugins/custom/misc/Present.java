@@ -2,13 +2,15 @@ package com.openrsc.server.plugins.custom.misc;
 
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Quests;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.model.entity.update.ChatMessage; // TODO: this should likely be removed in favour of more authentic quest-style dialogue
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
 
@@ -16,10 +18,11 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class Present implements UsePlayerTrigger, OpInvTrigger {
 
-	private static DropTable presentDrops;
+	private static DropTable cabbagePresentDrops;
+	private static DropTable openRSCPresentDrops;
 
 	static {
-		presentDrops = new DropTable();
+		cabbagePresentDrops = new DropTable();
 		DropTable holidayTable = new DropTable();
 		DropTable junkTable = new DropTable();
 		DropTable bronzeTable = new DropTable();
@@ -244,29 +247,140 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 		/**
 		 * Bring all the tables together
 		 */
-		presentDrops.addTableDrop(holidayTable, 128);
-		presentDrops.addTableDrop(junkTable, 48);
-		presentDrops.addTableDrop(bronzeTable, 14);
-		presentDrops.addTableDrop(ironTable, 13);
-		presentDrops.addTableDrop(steelTable, 12);
-		presentDrops.addTableDrop(blackTable, 12);
-		presentDrops.addTableDrop(mithTable, 11);
-		presentDrops.addTableDrop(addyTable, 10);
-		presentDrops.addTableDrop(runeTable, 6);
-		presentDrops.addTableDrop(ultraRareTable, 2);
+		cabbagePresentDrops.addTableDrop(holidayTable, 128);
+		cabbagePresentDrops.addTableDrop(junkTable, 48);
+		cabbagePresentDrops.addTableDrop(bronzeTable, 14);
+		cabbagePresentDrops.addTableDrop(ironTable, 13);
+		cabbagePresentDrops.addTableDrop(steelTable, 12);
+		cabbagePresentDrops.addTableDrop(blackTable, 12);
+		cabbagePresentDrops.addTableDrop(mithTable, 11);
+		cabbagePresentDrops.addTableDrop(addyTable, 10);
+		cabbagePresentDrops.addTableDrop(runeTable, 6);
+		cabbagePresentDrops.addTableDrop(ultraRareTable, 2);
+
+		/**
+		 *
+		 * Open RSC server, only allows innocuous drops within the authentic item id limit
+		 *
+		 */
+
+		openRSCPresentDrops = new DropTable();
+		DropTable petTable = new DropTable();
+		DropTable foodTable = new DropTable();
+		DropTable alcoholTable = new DropTable();
+		DropTable coolItemsTable = new DropTable();
+		DropTable gnomeRobesTable = new DropTable();
+		DropTable cuteSocksTable = new DropTable();
+		DropTable unobtainableTable = new DropTable();
+
+		/**
+		 * Pet table (a bit rude to impose a pet on a friend imo!)
+		 */
+		petTable.addItemDrop(ItemId.SWAMP_TOAD.id(), 1, 1);
+		petTable.addItemDrop(ItemId.KITTEN.id(), 1, 1); // turns into swamp toad if gertrude's cat not complete by otherPlayer
+
+		/**
+		 * Food Table (Semi-common gifts IRL)
+		 */
+		foodTable.addItemDrop(ItemId.CABBAGE.id(), 1, 2); // yum!
+		foodTable.addItemDrop(ItemId.CHOC_CRUNCHIES.id(), 1, 3); // this additionally gives Bucket of Milk later
+		foodTable.addItemDrop(ItemId.SPICE_CRUNCHIES.id(), 1, 3); // this additionally gives Bucket of Milk later
+		foodTable.addItemDrop(ItemId.CHOCOLATE_SLICE.id(), 1, 3); // this additionally gives Bucket of Milk later
+		foodTable.addItemDrop(ItemId.UGTHANKI_KEBAB.id(), 1, 1);
+		foodTable.addItemDrop(ItemId.TASTY_UGTHANKI_KEBAB.id(), 1, 1);
+		foodTable.addItemDrop(ItemId.BREAD_DOUGH.id(), 1, 3); // "Friendship Bread" https://en.wikipedia.org/wiki/Amish_friendship_bread; sometimes happens near xmas
+
+		/**
+		 * Alcohol table (a nice gift if they drink and a bad gift if not)
+		 */
+		alcoholTable.addItemDrop(ItemId.BRANDY.id(), 1, 1);
+		alcoholTable.addItemDrop(ItemId.WHISKY.id(), 1, 1);
+		alcoholTable.addItemDrop(ItemId.VODKA.id(), 1, 1);
+		alcoholTable.addItemDrop(ItemId.GIN.id(), 1, 1);
+		alcoholTable.addItemDrop(ItemId.POISON_CHALICE.id(), 1, 1);
+
+		/**
+		 * Unique gift ideas!
+		 */
+		coolItemsTable.addItemDrop(ItemId.OYSTER_PEARL_BOLT_TIPS.id(), 5, 1); // maybe can make these into a necklace lol?
+		coolItemsTable.addItemDrop(ItemId.GNOME_BALL.id(), 1, 1);
+		coolItemsTable.addItemDrop(ItemId.PARAMAYA_REST_TICKET.id(), 1, 2); // hotel gift card
+		coolItemsTable.addItemDrop(ItemId.SHIP_TICKET.id(), 1, 2); // omg a cruise???
+
+		/**
+		 * Clothes for christmas
+		 */
+		// gnome robe bottoms
+		gnomeRobesTable.addItemDrop(ItemId.GNOME_ROBE_PINK.id(), 1, 1);
+		gnomeRobesTable.addItemDrop(ItemId.GNOME_ROBE_GREEN.id(), 1, 1);
+		gnomeRobesTable.addItemDrop(ItemId.GNOME_ROBE_PURPLE.id(), 1, 1); // dark blue, not purple btw
+		gnomeRobesTable.addItemDrop(ItemId.GNOME_ROBE_CREAM.id(), 1, 1);
+		gnomeRobesTable.addItemDrop(ItemId.GNOME_ROBE_BLUE.id(), 1, 1); // sky blue
+
+		// gnome robe hats
+		gnomeRobesTable.addItemDrop(ItemId.GNOMESHAT_PINK.id(), 1, 1);
+		gnomeRobesTable.addItemDrop(ItemId.GNOMESHAT_GREEN.id(), 1, 1);
+		gnomeRobesTable.addItemDrop(ItemId.GNOMESHAT_PURPLE.id(), 1, 1); // dark blue, not purple btw
+		gnomeRobesTable.addItemDrop(ItemId.GNOMESHAT_CREAM.id(), 1, 1);
+		gnomeRobesTable.addItemDrop(ItemId.GNOMESHAT_BLUE.id(), 1, 1); // sky blue
+
+		// gnome robe tops
+		gnomeRobesTable.addItemDrop(ItemId.GNOME_TOP_PINK.id(), 1, 1);
+		gnomeRobesTable.addItemDrop(ItemId.GNOME_TOP_GREEN.id(), 1, 1);
+		gnomeRobesTable.addItemDrop(ItemId.GNOME_TOP_PURPLE.id(), 1, 1); // dark blue, not purple btw
+		gnomeRobesTable.addItemDrop(ItemId.GNOME_TOP_CREAM.id(), 1, 1);
+		gnomeRobesTable.addItemDrop(ItemId.GNOME_TOP_BLUE.id(), 1, 1); // sky blue
+
+		/**
+		 * Socks for christmas!
+		 */
+		// gnome "socks"
+		cuteSocksTable.addItemDrop(ItemId.BOOTS_PINK.id(), 1, 1);
+		cuteSocksTable.addItemDrop(ItemId.BOOTS_GREEN.id(), 1, 1);
+		cuteSocksTable.addItemDrop(ItemId.BOOTS_PURPLE.id(), 1, 1); // dark blue, not purple btw
+		cuteSocksTable.addItemDrop(ItemId.BOOTS_CREAM.id(), 1, 1);
+		cuteSocksTable.addItemDrop(ItemId.BOOTS_BLUE.id(), 1, 1); // sky blue
+		cuteSocksTable.addItemDrop(ItemId.DESERT_BOOTS.id(), 1, 1);
+
+		/**
+		 * Items that are normally unobtainable & kind of make sense to give as xmas gifts
+		 * These are both food items.
+		 */
+		unobtainableTable.addItemDrop(ItemId.SPECIAL_CURRY.id(), 1, 2); // unobtainable item
+		unobtainableTable.addItemDrop(ItemId.GNOME_BATTA.id(), 1, 1); // unobtainable item
+
+		/**
+		 * Bring all the tables together
+		 */
+		openRSCPresentDrops.addTableDrop(petTable, 1);
+		openRSCPresentDrops.addTableDrop(foodTable, 4);
+		openRSCPresentDrops.addTableDrop(alcoholTable, 3);
+		openRSCPresentDrops.addTableDrop(coolItemsTable, 2);
+		openRSCPresentDrops.addTableDrop(gnomeRobesTable, 3);
+		openRSCPresentDrops.addTableDrop(cuteSocksTable, 3);
+		openRSCPresentDrops.addTableDrop(unobtainableTable, 1);
 	}
 
 	@Override
 	public void onUsePlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getCatalogId() == ItemId.PRESENT.id()) {
+			// prevent player from using present on ironmen
 			if (otherPlayer.isIronMan(IronmanMode.Ironman.id()) || otherPlayer.isIronMan(IronmanMode.Ultimate.id())
 				|| otherPlayer.isIronMan(IronmanMode.Hardcore.id()) || otherPlayer.isIronMan(IronmanMode.Transfer.id())) {
-				player.message(otherPlayer.getUsername() + " is an Iron Man. " + (otherPlayer.isMale() ? "He" : "She") + " stands alone.");
+				player.playerServerMessage(MessageType.QUEST, otherPlayer.getUsername() + " is an Ironman. " + (otherPlayer.isMale() ? "He" : "She") + " stands alone.");
 				return;
 			}
 
+			// prevent player from using present on themselves
 			if(!config().CAN_USE_CRACKER_ON_SELF && !player.isAdmin() && player.getCurrentIP().equalsIgnoreCase(otherPlayer.getCurrentIP())) {
-				player.message(otherPlayer.getUsername() + " does not want your present...");
+				player.playerServerMessage(MessageType.QUEST, otherPlayer.getUsername() + " does not want your present...");
+				return;
+			}
+
+			// prevent player from using present on QoL opt out accounts, accounts who have purposely avoided inauthentic features
+			if (otherPlayer.getQolOptOut()) {
+				player.playerServerMessage(MessageType.QUEST, otherPlayer.getUsername() + " does not want your present...");
+				player.playerServerMessage(MessageType.QUEST, "They have opted out of new features which are inauthentic.");
 				return;
 			}
 
@@ -274,69 +388,44 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 			otherPlayer.face(player);
 
 			thinkbubble(item);
-			player.message("You give a present to " + otherPlayer.getUsername());
-			otherPlayer.message(player.getUsername() + " handed you a present...");
-			delay();
-			otherPlayer.message("You unwrap the present and reach your hand inside...");
-			delay();
 
-			ArrayList<Item> prizeList = presentDrops.rollItem(false, otherPlayer);
-			if (prizeList.size() <= 0) return;
-			Item prize = prizeList.get(0);
-			String prizeName = prize.getDef(player.getWorld()).getName().toLowerCase();
-
-			player.message(otherPlayer.getUsername() + " got a " + prizeName + " from your present!");
-			otherPlayer.message("You take out a " + prizeName + ".");
-			delay();
-
-			String playerDialogue;
-
-			if(prize.getCatalogId() == ItemId.COAL.id()) {
-				switch(DataConversions.random(0, 8)) {
-					default:
-					case 0:
-						playerDialogue = "No presents for you!";
-						break;
-					case 1:
-						playerDialogue = "Naughty boys and girls get coal for christmas";
-						break;
-					case 2:
-						playerDialogue = "Oh, behave!";
-						break;
-					case 3:
-						playerDialogue = "I can get you off the Naughty List, for a price...";
-						break;
-					case 4:
-						playerDialogue = "Darn! Almost had it.";
-						break;
-					case 5:
-						playerDialogue = "a glitch for a grinch, a pile of coal for you!";
-						break;
-					case 6:
-						playerDialogue = "For not believing in Christmas you get a lump of coal";
-						break;
-					case 7:
-						playerDialogue = "for behavior so cold, you are getting a lump of coal";
-						break;
-					case 8:
-						playerDialogue = "I know what you did last summer";
-						break;
-				}
-			} else {
-				playerDialogue = "Happy holidays";
-			}
-
-			player.getUpdateFlags().setChatMessage(new ChatMessage(player, playerDialogue, null));
-
-			otherPlayer.getCarriedItems().getInventory().add(prize);
 			player.getCarriedItems().remove(item);
+
+			if (config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect Cabbage server config
+				cabbageRollAndAwardPresent(player, otherPlayer);
+			} else { // NOT cabbage config
+				openRSCRollAndAwardPresent(player, otherPlayer);
+			}
 		}
 	}
 
 	@Override
 	public void onOpInv(Player player, Integer invIndex, Item item, String command) {
-		player.message("It would be selfish to keep this for myself");
-		player.message("I should give it to someone else");
+		if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())) {
+
+			String playerDialogue;
+			if (player.isMale()) {
+				playerDialogue = "I am an ironman, I stand alone.";
+			} else {
+				playerDialogue = "I am an ironwoman, I stand alone.";
+			}
+			player.getUpdateFlags().setChatMessage(new ChatMessage(player, playerDialogue, null));
+			delay(2);
+			thinkbubble(item);
+			player.playerServerMessage(MessageType.QUEST, "You rip open the present and thrust your hand inside...");
+
+			if (config().WANT_EQUIPMENT_TAB) { // TODO: this is not a very good way to detect Cabbage server config
+				cabbageRollAndAwardPresent(player);
+			} else {
+				// this code is usually unreachable, since no other official config has ironman mode enabled
+				openRSCRollAndAwardPresent(player);
+			}
+			player.getCarriedItems().remove(item);
+
+		} else {
+			player.message("It would be selfish to keep this for myself");
+			player.message("I should give it to someone else");
+		}
 	}
 
 	@Override
@@ -348,4 +437,334 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.getCatalogId() == ItemId.PRESENT.id();
 	}
+
+	private void cabbageRollAndAwardPresent(Player player, Player otherPlayer, boolean selfUse) {
+		if (!selfUse) {
+			player.playerServerMessage(MessageType.QUEST, "You give a present to " + otherPlayer.getUsername());
+			otherPlayer.playerServerMessage(MessageType.QUEST, player.getUsername() + " handed you a present...");
+			delay();
+			otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present and reach your hand inside...");
+			delay();
+		}
+
+		ArrayList<Item> prizeList = cabbagePresentDrops.rollItem(false, otherPlayer);
+		if (prizeList.size() <= 0) return;
+		Item prize = prizeList.get(0);
+		String prizeName = prize.getDef(player.getWorld()).getName().toLowerCase();
+
+		if (!selfUse)
+			player.playerServerMessage(MessageType.QUEST, otherPlayer.getUsername() + " got a " + prizeName + " from your present!");
+		otherPlayer.playerServerMessage(MessageType.QUEST, "You take out a " + prizeName + ".");
+		delay();
+
+		String playerDialogue;
+
+		if (prize.getCatalogId() == ItemId.COAL.id()) {
+			switch (DataConversions.random(0, 8)) {
+				default:
+				case 0:
+					playerDialogue = "No presents for you!";
+					break;
+				case 1:
+					playerDialogue = "Naughty boys and girls get coal for christmas";
+					break;
+				case 2:
+					playerDialogue = "Oh, behave!";
+					break;
+				case 3:
+					playerDialogue = "I can get you off the Naughty List, for a price...";
+					break;
+				case 4:
+					playerDialogue = "Darn! Almost had it.";
+					break;
+				case 5:
+					playerDialogue = "a glitch for a grinch, a pile of coal for you!";
+					break;
+				case 6:
+					playerDialogue = "For not believing in Christmas you get a lump of coal";
+					break;
+				case 7:
+					playerDialogue = "for behavior so cold, you are getting a lump of coal";
+					break;
+				case 8:
+					playerDialogue = "I know what you did last summer";
+					break;
+			}
+		} else {
+			playerDialogue = "Happy holidays";
+		}
+
+		if (!selfUse)
+			player.getUpdateFlags().setChatMessage(new ChatMessage(player, playerDialogue, null));
+		otherPlayer.getCarriedItems().getInventory().add(prize);
+	}
+
+	private void cabbageRollAndAwardPresent(Player player, Player otherPlayer) {
+		cabbageRollAndAwardPresent(player, otherPlayer, false);
+	}
+
+	private void cabbageRollAndAwardPresent(Player player) {
+		cabbageRollAndAwardPresent(player, player, true);
+	}
+
+	private void openRSCRollAndAwardPresent(Player player, Player otherPlayer, boolean selfUse) {
+		ArrayList<Item> prizeList = openRSCPresentDrops.rollItem(false, otherPlayer);
+		if (prizeList.size() <= 0) return;
+		Item prize = prizeList.get(0);
+		String prizeName = prize.getDef(player.getWorld()).getName().toLowerCase();
+
+		int unwrapDelay = 2;
+		int readingDelay = 2;
+
+		if (!selfUse) {
+			player.playerServerMessage(MessageType.QUEST, "You give a present to " + otherPlayer.getUsername());
+			otherPlayer.playerServerMessage(MessageType.QUEST, player.getUsername() + " handed you a present...");
+			delay();
+
+			if (prize.getDef(player.getWorld()).getId() == 1096 && otherPlayer.getQuestStage(Quests.GERTRUDES_CAT) != -1) {
+				// kitten selected, but otherPlayer ineligible to receive it, swamp toad substituted
+				player.playerServerMessage(MessageType.QUEST, "You hope they enjoy the swamp toad you got them!");
+			} else if ((prize.getDef(player.getWorld()).getId() >= 966 && prize.getDef(player.getWorld()).getId() <= 970) || prize.getDef(player.getWorld()).getId() == 990) {
+				player.playerServerMessage(MessageType.QUEST, "You hope they enjoy the socks you got them!");
+			} else {
+				player.playerServerMessage(MessageType.QUEST, "You hope they enjoy the " + prizeName + " you got them!");
+			}
+
+			switch (prize.getDef(player.getWorld()).getId()) {
+
+				/**
+				 * Pet table
+				 */
+				case 1096: // Kitten
+					if (otherPlayer.getQuestStage(Quests.GERTRUDES_CAT) == -1) { // has completed quest requirement
+						otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you hear a mewing noise...!!");
+						delay(unwrapDelay);
+						player.playerServerMessage(MessageType.QUEST, "@yel@" + otherPlayer.getUsername() + ": oh my gosh a kitten!!?!");
+						otherPlayer.getCarriedItems().getInventory().add(prize);
+						say(otherPlayer, "oh my gosh a kitten!!?!");
+						otherPlayer.playerServerMessage(MessageType.QUEST, "@yel@" + player.getUsername() + ": yeah, I hope you enjoy your new pet and take good care of them!");
+						say(player, "yeah, I hope you enjoy your new pet and take good care of them!");
+
+						break;
+					} else {
+						prize = new Item(895);
+						// fall through to swamp toad case
+					}
+				case 895: // Swamp Toad
+					otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you hear a croaking noise...!!");
+					delay(unwrapDelay);
+					player.playerServerMessage(MessageType.QUEST, "@yel@" + otherPlayer.getUsername() + ": oh my gosh a toad!!?!");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					say(otherPlayer, "oh my gosh a toad!!?!");
+					otherPlayer.playerServerMessage(MessageType.QUEST, "@yel@" + player.getUsername() + ": yeah, I hope you enjoy your new pet and take good care of them!");
+					say(player, "yeah, I hope you enjoy your new pet and take good care of them!");
+					player.playerServerMessage(MessageType.QUEST, "@red@Server Message: @whi@please do not viciously dismember your new pet toad");
+					otherPlayer.playerServerMessage(MessageType.QUEST, "@red@Server Message: @whi@please do not viciously dismember your new pet toad");
+					break;
+
+				/**
+				 * Food table
+				 */
+				case 18: // Cabbage
+					otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you can smell something weird...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a cabbage...!!!");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+
+				case 911: // Choc crunchies
+				case 914: // Spice crunchies
+				case 336: // Chocolate slice
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					if (prize.getDef(player.getWorld()).getId() == 336) {
+						otherPlayer.playerServerMessage(MessageType.QUEST, "Awh, it's some really nice homemade chocolate cake!");
+					} else {
+						otherPlayer.playerServerMessage(MessageType.QUEST, "Awh, it's some really nice homemade " + prizeName + "!");
+					}
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					delay(readingDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "and it looks like there's also an entire bucket of milk inside!");
+					otherPlayer.getCarriedItems().getInventory().add(new Item(ItemId.MILK.id()));
+					break;
+
+				case 923: // Ugthanki kebab
+				case 1102: // Tasty ugthanki kebab
+					otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you can smell something weird...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "it's an ugthanki kebab!!");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+
+				case 137: // bread dough
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "Ah! it's an Amish Friendship Bread starter...!");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					delay(readingDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You're supposed to break off a piece to act as a starter yeast, and bake the rest.");
+					delay(readingDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "Take the piece you saved and use more flour & water to create volume");
+					delay(readingDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "The yeast should grow over time if you feed it sugar,");
+					delay(readingDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "and then you can pass it on to a friend :-)");
+					break;
+
+				/**
+				 * Alcohol table
+				 */
+				case 876: // brandy
+				case 868: // whisky
+				case 869: // vodka
+				case 870: // gin
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "Oh, nice! It's some gnome " + prizeName + "!");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+				case 737: // poison chalice
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "... it's some kind of strange cocktail of random spirits!");
+					// see https://twitter.com/JagexAsh/status/1073671447753711616 for more info on poison chalice
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+
+				/**
+				 * Unique gift ideas!
+				 */
+				case 790: // Oyster pearl bolt tips
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "Ooh! It's some pointed pearls!");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+				case 981: // gnome ball
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "Oh, fun! A gnome ball! I always wanted one of those");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+				case 987: // Paramaya Rest Ticket
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "It's a gift card for a free stay in the Paramaya Inn!");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					if (otherPlayer.getQuestStage(Quests.SHILO_VILLAGE) != -1) {
+						// otherPlayer is currently unable to access the inn, located inside shilo village
+						delay(readingDelay + 1);
+						otherPlayer.playerServerMessage(MessageType.QUEST, "... Wonder where that is?");
+					}
+					break;
+				case 988: // Ship Ticket
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "WOW!! it's a ticket for @mag@a trip on a cruise ship!!!!");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+
+				/**
+				 * Clothes table (Just gnome clothing minus boots)
+				 */
+				case 836: // gnome robe skirts
+				case 837:
+				case 838:
+				case 839:
+				case 840:
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a very nice pastel dress");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+				case 841: // gnome hats
+				case 842:
+				case 843:
+				case 844:
+				case 845:
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a very nice pastel hat");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+				case 846: // gnome robe tops
+				case 847:
+				case 848:
+				case 849:
+				case 850:
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a very nice pastel shirt");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+
+				/**
+				 * Socks for Christmas!
+				 */
+				case 966: // gnome boots
+				case 967:
+				case 968:
+				case 969:
+				case 970:
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "oh! it's a pair of cute socks");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+				case 990: // desert boots
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "oh! it's a pair of socks...!");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+
+				/**
+				 * Unobtainable items
+				 */
+				case 924:
+					otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you can smell something strange...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a special christmas curry!!!");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					delay(readingDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "I wonder how they made it?"); // reference to it being unobtainable
+					break;
+				case 903:
+					otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you can smell something weird...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a homemade gnome batta... kind of smells like pants");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					delay(readingDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "I wonder how they made it?"); // reference to it being unobtainable
+					break;
+
+				/**
+				 * Bug in future code if reach default statement
+				 */
+				default:
+					// should not be reached
+					otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+					delay(unwrapDelay);
+					otherPlayer.playerServerMessage(MessageType.QUEST, "oh! it's a " + prizeName + "!");
+					otherPlayer.getCarriedItems().getInventory().add(prize);
+					break;
+			}
+		} else {
+			// TODO: Should port some of the above unique dialogues & behaviour
+			// but in 2020, this code is unreachable on any Open RSC hosted server
+			otherPlayer.playerServerMessage(MessageType.QUEST, "You unwrap the present...");
+			delay(unwrapDelay);
+			otherPlayer.playerServerMessage(MessageType.QUEST, "oh! it's a " + prizeName + "!");
+			otherPlayer.getCarriedItems().getInventory().add(prize);
+		}
+	}
+
+	private void openRSCRollAndAwardPresent(Player player, Player otherPlayer) {
+		openRSCRollAndAwardPresent(player, otherPlayer, false);
+	}
+
+	private void openRSCRollAndAwardPresent(Player player) {
+		openRSCRollAndAwardPresent(player, player, true);
+	}
+
 }

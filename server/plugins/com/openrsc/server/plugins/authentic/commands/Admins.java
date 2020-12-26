@@ -31,7 +31,6 @@ import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -89,8 +88,6 @@ public final class Admins implements CommandTrigger {
 			startHolidayDrop(player, command, args, false);
 		} else if (command.equalsIgnoreCase("stopholidaydrop") || command.equalsIgnoreCase("cancelholidaydrop") || command.equalsIgnoreCase("christmasiscancelled")) {
 			stopHolidayDrop(player);
-		} else if (command.equalsIgnoreCase("getholidaydrop") || command.equalsIgnoreCase("checkholidaydrop") || command.equalsIgnoreCase("checkholidayevent")) {
-			checkHolidayDrop(player);
 		} else if (command.equalsIgnoreCase("cabbagehalloweendrop")) {
 			cabbageHalloweenDrop(player, command, args);
 		} else if (command.equalsIgnoreCase("npckills")) {
@@ -327,29 +324,6 @@ public final class Admins implements CommandTrigger {
 			event.stop();
 			player.message(messagePrefix + "Stopping holiday drop!");
 			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Stopped holiday drop"));
-		}
-	}
-
-	private void checkHolidayDrop(Player player) {
-		boolean foundEvent = false;
-		StringBuilder eventDetails = new StringBuilder();
-		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
-		for (GameTickEvent event : events.values()) {
-			if (!(event instanceof HolidayDropEvent)) continue;
-
-			foundEvent = true;
-			HolidayDropEvent holidayEvent = (HolidayDropEvent) event;
-
-			eventDetails.append("@yel@There is currently an Holiday Drop Event running:%");
-			eventDetails.append("@lre@Occurs on minute @gre@" + holidayEvent.getMinute() + "@lre@ of each hour%");
-			eventDetails.append("@lre@Total Hours: @gre@" + holidayEvent.getLifeTime() + "@lre@, Elapsed Hours: @gre@" + holidayEvent.getElapsedHours() + "@lre@, Hours Left: @gre@" + Math.abs(holidayEvent.getLifeTimeLeft()));
-			eventDetails.append("%@lre@Items: @gre@" + StringUtils.join(holidayEvent.getItems(), "@lre@, @gre@"));
-			eventDetails.append("% %");
-		}
-		if (foundEvent) {
-			ActionSender.sendBox(player, eventDetails.toString(), true);
-		} else {
-			player.message(messagePrefix + "There is no running Holiday Drop Event");
 		}
 	}
 

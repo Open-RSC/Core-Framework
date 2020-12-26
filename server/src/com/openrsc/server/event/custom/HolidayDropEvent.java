@@ -1,5 +1,6 @@
 package com.openrsc.server.event.custom;
 
+import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -65,6 +66,14 @@ public class HolidayDropEvent extends HourlyEvent  {
 
 	public ArrayList<Integer> getItems() {
 		return items;
+	}
+
+	public static boolean isOccurring(Player player) {
+		for (GameTickEvent event : player.getWorld().getServer().getGameEventHandler().getEvents().values()) {
+			if (!(event instanceof HolidayDropEvent)) continue;
+			return true;
+		}
+		return false;
 	}
 
 	private String getEventMessage() {
