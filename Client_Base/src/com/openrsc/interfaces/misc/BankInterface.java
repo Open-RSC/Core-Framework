@@ -12,6 +12,8 @@ import orsc.util.BankUtil;
 
 import java.util.ArrayList;
 
+import static orsc.Config.*;
+
 public class BankInterface {
 	public static mudclient mc;
 
@@ -20,7 +22,7 @@ public class BankInterface {
 	private boolean swapCertMode;
 
 	public int width, height;
-
+	public boolean membersWorld;
 	public Panel bank;
 	ArrayList<BankItem> bankItems;
 
@@ -28,6 +30,7 @@ public class BankInterface {
 		mc = m;
 		width = 408; // WIDTH MODIFIER
 		height = 334; // HEIGHT MODIFIER
+		membersWorld = wantMembers();
 		bank = new Panel(mc.getSurface(), 3);
 		bankItems = new ArrayList<>();
 	}
@@ -90,16 +93,16 @@ public class BankInterface {
 
 				// Select bank page
 			} else if (currentItems.size() > 48 && selectedX >= 50 && selectedX <= 115 &&
-				selectedY <= 16 && currMouseY > mc.getGameHeight() / 2 - 146) {
+				selectedY <= 16 && currMouseY > mc.getGameHeight() / 2 - 146 && membersWorld) {
 				mouseOverBankPageText = 0; // Select page 1
 			} else if (currentItems.size() > 48 && selectedX >= 115 && selectedX <= 180 &&
-				selectedY <= 16 && currMouseY > mc.getGameHeight() / 2 - 146) {
+				selectedY <= 16 && currMouseY > mc.getGameHeight() / 2 - 146 && membersWorld) {
 				mouseOverBankPageText = 1; // Select page 2
 			} else if (currentItems.size() > 96 && selectedX >= 180 && selectedX <= 245 &&
-				selectedY <= 16 && currMouseY > mc.getGameHeight() / 2 - 146) {
+				selectedY <= 16 && currMouseY > mc.getGameHeight() / 2 - 146 && membersWorld) {
 				mouseOverBankPageText = 2; // Select page 3
 			} else if (currentItems.size() > 144 && selectedX >= 245 && selectedX <= 310 &&
-				selectedY <= 16 && currMouseY > mc.getGameHeight() / 2 - 146) {
+				selectedY <= 16 && currMouseY > mc.getGameHeight() / 2 - 146 && membersWorld) {
 				mouseOverBankPageText = 3; // Select page 4
 
 			} else { // Close Bank
@@ -237,8 +240,10 @@ public class BankInterface {
 		drawString("Bank", relativeX + 1, relativeY + 10, 1, 0xffffff);
 
 		// Draw Bank Page Buttons
-		drawPageButtons(currMouseX, currMouseY, relativeX, relativeY);
-
+		if (membersWorld) {
+			drawPageButtons(currMouseX, currMouseY, relativeX, relativeY);
+		}
+		
 		// Draw Top Descriptions & Close Button
 		int closeButtonColour = 0xffffff;
 		if (currMouseX > relativeX + 320 && currMouseY >= relativeY + 3 && currMouseX < relativeX + 408 && currMouseY < relativeY + 15)
