@@ -90,8 +90,10 @@ public final class WorldPopulator {
 					continue;
 				}
 
-				// Don't spawn Thug, Black Unicorn or Red Dragon in F2P
-				if ((n.id == 251 || n.id == 296 || n.id == 201) && !getWorld().getServer().getConfig().MEMBER_WORLD) {
+				// Don't spawn attackable members NPCs in F2P
+				if (getWorld().getServer().getEntityHandler().getNpcDef(n.id).isMembers() && 
+					getWorld().getServer().getEntityHandler().getNpcDef(n.id).isAttackable() &&
+					!getWorld().getServer().getConfig().MEMBER_WORLD) {
 					n = null;
 					continue;
 				}
