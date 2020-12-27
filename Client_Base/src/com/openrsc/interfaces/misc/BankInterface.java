@@ -270,14 +270,18 @@ public class BankInterface {
 	private void drawPageButtons(int currMouseX, int currMouseY, int relativeX, int relativeY) {
 		int pageButtonMargin = 50;
 		int pageButtonColour = 0xffffff;
-		if (mouseOverBankPageText == 0)
-			pageButtonColour = 0xff0000;
-		else if (currMouseX > relativeX + pageButtonMargin && currMouseY >= relativeY + 4
-			&& currMouseX < relativeX + pageButtonMargin + 65 && currMouseY < relativeY + 16)
-			pageButtonColour = 0xffff00;
-		drawString("<page 1>", relativeX + pageButtonMargin, relativeY + 10, 1, pageButtonColour);
-		pageButtonMargin += 65;
+
 		if (currentItems.size() > 48) {
+			// Page 1
+			if (mouseOverBankPageText == 0)
+				pageButtonColour = 0xff0000;
+			else if (currMouseX > relativeX + pageButtonMargin && currMouseY >= relativeY + 4
+				&& currMouseX < relativeX + pageButtonMargin + 65 && currMouseY < relativeY + 16)
+				pageButtonColour = 0xffff00;
+			drawString("<page 1>", relativeX + pageButtonMargin, relativeY + 10, 1, pageButtonColour);
+			pageButtonMargin += 65;
+
+			// Page 2
 			pageButtonColour = 0xffffff;
 			if (mouseOverBankPageText == 1)
 				pageButtonColour = 0xff0000;
