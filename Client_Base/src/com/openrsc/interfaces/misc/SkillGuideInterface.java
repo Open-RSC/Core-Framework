@@ -931,7 +931,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(90, "35", "Barbarian Outpost Agility Course"));
 				skillMenuEntries.add(new SkillMenuItem(412, "52", "Wilderness Agility Course"));
 			} else if (curTab == 1) {
-				skillMenuEntries.add(new SkillMenuItem(410, "5", "Falador West handholds"));
+				skillMenuEntries.add(new SkillMenuItem(410, "5", "Falador West enter handholds"));
 				skillMenuEntries.add(new SkillMenuItem(410, "10", "Brimhaven treeswing"));
 				skillMenuEntries.add(new SkillMenuItem(410, "15", "Edgeville dungeon ropeswing"));
 				skillMenuEntries.add(new SkillMenuItem(410, "15", "Yanille North climbing rocks"));
@@ -949,14 +949,16 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(410, "32", "East Karamjan River log balance"));
 				skillMenuEntries.add(new SkillMenuItem(410, "35", "Barbarian outpost handholds"));
 				skillMenuEntries.add(new SkillMenuItem(410, "40", "Yanille Agility Dungeon ledge"));
+				skillMenuEntries.add(new SkillMenuItem(410, "40", "Falador West exit handholds"));
 				skillMenuEntries.add(new SkillMenuItem(410, "45", "White Wolf Mountain vine climb"));
 				skillMenuEntries.add(new SkillMenuItem(410, "49", "Yanille Agility Dungeon pipe"));
 				skillMenuEntries.add(new SkillMenuItem(410, "50", "Kharazi Jungle cave entrance"));
+				skillMenuEntries.add(new SkillMenuItem(410, "50", "Taverly stepping stones to Catherby"));
 				skillMenuEntries.add(new SkillMenuItem(410, "55", "Entrana wall rubble"));
 				skillMenuEntries.add(new SkillMenuItem(410, "57", "Yanille Agility Dungeon rope swing"));
 				skillMenuEntries.add(new SkillMenuItem(410, "67", "Yanille Agility Dungeon pile of rubble"));
+				skillMenuEntries.add(new SkillMenuItem(410, "67", "Lava Maze stepping stones"));
 				skillMenuEntries.add(new SkillMenuItem(410, "70", "Taverly Dungeon pipe crawl"));
-				skillMenuEntries.add(new SkillMenuItem(410, "82", "Catherby island stepping stones"));
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Thieving")) {
