@@ -89,6 +89,15 @@ public final class WorldPopulator {
 					n = null;
 					continue;
 				}
+
+				// Don't spawn attackable members NPCs in F2P
+				if (getWorld().getServer().getEntityHandler().getNpcDef(n.id).isMembers() && 
+					getWorld().getServer().getEntityHandler().getNpcDef(n.id).isAttackable() &&
+					!getWorld().getServer().getConfig().MEMBER_WORLD) {
+					n = null;
+					continue;
+				}
+
 				// // if(!Point.inWilderness(n.startX, n.startY) && EntityHandler.getNpcDef(n.id).isAttackable() && n.id != 192 && n.id != 35 && n.id != 196 && n.id != 50 && n.id != 70 && n.id != 136 && n.id != 37) {
 				// //	for(int i = 0; i < 1; i++)
 				// //		world.registerNpc(new Npc(n));
