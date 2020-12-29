@@ -33,6 +33,12 @@ public class PlayerDuelHandler implements PacketHandler {
 			return;
 		}
 
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			unsetOptions(player);
+			unsetOptions(affectedPlayer);
+			return;
+		}
+
 		if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 			|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
 			player.message("You are an Iron Man. You stand alone.");

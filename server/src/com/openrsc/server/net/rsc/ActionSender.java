@@ -8,6 +8,7 @@ import com.openrsc.server.content.clan.ClanPlayer;
 import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyManager;
 import com.openrsc.server.content.party.PartyPlayer;
+import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.BankPreset;
 import com.openrsc.server.model.container.Equipment;
@@ -1231,6 +1232,11 @@ public class ActionSender {
 	 * Sends a sound effect
 	 */
 	public static void sendSound(Player player, String soundName) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			// F2P does not have sound effects
+			return;
+		}
+
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PLAY_SOUND.opcode);
 		if (player.isUsingAuthenticClient()) {
@@ -1710,6 +1716,10 @@ public class ActionSender {
 					sendMessage(player, null,  MessageType.QUEST, "Authentic client support is currently in beta.", 0, "@lre@");
 					sendMessage(player, null,  MessageType.QUEST, "Please report any issues, and thanks for understanding.", 0, "@lre@");
 				}
+
+				if (HolidayDropEvent.isOccurring(player) && player.getWorld().getServer().getConfig().WANT_BANK_PINS) { // TODO: this is not a good way to detect that we are not using the RSCP config
+				    sendMessage(player, null, MessageType.QUEST, "@mag@There is a Holiday Drop Event going on now! Type @gre@::drop@mag@ for more information.", 0, null);
+                }
 
                 sendGameSettings(player);
 				sendWorldInfo(player);
