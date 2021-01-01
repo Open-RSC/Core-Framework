@@ -7,6 +7,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -41,6 +42,12 @@ public class AgilityShortcuts implements OpLocTrigger,
 	private static final int TAVERLY_PIPE = 1236;
 	private static final int TAVERLY_PIPE_RETURN = 1237;
 	private static final int ENTRANA_RUBBLE = 1286;
+	private static final int TAVERLY_STEPPING_STONE = 1287;
+	private static final int CATHERBY_STEPPING_STONE = 1288;
+	private static final int FALADOR_MEMBERS_EXIT_HANDHOLDS = 1290;
+	private static final int KBD_TO_LAVADUNG_STEPPING_STONE = 1291;
+	private static final int LAVADUNG_TO_KBD_STEPPING_STONE = 1292;
+
 
 	@Override
 	public boolean blockOpLoc(Player player, GameObject obj, String command) {
@@ -65,11 +72,17 @@ public class AgilityShortcuts implements OpLocTrigger,
 			SHILO_VILLAGE_BRIDGE_BLOCKADE_JUMP,
 			TAVERLY_PIPE,
 			TAVERLY_PIPE_RETURN,
-			ENTRANA_RUBBLE);
+			ENTRANA_RUBBLE,
+			TAVERLY_STEPPING_STONE,
+			CATHERBY_STEPPING_STONE,
+			FALADOR_MEMBERS_EXIT_HANDHOLDS,
+			KBD_TO_LAVADUNG_STEPPING_STONE, LAVADUNG_TO_KBD_STEPPING_STONE
+			);
 	}
 
 	@Override
 	public void onOpLoc(Player player, GameObject obj, String command) {
+		int success = 0, damage = 0;
 		switch (obj.getID()) {
 			case SHILO_VILLAGE_BRIDGE_BLOCKADE_JUMP:
 				if (getCurrentLevel(player, Skills.AGILITY) < 32) {
@@ -564,6 +577,160 @@ public class AgilityShortcuts implements OpLocTrigger,
 					teleport(player, 434, 549);
 					player.incExp(Skills.AGILITY, 15, true);
 				}
+				break;
+			case TAVERLY_STEPPING_STONE:
+				if (getCurrentLevel(player, Skills.AGILITY) < 50) {
+					player.message("You need an agility level of 50 to use this shortcut");
+					return;
+				}
+				if (config().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to jump to the stone");
+						return;
+					}
+				}
+				player.teleport(395, 502);
+				delay(1);
+				player.face(397, 502);
+				player.message("You sure your footing...");
+				delay(3);
+				teleport(player, 396, 502);
+				player.message("and attempt to cross the stones...");
+				delay(4);
+				success = DataConversions.random(1, 100);
+				if (success > 10) {
+					teleport(player, 397, 502);
+					player.message("you make it to the shore of Catherby");
+					player.incExp(Skills.AGILITY, 60, true);
+				} else {
+					player.message("and fall into the water!");
+					damage = getMaxLevel(player, Skills.HITS) / 5;
+
+					//If they are going to die from the hit, put their gear on the Taverly side
+					if (damage >= getCurrentLevel(player, Skills.HITS))
+						player.teleport(394, 502);
+					else
+						player.teleport(388, 522);
+
+					player.damage(damage);
+				}
+				break;
+			case CATHERBY_STEPPING_STONE:
+				if (getCurrentLevel(player, Skills.AGILITY) < 50) {
+					player.message("You need an agility level of 50 to use this shortcut");
+					return;
+				}
+				if (config().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to jump to the stone");
+						return;
+					}
+				}
+				player.teleport(397, 502);
+				delay(1);
+				player.face(395, 502);
+				player.message("You sure your footing...");
+				delay(3);
+				teleport(player, 396, 502);
+				player.message("and attempt to cross the stones...");
+				delay(4);
+				success = DataConversions.random(1, 100);
+				if (success > 10) {
+					teleport(player, 395, 502);
+					player.message("you make it to the shore of Taverly");
+					player.incExp(Skills.AGILITY, 60, true);
+				} else {
+					player.message("and fall into the water!");
+					damage = getMaxLevel(player, Skills.HITS) / 5;
+
+					//If they are going to die from the hit, put their gear on the Catherby side
+					if (damage >= getCurrentLevel(player, Skills.HITS))
+						player.teleport(397, 501);
+					else
+						player.teleport(388, 522);
+					player.damage(damage);
+				}
+				break;
+			case FALADOR_MEMBERS_EXIT_HANDHOLDS:
+				if (getCurrentLevel(player, Skills.AGILITY) < 40) {
+					player.message("You need an agility level of 40 to climb the wall");
+					return;
+				}
+				player.message("You climb over the wall");
+				teleport(player, 339, 544);
+				player.incExp(Skills.AGILITY, 80, true);
+				break;
+			case KBD_TO_LAVADUNG_STEPPING_STONE:
+				if (getCurrentLevel(player, Skills.AGILITY) < 67) {
+					player.message("You need an agility level of 67 to jump to the stone");
+					return;
+				}
+				if (config().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to jump to the stone");
+						return;
+					}
+				}
+				player.teleport(280,3015);
+				player.face(274, 3015);
+				player.message("You focus on not slipping...");
+				delay(4);
+				if (Formulae.calcProductionSuccessful(19, getCurrentLevel(player, Skills.AGILITY) - 48, false, 58, 26)) {
+					player.teleport(278, 3015);
+					delay(3);
+					player.teleport(276, 3015);
+					delay(3);
+					player.teleport(274, 3015);
+					delay(3);
+					player.teleport(272, 3015);
+					player.face(272, 3013);
+					delay(3);
+					player.teleport(272,3012);
+					player.message("and skillfully cross the lava");
+					player.incExp(Skills.AGILITY, 160, true);
+				} else {
+					player.message("but fall into the lava");
+					int lavaDamage = (int) Math.round((player.getSkills().getLevel(Skills.HITS)) * 0.21D);
+					player.teleport(281, 3016);
+					player.damage(lavaDamage);
+				}
+
+				break;
+			case LAVADUNG_TO_KBD_STEPPING_STONE:
+				if (getCurrentLevel(player, Skills.AGILITY) < 67) {
+					player.message("You need an agility level of 67 to jump to the stone");
+					return;
+				}
+				if (config().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to jump to the stone");
+						return;
+					}
+				}
+				player.teleport(272,3013);
+				player.face(272, 3015);
+				player.message("You focus on not slipping...");
+				delay(4);
+				if (Formulae.calcProductionSuccessful(19, getCurrentLevel(player, Skills.AGILITY) - 48, false, 58, 26)) {
+					player.teleport(272, 3015);
+					player.face(280, 3015);
+					delay(3);
+					player.teleport(274, 3015);
+					delay(3);
+					player.teleport(276, 3015);
+					delay(3);
+					player.teleport(278, 3015);
+					delay(3);
+					player.teleport(281, 3015);
+					player.message("and skillfully cross the lava");
+					player.incExp(Skills.AGILITY, 160, true);
+				} else {
+					player.message("but fall into the lava");
+					int lavaDamage = (int) Math.round((player.getSkills().getLevel(Skills.HITS)) * 0.21D);
+					player.teleport(271, 3012);
+					player.damage(lavaDamage);
+				}
+
 				break;
 		}
 	}
