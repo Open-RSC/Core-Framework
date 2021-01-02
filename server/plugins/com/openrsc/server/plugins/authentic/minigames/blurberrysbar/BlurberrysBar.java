@@ -355,8 +355,9 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 
 	@Override
 	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
-		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id()) {
-			checkAndRemoveBlurberry(player, true);
+		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.HALF_COCKTAIL_GLASS.id()
+			|| item.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id()) {
+			resetCocktailMaking(player);
 		}
 	}
 

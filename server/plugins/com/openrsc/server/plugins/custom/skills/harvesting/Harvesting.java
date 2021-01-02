@@ -363,6 +363,8 @@ public final class Harvesting implements OpLocTrigger {
 					depId = 1271; //depleted tomato
 				} else if (prodId == ItemId.CORN.id()) {
 					depId = 1272; //depleted corn
+				} else if (prodId == ItemId.DRAGONFRUIT.id()) {
+					depId = 1294; //depleted dragonfruit
 				}
 				if (obj != null && obj.getID() == object.getID()) {
 					// if player did water (or have an active one) they get small chance not to deplete node
@@ -442,6 +444,7 @@ public final class Harvesting implements OpLocTrigger {
 			int uses = player.getCache().getInt("uses_wcan");
 			if (uses >= 4) {
 				player.getCarriedItems().remove(new Item(ItemId.WATERING_CAN.id()));
+				player.getCarriedItems().getInventory().add(new Item(ItemId.EMPTY_WATERING_CAN.id()));
 				player.getCache().remove("uses_wcan");
 			} else {
 				player.getCache().put("uses_wcan", uses + 1);
