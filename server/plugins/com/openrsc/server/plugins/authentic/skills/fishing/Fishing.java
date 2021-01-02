@@ -109,10 +109,10 @@ public class Fishing implements OpLocTrigger {
 	}
 
 	private void batchFishing(Player player, int netId, ObjectFishingDef def, GameObject object, String command) {
-		player.playSound("fish");
 		player.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
+		player.playSound("fish");
 		thinkbubble(new Item(netId));
-		delay(3);
+		delay(4);
 
 		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
 			player.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel(player.getWorld()) + " "
