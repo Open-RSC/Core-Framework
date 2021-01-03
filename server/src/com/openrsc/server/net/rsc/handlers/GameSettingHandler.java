@@ -31,7 +31,7 @@ public final class GameSettingHandler implements PacketHandler {
 			} else if (idx == 11) {
 				player.getCache().store("p_block_invites", value == 1);
 			} else if (idx == 16) {
-				player.getCache().store("setting_volume_rotate", value == 1);
+				player.getCache().set("setting_volume_function", value);
 			} else if (idx == 17) {
 				player.getCache().store("setting_swipe_rotate", value == 1);
 			} else if (idx == 18) {

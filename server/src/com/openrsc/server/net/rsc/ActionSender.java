@@ -502,7 +502,7 @@ public class ActionSender {
             s.writeByte((byte) player.getCombatStyle());
             s.writeByte(player.getGlobalBlock()); // 9
             s.writeByte((byte) (player.getClanInviteSetting() ? 0 : 1)); // 11
-            s.writeByte((byte) (player.getVolumeToRotate() ? 1 : 0)); // 16
+            s.writeByte((byte) (player.getVolumeFunction())); // 16
             s.writeByte((byte) (player.getSwipeToRotate() ? 1 : 0)); // 17
             s.writeByte((byte) (player.getSwipeToScroll() ? 1 : 0)); // 18
             s.writeByte(player.getLongPressDelay()); // 19
