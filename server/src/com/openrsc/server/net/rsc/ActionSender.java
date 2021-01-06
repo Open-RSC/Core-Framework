@@ -1521,9 +1521,11 @@ public class ActionSender {
 		if (player.isUsingAuthenticClient()) {
             int itemsInBank = player.getBank().size();
             s.writeByte(itemsInBank > 255 ? (byte)255 : itemsInBank & 0xFF);
-            if (itemsInBank > 192) {
-                sendMessage(player, "Warning: Unable to display all items in bank!");
-            }
+			if ((player.getWorld().getServer().getConfig().MEMBER_WORLD && itemsInBank > 192) ||
+				(!player.getWorld().getServer().getConfig().MEMBER_WORLD && itemsInBank > 48)) {
+				sendMessage(player, "Warning: Unable to display all items in bank!");
+			}
+
             s.writeByte(player.getBankSize() > 255 ? (byte)255 : player.getBankSize() & 0xFF);
             // If bank is filled to page 4 and bank size reports supporting more than 4 pages
             if (itemsInBank > (192 - 48) && player.getBankSize() > 192) {
