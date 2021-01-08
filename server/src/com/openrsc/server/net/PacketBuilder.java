@@ -128,7 +128,16 @@ public class PacketBuilder {
 	 * @return The Packet object.
 	 */
 	public Packet toPacket() {
+		finalizeLength();
 		return new Packet(opcode, payload);
+	}
+
+	/**
+	 * Prevent a bunch of zeros from being kept at the end of the packet
+	 * Affects PCAP writing, but readableLength() prevents zeros from being written on stream without this
+	 */
+	private void finalizeLength() {
+		payload.capacity(payload.writerIndex());
 	}
 
 	/**

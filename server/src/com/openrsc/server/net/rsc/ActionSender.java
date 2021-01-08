@@ -1713,9 +1713,9 @@ public class ActionSender {
                 sendPrivacySettings(player);
                 sendMessage(player, null,  MessageType.QUEST, "Welcome to " + player.getConfig().SERVER_NAME + "!", 0, null);
 
-                // This warning should not be removed until the Scenery Handler is handled correctly
+                // This warning can be removed soon, just want to make sure that scenery handler is really OK
                 if (player.isUsingAuthenticClient()) {
-					sendMessage(player, null,  MessageType.QUEST, "Authentic client support is currently in beta.", 0, "@lre@");
+					sendMessage(player, null,  MessageType.QUEST, "Authentic client support is nearly out of beta.", 0, "@lre@");
 					sendMessage(player, null,  MessageType.QUEST, "Please report any issues, and thanks for understanding.", 0, "@lre@");
 				}
 
