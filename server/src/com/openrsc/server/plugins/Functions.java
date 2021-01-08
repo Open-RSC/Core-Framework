@@ -22,6 +22,8 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /** Functions.java
  *
@@ -88,6 +90,10 @@ import com.openrsc.server.util.rsc.MessageType;
 
 
 public class Functions {
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * Displays item bubble above players head.
@@ -211,6 +217,7 @@ public class Functions {
 	}
 
 	public static int multi(final Player player, final Npc npc, final boolean sendToClient, final String... options) {
+		LOGGER.info("enter multi, " + PluginTask.getContextPluginTask().getDescriptor() + " tick " + PluginTask.getContextPluginTask().getWorld().getServer().getCurrentTick());
 		final long start = System.currentTimeMillis();
 		if (npc != null) {
 			if (npc.isRemoved()) {
@@ -225,24 +232,22 @@ public class Functions {
 		player.setMenuHandler(new MenuOptionListener(options));
 		ActionSender.sendMenu(player, options);
 
-		synchronized (player.getMenuHandler()) {
-			while (!player.checkUnderAttack()) {
-				if (player.getOption() != -1) {
-					if (npc != null && options[player.getOption()] != null) {
-						if (sendToClient)
-							say(player, npc, options[player.getOption()]);
-					}
-					return player.getOption();
-				} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
-					player.resetMenuHandler();
-					return -1;
+		while (!player.checkUnderAttack()) {
+			if (player.getOption() != -1) {
+				if (npc != null && options[player.getOption()] != null) {
+					if (sendToClient)
+						say(player, npc, options[player.getOption()]);
 				}
-
-				delay();
+				return player.getOption();
+			} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
+				player.resetMenuHandler();
+				return -1;
 			}
-			player.releaseUnderAttack();
-			return -1;
+
+			delay();
 		}
+		player.releaseUnderAttack();
+		return -1;
 	}
 
 	public static void advancestat(Player player, int skillId, int baseXp, int expPerLvl) {

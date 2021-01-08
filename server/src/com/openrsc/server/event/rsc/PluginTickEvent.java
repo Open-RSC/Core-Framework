@@ -33,17 +33,21 @@ public class PluginTickEvent extends GameTickEvent {
 
 		// Restart the plugin thread if it has waited long enough
 		synchronized(getPluginTask()) {
+			//LOGGER.info(getDescriptor() + "  tick " + getWorld().getServer().getCurrentTick() + " ticking PluginTask...");
 			getPluginTask().doRun();
 		}
 
 		// Wait for the plugin to get to a pause point or finish completely. This also waits for the PluginTask to start which is also intended to run plugin code on tick bounds.
 		while((!getPluginTask().isInitialized() || getPluginTask().isThreadRunning()) && !getPluginTask().isComplete()) {
 			try {
+				//LOGGER.info(getDescriptor() + " tick " + getWorld().getServer().getCurrentTick() + " waiting for PluginTask on tick " + " (" + getPluginTask().isInitialized() + ", " + getPluginTask().isThreadRunning() + ", " + getPluginTask().isComplete() + ")");
 				Thread.sleep(1);
 			} catch (final InterruptedException ex) {
 				LOGGER.catching(ex);
 			}
 		}
+
+		//LOGGER.info(getDescriptor() + " tick " + getWorld().getServer().getCurrentTick() + " ending event tick");
 
 		// Stop this event if the future/thread has completed.
 		if (getPluginTask().isComplete()) {

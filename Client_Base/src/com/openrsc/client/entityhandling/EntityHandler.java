@@ -6482,6 +6482,19 @@ public class EntityHandler {
 		}
 
 		objects.add(new GameObjectDef("Rocks", "It looks dangerous...", "climb", "Examine", 0, 1, 1, 0, "brownclimbingrocks", ++i));//1286
+		//Taverly stepping stone
+		objects.add(new GameObjectDef("Stepping Stone", "It looks like I could jump on this", "jump to", "Examine", 1, 1, 1, 0, "stonedisc", ++i)); //1287
+		//Catherby stepping stone
+		objects.add(new GameObjectDef("Stepping Stone", "It looks like I could jump on this", "jump to", "Examine", 1, 1, 1, 0, "stonedisc", ++i)); //1288
+		//Stone that sits between them
+		objects.add(new GameObjectDef("Stepping Stone", "It looks like I could jump on this", "WalkTo", "Examine", 1, 1, 1, 0, "stonedisc", ++i)); //1289
+		//Falador->Members area handholds
+		objects.add(new GameObjectDef("Handholds", "I wonder if I can climb up these", "climb", "Examine", 0, 1, 1, 0, "climbing_rocks", ++i)); //1290
+		//KBD->drag stepping stone
+		objects.add(new GameObjectDef("Stepping Stone", "It looks like I could jump on this", "jump to", "Examine", 1, 1, 1, 0, "stonedisc", ++i)); //1291
+		//drag->KBD stepping stone
+		objects.add(new GameObjectDef("Stepping Stone", "It looks like I could jump on this", "jump to", "Examine", 1, 1, 1, 0, "stonedisc", ++i)); //1292
+
 	}
 
 	public static void load(boolean loadMembers) {

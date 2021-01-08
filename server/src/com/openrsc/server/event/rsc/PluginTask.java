@@ -88,7 +88,9 @@ public abstract class PluginTask extends GameTickEvent implements Callable<Integ
 		try {
 			setDelayTicks(ticks);
 			setThreadRunning(false);
+			//LOGGER.info(getDescriptor() + " tick " + getWorld().getServer().getCurrentTick() + " pausing script...");
 			wait();
+			//LOGGER.info(getDescriptor() + " tick " + getWorld().getServer().getCurrentTick() + " resuming script...");
 			setThreadRunning(true);
 		} catch (final InterruptedException ex) {
 			throw new PluginInterruptedException("pause() was interrupted", ex);
