@@ -2574,11 +2574,11 @@ public final class Player extends Mob {
 		return 1;
 	}
 
-	public Boolean getVolumeToRotate() {
-		if (getCache().hasKey("setting_volume_rotate")) {
-			return getCache().getBoolean("setting_volume_rotate");
+	public int getVolumeFunction() {
+		if (getCache().hasKey("setting_volume_function")) {
+			return getCache().getInt("setting_volume_function");
 		}
-		return false;
+		return 0;
 	}
 
 	public Boolean getSwipeToRotate() {

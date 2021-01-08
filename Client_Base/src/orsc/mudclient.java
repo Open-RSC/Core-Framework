@@ -9238,12 +9238,15 @@ public final class mudclient implements Runnable {
 		}
 
 		// volume to rotate
-		if (!osConfig.C_VOLUME_TO_ROTATE) {
+		if (osConfig.C_VOLUME_FUNCTION == 0) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Volume buttons to Rotate - @red@Off", 6, null, null);
-		} else {
+				"@whi@Volume buttons - @red@Rotate", 6, null, null);
+		} else if (osConfig.C_VOLUME_FUNCTION == 1) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Volume buttons to Rotate - @gre@On", 6, null, null);
+				"@whi@Volume buttons - @yel@Zoom", 6, null, null);
+		} else if (osConfig.C_VOLUME_FUNCTION == 2) {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Volume buttons - @gre@Volume", 6, null, null);
 		}
 
 		// inventory close
@@ -9743,12 +9746,12 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// volume button camera rotation control
+		// volume button function control (rotate, zoom, volume)
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 6 && this.mouseButtonClick == 1) {
-			osConfig.C_VOLUME_TO_ROTATE = !osConfig.C_VOLUME_TO_ROTATE;
+			osConfig.C_VOLUME_FUNCTION = ++osConfig.C_VOLUME_FUNCTION %3;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(16);
-			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_VOLUME_TO_ROTATE ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_VOLUME_FUNCTION);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -16930,8 +16933,8 @@ public final class mudclient implements Runnable {
 		this.partyKickPlayer = player;
 	}
 
-	public void setVolumeToRotate(boolean b) {
-		osConfig.C_VOLUME_TO_ROTATE = b;
+	public void setVolumeFunction(int b) {
+		osConfig.C_VOLUME_FUNCTION = b;
 	}
 
 	public void setSwipeToRotate(boolean b) {

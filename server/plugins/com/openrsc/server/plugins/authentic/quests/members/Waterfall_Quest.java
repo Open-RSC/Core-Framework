@@ -468,22 +468,28 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 		} else if (obj.getID() == 135) {
 			player.message("the door is locked");
 		} else if (obj.getID() == 485) {
-			mes("as you touch the chalice it tips over");
-			delay(3);
-			mes("it falls to the floor");
-			delay(3);
-			mes("you hear a gushing of water");
-			delay(3);
-			mes("water floods into the cavern");
-			delay(3);
-			player.damage(DataConversions.random(1, 10));
-			player.teleport(654, 485, false);
-			mes("ouch!");
-			delay(3);
-			mes("you tumble over the water fall");
-			delay(3);
-			mes("and are washed up by the river side");
-			delay(3);
+			if (player.getQuestStage(this) == -1) {
+				mes("the chalice is empty");
+				delay(3);
+				mes("it will not move");
+			} else {
+				mes("as you touch the chalice it tips over");
+				delay(3);
+				mes("it falls to the floor");
+				delay(3);
+				mes("you hear a gushing of water");
+				delay(3);
+				mes("water floods into the cavern");
+				delay(3);
+				player.damage(DataConversions.random(1, 10));
+				player.teleport(654, 485, false);
+				mes("ouch!");
+				delay(3);
+				mes("you tumble over the water fall");
+				delay(3);
+				mes("and are washed up by the river side");
+				delay(3);
+			}
 		} else if (obj.getID() == 486) {
 			player.message("you walk through the doorway");
 			player.teleport(667, 3279, false);
@@ -808,8 +814,15 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 				player.teleport(647, 3267, false);
 			}
 		} else if (obj.getID() == 485 && item.getCatalogId() == ItemId.GLARIALS_URN.id()) {
+			if (player.getQuestStage(this) == -1) {
+				// lost info, but possible message
+				player.message("You have already completed this quest");
+				return;
+			}
 			mes("you carefully poor the ashes in the chalice");
+			player.getCarriedItems().remove(new Item(ItemId.GLARIALS_URN.id()));
 			delay(3);
+			give(player, ItemId.GLARIALS_URN_EMPTY.id(), 1);
 			mes("as you remove the baxtorian treasure");
 			delay(3);
 			mes("the chalice remains standing");
@@ -820,7 +833,6 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 			delay(3);
 			mes("two diamond's and two gold bars");
 			delay(3);
-			player.getCarriedItems().remove(new Item(ItemId.GLARIALS_URN.id()));
 			player.sendQuestComplete(getQuestId());
 		}
 	}

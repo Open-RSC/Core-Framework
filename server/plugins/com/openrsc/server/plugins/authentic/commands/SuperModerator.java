@@ -18,8 +18,7 @@ import java.util.Random;
 import static com.openrsc.server.plugins.Functions.config;
 
 public final class SuperModerator implements CommandTrigger {
-
-	private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger(SuperModerator.class);
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;

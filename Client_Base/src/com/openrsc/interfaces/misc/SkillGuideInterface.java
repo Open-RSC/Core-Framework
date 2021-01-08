@@ -371,6 +371,8 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(737, "", "Poison chalice - ???"));
 			} else if (curTab == 5) { // Other
 				if (runecraft) skillMenuEntries.add(new SkillMenuItem(1410, "", "Fish oil - 50% chance to heal 1"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1459, "", "Sweetened Slices - Heals 1 or 2"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1460, "", "Sweetened Chunks - Heals 1 or 2"));
 				skillMenuEntries.add(new SkillMenuItem(319, "", "Cheese - Heals 2"));
 				skillMenuEntries.add(new SkillMenuItem(179, "", "spinach roll - Heals 2"));
 				if (customSprites) skillMenuEntries.add(new SkillMenuItem(1417, "", "Pizza Bagel - Heals 2"));
@@ -388,6 +390,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1102, "", "Tasty Ugthanki Kebab - Heals 19"));
 				skillMenuEntries.add(new SkillMenuItem(210, "", "Kebab - ???"));
 				skillMenuEntries.add(new SkillMenuItem(923, "", "Ugthanki Kebab - ???"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1463, "", "Seaweed Soup - Heals 26"));
 				/*if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(2319, "99", "Cape"));
 				}*/
@@ -502,6 +505,7 @@ public final class SkillGuideInterface {
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Cooking")) {
+			boolean harvesting = Config.S_WANT_HARVESTING && Config.S_WANT_CUSTOM_SPRITES;
 			if (curTab == 0) {
 				skillMenuEntries.add(new SkillMenuItem(132, "1", "Cooked Meat"));
 				skillMenuEntries.add(new SkillMenuItem(350, "1", "Shrimp"));
@@ -534,6 +538,7 @@ public final class SkillGuideInterface {
 			} else if (curTab == 3) {
 				skillMenuEntries.add(new SkillMenuItem(346, "25", "Stew"));
 				skillMenuEntries.add(new SkillMenuItem(709, "60", "Curry"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1463, "80", "Seaweed Soup"));
 			} else if (curTab == 4) {
 				skillMenuEntries.add(new SkillMenuItem(138, "1", "Bread"));
 				skillMenuEntries.add(new SkillMenuItem(1105, "58", "Pitta Bread"));
@@ -559,6 +564,8 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(142, "35", "Wine"));
 				skillMenuEntries.add(new SkillMenuItem(1269, "50", "Oomlie Meat Parcel"));
 				skillMenuEntries.add(new SkillMenuItem(1102, "58", "Tasty Ugthanki Kebab"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(501, "70", "Wine of Zamorak"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1467, "70", "Wine of Saradomin"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1373, "99", "Cooking Cape"));
 				}
@@ -888,6 +895,7 @@ public final class SkillGuideInterface {
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Herblaw")) {
+			boolean harvesting = Config.S_WANT_HARVESTING && Config.S_WANT_CUSTOM_SPRITES;
 			boolean runecraft = Config.S_WANT_RUNECRAFT && Config.S_WANT_CUSTOM_SPRITES;
 			if (curTab == 0) {
 				skillMenuEntries.add(new SkillMenuItem(444, "3", EntityHandler.getItemDef(444).name));
@@ -921,7 +929,11 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(572, "60", "Weapon poison potion - Kwuarm & ground blue dragon scale"));
 				skillMenuEntries.add(new SkillMenuItem(495, "66", "Super defense potion - Cadantine & white berries"));
 				skillMenuEntries.add(new SkillMenuItem(498, "72", "Ranging potion - Dwarf weed & wine of zamorak"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1468, "76", "Magic potion - Dwarf weed & wine of saradomin"));
 				skillMenuEntries.add(new SkillMenuItem(963, "78", "Potion of zamorak - Torstol & jangerberries"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1471, "81", "Potion of Saradomin - Torstol & sliced dragonfruit"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1474, "83", "Super ranging potion - Ranging potion & half coconut"));
+				if (harvesting) skillMenuEntries.add(new SkillMenuItem(1477, "85", "Super magic potion - Magic potion & half coconut"));
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Agility")) {
@@ -1094,16 +1106,20 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1353, "20", "Corn"));
 				skillMenuEntries.add(new SkillMenuItem(1352, "30", "Red Cabbage"));
 				skillMenuEntries.add(new SkillMenuItem(1354, "47", "White Pumpkin"));
+				skillMenuEntries.add(new SkillMenuItem(1456, "50", "Sugar Cane"));
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(855, "15", "Lemon Tree"));
 				skillMenuEntries.add(new SkillMenuItem(863, "21", "Lime Tree"));
 				skillMenuEntries.add(new SkillMenuItem(1348, "27", "Apple Tree"));
 				skillMenuEntries.add(new SkillMenuItem(249, "33", "Banana Palm"));
+				skillMenuEntries.add(new SkillMenuItem(143, "36", "Grape Vine"));
 				skillMenuEntries.add(new SkillMenuItem(857, "39", "Orange Tree"));
 				skillMenuEntries.add(new SkillMenuItem(1349, "46", "Grapefruit Tree"));
 				skillMenuEntries.add(new SkillMenuItem(861, "51", "Pineapple Plant"));
 				skillMenuEntries.add(new SkillMenuItem(1350, "57", "Papaya Palm"));
 				skillMenuEntries.add(new SkillMenuItem(1351, "68", "Coconut Palm"));
+				skillMenuEntries.add(new SkillMenuItem(1457, "81", "Dragonfruit Tree"));
+				skillMenuEntries.add(new SkillMenuItem(1465, "85", "Bless/Curse Grapes"));
 			} else if (curTab == 2) {
 				skillMenuEntries.add(new SkillMenuItem(236, "10", "Redberry Bush"));
 				skillMenuEntries.add(new SkillMenuItem(55, "22", "Cadavaberry Bush"));

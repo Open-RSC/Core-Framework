@@ -238,7 +238,8 @@ public class ObjectCooking implements UseLocTrigger {
 		// Gnome Cooking Items
 		if (item.getCatalogId() == ItemId.GNOMEBATTA_DOUGH.id() || item.getCatalogId() == ItemId.GNOMEBOWL_DOUGH.id()
 			|| item.getCatalogId() == ItemId.GNOMECRUNCHIE_DOUGH.id() || item.getCatalogId() == ItemId.GNOMEBATTA.id()
-			|| item.getCatalogId() == ItemId.GNOMEBOWL.id() || item.getCatalogId() == ItemId.GNOMECRUNCHIE.id()) {
+			|| item.getCatalogId() == ItemId.GNOMEBOWL.id() || item.getCatalogId() == ItemId.GNOMECRUNCHIE.id()
+			|| item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id()) {
 			return false;
 		}
 		final ItemCookingDef cookingDef = item.getCookingDef(player.getWorld());
