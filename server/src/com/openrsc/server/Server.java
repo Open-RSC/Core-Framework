@@ -420,7 +420,7 @@ public class Server implements Runnable {
 		}
 	}
 
-	public static long bench(final Runnable r) {
+	public long bench(final Runnable r) {
 		long start = System.currentTimeMillis();
 		r.run();
 		return System.currentTimeMillis() - start;
