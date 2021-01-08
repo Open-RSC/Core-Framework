@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.authentic.minigames.blurberrysbar;
+package com.openrsc.server.plugins.authentic.minigames.gnomebar;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
@@ -11,7 +11,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class DrinkMixing implements UseInvTrigger {
 
-	private CocktailMaking cm = new CocktailMaking();
+	private GnomeBartending gb = new GnomeBartending();
 
 	private boolean canMix(Item itemOne, Item itemTwo) {
 		for (DrinkMix dm : DrinkMix.values()) {
@@ -58,7 +58,7 @@ public class DrinkMixing implements UseInvTrigger {
 				player.getCarriedItems().remove(new Item(dm.itemIDOther));
 			}
 
-			cm.addCocktailRecipeCache(player, dm.itemID, dm.itemIDOther);
+			gb.addCocktailRecipeCache(player, dm.itemID, dm.itemIDOther);
 
 			String recipe = "";
 			if (player.getCache().hasKey("cocktail_recipe")) {
@@ -69,28 +69,28 @@ public class DrinkMixing implements UseInvTrigger {
 			if (recipe.endsWith("!")) {
 				player.getCarriedItems().remove(new Item(dm.itemID)); // Remove base item
 
-				if (cm.recipeStrings[cm.FRUIT_BLAST].equals(recipe)) {
+				if (gb.recipeStrings[gb.FRUIT_BLAST].equals(recipe)) {
 					give(player, ItemId.FRUIT_BLAST.id(), 1);
 				}
-				else if (cm.recipeStrings[cm.PINEAPPLE_PUNCH].equals(recipe)) {
+				else if (gb.recipeStrings[gb.PINEAPPLE_PUNCH].equals(recipe)) {
 					give(player, ItemId.PINEAPPLE_PUNCH.id(), 1);
 				}
-				else if (cm.recipeStrings[cm.SHORT_GREEN_GUY].equals(recipe)) {
+				else if (gb.recipeStrings[gb.SHORT_GREEN_GUY].equals(recipe)) {
 					give(player, ItemId.SGG.id(), 1);
 				}
-				else if (cm.recipeStrings[cm.CHOC_SATURDAY].equals(recipe)) {
+				else if (gb.recipeStrings[gb.CHOC_SATURDAY].equals(recipe)) {
 					give(player, ItemId.CHOCOLATE_SATURDAY.id(), 1);
 				}
-				else if (cm.recipeStrings[cm.BLURBERRY_SPECIAL].equals(recipe)) {
+				else if (gb.recipeStrings[gb.BLURBERRY_SPECIAL].equals(recipe)) {
 					give(player, ItemId.BLURBERRY_SPECIAL.id(), 1);
 				}
-				else if (cm.recipeStrings[cm.WIZARD_BLIZZARD].equals(recipe)) {
+				else if (gb.recipeStrings[gb.WIZARD_BLIZZARD].equals(recipe)) {
 					give(player, ItemId.WIZARD_BLIZZARD.id(), 1);
 				}
-				resetCocktailMaking(player);
+				resetGnomeBartending(player);
 			} else {
 				boolean someRecipe = false;
-				for (String chkRecipe : cm.recipeStrings) {
+				for (String chkRecipe : gb.recipeStrings) {
 					if (chkRecipe.startsWith(recipe)) {
 						someRecipe = true;
 						break;
@@ -99,7 +99,7 @@ public class DrinkMixing implements UseInvTrigger {
 				if (dm.itemID == ItemId.FULL_COCKTAIL_GLASS.id() && !someRecipe) {
 					player.getCarriedItems().remove(new Item(dm.itemID));
 					player.getCarriedItems().getInventory().add(new Item(ItemId.ODD_LOOKING_COCKTAIL.id()));
-					resetCocktailMaking(player);
+					resetGnomeBartending(player);
 				}
 			}
 

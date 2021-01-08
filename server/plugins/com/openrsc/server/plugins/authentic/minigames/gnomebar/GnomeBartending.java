@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.authentic.minigames.blurberrysbar;
+package com.openrsc.server.plugins.authentic.minigames.gnomebar;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class CocktailMaking implements OpInvTrigger, UseLocTrigger {
+public class GnomeBartending implements OpInvTrigger, UseLocTrigger {
 
 	private boolean canHeat(Item item, GameObject object) {
 		if ((item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.HALF_COCKTAIL_GLASS.id()
@@ -119,12 +119,12 @@ public class CocktailMaking implements OpInvTrigger, UseLocTrigger {
 				if (player.getCache().getString("cocktail_recipe").equals(recipeStrings[DRUNK_DRAGON])) {
 					player.getCarriedItems().remove(new Item(item.getCatalogId()));
 					give(player, ItemId.DRUNK_DRAGON.id(), 1);
-					resetCocktailMaking(player);
+					resetGnomeBartending(player);
 				}
 			} else {
 				player.getCarriedItems().remove(new Item(item.getCatalogId()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.ODD_LOOKING_COCKTAIL.id()));
-				resetCocktailMaking(player);
+				resetGnomeBartending(player);
 			}
 		}
 	}

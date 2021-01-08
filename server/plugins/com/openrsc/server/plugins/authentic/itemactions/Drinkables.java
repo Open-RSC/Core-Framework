@@ -523,7 +523,7 @@ public class Drinkables implements OpInvTrigger {
 		player.playerServerMessage(MessageType.QUEST, "It tastes awful..yuck");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.COCKTAIL_GLASS.id()));
-		resetCocktailMaking(player);
+		resetGnomeBartending(player);
 	}
 
 	private void handleFruitCocktail(Player player, Item item) {

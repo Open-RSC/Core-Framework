@@ -1492,7 +1492,7 @@ public class Functions {
 		player.getCache().remove("gnome_recipe");
 	}
 
-	public static void resetCocktailMaking(Player player) {
+	public static void resetGnomeBartending(Player player) {
 		player.getCache().remove("cocktail_recipe");
 	}
 
