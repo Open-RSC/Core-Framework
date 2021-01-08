@@ -109,10 +109,10 @@ public class Fishing implements OpLocTrigger {
 	}
 
 	private void batchFishing(Player player, int netId, ObjectFishingDef def, GameObject object, String command) {
-		player.playSound("fish");
 		player.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
+		player.playSound("fish");
 		thinkbubble(new Item(netId));
-		delay(3);
+		delay(4);
 
 		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
 			player.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel(player.getWorld()) + " "
@@ -158,15 +158,15 @@ public class Fishing implements OpLocTrigger {
 					}
 					if (DataConversions.random(0, 200) == 100) {
 						player.playerServerMessage(MessageType.QUEST, "You catch a casket");
-						player.incExp(Skills.FISHING, 40, true);
 						give(player, ItemId.CASKET.id(), 1);
+						player.incExp(Skills.FISHING, 40, true);
 					}
 					for (Iterator<ObjectFishDef> iter = fishLst.iterator(); iter.hasNext();) {
 						ObjectFishDef fishDef = iter.next();
 						Item fish = new Item(fishDef.getId());
-						player.getCarriedItems().getInventory().add(fish);
 						player.playerServerMessage(MessageType.QUEST, "You catch " + (fish.getCatalogId() == ItemId.BOOTS.id() || fish.getCatalogId() == ItemId.SEAWEED.id() || fish.getCatalogId() == ItemId.LEATHER_GLOVES.id() ? "some" : fish.getCatalogId() == ItemId.OYSTER.id() ? "an" : "a") + " "
 							+ fish.getDef(player.getWorld()).getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getCatalogId() == ItemId.OYSTER.id() ? " shell" : ""));
+						player.getCarriedItems().getInventory().add(fish);
 						player.incExp(Skills.FISHING, fishDef.getExp(), true);
 					}
 				} else {
@@ -181,10 +181,10 @@ public class Fishing implements OpLocTrigger {
 							player.playerServerMessage(MessageType.QUEST, capeColor + "Because of your prowess in fishing");
 						}
 					}
-					player.getCarriedItems().getInventory().add(fish);
 					player.playerServerMessage(MessageType.QUEST, capeColor + "You catch " + (netId == ItemId.NET.id() ? "some" : "a") + " "
 						+ fish.getDef(player.getWorld()).getName().toLowerCase().replace("raw ", "") + (fish.getCatalogId() == ItemId.RAW_SHRIMP.id() ? "s" : "")
 						+ (fish.getCatalogId() == ItemId.RAW_SHARK.id() ? "!" : ""));
+					player.getCarriedItems().getInventory().add(fish);
 					player.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
 					if (object.getID() == 493 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41)
 						player.getCache().set("tutorial", 42);
