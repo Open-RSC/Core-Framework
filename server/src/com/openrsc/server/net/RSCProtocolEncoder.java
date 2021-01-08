@@ -27,6 +27,12 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
         final Channel channel = ctx.channel();
         ConnectionAttachment att = channel.attr(attachment).get();
 
+		if (att.player != null && att.player.get() != null) {
+			if (att.player.get().getWorld().getServer().getConfig().WANT_PCAP_LOGGING) {
+				att.pcapLogger.get().addPacket(message, true); // incoming from perspective of client
+			}
+		}
+
 		if (!message.isRaw()) {
             byte authenticClient;
             try {

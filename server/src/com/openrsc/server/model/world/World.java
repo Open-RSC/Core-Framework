@@ -26,12 +26,15 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Snapshot;
 import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
+import com.openrsc.server.net.ConnectionAttachment;
+import com.openrsc.server.net.PcapLogger;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.util.*;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.MessageType;
+import io.netty.util.AttributeKey;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -88,6 +91,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public NpcDrops npcDrops;
 	private Deque<Snapshot> snapshots;
 
+	public static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
 
 	public World(final Server server) {
 		this.server = server;
@@ -770,6 +774,12 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 			}
 			player.logout();
 			LOGGER.info("Unregistered " + player.getUsername() + " from player list.");
+
+			if (getServer().getConfig().WANT_PCAP_LOGGING) {
+				PcapLogger pcap = player.getChannel().attr(attachment).get().pcapLogger.get();
+				pcap.exportPCAP(player);
+				LOGGER.info("Wrote out pcap for " + player.getUsername() + " at " + pcap.fname);
+			}
 		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}

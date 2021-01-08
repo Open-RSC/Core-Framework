@@ -770,26 +770,12 @@ public final class GameStateUpdater {
 
 		// Add scenery
 		for (final GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
-			if (playerToUpdate.isUsingAuthenticClient()) {
-				// Server in current state doesn't really know anything about what scenery the client remembers.
-				// Let's just add all scenery every tick!
-				// This is very bad, but also an improvement.
-				// TODO: HANDLE SCENERY
-
-				if (newObject.getType() != 0) { // this one is pretty funny if you omit it. Trees in every open doorway!
-					continue;
-				}
-				// Hopefully don't add the Sails of a windmill too often.
-				if (newObject.getID() == 74 && playerToUpdate.getLocalGameObjects().contains(newObject)) {
-					continue;
-				}
-			} else {
-				if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
-					|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 0
-					|| playerToUpdate.getLocalGameObjects().contains(newObject)) {
-					continue;
-				}
+			if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
+				|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 0
+				|| playerToUpdate.getLocalGameObjects().contains(newObject)) {
+				continue;
 			}
+
 			packet.writeShort(newObject.getID());
 			final int offsetX = newObject.getX() - playerToUpdate.getX();
 			final int offsetY = newObject.getY() - playerToUpdate.getY();
