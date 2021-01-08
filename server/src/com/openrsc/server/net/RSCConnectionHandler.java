@@ -84,7 +84,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 		ctx.attr(attachment).set(new ConnectionAttachment());
 
 		if (!getServer().getPacketFilter().shouldAllowConnection(ctx.channel(), hostAddress, false)) {
-			getServer().getPacketFilter().ipBanHost(hostAddress, System.currentTimeMillis() + ServerConfiguration.NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "not should allow connection");
+			getServer().getPacketFilter().ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "not should allow connection");
 			ctx.channel().close();
 		}
 	}
