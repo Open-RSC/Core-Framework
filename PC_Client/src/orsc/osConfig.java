@@ -14,7 +14,7 @@ public class osConfig {
 	public static boolean C_SWIPE_TO_SCROLL = true;
 	public static boolean C_SWIPE_TO_ROTATE = true;
 	public static boolean C_SWIPE_TO_ZOOM = true;
-	public static boolean C_VOLUME_TO_ROTATE = false;
+	public static int C_VOLUME_FUNCTION = 0; // default as rotate
 	public static boolean C_ANDROID_INV_TOGGLE = false;
 	public static int C_LAST_ZOOM = 75;
 }

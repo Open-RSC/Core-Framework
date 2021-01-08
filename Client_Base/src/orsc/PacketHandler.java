@@ -1957,7 +1957,7 @@ public class PacketHandler {
 		mc.setCombatStyle(packetsIncoming.getUnsignedByte()); // ?
 		mc.setSettingsBlockGlobal(packetsIncoming.getUnsignedByte()); // 9
 		mc.setClanInviteBlockSetting(packetsIncoming.getUnsignedByte() == 1); // 11
-		mc.setVolumeToRotate(packetsIncoming.getUnsignedByte() == 1); // 16
+		mc.setVolumeFunction(packetsIncoming.getUnsignedByte()); // 16
 		mc.setSwipeToRotate(packetsIncoming.getUnsignedByte() == 1); // 17
 		mc.setSwipeToScroll(packetsIncoming.getUnsignedByte() == 1); // 18
 		mc.setLongPressDelay(packetsIncoming.getUnsignedByte()); // 19

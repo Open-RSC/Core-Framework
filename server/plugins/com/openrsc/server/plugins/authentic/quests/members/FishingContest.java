@@ -15,6 +15,7 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -532,14 +533,30 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 						npcsay(player, morris, "Move on through");
 						doGate(player, obj, 357);
 					} else {
+						ArrayList<String> menuOptions = new ArrayList<>();
+						menuOptions.add("I don't have one of them");
+						menuOptions.add("What do I need that for?");
+
+						if (player.getQuestStage(getQuestId()) == -1 && player.getWorld().getServer().getConfig().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
+							menuOptions.add("I just want to fish around");
+						}
+
+						String[] choiceOptions = new String[menuOptions.size()];
 						int m = multi(player, morris,
-							"I don't have one of them",
-							"What do I need that for?");
+							menuOptions.toArray(choiceOptions));
 						if (m == 1) {
 							npcsay(player, morris,
 								"This is the entrance to the Hementster fishing competition");
 							npcsay(player, morris, "It's a high class competition");
 							npcsay(player, morris, "Invitation only");
+						} else if (m == 2 && player.getQuestStage(getQuestId()) == -1 && choiceOptions.length > 2) {
+							npcsay(player, morris, "You are in luck champ",
+								"there are currently no competitions",
+								"feel free to use your usual fishing spot");
+							doGate(player, obj, 357);
+							if (!player.getCache().hasKey("usable_carp_spot")) {
+								player.getCache().store("usable_carp_spot", true);
+							}
 						}
 					}
 				} else
@@ -571,6 +588,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 		Npc sinister = ifnearvisnpc(player, NpcId.SINISTER_STRANGER.id(), 10);
 		Npc bonzo = ifnearvisnpc(player, NpcId.BONZO.id(), 15);
 		if (obj.getID() == 351) {
+			// spot by tree (normal fish)
 			if (player.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
 				player.message("you have already won the fishing competition");
 				return;
@@ -617,14 +635,19 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 			}
 		}
 		else if (obj.getID() == 352) {
-			if (player.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
-				player.message("you have already won the fishing competition");
-				return;
-			} else if (bonzo != null && !player.getCache().hasKey("paid_contest_fee")) {
-				bonzoDialogue(player, bonzo, false);
-				return;
+			// spot by pipe (with carps)
+			if (!player.getCache().hasKey("usable_carp_spot")) {
+				// regular and post quest if !config().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE
+				if (player.getCarriedItems().hasCatalogID(ItemId.HEMENSTER_FISHING_TROPHY.id(), Optional.of(false))) {
+					player.message("you have already won the fishing competition");
+					return;
+				} else if (bonzo != null && !player.getCache().hasKey("paid_contest_fee")) {
+					bonzoDialogue(player, bonzo, false);
+					return;
+				}
 			}
-			if (player.getQuestStage(getQuestId()) > 0 && player.getCache().hasKey("garlic_activated")) {
+			if ((player.getQuestStage(getQuestId()) > 0 && player.getCache().hasKey("garlic_activated"))
+				|| (player.getQuestStage(getQuestId()) == -1 && player.getCache().hasKey("usable_carp_spot"))) {
 				//cases: not enough level
 				//no rod
 				//no bait
@@ -643,20 +666,26 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 					player.message("You catch a giant carp");
 					player.getCarriedItems().getInventory().add(new Item(ItemId.RAW_GIANT_CARP.id()));
 					player.getCarriedItems().remove(new Item(ItemId.RED_VINE_WORMS.id()));
-					addCatchCache(player, ItemId.RAW_GIANT_CARP.id());
+					if (player.getQuestStage(getQuestId()) > 0) {
+						addCatchCache(player, ItemId.RAW_GIANT_CARP.id());
+					}
 				} else if (player.getCarriedItems().hasCatalogID(ItemId.FISHING_BAIT.id(), Optional.of(false))) {
 					player.message("You catch a sardine");
 					player.getCarriedItems().getInventory().add(new Item(ItemId.RAW_SARDINE.id()));
 					player.getCarriedItems().remove(new Item(ItemId.FISHING_BAIT.id()));
-					addCatchCache(player, ItemId.RAW_SARDINE.id());
+					if (player.getQuestStage(getQuestId()) > 0) {
+						addCatchCache(player, ItemId.RAW_SARDINE.id());
+					}
 				}
 
-				if (player.getCache().hasKey("contest_catches")) {
+				if (player.getQuestStage(getQuestId()) > 0 && player.getCache().hasKey("contest_catches")) {
 					int numCatches = player.getCache().getString("contest_catches").split("-").length;
 					if (numCatches > 2 && bonzo != null) {
 						bonzoTimesUpDialogue(player, bonzo);
 					}
 				}
+			} else if (player.getQuestStage(getQuestId()) == -1) {
+				player.message("you have already won the fishing competition");
 			} else {
 				npcsay(player, sinister, "I think you will find that is my spot");
 				say(player, sinister, "Can't you go to another spot?");

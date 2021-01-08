@@ -292,8 +292,26 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		boolean fishOil = itemID == ItemId.FISH_OIL.id() || usedWithID == ItemId.FISH_OIL.id();
 		boolean marrentill = itemID == ItemId.UNFINISHED_MARRENTILL_POTION.id() || usedWithID == ItemId.UNFINISHED_MARRENTILL_POTION.id();
 		boolean avantoe = itemID == ItemId.UNFINISHED_AVANTOE_POTION.id() || usedWithID == ItemId.UNFINISHED_AVANTOE_POTION.id();
-		if (runecraft && ((fishOil && marrentill) || fishOil && avantoe)) {
+		if (runecraft && ((fishOil && marrentill) || (fishOil && avantoe))) {
 			if (itemID == ItemId.FISH_OIL.id()) {
+				doCustomHerbSecond(player, usedWithID, itemID);
+			} else {
+				doCustomHerbSecond(player, itemID, usedWithID);
+			}
+		}
+
+		// Potions added with Harvesting
+		boolean harvesting = config().WANT_HARVESTING;
+		boolean saraWine = itemID == ItemId.WINE_OF_SARADOMIN.id() || usedWithID == ItemId.WINE_OF_SARADOMIN.id();
+		boolean dragonfruit = itemID == ItemId.SLICED_DRAGONFRUIT.id() || usedWithID == ItemId.SLICED_DRAGONFRUIT.id();
+		boolean coconut = itemID == ItemId.HALF_COCONUT.id() || usedWithID == ItemId.HALF_COCONUT.id();
+		boolean dwarfweed = itemID == ItemId.UNFINISHED_DWARFWEED_POTION.id() || usedWithID == ItemId.UNFINISHED_DWARFWEED_POTION.id();
+		boolean torstol = itemID == ItemId.UNFINISHED_TORSTOL_POTION.id() || usedWithID == ItemId.UNFINISHED_TORSTOL_POTION.id();
+		boolean regPotion = itemID == ItemId.FULL_MAGIC_POTION.id() || usedWithID == ItemId.FULL_MAGIC_POTION.id()
+			|| itemID == ItemId.FULL_RANGING_POTION.id() || usedWithID == ItemId.FULL_RANGING_POTION.id();
+		if (harvesting && ((saraWine && dwarfweed) || (dragonfruit && torstol) || (coconut && regPotion))) {
+			if (itemID == ItemId.WINE_OF_SARADOMIN.id() || itemID == ItemId.SLICED_DRAGONFRUIT.id()
+				|| itemID == ItemId.HALF_COCONUT.id()) {
 				doCustomHerbSecond(player, usedWithID, itemID);
 			} else {
 				doCustomHerbSecond(player, itemID, usedWithID);
@@ -342,7 +360,19 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		boolean fishOil = itemID == ItemId.FISH_OIL.id() || usedWithID == ItemId.FISH_OIL.id();
 		boolean marrentill = itemID == ItemId.UNFINISHED_MARRENTILL_POTION.id() || usedWithID == ItemId.UNFINISHED_MARRENTILL_POTION.id();
 		boolean avantoe = itemID == ItemId.UNFINISHED_AVANTOE_POTION.id() || usedWithID == ItemId.UNFINISHED_AVANTOE_POTION.id();
-		if (runecraft && ((fishOil && marrentill) || fishOil && avantoe)) return true;
+		if (runecraft && ((fishOil && marrentill) || (fishOil && avantoe))) return true;
+
+		// Harvesting related pots
+		boolean harvesting = player.getConfig().WANT_HARVESTING;
+		boolean saraWine = itemID == ItemId.WINE_OF_SARADOMIN.id() || usedWithID == ItemId.WINE_OF_SARADOMIN.id();
+		boolean dragonfruit = itemID == ItemId.SLICED_DRAGONFRUIT.id() || usedWithID == ItemId.SLICED_DRAGONFRUIT.id();
+		boolean coconut = itemID == ItemId.HALF_COCONUT.id() || usedWithID == ItemId.HALF_COCONUT.id();
+		boolean dwarfweed = itemID == ItemId.UNFINISHED_DWARFWEED_POTION.id() || usedWithID == ItemId.UNFINISHED_DWARFWEED_POTION.id();
+		boolean torstol = itemID == ItemId.UNFINISHED_TORSTOL_POTION.id() || usedWithID == ItemId.UNFINISHED_TORSTOL_POTION.id();
+		boolean regPotion = itemID == ItemId.FULL_MAGIC_POTION.id() || usedWithID == ItemId.FULL_MAGIC_POTION.id()
+			|| itemID == ItemId.FULL_RANGING_POTION.id() || usedWithID == ItemId.FULL_RANGING_POTION.id();
+		if (harvesting && ((saraWine && dwarfweed) || (dragonfruit && torstol) || (coconut && regPotion))) return true;
+
 		return false;
 	}
 
@@ -528,15 +558,38 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		int reqLevel = 1;
 		int xp = 0;
 		int resultId = -1;
+		int requiredCount = 1;
 		if (unfinishedPotId == ItemId.UNFINISHED_MARRENTILL_POTION.id()) {
 			xp = 200;
 			reqLevel = 12;
 			resultId = ItemId.FULL_RUNECRAFT_POTION.id();
+			requiredCount = 10;
 		}
 		else if (unfinishedPotId == ItemId.UNFINISHED_AVANTOE_POTION.id()) {
 			xp = 500;
 			reqLevel = 57;
 			resultId = ItemId.FULL_SUPER_RUNECRAFT_POTION.id();
+			requiredCount = 10;
+		}
+		else if (unfinishedPotId == ItemId.UNFINISHED_DWARFWEED_POTION.id()) {
+			xp = 690;
+			reqLevel = 76;
+			resultId = ItemId.FULL_MAGIC_POTION.id();
+		}
+		else if (unfinishedPotId == ItemId.UNFINISHED_TORSTOL_POTION.id()) {
+			xp = 720;
+			reqLevel = 81;
+			resultId = ItemId.FULL_POTION_OF_SARADOMIN.id();
+		}
+		else if (unfinishedPotId == ItemId.FULL_RANGING_POTION.id()) {
+			xp = 730;
+			reqLevel = 83;
+			resultId = ItemId.FULL_SUPER_RANGING_POTION.id();
+		}
+		else if (unfinishedPotId == ItemId.FULL_MAGIC_POTION.id()) {
+			xp = 740;
+			reqLevel = 85;
+			resultId = ItemId.FULL_SUPER_MAGIC_POTION.id();
 		}
 
 		if (player.getLevel(Skills.HERBLAW) < reqLevel) {
@@ -550,7 +603,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			return;
 		}
 
-		if (player.getCarriedItems().getInventory().countId(secondaryId) < 10) {
+		if (player.getCarriedItems().getInventory().countId(secondaryId) < requiredCount && secondaryId == ItemId.FISH_OIL.id()) {
 			player.message("You don't have enough Fish oil to make this potion");
 			return;
 		}
@@ -559,16 +612,16 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Math.min((player.getCarriedItems().getInventory().countId(secondaryId)/10),
+			repeat = Math.min((player.getCarriedItems().getInventory().countId(secondaryId)/requiredCount),
 				player.getCarriedItems().getInventory().countId(unfinishedPotId));
 		}
 
 		startbatch(repeat);
-		batchCustomHerbSecond(player, unfinishedPotId, secondaryId, resultId, xp);
+		batchCustomHerbSecond(player, unfinishedPotId, secondaryId, resultId, xp, requiredCount);
 	}
 
 	private void batchCustomHerbSecond(Player player, int unfinishedPotId,
-									   int secondaryId, int resultId, int xp) {
+									   int secondaryId, int resultId, int xp, int requiredSecondaries) {
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 2
 				&& player.getFatigue() >= player.MAX_FATIGUE) {
@@ -584,14 +637,14 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			player.getCarriedItems().getInventory().getLastIndexById(secondaryId, Optional.of(false))
 		);
 		if (unfinished == null || secondary == null) return;
-		if (secondary.getAmount() < 10) return;
+		if (secondary.getAmount() < requiredSecondaries) return;
 
 		player.playSound("mix");
 		player.playerServerMessage(MessageType.QUEST, "You mix the " + secondary.getDef(player.getWorld()).getName()
 			+ " into your potion");
 		player.getCarriedItems().remove(unfinished);
 		// Have to do this because fish oil is stacked
-		player.getCarriedItems().remove(new Item(secondaryId, 10));
+		player.getCarriedItems().remove(new Item(secondaryId, requiredSecondaries));
 		player.getCarriedItems().getInventory().add(new Item(resultId));
 
 		player.incExp(Skills.HERBLAW, xp, true);
@@ -600,7 +653,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		// Repeat
 		updatebatch();
 		if (!ifinterrupted() && !ifbatchcompleted()) {
-			batchCustomHerbSecond(player, unfinishedPotId, secondaryId, resultId, xp);
+			batchCustomHerbSecond(player, unfinishedPotId, secondaryId, resultId, xp, requiredSecondaries);
 		}
 	}
 

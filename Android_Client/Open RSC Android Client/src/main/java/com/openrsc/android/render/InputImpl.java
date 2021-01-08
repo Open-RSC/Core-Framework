@@ -1,5 +1,7 @@
 package com.openrsc.android.render;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.Handler;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -19,11 +21,13 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
     private mudclient mudclient;
     private GestureDetector gestureDetector;
+    private AudioManager audioManager;
 
     public InputImpl(mudclient mudclient, View view) {
         this.mudclient = mudclient;
         this.view = view;
         gestureDetector = new GestureDetector(view.getContext(), this);
+        audioManager = (AudioManager) view.getContext().getSystemService(Context.AUDIO_SERVICE);
 
         view.setOnTouchListener(this);
         view.setOnKeyListener(this);
@@ -128,7 +132,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        if (osConfig.C_VOLUME_TO_ROTATE) {
+        if (osConfig.C_VOLUME_FUNCTION == 0) {
             if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
                 mudclient.keyLeft = event.getAction() == KeyEvent.ACTION_DOWN;
                 return true;
@@ -139,7 +143,7 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
             }
         }
         // If we are not volume to rotate, then we are volume to zoom...
-        else {
+        else if (osConfig.C_VOLUME_FUNCTION == 1) {
             if (Config.S_ZOOM_VIEW_TOGGLE) {
                 if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
                     mudclient.keyUp = event.getAction() == KeyEvent.ACTION_DOWN;
@@ -151,6 +155,17 @@ public class InputImpl implements OnGestureListener, OnKeyListener, OnTouchListe
                 }
             }
         }
+        //
+		else if (osConfig.C_VOLUME_FUNCTION == 2) {
+			if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+				audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_SHOW_UI);
+				return true;
+			}
+			if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+				audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND | AudioManager.FLAG_SHOW_UI);
+				return true;
+			}
+		}
 
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             int key = event.getUnicodeChar();

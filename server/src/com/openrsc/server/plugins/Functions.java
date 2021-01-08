@@ -1492,26 +1492,8 @@ public class Functions {
 		player.getCache().remove("gnome_recipe");
 	}
 
-	public static boolean checkAndRemoveBlurberry(Player player, boolean reset) {
-		String[] caches = {
-			"lemon_in_shaker", "orange_in_shaker", "pineapple_in_shaker", "lemon_slices_to_drink",
-			"drunk_dragon_base", "diced_pa_to_drink", "cream_into_drink", "dwell_in_shaker",
-			"gin_in_shaker", "vodka_in_shaker", "fruit_blast_base", "lime_in_shaker", "sgg_base",
-			"leaves_into_drink", "lime_slices_to_drink", "whisky_in_shaker", "milk_in_shaker",
-			"leaves_in_shaker", "choco_bar_in_drink", "chocolate_saturday_base", "heated_choco_saturday",
-			"choco_dust_into_drink", "brandy_in_shaker", "diced_orange_in_drink", "blurberry_special_base",
-			"diced_lemon_in_drink", "pineapple_punch_base", "diced_lime_in_drink", "wizard_blizzard_base"
-		};
-		for (String s : caches) {
-			if (player.getCache().hasKey(s)) {
-				if (reset) {
-					player.getCache().remove(s);
-					continue;
-				}
-				return true;
-			}
-		}
-		return false;
+	public static void resetGnomeBartending(Player player) {
+		player.getCache().remove("cocktail_recipe");
 	}
 
 	public static void boundaryTeleport(Player player, Point location) {
