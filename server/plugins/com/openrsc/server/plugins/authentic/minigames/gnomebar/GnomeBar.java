@@ -46,7 +46,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 	public void onTalkNpc(Player player, Npc npc) {
 		if (npc.getID() == NpcId.BLURBERRY.id()) {
 			if (!player.getCache().hasKey("gnome_bartending")) {
-				startGnomeBartending(player, npc);
+				startGnomeBar(player, npc);
 			} else {
 				int stage = player.getCache().getInt("gnome_bartending");
 				switch (stage) {
@@ -107,7 +107,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 						say(player, npc, "hi again");
 						npcsay(player, npc, "so how did you do");
 						if (player.getCarriedItems().hasCatalogID(ItemId.BLURBERRY_SPECIAL.id(), Optional.of(false))) {
-							completeGnomeBartending(player, npc);
+							completeGnomeBar(player, npc);
 						} else {
 							say(player, npc, "I haven't managed to make it yet");
 							npcsay(player, npc, "I need one blurberry special",
@@ -367,7 +367,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 	}
 
 
-	private void startGnomeBartending(Player player, Npc npc) {
+	private void startGnomeBar(Player player, Npc npc) {
 		say(player, npc, "hello");
 		npcsay(player, npc, "well hello there traveller",
 			"if your looking for a cocktail the barman will happily make you one");
@@ -516,7 +516,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 		player.getCache().set("gnome_bartending", 6);
 	}
 
-	private void completeGnomeBartending(Player player, Npc npc) {
+	private void completeGnomeBar(Player player, Npc npc) {
 		say(player, npc, "I think i've made it right");
 		mes("you give the blurberry special to blurberry");
 		delay(3);
