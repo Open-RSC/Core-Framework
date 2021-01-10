@@ -8791,63 +8791,63 @@ public final class mudclient implements Runnable {
 		// block chat
 		y += 15;
 		if (this.settingsBlockChat == 2) {
-			this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow chat messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else if (this.settingsBlockChat == 1) {
-			this.getSurface().drawString("Block chat messages: @yel@<others>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow chat messages: @yel@<friends>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else {
-			this.getSurface().drawString("Block chat messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow chat messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
 
 		// block private
 		y += 15;
 		if (this.settingsBlockPrivate == 0) {
-			this.getSurface().drawString("Block private messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow private messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else if (this.settingsBlockPrivate == 1) {
-			this.getSurface().drawString("Block private messages: @yel@<others>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow private messages: @yel@<friends>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else {
-			this.getSurface().drawString("Block private messages: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow private messages: @red@<off>", baseX + 3, y, 0xFFFFFF, 1);
 		}
 
 		// if global chat enabled, block global friend as only one should be toggled on at a time
 		if (S_WANT_GLOBAL_FRIEND && !S_WANT_GLOBAL_CHAT) {
 			y += 15;
 			if (!C_BLOCK_GLOBAL_FRIEND) {
-				this.getSurface().drawString("Block global messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Allow global messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 			} else {
-				this.getSurface().drawString("Block global messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Allow global messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 			}
 		} else if (S_WANT_GLOBAL_CHAT && !S_WANT_GLOBAL_FRIEND) {
 			y += 15;
 			if (this.settingsBlockGlobal == 1) {
-				this.getSurface().drawString("Block global messages: @red@None", 3 + baseX, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Hide global messages: @red@None", 3 + baseX, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockGlobal == 2) {
-				this.getSurface().drawString("Block global messages: @gre@All", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Hide global messages: @gre@All", baseX + 3, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockGlobal == 3) {
-				this.getSurface().drawString("Block global messages: @or1@Pking", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Hide global messages: @or1@Pking", baseX + 3, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockGlobal == 4) {
-				this.getSurface().drawString("Block global messages: @gr1@General", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Hide global messages: @gr1@General", baseX + 3, y, 0xFFFFFF, 1);
 			}
 		}
 
 		// block trade
 		y += 15;
 		if (this.settingsBlockTrade == 2) {
-			this.getSurface().drawString("Block trade requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow trade requests: @red@<off>", baseX + 3, y, 0xFFFFFF, 1);
 		} else if (this.settingsBlockTrade == 1) {
-			this.getSurface().drawString("Block trade requests: @yel@<others>", baseX + 3, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow trade requests: @yel@<friends>", baseX + 3, y, 0xFFFFFF, 1);
 		} else {
-			this.getSurface().drawString("Block trade requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow trade requests: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
 
 		// block duel
 		y += 15;
 		if (wantMembers()) {
 			if (this.settingsBlockDuel == 2) {
-				this.getSurface().drawString("Block duel requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Allow duel requests: @red@<off>", baseX + 3, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockDuel == 1) {
-				this.getSurface().drawString("Block duel requests: @yel@<others>", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Allow duel requests: @yel@<friends>", baseX + 3, y, 0xFFFFFF, 1);
 			} else {
-				this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Allow duel requests: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 			}
 		}
 
@@ -9862,42 +9862,42 @@ public final class mudclient implements Runnable {
 		// block chat toggle
 		y += 15;
 		if (this.settingsBlockChat == 2) {
-			this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow chat messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else if (this.settingsBlockChat == 1) {
-			this.getSurface().drawString("Block chat messages: @yel@<others>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow chat messages: @yel@<friends>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else {
-			this.getSurface().drawString("Block chat messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow chat messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
 
 		// block private toggle
 		y += 15;
 		if (this.settingsBlockPrivate == 0) {
-			this.getSurface().drawString("Block private messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow private messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else if (this.settingsBlockPrivate == 1) {
-			this.getSurface().drawString("Block private messages: @yel@<others>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow private messages: @yel@<friends>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else {
-			this.getSurface().drawString("Block private messages: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow private messages: @red@<off>", baseX + 3, y, 0xFFFFFF, 1);
 		}
 
 		// block trade toggle
 		y += 15;
 		if (this.settingsBlockTrade == 2) {
-			this.getSurface().drawString("Block trade requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow trade requests: @red@<off>", baseX + 3, y, 0xFFFFFF, 1);
 		} else if (this.settingsBlockTrade == 1) {
-			this.getSurface().drawString("Block trade requests: @yel@<others>", baseX + 3, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow trade requests: @yel@<friends>", baseX + 3, y, 0xFFFFFF, 1);
 		} else {
-			this.getSurface().drawString("Block trade requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow trade requests: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
 
 		// block duel toggle
 		y += 15;
 		if (wantMembers()) {
 			if (this.settingsBlockDuel == 2) {
-				this.getSurface().drawString("Block duel requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Allow duel requests: @red@<off>", baseX + 3, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockDuel == 1) {
-				this.getSurface().drawString("Block duel requests: @yel@<others>", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Allow duel requests: @yel@<friends>", baseX + 3, y, 0xFFFFFF, 1);
 			} else {
-				this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Allow duel requests: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 			}
 		}
 
