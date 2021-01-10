@@ -103,15 +103,16 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 		int random = DataConversions.random(1, 100);
 		Item selectedLoot = null;
+		int cummChance = 0;
 		for (LootItem loot : stall.lootTable) {
-			if (loot.getChance() >= random) {
+			if (cummChance + loot.getChance() >= random) {
 				selectedLoot = new Item(loot.getId(), loot.getAmount());
 				break;
 			}
+			cummChance += loot.getChance();
 		}
 		if (selectedLoot == null) {
 			selectedLoot = new Item(stall.lootTable.get(0).getId(), stall.lootTable.get(0).getAmount());
-			return;
 		}
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 2

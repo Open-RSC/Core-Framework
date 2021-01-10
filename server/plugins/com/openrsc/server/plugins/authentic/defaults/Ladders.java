@@ -199,12 +199,12 @@ public class Ladders {
 				if (player.inCombat()) {
 					return;
 				}
-				int[] coords = coordModifier(player, true, obj);
-				player.teleport(coords[0], coords[1], false);
-				player.message(
-					"You " + command.replace("-", " ") + " the "
-						+ obj.getGameObjectDef().getName().toLowerCase());
 			}
+			int[] coords = coordModifier(player, true, obj);
+			player.teleport(coords[0], coords[1], false);
+			player.message(
+				"You " + command.replace("-", " ") + " the "
+					+ obj.getGameObjectDef().getName().toLowerCase());
 		} else if (obj.getID() == 249 && obj.getX() == 98 && obj.getY() == 3537) { // lost city (Zanaris) ladder
 			Npc ladderAttendant = player.getWorld().getNpc(NpcId.FAIRY_LADDER_ATTENDANT.id(), 99, 99, 3537, 3537);
 			if (ladderAttendant != null) {
