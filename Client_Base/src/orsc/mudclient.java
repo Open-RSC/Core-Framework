@@ -8793,7 +8793,7 @@ public final class mudclient implements Runnable {
 		if (this.settingsBlockChat == 2) {
 			this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else if (this.settingsBlockChat == 1) {
-			this.getSurface().drawString("Block chat messages: @yel@<friends>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Block chat messages: @yel@<others>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else {
 			this.getSurface().drawString("Block chat messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
@@ -8803,7 +8803,7 @@ public final class mudclient implements Runnable {
 		if (this.settingsBlockPrivate == 0) {
 			this.getSurface().drawString("Block private messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else if (this.settingsBlockPrivate == 1) {
-			this.getSurface().drawString("Block private messages: @yel@<friends>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Block private messages: @yel@<others>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else {
 			this.getSurface().drawString("Block private messages: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
 		}
@@ -8834,7 +8834,7 @@ public final class mudclient implements Runnable {
 		if (this.settingsBlockTrade == 2) {
 			this.getSurface().drawString("Block trade requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
 		} else if (this.settingsBlockTrade == 1) {
-			this.getSurface().drawString("Block trade requests: @yel@<friends>", baseX + 3, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Block trade requests: @yel@<others>", baseX + 3, y, 0xFFFFFF, 1);
 		} else {
 			this.getSurface().drawString("Block trade requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
@@ -8845,7 +8845,7 @@ public final class mudclient implements Runnable {
 			if (this.settingsBlockDuel == 2) {
 				this.getSurface().drawString("Block duel requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockDuel == 1) {
-				this.getSurface().drawString("Block duel requests: @yel@<friends>", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Block duel requests: @yel@<others>", baseX + 3, y, 0xFFFFFF, 1);
 			} else {
 				this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 			}
@@ -9864,7 +9864,7 @@ public final class mudclient implements Runnable {
 		if (this.settingsBlockChat == 2) {
 			this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else if (this.settingsBlockChat == 1) {
-			this.getSurface().drawString("Block chat messages: @yel@<friends>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Block chat messages: @yel@<others>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else {
 			this.getSurface().drawString("Block chat messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
@@ -9874,7 +9874,7 @@ public final class mudclient implements Runnable {
 		if (this.settingsBlockPrivate == 0) {
 			this.getSurface().drawString("Block private messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else if (this.settingsBlockPrivate == 1) {
-			this.getSurface().drawString("Block private messages: @yel@<friends>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Block private messages: @yel@<others>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else {
 			this.getSurface().drawString("Block private messages: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
 		}
@@ -9884,7 +9884,7 @@ public final class mudclient implements Runnable {
 		if (this.settingsBlockTrade == 2) {
 			this.getSurface().drawString("Block trade requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
 		} else if (this.settingsBlockTrade == 1) {
-			this.getSurface().drawString("Block trade requests: @yel@<friends>", baseX + 3, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Block trade requests: @yel@<others>", baseX + 3, y, 0xFFFFFF, 1);
 		} else {
 			this.getSurface().drawString("Block trade requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
@@ -9895,7 +9895,7 @@ public final class mudclient implements Runnable {
 			if (this.settingsBlockDuel == 2) {
 				this.getSurface().drawString("Block duel requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockDuel == 1) {
-				this.getSurface().drawString("Block duel requests: @yel@<friends>", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Block duel requests: @yel@<others>", baseX + 3, y, 0xFFFFFF, 1);
 			} else {
 				this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 			}
