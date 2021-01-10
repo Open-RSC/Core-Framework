@@ -4,6 +4,7 @@ import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.PrivateMessage;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
@@ -52,10 +53,14 @@ public final class FriendHandler implements PacketHandler {
 			player.getSocial().addFriend(friend, 0, DataConversions.hashToUsername(friend));
 			ActionSender.sendFriendUpdate(player, friend);
 			if (affectedPlayer != null && affectedPlayer.loggedIn()) {
-				if (affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
+				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
+					== PlayerSettings.BlockingMode.All.id();
+				boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
+					== PlayerSettings.BlockingMode.None.id();
+				if (!blockAll && affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
 					ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash());
 					ActionSender.sendFriendUpdate(player, friend);
-				} else if (!affectedPlayer.getSettings().getPrivacySetting(1)) {
+				} else if (blockNone && !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
 					ActionSender.sendFriendUpdate(player, friend);
 				}
 			}
@@ -67,7 +72,9 @@ public final class FriendHandler implements PacketHandler {
 
 			player.getSocial().removeFriend(friend);
 			if (affectedPlayer != null && affectedPlayer.loggedIn()) {
-				if (player.getSettings().getPrivacySetting(1) && affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
+				boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingAuthenticClient())
+					== PlayerSettings.BlockingMode.All.id();
+				if (!blockAll && affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
 					ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash());
 				}
 			}

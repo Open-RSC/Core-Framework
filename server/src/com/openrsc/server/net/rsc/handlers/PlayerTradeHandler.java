@@ -86,9 +86,12 @@ public class PlayerTradeHandler implements PacketHandler {
 					player.getTrade().resetAll();
 					return;
 				}
-				if ((affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS)
-					&& !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()))
-					|| affectedPlayer.getSocial().isIgnoring(player.getUsernameHash())) {
+				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, affectedPlayer.isUsingAuthenticClient())
+					== PlayerSettings.BlockingMode.All.id();
+				boolean blockNonFriends = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, affectedPlayer.isUsingAuthenticClient())
+					== PlayerSettings.BlockingMode.NonFriends.id();
+				if ((blockAll || (blockNonFriends && !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()))
+					|| affectedPlayer.getSocial().isIgnoring(player.getUsernameHash())) && !player.isMod()) {
 					return;
 				}
 
@@ -153,7 +156,7 @@ public class PlayerTradeHandler implements PacketHandler {
 					player.getTrade().resetAll();
 					return;
 				}
-				
+
 				if (player.getTrade().isTradeAccepted()) {
 					player.getTrade().setTradeAccepted(false);
 					ActionSender.sendOwnTradeAcceptUpdate(player);

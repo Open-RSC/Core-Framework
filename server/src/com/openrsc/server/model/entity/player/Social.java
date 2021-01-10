@@ -95,7 +95,13 @@ public class Social {
 	}
 
 	public void alertOfLogin(Player player) {
-		if (friendList.containsKey(player.getUsernameHash()) && (!player.getSettings().getPrivacySetting(1) || player.getSocial().isFriendsWith(player.getUsernameHash()))) {
+		boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingAuthenticClient())
+			== PlayerSettings.BlockingMode.All.id();
+		boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingAuthenticClient())
+			== PlayerSettings.BlockingMode.None.id();
+		if (friendList.containsKey(player.getUsernameHash())
+			&& (blockNone
+			|| (player.getSocial().isFriendsWith(player.getUsernameHash())) && !blockAll)) {
 			ActionSender.sendFriendUpdate(this.player, player.getUsernameHash());
 		}
 	}

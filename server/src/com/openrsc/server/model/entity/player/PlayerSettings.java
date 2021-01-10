@@ -1,10 +1,12 @@
 package com.openrsc.server.model.entity.player;
 
 import com.openrsc.server.model.PlayerAppearance;
-import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.model.entity.npc.Npc;
+import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 public class PlayerSettings {
 
@@ -17,10 +19,17 @@ public class PlayerSettings {
 		GAME_SETTING_MOUSE_BUTTONS = 1,
 		GAME_SETTING_SOUND_EFFECTS = 2;
 
+	public static final String[] BLOCK_ALL_CACHES = {
+		"setting_block_all_chat",
+		"setting_block_all_private",
+		"setting_block_all_trade",
+		"setting_block_all_duel"
+	};
+
 	private HashMap<Long, Long> attackedBy = new HashMap<Long, Long>();
 	private HashMap<Integer, Long> attackedBy2 = new HashMap<Integer, Long>();
 
-	private boolean[] privacySettings = new boolean[4];
+	private byte[] privacySettings = new byte[4];
 	private boolean[] gameSettings = new boolean[3];
 
 	private PlayerAppearance appearance;
@@ -32,42 +41,51 @@ public class PlayerSettings {
 	}
 
 
-	public void setPrivacySetting(int i, boolean b) {
+	public void setPrivacySetting(int i, byte b) {
+		if (privacySettings[i] == b) {
+			return;
+		}
+		privacySettings[i] = b;
+		final boolean blockAll = b == 2;
+		if (!player.getCache().hasKey(BLOCK_ALL_CACHES[i])
+			|| player.getCache().getBoolean(BLOCK_ALL_CACHES[i]) != blockAll) {
+			player.getCache().store(BLOCK_ALL_CACHES[i], blockAll);
+		}
 		if (i == 1) {
-			if (privacySettings[1] && !b) {
-				for (Player pl : player.getWorld().getPlayers()) {
-					if (!player.getSocial().isFriendsWith(pl.getUsernameHash())
-						&& pl.getSocial().isFriendsWith(player.getUsernameHash())
-						&& pl.getIndex() != player.getIndex()) {
-						ActionSender.sendFriendUpdate(pl, player.getUsernameHash()
-						);
-					}
-				}
-			} else if (!privacySettings[1] && b) {
-				for (Player pl : player.getWorld().getPlayers()) {
-					if (!player.getSocial().isFriendsWith(pl.getUsernameHash())
-						&& pl.getSocial().isFriendsWith(player.getUsernameHash())
-						&& pl.getIndex() != player.getIndex()) {
-						ActionSender.sendFriendUpdate(pl, player.getUsernameHash()
-						);
-					}
+			for (Player pl : player.getWorld().getPlayers()) {
+				if (pl.getSocial().isFriendsWith(player.getUsernameHash())
+					&& pl.getIndex() != player.getIndex()) {
+					ActionSender.sendFriendUpdate(pl, player.getUsernameHash()
+					);
 				}
 			}
 		}
-		privacySettings[i] = b;
 	}
 
-	public boolean getPrivacySetting(int i) {
-		return privacySettings[i];
+	public byte getPrivacySetting(int i, boolean fromAuthentic) {
+		if (fromAuthentic) {
+			if (privacySettings[i] == 0) {
+				return (byte)BlockingMode.None.id();
+			} else {
+				if (player.getCache().hasKey(BLOCK_ALL_CACHES[i]) && player.getCache().getBoolean(BLOCK_ALL_CACHES[i])) {
+					return (byte)BlockingMode.All.id();
+				} else {
+					return (byte)BlockingMode.NonFriends.id();
+				}
+			}
+		} else {
+			return privacySettings[i];
+		}
 	}
 
-	public boolean[] getPrivacySettings() {
+	// These getter-setter aren't currently used
+	/*public byte[] getPrivacySettings() {
 		return privacySettings;
 	}
 
-	public void setPrivacySettings(boolean[] privacySettings) {
+	public void setPrivacySettings(byte[] privacySettings) {
 		this.privacySettings = privacySettings;
-	}
+	}*/
 
 	public boolean getGameSetting(int i) {
 		return gameSettings[i];
@@ -120,5 +138,102 @@ public class PlayerSettings {
 			return time;
 		}
 		return 0;
+	}
+
+	public void toggleBlockChat(Player player) {
+		boolean currentSetting;
+		String cacheName = BLOCK_ALL_CACHES[PRIVACY_BLOCK_CHAT_MESSAGES];
+		try {
+			currentSetting = player.getCache().getBoolean(cacheName);
+		} catch (NoSuchElementException e) {
+			currentSetting = privacySettings[PRIVACY_BLOCK_CHAT_MESSAGES] == BlockingMode.All.id();
+		}
+
+		if (currentSetting) {
+			player.playerServerMessage(MessageType.QUEST, "You will now see all chat messages");
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You will no longer see any chat messages from players");
+		}
+		currentSetting = !currentSetting;
+		setPrivacySetting(PRIVACY_BLOCK_CHAT_MESSAGES, (byte)(currentSetting ? BlockingMode.All.id() : BlockingMode.None.id()));
+		ActionSender.sendPrivacySettings(player);
+	}
+
+	public void toggleBlockPrivate(Player player) {
+		boolean currentSetting;
+		String cacheName = BLOCK_ALL_CACHES[PRIVACY_BLOCK_PRIVATE_MESSAGES];
+		try {
+			currentSetting = player.getCache().getBoolean(cacheName);
+		} catch (NoSuchElementException e) {
+			currentSetting = privacySettings[PRIVACY_BLOCK_PRIVATE_MESSAGES] == BlockingMode.All.id();
+		}
+
+		if (currentSetting) {
+			player.playerServerMessage(MessageType.QUEST, "You will now see all private messages");
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You will no longer see any private messages from players");
+		}
+		currentSetting = !currentSetting;
+		setPrivacySetting(PRIVACY_BLOCK_PRIVATE_MESSAGES, (byte)(currentSetting ? BlockingMode.All.id() : BlockingMode.None.id()));
+		ActionSender.sendPrivacySettings(player);
+	}
+
+	public void toggleBlockTrade(Player player) {
+		boolean currentSetting;
+		String cacheName = BLOCK_ALL_CACHES[PRIVACY_BLOCK_TRADE_REQUESTS];
+		try {
+			currentSetting = player.getCache().getBoolean(cacheName);
+		} catch (NoSuchElementException e) {
+			currentSetting = privacySettings[PRIVACY_BLOCK_TRADE_REQUESTS] == BlockingMode.All.id();
+		}
+
+		if (currentSetting) {
+			player.playerServerMessage(MessageType.QUEST, "You will now receive trade requests");
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You will no longer receive trade requests from players");
+		}
+		currentSetting = !currentSetting;
+		setPrivacySetting(PRIVACY_BLOCK_TRADE_REQUESTS, (byte)(currentSetting ? BlockingMode.All.id() : BlockingMode.None.id()));
+		ActionSender.sendPrivacySettings(player);
+	}
+
+	public void toggleBlockDuel(Player player) {
+		if (!player.getWorld().getServer().getConfig().MEMBER_WORLD) {
+			player.playerServerMessage(MessageType.QUEST, "Please log into a members world to do this toggle");
+			return;
+		}
+
+		boolean currentSetting;
+		String cacheName = BLOCK_ALL_CACHES[PRIVACY_BLOCK_DUEL_REQUESTS];
+		try {
+			currentSetting = player.getCache().getBoolean(cacheName);
+		} catch (NoSuchElementException e) {
+			currentSetting = privacySettings[PRIVACY_BLOCK_DUEL_REQUESTS] == BlockingMode.All.id();
+		}
+
+		if (currentSetting) {
+			player.playerServerMessage(MessageType.QUEST, "You will now receive duel requests");
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "You will no longer receive duel requests from players");
+		}
+		currentSetting = !currentSetting;
+		setPrivacySetting(PRIVACY_BLOCK_DUEL_REQUESTS, (byte)(currentSetting ? BlockingMode.All.id() : BlockingMode.None.id()));
+		ActionSender.sendPrivacySettings(player);
+	}
+
+	public enum BlockingMode {
+		None(0),
+		NonFriends(1),
+		All(2);
+
+		private int mode;
+
+		BlockingMode(int mode) {
+			this.mode = mode;
+		}
+
+		public int id() {
+			return this.mode;
+		}
 	}
 }

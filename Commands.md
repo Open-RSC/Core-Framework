@@ -523,3 +523,18 @@ Regular Player Commands
 - commands
   - Usage: `::commands`
   - Shows a list of the Regular Player commands
+- toggleglobalchat
+  - Usage: `::toggleglobalchat`
+  - Toggles seeing global chat received via Global$ friend 
+- toggleblockchat
+  - Usage: `::toggleblockchat`
+  - Toggles the block of seeing all chat messages, including from friends
+- toggleblockprivate
+  - Usage: `::toggleblockprivate`
+  - Toggles the block of seeing all private messages, including from friends
+- toggleblocktrade
+  - Usage: `::toggleblocktrade`
+  - Toggles the block of receiving all trade requests, including from friends
+- toggleblockduel
+  - Usage: `::toggleblockduel`
+  - Toggles the block of receiving all duel requests, including from friends

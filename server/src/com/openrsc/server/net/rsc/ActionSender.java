@@ -442,6 +442,8 @@ public class ActionSender {
 
 	/**
 	 * Updates a friends login status
+	 * @param player - Our player
+	 * @param usernameHash - the friend player
 	 */
 	public static void sendFriendUpdate(Player player, long usernameHash) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
@@ -454,15 +456,16 @@ public class ActionSender {
 			username = "Global$";
 		}
 
-		else if (
-			player.getWorld().getPlayer(usernameHash) != null &&
-				player.getWorld().getPlayer(usernameHash).isLoggedIn() &&
-				(!player.getWorld().getPlayer(usernameHash).getSettings().getPrivacySetting(1) ||
-					player.getWorld().getPlayer(usernameHash).getSocial().isFriendsWith(player.getUsernameHash()) ||
-					player.isMod()
-				)
-		) {
-			onlineStatus |= 4 | 2; // 4 for is online and 2 for on same world. 1 would be if the User's name changed from original
+		else if (player.getWorld().getPlayer(usernameHash) != null &&
+				player.getWorld().getPlayer(usernameHash).isLoggedIn()) {
+			Player otherPlayer = player.getWorld().getPlayer(usernameHash);
+			boolean blockAll = otherPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, otherPlayer.isUsingAuthenticClient())
+				== PlayerSettings.BlockingMode.All.id();
+			boolean blockNone = otherPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, otherPlayer.isUsingAuthenticClient())
+				== PlayerSettings.BlockingMode.None.id();
+			if (blockNone || (otherPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || player.isMod()) {
+				onlineStatus |= 4 | 2; // 4 for is online and 2 for on same world. 1 would be if the User's name changed from original
+			}
 		}
 
 		s.setID(Opcode.SEND_FRIEND_UPDATE.opcode);
@@ -1130,17 +1133,32 @@ public class ActionSender {
 		player.write(s.toPacket());
 	}
 
-	private static void sendPrivacySettings(Player player) {
+	public static void sendPrivacySettings(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_PRIVACY_SETTINGS.opcode);
-		s.writeByte(
-			(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES) ? 1 : 0));
-		s.writeByte(
-			(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES) ? 1 : 0));
-		s.writeByte(
-			(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS) ? 1 : 0));
-		s.writeByte(
-			(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS) ? 1 : 0));
+		if (player.isUsingAuthenticClient()) {
+			s.writeByte(
+				(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, true)
+					!= PlayerSettings.BlockingMode.None.id() ? 1 : 0));
+			s.writeByte(
+				(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, true)
+					!= PlayerSettings.BlockingMode.None.id() ? 1 : 0));
+			s.writeByte(
+				(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS,true)
+					!= PlayerSettings.BlockingMode.None.id() ? 1 : 0));
+			s.writeByte(
+				(byte) (player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, true)
+					!= PlayerSettings.BlockingMode.None.id() ? 1 : 0));
+		} else {
+			s.writeByte(
+				(player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, false)));
+			s.writeByte(
+				(player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, false)));
+			s.writeByte(
+				(player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, false)));
+			s.writeByte(
+				(player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, false)));
+		}
 		player.write(s.toPacket());
 	}
 

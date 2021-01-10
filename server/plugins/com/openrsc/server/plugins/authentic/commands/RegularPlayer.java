@@ -11,6 +11,7 @@ import com.openrsc.server.external.NPCDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
@@ -26,7 +27,6 @@ import java.util.Map;
 import java.util.Random;
 
 import static com.openrsc.server.plugins.Functions.config;
-import static com.openrsc.server.plugins.Functions.delay;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isPhoenixGang;
 
@@ -117,6 +117,14 @@ public final class RegularPlayer implements CommandTrigger {
 			command.equalsIgnoreCase("checkholidayevent") ||
 		    command.equalsIgnoreCase("drop")) {
 			checkHolidayDrop(player);
+		} else if (command.equalsIgnoreCase("toggleblockchat")) {
+			player.getSettings().toggleBlockChat(player);
+		} else if (command.equalsIgnoreCase("toggleblockprivate")) {
+			player.getSettings().toggleBlockPrivate(player);
+		} else if (command.equalsIgnoreCase("toggleblocktrade")) {
+			player.getSettings().toggleBlockTrade(player);
+		} else if (command.equalsIgnoreCase("toggleblockduel")) {
+			player.getSettings().toggleBlockDuel(player);
 		}
 	}
 
@@ -485,8 +493,8 @@ public final class RegularPlayer implements CommandTrigger {
 		}
 		else {
 			for (Player targetPlayer : player.getWorld().getPlayers()) {
-				boolean privacy = targetPlayer.getSettings().getPrivacySetting(1);
-				if (targetPlayer.isDefaultUser() && !privacy) {
+				byte privacy = targetPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, targetPlayer.isUsingAuthenticClient());
+				if (targetPlayer.isDefaultUser() && privacy == PlayerSettings.BlockingMode.None.id()) {
 					players.add(targetPlayer);
 					locations.add(""); // No locations for regular players.
 					online++;
