@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `players`
     `block_private`     tinyint(1) UNSIGNED          DEFAULT 0,
     `block_trade`       tinyint(1) UNSIGNED          DEFAULT 0,
     `block_duel`        tinyint(1) UNSIGNED          DEFAULT 0,
-    `cameraauto`        tinyint(1) UNSIGNED          DEFAULT 0,
+    `cameraauto`        tinyint(1) UNSIGNED          DEFAULT 1,
     `onemouse`          tinyint(1) UNSIGNED          DEFAULT 0,
     `soundoff`          tinyint(1) UNSIGNED          DEFAULT 0,
     `haircolour`        int(5) UNSIGNED              DEFAULT 2,
@@ -243,6 +243,9 @@ CREATE TABLE IF NOT EXISTS `players`
     KEY `banned` (`banned`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
+  
+ALTER TABLE `players`
+ALTER `cameraauto` SET DEFAULT 1;
 
 DROP TABLE IF EXISTS `player_cache`;
 CREATE TABLE IF NOT EXISTS `player_cache`
