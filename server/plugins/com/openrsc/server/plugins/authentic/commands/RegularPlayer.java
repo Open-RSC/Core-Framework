@@ -778,7 +778,7 @@ public final class RegularPlayer implements CommandTrigger {
 			ActionSender.sendBox(player, ""
 				+ "@yel@Commands available: %"
 				+ "@lre@Type :: before you enter your command, see the list below. %"
-				+ " %" // Uncomment when this command is refactored
+				+ " %" // this adds a line of whitespace for readability
 				+ "@whi@::gameinfo - shows player and server information %"
 				+ "@whi@::online - shows players currently online %"
 				+ "@whi@::uniqueonline - shows number of unique IPs logged in %"
@@ -804,7 +804,7 @@ public final class RegularPlayer implements CommandTrigger {
 			ActionSender.sendBox(player, ""
 				+ "@yel@Commands available: %"
 				+ "@lre@Type :: before you enter your command, see the list below. %"
-				+ " %" // Uncomment when this command is refactored
+				+ " %" // this adds a line of whitespace for readability
 				+ "@whi@::time - shows the current server time %"
 				+ "@whi@::toggleglobalchat - toggle blocking Global$ messages %"
 				+ "@whi@::toggleblockchat - toggle blocking all chat messages %"
