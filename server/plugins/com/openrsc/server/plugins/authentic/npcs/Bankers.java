@@ -1,7 +1,6 @@
 package com.openrsc.server.plugins.authentic.npcs;
 
 import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -149,7 +148,8 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 	@Override
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
 		return (player.isUsingAuthenticClient() && inArray(npc.getID(), BANKERS) && item.getNoted())
-			|| (inArray(npc.getID(), BANKERS) && player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK);
+			|| (inArray(npc.getID(), BANKERS) && player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK
+			&& !item.getDef(player.getWorld()).getName().toLowerCase().endsWith("cracker"));
 	}
 
 	@Override
