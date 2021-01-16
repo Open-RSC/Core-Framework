@@ -184,7 +184,10 @@ public final class InterfaceShopHandler implements PacketHandler {
 		int totalMoney = 0;
 		int totalSold = 0;
 
-		amount = Math.min(amount, player.getCarriedItems().getInventory().countId(catalogID, Optional.empty()));
+		amount = Math.min(
+			Math.min(amount,
+			player.getCarriedItems().getInventory().countId(catalogID, Optional.empty())),
+			(Short.MAX_VALUE - Short.MIN_VALUE) - shop.currentStock(new Item(catalogID)));
 
 		if (amount <= 0) {
 			player.message("You don't have that many items");

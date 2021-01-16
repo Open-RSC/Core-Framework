@@ -8,6 +8,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.util.rsc.CertUtil;
 
 public class GroundItemTake implements PacketHandler {
 
@@ -71,6 +72,12 @@ public class GroundItemTake implements PacketHandler {
 					&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
 					|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
 					getPlayer().message("You're an Iron Man, so you can't take items that other players have dropped.");
+					return;
+				}
+
+				if (CertUtil.isCert(item.getID()) && player.getCertOptOut()
+					&& item.getOwnerUsernameHash() != 0 && !item.belongsTo(getPlayer())) {
+					getPlayer().message("You have opted out of taking certs that other players have dropped.");
 					return;
 				}
 

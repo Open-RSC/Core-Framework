@@ -11,6 +11,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
 import com.openrsc.server.database.impl.mysql.queries.logging.TradeLog;
+import com.openrsc.server.util.rsc.CertUtil;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -189,6 +190,16 @@ public class PlayerTradeHandler implements PacketHandler {
 						continue;
 					}
 					if (tItem.getDef(player.getWorld()).isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
+						player.setRequiresOfferUpdate(true);
+						continue;
+					}
+					if (CertUtil.isCert(tItem.getCatalogId()) && (player.getCertOptOut() || affectedPlayer.getCertOptOut())) {
+						if (player.getCertOptOut()) {
+							player.message("You have opted out of trading certs with other players");
+						}
+						if (affectedPlayer.getCertOptOut()) {
+							player.message("The other player has opted out of trading certs with players");
+						}
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}

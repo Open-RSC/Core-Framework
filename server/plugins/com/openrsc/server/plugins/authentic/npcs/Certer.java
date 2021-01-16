@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.ArrayList;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Certer implements TalkNpcTrigger {
@@ -45,14 +47,13 @@ public class Certer implements TalkNpcTrigger {
 
 		// First Certer Menu
 		int firstType = firstMenu(certerDef, ending, player, n);
-		switch(firstType) {
-			case 0:
-				say(player, n, "I have some certificates to trade in");
-				break;
-			case 1:
-				say(player, n, "I have some " + certerDef.getType() + ending + " to trade in");
-				break;
-			//case 2 handled separately
+		if (firstType == 0) {
+			say(player, n, "I have some certificates to trade in");
+		} else if (firstType == 1 && !player.getCertOptOut()) {
+			say(player, n, "I have some " + certerDef.getType() + ending + " to trade in");
+		} else if (firstType == 1 && player.getCertOptOut()) {
+			// convert to an "equivalent" option 2 for the informational menu, handled separately
+			++firstType;
 		}
 
 		int secondType = -1;
@@ -78,9 +79,16 @@ public class Certer implements TalkNpcTrigger {
 	}
 
 	private int firstMenu(CerterDef certerDef, String ending, Player player, Npc n) {
-		return multi(player, n, false, "I have some certificates to trade in",
-				"I have some " + certerDef.getType() + ending + " to trade in",
-				"What is a " + certerDef.getType() + " exchange stall?");
+		ArrayList<String> options = new ArrayList<>();
+		options.add("I have some certificates to trade in");
+		if (!player.getCertOptOut()) {
+			options.add("I have some " + certerDef.getType() + ending + " to trade in");
+		}
+		options.add("What is a " + certerDef.getType() + " exchange stall?");
+		String[] finalOptions = new String[options.size()];
+
+		return multi(player, n, false, //do not send over
+			options.toArray(finalOptions));
 	}
 
 	private int secondMenu(CerterDef certerDef, String ending, Player player, Npc n, int option) {

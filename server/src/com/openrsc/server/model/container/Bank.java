@@ -636,23 +636,6 @@ public class Bank {
 		}
 	}
 
-	private static boolean isCert(int itemID) {
-		int[] certIds = {
-			/* Ores **/
-			517, 518, 519, 520, 521,
-			/* Bars **/
-			528, 529, 530, 531, 532,
-			/* Fish **/
-			533, 534, 535, 536, 628, 629, 630, 631,
-			/* Logs **/
-			711, 712, 713,
-			/* Misc **/
-			1270, 1271, 1272, 1273, 1274, 1275
-		};
-
-		return DataConversions.inArray(certIds, itemID);
-	}
-
 	private static int uncertedID(int itemID) {
 		if (itemID == ItemId.IRON_ORE_CERTIFICATE.id()) {
 			return ItemId.IRON_ORE.id();

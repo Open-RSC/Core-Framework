@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Random;
 
 import static com.openrsc.server.plugins.Functions.config;
+import static com.openrsc.server.plugins.Functions.multi;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isBlackArmGang;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isPhoenixGang;
 
@@ -95,7 +96,7 @@ public final class RegularPlayer implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("d")) {
 			sendMessageDiscord(player, args);
 		} else if (command.equalsIgnoreCase("commands")) {
-			queryCommands(player);
+			queryCommands(player, 0);
 		} else if (command.equalsIgnoreCase("b") && config().RIGHT_CLICK_BANK) {
 			if (!player.getQolOptOut()) {
 				if (player.getLocation().isInBank()) {
@@ -110,6 +111,10 @@ public final class RegularPlayer implements CommandTrigger {
 			handleQOLOptOut(player);
 		} else if (command.equalsIgnoreCase("qoloptoutconfirm")) {
 			confirmQOLOptOut(player);
+		} else if (command.equalsIgnoreCase("certoptout")) {
+			handleCertOptOut(player);
+		} else if (command.equalsIgnoreCase("certoptoutconfirm")) {
+			confirmCertOptOut(player);
 		} else if (command.equalsIgnoreCase("toggleglobalchat")) {
 			player.getSocial().toggleGlobalFriend(player);
 		} else if (command.equalsIgnoreCase("getholidaydrop") ||
@@ -593,6 +598,52 @@ public final class RegularPlayer implements CommandTrigger {
 			|| config().WANT_BETTER_JEWELRY_CRAFTING;
 	}
 
+	private void confirmCertOptOut(Player player) {
+		if (player.getCertOptOut()) {
+			player.playerServerMessage(MessageType.QUEST,"You are already opted out of the traditional 'cert' system");
+			return;
+		}
+
+		if (player.getCertOptOutWarned()) {
+			player.setCertOptOut();
+			player.playerServerMessage(MessageType.QUEST, "@ran@Congratulations! @whi@You have successfully opted out of the traditional 'cert' system");
+		} else {
+			player.playerServerMessage(MessageType.QUEST, "Please read the warning first with @lre@::certoptout@whi@.");
+		}
+	}
+
+	private void handleCertOptOut(Player player) {
+		StringBuilder certExplanation = new StringBuilder("@lre@Traditional 'Cert' System Opt-Out%");
+
+		if (player.getCertOptOut()) {
+			certExplanation.append(" %@red@ Your account has been opted out of the traditional 'cert' system!% %");
+		}
+		certExplanation.append("@yel@When opted out of the traditional 'cert' the following applies:%");
+
+		certExplanation.append(String.format("@lre@0) @whi@Converting items to certificates is disabled.%%"));
+
+		certExplanation.append(String.format("@lre@1) @whi@Trading certificates is disabled.%%"));
+
+		certExplanation.append(String.format("@lre@2) @whi@Picking up certificates dropped by other players is disabled.%%"));
+
+
+		certExplanation.append(" %@red@");
+		certExplanation.append(player.getCertOptOut() ? "Notice:" : "Warning:");
+		certExplanation.append("@lre@ you will not be able to opt back in%@lre@to the traditional 'cert' system without manual intervention ");
+		certExplanation.append("from an @or1@administrator@lre@, who may or may not fulfil your request%@lre@to opt back in to 'cert' system.% %");
+		if (!player.getCertOptOut()) {
+			certExplanation.append("@whi@If you have read this warning and still wish to opt out,% type @lre@::certoptoutconfirm @whi@to opt out.% %");
+			certExplanation.append("@red@If you don't wish to opt out,%@red@ you should @dre@log out now@red@ to avoid accidentally opting out.");
+		}
+
+		ActionSender.sendBox(player, certExplanation.toString(), true);
+		if (player.getCertOptOut()) {
+			player.playerServerMessage(MessageType.QUEST, "@ran@Congratulations! @whi@Your account is already opted out of the traditional 'cert' system.");
+		} else {
+			player.setCertOptOutWarned(true);
+		}
+	}
+
 	private void checkHolidayDrop(Player player) {
 		boolean foundEvent = false;
 		StringBuilder eventDetails = new StringBuilder();
@@ -722,28 +773,46 @@ public final class RegularPlayer implements CommandTrigger {
 			player.message("Discord bot disabled");
 	}
 
-	private void queryCommands(Player player) {
-		ActionSender.sendBox(player, ""
-			+ "@yel@Commands available: %"
-			+ "@lre@Type :: before you enter your command, see the list below. %"
-			// + " %" // Uncomment when this command is refactored
-			+ "@whi@::gameinfo - shows player and server information %"
-			+ "@whi@::online - shows players currently online %"
-			+ "@whi@::uniqueonline - shows number of unique IPs logged in %"
-			+ "@whi@::onlinelist - shows players currently online in a list %"
-			+ "@whi@::g <message> - to talk in @gr1@general @whi@global chat channel %"
-			+ "@whi@::p <message> - to talk in @or1@pking @whi@global chat channel %"
-			+ "@whi@::c <message> - talk in clan chat %"
-			+ "@whi@::claninvite <name> - invite player to clan %"
-			+ "@whi@::clankick <name> - kick player from clan %"
-			+ "@whi@::clanaccept - accept clan invitation %"
-			+ "@whi@::gang - shows if you are 'Phoenix' or 'Black arm' gang %"
-			+ "@whi@::groups - shows available ranks on the server %"
-			+ "@whi@::wilderness - shows the wilderness activity %"
-			+ "@whi@::time - shows the current server time %"
-			+ "@whi@::event - to enter an ongoing server event %"
-			+ "@whi@::kills <name(optional)> - shows kill counts of npcs %"
-			+ "@whi@::qoloptout - opts you out of Quality of Life features", true
-		);
+	private void queryCommands(Player player, int page) {
+		if (page == 0) {
+			ActionSender.sendBox(player, ""
+				+ "@yel@Commands available: %"
+				+ "@lre@Type :: before you enter your command, see the list below. %"
+				// + " %" // Uncomment when this command is refactored
+				+ "@whi@::gameinfo - shows player and server information %"
+				+ "@whi@::online - shows players currently online %"
+				+ "@whi@::uniqueonline - shows number of unique IPs logged in %"
+				+ "@whi@::onlinelist - shows players currently online in a list %"
+				+ "@whi@::g <message> - to talk in @gr1@general @whi@global chat channel %"
+				+ "@whi@::p <message> - to talk in @or1@pking @whi@global chat channel %"
+				+ "@whi@::c <message> - talk in clan chat %"
+				+ "@whi@::claninvite <name> - invite player to clan %"
+				+ "@whi@::clankick <name> - kick player from clan %"
+				+ "@whi@::clanaccept - accept clan invitation %"
+				+ "@whi@::gang - shows if you are 'Phoenix' or 'Black arm' gang %"
+				+ "@whi@::groups - shows available ranks on the server %"
+				+ "@whi@::wilderness - shows the wilderness activity %"
+				+ "@whi@::event - to enter an ongoing server event %"
+				+ "@whi@::kills <name(optional)> - shows kill counts of npcs %"
+				+ "@whi@::qoloptout - opts you out of Quality of Life features %"
+				+ "@whi@::certoptout - opts you out of the traditional 'cert' system %",true
+			);
+			int cont = multi(player, "continue reading", "finished reading");
+			if (cont == 0) {
+				queryCommands(player, 1);
+			}
+		} else if (page == 1) {
+			ActionSender.sendBox(player, ""
+				+ "@yel@Commands available: %"
+				+ "@lre@Type :: before you enter your command, see the list below. %"
+				// + " %" // Uncomment when this command is refactored
+				+ "@whi@::time - shows the current server time %"
+				+ "@whi@::toggleglobalchat - toggle blocking Global$ messages %"
+				+ "@whi@::toggleblockchat - toggle blocking all chat messages %"
+				+ "@whi@::toggleblockprivate - toggle blocking all private messages %"
+				+ "@whi@::toggleblocktrade - toggle blocking all trade requests %"
+				+ "@whi@::toggleblockduel - toggle blocking all duel requests %",true
+			);
+		}
 	}
 }

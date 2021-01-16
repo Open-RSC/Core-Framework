@@ -1,7 +1,7 @@
 package com.openrsc.server.model.entity.player;
 
-import com.openrsc.server.constants.*;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -40,7 +40,6 @@ import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
-import com.openrsc.server.util.rsc.PrerenderedSleepword;
 import io.netty.channel.Channel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -122,6 +121,7 @@ public final class Player extends Mob {
 	public int preferredIcon = -1;
 	private boolean denyAllLogoutRequests = false;
 	private boolean qolOptOutWarned = false;
+	private boolean certOptOutWarned = false;
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -3306,6 +3306,20 @@ public final class Player extends Mob {
 	}
 	public boolean getQolOptOut() {
 		return getCache().hasKey("qol_optout");
+	}
+
+	public boolean getCertOptOutWarned() {
+		return this.certOptOutWarned;
+	}
+	public void setCertOptOutWarned(boolean warned) {
+		this.certOptOutWarned = warned;
+	}
+
+	public void setCertOptOut() {
+		getCache().store("cert_optout", true);
+	}
+	public boolean getCertOptOut() {
+		return getCache().hasKey("cert_optout");
 	}
 
 }

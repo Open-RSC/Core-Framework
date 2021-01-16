@@ -5508,9 +5508,9 @@ public final class mudclient implements Runnable {
 							if (str.length() > 10) {
 								str = str.substring(str.length() - 10);
 							}
-							int var4 = Integer.MAX_VALUE;
+							int var4 = Short.MAX_VALUE - Short.MIN_VALUE;
 							long intOverflowCheck = Long.parseLong(str);
-							if (intOverflowCheck < Integer.MAX_VALUE) {
+							if (intOverflowCheck < Short.MAX_VALUE - Short.MIN_VALUE) {
 								var4 = Integer.parseInt(str);
 							}
 							this.packetHandler.getClientStream().newPacket(236);
@@ -5533,9 +5533,9 @@ public final class mudclient implements Runnable {
 							if (str.length() > 10) {
 								str = str.substring(str.length() - 10);
 							}
-							int var4 = Integer.MAX_VALUE;
+							int var4 = Short.MAX_VALUE - Short.MIN_VALUE;
 							long intOverflowCheck = Long.parseLong(str);
-							if (intOverflowCheck < Integer.MAX_VALUE) {
+							if (intOverflowCheck < Short.MAX_VALUE - Short.MIN_VALUE) {
 								var4 = Integer.parseInt(str);
 							}
 							this.packetHandler.getClientStream().newPacket(221);

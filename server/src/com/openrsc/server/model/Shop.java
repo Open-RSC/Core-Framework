@@ -162,8 +162,13 @@ public final class Shop {
 		}
 	}
 
+	public int currentStock(Item item) {
+		return getItemCount(item.getCatalogId());
+	}
+
 	public boolean canHoldItem(Item item) {
-		return (40 - shopItems.size()) >= (shopItems.contains(item) ? 0 : 1);
+		return (40 - shopItems.size()) >= (shopItems.contains(item) ? 0 : 1)
+			&& currentStock(item) < (Short.MAX_VALUE - Short.MIN_VALUE);
 	}
 
 	public int getItemBuyPrice(int itemID, int defaultPrice, int totalBought) {
