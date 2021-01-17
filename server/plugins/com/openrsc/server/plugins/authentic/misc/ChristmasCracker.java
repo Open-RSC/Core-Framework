@@ -109,7 +109,7 @@ public class ChristmasCracker implements UsePlayerTrigger, UseNpcTrigger {
 				say(player, npc, playerDialogue);
 				npcsay(player, npc, "very good, let me help you out with the cracker");
 				thinkbubble(item);
-				player.playerServerMessage(MessageType.QUEST, "The banker pulls on you the christmas cracker");
+				player.playerServerMessage(MessageType.QUEST, "The banker pulls the christmas cracker on you");
 
 				delay();
 
