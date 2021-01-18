@@ -80,6 +80,7 @@ public final class SleepHandler implements PacketHandler {
 	}
 
 	private void handleExpToggle(Player player) {
+		if (player.getLocation().onTutorialIsland()) return;
 		player.toggleFreezeXp();
 		ActionSender.sendExperienceToggle(player);
 		if (player.isExperienceFrozen())
