@@ -109,6 +109,7 @@ public class Config {
 	public static boolean S_EXPERIENCE_DROPS_TOGGLE = false;
 	public static boolean S_ITEMS_ON_DEATH_MENU = false;
 	public static boolean S_SHOW_ROOF_TOGGLE = false;
+	public static boolean S_SHOW_TUTORIAL_SKIP_OPTION = true;
 	public static boolean S_WANT_GLOBAL_CHAT = false;
 	public static boolean S_WANT_GLOBAL_FRIEND = false;
 	public static boolean S_WANT_HIDE_IP = false;

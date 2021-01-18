@@ -94,6 +94,7 @@ public class ServerConfiguration {
 	public boolean SHOW_ROOF_TOGGLE;
 	public boolean WANT_HIDE_IP;
 	public boolean WANT_REMEMBER;
+	public boolean SHOW_TUTORIAL_SKIP_OPTION;
 	public boolean WANT_GLOBAL_CHAT;
 	public boolean WANT_GLOBAL_FRIEND;
 	public boolean WANT_SKILL_MENUS;
@@ -359,6 +360,7 @@ public class ServerConfiguration {
 		HIDE_LOGIN_BOX_TOGGLE = tryReadBool("hide_login_box_toggle").orElse(false);
 		BATCH_PROGRESSION = tryReadBool("batch_progression").orElse(false);
 		CUSTOM_IMPROVEMENTS = tryReadBool("custom_improvements").orElse(false);
+		SHOW_TUTORIAL_SKIP_OPTION = tryReadBool("show_tutorial_skip_option").orElse(false);
 		WANT_GLOBAL_CHAT = tryReadBool("want_global_chat").orElse(false);
 		WANT_GLOBAL_FRIEND = tryReadBool("want_global_friend").orElse(false);
 		WANT_EXPERIENCE_ELIXIRS = tryReadBool("want_experience_elixirs").orElse(false);

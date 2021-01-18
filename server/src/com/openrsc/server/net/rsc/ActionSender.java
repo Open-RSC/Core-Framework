@@ -659,61 +659,62 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().SHOW_ROOF_TOGGLE ? 1 : 0)); // 21
 		s.writeByte((byte) (server.getConfig().WANT_HIDE_IP ? 1 : 0)); // 22
 		s.writeByte((byte) (server.getConfig().WANT_REMEMBER ? 1 : 0)); // 23
-		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_CHAT ? 1 : 0)); // 24
-		s.writeByte((byte) (server.getConfig().WANT_SKILL_MENUS ? 1 : 0)); // 25
-		s.writeByte((byte) (server.getConfig().WANT_QUEST_MENUS ? 1 : 0)); // 26
-		s.writeByte((byte) (server.getConfig().WANT_EXPERIENCE_ELIXIRS ? 1 : 0)); // 27
-		s.writeByte((byte) server.getConfig().WANT_KEYBOARD_SHORTCUTS); // 28
-		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_BANKS ? 1 : 0)); // 29
-		s.writeByte((byte) (server.getConfig().WANT_BANK_PINS ? 1 : 0)); // 30
-		s.writeByte((byte) (server.getConfig().WANT_BANK_NOTES ? 1 : 0)); // 31
-		s.writeByte((byte) (server.getConfig().WANT_CERT_DEPOSIT ? 1 : 0)); // 32
-		s.writeByte((byte) (server.getConfig().CUSTOM_FIREMAKING ? 1 : 0)); // 33
-		s.writeByte((byte) (server.getConfig().WANT_DROP_X ? 1 : 0)); // 34
-		s.writeByte((byte) (server.getConfig().WANT_EXP_INFO ? 1 : 0)); // 35
-		s.writeByte((byte) (server.getConfig().WANT_WOODCUTTING_GUILD ? 1 : 0)); // 36
-		s.writeByte((byte) (server.getConfig().WANT_DECANTING ? 1 : 0)); // 37
-		s.writeByte((byte) (server.getConfig().WANT_CERTER_BANK_EXCHANGE ? 1 : 0)); // 38
-		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_RANK_DISPLAY ? 1 : 0)); // 39
-		s.writeByte((byte) (server.getConfig().RIGHT_CLICK_BANK ? 1 : 0)); // 40
-		s.writeByte((byte) (server.getConfig().FIX_OVERHEAD_CHAT ? 1 : 0)); // 41
-		s.writeString(server.getConfig().WELCOME_TEXT); // 42
-		s.writeByte((byte) (server.getConfig().MEMBER_WORLD ? 1 : 0)); // 43
-		s.writeByte((byte) (server.getConfig().DISPLAY_LOGO_SPRITE ? 1 : 0)); // 44
-		s.writeString(server.getConfig().LOGO_SPRITE_ID); // 45
-		s.writeByte((byte) server.getConfig().FPS); // 46
-		s.writeByte((byte) (server.getConfig().WANT_EMAIL ? 1 : 0)); // 47
-		s.writeByte((byte) (server.getConfig().WANT_REGISTRATION_LIMIT ? 1 : 0)); // 48
-		s.writeByte((byte) (server.getConfig().ALLOW_RESIZE ? 1 : 0)); // 49
-		s.writeByte((byte) (server.getConfig().LENIENT_CONTACT_DETAILS ? 1 : 0)); // 50
-		s.writeByte((byte) (server.getConfig().WANT_FATIGUE ? 1 : 0)); // 51
-		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_SPRITES ? 1 : 0)); // 52
-		s.writeByte((byte) (server.getConfig().PLAYER_COMMANDS ? 1 : 0)); // 53
-		s.writeByte((byte) (server.getConfig().WANT_PETS ? 1 : 0)); // 54
-		s.writeByte((byte) server.getConfig().MAX_WALKING_SPEED); // 55
-		s.writeByte((byte) (server.getConfig().SHOW_UNIDENTIFIED_HERB_NAMES ? 1 : 0)); // 56
-		s.writeByte((byte) (server.getConfig().WANT_QUEST_STARTED_INDICATOR ? 1 : 0)); // 57
-		s.writeByte((byte) (server.getConfig().FISHING_SPOTS_DEPLETABLE ? 1 : 0)); // 58
-		s.writeByte((byte) (server.getConfig().IMPROVED_ITEM_OBJECT_NAMES ? 1 : 0)); // 59
-		s.writeByte((byte) (server.getConfig().WANT_RUNECRAFT ? 1 : 0)); //60
-		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_LANDSCAPE ? 1 : 0)); //61
-		s.writeByte((byte) (server.getConfig().WANT_EQUIPMENT_TAB ? 1 : 0)); //62
-		s.writeByte((byte) (server.getConfig().WANT_BANK_PRESETS ? 1 : 0)); //63
-		s.writeByte((byte) (server.getConfig().WANT_PARTIES ? 1 : 0)); //64
-		s.writeByte((byte) (server.getConfig().MINING_ROCKS_EXTENDED ? 1 : 0)); //65
-		s.writeByte((byte) stepsPerFrame); //66
-		s.writeByte((byte) (server.getConfig().WANT_LEFTCLICK_WEBS ? 1 : 0)); //67
-		s.writeByte((byte) ((server.getConfig().NPC_KILL_LOGGING && server.getConfig().NPC_KILL_MESSAGES) ? 1 : 0)); //68
-		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_UI ? 1 : 0)); //69
-		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); //70
-		s.writeByte((byte) server.getConfig().CHARACTER_CREATION_MODE); //71
-		s.writeByte((byte) server.getConfig().SKILLING_EXP_RATE); //72
-		s.writeByte((byte) (server.getConfig().WANT_HARVESTING ? 1 : 0)); // 73
-		s.writeByte((byte) (server.getConfig().HIDE_LOGIN_BOX_TOGGLE ? 1 : 0)); // 74
-		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); // 75
-		s.writeByte((byte) (server.getConfig().RIGHT_CLICK_TRADE ? 1 : 0)); // 76
-		s.writeByte((byte) (server.getConfig().CUSTOM_PROTOCOL ? 1 : 0)); // 77
-		s.writeByte((byte) (server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR ? 1 : 0)); // 78
+		s.writeByte((byte) (server.getConfig().SHOW_TUTORIAL_SKIP_OPTION ? 1 : 0)); // 24
+		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_CHAT ? 1 : 0)); // 25
+		s.writeByte((byte) (server.getConfig().WANT_SKILL_MENUS ? 1 : 0)); // 26
+		s.writeByte((byte) (server.getConfig().WANT_QUEST_MENUS ? 1 : 0)); // 27
+		s.writeByte((byte) (server.getConfig().WANT_EXPERIENCE_ELIXIRS ? 1 : 0)); // 28
+		s.writeByte((byte) server.getConfig().WANT_KEYBOARD_SHORTCUTS); // 29
+		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_BANKS ? 1 : 0)); // 30
+		s.writeByte((byte) (server.getConfig().WANT_BANK_PINS ? 1 : 0)); // 31
+		s.writeByte((byte) (server.getConfig().WANT_BANK_NOTES ? 1 : 0)); // 32
+		s.writeByte((byte) (server.getConfig().WANT_CERT_DEPOSIT ? 1 : 0)); // 33
+		s.writeByte((byte) (server.getConfig().CUSTOM_FIREMAKING ? 1 : 0)); // 34
+		s.writeByte((byte) (server.getConfig().WANT_DROP_X ? 1 : 0)); // 35
+		s.writeByte((byte) (server.getConfig().WANT_EXP_INFO ? 1 : 0)); // 36
+		s.writeByte((byte) (server.getConfig().WANT_WOODCUTTING_GUILD ? 1 : 0)); // 37
+		s.writeByte((byte) (server.getConfig().WANT_DECANTING ? 1 : 0)); // 38
+		s.writeByte((byte) (server.getConfig().WANT_CERTER_BANK_EXCHANGE ? 1 : 0)); // 39
+		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_RANK_DISPLAY ? 1 : 0)); // 40
+		s.writeByte((byte) (server.getConfig().RIGHT_CLICK_BANK ? 1 : 0)); // 41
+		s.writeByte((byte) (server.getConfig().FIX_OVERHEAD_CHAT ? 1 : 0)); // 42
+		s.writeString(server.getConfig().WELCOME_TEXT); // 43
+		s.writeByte((byte) (server.getConfig().MEMBER_WORLD ? 1 : 0)); // 44
+		s.writeByte((byte) (server.getConfig().DISPLAY_LOGO_SPRITE ? 1 : 0)); // 45
+		s.writeString(server.getConfig().LOGO_SPRITE_ID); // 46
+		s.writeByte((byte) server.getConfig().FPS); // 47
+		s.writeByte((byte) (server.getConfig().WANT_EMAIL ? 1 : 0)); // 48
+		s.writeByte((byte) (server.getConfig().WANT_REGISTRATION_LIMIT ? 1 : 0)); // 49
+		s.writeByte((byte) (server.getConfig().ALLOW_RESIZE ? 1 : 0)); // 50
+		s.writeByte((byte) (server.getConfig().LENIENT_CONTACT_DETAILS ? 1 : 0)); // 51
+		s.writeByte((byte) (server.getConfig().WANT_FATIGUE ? 1 : 0)); // 52
+		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_SPRITES ? 1 : 0)); // 53
+		s.writeByte((byte) (server.getConfig().PLAYER_COMMANDS ? 1 : 0)); // 54
+		s.writeByte((byte) (server.getConfig().WANT_PETS ? 1 : 0)); // 55
+		s.writeByte((byte) server.getConfig().MAX_WALKING_SPEED); // 56
+		s.writeByte((byte) (server.getConfig().SHOW_UNIDENTIFIED_HERB_NAMES ? 1 : 0)); // 57
+		s.writeByte((byte) (server.getConfig().WANT_QUEST_STARTED_INDICATOR ? 1 : 0)); // 58
+		s.writeByte((byte) (server.getConfig().FISHING_SPOTS_DEPLETABLE ? 1 : 0)); // 59
+		s.writeByte((byte) (server.getConfig().IMPROVED_ITEM_OBJECT_NAMES ? 1 : 0)); // 60
+		s.writeByte((byte) (server.getConfig().WANT_RUNECRAFT ? 1 : 0)); //61
+		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_LANDSCAPE ? 1 : 0)); //62
+		s.writeByte((byte) (server.getConfig().WANT_EQUIPMENT_TAB ? 1 : 0)); //63
+		s.writeByte((byte) (server.getConfig().WANT_BANK_PRESETS ? 1 : 0)); //64
+		s.writeByte((byte) (server.getConfig().WANT_PARTIES ? 1 : 0)); //65
+		s.writeByte((byte) (server.getConfig().MINING_ROCKS_EXTENDED ? 1 : 0)); //66
+		s.writeByte((byte) stepsPerFrame); //67
+		s.writeByte((byte) (server.getConfig().WANT_LEFTCLICK_WEBS ? 1 : 0)); //68
+		s.writeByte((byte) ((server.getConfig().NPC_KILL_LOGGING && server.getConfig().NPC_KILL_MESSAGES) ? 1 : 0)); //69
+		s.writeByte((byte) (server.getConfig().WANT_CUSTOM_UI ? 1 : 0)); //70
+		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); //71
+		s.writeByte((byte) server.getConfig().CHARACTER_CREATION_MODE); //72
+		s.writeByte((byte) server.getConfig().SKILLING_EXP_RATE); //73
+		s.writeByte((byte) (server.getConfig().WANT_HARVESTING ? 1 : 0)); // 74
+		s.writeByte((byte) (server.getConfig().HIDE_LOGIN_BOX_TOGGLE ? 1 : 0)); // 75
+		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); // 76
+		s.writeByte((byte) (server.getConfig().RIGHT_CLICK_TRADE ? 1 : 0)); // 77
+		s.writeByte((byte) (server.getConfig().CUSTOM_PROTOCOL ? 1 : 0)); // 78
+		s.writeByte((byte) (server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR ? 1 : 0)); // 79
 		return s;
 	}
 
