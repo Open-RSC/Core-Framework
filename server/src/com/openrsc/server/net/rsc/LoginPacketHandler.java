@@ -6,10 +6,7 @@ import com.openrsc.server.database.struct.PlayerRecoveryQuestions;
 import com.openrsc.server.login.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.ConnectionAttachment;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.PacketBuilder;
-import com.openrsc.server.net.RSCConnectionHandler;
+import com.openrsc.server.net.*;
 import com.openrsc.server.util.rsc.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -18,7 +15,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+
+import static com.openrsc.server.net.PcapLogger.VIRTUAL_OPCODE_SERVER_METADATA;
 
 public class LoginPacketHandler {
 
@@ -26,6 +27,8 @@ public class LoginPacketHandler {
 	 * The asynchronous logger.
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
+
+	private int loginResponse = -1;
 
 	public String getString(ByteBuf payload) {
 		StringBuilder bldr = new StringBuilder();
@@ -42,6 +45,27 @@ public class LoginPacketHandler {
         val += Byte.toUnsignedInt(b4);
 	    return (int)val;
     }
+
+    private void initializePcapLogger(Player loadedPlayer, ConnectionAttachment attachment) {
+		if (loadedPlayer.getWorld().getServer().getConfig().WANT_PCAP_LOGGING) {
+			long startTime = System.currentTimeMillis();
+			String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss ").format(new Date());
+			String fname = timeStamp + loadedPlayer.getUsername();
+			attachment.pcapLogger.set(new PcapLogger(fname));
+
+			com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
+			s.setID(VIRTUAL_OPCODE_SERVER_METADATA);
+			s.writeInt(loginResponse);
+			s.writeInt(loadedPlayer.getClientVersion());
+			s.writeInt(loadedPlayer.isUsingAuthenticClient() ? 1 : 0);
+			s.writeLong(startTime);
+			s.writeInt(loadedPlayer.getWorld().getServer().getConfig().WORLD_NUMBER);
+			s.writeZeroQuotedString(loadedPlayer.getWorld().getServer().getName());
+			s.writeZeroQuotedString(loadedPlayer.getUsername());
+			s.writeZeroQuotedString(loadedPlayer.getCurrentIP());
+			attachment.pcapLogger.get().addPacket(s.toPacket(), true);
+		}
+	}
 
 	public void processLogin(Packet packet, Channel channel, Server server) {
 		final String IP = ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
@@ -120,6 +144,7 @@ public class LoginPacketHandler {
                     final LoginRequest request = new LoginRequest(server, channel, username, password, clientVersion) {
                         @Override
                         public void loginValidated(int response) {
+							loginResponse = response;
                             Channel channel = getChannel();
                             channel.writeAndFlush(new PacketBuilder().writeByte((byte) response).toPacket());
                             if ((response & 0x40) == LoginResponse.LOGIN_UNSUCCESSFUL) {
@@ -153,6 +178,8 @@ public class LoginPacketHandler {
 
                             loadedPlayer.setClientVersion(clientVersion);
 
+							initializePcapLogger(loadedPlayer, attachment);
+
                             server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
                             ActionSender.sendLogin(loadedPlayer);
                         }
@@ -170,6 +197,7 @@ public class LoginPacketHandler {
                     final LoginRequest request = new LoginRequest(server, channel, username, password, clientVersion) {
                         @Override
                         public void loginValidated(int response) {
+							loginResponse = response;
                             Channel channel = getChannel();
                             channel.writeAndFlush(new PacketBuilder().writeByte((byte) response).toPacket());
                             if ((response & 0x40) == LoginResponse.LOGIN_UNSUCCESSFUL) {
@@ -193,6 +221,8 @@ public class LoginPacketHandler {
                             }
 
                             loadedPlayer.setClientVersion(clientVersion);
+
+							initializePcapLogger(loadedPlayer, attachment);
 
                             server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
                             ActionSender.sendLogin(loadedPlayer);

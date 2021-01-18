@@ -13,5 +13,6 @@ public class ConnectionAttachment {
 
 	public AtomicReference<Boolean> authenticClient = new AtomicReference<Boolean>();
 
+	public AtomicReference<PcapLogger> pcapLogger = new AtomicReference<PcapLogger>();
 
 }

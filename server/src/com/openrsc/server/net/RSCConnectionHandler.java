@@ -84,7 +84,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 		ctx.attr(attachment).set(new ConnectionAttachment());
 
 		if (!getServer().getPacketFilter().shouldAllowConnection(ctx.channel(), hostAddress, false)) {
-			getServer().getPacketFilter().ipBanHost(hostAddress, System.currentTimeMillis() + ServerConfiguration.NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "not should allow connection");
+			getServer().getPacketFilter().ipBanHost(hostAddress, System.currentTimeMillis() + getServer().getConfig().NETWORK_FLOOD_IP_BAN_MINUTES * 60 * 1000, "not should allow connection");
 			ctx.channel().close();
 		}
 	}
@@ -114,11 +114,11 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 
 			if(getServer().getConfig().NETWORK_CONNECTION_RESET_EXCEPTIONS.stream().noneMatch($it -> Objects.equal($it, e.getMessage()))) {
 				LOGGER.error("Exception caught in Network I/O : Remote address " + channel.remoteAddress() + " : isOpen " + channel.isOpen() + " : isActive " + channel.isActive() + " : isWritable " + channel.isWritable() + (att == null ? "" : " : Attached Player " + att.player.get()));
-				LOGGER.catching(e);
 			} else {
 				// Log that connection was reset.
 				LOGGER.info(e.getMessage() + " : Remote address " + channel.remoteAddress() + (att == null ? "" : " : Attached Player " + att.player.get()));
 			}
+			LOGGER.catching(e);
 		}
 
 		if (ctx.channel().isActive())

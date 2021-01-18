@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.authentic.minigames.blurberrysbar;
+package com.openrsc.server.plugins.authentic.minigames.gnomebar;
 
 import com.openrsc.server.constants.*;
 import com.openrsc.server.model.container.Item;
@@ -15,16 +15,16 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger, DropObjTrigger {
+public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger, DropObjTrigger {
 
 	@Override
 	public int getMiniGameId() {
-		return Minigames.BLURBERRYS_BAR;
+		return Minigames.GNOME_BAR;
 	}
 
 	@Override
 	public String getMiniGameName() {
-		return "Blurberry's Bar (members)";
+		return "Gnome Bar (members)";
 	}
 
 	@Override
@@ -45,10 +45,10 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	@Override
 	public void onTalkNpc(Player player, Npc npc) {
 		if (npc.getID() == NpcId.BLURBERRY.id()) {
-			if (!player.getCache().hasKey("blurberrys_bar")) {
-				startBlurberrysBar(player, npc);
+			if (!player.getCache().hasKey("gnome_bartending")) {
+				startGnomeBar(player, npc);
 			} else {
-				int stage = player.getCache().getInt("blurberrys_bar");
+				int stage = player.getCache().getInt("gnome_bartending");
 				switch (stage) {
 
 					// Assigns Fruit Blast
@@ -107,7 +107,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 						say(player, npc, "hi again");
 						npcsay(player, npc, "so how did you do");
 						if (player.getCarriedItems().hasCatalogID(ItemId.BLURBERRY_SPECIAL.id(), Optional.of(false))) {
-							completeBlurberrysBar(player, npc);
+							completeGnomeBar(player, npc);
 						} else {
 							say(player, npc, "I haven't managed to make it yet");
 							npcsay(player, npc, "I need one blurberry special",
@@ -117,7 +117,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 
 					// Current Job
 					case 7:
-						if (player.getCache().hasKey("blurberry_job")) {
+						if (player.getCache().hasKey("gnome_bar_job")) {
 							myCurrentJob(player, npc);
 						} else {
 							say(player, npc, "hello again blurberry");
@@ -161,13 +161,13 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 			npcsay(player, n, "i just need one fruit blast");
 			say(player, n, "no problem");
 		}
-		if (!player.getCache().hasKey("blurberry_job")) {
-			player.getCache().set("blurberry_job", randomize);
+		if (!player.getCache().hasKey("gnome_bar_job")) {
+			player.getCache().set("gnome_bar_job", randomize);
 		}
 	}
 
 	private void myCurrentJob(Player player, Npc n) {
-		int job = player.getCache().getInt("blurberry_job");
+		int job = player.getCache().getInt("gnome_bar_job");
 		say(player, n, "hi");
 		npcsay(player, n, "have you made the order?");
 		if (job == 0) {
@@ -272,7 +272,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 				return;
 			}
 		}
-		player.getCache().remove("blurberry_job");
+		player.getCache().remove("gnome_bar_job");
 		if (!player.getCache().hasKey("blurberry_jobs_completed")) {
 			player.getCache().set("blurberry_jobs_completed", 1);
 		} else {
@@ -355,8 +355,9 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 
 	@Override
 	public void onDropObj(Player player, Integer invIndex, Item item, Boolean fromInventory) {
-		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id()) {
-			checkAndRemoveBlurberry(player, true);
+		if (item.getCatalogId() == ItemId.FULL_COCKTAIL_GLASS.id() || item.getCatalogId() == ItemId.HALF_COCKTAIL_GLASS.id()
+			|| item.getCatalogId() == ItemId.ODD_LOOKING_COCKTAIL.id()) {
+			resetGnomeBartending(player);
 		}
 	}
 
@@ -366,7 +367,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 	}
 
 
-	private void startBlurberrysBar(Player player, Npc npc) {
+	private void startGnomeBar(Player player, Npc npc) {
 		say(player, npc, "hello");
 		npcsay(player, npc, "well hello there traveller",
 			"if your looking for a cocktail the barman will happily make you one");
@@ -390,7 +391,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 				"I'll tell you what i need and you can make them");
 			say(player, npc, "sounds easy enough");
 			npcsay(player, npc, "take a look at the book and then come and talk to me");
-			player.getCache().set("blurberrys_bar", 1);
+			player.getCache().set("gnome_bartending", 1);
 		}
 	}
 
@@ -411,7 +412,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 		give(player, ItemId.KNIFE.id(), 1);
 		player.message("a cocktail shaker, a glass and a knife");
 		npcsay(player, npc, "let me know when you're done");
-		player.getCache().set("blurberrys_bar", 2);
+		player.getCache().set("gnome_bartending", 2);
 	}
 
 	private void assignDrunkDragon(Player player, Npc npc) {
@@ -433,7 +434,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 		player.message("... some pineapple and some cream");
 		npcsay(player, npc, "i'm afraid i won't be able to give you anymore if you make a mistake though",
 			"let me know when it's done");
-		player.getCache().set("blurberrys_bar", 3);
+		player.getCache().set("gnome_bartending", 3);
 	}
 
 	private void assignSGG(Player player, Npc npc) {
@@ -458,7 +459,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 		give(player, ItemId.VODKA.id(), 1);
 		give(player, ItemId.EQUA_LEAVES.id(), 1);
 		give(player, ItemId.COCKTAIL_GLASS.id(), 1);
-		player.getCache().set("blurberrys_bar", 4);
+		player.getCache().set("gnome_bartending", 4);
 	}
 
 	private void assignChocolateSaturday(Player player, Npc npc) {
@@ -485,7 +486,7 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 		give(player, ItemId.CREAM.id(), 1);
 		give(player, ItemId.CHOCOLATE_DUST.id(), 1);
 		give(player, ItemId.COCKTAIL_GLASS.id(), 1);
-		player.getCache().set("blurberrys_bar", 5);
+		player.getCache().set("gnome_bartending", 5);
 	}
 
 	private void assignBlurberrySpecial(Player player, Npc npc) {
@@ -512,10 +513,10 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 		say(player, npc, "ok i'll do best");
 		npcsay(player, npc, "I'm sure you'll make a great " +
 		(player.isMale() ? "bar man" : "bartender"));
-		player.getCache().set("blurberrys_bar", 6);
+		player.getCache().set("gnome_bartending", 6);
 	}
 
-	private void completeBlurberrysBar(Player player, Npc npc) {
+	private void completeGnomeBar(Player player, Npc npc) {
 		say(player, npc, "I think i've made it right");
 		mes("you give the blurberry special to blurberry");
 		delay(3);
@@ -533,6 +534,6 @@ public class BlurberrysBar implements MiniGameInterface, TalkNpcTrigger, OpInvTr
 			"but you can buy them from heckel funch the grocer",
 			"I'll always pay you more for the cocktail than you paid for the ingredients",
 			"and it's a great way to learn how to prepare food and drink");
-		player.getCache().set("blurberrys_bar", 7);  // COMPLETED TUTORIAL!
+		player.getCache().set("gnome_bartending", 7);  // COMPLETED TUTORIAL!
 	}
 }

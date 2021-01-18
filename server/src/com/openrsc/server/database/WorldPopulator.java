@@ -91,7 +91,7 @@ public final class WorldPopulator {
 				}
 
 				// Don't spawn attackable members NPCs in F2P
-				if (getWorld().getServer().getEntityHandler().getNpcDef(n.id).isMembers() && 
+				if (getWorld().getServer().getEntityHandler().getNpcDef(n.id).isMembers() &&
 					getWorld().getServer().getEntityHandler().getNpcDef(n.id).isAttackable() &&
 					!getWorld().getServer().getConfig().MEMBER_WORLD) {
 					n = null;
@@ -201,6 +201,9 @@ public final class WorldPopulator {
 			}
 		} else if (type == LocType.GroundItem) {
 			if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
+				if (getWorld().getServer().getConfig().WANT_HARVESTING) {
+					loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItemsHarvesting.json");
+				}
 				if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
 					loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItemsCustomQuest.json");
 				}

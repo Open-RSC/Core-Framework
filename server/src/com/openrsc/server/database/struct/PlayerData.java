@@ -1,7 +1,5 @@
 package com.openrsc.server.database.struct;
 
-import com.openrsc.server.Server;
-
 public class PlayerData {
 	public int playerId;
 	public int groupId;
@@ -20,10 +18,10 @@ public class PlayerData {
 	public int ironManRestriction;
 	public int hcIronManDeath;
 	public int questPoints;
-	public boolean blockChat;
-	public boolean blockPrivate;
-	public boolean blockTrade;
-	public boolean blockDuel;
+	public byte blockChat;
+	public byte blockPrivate;
+	public byte blockTrade;
+	public byte blockDuel;
 	public boolean cameraAuto;
 	public boolean oneMouse;
 	public boolean soundOff;

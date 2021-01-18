@@ -18,7 +18,9 @@ public class Eating implements OpInvTrigger {
 	public boolean blockOpInv(Player player, Integer invIndex, Item item, String command) {
 		return item.isEdible(player.getWorld())
 			|| item.getCatalogId() == ItemId.ROTTEN_APPLES.id()
-			|| item.getCatalogId() == ItemId.FISH_OIL.id();
+			|| item.getCatalogId() == ItemId.FISH_OIL.id()
+			|| item.getCatalogId() == ItemId.SWEETENED_SLICES.id()
+			|| item.getCatalogId() == ItemId.SWEETENED_CHUNKS.id();
 	}
 
 	@Override
@@ -241,6 +243,23 @@ public class Eating implements OpInvTrigger {
 			}
 			// Remove
 			player.getCarriedItems().remove(new Item(id, 1));
+		} else if (item.getCatalogId() == ItemId.SWEETENED_SLICES.id() || item.getCatalogId() == ItemId.SWEETENED_CHUNKS.id()) {
+			ActionSender.sendSound(player, "eat");
+			int id = item.getCatalogId();
+
+			player.playerServerMessage(MessageType.QUEST, "You eat the sweetened fruit");
+
+			// Heal
+			if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
+				int newHp = player.getSkills().getLevel(Skills.HITS) + DataConversions.random(1, 2);
+				if (newHp > player.getSkills().getMaxStat(Skills.HITS)) {
+					newHp = player.getSkills().getMaxStat(Skills.HITS);
+				}
+				player.getSkills().setLevel(Skills.HITS, newHp);
+				player.playerServerMessage(MessageType.QUEST, "It heals some health");
+			}
+			// Remove
+			player.getCarriedItems().remove(new Item(id, 1));
 		}
 	}
 
@@ -381,7 +400,8 @@ public class Eating implements OpInvTrigger {
 		else if (id == ItemId.HALF_A_MEAT_PIE.id())
 			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 
-		else if (id == ItemId.STEW.id() || id == ItemId.CURRY.id() || id == ItemId.SPECIAL_CURRY.id())
+		else if (id == ItemId.STEW.id() || id == ItemId.CURRY.id() || id == ItemId.SPECIAL_CURRY.id()
+			|| id == ItemId.SEAWEED_SOUP.id())
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BOWL.id()));
 	}
 }

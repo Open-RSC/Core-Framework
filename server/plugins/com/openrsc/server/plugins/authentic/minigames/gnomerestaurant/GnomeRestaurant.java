@@ -412,11 +412,11 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 			}
 		}
 		player.getCache().remove("gnome_restaurant_job");
-		if (!player.getCache().hasKey("gnome_jobs_completed")) {
-			player.getCache().set("gnome_jobs_completed", 1);
+		if (!player.getCache().hasKey("gianne_jobs_completed")) {
+			player.getCache().set("gianne_jobs_completed", 1);
 		} else {
-			int completedJobs = player.getCache().getInt("gnome_jobs_completed");
-			player.getCache().set("gnome_jobs_completed", ++completedJobs);
+			int completedJobs = player.getCache().getInt("gianne_jobs_completed");
+			player.getCache().set("gianne_jobs_completed", ++completedJobs);
 			if (completedJobs >= 250) {
 				if (player.getConfig().WANT_GIANNE_BADGE) {
 					boolean carrryingBadge = player.getCarriedItems().hasCatalogID(ItemId.GIANNE_BADGE.id(), Optional.empty());

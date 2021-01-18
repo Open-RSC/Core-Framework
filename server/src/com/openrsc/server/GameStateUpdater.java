@@ -379,7 +379,10 @@ public final class GameStateUpdater {
 			Projectile projectileFired = player.getUpdateFlags().getProjectile().get();
 			projectilesNeedingDisplayed.add(projectileFired);
 		}
-		if (player.getUpdateFlags().hasChatMessage()) {
+		boolean myBlockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
+			== PlayerSettings.BlockingMode.All.id();
+		if (player.getUpdateFlags().hasChatMessage() && (!myBlockAll || player.isMod()
+			|| player.getUpdateFlags().getChatMessage().getRecipient() != null)) {
 			ChatMessage chatMessage = player.getUpdateFlags().getChatMessage();
 			if (!chatMessage.getMuted() || player.hasElevatedPriveledges())
 				chatMessagesNeedingDisplayed.add(chatMessage);
@@ -398,6 +401,13 @@ public final class GameStateUpdater {
 		for (final Player otherPlayer : player.getLocalPlayers()) {
 			final UpdateFlags updateFlags = otherPlayer.getUpdateFlags();
 
+			boolean otherBlockAll = otherPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, otherPlayer.isUsingAuthenticClient())
+				== PlayerSettings.BlockingMode.All.id();
+			boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
+				== PlayerSettings.BlockingMode.All.id();
+			boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
+				== PlayerSettings.BlockingMode.None.id();
+
 			if(otherPlayer.getUsername().trim().equalsIgnoreCase("kenix") && player.getUsername().trim().equalsIgnoreCase("kenix")) {
 				LOGGER.info("UF: " + updateFlags + ", isTeleporting: " + otherPlayer.isTeleporting() + ", Override: " + player.requiresAppearanceUpdateForPeek(otherPlayer));
 			}
@@ -410,7 +420,12 @@ public final class GameStateUpdater {
 				Projectile projectileFired = updateFlags.getProjectile().get();
 				projectilesNeedingDisplayed.add(projectileFired);
 			}
-			if (updateFlags.hasChatMessage() && !player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES)) {
+
+			if (updateFlags.hasChatMessage()
+				&& (((player.getSocial().isFriendsWith(otherPlayer.getUsernameHash()) && !blockAll)
+				|| (!player.getSocial().isFriendsWith(otherPlayer.getUsernameHash()) && blockNone))
+				&& !player.getSocial().isIgnoring(otherPlayer.getUsernameHash()) && !otherBlockAll
+				|| otherPlayer.isMod() || updateFlags.getChatMessage().getRecipient() != null)) {
 				ChatMessage chatMessage = updateFlags.getChatMessage();
 				if (!chatMessage.getMuted() || player.hasElevatedPriveledges())
 					chatMessagesNeedingDisplayed.add(chatMessage);
@@ -770,26 +785,12 @@ public final class GameStateUpdater {
 
 		// Add scenery
 		for (final GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
-			if (playerToUpdate.isUsingAuthenticClient()) {
-				// Server in current state doesn't really know anything about what scenery the client remembers.
-				// Let's just add all scenery every tick!
-				// This is very bad, but also an improvement.
-				// TODO: HANDLE SCENERY
-
-				if (newObject.getType() != 0) { // this one is pretty funny if you omit it. Trees in every open doorway!
-					continue;
-				}
-				// Hopefully don't add the Sails of a windmill too often.
-				if (newObject.getID() == 74 && playerToUpdate.getLocalGameObjects().contains(newObject)) {
-					continue;
-				}
-			} else {
-				if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
-					|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 0
-					|| playerToUpdate.getLocalGameObjects().contains(newObject)) {
-					continue;
-				}
+			if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
+				|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 0
+				|| playerToUpdate.getLocalGameObjects().contains(newObject)) {
+				continue;
 			}
+
 			packet.writeShort(newObject.getID());
 			final int offsetX = newObject.getX() - playerToUpdate.getX();
 			final int offsetY = newObject.getY() - playerToUpdate.getY();
@@ -1074,8 +1075,11 @@ public final class GameStateUpdater {
 			if (pm != null) {
 				Player affectedPlayer = getServer().getWorld().getPlayer(pm.getFriend());
 				if (affectedPlayer != null) {
-					if ((affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()) || !affectedPlayer.getSettings()
-						.getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES))
+					boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
+						== PlayerSettings.BlockingMode.All.id();
+					boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
+						== PlayerSettings.BlockingMode.None.id();
+					if (((affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || blockNone)
 						&& !affectedPlayer.getSocial().isIgnoring(player.getUsernameHash()) || player.isMod()) {
 						ActionSender.sendPrivateMessageSent(player, affectedPlayer.getUsernameHash(), pm.getMessage(), false);
 						ActionSender.sendPrivateMessageReceived(affectedPlayer, player, pm.getMessage(), false);
@@ -1095,8 +1099,9 @@ public final class GameStateUpdater {
 					ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
 				} else {
 					if (!player.getBlockGlobalFriend()) {
-						if (!player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES)
-							&& !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
+						boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingAuthenticClient())
+							== PlayerSettings.BlockingMode.None.id();
+						if (blockNone && !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
 							ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);
 						}
 					}

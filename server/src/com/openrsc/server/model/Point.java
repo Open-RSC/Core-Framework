@@ -480,6 +480,13 @@ public class Point {
 		;
 	}
 
+	public boolean isInSaradominMonksPlace() {
+		return inBounds(249, 452, 265, 468);
+	}
+	public boolean isInZamorakMonksPlace() {
+		return inBounds(679, 634, 704, 659);
+	}
+
 	public boolean inArea(Area area) {
 		return area.inBounds(this);
 	}

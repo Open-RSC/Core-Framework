@@ -15,10 +15,10 @@ public class Refill implements UseLocTrigger {
 	final int[] VALID_OBJECTS_WELL = {2, 466, 814};
 	final int[] VALID_OBJECTS_OTHER = {48, 26, 86, 1130};
 	private final int[] REFILLABLE = {
-		ItemId.BUCKET.id(), ItemId.JUG.id(), ItemId.BOWL.id(), ItemId.EMPTY_VIAL.id()
+		ItemId.BUCKET.id(), ItemId.JUG.id(), ItemId.BOWL.id(), ItemId.EMPTY_VIAL.id(), ItemId.EMPTY_WATERING_CAN.id()
 	};
 	private int[] REFILLED = {
-		ItemId.BUCKET_OF_WATER.id(), ItemId.JUG_OF_WATER.id(), ItemId.BOWL_OF_WATER.id(), ItemId.VIAL.id()
+		ItemId.BUCKET_OF_WATER.id(), ItemId.JUG_OF_WATER.id(), ItemId.BOWL_OF_WATER.id(), ItemId.VIAL.id(), ItemId.WATERING_CAN.id()
 	};
 
 	@Override

@@ -461,10 +461,10 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 				playerData.questPoints = result.getShort("quest_points");
 
-				playerData.blockChat = result.getInt("block_chat") == 1;
-				playerData.blockPrivate = result.getInt("block_private") == 1;
-				playerData.blockTrade = result.getInt("block_trade") == 1;
-				playerData.blockDuel = result.getInt("block_duel") == 1;
+				playerData.blockChat = result.getByte("block_chat");
+				playerData.blockPrivate = result.getByte("block_private");
+				playerData.blockTrade = result.getByte("block_trade");
+				playerData.blockDuel = result.getByte("block_duel");
 
 				playerData.cameraAuto = result.getInt("cameraauto") == 1;
 				playerData.oneMouse = result.getInt("onemouse") == 1;
@@ -1572,10 +1572,10 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setLong(counter++, playerData.muteExpires);
 			statement.setInt(counter++, playerData.bankSize);
 			statement.setInt(counter++, playerData.groupId);
-			statement.setInt(counter++, playerData.blockChat ? 1 : 0);
-			statement.setInt(counter++, playerData.blockPrivate ? 1 : 0);
-			statement.setInt(counter++, playerData.blockTrade ? 1 : 0);
-			statement.setInt(counter++, playerData.blockDuel ? 1 : 0);
+			statement.setInt(counter++, playerData.blockChat);
+			statement.setInt(counter++, playerData.blockPrivate);
+			statement.setInt(counter++, playerData.blockTrade);
+			statement.setInt(counter++, playerData.blockDuel);
 			statement.setInt(counter++, playerData.cameraAuto ? 1 : 0);
 			statement.setInt(counter++, playerData.oneMouse ? 1 : 0);
 			statement.setInt(counter++, playerData.soundOff ? 1 : 0);

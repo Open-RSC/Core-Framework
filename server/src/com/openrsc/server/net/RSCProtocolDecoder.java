@@ -44,7 +44,7 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                             ByteBuf data = Unpooled.buffer(length);
                             buffer.readBytes(data, length);
                             Packet packet = new Packet(opcode, data);
-                            out.add(packet);
+							addPacketToIncoming(out, att, packet);
                         } else {
                             buffer.resetReaderIndex();
                         }
@@ -92,12 +92,11 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 											boolean isPossiblyValid = OpcodeIn.isPossiblyValid(opcode, length, 235);
 											if (isPossiblyValid) {
 												Packet packet = new Packet(opcode, bufferOrdered);
-												out.add(packet);
-												// Packet.printPacket(packet, "Incoming");
+												addPacketToIncoming(out, att, packet);
 												return;
 											} else if (OpcodeIn.isPossiblyValid(opcode, length, 175)) {
 												Packet packet = new Packet(opcode, bufferOrdered);
-												out.add(packet);
+												addPacketToIncoming(out, att, packet);
 												return;
 											} else {
 												System.out.println(String.format("Caught invalid incoming opcode;; enc: %d; dec: %d; len: %d; isPossiblyValid: %b; opcodeTries: %d", encodedOpcode, opcode, length, isPossiblyValid, opcodeTries));
@@ -121,7 +120,7 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                             ByteBuf data = Unpooled.buffer(length);
                             buffer.readBytes(data, length);
                             Packet packet = new Packet(opcode, data);
-                            out.add(packet);
+							addPacketToIncoming(out, att, packet);
                             // Packet.printPacket(packet, "Incoming");
 
 
@@ -161,7 +160,7 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 										opcode = (isaacContainer.decodeOpcode(encodedOpcode) & 0xFF);
 
 										Packet packet = new Packet(opcode, bufferOrdered);
-										out.add(packet);
+										addPacketToIncoming(out, att, packet);
 										return;
 
 									} else {
@@ -179,7 +178,7 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 
 										Packet packet = new Packet(opcode, bufferOrdered);
 										//Packet.printPacket(packet, "Incoming");
-										out.add(packet);
+										addPacketToIncoming(out, att, packet);
 										return;
 									} else {
 										opcode = (buffer.readByte()) & 0xFF;
@@ -193,7 +192,7 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 							ByteBuf data = Unpooled.buffer(length);
 							buffer.readBytes(data, length);
 							Packet packet = new Packet(opcode, data);
-							out.add(packet);
+							addPacketToIncoming(out, att, packet);
 							//Packet.printPacket(packet, "Incoming");
 
 						} else {
@@ -203,7 +202,8 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                                 if (bLength == 1) {
                                     byte theOnlyByte = buffer.readByte();
                                     if (theOnlyByte == (byte) 19) {
-                                        out.add(new Packet(19, Unpooled.buffer(1)));
+                                    	Packet packet = new Packet(19, Unpooled.buffer(1));
+										addPacketToIncoming(out, att, packet);
                                     } else {
                                         buffer.resetReaderIndex();
                                     }
@@ -219,7 +219,7 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
                                         buffer.readBytes(data, loginLength);
                                         Packet packet = new Packet(opcode, data);
                                         // Packet.printPacket(packet, "Incoming");
-                                        out.add(packet);
+                                        addPacketToIncoming(out, att, packet);
                                     } else {
                                         buffer.resetReaderIndex();
                                     }
@@ -233,6 +233,16 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
             }
         }
     }
+
+    private void addPacketToIncoming(List<Object> out, ConnectionAttachment att, Packet packet) {
+		if (att.player != null && att.player.get() != null) {
+			if (att.player.get().getWorld().getServer().getConfig().WANT_PCAP_LOGGING) {
+				Packet copy = new Packet(packet.getID(), packet.getBuffer().copy());
+				att.pcapLogger.get().addPacket(copy, false); // outgoing from client's perspective
+			}
+		}
+		out.add(packet);
+	}
 
 	@Override
 	public <T> Attribute<T> attr(AttributeKey<T> attributeKey) {

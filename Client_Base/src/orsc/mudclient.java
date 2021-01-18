@@ -8790,56 +8790,64 @@ public final class mudclient implements Runnable {
 
 		// block chat
 		y += 15;
-		if (this.settingsBlockChat != 0) {
-			this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
+		if (this.settingsBlockChat == 2) {
+			this.getSurface().drawString("Allow chat messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+		} else if (this.settingsBlockChat == 1) {
+			this.getSurface().drawString("Allow chat messages: @yel@<friends>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else {
-			this.getSurface().drawString("Block chat messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow chat messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
 
 		// block private
 		y += 15;
 		if (this.settingsBlockPrivate == 0) {
-			this.getSurface().drawString("Block private messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow private messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
+		} else if (this.settingsBlockPrivate == 1) {
+			this.getSurface().drawString("Allow private messages: @yel@<friends>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else {
-			this.getSurface().drawString("Block private messages: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow private messages: @red@<off>", baseX + 3, y, 0xFFFFFF, 1);
 		}
 
 		// if global chat enabled, block global friend as only one should be toggled on at a time
 		if (S_WANT_GLOBAL_FRIEND && !S_WANT_GLOBAL_CHAT) {
 			y += 15;
 			if (!C_BLOCK_GLOBAL_FRIEND) {
-				this.getSurface().drawString("Block global messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Allow global messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 			} else {
-				this.getSurface().drawString("Block global messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Allow global messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
 			}
 		} else if (S_WANT_GLOBAL_CHAT && !S_WANT_GLOBAL_FRIEND) {
 			y += 15;
 			if (this.settingsBlockGlobal == 1) {
-				this.getSurface().drawString("Block global messages: @red@None", 3 + baseX, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Hide global messages: @red@None", 3 + baseX, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockGlobal == 2) {
-				this.getSurface().drawString("Block global messages: @gre@All", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Hide global messages: @gre@All", baseX + 3, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockGlobal == 3) {
-				this.getSurface().drawString("Block global messages: @or1@Pking", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Hide global messages: @or1@Pking", baseX + 3, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockGlobal == 4) {
-				this.getSurface().drawString("Block global messages: @gr1@General", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Hide global messages: @gr1@General", baseX + 3, y, 0xFFFFFF, 1);
 			}
 		}
 
 		// block trade
 		y += 15;
-		if (this.settingsBlockTrade != 0) {
-			this.getSurface().drawString("Block trade requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+		if (this.settingsBlockTrade == 2) {
+			this.getSurface().drawString("Allow trade requests: @red@<off>", baseX + 3, y, 0xFFFFFF, 1);
+		} else if (this.settingsBlockTrade == 1) {
+			this.getSurface().drawString("Allow trade requests: @yel@<friends>", baseX + 3, y, 0xFFFFFF, 1);
 		} else {
-			this.getSurface().drawString("Block trade requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow trade requests: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
 
 		// block duel
 		y += 15;
 		if (wantMembers()) {
-			if (this.settingsBlockDuel != 0) {
-				this.getSurface().drawString("Block duel requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+			if (this.settingsBlockDuel == 2) {
+				this.getSurface().drawString("Allow duel requests: @red@<off>", baseX + 3, y, 0xFFFFFF, 1);
+			} else if (this.settingsBlockDuel == 1) {
+				this.getSurface().drawString("Allow duel requests: @yel@<friends>", baseX + 3, y, 0xFFFFFF, 1);
 			} else {
-				this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Allow duel requests: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 			}
 		}
 
@@ -9238,12 +9246,15 @@ public final class mudclient implements Runnable {
 		}
 
 		// volume to rotate
-		if (!osConfig.C_VOLUME_TO_ROTATE) {
+		if (osConfig.C_VOLUME_FUNCTION == 0) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Volume buttons to Rotate - @red@Off", 6, null, null);
-		} else {
+				"@whi@Volume buttons - @red@Rotate", 6, null, null);
+		} else if (osConfig.C_VOLUME_FUNCTION == 1) {
 			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
-				"@whi@Volume buttons to Rotate - @gre@On", 6, null, null);
+				"@whi@Volume buttons - @yel@Zoom", 6, null, null);
+		} else if (osConfig.C_VOLUME_FUNCTION == 2) {
+			this.panelSettings.setListEntry(this.controlSettingPanel, index++,
+				"@whi@Volume buttons - @gre@Volume", 6, null, null);
 		}
 
 		// inventory close
@@ -9297,7 +9308,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// sound on/off - byte index 2
-		if (settingIndex == 2 && this.mouseButtonClick == 1) {
+		if (wantMembers() && settingIndex == 2 && this.mouseButtonClick == 1) {
 			optionSoundDisabled = !optionSoundDisabled;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(2);
@@ -9563,7 +9574,7 @@ public final class mudclient implements Runnable {
 		yFromTopDistance += 15;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12
 			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
-			this.settingsBlockChat = 1 - this.settingsBlockChat;
+			this.settingsBlockChat = ++this.settingsBlockChat %3;
 			var11 = true;
 		}
 
@@ -9571,7 +9582,7 @@ public final class mudclient implements Runnable {
 		yFromTopDistance += 15;
 		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
 			&& yFromTopDistance + 4 > this.mouseY && this.mouseButtonClick == 1) {
-			this.settingsBlockPrivate = 1 - this.settingsBlockPrivate;
+			this.settingsBlockPrivate = ++this.settingsBlockPrivate %3;
 			var11 = true;
 		}
 
@@ -9608,16 +9619,16 @@ public final class mudclient implements Runnable {
 		yFromTopDistance += 15;
 		if (this.mouseX > var6 && this.mouseX < var6 + var5 && yFromTopDistance - 12 < this.mouseY
 			&& this.mouseY < 4 + yFromTopDistance && this.mouseButtonClick == 1) {
-			this.settingsBlockTrade = 1 - this.settingsBlockTrade;
+			this.settingsBlockTrade = ++this.settingsBlockTrade %3;
 			var11 = true;
 		}
 
 		// block duel toggle
 		yFromTopDistance += 15;
-		if (this.mouseX > var6 && this.mouseX < var6 + var5
+		if (wantMembers() && this.mouseX > var6 && this.mouseX < var6 + var5
 			&& yFromTopDistance - 12 < this.mouseY && this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 			var11 = true;
-			this.settingsBlockDuel = 1 - this.settingsBlockDuel;
+			this.settingsBlockDuel = ++this.settingsBlockDuel %3;
 		}
 
 		// block chat toggle
@@ -9743,12 +9754,12 @@ public final class mudclient implements Runnable {
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
-		// volume button camera rotation control
+		// volume button function control (rotate, zoom, volume)
 		if (this.panelSettings.getControlSelectedListIndex(this.controlSettingPanel) == 6 && this.mouseButtonClick == 1) {
-			osConfig.C_VOLUME_TO_ROTATE = !osConfig.C_VOLUME_TO_ROTATE;
+			osConfig.C_VOLUME_FUNCTION = ++osConfig.C_VOLUME_FUNCTION %3;
 			this.packetHandler.getClientStream().newPacket(111);
 			this.packetHandler.getClientStream().bufferBits.putByte(16);
-			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_VOLUME_TO_ROTATE ? 1 : 0);
+			this.packetHandler.getClientStream().bufferBits.putByte(osConfig.C_VOLUME_FUNCTION);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -9844,41 +9855,49 @@ public final class mudclient implements Runnable {
 
 		// privacy setting text
 		y += 20;
-		this.getSurface().drawString("Privacy settings. Will be applied to", 3 + baseX, y, 0, 1);
+		this.getSurface().drawString("Privacy settings. May be applied to all", 3 + baseX, y, 0, 1);
 		y += 15;
-		this.getSurface().drawString("all people not on your friends list", 3 + baseX, y, 0, 1);
+		this.getSurface().drawString("people including those on your friends list", 3 + baseX, y, 0, 1);
 
 		// block chat toggle
 		y += 15;
-		if (this.settingsBlockChat != 0) {
-			this.getSurface().drawString("Block chat messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
+		if (this.settingsBlockChat == 2) {
+			this.getSurface().drawString("Allow chat messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+		} else if (this.settingsBlockChat == 1) {
+			this.getSurface().drawString("Allow chat messages: @yel@<friends>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else {
-			this.getSurface().drawString("Block chat messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow chat messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
 
 		// block private toggle
 		y += 15;
 		if (this.settingsBlockPrivate == 0) {
-			this.getSurface().drawString("Block private messages: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow private messages: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
+		} else if (this.settingsBlockPrivate == 1) {
+			this.getSurface().drawString("Allow private messages: @yel@<friends>", 3 + baseX, y, 0xFFFFFF, 1);
 		} else {
-			this.getSurface().drawString("Block private messages: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow private messages: @red@<off>", baseX + 3, y, 0xFFFFFF, 1);
 		}
 
 		// block trade toggle
 		y += 15;
-		if (this.settingsBlockTrade != 0) {
-			this.getSurface().drawString("Block trade requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+		if (this.settingsBlockTrade == 2) {
+			this.getSurface().drawString("Allow trade requests: @red@<off>", baseX + 3, y, 0xFFFFFF, 1);
+		} else if (this.settingsBlockTrade == 1) {
+			this.getSurface().drawString("Allow trade requests: @yel@<friends>", baseX + 3, y, 0xFFFFFF, 1);
 		} else {
-			this.getSurface().drawString("Block trade requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+			this.getSurface().drawString("Allow trade requests: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 		}
 
 		// block duel toggle
 		y += 15;
 		if (wantMembers()) {
-			if (this.settingsBlockDuel != 0) {
-				this.getSurface().drawString("Block duel requests: @gre@<on>", baseX + 3, y, 0xFFFFFF, 1);
+			if (this.settingsBlockDuel == 2) {
+				this.getSurface().drawString("Allow duel requests: @red@<off>", baseX + 3, y, 0xFFFFFF, 1);
+			} else if (this.settingsBlockDuel == 1) {
+				this.getSurface().drawString("Allow duel requests: @yel@<friends>", baseX + 3, y, 0xFFFFFF, 1);
 			} else {
-				this.getSurface().drawString("Block duel requests: @red@<off>", 3 + baseX, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Allow duel requests: @gre@<on>", 3 + baseX, y, 0xFFFFFF, 1);
 			}
 		}
 
@@ -9941,7 +9960,7 @@ public final class mudclient implements Runnable {
 
 		// sound on/off - byte index 2
 		yFromTopDistance += 15;
-		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12
+		if (wantMembers() && this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12
 			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
 			optionSoundDisabled = !optionSoundDisabled;
 			this.packetHandler.getClientStream().newPacket(111);
@@ -9982,7 +10001,7 @@ public final class mudclient implements Runnable {
 		// block chat toggle
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12
 			&& 4 + yFromTopDistance > this.mouseY && this.mouseButtonClick == 1) {
-			this.settingsBlockChat = 1 - this.settingsBlockChat;
+			this.settingsBlockChat = ++this.settingsBlockChat %3;
 			var11 = true;
 		}
 
@@ -9990,7 +10009,7 @@ public final class mudclient implements Runnable {
 		yFromTopDistance += 15;
 		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
 			&& yFromTopDistance + 4 > this.mouseY && this.mouseButtonClick == 1) {
-			this.settingsBlockPrivate = 1 - this.settingsBlockPrivate;
+			this.settingsBlockPrivate = ++this.settingsBlockPrivate %3;
 			var11 = true;
 		}
 
@@ -9998,16 +10017,16 @@ public final class mudclient implements Runnable {
 		yFromTopDistance += 15;
 		if (this.mouseX > var6 && this.mouseX < var6 + var5 && yFromTopDistance - 12 < this.mouseY
 			&& this.mouseY < 4 + yFromTopDistance && this.mouseButtonClick == 1) {
-			this.settingsBlockTrade = 1 - this.settingsBlockTrade;
+			this.settingsBlockTrade = ++this.settingsBlockTrade %3;
 			var11 = true;
 		}
 
 		// block duel toggle
 		yFromTopDistance += 15;
-		if (this.mouseX > var6 && this.mouseX < var6 + var5
+		if (wantMembers() && this.mouseX > var6 && this.mouseX < var6 + var5
 			&& yFromTopDistance - 12 < this.mouseY && this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 			var11 = true;
-			this.settingsBlockDuel = 1 - this.settingsBlockDuel;
+			this.settingsBlockDuel = ++this.settingsBlockDuel %3;
 		}
 
 		// adjusts the menu slightly to accommodate the skip link below
@@ -16930,8 +16949,8 @@ public final class mudclient implements Runnable {
 		this.partyKickPlayer = player;
 	}
 
-	public void setVolumeToRotate(boolean b) {
-		osConfig.C_VOLUME_TO_ROTATE = b;
+	public void setVolumeFunction(int b) {
+		osConfig.C_VOLUME_FUNCTION = b;
 	}
 
 	public void setSwipeToRotate(boolean b) {

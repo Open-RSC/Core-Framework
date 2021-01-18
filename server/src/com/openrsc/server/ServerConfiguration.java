@@ -57,13 +57,14 @@ public class ServerConfiguration {
 	public int VIEW_DISTANCE;
 	public String LOGO_SPRITE_ID;
 	public int NPC_BLOCKING;
-	public static int MAX_CONNECTIONS_PER_IP;
-	public static int MAX_CONNECTIONS_PER_SECOND;
-	public static int MAX_PACKETS_PER_SECOND;
-	public static int MAX_LOGINS_PER_SECOND;
-	public static int MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES;
-	public static int NETWORK_FLOOD_IP_BAN_MINUTES;
-	private static int SUSPICIOUS_PLAYER_IP_BAN_MINUTES;
+	public int MAX_CONNECTIONS_PER_IP;
+	public int MAX_CONNECTIONS_PER_SECOND;
+	public int MAX_PACKETS_PER_SECOND;
+	public int MAX_LOGINS_PER_SECOND;
+	public int MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES;
+	public int NETWORK_FLOOD_IP_BAN_MINUTES;
+	private int SUSPICIOUS_PLAYER_IP_BAN_MINUTES;
+	public boolean WANT_PCAP_LOGGING;
 
 	// Location of the server conf files.
 	public String CONFIG_DIR = "conf" + File.separator + "server";
@@ -77,7 +78,7 @@ public class ServerConfiguration {
 	public boolean SHOW_FLOATING_NAMETAGS;
 	public boolean WANT_CLANS;
 	public boolean WANT_KILL_FEED;
-	public static boolean FOG_TOGGLE;
+	public boolean FOG_TOGGLE;
 	public boolean GROUND_ITEM_TOGGLE;
 	public boolean AUTO_MESSAGE_SWITCH_TOGGLE;
 	public boolean HIDE_LOGIN_BOX_TOGGLE;
@@ -292,6 +293,7 @@ public class ServerConfiguration {
 		MAX_PLAYERS_PER_IP = tryReadInt("max_players_per_ip").orElse(10);
 		AVATAR_GENERATOR = tryReadBool("avatar_generator").orElse(false);
 		MEMBER_WORLD = tryReadBool("member_world").orElse(true);
+		WANT_PCAP_LOGGING = tryReadBool("want_pcap_logging").orElse(true);
 		WORLD_NUMBER = tryReadInt("world_number").orElse(1);
 		PLAYER_LEVEL_LIMIT = tryReadInt("player_level_limit").orElse(99);
 		COMBAT_EXP_RATE = tryReadDouble("combat_exp_rate").orElse(1.0);

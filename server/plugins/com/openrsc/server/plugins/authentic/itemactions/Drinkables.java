@@ -204,31 +204,65 @@ public class Drinkables implements OpInvTrigger {
 		else if (id == ItemId.GLASS_MILK.id())
 			handleGlassMilk(player, item);
 
-		else if (config().WANT_RUNECRAFT) {
+		else {
+			if (config().WANT_RUNECRAFT) {
+				if (id == ItemId.FULL_RUNECRAFT_POTION.id())
+					useRunecraftPotion(player, item, ItemId.TWO_RUNECRAFT_POTION.id(), false, 2);
 
-			if (id == ItemId.FULL_RUNECRAFT_POTION.id())
-				useRunecraftPotion(player, item, ItemId.TWO_RUNECRAFT_POTION.id(), false, 2);
+				else if (id == ItemId.TWO_RUNECRAFT_POTION.id())
+					useRunecraftPotion(player, item, ItemId.ONE_RUNECRAFT_POTION.id(), false, 1);
 
-			else if (id == ItemId.TWO_RUNECRAFT_POTION.id())
-				useRunecraftPotion(player, item, ItemId.ONE_RUNECRAFT_POTION.id(), false, 1);
+				else if (id == ItemId.ONE_RUNECRAFT_POTION.id())
+					useRunecraftPotion(player, item, ItemId.EMPTY_VIAL.id(), false, 0);
 
-			else if (id == ItemId.ONE_RUNECRAFT_POTION.id())
-				useRunecraftPotion(player, item, ItemId.EMPTY_VIAL.id(), false, 0);
+				else if (id == ItemId.FULL_SUPER_RUNECRAFT_POTION.id())
+					useRunecraftPotion(player, item, ItemId.TWO_SUPER_RUNECRAFT_POTION.id(), true, 2);
 
-			else if (id == ItemId.FULL_SUPER_RUNECRAFT_POTION.id())
-				useRunecraftPotion(player, item, ItemId.TWO_SUPER_RUNECRAFT_POTION.id(), true, 2);
+				else if (id == ItemId.TWO_SUPER_RUNECRAFT_POTION.id())
+					useRunecraftPotion(player, item, ItemId.ONE_SUPER_RUNECRAFT_POTION.id(), true, 1);
 
-			else if (id == ItemId.TWO_SUPER_RUNECRAFT_POTION.id())
-				useRunecraftPotion(player, item, ItemId.ONE_SUPER_RUNECRAFT_POTION.id(), true, 1);
+				else if (id == ItemId.ONE_SUPER_RUNECRAFT_POTION.id())
+					useRunecraftPotion(player, item, ItemId.EMPTY_VIAL.id(), true, 0);
+			}
 
-			else if (id == ItemId.ONE_SUPER_RUNECRAFT_POTION.id())
-				useRunecraftPotion(player, item, ItemId.EMPTY_VIAL.id(), true, 0);
+			if (id == ItemId.FULL_MAGIC_POTION.id())
+				useNormalPotion(player, item, Skills.MAGIC, 10, 3, ItemId.TWO_MAGIC_POTION.id(), 2);
 
+			else if (id == ItemId.TWO_MAGIC_POTION.id())
+				useNormalPotion(player, item, Skills.MAGIC, 10, 3, ItemId.ONE_MAGIC_POTION.id(), 1);
+
+			else if (id == ItemId.ONE_MAGIC_POTION.id())
+				useNormalPotion(player, item, Skills.MAGIC, 10, 3, ItemId.EMPTY_VIAL.id(), 0);
+
+			else if (id == ItemId.FULL_SUPER_RANGING_POTION.id())
+				useNormalPotion(player, item, Skills.RANGED, 15, 4, ItemId.TWO_SUPER_RANGING_POTION.id(), 2);
+
+			else if (id == ItemId.TWO_SUPER_RANGING_POTION.id())
+				useNormalPotion(player, item, Skills.RANGED, 15, 4, ItemId.ONE_SUPER_RANGING_POTION.id(), 1);
+
+			else if (id == ItemId.ONE_SUPER_RANGING_POTION.id())
+				useNormalPotion(player, item, Skills.RANGED, 15, 4, ItemId.EMPTY_VIAL.id(), 0);
+
+			else if (id == ItemId.FULL_SUPER_MAGIC_POTION.id())
+				useNormalPotion(player, item, Skills.MAGIC, 15, 4, ItemId.TWO_SUPER_MAGIC_POTION.id(), 2);
+
+			else if (id == ItemId.TWO_SUPER_MAGIC_POTION.id())
+				useNormalPotion(player, item, Skills.MAGIC, 15, 4, ItemId.ONE_SUPER_MAGIC_POTION.id(), 1);
+
+			else if (id == ItemId.ONE_SUPER_MAGIC_POTION.id())
+				useNormalPotion(player, item, Skills.MAGIC, 15, 4, ItemId.EMPTY_VIAL.id(), 0);
+
+			else if (id == ItemId.FULL_POTION_OF_SARADOMIN.id())
+				useSaradominPotion(player, item, ItemId.TWO_POTION_OF_SARADOMIN.id(), 2);
+
+			else if (id == ItemId.TWO_POTION_OF_SARADOMIN.id())
+				useSaradominPotion(player, item, ItemId.ONE_POTION_OF_SARADOMIN.id(), 1);
+
+			else if (id == ItemId.ONE_POTION_OF_SARADOMIN.id())
+				useSaradominPotion(player, item, ItemId.EMPTY_VIAL.id(), 0);
 			else
 				player.message("Nothing interesting happens");
 		}
-		else
-			player.message("Nothing interesting happens");
 	}
 
 	private void useFishingPotion(Player player, final Item item, final int newItem, final int left) {
@@ -299,7 +333,49 @@ public class Drinkables implements OpInvTrigger {
 		int[] percentageIncrease = {20, -10, 12, -10, 10};
 		int[] modifier = {1, -1, 1, 0, 0};
 		if (isLastDose) {
-			for (int i=0; i<3; i++) modifier[i] *= 3;
+			for (int i=0; i<5; i++) modifier[i] *= 3;
+		}
+
+		for (int i=0; i<affectedStats.length; i++) {
+			boolean isBoost = percentageIncrease[i] >= 0;
+			if (isBoost) {
+				int baseStat = player.getSkills().getLevel(affectedStats[i]) > player.getSkills().getMaxStat(affectedStats[i]) ? player.getSkills().getMaxStat(affectedStats[i]) : player.getSkills().getLevel(affectedStats[i]);
+				int newStat = baseStat
+					+ DataConversions.roundUp((player.getSkills().getMaxStat(affectedStats[i]) / 100D) * percentageIncrease[i])
+					+ modifier[i];
+				newStat = affectedStats[i] != Skills.PRAYER ? newStat : Math.min(newStat, player.getSkills().getMaxStat(Skills.PRAYER));
+				if (newStat > player.getSkills().getLevel(affectedStats[i])) {
+					player.getSkills().setLevel(affectedStats[i], newStat);
+				}
+			} else {
+				int baseStat = player.getSkills().getLevel(affectedStats[i]) < player.getSkills().getMaxStat(affectedStats[i]) ? player.getSkills().getMaxStat(affectedStats[i]) : player.getSkills().getLevel(affectedStats[i]);
+				int newStat = baseStat
+					- DataConversions.roundUp((player.getSkills().getMaxStat(affectedStats[i]) / 100D) * -1 * percentageIncrease[i])
+					- (-1 * modifier[i]);
+				if (newStat < player.getSkills().getLevel(affectedStats[i])) {
+					player.getSkills().setLevel(affectedStats[i], newStat);
+				}
+			}
+		}
+
+		delay(2);
+		if (left <= 0) {
+			player.message("You have finished your potion");
+		} else {
+			player.message("You have " + left + " dose" + (left == 1 ? "" : "s") + " of potion left");
+		}
+	}
+
+	private void useSaradominPotion(Player player, final Item item, final int newItem, final int left) {
+		player.message("You drink some of the cleansed liquid");
+		player.getCarriedItems().remove(item);
+		player.getCarriedItems().getInventory().add(new Item(newItem));
+		boolean isLastDose = item.getCatalogId() == ItemId.ONE_POTION_OF_SARADOMIN.id();
+		int[] affectedStats = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH, Skills.HITS, Skills.RANGED, Skills.MAGIC};
+		int[] percentageIncrease = {-10, 20, -10, 15, -10, -10};
+		int[] modifier = {-1, 1, -1, 1, -1, -1};
+		if (isLastDose) {
+			for (int i=0; i<6; i++) modifier[i] *= 3;
 		}
 
 		for (int i=0; i<affectedStats.length; i++) {
@@ -447,7 +523,7 @@ public class Drinkables implements OpInvTrigger {
 		player.playerServerMessage(MessageType.QUEST, "It tastes awful..yuck");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.COCKTAIL_GLASS.id()));
-		checkAndRemoveBlurberry(player, true);
+		resetGnomeBartending(player);
 	}
 
 	private void handleFruitCocktail(Player player, Item item) {

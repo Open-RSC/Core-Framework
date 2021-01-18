@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.List;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Moderator implements CommandTrigger {
+	private static final Logger LOGGER = LogManager.getLogger(Moderator.class);
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;

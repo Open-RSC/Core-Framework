@@ -5,10 +5,13 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class PlayerModerator implements CommandTrigger {
+	private static final Logger LOGGER = LogManager.getLogger(PlayerModerator.class);
 
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;

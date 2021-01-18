@@ -3710,7 +3710,7 @@ public class EntityHandler {
 			items.add(new ItemDef("Fruit Picker", "Useful for picking trees better", "", 10, -1, "items:530", false, false, 0, 0, false, false, true, 1355));
 			items.add(new ItemDef("Hand Shovel", "This will help get yield from bushes and allotments", "", 15, -1, "items:532", false, false, 0, 0, false, false, true, 1356));
 			items.add(new ItemDef("Herb Clippers", "Useful for picking up herbs out there", "", 25, -1, "items:531", false, false, 0, 0, true, false, true, 1357));
-			items.add(new ItemDef("Watering Can", "It's a watering can", "", 20, -1, "items:533", false, false, 0, 0, false, false, true, 1358));
+			items.add(new ItemDef("Watering Can", "It's a watering can", "", 20, -1, "items:557", false, false, 0, 0, false, false, true, 1358));
 			items.add(new ItemDef("grapefruit slices", "It's very fresh", "eat", 2, 291, "items:291", false, false, 0, 15435583, true, false, true, 1359));
 			items.add(new ItemDef("Diced grapefruit", "Fresh chunks of grapefruit", "eat", 2, 293, "items:293", false, false, 0, 15435583, true, false, true, 1360));
 			items.add(new ItemDef("Half coconut", "Looks like some great coconut", "", 2, -1, "items:538", false, false, 0, 0, true, false, true, 1361));
@@ -3827,6 +3827,34 @@ public class EntityHandler {
 		items.add(new ItemDef("Poison dragon bolts", "Good if you have a dragon crossbow!", "", 3000, -1, "items:poisondragonbolts", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1001 : 0, 16711748, 8257536, true, false, true, 1452));
 		items.add(new ItemDef("Dragon crossbow", "This fires crossbow bolts", "", 300000, -1, "items:dragoncrossbow", false, true, 16, 16711748, 8257536, true, false, true, 1453));
 		items.add(new ItemDef("Dragon longbow", "A nice sturdy bow", "", 300000, 54, "items:54", false, true, 24, 8257536, 16711748, true, false, true, 1454));
+
+		if (Config.S_WANT_HARVESTING) {
+			items.add(new ItemDef("Watering Can", "It's an empty watering can", "", 20, -1, "items:533", false, false, 0, 0, false, false, true, 1455));
+			items.add(new ItemDef("sugar cane", "These can sweeten things up", "", 2, -1, "items:541", false, false, 0, 0, true, false, true, 1456));
+			items.add(new ItemDef("dragonfruit", "A powerful fruit", "", 3, -1, "items:539", false, false, 0, 0, true, false, true, 1457));
+			items.add(new ItemDef("sliced dragonfruit", "Some great dragonfruit ready to be used", "", 3, -1, "items:540", false, false, 0, 0, true, false, true, 1458));
+			items.add(new ItemDef("Sweetened Slices", "Slices of fruit both sweet and sour", "eat", 2, 291, "items:291", true, false, 0, 15106125, true, false, false, 1459));
+			items.add(new ItemDef("Sweetened Chunks", "Chunks of fruit both sweet and sour", "eat", 2, 293, "items:293", true, false, 0, 15106125, true, false, false, 1460));
+			items.add(new ItemDef("Mixing bowl", "For mixing advanced cooking ingredients", "pour", 2, 161, "items:161", false, false, 0, 13553358, true, false, true, 1461));
+			items.add(new ItemDef("Uncooked seaweed soup", "I need to cook this", "", 15, 162, "items:162", false, false, 0, 10066227, true, false, true, 1462));
+			items.add(new ItemDef("Seaweed soup", "It's a seaweed soup", "Eat", 25, 162, "items:162", false, false, 0, 3368499, true, false, true, 1463));
+			items.add(new ItemDef("Burnt seaweed soup", "Eew it's horribly burnt", "", 1, 162, "items:162", false, false, 0, 3158064, true, false, true, 1464));
+			items.add(new ItemDef("grapes of Saradomin", "Strong grapes for a powerful wine", "", 1, 21, "items:21", false, false, 0, 4210783, true, false, true, 1465));
+			items.add(new ItemDef("grapes of Zamorak", "Strong grapes for a powerful wine", "", 1, 21, "items:21", false, false, 0, 12981081, true, false, true, 1466));
+			items.add(new ItemDef("wine of Saradomin", "It's full of wine", "Drink", 1, 65, "items:65", false, false, 0, 12851224, true, false, true, 1467));
+			items.add(new ItemDef("magic Potion", "3 doses of magic potion", "Drink", 288, 48, "items:48", false, false, 0, 11959655, true, false, true, 1468));
+			items.add(new ItemDef("magic Potion", "2 doses of magic potion", "Drink", 216, Config.S_WANT_CUSTOM_SPRITES ? 436 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:436" : "items:48", false, false, 0, 11959655, true, false, true, 1469));
+			items.add(new ItemDef("magic Potion", "1 dose of magic potion", "Drink", 144, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 11959655, true, false, true, 1470));
+			items.add(new ItemDef("Potion of Saradomin", "It looks dauntless", "drink", 25, 48, "items:48", false, false, 0, 14868319, true, false, true, 1471));
+			items.add(new ItemDef("Potion of Saradomin", "It looks dauntless", "drink", 25, Config.S_WANT_CUSTOM_SPRITES ? 436 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:436" : "items:48", false, false, 0, 14868319, true, false, true, 1472));
+			items.add(new ItemDef("Potion of Saradomin", "It looks dauntless", "drink", 25, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 14868319, true, false, true, 1473));
+			items.add(new ItemDef("Super ranging Potion", "3 doses of ranging potion", "Drink", 288, 48, "items:48", false, false, 0, 3192558, true, false, true, 1474));
+			items.add(new ItemDef("Super ranging Potion", "2 doses of ranging potion", "Drink", 216, Config.S_WANT_CUSTOM_SPRITES ? 436 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:436" : "items:48", false, false, 0, 3192558, true, false, true, 1475));
+			items.add(new ItemDef("Super ranging Potion", "1 dose of ranging potion", "Drink", 144, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 3192558, true, false, true, 1476));
+			items.add(new ItemDef("Super magic Potion", "3 doses of magic potion", "Drink", 288, 48, "items:48", false, false, 0, 6130854, true, false, true, 1477));
+			items.add(new ItemDef("Super magic Potion", "2 doses of magic potion", "Drink", 216, Config.S_WANT_CUSTOM_SPRITES ? 436 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:436" : "items:48", false, false, 0, 6130854, true, false, true, 1478));
+			items.add(new ItemDef("Super magic Potion", "1 dose of magic potion", "Drink", 144, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 6130854, true, false, true, 1479));
+		}
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
@@ -6477,10 +6505,10 @@ public class EntityHandler {
 			objects.add(new GameObjectDef("Limpwurt Root", "Some nice limpwurt root around here", "Clip", "Examine", 1, 1, 1, 0, "limpwurtroot", ++i));
 			objects.add(new GameObjectDef("Sugar Cane", "The plant of interesting sugar cane!", "Harvest", "Examine", 0, 1, 1, 0, "sugarcane", ++i));
 			objects.add(new GameObjectDef("Mysterious Grape Vine", "This vine may have more than just grapes", "Harvest", "Examine", 0, 1, 1, 0, "grapevine", ++i));
-			objects.add(new GameObjectDef("Lava Forge", "The latest in dwarven technology", "WalkTo", "Examine", 1, 2, 2, 0, "furnace", ++i));//1284
-			objects.add(new GameObjectDef("anvil", "heavy metal", "WalkTo", "Examine", 1, 1, 1, 0, "anvil", ++i));//1285
 		}
 
+		objects.add(new GameObjectDef("Lava Forge", "The latest in dwarven technology", "WalkTo", "Examine", 1, 2, 2, 0, "furnace", ++i));//1284
+		objects.add(new GameObjectDef("anvil", "heavy metal", "WalkTo", "Examine", 1, 1, 1, 0, "anvil", ++i));//1285
 		objects.add(new GameObjectDef("Rocks", "It looks dangerous...", "climb", "Examine", 0, 1, 1, 0, "brownclimbingrocks", ++i));//1286
 		//Taverly stepping stone
 		objects.add(new GameObjectDef("Stepping Stone", "It looks like I could jump on this", "jump to", "Examine", 1, 1, 1, 0, "stonedisc", ++i)); //1287
@@ -6495,6 +6523,10 @@ public class EntityHandler {
 		//drag->KBD stepping stone
 		objects.add(new GameObjectDef("Stepping Stone", "It looks like I could jump on this", "jump to", "Examine", 1, 1, 1, 0, "stonedisc", ++i)); //1292
 
+		if (Config.S_WANT_HARVESTING) {
+			objects.add(new GameObjectDef("Dragonfruit Tree", "A tree filled with many ripe dragonfruits", "Harvest", "Examine", 1, 1, 1, 0, "dragonfruit", ++i)); //1293
+			objects.add(new GameObjectDef("Exhausted Tree", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "depleteddragonfruit", ++i)); //1294
+		}
 	}
 
 	public static void load(boolean loadMembers) {
