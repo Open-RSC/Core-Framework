@@ -9,7 +9,8 @@ public class TutorialHandler implements PacketHandler {
 
 	@Override
 	public void handlePacket(Packet packet, Player player) throws Exception {
-		if (player == null) {
+		
+		if (player == null || !player.getWorld().getServer().getConfig().SHOW_TUTORIAL_SKIP_OPTION) {
 			return;
 		}
 		if (player.getLocation().onTutorialIsland()) {

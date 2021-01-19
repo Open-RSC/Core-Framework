@@ -107,7 +107,8 @@ public class ActionSender {
 	public static void sendPlayerOnTutorial(Player player) {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(Opcode.SEND_ON_TUTORIAL.opcode);
-		s.writeByte((byte) (player.getLocation().onTutorialIsland() ? 1 : 0));
+		s.writeByte((byte) (player.getLocation().onTutorialIsland() && 
+			player.getWorld().getServer().getConfig().SHOW_TUTORIAL_SKIP_OPTION ? 1 : 0));
 		player.write(s.toPacket());
 	}
 

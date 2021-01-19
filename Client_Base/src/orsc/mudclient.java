@@ -8866,7 +8866,7 @@ public final class mudclient implements Runnable {
 
 		// skip tutorial or exit the black hole menu option
 		int logoutColor;
-		if (this.insideTutorial && S_SHOW_TUTORIAL_SKIP_OPTION) {
+		if (this.insideTutorial) {
 			y = 256;
 			if (C_CUSTOM_UI)
 				y = var4 + 195;
@@ -9884,7 +9884,7 @@ public final class mudclient implements Runnable {
 
 		// skip tutorial button or exit blackhole button
 		int logoutColor = 0xFFFFFF;
-		if (this.insideTutorial && S_SHOW_TUTORIAL_SKIP_OPTION) {
+		if (this.insideTutorial) {
 			y += 20;
 			if (x < this.mouseX && this.mouseX < x + boxWidth && y - 12 < this.mouseY
 				&& this.mouseY < 4 + y) {
