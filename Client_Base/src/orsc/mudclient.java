@@ -9647,7 +9647,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// skip tutorial button or exit blackhole button
-		if (this.insideTutorial && S_SHOW_TUTORIAL_SKIP_OPTION) {
+		if (this.insideTutorial) {
 			yFromTopDistance = 255;
 			if (C_CUSTOM_UI)
 				yFromTopDistance = getUITabsY() - 240 + 194;
@@ -9670,7 +9670,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// logout menu option
-		yFromTopDistance = (S_SHOW_TUTORIAL_SKIP_OPTION ? 290 : 305);
+		yFromTopDistance = 290;
 		if (C_CUSTOM_UI)
 			yFromTopDistance = getUITabsY() - 240 + 229;
 		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
@@ -9901,11 +9901,11 @@ public final class mudclient implements Runnable {
 		}
 
 		// logout section text
-		y += (S_SHOW_TUTORIAL_SKIP_OPTION ? 20 : 35);
+		y += 20;
 		this.getSurface().drawString("Always logout when you finish", x, y, 0, 1);
 
 		// logout menu option
-		y += (S_SHOW_TUTORIAL_SKIP_OPTION ? 15 : 20);
+		y += 15;
 		logoutColor = 0xFFFFFF;
 		if (x < this.mouseX && x + boxWidth > this.mouseX && y - 12 < this.mouseY && this.mouseY < 4 + y) {
 			logoutColor = 0xFFFF00;
@@ -10018,7 +10018,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// skip tutorial button or exit blackhole button
-		if (this.insideTutorial && S_SHOW_TUTORIAL_SKIP_OPTION) { // tutorial menu option
+		if (this.insideTutorial) { // tutorial menu option
 			if (this.mouseX > var6 && var5 + var6 > this.mouseX && yFromTopDistance - 12 < this.mouseY
 				&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 				this.showItemModX(InputXPrompt.promptSkipTutorial, InputXAction.SKIP_TUTORIAL, false);
@@ -10037,7 +10037,7 @@ public final class mudclient implements Runnable {
 		}
 
 		// logout menu option
-		yFromTopDistance += (S_SHOW_TUTORIAL_SKIP_OPTION ? 15 : 40);
+		yFromTopDistance += 15;
 		if (this.mouseX > var6 && var5 + var6 > this.mouseX && this.mouseY > yFromTopDistance - 12
 			&& this.mouseY < yFromTopDistance + 4 && this.mouseButtonClick == 1) {
 			this.sendLogout(0);
