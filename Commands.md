@@ -28,7 +28,7 @@ Admin Commands
   - Stops the currently running holiday drop.
 - getholidaydrop
   - Usage: `::getholidaydrop`
-  - Alias: `::checkholidaydrop`
+  - Alias: `::checkholidaydrop` or `::checkholidayevent` or `::drop`
   - Gets information about the currently running holiday drop.
 - restart
   - Usage: `::restart`
@@ -460,7 +460,7 @@ Regular Player Commands
   - Usage: `::gang`
   - Shows which gang you are in: Black Arm, Phoneix, or none.
 - bankpin
-  - Usage: `::bankpin (name)`
+  - Usage: `::bankpin [name]`
   - Shows the change bankpin screen to the specified player.
   - Only admins may show the bank screen to another player.
 - wilderness
@@ -471,6 +471,9 @@ Regular Player Commands
   - Send message to clan chat.
   - Clans must be enabled to use this command.
   - You must be in a clan to use this command.
+- joinclan
+  - Usage: `::joinclan [clan name]`
+  - Allows a player to request to join a clan.
 - clanaccept
   - Usage: `::clanaccept`
   - Accept an invication to a clan.
@@ -488,21 +491,30 @@ Regular Player Commands
   - You must be in a clan to use this command.
   - You can not kick the clan leader.
   - You must be a clan general or clan leader to kick from the clan.
+- partyaccept
+  - Usage: `::partyaccept [name]`
+  - Accepts a player's party join request
+- leaveparty
+  - Usage: `::leaveparty`
+  - Causes the player to leave the current party
 - gameinfo
   - Usage: `::gameinfo`
   - Shows your coordinates and total time played.
 - event
-  - Usage: `::event
+  - Usage: `::event`
   - Join the currently running server PK Event.
   - You can not participate in PK Events while you are jailed.
   - You can not join PK Events while you are in the wilderness.
   - You must meet the PK Event requirements to join.
 - g
   - Usage: `::g [message]`
-  - Alias: `::p`
+  - Alias: `::pk`
   - Send a message to global or PK chat.
-  - `::g` is for global and `::p` is for PK chat.
+  - `::g` is for global and `::pk` is for PK chat.
   - You can only send one global chat message per 15 seconds.
+- p
+  - Usage: `::p [message]`
+  - Send a message to party members chat.
 - online
   - Usage: `::online`
   - Shows the number of players currently online
@@ -522,19 +534,40 @@ Regular Player Commands
   - Shows the current date and time of the server.
 - commands
   - Usage: `::commands`
-  - Shows a list of the Regular Player commands
+  - Shows a list of the Regular Player commands.
 - toggleglobalchat
   - Usage: `::toggleglobalchat`
-  - Toggles seeing global chat received via Global$ friend 
+  - Toggles seeing global chat received via Global$ friend.
 - toggleblockchat
   - Usage: `::toggleblockchat`
-  - Toggles the block of seeing all chat messages, including from friends
+  - Toggles the block of seeing all chat messages, including from friends.
 - toggleblockprivate
   - Usage: `::toggleblockprivate`
-  - Toggles the block of seeing all private messages, including from friends
+  - Toggles the block of seeing all private messages, including from friends.
 - toggleblocktrade
   - Usage: `::toggleblocktrade`
-  - Toggles the block of receiving all trade requests, including from friends
+  - Toggles the block of receiving all trade requests, including from friends.
 - toggleblockduel
   - Usage: `::toggleblockduel`
-  - Toggles the block of receiving all duel requests, including from friends
+  - Toggles the block of receiving all duel requests, including from friends.
+- shareloot
+  - Usage: `::shareloot`
+  - Toggles loot sharing for the party.
+- shareexp
+  - Usage: `::shareexp`
+  - Toggles experience sharing for the party.
+- kills
+  - Usage: `::kills`
+  - Displays the top NPC kill counts for the player
+- qoloptout
+  - Usage: `::qoloptout`
+  - Allows the player to permanently opt out of QoL features for their account.
+- qoloptoutconfirm
+  - Usage: `::qoloptoutconfirm`
+  - Confirms permanent QoL opt out for the player's account.
+- certoptout
+  - Usage: `::certoptout`
+  - Allows the player to permanently opt out of being able to use item certs.
+- certoptoutconfirm
+  - Usage: `::certoptoutconfirm`
+  - Confirms permanent opt out of being able to use item certs.
