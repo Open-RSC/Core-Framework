@@ -784,15 +784,13 @@ public final class RegularPlayer implements CommandTrigger {
 				+ "@whi@::uniqueonline - shows number of unique IPs logged in %"
 				+ "@whi@::onlinelist - shows players currently online in a list %"
 				+ "@whi@::g <message> - to talk in @gr1@general @whi@global chat channel %"
-				+ "@whi@::p <message> - to talk in @or1@pking @whi@global chat channel %"
+				+ "@whi@::pk <message> - to talk in @or1@pking @whi@global chat channel %"
 				+ "@whi@::c <message> - talk in clan chat %"
-				+ "@whi@::claninvite <name> - invite player to clan %"
-				+ "@whi@::clankick <name> - kick player from clan %"
-				+ "@whi@::clanaccept - accept clan invitation %"
+				+ "@whi@::p <message> - talk in party chat %"
 				+ "@whi@::gang - shows if you are 'Phoenix' or 'Black arm' gang %"
 				+ "@whi@::wilderness - shows the wilderness activity %"
 				+ "@whi@::event - to enter an ongoing server event %"
-				+ "@whi@::kills <name(optional)> - shows kill counts of npcs %"
+				+ "@whi@::kills - shows kill counts of npcs %"
 				+ "@whi@::qoloptout - opts you out of Quality of Life features %"
 				+ "@whi@::certoptout - opts you out of the traditional 'cert' system %",true
 			);
