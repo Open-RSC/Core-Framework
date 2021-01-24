@@ -379,8 +379,7 @@ public final class GameStateUpdater {
 			Projectile projectileFired = player.getUpdateFlags().getProjectile().get();
 			projectilesNeedingDisplayed.add(projectileFired);
 		}
-		boolean myBlockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
-			== PlayerSettings.BlockingMode.All.id();
+
 		if (player.getUpdateFlags().hasChatMessage()) {
 			ChatMessage chatMessage = player.getUpdateFlags().getChatMessage();
 			if (!chatMessage.getMuted() || player.hasElevatedPriveledges())
@@ -399,9 +398,7 @@ public final class GameStateUpdater {
 		}
 		for (final Player otherPlayer : player.getLocalPlayers()) {
 			final UpdateFlags updateFlags = otherPlayer.getUpdateFlags();
-
-			boolean otherBlockAll = otherPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, otherPlayer.isUsingAuthenticClient())
-				== PlayerSettings.BlockingMode.All.id();
+			
 			boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
 				== PlayerSettings.BlockingMode.All.id();
 			boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
