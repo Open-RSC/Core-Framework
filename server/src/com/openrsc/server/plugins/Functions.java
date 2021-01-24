@@ -239,7 +239,7 @@ public class Functions {
 						say(player, npc, options[player.getOption()]);
 				}
 				return player.getOption();
-			} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
+			} else if (System.currentTimeMillis() - start > 500L * player.getConfig().GAME_TICK || player.getMenuHandler() == null) {
 				player.resetMenuHandler();
 				return -1;
 			}
