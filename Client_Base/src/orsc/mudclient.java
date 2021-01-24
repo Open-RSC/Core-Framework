@@ -68,8 +68,8 @@ public final class mudclient implements Runnable {
 	private static String[] skillNameLong;
 	private static String[] skillNames;
 	public final int[] bankItemOnTab = new int[500];
-	public final int[] equipIconXLocations = new int[]{98, 98, 98, 153, 43, 98, 98, 43, 43, 153, 153};
-	public final int[] equipIconYLocations = new int[]{5, 85, 125, 85, 85, 45, 165, 165, 45, 45, 165};
+	public final int[] equipIconXLocations = new int[]{98, 98, 98, 153, 43, 43, 98, 98, 43, 153, 153};
+	public final int[] equipIconYLocations = new int[]{5, 85, 125, 85, 85, 165, 165, 45, 45, 45, 165};
 	public final String[] equipmentStatNames = new String[]{"Armour", "WeaponAim", "WeaponPower", "Magic",
 		"Prayer"};
 	public final int[] playerStatEquipment = new int[5];

@@ -20,7 +20,7 @@ import static orsc.osConfig.C_MENU_SIZE;
 public final class CustomBankInterface extends BankInterface {
 	private static int fontSize = Config.isAndroid() ? C_MENU_SIZE : 1;
 	private static int fontSizeHeight;
-	private int[] equipmentViewOrder = new int[]{0, 1, 2, 5, 4, 3, 8, 9, 6, 7, 10};
+	private int[] equipmentViewOrder = new int[]{0, 1, 2, 7, 4, 3, 8, 9, 5, 6, 10};
 	private final int presetCount = 2;
 	public Preset[] presets = new Preset[presetCount];
 	public int selectedInventorySlot = -1;

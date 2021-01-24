@@ -472,6 +472,7 @@ public final class EntityHandler {
 			items.get(ItemId.DIAMOND_NECKLACE.id()).setAppearanceId(411);
 			items.get(ItemId.DIAMOND_AMULET.id()).setAppearanceId(412);
 			items.get(ItemId.DRAGONSTONE_NECKLACE.id()).setAppearanceId(413);
+			items.get(ItemId.DRAGONSTONE_AMULET.id()).setAppearanceId(414);
 			items.get(ItemId.CHARGED_DRAGONSTONE_AMULET.id()).setAppearanceId(414);
 
 			items.get(ItemId.ANNAS_SILVER_NECKLACE.id()).setAppearanceId(415);
