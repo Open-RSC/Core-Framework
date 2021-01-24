@@ -3,7 +3,6 @@ package com.openrsc.server.model.container;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.EquipRequest;
@@ -749,9 +748,9 @@ public class Equipment {
 		SLOT_MEDIUM_HELMET(5),
 		SLOT_CHAIN_BODY(6),
 		SLOT_SKIRT(7),
-		SLOT_NECK(8),
+		SLOT_GLOVES(8),
 		SLOT_BOOTS(9),
-		SLOT_GLOVES(10),
+		SLOT_NECK(10),
 		SLOT_CAPE(11),
 		SLOT_AMMO(12),
 		SLOT_RING(13);
