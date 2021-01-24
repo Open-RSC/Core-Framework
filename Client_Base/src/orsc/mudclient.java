@@ -8819,13 +8819,13 @@ public final class mudclient implements Runnable {
 		} else if (S_WANT_GLOBAL_CHAT && !S_WANT_GLOBAL_FRIEND) {
 			y += 15;
 			if (this.settingsBlockGlobal == 1) {
-				this.getSurface().drawString("Hide global messages: @red@None", 3 + baseX, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Hide global messages: @gre@None", 3 + baseX, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockGlobal == 2) {
-				this.getSurface().drawString("Hide global messages: @gre@All", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Hide global messages: @red@All", baseX + 3, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockGlobal == 3) {
 				this.getSurface().drawString("Hide global messages: @or1@Pking", baseX + 3, y, 0xFFFFFF, 1);
 			} else if (this.settingsBlockGlobal == 4) {
-				this.getSurface().drawString("Hide global messages: @gr1@General", baseX + 3, y, 0xFFFFFF, 1);
+				this.getSurface().drawString("Hide global messages: @ora@General", baseX + 3, y, 0xFFFFFF, 1);
 			}
 		}
 

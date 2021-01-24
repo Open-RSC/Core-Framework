@@ -108,6 +108,26 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
+	protected int queryPlayerGroup(int playerId) throws GameDatabaseException {
+		try {
+			final PreparedStatement statement = statementFromInteger(getQueries().playerGroupId, playerId);
+			final ResultSet result = statement.executeQuery();
+			try {
+				if (result.next()) {
+					return result.getInt("group_id");
+				}
+			} finally {
+				result.close();
+				statement.close();
+			}
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+		return -1;
+	}
+
+	@Override
 	protected int queryPlayerIdFromUsername(String username) throws GameDatabaseException {
 		try {
 			final PreparedStatement statement = statementFromString(getQueries().userToId, username);

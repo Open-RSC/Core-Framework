@@ -60,6 +60,8 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract boolean queryPlayerExists(String username) throws GameDatabaseException;
 
+	protected abstract int queryPlayerGroup(int playerId) throws GameDatabaseException;
+
 	protected abstract int queryPlayerIdFromUsername(String username) throws GameDatabaseException;
 
 	protected abstract String queryUsernameFromPlayerId(final int playerId) throws GameDatabaseException;
@@ -407,6 +409,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	public boolean playerExists(final String username) throws GameDatabaseException {
 		return queryPlayerExists(username);
+	}
+
+	public int playerGroup(int playerId) throws GameDatabaseException {
+		return queryPlayerGroup(playerId);
 	}
 
 	public int playerIdFromUsername(final String username) throws GameDatabaseException {

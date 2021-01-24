@@ -381,8 +381,7 @@ public final class GameStateUpdater {
 		}
 		boolean myBlockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
 			== PlayerSettings.BlockingMode.All.id();
-		if (player.getUpdateFlags().hasChatMessage() && (!myBlockAll || player.isMod()
-			|| player.getUpdateFlags().getChatMessage().getRecipient() != null)) {
+		if (player.getUpdateFlags().hasChatMessage()) {
 			ChatMessage chatMessage = player.getUpdateFlags().getChatMessage();
 			if (!chatMessage.getMuted() || player.hasElevatedPriveledges())
 				chatMessagesNeedingDisplayed.add(chatMessage);
@@ -424,8 +423,8 @@ public final class GameStateUpdater {
 			if (updateFlags.hasChatMessage()
 				&& (((player.getSocial().isFriendsWith(otherPlayer.getUsernameHash()) && !blockAll)
 				|| (!player.getSocial().isFriendsWith(otherPlayer.getUsernameHash()) && blockNone))
-				&& !player.getSocial().isIgnoring(otherPlayer.getUsernameHash()) && !otherBlockAll
-				|| otherPlayer.isMod() || updateFlags.getChatMessage().getRecipient() != null)) {
+				&& !player.getSocial().isIgnoring(otherPlayer.getUsernameHash())
+				|| player.isMod()|| otherPlayer.isMod() || updateFlags.getChatMessage().getRecipient() != null)) {
 				ChatMessage chatMessage = updateFlags.getChatMessage();
 				if (!chatMessage.getMuted() || player.hasElevatedPriveledges())
 					chatMessagesNeedingDisplayed.add(chatMessage);

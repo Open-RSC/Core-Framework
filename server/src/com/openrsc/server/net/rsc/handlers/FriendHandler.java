@@ -50,6 +50,19 @@ public final class FriendHandler implements PacketHandler {
 				return;
 			}
 
+			if (friend >= 0L) {
+				try {
+					int friendId = player.getWorld().getServer().getDatabase().playerIdFromUsername(DataConversions.hashToUsername(friend));
+
+					if (!player.getWorld().getServer().getDatabase().playerExists(friendId)) {
+						// only able to add those that exist!
+						player.message("Unable to add friend - unknown player.");
+						ActionSender.sendFriendList(player);
+						return;
+					}
+				} catch (Exception e) { }
+			}
+
 			player.getSocial().addFriend(friend, 0, DataConversions.hashToUsername(friend));
 			ActionSender.sendFriendUpdate(player, friend);
 			if (affectedPlayer != null && affectedPlayer.loggedIn()) {
@@ -85,6 +98,25 @@ public final class FriendHandler implements PacketHandler {
 				player.message("Ignore list full");
 				ActionSender.sendIgnoreList(player);
 				return;
+			}
+			if (friend >= 0L) {
+				try {
+					int friendId = player.getWorld().getServer().getDatabase().playerIdFromUsername(DataConversions.hashToUsername(friend));
+
+					if (!player.getWorld().getServer().getDatabase().playerExists(friendId)) {
+						// only able to add those that exist!
+						player.message("Unable to add name - unknown player.");
+						ActionSender.sendIgnoreList(player);
+						return;
+					}
+
+					int staffGroup = player.getWorld().getServer().getDatabase().playerGroup(friendId);
+					if (staffGroup >= 0 && staffGroup <= 3) {
+						player.message("Staff may not be added to ignore list");
+						ActionSender.sendIgnoreList(player);
+						return;
+					}
+				} catch (Exception e) { }
 			}
 			player.getSocial().addIgnore(friend, 0, DataConversions.hashToUsername(friend));
 			ActionSender.sendIgnoreList(player);

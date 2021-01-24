@@ -10,7 +10,7 @@ public class MySqlQueries {
 	public String updateExperience, updateStats, playerExp, playerCurExp;
 	public final String createPlayer, recentlyRegistered, initStats, initExp;
 	public final String save_AddFriends, save_DeleteFriends, save_AddIgnored, save_DeleteIgnored;
-	public final String playerExists, playerData, playerInvItems, playerEquipped, playerBankItems, playerBankPresets;
+	public final String playerExists, playerGroupId, playerData, playerInvItems, playerEquipped, playerBankItems, playerBankPresets;
 	public final String playerFriends, playerIgnored, playerQuests, playerAchievements, playerCache;
 	public final String max_itemStatus, save_ItemCreate, save_ItemUpdate, save_ItemPurge; //itemstatuses, must be inserted before adding entry on bank, equipment, inventory
 	public final String save_DeleteBank, save_DeleteBankPresets, save_BankAdd, save_BankRemove, save_BankPresetAdd, save_BankPresetRemove;
@@ -72,6 +72,7 @@ public class MySqlQueries {
 		save_AddIgnored = "INSERT INTO `" + PREFIX + "ignores`(`playerID`, `ignore`) VALUES(?, ?)";
 		save_DeleteIgnored = "DELETE FROM `" + PREFIX + "ignores` WHERE `playerID` = ?";
 		playerExists = "SELECT 1 FROM `" + PREFIX + "players` WHERE `id` = ?";
+		playerGroupId = "SELECT `group_id` FROM `" + PREFIX + "players` WHERE `id` = ?";
 		playerData = "SELECT `id`, `group_id`, "
 			+ "`combatstyle`, `login_date`, `login_ip`, `x`, `y`, `fatigue`,  `kills`,"
 			+ "`deaths`, `npc_kills`, "
