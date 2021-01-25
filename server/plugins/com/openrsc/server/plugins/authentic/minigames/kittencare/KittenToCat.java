@@ -141,7 +141,6 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 		case RAW_SARDINE:
 		case SEASONED_SARDINE:
 		case SARDINE:
-		case RAW_HERRING:
 		case RAW_ANCHOVIES:
 		case RAW_TROUT:
 		case TROUT:
@@ -288,11 +287,11 @@ public class KittenToCat implements MiniGameInterface, CatGrowthTrigger, DropObj
 
 	private boolean isFoodOnCat(Item item1, Item item2) {
 		return ((item2.getCatalogId() == ItemId.KITTEN.id() || item2.getCatalogId() == ItemId.CAT.id()) && inArray(item1.getCatalogId(), ItemId.MILK.id(), ItemId.RAW_SHRIMP.id(), ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id(),
-				ItemId.SARDINE.id(), ItemId.RAW_HERRING.id(), ItemId.RAW_ANCHOVIES.id(), ItemId.RAW_TROUT.id(),
-				ItemId.TROUT.id(), ItemId.RAW_SALMON.id(), ItemId.RAW_TUNA.id(), ItemId.TUNA.id())) ||
+				ItemId.SARDINE.id(), ItemId.RAW_ANCHOVIES.id(), ItemId.RAW_TROUT.id(), ItemId.TROUT.id(),
+				ItemId.RAW_SALMON.id(), ItemId.SALMON.id(), ItemId.RAW_TUNA.id(), ItemId.TUNA.id())) ||
 				((item1.getCatalogId() == ItemId.KITTEN.id() || item1.getCatalogId() == ItemId.CAT.id()) && inArray(item2.getCatalogId(), ItemId.MILK.id(), ItemId.RAW_SHRIMP.id(), ItemId.RAW_SARDINE.id(), ItemId.SEASONED_SARDINE.id(),
-				ItemId.SARDINE.id(), ItemId.RAW_HERRING.id(), ItemId.RAW_ANCHOVIES.id(), ItemId.RAW_TROUT.id(),
-				ItemId.TROUT.id(), ItemId.RAW_SALMON.id(), ItemId.SALMON.id(), ItemId.RAW_TUNA.id(), ItemId.TUNA.id()));
+				ItemId.SARDINE.id(), ItemId.RAW_ANCHOVIES.id(), ItemId.RAW_TROUT.id(), ItemId.TROUT.id(),
+				ItemId.RAW_SALMON.id(), ItemId.SALMON.id(), ItemId.RAW_TUNA.id(), ItemId.TUNA.id()));
 	}
 
 	@Override
