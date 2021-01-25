@@ -11917,8 +11917,8 @@ public final class mudclient implements Runnable {
 			showLoginScreenStatus("Password must be at least 4", "characters long!");
 			return;
 		}
-		if (pass.trim().length() > 16) {
-			showLoginScreenStatus("Password is too long, please use", "password with length of 4-16");
+		if (pass.trim().length() > 64) {
+			showLoginScreenStatus("Password is too long, please use", "password with length of 4-64");
 			return;
 		}
 		if (!isValidEmailAddress(email)) {
