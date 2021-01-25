@@ -6,6 +6,7 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
+import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -414,18 +415,72 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		startKolodionEvent(player);
 	}
 
+	private int[] allowedItems = {
+		// basic staves
+		ItemId.STAFF.id(),
+		ItemId.MAGIC_STAFF.id(),
+		ItemId.STAFF_OF_AIR.id(),
+		ItemId.STAFF_OF_EARTH.id(),
+		ItemId.STAFF_OF_FIRE.id(),
+		ItemId.STAFF_OF_EARTH.id(),
+
+		// Magic hats/robes
+		ItemId.BLUE_WIZARDSHAT.id(),
+		ItemId.BLACK_WIZARDSHAT.id(),
+		ItemId.GNOMESHAT_BLUE.id(),
+		ItemId.GNOMESHAT_PURPLE.id(),
+		ItemId.GNOMESHAT_CREAM.id(),
+		ItemId.GNOMESHAT_PINK.id(),
+		ItemId.GNOMESHAT_GREEN.id(),
+		ItemId.SANTAS_HAT.id(),
+		ItemId.WIZARDS_ROBE.id(),
+		ItemId.BLACK_ROBE.id(),
+		ItemId.ROBE_OF_ZAMORAK_TOP.id(),
+		ItemId.BLUE_SKIRT.id(),
+		ItemId.BLACK_SKIRT.id(),
+		ItemId.ROBE_OF_ZAMORAK_BOTTOM.id(),
+
+		// Amulets
+		ItemId.AMULET_OF_ACCURACY.id(),
+		ItemId.SAPPHIRE_AMULET_OF_MAGIC.id(),
+		ItemId.EMERALD_AMULET_OF_PROTECTION.id(),
+		ItemId.RUBY_AMULET_OF_STRENGTH.id(),
+		ItemId.DIAMOND_AMULET_OF_POWER.id(),
+		ItemId.DRAGONSTONE_AMULET.id(),
+		ItemId.CHARGED_DRAGONSTONE_AMULET.id(),
+
+		// Capes
+		ItemId.CAPE_OF_LEGENDS.id(),
+		ItemId.BLACK_CAPE.id(),
+		ItemId.RED_CAPE.id(),
+		ItemId.ORANGE_CAPE.id(),
+		ItemId.YELLOW_CAPE.id(),
+		ItemId.GREEN_CAPE.id(),
+		ItemId.BLUE_CAPE.id(),
+		ItemId.PURPLE_CAPE.id(),
+		ItemId.GUTHIX_CAPE.id(),
+		ItemId.SARADOMIN_CAPE.id(),
+		ItemId.ZAMORAK_CAPE.id()
+	};
+
 	private boolean cantGo(Player player) {
 		synchronized(player.getCarriedItems().getInventory().getItems()) {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
-				String name = item.getDef(player.getWorld()).getName().toLowerCase();
-				if (name.contains("dagger") || name.contains("scimitar") || name.contains("bow") || name.contains("mail")
-					|| (name.contains("sword") && !name.equalsIgnoreCase("Swordfish")
-					&& !name.equalsIgnoreCase("Burnt Swordfish") && !name.equalsIgnoreCase("Raw Swordfish"))
-					|| name.contains("mace") || name.contains("helmet") || name.contains("axe")
-					|| name.contains("arrow") || name.contains("bow") || name.contains("spear")
-					|| name.contains("battlestaff")) {
+				// If the item is in the allowed list, then let it's good.
+				if (inArray(item, allowedItems)) continue;
+				// If the item isn't in the above list and you can wield it, then
+				// it isn't allowed.
+				if (item.getDef(player.getWorld()).isWieldable()) return true;
+			}
 
-					return true;
+			if (config().WANT_EQUIPMENT_TAB) {
+				Item item;
+				for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+					item = player.getCarriedItems().getEquipment().get(i);
+					if (item == null) continue;
+					// If the equipped item is not in the allowed list, then
+					// they cannot bring it into the arena.
+					if (!inArray(item, allowedItems)) return true;
 				}
 			}
 			return false;
