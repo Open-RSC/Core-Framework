@@ -398,7 +398,7 @@ public final class GameStateUpdater {
 		}
 		for (final Player otherPlayer : player.getLocalPlayers()) {
 			final UpdateFlags updateFlags = otherPlayer.getUpdateFlags();
-			
+
 			boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
 				== PlayerSettings.BlockingMode.All.id();
 			boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
@@ -1075,7 +1075,9 @@ public final class GameStateUpdater {
 						== PlayerSettings.BlockingMode.All.id();
 					boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
 						== PlayerSettings.BlockingMode.None.id();
-					if (((affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || blockNone)
+					if (!player.getSocial().isFriendsWith(affectedPlayer.getUsernameHash())) {
+						player.message("Unable to send message - player not on your friendlist.");
+					} else if (((affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || blockNone)
 						&& !affectedPlayer.getSocial().isIgnoring(player.getUsernameHash()) || player.isMod()) {
 						ActionSender.sendPrivateMessageSent(player, affectedPlayer.getUsernameHash(), pm.getMessage(), false);
 						ActionSender.sendPrivateMessageReceived(affectedPlayer, player, pm.getMessage(), false);
@@ -1083,6 +1085,18 @@ public final class GameStateUpdater {
 
 					player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), pm.getMessage(),
 						DataConversions.hashToUsername(pm.getFriend())));
+				} else {
+					// player not online
+					if (pm.getFriend() >= 0L) {
+						try {
+							int friendId = player.getWorld().getServer().getDatabase().playerIdFromUsername(DataConversions.hashToUsername(pm.getFriend()));
+
+							if (player.getWorld().getServer().getDatabase().playerExists(friendId)) {
+								// player not online
+								player.message("Unable to send message - player unavailable.");
+							}
+						} catch (Exception e) { }
+					}
 				}
 			}
 		}
