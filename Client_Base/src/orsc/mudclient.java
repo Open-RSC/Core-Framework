@@ -2095,19 +2095,19 @@ public final class mudclient implements Runnable {
 			menuNewUserUsername = menuNewUser.addCenteredTextEntry(halfGameWidth() - 6, halfGameHeight() - 82, 200, 12, 40, 4, false, false);
 
 			if (!wantEmail()) { // moves the password box down a bit for a clean look
-				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 38, "@whi@Password must be at least between 4 and 64 characters long", 1, false);
+				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 38, "@whi@Password must be at least between 4 and 20 characters long", 1, false);
 				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 27, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
 
 				menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() - 1, 420, 34);
 				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 6, "Choose a Password (You will require this to login)", 4, false);
-				menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() + 7, 200, 64, 40, 4, true, false);
+				menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() + 7, 200, 20, 40, 4, true, false);
 			} else { // leaves space for the email box below
-				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 64, "@whi@Password must be at least between 4 and 64 characters long", 1, false);
+				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 64, "@whi@Password must be at least between 4 and 20 characters long", 1, false);
 				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 53, "@red@(DO NOT use the same password that you use elsewhere. Regular letters and numbers only)", 0, false);
 
 				menuNewUser.addButtonBackground(halfGameWidth() - 6, halfGameHeight() - 28, 420, 34);
 				menuNewUser.addCenteredText(halfGameWidth() - 6, halfGameHeight() - 37, "Choose a Password (You will require this to login)", 4, false);
-				menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() - 20, 200, 64, 40, 4, true, false);
+				menuNewUserPassword = menuNewUser.addCenteredTextEntry(halfGameWidth(), halfGameHeight() - 20, 200, 20, 40, 4, true, false);
 			}
 
 			if (wantEmail()) {
@@ -11790,8 +11790,8 @@ public final class mudclient implements Runnable {
 							return;
 						}
 
-						if (newPass.length() < 5) {
-							this.showLoginScreenStatus("@yel@Your new password must be at least 5 letters long", "");
+						if (newPass.length() < 4) {
+							this.showLoginScreenStatus("@yel@Your new password must be at least 4 letters long", "");
 							return;
 						}
 
@@ -11917,8 +11917,8 @@ public final class mudclient implements Runnable {
 			showLoginScreenStatus("Password must be at least 4", "characters long!");
 			return;
 		}
-		if (pass.trim().length() > 64) {
-			showLoginScreenStatus("Password is too long, please use", "password with length of 4-64");
+		if (pass.trim().length() > 20) {
+			showLoginScreenStatus("Password is too long, please use", "password with length of 4-20");
 			return;
 		}
 		if (!isValidEmailAddress(email)) {
