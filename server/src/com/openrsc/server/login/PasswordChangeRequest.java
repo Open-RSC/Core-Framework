@@ -80,6 +80,13 @@ public class PasswordChangeRequest extends LoginExecutorProcess {
 				ActionSender.sendMessage(getPlayer(), "No changes made, your current password did not match");
 				return;
 			}
+
+			if (getNewPassword().length() < 4 || getNewPassword().length() > 20) {
+				LOGGER.info(getPlayer().getCurrentIP() + " - Pass change failed: New password is either too long or too short.");
+				ActionSender.sendMessage(getPlayer(), "No changes made, your new password must be 4-20 characters.");
+				return;
+			}
+			
 			newDBPass = DataConversions.hashPassword(getNewPassword(), DBsalt);
 			getPlayer().getWorld().getServer().getDatabase().saveNewPassword(playerID, newDBPass);
 
