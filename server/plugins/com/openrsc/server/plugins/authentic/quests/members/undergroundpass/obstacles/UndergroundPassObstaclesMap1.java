@@ -29,6 +29,8 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 	public static int BLESSED_SPIDER_SWAMP_OBJ = 795;
 	public static int CLEAR_ROCKS = 772;
 	public static int DROP_DOWN_LEDGE = 812;
+	public static int CLEAR_ROCKS_INIT_WEST = 796;
+	public static int CLEAR_ROCKS_INIT_EAST = 797;
 
 	/**
 	 * Main floor of the cave rocks
@@ -62,7 +64,8 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 				|| inArray(obj.getID(), MAIN_LEDGE) || obj.getID() == FIRST_SWAMP
 				|| inArray(obj.getID(), FAIL_SWAMP_ROCKS) || obj.getID() == PILE_OF_MUD_MAP_LEVEL_1
 				|| obj.getID() == LEVER || obj.getID() == BLESSED_SPIDER_SWAMP_OBJ
-				|| obj.getID() == CLEAR_ROCKS || obj.getID() == DROP_DOWN_LEDGE || inArray(obj.getID(), SPEAR_ROCKS);
+				|| obj.getID() == CLEAR_ROCKS || obj.getID() == CLEAR_ROCKS_INIT_WEST || obj.getID() == CLEAR_ROCKS_INIT_EAST
+				|| obj.getID() == DROP_DOWN_LEDGE || inArray(obj.getID(), SPEAR_ROCKS);
 	}
 
 	@Override
@@ -195,18 +198,26 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			mes("it clings to your feet, you cannot cross");
 			delay(3);
 		}
-		else if (obj.getID() == CLEAR_ROCKS) {
+		else if (obj.getID() == CLEAR_ROCKS || obj.getID() == CLEAR_ROCKS_INIT_WEST || obj.getID() == CLEAR_ROCKS_INIT_EAST) {
 			if (player.getX() == 695 && (player.getY() == 3436 || player.getY() == 3435)) {
 				player.teleport(695, 3435);
 				return;
 			}
+			if (obj.getID() == CLEAR_ROCKS_INIT_WEST && player.getX() > obj.getX() && player.getY() == obj.getY()) {
+				player.teleport(obj.getX() + 1, obj.getY());
+			}
+			else if (obj.getID() == CLEAR_ROCKS_INIT_EAST && player.getX() < obj.getX() && player.getY() == obj.getY()) {
+				player.teleport(obj.getX() + 1, obj.getY());
+			}
 			mes("you move the rocks from your path");
 			delay(3);
+			if (obj.getID() != CLEAR_ROCKS) {
+				GameObject newRocks = new GameObject(player.getWorld(), obj.getLocation(), CLEAR_ROCKS, obj.getDirection(), obj.getType());
+				changeloc(obj, newRocks);
+			}
 			player.message("you hear a strange mechanical sound");
-			obj.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getWorld(), obj.getLocation(), CLEAR_ROCKS + 1, obj.getDirection(), obj
-					.getType()));
-			obj.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
+			GameObject checkObj = player.getViewArea().getGameObject(CLEAR_ROCKS, obj.getX(), obj.getY());
+			changeloc(checkObj, 3000, CLEAR_ROCKS + 1);
 			player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.2D));
 			say(player, null, "aaarrghhh");
 			mes("You've triggered a trap");
