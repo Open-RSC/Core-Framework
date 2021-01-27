@@ -443,8 +443,8 @@ public final class EntityHandler {
 			items.get(ItemId.POISONED_IRON_DAGGER.id()).setAppearanceId(274);
 			items.get(ItemId.POISONED_STEEL_DAGGER.id()).setAppearanceId(275);
 			items.get(ItemId.POISONED_MITHRIL_DAGGER.id()).setAppearanceId(276);
-			items.get(ItemId.POISONED_RUNE_DAGGER.id()).setAppearanceId(277);
-			items.get(ItemId.POISONED_ADAMANTITE_DAGGER.id()).setAppearanceId(278);
+			items.get(ItemId.POISONED_ADAMANTITE_DAGGER.id()).setAppearanceId(277);
+			items.get(ItemId.POISONED_RUNE_DAGGER.id()).setAppearanceId(278);
 			items.get(ItemId.POISONED_BLACK_DAGGER.id()).setAppearanceId(279);
 			items.get(ItemId.POISONED_DRAGON_DAGGER.id()).setAppearanceId(470);
 

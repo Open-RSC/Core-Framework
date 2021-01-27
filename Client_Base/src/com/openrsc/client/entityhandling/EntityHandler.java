@@ -3547,22 +3547,22 @@ public class EntityHandler {
 			loadCustomItemDefinitions();
 
 		if (Config.S_SHOW_UNIDENTIFIED_HERB_NAMES) {
-			items.get(165).name = "Undefined Guam";
-			items.get(435).name = "Undefined Marrentill";
-			items.get(436).name = "Undefined Tarromin";
-			items.get(437).name = "Undefined Harralander";
-			items.get(438).name = "Undefined Ranarr Weed";
-			items.get(439).name = "Undefined Irit Leaf";
-			items.get(440).name = "Undefined Avantoe";
-			items.get(441).name = "Undefined Kwuarm";
-			items.get(442).name = "Undefined Cadantine";
-			items.get(443).name = "Undefined Dwarf Weed";
-			items.get(815).name = "Undefined Snake Weed";
-			items.get(817).name = "Undefined Ardrigal";
-			items.get(819).name = "Undefined Sito Foil";
-			items.get(821).name = "Undefined Volencia Moss";
-			items.get(823).name = "Undefined Rogues Purse";
-			items.get(933).name = "Undefined Torstol";
+			items.get(165).name = "Unidentified Guam";
+			items.get(435).name = "Unidentified Marrentill";
+			items.get(436).name = "Unidentified Tarromin";
+			items.get(437).name = "Unidentified Harralander";
+			items.get(438).name = "Unidentified Ranarr Weed";
+			items.get(439).name = "Unidentified Irit Leaf";
+			items.get(440).name = "Unidentified Avantoe";
+			items.get(441).name = "Unidentified Kwuarm";
+			items.get(442).name = "Unidentified Cadantine";
+			items.get(443).name = "Unidentified Dwarf Weed";
+			items.get(815).name = "Unidentified Snake Weed";
+			items.get(817).name = "Unidentified Ardrigal";
+			items.get(819).name = "Unidentified Sito Foil";
+			items.get(821).name = "Unidentified Volencia Moss";
+			items.get(823).name = "Unidentified Rogues Purse";
+			items.get(933).name = "Unidentified Torstol";
 		}
 
 		/*try {
@@ -4171,10 +4171,10 @@ public class EntityHandler {
 			animations.add(new AnimationDef("poisoneddagger", "equipment", 16737817, 0, true, false, 0)); //273 - bronze p dagger
 			animations.add(new AnimationDef("poisoneddagger", "equipment", 15654365, 0, true, false, 0)); //274 - iron p dagger
 			animations.add(new AnimationDef("poisoneddagger", "equipment", 15658734, 0, true, false, 0)); //275 - steel p dagger
-			animations.add(new AnimationDef("poisoneddagger", "equipment", 10072780, 0, true, false, 0)); //276 - black p dagger
-			animations.add(new AnimationDef("poisoneddagger", "equipment", 11717785, 0, true, false, 0)); //277 - mith p dagger
-			animations.add(new AnimationDef("poisoneddagger", "equipment", 65535, 0, true, false, 0)); //278 - addy p dagger
-			animations.add(new AnimationDef("poisoneddagger", "equipment", 3158064, 0, true, false, 0)); //279 - rune p dagger
+			animations.add(new AnimationDef("poisoneddagger", "equipment", 10072780, 0, true, false, 0)); //276 - mith p dagger
+			animations.add(new AnimationDef("poisoneddagger", "equipment", 11717785, 0, true, false, 0)); //277 - addy p dagger
+			animations.add(new AnimationDef("poisoneddagger", "equipment", 65535, 0, true, false, 0)); //278 - rune p dagger
+			animations.add(new AnimationDef("poisoneddagger", "equipment", 3158064, 0, true, false, 0)); //279 - black p dagger
 
 			// 2-handed swords
 			animations.add(new AnimationDef("2hander", "equipment", 16737817, 0, true, false, 0)); //280 - bronze 2h
