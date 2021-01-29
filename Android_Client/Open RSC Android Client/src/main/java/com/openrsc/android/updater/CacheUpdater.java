@@ -152,7 +152,7 @@ public class CacheUpdater extends Activity {
             System.out.println(" ");
             System.out.println("Please select which game you wish to play.");
             System.out.println(" ");
-            System.out.println("43594 openrsc / 43595 cabbage / 43596 preservation / 43597 openpk / 43598 wk / 43599 dev");
+            System.out.println("43594 openrsc / 43595 cabbage / 43235 uranium / 43599 coleslaw");
             System.out.println(" ");
 
             // setup the alert builder
@@ -161,10 +161,35 @@ public class CacheUpdater extends Activity {
 
             // add a list
             //String[] games = {"RSC Cabbage", "Open RSC", "RSC Preservation (alpha)", "Open PK (beta)", "Dev Testing", "Local Instance"};
-            String[] games = {"RSC Cabbage", "Open RSC", "Local Instance"};
+            String[] games = {"Open RSC", "RSC Cabbage", "RSC Uranium", "RSC Coleslaw", "Local Instance"};
             builder.setItems(games, (dialog, which) -> {
                 switch (which) {
-                    case 0: // RSC Cabbage
+					case 0: // Open RSC
+						String ip_openrsc = "androidcheck.openrsc.com";
+						String port_openrsc = "43596";
+						FileOutputStream fileout_openrsc;
+						try {
+							fileout_openrsc = new FileOutputStream(realPath.get() + "ip.txt");
+							OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openrsc);
+							outputWriter.write(ip_openrsc);
+							outputWriter.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						try {
+							fileout_openrsc = new FileOutputStream(realPath.get() + "port.txt");
+							OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openrsc);
+							outputWriter.write(port_openrsc);
+							outputWriter.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						Intent mainIntent_openrsc = new Intent(CacheUpdater.this, GameActivity.class);
+						mainIntent_openrsc.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+						startActivity(mainIntent_openrsc);
+						finish();
+						return;
+                    case 1: // RSC Cabbage
                         String ip_cabbage = "androidcheck.openrsc.com";
                         String port_cabbage = "43595";
                         FileOutputStream fileout_cabbage;
@@ -197,107 +222,67 @@ public class CacheUpdater extends Activity {
                         startActivity(mainIntent_cabbage);
                         finish();
                         return;
-                    case 1: // Open RSC
-                        String ip_openrsc = "androidcheck.openrsc.com";
-                        String port_openrsc = "43596";
-                        FileOutputStream fileout_openrsc;
-                        try {
-                            fileout_openrsc = new FileOutputStream(realPath.get() + "ip.txt");
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openrsc);
-                            outputWriter.write(ip_openrsc);
-                            outputWriter.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            fileout_openrsc = new FileOutputStream(realPath.get() + "port.txt");
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openrsc);
-                            outputWriter.write(port_openrsc);
-                            outputWriter.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        Intent mainIntent_openrsc = new Intent(CacheUpdater.this, GameActivity.class);
-                        mainIntent_openrsc.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(mainIntent_openrsc);
-                        finish();
-                        return;
-                    /*case 2: // RSC Preservation
-                        String ip_preservation = "androidcheck.openrsc.com";
-                        String port_preservation = "43594";
-                        FileOutputStream fileout_preservation;
-                        try {
-                            fileout_preservation = new FileOutputStream(realPath.get() + "ip.txt");
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_preservation);
-                            outputWriter.write(ip_preservation);
-                            outputWriter.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            fileout_preservation = new FileOutputStream(realPath.get() + "port.txt");
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_preservation);
-                            outputWriter.write(port_preservation);
-                            outputWriter.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        Intent mainIntent_preservation = new Intent(CacheUpdater.this, GameActivity.class);
-                        mainIntent_preservation.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(mainIntent_preservation);
-                        finish();
-                        return;
-                    case 3: // Open PK
-                        String ip_openpk = "androidcheck.openrsc.com";
-                        String port_openpk = "43597";
-                        FileOutputStream fileout_openpk;
-                        try {
-                            fileout_openpk = new FileOutputStream(realPath.get() + "ip.txt");
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openpk);
-                            outputWriter.write(ip_openpk);
-                            outputWriter.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            fileout_openpk = new FileOutputStream(realPath.get() + "port.txt");
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_openpk);
-                            outputWriter.write(port_openpk);
-                            outputWriter.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        Intent mainIntent_openpk = new Intent(CacheUpdater.this, GameActivity.class);
-                        mainIntent_openpk.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(mainIntent_openpk);
-                        finish();
-                        return;
-                    case 4: // Dev
-                        String ip_dev = "androidcheck.openrsc.com";
-                        String port_dev = "43599";
-                        FileOutputStream fileout_dev;
-                        try {
-                            fileout_dev = new FileOutputStream(realPath.get() + "ip.txt");
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_dev);
-                            outputWriter.write(ip_dev);
-                            outputWriter.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            fileout_dev = new FileOutputStream(realPath.get() + "port.txt");
-                            OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_dev);
-                            outputWriter.write(port_dev);
-                            outputWriter.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        Intent mainIntent_dev = new Intent(CacheUpdater.this, GameActivity.class);
-                        mainIntent_dev.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(mainIntent_dev);
-                        finish();
-                        return;*/
-                    case 2: // Manual
+					case 2: // RSC Uranium
+						String ip_uranium = "androidcheck.openrsc.com";
+						String port_uranium = "43235";
+						FileOutputStream fileout_uranium;
+
+						FileOutputStream fileout_uranium2;
+						try {
+							fileout_uranium = new FileOutputStream(realPath.get() + "ip.txt");
+							OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_uranium);
+							outputWriter.write(ip_uranium);
+							outputWriter.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						try {
+							fileout_uranium2 = new FileOutputStream(realPath.get() + "port.txt");
+							OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_uranium2);
+							outputWriter.write(port_uranium);
+							outputWriter.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						Intent mainIntent_uraninum = new Intent(CacheUpdater.this, GameActivity.class);
+						mainIntent_uraninum.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+						startActivity(mainIntent_uraninum);
+						finish();
+						return;
+					case 3: // RSC Coleslaw
+						String ip_coleslaw = "androidcheck.openrsc.com";
+						String port_coleslaw = "43599";
+						FileOutputStream fileout_coleslaw;
+
+						String pack2 = "Menus:1";
+						FileOutputStream fileout_coleslaw2;
+						try {
+							fileout_coleslaw = new FileOutputStream(realPath.get() + "ip.txt");
+							OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_coleslaw);
+							outputWriter.write(ip_coleslaw);
+							outputWriter.close();
+
+							fileout_coleslaw2 = new FileOutputStream(realPath.get() + "config.txt");
+							OutputStreamWriter outputWriter2 = new OutputStreamWriter(fileout_coleslaw2);
+							outputWriter2.write(pack2);
+							outputWriter2.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						try {
+							fileout_coleslaw = new FileOutputStream(realPath.get() + "port.txt");
+							OutputStreamWriter outputWriter = new OutputStreamWriter(fileout_coleslaw);
+							outputWriter.write(port_coleslaw);
+							outputWriter.close();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						Intent mainIntent_coleslaw = new Intent(CacheUpdater.this, GameActivity.class);
+						mainIntent_coleslaw.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+						startActivity(mainIntent_coleslaw);
+						finish();
+						return;
+                    case 4: // Manual
                         LinearLayout layout = new LinearLayout(CacheUpdater.this);
 
                         // TextView to enter ip
