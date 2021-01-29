@@ -160,7 +160,6 @@ public class Downloader {
 				old.delete();
 			AppFrame.get().getLaunchopenrsc().setEnabled(true);
 			AppFrame.get().getLaunchcabbage().setEnabled(true);
-			//AppFrame.get().getLaunchpreservation().setEnabled(true);
 			AppFrame.get().getLaunchuranium().setEnabled(true);
 			AppFrame.get().getLaunchcoleslaw().setEnabled(true);
 			AppFrame.get().getSpriteCombo().loadSpritePacks();
