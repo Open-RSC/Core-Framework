@@ -109,7 +109,7 @@ public class AppFrame extends JFrame {
 
 		String uranium = "uranium";
 		(this.launch4 = new LaunchButton(uranium)).setBounds(uranium_x, launch_button_y, launch_button_width, launch_button_height);
-		this.bg.add(this.launch5);
+		this.bg.add(this.launch4);
 
 		String coleslaw = "coleslaw";
 		(this.launch5 = new LaunchButton(coleslaw)).setBounds(coleslaw_x, launch_button_y, launch_button_width, launch_button_height);
