@@ -24,8 +24,8 @@ public class AppFrame extends JFrame {
 	private final int preservation_x = 113;
 	private final int openrsc_x = 165;
 	private final int cabbage_x = 295;
-	private final int openpk_x = 420;
-	private final int dev_x = 535;
+	private final int uranium_x = 420;
+	private final int coleslaw_x = 535;
 	private final int launch_button_y = 218;
 	private final int link_button_y = 359;
 
@@ -107,8 +107,12 @@ public class AppFrame extends JFrame {
 		(this.launch2 = new LaunchButton(cabbage)).setBounds(cabbage_x, launch_button_y - 3, launch_button_width, launch_button_height);
 		this.bg.add(this.launch2);
 
-		String dev = "dev";
-		(this.launch5 = new LaunchButton(dev)).setBounds(dev_x, launch_button_y, launch_button_width, launch_button_height);
+		String uranium = "uranium";
+		(this.launch4 = new LaunchButton(uranium)).setBounds(uranium_x, launch_button_y, launch_button_width, launch_button_height);
+		this.bg.add(this.launch5);
+
+		String coleslaw = "coleslaw";
+		(this.launch5 = new LaunchButton(coleslaw)).setBounds(coleslaw_x, launch_button_y, launch_button_width, launch_button_height);
 		this.bg.add(this.launch5);
 
 
@@ -154,11 +158,11 @@ public class AppFrame extends JFrame {
 		return this.launch2;
 	}
 
-	public LaunchButton getLaunchpreservation() {
+	public LaunchButton getLaunchuranium() {
 		return this.launch4;
 	}
 
-	public LaunchButton getLaunchdev() {
+	public LaunchButton getLaunchcoleslaw() {
 		return this.launch5;
 	}
 

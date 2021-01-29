@@ -58,7 +58,8 @@ public class Downloader {
 		try {
 			AppFrame.get().getLaunchopenrsc().setEnabled(false);
 			AppFrame.get().getLaunchcabbage().setEnabled(false);
-			AppFrame.get().getLaunchdev().setEnabled(false);
+			AppFrame.get().getLaunchuranium().setEnabled(false);
+			AppFrame.get().getLaunchcoleslaw().setEnabled(false);
 			AppFrame.get().setDownloadProgress("Checking for updates...", 100.0f);
 
 			File file = new File(Constants.CONF_DIR);
@@ -160,7 +161,8 @@ public class Downloader {
 			AppFrame.get().getLaunchopenrsc().setEnabled(true);
 			AppFrame.get().getLaunchcabbage().setEnabled(true);
 			//AppFrame.get().getLaunchpreservation().setEnabled(true);
-			AppFrame.get().getLaunchdev().setEnabled(true);
+			AppFrame.get().getLaunchuranium().setEnabled(true);
+			AppFrame.get().getLaunchcoleslaw().setEnabled(true);
 			AppFrame.get().getSpriteCombo().loadSpritePacks();
 			AppFrame.get().setDownloadProgress("Ready to play!", 100.0f);
 		} catch (Exception e) {

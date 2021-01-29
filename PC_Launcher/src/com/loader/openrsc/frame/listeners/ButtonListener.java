@@ -55,15 +55,15 @@ public class ButtonListener implements ActionListener {
 				return;
 			}
 
-			case "wk": {
+			case "uranium": {
 				String ip = "game.openrsc.com";
-				String port = "43598";
+				String port = "43235";
 				set(ip, port);
-				launch();
+				launch(true);
 				return;
 			}
 
-			case "dev": {
+			case "coleslaw": {
 				String ip = "game.openrsc.com";
 				String port = "43599";
 				set(ip, port);
