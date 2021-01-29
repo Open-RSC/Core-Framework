@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.authentic.npcs;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
@@ -11,19 +12,19 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.AbstractShop;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Arrays;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class GeneralStore extends AbstractShop {
 
-	public static Item[] shop_items = new Item[]{new Item(ItemId.POT.id(), 3),
-		new Item(ItemId.JUG.id(), 2), new Item(ItemId.SHEARS.id(), 2), new Item(ItemId.BUCKET.id(), 2),
-		new Item(ItemId.TINDERBOX.id(), 2), new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.HAMMER.id(), 5),
-		new Item(ItemId.SLEEPING_BAG.id(), 10)};
-
-	private final Shop baseShop = new Shop(true, 12400, 130, 40, 3, new Item(
+	private final Item[] shopItems = new Item[] { new Item(
 		ItemId.POT.id(), 3), new Item(ItemId.JUG.id(), 2), new Item(ItemId.SHEARS.id(), 2), new Item(ItemId.BUCKET.id(),
 		2), new Item(ItemId.TINDERBOX.id(), 2), new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.HAMMER.id(), 5),
-		new Item(ItemId.SLEEPING_BAG.id(), 10));
+		new Item(ItemId.SLEEPING_BAG.id(), 10) };
+
+	private final Shop baseShop = new Shop(true, 12400, 130, 40, 3, shopItems);
+	private final Shop dwarvenShop = new Shop(true, 12400, 130, 40, 3, Arrays.copyOfRange(shopItems, 0, 7));
 	private Shop[] shops = null;
 
 	@Override
@@ -44,15 +45,15 @@ public final class GeneralStore extends AbstractShop {
 	public Shop[] getShops(World world) {
 		if (shops == null) {
 			shops = new Shop[9];
-			shops[0] = new Shop(baseShop, "Dwarven Mine", 143);
-			shops[1] = new Shop(baseShop, "Varrock", 51, 82);
-			shops[2] = new Shop(baseShop, "Falador", 105, 106);
-			shops[3] = new Shop(baseShop, "Lumbridge", 55, 83);
-			shops[4] = new Shop(baseShop, "Rimmington", 145, 146);
-			shops[5] = new Shop(baseShop, "Karamja", 168, 169);
-			shops[6] = new Shop(baseShop, "Al_Kharid", 87, 88);
-			shops[7] = new Shop(baseShop, "Edgeville", 185, 186);
-			shops[8] = new Shop(baseShop, "Lostcity", 222, 223);
+			shops[0] = new Shop(dwarvenShop, "Dwarven Mine", NpcId.DWARVEN_SHOPKEEPER.id());
+			shops[1] = new Shop(baseShop, "Varrock", NpcId.SHOPKEEPER_VARROCK.id(), NpcId.SHOP_ASSISTANT_VARROCK.id());
+			shops[2] = new Shop(baseShop, "Falador", NpcId.SHOPKEEPER_FALADOR.id(), NpcId.SHOP_ASSISTANT_FALADOR.id());
+			shops[3] = new Shop(baseShop, "Lumbridge", NpcId.SHOPKEEPER_LUMBRIDGE.id(), NpcId.SHOP_ASSISTANT_LUMBRIDGE.id());
+			shops[4] = new Shop(baseShop, "Rimmington", NpcId.SHOPKEEPER_RIMMINGTON.id(), NpcId.SHOP_ASSISTANT_RIMMINGTON.id());
+			shops[5] = new Shop(baseShop, "Karamja", NpcId.SHOPKEEPER_KARAMJA.id(), NpcId.SHOP_ASSISTANT_KARAMJA.id());
+			shops[6] = new Shop(baseShop, "Al_Kharid", NpcId.SHOPKEEPER_ALKHARID.id(), NpcId.SHOP_ASSISTANT_ALKHARID.id());
+			shops[7] = new Shop(baseShop, "Edgeville", NpcId.SHOPKEEPER_EDGEVILLE.id(), NpcId.SHOP_ASSISTANT_EDGEVILLE.id());
+			shops[8] = new Shop(baseShop, "Lostcity", NpcId.FAIRY_SHOPKEEPER.id(), NpcId.FAIRY_SHOP_ASSISTANT.id());
 
 		}
 		return shops;
