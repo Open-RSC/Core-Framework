@@ -24,7 +24,8 @@ public final class ItemDropHandler implements PacketHandler {
 		player.resetAll();
 		int inventorySlot = (int) packet.readShort();
 		int amount;
-		if (!player.isUsingAuthenticClient()) {
+		boolean respectDropX = !player.isUsingAuthenticClient() && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB; // TODO: this is a bad way of detecting cabbage config
+		if (respectDropX) {
 			amount = packet.readInt();
 		} else {
 			amount = 0;
@@ -45,7 +46,7 @@ public final class ItemDropHandler implements PacketHandler {
 		} else {
 			if (inventorySlot != -1) {
 				tempitem = player.getCarriedItems().getInventory().get(inventorySlot);
-				if (player.isUsingAuthenticClient()) {
+				if (!respectDropX) {
 					amount = tempitem.getAmount();
 				}
 			}
