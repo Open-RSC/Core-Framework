@@ -46,6 +46,12 @@ public class OpenRSC extends ORSCApplet {
 
 	public void setIconImage(String serverName) {
 		switch (serverName) {
+			case "RSC Coleslaw":
+				jframe.setIconImage(Utils.getImage("coleslaw.icon.png").getImage());
+				break;
+			case "RSC Uranium":
+				jframe.setIconImage(Utils.getImage("uranium.icon.png").getImage());
+				break;
 			case "RSC Cabbage":
 				jframe.setIconImage(Utils.getImage("cabbage.icon.png").getImage());
 				break;
