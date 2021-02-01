@@ -1,5 +1,7 @@
 package com.loader.openrsc.frame.elements;
 
+import com.loader.openrsc.Settings;
+import com.loader.openrsc.frame.AppFrame;
 import com.loader.openrsc.frame.listeners.ButtonListener;
 import com.loader.openrsc.util.Utils;
 
@@ -25,6 +27,9 @@ public class CheckboxButton extends JCheckBox implements MouseListener {
 
 	@Override
 	public void mouseClicked(final MouseEvent arg0) {
+		// TODO: when more checkboxes are added, will need to check which one is pressed
+		Settings.showBotButtons = !Settings.showBotButtons;
+		AppFrame.get().toggleBotServers();
 	}
 
 	@Override

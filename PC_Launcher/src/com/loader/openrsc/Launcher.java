@@ -16,8 +16,13 @@ public class Launcher {
 		} catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			Launcher.getPopup().setMessage("" + e);
 		}
+		Settings.loadSettings();
+
 		Downloader updater = new Downloader();
-		updater.updateJar();
+		if (Settings.autoUpdate) {
+			System.out.println("Attempting to update the program!"); // Warn user that this is happening
+			updater.updateJar();
+		}
 
 		final AppFrame frame = new AppFrame();
 		frame.build();

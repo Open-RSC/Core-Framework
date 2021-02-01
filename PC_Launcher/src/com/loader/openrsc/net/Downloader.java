@@ -1,6 +1,8 @@
 package com.loader.openrsc.net;
 
 import com.loader.openrsc.Constants;
+import com.loader.openrsc.Launcher;
+import com.loader.openrsc.Settings;
 import com.loader.openrsc.frame.AppFrame;
 
 import java.io.*;
@@ -108,7 +110,8 @@ public class Downloader {
 			}
 		} catch (Exception e) {
 			System.out.println("Unable to load checksums.");
-			System.exit(1);
+			if (Settings.autoUpdate)
+				System.exit(1);
 		}
 
 		//Verify the cache
