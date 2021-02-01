@@ -38,11 +38,15 @@ public final class ItemDropHandler implements PacketHandler {
 		Item tempitem = null;
 
 		//User wants to drop the item from equipment tab
-		if (inventorySlot == -1 && !player.isUsingAuthenticClient()) {
+		if (inventorySlot == -1 && !player.isUsingAuthenticClient() && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			int realid = (int) packet.readShort();
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(realid);
-			if (slot != -1)
+			if (slot != -1) {
 				tempitem = player.getCarriedItems().getEquipment().get(slot);
+				if (!respectDropX) {
+					amount = tempitem.getAmount();
+				}
+			}
 		} else {
 			if (inventorySlot != -1) {
 				tempitem = player.getCarriedItems().getInventory().get(inventorySlot);
