@@ -204,7 +204,7 @@ public final class GameStateUpdater {
 					|| otherPlayer.inCombat() || otherPlayer.hasMoved()) {
 					positionBuilder.writeBits(1, 1); //Needs Update
 					positionBuilder.writeBits(1, 1); //Update Type
-					positionBuilder.writeBits(3, 2); //???
+					positionBuilder.writeBits(3, 2); //Animation type (Remove)
 					it$.remove();
 					playerToUpdate.getKnownPlayerAppearanceIDs().remove(otherPlayer.getUsernameHash());
 				} else {
@@ -630,11 +630,11 @@ public final class GameStateUpdater {
                         // these two gloves are the only ones that exist.
                         final int lightGloves = 47;
                         final int darkGloves = 156;
-                        int gloveColour = lightGloves; // default
-                        if (wornItems[8] != 0) {
-                            // if player is already wearing gloves, we can let them choose their colour. :-)
-                            gloveColour = wornItems[8];
-                        }
+                        int gloveColour = wornItems[8]; // let player keep their gloves, even if they have none
+						if (wornItems[8] == 0 && wornItems[4] != 0) {
+							// give player gloves if they are wielding a weapon
+							gloveColour = lightGloves;
+						}
 
                         // if player is just invulnerable & not invisible, give them a dark-robed appearance
                         int headSprite = 0; // default to invisible
@@ -643,7 +643,7 @@ public final class GameStateUpdater {
                         int legSprite = 0;
                         int pantsSprite = 0;
                         int shirtSprite = 0;
-                        int amuletSprite = 0;
+                        int amuletSprite = wornItems[10];
                         if (!playerNeedingAppearanceUpdate.stateIsInvisible()) {
                             headSprite = wornItems[0];
                             if (wornItems[5] == 0) {
@@ -658,6 +658,7 @@ public final class GameStateUpdater {
                             legSprite = 184;
                             pantsSprite = 3;
                             shirtSprite = 5;
+                            gloveColour = darkGloves;
                             amuletSprite = 172; // amulet of lucien
                         }
 
