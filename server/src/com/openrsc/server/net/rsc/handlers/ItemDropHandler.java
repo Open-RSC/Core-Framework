@@ -24,7 +24,7 @@ public final class ItemDropHandler implements PacketHandler {
 		player.resetAll();
 		int inventorySlot = (int) packet.readShort();
 		int amount;
-		boolean respectDropX = !player.isUsingAuthenticClient() && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB; // TODO: this is a bad way of detecting cabbage config
+		boolean respectDropX = !player.isUsingAuthenticClient() && player.getWorld().getServer().getConfig().WANT_DROP_X;
 		if (respectDropX) {
 			amount = packet.readInt();
 		} else {
