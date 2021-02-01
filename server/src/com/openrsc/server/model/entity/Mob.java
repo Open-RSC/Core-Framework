@@ -335,9 +335,9 @@ public abstract class Mob extends Entity {
 		return false;
 	}
 
-	public boolean within5GridRange(final Entity e) {
+	public boolean within4GridRange(final Entity e) {
 		if (e != null) {
-			return getLocation().withinGridRange(e.getLocation(), 5);
+			return getLocation().withinGridRange(e.getLocation(), 4);
 		}
 		return false;
 	}

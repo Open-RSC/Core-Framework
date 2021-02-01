@@ -731,59 +731,49 @@ public final class GameStateUpdater {
 		//       According to RSC+ replays, the server never tells the client to unload objects until
 		//       a region is unloaded. It then instructs the client to only unload the region.
 
-		if (playerToUpdate.isUsingAuthenticClient()) {
-			// authentic client; remove scenery
-			// 2020-10-03; still not authentic, but should be a better experience
-			for (final Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext(); ) {
-				final GameObject o = it$.next();
-				if (!playerToUpdate.within5GridRange(o) || o.isRemoved() || o.isInvisibleTo(playerToUpdate)) {
-					final int offsetX = o.getX() - playerToUpdate.getX();
-					final int offsetY = o.getY() - playerToUpdate.getY();
-					if (o.isRemoved() && offsetX > -16 && offsetY > -16 && offsetX < 16 && offsetY < 16) {
-						packet.writeShort(60000);
-						packet.writeByte(offsetX);
-						packet.writeByte(offsetY);
-						it$.remove();
-						changed = true;
-					} else {
-						//If it's not close enough we need to use the region clean packet
-						playerToUpdate.getLocationsToClear().add(o.getLocation());
-						it$.remove();
-						changed = true;
-					}
+		for (final Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext(); ) {
+			final GameObject o = it$.next();
+			if (!playerToUpdate.withinGridRange(o) || o.isRemoved() || o.isInvisibleTo(playerToUpdate)) {
+				if (playerToUpdate.isUsingAuthenticClient() && !o.isRemoved()){
+					// skip invisibility, which is not authentically a thing, & gridRange method is flawed currently
+					continue;
 				}
-			}
-		} else { // non-authentic client; remove scenery
-			for (final Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext(); ) {
-				final GameObject o = it$.next();
-				if (!playerToUpdate.withinGridRange(o) || o.isRemoved() || o.isInvisibleTo(playerToUpdate)) {
-					final int offsetX = o.getX() - playerToUpdate.getX();
-					final int offsetY = o.getY() - playerToUpdate.getY();
-					//If the object is close enough we can use regular way to remove:
-					if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
-						packet.writeShort(60000);
-						packet.writeByte(offsetX);
-						packet.writeByte(offsetY);
-						if (!playerToUpdate.isUsingAuthenticClient()) {
-							packet.writeByte(o.getDirection());
-						}
-						it$.remove();
-						changed = true;
-					} else {
-						//If it's not close enough we need to use the region clean packet
-						playerToUpdate.getLocationsToClear().add(o.getLocation());
-						it$.remove();
-						changed = true;
+				final int offsetX = o.getX() - playerToUpdate.getX();
+				final int offsetY = o.getY() - playerToUpdate.getY();
+				//If the object is close enough we can use regular way to remove:
+				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
+					packet.writeShort(60000);
+					packet.writeByte(offsetX);
+					packet.writeByte(offsetY);
+					if (!playerToUpdate.isUsingAuthenticClient()) {
+						// the authentic client just gets this information from the cached map
+						packet.writeByte(o.getDirection());
 					}
+					it$.remove();
+					changed = true;
+				} else {
+					//If it's not close enough we need to use the region clean packet
+					playerToUpdate.getLocationsToClear().add(o.getLocation());
+					it$.remove();
+					changed = true;
 				}
 			}
 		}
 
 		// Add scenery
 		for (final GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
-			if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
-				|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 0
-				|| playerToUpdate.getLocalGameObjects().contains(newObject)) {
+			boolean skipAdd = newObject.isRemoved() ||
+				newObject.isInvisibleTo(playerToUpdate) ||
+				newObject.getType() != 0 || // not a wallObject
+				playerToUpdate.getLocalGameObjects().contains(newObject);
+			if (playerToUpdate.isUsingAuthenticClient()) {
+				// Honestly don't think this does anything because the scenery isn't iterated over in the view anyway
+				// TODO: funny behaviour where if a rock is mined > 16 tiles from you, it can be removed but not replaced until you get closer.
+				skipAdd |= !playerToUpdate.within4GridRange(newObject);
+			} else {
+				skipAdd |= !playerToUpdate.withinGridRange(newObject);
+			}
+			if (skipAdd) {
 				continue;
 			}
 
