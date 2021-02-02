@@ -82,6 +82,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	private final Market market;
 	private final WorldLoader worldLoader;
 	private HashMap<String, ArrayList<Npc>> npcPositions;
+	private HashMap<Point, Integer> sceneryLocs;
 	private final ConcurrentMap<TrawlerBoat, FishingTrawler> fishingTrawler;
 
 	private ConcurrentMap<Player, Boolean> playerUnderAttackMap;
@@ -98,6 +99,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		this.npcs = new EntityList<>(4000);
 		this.players = new EntityList<>(2000);
 		this.npcPositions = new HashMap<>();
+		this.sceneryLocs = new HashMap<>();
 		this.npcDrops = new NpcDrops(this);
 		this.quests = Collections.synchronizedList( new LinkedList<>() );
 		this.minigames = Collections.synchronizedList( new LinkedList<>() );
@@ -386,6 +388,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		getNpcDrops().unload();
 		npcs.clear();
 		npcPositions.clear();
+		sceneryLocs.clear();
 		players.clear();
 		snapshots.clear();
 		wildernessIPTracker.clear();
@@ -946,6 +949,14 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 				npcPositions.remove(key);
 			}
 		}
+	}
+
+	public void addSceneryLoc(final Point point, final Integer id) {
+		sceneryLocs.put(point, id);
+	}
+
+	public Integer getSceneryLoc(final Point point) {
+		return sceneryLocs.getOrDefault(point, -1);
 	}
 
 	@Override

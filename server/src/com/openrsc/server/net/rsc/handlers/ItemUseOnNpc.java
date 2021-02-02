@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.action.WalkToMobAction;
 import com.openrsc.server.model.container.Inventory;
@@ -39,9 +40,9 @@ public class ItemUseOnNpc implements PacketHandler {
 			public void executeInternal() {
 				getPlayer().resetPath();
 				getPlayer().resetFollowing();
-				if (!getPlayer().getCarriedItems().getInventory().contains(item) || getPlayer().isBusy()
+				if ((!getPlayer().getCarriedItems().getInventory().contains(item) || getPlayer().isBusy()
 					|| getPlayer().isRanging() || !getPlayer().canReach(affectedNpc)
-					|| affectedNpc.isBusy()) {
+					|| affectedNpc.isBusy()) && item.getCatalogId() != ItemId.RESETCRYSTAL.id()) {
 					return;
 				}
 				getPlayer().resetAll();
