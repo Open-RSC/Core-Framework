@@ -24,6 +24,7 @@ public class Downloader {
 		excludedFiles.add("OpenRSC.jar");
 		refuseUpdate.add("credentials.txt");
 		refuseUpdate.add("config.txt");
+		refuseUpdate.add("launcherSettings.conf");
 	}
 
 	private static boolean checkVersionNumber() {
