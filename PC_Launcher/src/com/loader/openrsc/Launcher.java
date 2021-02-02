@@ -1,7 +1,5 @@
 package com.loader.openrsc;
 
-import java.io.File;
-
 import com.loader.openrsc.frame.AppFrame;
 import com.loader.openrsc.frame.popup.PopupFrame;
 import com.loader.openrsc.frame.threads.Statistics;
@@ -18,34 +16,15 @@ public class Launcher {
 		} catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			Launcher.getPopup().setMessage("" + e);
 		}
-
 		Downloader updater = new Downloader();
-
-		File configFile = new File(Constants.CONF_DIR + "/launcherSettings.conf");
-		if (!configFile.exists()) {
-			Settings.loadSettings();
-			if (Settings.autoUpdate) {
-				System.out.println("Attempting to update the program!"); // Warn user that this is happening
-				try {
-					updater.updateJar();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		updater.updateJar();
 
 		final AppFrame frame = new AppFrame();
 		frame.build();
-		Launcher.popup = new
-
-			PopupFrame();
+		Launcher.popup = new PopupFrame();
 
 		// All game statistics via jsoup web scraper
-		new
-
-			Thread(new Statistics()).
-
-			start();
+		new Thread(new Statistics()).start();
 
 		updater.init();
 		updater.doneLoading();

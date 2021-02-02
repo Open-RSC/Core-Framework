@@ -1,8 +1,6 @@
 package com.loader.openrsc.net;
 
 import com.loader.openrsc.Constants;
-import com.loader.openrsc.Launcher;
-import com.loader.openrsc.Settings;
 import com.loader.openrsc.frame.AppFrame;
 
 import java.io.*;
@@ -24,7 +22,6 @@ public class Downloader {
 		excludedFiles.add("OpenRSC.jar");
 		refuseUpdate.add("credentials.txt");
 		refuseUpdate.add("config.txt");
-		refuseUpdate.add("launcherSettings.conf");
 	}
 
 	private static boolean checkVersionNumber() {
@@ -110,10 +107,8 @@ public class Downloader {
 					entry.getRef().delete();
 			}
 		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace();
-			if (Settings.autoUpdate)
-				System.exit(1);
+			System.out.println("Unable to load checksums.");
+			System.exit(1);
 		}
 
 		//Verify the cache
@@ -153,8 +148,7 @@ public class Downloader {
 				output.write(data);
 				output.close();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ignored) {
 		}
 
 	}
