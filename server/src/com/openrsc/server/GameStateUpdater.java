@@ -731,14 +731,11 @@ public final class GameStateUpdater {
 		// TODO: Unloading scenery is not handled correctly.
 		//       According to RSC+ replays, the server never tells the client to unload objects until
 		//       a region is unloaded. It then instructs the client to only unload the region.
+		//       Right now the server is very aggressive in unloading scenery, which is detrimental for clients with a larger view
 
 		for (final Iterator<GameObject> it$ = playerToUpdate.getLocalGameObjects().iterator(); it$.hasNext(); ) {
 			final GameObject o = it$.next();
 			if (!playerToUpdate.withinGridRange(o) || o.isRemoved() || o.isInvisibleTo(playerToUpdate)) {
-				if (playerToUpdate.isUsingAuthenticClient() && !o.isRemoved()){
-					// skip invisibility, which is not authentically a thing, & gridRange method is flawed currently
-					continue;
-				}
 				final int offsetX = o.getX() - playerToUpdate.getX();
 				final int offsetY = o.getY() - playerToUpdate.getY();
 				//If the object is close enough we can use regular way to remove:
