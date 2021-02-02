@@ -110,7 +110,7 @@ public class Downloader {
 					entry.getRef().delete();
 			}
 		} catch (Exception e) {
-			System.out.println("Unable to load checksums.");
+			System.out.println(e);
 			if (Settings.autoUpdate)
 				System.exit(1);
 		}

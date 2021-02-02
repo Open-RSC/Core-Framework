@@ -16,12 +16,14 @@ public class Settings {
 		Properties props = new Properties();
 
 		try {
+			File file = new File(Constants.CONF_DIR);
+			if (!file.exists()) {
+				file.mkdir();
+			}
 			File configFile = new File(Constants.CONF_DIR + "/launcherSettings.conf");
-			if (!configFile.isDirectory()) {
-				if (!configFile.exists()) {
-					saveSettings();
-					return;
-				}
+			if (!configFile.exists()) {
+				saveSettings();
+				return;
 			}
 
 			FileInputStream in = new FileInputStream(Constants.CONF_DIR + "/launcherSettings.conf");
