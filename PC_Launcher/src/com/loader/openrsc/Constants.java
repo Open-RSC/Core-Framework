@@ -8,7 +8,7 @@ public class Constants {
 	public static final String CONF_DIR = "Cache";
 	public static final String CLIENT_FILENAME = "Open_RSC_Client";
 	public static final String CACHE_URL = BASE_URL + "downloads/";
-	public static final Double VERSION_NUMBER = 20210128.093500; //YYYYMMDD.HHMMSS format
+	public static final Double VERSION_NUMBER = 20210201.210800; //YYYYMMDD.HHMMSS format
 	public static final String VERSION_UPDATE_URL = "https://gitlab.com/open-runescape-classic/core/-/raw/master/PC_Launcher/src/com/loader/openrsc/Constants.java";
 	public static final String UPDATE_JAR_URL = "http://game.openrsc.com/static/downloads/OpenRSC.jar";
 	public static final String JAR_FILENAME = "OpenRSC.jar";

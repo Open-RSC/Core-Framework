@@ -111,6 +111,7 @@ public class Downloader {
 			}
 		} catch (Exception e) {
 			System.out.println(e);
+			e.printStackTrace();
 			if (Settings.autoUpdate)
 				System.exit(1);
 		}
@@ -152,7 +153,8 @@ public class Downloader {
 				output.write(data);
 				output.close();
 			}
-		} catch (Exception ignored) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
