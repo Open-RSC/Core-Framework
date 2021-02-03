@@ -9,7 +9,7 @@ public class Defaults {
     public static final String SPRITEPACK_DIR = _DEFAULT_CONFIG_DIR + File.separator + "video" + File.separator + "spritepacks";
 
     // URLS
-    public static final String _VERSION_UPDATE_URL = "https://raw.githubusercontent.com/Open-RSC/Alt-Launcher/master/src/main/java/launcher/Utils/Defaults.java";
+    public static final String _VERSION_UPDATE_URL = "https://raw.githubusercontent.com/Open-RSC/Core-Framework/develop/PC_Launcher/src/main/java/launcher/Utils/Defaults.java";
     public final static String _GAME_FILES_SERVER = "http://game.openrsc.com/static/downloads/";
 
     // STRINGS
