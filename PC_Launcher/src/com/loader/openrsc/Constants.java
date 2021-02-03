@@ -4,8 +4,6 @@
 
 package com.loader.openrsc;
 
-import java.io.File;
-
 public class Constants {
-	public static final Double VERSION_NUMBER = 20210201.212800; //YYYYMMDD.HHMMSS format
+	public static final Double VERSION_NUMBER = 20210203.130000; //YYYYMMDD.HHMMSS format
 }
