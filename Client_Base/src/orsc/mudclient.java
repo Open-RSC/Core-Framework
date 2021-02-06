@@ -3165,15 +3165,23 @@ public final class mudclient implements Runnable {
 						ItemDef def = item.getItemDef();
 						if (item.getNoted()) {
 							def = ItemDef.asNote(def);
-							this.getSurface().drawSpriteClipping(
-								spriteSelect(EntityHandler.noteDef), xI,
-								yI, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-								EntityHandler.noteDef.getBlueMask(), false,
-								0, 1);
+							if (S_WANT_CERT_AS_NOTES) {
+								this.getSurface().drawSpriteClipping(
+									spriteSelect(EntityHandler.noteDef), xI,
+									yI, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+									EntityHandler.noteDef.getBlueMask(), false,
+									0, 1);
 
-							getSurface().drawSpriteClipping(spriteSelect(def), xI + 7, yI + 4,
-								33, 23, def.getPictureMask(), 0,
-								def.getBlueMask(), false, 0, 1);
+								getSurface().drawSpriteClipping(spriteSelect(def), xI + 7, yI + 4,
+									33, 23, def.getPictureMask(), 0,
+									def.getBlueMask(), false, 0, 1);
+							} else {
+								this.getSurface().drawSpriteClipping(
+									spriteSelect(EntityHandler.certificateDef), xI,
+									yI, 48, 32, EntityHandler.certificateDef.getPictureMask(), 0,
+									EntityHandler.certificateDef.getBlueMask(), false,
+									0, 1);
+							}
 						} else {
 							this.getSurface().drawSpriteClipping(
 								spriteSelect(def), xI,
@@ -3229,15 +3237,23 @@ public final class mudclient implements Runnable {
 
 					if (item.getNoted()) {
 						def = ItemDef.asNote(def);
-						this.getSurface().drawSpriteClipping(
-							spriteSelect(EntityHandler.noteDef), xI,
-							yI, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-							EntityHandler.noteDef.getBlueMask(), false,
-							0, 1);
+						if (S_WANT_CERT_AS_NOTES) {
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(EntityHandler.noteDef), xI,
+								yI, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+								EntityHandler.noteDef.getBlueMask(), false,
+								0, 1);
 
-						getSurface().drawSpriteClipping(spriteSelect(def), xI + 7, yI + 4,
-							33, 23, def.getPictureMask(), 0,
-							def.getBlueMask(), false, 0, 1);
+							getSurface().drawSpriteClipping(spriteSelect(def), xI + 7, yI + 4,
+								33, 23, def.getPictureMask(), 0,
+								def.getBlueMask(), false, 0, 1);
+						} else {
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(EntityHandler.certificateDef), xI,
+								yI, 48, 32, EntityHandler.certificateDef.getPictureMask(), 0,
+								EntityHandler.certificateDef.getBlueMask(), false,
+								0, 1);
+						}
 					} else {
 						this.getSurface().drawSpriteClipping(
 							spriteSelect(def), xI,
@@ -3267,15 +3283,23 @@ public final class mudclient implements Runnable {
 
 					if (item.getNoted()) {
 						def = ItemDef.asNote(def);
-						this.getSurface().drawSpriteClipping(
-							spriteSelect(EntityHandler.noteDef), xI,
-							yI, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-							EntityHandler.noteDef.getBlueMask(), false,
-							0, 1);
+						if (S_WANT_CERT_AS_NOTES) {
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(EntityHandler.noteDef), xI,
+								yI, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+								EntityHandler.noteDef.getBlueMask(), false,
+								0, 1);
 
-						getSurface().drawSpriteClipping(spriteSelect(def), xI + 7, yI + 4,
-							33, 23, def.getPictureMask(), 0,
-							def.getBlueMask(), false, 0, 1);
+							getSurface().drawSpriteClipping(spriteSelect(def), xI + 7, yI + 4,
+								33, 23, def.getPictureMask(), 0,
+								def.getBlueMask(), false, 0, 1);
+						} else {
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(EntityHandler.certificateDef), xI,
+								yI, 48, 32, EntityHandler.certificateDef.getPictureMask(), 0,
+								EntityHandler.certificateDef.getBlueMask(), false,
+								0, 1);
+						}
 					} else {
 						this.getSurface().drawSpriteClipping(
 							spriteSelect(def), xI,
@@ -3717,14 +3741,24 @@ public final class mudclient implements Runnable {
 						if (this.shopCategoryID[slot] != -1) {
 							if (S_WANT_BANK_NOTES && this.getInventoryCount(this.shopCategoryID[slot], this.shopItemNoted[slot]) > 0
 								&& this.getShopItemNoted(slot)) {
-								this.getSurface().drawSpriteClipping(this.spriteSelect(EntityHandler.noteDef),
-									sx, sy, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-									EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+								if (S_WANT_CERT_AS_NOTES) {
+									this.getSurface().drawSpriteClipping(this.spriteSelect(EntityHandler.noteDef),
+										sx, sy, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+										EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+									this.getSurface().drawSpriteClipping(spriteSelect(EntityHandler.getItemDef(this.shopCategoryID[slot])), sx + 7, sy + 4,
+										33, 23, EntityHandler.getItemDef(this.shopCategoryID[slot]).getPictureMask(), 0,
+										EntityHandler.getItemDef(this.shopCategoryID[slot]).getBlueMask(), false, 0, 1);
+								} else {
+									this.getSurface().drawSpriteClipping(this.spriteSelect(EntityHandler.certificateDef),
+										sx, sy, 48, 32, EntityHandler.certificateDef.getPictureMask(), 0,
+										EntityHandler.certificateDef.getBlueMask(), false, 0, 1);
+								}
+							} else {
+								this.getSurface().drawSpriteClipping(
+									spriteSelect(EntityHandler.getItemDef(this.shopCategoryID[slot])),
+									sx, sy, 48, 32, EntityHandler.getItemDef(this.shopCategoryID[slot]).getPictureMask(), 0,
+									EntityHandler.getItemDef(this.shopCategoryID[slot]).getBlueMask(), false, 0, 1);
 							}
-							this.getSurface().drawSpriteClipping(
-								spriteSelect(EntityHandler.getItemDef(this.shopCategoryID[slot])),
-								sx, sy, 48, 32, EntityHandler.getItemDef(this.shopCategoryID[slot]).getPictureMask(), 0,
-								EntityHandler.getItemDef(this.shopCategoryID[slot]).getBlueMask(), false, 0, 1);
 
 							ItemDef def = EntityHandler.getItemDef(this.shopCategoryID[slot]);
 
@@ -3803,7 +3837,7 @@ public final class mudclient implements Runnable {
 							this.shopItemPrice[this.shopSelectedItemIndex], this.shopSellPriceMod, -30910, false, 1,
 							count, this.shopPriceMultiplier);
 						this.getSurface().drawString(
-							EntityHandler.getItemDef(id).getName() + ": sell for " + sellCost + "gp each", 2 + xr,
+							EntityHandler.getItemDef(id, this.getShopItemNoted(this.shopSelectedItemIndex)).getName() + ": sell for " + sellCost + "gp each", 2 + xr,
 							yr + 239, 0xFFFF00, 1);
 						boolean mouseInRow = this.mouseY >= yr + 229 && yr + 240 >= this.mouseY;
 
@@ -4187,15 +4221,23 @@ public final class mudclient implements Runnable {
 
 					if (item.getNoted()) {
 						def = ItemDef.asNote(def);
-						this.getSurface().drawSpriteClipping(
-							spriteSelect(EntityHandler.noteDef), sX,
-							sY, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-							EntityHandler.noteDef.getBlueMask(), false,
-							0, 1);
+						if (S_WANT_CERT_AS_NOTES) {
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(EntityHandler.noteDef), sX,
+								sY, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+								EntityHandler.noteDef.getBlueMask(), false,
+								0, 1);
 
-						getSurface().drawSpriteClipping(spriteSelect(def), sX + 7, sY + 4,
-							33, 23, def.getPictureMask(), 0,
-							def.getBlueMask(), false, 0, 1);
+							getSurface().drawSpriteClipping(spriteSelect(def), sX + 7, sY + 4,
+								33, 23, def.getPictureMask(), 0,
+								def.getBlueMask(), false, 0, 1);
+						} else {
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(EntityHandler.certificateDef), sX,
+								sY, 48, 32, EntityHandler.certificateDef.getPictureMask(), 0,
+								EntityHandler.certificateDef.getBlueMask(), false,
+								0, 1);
+						}
 					} else {
 						this.getSurface().drawSpriteClipping(
 							spriteSelect(def), sX,
@@ -4218,15 +4260,23 @@ public final class mudclient implements Runnable {
 
 					if (item.getNoted()) {
 						def = ItemDef.asNote(def);
-						this.getSurface().drawSpriteClipping(
-							spriteSelect(EntityHandler.noteDef), sx,
-							sy, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-							EntityHandler.noteDef.getBlueMask(), false,
-							0, 1);
+						if (S_WANT_CERT_AS_NOTES) {
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(EntityHandler.noteDef), sx,
+								sy, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+								EntityHandler.noteDef.getBlueMask(), false,
+								0, 1);
 
-						getSurface().drawSpriteClipping(spriteSelect(def), sx + 7, sy + 4,
-							33, 23, def.getPictureMask(), 0,
-							def.getBlueMask(), false, 0, 1);
+							getSurface().drawSpriteClipping(spriteSelect(def), sx + 7, sy + 4,
+								33, 23, def.getPictureMask(), 0,
+								def.getBlueMask(), false, 0, 1);
+						} else {
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(EntityHandler.certificateDef), sx,
+								sy, 48, 32, EntityHandler.certificateDef.getPictureMask(), 0,
+								EntityHandler.certificateDef.getBlueMask(), false,
+								0, 1);
+						}
 					} else {
 						this.getSurface().drawSpriteClipping(
 							spriteSelect(def), sx,
@@ -4256,15 +4306,23 @@ public final class mudclient implements Runnable {
 
 					if (item.getNoted()) {
 						def = ItemDef.asNote(def);
-						this.getSurface().drawSpriteClipping(
-							spriteSelect(EntityHandler.noteDef), sx,
-							sy, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-							EntityHandler.noteDef.getBlueMask(), false,
-							0, 1);
+						if (S_WANT_CERT_AS_NOTES) {
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(EntityHandler.noteDef), sx,
+								sy, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+								EntityHandler.noteDef.getBlueMask(), false,
+								0, 1);
 
-						getSurface().drawSpriteClipping(spriteSelect(def), sx + 7, sy + 4,
-							33, 23, def.getPictureMask(), 0,
-							def.getBlueMask(), false, 0, 1);
+							getSurface().drawSpriteClipping(spriteSelect(def), sx + 7, sy + 4,
+								33, 23, def.getPictureMask(), 0,
+								def.getBlueMask(), false, 0, 1);
+						} else {
+							this.getSurface().drawSpriteClipping(
+								spriteSelect(EntityHandler.certificateDef), sx,
+								sy, 48, 32, EntityHandler.certificateDef.getPictureMask(), 0,
+								EntityHandler.certificateDef.getBlueMask(), false,
+								0, 1);
+						}
 					} else {
 						this.getSurface().drawSpriteClipping(
 							spriteSelect(def), sx,
@@ -5654,7 +5712,11 @@ public final class mudclient implements Runnable {
 		try {
 			Sprite sprite;
 			if (S_WANT_BANK_NOTES && id == -1) {
-				sprite = spriteSelect(EntityHandler.noteDef);
+				if (S_WANT_CERT_AS_NOTES) {
+					sprite = spriteSelect(EntityHandler.noteDef);
+				} else {
+					sprite = spriteSelect(EntityHandler.certificateDef);
+				}
 			}
 			else {
 				sprite = spriteSelect(EntityHandler.getItemDef(id));
@@ -7521,13 +7583,20 @@ public final class mudclient implements Runnable {
 
 						if (item.getNoted()) {
 							def = ItemDef.asNote(def);
-							this.getSurface().drawSpriteClipping(
-								spriteSelect(EntityHandler.noteDef),
-								var5, id, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
-								EntityHandler.noteDef.getBlueMask(), false, 0, var1 ^ -15251);
-							getSurface().drawSpriteClipping(spriteSelect(def), var5 + 7,
-								id + 4, 33, 23, def.getPictureMask(), 0,
-								def.getBlueMask(), false, 0, 1);
+							if (S_WANT_CERT_AS_NOTES) {
+								this.getSurface().drawSpriteClipping(
+									spriteSelect(EntityHandler.noteDef),
+									var5, id, 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
+									EntityHandler.noteDef.getBlueMask(), false, 0, var1 ^ -15251);
+								getSurface().drawSpriteClipping(spriteSelect(def), var5 + 7,
+									id + 4, 33, 23, def.getPictureMask(), 0,
+									def.getBlueMask(), false, 0, 1);
+							} else {
+								this.getSurface().drawSpriteClipping(
+									spriteSelect(EntityHandler.certificateDef),
+									var5, id, 48, 32, EntityHandler.certificateDef.getPictureMask(), 0,
+									EntityHandler.certificateDef.getBlueMask(), false, 0, var1 ^ -15251);
+							}
 						} else {
 							this.getSurface().drawSpriteClipping(
 								spriteSelect(def),
@@ -7607,21 +7676,21 @@ public final class mudclient implements Runnable {
 								}
 
 								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_USE, "Use",
-									"@lre@" + EntityHandler.getItemDef(id).getName());
+									"@lre@" + EntityHandler.getItemDef(id, item.getNoted()).getName());
 								this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP, "Drop",
-									"@lre@" + EntityHandler.getItemDef(id).getName());
+									"@lre@" + EntityHandler.getItemDef(id, item.getNoted()).getName());
 								if (S_WANT_DROP_X) {
 									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_X, "Drop X",
-										"@lre@" + EntityHandler.getItemDef(id).getName());
+										"@lre@" + EntityHandler.getItemDef(id, item.getNoted()).getName());
 									this.menuCommon.addCharacterItem(var5, MenuItemAction.ITEM_DROP_ALL, "Drop All",
-										"@lre@" + EntityHandler.getItemDef(id).getName());
+										"@lre@" + EntityHandler.getItemDef(id, item.getNoted()).getName());
 								}
 								this.menuCommon.addCharacterItem(vId, MenuItemAction.ITEM_EXAMINE, "Examine",
-									"@lre@" + EntityHandler.getItemDef(id).getName()
+									"@lre@" + EntityHandler.getItemDef(id, item.getNoted()).getName()
 										+ (localPlayer.isDev() ? " @or1@(" + id + ")" : ""));
 							} else {
 								this.menuCommon.addCharacterItem_WithID(var5,
-									"@lre@" + EntityHandler.getItemDef(id).getName(), MenuItemAction.ITEM_USE_ITEM,
+									"@lre@" + EntityHandler.getItemDef(id, item.getNoted()).getName(), MenuItemAction.ITEM_USE_ITEM,
 									"Use " + this.m_ig + " with", this.selectedItemInventoryIndex);
 							}
 						}

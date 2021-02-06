@@ -200,6 +200,7 @@ public class ServerConfiguration {
 	public boolean CHAR_NAME_CAN_CONTAIN_MOD;
 	public boolean WANT_CHAIN_LEGS;
 	public boolean WANT_APOTHECARY_QOL;
+	public boolean WANT_CERT_AS_NOTES;
 	// public boolean CHECK_ADMIN_IP;
 	// public String ADMIN_IP;
 	// public List<String> adminIp;
@@ -410,6 +411,7 @@ public class ServerConfiguration {
 		WANT_BANK_NOTES = tryReadBool("want_bank_notes").orElse(false);
 		WANT_CERT_DEPOSIT = tryReadBool("want_cert_deposit").orElse(false);
 		WANT_CERTER_BANK_EXCHANGE = tryReadBool("want_certer_bank_exchange").orElse(false);
+		WANT_CERT_AS_NOTES = tryReadBool("want_cert_as_notes").orElse(false);
 
 		//Shop
 		RIGHT_CLICK_TRADE = tryReadBool("right_click_trade").orElse(false);

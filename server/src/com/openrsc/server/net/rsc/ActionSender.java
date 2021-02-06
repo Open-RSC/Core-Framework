@@ -617,6 +617,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().RIGHT_CLICK_TRADE + " 76");
 			LOGGER.info(server.getConfig().CUSTOM_PROTOCOL + " 77");
 			LOGGER.info(server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR + " 78");
+			LOGGER.info(server.getConfig().WANT_CERT_AS_NOTES + " 79");
 		}
 		com.openrsc.server.net.PacketBuilder s = prepareServerConfigs(server);
 		// ConnectionAttachment attachment = new ConnectionAttachment();
@@ -717,6 +718,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().RIGHT_CLICK_TRADE ? 1 : 0)); // 76
 		s.writeByte((byte) (server.getConfig().CUSTOM_PROTOCOL ? 1 : 0)); // 77
 		s.writeByte((byte) (server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR ? 1 : 0)); // 78
+		s.writeByte((byte) (server.getConfig().WANT_CERT_AS_NOTES ? 1 : 0)); // 79
 		return s;
 	}
 

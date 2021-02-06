@@ -908,7 +908,7 @@ public class PacketHandler {
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecraft, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
-		int globalFriendChat, wantRightClickTrade, customProtocol, wantExtendedCatsBehavior;
+		int globalFriendChat, wantRightClickTrade, customProtocol, wantExtendedCatsBehavior, wantCertAsNotes;
 
 		String logoSpriteID;
 
@@ -991,6 +991,7 @@ public class PacketHandler {
 			wantRightClickTrade = this.getClientStream().getUnsignedByte(); // 76
 			customProtocol = this.getClientStream().getUnsignedByte(); // 77
 			wantExtendedCatsBehavior = this.getClientStream().getUnsignedByte(); // 78
+			wantCertAsNotes = this.getClientStream().getUnsignedByte(); // 79
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1070,6 +1071,7 @@ public class PacketHandler {
 			wantRightClickTrade = packetsIncoming.getUnsignedByte(); // 76
 			customProtocol = packetsIncoming.getUnsignedByte(); // 77
 			wantExtendedCatsBehavior = packetsIncoming.getUnsignedByte(); // 78
+			wantCertAsNotes = packetsIncoming.getUnsignedByte(); // 79
 		}
 
 		if (Config.DEBUG) {
@@ -1151,7 +1153,8 @@ public class PacketHandler {
 					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 76
 					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 77
 					"\nS_CUSTOM_PROTOCOL " + customProtocol + // 78
-					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior // 79
+					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior + // 79
+					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes // 80
 			);
 		}
 
@@ -1237,6 +1240,7 @@ public class PacketHandler {
 		props.setProperty("S_RIGHT_CLICK_TRADE", wantRightClickTrade == 1 ? "true" : "false"); // 77
 		props.setProperty("S_CUSTOM_PROTOCOL", customProtocol == 1 ? "true" : "false"); // 78
 		props.setProperty("S_WANT_EXTENDED_CATS_BEHAVIOR", wantExtendedCatsBehavior == 1 ? "true" : "false"); // 79
+		props.setProperty("S_WANT_CERT_AS_NOTES", wantCertAsNotes == 1 ? "true" : "false"); // 80
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(

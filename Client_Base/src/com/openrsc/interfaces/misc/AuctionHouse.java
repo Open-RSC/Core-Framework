@@ -2,19 +2,17 @@ package com.openrsc.interfaces.misc;
 
 import com.openrsc.client.entityhandling.EntityHandler;
 import com.openrsc.client.entityhandling.defs.ItemDef;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
-
 import com.openrsc.client.entityhandling.instances.Item;
-
 import orsc.Config;
 import orsc.enumerations.MessageType;
 import orsc.graphics.gui.Panel;
 import orsc.graphics.two.GraphicsController;
 import orsc.mudclient;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 
 public final class AuctionHouse {
 	public int auctionScrollHandle;
@@ -214,10 +212,15 @@ public final class AuctionHouse {
 		} else if (newAuctionItem != null) {
 			ItemDef def = EntityHandler.getItemDef(newAuctionItem.getItemID());
 			if (newAuctionItem.getNoted()) {
-				mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), x + 40, y + 55, 48, 32,
-					EntityHandler.noteDef.getPictureMask(), 0, EntityHandler.noteDef.getBlueMask(), false, 0, 1);
-				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), x + 47,
-					y + 59, 33, 23, def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1);
+				if (Config.S_WANT_CERT_AS_NOTES) {
+					mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), x + 40, y + 55, 48, 32,
+						EntityHandler.noteDef.getPictureMask(), 0, EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+					mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), x + 47,
+						y + 59, 33, 23, def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1);
+				} else {
+					mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.certificateDef), x + 40, y + 55, 48, 32,
+						EntityHandler.certificateDef.getPictureMask(), 0, EntityHandler.certificateDef.getBlueMask(), false, 0, 1);
+				}
 			} else {
 				mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), x + 40, y + 55, 48, 32,
 					def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1);
@@ -284,10 +287,15 @@ public final class AuctionHouse {
 						Item item = mc.getInventoryItem(inventorySlot);
 						ItemDef def = item.getItemDef();
 						if (item.getNoted()) {
-							mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), drawX,
-								drawY, 48, 32, EntityHandler.noteDef.getPictureMask(), 0, EntityHandler.noteDef.getBlueMask(), false, 0, 1);
-							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX + 7, drawY + 4, 33,
-								23, def.getPictureMask(), 0, def.getBlueMask(),false, 0, 1);
+							if (Config.S_WANT_CERT_AS_NOTES) {
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef), drawX,
+									drawY, 48, 32, EntityHandler.noteDef.getPictureMask(), 0, EntityHandler.noteDef.getBlueMask(), false, 0, 1);
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX + 7, drawY + 4, 33,
+									23, def.getPictureMask(), 0, def.getBlueMask(),false, 0, 1);
+							} else {
+								mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.certificateDef), drawX,
+									drawY, 48, 32, EntityHandler.certificateDef.getPictureMask(), 0, EntityHandler.certificateDef.getBlueMask(), false, 0, 1);
+							}
 						} else {
 							mc.getSurface().drawSpriteClipping(mc.spriteSelect(def), drawX, drawY, 48,
 								32, def.getPictureMask(), 0, def.getBlueMask(),false, 0, 1);

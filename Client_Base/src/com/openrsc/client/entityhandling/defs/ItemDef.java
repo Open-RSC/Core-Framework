@@ -1,5 +1,7 @@
 package com.openrsc.client.entityhandling.defs;
 
+import orsc.Config;
+
 public class ItemDef extends EntityDef {
 	public String[] command;
 	public int basePrice;
@@ -84,9 +86,15 @@ public class ItemDef extends EntityDef {
 
 	public static ItemDef asNote(ItemDef item) {
 		if (item.hasNoteType) {
-			return new ItemDef(item.name, "Swap this note at any bank for the equivalent item.", "", item.basePrice, item.spriteID, item.spriteLocation, /*438, "items:438",*/ /*item.spriteID, item.spriteLocation,*/
-				true, false, 0, item.getPictureMask(), item.getBlueMask(), item.membersItem,
-				item.untradeable, false, -1, item.id, item.id);
+			if (Config.S_WANT_CERT_AS_NOTES) {
+				return new ItemDef(item.name, "Swap this note at any bank for the equivalent item.", "", item.basePrice, item.spriteID, item.spriteLocation, /*438, "items:438",*/ /*item.spriteID, item.spriteLocation,*/
+					true, false, 0, item.getPictureMask(), item.getBlueMask(), item.membersItem,
+					item.untradeable, false, -1, item.id, item.id);
+			} else {
+				return new ItemDef(item.name + " Certificate", "Each certificate exchangable at any bank for the equivalent item", "", item.basePrice, item.spriteID, item.spriteLocation, /*438, "items:438",*/ /*item.spriteID, item.spriteLocation,*/
+					true, false, 0, item.getPictureMask(), item.getBlueMask(), item.membersItem,
+					item.untradeable, false, -1, item.id, item.id);
+			}
 		} else {
 			return item;
 		}

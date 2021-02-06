@@ -26,7 +26,7 @@ public class EntityHandler {
 	private static final ArrayList<ElevationDef> elevation = new ArrayList<>();
 	private static final ArrayList<GameObjectDef> objects = new ArrayList<>();
 	private static final ArrayList<String> models = new ArrayList<>();
-	public static ItemDef noteDef;
+	public static ItemDef noteDef, certificateDef;
 
 	private static int invPictureCount = 0;
 
@@ -2248,6 +2248,7 @@ public class EntityHandler {
 	private static void loadItemDefinitions() {
 		//Setup the note definition
 		noteDef = new ItemDef("", "", "", 0, 438, "items:438", true, false, 0, 0, false, false, false, 0);
+		certificateDef = new ItemDef("", "", "", 0, 180, "items:180", true, false, 0, 0, false, false, false, 0);
 
 		items.add(new ItemDef("Iron Mace", "A spiky mace", "", 63, 0, "items:0", false, true, 16, 15654365, false, false, true, 0));
 		items.add(new ItemDef("Iron Short Sword", "A razor sharp sword", "", 91, 1, "items:1", false, true, 16, 15654365, false, false, true, 1));
@@ -3563,6 +3564,14 @@ public class EntityHandler {
 			items.get(821).name = "Unidentified Volencia Moss";
 			items.get(823).name = "Unidentified Rogues Purse";
 			items.get(933).name = "Unidentified Torstol";
+		}
+
+		if (Config.S_WANT_BANK_NOTES && !Config.S_WANT_CERT_AS_NOTES) {
+			// notes themed as certificates, "old" certs change name
+			int oldCertids[] = { 517, 518, 519, 520, 521, 528, 529, 530, 531, 532, 533, 534, 535, 536, 628, 629, 630, 631, 711, 712, 713, 1270, 1271, 1272, 1273, 1274, 1275 };
+			for (int certId : oldCertids) {
+				items.get(certId).name = items.get(certId).name + " (market)";
+			}
 		}
 
 		/*try {
