@@ -169,7 +169,8 @@ public class RegionManager {
 		return getTile(point.getX(), point.getY());
 	}
 
-	private ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Region>> getRegions() {
+	// originally private, set to public to access for reset event
+	public ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Region>> getRegions() {
 		return regions;
 	}
 

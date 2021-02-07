@@ -7,6 +7,7 @@ import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.custom.HourlyNpcLootEvent;
+import com.openrsc.server.event.custom.HourlyResetEvent;
 import com.openrsc.server.event.custom.NpcLootEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
@@ -190,6 +191,10 @@ public final class Admins implements CommandTrigger {
 			spawnNpc(player, command, args);
 		} else if (command.equalsIgnoreCase("winterholidayevent") || command.equalsIgnoreCase("toggleholiday")) {
 			winterHolidayEvent(player, command, args);
+		} else if (command.equalsIgnoreCase("resetevent")) {
+			startResetEvent(player, command, args, false);
+		} else if (command.equalsIgnoreCase("stopresetevent") || command.equalsIgnoreCase("cancelresetevent")) {
+			stopResetEvent(player);
 		}
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
 			fakeCrystalChest(player, args);
@@ -2037,6 +2042,56 @@ public final class Admins implements CommandTrigger {
 			}
 
 			player.playerServerMessage(MessageType.QUEST, messagePrefix + "Christmas trees have been enabled.");
+		}
+	}
+
+	private void startResetEvent(Player player, String command, String[] args, boolean allowMultiple) {
+		if (args.length < 2) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [hours] [minute]");
+			return;
+		}
+
+		int executionCount;
+		try {
+			executionCount = Integer.parseInt(args[0]);
+		} catch (NumberFormatException ex) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [hours] [minute]");
+			return;
+		}
+
+		int minute;
+		try {
+			minute = Integer.parseInt(args[1]);
+
+			if (minute < 0 || minute > 60) {
+				player.message(messagePrefix + "The minute of the hour must be between 0 and 60");
+			}
+		} catch (NumberFormatException ex) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [hours] [minute]");
+			return;
+		}
+
+		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		for (GameTickEvent event : events.values()) {
+			if (!(event instanceof HourlyResetEvent)) continue;
+
+			player.message(messagePrefix + "There is already an hourly reset running!");
+			return;
+		}
+
+		player.getWorld().getServer().getGameEventHandler().add(new HourlyResetEvent(player.getWorld(), executionCount, minute));
+		player.message(messagePrefix + "Starting hourly reset!");
+		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Started reset event"));
+	}
+
+	private void stopResetEvent(Player player) {
+		HashMap<String, GameTickEvent> events = player.getWorld().getServer().getGameEventHandler().getEvents();
+		for (GameTickEvent event : events.values()) {
+			if (!(event instanceof HourlyResetEvent)) continue;
+
+			event.stop();
+			player.message(messagePrefix + "Stopping hourly reset!");
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 21, messagePrefix + "Stopped reset event"));
 		}
 	}
 }
