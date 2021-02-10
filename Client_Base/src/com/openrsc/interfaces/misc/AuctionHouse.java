@@ -226,6 +226,7 @@ public final class AuctionHouse {
 					def.getPictureMask(), 0, def.getBlueMask(), false, 0, 1);
 			}
 			//graphics.drawString("Fee: +" + (int) getFee() + "gp", x + 6, y + 101, 0xffffff, 0);
+			graphics.drawString(def.getName(), x + 6, y + 101, 0xffffff, 0);
 		}
 		graphics.drawBoxAlpha(x + 3, y + 37 + 71, 129, 181, 0, 60);
 		graphics.drawBoxBorder(x + 2, 130, y + 37 + 70, 182, 0x343434);
