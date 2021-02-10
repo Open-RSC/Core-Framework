@@ -40,7 +40,6 @@ public class ServerConfiguration {
 	int IDLE_TIMER;
 	int AUTO_SAVE;
 	private String SERVER_LOCATION;
-	private String HMAC_PRIVATE_KEY;
 	public int AGGRO_RANGE;
 	public DatabaseType DB_TYPE;
 	public String DB_HOST;
@@ -226,13 +225,14 @@ public class ServerConfiguration {
 	private YMLReader serverProps = new YMLReader();
 
 	void initConfig(String defaultFile) throws IOException {
-		// Try to load the connections.conf. If not, we'll use the defaults
-		// (But you really want this file)
+		// Try to load the connections.conf
 		try {
 			serverProps.loadFromYML("connections.conf");
 			LOGGER.info("Loaded connections.conf");
 		} catch (Exception e) {
-			LOGGER.info("Properties file connections.conf not found, using default properties.");
+			LOGGER.info("Properties file connections.conf not found, terminating server.");
+			System.exit(1);
+
 		}
 
 		// Always try to load from local.conf first.
@@ -303,7 +303,6 @@ public class ServerConfiguration {
 		SKULL_BOOST = tryReadDouble("skull_boost").orElse(0.0);
 		IS_DOUBLE_EXP = tryReadBool("double_exp").orElse(false);
 		NPC_RESPAWN_MULTIPLIER = tryReadDouble("npc_respawn_multiplier").orElse(1.0);
-		HMAC_PRIVATE_KEY = tryReadString("HMAC_PRIVATE_KEY").orElse("root");
 		WANT_REGISTRATION_LIMIT = tryReadBool("want_registration_limit").orElse(false);
 		PACKET_LIMIT = tryReadInt("packet_limit").orElse(100);
 		CONNECTION_LIMIT = tryReadInt("connection_limit").orElse(10);
