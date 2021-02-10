@@ -6,4 +6,4 @@ echo "Running the game server. Press CTRL + C to shut it down or"
 echo "CTRL + A + D to detach the screen so this continues in the background."
 echo ""
 touch ../gameserver.log && chmod 777 ../gameserver.log &>/dev/null
-ant runserver | tee -a ../gameserver.log
+ant runserver
