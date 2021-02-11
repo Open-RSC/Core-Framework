@@ -8,6 +8,7 @@ import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
 import com.openrsc.server.event.custom.HolidayDropEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.NPCDef;
+import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
@@ -286,7 +287,7 @@ public final class RegularPlayer implements CommandTrigger {
 	}
 
 	private void sendMessageGlobal(Player player, String command, String[] args) {
-		if (!config().WANT_GLOBAL_CHAT) return;
+		if (!config().WANT_GLOBAL_CHAT && !config().WANT_GLOBAL_FRIEND) return;
 		if (player.isMuted()) {
 			player.message(messagePrefix + "You are muted, you cannot send messages");
 			return;
@@ -324,35 +325,40 @@ public final class RegularPlayer implements CommandTrigger {
 		}
 		newStr = new StringBuilder(newStr.toString().replace('~', ' '));
 		newStr = new StringBuilder(newStr.toString().replace('@', ' '));
-		String channelPrefix = command.equals("g") ? "@gr2@[General] " : "@or1@[PKing] ";
-		int channel = command.equalsIgnoreCase("g") ? 1 : 2;
-		for (Player p : player.getWorld().getPlayers()) {
-			if (p.getSocial().isIgnoring(player.getUsernameHash()))
-				continue;
-			if (p.getGlobalBlock() == 3 && channel == 2) {
-				continue;
-			}
-			if (p.getGlobalBlock() == 4 && channel == 1) {
-				continue;
-			}
-			if (p.getGlobalBlock() != 2) {
-				String header = "";
-				if (p.isUsingAuthenticClient()) {
-					ActionSender.sendMessage(p, player, MessageType.PRIVATE_RECIEVE, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
-						+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIconAuthentic(), null);
+		if (config().WANT_GLOBAL_CHAT) {
+			String channelPrefix = command.equals("g") ? "@gr2@[General] " : "@or1@[PKing] ";
+			int channel = command.equalsIgnoreCase("g") ? 1 : 2;
+			for (Player p : player.getWorld().getPlayers()) {
+				if (p.getSocial().isIgnoring(player.getUsernameHash()))
+					continue;
+				if (p.getGlobalBlock() == 3 && channel == 2) {
+					continue;
+				}
+				if (p.getGlobalBlock() == 4 && channel == 1) {
+					continue;
+				}
+				if (p.getGlobalBlock() != 2) {
+					String header = "";
+					if (p.isUsingAuthenticClient()) {
+						ActionSender.sendMessage(p, player, MessageType.PRIVATE_RECIEVE, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
+							+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIconAuthentic(), null);
 
-				} else {
-					ActionSender.sendMessage(p, player, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
-						+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon(), null);
+					} else {
+						ActionSender.sendMessage(p, player, MessageType.GLOBAL_CHAT, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
+							+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIcon(), null);
+					}
 				}
 			}
-		}
-		if (command.equalsIgnoreCase("g")) {
-			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(Global) " + newStr));
+			if (command.equalsIgnoreCase("g")) {
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(Global) " + newStr));
+				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
+			} else {
+				player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(PKing) " + newStr));
+				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
+			}
+		} else if (config().WANT_GLOBAL_FRIEND && command.equalsIgnoreCase("g")) {
+			player.getWorld().addGlobalMessage(new GlobalMessage(player, newStr.toString()));
 			player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
-		} else {
-			player.getWorld().getServer().getGameLogger().addQuery(new ChatLog(player.getWorld(), player.getUsername(), "(PKing) " + newStr));
-			player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
 		}
 	}
 
