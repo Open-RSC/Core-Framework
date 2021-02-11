@@ -181,6 +181,12 @@ public final class EntityHandler {
 		objectHarvesting = (HashMap<Integer, ObjectHarvestingDef>) getPersistenceManager().load("defs/extras/ObjectHarvesting.xml.gz");
 		objectTelePoints = (HashMap<Point, TelePoint>) getPersistenceManager().load("locs/extras/ObjectTelePoints.xml.gz");
 		certers = (HashMap<Integer, CerterDef>) getPersistenceManager().load("defs/extras/NpcCerters.xml.gz");
+
+		for (int fishSpot : objectFishing.keySet()) {
+			for (ObjectFishingDef fishDef : objectFishing.get(fishSpot)) {
+				fishDef.calculateFishRates();
+			}
+		}
 	}
 
 	private void loadNpcs(String filename) {

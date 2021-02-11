@@ -1,6 +1,8 @@
 package com.openrsc.server.external;
 
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.util.rsc.Formulae;
 
 /**
  * The definition wrapper for fishing spots
@@ -8,7 +10,7 @@ import com.openrsc.server.model.world.World;
 public class ObjectFishingDef {
 
 	/**
-	 * The If of any bait required to go with the net
+	 * The Id of any bait required to go with the net
 	 */
 	public int baitId;
 	/**
@@ -36,6 +38,11 @@ public class ObjectFishingDef {
 		return defs;
 	}
 
+	/**
+	 * Whether or not the fish defined are competing against each other for a chance to be caught
+	 */
+	public int cascade;
+
 	public int getNetId() {
 		return netId;
 	}
@@ -58,4 +65,49 @@ public class ObjectFishingDef {
 		return respawnTime;
 	}
 
+	public ObjectFishDef fishingAttemptResult(int level) {
+		double roll = Math.random();
+		for (ObjectFishDef def : defs) {
+			if (def.getRate(level) > roll) {
+				return def;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Pre calculate the probability rate of each possible outcome of fishing at a fishing spot
+	 */
+	void calculateFishRates() {
+		final int maxLevelToCalcFor = 138;
+
+		SkillSuccessRate[] bounds = new SkillSuccessRate[defs.length];
+		int i = 0;
+		for (ObjectFishDef def : defs) {
+			def.bounds = new SkillSuccessRate(def.lowRate, def.highRate, def.requiredLevel);
+			bounds[i++] = def.bounds;
+		}
+		double[] rateSoFar = new double[maxLevelToCalcFor];
+		if (cascade == 1) {
+			for (int fishDefIdx = 0; fishDefIdx < defs.length; fishDefIdx++) {
+				defs[fishDefIdx].rate = new double[maxLevelToCalcFor];
+				for (int level = 0; level < maxLevelToCalcFor; level++) {
+					if (level >= defs[fishDefIdx].requiredLevel) {
+						rateSoFar[level] += Formulae.cascadeInterp(bounds, level, fishDefIdx);
+						defs[fishDefIdx].rate[level] = rateSoFar[level];
+					}
+				}
+			}
+		} else {
+			for (ObjectFishDef def : defs) {
+				def.rate = new double[maxLevelToCalcFor];
+				for (int level = 0; level < maxLevelToCalcFor; level++) {
+					if (level >= def.requiredLevel) {
+						rateSoFar[level] += Formulae.interp(def.lowRate, def.highRate, level);
+						def.rate[level] = rateSoFar[level];
+					}
+				}
+			}
+		}
+	}
 }

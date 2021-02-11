@@ -28,18 +28,8 @@ public class Fishing implements OpLocTrigger {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger(Fishing.class);
 
-	private ObjectFishDef getFish(ObjectFishingDef objectFishDef, int fishingLevel) {
-		ArrayList<ObjectFishDef> fish = new ArrayList<ObjectFishDef>();
-
-		for (ObjectFishDef def : objectFishDef.getFishDefs()) {
-			if (fishingLevel >= def.getReqLevel() && Formulae.calcGatheringSuccessful(def.getReqLevel(), fishingLevel)) {
-				fish.add(def);
-			}
-		}
-		if (fish.size() <= 0) {
-			return null;
-		}
-		return fish.get(DataConversions.random(0, fish.size() - 1));
+	public ObjectFishDef getFish(ObjectFishingDef objectFishingDef, int fishingLevel) {
+		return objectFishingDef.fishingAttemptResult(fishingLevel);
 	}
 
 	@Override

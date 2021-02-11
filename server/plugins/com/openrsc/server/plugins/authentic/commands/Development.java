@@ -3,6 +3,8 @@ package com.openrsc.server.plugins.authentic.commands;
 import com.openrsc.server.constants.NpcDrops;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.external.ObjectFishDef;
+import com.openrsc.server.external.ObjectFishingDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -74,6 +76,9 @@ public final class Development implements CommandTrigger {
 		}
 		else if (command.equalsIgnoreCase("droptest")) {
 			testNpcDrops(player, command, args);
+		}
+		else if (command.equalsIgnoreCase("fishingRate")) {
+			fishingRate(player, command, args);
 		}
 	}
 
@@ -503,5 +508,51 @@ public final class Development implements CommandTrigger {
 			}
 			System.out.println(key + " (" + amount + "): " + entry.getValue() + " / " + finalCount + " (" + ((entry.getValue() / (double)finalCount) * 128) + "/128)");
 		});
+	}
+
+
+	private void fishingRate(Player player, String command, String[] args) {
+		if (args.length < 2) {
+			mes("::fishingrate [fishing spot name (see Development.java)] [level] (trials)");
+			return;
+		}
+		int trials = 10000;
+		if (args.length == 3) {
+			trials = Integer.parseInt(args[2]);
+		}
+
+		HashMap<String, ObjectFishingDef> fishingDefs = new HashMap<>();
+		fishingDefs.put("pike", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(192, 1));
+		fishingDefs.put("troutSalmon", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(192, 0));
+		fishingDefs.put("sardineHerring", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(193, 1));
+		fishingDefs.put("shrimpAnchovies", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(193, 0));
+		fishingDefs.put("lobster", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(194, 1));
+		fishingDefs.put("tunaSwordfish", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(194, 0));
+		fishingDefs.put("shark", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(261, 1));
+		fishingDefs.put("bigNet", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(261, 0));
+		fishingDefs.put("tunaSwordfish2", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(376, 1));
+		fishingDefs.put("lobster2", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(376, 0));
+		fishingDefs.put("tutShrimp", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(493, 0));
+		fishingDefs.put("lobster3", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(557, 1));
+		fishingDefs.put("tunaSwordfish3", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(557, 0));
+		fishingDefs.put("lavaeel", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(271, 0));
+
+		HashMap<Integer,Integer> results = new HashMap<Integer, Integer>();
+		for (int i = 0; i < trials; i++) {
+			ObjectFishDef fish = fishingDefs.get(args[0]).fishingAttemptResult(Integer.parseInt(args[1]));
+			int result = -1;
+			if (fish != null) {
+				result = fish.getId();
+			}
+			if (results.get(result) != null) {
+				results.put(result, results.get(result) + 1);
+			} else {
+				results.put(result, 1);
+			}
+		}
+		mes("@whi@At level @gre@" + Integer.parseInt(args[1]) + "@whi@ in @gre@" + trials + "@whi@ attempts:");
+		for (int key : results.keySet()) {
+			mes("@whi@We got @gre@" + results.get(key) + "@whi@ of id @mag@" + key);
+		}
 	}
 }

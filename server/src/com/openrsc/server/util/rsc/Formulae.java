@@ -340,6 +340,41 @@ public final class Formulae {
 	}
 
 	/**
+	 * Calculates the chance of succeeding at a skilling event (out of 256)
+	 * @param low
+	 * @param high
+	 * @param level
+	 * @return percent chance of success
+	 */
+	public static double interp(double low, double high, int level) {
+		// 99 & 98 numbers should *not* be adjusted for level cap > 99
+		int value = (int)(Math.floor(low*(99-level)/98) + Math.floor(high*(level-1)/98) + 1);
+		return Math.min(Math.max(value / 256D, 0), 1);
+	}
+
+	/**
+	 * Calculates the chance of outcomes for a skilling event with multiple outcomes (e.g., tuna, swordfish, or nothing)
+	 * @param bounds the low, high, and levelReq for each competing outcome result.
+	 *               Order matters; highest level events must come first.
+	 * @param level the player's level when attempting the skilling success event
+	 * @param index the index of the skilling event currently being checked
+	 * @return percent chance of success
+	 */
+	public static double cascadeInterp(SkillSuccessRate[] bounds, int level, int index) {
+		double rate = 1D;
+		for (int boundsIndex = 0; boundsIndex < bounds.length; boundsIndex++) {
+			if (boundsIndex == index) {
+				rate = rate * interp(bounds[boundsIndex].lowRate, bounds[boundsIndex].highRate, level);
+				return rate;
+			}
+			if (level >= bounds[boundsIndex].requiredLevel) {
+				rate = rate * (1 - interp(bounds[boundsIndex].lowRate, bounds[boundsIndex].highRate, level));
+			}
+		}
+		return 0;
+	}
+
+	/**
 	 * Calculate a mobs combat level based on their stats
 	 */
 	public static int getCombatlevel(int[] stats, boolean isSpecial) {
