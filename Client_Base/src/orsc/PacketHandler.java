@@ -908,7 +908,7 @@ public class PacketHandler {
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecraft, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
-		int globalFriendChat, wantRightClickTrade, customProtocol, wantExtendedCatsBehavior, wantCertAsNotes;
+		int globalFriendChat, wantRightClickTrade, nothingReuseMe, wantExtendedCatsBehavior, wantCertAsNotes;
 
 		String logoSpriteID;
 
@@ -989,7 +989,7 @@ public class PacketHandler {
 			hideLoginBox = this.getClientStream().getUnsignedByte(); // 74
 			globalFriendChat = this.getClientStream().getUnsignedByte(); // 75
 			wantRightClickTrade = this.getClientStream().getUnsignedByte(); // 76
-			customProtocol = this.getClientStream().getUnsignedByte(); // 77
+			nothingReuseMe = this.getClientStream().getUnsignedByte(); // 77
 			wantExtendedCatsBehavior = this.getClientStream().getUnsignedByte(); // 78
 			wantCertAsNotes = this.getClientStream().getUnsignedByte(); // 79
 		} else {
@@ -1069,7 +1069,7 @@ public class PacketHandler {
 			hideLoginBox = packetsIncoming.getUnsignedByte(); // 74
 			globalFriendChat = packetsIncoming.getUnsignedByte(); // 75
 			wantRightClickTrade = packetsIncoming.getUnsignedByte(); // 76
-			customProtocol = packetsIncoming.getUnsignedByte(); // 77
+			nothingReuseMe = packetsIncoming.getUnsignedByte(); // 77
 			wantExtendedCatsBehavior = packetsIncoming.getUnsignedByte(); // 78
 			wantCertAsNotes = packetsIncoming.getUnsignedByte(); // 79
 		}
@@ -1152,7 +1152,7 @@ public class PacketHandler {
 					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 75
 					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 76
 					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 77
-					"\nS_CUSTOM_PROTOCOL " + customProtocol + // 78
+					"\nS_NOTHING_REUSE_ME " + nothingReuseMe + // 78
 					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior + // 79
 					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes // 80
 			);
@@ -1238,7 +1238,7 @@ public class PacketHandler {
 		props.setProperty("S_HIDE_LOGIN_BOX", hideLoginBox == 1 ? "true" : "false"); // 75
 		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 76
 		props.setProperty("S_RIGHT_CLICK_TRADE", wantRightClickTrade == 1 ? "true" : "false"); // 77
-		props.setProperty("S_CUSTOM_PROTOCOL", customProtocol == 1 ? "true" : "false"); // 78
+		props.setProperty("S_NOTHING_REUSE_ME", nothingReuseMe == 1 ? "true" : "false"); // 78
 		props.setProperty("S_WANT_EXTENDED_CATS_BEHAVIOR", wantExtendedCatsBehavior == 1 ? "true" : "false"); // 79
 		props.setProperty("S_WANT_CERT_AS_NOTES", wantCertAsNotes == 1 ? "true" : "false"); // 80
 		Config.updateServerConfiguration(props);

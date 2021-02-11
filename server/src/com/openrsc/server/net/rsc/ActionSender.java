@@ -615,7 +615,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().HIDE_LOGIN_BOX_TOGGLE + " 74");
 			LOGGER.info(server.getConfig().WANT_GLOBAL_FRIEND + " 75");
 			LOGGER.info(server.getConfig().RIGHT_CLICK_TRADE + " 76");
-			LOGGER.info(server.getConfig().CUSTOM_PROTOCOL + " 77");
+			LOGGER.info(server.getConfig().NOTHING_REUSE_ME + " 77");
 			LOGGER.info(server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR + " 78");
 			LOGGER.info(server.getConfig().WANT_CERT_AS_NOTES + " 79");
 		}
@@ -716,7 +716,7 @@ public class ActionSender {
 		s.writeByte((byte) (server.getConfig().HIDE_LOGIN_BOX_TOGGLE ? 1 : 0)); // 74
 		s.writeByte((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); // 75
 		s.writeByte((byte) (server.getConfig().RIGHT_CLICK_TRADE ? 1 : 0)); // 76
-		s.writeByte((byte) (server.getConfig().CUSTOM_PROTOCOL ? 1 : 0)); // 77
+		s.writeByte((byte) (server.getConfig().NOTHING_REUSE_ME ? 1 : 0)); // 77
 		s.writeByte((byte) (server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR ? 1 : 0)); // 78
 		s.writeByte((byte) (server.getConfig().WANT_CERT_AS_NOTES ? 1 : 0)); // 79
 		return s;

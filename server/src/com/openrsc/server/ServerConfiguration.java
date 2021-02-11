@@ -173,7 +173,7 @@ public class ServerConfiguration {
 	public boolean LENIENT_CONTACT_DETAILS;
 	//loosened checks
 	public boolean LOOSE_SHALLOW_WATER_CHECK;
-	public boolean CUSTOM_PROTOCOL;
+	public boolean NOTHING_REUSE_ME;
 	public int PACKET_LIMIT;
 	private int CONNECTION_LIMIT;
 	private int CONNECTION_TIMEOUT;
@@ -315,7 +315,7 @@ public class ServerConfiguration {
 		RING_OF_FORGING_USES = tryReadInt("ring_of_forging_uses").orElse(75);
 		DWARVEN_RING_USES = tryReadInt("dwarven_ring_uses").orElse(29);
 		DWARVEN_RING_BONUS = tryReadInt("dwarven_ring_bonus").orElse(3);
-		CUSTOM_PROTOCOL = tryReadBool("custom_protocol").orElse(false);
+		NOTHING_REUSE_ME = tryReadBool("custom_protocol").orElse(false);
 		LOCATION_DATA = tryReadInt("location_data").orElse(0);
 		WANT_FIXED_BROKEN_MECHANICS = tryReadBool("want_fixed_broken_mechanics").orElse(false);
 		WANT_DECORATED_MOD_ROOM = tryReadBool("want_decorated_mod_room").orElse(false);
