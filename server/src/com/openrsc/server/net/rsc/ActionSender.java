@@ -181,7 +181,7 @@ public class ActionSender {
                         String.format("@ran@Please Confirm: @whi@Other player is staking @gre@%d @yel@%s", item.getAmount(), itemName));
                 }
 				if (!player.isUsingAuthenticClient()) {
-                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                    if (player.getConfig().WANT_BANK_NOTES) {
                         s.writeByte((byte) (item.getNoted() ? 1 : 0));
                     }
                 }
@@ -193,7 +193,7 @@ public class ActionSender {
 			for (Item item : player.getDuel().getDuelOffer().getItems()) {
 				s.writeShort(item.getCatalogId());
                 if (!player.isUsingAuthenticClient()) {
-                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                    if (player.getConfig().WANT_BANK_NOTES) {
                         s.writeByte((byte) (item.getNoted() ? 1 : 0));
                     }
                 }
@@ -265,7 +265,7 @@ public class ActionSender {
             } else {
                 for (Item item : items) {
                     s.writeShort(item.getCatalogId());
-                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                    if (player.getConfig().WANT_BANK_NOTES) {
                         s.writeByte((byte) (item.getNoted() ? 1 : 0));
                     }
 
@@ -780,9 +780,7 @@ public class ActionSender {
                 for (Item item : player.getCarriedItems().getInventory().getItems()) {
                     s.writeShort(item.getCatalogId());
                     s.writeByte((byte) (item.isWielded() ? 1 : 0));
-                    if (player.getConfig().CUSTOM_PROTOCOL) {
-                        s.writeByte((byte) (item.getNoted() ? 1 : 0));
-                    }
+					s.writeByte((byte) (item.getNoted() ? 1 : 0)); // must always send this in case notes have been enabled previously then removed
                     if (item.getDef(player.getWorld()).isStackable() || item.getNoted())
                         s.writeInt(item.getAmount());
                 }
@@ -1364,7 +1362,7 @@ public class ActionSender {
             s.writeByte((byte) with.getTrade().getTradeOffer().getItems().size());
             for (Item item : with.getTrade().getTradeOffer().getItems()) {
                 s.writeShort(item.getCatalogId());
-                if (player.getConfig().CUSTOM_PROTOCOL) {
+                if (player.getConfig().WANT_BANK_NOTES) {
                     s.writeByte((byte) (item.getNoted() ? 1 : 0));
                 }
                 s.writeInt(item.getAmount());
@@ -1372,7 +1370,7 @@ public class ActionSender {
             s.writeByte((byte) player.getTrade().getTradeOffer().getItems().size());
             for (Item item : player.getTrade().getTradeOffer().getItems()) {
                 s.writeShort(item.getCatalogId());
-                if (player.getConfig().CUSTOM_PROTOCOL) {
+                if (player.getConfig().WANT_BANK_NOTES) {
                     s.writeByte((byte) (item.getNoted() ? 1 : 0));
                 }
                 s.writeInt(item.getAmount());
@@ -1434,7 +1432,7 @@ public class ActionSender {
                 for (Item item : items) {
                     s.writeShort(item.getCatalogId());
 
-                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                    if (player.getConfig().WANT_BANK_NOTES) {
                         s.writeByte((byte) (item.getNoted() ? 1 : 0));
                     }
 
@@ -1446,7 +1444,7 @@ public class ActionSender {
                 s.writeByte((byte) items.size());
                 for (Item item : items) {
                     s.writeShort(item.getCatalogId());
-                    if (player.getConfig().CUSTOM_PROTOCOL) {
+                    if (player.getConfig().WANT_BANK_NOTES) {
                         s.writeByte((byte) (item.getNoted() ? 1 : 0));
                     }
                     s.writeInt(item.getAmount());

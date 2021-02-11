@@ -121,10 +121,10 @@ public class Item implements Comparable<Item> {
 		if (getNoted()) {
 			// Unfortunately, noted items will need to appear as some other stackable item.
 			// There's no way to show a stack of an unstackable item in the authentic protocol.
-			// At least when a placeholder is used, and thatitem is stackable,
+			// At least when a placeholder is used, and that item is stackable,
 			// most of the functions of the noted item are retained.
 
-			// The Shantay Desert Pass is chosen due to its low value, rarity in trades, & visual similarity to a note.
+			// The Shantay Desert Pass is chosen due to its low value, untradability, & visual similarity to a note.
 			return 1030; // Shantay Desert Pass
 		} else {
 			return getCatalogId();

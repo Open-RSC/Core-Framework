@@ -65,6 +65,12 @@ public final class ItemDropHandler implements PacketHandler {
 			return;
 		}
 
+		if (item.getNoted() && !player.getConfig().WANT_BANK_NOTES) {
+			player.message("Notes have been disabled; you cannot drop them anymore.");
+			player.message("You may either deposit it in the bank or sell to a shop instead.");
+			return;
+		}
+
 		if (inventorySlot != -1) {
 			if (amount > player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()))) {
 				amount = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(item.getNoted()));

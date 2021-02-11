@@ -340,6 +340,12 @@ public class PlayerDuelHandler implements PacketHandler {
 						player.setSuspiciousPlayer(true, "duel item amount < 1");
 						continue;
 					}
+					if (tItem.getNoted() && !player.getConfig().WANT_BANK_NOTES) {
+						player.message("Notes can no longer be staked with other players.");
+						player.message("You may either deposit it in the bank or sell to a shop instead.");
+						ActionSender.sendDuelOpponentItems(player);
+						continue;
+					}
 					if (tItem.getDef(player.getWorld()).isUntradable()) {
 						player.message("This object cannot be added to a duel offer");
 						ActionSender.sendDuelOpponentItems(player);

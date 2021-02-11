@@ -184,6 +184,12 @@ public class PlayerTradeHandler implements PacketHandler {
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
+					if (tItem.getNoted() && !player.getConfig().WANT_BANK_NOTES) {
+						player.message("Notes can no longer be traded with other players.");
+						player.message("You may either deposit it in the bank or sell to a shop instead.");
+						player.setRequiresOfferUpdate(true);
+						continue;
+					}
 					if (tItem.getDef(player.getWorld()).isUntradable() && !player.isAdmin()) {
 						player.message("This object cannot be traded with other players");
 						player.setRequiresOfferUpdate(true);

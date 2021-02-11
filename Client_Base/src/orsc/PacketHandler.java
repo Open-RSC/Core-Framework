@@ -1499,10 +1499,10 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setInventoryItemID(i, itemID);
 			mc.setInventoryItemEquipped(i, packetsIncoming.getByte());
-			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
-				noted = packetsIncoming.getByte() == 1;
-			}
+
+			// must always check for this even if server config has notes off, in case they were enabled previously
+			boolean noted = packetsIncoming.getByte() == 1;
+
 			mc.getInventoryItem(i).setNoted(noted);
 			if (com.openrsc.client.entityhandling.EntityHandler.getItemDef(itemID, noted).isStackable()) {
 				mc.setInventoryItemSize(i, packetsIncoming.get32());
@@ -2055,7 +2055,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setTradeRecipientConfirmItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getTradeRecipientConfirmItem(var4).setNoted(noted);
@@ -2068,7 +2068,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setTradeConfirmItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getTradeConfirmItem(var4).setNoted(noted);
@@ -2083,7 +2083,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setDuelOpponentItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getDuelOpponentItem(var4).setNoted(noted);
@@ -2185,7 +2185,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setDuelOpponentConfirmItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getDuelOpponentConfirmItem(var4).setNoted(noted);
@@ -2198,7 +2198,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setDuelConfirmItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getDuelConfirmItem(var4).setNoted(noted);
@@ -2363,7 +2363,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setTradeRecipientItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getTradeRecipientItem(var4).setNoted(noted);
@@ -2376,7 +2376,7 @@ public class PacketHandler {
 			int itemID = packetsIncoming.getShort();
 			mc.setTradeItemID(var4, itemID);
 			boolean noted = false;
-			if (Config.S_CUSTOM_PROTOCOL) {
+			if (Config.S_WANT_BANK_NOTES) {
 				noted = packetsIncoming.getByte() == 1;
 			}
 			mc.getTradeItem(var4).setNoted(noted);
