@@ -1323,9 +1323,9 @@ public class EntityHandler {
 		sprites = new int[]{0, 1, 2, -1, -1, 173, 174, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Guard", "It's one of General Khazard's guard's", "", 31, 30, 22, 31, false, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, 173, 174, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Guard", "It's one of General Khazard's guard's", "", 31, 30, 22, 31, false, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Guard", "It's one of General Khazard's guard's", "pickpocket", 31, 30, 22, 31, false, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, 117, 173, 174, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Guard", "It's one of General Khazard's guard's", "", 31, 30, 22, 31, false, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Guard", "It's one of General Khazard's guard's", "pickpocket", 31, 30, 22, 31, false, sprites, 1, 2, 3, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1};
 		npcs.add(new NPCDef("Jeremy Servil", "A young squire", "", 0, 0, 3, 0, false, sprites, 14535800, 2, 3, 15523536, 120, 140, 6, 6, 5, i++));
 		sprites = new int[]{0, 1, 2, -1, -1, -1, 45, -1, 46, -1, -1, -1};
@@ -3564,6 +3564,21 @@ public class EntityHandler {
 			items.get(821).name = "Unidentified Volencia Moss";
 			items.get(823).name = "Unidentified Rogues Purse";
 			items.get(933).name = "Unidentified Torstol";
+
+			// apply also for potions
+			items.get(454).name = "Unfinished Guam potion";
+			items.get(455).name = "Unfinished Marrentill potion";
+			items.get(456).name = "Unfinished Tarromin potion";
+			items.get(457).name = "Unfinished Harralander potion";
+			items.get(458).name = "Unfinished Ranarr potion";
+			items.get(459).name = "Unfinished Irit potion";
+			items.get(460).name = "Unfinished Avantoe potion";
+			items.get(461).name = "Unfinished Kwuarm potion";
+			items.get(462).name = "Unfinished Cadantine potion";
+			items.get(463).name = "Unfinished Dwarf Weed potion";
+			items.get(935).name = "Unfinished Torstol potion";
+			items.get(1052).name = "Unfinished Ogre potion";
+			items.get(1074).name = "Unfinished Jangerberries potion";
 		}
 
 		if (Config.S_WANT_BANK_NOTES && !Config.S_WANT_CERT_AS_NOTES) {

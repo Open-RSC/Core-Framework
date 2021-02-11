@@ -83,6 +83,7 @@ public class SpellHandler implements PacketHandler {
 			player.message("You manage to cast the spell without using any runes");
 			return true;
 		}
+		Set<Entry<Integer, Integer>> runesToConsume = new HashSet<>();
 
 		for (Entry<Integer, Integer> e : spell.getRunesRequired()) {
 			boolean skipRune = false;
@@ -115,7 +116,11 @@ public class SpellHandler implements PacketHandler {
 				player.message("You don't have all the reagents you need for this spell");
 				return false;
 			}
-			player.getCarriedItems().remove(new Item(e.getKey(), e.getValue()));
+			runesToConsume.add(new AbstractMap.SimpleEntry<Integer, Integer>(e.getKey(), e.getValue()));
+		}
+		// remove now if player meets all rune requirements
+		for (Entry<Integer, Integer> r : runesToConsume) {
+			player.getCarriedItems().remove(new Item(r.getKey(), r.getValue()));
 		}
 		return true;
 	}
