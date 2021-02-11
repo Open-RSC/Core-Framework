@@ -675,7 +675,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.face(274, 3015);
 				player.message("You focus on not slipping...");
 				delay(4);
-				if (Formulae.calcProductionSuccessful(19, getCurrentLevel(player, Skills.AGILITY) - 48, false, 58, 26)) {
+				if (Formulae.calcProductionSuccessfulLegacy(19, getCurrentLevel(player, Skills.AGILITY) - 48, false, 58, 26)) {
 					player.teleport(278, 3015);
 					delay(3);
 					player.teleport(276, 3015);
@@ -711,7 +711,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.face(272, 3015);
 				player.message("You focus on not slipping...");
 				delay(4);
-				if (Formulae.calcProductionSuccessful(19, getCurrentLevel(player, Skills.AGILITY) - 48, false, 58, 26)) {
+				if (Formulae.calcProductionSuccessfulLegacy(19, getCurrentLevel(player, Skills.AGILITY) - 48, false, 58, 26)) {
 					player.teleport(272, 3015);
 					player.face(280, 3015);
 					delay(3);
@@ -736,11 +736,11 @@ public class AgilityShortcuts implements OpLocTrigger,
 	}
 
 	boolean succeed(Player player, int req) {
-		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, Skills.AGILITY), false, req + 30);
+		return Formulae.calcProductionSuccessfulLegacy(req, getCurrentLevel(player, Skills.AGILITY), false, req + 30);
 	}
 
 	boolean succeed(Player player, int req, int lvlStopFail) {
-		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, Skills.AGILITY), true, lvlStopFail);
+		return Formulae.calcProductionSuccessfulLegacy(req, getCurrentLevel(player, Skills.AGILITY), true, lvlStopFail);
 	}
 
 	@Override

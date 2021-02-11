@@ -339,6 +339,6 @@ public final class Mining implements OpLocTrigger {
 	 * Should we can get an ore from the rock?
 	 */
 	private boolean getOre(Server server, ObjectMiningDef def, int miningLevel, int axeId) {
-		return Formulae.calcGatheringSuccessful(def.getReqLevel(), miningLevel, calcAxeBonus(server, axeId));
+		return Formulae.calcGatheringSuccessfulLegacy(def.getReqLevel(), miningLevel, calcAxeBonus(server, axeId));
 	}
 }

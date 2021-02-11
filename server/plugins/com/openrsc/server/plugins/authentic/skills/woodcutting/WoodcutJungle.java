@@ -188,6 +188,6 @@ public class WoodcutJungle implements OpLocTrigger,
 	 * Should we get a log from the tree?
 	 */
 	private boolean getLog(int reqLevel, int woodcutLevel, int axeId) {
-		return Formulae.calcGatheringSuccessful(reqLevel, woodcutLevel, calcAxeBonus(axeId));
+		return Formulae.calcGatheringSuccessfulLegacy(reqLevel, woodcutLevel, calcAxeBonus(axeId));
 	}
 }

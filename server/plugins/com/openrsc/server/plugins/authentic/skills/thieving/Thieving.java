@@ -34,11 +34,11 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	public static boolean succeedPickLockThieving(Player player, int req_level) {
 		//lockpick said to make picking a bit easier
 		int effectiveLevel = player.getSkills().getLevel(Skills.THIEVING) + (player.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false)) ? 10 : 0);
-		return Formulae.calcGatheringSuccessful(req_level, effectiveLevel);
+		return Formulae.calcGatheringSuccessfulLegacy(req_level, effectiveLevel);
 	}
 
 	private boolean succeedThieving(Player player, int req_level) {
-		return Formulae.calcGatheringSuccessful(req_level, player.getSkills().getLevel(Skills.THIEVING), 40);
+		return Formulae.calcGatheringSuccessfulLegacy(req_level, player.getSkills().getLevel(Skills.THIEVING), 40);
 	}
 
 	public void stallThieving(Player player, GameObject object, final Stall stall) {

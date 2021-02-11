@@ -187,6 +187,6 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 	}
 
 	boolean succeed(Player player, int req) {
-		return Formulae.calcProductionSuccessful(req, getCurrentLevel(player, Skills.AGILITY), false, req + 30);
+		return Formulae.calcProductionSuccessfulLegacy(req, getCurrentLevel(player, Skills.AGILITY), false, req + 30);
 	}
 }

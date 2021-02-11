@@ -124,7 +124,7 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 	}
 
 	boolean succeed(Player player, int req) {
-		return Formulae.calcProductionSuccessful(req, player.getSkills().getLevel(Skills.AGILITY), false, req + 70);
+		return Formulae.calcProductionSuccessfulLegacy(req, player.getSkills().getLevel(Skills.AGILITY), false, req + 70);
 	}
 
 	private void failBlackAreaObstacle(Player player, GameObject obj) {

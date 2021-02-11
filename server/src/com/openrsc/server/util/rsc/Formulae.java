@@ -162,11 +162,11 @@ public final class Formulae {
 		//is usually 35 since player can cook item
 		int levelStopFail = player.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId) != null ?
 			player.getWorld().getServer().getEntityHandler().getItemPerfectCookingDef(foodId).getReqLevel() : levelReq + 35;
-		return !Formulae.calcProductionSuccessful(levelReq, effectiveLevel, true, levelStopFail);
+		return !Formulae.calcProductionSuccessfulLegacy(levelReq, effectiveLevel, true, levelStopFail);
 	}
 
 	public static boolean goodWine(int cookingLevel) {
-		return Formulae.calcProductionSuccessful(35, cookingLevel, true, 70);
+		return Formulae.calcProductionSuccessfulLegacy(35, cookingLevel, true, 70);
 	}
 
 	private static double addPrayers(Mob source, int prayer1, int prayer2, int prayer3) {
@@ -256,7 +256,7 @@ public final class Formulae {
 	 */
 	public static boolean crackPot(int requiredLvl, int craftingLvl) {
 		int levelStopFail = requiredLvl + 8;
-		return !Formulae.calcProductionSuccessful(requiredLvl, craftingLvl, true, levelStopFail);
+		return !Formulae.calcProductionSuccessfulLegacy(requiredLvl, craftingLvl, true, levelStopFail);
 	}
 
 	/**
@@ -264,7 +264,7 @@ public final class Formulae {
 	 */
 	public static boolean breakGoldenItem(int requiredLvl, int smithingLvl) {
 		int levelStopFail = requiredLvl + 30;
-		return !Formulae.calcProductionSuccessful(requiredLvl, smithingLvl, true, levelStopFail);
+		return !Formulae.calcProductionSuccessfulLegacy(requiredLvl, smithingLvl, true, levelStopFail);
 	}
 
 	/**
@@ -277,7 +277,7 @@ public final class Formulae {
 			return false;
 
 		int levelStopFail = requiredLvl + 89;
-		return !Formulae.calcProductionSuccessful(requiredLvl, craftingLvl, true, levelStopFail);
+		return !Formulae.calcProductionSuccessfulLegacy(requiredLvl, craftingLvl, true, levelStopFail);
 	}
 
 	/**
@@ -305,11 +305,11 @@ public final class Formulae {
 	/**
 	 * Decide if a gathering skill operation was successful
 	 */
-	public static boolean calcGatheringSuccessful(int levelReq, int skillLevel) {
-		return calcGatheringSuccessful(levelReq, skillLevel, 0);
+	public static boolean calcGatheringSuccessfulLegacy(int levelReq, int skillLevel) {
+		return calcGatheringSuccessfulLegacy(levelReq, skillLevel, 0);
 	}
 
-	public static boolean calcGatheringSuccessful(int levelReq, int skillLevel, int equipmentBonus) {
+	public static boolean calcGatheringSuccessfulLegacy(int levelReq, int skillLevel, int equipmentBonus) {
 		int roll = DataConversions.random(1, 128);
 
 		if (skillLevel < levelReq)
@@ -322,11 +322,11 @@ public final class Formulae {
 		return roll <= threshold;
 	}
 
-	public static boolean calcProductionSuccessful(int levelReq, int skillLevel, boolean stopsFailing, int levelStopFail) {
-		return calcProductionSuccessful(levelReq, skillLevel, stopsFailing, levelStopFail, 1);
+	public static boolean calcProductionSuccessfulLegacy(int levelReq, int skillLevel, boolean stopsFailing, int levelStopFail) {
+		return calcProductionSuccessfulLegacy(levelReq, skillLevel, stopsFailing, levelStopFail, 1);
 	}
 
-	public static boolean calcProductionSuccessful(int levelReq, int skillLevel, boolean stopsFailing, int levelStopFail, int minFailChance) {
+	public static boolean calcProductionSuccessfulLegacy(int levelReq, int skillLevel, boolean stopsFailing, int levelStopFail, int minFailChance) {
 		int roll = DataConversions.random(1, 256);
 
 		if (skillLevel < levelReq)
@@ -524,14 +524,14 @@ public final class Formulae {
 	 * Should the fire light or fail?
 	 */
 	public static boolean lightLogs(int firemakingLvl) {
-		return Formulae.calcProductionSuccessful(1, firemakingLvl, true, 60);
+		return Formulae.calcProductionSuccessfulLegacy(1, firemakingLvl, true, 60);
 	}
 
 	public static boolean lightCustomLogs(FiremakingDef def, int firemakingLvl) {
 		int levelReq = def.getRequiredLevel();
 		//from normal logs, level stop failing is 60 since start
 		int levelStopFail = levelReq + 59;
-		return Formulae.calcProductionSuccessful(levelReq, firemakingLvl, true, levelStopFail);
+		return Formulae.calcProductionSuccessfulLegacy(levelReq, firemakingLvl, true, levelStopFail);
 	}
 
 	public static int getLevelsToReduceAttackKBD(Player player) {

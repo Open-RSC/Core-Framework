@@ -294,7 +294,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 
 	public static void doLedge(final GameObject object, final Player player, int damage) {
 		player.message("you climb the ledge");
-		boolean failLedge = !Formulae.calcProductionSuccessful(1, player.getSkills().getLevel(Skills.AGILITY), false, 71);
+		boolean failLedge = !Formulae.calcProductionSuccessfulLegacy(1, player.getSkills().getLevel(Skills.AGILITY), false, 71);
 		if (object != null && !failLedge) {
 			if (object.getDirection() == 2 || object.getDirection() == 6) {
 				if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) { // X
@@ -333,7 +333,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 	public static void doRock(final GameObject object, final Player player, int damage, boolean eventMessage,
 							  int spikeLocation) {
 		player.message("you climb onto the rock");
-		boolean failRock = !Formulae.calcProductionSuccessful(1, player.getSkills().getLevel(Skills.AGILITY), false, 71);
+		boolean failRock = !Formulae.calcProductionSuccessfulLegacy(1, player.getSkills().getLevel(Skills.AGILITY), false, 71);
 		if (object != null && !failRock) {
 			if (object.getDirection() == 1 || object.getDirection() == 2 || object.getDirection() == 4
 				|| object.getDirection() == 3) {

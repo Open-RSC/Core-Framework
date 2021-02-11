@@ -196,7 +196,7 @@ public class GemMining implements OpLocTrigger {
 	}
 
 	private boolean getGem(Player player, int req, int miningLevel, int axeId) {
-		return Formulae.calcGatheringSuccessful(req, miningLevel, calcAxeBonus(axeId));
+		return Formulae.calcGatheringSuccessfulLegacy(req, miningLevel, calcAxeBonus(axeId));
 	}
 
 	/**

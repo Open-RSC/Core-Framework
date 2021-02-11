@@ -139,7 +139,7 @@ public class TrawlerCatch implements OpLocTrigger {
 	}
 
 	private boolean catchFish(int levelReq, int level) {
-		return Formulae.calcGatheringSuccessful(levelReq, level, 18);
+		return Formulae.calcGatheringSuccessfulLegacy(levelReq, level, 18);
 	}
 
 }

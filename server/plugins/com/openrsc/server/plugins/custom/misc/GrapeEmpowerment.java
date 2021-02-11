@@ -146,7 +146,7 @@ public class GrapeEmpowerment implements UseInvTrigger {
 			player.getCarriedItems().remove(new Item(item1.getCatalogId()));
 			player.getCarriedItems().remove(new Item(item2.getCatalogId()));
 			delay(5);
-			if (Formulae.calcProductionSuccessful(70, player.getSkills().getLevel(Skills.COOKING), true, 105)) {
+			if (Formulae.calcProductionSuccessfulLegacy(70, player.getSkills().getLevel(Skills.COOKING), true, 105)) {
 				player.playerServerMessage(MessageType.QUEST, "You make some powerful wine");
 				player.getCarriedItems().getInventory().add(new Item(resultWineId));
 				player.incExp(Skills.COOKING, 550, true);

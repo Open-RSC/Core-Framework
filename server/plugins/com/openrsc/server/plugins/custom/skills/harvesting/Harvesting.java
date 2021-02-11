@@ -464,6 +464,6 @@ public final class Harvesting implements OpLocTrigger {
 	}
 
 	private boolean getProduce(int reqLevel, int harvestingLevel) {
-		return Formulae.calcGatheringSuccessful(reqLevel, harvestingLevel, 0);
+		return Formulae.calcGatheringSuccessfulLegacy(reqLevel, harvestingLevel, 0);
 	}
 }
