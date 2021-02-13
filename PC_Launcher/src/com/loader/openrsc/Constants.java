@@ -5,5 +5,5 @@
 package com.loader.openrsc;
 
 public class Constants {
-	public static final Double VERSION_NUMBER = 20210203.130000; //YYYYMMDD.HHMMSS format
+	public static final Double VERSION_NUMBER = 20210213.135036; //YYYYMMDD.HHMMSS format
 }
