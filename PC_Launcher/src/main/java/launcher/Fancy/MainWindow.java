@@ -20,6 +20,9 @@ public class MainWindow extends JFrame {
     private LaunchButton launch3;
     private LaunchButton launch4;
     private LaunchButton launch5;
+	private LaunchButton launch6;
+	private LaunchButton launch7;
+	private LaunchButton launch8;
 
     private final int launch_button_y = 218;
     private final int link_button_y = 359;
@@ -93,51 +96,77 @@ public class MainWindow extends JFrame {
         if (Settings.showBotButtons) {
             this._BACKGROUND.remove(this.launch1);
             this._BACKGROUND.remove(this.launch2);
+			this._BACKGROUND.remove(this.launch3);
         } else {
             this._BACKGROUND.remove(this.launch4);
             this._BACKGROUND.remove(this.launch5);
+			this._BACKGROUND.remove(this.launch6);
+			this._BACKGROUND.remove(this.launch7);
+			//this._BACKGROUND.remove(this.launch8);
         }
         addServerButtons();
         Settings.saveSettings();
     }
 
     private void addServerButtons() {
-        int openrsc_x = 0;
+        int preservation_x = 0;
         int cabbage_x = 0;
         int uranium_x = 0;
         int coleslaw_x = 0;
+        int rscplus_x = 50;
+		int apos_x = 50;
+		int rscidle_x = 50;
+		int apos_y = launch_button_y - 100;
+		int rscidle_y = launch_button_y - 20;
 
         // Launch button size
         int launch_button_width = 100;
         int launch_button_height = 100;
 
-        // Launch buttons
-        String preservation = "preservation";
-
         if (Settings.showBotButtons) {
             uranium_x = 230;
             coleslaw_x = 477;
         } else {
-            openrsc_x = 230;
+        	preservation_x = 230;
             cabbage_x = 477;
         }
 
         if (Settings.showBotButtons) {
-            String uranium = "uranium";
+			String uranium = "uranium";
             (this.launch4 = new LaunchButton(uranium)).setBounds(uranium_x, launch_button_y, launch_button_width, launch_button_height);
             this._BACKGROUND.add(this.launch4);
 
             String coleslaw = "coleslaw";
             (this.launch5 = new LaunchButton(coleslaw)).setBounds(coleslaw_x, launch_button_y, launch_button_width, launch_button_height);
             this._BACKGROUND.add(this.launch5);
+
+			String rscplus = "rscplus";
+			(this.launch6 = new LaunchButton(rscplus)).setBounds(rscplus_x, launch_button_y - 170, launch_button_width, launch_button_height);
+			this._BACKGROUND.add(this.launch6);
+
+			String apos = "apos";
+			(this.launch7 = new LaunchButton(apos)).setBounds(apos_x, apos_y, launch_button_width, launch_button_height);
+			this._BACKGROUND.add(this.launch7);
+
+			/*String rscidle = "rscidle";
+			(this.launch8 = new LaunchButton(rscidle)).setBounds(rscidle_x, rscidle_y, launch_button_width, launch_button_height);
+			this._BACKGROUND.add(this.launch8);*/
+
+			this._BACKGROUND.repaint();
         } else {
-            String openrsc = "openrsc";
-            (this.launch1 = new LaunchButton(openrsc)).setBounds(openrsc_x, launch_button_y, launch_button_width, launch_button_height);
+            String preservation = "preservation";
+            (this.launch1 = new LaunchButton(preservation)).setBounds(preservation_x, launch_button_y, launch_button_width, launch_button_height);
             this._BACKGROUND.add(this.launch1);
 
             String cabbage = "cabbage";
             (this.launch2 = new LaunchButton(cabbage)).setBounds(cabbage_x, launch_button_y - 3, launch_button_width, launch_button_height);
             this._BACKGROUND.add(this.launch2);
+
+			String rscplus = "rscplus";
+			(this.launch3 = new LaunchButton(rscplus)).setBounds(rscplus_x, launch_button_y - 170, launch_button_width, launch_button_height);
+			this._BACKGROUND.add(this.launch3);
+
+			this._BACKGROUND.repaint();
         }
         this._BACKGROUND.repaint();
     }

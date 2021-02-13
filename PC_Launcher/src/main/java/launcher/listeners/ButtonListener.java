@@ -31,12 +31,11 @@ public class ButtonListener implements ActionListener {
 				return;
 			}
 
-			case "openrsc": {
+			case "preservation": {
 				String ip = "game.openrsc.com";
 				String port = "43596";
 				set(ip, port);
 				launch();
-				//launchRSCPlus();
 				return;
 			}
 			case "cabbage": {
@@ -52,9 +51,6 @@ public class ButtonListener implements ActionListener {
 				String port = "43235";
 				set(ip, port);
 				launch();
-				//launchAPOS();
-				//launchRSCPlus();
-				//launchIdleRSC();
 				return;
 			}
 
@@ -63,8 +59,19 @@ public class ButtonListener implements ActionListener {
 				String port = "43599";
 				set(ip, port);
 				launch();
-				//launchIdleRSC();
 				return;
+			}
+
+			case "rscplus": {
+				ClientLauncher.launchRSCPlus();
+			}
+
+			case "apos": {
+				ClientLauncher.launchAPOS();
+			}
+
+			case "idlersc": {
+				ClientLauncher.launchIdleRSC();
 			}
 
 			case "minimize": {
@@ -139,18 +146,6 @@ public class ButtonListener implements ActionListener {
 			outputWriter.close();
 		} catch (Exception ignored) {
 		}
-	}
-
-	private void launchRSCPlus() {
-		ClientLauncher.launchRSCPlus();
-	}
-
-	private void launchAPOS() {
-		ClientLauncher.launchAPOS();
-	}
-
-	private void launchIdleRSC() {
-		ClientLauncher.launchIdleRSC();
 	}
 
 	private void launch() {
