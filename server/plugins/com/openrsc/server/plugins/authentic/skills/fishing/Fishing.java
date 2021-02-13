@@ -71,8 +71,7 @@ public class Fishing implements OpLocTrigger {
 			player.playerServerMessage(MessageType.QUEST,
 				"You need a "
 					+ player.getWorld().getServer().getEntityHandler()
-					.getItemDef(
-						netId)
+					.getItemDef(netId)
 					.getName().toLowerCase()
 					+ " to " + (command.equals("lure") || command.equals("bait") ? command : def.getBaitId() > 0 ? "bait" : "catch") + " "
 					+ (!command.contains("cage") ? "these fish"
@@ -83,8 +82,7 @@ public class Fishing implements OpLocTrigger {
 		final int baitId = def.getBaitId();
 		if (baitId >= 0) {
 			if (player.getCarriedItems().getInventory().countId(baitId, Optional.of(false)) <= 0) {
-				player.playerServerMessage(MessageType.QUEST,
-					"You don't have any " + player.getWorld().getServer().getEntityHandler().getItemDef(baitId).getName().toLowerCase() + " left");
+				player.playerServerMessage(MessageType.QUEST, outOfBait(baitId));
 				return;
 			}
 		}
@@ -96,6 +94,33 @@ public class Fishing implements OpLocTrigger {
 
 		startbatch(repeat);
 		batchFishing(player, netId, def, object, command);
+	}
+
+	public void testBigNetFishing(int level, int trials, Player player) {
+		ObjectFishingDef bigNet = player.getWorld().getServer().getEntityHandler().getObjectFishingDef(261, 0);
+		if (bigNet == null) {
+			LOGGER.error("Somehow bigNet fishing spot isn't defined. Check your cache files.");
+			return;
+		}
+
+		List<ObjectFishDef> fishLst = new ArrayList<ObjectFishDef>();
+
+		for (int i = 0; i < trials; i++) {
+			doBigNetFishingRoll(fishLst, bigNet, level);
+		}
+
+		// tally results
+		int[] results = new int[1290];
+		for (ObjectFishDef fish : fishLst) {
+			results[fish.getId()]++;
+		}
+
+		mes("@whi@At level @gre@" + level + "@whi@ in @gre@" + trials + "@whi@ attempts:");
+		for (int i = 0; i < 1290; i++) {
+			if (results[i] > 0) {
+				mes( "@whi@We got @gre@" + results[i] + "@whi@ of id @mag@" + i);
+			}
+		}
 	}
 
 	private void batchFishing(Player player, int netId, ObjectFishingDef def, GameObject object, String command) {
@@ -115,8 +140,7 @@ public class Fishing implements OpLocTrigger {
 		final int baitId = def.getBaitId();
 		if (baitId >= 0) {
 			if (player.getCarriedItems().getInventory().countId(baitId, Optional.of(false)) <= 0) {
-				player.playerServerMessage(MessageType.QUEST, "You don't have any " + player.getWorld().getServer().getEntityHandler().getItemDef(baitId).getName().toLowerCase()
-					+ " left");
+				player.playerServerMessage(MessageType.QUEST, outOfBait(baitId));
 				return;
 			}
 		}
@@ -124,79 +148,188 @@ public class Fishing implements OpLocTrigger {
 		if (checkFatigue(player)) return;
 
 		List<ObjectFishDef> fishLst = new ArrayList<ObjectFishDef>();
-		ObjectFishDef aFishDef = getFish(def, player.getSkills().getLevel(Skills.FISHING));
-		if (aFishDef != null) fishLst.add(aFishDef);
-		if (fishLst.size() > 0) {
+		ObjectFishDef aFishDef;
+		GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+
+		if (object.getID() == 493) { // Tutorial Island Shrimp
+			aFishDef = getFish(def, player.getSkills().getLevel(Skills.FISHING));
+			if (aFishDef != null) fishLst.add(aFishDef);
+
+			if (fishLst.size() > 0) {
+				player.playerServerMessage(MessageType.QUEST, "You catch some shrimps");
+				player.getCarriedItems().getInventory().add(new Item(fishLst.get(0).getId()));
+				player.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
+				if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41) {
+					player.getCache().set("tutorial", 42);
+				}
+			} else {
+				// it is authentic that this message only appears until you have caught your first shrimp.
+				if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41) {
+					player.message("keep trying, you'll catch something soon");
+				}
+			}
+		} else if (netId == ItemId.BIG_NET.id()) {
+
+			ObjectFishingDef bigNet = player.getWorld().getServer().getEntityHandler().getObjectFishingDef(261, 0);
+			if (bigNet == null) {
+				LOGGER.error("Somehow bigNet fishing spot isn't defined. Check your cache files.");
+				return;
+			}
+
+			// add the fish gained to fishLst, report how many rolls were able to be done
+			int fishRolls = doBigNetFishingRoll(fishLst, bigNet, player.getSkills().getLevel(Skills.FISHING));
+
 			//check if the spot is still active
-			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 			if (obj == null) {
 				player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
 				return;
-			} else {
-				if (baitId >= 0) {
-					int idx = player.getCarriedItems().getInventory().getLastIndexById(baitId, Optional.of(false));
-					Item bait = player.getCarriedItems().getInventory().get(idx);
-					if (bait == null) return;
-					player.getCarriedItems().remove(new Item(bait.getCatalogId(), 1, false, bait.getItemId()));
-				}
-				if (netId == ItemId.BIG_NET.id()) {
-					//big net spot may get 4 items but 1 already gotten
-					int max = bigNetRand() - 1;
-					for (int i = 0; i < max; i++) {
-						aFishDef = getFish(def, player.getSkills().getLevel(Skills.FISHING));
-						if (aFishDef != null) fishLst.add(aFishDef);
-					}
-					if (DataConversions.random(0, 200) == 100) {
+			}
+			// award the fish
+			for (ObjectFishDef fishDef : fishLst) {
+				Item fish = new Item(fishDef.getId());
+				switch (ItemId.getById(fishDef.getId())) {
+					// NOTICE: Don't obfuscate this by making it a one liner.
+					// Needed to be on separate lines for Language Translations.
+					case RAW_BASS:
+						player.playerServerMessage(MessageType.QUEST, "You catch a bass");
+						break;
+					case RAW_COD:
+						player.playerServerMessage(MessageType.QUEST, "You catch a cod");
+						break;
+					case RAW_MACKEREL:
+						player.playerServerMessage(MessageType.QUEST, "You catch a mackerel");
+						break;
+					case OYSTER:
+						player.playerServerMessage(MessageType.QUEST, "You catch an oyster shell");
+						break;
+					case CASKET:
 						player.playerServerMessage(MessageType.QUEST, "You catch a casket");
-						give(player, ItemId.CASKET.id(), 1);
-						player.incExp(Skills.FISHING, 40, true);
+						break;
+					case BOOTS:
+						player.playerServerMessage(MessageType.QUEST, "You catch some boots");
+						break;
+					case LEATHER_GLOVES:
+						player.playerServerMessage(MessageType.QUEST, "You catch some gloves");
+						break;
+					case SEAWEED:
+						player.playerServerMessage(MessageType.QUEST, "You catch some seaweed");
+						break;
+					default:
+						player.playerServerMessage(MessageType.QUEST, "You catch something really surprising: a bug! Please report this bug!");
+						break;
+				}
+				player.getCarriedItems().getInventory().add(fish);
+				player.incExp(Skills.FISHING, fishDef.getExp(), true);
+			}
+			if (fishLst.size() == 0 && fishRolls == 9) {
+				// An erroneous (mostly authentic) additional check on fishRolls here,
+				// so that this message doesn't appear unless all rolls were possible at the player's fishing level.
+				//
+				// It was likely a NPE or array index out of bounds in the original source, like checking the result
+				// of the fish in some array while awarding the fish, or just referencing some null value...
+				// Because there's only 7 / 9  of the fish expected, the fishing script crashes & doesn't make it to this message.
+				//
+				// It would be rather ugly to emulate that at this time, so instead I'm checking fishRolls
+				// Which is functionally the same except our script doesn't crash.
+				player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
+			}
+
+			// check if fishing spot should inauthentically deplete
+			if (fishLst.size() > 0) {
+				if (config().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 250) <= def.getDepletion()) {
+					obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+					if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+						GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), 668, object.getDirection(), object.getType());
+						player.getWorld().replaceGameObject(object, newObject);
+						player.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * config().GAME_TICK, true);
 					}
-					for (Iterator<ObjectFishDef> iter = fishLst.iterator(); iter.hasNext();) {
-						ObjectFishDef fishDef = iter.next();
-						Item fish = new Item(fishDef.getId());
-						player.playerServerMessage(MessageType.QUEST, "You catch " + (fish.getCatalogId() == ItemId.BOOTS.id() || fish.getCatalogId() == ItemId.SEAWEED.id() || fish.getCatalogId() == ItemId.LEATHER_GLOVES.id() ? "some" : fish.getCatalogId() == ItemId.OYSTER.id() ? "an" : "a") + " "
-							+ fish.getDef(player.getWorld()).getName().toLowerCase().replace("raw ", "").replace("leather ", "") + (fish.getCatalogId() == ItemId.OYSTER.id() ? " shell" : ""));
-						player.getCarriedItems().getInventory().add(fish);
-						player.incExp(Skills.FISHING, fishDef.getExp(), true);
-					}
-				} else {
-					Item fish = new Item(fishLst.get(0).getId());
-					// Skill cape perk. Will convert a shark to either a manta ray or a turtle.
-					String capeColor = "";
-					if (fish.getCatalogId() == ItemId.RAW_SHARK.id()) {
-						Item newFish = new Item(SkillCapes.shouldActivateInt(player, ItemId.FISHING_CAPE));
-						if (newFish.getCatalogId() != -1) {
-							player.getBank().add(newFish, false);
-							capeColor = "@dcy@";
-							player.playerServerMessage(MessageType.QUEST, capeColor + "Because of your prowess in fishing");
-						}
-					}
-					player.playerServerMessage(MessageType.QUEST, capeColor + "You catch " + (netId == ItemId.NET.id() ? "some" : "a") + " "
-						+ fish.getDef(player.getWorld()).getName().toLowerCase().replace("raw ", "") + (fish.getCatalogId() == ItemId.RAW_SHRIMP.id() ? "s" : "")
-						+ (fish.getCatalogId() == ItemId.RAW_SHARK.id() ? "!" : ""));
-					player.getCarriedItems().getInventory().add(fish);
-					player.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
-					if (object.getID() == 493 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41)
-						player.getCache().set("tutorial", 42);
 				}
 			}
-			if (config().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 250) <= def.getDepletion()) {
-				obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-				if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
-					GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), 668, object.getDirection(), object.getType());
-					player.getWorld().replaceGameObject(object, newObject);
-					player.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * config().GAME_TICK, true);
+		} else { // NOT big net fishing & NOT tutorial island shrimp; normal fishing
+			// Roll for fish to be given to user
+			aFishDef = getFish(def, player.getSkills().getLevel(Skills.FISHING));
+			if (aFishDef != null) fishLst.add(aFishDef);
+
+			//check if the spot is still active
+			if (obj == null) {
+				player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
+				return;
+			}
+
+			// check & remove bait
+			if (baitId >= 0) {
+				int idx = player.getCarriedItems().getInventory().getLastIndexById(baitId, Optional.of(false));
+				Item bait = player.getCarriedItems().getInventory().get(idx);
+				if (bait == null) {
+					// should not be reachable unless threading bug; this was already checked
+					if (player.getCarriedItems().getInventory().countId(baitId, Optional.of(false)) <= 0) {
+						player.playerServerMessage(MessageType.QUEST, outOfBait(baitId));
+						return;
+					}
 				}
+				player.getCarriedItems().remove(new Item(bait.getCatalogId(), 1, false, bait.getItemId()));
 			}
-		} else {
-			player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
-			if (object.getID() == 493 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41) {
-				player.message("keep trying, you'll catch something soon");
-			}
-			if (object.getID() != 493 && !ifbatchcompleted()) {
-				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-				if (checkObj == null) {
-					return;
+			if (fishLst.size() == 0) {
+				player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
+				if (!ifbatchcompleted()) {
+					GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+					if (checkObj == null) {
+						return;
+					}
+				}
+			} else {
+				// Award the fish
+				Item fish = new Item(fishLst.get(0).getId());
+
+				// Skill cape perk. Will convert a shark to either a manta ray or a turtle.
+				String capeColor = "";
+				if (fish.getCatalogId() == ItemId.RAW_SHARK.id()) {
+					Item newFish = new Item(SkillCapes.shouldActivateInt(player, ItemId.FISHING_CAPE));
+					if (newFish.getCatalogId() != -1) {
+						player.getBank().add(newFish, false);
+						capeColor = "@dcy@";
+						player.playerServerMessage(MessageType.QUEST, capeColor + "Because of your prowess in fishing");
+					}
+				}
+
+				switch (ItemId.getById(fish.getItemId())) {
+					// NOTICE: Don't obfuscate this by making it a one liner.
+					// Needed to be on separate lines for Language Translations.
+					case RAW_SHARK:
+						player.playerServerMessage(MessageType.QUEST, "You catch a shark!");
+						break;
+					case RAW_SHRIMP:
+						player.playerServerMessage(MessageType.QUEST, "You catch some shrimps");
+						break;
+					case RAW_ANCHOVIES:
+						player.playerServerMessage(MessageType.QUEST, "You catch some anchovies");
+						break;
+					case RAW_MANTA_RAY:
+						// inauthentic, from Fishing Skill Cape perk. These are usually just from trawler.
+						player.playerServerMessage(MessageType.QUEST, capeColor + "You catch a manta ray!");
+						break;
+					case RAW_SEA_TURTLE:
+						// inauthentic, from Fishing Skill Cape perk. These are usually just from trawler.
+						player.playerServerMessage(MessageType.QUEST, capeColor + "You catch a sea turtle!");
+						break;
+					default:
+						// TODO: may need to separate all these out for Language Translations
+						String fishName = fish.getDef(player.getWorld()).getName().toLowerCase().replace("raw ", "");
+						player.playerServerMessage(MessageType.QUEST, "You catch a " + fishName);
+						break;
+				}
+
+				player.getCarriedItems().getInventory().add(fish);
+				player.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
+
+				// inauthentically check if the fishing spot should deplete
+				if (config().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 250) <= def.getDepletion()) {
+					obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+					if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+						GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), 668, object.getDirection(), object.getType());
+						player.getWorld().replaceGameObject(object, newObject);
+						player.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * config().GAME_TICK, true);
+					}
 				}
 			}
 		}
@@ -209,17 +342,23 @@ public class Fishing implements OpLocTrigger {
 		}
 	}
 
-	private int bigNetRand() {
-		int roll = DataConversions.random(0, 30);
-		if (roll <= 23) {
-			return 1;
-		} else if (roll <= 27) {
-			return 2;
-		} else if (roll <= 29) {
-			return 3;
-		} else {
-			return 4;
+	private int doBigNetFishingRoll(List<ObjectFishDef> fishLst, ObjectFishingDef bigNet, int playerLevel) {
+		// Roll for fish. Each of the 8 fish get 1 roll each except mackerel, those get 2 rolls.
+		// Based on jmod tweet & consistent with the data we have on this. The double mackerel roll can be seen in replays.
+
+		int fishRolls = 0;
+		for (ObjectFishDef fish : bigNet.getFishDefs()) {
+			if (playerLevel >= fish.getReqLevel()) {
+				int rolls = (fish.getId() == ItemId.RAW_MACKEREL.id() ? 2 : 1); // mackerel get 2 rolls, all others get 1 roll
+				for (int roll = 0; roll < rolls; roll++) {
+					fishRolls++;
+					if (fish.rate[playerLevel] > Math.random()) {
+						fishLst.add(fish);
+					}
+				}
+			}
 		}
+		return fishRolls; // mmmm, delicious fish rolls...
 	}
 
 	@Override
@@ -232,6 +371,16 @@ public class Fishing implements OpLocTrigger {
 			return true;
 		}
 		return false;
+	}
+
+	private String outOfBait(int baitId) {
+		if (baitId == ItemId.FISHING_BAIT.id()) {
+			return "You don't have any fishing bait left"; // /1e_Luis/Quests/Heroes Quest/Heroes Quest Pt1
+		}
+		if (baitId == ItemId.FEATHER.id()) {
+			return "You don't have any feathers left to lure the fish"; // /flying sno/flying sno (redacted chat) replays/fsnom2@aol.com/07-30-2018 09.06.45
+		}
+		return "You are out of an unknown bait. Please report this.";
 	}
 
 	private String fishingRequirementString(GameObject obj, String command) {

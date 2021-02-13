@@ -1569,7 +1569,6 @@ public final class Player extends Mob {
 				ActionSender.sendFatigue(this);
 			}
 		}
-		// ActionSender.sendExperience(this, skill);
 	}
 
 	public void incQuestPoints(final int amount) {

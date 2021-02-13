@@ -103,8 +103,8 @@ public class ObjectFishingDef {
 				def.rate = new double[maxLevelToCalcFor];
 				for (int level = 0; level < maxLevelToCalcFor; level++) {
 					if (level >= def.requiredLevel) {
-						rateSoFar[level] += Formulae.interp(def.lowRate, def.highRate, level);
-						def.rate[level] = rateSoFar[level];
+						// these rolls are separate, so don't use rateSoFar
+						def.rate[level] = Formulae.interp(def.lowRate, def.highRate, level);
 					}
 				}
 			}

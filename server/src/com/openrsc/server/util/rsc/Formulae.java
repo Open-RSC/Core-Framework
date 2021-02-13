@@ -340,7 +340,7 @@ public final class Formulae {
 	}
 
 	/**
-	 * Calculates the chance of succeeding at a skilling event (out of 256)
+	 * Calculates the chance of succeeding at a skilling event
 	 * @param low
 	 * @param high
 	 * @param level

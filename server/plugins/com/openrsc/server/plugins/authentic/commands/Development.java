@@ -12,6 +12,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.authentic.skills.fishing.Fishing;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
@@ -516,9 +517,16 @@ public final class Development implements CommandTrigger {
 			mes("::fishingrate [fishing spot name (see Development.java)] [level] (trials)");
 			return;
 		}
+		String spotName = args[0];
+		int level = Integer.parseInt(args[1]);
 		int trials = 10000;
 		if (args.length == 3) {
 			trials = Integer.parseInt(args[2]);
+		}
+
+		if (spotName.equals("bigNet")) {
+			bigNetFishingRate(level, trials, player);
+			return;
 		}
 
 		HashMap<String, ObjectFishingDef> fishingDefs = new HashMap<>();
@@ -550,9 +558,14 @@ public final class Development implements CommandTrigger {
 				results.put(result, 1);
 			}
 		}
-		mes("@whi@At level @gre@" + Integer.parseInt(args[1]) + "@whi@ in @gre@" + trials + "@whi@ attempts:");
+		mes("@whi@At level @gre@" + level + "@whi@ in @gre@" + trials + "@whi@ attempts:");
 		for (int key : results.keySet()) {
 			mes("@whi@We got @gre@" + results.get(key) + "@whi@ of id @mag@" + key);
 		}
+	}
+
+	private void bigNetFishingRate(int level, int trials, Player player) {
+		Fishing fishy = new Fishing();
+		fishy.testBigNetFishing(level, trials, player);
 	}
 }
