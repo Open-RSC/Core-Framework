@@ -127,10 +127,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 					return;
 				}
 
-				if (!getServer().getConfig().CHAR_NAME_CAN_CONTAIN_MOD
-					&& (getUsername().toLowerCase().startsWith("mod")
-					|| getUsername().toLowerCase().startsWith("m0d"))) {
-
+				if (isDisallowedUsername(getUsername())) {
 					getChannel().writeAndFlush(new PacketBuilder().writeByte((byte) 8).toPacket());
 					getChannel().close();
 					return;
@@ -235,9 +232,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 				return (byte) RegisterResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
-			if (!getServer().getConfig().CHAR_NAME_CAN_CONTAIN_MOD
-				&& (getUsername().toLowerCase().startsWith("mod")
-				|| getUsername().toLowerCase().startsWith("m0d"))) {
+			if (isDisallowedUsername(getUsername())) {
 				return (byte) RegisterResponse.USERNAME_TAKEN_DISALLOWED;
 			}
 
@@ -263,5 +258,70 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 			return (byte) RegisterResponse.REGISTER_UNSUCCESSFUL;
 		}
 		return (byte) RegisterResponse.REGISTER_SUCCESSFUL;
+	}
+
+	private boolean isDisallowedUsername(String username) {
+		final String[] disallowed = {"ass", "fuck", "shit", "suck", "penis", "vagina", "pussy", "whore", "slut", "dick",
+			"cock", "cunt"};
+
+		final String[] staff = {"mod", "moderator", "mordorator", "admin", "administrator",
+			"afman", "owner", "jagex", "java"};
+
+		boolean notAllowed = false;
+		String user = username.toLowerCase();
+		user = user.replaceAll("1", "i");
+		user = user.replaceAll("0", "o");
+
+		for (String word : disallowed) {
+			if (user.contains(word)) {
+				notAllowed = true;
+				break;
+			}
+		}
+
+		// check for staff related
+		if (!notAllowed && !getServer().getConfig().CHAR_NAME_CAN_CONTAIN_MOD) {
+			int indexWord;
+			int indexChk;
+			char charChk, tmpChar;
+			for (String word : staff) {
+				indexWord = user.indexOf(word);
+				if (indexWord != -1) {
+					// possible, further check
+					// is a reserved word, disallow
+					if (user.equals(word)) {
+						notAllowed = true;
+						break;
+					} else if (user.length() <= word.length()) {
+						continue;
+					}
+
+					if (indexWord == 0) {
+						// check if starts with followed by space, underscore or dash
+						// since players could have names like Modesto
+						indexChk = indexWord + word.length();
+						charChk = user.charAt(indexChk);
+						if (charChk == ' ' || charChk == '_' || charChk == '-') {
+							notAllowed = true;
+							break;
+						}
+						continue;
+					}
+
+					// check if before and after is space, underscore or dash
+					// since players could have names like Willmod
+					indexChk = indexWord - 1;
+					charChk = user.charAt(indexChk);
+					tmpChar = user.length() == indexWord + word.length() ? ' ' : user.charAt(indexWord + word.length());
+					if ((charChk == ' ' || charChk == '_' || charChk == '-')
+						&& (tmpChar == ' ' || tmpChar == '_' || tmpChar == '-')) {
+						notAllowed = true;
+						break;
+					}
+				}
+			}
+		}
+
+		return notAllowed;
 	}
 }

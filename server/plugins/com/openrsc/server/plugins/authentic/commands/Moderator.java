@@ -191,6 +191,10 @@ public final class Moderator implements CommandTrigger {
 			player.message(messagePrefix + "Invalid name or player is not online");
 			return;
 		}
+		if (targetPlayer == player) {
+			player.message(messagePrefix + "You can't kick yourself");
+			return;
+		}
 		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 			player.message(messagePrefix + "You can not kick a staff member of equal or greater rank.");
 			return;

@@ -289,7 +289,9 @@ public final class RegularPlayer implements CommandTrigger {
 	private void sendMessageGlobal(Player player, String command, String[] args) {
 		if (!config().WANT_GLOBAL_CHAT && !config().WANT_GLOBAL_FRIEND) return;
 		if (player.isMuted()) {
-			player.message(messagePrefix + "You are muted, you cannot send messages");
+			if (player.getMuteNotify()) {
+				player.message(messagePrefix + "You are muted, you cannot send messages");
+			}
 			return;
 		}
 		if (player.getCache().hasKey("global_mute") && (player.getCache().getLong("global_mute") - System.currentTimeMillis() > 0 || player.getCache().getLong("global_mute") == -1) && command.equals("g")) {
@@ -364,7 +366,9 @@ public final class RegularPlayer implements CommandTrigger {
 
 	private void sendMessageParty(Player player, String command, String[] args) {
 		if (player.isMuted()) {
-			player.message(messagePrefix + "You are muted, you cannot send messages");
+			if (player.getMuteNotify()) {
+				player.message(messagePrefix + "You are muted, you cannot send messages");
+			}
 			return;
 		}
 		if (player.getCache().hasKey("global_mute") && (player.getCache().getLong("global_mute") - System.currentTimeMillis() > 0 || player.getCache().getLong("global_mute") == -1) && command.equals("g")) {

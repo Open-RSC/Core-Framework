@@ -12052,7 +12052,7 @@ public final class mudclient implements Runnable {
 				return;
 			}
 			if (registerResponse == 8) {
-				showLoginScreenStatus("Username cannot", "contain \"Mod\"!");
+				showLoginScreenStatus("Invalid username", "please use an appropriate username");
 				return;
 			}
 			showLoginScreenStatus("Error unable to login.", "Unrecognised response code");
@@ -13879,13 +13879,14 @@ public final class mudclient implements Runnable {
 								"Connection lost! Please wait...");
 						}
 
+						String ip;
 						if ((Config.SERVER_IP != null)) {
-							String ip = Config.SERVER_IP; // allows override if manually set in Config code
+							ip = Config.SERVER_IP; // allows override if manually set in Config code
 							int port = Config.SERVER_PORT; // allows override if manually set in Config code
 							this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 							this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
 						} else {
-							String ip = Config.getServerIp(); // loads cached server IP addressed
+							ip = Config.getServerIp(); // loads cached server IP addressed
 							int port = Config.getServerPort(); // loads cached port
 							this.packetHandler.setClientStream(new Network_Socket(this.packetHandler.openSocket(port, ip), this.packetHandler));
 							this.packetHandler.getClientStream().m_d = MiscFunctions.maxReadTries;
@@ -13945,7 +13946,14 @@ public final class mudclient implements Runnable {
 							this.m_Ce = loginResponse & 0x3;
 							this.m_Oj = (loginResponse >> 2) & 0xf;
 							this.resetGame((byte) -123);
-							clientPort.setTitle(Config.getServerName() + " -- " + getUsername());
+							String suffix = " ";
+							if (ip.toLowerCase().equals("localhost") || ip.startsWith("127.") || ip.equals("::1")) {
+								suffix += "[localhost]";
+							} else if (ip.startsWith("10.") || ip.startsWith("172.16.") || ip.startsWith("172.31.")
+								|| ip.startsWith("192.168.")) {
+								suffix += "[LAN]";
+							}
+							clientPort.setTitle(Config.getServerName() + " -- " + getUsername() + suffix);
 						} else {
 							if (loginResponse == 1) {
 								this.autoLoginTimeout = 0;

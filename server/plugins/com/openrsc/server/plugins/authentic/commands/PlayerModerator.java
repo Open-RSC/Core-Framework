@@ -31,8 +31,12 @@ public final class PlayerModerator implements CommandTrigger {
 
 		if (command.equalsIgnoreCase("gmute")) {
 			mutePlayerGlobal(player, command, args);
+		} else if (command.equalsIgnoreCase("ungmute")) {
+			unmutePlayerGlobal(player, command, args);
 		} else if (command.equalsIgnoreCase("mute")) {
 			mutePlayer(player, command, args);
+		} else if (command.equalsIgnoreCase("unmute")) {
+			unmutePlayer(player, command, args);
 		} else if (command.equalsIgnoreCase("alert")) {
 			showPlayerAlertBox(player, command, args);
 		} else if (command.equalsIgnoreCase("set_icon")) {
@@ -40,9 +44,18 @@ public final class PlayerModerator implements CommandTrigger {
 		}
 	}
 
+	private void unmutePlayerGlobal(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [name]");
+			return;
+		}
+		mutePlayerGlobal(player, command, new String[]{ args[0], "0" });
+	}
+
 	private void mutePlayerGlobal(Player player, String command, String[] args) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] (time in minutes, -1 or exclude for permanent)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unmute] ...");
+			player.message("... (notify) (Reason)");
 			return;
 		}
 
@@ -53,20 +66,60 @@ public final class PlayerModerator implements CommandTrigger {
 			return;
 		}
 
+		if (targetPlayer == player) {
+			player.message(messagePrefix + "You can't mute or unmute yourself");
+			return;
+		}
+
 		int minutes = -1;
 		if (args.length >= 2) {
 			try {
 				minutes = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [name] (time in minutes, -1 or exclude for permanent)");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unmute] ...");
+				player.message("... (notify) (Reason)");
 				return;
 			}
 		} else {
 			minutes = player.isSuperMod() ? -1 : player.isMod() ? 60 : 15;
 		}
 
+		boolean notify;
+		if (args.length >= 3) {
+			try {
+				notify = Integer.parseInt(args[2]) == 1;
+			} catch (NumberFormatException nfe) {
+				notify = Boolean.parseBoolean(args[2]);
+			}
+		} else {
+			notify = false;
+		}
+
+		String reason;
+		if (args.length >= 4) {
+			reason = args[3];
+		} else {
+			reason = "";
+		}
+
 		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 			player.message(messagePrefix + "You can not mute a staff member of equal or greater rank.");
+			return;
+		}
+
+		if (minutes == 0) {
+			if (!player.isSuperMod()) {
+				player.message(messagePrefix + "You are not allowed to unmute users.");
+			} else {
+				player.message("You have lifted the mute of " + targetPlayer.getUsername() + ".");
+				if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+					targetPlayer.message("Your mute has been lifted. Happy RSC scaping.");
+				}
+				targetPlayer.setMuteExpires(System.currentTimeMillis());
+				player.getWorld().getServer().getGameLogger().addQuery(
+					new StaffLog(player, 0, targetPlayer, targetPlayer.getUsername()
+						+ " was unmuted for the (::g) chat."));
+			}
 			return;
 		}
 
@@ -95,15 +148,26 @@ public final class PlayerModerator implements CommandTrigger {
 			}
 			targetPlayer.getCache().store("global_mute", (System.currentTimeMillis() + (minutes * 60000)));
 		}
+		targetPlayer.setMuteNotify(notify);
 		player.getWorld().getServer().getGameLogger().addQuery(
 			new StaffLog(player, 0, targetPlayer, targetPlayer.getUsername()
 				+ " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for "
-				+ minutes + " minutes in (::g) chat.")));
+				+ minutes + " minutes") + " in (::g) chat. "
+				+ (!reason.equals("") ? "Reason: " + reason : "")));
+	}
+
+	private void unmutePlayer(Player player, String command, String[] args) {
+		if (args.length < 1) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [name]");
+			return;
+		}
+		mutePlayer(player, command, new String[]{ args[0], "0" });
 	}
 
 	private void mutePlayer(Player player, String command, String[] args) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] (time in minutes, -1 for permanent)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unmute] ...");
+			player.message("... (notify) (Reason)");
 			return;
 		}
 
@@ -114,20 +178,60 @@ public final class PlayerModerator implements CommandTrigger {
 			return;
 		}
 
+		if (targetPlayer == player) {
+			player.message(messagePrefix + "You can't mute or unmute yourself");
+			return;
+		}
+
 		int minutes = -1;
 		if (args.length >= 2) {
 			try {
 				minutes = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [name] (time in minutes, -1 for permanent)");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [name] [time in minutes, -1 for permanent, 0 to unmute] ...");
+				player.message("... (notify) (Reason)");
 				return;
 			}
 		} else {
 			minutes = player.isSuperMod() ? -1 : player.isMod() ? 60 : 15;
 		}
 
+		boolean notify;
+		if (args.length >= 3) {
+			try {
+				notify = Integer.parseInt(args[2]) == 1;
+			} catch (NumberFormatException nfe) {
+				notify = Boolean.parseBoolean(args[2]);
+			}
+		} else {
+			notify = false;
+		}
+
+		String reason;
+		if (args.length >= 4) {
+			reason = args[3];
+		} else {
+			reason = "";
+		}
+
 		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
 			player.message(messagePrefix + "You can not mute a staff member of equal or greater rank.");
+			return;
+		}
+
+		if (minutes == 0) {
+			if (!player.isSuperMod()) {
+				player.message(messagePrefix + "You are not allowed to unmute users.");
+			} else {
+				player.message("You have lifted the mute of " + targetPlayer.getUsername() + ".");
+				if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+					targetPlayer.message("Your mute has been lifted. Happy RSC scaping.");
+				}
+				targetPlayer.setMuteExpires(System.currentTimeMillis());
+				player.getWorld().getServer().getGameLogger().addQuery(
+					new StaffLog(player, 0, targetPlayer, targetPlayer.getUsername()
+						+ " was unmuted."));
+			}
 			return;
 		}
 
@@ -156,9 +260,11 @@ public final class PlayerModerator implements CommandTrigger {
 			}
 			targetPlayer.setMuteExpires((System.currentTimeMillis() + (minutes * 60000)));
 		}
+		targetPlayer.setMuteNotify(notify);
 		player.getWorld().getServer().getGameLogger().addQuery(
 			new StaffLog(player, 0, targetPlayer, targetPlayer.getUsername()
-				+ " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for " + minutes + " minutes")));
+				+ " was given a " + (minutes == -1 ? "permanent mute" : " temporary mute for " + minutes + " minutes") + ". "
+				+ (!reason.equals("") ? "Reason: " + reason : "")));
 	}
 
 	private void showPlayerAlertBox(Player player, String command, String[] args) {

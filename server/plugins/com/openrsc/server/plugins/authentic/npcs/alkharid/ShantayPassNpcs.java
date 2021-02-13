@@ -450,14 +450,13 @@ public class ShantayPassNpcs extends AbstractShop implements OpLocTrigger, TakeO
 				player.message("As an Ultimate Iron Man, you cannot use the bank.");
 				return;
 			}
-			if (!player.getCache().hasKey("shantay-chest") && obj.getX() == 58 && obj.getY() == 731) {
+			if (obj.getX() == 58 && obj.getY() == 731) {
 				mes("This chest is used by Shantay and his men.");
-				delay(3);
+				delay(2);
 				mes("They can put things in and out of storage for you.");
-				delay(3);
+				delay(2);
 				mes("You open the bank.");
-				delay(3);
-				player.getCache().store("shantay-chest", true);
+				delay(2);
 			}
 			if(validatebankpin(player, null)) {
 				player.setAccessingBank(true);

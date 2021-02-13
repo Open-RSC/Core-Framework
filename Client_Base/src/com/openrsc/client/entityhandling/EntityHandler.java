@@ -2883,11 +2883,11 @@ public class EntityHandler {
 		items.add(new ItemDef("Raw bass certificate", "Each certificate exchangable at Catherby for 5 raw bass", "", 10, 180, "items:180", true, false, 0, 0, true, false, false, 629));
 		items.add(new ItemDef("shark certificate", "Each certificate exchangable at Catherby for 5 shark", "", 10, 180, "items:180", true, false, 0, 0, true, false, false, 630));
 		items.add(new ItemDef("Raw shark certificate", "Each certificate exchangable at Catherby for 5 raw shark", "", 10, 180, "items:180", true, false, 0, 0, true, false, false, 631));
-		items.add(new ItemDef("Oak Logs", "Logs cut from an oak tree", "", 20, 14, "items:506", false, false, 0, 0, true, false, true, 632));
-		items.add(new ItemDef("Willow Logs", "Logs cut from a willow tree", "", 40, 14, "items:507", false, false, 0, 0, true, false, true, 633));
-		items.add(new ItemDef("Maple Logs", "Logs cut from a maple tree", "", 80, 14, "items:505", false, false, 0, 0, true, false, true, 634));
-		items.add(new ItemDef("Yew Logs", "Logs cut from a yew tree", "", 160, 14, "items:508", false, false, 0, 0, true, false, true, 635));
-		items.add(new ItemDef("Magic Logs", "Logs made from magical wood", "", 320, 14, "items:504", false, false, 0, 0, true, false, true, 636));
+		items.add(new ItemDef("Oak Logs", "Logs cut from an oak tree", "", 20, 14, "items:14", false, false, 0, 0, true, false, true, 632));
+		items.add(new ItemDef("Willow Logs", "Logs cut from a willow tree", "", 40, 14, "items:14", false, false, 0, 0, true, false, true, 633));
+		items.add(new ItemDef("Maple Logs", "Logs cut from a maple tree", "", 80, 14, "items:14", false, false, 0, 0, true, false, true, 634));
+		items.add(new ItemDef("Yew Logs", "Logs cut from a yew tree", "", 160, 14, "items:14", false, false, 0, 0, true, false, true, 635));
+		items.add(new ItemDef("Magic Logs", "Logs made from magical wood", "", 320, 14, "items:14", false, false, 0, 0, true, false, true, 636));
 		items.add(new ItemDef("Headless Arrows", "I need to attach arrow heads to these", "", 1, 205, "items:205", true, false, 0, 0, true, false, false, 637));
 		items.add(new ItemDef("Iron Arrows", "Arrows with iron heads", "", 6, 11, "items:11", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 15654365, true, false, false, 638));
 		items.add(new ItemDef("Poison Iron Arrows", "Venomous looking arrows", "", 6, 206, "items:206", true, Config.S_WANT_EQUIPMENT_TAB, Config.S_WANT_EQUIPMENT_TAB ? 1000 : 0, 15654365, true, false, false, 639));
@@ -3897,6 +3897,13 @@ public class EntityHandler {
 		items.get(821).spriteLocation = "items:588";
 		items.get(823).spriteLocation = "items:588";
 		items.get(933).spriteLocation = "items:588";
+
+		// Custom logs sprite
+		items.get(632).spriteLocation = "items:506";
+		items.get(633).spriteLocation = "items:507";
+		items.get(634).spriteLocation = "items:505";
+		items.get(635).spriteLocation = "items:508";
+		items.get(636).spriteLocation = "items:504";
 	}
 
 	private static void loadAnimationDefinitions() {

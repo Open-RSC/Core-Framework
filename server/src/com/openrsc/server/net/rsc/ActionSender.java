@@ -1778,8 +1778,12 @@ public class ActionSender {
 				sendWakeUp(player, false, true);
 
 				if (player.isMuted()) {
-					sendMessage(player, "You are muted for "
-						+ (double) (System.currentTimeMillis() - player.getMuteExpires()) / 3600000D + " hours.");
+					// doesn't seem authentic to have notified the player that they are muted after login
+					/*player.message("You have been " + (player.getMuteExpires() == -1 ? "permanently" : "temporarily") + " due to breaking a rule");
+					if (player.getMuteExpires() != -1) {
+						player.message("This mute will remain for a further " + DataConversions.formatTimeString(player.getMinutesMuteLeft()));
+					}
+					player.message("To prevent further mutes please read the rules");*/
 				}
 
 				if (player.getLocation().inTutorialLanding()) {

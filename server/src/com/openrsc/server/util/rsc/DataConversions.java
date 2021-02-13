@@ -646,4 +646,14 @@ public final class DataConversions {
 
 		return df.format(Math.pow(1024, base - Math.floor(base))) + suffixes[(int)Math.floor(base)];
 	}
+
+	public static String formatTimeString(final int minutes) {
+		if (minutes < 60) {
+			return minutes + " minutes";
+		} else if (minutes < 24 * 60) {
+			return (minutes / 60) + " hours";
+		} else {
+			return (minutes / (24 * 60)) + " days";
+		}
+	}
 }

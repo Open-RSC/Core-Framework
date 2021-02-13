@@ -127,6 +127,17 @@ public final class FriendHandler implements PacketHandler {
 				player.message("@cya@Once you finish the tutorial, this lets you send messages to your friends");
 				return;
 			}
+			Player friendPlayer = player.getWorld().getPlayer(friend);
+			if (player.isMuted() && (friendPlayer == null || !friendPlayer.hasElevatedPriveledges())) {
+				if (player.getMuteNotify()) {
+					player.message("You have been " + (player.getMuteExpires() == -1 ? "permanently" : "temporarily") + " due to breaking a rule");
+					if (player.getMuteExpires() != -1) {
+						player.message("This mute will remain for a further " + DataConversions.formatTimeString(player.getMinutesMuteLeft()));
+					}
+					player.message("To prevent further mutes please read the rules");
+				}
+				return;
+			}
 			String message = DataConversions.upperCaseAllFirst(
 				DataConversions.stripBadCharacters(
 					DataConversions.getEncryptedString(packet, 32576)));

@@ -1113,6 +1113,17 @@ public final class Player extends Mob {
 		getCache().store("global_mute", l);
 	}
 
+	public void setMuteNotify(final boolean n) {
+		getCache().store("mute_notify", n);
+	}
+
+	public boolean getMuteNotify() {
+		if (getCache().hasKey("mute_notify"))
+			return getCache().getBoolean("mute_notify");
+		else
+			return false;
+	}
+
 	public synchronized int getOption() {
 		return questionOption;
 	}
