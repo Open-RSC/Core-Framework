@@ -603,8 +603,8 @@ public final class CustomBankInterface extends BankInterface {
 
 					if (draggingInventoryID != -1
 						&& (mc.getInventoryItemAmount(draggingInventoryID) != -1)) {
-						ItemDef def = mc.getInventoryItem(selectedInventorySlot).getItemDef();
-						if (mc.getInventoryItem(selectedInventorySlot).getNoted()) {
+						ItemDef def = mc.getInventoryItem(draggingInventoryID).getItemDef();
+						if (mc.getInventoryItem(draggingInventoryID).getNoted()) {
 							if (S_WANT_CERT_AS_NOTES) {
 								mc.getSurface().drawSpriteClipping(mc.spriteSelect(EntityHandler.noteDef),
 									mc.getMouseX(), mc.getMouseY(), 48, 32, EntityHandler.noteDef.getPictureMask(), 0,
