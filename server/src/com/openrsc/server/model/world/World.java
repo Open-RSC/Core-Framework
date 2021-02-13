@@ -843,7 +843,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	@Override
 	public void update(final FishingTrawler ctx) {
 		if (ctx != null && ctx.getPlayers().size() == 0) {
-			fishingTrawler.put(ctx.getBoat(), null);
+			fishingTrawler.remove(ctx.getBoat());
 		}
 	}
 
