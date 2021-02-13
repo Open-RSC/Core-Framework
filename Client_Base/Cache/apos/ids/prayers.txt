@@ -1,0 +1,14 @@
+[0] name='Thick skin' desc='Increases your defense by 5%' req='1' drain=15
+[1] name='Burst of strength' desc='Increases your strength by 5%' req='4' drain=15
+[2] name='Clarity of thought' desc='Increases your attack by 5%' req='7' drain=15
+[3] name='Rock skin' desc='Increases your defense by 10%' req='10' drain=30
+[4] name='Superhuman strength' desc='Increases your strength by 10%' req='13' drain=30
+[5] name='Improved reflexes' desc='Increases your attack by 10%' req='16' drain=30
+[6] name='Rapid restore' desc='2x restore rate for all stats except hits' req='19' drain=5
+[7] name='Rapid heal' desc='2x restore rate for hitpoints stat' req='22' drain=10
+[8] name='Protect items' desc='Keep 1 extra item if you die' req='25' drain=10
+[9] name='Steel skin' desc='Increases your defense by 15%' req='28' drain=60
+[10] name='Ultimate strength' desc='Increases your strength by 15%' req='31' drain=60
+[11] name='Incredible reflexes' desc='Increases your attack by 15%' req='34' drain=60
+[12] name='Paralyze monster' desc='Stops monsters from fighting back' req='37' drain=60
+[13] name='Protect from missiles' desc='100% protection from ranged attack' req='40' drain=60

@@ -1,0 +1,794 @@
+[0] name='Unicorn' desc='It's a unicorn' combat=21
+[1] name='Bob' desc='An axe seller' combat=2
+[2] name='Sheep' desc='A very wooly sheep' combat=0
+[3] name='Chicken' desc='Yep definitely a chicken' combat=3
+[4] name='Goblin' desc='An ugly green creature' combat=13
+[5] name='Hans' desc='A castle servant' combat=3
+[6] name='cow' desc='It's a multi purpose cow' combat=8
+[7] name='cook' desc='The head cook of Lumbridge castle' combat=15
+[8] name='Bear' desc='Eek! A bear!' combat=24
+[9] name='Priest' desc='A priest of Saradomin' combat=0
+[10] name='Urhney' desc='He looks a little grumpy' combat=8
+[11] name='Man' desc='One of runescapes many citizens' combat=9
+[12] name='Bartender' desc='I could get a beer off him' combat=0
+[13] name='Camel' desc='Oh its a camel' combat=0
+[14] name='Gypsy' desc='An old gypsy lady' combat=0
+[15] name='Ghost' desc='Ooh spooky' combat=12
+[16] name='Sir Prysin' desc='One of the king's knights' combat=40
+[17] name='Traiborn the wizard' desc='An old wizard' combat=12
+[18] name='Captain Rovin' desc='The head of the palace guard' combat=51
+[19] name='Rat' desc='Overgrown vermin' combat=8
+[20] name='Reldo' desc='I think he's the librarian' combat=12
+[21] name='mugger' desc='He jumps out and attacks people' combat=10
+[22] name='Lesser Demon' desc='Lesser but still pretty big' combat=79
+[23] name='Giant Spider' desc='I think this spider has been genetically modified' combat=8
+[24] name='Man' desc='A shifty looking man' combat=30
+[25] name='Jonny the beard' desc='I can see why he's called the beard' combat=10
+[26] name='Baraek' desc='A fur trader' combat=30
+[27] name='Katrine' desc='She doesn't look to friendly' combat=25
+[28] name='Tramp' desc='A scruffy looking chap' combat=7
+[29] name='Rat' desc='A small muddy rat' combat=2
+[30] name='Romeo' desc='He looks mildly confused' combat=45
+[31] name='Juliet' desc='She looks a little stressed' combat=2
+[32] name='Father Lawrence' desc='A kindly looking priest' combat=0
+[33] name='Apothecary' desc='I wonder if he has any good potions' combat=6
+[34] name='spider' desc='Incey wincey' combat=2
+[35] name='Delrith' desc='A freshly summoned demon' combat=30
+[36] name='Veronica' desc='She doesn't look too happy' combat=2
+[37] name='Weaponsmaster' desc='The phoenix gang quartermaster' combat=25
+[38] name='Professor Oddenstein' desc='A mad scientist if I ever saw one' combat=4
+[39] name='Curator' desc='He looks like he's daydreaming' combat=2
+[40] name='skeleton' desc='It rattles as it walks' combat=21
+[41] name='zombie' desc='The living dead' combat=24
+[42] name='king' desc='King Roald the VIII' combat=30
+[43] name='Giant bat' desc='An angry flying rodent' combat=32
+[44] name='Bartender' desc='A friendly barman' combat=0
+[45] name='skeleton' desc='It rattles as it walks' combat=31
+[46] name='skeleton' desc='It rattles as it walks' combat=25
+[47] name='Rat' desc='overgrown vermin' combat=13
+[48] name='Horvik the Armourer' desc='He looks strong' combat=16
+[49] name='Bear' desc='A  bear' combat=0
+[50] name='skeleton' desc='It rattles when it walks' combat=19
+[51] name='Shopkeeper' desc='Maybe he'd like to buy some of my junk' combat=0
+[52] name='zombie' desc='The living dead' combat=19
+[53] name='Ghost' desc='Ooh spooky' combat=25
+[54] name='Aubury' desc='I think he might be a shop keeper' combat=0
+[55] name='Shopkeeper' desc='I wonder what he's got for sale' combat=0
+[56] name='shopkeeper' desc='I can buy swords off him' combat=0
+[57] name='Darkwizard' desc='He works evil magic' combat=13
+[58] name='lowe' desc='The owner of the archery store' combat=0
+[59] name='Thessalia' desc='A young shop assistant' combat=0
+[60] name='Darkwizard' desc='He works evil magic' combat=25
+[61] name='Giant' desc='A very large foe' combat=37
+[62] name='Goblin' desc='An ugly green creature' combat=7
+[63] name='farmer' desc='He grows the crops in this area' combat=15
+[64] name='Thief' desc='He'll take anything that isn't nailed down' combat=21
+[65] name='Guard' desc='He tries to keep order around here' combat=28
+[66] name='Black Knight' desc='A sinister looking knight' combat=46
+[67] name='Hobgoblin' desc='A large ugly green creature' combat=32
+[68] name='zombie' desc='The living dead' combat=32
+[69] name='Zaff' desc='He trades in staffs' combat=0
+[70] name='Scorpion' desc='An extremely vicious scorpion' combat=21
+[71] name='silk trader' desc='He sells silk' combat=0
+[72] name='Man' desc='One of Runescapes many citizens' combat=9
+[73] name='Guide' desc='He gives hints to new adventurers' combat=1
+[74] name='Giant Spider' desc='I think this spider has been genetically modified' combat=31
+[75] name='Peksa' desc='A helmet salesman' combat=9
+[76] name='Barbarian' desc='Not civilised looking' combat=16
+[77] name='Fred the farmer' desc='An old farmer' combat=9
+[78] name='Gunthor the Brave' desc='The barbarians fearless leader' combat=37
+[79] name='Witch' desc='She's got warts' combat=25
+[80] name='Ghost' desc='Ooh spooky' combat=25
+[81] name='Wizard' desc='An old wizard' combat=16
+[82] name='Shop Assistant' desc='Maybe he'd like to buy some of my junk' combat=0
+[83] name='Shop Assistant' desc='Maybe he'd like to buy some of my junk' combat=0
+[84] name='Zeke' desc='He sells Scimitars' combat=0
+[85] name='Louie Legs' desc='He might want to sell something' combat=0
+[86] name='Warrior' desc='A member of Al Kharid's military' combat=18
+[87] name='Shopkeeper' desc='I wonder what he's got for sale' combat=0
+[88] name='Shop Assistant' desc='Maybe she'd like to buy some of my junk' combat=0
+[89] name='Highwayman' desc='He holds up passers by' combat=13
+[90] name='Kebab Seller' desc='A seller of strange food' combat=0
+[91] name='Chicken' desc='Yep definitely a chicken' combat=3
+[92] name='Ernest' desc='A former chicken' combat=3
+[93] name='Monk' desc='A Peaceful monk' combat=13
+[94] name='Dwarf' desc='A short angry guy' combat=18
+[95] name='Banker' desc='He can look after my money' combat=9
+[96] name='Count Draynor' desc='A vicious vampire' combat=43
+[97] name='Morgan' desc='A frigtened villager' combat=9
+[98] name='Dr Harlow' desc='His nose is very red' combat=9
+[99] name='Deadly Red spider' desc='I think this spider has been genetically modified' combat=36
+[100] name='Guard' desc='He's here to guard this fortress' combat=28
+[101] name='Cassie' desc='She sells shields' combat=25
+[102] name='White Knight' desc='A chivalrous knight' combat=56
+[103] name='Ranael' desc='A shopkeeper of some sort' combat=25
+[104] name='Moss Giant' desc='his beard seems to have a life of its own' combat=62
+[105] name='Shopkeeper' desc='I wonder what he's got for sale' combat=0
+[106] name='Shop Assistant' desc='Maybe he'd like to buy some of my junk' combat=0
+[107] name='Witch' desc='She's got warts' combat=25
+[108] name='Black Knight' desc='A sinister looking knight' combat=46
+[109] name='Greldo' desc='A small green warty creature' combat=7
+[110] name='Sir Amik Varze' desc='The leader of the white knights' combat=56
+[111] name='Guildmaster' desc='He's in charge of this place' combat=40
+[112] name='Valaine' desc='She runs the champion's store' combat=25
+[113] name='Drogo' desc='He runs a mining store' combat=18
+[114] name='Imp' desc='A cheeky little imp' combat=5
+[115] name='Flynn' desc='The mace salesman' combat=16
+[116] name='Wyson the gardener' desc='An old gardener' combat=8
+[117] name='Wizard Mizgog' desc='An old wizard' combat=12
+[118] name='Prince Ali' desc='A young prince' combat=20
+[119] name='Hassan' desc='the Chancellor to the emir' combat=20
+[120] name='Osman' desc='He looks a little shifty' combat=20
+[121] name='Joe' desc='Lady Keli's head guard' combat=40
+[122] name='Leela' desc='She comes from Al Kharid' combat=20
+[123] name='Lady Keli' desc='An Infamous bandit' combat=20
+[124] name='Ned' desc='An old sailor' combat=20
+[125] name='Aggie' desc='A witch' combat=25
+[126] name='Prince Ali' desc='That is an effective disguise' combat=10
+[127] name='Jailguard' desc='I wonder what he's guarding' combat=34
+[128] name='Redbeard Frank' desc='A pirate' combat=25
+[129] name='Wydin' desc='A grocer' combat=0
+[130] name='shop assistant' desc='I can buy swords off him' combat=0
+[131] name='Brian' desc='An axe seller' combat=0
+[132] name='squire' desc='A young squire' combat=0
+[133] name='Head chef' desc='He looks after the chef's guild' combat=15
+[134] name='Thurgo' desc='A short angry guy' combat=18
+[135] name='Ice Giant' desc='He's got icicles in his beard' combat=68
+[136] name='King Scorpion' desc='Wow scorpions shouldn't grow that big' combat=36
+[137] name='Pirate' desc='A vicious pirate' combat=27
+[138] name='Sir Vyvin' desc='One of the white knights of Falador' combat=56
+[139] name='Monk of Zamorak' desc='An evil cleric' combat=29
+[140] name='Monk of Zamorak' desc='An evil cleric' combat=19
+[141] name='Wayne' desc='An armourer' combat=16
+[142] name='Barmaid' desc='a pretty barmaid' combat=25
+[143] name='Dwarven shopkeeper' desc='I wonder if he wants to buy any of my junk' combat=18
+[144] name='Doric' desc='A dwarven smith' combat=18
+[145] name='Shopkeeper' desc='I wonder what he's got for sale' combat=0
+[146] name='Shop Assistant' desc='Maybe he'd like to buy some of my junk' combat=0
+[147] name='Guide' desc='She gives hints to new adventurers' combat=1
+[148] name='Hetty' desc='A witch' combat=25
+[149] name='Betty' desc='A witch' combat=25
+[150] name='Bartender' desc='I could get a beer off him' combat=0
+[151] name='General wartface' desc='An ugly green creature' combat=13
+[152] name='General Bentnoze' desc='An ugly green creature' combat=13
+[153] name='Goblin' desc='An ugly green creature' combat=13
+[154] name='Goblin' desc='An ugly green creature' combat=13
+[155] name='Herquin' desc='A gem merchant' combat=0
+[156] name='Rommik' desc='The owner of the crafting shop' combat=0
+[157] name='Grum' desc='Grum the goldsmith' combat=0
+[158] name='Ice warrior' desc='A strange inhuman warrior' combat=57
+[159] name='Warrior' desc='A skilled fighter' combat=27
+[160] name='Thrander' desc='A smith of some sort' combat=16
+[161] name='Border Guard' desc='a guard from Al Kharid' combat=18
+[162] name='Border Guard' desc='a guard from Al Kharid' combat=18
+[163] name='Customs Officer' desc='She is here to stop smugglers' combat=16
+[164] name='Luthas' desc='The owner of the banana plantation' combat=16
+[165] name='Zambo' desc='He will sell me exotic rum' combat=16
+[166] name='Captain Tobias' desc='An old sailor' combat=20
+[167] name='Gerrant' desc='I wonder what he's got for sale' combat=0
+[168] name='Shopkeeper' desc='I wonder what he's got for sale' combat=0
+[169] name='Shop Assistant' desc='Maybe he'd like to buy some of my junk' combat=0
+[170] name='Seaman Lorris' desc='A young sailor' combat=20
+[171] name='Seaman Thresnor' desc='A young sailor' combat=20
+[172] name='Tanner' desc='He makes leather' combat=45
+[173] name='Dommik' desc='The owner of the crafting shop' combat=0
+[174] name='Abbot Langley' desc='A Peaceful monk' combat=13
+[175] name='Thordur' desc='He runs a a tourist attraction' combat=18
+[176] name='Brother Jered' desc='human' combat=13
+[177] name='Rat' desc='Overgrown vermin' combat=13
+[178] name='Ghost' desc='Ooh spooky' combat=25
+[179] name='skeleton' desc='it rattles when it walks' combat=31
+[180] name='zombie' desc='the living dead' combat=32
+[181] name='Lesser Demon' desc='Lesser but still very big' combat=79
+[182] name='Melzar the mad' desc='He looks totally insane' combat=45
+[183] name='Scavvo' desc='He has lopsided eyes' combat=10
+[184] name='Greater Demon' desc='big red and incredibly evil' combat=87
+[185] name='Shopkeeper' desc='I wonder what he's got for sale' combat=0
+[186] name='Shop Assistant' desc='Maybe he'd like to buy some of my junk' combat=0
+[187] name='Oziach' desc='A strange little man' combat=0
+[188] name='Bear' desc='Eek! A bear!' combat=26
+[189] name='Black Knight' desc='An armoured follower of Zamorak' combat=46
+[190] name='chaos Dwarf' desc='a dwarf gone bad' combat=59
+[191] name='dwarf' desc='A dwarf who looks after the mining guild' combat=18
+[192] name='Wormbrain' desc='Dumb even by goblin standards' combat=7
+[193] name='Klarense' desc='A young sailor' combat=20
+[194] name='Ned' desc='An old sailor' combat=20
+[195] name='skeleton' desc='A Taller than normal skeleton' combat=54
+[196] name='Dragon' desc='A powerful and ancient dragon' combat=110
+[197] name='Oracle' desc='A mystic of unknown race' combat=57
+[198] name='Duke of Lumbridge' desc='Duke Horacio of Lumbridge' combat=30
+[199] name='Dark Warrior' desc='A warrior touched by chaos' combat=21
+[200] name='Druid' desc='A worshipper of Guthix' combat=29
+[201] name='Red Dragon' desc='A big powerful dragon' combat=140
+[202] name='Blue Dragon' desc='A mother dragon' combat=105
+[203] name='Baby Blue Dragon' desc='Young but still dangerous' combat=50
+[204] name='Kaqemeex' desc='A wise druid' combat=29
+[205] name='Sanfew' desc='An old druid' combat=29
+[206] name='Suit of armour' desc='A dusty old suit of armour' combat=29
+[207] name='Adventurer' desc='A cleric' combat=13
+[208] name='Adventurer' desc='A wizard' combat=12
+[209] name='Adventurer' desc='A Warrior' combat=56
+[210] name='Adventurer' desc='An archer' combat=25
+[211] name='Leprechaun' desc='A funny little man who lives in a tree' combat=18
+[212] name='Monk of entrana' desc='A Peaceful monk' combat=13
+[213] name='Monk of entrana' desc='A Peaceful monk' combat=13
+[214] name='zombie' desc='The living dead' combat=32
+[215] name='Monk of entrana' desc='A Peaceful monk' combat=13
+[216] name='tree spirit' desc='Ooh spooky' combat=95
+[217] name='cow' desc='It's a dairy cow' combat=8
+[218] name='Irksol' desc='Is he invisible or just a set of floating clothes?' combat=2
+[219] name='Fairy Lunderwin' desc='A fairy merchant' combat=2
+[220] name='Jakut' desc='An unusual looking merchant' combat=2
+[221] name='Doorman' desc='He guards the entrance to the faerie market' combat=56
+[222] name='Fairy Shopkeeper' desc='I wonder what he's got for sale' combat=0
+[223] name='Fairy Shop Assistant' desc='Maybe he'd like to buy some of my junk' combat=0
+[224] name='Fairy banker' desc='He can look after my money' combat=9
+[225] name='Giles' desc='He runs an ore exchange store' combat=30
+[226] name='Miles' desc='He runs a bar exchange store' combat=30
+[227] name='Niles' desc='He runs a fish exchange store' combat=30
+[228] name='Gaius' desc='he sells very big swords' combat=16
+[229] name='Fairy Ladder attendant' desc='A worker in the faerie market' combat=0
+[230] name='Jatix' desc='A hard working druid' combat=29
+[231] name='Master Crafter' desc='The man in charge of the crafter's guild' combat=0
+[232] name='Bandit' desc='He's ready for a fight' combat=29
+[233] name='Noterazzo' desc='A bandit shopkeeper' combat=29
+[234] name='Bandit' desc='A wilderness outlaw' combat=29
+[235] name='Fat Tony' desc='A Gourmet Pizza chef' combat=15
+[236] name='Donny the lad' desc='A bandit leader' combat=39
+[237] name='Black Heather' desc='A bandit leader' combat=39
+[238] name='Speedy Keith' desc='A bandit leader' combat=39
+[239] name='White wolf sentry' desc='A vicious mountain wolf' combat=31
+[240] name='Boy' desc='He doesn't seem very happy' combat=39
+[241] name='Rat' desc='He seems to live here' combat=2
+[242] name='Nora T Hag' desc='She's got warts' combat=25
+[243] name='Grey wolf' desc='A sinister looking wolf' combat=64
+[244] name='shapeshifter' desc='I've not seen anyone like this before' combat=24
+[245] name='shapeshifter' desc='I think this spider has been genetically modified' combat=34
+[246] name='shapeshifter' desc='Eek! A bear!' combat=44
+[247] name='shapeshifter' desc='A sinister looking wolf' combat=54
+[248] name='White wolf' desc='A vicious mountain wolf' combat=41
+[249] name='Pack leader' desc='A vicious mountain wolf' combat=71
+[250] name='Harry' desc='I wonder what he's got for sale' combat=0
+[251] name='Thug' desc='He likes hitting things' combat=18
+[252] name='Firebird' desc='Probably not a chicken' combat=6
+[253] name='Achetties' desc='One of Asgarnia's greatest heros' combat=46
+[254] name='Ice queen' desc='The leader of the ice warriors' combat=103
+[255] name='Grubor' desc='A rough looking thief' combat=15
+[256] name='Trobert' desc='A well dressed thief' combat=13
+[257] name='Garv' desc='A diligent guard' combat=28
+[258] name='guard' desc='A vicious pirate' combat=27
+[259] name='Grip' desc='Scar face petes head guard' combat=46
+[260] name='Alfonse the waiter' desc='He should get a clean apron' combat=9
+[261] name='Charlie the cook' desc='Head cook of the Shrimp and parrot' combat=15
+[262] name='Guard Dog' desc='He doesn't seem pleased to see me' combat=46
+[263] name='Ice spider' desc='I think this spider has been genetically modified' combat=64
+[264] name='Pirate' desc='A vicious pirate' combat=30
+[265] name='Jailer' desc='Guards prisoners for the black knights' combat=51
+[266] name='Lord Darquarius' desc='A black knight commander' combat=76
+[267] name='Seth' desc='He runs a fish exchange store' combat=30
+[268] name='Banker' desc='He can look after my money' combat=9
+[269] name='Helemos' desc='A retired hero' combat=46
+[270] name='Chaos Druid' desc='A crazy evil druid' combat=19
+[271] name='Poison Scorpion' desc='It has a very vicious looking tail' combat=26
+[272] name='Velrak the explorer' desc='he looks cold and hungry' combat=3
+[273] name='Sir Lancelot' desc='A knight of the round table' combat=56
+[274] name='Sir Gawain' desc='A knight of the round table' combat=56
+[275] name='King Arthur' desc='A wise old king' combat=56
+[276] name='Sir Mordred' desc='An evil knight' combat=58
+[277] name='Renegade knight' desc='He isn't very friendly' combat=51
+[278] name='Davon' desc='An amulet trader' combat=27
+[279] name='Bartender' desc='I could get some grog off him' combat=0
+[280] name='Arhein' desc='A merchant' combat=0
+[281] name='Morgan le faye' desc='An evil sorceress' combat=25
+[282] name='Candlemaker' desc='He makes and sells candles' combat=16
+[283] name='lady' desc='She has a hint of magic about her' combat=0
+[284] name='lady' desc='She has a hint of magic about her' combat=0
+[285] name='lady' desc='She has a hint of magic about her' combat=0
+[286] name='Beggar' desc='A scruffy looking chap' combat=7
+[287] name='Merlin' desc='An old wizard' combat=12
+[288] name='Thrantax' desc='A freshly summoned demon' combat=90
+[289] name='Hickton' desc='The owner of the archery store' combat=0
+[290] name='Black Demon' desc='A big scary jet black demon' combat=156
+[291] name='Black Dragon' desc='A fierce dragon with black scales!' combat=200
+[292] name='Poison Spider' desc='I think this spider has been genetically modified' combat=63
+[293] name='Monk of Zamorak' desc='An evil cleric' combat=47
+[294] name='Hellhound' desc='Hello nice doggy' combat=114
+[295] name='Animated axe' desc='a magic axe with a mind of it's own' combat=46
+[296] name='Black Unicorn' desc='It's a sort of unicorn' combat=31
+[297] name='Frincos' desc='A Peaceful monk' combat=13
+[298] name='Otherworldly being' desc='Is he invisible or just a set of floating clothes?' combat=66
+[299] name='Owen' desc='He runs a fish exchange store' combat=30
+[300] name='Thormac the sorceror' desc='A powerful sorcerrer' combat=25
+[301] name='Seer' desc='An old wizard' combat=16
+[302] name='Kharid Scorpion' desc='a smaller less dangerous scorpion' combat=21
+[303] name='Kharid Scorpion' desc='a smaller less dangerous scorpion' combat=21
+[304] name='Kharid Scorpion' desc='a smaller less dangerous scorpion' combat=21
+[305] name='Barbarian guard' desc='Not very civilised' combat=16
+[306] name='Bartender' desc='I could get a beer off him' combat=0
+[307] name='man' desc='A well dressed nobleman' combat=9
+[308] name='gem trader' desc='He sells gems' combat=0
+[309] name='Dimintheis' desc='A well dressed nobleman' combat=9
+[310] name='chef' desc='A busy looking chef' combat=15
+[311] name='Hobgoblin' desc='An ugly green creature' combat=48
+[312] name='Ogre' desc='A large dim looking humanoid' combat=58
+[313] name='Boot the Dwarf' desc='A short angry guy' combat=18
+[314] name='Wizard' desc='A young wizard' combat=16
+[315] name='Chronozon' desc='Chronozon the blood demon' combat=121
+[316] name='Captain Barnaby' desc='An old sailor' combat=20
+[317] name='Customs Official' desc='She's here to stop smugglers' combat=16
+[318] name='Man' desc='One of Runescape's citizens' combat=9
+[319] name='farmer' desc='An humble peasant' combat=15
+[320] name='Warrior' desc='A skilled fighter' combat=27
+[321] name='Guard' desc='He tries to keep the law and order around here' combat=28
+[322] name='Knight' desc='A knight of Ardougne' combat=56
+[323] name='Paladin' desc='A paladin of Ardougne' combat=71
+[324] name='Hero' desc='A Hero of Ardougne' combat=83
+[325] name='Baker' desc='He sells hot baked bread' combat=15
+[326] name='silk merchant' desc='He buys silk' combat=0
+[327] name='Fur trader' desc='A buyer and seller of animal furs' combat=0
+[328] name='silver merchant' desc='He deals in silver' combat=0
+[329] name='spice merchant' desc='He sells exotic spices' combat=15
+[330] name='gem merchant' desc='He sells gems' combat=0
+[331] name='Zenesha' desc='A shopkeeper of some sort' combat=25
+[332] name='Kangai Mau' desc='A tribesman' combat=0
+[333] name='Wizard Cromperty' desc='An old wizard' combat=12
+[334] name='RPDT employee' desc='A delivery man' combat=12
+[335] name='Horacio' desc='An old gardener' combat=8
+[336] name='Aemad' desc='He helps run the adventurers store' combat=16
+[337] name='Kortan' desc='He helps run the adventurers store' combat=16
+[338] name='zoo keeper' desc='He looks after Ardougne city zoo' combat=20
+[339] name='Make over mage' desc='He can change how I look' combat=0
+[340] name='Bartender' desc='I could get a beer off him' combat=0
+[341] name='chuck' desc='A wood merchant' combat=0
+[342] name='Rogue' desc='He needs a shave' combat=21
+[343] name='Shadow spider' desc='Is it a spider or is it a shadow' combat=53
+[344] name='Fire Giant' desc='A big guy with red glowing skin' combat=109
+[345] name='Grandpa Jack' desc='A wistful old man' combat=20
+[346] name='Sinister stranger' desc='not your average fisherman' combat=43
+[347] name='Bonzo' desc='Fishing competition organiser' combat=30
+[348] name='Forester' desc='He looks after McGrubor's wood' combat=21
+[349] name='Morris' desc='Fishing competition organiser' combat=30
+[350] name='Brother Omad' desc='A Peaceful monk' combat=13
+[351] name='Thief' desc='A dastardly blanket thief' combat=21
+[352] name='Head Thief' desc='A dastardly blanket thief' combat=34
+[353] name='Big Dave' desc='A well built fisherman' combat=15
+[354] name='Joshua' desc='A grumpy fisherman' combat=15
+[355] name='Mountain Dwarf' desc='A short angry guy' combat=18
+[356] name='Mountain Dwarf' desc='A short angry guy' combat=28
+[357] name='Brother Cedric' desc='A Peaceful monk' combat=13
+[358] name='Necromancer' desc='A crazy evil necromancer' combat=34
+[359] name='zombie' desc='The living dead' combat=24
+[360] name='Lucien' desc='He walks with a slight limp' combat=21
+[361] name='The Fire warrior of lesarkus' desc='A strange red humanoid' combat=63
+[362] name='guardian of Armadyl' desc='A worshipper of Armadyl' combat=54
+[363] name='guardian of Armadyl' desc='A worshipper of Armadyl' combat=54
+[364] name='Lucien' desc='He walks with a limp' combat=21
+[365] name='winelda' desc='A witch' combat=25
+[366] name='Brother Kojo' desc='A Peaceful monk' combat=13
+[367] name='Dungeon Rat' desc='Overgrown vermin' combat=16
+[368] name='Master fisher' desc='The man in charge of the fishing guild' combat=15
+[369] name='Orven' desc='He runs a fish exchange store' combat=30
+[370] name='Padik' desc='He runs a fish exchange store' combat=30
+[371] name='Shopkeeper' desc='He smells of fish' combat=0
+[372] name='Lady servil' desc='She look's wealthy' combat=2
+[373] name='Guard' desc='It's one of General Khazard's guard's' combat=28
+[374] name='Guard' desc='It's one of General Khazard's guard's' combat=28
+[375] name='Guard' desc='It's one of General Khazard's guard's' combat=28
+[376] name='Guard' desc='It's one of General Khazard's guard's' combat=28
+[377] name='Jeremy Servil' desc='A young squire' combat=0
+[378] name='Justin Servil' desc='Jeremy servil's father' combat=0
+[379] name='fightslave joe' desc='He look's mistreated and weak' combat=0
+[380] name='fightslave kelvin' desc='He look's mistreated and weak' combat=0
+[381] name='local' desc='A scruffy looking chap' combat=7
+[382] name='Khazard Bartender' desc='A tough looking barman' combat=0
+[383] name='General Khazard' desc='He look's real nasty' combat=100
+[384] name='Khazard Ogre' desc='Khazard's strongest ogre warrior' combat=58
+[385] name='Guard' desc='It's one of General Khazard's guard's' combat=28
+[386] name='Khazard Scorpion' desc='A large angry scorpion' combat=46
+[387] name='hengrad' desc='He look's mistreated and weak' combat=0
+[388] name='Bouncer' desc='Hello nice doggy' combat=122
+[389] name='Stankers' desc='A cheerful looking fellow' combat=0
+[390] name='Docky' desc='An old sailor' combat=20
+[391] name='Shopkeeper' desc='Maybe he'd like to buy some of my junk' combat=0
+[392] name='Fairy queen' desc='A very little queen' combat=2
+[393] name='Merlin' desc='An old wizard' combat=12
+[394] name='Crone' desc='A strange old lady' combat=25
+[395] name='High priest of entrana' desc='A Peaceful monk' combat=13
+[396] name='elkoy' desc='It's a tree gnome' combat=3
+[397] name='remsai' desc='It's a tree gnome' combat=3
+[398] name='bolkoy' desc='It's a tree gnome' combat=3
+[399] name='local gnome' desc='It's a young tree gnome' combat=3
+[400] name='bolren' desc='It's a gnome he look's important' combat=3
+[401] name='Black Knight titan' desc='He is blocking the way' combat=146
+[402] name='kalron' desc='he look's lost' combat=3
+[403] name='brother Galahad' desc='A Peaceful monk' combat=13
+[404] name='tracker 1' desc='It's a tree gnome' combat=3
+[405] name='tracker 2' desc='It's a tree gnome' combat=3
+[406] name='tracker 3' desc='It's a tree gnome' combat=3
+[407] name='Khazard troop' desc='It's one of General Khazard's warrior's' combat=28
+[408] name='commander montai' desc='It's a tree gnome' combat=3
+[409] name='gnome troop' desc='It's a tree gnome trooper' combat=3
+[410] name='khazard warlord' desc='He look's real nasty' combat=100
+[411] name='Sir Percival' desc='He's covered in pieces of straw' combat=56
+[412] name='Fisher king' desc='an old king' combat=30
+[413] name='maiden' desc='She has a far away look in her eyes' combat=2
+[414] name='Fisherman' desc='an old fisherman' combat=30
+[415] name='King Percival' desc='The new fisher king' combat=56
+[416] name='unhappy peasant' desc='He looks tired and hungry' combat=25
+[417] name='happy peasant' desc='He looks well fed and full of energy' combat=25
+[418] name='ceril' desc='It's Sir ceril carnillean a local noblemen' combat=9
+[419] name='butler' desc='It's the carnillean family butler' combat=9
+[420] name='carnillean guard' desc='It's a carnillean family guard' combat=28
+[421] name='Tribesman' desc='A primative warrior' combat=39
+[422] name='henryeta' desc='It's a wealthy looking woman' combat=2
+[423] name='philipe' desc='It's a young well dressed boy' combat=0
+[424] name='clivet' desc='A strange looking man in black ' combat=20
+[425] name='cult member' desc='An suspicous looking man in black ' combat=20
+[426] name='Lord hazeel' desc='He could do with some sun' combat=100
+[427] name='alomone' desc='A musculer looking man in black ' combat=42
+[428] name='Khazard commander' desc='It's one of General Khazard's commander's' combat=41
+[429] name='claus' desc='the carnillean family cook' combat=15
+[430] name='1st plague sheep' desc='The sheep has the plague' combat=0
+[431] name='2nd plague sheep' desc='The sheep has the plague' combat=0
+[432] name='3rd plague sheep' desc='The sheep has the plague' combat=0
+[433] name='4th plague sheep' desc='The sheep has the plague' combat=0
+[434] name='Farmer brumty' desc='He looks after livestock in this area' combat=15
+[435] name='Doctor orbon' desc='A local doctor' combat=15
+[436] name='Councillor Halgrive' desc='A town counceller' combat=20
+[437] name='Edmond' desc='A local civilian' combat=20
+[438] name='Citizen' desc='He look's tired' combat=11
+[439] name='Citizen' desc='He look's frightened' combat=10
+[440] name='Citizen' desc='She look's frustrated' combat=12
+[441] name='Citizen' desc='He look's angry' combat=20
+[442] name='Citizen' desc='He look's disillusioned' combat=15
+[443] name='Jethick' desc='A cynical old man' combat=15
+[444] name='Mourner' desc='A mourner or plague healer' combat=2
+[445] name='Mourner' desc='A mourner or plague healer' combat=2
+[446] name='Ted Rehnison' desc='The head of the Rehnison family' combat=9
+[447] name='Martha Rehnison' desc='A fairly poor looking woman' combat=12
+[448] name='Billy Rehnison' desc='The Rehnisons eldest son' combat=45
+[449] name='Milli Rehnison' desc='She doesn't seem very happy' combat=39
+[450] name='Alrena' desc='She look's concerned' combat=2
+[451] name='Mourner' desc='A mourner or plague healer' combat=2
+[452] name='Clerk' desc='A bueracratic administrator' combat=2
+[453] name='Carla' desc='She look's upset' combat=2
+[454] name='Bravek' desc='The city warder of West Ardougne' combat=30
+[455] name='Caroline' desc='A well dressed middle aged lady' combat=2
+[456] name='Holgart' desc='An old sailor' combat=20
+[457] name='Holgart' desc='An old sailor' combat=20
+[458] name='Holgart' desc='An old sailor' combat=20
+[459] name='kent' desc='caroline's husband' combat=45
+[460] name='bailey' desc='the fishing platform cook' combat=15
+[461] name='kennith' desc='A young scared looking boy' combat=0
+[462] name='Platform Fisherman' desc='an emotionless fisherman' combat=30
+[463] name='Platform Fisherman' desc='an emotionless fisherman' combat=30
+[464] name='Platform Fisherman' desc='an emotionless fisherman' combat=30
+[465] name='Elena' desc='She doesn't look too happy' combat=2
+[466] name='jinno' desc='He doesn't seem to mind his lack of legs' combat=30
+[467] name='Watto' desc='He doesn't seem to mind his lack of legs' combat=30
+[468] name='Recruiter' desc='A member of the Ardougne royal army' combat=51
+[469] name='Head mourner' desc='In charge of people with silly outfits' combat=2
+[470] name='Almera' desc='A woman of the wilderness' combat=2
+[471] name='hudon' desc='A young boisterous looking lad' combat=0
+[472] name='hadley' desc='A happy looking fellow' combat=30
+[473] name='Rat' desc='Overgrown vermin' combat=7
+[474] name='Combat instructor' desc='He will tell me how to fight' combat=51
+[475] name='golrie' desc='It's a tree gnome' combat=3
+[476] name='Guide' desc='She gives hints to new adventurers' combat=1
+[477] name='King Black Dragon' desc='The biggest meanest dragon around' combat=245
+[478] name='cooking instructor' desc='Talk to him to learn about runescape food' combat=15
+[479] name='fishing instructor' desc='He smells of fish' combat=15
+[480] name='financial advisor' desc='He knows about money' combat=0
+[481] name='gerald' desc='An old fisherman' combat=15
+[482] name='mining instructor' desc='A short angry guy' combat=18
+[483] name='Elena' desc='She looks concerned' combat=2
+[484] name='Omart' desc='A nervous looking fellow' combat=30
+[485] name='Bank assistant' desc='She can look after my stuff' combat=9
+[486] name='Jerico' desc='He looks friendly enough' combat=15
+[487] name='Kilron' desc='He looks shifty' combat=15
+[488] name='Guidor's wife' desc='She looks rather concerned' combat=2
+[489] name='Quest advisor' desc='I wonder what advise he has to impart' combat=51
+[490] name='chemist' desc='human' combat=4
+[491] name='Mourner' desc='A mourner or plague healer' combat=2
+[492] name='Mourner' desc='A mourner or plague healer' combat=2
+[493] name='Wilderness guide' desc='He's ready for a fight' combat=29
+[494] name='Magic Instructor' desc='An old wizard' combat=12
+[495] name='Mourner' desc='A mourner or plague healer' combat=22
+[496] name='Community instructor' desc='This is the last advisor - honest' combat=2
+[497] name='boatman' desc='An old sailor' combat=20
+[498] name='skeleton mage' desc='It rattles as it walks' combat=21
+[499] name='controls guide' desc='He's ready for a fight' combat=29
+[500] name='nurse sarah' desc='She's quite a looker' combat=2
+[501] name='Tailor' desc='He's ready for a party' combat=29
+[502] name='Mourner' desc='A mourner or plague healer' combat=25
+[503] name='Guard' desc='He tries to keep order around here' combat=28
+[504] name='Chemist' desc='He looks clever enough' combat=29
+[505] name='Chancy' desc='He's ready for a bet' combat=29
+[506] name='Hops' desc='He's drunk' combat=29
+[507] name='DeVinci' desc='He has a colourful personality' combat=29
+[508] name='Guidor' desc='He's not that ill' combat=29
+[509] name='Chancy' desc='He's ready for a bet' combat=29
+[510] name='Hops' desc='He's drunk' combat=29
+[511] name='DeVinci' desc='He has a colourful personality' combat=29
+[512] name='king Lathas' desc='King Lanthas of east ardounge' combat=30
+[513] name='Head wizard' desc='He runs the wizards guild' combat=12
+[514] name='Magic store owner' desc='An old wizard' combat=12
+[515] name='Wizard Frumscone' desc='A confused looking wizard' combat=12
+[516] name='target practice zombie' desc='The living dead' combat=24
+[517] name='Trufitus' desc='A wise old witch doctor' combat=6
+[518] name='Colonel Radick' desc='A soldier of the town of Yanille' combat=51
+[519] name='Soldier' desc='A soldier of the town of Yanille' combat=28
+[520] name='Bartender' desc='I could get a beer off him' combat=0
+[521] name='Jungle Spider' desc='A venomous deadly spider' combat=47
+[522] name='Jiminua' desc='She looks very interested in selling some of her wares.' combat=0
+[523] name='Jogre' desc='An aggressive humanoid' combat=58
+[524] name='Guard' desc='He tries to keep order around here' combat=28
+[525] name='Ogre' desc='Useful for ranged training' combat=58
+[526] name='Guard' desc='He tries to keep order around here' combat=28
+[527] name='Guard' desc='He tries to keep order around here' combat=28
+[528] name='shop keeper' desc='he sells weapons' combat=0
+[529] name='Bartender' desc='I could get a beer off him' combat=0
+[530] name='Frenita' desc='runs a cookery shop' combat=0
+[531] name='Ogre chieftan' desc='A slightly bigger uglier ogre' combat=78
+[532] name='rometti' desc='It's a well dressed tree gnome' combat=3
+[533] name='Rashiliyia' desc='A willowy ethereal being who floats above the ground' combat=80
+[534] name='Blurberry' desc='It's a red faced tree gnome' combat=3
+[535] name='Heckel funch' desc='It's another jolly tree gnome' combat=3
+[536] name='Aluft Gianne' desc='It's a tree gnome chef' combat=3
+[537] name='Hudo glenfad' desc='It's another jolly tree gnome' combat=3
+[538] name='Irena' desc='human' combat=0
+[539] name='Mosol' desc='A jungle warrior' combat=0
+[540] name='Gnome banker' desc='It's tree gnome banker' combat=3
+[541] name='King Narnode Shareen' desc='It's a gnome he look's important' combat=3
+[542] name='UndeadOne' desc='One of Rashaliyas Minions' combat=62
+[543] name='Drucas' desc='engraver' combat=20
+[544] name='tourist' desc='human' combat=29
+[545] name='King Narnode Shareen' desc='It's a gnome he look's important' combat=3
+[546] name='Hazelmere' desc='An ancient looking gnome' combat=3
+[547] name='Glough' desc='An rough looking gnome' combat=3
+[548] name='Shar' desc='Concerned about the economy' combat=0
+[549] name='Shantay' desc='human' combat=0
+[550] name='charlie' desc='Poor guy?' combat=0
+[551] name='Gnome guard' desc='A tree gnome guard' combat=31
+[552] name='Gnome pilot' desc='He can fly the glider' combat=3
+[553] name='Mehman' desc='local' combat=29
+[554] name='Ana' desc='This lady doesn't look as if she belongs here.' combat=16
+[555] name='Chaos Druid warrior' desc='A crazy evil druid' combat=44
+[556] name='Gnome pilot' desc='He can fly the glider' combat=3
+[557] name='Shipyard worker' desc='He look's busy' combat=44
+[558] name='Shipyard worker' desc='He look's busy' combat=44
+[559] name='Shipyard worker' desc='He look's busy' combat=44
+[560] name='Shipyard foreman' desc='He look's busy' combat=62
+[561] name='Shipyard foreman' desc='He look's busy' combat=62
+[562] name='Gnome guard' desc='A tree gnome guard' combat=23
+[563] name='Femi' desc='It's a little tree gnome' combat=3
+[564] name='Femi' desc='It's a little tree gnome' combat=3
+[565] name='Anita' desc='It's a little tree gnome' combat=3
+[566] name='Glough' desc='An rough looking gnome' combat=3
+[567] name='Salarin the twisted' desc='A crazy evil druid' combat=69
+[568] name='Black Demon' desc='A big scary jet black demon' combat=175
+[569] name='Gnome pilot' desc='He can fly the glider' combat=3
+[570] name='Gnome pilot' desc='He can fly the glider' combat=3
+[571] name='Gnome pilot' desc='He can fly the glider' combat=3
+[572] name='Gnome pilot' desc='He can fly the glider' combat=3
+[573] name='Sigbert the Adventurer' desc='A Warrior' combat=56
+[574] name='Yanille Watchman' desc='He watches out for invading ogres' combat=33
+[575] name='Tower guard' desc='He stops people going up the tower' combat=33
+[576] name='Gnome Trainer' desc='He can advise on training' combat=11
+[577] name='Gnome Trainer' desc='He can advise on training' combat=11
+[578] name='Gnome Trainer' desc='He can advise on training' combat=11
+[579] name='Gnome Trainer' desc='He can advise on training' combat=11
+[580] name='Blurberry barman' desc='He serves cocktails' combat=3
+[581] name='Gnome waiter' desc='He can serve you gnome food' combat=3
+[582] name='Gnome guard' desc='A tree gnome guard' combat=27
+[583] name='Gnome child' desc='that's a little gnome' combat=3
+[584] name='Earth warrior' desc='A strange inhuman warrior' combat=52
+[585] name='Gnome child' desc='He's a little fellow' combat=3
+[586] name='Gnome child' desc='hello little gnome' combat=3
+[587] name='Gulluck' desc='He sells weapons' combat=10
+[588] name='Gunnjorn' desc='Not civilised looking' combat=16
+[589] name='Zadimus' desc='Ghostly Visage of the dead Zadimus' combat=0
+[590] name='Brimstail' desc='An ancient looking gnome' combat=3
+[591] name='Gnome child' desc='He's a little fellow' combat=3
+[592] name='Gnome local' desc='A tree gnome villager' combat=9
+[593] name='Gnome local' desc='A tree gnome villager' combat=3
+[594] name='Moss Giant' desc='his beard seems to have a life of its own' combat=62
+[595] name='Gnome Baller' desc='A tree gnome ball player' combat=70
+[596] name='Goalie' desc='A gnome ball goal catcher' combat=70
+[597] name='Gnome Baller' desc='A tree gnome ball player' combat=70
+[598] name='Gnome Baller' desc='A tree gnome ball player' combat=70
+[599] name='Gnome Baller' desc='A tree gnome ball player' combat=70
+[600] name='Gnome Baller' desc='A tree gnome ball player' combat=70
+[601] name='Referee' desc='He controls the game' combat=3
+[602] name='Gnome Baller' desc='A tree gnome ball player' combat=70
+[603] name='Gnome Baller' desc='A tree gnome ball player' combat=70
+[604] name='Gnome Baller' desc='A tree gnome ball player' combat=70
+[605] name='Gnome Baller' desc='A tree gnome ball player' combat=70
+[606] name='Gnome Baller' desc='A tree gnome ball player' combat=70
+[607] name='Gnome Baller' desc='A tree gnome ball player' combat=70
+[608] name='Gnome Baller' desc='A tree gnome ball player' combat=70
+[609] name='Gnome Baller' desc='He's on your team' combat=70
+[610] name='Gnome Baller' desc='He's on your team' combat=70
+[611] name='Cheerleader' desc='It's a little tree gnome' combat=3
+[612] name='Cheerleader' desc='It's a little tree gnome' combat=3
+[613] name='Nazastarool Zombie' desc='One of Rashaliyas Minions' combat=83
+[614] name='Nazastarool Skeleton' desc='One of Rashaliyas Minions' combat=83
+[615] name='Nazastarool Ghost' desc='One of Rashaliyas Minions' combat=83
+[616] name='Fernahei' desc='An enthusiastic fishing shop owner' combat=6
+[617] name='Jungle Banker' desc='He can look after my money' combat=9
+[618] name='Cart Driver' desc='He drives the cart' combat=15
+[619] name='Cart Driver' desc='He drives the cart' combat=15
+[620] name='Obli' desc='An intelligent looking shop owner' combat=0
+[621] name='Kaleb' desc='This is Kaleb Paramaya - a warm and friendly inn owner' combat=0
+[622] name='Yohnus' desc='This is Yohnus - he runs the local blacksmiths' combat=0
+[623] name='Serevel' desc='This is Serevel - he sells tickets for the 'Lady of the Waves'' combat=0
+[624] name='Yanni' desc='Yanni Salika - He buys and sells antiques.' combat=0
+[625] name='Official' desc='He helps the referee' combat=3
+[626] name='Koftik' desc='The kings top tracker' combat=16
+[627] name='Koftik' desc='The kings top tracker' combat=16
+[628] name='Koftik' desc='The kings top tracker' combat=16
+[629] name='Koftik' desc='The kings top tracker' combat=16
+[630] name='Blessed Vermen' desc='A undead servent of iban' combat=14
+[631] name='Blessed Spider' desc='One of iban's eight legged friends' combat=35
+[632] name='Paladin' desc='A paladin of Ardougne' combat=71
+[633] name='Paladin' desc='A paladin of Ardougne' combat=71
+[634] name='slave' desc='He seems possessed' combat=16
+[635] name='slave' desc='He seems possessed' combat=16
+[636] name='slave' desc='He seems to have been here a while' combat=16
+[637] name='slave' desc='He seems possessed' combat=16
+[638] name='slave' desc='He seems to have been here a while' combat=16
+[639] name='slave' desc='He seems possessed' combat=16
+[640] name='slave' desc='He seems to have been here a while' combat=16
+[641] name='Kalrag' desc='I think this is one of Ibans pets' combat=78
+[642] name='Niloof' desc='A short angry guy' combat=18
+[643] name='Kardia the Witch' desc='She's got warts' combat=25
+[644] name='Souless' desc='He seems an empty shell' combat=16
+[645] name='Othainian' desc='big red and incredibly evil' combat=78
+[646] name='Doomion' desc='A big scary jet black demon' combat=98
+[647] name='Holthion' desc='big red and incredibly evil' combat=78
+[648] name='Klank' desc='A short angry guy' combat=18
+[649] name='Iban' desc='You feel terror just looking at him' combat=21
+[650] name='Koftik' desc='The kings top tracker' combat=16
+[651] name='Goblin guard' desc='An imposing green creature' combat=48
+[652] name='Observatory Professor' desc='He works in the observatory' combat=4
+[653] name='Ugthanki' desc='A dangerous type of spitting camel that can temporarily blind an opponent.' combat=45
+[654] name='Observatory assistant' desc='The Professor's assistant' combat=4
+[655] name='Souless' desc='A servent to zamorak' combat=24
+[656] name='Dungeon spider' desc='A nasty poisonous arachnid' combat=22
+[657] name='Kamen' desc='A short angry guy' combat=18
+[658] name='Iban disciple' desc='An evil follower of Iban' combat=19
+[659] name='Koftik' desc='The kings top tracker' combat=16
+[660] name='Goblin' desc='These goblins have grown strong' combat=19
+[661] name='Chadwell' desc='A sturdy looking gent' combat=16
+[662] name='Professor' desc='The owner of the observatory' combat=4
+[663] name='San Tojalon' desc='The animated spirit of San Tojalon' combat=120
+[664] name='Ghost' desc='A doomed victim of zamorak' combat=29
+[665] name='Spirit of Scorpius' desc='The undead spirit of the follower of Zamorak' combat=100
+[666] name='Scorpion' desc='There are nasty scorpions around this grave' combat=21
+[667] name='Dark Mage' desc='He works in the ways of dark magic' combat=0
+[668] name='Mercenary' desc='He seems to be guarding an area' combat=50
+[669] name='Mercenary Captain' desc='He's in control of the local guards.' combat=64
+[670] name='Mercenary' desc='He seems to be guarding an area' combat=39
+[671] name='Mining Slave' desc='A chained slave forced to mine rocks.' combat=16
+[672] name='Watchtower wizard' desc='A learned man' combat=12
+[673] name='Ogre Shaman' desc='An intelligent form of ogre' combat=100
+[674] name='Skavid' desc='Servant race to the ogres' combat=3
+[675] name='Ogre guard' desc='These ogres protect the city' combat=78
+[676] name='Ogre guard' desc='These ogres protect the city' combat=78
+[677] name='Ogre guard' desc='These ogres protect the city' combat=78
+[678] name='Skavid' desc='Servant race to the ogres' combat=3
+[679] name='Skavid' desc='Servant race to the ogres' combat=3
+[680] name='Og' desc='The chieftan of this ogre tribe' combat=78
+[681] name='Grew' desc='The chieftan of this ogre tribe' combat=78
+[682] name='Toban' desc='The chieftan of this ogre tribe' combat=78
+[683] name='Gorad' desc='A high ranking ogre official' combat=78
+[684] name='Ogre guard' desc='this creature looks very tough' combat=96
+[685] name='Yanille Watchman' desc='A captured guard of Yanille' combat=33
+[686] name='Ogre merchant' desc='He sells ogre-inspired items' combat=58
+[687] name='Ogre trader' desc='He trades in metals' combat=58
+[688] name='Ogre trader' desc='He trades in food' combat=58
+[689] name='Ogre trader' desc='He trades in food' combat=58
+[690] name='Mercenary' desc='He seems to be guarding an area' combat=39
+[691] name='City Guard' desc='high ranking ogre guards' combat=78
+[692] name='Mercenary' desc='He seems to be guarding this area' combat=39
+[693] name='Lawgof' desc='He guards the mines' combat=18
+[694] name='Dwarf' desc='A short angry guy' combat=18
+[695] name='lollk' desc='He looks scared' combat=18
+[696] name='Skavid' desc='Servant race to the ogres' combat=3
+[697] name='Ogre guard' desc='These ogres protect the city' combat=78
+[698] name='Nulodion' desc='He's the head of black guard weapon development' combat=18
+[699] name='Dwarf' desc='A short angry guy' combat=18
+[700] name='Al Shabim' desc='The leader of a nomadic Bedabin desert people - sometimes referred to as the 'Tenti's'' combat=0
+[701] name='Bedabin Nomad' desc='A Bedabin nomad - they live in the harshest extremes in the desert' combat=0
+[702] name='Captain Siad' desc='He's in control of the whole mining camp.' combat=48
+[703] name='Bedabin Nomad Guard' desc='A Bedabin nomad guard - he's protecting something important' combat=70
+[704] name='Ogre citizen' desc='A denizen of Gu'Tanoth' combat=58
+[705] name='Rock of ages' desc='A huge boulder' combat=150
+[706] name='Ogre' desc='A large dim looking humanoid' combat=58
+[707] name='Skavid' desc='Servant race to the ogres' combat=3
+[708] name='Skavid' desc='Servant race to the ogres' combat=3
+[709] name='Skavid' desc='Servant race to the ogres' combat=3
+[710] name='Draft Mercenary Guard' desc='He's quickly drafted in to deal with trouble makers' combat=50
+[711] name='Mining Cart Driver' desc='He drives the mining cart' combat=15
+[712] name='kolodion' desc='He runs the mage arena' combat=12
+[713] name='kolodion' desc='He runs the mage arena' combat=12
+[714] name='Gertrude' desc='A busy housewife' combat=20
+[715] name='Shilop' desc='A young boisterous looking lad' combat=0
+[716] name='Rowdy Guard' desc='He looks as if he's spoiling for trouble' combat=50
+[717] name='Shantay Pass Guard' desc='He seems to be guarding the Shantay Pass' combat=32
+[718] name='Rowdy Slave' desc='A slave who's looking for trouble.' combat=16
+[719] name='Shantay Pass Guard' desc='He seems to be guarding the Shantay Pass' combat=32
+[720] name='Assistant' desc='He is an assistant to Shantay and helps him to run the pass.' combat=0
+[721] name='Desert Wolf' desc='A vicious Desert wolf' combat=31
+[722] name='Workman' desc='This person is working on the site' combat=9
+[723] name='Examiner' desc='As you examine the examiner you examine that she is indeed an examiner!!' combat=2
+[724] name='Student' desc='A student busily digging!' combat=0
+[725] name='Student' desc='A student busily digging!' combat=20
+[726] name='Guide' desc='This person specialises in panning for gold' combat=12
+[727] name='Student' desc='A student busily digging!' combat=18
+[728] name='Archaeological expert' desc='An expert on archaeology!' combat=15
+[729] name='civillian' desc='He looks aggitated!' combat=18
+[730] name='civillian' desc='She looks aggitated!' combat=0
+[731] name='civillian' desc='She looks aggitated!' combat=0
+[732] name='civillian' desc='He looks aggitated!' combat=15
+[733] name='Murphy' desc='The man in charge of the fishing trawler' combat=15
+[734] name='Murphy' desc='The man in charge of the fishing trawler' combat=15
+[735] name='Sir Radimus Erkle' desc='A huge muscular man in charge of the Legends Guild' combat=10
+[736] name='Legends Guild Guard' desc='This guard is protecting the entrance to the Legends Guild.' combat=50
+[737] name='Escaping Mining Slave' desc='An emancipated slave with cool Desert Clothes.' combat=16
+[738] name='Workman' desc='This person is working in the mine' combat=9
+[739] name='Murphy' desc='The man in charge of the fishing trawler' combat=15
+[740] name='Echned Zekin' desc='An evil spirit of the underworld.' combat=50
+[741] name='Donovan the Handyman' desc='It's the family odd jobs man' combat=9
+[742] name='Pierre the Dog Handler' desc='It's the guy who looks after the family guard dog' combat=9
+[743] name='Hobbes the Butler' desc='It's the family butler' combat=9
+[744] name='Louisa The Cook' desc='It's the family cook' combat=0
+[745] name='Mary The Maid' desc='The family maid' combat=25
+[746] name='Stanford The Gardener' desc='It's the family Gardener' combat=8
+[747] name='Guard' desc='He looks like he's in over his head here' combat=28
+[748] name='Guard Dog' desc='He doesn't seem pleased to see me' combat=46
+[749] name='Guard' desc='***EMPTY PLEASE USE OR REPLACE***' combat=8
+[750] name='Man' desc='A thirsty looking man' combat=9
+[751] name='Anna Sinclair' desc='The first child of the late Lord Sinclair' combat=9
+[752] name='Bob Sinclair' desc='The second child of the late Lord Sinclair' combat=9
+[753] name='Carol Sinclair' desc='The third child of the late Lord Sinclair' combat=9
+[754] name='David Sinclair' desc='The fourth child of the late Lord Sinclair' combat=9
+[755] name='Elizabeth Sinclair' desc='The fifth child of the late Lord Sinclair' combat=9
+[756] name='Frank Sinclair' desc='The sixth child of the late Lord Sinclair' combat=9
+[757] name='kolodion' desc='He's a shape shifter' combat=65
+[758] name='kolodion' desc='He's a shape shifter' combat=68
+[759] name='kolodion' desc='He's a shape shifter' combat=46
+[760] name='kolodion' desc='He's a shape shifter' combat=98
+[761] name='Irvig Senay' desc='The animated spirit of Irvig Senay' combat=125
+[762] name='Ranalph Devere' desc='The animated spirit of Ranalph Devere' combat=130
+[763] name='Poison Salesman' desc='Peter Potter - Poison Purveyor' combat=7
+[764] name='Gujuo' desc='A tall charismatic looking jungle native - he approaches with confidence' combat=60
+[765] name='Jungle Forester' desc='A woodsman who specialises in large and exotic timber' combat=15
+[766] name='Ungadulu' desc='An ancient looking Shaman' combat=75
+[767] name='Ungadulu' desc='An ancient looking Shaman - he looks very strange with glowing red eyes...' combat=75
+[768] name='Death Wing' desc='A supernatural creature of the underworld' combat=80
+[769] name='Nezikchened' desc='An ancient powerful Demon of the Underworld...' combat=172
+[770] name='Dwarf Cannon engineer' desc='He's the head of black guard weapon development' combat=18
+[771] name='Dwarf commander' desc='He guards the mines' combat=18
+[772] name='Viyeldi' desc='The spirit of a dead sorcerer' combat=80
+[773] name='Nurmof' desc='He sells pickaxes' combat=18
+[774] name='Fatigue expert' desc='He looks wide awake' combat=10
+[775] name='Karamja Wolf' desc='A hungry' combat=61
+[776] name='Jungle Savage' desc='A savage and fearless Jungle warrior' combat=87
+[777] name='Oomlie Bird' desc='A variety of flightless jungle fowl - it has a sharp beak and a bad temper.' combat=32
+[778] name='Sidney Smith' desc='Sidney Smith - Certification clerk' combat=30
+[779] name='Siegfried Erkle' desc='An eccentric shop keeper - related to the Grand Vizier of the Legends Guild' combat=25
+[780] name='Tea seller' desc='He has delicious tea to buy' combat=9
+[781] name='Wilough' desc='A young son of gertrudes' combat=0
+[782] name='Philop' desc='Gertrudes youngest' combat=0
+[783] name='Kanel' desc='Gertrudes youngest's twin brother' combat=0
+[784] name='chamber guardian' desc='He hasn't seen much sun latley' combat=15
+[785] name='Sir Radimus Erkle' desc='A huge muscular man in charge of the Legends Guild' combat=10
+[786] name='Pit Scorpion' desc='Very vicious little scorpions' combat=35
+[787] name='Shadow Warrior' desc='A sinsistar shadowy figure' combat=64
+[788] name='Fionella' desc='She runs the legend's general store' combat=25
+[789] name='Battle mage' desc='He kills in the name of guthix' combat=52
+[790] name='Battle mage' desc='He kills in the name of zamarok' combat=52
+[791] name='Battle mage' desc='He kills in the name of Saradomin' combat=52
+[792] name='Gundai' desc='He must get lonely out here' combat=15
+[793] name='Lundail' desc='He sells rune stones' combat=15
