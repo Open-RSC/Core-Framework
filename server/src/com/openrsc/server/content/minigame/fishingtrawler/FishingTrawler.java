@@ -94,7 +94,7 @@ public class FishingTrawler extends DelayedEvent {
 	// fairness rule, if 4 minutes is remaining just play with current players
 	public boolean isAvailable() {
 		return this.currentStage == State.STANDBY || (this.currentStage == State.FIRST_SHIP &&
-				timeTillReturn >= 400 && players.size() < MAX_PLAYERS);
+				timeTillReturn >= 4 * (60 * 1000) / getWorld().getServer().getConfig().GAME_TICK && players.size() < MAX_PLAYERS);
 	}
 
 	public boolean register(SimpleSubscriber<FishingTrawler> subscriber) {
