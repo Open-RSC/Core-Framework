@@ -166,6 +166,8 @@ public class Fishing implements OpLocTrigger {
 				// it is authentic that this message only appears until you have caught your first shrimp.
 				if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41) {
 					player.message("keep trying, you'll catch something soon");
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
 				}
 			}
 		} else if (netId == ItemId.BIG_NET.id()) {
