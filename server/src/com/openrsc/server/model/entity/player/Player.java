@@ -614,7 +614,7 @@ public final class Player extends Mob {
 		if (denyAllLogoutRequests && System.currentTimeMillis() - getLastClientActivity() < 30000) {
 			return false;
 		}
-		return !isBusy() && System.currentTimeMillis() - getCombatTimer() > 10000
+		return !isBusy() && (System.currentTimeMillis() - getLastClientActivity() > 30000 || System.currentTimeMillis() - getCombatTimer() > 10000)
 			&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000
 			&& System.currentTimeMillis() - getLastExchangeTime() > 3000;
 	}

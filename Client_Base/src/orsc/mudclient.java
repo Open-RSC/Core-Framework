@@ -10856,6 +10856,15 @@ public final class mudclient implements Runnable {
 				--this.logoutTimeout;
 			}
 
+			// Originally below code was for client to send request to server if there
+			// hadn't been activity but since we want for staff to just be logged out
+			// via server or desired logout, this code is left commented
+			// if (this.lastMouseAction > 15000 && this.combatTimeout == 0 && this.logoutTimeout == 0) {
+			// 	this.lastMouseAction -= 15000;
+			// 	this.sendLogout(0);
+			// 	return;
+			// }
+
 			if (this.localPlayer.direction == ORSCharacterDirection.COMBAT_A
 				|| this.localPlayer.direction == ORSCharacterDirection.COMBAT_B) {
 				this.combatTimeout = 500;
