@@ -177,7 +177,7 @@ public class Launcher extends Component {
 			return currentVersion;
 		} catch (Exception e) {
 			System.out.println("Error checking latest version");
-			return Defaults._CURRENT_VERSION;
+			return Double.valueOf(_EXTRA_VERSION);
 		}
 	}
 
