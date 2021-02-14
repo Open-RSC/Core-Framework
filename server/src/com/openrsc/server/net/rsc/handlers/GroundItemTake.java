@@ -75,7 +75,12 @@ public class GroundItemTake implements PacketHandler {
 					return;
 				}
 
-				if (CertUtil.isCert(item.getID()) && player.getCertOptOut()
+				if (!item.belongsTo(getPlayer()) && item.getAttribute("isTransferIronmanItem", false)) {
+					getPlayer().message("That belongs to a Transfer Ironman player.");
+					return;
+				}
+
+				if (CertUtil.isCert(item.getID()) && getPlayer().getCertOptOut()
 					&& item.getOwnerUsernameHash() != 0 && !item.belongsTo(getPlayer())) {
 					getPlayer().message("You have opted out of taking certs that other players have dropped.");
 					return;

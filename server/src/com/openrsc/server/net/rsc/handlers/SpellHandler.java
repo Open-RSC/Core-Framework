@@ -28,6 +28,7 @@ import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.OpcodeIn;
 import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.util.rsc.CertUtil;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -1148,7 +1149,10 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 
-						if (affectedItem.getLocation().inWilderness() && affectedItem.belongsTo(getPlayer()) && affectedItem.getAttribute("playerKill", false) && (getPlayer().isIronMan(2) || getPlayer().isIronMan(1) || getPlayer().isIronMan(3))) {
+						if (affectedItem.getLocation().inWilderness() && !affectedItem.belongsTo(getPlayer())
+							&& affectedItem.getAttribute("playerKill", false)
+							&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
+							|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
 							getPlayer().message("You're an Iron Man, so you can't loot items from players.");
 							return;
 						}
@@ -1156,6 +1160,17 @@ public class SpellHandler implements PacketHandler {
 							&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
 							|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
 							getPlayer().message("You're an Iron Man, so you can't take items that other players have dropped.");
+							return;
+						}
+
+						if (!affectedItem.belongsTo(getPlayer()) && affectedItem.getAttribute("isTransferIronmanItem", false)) {
+							getPlayer().message("That belongs to a Transfer Ironman player.");
+							return;
+						}
+
+						if (CertUtil.isCert(affectedItem.getID()) && getPlayer().getCertOptOut()
+							&& affectedItem.getOwnerUsernameHash() != 0 && !affectedItem.belongsTo(getPlayer())) {
+							getPlayer().message("You have opted out of taking certs that other players have dropped.");
 							return;
 						}
 

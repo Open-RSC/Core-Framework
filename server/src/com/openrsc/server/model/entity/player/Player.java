@@ -3211,11 +3211,6 @@ public final class Player extends Mob {
 			itemFinal.setAttribute("npcdrop", true);
 		}
 
-		if (item.getAttribute("isIronmanItem", false) && getIronMan() == IronmanMode.None.id()) {
-			message("That belongs to an Ironman player.");
-			return false;
-		}
-
 		if (!getCarriedItems().getInventory().canHold(itemFinal)) {
 			return false;
 		}

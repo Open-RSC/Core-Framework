@@ -64,8 +64,12 @@ public class GroundItem extends Entity {
 		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
 		spawnedTime = spawnTime;
 		setLocation(Point.location(x, y));
-		if (owner != null && owner.getIronMan() >= IronmanMode.Ironman.id() && owner.getIronMan() <= IronmanMode.Transfer.id())
-			this.setAttribute("isIronmanItem", true);
+		if (owner != null) {
+			if (owner.getIronMan() == IronmanMode.Transfer.id()) {
+				// disallow everyone from picking up transfer ironman items
+				this.setAttribute("isTransferIronmanItem", true);
+			}
+		}
 	}
 
 	public GroundItem(final World world, final ItemLoc loc) {
@@ -125,8 +129,11 @@ public class GroundItem extends Entity {
 			return true;
 		if (getDef().isUntradable())
 			return true;
-		if (!belongsTo(player) && player.getIronMan() >= IronmanMode.Ironman.id() && player.getIronMan() <= IronmanMode.Transfer.id())
-			return true;
+		if (!belongsTo(player) && this.getAttribute("killerHash", -1L) == player.getUsernameHash())
+			return false;
+		// should be visible to everyone else after a time, just not lootable for ironmen
+		// if (!belongsTo(player) && player.getIronMan() != IronmanMode.None.id())
+		//	return true;
 
 		// One minute and four seconds to show to all.
 		return System.currentTimeMillis() - spawnedTime <= 64000;
