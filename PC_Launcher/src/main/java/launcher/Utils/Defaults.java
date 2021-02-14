@@ -14,8 +14,8 @@ public class Defaults {
 
     // EXTRAS
 	public final static String _RSCPLUS_REPOSITORY_DL = "https://github.com/RSCPlus/rscplus/releases/download/Latest/rscplus-windows.zip";
-    public final static String _APOS_REPOSITORY_DL = "https://github.com/Open-RSC/apos/archive/master.zip";
-	public final static String _IDLERSC_REPOSITORY_DL = "";
+    public final static String _APOS_REPOSITORY_DL = "https://github.com/Open-RSC/APOS/archive/master.zip";
+	public final static String _IDLERSC_REPOSITORY_DL = "https://github.com/Open-RSC/IdleRSC/archive/master.zip";
 
     // STRINGS
     public final static String _TITLE = "Open RuneScape Classic Game Launcher";
