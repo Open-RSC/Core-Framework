@@ -33,27 +33,19 @@ public class Downloader {
 
 	public void initUpdate() {
 		this._UPDATERGUI.build();
-
 		try {
-
 			MainUpdaterGui.get().setDownloadProgress("Checking for updates", 100.0f);
-
 			// Populate MD5 checksums
 			File currentMd5Table = new File(this._GAMEFOLDER + File.separator + Defaults._MD5_TABLE_FILENAME);
 			if (currentMd5Table.exists())
 				currentMd5Table.delete();
 			Download(new File(Defaults._MD5_TABLE_FILENAME));
-
 			Md5Handler localCache = new Md5Handler(currentMd5Table.getParentFile(), this._GAMEFOLDER);
 			Md5Handler remoteCache = new Md5Handler(currentMd5Table, this._GAMEFOLDER);
-
 			for (Md5Handler.Entry entry : remoteCache.entries) {
-
 				if (_EXCLUDED_FILES.contains(entry.getRef().getName()))
 					continue;
-
 				entry.getRef().getParentFile().mkdirs();
-
 				String localSum = localCache.getRefSum(entry.getRef());
 				if (localSum != null) {
 					if (_REFUSE_UPDATE.contains(entry.getRef().getName()) ||
@@ -61,27 +53,19 @@ public class Downloader {
 						continue;
 					}
 				}
-
 				Download(entry.getDownloadRef());
-
 			}
-
 		} catch (Exception error) {
 			System.out.println("Unable to load checksums.");
 			error.printStackTrace();
 		}
-
 		_UPDATERGUI.hideWin();
 	}
 
 	private void Download(File file) {
-
 		try {
-
 			String filename = file.toString().replaceAll("\\\\", "/");
-
 			String completeFileUrl = Defaults._GAME_FILES_SERVER + filename;
-
 			URLConnection connection = new URL(completeFileUrl).openConnection();
 
 			// File metadata
@@ -93,24 +77,17 @@ public class Downloader {
 				byte[] data = new byte[1024];
 				int byteContent;
 				int totalRead = 0;
-
 				while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
-
 					totalRead += byteContent;
 					fileOS.write(data, 0, byteContent);
 					MainUpdaterGui.get().setDownloadProgress(description, (float) (totalRead * 100 / fileSize));
-
 				}
-
 			} catch (Exception error) {
 				error.printStackTrace();
 			}
-
-
 		} catch (Exception error) {
 			error.printStackTrace();
 		}
-
 	}
 
 	private String getDescription(File ref) {
@@ -134,5 +111,4 @@ public class Downloader {
 
 		}
 	}
-
 }

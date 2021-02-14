@@ -13,9 +13,9 @@ public class Defaults {
     public final static String _GAME_FILES_SERVER = "http://game.openrsc.com/static/downloads/";
 
     // DOWNLOADS
-	public final static String _RSCPLUS_REPOSITORY_DL = "https://gitlab.com/open-runescape-classic/rscplus/-/archive/master/rscplus-master.zip";
-    public final static String _APOS_REPOSITORY_DL = "https://gitlab.com/open-runescape-classic/APOS/-/archive/master/APOS-master.zip";
-	public final static String _IDLERSC_REPOSITORY_DL = "https://gitlab.com/open-runescape-classic/idlersc/-/archive/master/idlersc-master.zip";
+	public final static String _RSCPLUS_REPOSITORY_DL = "https://github.com/RSCPlus/rscplus/archive/master.zip";
+    public final static String _APOS_REPOSITORY_DL = "https://github.com/Open-RSC/apos/archive/master.zip";
+	public final static String _IDLERSC_REPOSITORY_DL = "";
 
     // STRINGS
     public final static String _TITLE = "Open RuneScape Classic Game Launcher";

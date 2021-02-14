@@ -25,7 +25,7 @@ public class ClientLauncher {
 
 	public static void launchRSCPlus() throws IllegalArgumentException, SecurityException {
 		try {
-			String homeDir = Defaults._DEFAULT_CONFIG_DIR + File.separator + "rscplus";
+			String homeDir = Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "rscplus";
 			ProcessBuilder pb = new ProcessBuilder();
 			pb.directory(new File(homeDir));
 			pb.command(System.getProperty("java.home") + File.separator + "bin" + File.separator
@@ -39,7 +39,7 @@ public class ClientLauncher {
 
 	public static void launchAPOS() throws IllegalArgumentException, SecurityException {
 		try {
-			String homeDir = Defaults._DEFAULT_CONFIG_DIR + File.separator + "apos";
+			String homeDir = Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "apos";
 			ProcessBuilder pb = new ProcessBuilder();
 			pb.directory(new File(homeDir));
 			pb.command(System.getProperty("java.home") + File.separator + "bin" + File.separator
@@ -53,7 +53,7 @@ public class ClientLauncher {
 
 	public static void launchIdleRSC() throws IllegalArgumentException, SecurityException {
 		try {
-			String homeDir = Defaults._DEFAULT_CONFIG_DIR + File.separator + "idlersc";
+			String homeDir = Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "idlersc";
 			ProcessBuilder pb = new ProcessBuilder();
 			pb.directory(new File(homeDir));
 			pb.command(System.getProperty("java.home") + File.separator + "bin" + File.separator
