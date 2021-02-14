@@ -26,8 +26,8 @@ public class Defaults {
     public final static String _MD5_TABLE_FILENAME = "MD5.SUM";
 
     // VERSIONs
-    public final static Double _CURRENT_VERSION = 20210213.135036;
-	public final static Double _RSCPLUS_VERSION = 20210213.135036;
-	public final static Double _APOS_VERSION = 20210213.135036;
-	public final static Double _IDLERSC_VERSION = 20210213.135036;
+    public final static Double _CURRENT_VERSION = 20210214.175053;
+	public final static Double _RSCPLUS_VERSION = 20210214.175053;
+	public final static Double _APOS_VERSION = 20210214.175053;
+	public final static Double _IDLERSC_VERSION = 20210214.175053;
 }
