@@ -25,7 +25,7 @@ public class ClientLauncher {
 
 	public static void launchRSCPlus() throws IllegalArgumentException, SecurityException {
 		try {
-			String homeDir = Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "rscplus" + File.separator + "rscplus-master";
+			String homeDir = Defaults._DEFAULT_CONFIG_DIR + File.separator + "extras" + File.separator + "rscplus";
 			ProcessBuilder pb = new ProcessBuilder();
 			pb.directory(new File(homeDir));
 			pb.command(System.getProperty("java.home") + File.separator + "bin" + File.separator

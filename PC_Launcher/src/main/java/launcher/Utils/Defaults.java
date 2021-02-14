@@ -13,7 +13,7 @@ public class Defaults {
     public final static String _GAME_FILES_SERVER = "http://game.openrsc.com/static/downloads/";
 
     // EXTRAS
-	public final static String _RSCPLUS_REPOSITORY_DL = "https://github.com/RSCPlus/rscplus/archive/master.zip";
+	public final static String _RSCPLUS_REPOSITORY_DL = "https://github.com/RSCPlus/rscplus/releases/download/Latest/rscplus-windows.zip";
     public final static String _APOS_REPOSITORY_DL = "https://github.com/Open-RSC/apos/archive/master.zip";
 	public final static String _IDLERSC_REPOSITORY_DL = "";
 

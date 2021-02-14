@@ -64,7 +64,11 @@ public class ButtonListener implements ActionListener {
 			}
 
 			case "rscplus": {
-				ClientLauncher.launchRSCPlus();
+				try {
+					Updater.updateRSCPlus();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
 			case "apos": {
@@ -76,7 +80,11 @@ public class ButtonListener implements ActionListener {
 			}
 
 			/*case "idlersc": {
-				ClientLauncher.launchIdleRSC();
+				try {
+					Updater.updateIdleRSC();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}*/
 
 			case "minimize": {
