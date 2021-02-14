@@ -49,11 +49,9 @@ public class Updater {
 
 			if (!_PRESERVATION_CONFIG.exists()) {
 				createPreservationConfig(_PRESERVATION_CONFIG);
-				return;
 			}
 			if (!_URANIUM_CONFIG.exists()) {
 				createUraniumConfig(_URANIUM_CONFIG);
-				return;
 			}
 
 			if (_DEFAULT_CONFIG.exists())
