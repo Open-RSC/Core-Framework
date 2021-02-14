@@ -153,6 +153,34 @@ public class Launcher extends Component {
         }
     }
 
+	public static Double fetchLatestExtrasVersionNumber(String _EXTRA_VERSION) {
+		try {
+			double currentVersion = 0.0;
+			URL updateURL = new URL(_EXTRA_VERSION);
+
+			// Open connection
+			URLConnection connection = updateURL.openConnection();
+			connection.setConnectTimeout(3000);
+			connection.setReadTimeout(3000);
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String line;
+			while ((line = in.readLine()) != null) {
+				if (line.contains("_CURRENT_VERSION")) {
+					currentVersion = Double.parseDouble(line.substring(line.indexOf('=') + 1, line.indexOf(';')));
+					System.out.println("Current Version: " + currentVersion);
+					break;
+				}
+			}
+
+			// Close connection
+			in.close();
+			return currentVersion;
+		} catch (Exception e) {
+			System.out.println("Error checking latest version");
+			return Defaults._CURRENT_VERSION;
+		}
+	}
+
     public boolean updateJar() {
         setStatus("Starting launcher update...");
         setProgress(0, 1);

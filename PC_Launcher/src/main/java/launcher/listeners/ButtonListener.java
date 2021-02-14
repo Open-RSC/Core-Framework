@@ -68,7 +68,11 @@ public class ButtonListener implements ActionListener {
 			}
 
 			case "apos": {
-				Updater.updateAPOS();
+				try {
+					Updater.updateAPOS();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
 			/*case "idlersc": {
