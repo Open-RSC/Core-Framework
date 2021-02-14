@@ -12,127 +12,127 @@ import java.util.ArrayList;
 
 public class Downloader {
 
-    private ArrayList<String> _EXCLUDED_FILES = new ArrayList<>();
-    private ArrayList<String> _REFUSE_UPDATE = new ArrayList<>();
-    private String _GAMEFOLDER;
-    private MainUpdaterGui _UPDATERGUI;
+	private final ArrayList<String> _EXCLUDED_FILES = new ArrayList<>();
+	private final ArrayList<String> _REFUSE_UPDATE = new ArrayList<>();
+	private final String _GAMEFOLDER;
+	private final MainUpdaterGui _UPDATERGUI;
 
-    public Downloader(String gameFolder) {
-        this._EXCLUDED_FILES.add(Defaults._MD5_TABLE_FILENAME);
-        this._EXCLUDED_FILES.add("android_version.txt");
-        this._EXCLUDED_FILES.add("android_version_pk.txt");
-        this._EXCLUDED_FILES.add("openrsc.apk");
-        this._EXCLUDED_FILES.add("openpk.apk");
-        this._EXCLUDED_FILES.add("credentials.txt");
-        this._EXCLUDED_FILES.add("config.txt");
-        this._EXCLUDED_FILES.add("OpenRSC.jar");
-        this._GAMEFOLDER = gameFolder;
-        this._UPDATERGUI = new MainUpdaterGui();
-        this._UPDATERGUI.init();
-    }
+	public Downloader(String gameFolder) {
+		this._EXCLUDED_FILES.add(Defaults._MD5_TABLE_FILENAME);
+		this._EXCLUDED_FILES.add("android_version.txt");
+		this._EXCLUDED_FILES.add("android_version_pk.txt");
+		this._EXCLUDED_FILES.add("openrsc.apk");
+		this._EXCLUDED_FILES.add("openpk.apk");
+		this._EXCLUDED_FILES.add("credentials.txt");
+		this._EXCLUDED_FILES.add("config.txt");
+		this._EXCLUDED_FILES.add("OpenRSC.jar");
+		this._GAMEFOLDER = gameFolder;
+		this._UPDATERGUI = new MainUpdaterGui();
+		this._UPDATERGUI.init();
+	}
 
-    public void initUpdate() {
-        this._UPDATERGUI.build();
+	public void initUpdate() {
+		this._UPDATERGUI.build();
 
-        try {
+		try {
 
-            MainUpdaterGui.get().setDownloadProgress("Checking for updates", 100.0f);
+			MainUpdaterGui.get().setDownloadProgress("Checking for updates", 100.0f);
 
-            // Populate MD5 checksums
-            File currentMd5Table = new File(this._GAMEFOLDER + File.separator + Defaults._MD5_TABLE_FILENAME);
-            if (currentMd5Table.exists())
-                currentMd5Table.delete();
-            Download(new File(Defaults._MD5_TABLE_FILENAME));
+			// Populate MD5 checksums
+			File currentMd5Table = new File(this._GAMEFOLDER + File.separator + Defaults._MD5_TABLE_FILENAME);
+			if (currentMd5Table.exists())
+				currentMd5Table.delete();
+			Download(new File(Defaults._MD5_TABLE_FILENAME));
 
-            Md5Handler localCache = new Md5Handler(currentMd5Table.getParentFile(), this._GAMEFOLDER);
-            Md5Handler remoteCache = new Md5Handler(currentMd5Table, this._GAMEFOLDER);
+			Md5Handler localCache = new Md5Handler(currentMd5Table.getParentFile(), this._GAMEFOLDER);
+			Md5Handler remoteCache = new Md5Handler(currentMd5Table, this._GAMEFOLDER);
 
-            for (Md5Handler.Entry entry : remoteCache.entries) {
+			for (Md5Handler.Entry entry : remoteCache.entries) {
 
-                if (_EXCLUDED_FILES.contains(entry.getRef().getName()))
-                    continue;
+				if (_EXCLUDED_FILES.contains(entry.getRef().getName()))
+					continue;
 
-                entry.getRef().getParentFile().mkdirs();
+				entry.getRef().getParentFile().mkdirs();
 
-                String localSum = localCache.getRefSum(entry.getRef());
-                if (localSum != null) {
-                    if (_REFUSE_UPDATE.contains(entry.getRef().getName()) ||
-                            localSum.equalsIgnoreCase(entry.getSum())) {
-                        continue;
-                    }
-                }
+				String localSum = localCache.getRefSum(entry.getRef());
+				if (localSum != null) {
+					if (_REFUSE_UPDATE.contains(entry.getRef().getName()) ||
+						localSum.equalsIgnoreCase(entry.getSum())) {
+						continue;
+					}
+				}
 
-                Download(entry.getDownloadRef());
+				Download(entry.getDownloadRef());
 
-            }
+			}
 
-        } catch (Exception error) {
-            System.out.println("Unable to load checksums.");
-            error.printStackTrace();
-        }
+		} catch (Exception error) {
+			System.out.println("Unable to load checksums.");
+			error.printStackTrace();
+		}
 
-        _UPDATERGUI.hideWin();
-    }
+		_UPDATERGUI.hideWin();
+	}
 
-    private void Download(File file) {
+	private void Download(File file) {
 
-        try {
+		try {
 
-            String filename = file.toString().replaceAll("\\\\", "/");
+			String filename = file.toString().replaceAll("\\\\", "/");
 
-            String completeFileUrl = Defaults._GAME_FILES_SERVER + filename;
+			String completeFileUrl = Defaults._GAME_FILES_SERVER + filename;
 
-            URLConnection connection = new URL(completeFileUrl).openConnection();
+			URLConnection connection = new URL(completeFileUrl).openConnection();
 
-            // File metadata
-            String description = getDescription(file);
-            int fileSize = connection.getContentLength();
+			// File metadata
+			String description = getDescription(file);
+			int fileSize = connection.getContentLength();
 
-            try (BufferedInputStream inputStream = new BufferedInputStream(new URL(completeFileUrl).openStream());
-                 FileOutputStream fileOS = new FileOutputStream(this._GAMEFOLDER + File.separator + filename)) {
-                byte data[] = new byte[1024];
-                int byteContent;
-                int totalRead = 0;
+			try (BufferedInputStream inputStream = new BufferedInputStream(new URL(completeFileUrl).openStream());
+				 FileOutputStream fileOS = new FileOutputStream(this._GAMEFOLDER + File.separator + filename)) {
+				byte[] data = new byte[1024];
+				int byteContent;
+				int totalRead = 0;
 
-                while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
+				while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
 
-                    totalRead += byteContent;
-                    fileOS.write(data, 0, byteContent);
-                    MainUpdaterGui.get().setDownloadProgress(description, (float) (totalRead * 100 / fileSize));
+					totalRead += byteContent;
+					fileOS.write(data, 0, byteContent);
+					MainUpdaterGui.get().setDownloadProgress(description, (float) (totalRead * 100 / fileSize));
 
-                }
+				}
 
-            } catch (Exception error) {
-                error.printStackTrace();
-            }
+			} catch (Exception error) {
+				error.printStackTrace();
+			}
 
 
-        } catch (Exception error) {
-            error.printStackTrace();
-        }
+		} catch (Exception error) {
+			error.printStackTrace();
+		}
 
-    }
+	}
 
-    private String getDescription(File ref) {
-        int index = ref.getName().lastIndexOf('.');
-        if (index == -1)
-            return "General";
-        else {
-            String extension = ref.getName().substring(index + 1);
-            if (extension.equalsIgnoreCase("ospr"))
-                return "Graphics";
-            else if (extension.equalsIgnoreCase("wav"))
-                return "Audio";
-            else if (extension.equalsIgnoreCase("orsc"))
-                return "Graphics";
-            else if (extension.equalsIgnoreCase("jar"))
-                return "Executable";
-            else if (extension.equalsIgnoreCase("xm"))
-                return "Module";
-            else
-                return "General";
+	private String getDescription(File ref) {
+		int index = ref.getName().lastIndexOf('.');
+		if (index == -1)
+			return "General";
+		else {
+			String extension = ref.getName().substring(index + 1);
+			if (extension.equalsIgnoreCase("ospr"))
+				return "Graphics";
+			else if (extension.equalsIgnoreCase("wav"))
+				return "Audio";
+			else if (extension.equalsIgnoreCase("orsc"))
+				return "Graphics";
+			else if (extension.equalsIgnoreCase("jar"))
+				return "Executable";
+			else if (extension.equalsIgnoreCase("xm"))
+				return "Module";
+			else
+				return "General";
 
-        }
-    }
+		}
+	}
 
 }

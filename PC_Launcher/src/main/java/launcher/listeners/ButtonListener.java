@@ -4,6 +4,7 @@ import launcher.Utils.ClientLauncher;
 import launcher.Utils.Defaults;
 import launcher.Fancy.MainWindow;
 import launcher.Utils.Utils;
+import launcher.Gameupdater.Updater;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -67,12 +68,12 @@ public class ButtonListener implements ActionListener {
 			}
 
 			case "apos": {
-				ClientLauncher.launchAPOS();
+				Updater.updateAPOS();
 			}
 
-			case "idlersc": {
+			/*case "idlersc": {
 				ClientLauncher.launchIdleRSC();
-			}
+			}*/
 
 			case "minimize": {
 				MainWindow.get().setState(1);
