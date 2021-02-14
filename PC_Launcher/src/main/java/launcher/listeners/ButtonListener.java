@@ -69,6 +69,7 @@ public class ButtonListener implements ActionListener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				return;
 			}
 
 			case "apos": {
@@ -77,6 +78,7 @@ public class ButtonListener implements ActionListener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				return;
 			}
 
 			/*case "idlersc": {

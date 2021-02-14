@@ -36,11 +36,11 @@ public class Updater {
 	public static void updateRSCPlus() throws SecurityException, IOException {
 		try {
 			// Set variables
-			File _GAME_PATH = new File(_CACHE_DIR + "/extras/rscplus");
+			File _GAME_PATH = new File(_CACHE_DIR + "/extras/rscplus/");
 			String _FILE_NAME = "rscplus-master.zip";
 			String _URL = Defaults._RSCPLUS_REPOSITORY_DL;
 			String _EXTRA_VERSION = String.valueOf(Defaults._RSCPLUS_VERSION);
-			File _PRESERVATION_CONFIG = new File(_CACHE_DIR + "/extras/rscplus/worlds/01_RSC Preservation.ini");
+			File _PRESERVATION_CONFIG = new File( _CACHE_DIR + "/extras/rscplus/worlds/01_RSC Preservation.ini");
 			File _URANIUM_CONFIG = new File(_CACHE_DIR + "/extras/rscplus/worlds/02_RSC Uranium.ini");
 			File _DEFAULT_CONFIG = new File(_CACHE_DIR + "/extras/rscplus/worlds/01_World 1.ini");
 
@@ -68,7 +68,7 @@ public class Updater {
 	public static void updateAPOS() throws SecurityException, IOException {
 		try {
 			// Set variables
-			File _GAME_PATH = new File(_CACHE_DIR + "/extras/apos");
+			File _GAME_PATH = new File(_CACHE_DIR + "/extras/apos/");
 			String _FILE_NAME = "apos-master.zip";
 			String _URL = Defaults._APOS_REPOSITORY_DL;
 			String _EXTRA_VERSION = String.valueOf(Defaults._APOS_VERSION);
@@ -84,7 +84,7 @@ public class Updater {
 	public static void updateIdleRSC() throws SecurityException, IOException {
 		try {
 			// Set variables
-			File _GAME_PATH = new File(_CACHE_DIR + "/extras/idlersc");
+			File _GAME_PATH = new File(_CACHE_DIR + "/extras/idlersc/");
 			String _FILE_NAME = "idlersc-master.zip";
 			String _URL = Defaults._IDLERSC_REPOSITORY_DL;
 			String _EXTRA_VERSION = String.valueOf(Defaults._IDLERSC_VERSION);
@@ -100,7 +100,15 @@ public class Updater {
 	private static void downloadOrUpdate(File _GAME_PATH, String _FILE_NAME, String _URL, String _EXTRA_VERSION) {
 		// If the folder does not exist, download, extract, and launch.
 		if (!_GAME_PATH.exists() || !_GAME_PATH.isDirectory()) {
-			_GAME_PATH.mkdir();
+			if (_GAME_PATH.getParentFile() != null) {
+				try {
+					Files.createDirectories(_GAME_PATH.toPath());
+				} catch (IOException e) {
+					System.out.println("Could not make required directories, trying with alternative method");
+					_GAME_PATH.mkdirs();
+					e.printStackTrace();
+				}
+			}
 			try {
 				URLConnection connection = new URL(_URL).openConnection();
 				String description = getDescription(new File(_FILE_NAME));
@@ -196,16 +204,21 @@ public class Updater {
 		}
 	}
 
-	public static void createPreservationConfig(File config) {
+	public static void createPropsConfig(File config, Properties props) {
+		if (!config.exists()) {
+			if (config.getParentFile() != null) {
+				try {
+					Files.createDirectories(config.getParentFile().toPath());
+				} catch (IOException e) {
+					config.getParentFile().mkdirs();
+					e.printStackTrace();
+				}
+			}
+		}
+
 		try {
-			Properties props = new Properties();
 			FileOutputStream out = new FileOutputStream(config);
-			props.store(out, "rsa_pub_key=7112866275597968156550007489163685737528267584779959617759901583041864787078477876689003422509099353805015177703670715380710894892460637136582066351659813\n" +
-				"port=43596\n" +
-				"rsa_exponent=65537\n" +
-				"url=game.openrsc.com\n" +
-				"name=RSC Preservation\n" +
-				"servertype=1");
+			props.store(out, null);
 			out.close();
 		} catch (IOException e) {
 			System.out.println("Could not save world config!");
@@ -213,20 +226,27 @@ public class Updater {
 		}
 	}
 
+	public static void createPreservationConfig(File config) {
+		Properties props = new Properties();
+		props.put("rsa_pub_key", "7112866275597968156550007489163685737528267584779959617759901583041864787078477876689003422509099353805015177703670715380710894892460637136582066351659813");
+		props.put("port", "43596");
+		props.put("rsa_exponent", "65537");
+		props.put("url", "game.openrsc.com");
+		props.put("name", "RSC Preservation");
+		props.put("servertype", "1");
+
+		createPropsConfig(config, props);
+	}
+
 	public static void createUraniumConfig(File config) {
-		try {
-			Properties props = new Properties();
-			FileOutputStream out = new FileOutputStream(config);
-			props.store(out, "rsa_pub_key=7112866275597968156550007489163685737528267584779959617759901583041864787078477876689003422509099353805015177703670715380710894892460637136582066351659813\n" +
-				"port=43235\n" +
-				"rsa_exponent=65537\n" +
-				"url=game.openrsc.com\n" +
-				"name=RSC Uranium\n" +
-				"servertype=1");
-			out.close();
-		} catch (IOException e) {
-			System.out.println("Could not save world config!");
-			e.printStackTrace();
-		}
+		Properties props = new Properties();
+		props.put("rsa_pub_key", "7112866275597968156550007489163685737528267584779959617759901583041864787078477876689003422509099353805015177703670715380710894892460637136582066351659813");
+		props.put("port", "43235");
+		props.put("rsa_exponent", "65537");
+		props.put("url", "game.openrsc.com");
+		props.put("name", "RSC Uranium");
+		props.put("servertype", "1");
+
+		createPropsConfig(config, props);
 	}
 }
