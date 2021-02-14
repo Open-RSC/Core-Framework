@@ -250,6 +250,9 @@ public class Skills {
 		levels[skill] = getMaxStat(skill);
 		if (sendUpdate)
 			sendUpdate(skill);
+		if (skill == com.openrsc.server.constants.Skills.PRAYER && mob.isPlayer()) {
+			((Player) getMob()).setPrayerStatePoints(levels[skill] * 120);
+		}
 	}
 
 	public void normalize() {
