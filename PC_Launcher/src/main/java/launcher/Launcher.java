@@ -153,10 +153,10 @@ public class Launcher extends Component {
         }
     }
 
-	public static Double fetchLatestExtrasVersionNumber(String _EXTRA_VERSION) {
+	public static Double fetchLatestExtrasVersionNumber(Double _EXTRA_VERSION) {
 		try {
-			double currentVersion = 0.0;
-			URL updateURL = new URL(_EXTRA_VERSION);
+			double extraVersion = 0.0;
+			URL updateURL = new URL(Defaults._VERSION_UPDATE_URL);
 
 			// Open connection
 			URLConnection connection = updateURL.openConnection();
@@ -165,19 +165,19 @@ public class Launcher extends Component {
 			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String line;
 			while ((line = in.readLine()) != null) {
-				if (line.contains("_CURRENT_VERSION")) {
-					currentVersion = Double.parseDouble(line.substring(line.indexOf('=') + 1, line.indexOf(';')));
-					System.out.println("Current Version: " + currentVersion);
+				if (line.contains("_EXTRA_VERSION")) {
+					extraVersion = Double.parseDouble(line.substring(line.indexOf('=') + 1, line.indexOf(';')));
+					System.out.println("Extra Version: " + extraVersion);
 					break;
 				}
 			}
 
 			// Close connection
 			in.close();
-			return currentVersion;
+			return extraVersion;
 		} catch (Exception e) {
-			System.out.println("Error checking latest version");
-			return Double.valueOf(_EXTRA_VERSION);
+			System.out.println("Error checking latest extra version");
+			return _EXTRA_VERSION;
 		}
 	}
 

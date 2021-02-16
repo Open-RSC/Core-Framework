@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -12,8 +11,6 @@ import java.util.zip.ZipInputStream;
 import launcher.Gameupdater.UpdaterGui.MainUpdaterGui;
 import launcher.Utils.ClientLauncher;
 import launcher.Utils.Defaults;
-
-import javax.swing.*;
 
 import static launcher.Launcher.fetchLatestExtrasVersionNumber;
 
@@ -39,7 +36,7 @@ public class Updater {
 			File _GAME_PATH = new File(_CACHE_DIR + "/extras/rscplus/");
 			String _FILE_NAME = "rscplus-master.zip";
 			String _URL = Defaults._RSCPLUS_REPOSITORY_DL;
-			String _EXTRA_VERSION = String.valueOf(Defaults._RSCPLUS_VERSION);
+			Double _EXTRA_VERSION = Defaults._RSCPLUS_VERSION;
 			File _PRESERVATION_CONFIG = new File( _CACHE_DIR + "/extras/rscplus/worlds/01_RSC Preservation.ini");
 			File _URANIUM_CONFIG = new File(_CACHE_DIR + "/extras/rscplus/worlds/02_RSC Uranium.ini");
 			File _DEFAULT_CONFIG = new File(_CACHE_DIR + "/extras/rscplus/worlds/01_World 1.ini");
@@ -69,7 +66,7 @@ public class Updater {
 			File _GAME_PATH = new File(_CACHE_DIR + "/extras/apos/");
 			String _FILE_NAME = "apos-master.zip";
 			String _URL = Defaults._APOS_REPOSITORY_DL;
-			String _EXTRA_VERSION = String.valueOf(Defaults._APOS_VERSION);
+			Double _EXTRA_VERSION = Defaults._APOS_VERSION;
 
 			// Download new or update existing, then execute
 			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
@@ -85,7 +82,7 @@ public class Updater {
 			File _GAME_PATH = new File(_CACHE_DIR + "/extras/idlersc/");
 			String _FILE_NAME = "idlersc-master.zip";
 			String _URL = Defaults._IDLERSC_REPOSITORY_DL;
-			String _EXTRA_VERSION = String.valueOf(Defaults._IDLERSC_VERSION);
+			Double _EXTRA_VERSION = Defaults._IDLERSC_VERSION;
 
 			// Download new or update existing, then execute
 			downloadOrUpdate(_GAME_PATH, _FILE_NAME, _URL, _EXTRA_VERSION);
@@ -95,7 +92,7 @@ public class Updater {
 		}
 	}
 
-	private static void downloadOrUpdate(File _GAME_PATH, String _FILE_NAME, String _URL, String _EXTRA_VERSION) {
+	private static void downloadOrUpdate(File _GAME_PATH, String _FILE_NAME, String _URL, Double _EXTRA_VERSION) {
 		// If the folder does not exist, download, extract, and launch.
 		if (!_GAME_PATH.exists() || !_GAME_PATH.isDirectory()) {
 			if (_GAME_PATH.getParentFile() != null) {
