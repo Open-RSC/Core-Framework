@@ -420,9 +420,9 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		ItemId.STAFF.id(),
 		ItemId.MAGIC_STAFF.id(),
 		ItemId.STAFF_OF_AIR.id(),
+		ItemId.STAFF_OF_WATER.id(),
 		ItemId.STAFF_OF_EARTH.id(),
 		ItemId.STAFF_OF_FIRE.id(),
-		ItemId.STAFF_OF_EARTH.id(),
 
 		// Magic hats/robes
 		ItemId.BLUE_WIZARDSHAT.id(),
@@ -436,9 +436,17 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		ItemId.WIZARDS_ROBE.id(),
 		ItemId.BLACK_ROBE.id(),
 		ItemId.ROBE_OF_ZAMORAK_TOP.id(),
+		ItemId.MONKS_ROBE_TOP.id(),
+		ItemId.PRIEST_GOWN.id(),
+		ItemId.DRUIDS_ROBE_TOP.id(),
+		ItemId.DOCTORS_GOWN.id(),
 		ItemId.BLUE_SKIRT.id(),
 		ItemId.BLACK_SKIRT.id(),
 		ItemId.ROBE_OF_ZAMORAK_BOTTOM.id(),
+		ItemId.MONKS_ROBE_BOTTOM.id(),
+		ItemId.PRIEST_ROBE.id(),
+		ItemId.DRUIDS_ROBE_BOTTOM.id(),
+		ItemId.PINK_SKIRT.id(),
 
 		// Amulets
 		ItemId.AMULET_OF_ACCURACY.id(),
@@ -448,6 +456,12 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		ItemId.DIAMOND_AMULET_OF_POWER.id(),
 		ItemId.DRAGONSTONE_AMULET.id(),
 		ItemId.CHARGED_DRAGONSTONE_AMULET.id(),
+		ItemId.HOLY_SYMBOL_OF_SARADOMIN.id(),
+		ItemId.UNHOLY_SYMBOL_OF_ZAMORAK.id(),
+		ItemId.AMULET_OF_DOOMION.id(),
+		ItemId.AMULET_OF_HOLTHION.id(),
+		ItemId.AMULET_OF_OTHAINIAN.id(),
+		ItemId.BEADS_OF_THE_DEAD.id(),
 
 		// Capes
 		ItemId.CAPE_OF_LEGENDS.id(),
@@ -467,7 +481,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		synchronized(player.getCarriedItems().getInventory().getItems()) {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
 				// If the item is in the allowed list, then let it's good.
-				if (inArray(item, allowedItems)) continue;
+				if (inArray(item.getCatalogId(), allowedItems)) continue;
 				// If the item isn't in the above list and you can wield it, then
 				// it isn't allowed.
 				if (item.getDef(player.getWorld()).isWieldable()) return true;
@@ -480,7 +494,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					if (item == null) continue;
 					// If the equipped item is not in the allowed list, then
 					// they cannot bring it into the arena.
-					if (!inArray(item, allowedItems)) return true;
+					if (!inArray(item.getCatalogId(), allowedItems)) return true;
 				}
 			}
 			return false;
