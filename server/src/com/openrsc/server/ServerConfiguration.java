@@ -39,7 +39,6 @@ public class ServerConfiguration {
 	int SERVER_PORT;
 	int IDLE_TIMER;
 	int AUTO_SAVE;
-	private String SERVER_LOCATION;
 	public int AGGRO_RANGE;
 	public DatabaseType DB_TYPE;
 	public String DB_HOST;
@@ -62,7 +61,6 @@ public class ServerConfiguration {
 	public int MAX_LOGINS_PER_SECOND;
 	public int MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES;
 	public int NETWORK_FLOOD_IP_BAN_MINUTES;
-	private int SUSPICIOUS_PLAYER_IP_BAN_MINUTES;
 	public boolean WANT_PCAP_LOGGING;
 
 	// Location of the server conf files.
@@ -121,7 +119,6 @@ public class ServerConfiguration {
 	public boolean VALUABLE_DROP_MESSAGES;
 	public double VALUABLE_DROP_RATIO;
 	public boolean VALUABLE_DROP_EXTRAS;
-	private String VALUABLE_DROP_ITEMS;
 	public boolean WANT_CUSTOM_RANK_DISPLAY;
 	public boolean RIGHT_CLICK_BANK;
 	public boolean RIGHT_CLICK_TRADE;
@@ -175,8 +172,6 @@ public class ServerConfiguration {
 	public boolean LOOSE_SHALLOW_WATER_CHECK;
 	public boolean NOTHING_REUSE_ME;
 	public int PACKET_LIMIT;
-	private int CONNECTION_LIMIT;
-	private int CONNECTION_TIMEOUT;
 	//quest-minigame related
 	public boolean WANT_GIANNE_BADGE;
 	public boolean WANT_BLURBERRY_BADGE;
@@ -212,7 +207,7 @@ public class ServerConfiguration {
 		ImmutableList.of("Connection reset by peer", "Connection reset");
 
 	public String configFile;
-	private String[] deprecatedKeys = new String[]{
+	private final String[] deprecatedKeys = new String[]{
 		"bank_size", "want_password_massage", "mysql_db",
 		"mysql_host", "mysql_user", "mysql_pass", "mysql_table_prefix"
 	};
@@ -222,7 +217,7 @@ public class ServerConfiguration {
 	 * @throws IOException
 	 * Config file for server configurations.
 	 */
-	private YMLReader serverProps = new YMLReader();
+	private final YMLReader serverProps = new YMLReader();
 
 	void initConfig(String defaultFile) throws IOException {
 		// Try to load the connections.conf
@@ -255,19 +250,11 @@ public class ServerConfiguration {
 
 		// Database settings
 		DB_TYPE = DatabaseType.getByType(tryReadInt("db_type").orElse(0));
-		DB_NAME = tryReadString("db_name").orElse("openrsc");
+		DB_NAME = tryReadString("db_name").orElse("preservation");
 		DB_HOST = tryReadString("db_host").orElse("localhost:3306");
 		DB_USER = tryReadString("db_user").orElse("root");
 		DB_PASS = tryReadString("db_pass").orElse("root");
 		DB_TABLE_PREFIX = tryReadString("db_table_prefix").orElse("");
-
-		// Discord settings
-		DISCORD_AUCTION_WEBHOOK_URL = tryReadString("discord_auction_webhook_url").orElse("null");
-		DISCORD_MONITORING_WEBHOOK_URL = tryReadString("discord_monitoring_webhook_url").orElse("null");
-		WANT_DISCORD_AUCTION_UPDATES = tryReadBool("want_discord_auction_updates").orElse(false);
-		WANT_DISCORD_MONITORING_UPDATES = tryReadBool("want_discord_monitoring_updates").orElse(false);
-		WANT_DISCORD_BOT = tryReadBool("want_discord_bot").orElse(false);
-		CROSS_CHAT_CHANNEL = tryReadInt("cross_chat_channel").orElse(0);
 
 		// World settings
 		SERVER_NAME = tryReadString("server_name").orElse("Runescape");
@@ -280,21 +267,21 @@ public class ServerConfiguration {
 		WANT_CUSTOM_WALK_SPEED = tryReadBool("want_custom_walking_speed").orElse(false);
 		IDLE_TIMER = tryReadInt("idle_timer").orElse(300000); // 5 minutes
 		AUTO_SAVE = tryReadInt("auto_save").orElse(30000); // 30 seconds
-		CLIENT_VERSION = tryReadInt("client_version").orElse(6);
+		CLIENT_VERSION = tryReadInt("client_version").orElse(8); // version 8
 		SERVER_PORT = tryReadInt("server_port").orElse(43594);
-		MAX_CONNECTIONS_PER_IP = tryReadInt("max_connections_per_ip").orElse(10);
-		MAX_CONNECTIONS_PER_SECOND = tryReadInt("max_connections_per_second").orElse(10);
-		MAX_PACKETS_PER_SECOND = tryReadInt("max_packets_per_second").orElse(1000);
+		MAX_CONNECTIONS_PER_IP = tryReadInt("max_connections_per_ip").orElse(20);
+		MAX_CONNECTIONS_PER_SECOND = tryReadInt("max_connections_per_second").orElse(20);
+		MAX_PACKETS_PER_SECOND = tryReadInt("max_packets_per_second").orElse(50);
 		MAX_LOGINS_PER_SECOND = tryReadInt("max_logins_per_second").orElse(1);
 		MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES = tryReadInt("max_password_guesses_per_five_minutes").orElse(10);
-		NETWORK_FLOOD_IP_BAN_MINUTES = tryReadInt("network_flood_ip_ban_minutes").orElse(20);
-		SUSPICIOUS_PLAYER_IP_BAN_MINUTES = tryReadInt("suspicious_player_ip_ban_minutes").orElse(60);
-		SERVER_LOCATION = tryReadString("server_location").orElse("USA");
-		MAX_PLAYERS = tryReadInt("max_players").orElse(100);
+		NETWORK_FLOOD_IP_BAN_MINUTES = tryReadInt("network_flood_ip_ban_minutes").orElse(5);
+		int SUSPICIOUS_PLAYER_IP_BAN_MINUTES = tryReadInt("suspicious_player_ip_ban_minutes").orElse(60);
+		String SERVER_LOCATION = tryReadString("server_location").orElse("USA");
+		MAX_PLAYERS = tryReadInt("max_players").orElse(2000);
 		MAX_PLAYERS_PER_IP = tryReadInt("max_players_per_ip").orElse(10);
 		AVATAR_GENERATOR = tryReadBool("avatar_generator").orElse(false);
 		MEMBER_WORLD = tryReadBool("member_world").orElse(true);
-		WANT_PCAP_LOGGING = tryReadBool("want_pcap_logging").orElse(true);
+		WANT_PCAP_LOGGING = tryReadBool("want_pcap_logging").orElse(false);
 		WORLD_NUMBER = tryReadInt("world_number").orElse(1);
 		PLAYER_LEVEL_LIMIT = tryReadInt("player_level_limit").orElse(99);
 		COMBAT_EXP_RATE = tryReadDouble("combat_exp_rate").orElse(1.0);
@@ -305,8 +292,8 @@ public class ServerConfiguration {
 		NPC_RESPAWN_MULTIPLIER = tryReadDouble("npc_respawn_multiplier").orElse(1.0);
 		WANT_REGISTRATION_LIMIT = tryReadBool("want_registration_limit").orElse(false);
 		PACKET_LIMIT = tryReadInt("packet_limit").orElse(100);
-		CONNECTION_LIMIT = tryReadInt("connection_limit").orElse(10);
-		CONNECTION_TIMEOUT = tryReadInt("connection_timeout").orElse(15);
+		int CONNECTION_LIMIT = tryReadInt("connection_limit").orElse(10);
+		int CONNECTION_TIMEOUT = tryReadInt("connection_timeout").orElse(15);
 		WANT_FATIGUE = tryReadBool("want_fatigue").orElse(true);
 		STOP_SKILLING_FATIGUED = tryReadInt("stop_skilling_fatigued").orElse(1);
 		AGGRO_RANGE = tryReadInt("aggro_range").orElse(1);
@@ -315,14 +302,12 @@ public class ServerConfiguration {
 		RING_OF_FORGING_USES = tryReadInt("ring_of_forging_uses").orElse(75);
 		DWARVEN_RING_USES = tryReadInt("dwarven_ring_uses").orElse(29);
 		DWARVEN_RING_BONUS = tryReadInt("dwarven_ring_bonus").orElse(3);
-		NOTHING_REUSE_ME = tryReadBool("custom_protocol").orElse(false);
+		NOTHING_REUSE_ME = tryReadBool("nothing_reuse_me").orElse(false);
+		//CHECK_ADMIN_IP = tryReadBool("check_admin_ip").orElse(false);
+		//ADMIN_IP = tryReadString("admin_ip").orElse("127.0.0.0,10.0.0.0,172.16.0.0,192.168.0.0");
 		LOCATION_DATA = tryReadInt("location_data").orElse(0);
 		WANT_FIXED_BROKEN_MECHANICS = tryReadBool("want_fixed_broken_mechanics").orElse(false);
 		WANT_DECORATED_MOD_ROOM = tryReadBool("want_decorated_mod_room").orElse(false);
-		/*
-		CHECK_ADMIN_IP = tryReadBool("check_admin_ip").orElse(false);
-		ADMIN_IP = tryReadString("admin_ip").orElse("127.0.0.0,10.0.0.0,172.16.0.0,192.168.0.0");
-		*/
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
@@ -386,6 +371,7 @@ public class ServerConfiguration {
 		LOOTED_CHESTS_STUCK = tryReadBool("looted_chests_stuck").orElse(false);
 		WANT_RUNECRAFT = tryReadBool("want_runecraft").orElse(false);
 		WANT_HARVESTING = tryReadBool("want_harvesting").orElse(false);
+		WANT_CUSTOM_LEATHER = tryReadBool("want_custom_leather").orElse(false);
 		WANT_CUSTOM_LANDSCAPE = tryReadBool("custom_landscape").orElse(false);
 		WANT_EQUIPMENT_TAB = tryReadBool("want_equipment_tab").orElse(false);
 		WANT_BANK_PRESETS = tryReadBool("want_bank_presets").orElse(false);
@@ -396,12 +382,19 @@ public class ServerConfiguration {
 		WANT_IMPROVED_PATHFINDING = tryReadBool("want_improved_pathfinding").orElse(false);
 		CAN_USE_CRACKER_ON_SELF = tryReadBool("can_use_cracker_on_self").orElse(false);
 		FIX_OVERHEAD_CHAT = tryReadBool("fix_overhead_chat").orElse(false);
-		WANT_CUSTOM_LEATHER = tryReadBool("want_custom_leather").orElse(false);
 		WANT_BETTER_JEWELRY_CRAFTING = tryReadBool("want_better_jewelry_crafting").orElse(false);
 		MORE_SHAFTS_PER_BETTER_LOG = tryReadBool("more_shafts_per_better_log").orElse(false);
 		FASTER_YOHNUS = tryReadBool("faster_yohnus").orElse(false);
 		WANT_CHAIN_LEGS = tryReadBool("want_chain_legs").orElse(false);
 		WANT_APOTHECARY_QOL = tryReadBool("want_apothecary_qol").orElse(false);
+
+		// Discord settings
+		DISCORD_AUCTION_WEBHOOK_URL = tryReadString("discord_auction_webhook_url").orElse("null");
+		DISCORD_MONITORING_WEBHOOK_URL = tryReadString("discord_monitoring_webhook_url").orElse("null");
+		WANT_DISCORD_AUCTION_UPDATES = tryReadBool("want_discord_auction_updates").orElse(false);
+		WANT_DISCORD_MONITORING_UPDATES = tryReadBool("want_discord_monitoring_updates").orElse(false);
+		WANT_DISCORD_BOT = tryReadBool("want_discord_bot").orElse(false);
+		CROSS_CHAT_CHANNEL = tryReadInt("cross_chat_channel").orElse(0);
 
 		// Bank
 		RIGHT_CLICK_BANK = tryReadBool("right_click_bank").orElse(false);
@@ -426,7 +419,8 @@ public class ServerConfiguration {
 		VALUABLE_DROP_MESSAGES = tryReadBool("valuable_drop_messages").orElse(false);
 		VALUABLE_DROP_RATIO = tryReadDouble("valuable_drop_ratio").orElse(0.0);
 		VALUABLE_DROP_EXTRAS = tryReadBool("valuable_drop_extras").orElse(false);
-		VALUABLE_DROP_ITEMS = tryReadString("valuable_drop_items").orElse("Half of a key,Half Dragon Square Shield");
+		String VALUABLE_DROP_ITEMS = tryReadString("valuable_drop_items").orElse("Half of a key,Half Dragon Square Shield");
+		valuableDrops = Arrays.asList(VALUABLE_DROP_ITEMS.split(","));
 
 		// Glitch checks
 		STRICT_CHECK_ALL = tryReadBool("strict_check_all").orElse(true);
@@ -442,17 +436,15 @@ public class ServerConfiguration {
 		WANT_BARTER_WORMBRAINS = tryReadBool("want_barter_wormbrains").orElse(false);
 		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = tryReadBool("locked_post_quest_regions_accessible").orElse(false);
 		CAN_RETRIEVE_POST_QUEST_ITEMS = tryReadBool("can_retrieve_post_quest_items").orElse(false);
-
-		valuableDrops = Arrays.asList(VALUABLE_DROP_ITEMS.split(","));
 		// adminIp = Arrays.asList(ADMIN_IP.split(","));
 	}
 
 	// Notify the user if they have any deprecated
 	// keys in their config files.
 	private void notifyDeprecated() {
-		for (int i = 0; i < deprecatedKeys.length; ++i) {
-			if (serverProps.keyExists(deprecatedKeys[i])) {
-				LOGGER.info(deprecatedKeys[i] + " is a deprecated key. You can remove it from " +
+		for (String deprecatedKey : deprecatedKeys) {
+			if (serverProps.keyExists(deprecatedKey)) {
+				LOGGER.info(deprecatedKey + " is a deprecated key. You can remove it from " +
 					configFile + ".");
 			}
 		}
