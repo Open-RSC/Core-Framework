@@ -527,7 +527,8 @@ public class Server implements Runnable {
 				continue;
 			}
 
-			p.playerServerMessage(MessageType.QUEST, getWorld().getServer().getConfig().MESSAGE_PREFIX + message);
+			if (getConfig().DEBUG) // only displays in-client to logged in staff players if server config debug is true
+				p.playerServerMessage(MessageType.QUEST, getWorld().getServer().getConfig().MESSAGE_PREFIX + message);
 		}
 
 		LOGGER.warn(message);
