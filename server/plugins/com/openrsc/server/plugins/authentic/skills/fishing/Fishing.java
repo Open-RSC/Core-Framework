@@ -258,19 +258,6 @@ public class Fishing implements OpLocTrigger {
 				return;
 			}
 
-			// check & remove bait
-			if (baitId >= 0) {
-				int idx = player.getCarriedItems().getInventory().getLastIndexById(baitId, Optional.of(false));
-				Item bait = player.getCarriedItems().getInventory().get(idx);
-				if (bait == null) {
-					// should not be reachable unless threading bug; this was already checked
-					if (player.getCarriedItems().getInventory().countId(baitId, Optional.of(false)) <= 0) {
-						player.playerServerMessage(MessageType.QUEST, outOfBait(baitId));
-						return;
-					}
-				}
-				player.getCarriedItems().remove(new Item(bait.getCatalogId(), 1, false, bait.getItemId()));
-			}
 			if (fishLst.size() == 0) {
 				player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
 				if (!ifbatchcompleted()) {
@@ -282,6 +269,20 @@ public class Fishing implements OpLocTrigger {
 			} else {
 				// Award the fish
 				Item fish = new Item(fishLst.get(0).getId());
+				
+				// check & remove bait
+				if (baitId >= 0) {
+					int idx = player.getCarriedItems().getInventory().getLastIndexById(baitId, Optional.of(false));
+					Item bait = player.getCarriedItems().getInventory().get(idx);
+					if (bait == null) {
+						// should not be reachable unless threading bug; this was already checked
+						if (player.getCarriedItems().getInventory().countId(baitId, Optional.of(false)) <= 0) {
+							player.playerServerMessage(MessageType.QUEST, outOfBait(baitId));
+							return;
+						}
+					}
+					player.getCarriedItems().remove(new Item(bait.getCatalogId(), 1, false, bait.getItemId()));
+				}
 
 				switch (ItemId.getById(fish.getCatalogId())) {
 					// NOTICE: Don't obfuscate this by making it a one liner.
