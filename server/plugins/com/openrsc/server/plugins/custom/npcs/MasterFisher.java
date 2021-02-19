@@ -6,6 +6,7 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.custom.misc.FishingCape;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -41,8 +42,12 @@ public class MasterFisher implements TalkNpcTrigger {
 									mes("And hands you a Fishing cape");
 									delay(3);
 									give(player, ItemId.FISHING_CAPE.id(), 1);
+									player.getCache().set("fishing_cape_charges", FishingCape.MAX_CHARGES);
 									npcsay(player, n, "There",
-										"Wear this to catch manta rays and sea turtles while fishing for sharks");
+										"This cape allows you to form a special bond with sharks.",
+										"Don't ask me how it works, but just think very hard about sharks,",
+										"and surround yourself with sharks, and you'll find yourself back here.",
+										"You might also have a better haul at the fishing trawler.");
 								}
 							} else {
 								npcsay(player, n, "You don't have enough coins " + (player.isMale() ? "lad" : "lass"));

@@ -3767,7 +3767,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Rubber Chicken Cap", "Wow. That was some very in-depth research on the 'chicken or the egg' question.", "", 1, -1, "items:548", false, true, 32, 0, false, false, true, 1379));
 
 		// Skill Cape Batch Two
-		items.add(new ItemDef("Fishing cape", "The cape worn by the best fishermen", "", 99000, -1, "items:485", false, true, 2048, 0, false, false, false, 1380));
+		items.add(new ItemDef("Fishing cape", "The cape worn by the best fishermen", "Teleport", 99000, -1, "items:485", false, true, 2048, 0, false, false, false, 1380));
 		items.add(new ItemDef("Strength cape", "The cape worn by only the strongest people", "", 99000, -1, "items:495", false, true, 2048, 0, false, false, false, 1381));
 		items.add(new ItemDef("Magic cape", "The cape worn by the most powerful mages", "", 99000, -1, "items:489", false, true, 2048, 0, false, false, false, 1382));
 		items.add(new ItemDef("Smithing cape", "The cape worn by master smiths", "", 99000, -1, "items:494", false, true, 2048, 0, false, false, false, 1383));

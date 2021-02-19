@@ -1,4 +1,4 @@
-package com.openrsc.server.plugins.authentic.misc;
+package com.openrsc.server.plugins.custom.misc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
@@ -7,7 +7,7 @@ import com.openrsc.server.plugins.triggers.OpInvTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Skillcape implements OpInvTrigger {
+public class CraftingCape implements OpInvTrigger {
 
 	private boolean canTeleport(Player player) {
 		if (player.getLocation().wildernessLevel() >= 30 || player.getLocation().isInFisherKingRealm()

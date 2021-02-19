@@ -283,17 +283,6 @@ public class Fishing implements OpLocTrigger {
 				// Award the fish
 				Item fish = new Item(fishLst.get(0).getId());
 
-				// Skill cape perk. Will convert a shark to either a manta ray or a turtle.
-				String capeColor = "";
-				if (fish.getCatalogId() == ItemId.RAW_SHARK.id()) {
-					Item newFish = new Item(SkillCapes.shouldActivateInt(player, ItemId.FISHING_CAPE));
-					if (newFish.getCatalogId() != -1) {
-						fish = newFish;
-						capeColor = "@dcy@";
-						player.playerServerMessage(MessageType.QUEST, capeColor + "Because of your prowess in fishing");
-					}
-				}
-
 				switch (ItemId.getById(fish.getCatalogId())) {
 					// NOTICE: Don't obfuscate this by making it a one liner.
 					// Needed to be on separate lines for Language Translations.
@@ -305,14 +294,6 @@ public class Fishing implements OpLocTrigger {
 						break;
 					case RAW_ANCHOVIES:
 						player.playerServerMessage(MessageType.QUEST, "You catch some anchovies");
-						break;
-					case RAW_MANTA_RAY:
-						// inauthentic, from Fishing Skill Cape perk. These are usually just from trawler.
-						player.playerServerMessage(MessageType.QUEST, capeColor + "You catch a manta ray!");
-						break;
-					case RAW_SEA_TURTLE:
-						// inauthentic, from Fishing Skill Cape perk. These are usually just from trawler.
-						player.playerServerMessage(MessageType.QUEST, capeColor + "You catch a sea turtle!");
 						break;
 					default:
 						// TODO: may need to separate all these out for Language Translations

@@ -43,6 +43,11 @@ public class TrawlerCatch implements OpLocTrigger {
 			if (player.getCache().hasKey("fishing_trawler_reward")) {
 				player.message("you find...");
 				int fishCaught = player.getCache().getInt("fishing_trawler_reward");
+
+				if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.FISHING_CAPE.id())) {
+					fishCaught *= 1.5;
+				}
+
 				boolean isFishRoll;
 				for (int fishGiven = 0; fishGiven < fishCaught; fishGiven++) {
 					isFishRoll = DataConversions.random(0,1) == 1;

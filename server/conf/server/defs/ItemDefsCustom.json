@@ -2074,7 +2074,7 @@
             "id": 1380,
             "name": "Fishing cape",
             "description": "The cape worn by the best fishermen",
-            "command": "",
+            "command": "Teleport",
             "isFemaleOnly": 0,
             "isMembersOnly": 0,
             "isStackable": 0,
