@@ -7,6 +7,7 @@ import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
 import com.openrsc.server.database.impl.mysql.MySqlGameLogger;
+import com.openrsc.server.event.custom.HourlyResetEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.SingleTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
@@ -31,6 +32,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -150,9 +152,9 @@ public class Server implements Runnable {
 				LOGGER.catching(t);
 			}
 		} else {
-			for (int i = 0; i < args.length; i++) {
+			for (String arg : args) {
 				try {
-					startServer(args[i]);
+					startServer(arg);
 				} catch (final Throwable t) {
 					LOGGER.catching(t);
 				}
@@ -162,7 +164,9 @@ public class Server implements Runnable {
 		while (serversList.size() > 0) {
 			try {
 				Thread.sleep(1000);
-			} catch (final InterruptedException e) { }
+			} catch (final InterruptedException e) {
+				e.printStackTrace();
+			}
 
 			for (final Server server : serversList.values()) {
 				server.checkShutdown();
@@ -447,6 +451,9 @@ public class Server implements Runnable {
 
 					monitorTickPerformance();
 
+					dailyShutdownEvent();
+					resetEvent();
+
 					// Set us to be in the next tick.
 					this.lastTickTimestamp += getConfig().GAME_TICK;
 
@@ -474,6 +481,25 @@ public class Server implements Runnable {
 				LOGGER.catching(t);
 			}
 		}
+	}
+
+	private void dailyShutdownEvent() {
+		try {
+			if (getConfig().WANT_AUTO_SERVER_SHUTDOWN) {
+				int hour = LocalDateTime.now().getHour();
+				int minute = LocalDateTime.now().getMinute();
+
+				if (hour == getConfig().RESTART_HOUR && minute == 0)
+					getWorld().getServer().shutdown(300);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void resetEvent() {
+		if (getConfig().WANT_RESET_EVENT)
+			getWorld().getServer().getGameEventHandler().add(new HourlyResetEvent(getWorld(), 0, 0));
 	}
 
 	private long processIncomingPackets() {
@@ -521,14 +547,13 @@ public class Server implements Runnable {
 	}
 
 	private void sendMonitoringWarning(final String message, final boolean showEventData) {
-		// Warn logged in developers
-		for (Player p : getWorld().getPlayers()) {
-			if (!p.isDev()) {
-				continue;
-			}
+		if (getConfig().DEBUG) { // only displays in-client to logged in staff players if server config debug is true
+			for (Player p : getWorld().getPlayers()) {
+				if (!p.isDev())
+					continue;
 
-			if (getConfig().DEBUG) // only displays in-client to logged in staff players if server config debug is true
 				p.playerServerMessage(MessageType.QUEST, getWorld().getServer().getConfig().MESSAGE_PREFIX + message);
+			}
 		}
 
 		LOGGER.warn(message);
@@ -541,7 +566,7 @@ public class Server implements Runnable {
 		if (shutdownEvent != null) {
 			return false;
 		}
-		shutdownEvent = new SingleTickEvent(getWorld(), null, seconds * 1000 / getConfig().GAME_TICK, "Shutdown for Update") {
+		shutdownEvent = new SingleTickEvent(getWorld(), null, seconds * 1000 / getConfig().GAME_TICK, "Server shut down") {
 			public void action() {
 				shuttingDown = true;
 			}
@@ -559,7 +584,7 @@ public class Server implements Runnable {
 		if (shutdownEvent != null) {
 			return false;
 		}
-		shutdownEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000 / getConfig().GAME_TICK, "Restart") {
+		shutdownEvent = new SingleTickEvent(getWorld(), null, (seconds - 1) * 1000 / getConfig().GAME_TICK, "Server shut down") {
 			public void action() {
 				shuttingDown = true;
 				restarting = true;

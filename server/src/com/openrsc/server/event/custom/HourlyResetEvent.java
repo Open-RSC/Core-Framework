@@ -9,14 +9,13 @@ import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.openrsc.server.plugins.Functions.changeloc;
 
 public class HourlyResetEvent extends HourlyEvent  {
 	private int actionedResets;
-	private String eventMessage;
+	private final String eventMessage;
 
 	public HourlyResetEvent(final World world, final int lifeTime) {
 		this(world, lifeTime, 0, null);
@@ -35,8 +34,7 @@ public class HourlyResetEvent extends HourlyEvent  {
 		actionedResets = 0;
 		for (final ConcurrentHashMap<Integer, Region> yRegionList : getWorld().getRegionManager().getRegions().values()) {
 			for (final Region region : yRegionList.values()) {
-				for (Iterator<GameObject> iter = new ArrayList<>(region.getGameObjects()).iterator(); iter.hasNext();) {
-					GameObject obj = iter.next();
+				for (GameObject obj : new ArrayList<>(region.getGameObjects())) {
 					if (obj.getType() == 0) {
 						// only for scenery
 						resetScenery(obj);
@@ -49,8 +47,8 @@ public class HourlyResetEvent extends HourlyEvent  {
 			if(!p.isAdmin()) {
 				continue;
 			}
-
-			p.playerServerMessage(MessageType.QUEST, getWorld().getServer().getConfig().MESSAGE_PREFIX + "Automatic hourly reset done for " + actionedResets + " sceneries");
+			if (getWorld().getServer().getConfig().DEBUG)
+				p.playerServerMessage(MessageType.QUEST, getWorld().getServer().getConfig().MESSAGE_PREFIX + "Automatic hourly reset done for " + actionedResets + " sceneries");
 		}
 	}
 

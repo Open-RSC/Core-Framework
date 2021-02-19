@@ -191,6 +191,9 @@ public class ServerConfiguration {
 	public int LOCATION_DATA;
 	public boolean WANT_FIXED_BROKEN_MECHANICS;
 	public boolean WANT_DECORATED_MOD_ROOM;
+	public boolean WANT_AUTO_SERVER_SHUTDOWN;
+	public int RESTART_HOUR;
+	public boolean WANT_RESET_EVENT = false;
 	public boolean CHAR_NAME_CAN_CONTAIN_MOD;
 	public boolean WANT_CHAIN_LEGS;
 	public boolean WANT_APOTHECARY_QOL;
@@ -308,6 +311,9 @@ public class ServerConfiguration {
 		LOCATION_DATA = tryReadInt("location_data").orElse(0);
 		WANT_FIXED_BROKEN_MECHANICS = tryReadBool("want_fixed_broken_mechanics").orElse(false);
 		WANT_DECORATED_MOD_ROOM = tryReadBool("want_decorated_mod_room").orElse(false);
+		WANT_AUTO_SERVER_SHUTDOWN = tryReadBool("want_auto_server_shutdown").orElse(false);
+		RESTART_HOUR = tryReadInt("restart_hour").orElse(7);
+		WANT_RESET_EVENT = tryReadBool("want_reset_event").orElse(false);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
