@@ -7,10 +7,8 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.util.rsc.MessageType;
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.openrsc.server.plugins.Functions.changeloc;
@@ -49,7 +47,7 @@ public class HourlyResetEvent extends HourlyEvent  {
 			if(!p.isAdmin()) {
 				continue;
 			}
-			if (Config.DEBUG)
+			if (getWorld().getServer().getConfig().DEBUG)
 				p.playerServerMessage(MessageType.QUEST, getWorld().getServer().getConfig().MESSAGE_PREFIX + "Automatic hourly reset done for " + actionedResets + " sceneries");
 		}
 	}
