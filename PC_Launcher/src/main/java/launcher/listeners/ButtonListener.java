@@ -81,13 +81,13 @@ public class ButtonListener implements ActionListener {
 				return;
 			}
 
-			/*case "idlersc": {
+			case "idlersc": {
 				try {
 					Updater.updateIdleRSC();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}*/
+			}
 
 			case "minimize": {
 				MainWindow.get().setState(1);
@@ -164,10 +164,6 @@ public class ButtonListener implements ActionListener {
 	}
 
 	private void launch() {
-		launch(false);
-	}
-
-	private void launch(boolean dev) {
 		// Deletes the client.properties file that may persist unwanted settings between different games
 		File f = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "client.properties");
 		f.delete();
@@ -176,6 +172,6 @@ public class ButtonListener implements ActionListener {
 		File configFile = new File(Defaults._DEFAULT_CONFIG_DIR + File.separator + "config.txt");
 		configFile.delete();
 
-		ClientLauncher.launchClient(dev);
+		ClientLauncher.launchClient();
 	}
 }

@@ -24,10 +24,7 @@ public class MainWindow extends JFrame {
 	private LaunchButton launch7;
 	private LaunchButton launch8;
 
-    private final int launch_button_y = 218;
-    private final int link_button_y = 359;
-
-    public MainWindow() {
+	public MainWindow() {
         this.setPreferredSize(new Dimension(795, 555));
         this.setUndecorated(true);
         this.setTitle(Defaults._TITLE);
@@ -60,7 +57,8 @@ public class MainWindow extends JFrame {
 
         // Link buttons
         final String BUTTON1 = "Discord";
-        this._BACKGROUND.add(new LinkButton(BUTTON1, new Rectangle(101, link_button_y, link_button_width, link_button_height)));
+		int link_button_y = 359;
+		this._BACKGROUND.add(new LinkButton(BUTTON1, new Rectangle(101, link_button_y, link_button_width, link_button_height)));
 
         final String BUTTON2 = "Bug Reports";
         this._BACKGROUND.add(new LinkButton(BUTTON2, new Rectangle(256, link_button_y, link_button_width, link_button_height)));
@@ -102,7 +100,7 @@ public class MainWindow extends JFrame {
             this._BACKGROUND.remove(this.launch5);
 			this._BACKGROUND.remove(this.launch6);
 			this._BACKGROUND.remove(this.launch7);
-			//this._BACKGROUND.remove(this.launch8);
+			this._BACKGROUND.remove(this.launch8);
         }
         addServerButtons();
         Settings.saveSettings();
@@ -115,9 +113,10 @@ public class MainWindow extends JFrame {
         int coleslaw_x = 0;
         int rscplus_x = 50;
 		int apos_x = 50;
-		int rscidle_x = 50;
+		int idlersc_x = 50;
+		int launch_button_y = 218;
 		int apos_y = launch_button_y - 100;
-		int rscidle_y = launch_button_y - 20;
+		int idlersc_y = launch_button_y - 20;
 
         // Launch button size
         int launch_button_width = 100;
@@ -148,9 +147,9 @@ public class MainWindow extends JFrame {
 			(this.launch7 = new LaunchButton(apos)).setBounds(apos_x, apos_y, launch_button_width, launch_button_height);
 			this._BACKGROUND.add(this.launch7);
 
-			/*String rscidle = "rscidle";
-			(this.launch8 = new LaunchButton(rscidle)).setBounds(rscidle_x, rscidle_y, launch_button_width, launch_button_height);
-			this._BACKGROUND.add(this.launch8);*/
+			String idlersc = "idlersc";
+			(this.launch8 = new LaunchButton(idlersc)).setBounds(idlersc_x, idlersc_y, launch_button_width, launch_button_height);
+			this._BACKGROUND.add(this.launch8);
 
 			this._BACKGROUND.repaint();
         } else {

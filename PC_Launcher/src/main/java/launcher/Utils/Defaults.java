@@ -26,7 +26,9 @@ public class Defaults {
     public final static String _MD5_TABLE_FILENAME = "MD5.SUM";
 
     // VERSIONS
-    public final static Double _CURRENT_VERSION = 20210214.175053;
+    public final static Double _CURRENT_VERSION = 20210214.175053; // Launcher version is compared against this value
+
+    // Only update versions below as-needed
 	public final static Double _RSCPLUS_VERSION = 20210214.175053;
 	public final static Double _APOS_VERSION = 20210214.175053;
 	public final static Double _IDLERSC_VERSION = 20210214.175053;
