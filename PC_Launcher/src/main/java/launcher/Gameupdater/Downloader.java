@@ -25,6 +25,7 @@ public class Downloader {
 		this._EXCLUDED_FILES.add("openpk.apk");
 		this._EXCLUDED_FILES.add("credentials.txt");
 		this._EXCLUDED_FILES.add("config.txt");
+		this._EXCLUDED_FILES.add("discord_inuse.txt");
 		this._EXCLUDED_FILES.add("OpenRSC.jar");
 		this._GAMEFOLDER = gameFolder;
 		this._UPDATERGUI = new MainUpdaterGui();
