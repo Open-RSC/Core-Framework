@@ -53,7 +53,7 @@
             <compilerarg line="-Xlint:deprecation"/>
         </javac>
         <jar basedir="${build}" destfile="${jar}">
-            <zipgroupfileset dir="lib" includes="*.jar"/>
+            <zipgroupfileset dir="${lib}" includes="*.jar"/>
             <manifest>
                 <attribute name="Main-Class" value="com.openrsc.server.Server"/>
             </manifest>
