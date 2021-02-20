@@ -55,6 +55,7 @@ public class ServerConfiguration {
 	public int VIEW_DISTANCE;
 	public String LOGO_SPRITE_ID;
 	public int NPC_BLOCKING;
+	public int PLAYER_BLOCKING;
 	public int MAX_CONNECTIONS_PER_IP;
 	public int MAX_CONNECTIONS_PER_SECOND;
 	public int MAX_PACKETS_PER_SECOND;
@@ -365,6 +366,7 @@ public class ServerConfiguration {
 		WANT_DECANTING = tryReadBool("want_decanting").orElse(false);
 		PLAYER_COMMANDS = tryReadBool("player_commands").orElse(false);
 		NPC_BLOCKING = tryReadInt("npc_blocking").orElse(2);
+		PLAYER_BLOCKING = tryReadInt("player_blocking").orElse(1);
 		NPC_DONT_RETREAT = tryReadBool("npc_dont_retreat").orElse(false);
 		MESSAGE_FULL_INVENTORY = tryReadBool("message_full_inventory").orElse(false);
 		WANT_PETS = tryReadBool("want_pets").orElse(false);

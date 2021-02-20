@@ -285,10 +285,17 @@ public class Region {
 		return null;
 	}
 
-	public Player getPlayer(final int x, final int y, final Entity e) {
+	public Player getPlayer(final int x, final int y, final Entity e, boolean allowSelf) {
 		synchronized (players) {
 			for (final Player p : players) {
 				if (p.getX() == x && p.getY() == y && (e == null || !p.isInvisibleTo(e))) {
+
+					if (e.isPlayer() && !allowSelf) {
+						if (((Player)e).getUsername() == p.getUsername()) {
+							continue;
+						}
+					}
+
 					return p;
 				}
 			}

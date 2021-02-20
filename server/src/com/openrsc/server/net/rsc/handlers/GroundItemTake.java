@@ -42,7 +42,7 @@ public class GroundItemTake implements PacketHandler {
 		}
 
 		int distance = item.getRegion().getGameObject(location, player) != null ? 1 : 0;
-		Player onTile = item.getRegion().getPlayer(location.getX(), location.getY(), player);
+		Player onTile = item.getRegion().getPlayer(location.getX(), location.getY(), player, true);
 		if (onTile != null && onTile.inCombat()) {
 			distance = 1;
 		}

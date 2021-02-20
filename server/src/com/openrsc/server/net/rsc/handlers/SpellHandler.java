@@ -188,7 +188,6 @@ public class SpellHandler implements PacketHandler {
 	}
 
 	public void handlePacket(Packet packet, Player player) throws Exception {
-
 		if ((player.isBusy() && !player.inCombat()) || player.isRanging()) {
 			return;
 		}
@@ -236,6 +235,7 @@ public class SpellHandler implements PacketHandler {
 					if (spell == null) {
 						return;
 					}
+
 					if (!spellSuccessCheck(player, spell)) {
 						return;
 					}
@@ -514,12 +514,9 @@ public class SpellHandler implements PacketHandler {
 			return true;
 		}
 
-		// Mage Arena block (authentic)
-		if (affectedPlayer.getLocation().inBounds(220, 108, 225, 111)) {
-			player.message("Here kolodion protects all from your attack");
-			player.resetPath();
-			return true;
-		}
+		// Note: Blocking magic casts near mage arena is inauthentic
+		// see [Logg/Tylerbeg/08-05-2018 13.53.26 more pvp mechanics slash bugs with zephyr]
+		// Only ranged & melee are authentically blocked in that safespot.
 
 		// Stop the player if they are close enough to their opponent.
 		if (player.withinRange(affectedPlayer, 4)) {
@@ -1220,10 +1217,11 @@ public class SpellHandler implements PacketHandler {
 				// Effectively remove the attack timer from the player casted on
 				// Authentic: see ticket #2579
 				player.setCombatTimer(-timeToAllowAttacks);
-				return;
 			}
 			if (player.getLocation().inWilderness() && System.currentTimeMillis() - player.getCombatTimer() < timeToAllowAttacks) {
 				player.resetPath();
+				// TODO: ...? should probably display a message here instead of dying silently...?
+				System.out.println("Killed pvp cast silently because they shot too fast");
 				return;
 			}
 		}

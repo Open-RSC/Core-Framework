@@ -464,7 +464,7 @@ public class PathValidation {
 			myYBlocked = checkBlocking(mob, startX, startY, CollisionFlag.WALL_SOUTH, true);
 			// Or on north edge of square we are travelling toward.
 			newYBlocked = checkBlocking(mob, startX, startY + 1, CollisionFlag.WALL_NORTH, false);
-			coords[1] = startX + 1;
+			coords[1] = startY + 1;
 		}
 
 		if (DEBUG && mob.isPlayer()) System.out.println("Pathing 0");
@@ -537,7 +537,28 @@ public class PathValidation {
 		/*boolean inFisherKingdom = (mob.getLocation().inBounds(415, 976, 423, 984)
 			|| mob.getLocation().inBounds(511, 976, 519, 984));*/
 		boolean blockedPath = PathValidation.isBlocking(t.traversalMask, (byte) bit, isCurrentTile);
-		return blockedPath || isMobBlocking(mob, x, y);
+		blockedPath |= isMobBlocking(mob, x, y);
+		if (mob.isPlayer() && mob.getConfig().PLAYER_BLOCKING == 2) {
+			blockedPath |= isPlayerBlocking((Player)mob, x, y);
+		}
+		return blockedPath;
+	}
+
+	public static boolean isPlayerBlocking(Player localPlayer, int x, int y) {
+		switch(localPlayer.getConfig().PLAYER_BLOCKING) {
+			case 0: // Players can walk through players & directly on top of them
+				return false;
+			case 1: // Players can walk through other players, but only if they are not the last point on their path (authentic to 2018 RSC)
+			case 2: // Players act like solid objects. Possibly authentic to very early RSC, based on reports that players could stand in doors to block off buildings.
+				Region region = localPlayer.getWorld().getRegionManager().getRegion(Point.location(x, y));
+				Player player = region.getPlayer(x, y, localPlayer, false);
+				if (player != null) {
+					localPlayer.face(player); // TODO: this needs to be somewhere else for it to work when distance to player > 1. :-/
+					return true;
+				}
+			default:
+				return false;
+		}
 	}
 
 	public static boolean isMobBlocking(Mob mob, int x, int y) {
@@ -579,7 +600,7 @@ public class PathValidation {
 
 		if (mob.isNpc()) {
 			Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
-			Player player = region.getPlayer(x, y, mob);
+			Player player = region.getPlayer(x, y, mob, true);
 			return player != null;
 		}
 		return false;

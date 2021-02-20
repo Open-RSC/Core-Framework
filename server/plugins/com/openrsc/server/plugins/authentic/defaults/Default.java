@@ -277,8 +277,14 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onAttackPlayer(Player player, Player affectedmob) {
-		player.startCombat(affectedmob);
+	public void onAttackPlayer(Player player, Player affectedMob) {
+		if (affectedMob.getLocation().inBounds(220, 107, 224, 111)) { // mage arena block real rsc.
+			player.message("Here kolodion protects all from your attack");
+			player.face(affectedMob); // TODO: not necessary to do this if the walk handler would do it for us.
+			return;
+		}
+
+		player.startCombat(affectedMob);
 		if (config().WANT_PARTIES) {
 			if (player.getParty() != null) {
 				player.getParty().sendParty();
@@ -287,7 +293,7 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public boolean blockAttackPlayer(Player player, Player affectedmob) {
+	public boolean blockAttackPlayer(Player player, Player affectedMob) {
 		return false;
 	}
 

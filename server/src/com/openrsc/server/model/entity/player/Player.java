@@ -2214,9 +2214,13 @@ public final class Player extends Mob {
 		if (trawlerInstance != null && trawlerInstance.getPlayers().contains(this)) {
 			trawlerInstance.disconnectPlayer(this, true);
 		}
-		if (getLocation().inMageArena()) {
-			teleport(228, 109);
+		if (getLocation().inMageArenaLogOutZone()) {
+			teleport(228, 109); // see note in Point.java (Goto declaration of inMageArenaLogOutZone())
 		}
+		if (getLocation().inIbansChamberLogOutZone()) {
+			teleport(791, 3469); // see [Logg/Tylerbeg/07-19-2018 11.11.46 log back in outside iban's chamber]
+		}
+
 		if (getParty() != null) {
 			getParty().removePlayer(this.getUsername());
 		}
@@ -2460,6 +2464,7 @@ public final class Player extends Mob {
 			if (isEquipped) wornItems[2] = 0;
 			else wornItems[2] = 3;
 		}
+
 		//Don't need to show arrows or rings
 		if (indexPosition <= 11) {
 			wornItems[indexPosition] = appearanceId;

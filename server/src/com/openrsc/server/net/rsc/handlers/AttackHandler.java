@@ -46,11 +46,6 @@ public class AttackHandler implements PacketHandler {
 		}
 
 		if (affectedMob.isPlayer()) {
-			if (affectedMob.getLocation().inBounds(220, 108, 225, 111)) { // mage arena block real rsc.
-				player.message("Here kolodion protects all from your attack");
-				player.resetPath();
-				return;
-			}
 			assert affectedMob instanceof Player;
 			Player pl = (Player) affectedMob;
 			if (System.currentTimeMillis() - pl.getCombatTimer() < player.getConfig().GAME_TICK * 5) {

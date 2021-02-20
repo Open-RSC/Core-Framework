@@ -975,17 +975,17 @@ public final class GameStateUpdater {
 	}
 
 	protected final long updateClients() {
-		final long updateClientsStart	= System.currentTimeMillis();
+		final long updateClientsStart = System.currentTimeMillis();
 		for (final Player player : getServer().getWorld().getPlayers()) {
 			sendUpdatePackets(player);
 			player.process();
 		}
-		final long updateClientsEnd		= System.currentTimeMillis();
+		final long updateClientsEnd = System.currentTimeMillis();
 		return updateClientsEnd - updateClientsStart;
 	}
 
 	protected final long doCleanup() {// it can do the teleport at this time.
-		final long doCleanupStart	= System.currentTimeMillis();
+		final long doCleanupStart = System.currentTimeMillis();
 
 		/*
 		 * Reset the update related flags and unregister npcs flagged as
@@ -1112,7 +1112,7 @@ public final class GameStateUpdater {
 				player.setRequiresOfferUpdate(false);
 			}
 		}
-		final long processMessageQueuesEnd	= System.currentTimeMillis();
+		final long processMessageQueuesEnd = System.currentTimeMillis();
 		return processMessageQueuesEnd - processMessageQueuesStart;
 	}
 
@@ -1121,7 +1121,7 @@ public final class GameStateUpdater {
 	 * aware of needs updated
 	 */
 	protected final long processPlayers() {
-		final long processPlayersStart	= System.currentTimeMillis();
+		final long processPlayersStart = System.currentTimeMillis();
 		for (final Player player : getServer().getWorld().getPlayers()) {
 			// Checking login because we don't want to unregister more than once
 			if (player.isUnregistering() && player.isLoggedIn()) {
@@ -1138,7 +1138,7 @@ public final class GameStateUpdater {
 				player.incAppearanceID();
 			}
 		}
-		final long processPlayersEnd	= System.currentTimeMillis();
+		final long processPlayersEnd = System.currentTimeMillis();
 		return processPlayersEnd - processPlayersStart;
 	}
 

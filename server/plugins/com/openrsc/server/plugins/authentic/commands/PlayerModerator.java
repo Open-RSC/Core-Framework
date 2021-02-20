@@ -41,6 +41,8 @@ public final class PlayerModerator implements CommandTrigger {
 			showPlayerAlertBox(player, command, args);
 		} else if (command.equalsIgnoreCase("set_icon")) {
 			setIcon(player, args);
+		} else if (command.equalsIgnoreCase("redhat") || command.equalsIgnoreCase("rhel")) {
+			setRedHat(player);
 		}
 	}
 
@@ -292,6 +294,12 @@ public final class PlayerModerator implements CommandTrigger {
 			player.message("Usage: @mag@::set_icon [integer]");
 		}
 		player.preferredIcon = icon;
+	}
+
+	private void setRedHat(Player player) {
+		player.updateWornItems(5, 176); // unobtainable zamorak hat sprite
+		player.updateWornItems(6, 85); // regular zammy robes
+		player.updateWornItems(7, 91); // regular zammy robes
 	}
 
 }

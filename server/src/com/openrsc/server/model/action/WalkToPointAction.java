@@ -17,6 +17,6 @@ public abstract class WalkToPointAction extends WalkToAction {
 
 	@Override
 	public boolean shouldExecuteInternal() {
-		return getPlayer().getLocation().getDistanceTo(getLocation()) <= radius;
+		return getPlayer().getLocation().getDistancePythagoras(getLocation()) <= radius;
 	}
 }
