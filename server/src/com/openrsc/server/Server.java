@@ -498,8 +498,17 @@ public class Server implements Runnable {
 	}
 
 	private void resetEvent() {
-		if (getConfig().WANT_RESET_EVENT)
-			getWorld().getServer().getGameEventHandler().add(new HourlyResetEvent(getWorld(), 0, 0));
+		if (getConfig().WANT_RESET_EVENT) {
+			HashMap<String, GameTickEvent> events = getWorld().getServer().getGameEventHandler().getEvents();
+			for (GameTickEvent event : events.values()) {
+				if (!(event instanceof HourlyResetEvent)) continue;
+
+				// There is already an hourly reset running!;
+				// do nothing!
+				return;
+			}
+			getWorld().getServer().getGameEventHandler().add(new HourlyResetEvent(getWorld(), 48, 0));
+		}
 	}
 
 	private long processIncomingPackets() {

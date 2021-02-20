@@ -416,6 +416,16 @@ public final class ItemDefinition extends EntityDef {
 	}
 
 	/**
+	 * Returns a virtual melee-bonus
+	 * for this <code>ItemDefinition</code>.
+	 *
+	 * @return Returns the melee-bonus.
+	 */
+	public final long getMeleeBonus() {
+		return armourBonus + weaponAimBonus + weaponAimBonus;
+	}
+
+	/**
 	 * Returns the current wearable-ID
 	 * for this <code>ItemDefinition</code>.
 	 *
