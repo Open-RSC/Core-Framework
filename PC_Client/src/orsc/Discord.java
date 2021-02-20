@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Discord {
@@ -22,6 +23,7 @@ public class Discord {
 	private static final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
 	private static final Runnable presenceTask = new PresenceCheck();
 	private static final Runnable discordTask = new DiscordUpdate();
+	private static ScheduledFuture scheduled;
 
 	public static void setInUse(final boolean inuse) {
 		try {
@@ -58,9 +60,11 @@ public class Discord {
 				DiscordRPC.discordInitialize(APPLICATION_ID, discord, false);
 				DiscordRPC.discordRegister(APPLICATION_ID, "");
 				scheduledExecutorService.scheduleAtFixedRate(discordTask, 0L, 5L, TimeUnit.SECONDS);
-				//Timer timer = new Timer();
-				//timer.scheduleAtFixedRate(new DiscordUpdate(), 0, 5000);
 				startedDiscord = true;
+				if (!scheduled.isCancelled()) {
+					System.out.println("Discord detection finished.");
+					scheduled.cancel(false);
+				}
 			}
 		}
 	}
@@ -71,7 +75,7 @@ public class Discord {
 		// if that instance later gets closed, one of the other instances
 		// will then check to initialize
 		// this is done per 15 secs
-		scheduledExecutorService.scheduleAtFixedRate(presenceTask, 0L, 15L, TimeUnit.SECONDS);
+		scheduled = scheduledExecutorService.scheduleAtFixedRate(presenceTask, 0L, 15L, TimeUnit.SECONDS);
 	}
 
 	static class DiscordUpdate implements Runnable {
