@@ -106,8 +106,13 @@ public class RangeEvent extends GameTickEvent {
 			return;
 		}
 
-		// Authentic player always faced NW
-		getPlayerOwner().face(getPlayerOwner().getX() + 1, getPlayerOwner().getY() - 1);
+		if (getWorld().getServer().getConfig().WANT_RANGED_FACE_PLAYER) {
+			// 	Player faces victim when ranging
+			getPlayerOwner().face(target.getX(), target.getY());
+		} else {
+			// Authentic player always faced NW
+			getPlayerOwner().face(getPlayerOwner().getX() + 1, getPlayerOwner().getY() - 1);
+		}
 		getPlayerOwner().setAttribute("rangedTimeout", System.currentTimeMillis());
 
 		if (target.isPlayer()) {

@@ -202,6 +202,7 @@ public class ServerConfiguration {
 	// public boolean CHECK_ADMIN_IP;
 	// public String ADMIN_IP;
 	// public List<String> adminIp;
+	public boolean WANT_RANGED_FACE_PLAYER = false;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -395,6 +396,7 @@ public class ServerConfiguration {
 		FASTER_YOHNUS = tryReadBool("faster_yohnus").orElse(false);
 		WANT_CHAIN_LEGS = tryReadBool("want_chain_legs").orElse(false);
 		WANT_APOTHECARY_QOL = tryReadBool("want_apothecary_qol").orElse(false);
+		WANT_RANGED_FACE_PLAYER = tryReadBool("want_ranged_face_player").orElse(false);
 
 		// Discord settings
 		DISCORD_AUCTION_WEBHOOK_URL = tryReadString("discord_auction_webhook_url").orElse("null");
