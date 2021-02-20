@@ -452,7 +452,8 @@ public class Server implements Runnable {
 					monitorTickPerformance();
 
 					//dailyShutdownEvent();
-					//resetEvent();
+					// not ideal location but is safe guarded to only keep 1
+					resetEvent();
 
 					// Set us to be in the next tick.
 					this.lastTickTimestamp += getConfig().GAME_TICK;
