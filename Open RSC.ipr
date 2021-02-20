@@ -182,10 +182,15 @@
       <SOURCES />
       <jarDirectory url="file://$PROJECT_DIR$/server/lib" recursive="false" />
     </library>
-    <library name="PC Launcher">
+    <library name="PC Client">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/PC_Launcher/lib/jsoup-1.11.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/PC_Client/lib/discord-rpc.jar!/" />
       </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="PC Launcher">
+      <CLASSES />
       <JAVADOC />
       <SOURCES />
     </library>

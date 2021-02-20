@@ -448,6 +448,9 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 		} catch (RuntimeException var12) {
 			throw GenUtil.makeThrowable(var12, "e.OE(" + 346 + ',' + Config.CLIENT_VERSION + ',' + 12 + ',' + 512 + ')');
 		}
+		try {
+			Discord.InitalizeDiscord();
+		} catch (Exception e) { }
 	}
 
 	@Override
