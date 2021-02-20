@@ -4,9 +4,12 @@ import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
 import net.arikia.dev.drpc.DiscordRichPresence;
 
-import java.io.*;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Discord {
 
@@ -16,37 +19,29 @@ public class Discord {
 
 	public static boolean startedDiscord = false;
 
-	public static void setInUse(boolean inuse) {
-		try {
-			FileOutputStream fileout = new FileOutputStream(Config.F_CACHE_DIR + File.separator + "discord_inuse.txt");
+	private static final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+	private static final Runnable presenceTask = new PresenceCheck();
+	private static final Runnable discordTask = new DiscordUpdate();
 
-			OutputStreamWriter outputWriter = new OutputStreamWriter(fileout);
-			outputWriter.write("" + (inuse ? "1" : "0"));
-			outputWriter.close();
+	public static void setInUse(final boolean inuse) {
+		try {
+			Files.write(Paths.get(Config.F_CACHE_DIR + File.separator + "discord_inuse.txt"), (inuse ? "1" : "0").getBytes());
 		} catch (Exception e) {
 		}
 	}
 
 	public static boolean getInUse() {
 		try {
-			FileInputStream in = new FileInputStream(Config.F_CACHE_DIR + File.separator + "discord_inuse.txt");
-			InputStreamReader inputStreamReader = new InputStreamReader(in);
-			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-			StringBuilder sb = new StringBuilder();
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				sb.append(line);
-			}
-			in.close();
-			return sb.toString().equals("1");
+			final String read = Files.readAllLines(Paths.get(Config.F_CACHE_DIR + File.separator + "discord_inuse.txt")).get(0);
+			return read.equals("1");
 		} catch (Exception e) {
 			setInUse(true);
 		}
 		return false;
 	}
 
-	static class PresenceCheck extends TimerTask {
-		public synchronized void run() {
+	static class PresenceCheck implements Runnable {
+		public void run() {
 			// discord natives not in use and have not started discord
 			if (!startedDiscord && !getInUse()) {
 				Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -62,24 +57,24 @@ public class Discord {
 				setInUse(true);
 				DiscordRPC.discordInitialize(APPLICATION_ID, discord, false);
 				DiscordRPC.discordRegister(APPLICATION_ID, "");
-				Timer timer = new Timer();
-				timer.schedule(new DiscordUpdate(), 0, 5000);
+				scheduledExecutorService.scheduleAtFixedRate(discordTask, 0L, 5L, TimeUnit.SECONDS);
+				//Timer timer = new Timer();
+				//timer.scheduleAtFixedRate(new DiscordUpdate(), 0, 5000);
 				startedDiscord = true;
 			}
 		}
 	}
 
 	public static void InitalizeDiscord() {
-		Timer timer = new Timer();
 		// users may (likely) have multiple instances of the game open at once
 		// so we have to run a timer task to only have one initialized at a time
 		// if that instance later gets closed, one of the other instances
 		// will then check to initialize
 		// this is done per 15 secs
-		timer.schedule(new PresenceCheck(), 0, 15000);
+		scheduledExecutorService.scheduleAtFixedRate(presenceTask, 0L, 15L, TimeUnit.SECONDS);
 	}
 
-	static class DiscordUpdate extends TimerTask {
+	static class DiscordUpdate implements Runnable {
 		public void run() {
 			DiscordRPC.discordRunCallbacks();
 			DiscordRichPresence.Builder presence = new DiscordRichPresence.Builder("Open source RSC MMO");
