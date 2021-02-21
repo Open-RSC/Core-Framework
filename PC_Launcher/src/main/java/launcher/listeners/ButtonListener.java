@@ -87,6 +87,7 @@ public class ButtonListener implements ActionListener {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				return;
 			}
 
 			case "minimize": {
