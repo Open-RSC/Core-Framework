@@ -28,7 +28,8 @@ public class Scavvo extends AbstractShop {
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
 		npcsay(player, n, "Ello matey", "Want to buy some exciting new toys?");
-		int options = multi(player, n, "No, toys are for kids", "Lets have a look then", "Ooh goody goody toys");
+		int options = multi(player, n, false, // do not send over
+			"No, toys are for kids", "Lets have a look then", "Ooh goody goody toys");
 		if (options == 0) {
 			say(player, n, "No toys are for kids");
 		} else if (options == 1) {
