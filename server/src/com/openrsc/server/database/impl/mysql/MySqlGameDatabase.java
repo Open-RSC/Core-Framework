@@ -551,8 +551,13 @@ public class MySqlGameDatabase extends GameDatabase {
 	@Override
 	protected PlayerFriend[] queryLoadPlayerFriends(final Player player) throws GameDatabaseException {
 		final ArrayList<PlayerFriend> list = new ArrayList<>();
-		try (final PreparedStatement statement = statementFromInteger(getQueries().playerFriends, player.getDatabaseID());) {
-			final List<Long> friends = longListFromResultSet(statement.executeQuery(), "friend");
+		final List<Long> friends = new ArrayList<Long>();
+		try (final PreparedStatement statement = statementFromInteger(getQueries().playerFriends, player.getDatabaseID());
+			 final ResultSet resultSet = statement.executeQuery();) {
+
+			while (resultSet.next()) {
+				friends.add(resultSet.getLong("friend"));
+			}
 
 			for (int i = 0; i < friends.size(); i++) {
 				final PlayerFriend friend = new PlayerFriend();
@@ -570,8 +575,13 @@ public class MySqlGameDatabase extends GameDatabase {
 	@Override
 	protected PlayerIgnore[] queryLoadPlayerIgnored(final Player player) throws GameDatabaseException {
 		final ArrayList<PlayerIgnore> list = new ArrayList<>();
-		try (final PreparedStatement statement = statementFromInteger(getQueries().playerIgnored, player.getDatabaseID());) {
-			final List<Long> friends = longListFromResultSet(statement.executeQuery(), "ignore");
+		final List<Long> friends = new ArrayList<Long>();
+		try (final PreparedStatement statement = statementFromInteger(getQueries().playerIgnored, player.getDatabaseID());
+			 final ResultSet resultSet = statement.executeQuery();) {
+
+			while (resultSet.next()) {
+				friends.add(resultSet.getLong("ignore"));
+			}
 
 			for (int i = 0; i < friends.size(); i++) {
 				final PlayerIgnore ignore = new PlayerIgnore();
@@ -2161,11 +2171,20 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	private PreparedStatement statementFromString(final String query, final String... longA) throws SQLException {
-		PreparedStatement prepared = null;
-		prepared = getConnection().prepareStatement(query);
+		final PreparedStatement prepared = getConnection().prepareStatement(query);
 
 		for (int i = 1; i <= longA.length; i++) {
 			prepared.setString(i, longA[i - 1]);
+		}
+
+		return prepared;
+	}
+
+	private PreparedStatement statementFromInteger(final String statement, final int... longA) throws SQLException {
+		final PreparedStatement prepared = getConnection().prepareStatement(statement);
+
+		for (int i = 1; i <= longA.length; i++) {
+			prepared.setInt(i, longA[i - 1]);
 		}
 
 		return prepared;
@@ -2179,30 +2198,6 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			prepared.executeUpdate();
 		}
-	}
-
-	private List<Long> longListFromResultSet(final ResultSet result, final String param) throws SQLException {
-		List<Long> list = new ArrayList<Long>();
-		try {
-			while (result.next()) {
-				list.add(result.getLong(param));
-			}
-		} finally {
-			result.close();
-		}
-
-		return list;
-	}
-
-	private PreparedStatement statementFromInteger(final String statement, final int... longA) throws SQLException {
-		PreparedStatement prepared = null;
-		prepared = getConnection().prepareStatement(statement);
-
-		for (int i = 1; i <= longA.length; i++) {
-			prepared.setInt(i, longA[i - 1]);
-		}
-
-		return prepared;
 	}
 
 	private boolean hasNextFromInt(final String statement, final int... intA) throws SQLException {
