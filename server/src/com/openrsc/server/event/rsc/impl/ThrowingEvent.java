@@ -219,6 +219,18 @@ public class ThrowingEvent extends GameTickEvent {
 				target.startPoisonEvent();
 			}
 		}
+
+		//Poison Throwables Ability to Poison NPCs
+		if(getPlayerOwner().getConfig().WANT_POISON_NPCS) {
+			if (getOwner().getWorld().getServer().getEntityHandler().getItemDef(throwingID).getName().toLowerCase().contains("poison") && target.isNpc()) {
+					if (target.getCurrentPoisonPower() < 10 && DataConversions.random(1, 50) == 1) {
+						target.setPoisonDamage(60);
+						target.startPoisonEvent();
+						getPlayerOwner().message("@gr3@You @gr2@have @gr1@poisioned @gr2@the " + ((Npc) target).getDef().name + "!");
+					}
+			}
+		}
+
 		getOwner().setKillType(2);
 		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
 		deliveredFirstProjectile = true;

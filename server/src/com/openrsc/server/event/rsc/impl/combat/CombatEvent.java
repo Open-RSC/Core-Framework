@@ -20,6 +20,7 @@ public class CombatEvent extends GameTickEvent {
 
 	private final Mob attackerMob, defenderMob;
 	private int roundNumber = 0;
+	private int[] poisonedWeapons = {ItemId.POISONED_BRONZE_DAGGER.id(), ItemId.POISONED_IRON_DAGGER.id(), ItemId.POISONED_STEEL_DAGGER.id(), ItemId.POISONED_BLACK_DAGGER.id(), ItemId.POISONED_MITHRIL_DAGGER.id(), ItemId.POISONED_ADAMANTITE_DAGGER.id(), ItemId.POISONED_RUNE_DAGGER.id(), ItemId.POISONED_DRAGON_DAGGER.id()};
 
 	public CombatEvent(World world, Mob attacker, Mob defender) {
 		super(world, null, 0, "Combat Event", false);
@@ -97,6 +98,13 @@ public class CombatEvent extends GameTickEvent {
 			target.setLastCombatState(CombatState.ERROR);
 			resetCombat();
 		} else {
+
+			if (hitter.isPlayer() && hitter.getConfig().WANT_POISON_NPCS && checkPoisonousWeapons(hitter) && target.getCurrentPoisonPower() < 10 && DataConversions.random(1, 50) == 1) {
+				target.setPoisonDamage(60);
+				target.startPoisonEvent();
+				((Player) hitter).message("@gr3@You @gr2@have @gr1@poisioned @gr2@the " + ((Npc) target).getDef().name + "!");
+			}
+
 			//if(hitter.isNpc() && target.isPlayer() || target.isNpc() && hitter.isPlayer()) {
 			int damage = CombatFormula.doMeleeDamage(hitter, target);
 			inflictDamage(hitter, target, damage);
@@ -123,6 +131,15 @@ public class CombatEvent extends GameTickEvent {
 				}
 			}
 		}
+	}
+
+	private boolean checkPoisonousWeapons(Mob hitter) {
+		for (int itemId : poisonedWeapons) {
+			if (((Player) hitter).getCarriedItems().getEquipment().hasEquipped(itemId)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void inflictDamage(final Mob hitter, final Mob target, int damage) {

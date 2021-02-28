@@ -331,6 +331,17 @@ public class RangeEvent extends GameTickEvent {
 				target.startPoisonEvent();
 			}
 		}
+		// Poison Arrows/Bolts Ability to Poison an NPC
+		if (getPlayerOwner().getConfig().WANT_POISON_NPCS) {
+			if (Objects.requireNonNull(getOwner().getWorld().getServer().getEntityHandler().getItemDef(arrowID)).getName().toLowerCase().contains("poison") && target.isNpc()) {
+					if (target.getCurrentPoisonPower() < 10 && DataConversions.random(1, 50) == 1) {
+						target.setPoisonDamage(60);
+						target.startPoisonEvent();
+						getPlayerOwner().message("@gr3@You @gr2@have @gr1@poisioned @gr2@the " + ((Npc) target).getDef().name + "!");
+					}
+
+			}
+		}
 		getOwner().setKillType(2);
 		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getPlayerOwner(), target, damage, 2));
 		deliveredFirstProjectile = true;

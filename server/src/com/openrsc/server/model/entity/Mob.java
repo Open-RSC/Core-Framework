@@ -721,6 +721,16 @@ public abstract class Mob extends Entity {
 		getWorld().getServer().getGameEventHandler().add(poisonEvent);
 	}
 
+	// part of NPC poison feature
+	public int getCurrentPoisonPower() {
+		final PoisonEvent poisonEvent = getAttribute("poisonEvent", null);
+		if (poisonEvent == null) {
+			return 0;
+		} else {
+			return poisonEvent.getPoisonPower();
+		}
+	}
+
 	/**
 	 * SETTERS/GETTERS
 	 */

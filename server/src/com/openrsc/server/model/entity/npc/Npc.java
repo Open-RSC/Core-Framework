@@ -273,6 +273,11 @@ public class Npc extends Mob {
 
 	@Override
 	public void killedBy(Mob mob) {
+		if (mob == null) {
+			this.cure();
+			deathListeners.clear();
+			return;
+		}
 		if (this.killed) return;
 		//this.killed = true; remove() assures everything went fine, and set killed to true
 

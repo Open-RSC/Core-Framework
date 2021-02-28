@@ -133,6 +133,7 @@ public class ServerConfiguration {
 	public int MAX_WALKING_SPEED;
 	public boolean SHOW_UNIDENTIFIED_HERB_NAMES;
 	public boolean WANT_QUEST_STARTED_INDICATOR;
+	public boolean WANT_POISON_NPCS;
 	public boolean WANT_CUSTOM_QUESTS;
 	public boolean FISHING_SPOTS_DEPLETABLE;
 	public boolean IMPROVED_ITEM_OBJECT_NAMES;
@@ -397,6 +398,7 @@ public class ServerConfiguration {
 		WANT_CHAIN_LEGS = tryReadBool("want_chain_legs").orElse(false);
 		WANT_APOTHECARY_QOL = tryReadBool("want_apothecary_qol").orElse(false);
 		WANT_RANGED_FACE_PLAYER = tryReadBool("want_ranged_face_player").orElse(false);
+		WANT_POISON_NPCS = tryReadBool("want_poison_npcs").orElse(false);
 
 		// Discord settings
 		DISCORD_AUCTION_WEBHOOK_URL = tryReadString("discord_auction_webhook_url").orElse("null");

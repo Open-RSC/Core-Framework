@@ -7,7 +7,7 @@ import com.openrsc.server.model.world.World;
 
 public class PoisonEvent extends GameTickEvent {
 
-	private Mob mob;
+	final private Mob mob;
 
 	private int poisonPower;
 
@@ -36,6 +36,11 @@ public class PoisonEvent extends GameTickEvent {
 
 	public void setPoisonPower(int int1) {
 		poisonPower = int1;
+	}
+
+	//Part of Poison NPC feature
+	public int getPoisonPower() {
+		return poisonPower;
 	}
 
 }
