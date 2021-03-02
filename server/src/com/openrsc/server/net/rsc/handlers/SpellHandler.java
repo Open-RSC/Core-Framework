@@ -1250,11 +1250,8 @@ public class SpellHandler implements PacketHandler {
 				}
 				if (!getPlayer().checkAttack(affectedMob, true) && affectedMob.isNpc()) {
 					// Exception for certain non-attackable mobs that attack you
-					// Want to make sure that player is in combat with mob, and that
-					// they are casting on the mob that they are in combat with.
+					// We want to make sure that player is in combat with the mob.
 					boolean inCombat = getPlayer().inCombat();
-					boolean castingOnOpponent = getPlayer().getOpponent() != null
-						&& getPlayer().getOpponent().getUUID() == affectedMob.getUUID();
 					boolean isRightMob = inArray(affectedMob.getID(),
 						new int[]{
 							NpcId.SHAPESHIFTER_SPIDER.id(),
@@ -1268,7 +1265,7 @@ public class SpellHandler implements PacketHandler {
 							NpcId.OGRE_TRADER_FOOD.id(),
 							NpcId.CITY_GUARD.id(),
 							NpcId.TOBAN.id()});
-					boolean shouldCastSpell = inCombat && castingOnOpponent && isRightMob;
+					boolean shouldCastSpell = inCombat && isRightMob;
 					if (!shouldCastSpell) {
 						getPlayer().message("I can't attack that");
 						getPlayer().resetPath();
