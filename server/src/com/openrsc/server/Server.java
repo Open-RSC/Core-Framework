@@ -7,6 +7,7 @@ import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
 import com.openrsc.server.database.impl.mysql.MySqlGameLogger;
+import com.openrsc.server.event.custom.DailyShutdownEvent;
 import com.openrsc.server.event.custom.HourlyResetEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.SingleTickEvent;
@@ -32,7 +33,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -451,7 +451,7 @@ public class Server implements Runnable {
 
 					monitorTickPerformance();
 
-					//dailyShutdownEvent();
+					dailyShutdownEvent();
 					// not ideal location but is safe guarded to only keep 1
 					resetEvent();
 
@@ -487,11 +487,20 @@ public class Server implements Runnable {
 	private void dailyShutdownEvent() {
 		try {
 			if (getConfig().WANT_AUTO_SERVER_SHUTDOWN) {
-				int hour = LocalDateTime.now().getHour();
+				HashMap<String, GameTickEvent> events = getWorld().getServer().getGameEventHandler().getEvents();
+				for (GameTickEvent event : events.values()) {
+					if (!(event instanceof DailyShutdownEvent)) continue;
+
+					// There is already a daily shutdown running!;
+					// do nothing!
+					return;
+				}
+				getWorld().getServer().getGameEventHandler().add(new DailyShutdownEvent(getWorld(), 1, getConfig().RESTART_HOUR));
+				/*int hour = LocalDateTime.now().getHour();
 				int minute = LocalDateTime.now().getMinute();
 
 				if (hour == getConfig().RESTART_HOUR && minute == 0)
-					getWorld().getServer().shutdown(300);
+					getWorld().getServer().shutdown(300);*/
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
