@@ -458,7 +458,19 @@ public class Drinkables implements OpInvTrigger {
 		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(newItem));
-		int newStat = Math.min(player.getSkills().getLevel(Skills.RUNECRAFT), player.getSkills().getMaxStat(Skills.RUNECRAFT)) + (superPot ? 6 : 3);
+		int newStat;
+		// TODO Should probably put the boost values in some kind of configuration or definition at some point.
+		// Restore stat
+		if (player.getSkills().getLevel(Skills.RUNECRAFT) <= player.getSkills().getMaxStat(Skills.RUNECRAFT)) {
+			newStat = player.getSkills().getLevel(Skills.RUNECRAFT) + (superPot ? 6 : 3);
+		}
+
+		// Boost stat
+		else {
+			final int boostedStat = player.getSkills().getMaxStat(Skills.RUNECRAFT) + (superPot ? 6 : 3);
+			newStat = Math.max(boostedStat, player.getSkills().getLevel(Skills.RUNECRAFT));
+		}
+
 		player.getSkills().setLevel(Skills.RUNECRAFT, newStat);
 		delay(2);
 		if (left <= 0) {
