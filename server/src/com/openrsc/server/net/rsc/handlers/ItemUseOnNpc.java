@@ -51,7 +51,12 @@ public class ItemUseOnNpc implements PacketHandler {
 				// Lazy bugfix for "notes shouldn't be able to be used on NPCs... except for the bankers!"
 				int[] BANKERS = {NpcId.BANKER_GEN1.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_GEN2.id(),
 					NpcId.GNOME_BANKER.id(), NpcId.JUNGLE_BANKER.id()};
-				if (item.getNoted() && !inArray(affectedNpc.getID(), BANKERS)) {
+				int[] CERTERS = {NpcId.GILES.id(), NpcId.MILES.id(), NpcId.NILES.id(), NpcId.JINNO.id(),
+					NpcId.WATTO.id(), NpcId.OWEN.id(), NpcId.CHUCK.id(), NpcId.ORVEN.id(),
+					NpcId.PADIK.id(), NpcId.SETH.id(), NpcId.FORESTER.id(), NpcId.SIDNEY_SMITH.id()};
+
+				if (item.getNoted() &&
+					!(inArray(affectedNpc.getID(), BANKERS) || inArray(affectedNpc.getID(), CERTERS))) {
 					getPlayer().message("Nothing interesting happens");
 					return;
 				}
