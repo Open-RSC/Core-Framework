@@ -1742,6 +1742,9 @@ public class PacketHandler {
 						mc.showMessage(false, null,
 							com.openrsc.client.entityhandling.EntityHandler.getNpcDef(npc.npcId).getName() + ": " + npc.message,
 							MessageType.QUEST, 0, null, "@yel@");
+
+						// Discord update
+						Discord.setLastUpdate("Questing");
 					}
 				}
 
@@ -2022,6 +2025,9 @@ public class PacketHandler {
 
 			mc.setQuestStage(questID, stage);
 		}
+
+		// Discord status
+		Discord.setLastUpdate("Questing");
 	}
 
 	private void showBank() {
@@ -2032,6 +2038,9 @@ public class PacketHandler {
 		for (int slot = 0; slot < mc.getNewBankItemCount(); ++slot) {
 			mc.getBank().addBank(slot, packetsIncoming.getShort(), packetsIncoming.get32());
 		}
+
+		// Discord update
+		Discord.setLastUpdate("Banking");
 	}
 
 	private void updateIndividualExperience() {
@@ -2365,6 +2374,9 @@ public class PacketHandler {
 			mc.setShopSelectedItemIndex(-1);
 			mc.setShopSelectedItemType(-2);
 		}
+
+		// Discord status
+		Discord.setLastUpdate("Shopping");
 	}
 
 	private void updateTradeDialog() {
