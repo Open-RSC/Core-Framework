@@ -2,7 +2,6 @@ package com.openrsc.server.net;
 
 import com.google.common.base.Objects;
 import com.openrsc.server.Server;
-import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.LoginPacketHandler;
@@ -104,6 +103,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 		if (player != null) {
 			player.unregister(false, "Channel closed");
 		}
+		ctx.attr(attachment).set(null);
 	}
 
 	@Override
