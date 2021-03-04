@@ -24,6 +24,7 @@ public class Discord {
 	private static final Runnable presenceTask = new PresenceCheck();
 	private static final Runnable discordTask = new DiscordUpdate();
 	private static ScheduledFuture scheduled;
+	private static String lastUpdate = "Open source RSC MMO";
 
 	public static void setInUse(final boolean inuse) {
 		try {
@@ -81,9 +82,16 @@ public class Discord {
 	static class DiscordUpdate implements Runnable {
 		public void run() {
 			DiscordRPC.discordRunCallbacks();
-			DiscordRichPresence.Builder presence = new DiscordRichPresence.Builder("Open source RSC MMO");
+			DiscordRichPresence.Builder presence = new DiscordRichPresence.Builder(lastUpdate);
 			presence.setBigImage("openrsc_logo", "Check out rsc.vet!");
 			DiscordRPC.discordUpdatePresence(presence.build());
+			// This will be the default message if the player hasn't done anything
+			// since the last update.
+			setLastUpdate("Adventuring");
 		}
+	}
+
+	public static void setLastUpdate(String update) {
+		lastUpdate = update;
 	}
 }

@@ -2138,6 +2138,17 @@ public class PacketHandler {
 		mc.setPlayerStatBase(skill, packetsIncoming.getUnsignedByte());
 		mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
 		updateExperienceTracker(skill, oldXP, oldLvl);
+
+		// Update the discord status
+		final String[] skillNames = {"Attack", "Defense", "Strength", "Hits",
+			"Ranged", "Prayer", "Magic", "Cooking", "Woodcutting", "Fletching",
+			"Fishing", "Firemaking", "Crafting", "Smithing", "Mining", "Herblaw",
+			"Agility", "Thieving", "Runecraft", "Harvesting"};
+		if (skill == 0 || skill == 1 || skill == 2 || skill == 3) {
+			Discord.setLastUpdate("Training Combat");
+		} else {
+			Discord.setLastUpdate("Training " + skillNames[skill]);
+		}
 	}
 
 	private void updateExperienceTracker(int skill, int oldXp, int oldLvl) {
