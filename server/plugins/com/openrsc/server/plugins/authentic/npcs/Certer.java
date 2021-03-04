@@ -1,56 +1,92 @@
 package com.openrsc.server.plugins.authentic.npcs;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.external.CerterDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Certer implements TalkNpcTrigger {
+public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 
 	//official certers
-	int[] certers = new int[]{NpcId.GILES.id(), NpcId.MILES.id(), NpcId.NILES.id(), NpcId.JINNO.id(), NpcId.WATTO.id(),
+	final int[] certers = new int[]{NpcId.GILES.id(), NpcId.MILES.id(), NpcId.NILES.id(), NpcId.JINNO.id(), NpcId.WATTO.id(),
 			NpcId.OWEN.id(), NpcId.CHUCK.id(), NpcId.ORVEN.id(), NpcId.PADIK.id(), NpcId.SETH.id()};
 	//forester is custom certer if wc guild enabled
 	//sidney smith is in its own file
 
+	// For custom content, use item on certer
+	final HashMap<Integer, int[]> certerTable = new HashMap<Integer, int[]>() {{
+		// Fish
+		put(NpcId.NILES.id(), new int[]{ItemId.SWORDFISH.id(), ItemId.RAW_SWORDFISH.id(),
+			ItemId.LOBSTER.id(), ItemId.RAW_LOBSTER.id()});
+		put(NpcId.SETH.id(), new int[]{ItemId.SWORDFISH.id(), ItemId.RAW_SWORDFISH.id(),
+			ItemId.LOBSTER.id(), ItemId.RAW_LOBSTER.id()});
+		put(NpcId.ORVEN.id(), new int[]{ItemId.SWORDFISH.id(), ItemId.RAW_SWORDFISH.id(),
+			ItemId.LOBSTER.id(), ItemId.RAW_LOBSTER.id()});
+		// Member's fish
+		put(NpcId.OWEN.id(), new int[]{ItemId.BASS.id(), ItemId.RAW_BASS.id(), ItemId.SHARK.id(),
+			ItemId.RAW_SHARK.id()});
+		put(NpcId.PADIK.id(), new int[]{ItemId.BASS.id(), ItemId.RAW_BASS.id(), ItemId.SHARK.id(),
+			ItemId.RAW_SHARK.id()});
+		// Ores
+		put(NpcId.GILES.id(), new int[]{ItemId.IRON_ORE.id(), ItemId.COAL.id(), ItemId.SILVER.id(),
+			ItemId.GOLD.id(), ItemId.MITHRIL_ORE.id()});
+		put(NpcId.JINNO.id(), new int[]{ItemId.IRON_ORE.id(), ItemId.COAL.id(), ItemId.SILVER.id(),
+			ItemId.GOLD.id(), ItemId.MITHRIL_ORE.id()});
+		// Bars
+		put(NpcId.MILES.id(), new int[]{ItemId.IRON_BAR.id(), ItemId.SILVER_BAR.id(),
+			ItemId.STEEL_BAR.id(), ItemId.GOLD_BAR.id(), ItemId.MITHRIL_BAR.id()});
+		put(NpcId.WATTO.id(), new int[]{ItemId.IRON_BAR.id(), ItemId.SILVER_BAR.id(),
+			ItemId.STEEL_BAR.id(), ItemId.GOLD_BAR.id(), ItemId.MITHRIL_BAR.id()});
+		// Logs
+		put(NpcId.CHUCK.id(), new int[]{ItemId.WILLOW_LOGS.id(), ItemId.MAPLE_LOGS.id(),
+			ItemId.YEW_LOGS.id()});
+		// The following is custom - only if the Woodcutting guild is enabled.
+		put(NpcId.FORESTER.id(), new int[]{ItemId.WILLOW_LOGS.id(), ItemId.MAPLE_LOGS.id(),
+			ItemId.YEW_LOGS.id()});
+	}};
+
 	@Override
-	public void onTalkNpc(Player player, final Npc n) {
+	public void onTalkNpc(Player player, final Npc npc) {
 
 		// Forester (Log certer; custom)
-		if ((n.getID() == NpcId.FORESTER.id())
+		if ((npc.getID() == NpcId.FORESTER.id())
 			&& !config().WANT_WOODCUTTING_GUILD) {
 			return;
 		}
 
-		final CerterDef certerDef = player.getWorld().getServer().getEntityHandler().getCerterDef(n.getID());
+		final CerterDef certerDef = player.getWorld().getServer().getEntityHandler().getCerterDef(npc.getID());
 		if (certerDef == null) {
 			return;
 		}
 
-		beginCertExchange(certerDef, player, n);
+		beginCertExchange(certerDef, player, npc);
 	}
 
-	private void beginCertExchange(CerterDef certerDef, Player player, Npc n) {
-		npcsay(player, n, "Welcome to my " + certerDef.getType()
+	private void beginCertExchange(CerterDef certerDef, Player player, Npc npc) {
+		npcsay(player, npc, "Welcome to my " + certerDef.getType()
 			+ " exchange stall");
 
-		String ending = (n.getID() == NpcId.MILES.id() || n.getID() == NpcId.CHUCK.id() || n.getID() == NpcId.WATTO.id() ? "s" : "");
+		String ending = (npc.getID() == NpcId.MILES.id() || npc.getID() == NpcId.CHUCK.id() || npc.getID() == NpcId.WATTO.id() ? "s" : "");
 
 		// First Certer Menu
-		int firstType = firstMenu(certerDef, ending, player, n);
+		int firstType = firstMenu(certerDef, ending, player, npc);
 		if (firstType == 0) {
-			say(player, n, "I have some certificates to trade in");
+			say(player, npc, "I have some certificates to trade in");
 		} else if (firstType == 1 && !player.getCertOptOut()) {
-			say(player, n, "I have some " + certerDef.getType() + ending + " to trade in");
+			say(player, npc, "I have some " + certerDef.getType() + ending + " to trade in");
 		} else if (firstType == 1 && player.getCertOptOut()) {
 			// convert to an "equivalent" option 2 for the informational menu, handled separately
 			++firstType;
@@ -61,24 +97,24 @@ public class Certer implements TalkNpcTrigger {
 		//informational only
 		if (firstType != 2) {
 			// Second Certer Menu
-			secondType = secondMenu(certerDef, ending, player, n, firstType);
+			secondType = secondMenu(certerDef, ending, player, npc, firstType);
 		}
 
 		// Final Certer Menu
 		switch (firstType) {
 			case 0: //cert to item
-				decertMenu(certerDef, ending, player, n, secondType);
+				decertMenu(certerDef, ending, player, npc, secondType);
 				break;
 			case 1: //item to cert
-				certMenu(certerDef, ending, player, n, secondType);
+				certMenu(certerDef, ending, player, npc, secondType);
 				break;
 			case 2: //informational
-				infMenu(certerDef, ending, player, n);
+				infMenu(certerDef, ending, player, npc);
 				break;
 		}
 	}
 
-	private int firstMenu(CerterDef certerDef, String ending, Player player, Npc n) {
+	private int firstMenu(CerterDef certerDef, String ending, Player player, Npc npc) {
 		ArrayList<String> options = new ArrayList<>();
 		options.add("I have some certificates to trade in");
 		if (!player.getCertOptOut()) {
@@ -87,7 +123,7 @@ public class Certer implements TalkNpcTrigger {
 		options.add("What is a " + certerDef.getType() + " exchange stall?");
 		String[] finalOptions = new String[options.size()];
 
-		return multi(player, n, false, //do not send over
+		return multi(player, npc, false, //do not send over
 			options.toArray(finalOptions));
 	}
 
@@ -108,15 +144,15 @@ public class Certer implements TalkNpcTrigger {
 		}
 	}
 
-	private void decertMenu(CerterDef certerDef, String ending, Player player, Npc n, int index) {
+	private void decertMenu(CerterDef certerDef, String ending, Player player, Npc npc, int index) {
 		final String[] names = certerDef.getCertNames();
 		player.message("How many certificates do you wish to trade in?");
 		int certAmount;
 		if (config().WANT_CERTER_BANK_EXCHANGE) {
-			certAmount = multi(player, n, false, "One", "two", "Three", "four",
+			certAmount = multi(player, npc, false, "One", "two", "Three", "four",
 				"five", "All to bank");
 		} else {
-			certAmount = multi(player, n, false, "One", "two", "Three", "four", "five");
+			certAmount = multi(player, npc, false, "One", "two", "Three", "four", "five");
 		}
 		if (certAmount < 0)
 			return;
@@ -169,16 +205,16 @@ public class Certer implements TalkNpcTrigger {
 		}
 	}
 
-	private void certMenu(CerterDef certerDef, String ending, Player player, Npc n, int index) {
+	private void certMenu(CerterDef certerDef, String ending, Player player, Npc npc, int index) {
 		final String[] names = certerDef.getCertNames();
 		player.message("How many " + certerDef.getType() + ending
 			+ " do you wish to trade in?");
 		int certAmount;
 		if (config().WANT_CERTER_BANK_EXCHANGE) {
-			certAmount = multi(player, n, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive",
+			certAmount = multi(player, npc, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive",
 					"All from bank");
 		} else {
-			certAmount = multi(player, n, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive");
+			certAmount = multi(player, npc, false, "five", "ten", "Fifteen", "Twenty", "Twentyfive");
 		}
 		if (certAmount < 0)
 			return;
@@ -223,7 +259,7 @@ public class Certer implements TalkNpcTrigger {
 		}
 	}
 
-	private void infMenu(CerterDef certerDef, String ending, Player player, Npc n) {
+	private void infMenu(CerterDef certerDef, String ending, Player player, Npc npc) {
 		String item;
 		switch(certerDef.getType()) {
 			case "ore":
@@ -242,8 +278,8 @@ public class Certer implements TalkNpcTrigger {
 				item = certerDef.getType();
 				break;
 		}
-		say(player, n, "What is a " + certerDef.getType() + " exchange store?");
-		npcsay(player, n, "You may exchange your " + item + " here",
+		say(player, npc, "What is a " + certerDef.getType() + " exchange store?");
+		npcsay(player, npc, "You may exchange your " + item + " here",
 				"For certificates which are light and easy to carry",
 				"You can carry many of these certificates at once unlike " + item,
 				"5 " + item + " will give you one certificate",
@@ -253,7 +289,98 @@ public class Certer implements TalkNpcTrigger {
 	}
 
 	@Override
-	public boolean blockTalkNpc(Player player, Npc n) {
-		return (DataConversions.inArray(certers, n.getID())) || (n.getID() == NpcId.FORESTER.id() && player.getConfig().WANT_WOODCUTTING_GUILD);
+	public boolean blockTalkNpc(Player player, Npc npc) {
+		return (DataConversions.inArray(certers, npc.getID())) || (npc.getID() == NpcId.FORESTER.id() && player.getConfig().WANT_WOODCUTTING_GUILD);
+	}
+
+	@Override
+	public void onUseNpc(Player player, Npc npc, Item item) {
+		// Do our checks
+		if (!config().WANT_BANK_NOTES) return;
+		if ((npc.getID() == NpcId.FORESTER.id()) && !config().WANT_WOODCUTTING_GUILD) return;
+
+		final int[] validItems = certerTable.get(npc.getID());
+		if (validItems == null) return;
+
+		if (inArray(item.getCatalogId(), validItems)) {
+			// Grab a bunch of info about the item and NPC for flavor text
+			final boolean isNoted = item.getNoted();
+			final String npcName = player.getWorld().getServer().getEntityHandler().getNpcDef(npc.getID()).getName();
+			final String itemName = player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).getName();
+
+			// Determine how much of the item the player is holding.
+			// But only look for items of the same notedness that they handed the NPC.
+			final int totalHeld = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(isNoted));
+			int toExchange = 0;
+
+			// If the item is noted, we'll ask how many unnoted items they want.
+			// If it's just items, we'll just note them all.
+			if (isNoted && totalHeld > 1) {
+				npcsay(player, npc, "How many " + itemName + " certificates would you like to exchange?");
+				int option = multi(player, "One", "Two", "Five", "Ten", "Twenty-five");
+				switch (option)
+				{
+					case -1:
+						return;
+					case 0:
+						toExchange = 1;
+						break;
+					case 1:
+						toExchange = 2;
+						break;
+					case 2:
+						toExchange = 5;
+						break;
+					case 3:
+						toExchange = 10;
+						break;
+					case 4:
+						toExchange = 25;
+						break;
+				}
+				// Make sure they ain't trying to fib us
+				toExchange = Math.min(toExchange, totalHeld);
+
+			} else {
+				toExchange = totalHeld;
+			}
+
+			mes("You hand " + npcName + " your " + (isNoted ? "certed " : "") + itemName + (toExchange > 1 ? "s" : ""));
+			delay(3);
+			if (isNoted) {
+				// Remove the items
+				player.getCarriedItems().remove(new Item(item.getCatalogId(), toExchange, true));
+				// Add them back
+				for (int i = 0; i < toExchange; i++) {
+					player.getCarriedItems().getInventory().add(new Item(item.getCatalogId()));
+				}
+			} else {
+				// Remove the (non-noted) items
+				for (int i = 0; i < toExchange; i++) {
+					player.getCarriedItems().remove(new Item(item.getCatalogId(), 1, false));
+				}
+
+				// Add back the noted items.
+				player.getCarriedItems().getInventory().add(new Item(item.getCatalogId(), toExchange, true));
+			}
+			mes(npcName + " hands you back " + (toExchange > 1 ? "some " : "a ") +
+				itemName + (isNoted ? "" : " cert") + (toExchange > 1 ? "s" : ""));
+			delay(3);
+
+		} else {
+			mes("Nothing interesting happens");
+		}
+	}
+
+	@Override
+	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		// IF bank notes aren't enabled, don't block
+		if (!player.getConfig().WANT_BANK_NOTES) return false;
+		// If we're not using on a certer, don't block
+		if (!certerTable.containsKey(npc.getID())) return false;
+		// If we're using on the Forester, but the WC guild isn't enabled, don't block
+		if (npc.getID() == NpcId.FORESTER.id() && !player.getConfig().WANT_WOODCUTTING_GUILD) return false;
+		// If we're using on a certer and it's a certable item, block
+		return inArray(item.getCatalogId(), certerTable.get(npc.getID()));
 	}
 }
