@@ -1,0 +1,363 @@
+<!-- WARNING: DO NOT REARRANGE THE ORDER OF THE FISH!! -->
+<!-- Fish must be in order of highest level to lowest level,
+     or else the success rate calculation will be flawed.    -->
+<map>
+	<entry>
+		<int>192</int><!-- lure/bait -->
+		<ObjectFishingDef-array>
+			<ObjectFishingDef><!-- trout/salmon -->
+				<defs>
+					<ObjectFishDef>
+						<fishId>356</fishId>
+						<requiredLevel>30</requiredLevel>
+						<exp>280</exp>
+                                                <lowRate>16</lowRate>
+                                                <highRate>96</highRate>
+					</ObjectFishDef>
+                                        <ObjectFishDef>
+						<fishId>358</fishId>
+						<requiredLevel>20</requiredLevel>
+						<exp>200</exp>
+                                                <lowRate>32</lowRate>
+                                                <highRate>192</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>378</netId>
+				<baitId>381</baitId>
+				<depletion>2</depletion>
+				<respawnTime>17</respawnTime>
+                                <cascade>1</cascade>
+			</ObjectFishingDef>
+			<ObjectFishingDef><!-- pike -->
+				<defs>
+					<ObjectFishDef>
+						<fishId>363</fishId>
+						<requiredLevel>25</requiredLevel>
+						<exp>240</exp>
+                                                <lowRate>16</lowRate>
+                                                <highRate>96</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>377</netId>
+				<baitId>380</baitId>
+				<depletion>2</depletion>
+				<respawnTime>17</respawnTime>
+                                <cascade>0</cascade>
+			</ObjectFishingDef>
+		</ObjectFishingDef-array>
+	</entry>
+        <entry>
+		<int>271</int><!-- bait -->
+		<ObjectFishingDef-array>
+			<ObjectFishingDef><!-- Lava eel -->
+				<defs>
+					<ObjectFishDef>
+						<fishId>591</fishId>
+						<requiredLevel>53</requiredLevel>
+						<exp>360</exp>
+                                                <lowRate>16</lowRate>
+                                                <highRate>96</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>589</netId>
+				<baitId>380</baitId>
+				<depletion>0</depletion>
+				<respawnTime>-1</respawnTime>
+                                <cascade>0</cascade>
+			</ObjectFishingDef>
+		</ObjectFishingDef-array>
+	</entry>
+	<entry>
+		<int>193</int><!-- net/bait -->
+		<ObjectFishingDef-array>
+			<ObjectFishingDef><!-- anchovies/shrimp -->
+				<defs>
+                                        <ObjectFishDef>
+						<fishId>351</fishId>
+						<requiredLevel>15</requiredLevel>
+						<exp>160</exp>
+                                                <lowRate>24</lowRate>
+                                                <highRate>128</highRate>
+					</ObjectFishDef>
+					<ObjectFishDef>
+						<fishId>349</fishId>
+						<requiredLevel>1</requiredLevel>
+						<exp>40</exp>
+                                                <lowRate>48</lowRate>
+                                                <highRate>256</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>376</netId>
+				<baitId>-1</baitId>
+				<depletion>1</depletion>
+				<respawnTime>8</respawnTime>
+                                <cascade>1</cascade>
+			</ObjectFishingDef>
+			<ObjectFishingDef><!-- sardine/herring -->
+				<defs>
+                                        <ObjectFishDef>
+						<fishId>361</fishId>
+						<requiredLevel>10</requiredLevel>
+						<exp>120</exp>
+                                                <lowRate>24</lowRate>
+                                                <highRate>128</highRate>
+					</ObjectFishDef>
+					<ObjectFishDef>
+						<fishId>354</fishId>
+						<requiredLevel>5</requiredLevel>
+						<exp>80</exp>
+                                                <lowRate>32</lowRate>
+                                                <highRate>192</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>377</netId>
+				<baitId>380</baitId>
+				<depletion>1</depletion>
+				<respawnTime>8</respawnTime>
+                                <cascade>1</cascade>
+			</ObjectFishingDef>
+		</ObjectFishingDef-array>
+	</entry>
+	<entry>
+		<int>493</int><!-- net tutorial island -->
+		<ObjectFishingDef-array>
+			<ObjectFishingDef><!-- shrimp -->
+				<defs>
+					<ObjectFishDef>
+						<fishId>349</fishId>
+						<requiredLevel>1</requiredLevel>
+						<exp>40</exp>
+                                                <lowRate>48</lowRate>
+                                                <highRate>256</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>376</netId>
+				<baitId>-1</baitId>
+				<depletion>0</depletion>
+				<respawnTime>-1</respawnTime>
+                                <cascade>0</cascade>
+			</ObjectFishingDef>
+		</ObjectFishingDef-array>
+	</entry>
+	<entry>
+		<int>194</int><!-- harpoon/cage -->
+		<ObjectFishingDef-array>
+			<ObjectFishingDef><!-- swordfish/tuna -->
+				<defs>
+					<ObjectFishDef>
+						<fishId>369</fishId>
+						<requiredLevel>50</requiredLevel>
+						<exp>400</exp>
+                                                <lowRate>4</lowRate>
+                                                <highRate>48</highRate>
+					</ObjectFishDef>
+					<ObjectFishDef>
+						<fishId>366</fishId>
+						<requiredLevel>35</requiredLevel>
+						<exp>320</exp>
+                                                <lowRate>8</lowRate>
+                                                <highRate>64</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>379</netId>
+				<baitId>-1</baitId>
+				<depletion>4</depletion>
+				<respawnTime>35</respawnTime>
+                                <cascade>1</cascade>
+			</ObjectFishingDef>
+			<ObjectFishingDef><!-- lobster -->
+				<defs>
+					<ObjectFishDef>
+						<fishId>372</fishId>
+						<requiredLevel>40</requiredLevel>
+						<exp>360</exp>
+                                                <lowRate>6</lowRate>
+                                                <highRate>95</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>375</netId>
+				<baitId>-1</baitId>
+				<depletion>4</depletion>
+				<respawnTime>35</respawnTime>
+                                <cascade>0</cascade>
+			</ObjectFishingDef>
+		</ObjectFishingDef-array>
+	</entry>
+	<entry>
+		<int>261</int><!-- net/harpoon -->
+		<ObjectFishingDef-array>
+			<ObjectFishingDef><!-- big net -->
+				<defs>
+                                        <!-- rates here are a bit weird & don't cascade...! -->
+                                        <!-- these rates are different from OSRS & are based
+                                             on 44512 big net fishing attempts from RSC     -->
+                                        <ObjectFishDef>
+						<fishId>554</fishId> <!-- bass -->
+						<requiredLevel>46</requiredLevel>
+						<exp>400</exp>
+                                                <lowRate>6</lowRate>
+                                                <highRate>31</highRate>
+					</ObjectFishDef>
+					<ObjectFishDef>
+						<fishId>550</fishId> <!-- cod -->
+						<requiredLevel>23</requiredLevel>
+						<exp>180</exp>
+                                                <lowRate>10</lowRate>
+                                                <highRate>41</highRate>
+					</ObjectFishDef>
+                                        <ObjectFishDef>
+						<fishId>552</fishId> <!-- mackerel, rolls twice -->
+						<requiredLevel>16</requiredLevel>
+						<exp>80</exp>
+                                                <lowRate>14</lowRate>
+                                                <highRate>48</highRate>
+					</ObjectFishDef>
+                                        <ObjectFishDef>
+						<fishId>793</fishId> <!-- oyster -->
+						<requiredLevel>16</requiredLevel>
+						<exp>40</exp>
+                                                <lowRate>2</lowRate>
+                                                <highRate>5</highRate>
+					</ObjectFishDef>
+					<ObjectFishDef>
+						<fishId>549</fishId> <!-- casket -->
+						<requiredLevel>16</requiredLevel>
+						<exp>40</exp>
+                                                <lowRate>0</lowRate>
+                                                <highRate>1</highRate>
+					</ObjectFishDef> 
+					<ObjectFishDef>
+						<fishId>17</fishId> <!-- boots -->
+						<requiredLevel>16</requiredLevel>
+						<exp>4</exp>
+                                                <lowRate>8</lowRate>
+                                                <highRate>8</highRate>
+					</ObjectFishDef>
+					<ObjectFishDef>
+						<fishId>16</fishId> <!-- gloves -->
+						<requiredLevel>16</requiredLevel>
+						<exp>4</exp>
+                                                <lowRate>4</lowRate>
+                                                <highRate>4</highRate>
+					</ObjectFishDef>
+					<ObjectFishDef>
+						<fishId>622</fishId> <!-- sea weed -->
+						<requiredLevel>16</requiredLevel>
+						<exp>4</exp>
+                                                <lowRate>8</lowRate>
+                                                <highRate>8</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>548</netId>
+				<baitId>-1</baitId>
+				<depletion>1</depletion>
+				<respawnTime>70</respawnTime>
+                                <cascade>0</cascade>
+			</ObjectFishingDef>
+			<ObjectFishingDef><!-- shark -->
+				<defs>
+					<ObjectFishDef>
+						<fishId>545</fishId>
+						<requiredLevel>76</requiredLevel>
+						<exp>440</exp>
+                                                <lowRate>3</lowRate>
+                                                <highRate>40</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>379</netId>
+				<baitId>-1</baitId>
+				<depletion>7</depletion>
+				<respawnTime>70</respawnTime>
+                                <cascade>0</cascade>
+			</ObjectFishingDef>
+		</ObjectFishingDef-array>
+	</entry>
+	<entry>
+		<int>376</int><!-- cage/harpoon -->
+		<ObjectFishingDef-array>
+			<ObjectFishingDef><!-- lobster -->
+				<defs>
+					<ObjectFishDef>
+						<fishId>372</fishId>
+						<requiredLevel>40</requiredLevel>
+						<exp>360</exp>
+                                                <lowRate>6</lowRate>
+                                                <highRate>95</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>375</netId>
+				<baitId>-1</baitId>
+				<depletion>4</depletion>
+				<respawnTime>35</respawnTime>
+                                <cascade>0</cascade>
+			</ObjectFishingDef>
+			<ObjectFishingDef><!-- swordfish/tuna -->
+				<defs>
+					<ObjectFishDef>
+						<fishId>369</fishId>
+						<requiredLevel>50</requiredLevel>
+						<exp>400</exp>
+                                                <lowRate>4</lowRate>
+                                                <highRate>48</highRate>
+					</ObjectFishDef>
+					<ObjectFishDef>
+						<fishId>366</fishId>
+						<requiredLevel>35</requiredLevel>
+						<exp>320</exp>
+                                                <lowRate>8</lowRate>
+                                                <highRate>64</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>379</netId>
+				<baitId>-1</baitId>
+				<depletion>4</depletion>
+				<respawnTime>35</respawnTime>
+                                <cascade>1</cascade>
+			</ObjectFishingDef>
+		</ObjectFishingDef-array>
+	</entry>
+	<entry>
+		<int>557</int><!-- harpoon/cage -->
+		<ObjectFishingDef-array>
+			<ObjectFishingDef><!-- swordfish/tuna -->
+				<defs>
+					<ObjectFishDef>
+						<fishId>369</fishId>
+						<requiredLevel>50</requiredLevel>
+						<exp>400</exp>
+                                                <lowRate>4</lowRate>
+                                                <highRate>48</highRate>
+					</ObjectFishDef>
+					<ObjectFishDef>
+						<fishId>366</fishId>
+						<requiredLevel>35</requiredLevel>
+						<exp>320</exp>
+                                                <lowRate>8</lowRate>
+                                                <highRate>64</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>379</netId>
+				<baitId>-1</baitId>
+				<depletion>4</depletion>
+				<respawnTime>35</respawnTime>
+                                <cascade>1</cascade>
+			</ObjectFishingDef>
+			<ObjectFishingDef><!-- lobster -->
+				<defs>
+					<ObjectFishDef>
+						<fishId>372</fishId>
+						<requiredLevel>40</requiredLevel>
+						<exp>360</exp>
+                                                <lowRate>6</lowRate>
+                                                <highRate>95</highRate>
+					</ObjectFishDef>
+				</defs>
+				<netId>375</netId>
+				<baitId>-1</baitId>
+				<depletion>4</depletion>
+				<respawnTime>35</respawnTime>
+                                <cascade>0</cascade>
+			</ObjectFishingDef>
+		</ObjectFishingDef-array>
+	</entry>
+</map>

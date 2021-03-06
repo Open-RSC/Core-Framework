@@ -1,0 +1,242 @@
+<map>
+<entry>
+		<int>176</int><!-- Bluerite -->
+		<ObjectMiningDef>
+			<requiredLvl>10</requiredLvl>
+			<oreId>266</oreId>
+			<exp>70</exp>
+			<depletion>9</depletion>
+			<respawnTime>510</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>100</int><!-- Copper -->
+		<ObjectMiningDef>
+			<requiredLvl>1</requiredLvl>
+			<oreId>150</oreId>
+			<exp>70</exp>
+			<depletion>9</depletion>
+			<respawnTime>4</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>101</int><!-- Copper -->
+		<ObjectMiningDef>
+			<requiredLvl>1</requiredLvl>
+			<oreId>150</oreId>
+			<exp>70</exp>
+			<depletion>9</depletion>
+			<respawnTime>4</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>102</int><!-- Iron -->
+		<ObjectMiningDef>
+			<requiredLvl>15</requiredLvl>
+			<oreId>151</oreId>
+			<exp>140</exp>
+			<depletion>14</depletion>
+			<respawnTime>7</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>103</int><!-- Iron -->
+		<ObjectMiningDef>
+			<requiredLvl>15</requiredLvl>
+			<oreId>151</oreId>
+			<exp>140</exp>
+			<depletion>14</depletion>
+			<respawnTime>7</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>104</int><!-- Tin -->
+		<ObjectMiningDef>
+			<requiredLvl>1</requiredLvl>
+			<oreId>202</oreId>
+			<exp>70</exp>
+			<depletion>9</depletion>
+			<respawnTime>4</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>105</int><!-- Tin -->
+		<ObjectMiningDef>
+			<requiredLvl>1</requiredLvl>
+			<oreId>202</oreId>
+			<exp>70</exp>
+			<depletion>9</depletion>
+			<respawnTime>4</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>106</int><!-- Mith -->
+		<ObjectMiningDef>
+			<requiredLvl>55</requiredLvl>
+			<oreId>153</oreId>
+			<exp>320</exp>
+			<depletion>29</depletion>
+			<respawnTime>110</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>107</int><!-- Mith -->
+		<ObjectMiningDef>
+			<requiredLvl>55</requiredLvl>
+			<oreId>153</oreId>
+			<exp>320</exp>
+			<depletion>29</depletion>
+			<respawnTime>110</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>108</int><!-- Addy -->
+		<ObjectMiningDef>
+			<requiredLvl>70</requiredLvl>
+			<oreId>154</oreId>
+			<exp>380</exp>
+			<depletion>49</depletion>
+			<respawnTime>220</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>109</int><!-- Addy -->
+		<ObjectMiningDef>
+			<requiredLvl>70</requiredLvl>
+			<oreId>154</oreId>
+			<exp>380</exp>
+			<depletion>49</depletion>
+			<respawnTime>220</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>110</int><!-- Coal -->
+		<ObjectMiningDef>
+			<requiredLvl>30</requiredLvl>
+			<oreId>155</oreId>
+			<exp>200</exp>
+			<depletion>19</depletion>
+			<respawnTime>25</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>111</int><!-- Coal -->
+		<ObjectMiningDef>
+			<requiredLvl>30</requiredLvl>
+			<oreId>155</oreId>
+			<exp>200</exp>
+			<depletion>19</depletion>
+			<respawnTime>25</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>112</int><!-- Gold -->
+		<ObjectMiningDef>
+			<requiredLvl>40</requiredLvl>
+			<oreId>152</oreId>
+			<exp>260</exp>
+			<depletion>24</depletion>
+			<respawnTime>70</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>113</int><!-- Gold -->
+		<ObjectMiningDef>
+			<requiredLvl>40</requiredLvl>
+			<oreId>152</oreId>
+			<exp>260</exp>
+			<depletion>24</depletion>
+			<respawnTime>70</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>315</int><!-- Gold -->
+		<ObjectMiningDef>
+			<requiredLvl>40</requiredLvl>
+			<oreId>690</oreId>
+			<exp>260</exp>
+			<depletion>24</depletion>
+			<respawnTime>70</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>114</int><!-- Clay -->
+		<ObjectMiningDef>
+			<requiredLvl>1</requiredLvl>
+			<oreId>149</oreId>
+			<exp>20</exp>
+			<depletion>9</depletion>
+			<respawnTime>2</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>115</int><!-- Clay -->
+		<ObjectMiningDef>
+			<requiredLvl>1</requiredLvl>
+			<oreId>149</oreId>
+			<exp>20</exp>
+			<depletion>9</depletion>
+			<respawnTime>2</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>195</int><!-- Silver -->
+		<ObjectMiningDef>
+			<requiredLvl>20</requiredLvl>
+			<oreId>383</oreId>
+			<exp>160</exp>
+			<depletion>17</depletion>
+			<respawnTime>70</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>196</int><!-- Silver -->
+		<ObjectMiningDef>
+			<requiredLvl>20</requiredLvl>
+			<oreId>383</oreId>
+			<exp>160</exp>
+			<depletion>17</depletion>
+			<respawnTime>70</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>210</int><!-- Rune -->
+		<ObjectMiningDef>
+			<requiredLvl>85</requiredLvl>
+			<oreId>409</oreId>
+			<exp>500</exp>
+			<depletion>79</depletion>
+			<respawnTime>900</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>211</int><!-- Rune -->
+		<ObjectMiningDef>
+			<requiredLvl>85</requiredLvl>
+			<oreId>409</oreId>
+			<exp>500</exp>
+			<depletion>79</depletion>
+			<respawnTime>900</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>496</int><!-- Tutorial Island Tin -->
+		<ObjectMiningDef>
+			<requiredLvl>1</requiredLvl>
+			<oreId>202</oreId>
+			<exp>70</exp>
+			<depletion>0</depletion>
+			<respawnTime>0</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+	<entry>
+		<int>1030</int><!-- Tourist trap cave jail rocks -->
+		<ObjectMiningDef>
+			<requiredLvl>1</requiredLvl>
+			<oreId>986</oreId>
+			<exp>0</exp>
+			<depletion>9</depletion>
+			<respawnTime>5</respawnTime>
+		</ObjectMiningDef>
+	</entry>
+</map>

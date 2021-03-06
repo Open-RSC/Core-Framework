@@ -30,8 +30,15 @@ public final class PersistenceManager {
 
 	public Object load(String filename) {
 		try {
-			InputStream is = new FileInputStream(new File(getServer().getConfig().CONFIG_DIR, filename));
-			if (filename.endsWith(".gz")) {
+			File theFile = new File(getServer().getConfig().CONFIG_DIR, filename);
+			boolean isGzipped = false;
+			if (!theFile.exists()) {
+				// fallback for old servers using .gz definitions
+				theFile = new File(getServer().getConfig().CONFIG_DIR, filename + ".gz");
+				isGzipped = true;
+			}
+			InputStream is = new FileInputStream(theFile);
+			if (isGzipped) {
 				is = new GZIPInputStream(is);
 			}
 			Object rv = xstream.fromXML(is);

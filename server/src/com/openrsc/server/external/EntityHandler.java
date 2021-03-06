@@ -152,35 +152,35 @@ public final class EntityHandler {
 		customItemConditions();
 		LOGGER.info("Loaded " + items.size() + " item definitions");
 
-		doors = (DoorDef[]) getPersistenceManager().load("defs/DoorDef.xml.gz");
-		gameObjects = (GameObjectDef[]) getPersistenceManager().load("defs/GameObjectDef.xml.gz");
-		prayers = (PrayerDef[]) getPersistenceManager().load("defs/PrayerDef.xml.gz");
-		spells = (SpellDef[]) getPersistenceManager().load("defs/SpellDef.xml.gz");
-		tiles = (TileDef[]) getPersistenceManager().load("defs/TileDef.xml.gz");
+		doors = (DoorDef[]) getPersistenceManager().load("defs/DoorDef.xml");
+		gameObjects = (GameObjectDef[]) getPersistenceManager().load("defs/GameObjectDef.xml");
+		prayers = (PrayerDef[]) getPersistenceManager().load("defs/PrayerDef.xml");
+		spells = (SpellDef[]) getPersistenceManager().load("defs/SpellDef.xml");
+		tiles = (TileDef[]) getPersistenceManager().load("defs/TileDef.xml");
 
-		herbSeconds = (ItemHerbSecond[]) getPersistenceManager().load("defs/extras/ItemHerbSecond.xml.gz");
-		dartTips = (HashMap<Integer, ItemDartTipDef>) getPersistenceManager().load("defs/extras/ItemDartTipDef.xml.gz");
-		gems = (HashMap<Integer, ItemGemDef>) getPersistenceManager().load("defs/extras/ItemGemDef.xml.gz");
-		logCut = (HashMap<Integer, ItemLogCutDef>) getPersistenceManager().load("defs/extras/ItemLogCutDef.xml.gz");
-		bowString = (HashMap<Integer, ItemBowStringDef>) getPersistenceManager().load("defs/extras/ItemBowStringDef.xml.gz");
-		arrowHeads = (HashMap<Integer, ItemArrowHeadDef>) getPersistenceManager().load("defs/extras/ItemArrowHeadDef.xml.gz");
-		firemaking = (HashMap<Integer, FiremakingDef>) getPersistenceManager().load("defs/extras/FiremakingDef.xml.gz");
-		itemAffectedTypes = (HashMap<Integer, int[]>) getPersistenceManager().load("defs/extras/ItemAffectedTypes.xml.gz");
-		itemUnIdentHerb = (HashMap<Integer, ItemUnIdentHerbDef>) getPersistenceManager().load("defs/extras/ItemUnIdentHerbDef.xml.gz");
-		itemHerb = (HashMap<Integer, ItemHerbDef>) getPersistenceManager().load("defs/extras/ItemHerbDef.xml.gz");
-		itemEdibleHeals = (HashMap<Integer, Integer>) getPersistenceManager().load("defs/extras/ItemEdibleHeals.xml.gz");
-		itemCooking = (HashMap<Integer, ItemCookingDef>) getPersistenceManager().load("defs/extras/ItemCookingDef.xml.gz");
-		itemPerfectCooking = (HashMap<Integer, ItemPerfectCookingDef>) getPersistenceManager().load("defs/extras/ItemPerfectCookingDef.xml.gz");
-		itemSmelting = (HashMap<Integer, ItemSmeltingDef>) getPersistenceManager().load("defs/extras/ItemSmeltingDef.xml.gz");
-		itemSmithing = (ItemSmithingDef[]) getPersistenceManager().load("defs/extras/ItemSmithingDef.xml.gz");
-		itemCrafting = (ItemCraftingDef[]) getPersistenceManager().load("defs/extras/ItemCraftingDef.xml.gz");
-		objectMining = (HashMap<Integer, ObjectMiningDef>) getPersistenceManager().load("defs/extras/ObjectMining.xml.gz");
-		objectWoodcutting = (HashMap<Integer, ObjectWoodcuttingDef>) getPersistenceManager().load("defs/extras/ObjectWoodcutting.xml.gz");
-		objectRunecraft = (HashMap<Integer, ObjectRunecraftDef>) getPersistenceManager().load("defs/extras/ObjectRunecraft.xml.gz");
-		objectFishing = (HashMap<Integer, ObjectFishingDef[]>) getPersistenceManager().load("defs/extras/ObjectFishing.xml.gz");
-		objectHarvesting = (HashMap<Integer, ObjectHarvestingDef>) getPersistenceManager().load("defs/extras/ObjectHarvesting.xml.gz");
-		objectTelePoints = (HashMap<Point, TelePoint>) getPersistenceManager().load("locs/extras/ObjectTelePoints.xml.gz");
-		certers = (HashMap<Integer, CerterDef>) getPersistenceManager().load("defs/extras/NpcCerters.xml.gz");
+		herbSeconds = (ItemHerbSecond[]) getPersistenceManager().load("defs/extras/ItemHerbSecond.xml");
+		dartTips = (HashMap<Integer, ItemDartTipDef>) getPersistenceManager().load("defs/extras/ItemDartTipDef.xml");
+		gems = (HashMap<Integer, ItemGemDef>) getPersistenceManager().load("defs/extras/ItemGemDef.xml");
+		logCut = (HashMap<Integer, ItemLogCutDef>) getPersistenceManager().load("defs/extras/ItemLogCutDef.xml");
+		bowString = (HashMap<Integer, ItemBowStringDef>) getPersistenceManager().load("defs/extras/ItemBowStringDef.xml");
+		arrowHeads = (HashMap<Integer, ItemArrowHeadDef>) getPersistenceManager().load("defs/extras/ItemArrowHeadDef.xml");
+		firemaking = (HashMap<Integer, FiremakingDef>) getPersistenceManager().load("defs/extras/FiremakingDef.xml");
+		itemAffectedTypes = (HashMap<Integer, int[]>) getPersistenceManager().load("defs/extras/ItemAffectedTypes.xml");
+		itemUnIdentHerb = (HashMap<Integer, ItemUnIdentHerbDef>) getPersistenceManager().load("defs/extras/ItemUnIdentHerbDef.xml");
+		itemHerb = (HashMap<Integer, ItemHerbDef>) getPersistenceManager().load("defs/extras/ItemHerbDef.xml");
+		itemEdibleHeals = (HashMap<Integer, Integer>) getPersistenceManager().load("defs/extras/ItemEdibleHeals.xml");
+		itemCooking = (HashMap<Integer, ItemCookingDef>) getPersistenceManager().load("defs/extras/ItemCookingDef.xml");
+		itemPerfectCooking = (HashMap<Integer, ItemPerfectCookingDef>) getPersistenceManager().load("defs/extras/ItemPerfectCookingDef.xml");
+		itemSmelting = (HashMap<Integer, ItemSmeltingDef>) getPersistenceManager().load("defs/extras/ItemSmeltingDef.xml");
+		itemSmithing = (ItemSmithingDef[]) getPersistenceManager().load("defs/extras/ItemSmithingDef.xml");
+		itemCrafting = (ItemCraftingDef[]) getPersistenceManager().load("defs/extras/ItemCraftingDef.xml");
+		objectMining = (HashMap<Integer, ObjectMiningDef>) getPersistenceManager().load("defs/extras/ObjectMining.xml");
+		objectWoodcutting = (HashMap<Integer, ObjectWoodcuttingDef>) getPersistenceManager().load("defs/extras/ObjectWoodcutting.xml");
+		objectRunecraft = (HashMap<Integer, ObjectRunecraftDef>) getPersistenceManager().load("defs/extras/ObjectRunecraft.xml");
+		objectFishing = (HashMap<Integer, ObjectFishingDef[]>) getPersistenceManager().load("defs/extras/ObjectFishing.xml");
+		objectHarvesting = (HashMap<Integer, ObjectHarvestingDef>) getPersistenceManager().load("defs/extras/ObjectHarvesting.xml");
+		objectTelePoints = (HashMap<Point, TelePoint>) getPersistenceManager().load("locs/extras/ObjectTelePoints.xml");
+		certers = (HashMap<Integer, CerterDef>) getPersistenceManager().load("defs/extras/NpcCerters.xml");
 
 		for (int fishSpot : objectFishing.keySet()) {
 			for (ObjectFishingDef fishDef : objectFishing.get(fishSpot)) {
