@@ -81,6 +81,9 @@ public final class Development implements CommandTrigger {
 		else if (command.equalsIgnoreCase("fishingRate")) {
 			fishingRate(player, command, args);
 		}
+		else if (command.equalsIgnoreCase("setcombatstyle")) {
+			setCombatStyle(player, args);
+		}
 	}
 
 	private void createNpc(Player player, String command, String[] args) {
@@ -567,5 +570,18 @@ public final class Development implements CommandTrigger {
 	private void bigNetFishingRate(int level, int trials, Player player) {
 		Fishing fishy = new Fishing();
 		fishy.testBigNetFishing(level, trials, player);
+	}
+
+	// test combat style desync
+	private void setCombatStyle(Player player, String[] args) {
+		if (args.length == 0) {
+			player.setCombatStyle(0);
+		}
+		if (args.length == 1) {
+			try {
+				int proposedStyle = Integer.parseInt(args[0]);
+				player.setCombatStyle(proposedStyle);
+			} catch (Exception e) {}
+		}
 	}
 }

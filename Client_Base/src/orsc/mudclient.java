@@ -635,6 +635,9 @@ public final class mudclient implements Runnable {
 	private Panel panelLoginOptions;
 	private boolean worldComponentsLoaded = false;
 
+	public int proposedStyle = 0;
+	public long timeOfLastCombatStylePacket = 0;
+
 	/**
 	 * Newest RSC cache: SAME VALUES.
 	 * <p>
@@ -1475,7 +1478,7 @@ public final class mudclient implements Runnable {
 				this.lastWrite = var2;
 			}
 
-			if (-5001L > ~(var2 + -this.lastWrite)) {
+			if (-5001L > ~(var2 - this.lastWrite)) {
 				this.lastWrite = var2;
 				this.packetHandler.getClientStream().newPacket(67);
 				this.packetHandler.getClientStream().finishPacket();
@@ -1492,6 +1495,10 @@ public final class mudclient implements Runnable {
 			int len = this.packetHandler.getClientStream().readIncomingPacket(packetHandler.getPacketsIncoming());
 			if (len > 0)
 				this.packetHandler.handlePacket(packetHandler.getPacketsIncoming().getUnsignedByte(), len);
+
+			if (System.currentTimeMillis() - timeOfLastCombatStylePacket > 1000) {
+				setCombatStyle(proposedStyle);
+			}
 		} catch (RuntimeException var6) {
 			throw GenUtil.makeThrowable(var6, "client.SB(" + "dummy" + ')');
 		}
@@ -2743,6 +2750,7 @@ public final class mudclient implements Runnable {
 						&& row * 20 + sy + 20 > this.mouseY) {
 						this.mouseButtonClick = 0;
 						this.combatStyle = row - 1;
+						this.proposedStyle = this.combatStyle;
 						this.packetHandler.getClientStream().newPacket(29);
 						this.packetHandler.getClientStream().bufferBits.putByte(this.combatStyle);
 						this.packetHandler.getClientStream().finishPacket();
@@ -9549,6 +9557,7 @@ public final class mudclient implements Runnable {
 			this.combatStyle++;
 			if (this.combatStyle == 4)
 				this.combatStyle = 0;
+			this.proposedStyle = this.combatStyle;
 			this.packetHandler.getClientStream().newPacket(29);
 			this.packetHandler.getClientStream().bufferBits.putByte(this.combatStyle);
 			this.packetHandler.getClientStream().finishPacket();
@@ -15450,6 +15459,8 @@ public final class mudclient implements Runnable {
 	public void setCombatStyle(int style) {
 		this.combatStyle = style;
 	}
+
+	public int getCombatStyle() { return this.combatStyle; }
 
 	public void setSettingsBlockGlobal(int block) {
 		this.settingsBlockGlobal = block;
