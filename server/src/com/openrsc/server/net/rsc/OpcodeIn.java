@@ -144,15 +144,21 @@ public enum OpcodeIn {
 		return null;
 	}
 
-	// opcodes that can be cancelled by subsequently sent opcodes of the same int received on the same tick
+	// tells if the opcode given should be allowed to trigger more than once per tick
+	// TODO: if plugin system has double action bug fixed, refactor similar to 3e0981310ded1af26f08ab22bdfb1a7563df2a20
 	public static boolean useLastPerTick(int opcode) {
-		if (opcode == OpcodeIn.WALK_TO_ENTITY.getOpcode()) {
-			return true;
-		}
-		if (opcode == OpcodeIn.WALK_TO_POINT.getOpcode()) {
-			return true;
-		}
-		return false;
+		boolean allowMultiple =
+			opcode == ITEM_USE_ITEM.getOpcode()
+			|| opcode == BANK_DEPOSIT.getOpcode()
+			|| opcode == BANK_WITHDRAW.getOpcode()
+			|| opcode == SHOP_BUY.getOpcode()
+			|| opcode == SHOP_SELL.getOpcode()
+			|| opcode == PLAYER_ADDED_ITEMS_TO_TRADE_OFFER.getOpcode()
+			|| opcode == DUEL_OFFER_ITEM.getOpcode()
+			|| opcode == PRAYER_ACTIVATED.getOpcode()
+			|| opcode == PRAYER_DEACTIVATED.getOpcode()
+			|| opcode == COMBAT_STYLE_CHANGED.getOpcode();
+		return !allowMultiple;
 	}
 
 	// a basic check is done on authentic opcodes against their possible lengths
