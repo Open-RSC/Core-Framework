@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.authentic.npcs.yanille;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -25,6 +26,15 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 	public static final int SUPER_DEFENSE_POT = ItemId.FULL_SUPER_DEFENSE_POTION.id();
 	public static final int DRAGON_BONES = ItemId.DRAGON_BONES.id();
 	public static final int LIMPWURT_ROOT = ItemId.LIMPWURT_ROOT.id();
+
+	final int[] itemIds = new int[]{
+		PRAYER_RESTORE_POT,
+		SUPER_ATTACK_POT,
+		SUPER_STRENGTH_POT,
+		SUPER_DEFENSE_POT,
+		DRAGON_BONES,
+		LIMPWURT_ROOT
+	};
 	/**
 	 * ITEM CERTED
 	 */
@@ -414,51 +424,123 @@ public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
-		if (npc.getID() == SIDNEY_SMITH && inArray(item.getCatalogId(), PRAYER_RESTORE_POT,
-			SUPER_ATTACK_POT, SUPER_STRENGTH_POT, SUPER_DEFENSE_POT, DRAGON_BONES,
-			LIMPWURT_ROOT, PRAYER_CERT, SUPER_ATTACK_CERT, SUPER_DEFENSE_CERT,
-			SUPER_STRENGTH_CERT, DRAGON_BONES_CERT, LIMPWURT_ROOT_CERT)) {
-			switch (ItemId.getById(item.getCatalogId())) {
-				case FULL_RESTORE_PRAYER_POTION:
-					calculateExchangeMenu(player, npc, false, item, new Item(PRAYER_CERT));
-					break;
-				case FULL_SUPER_ATTACK_POTION:
-					calculateExchangeMenu(player, npc, false, item, new Item(SUPER_ATTACK_CERT));
-					break;
-				case FULL_SUPER_STRENGTH_POTION:
-					calculateExchangeMenu(player, npc, false, item, new Item(SUPER_STRENGTH_CERT));
-					break;
-				case FULL_SUPER_DEFENSE_POTION:
-					calculateExchangeMenu(player, npc, false, item, new Item(SUPER_DEFENSE_CERT));
-					break;
-				case DRAGON_BONES:
-					calculateExchangeMenu(player, npc, false, item, new Item(DRAGON_BONES_CERT));
-					break;
-				case LIMPWURT_ROOT:
-					calculateExchangeMenu(player, npc, false, item, new Item(LIMPWURT_ROOT_CERT));
-					break;
-				case PRAYER_POTION_CERTIFICATE:
-					calculateExchangeMenu(player, npc, true, new Item(PRAYER_RESTORE_POT), item);
-					break;
-				case SUPER_ATTACK_POTION_CERTIFICATE:
-					calculateExchangeMenu(player, npc, true, new Item(SUPER_ATTACK_POT), item);
-					break;
-				case SUPER_STRENGTH_POTION_CERTIFICATE:
-					calculateExchangeMenu(player, npc, true, new Item(SUPER_STRENGTH_POT), item);
-					break;
-				case SUPER_DEFENSE_POTION_CERTIFICATE:
-					calculateExchangeMenu(player, npc, true, new Item(SUPER_DEFENSE_POT), item);
-					break;
-				case DRAGON_BONE_CERTIFICATE:
-					calculateExchangeMenu(player, npc, true, new Item(DRAGON_BONES), item);
-					break;
-				case LIMPWURT_ROOT_CERTIFICATE:
-					calculateExchangeMenu(player, npc, true, new Item(LIMPWURT_ROOT), item);
-					break;
-				default:
-					player.message("Nothing interesting happens");
-					break;
+		// If we don't have bank notes enabled, we'll do the normal exchange
+		if (!config().WANT_BANK_NOTES) {
+			if (npc.getID() == SIDNEY_SMITH && inArray(item.getCatalogId(), PRAYER_RESTORE_POT,
+				SUPER_ATTACK_POT, SUPER_STRENGTH_POT, SUPER_DEFENSE_POT, DRAGON_BONES,
+				LIMPWURT_ROOT, PRAYER_CERT, SUPER_ATTACK_CERT, SUPER_DEFENSE_CERT,
+				SUPER_STRENGTH_CERT, DRAGON_BONES_CERT, LIMPWURT_ROOT_CERT)) {
+				switch (ItemId.getById(item.getCatalogId())) {
+					case FULL_RESTORE_PRAYER_POTION:
+						calculateExchangeMenu(player, npc, false, item, new Item(PRAYER_CERT));
+						break;
+					case FULL_SUPER_ATTACK_POTION:
+						calculateExchangeMenu(player, npc, false, item, new Item(SUPER_ATTACK_CERT));
+						break;
+					case FULL_SUPER_STRENGTH_POTION:
+						calculateExchangeMenu(player, npc, false, item, new Item(SUPER_STRENGTH_CERT));
+						break;
+					case FULL_SUPER_DEFENSE_POTION:
+						calculateExchangeMenu(player, npc, false, item, new Item(SUPER_DEFENSE_CERT));
+						break;
+					case DRAGON_BONES:
+						calculateExchangeMenu(player, npc, false, item, new Item(DRAGON_BONES_CERT));
+						break;
+					case LIMPWURT_ROOT:
+						calculateExchangeMenu(player, npc, false, item, new Item(LIMPWURT_ROOT_CERT));
+						break;
+					case PRAYER_POTION_CERTIFICATE:
+						calculateExchangeMenu(player, npc, true, new Item(PRAYER_RESTORE_POT), item);
+						break;
+					case SUPER_ATTACK_POTION_CERTIFICATE:
+						calculateExchangeMenu(player, npc, true, new Item(SUPER_ATTACK_POT), item);
+						break;
+					case SUPER_STRENGTH_POTION_CERTIFICATE:
+						calculateExchangeMenu(player, npc, true, new Item(SUPER_STRENGTH_POT), item);
+						break;
+					case SUPER_DEFENSE_POTION_CERTIFICATE:
+						calculateExchangeMenu(player, npc, true, new Item(SUPER_DEFENSE_POT), item);
+						break;
+					case DRAGON_BONE_CERTIFICATE:
+						calculateExchangeMenu(player, npc, true, new Item(DRAGON_BONES), item);
+						break;
+					case LIMPWURT_ROOT_CERTIFICATE:
+						calculateExchangeMenu(player, npc, true, new Item(LIMPWURT_ROOT), item);
+						break;
+					default:
+						player.message("Nothing interesting happens");
+						break;
+				}
 			}
+		} else {
+			// If we do have bank notes enabled, we'll check to make sure we're using
+			// a valid item on the right NPC.
+			if (!(npc.getID() == NpcId.SIDNEY_SMITH.id())) return;
+			if (!inArray(item.getCatalogId(), itemIds)) return;
+
+			// Grab a bunch of info about the item and NPC for flavor text
+			final boolean isNoted = item.getNoted();
+			final String npcName = player.getWorld().getServer().getEntityHandler().getNpcDef(npc.getID()).getName();
+			final String itemName = player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).getName();
+
+			// Determine how much of the item the player is holding.
+			// But only look for items of the same notedness that they handed the NPC.
+			final int totalHeld = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(isNoted));
+			int toExchange = 0;
+
+			// If the item is noted, we'll ask how many unnoted items they want.
+			// If it's just items, we'll just note them all.
+			if (isNoted && totalHeld > 1) {
+				npcsay(player, npc, "How many " + itemName + " certificates would you like to exchange?");
+				int option = multi(player, "One", "Two", "Five", "Ten", "Twenty-five");
+				switch (option)
+				{
+					case -1:
+						return;
+					case 0:
+						toExchange = 1;
+						break;
+					case 1:
+						toExchange = 2;
+						break;
+					case 2:
+						toExchange = 5;
+						break;
+					case 3:
+						toExchange = 10;
+						break;
+					case 4:
+						toExchange = 25;
+						break;
+				}
+				// Make sure they ain't trying to fib us
+				toExchange = Math.min(toExchange, totalHeld);
+
+			} else {
+				toExchange = totalHeld;
+			}
+
+			mes("You hand " + npcName + " your " + (isNoted ? "certed " : "") + itemName + (toExchange > 1 ? "s" : ""));
+			delay(3);
+			if (isNoted) {
+				// Remove the items
+				player.getCarriedItems().remove(new Item(item.getCatalogId(), toExchange, true));
+				// Add them back
+				for (int i = 0; i < toExchange; i++) {
+					player.getCarriedItems().getInventory().add(new Item(item.getCatalogId()));
+				}
+			} else {
+				// Remove the (non-noted) items
+				for (int i = 0; i < toExchange; i++) {
+					player.getCarriedItems().remove(new Item(item.getCatalogId(), 1, false));
+				}
+
+				// Add back the noted items.
+				player.getCarriedItems().getInventory().add(new Item(item.getCatalogId(), toExchange, true));
+			}
+			mes(npcName + " hands you back " + (toExchange > 1 ? "some " : "a ") +
+				itemName + (isNoted ? "" : " cert") + (toExchange > 1 ? "s" : ""));
+			delay(3);
 		}
 	}
 
