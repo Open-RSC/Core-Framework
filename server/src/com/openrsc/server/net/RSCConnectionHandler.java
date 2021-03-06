@@ -103,7 +103,6 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 		if (player != null) {
 			player.unregister(false, "Channel closed");
 		}
-		ctx.attr(attachment).set(null);
 	}
 
 	@Override
