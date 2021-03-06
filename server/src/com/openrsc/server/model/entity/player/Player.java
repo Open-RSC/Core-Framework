@@ -984,6 +984,7 @@ public final class Player extends Mob {
 
 	public void setCombatStyle(final int style) {
 		combatStyle = style;
+		ActionSender.sendCombatStyle(this);
 	}
 
 	public String getCorrectSleepword() {
@@ -1960,29 +1961,6 @@ public final class Player extends Mob {
 		}
 	}
 
-	public void addToPacketQueue(final Packet packet) {
-		updateClientActivity();
-		int packetID = packet.getID();
-		if ((packetID != OpcodeIn.ITEM_USE_ITEM.getOpcode()
-				&& packetID != OpcodeIn.BANK_DEPOSIT.getOpcode()
-				&& packetID != OpcodeIn.BANK_WITHDRAW.getOpcode()
-				&& packetID != OpcodeIn.SHOP_BUY.getOpcode()
-				&& packetID != OpcodeIn.SHOP_SELL.getOpcode()
-				&& packetID != OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER.getOpcode()
-				&& packetID != OpcodeIn.DUEL_OFFER_ITEM.getOpcode()
-				&& packetID != OpcodeIn.PRAYER_ACTIVATED.getOpcode()
-				&& packetID != OpcodeIn.PRAYER_DEACTIVATED.getOpcode())
-			&& activePackets.contains(packetID)) {
-			return;
-		}
-		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
-			synchronized (incomingPackets) {
-				incomingPackets.add(packet);
-				activePackets.add(packetID);
-			}
-		}
-	}
-
 	public void updateClientActivity() {
 		lastClientActivity = System.currentTimeMillis();
 	}
@@ -2021,6 +1999,18 @@ public final class Player extends Mob {
 		}
 	}
 
+	public void addToPacketQueue(final Packet packet) {
+		updateClientActivity();
+		int packetID = packet.getID();
+
+		if (incomingPackets.size() <= getWorld().getServer().getConfig().PACKET_LIMIT) {
+			synchronized (incomingPackets) {
+				incomingPackets.add(packet);
+				activePackets.add(packetID);
+			}
+		}
+	}
+
 	public void processIncomingPackets() {
 		if (!channel.isOpen() && !channel.isWritable()) {
 			return;
@@ -2033,13 +2023,17 @@ public final class Player extends Mob {
 				final long packetTime = getWorld().getServer().bench(
 					() -> {
 						activePackets.remove(activePackets.indexOf(curPacket.getID()));
-						final PacketHandler ph = PacketHandlerLookup.get(curPacket.getID());
-						if (ph != null && curPacket.getBuffer().readableBytes() >= 0) {
-							try {
-								ph.handlePacket(curPacket, this);
-							} catch (final Exception e) {
-								LOGGER.catching(e);
-								unregister(false, "Malformed packet!");
+
+						// only consider the last packet sent for certain opcodes, to e.g., allow cancelling walk with another walk.
+						if (!(activePackets.contains(curPacket.getID()) && OpcodeIn.useLastPerTick(curPacket.getID()))) {
+							final PacketHandler ph = PacketHandlerLookup.get(curPacket.getID());
+							if (ph != null && curPacket.getBuffer().readableBytes() >= 0) {
+								try {
+									ph.handlePacket(curPacket, this);
+								} catch (final Exception e) {
+									LOGGER.catching(e);
+									unregister(false, "Malformed packet!");
+								}
 							}
 						}
 					}
@@ -2048,7 +2042,7 @@ public final class Player extends Mob {
 				getWorld().getServer().incrementIncomingPacketCount(curPacket.getID());
 
 				packet = incomingPackets.poll();
-			};
+			}
 
 			incomingPackets.clear();
 		}

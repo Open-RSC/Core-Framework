@@ -144,6 +144,17 @@ public enum OpcodeIn {
 		return null;
 	}
 
+	// opcodes that can be cancelled by subsequently sent opcodes of the same int received on the same tick
+	public static boolean useLastPerTick(int opcode) {
+		if (opcode == OpcodeIn.WALK_TO_ENTITY.getOpcode()) {
+			return true;
+		}
+		if (opcode == OpcodeIn.WALK_TO_POINT.getOpcode()) {
+			return true;
+		}
+		return false;
+	}
+
 	// a basic check is done on authentic opcodes against their possible lengths
 	public static boolean isPossiblyValid(int opcode, int length, int protocolVer) {
 		// TODO: remove this if checking valid for other protocol vers is implemented e.g. 127
