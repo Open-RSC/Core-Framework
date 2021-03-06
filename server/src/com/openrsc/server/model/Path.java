@@ -89,10 +89,12 @@ public class Path {
 			boolean canWalkXY = PathValidation.checkAdjacent(mob, last, new Point(x - (diffX - moveX), y - (diffY - moveY)));
 
 			// last step of path, check if a player is there, blocking.
-			if (mob.getConfig().PLAYER_BLOCKING == 1 && !mob.isFollowing()) {
-				if ((Math.abs(diffX) == 1 || Math.abs(diffY) == 1) && mob instanceof Player) {
-					if (PathValidation.isPlayerBlocking((Player) mob, x, y)) {
-						return;
+			if (mob.getConfig().PLAYER_BLOCKING == 1) {
+				if (mob instanceof Player && !mob.isFollowing() && pathType == PathType.WALK_TO_POINT) {
+					if (Math.abs(diffX) == 1 || Math.abs(diffY) == 1) {
+						if (PathValidation.isPlayerBlocking((Player) mob, x, y)) {
+							return;
+						}
 					}
 				}
 			}
