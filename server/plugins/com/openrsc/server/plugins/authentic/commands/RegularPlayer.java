@@ -505,11 +505,21 @@ public final class RegularPlayer implements CommandTrigger {
 					online++;
 				}
 			}
-		}
-		else {
+		} else {
 			for (Player targetPlayer : player.getWorld().getPlayers()) {
 				byte privacy = targetPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, targetPlayer.isUsingAuthenticClient());
-				if (targetPlayer.isDefaultUser() && privacy == PlayerSettings.BlockingMode.None.id()) {
+
+				boolean privacyAllows = false;
+				if (privacy == PlayerSettings.BlockingMode.None.id()) {
+					privacyAllows = true;
+				} else if (privacy == PlayerSettings.BlockingMode.NonFriends.id() && targetPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
+					// mods, pmods, admins, may only appear in the online list if their privacy block isn't set to block all
+					if (player.isDefaultUser()) {
+						privacyAllows = true;
+					}
+				}
+
+				if (privacyAllows) {
 					players.add(targetPlayer);
 					locations.add(""); // No locations for regular players.
 					online++;
