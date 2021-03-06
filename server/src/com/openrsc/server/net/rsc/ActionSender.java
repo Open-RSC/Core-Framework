@@ -132,14 +132,23 @@ public class ActionSender {
 	/**
 	 * Inform client of combat style
 	 *
+	 * This is generally not necessary, because remembered style is sent on log-in with opcode SEND_GAME_SETTINGS
+	 *  and the client takes care of remembering the combat style in all other cases.
+	 *
+	 *  If some type of network unreliability issue happens, it is possible the server could interpret bad data
+	 *  as a combat style change packet, and we would like to avoid a client-server desync combat style,
+	 *  which is very important for Pure accounts.
+	 *
 	 * @param player
 	 */
-	private static void sendCombatStyle(Player player) {
-		// com.rscr.server.net.PacketBuilder s = new
-		// com.rscr.server.net.PacketBuilder();
-		// s.setID(129);
-		// s.writeByte((byte) player.getCombatStyle());
-		// player.write(s.toPacket());
+	public static void sendCombatStyle(Player player) {
+		if (player.isUsingAuthenticClient()) return;
+
+		com.openrsc.server.net.PacketBuilder s = new
+		com.openrsc.server.net.PacketBuilder();
+		s.setID(Opcode.SEND_COMBAT_STYLE.opcode);
+		s.writeByte((byte) player.getCombatStyle());
+		player.write(s.toPacket());
 	}
 
 	/**
@@ -2120,6 +2129,7 @@ public class ActionSender {
 		SEND_INVENTORY_REMOVE_ITEM(123),
 		SEND_DUEL_CANCEL_ACCEPTED(128),
 		SEND_TRADE_CLOSE(128),
+		SEND_COMBAT_STYLE(129), //inauthentic
 		SEND_SERVER_MESSAGE(131),
 		SEND_AUCTION_PROGRESS(132), // inauthentic
 		SEND_FISHING_TRAWLER(133), // inauthentic

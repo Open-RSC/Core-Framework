@@ -104,6 +104,7 @@ public class PacketHandler {
 		put(34, "FREEZE_EXPERIENCE_TOGGLE");
 		put(113, "SEND_IRONMAN");
 		put(115, "SEND_ON_BLACK_HOLE");
+		put(129, "COMBAT_STYLE_CHANGED");
 		put(135, "BANK_PIN_INTERFACE");
 		put(136, "ONLINE_LIST");
 		put(147, "SEND_KILLS2");
@@ -473,6 +474,9 @@ public class PacketHandler {
 
 				//toggle experience freeze
 			else if (opcode == 34) mc.toggleExperienceFreeze(packetsIncoming.getByte());
+
+			    //sync combat style with server (needed to compensate for network errors)
+			else if (opcode == 129) gotCombatStylePacket();
 
 			else mc.closeConnection(true);
 
@@ -1472,6 +1476,12 @@ public class PacketHandler {
 		if (mc.getInventoryItemCount() < mc.getInventory().length) {
 			mc.setInventoryItem(mc.getInventoryItemCount(), new Item());
 		}
+	}
+
+
+	private void gotCombatStylePacket() {
+		mc.timeOfLastCombatStylePacket = System.currentTimeMillis();
+		mc.proposedStyle = packetsIncoming.getByte();
 	}
 
 	private void updateInventoryItem() {
