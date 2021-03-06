@@ -783,6 +783,8 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 				pcap.exportPCAP(player);
 				LOGGER.info("Wrote out pcap for " + player.getUsername() + " at " + pcap.fname);
 			}
+
+			player.getChannel().attr(attachment).set(null);
 		} catch (final Exception e) {
 			LOGGER.catching(e);
 		}
