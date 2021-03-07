@@ -954,166 +954,155 @@ public final class GameStateUpdater {
 	}
 
 	public long doUpdates() {
-		final long gameStateStart = System.currentTimeMillis();
-		lastWorldUpdateDuration = updateWorld();
-		lastProcessPlayersDuration = processPlayers();
-		lastProcessNpcsDuration = processNpcs();
-		lastProcessMessageQueuesDuration = processMessageQueues();
-		lastUpdateClientsDuration = updateClients();
-		lastDoCleanupDuration = doCleanup();
-		lastExecuteWalkToActionsDuration = executeWalkToActions();
-		final long gameStateEnd = System.currentTimeMillis();
-
-		return gameStateEnd - gameStateStart;
+		return getServer().bench(() -> {
+			lastWorldUpdateDuration = updateWorld();
+			lastProcessPlayersDuration = processPlayers();
+			lastProcessNpcsDuration = processNpcs();
+			lastProcessMessageQueuesDuration = processMessageQueues();
+			lastUpdateClientsDuration = updateClients();
+			lastDoCleanupDuration = doCleanup();
+			lastExecuteWalkToActionsDuration = executeWalkToActions();
+		});
 	}
 
 	protected final long updateWorld() {
-		final long updateWorldStart = System.currentTimeMillis();
-		getServer().getWorld().run();
-		final long updateWorldEnd = System.currentTimeMillis();
-		return updateWorldEnd - updateWorldStart;
+		return getServer().bench(() -> {
+			getServer().getWorld().run();
+		});
 	}
 
 	protected final long updateClients() {
-		final long updateClientsStart = System.currentTimeMillis();
-		for (final Player player : getServer().getWorld().getPlayers()) {
-			sendUpdatePackets(player);
-			player.process();
-		}
-		final long updateClientsEnd = System.currentTimeMillis();
-		return updateClientsEnd - updateClientsStart;
+		return getServer().bench(() -> {
+			for (final Player player : getServer().getWorld().getPlayers()) {
+				sendUpdatePackets(player);
+				player.process();
+			}
+		});
 	}
 
 	protected final long doCleanup() {// it can do the teleport at this time.
-		final long doCleanupStart = System.currentTimeMillis();
+		return getServer().bench(() -> {
+			/*
+			 * Reset the update related flags and unregister npcs flagged as
+			 * unregistering
+			 */
+			for (final Npc npc : getServer().getWorld().getNpcs()) {
+				npc.setHasMoved(false);
+				npc.resetSpriteChanged();
+				npc.getUpdateFlags().reset();
+				npc.setTeleporting(false);
+			}
 
-		/*
-		 * Reset the update related flags and unregister npcs flagged as
-		 * unregistering
-		 */
-		for (final Npc npc : getServer().getWorld().getNpcs()) {
-			npc.setHasMoved(false);
-			npc.resetSpriteChanged();
-			npc.getUpdateFlags().reset();
-			npc.setTeleporting(false);
-		}
-
-		/*
-		 * Reset the update related flags and unregister players that are
-		 * flagged as unregistered
-		 */
-		for (final Player player : getServer().getWorld().getPlayers()) {
-			player.setTeleporting(false);
-			player.resetSpriteChanged();
-			player.getUpdateFlags().reset();
-			player.setHasMoved(false);
-		}
-
-		final long doCleanupEnd	= System.currentTimeMillis();
-
-		return doCleanupEnd - doCleanupStart;
+			/*
+			 * Reset the update related flags and unregister players that are
+			 * flagged as unregistered
+			 */
+			for (final Player player : getServer().getWorld().getPlayers()) {
+				player.setTeleporting(false);
+				player.resetSpriteChanged();
+				player.getUpdateFlags().reset();
+				player.setHasMoved(false);
+			}
+		});
 	}
 
 	protected final long executeWalkToActions() {
-		final long executeWalkToActionsStart	= System.currentTimeMillis();
-		for (final Player player : getServer().getWorld().getPlayers()) {
-			if (player.getWalkToAction() != null) {
-				if (player.getWalkToAction().shouldExecute()) {
-					player.getWalkToAction().execute();
+		return getServer().bench(() -> {
+			for (final Player player : getServer().getWorld().getPlayers()) {
+				if (player.getWalkToAction() != null) {
+					if (player.getWalkToAction().shouldExecute()) {
+						player.getWalkToAction().execute();
+					}
 				}
 			}
-		}
-		final long executeWalkToActionsEnd	= System.currentTimeMillis();
-		return executeWalkToActionsEnd - executeWalkToActionsStart;
+		});
 	}
 
 	protected final long processNpcs() {
-		final long processNpcsStart	= System.currentTimeMillis();
-		for (final Npc n : getServer().getWorld().getNpcs()) {
-			try {
-				if (n.isUnregistering()) {
-					getServer().getWorld().unregisterNpc(n);
-					continue;
-				}
+		return getServer().bench(() -> {
+			for (final Npc n : getServer().getWorld().getNpcs()) {
+				try {
+					if (n.isUnregistering()) {
+						getServer().getWorld().unregisterNpc(n);
+						continue;
+					}
 
-				// Only do the walking tick here if the NPC's walking tick matches the game tick
-				if(!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
-					n.updatePosition();
+					// Only do the walking tick here if the NPC's walking tick matches the game tick
+					if (!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
+						n.updatePosition();
+					}
+				} catch (final Exception e) {
+					LOGGER.error("Error while updating " + n + " at position " + n.getLocation() + " loc: " + n.getLoc());
+					LOGGER.catching(e);
 				}
-			} catch (final Exception e) {
-				LOGGER.error("Error while updating " + n + " at position " + n.getLocation() + " loc: " + n.getLoc());
-				LOGGER.catching(e);
 			}
-		}
-		final long processNpcsEnd = System.currentTimeMillis();
-		return processNpcsEnd - processNpcsStart;
+		});
 	}
 
 	/**
 	 * Updates the messages queues for each player
 	 */
 	protected final long processMessageQueues() {
-		final long processMessageQueuesStart = System.currentTimeMillis();
-		for (final Player player : getServer().getWorld().getPlayers()) {
-			final PrivateMessage pm = player.getNextPrivateMessage();
-			if (pm != null) {
-				Player affectedPlayer = getServer().getWorld().getPlayer(pm.getFriend());
-				if (affectedPlayer != null) {
-					boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
-						== PlayerSettings.BlockingMode.All.id();
-					boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
-						== PlayerSettings.BlockingMode.None.id();
-					if (!player.getSocial().isFriendsWith(affectedPlayer.getUsernameHash())) {
-						player.message("Unable to send message - player not on your friendlist.");
-					} else if (((affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || blockNone)
-						&& !affectedPlayer.getSocial().isIgnoring(player.getUsernameHash()) || player.isMod()) {
-						ActionSender.sendPrivateMessageSent(player, affectedPlayer.getUsernameHash(), pm.getMessage(), false);
-						ActionSender.sendPrivateMessageReceived(affectedPlayer, player, pm.getMessage(), false);
-					}
-
-					player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), pm.getMessage(),
-						DataConversions.hashToUsername(pm.getFriend())));
-				} else {
-					// player not online
-					if (pm.getFriend() >= 0L) {
-						try {
-							int friendId = player.getWorld().getServer().getDatabase().playerIdFromUsername(DataConversions.hashToUsername(pm.getFriend()));
-
-							if (player.getWorld().getServer().getDatabase().playerExists(friendId)) {
-								// player not online
-								player.message("Unable to send message - player unavailable.");
-							}
-						} catch (Exception e) { }
-					}
-				}
-			}
-		}
-		GlobalMessage gm ;
-		while((gm = getServer().getWorld().getNextGlobalMessage()) != null) {
+		return getServer().bench(() -> {
 			for (final Player player : getServer().getWorld().getPlayers()) {
-				if (player == gm.getPlayer()) {
-					player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), gm.getMessage(),
-						"Global$"));
-					ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
-				} else {
-					if (!player.getBlockGlobalFriend()) {
-						boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingAuthenticClient())
+				final PrivateMessage pm = player.getNextPrivateMessage();
+				if (pm != null) {
+					Player affectedPlayer = getServer().getWorld().getPlayer(pm.getFriend());
+					if (affectedPlayer != null) {
+						boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
+							== PlayerSettings.BlockingMode.All.id();
+						boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
 							== PlayerSettings.BlockingMode.None.id();
-						if (blockNone && !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
-							ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);
+						if (!player.getSocial().isFriendsWith(affectedPlayer.getUsernameHash())) {
+							player.message("Unable to send message - player not on your friendlist.");
+						} else if (((affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || blockNone)
+							&& !affectedPlayer.getSocial().isIgnoring(player.getUsernameHash()) || player.isMod()) {
+							ActionSender.sendPrivateMessageSent(player, affectedPlayer.getUsernameHash(), pm.getMessage(), false);
+							ActionSender.sendPrivateMessageReceived(affectedPlayer, player, pm.getMessage(), false);
+						}
+
+						player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), pm.getMessage(),
+							DataConversions.hashToUsername(pm.getFriend())));
+					} else {
+						// player not online
+						if (pm.getFriend() >= 0L) {
+							try {
+								int friendId = player.getWorld().getServer().getDatabase().playerIdFromUsername(DataConversions.hashToUsername(pm.getFriend()));
+
+								if (player.getWorld().getServer().getDatabase().playerExists(friendId)) {
+									// player not online
+									player.message("Unable to send message - player unavailable.");
+								}
+							} catch (Exception e) { }
 						}
 					}
 				}
 			}
-		}
-		for (final Player player : getServer().getWorld().getPlayers()) {
-			if (player.requiresOfferUpdate()) {
-				ActionSender.sendTradeItems(player);
-				player.setRequiresOfferUpdate(false);
+			GlobalMessage gm ;
+			while((gm = getServer().getWorld().getNextGlobalMessage()) != null) {
+				for (final Player player : getServer().getWorld().getPlayers()) {
+					if (player == gm.getPlayer()) {
+						player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), gm.getMessage(),
+							"Global$"));
+						ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
+					} else {
+						if (!player.getBlockGlobalFriend()) {
+							boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingAuthenticClient())
+								== PlayerSettings.BlockingMode.None.id();
+							if (blockNone && !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
+								ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);
+							}
+						}
+					}
+				}
 			}
-		}
-		final long processMessageQueuesEnd = System.currentTimeMillis();
-		return processMessageQueuesEnd - processMessageQueuesStart;
+			for (final Player player : getServer().getWorld().getPlayers()) {
+				if (player.requiresOfferUpdate()) {
+					ActionSender.sendTradeItems(player);
+					player.setRequiresOfferUpdate(false);
+				}
+			}
+		});
 	}
 
 	/**
@@ -1121,25 +1110,24 @@ public final class GameStateUpdater {
 	 * aware of needs updated
 	 */
 	protected final long processPlayers() {
-		final long processPlayersStart = System.currentTimeMillis();
-		for (final Player player : getServer().getWorld().getPlayers()) {
-			// Checking login because we don't want to unregister more than once
-			if (player.isUnregistering() && player.isLoggedIn()) {
-				getServer().getWorld().unregisterPlayer(player);
-				continue;
-			}
+		return getServer().bench(() -> {
+			for (final Player player : getServer().getWorld().getPlayers()) {
+				// Checking login because we don't want to unregister more than once
+				if (player.isUnregistering() && player.isLoggedIn()) {
+					getServer().getWorld().unregisterPlayer(player);
+					continue;
+				}
 
-			// Only do the walking tick here if the Players' walking tick matches the game tick
-			if(!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
-				player.updatePosition();
-			}
+				// Only do the walking tick here if the Players' walking tick matches the game tick
+				if(!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
+					player.updatePosition();
+				}
 
-			if (player.getUpdateFlags().hasAppearanceChanged()) {
-				player.incAppearanceID();
+				if (player.getUpdateFlags().hasAppearanceChanged()) {
+					player.incAppearanceID();
+				}
 			}
-		}
-		final long processPlayersEnd = System.currentTimeMillis();
-		return processPlayersEnd - processPlayersStart;
+		});
 	}
 
 	public long getLastWorldUpdateDuration() {

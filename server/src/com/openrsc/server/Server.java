@@ -350,7 +350,7 @@ public class Server implements Runnable {
 					serversList.put(this.getName(), this);
 				}
 
-				lastTickTimestamp = serverStartedTime = System.currentTimeMillis();
+				lastTickTimestamp = serverStartedTime = System.nanoTime();
 				running = true;
 			} catch (final Throwable t) {
 				LOGGER.catching(t);
@@ -425,17 +425,18 @@ public class Server implements Runnable {
 	}
 
 	public long bench(final Runnable r) {
-		long start = System.currentTimeMillis();
+		final long start = System.nanoTime();
 		r.run();
-		return System.currentTimeMillis() - start;
+		final long end = System.nanoTime();
+		return end - start;
 	}
 
 	public void run() {
 		synchronized (running) {
 			try {
-				this.timeLate = System.currentTimeMillis() - lastTickTimestamp;
-				if (getTimeLate() >= getConfig().GAME_TICK) {
-					this.timeLate -= getConfig().GAME_TICK;
+				this.timeLate = System.nanoTime() - lastTickTimestamp;
+				if (getTimeLate() >= getConfig().GAME_TICK * 1000000) {
+					this.timeLate -= getConfig().GAME_TICK * 1000000;
 
 					// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 					this.lastTickDuration = bench(() -> {
@@ -456,7 +457,7 @@ public class Server implements Runnable {
 					resetEvent();
 
 					// Set us to be in the next tick.
-					this.lastTickTimestamp += getConfig().GAME_TICK;
+					advanceTicks(1);
 
 					// Clear out the outgoing and incoming packet processing time frames
 					incomingTimePerPacketOpcode.clear();
@@ -464,7 +465,7 @@ public class Server implements Runnable {
 					outgoingTimePerPacketOpcode.clear();
 					outgoingCountPerPacketOpcode.clear();
 
-					//LOGGER.info("Tick " + getCurrentTick() + " processed.");
+					LOGGER.info("Tick " + getCurrentTick() + " processed.");
 				} else {
 					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
 						for (final Player p : getWorld().getPlayers()) {
@@ -541,25 +542,25 @@ public class Server implements Runnable {
 		// Store the current tick because we can modify it by calling skipTicks()
 		final long currentTick = getCurrentTick();
 		// Check if processing game tick took longer than the tick
-		final boolean isLastTickLate = getLastTickDuration() > getConfig().GAME_TICK;
-		final long ticksLate = getTimeLate() / getConfig().GAME_TICK;
+		final boolean isLastTickLate = (getLastTickDuration() / 1000000) > getConfig().GAME_TICK;
+		final long ticksLate = (getTimeLate() / 1000000) / getConfig().GAME_TICK;
 		final boolean isServerLate = ticksLate >= 1;
 
 		if (isLastTickLate) {
 			// Current tick processing took too long.
 			final String message = "Tick " + currentTick + " is late: " +
-				getLastTickDuration() + "ms " +
-				getLastIncomingPacketsDuration() + "ms " +
-				getLastEventsDuration() + "ms " +
-				getLastGameStateDuration() + "ms " +
-				getLastOutgoingPacketsDuration() + "ms";
+				(getLastTickDuration() / 1000000) + "ms " +
+				(getLastIncomingPacketsDuration() / 1000000) + "ms " +
+				(getLastEventsDuration() / 1000000) + "ms " +
+				(getLastGameStateDuration() / 1000000) + "ms " +
+				(getLastOutgoingPacketsDuration() / 1000000) + "ms";
 
 			sendMonitoringWarning(message, true);
 		}
 		if (isServerLate) {
 			// Server fell behind, skip ticks
-			skipTicks(ticksLate);
-			final String ticksSkipped = ticksLate>1 ? "ticks (" + (currentTick+1) + " - " + (currentTick+ticksLate) + ")" : "tick (" + (currentTick+ticksLate) + ")";
+			advanceTicks(ticksLate);
+			final String ticksSkipped = ticksLate > 1 ? "ticks (" + (currentTick+1) + " - " + (currentTick+ticksLate) + ")" : "tick (" + (currentTick+ticksLate) + ")";
 			final String message = "Tick " + currentTick + " " + getTimeLate() + "ms behind. Skipping " + ticksLate + " " + ticksSkipped;
 			sendMonitoringWarning(message, false);
 		}
@@ -674,11 +675,11 @@ public class Server implements Runnable {
 	}
 
 	public final long getCurrentTick() {
-		return (lastTickTimestamp - getServerStartedTime()) / getConfig().GAME_TICK;
+		return (lastTickTimestamp - getServerStartedTime()) / (getConfig().GAME_TICK * 1000000);
 	}
 
-	private void skipTicks(final long ticks) {
-		lastTickTimestamp += ticks * getConfig().GAME_TICK;
+	private void advanceTicks(final long ticks) {
+		lastTickTimestamp += ticks * getConfig().GAME_TICK * 1000000;
 	}
 
 	public final ServerConfiguration getConfig() {
