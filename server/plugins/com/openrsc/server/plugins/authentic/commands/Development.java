@@ -12,6 +12,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.plugins.authentic.quests.members.touristtrap.Tourist_Trap_Mechanism;
 import com.openrsc.server.plugins.authentic.skills.fishing.Fishing;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -83,6 +84,9 @@ public final class Development implements CommandTrigger {
 		}
 		else if (command.equalsIgnoreCase("setcombatstyle")) {
 			setCombatStyle(player, args);
+		}
+		else if (command.equalsIgnoreCase("protodarts")) {
+			protoDartTipsTest(player, args);
 		}
 	}
 
@@ -583,5 +587,30 @@ public final class Development implements CommandTrigger {
 				player.setCombatStyle(proposedStyle);
 			} catch (Exception e) {}
 		}
+	}
+
+	private void protoDartTipsTest(Player player, String[] args) {
+		if (args.length < 1) {
+			mes("::protodarts [level] (trials)");
+			return;
+		}
+
+		int level = Integer.parseInt(args[0]);
+		int trials = 10000;
+		if (args.length == 2) {
+			trials = Integer.parseInt(args[1]);
+		}
+
+		int fletchSuccesses = 0;
+		int smithSuccesses = 0;
+		for (int i = 0; i < trials; i++) {
+			if (Tourist_Trap_Mechanism.protoDartFletchSuccessful(level)) ++fletchSuccesses;
+			if (Tourist_Trap_Mechanism.protoDartSmithSuccessful(level)) ++smithSuccesses;
+		}
+
+		mes("@whi@At level @mag@" + level + "@whi@:");
+		mes("@gre@" + fletchSuccesses + "@whi@ fletching successes, @lre@" + (trials - fletchSuccesses) + "@whi@ failures.");
+		mes("@gre@" + smithSuccesses + "@whi@ smithing successes, @lre@" + (trials - smithSuccesses) + "@whi@ failures.");
+
 	}
 }
