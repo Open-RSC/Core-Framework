@@ -2,58 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="71958bef-0dea-46c2-9e76-8d436da768c3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Android_Client/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Android_Client/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_core_common_1_1_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_lifecycle_common_1_1_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_persistence_room_common_1_1_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_collections_28_0_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_annotations_28_0_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Android_Client/.idea/modules/Open RSC Android Client/Android_Client.Open_RSC_Android_Client.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_core_common_1_1_1_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_core_runtime_1_1_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_core_runtime_1_1_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_lifecycle_common_1_1_1_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_lifecycle_livedata_1_1_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_lifecycle_livedata_1_1_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_lifecycle_livedata_core_1_1_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_lifecycle_livedata_core_1_1_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_lifecycle_runtime_1_1_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_lifecycle_runtime_1_1_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_lifecycle_viewmodel_1_1_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_lifecycle_viewmodel_1_1_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_persistence_db_1_1_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_persistence_db_1_1_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_persistence_db_framework_1_1_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_persistence_db_framework_1_1_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_persistence_room_common_1_1_1_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_persistence_room_runtime_1_1_1_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__android_arch_persistence_room_runtime_1_1_1_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_asynclayoutinflater_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_asynclayoutinflater_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_collections_28_0_0_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_coordinatorlayout_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_coordinatorlayout_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_cursoradapter_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_cursoradapter_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_customview_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_customview_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_documentfile_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_documentfile_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_drawerlayout_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_drawerlayout_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_interpolator_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_interpolator_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_loader_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_loader_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_localbroadcastmanager_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_localbroadcastmanager_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_multidex_1_0_2_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_multidex_1_0_2_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_multidex_instrumentation_1_0_2_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_multidex_instrumentation_1_0_2_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_print_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_print_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_slidingpanelayout_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_slidingpanelayout_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_annotations_28_0_0_jar.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_compat_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_compat_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_core_ui_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_core_ui_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_core_utils_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_core_utils_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_fragment_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_fragment_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_media_compat_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_media_compat_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_v4_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_support_v4_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_swiperefreshlayout_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_swiperefreshlayout_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_versionedparcelable_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_versionedparcelable_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_viewpager_28_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/libraries/Gradle__com_android_support_viewpager_28_0_0_aar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/modules/Open RSC Android Client/Open_RSC_Android_Client.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/Android_Client.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/Android_Client.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Android_Client/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Android_Client/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,17 +54,6 @@
       <method v="2">
         <option name="AntTarget" enabled="true" antfile="file://$PROJECT_DIR$/server/build.xml" target="compile_core" />
         <option name="AntTarget" enabled="true" antfile="file://$PROJECT_DIR$/server/build.xml" target="compile_plugins" />
-      </method>
-    </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration name="Run Client" type="JarApplication" singleton="false">
@@ -177,6 +116,7 @@
       <workItem from="1604108330157" duration="1232000" />
       <workItem from="1604250918056" duration="2296000" />
       <workItem from="1605132431530" duration="23482000" />
+      <workItem from="1615163933848" duration="12000" />
     </task>
     <servers />
   </component>
@@ -184,53 +124,37 @@
     <option name="version" value="3" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="760" y="274" key="#Project_Structure" timestamp="1605386782357">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1877" height="348" key="GridCell.Tab.0.bottom" timestamp="1615157870632">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="760" y="274" key="#Project_Structure/0.0.2560.1400@0.0.2560.1400" timestamp="1605386782357" />
-    <state x="1450" y="0" width="1092" height="1400" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1605387876777">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1877" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1615157870632" />
+    <state width="1877" height="348" key="GridCell.Tab.0.center" timestamp="1615157870632">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="1450" y="0" width="1092" height="1400" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1605387876777" />
-    <state x="1776" y="487" key="#com.intellij.ide.macro.MacrosDialog" timestamp="1605386397854">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1877" height="348" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1615157870632" />
+    <state width="1877" height="348" key="GridCell.Tab.0.left" timestamp="1615157870632">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="1776" y="487" key="#com.intellij.ide.macro.MacrosDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1605386397854" />
-    <state x="1725" y="572" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1605387182983">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1877" height="348" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1615157870632" />
+    <state width="1877" height="348" key="GridCell.Tab.0.right" timestamp="1615157870632">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="1725" y="572" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1605387182983" />
-    <state x="0" y="0" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1604250917173">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1877" height="348" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1615157870632" />
+    <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1615157870632">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="0" y="0" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1604250917173" />
-    <state x="1060" y="455" key="FileChooserDialogImpl" timestamp="1605387630806">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1877" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1615157870632" />
+    <state width="1877" height="348" key="GridCell.Tab.1.center" timestamp="1615157870632">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="1060" y="455" key="FileChooserDialogImpl/0.0.2560.1400@0.0.2560.1400" timestamp="1605387630806" />
-    <state width="2100" height="391" key="GridCell.Tab.0.bottom" timestamp="1605387854588">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1877" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1615157870632" />
+    <state width="1877" height="348" key="GridCell.Tab.1.left" timestamp="1615157870632">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="2100" height="391" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1605387854588" />
-    <state width="2100" height="391" key="GridCell.Tab.0.center" timestamp="1605387854588">
-      <screen x="0" y="0" width="2560" height="1400" />
+    <state width="1877" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1615157870632" />
+    <state width="1877" height="348" key="GridCell.Tab.1.right" timestamp="1615157870632">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="2100" height="391" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1605387854588" />
-    <state width="2100" height="391" key="GridCell.Tab.0.left" timestamp="1605387854588">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state width="2100" height="391" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1605387854588" />
-    <state width="2100" height="391" key="GridCell.Tab.0.right" timestamp="1605387854588">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state width="2100" height="391" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1605387854588" />
-    <state x="746" y="517" key="cloudConfig.PluginsDialog" timestamp="1601757018442">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state x="746" y="517" key="cloudConfig.PluginsDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1601757018442" />
-    <state x="988" y="417" width="584" height="566" key="find.popup" timestamp="1605193246014">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state x="988" y="417" width="584" height="566" key="find.popup/0.0.2560.1400@0.0.2560.1400" timestamp="1605193246014" />
+    <state width="1877" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1615157870632" />
   </component>
 </project>
