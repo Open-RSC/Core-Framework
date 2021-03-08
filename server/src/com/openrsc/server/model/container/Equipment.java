@@ -553,6 +553,10 @@ public class Equipment {
 			return false;
 		}
 
+                // Note: It is authentic to NOT have a check for Cape of Legends!
+                // They only relied on its untradability as the check. Proof of this is in the
+                // behaviour seen in 2004, when transferring the cape from RS2 back to RS1.
+
 		// God capes and staves.
 		else if (item.getCatalogId() == ItemId.STAFF_OF_GUTHIX.id() && (hasEquipped(ItemId.ZAMORAK_CAPE.id()) || hasEquipped(ItemId.SARADOMIN_CAPE.id()))) { // try to wear guthix staff
 			player.message("you may not wield this staff while wearing a cape of another god");
