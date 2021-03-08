@@ -192,7 +192,7 @@ public class GameEventHandler {
 			final int eventCount = eventsCounts.get(entry.getKey());
 			s.append(eventName).append(" : ")
 			.append(eventTime / 1000000).append("ms").append(" : ")
-			.append(eventTime).append("ns").append(" : ")
+			.append(eventTime / 1000).append("μs").append(" : ")
 			.append(eventCount).append(newLine);
 		}
 
@@ -206,7 +206,7 @@ public class GameEventHandler {
 				final long incomingTime = getServer().getIncomingTimePerPacketOpcode().get(incomingPacketId);
 				s.append("Packet ID: ").append(incomingPacketId).append(" : ")
 				.append(incomingTime / 1000000).append("ms").append(" : ")
-				.append(incomingTime).append("ns").append(" : ")
+				.append(incomingTime / 1000).append("μs").append(" : ")
 				.append(incomingCount).append(newLine);
 			}
 		}
