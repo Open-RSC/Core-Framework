@@ -185,6 +185,9 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				delay(1);
 				player.playerServerMessage(MessageType.QUEST, "Your bank seems to be too full to deposit these notes at this time.");
 			}
+		} else if (player.getIronMan() == IronmanMode.Ultimate.id() && item.getNoted()) {
+			Certer.UIMCert(player, npc, item);
+
 		} else if (player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
 			if (!player.getQolOptOut()) {
 				quickFeature(npc, player, false);
