@@ -27,7 +27,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 	//sidney smith is in its own file
 
 	// For custom content, use item on certer
-	final HashMap<Integer, int[]> certerTable = new HashMap<Integer, int[]>() {{
+	final static HashMap<Integer, int[]> certerTable = new HashMap<Integer, int[]>() {{
 		// Fish
 		put(NpcId.NILES.id(), new int[]{ItemId.SWORDFISH.id(), ItemId.RAW_SWORDFISH.id(),
 			ItemId.LOBSTER.id(), ItemId.RAW_LOBSTER.id()});
@@ -56,6 +56,11 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		// The following is custom - only if the Woodcutting guild is enabled.
 		put(NpcId.FORESTER.id(), new int[]{ItemId.WILLOW_LOGS.id(), ItemId.MAPLE_LOGS.id(),
 			ItemId.YEW_LOGS.id()});
+		// Sidney Smith
+		put(NpcId.SIDNEY_SMITH.id(), new int[]{ItemId.FULL_SUPER_ATTACK_POTION.id(),
+			ItemId.FULL_SUPER_STRENGTH_POTION.id(), ItemId.FULL_SUPER_DEFENSE_POTION.id(),
+			ItemId.FULL_RESTORE_PRAYER_POTION.id(), ItemId.DRAGON_BONES.id(),
+			ItemId.LIMPWURT_ROOT.id()});
 	}};
 
 	@Override
@@ -295,78 +300,8 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
-		// Do our checks
-		if (!config().WANT_BANK_NOTES) return;
-		if ((npc.getID() == NpcId.FORESTER.id()) && !config().WANT_WOODCUTTING_GUILD) return;
-
-		final int[] validItems = certerTable.get(npc.getID());
-		if (validItems == null) return;
-
-		if (inArray(item.getCatalogId(), validItems)) {
-			// Grab a bunch of info about the item and NPC for flavor text
-			final boolean isNoted = item.getNoted();
-			final String npcName = player.getWorld().getServer().getEntityHandler().getNpcDef(npc.getID()).getName();
-			final String itemName = player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).getName();
-
-			// Determine how much of the item the player is holding.
-			// But only look for items of the same notedness that they handed the NPC.
-			final int totalHeld = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(isNoted));
-			int toExchange = 0;
-
-			// If the item is noted, we'll ask how many unnoted items they want.
-			// If it's just items, we'll just note them all.
-			if (isNoted && totalHeld > 1) {
-				npcsay(player, npc, "How many " + itemName + " certificates would you like to exchange?");
-				int option = multi(player, "One", "Two", "Five", "Ten", "Twenty-five");
-				switch (option)
-				{
-					case -1:
-						return;
-					case 0:
-						toExchange = 1;
-						break;
-					case 1:
-						toExchange = 2;
-						break;
-					case 2:
-						toExchange = 5;
-						break;
-					case 3:
-						toExchange = 10;
-						break;
-					case 4:
-						toExchange = 25;
-						break;
-				}
-				// Make sure they ain't trying to fib us
-				toExchange = Math.min(toExchange, totalHeld);
-
-			} else {
-				toExchange = totalHeld;
-			}
-
-			mes("You hand " + npcName + " your " + (isNoted ? "certed " : "") + itemName + (toExchange > 1 ? "s" : ""));
-			delay(3);
-			if (isNoted) {
-				// Remove the items
-				player.getCarriedItems().remove(new Item(item.getCatalogId(), toExchange, true));
-				// Add them back
-				for (int i = 0; i < toExchange; i++) {
-					player.getCarriedItems().getInventory().add(new Item(item.getCatalogId()));
-				}
-			} else {
-				// Remove the (non-noted) items
-				for (int i = 0; i < toExchange; i++) {
-					player.getCarriedItems().remove(new Item(item.getCatalogId(), 1, false));
-				}
-
-				// Add back the noted items.
-				player.getCarriedItems().getInventory().add(new Item(item.getCatalogId(), toExchange, true));
-			}
-			mes(npcName + " hands you back " + (toExchange > 1 ? "some " : "a ") +
-				itemName + (isNoted ? "" : " cert") + (toExchange > 1 ? "s" : ""));
-			delay(3);
-
+		if (UIMCertBlock(player, npc, item)) {
+			UIMCert(player, npc, item);
 		} else {
 			mes("Nothing interesting happens");
 		}
@@ -374,6 +309,77 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
+		return UIMCertBlock(player, npc, item);
+	}
+
+	public static void UIMCert(Player player, Npc npc, Item item) {
+		// Grab a bunch of info about the item and NPC for flavor text
+		final boolean isNoted = item.getNoted();
+		final String npcName = player.getWorld().getServer().getEntityHandler().getNpcDef(npc.getID()).getName();
+		final String itemName = player.getWorld().getServer().getEntityHandler().getItemDef(item.getCatalogId()).getName();
+
+		// Determine how much of the item the player is holding.
+		// But only look for items of the same notedness that they handed the NPC.
+		final int totalHeld = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(isNoted));
+		int toExchange = 0;
+
+		// If the item is noted, we'll ask how many unnoted items they want.
+		// If it's just items, we'll just note them all.
+		if (isNoted && totalHeld > 1) {
+			npcsay(player, npc, "How many " + itemName + " certificates would you like to exchange?");
+			int option = multi(player, npc, "One", "Two", "Five", "Ten", "Twenty-five");
+			switch (option)
+			{
+				case -1:
+					return;
+				case 0:
+					toExchange = 1;
+					break;
+				case 1:
+					toExchange = 2;
+					break;
+				case 2:
+					toExchange = 5;
+					break;
+				case 3:
+					toExchange = 10;
+					break;
+				case 4:
+					toExchange = 25;
+					break;
+			}
+			// Make sure they ain't trying to fib us
+			toExchange = Math.min(toExchange, totalHeld);
+
+		} else {
+			toExchange = totalHeld;
+		}
+
+		mes("You hand " + npcName + " your " + (isNoted ? "certed " : "") + itemName + (toExchange > 1 ? "s" : ""));
+		delay(3);
+		if (isNoted) {
+			// Remove the items
+			player.getCarriedItems().remove(new Item(item.getCatalogId(), toExchange, true));
+			// Add them back
+			for (int i = 0; i < toExchange; i++) {
+				player.getCarriedItems().getInventory().add(new Item(item.getCatalogId()));
+			}
+		} else {
+			// Remove the (non-noted) items
+			for (int i = 0; i < toExchange; i++) {
+				player.getCarriedItems().remove(new Item(item.getCatalogId(), 1, false));
+			}
+
+			// Add back the noted items.
+			player.getCarriedItems().getInventory().add(new Item(item.getCatalogId(), toExchange, true));
+		}
+		mes(npcName + " hands you back " + (toExchange > 1 ? "some " : "a ") +
+			itemName + (isNoted ? "" : " cert") + (toExchange > 1 ? "s" : ""));
+		delay(3);
+	}
+
+	public static boolean UIMCertBlock(Player player, Npc npc, Item item) {
+		if (player.getIronMan() != IronmanMode.Ultimate.id()) return false;
 		// IF bank notes aren't enabled, don't block
 		if (!player.getConfig().WANT_BANK_NOTES) return false;
 		// If we're not using on a certer, don't block
