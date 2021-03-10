@@ -185,8 +185,17 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				delay(1);
 				player.playerServerMessage(MessageType.QUEST, "Your bank seems to be too full to deposit these notes at this time.");
 			}
-		} else if (player.getIronMan() == IronmanMode.Ultimate.id() && item.getNoted()) {
-			Certer.UIMCert(player, npc, item);
+		} else if (player.getIronMan() == IronmanMode.Ultimate.id()) {
+			// If a UIM uses a certable item on a banker (or a note cert of said item)
+			// they will be able to note cert/un-note cert it.
+			for (int[] ids : Certer.certerTable.values()) {
+				for (int id : ids) {
+					if (item.getCatalogId() == id) {
+						Certer.UIMCert(player, npc, item);
+						return;
+					}
+				}
+			}
 
 		} else if (player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
 			if (!player.getQolOptOut()) {
