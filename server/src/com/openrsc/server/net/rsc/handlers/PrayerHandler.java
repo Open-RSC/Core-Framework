@@ -85,10 +85,12 @@ public class PrayerHandler implements PacketHandler {
 			if (player.getSkills().getMaxStat(Skills.PRAYER) < prayer.getReqLevel()) {
 				player.setSuspiciousPlayer(true, "max stat prayer < req level");
 				player.message("Your prayer ability is not high enough to use this prayer");
+				return;
 			}
 			if (player.getSkills().getLevel(Skills.PRAYER) <= 0) {
 				player.getPrayers().setPrayer(prayerID, false);
 				player.message("You have run out of prayer points. Return to a church to recharge");
+				return;
 			}
 			activatePrayer(player, prayerID);
 		} else if (pID == packetTwo) {
