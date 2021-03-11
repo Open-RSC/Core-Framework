@@ -154,6 +154,17 @@ public class ServerConfiguration {
 	public boolean WANT_EQUIPMENT_TAB;
 	public boolean WANT_BANK_PRESETS;
 	public boolean WANT_PARTIES;
+	public double PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER;
+	public double PARTY_DISTANCE_PERCENT_DECREASE;
+	public double PARTY_SAVE_XP_FOR_SKILLER_PERCENT;
+	public int PARTY_SHARE_MAX_X;
+	public int PARTY_SHARE_MAX_Y;
+	public boolean PARTY_SHARE_INFINITE_RANGE;
+	public boolean PARTY_SHARE_WITH_SAME_IP;
+	public String PARTY_SHARE_SIZE_ALGORITHM;
+	public String PARTY_SHARE_DISTANCE_ALGORITHM;
+	public int PARTY_MAX_SIZE_FOR_ADDITIONAL_XP;
+	public boolean PARTY_IRON_MAN_CAN_SHARE;
 	public boolean MINING_ROCKS_EXTENDED;
 	public boolean WANT_NEW_RARE_DROP_TABLES;
 	public boolean WANT_LEFTCLICK_WEBS;
@@ -308,7 +319,6 @@ public class ServerConfiguration {
 		RING_OF_FORGING_USES = tryReadInt("ring_of_forging_uses").orElse(75);
 		DWARVEN_RING_USES = tryReadInt("dwarven_ring_uses").orElse(29);
 		DWARVEN_RING_BONUS = tryReadInt("dwarven_ring_bonus").orElse(3);
-		NOTHING_REUSE_ME = tryReadBool("nothing_reuse_me").orElse(false);
 		//CHECK_ADMIN_IP = tryReadBool("check_admin_ip").orElse(false);
 		//ADMIN_IP = tryReadString("admin_ip").orElse("127.0.0.0,10.0.0.0,172.16.0.0,192.168.0.0");
 		LOCATION_DATA = tryReadInt("location_data").orElse(0);
@@ -385,7 +395,6 @@ public class ServerConfiguration {
 		WANT_CUSTOM_LANDSCAPE = tryReadBool("custom_landscape").orElse(false);
 		WANT_EQUIPMENT_TAB = tryReadBool("want_equipment_tab").orElse(false);
 		WANT_BANK_PRESETS = tryReadBool("want_bank_presets").orElse(false);
-		WANT_PARTIES = tryReadBool("want_parties").orElse(false);
 		MINING_ROCKS_EXTENDED = tryReadBool("mining_rocks_extended").orElse(false);
 		WANT_NEW_RARE_DROP_TABLES = tryReadBool("want_new_rare_drop_tables").orElse(false);
 		WANT_LEFTCLICK_WEBS = tryReadBool("want_leftclick_webs").orElse(false);
@@ -399,6 +408,26 @@ public class ServerConfiguration {
 		WANT_APOTHECARY_QOL = tryReadBool("want_apothecary_qol").orElse(false);
 		WANT_RANGED_FACE_PLAYER = tryReadBool("want_ranged_face_player").orElse(false);
 		WANT_POISON_NPCS = tryReadBool("want_poison_npcs").orElse(false);
+
+		// Party settings
+		WANT_PARTIES = tryReadBool("want_parties").orElse(false);
+		PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER = tryReadDouble("party_additional_xp_percent_per_player")
+			.orElse(0.1);
+		PARTY_DISTANCE_PERCENT_DECREASE = tryReadDouble("party_distance_percent_decrease")
+			.orElse(0.05);
+		PARTY_SAVE_XP_FOR_SKILLER_PERCENT = tryReadDouble("party_save_xp_for_skiller_percent")
+			.orElse(0.1);
+		PARTY_SHARE_MAX_X = tryReadInt("party_share_max_x").orElse(20);
+		PARTY_SHARE_MAX_Y = tryReadInt("party_share_max_y").orElse(20);
+		PARTY_SHARE_INFINITE_RANGE = tryReadBool("party_share_infinite_range").orElse(false);
+		PARTY_SHARE_WITH_SAME_IP = tryReadBool("party_share_with_same_ip").orElse(false);
+		PARTY_SHARE_SIZE_ALGORITHM = tryReadString("party_share_size_algorithm")
+			.orElse("exponential");
+		PARTY_SHARE_DISTANCE_ALGORITHM = tryReadString("party_share_distance_algorithm")
+			.orElse("exponential");
+		PARTY_MAX_SIZE_FOR_ADDITIONAL_XP = tryReadInt("party_max_size_for_additional_xp")
+			.orElse(1000);
+		PARTY_IRON_MAN_CAN_SHARE = tryReadBool("party_iron_man_can_share").orElse(false);
 
 		// Discord settings
 		DISCORD_AUCTION_WEBHOOK_URL = tryReadString("discord_auction_webhook_url").orElse("null");
