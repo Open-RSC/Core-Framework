@@ -255,9 +255,9 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					oziachDialogue(player, n, Oziach.ANTIDRAGON_SHIELD);
 				} else if (menu2 == 1) {
 					oziachDialogue(player, n, Oziach.FIRST_PIECE);
-				} else if (menu2 == 1) {
+				} else if (menu2 == 2) {
 					oziachDialogue(player, n, Oziach.THIRD_PIECE);
-				} else if (menu2 == 1) {
+				} else if (menu2 == 3) {
 					npcsay(player, n, "Fare ye well");
 				}
 				break;
@@ -272,9 +272,9 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 					oziachDialogue(player, n, Oziach.ANTIDRAGON_SHIELD);
 				} else if (menu3 == 1) {
 					oziachDialogue(player, n, Oziach.FIRST_PIECE);
-				} else if (menu3 == 1) {
+				} else if (menu3 == 2) {
 					oziachDialogue(player, n, Oziach.SECOND_PIECE);
-				} else if (menu3 == 1) {
+				} else if (menu3 == 3) {
 					npcsay(player, n, "Fare ye well");
 				}
 				break;
