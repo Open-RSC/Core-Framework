@@ -423,6 +423,9 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 		ItemId.STAFF_OF_WATER.id(),
 		ItemId.STAFF_OF_EARTH.id(),
 		ItemId.STAFF_OF_FIRE.id(),
+		ItemId.STAFF_OF_SARADOMIN.id(),
+		ItemId.STAFF_OF_ZAMORAK.id(),
+		ItemId.STAFF_OF_GUTHIX.id()
 	};
 
 	private boolean isNotAllowed(Player player, Item item) {
