@@ -145,6 +145,24 @@ public abstract class Entity {
 		return location.get().getY();
 	}
 
+	/**
+	 * Normalize the player's Y coordinate by returning the Y value they would be at
+	 * if they were on the ground floor (British convention)
+	 * @param yPos The current Y coordinate of the player
+	 * @return The player's Y coordinate if they were on the ground floor (British convention)
+	 */
+	public final int normalizeFloor(final int yPos) {
+		// Subtract 944 until the value becomes negative
+		int normalizedY = yPos;
+		do {
+			normalizedY -= 944;
+		} while (normalizedY >= 0);
+
+		// Add 944 back to it to get the ground floor y coordinate
+		normalizedY += 944;
+		return normalizedY;
+	}
+
 	public boolean isRemoved() {
 		return removed;
 	}
