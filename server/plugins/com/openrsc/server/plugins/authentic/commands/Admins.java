@@ -1943,7 +1943,7 @@ public final class Admins implements CommandTrigger {
 		}
 
 		int radius = -1;
-		if (args.length >= 3) {
+		if (args.length >= 2) {
 			try {
 				radius = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
@@ -1955,7 +1955,7 @@ public final class Admins implements CommandTrigger {
 		}
 
 		int time = -1;
-		if (args.length >= 4) {
+		if (args.length >= 3) {
 			try {
 				time = Integer.parseInt(args[2]);
 			} catch (NumberFormatException ex) {
