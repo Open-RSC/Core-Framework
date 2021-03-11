@@ -425,6 +425,21 @@ public final class Player extends Mob {
 		this.IRON_MAN_HC_DEATH = int1;
 	}
 
+	/**
+	 * Checks if the player is any type of Iron Man (except a transfer character
+	 * @return True if the player is any type of Iron Man, false otherwise
+	 */
+	public boolean isIronMan() {
+		return getIronMan() == IronmanMode.Ironman.id()
+			|| getIronMan() == IronmanMode.Ultimate.id()
+			|| getIronMan() == IronmanMode.Hardcore.id();
+	}
+
+	/**
+	 * Checks if the player is the specified type of Iron Man
+	 * @param mode The Iron Man type to check for
+	 * @return True if the player is of the specified Iron Man Type, false otherwise
+	 */
 	public boolean isIronMan(final int mode) {
 		if (mode == IronmanMode.Ironman.id() && getIronMan() == IronmanMode.Ironman.id()) {
 			return true;
@@ -1410,70 +1425,44 @@ public final class Player extends Mob {
 		getSkills().addExperience(i, appliedAmount);
 	}
 
-	private List<Double> getExperienceRate(final int skill) {
-		// total possible multiplier
+	/**
+	 * Gets the experience multiplier for the player, based on the server's configurations
+	 * @param skill The skill the player is training
+	 * @return The modifier that should be applied to the player's gained XP
+	 */
+	private double getExperienceMultiplier(final int skill) {
 		double multiplier = 1.0;
-		// multiplier for the player
-		double effectiveMultiplier = 1.0;
-		// minimum multiplier (used shared xp party)
-		double minMultiplier = 1.0;
 
-		/*
-		 Skilling Experience Rate
-		 */
-		if (skill >= 4 && skill <= getWorld().getServer().getConstants().getSkills().getSkillsCount() - 1) {
-			multiplier = getWorld().getServer().getConfig().SKILLING_EXP_RATE;
-			if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
-				multiplier += getWorld().getServer().getConfig().WILDERNESS_BOOST;
-				if (isSkulled()) {
-					multiplier += getWorld().getServer().getConfig().SKULL_BOOST;
-				}
+		// Check to see if the server has double XP enabled.
+		if (getConfig().IS_DOUBLE_EXP) {
+			multiplier *= 2.0;
+		}
+
+		// If the player has opted into 1x, they get no multipliers
+		// (save for the DXP multiplier if enabled).
+		if (isOneXp()) return multiplier;
+
+		// Check if the skill is a non-combat skill (all skills after index 4) and
+		// apply the non-combat skilling rate.
+		if (skill >= 4 ) {
+			multiplier = getConfig().SKILLING_EXP_RATE;
+		}
+
+		// Otherwise apply the combat skilling rate.
+		else {
+			multiplier = getConfig().COMBAT_EXP_RATE;
+		}
+
+		// Apply the Wilderness and Skull multipliers.
+		// You won't get the Wilderness multiplier if you're standing in the mage bank entrance.
+		if (getLocation().inWilderness() && !getLocation().inBounds(220, 108, 225, 111)) {
+			multiplier += getConfig().WILDERNESS_BOOST;
+			if (isSkulled()) {
+				multiplier += getConfig().SKULL_BOOST;
 			}
 		}
 
-		/*
-		Combat Experience Rate
-		 */
-		else if (skill >= 0 && skill <= 3) { // Attack, Strength, Defense & HP bonus.
-			multiplier = getWorld().getServer().getConfig().COMBAT_EXP_RATE;
-			if (getLocation().inWilderness()) {
-				multiplier += getWorld().getServer().getConfig().WILDERNESS_BOOST;
-				if (isSkulled()) {
-					multiplier += getWorld().getServer().getConfig().SKULL_BOOST;
-				}
-			}
-		}
-
-		if (!isOneXp()) {
-			effectiveMultiplier = multiplier;
-		}
-
-		/*
-		  Double Experience
-		 */
-		if (getWorld().getServer().getConfig().IS_DOUBLE_EXP) {
-			multiplier *= 2;
-			effectiveMultiplier *= 2;
-			minMultiplier *= 2;
-		}
-
-		/*
-		  Experience Elixir
-		 */
-		if (getCache().hasKey("elixir_time")) {
-			if (getElixir() <= 0) {
-				getCache().remove("elixir_time");
-				ActionSender.sendElixirTimer(this, 0);
-			} else {
-				multiplier += 1;
-				if (!isOneXp()) effectiveMultiplier += 1;
-			}
-		}
-
-		double finalMultiplier = multiplier;
-		double finalEffectiveMultiplier = effectiveMultiplier;
-		double finalMinMultiplier = minMultiplier;
-		return new ArrayList<Double>() {{ add(finalMultiplier); add(finalEffectiveMultiplier); add(finalMinMultiplier); }};
+		return multiplier;
 	}
 
 	public void incExp(final int[] skillDist, int skillXP, final boolean useFatigue) {
@@ -1496,13 +1485,26 @@ public final class Player extends Mob {
 	}
 
 	public void incExp(final int skill, int skillXP, final boolean useFatigue) {
+		// Warn the player that they currently cannot gain XP.
 		if (isExperienceFrozen()) {
-			if (getWorld().getServer().getConfig().WANT_FATIGUE)
+			if (getWorld().getServer().getConfig().WANT_FATIGUE) {
 				ActionSender.sendMessage(this, "You can not gain experience right now!");
+			}
+
+			// If we have fatigue disabled, that means the player has slept to disable XP
+			// gain. We will tell them once per login, to make sure that they didn't do it
+			// by accident.
+			else if (!this.getAttribute("warned_xp_off", false)) {
+				ActionSender.sendMessage(this, "You have disabled experience gain." +
+					"Use a sleeping bag or bed to re-enable,");
+				this.setAttribute("warned_xp_off", true);
+			}
 			return;
 		}
 
 		if (getWorld().getServer().getConfig().WANT_FATIGUE) {
+			// If the action uses fatigue, and the player is too tired,
+			// send a message saying so, and do not give xp.
 			if (useFatigue) {
 				if (fatigue >= this.MAX_FATIGUE) {
 					ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
@@ -1511,9 +1513,14 @@ public final class Player extends Mob {
 				//if (fatigue >= 139500) {
 				//	ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
 				//}
+
+				// Give fatigue for non-combat skills (all skills after skill ID 4
 				if (skill >= 4) {
 					fatigue += skillXP * 8;
-				} else if (skill >= 0) {
+				}
+
+				// Give fatigue for combat skills (all skills between skill ID 0 and 3 inclusive)
+				else if (skill >= 0) {
 					fatigue += skillXP * 5;
 				}
 				if (fatigue > this.MAX_FATIGUE) {
@@ -1522,6 +1529,7 @@ public final class Player extends Mob {
 			}
 		}
 
+		// Player cannot gain more than 200 fishing xp on tutorial island
 		if (getLocation().onTutorialIsland()) {
 			if (getSkills().getExperience(skill) + skillXP > 200) {
 				if (skill == Skills.FISHING) {
@@ -1529,50 +1537,103 @@ public final class Player extends Mob {
 				}
 			}
 		}
-		List<Double> multipliers = getExperienceRate(skill);
-		if (this.getParty() != null) {
-			PartyPlayer partyLeader = this.getParty().getLeader();
-			if (partyLeader.getShareExp() > 0) {
-				if (skill > 6) {
-					// apply combined multiplier
-					skillXP *= multipliers.get(0);
-					double ratio;
-					for (PartyPlayer player : this.getParty().getPlayers()) {
-						if (player.getPlayerReference().getFatigue() < player.getPlayerReference().MAX_FATIGUE) {
-							ratio = player.getPlayerReference().isOneXp() ? (multipliers.get(2) / multipliers.get(0)) : 1.0;
-							if (player.getPlayerReference().getUsername() != this.getUsername()) {
-								player.getPlayerReference().setFatigue(player.getPlayerReference().getFatigue() + (int)(ratio * skillXP) * 4);
-								ActionSender.sendFatigue(this);
-							}
-							player.getPlayerReference().getSkills().addExperience(skill, (int) (ratio * skillXP) / player.getPartyMembersNotTired() - 1);
-						}
-					}
-					int p11 = partyLeader.getPartyMembersNotTired() - 1;
-					if (partyLeader.getPartyMembersNotTired() - 1 > 0) {
-						int skill1 = skillXP / 4;
-						int p1 = partyLeader.getPartyMembersNotTired();
-						int p3 = partyLeader.getPartyMembersNotTired() - 1;
-						ActionSender.sendMessage(this, skill1 + " total exp. " + p1 + " members to share");
-						int shared = this.getExpShared() + skill1 / p1;
-						this.setExpShared(this.getExpShared() + skill1 / p1 * p3);
-						ActionSender.sendExpShared(this);
-						this.getParty().sendParty();
-					}
-				} else {
-					// cb skill -> apply effective multiplier
-					skillXP *= multipliers.get(1);
-					getSkills().addExperience(skill, (int) skillXP);
+
+		// This is how much XP will be given to this player at the end.
+		// If they aren't in a party, or if there aren't any players that are close
+		// enough, this player will get all the XP.
+		int thisXp = skillXP;
+
+		// Check if the player is an Iron Man and in a party
+		final boolean notIronMan = getConfig().PARTY_IRON_MAN_CAN_SHARE || !this.isIronMan();
+		if (this.getParty() != null && notIronMan) {
+			ArrayList<PartyPlayer> sharers = new ArrayList<PartyPlayer>();
+			int xpLeftToReward = skillXP;
+
+			// Get the players to share with
+			for (PartyPlayer partyMember : getParty().getPlayers()) {
+				final Player partyMemberPlayer = partyMember.getPlayerReference();
+
+				// Make sure the player is in range.
+				final boolean inRange = getConfig().PARTY_SHARE_INFINITE_RANGE
+					|| (Math.abs(this.getX() - partyMemberPlayer.getX()) <= getConfig().PARTY_SHARE_MAX_X
+					&& Math.abs(normalizeFloor(this.getY()) - normalizeFloor(partyMemberPlayer.getY())) <= getConfig().PARTY_SHARE_MAX_Y);
+
+				// Make sure the player isn't on the same IP
+				final boolean notSameIp = getConfig().PARTY_SHARE_WITH_SAME_IP || !this.getCurrentIP().equals(partyMemberPlayer.getCurrentIP());
+
+				// Make sure the player isn't an Iron Man
+				final boolean isntIronMan = getConfig().PARTY_IRON_MAN_CAN_SHARE || !partyMemberPlayer.isIronMan();
+
+				// Make sure the party member isn't this!!
+				final boolean notMe = this != partyMemberPlayer;
+
+				if (inRange && notSameIp && isntIronMan && notMe) {
+					sharers.add(partyMember);
 				}
-			} else {
-				// no shared xp -> apply effective multiplier
-				skillXP *= multipliers.get(1);
-				getSkills().addExperience(skill, (int) skillXP);
 			}
-		} else {
-			// effective multiplier
-			skillXP *= multipliers.get(1);
-			getSkills().addExperience(skill, (int) skillXP);
+
+			int shareCount = sharers.size();
+			if (shareCount > 0) {
+				// Include this player in the math
+				shareCount++;
+
+				// Do some maths to get the XP to reward
+				switch (getConfig().PARTY_SHARE_SIZE_ALGORITHM) {
+					case "linear":
+						xpLeftToReward *= 1.0 + (getConfig().PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER
+							* Math.min(shareCount, getConfig().PARTY_MAX_SIZE_FOR_ADDITIONAL_XP));
+						break;
+					case "exponential":
+						xpLeftToReward *= Math.pow(1.0 + getConfig().PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER,
+							Math.min(shareCount, getConfig().PARTY_MAX_SIZE_FOR_ADDITIONAL_XP));
+						break;
+					default:
+						LOGGER.error("Unrecognized PARTY_SHARE_SIZE_ALGORITHM provided in config");
+						break;
+				}
+
+				// The total XP that should be awarded out to the party
+				final int totalXpToReward = xpLeftToReward;
+				// The max XP that each player besides the skiller should get
+				final int maxXpPerSharedPlayer = (int)(((1.0 / shareCount) * (1.0 - getConfig().PARTY_SAVE_XP_FOR_SKILLER_PERCENT)) * totalXpToReward);
+
+				// Calculate and award XP to each party member
+				for (PartyPlayer partyMember : sharers) {
+					final Player partyMemberPlayer = partyMember.getPlayerReference();
+
+					double xpDropoffPercent = 1.0;
+					final int playerDistance = Math.abs(this.getX() - partyMemberPlayer.getX())
+						+ Math.abs(normalizeFloor(this.getY()) - normalizeFloor(partyMemberPlayer.getY()));
+
+					// Decrease the amount of XP the player gets depending on how far away they are
+					switch (getConfig().PARTY_SHARE_DISTANCE_ALGORITHM) {
+						case "linear":
+							xpDropoffPercent *= 1.0 - (getConfig().PARTY_DISTANCE_PERCENT_DECREASE
+								* playerDistance);
+							break;
+						case "exponential":
+							xpDropoffPercent *= Math.pow(1.0 - getConfig().PARTY_DISTANCE_PERCENT_DECREASE,
+								playerDistance);
+							break;
+						default:
+							LOGGER.error("Unrecognized PARTY_SHARE_DISTANCE_ALGORITHM provided in config");
+							break;
+					}
+
+					// Award XP to the party member
+					int playerXp = (int)(maxXpPerSharedPlayer * xpDropoffPercent);
+					xpLeftToReward -= playerXp;
+					playerXp *= partyMemberPlayer.getExperienceMultiplier(skill);
+					partyMemberPlayer.getSkills().addExperience(skill, playerXp);
+				}
+				thisXp = xpLeftToReward;
+			}
 		}
+
+		// Update this player's XP.
+		thisXp = Math.min(thisXp, skillXP);
+		thisXp *= getExperienceMultiplier(skill);
+		getSkills().addExperience(skill, thisXp);
 
 		// packet order; fatigue update comes after XP update authentically.
 		// still, will need to check fatigue is not too high before awarding XP, so this check is in 2 places
