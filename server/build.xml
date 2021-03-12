@@ -61,13 +61,12 @@
         <delete dir="${build}"/>
     </target>
 
+    <property name="confFile" value="default" />
     <target name="runserver">
         <java classname="com.openrsc.server.Server" fork="true">
-            <!-- Comment out the below default.conf reference to disable default loading and instead run multiple worlds on the same server process -->
-            <arg value="default.conf"/>
-            <!-- Uncomment the below section to run multiple worlds on the same server process (comment out default.conf above first)-->
-            <!--<arg value="openrsc.conf"/>
-            <arg value="rsccabbage.conf"/>-->
+            <!-- usage: `ant runserver -DconfFile=openrsc` to run server with config file openrsc.conf -->
+            <!-- see also: Deployment_Scripts/run.sh -->
+            <arg value="${confFile}.conf"/>
             <jvmarg line="-Xdiag -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=64m"/>
             <classpath>
                 <pathelement location="${lib}/netty-all-4.1.8.Final.jar"/>

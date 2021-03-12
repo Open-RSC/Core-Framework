@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # Run the game server
-echo ""
-echo "Running the game server. Press CTRL + C to shut it down or"
-echo "CTRL + A + D to detach the screen so this continues in the background."
-echo ""
-ant runserver
+echo "Running the game server with config named \"$1.conf\"."
+
+command="ant runserver -DconfFile=$1"
+screen -dmS $1 $command
