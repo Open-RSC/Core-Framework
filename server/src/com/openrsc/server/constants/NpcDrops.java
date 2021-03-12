@@ -1504,6 +1504,7 @@ public class NpcDrops {
 
 		currentNpcDrops = new DropTable("Chaos Druid Warrior (555)");
 		currentNpcDrops.addTableDrop(herbDropTable, 34);
+		currentNpcDrops.addTableDrop(rareDropTable, 1);
 		currentNpcDrops.addItemDrop(ItemId.ONE_SUPER_DEFENSE_POTION.id(), 1, 12);
 		currentNpcDrops.addItemDrop(ItemId.WHITE_BERRIES.id(), 1, 5);
 		currentNpcDrops.addItemDrop(ItemId.FIRE_RUNE.id(), 8, 5);

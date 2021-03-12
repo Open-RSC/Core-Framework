@@ -1,6 +1,7 @@
 package com.openrsc.server.database.struct;
 
-public class PlayerSkills {
+public class PlayerExperienceCapped {
 	public int skillId;
-	public int skillLevel;
+	public long dateWhenCapped;
 }
+

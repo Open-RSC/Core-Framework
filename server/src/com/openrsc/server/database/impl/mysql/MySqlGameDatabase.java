@@ -344,6 +344,17 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
+	protected void queryInitializeMaxStats(final int playerId) throws GameDatabaseException {
+		try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().initMaxStats);) {
+			statement.setInt(1, playerId);
+
+			statement.executeUpdate();
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
 	protected void queryInitializeStats(final int playerId) throws GameDatabaseException {
 		try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().initStats);) {
 			statement.setInt(1, playerId);
@@ -357,6 +368,17 @@ public class MySqlGameDatabase extends GameDatabase {
 	@Override
 	protected void queryInitializeExp(final int playerId) throws GameDatabaseException {
 		try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().initExp);) {
+			statement.setInt(1, playerId);
+
+			statement.executeUpdate();
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryInitializeExpCapped(final int playerId) throws GameDatabaseException {
+		try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().initExpCapped);) {
 			statement.setInt(1, playerId);
 
 			statement.executeUpdate();
@@ -678,19 +700,21 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected PlayerSkills[] queryLoadPlayerSkills(final Player player) throws GameDatabaseException {
+	protected PlayerSkills[] queryLoadPlayerSkills(final Player player, final boolean isMax) throws GameDatabaseException, NoSuchElementException  {
 		try {
-			final int skillLevels[] = fetchLevels(player.getDatabaseID());
+			final int skillLevels[] = fetchLevels(player.getDatabaseID(), isMax);
 			final PlayerSkills[] playerSkills = new PlayerSkills[skillLevels.length];
 			for (int i = 0; i < playerSkills.length; i++) {
 				playerSkills[i] = new PlayerSkills();
 				playerSkills[i].skillId = i;
-				playerSkills[i].skillCurLevel = skillLevels[i];
+				playerSkills[i].skillLevel = skillLevels[i];
 			}
 			return playerSkills;
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
+		} catch (final NoSuchElementException nse) {
+			throw nse;
 		}
 	}
 
@@ -705,6 +729,29 @@ public class MySqlGameDatabase extends GameDatabase {
 				playerExperiences[i].experience = experience[i];
 			}
 			return playerExperiences;
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected PlayerExperienceCapped[] queryLoadPlayerExperienceCapped(final int playerId) throws GameDatabaseException {
+		try {
+			long experienceCapped[];
+			try {
+				experienceCapped = fetchExperienceCapped(playerId);
+			} catch (NoSuchElementException e) {
+				queryInitializeExpCapped(playerId);
+				experienceCapped = new long[getServer().getConstants().getSkills().getSkillsCount()];
+			}
+			final PlayerExperienceCapped[] playerExperienceCaps = new PlayerExperienceCapped[experienceCapped.length];
+			for (int i = 0; i < playerExperienceCaps.length; i++) {
+				playerExperienceCaps[i] = new PlayerExperienceCapped();
+				playerExperienceCaps[i].skillId = i;
+				playerExperienceCaps[i].dateWhenCapped = experienceCapped[i];
+			}
+			return playerExperienceCaps;
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
 			throw new GameDatabaseException(this, ex.getMessage());
@@ -1603,11 +1650,26 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
+	protected void querySavePlayerMaxSkills(final int playerId, final PlayerSkills[] maxSkillLevels) throws GameDatabaseException {
+		try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().updateMaxStats);) {
+			statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, playerId);
+			for (final PlayerSkills skill : maxSkillLevels) {
+				statement.setInt(skill.skillId + 1, skill.skillLevel);
+			}
+
+			statement.executeUpdate();
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
 	protected void querySavePlayerSkills(final int playerId, final PlayerSkills[] currSkillLevels) throws GameDatabaseException {
 		try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().updateStats);) {
 			statement.setInt(getServer().getConstants().getSkills().getSkillsCount() + 1, playerId);
 			for (final PlayerSkills skill : currSkillLevels) {
-				statement.setInt(skill.skillId + 1, skill.skillCurLevel);
+				statement.setInt(skill.skillId + 1, skill.skillLevel);
 			}
 
 			statement.executeUpdate();
@@ -1624,6 +1686,36 @@ public class MySqlGameDatabase extends GameDatabase {
 			for (final PlayerExperience exp : experience) {
 				statement.setInt(exp.skillId + 1, exp.experience);
 			}
+
+			statement.executeUpdate();
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void querySavePlayerMaxSkill(final int playerId, final int skillId, final int level) throws GameDatabaseException {
+		final String skillName = getServer().getConstants().getSkills().skills.get(skillId).getShortName().toLowerCase();
+		final String query = String.format(getQueries().updateMaxStat, skillName);
+		try (final PreparedStatement statement = getConnection().prepareStatement(query);) {
+			statement.setInt(1, level);
+			statement.setInt(2, playerId);
+
+			statement.executeUpdate();
+		} catch (final SQLException ex) {
+			// Convert SQLException to a general usage exception
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void querySavePlayerExpCapped(final int playerId, final int skillId, final long dateCapped) throws GameDatabaseException {
+		final String skillName = getServer().getConstants().getSkills().skills.get(skillId).getShortName().toLowerCase();
+		final String query = String.format(getQueries().updateExpCapped, skillName);
+		try (final PreparedStatement statement = getConnection().prepareStatement(query);) {
+			statement.setLong(1, dateCapped);
+			statement.setInt(2, playerId);
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
@@ -2167,11 +2259,42 @@ public class MySqlGameDatabase extends GameDatabase {
 		}
 	}
 
-	private int[] fetchLevels(final int playerID) throws SQLException {
+	@Override
+	protected boolean queryTableExists(final String table) throws GameDatabaseException {
+		boolean exists = true;
+		try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().checkTableExists);) {
+			statement.setString(1, table);
+			statement.execute();
+
+			try (final ResultSet result = statement.getResultSet();) {
+				if (result.next()) {
+					exists = result.getInt("exist") == 1;
+				}
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+		return exists; // Do not want to continue creating table if table exists
+	}
+
+	@Override
+	protected void queryRawStatement(final String statementString) throws GameDatabaseException {
+		try (final PreparedStatement statement = getConnection().prepareStatement(statementString)) {
+			statement.executeUpdate();
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	private int[] fetchLevels(final int playerID, final boolean isMax) throws SQLException, NoSuchElementException {
 		final int[] data = new int[getServer().getConstants().getSkills().getSkillsCount()];
-		try (final PreparedStatement statement = statementFromInteger(getQueries().playerCurExp, playerID);
+		String query = isMax ? getQueries().playerMaxExp : getQueries().playerCurExp;
+		try (final PreparedStatement statement = statementFromInteger(query, playerID);
 			 final ResultSet result = statement.executeQuery();) {
 
+			if (!result.isBeforeFirst() ) {
+				throw new NoSuchElementException("Stats not initialized");
+			}
 			if (result.next()) {
 				for (int i = 0; i < data.length; i++) {
 					data[i] = result.getInt(getServer().getConstants().getSkills().getSkillName(i));
@@ -2191,6 +2314,26 @@ public class MySqlGameDatabase extends GameDatabase {
 				if (result.next()) {
 					for (int i = 0; i < data.length; i++) {
 						data[i] = result.getInt(getServer().getConstants().getSkills().getSkillName(i));
+					}
+				}
+			}
+		}
+		return data;
+	}
+
+	private long[] fetchExperienceCapped(final int playerID) throws SQLException, NoSuchElementException {
+		final long[] data = new long[getServer().getConstants().getSkills().getSkillsCount()];
+
+		try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().playerExpCapped);) {
+			statement.setInt(1, playerID);
+
+			try (final ResultSet result = statement.executeQuery();) {
+				if (!result.isBeforeFirst() ) {
+					throw new NoSuchElementException("XP capped not initialized");
+				}
+				if (result.next()) {
+					for (int i = 0; i < data.length; i++) {
+						data[i] = result.getLong(getServer().getConstants().getSkills().getSkillName(i));
 					}
 				}
 			}

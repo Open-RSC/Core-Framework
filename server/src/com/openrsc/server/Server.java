@@ -5,6 +5,7 @@ import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.builder.TableBuilder;
 import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
 import com.openrsc.server.database.impl.mysql.MySqlGameLogger;
 import com.openrsc.server.event.custom.DailyShutdownEvent;
@@ -34,6 +35,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -878,6 +880,72 @@ public class Server implements Runnable {
 			if (getDatabase().columnExists("experience", "harvesting")
 				&& getDatabase().columnType("experience", "harvesting").toLowerCase().contains("unsigned")) {
 				getDatabase().modifyColumn("experience", "harvesting", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (!getDatabase().tableExists("maxstats")) {
+				TableBuilder maxStatsTable = new TableBuilder("maxstats", new LinkedHashMap<String, String>(){{
+					put("ENGINE", "InnoDB");
+					put("DEFAULT CHARSET", "utf8");
+				}}).addColumn("playerID", "int(10) UNSIGNED NOT NULL")
+					.addColumn("attack", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("defense", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("strength", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("hits", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("ranged", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("prayer", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("magic", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("cooking", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("woodcut", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("fletching", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("fishing", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("firemaking", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("crafting", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("smithing", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("mining", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("herblaw", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("agility", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
+					.addColumn("thieving", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1");
+				if (getConfig().WANT_RUNECRAFT) {
+					maxStatsTable.addColumn("runecraft", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1");
+				}
+				if (getConfig().WANT_HARVESTING) {
+					maxStatsTable.addColumn("harvesting", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1");
+				}
+				maxStatsTable.addPrimaryKey("playerID")
+					.addKey("playerID", "playerID");
+				getDatabase().addTable(maxStatsTable.toString());
+			}
+			if (!getDatabase().tableExists("capped_experience")) {
+				TableBuilder cappedXpTable = new TableBuilder("capped_experience", new LinkedHashMap<String, String>(){{
+					put("ENGINE", "InnoDB");
+					put("DEFAULT CHARSET", "utf8");
+				}}).addColumn("playerID", "int(10) UNSIGNED NOT NULL")
+					.addColumn("attack", "int(10) UNSIGNED")
+					.addColumn("defense", "int(10) UNSIGNED")
+					.addColumn("strength", "int(10) UNSIGNED")
+					.addColumn("hits", "int(10) UNSIGNED")
+					.addColumn("ranged", "int(10) UNSIGNED")
+					.addColumn("prayer", "int(10) UNSIGNED")
+					.addColumn("magic", "int(10) UNSIGNED")
+					.addColumn("cooking", "int(10) UNSIGNED")
+					.addColumn("woodcut", "int(10) UNSIGNED")
+					.addColumn("fletching", "int(10) UNSIGNED")
+					.addColumn("fishing", "int(10) UNSIGNED")
+					.addColumn("firemaking", "int(10) UNSIGNED")
+					.addColumn("crafting", "int(10) UNSIGNED")
+					.addColumn("smithing", "int(10) UNSIGNED")
+					.addColumn("mining", "int(10) UNSIGNED")
+					.addColumn("herblaw", "int(10) UNSIGNED")
+					.addColumn("agility", "int(10) UNSIGNED")
+					.addColumn("thieving", "int(10) UNSIGNED");
+				if (getConfig().WANT_RUNECRAFT) {
+					cappedXpTable.addColumn("runecraft", "int(10) UNSIGNED");
+				}
+				if (getConfig().WANT_HARVESTING) {
+					cappedXpTable.addColumn("harvesting", "int(10) UNSIGNED");
+				}
+				cappedXpTable.addPrimaryKey("playerID")
+					.addKey("playerID", "playerID");
+				getDatabase().addTable(cappedXpTable.toString());
 			}
 			return true;
 		} catch (GameDatabaseException e) {

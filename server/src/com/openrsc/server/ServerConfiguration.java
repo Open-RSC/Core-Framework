@@ -47,6 +47,8 @@ public class ServerConfiguration {
 	public String DB_PASS;
 	public String DB_TABLE_PREFIX;
 	public int PLAYER_LEVEL_LIMIT;
+	public boolean WANT_EXPERIENCE_CAP;
+	public int EXPERIENCE_LIMIT;
 	public double COMBAT_EXP_RATE;
 	public double SKILLING_EXP_RATE;
 	public double WILDERNESS_BOOST;
@@ -301,6 +303,8 @@ public class ServerConfiguration {
 		WANT_PCAP_LOGGING = tryReadBool("want_pcap_logging").orElse(false);
 		WORLD_NUMBER = tryReadInt("world_number").orElse(1);
 		PLAYER_LEVEL_LIMIT = tryReadInt("player_level_limit").orElse(99);
+		WANT_EXPERIENCE_CAP = tryReadBool("want_experience_cap").orElse(false);
+		EXPERIENCE_LIMIT = tryReadInt("experience_limit").orElse(-1);
 		COMBAT_EXP_RATE = tryReadDouble("combat_exp_rate").orElse(1.0);
 		SKILLING_EXP_RATE = tryReadDouble("skilling_exp_rate").orElse(1.0);
 		WILDERNESS_BOOST = tryReadDouble("wilderness_boost").orElse(0.0);

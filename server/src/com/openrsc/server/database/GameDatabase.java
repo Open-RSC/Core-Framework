@@ -1,6 +1,7 @@
 package com.openrsc.server.database;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.achievement.AchievementReward;
 import com.openrsc.server.content.achievement.AchievementTask;
@@ -23,10 +24,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public abstract class GameDatabase extends GameDatabaseQueries {
 	/**
@@ -104,9 +102,13 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract boolean queryRecentlyRegistered(String ipAddress) throws GameDatabaseException;
 
+	protected abstract void queryInitializeMaxStats(int playerId) throws GameDatabaseException;
+
 	protected abstract void queryInitializeStats(int playerId) throws GameDatabaseException;
 
 	protected abstract void queryInitializeExp(int playerId) throws GameDatabaseException;
+
+	protected abstract void queryInitializeExpCapped(int playerId) throws GameDatabaseException;
 
 	protected abstract PlayerData queryLoadPlayerData(Player player) throws GameDatabaseException;
 
@@ -130,9 +132,11 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract PlayerNpcKills[] queryLoadPlayerNpcKills(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerSkills[] queryLoadPlayerSkills(Player player) throws GameDatabaseException;
+	protected abstract PlayerSkills[] queryLoadPlayerSkills(Player player, boolean isMax) throws GameDatabaseException, NoSuchElementException;
 
 	protected abstract PlayerExperience[] queryLoadPlayerExperience(final int playerId) throws GameDatabaseException;
+
+	protected abstract PlayerExperienceCapped[] queryLoadPlayerExperienceCapped(final int playerId) throws GameDatabaseException;
 
 	protected abstract String queryPreviousPassword(int playerId) throws GameDatabaseException;
 
@@ -206,9 +210,15 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract void querySavePlayerNpcKills(int playerId, PlayerNpcKills[] kills) throws GameDatabaseException;
 
+	protected abstract void querySavePlayerMaxSkills(int playerId, PlayerSkills[] maxSkillLevels) throws GameDatabaseException;
+
 	protected abstract void querySavePlayerSkills(int playerId, PlayerSkills[] currSkillLevels) throws GameDatabaseException;
 
 	protected abstract void querySavePlayerExperience(int playerId, PlayerExperience[] experience) throws GameDatabaseException;
+
+	protected abstract void querySavePlayerMaxSkill(int playerId, int skillId, int level) throws GameDatabaseException;
+
+	protected abstract void querySavePlayerExpCapped(int playerId, int skillId, long dateCapped) throws GameDatabaseException;
 
 	protected abstract void querySavePassword(int playerId, String newPassword) throws GameDatabaseException;
 
@@ -269,6 +279,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract void queryModifyColumn(final String table, final String modifiedColumn, final String dataType) throws GameDatabaseException;
 
+	protected abstract void queryRawStatement(String statementString) throws GameDatabaseException;
+
+	protected abstract boolean queryTableExists(final String table) throws GameDatabaseException;
+
 	public void open() {
 		synchronized (open) {
 			try {
@@ -295,20 +309,28 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 		int playerId = queryPlayerIdFromUsername(username);
 		if (playerId != -1) {
+			queryInitializeMaxStats(playerId);
 			queryInitializeStats(playerId);
 			queryInitializeExp(playerId);
+			queryInitializeExpCapped(playerId);
 
 			//Don't rely on the default values of the database.
 			//Update the stats based on their StatDef-----------------------------------------------
 			final int skillsSize = getServer().getConstants().getSkills().getSkillsCount();
+			final PlayerSkills[] maxSkills = new PlayerSkills[skillsSize];
 			final PlayerSkills[] skills = new PlayerSkills[skillsSize];
 			final PlayerExperience[] experiences = new PlayerExperience[skillsSize];
 
 			for (int i = 0; i < skillsSize; i++) {
+				SkillDef maxSkill = getServer().getConstants().getSkills().getSkill(i);
+				maxSkills[i] = new PlayerSkills();
+				maxSkills[i].skillId = i;
+				maxSkills[i].skillLevel = maxSkill.getMinLevel();
+
 				SkillDef skill = getServer().getConstants().getSkills().getSkill(i);
 				skills[i] = new PlayerSkills();
 				skills[i].skillId = i;
-				skills[i].skillCurLevel = skill.getMinLevel();
+				skills[i].skillLevel = skill.getMinLevel();
 
 				experiences[i] = new PlayerExperience();
 				experiences[i].skillId = i;
@@ -317,7 +339,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 					experiences[i].experience = 0;
 				}
 				else {
-					if (i == 3) { // Hits
+					if (i == Skills.HITPOINTS) { // Hits
 						experiences[i].experience = 4000;
 					}
 					else {
@@ -325,6 +347,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 					}
 				}
 			}
+			querySavePlayerMaxSkills(playerId, maxSkills);
 			querySavePlayerSkills(playerId, skills);
 			querySavePlayerExperience(playerId, experiences);
 			//---------------------------------------------------------------------------------------
@@ -946,8 +969,19 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	private void loadPlayerSkills(final Player player) throws GameDatabaseException {
-		player.getSkills().loadExp(queryLoadPlayerExperience(player.getDatabaseID()));
-		player.getSkills().loadLevels(queryLoadPlayerSkills(player));
+		final PlayerExperience[] exp = queryLoadPlayerExperience(player.getDatabaseID());
+		player.getSkills().loadExp(exp);
+		player.getSkills().loadLevels(queryLoadPlayerSkills(player, false));
+		try {
+			player.getSkills().loadMaxLevels(queryLoadPlayerSkills(player, true));
+		} catch(NoSuchElementException e) {
+			// from old architecture to new one, compute the expected max level and store back in
+			PlayerSkills[] lvls = player.getSkills().asLevels(exp);
+			player.getSkills().loadMaxLevels(lvls);
+			queryInitializeMaxStats(player.getDatabaseID());
+			querySavePlayerMaxSkills(player.getDatabaseID(), lvls);
+		}
+		player.getSkills().loadExpCapped(queryLoadPlayerExperienceCapped(player.getDatabaseID()));
 	}
 
 	private void loadPlayerLastRecoveryChangeRequest(final Player player) throws GameDatabaseException {
@@ -1007,6 +1041,14 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	private void savePlayerSkills(final Player player) throws GameDatabaseException {
 		querySavePlayerSkills(player);
 		querySavePlayerExperience(player);
+	}
+
+	public void savePlayerMaxSkill(final int playerId, final int skillId, final int level) throws GameDatabaseException {
+		querySavePlayerMaxSkill(playerId, skillId, level);
+	}
+
+	public void savePlayerExpCapped(final int playerId, final int skillId, final long dateCapped) throws GameDatabaseException {
+		querySavePlayerExpCapped(playerId, skillId, dateCapped);
 	}
 
 	private void savePlayerCastTime(final Player player) {
@@ -1275,7 +1317,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		for (int i = 0; i < skillsSize; i++) {
 			skills[i] = new PlayerSkills();
 			skills[i].skillId = i;
-			skills[i].skillCurLevel = player.getSkills().getLevel(i);
+			skills[i].skillLevel = player.getSkills().getLevel(i);
 		}
 
 		querySavePlayerSkills(player.getDatabaseID(), skills);
@@ -1342,6 +1384,14 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	public void modifyColumn(String table, String modifiedColumn, String dataType) throws GameDatabaseException {
 		queryModifyColumn(table, modifiedColumn, dataType);
+	}
+
+	public boolean tableExists(String table) throws GameDatabaseException {
+		return queryTableExists(table);
+	}
+
+	public void addTable(String tableStatement) throws GameDatabaseException {
+		queryRawStatement(tableStatement);
 	}
 
 }

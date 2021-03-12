@@ -93,6 +93,60 @@ CREATE TABLE IF NOT EXISTS `experience`
     KEY `playerID` (`playerID`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
+  
+DROP TABLE IF EXISTS `maxstats`;
+CREATE TABLE IF NOT EXISTS `maxstats`
+(
+    `playerID`       int(10) UNSIGNED    NOT NULL,
+    `attack`     tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `defense`    tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `strength`   tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `hits`       tinyint(3) UNSIGNED NOT NULL DEFAULT 10,
+    `ranged`     tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `prayer`     tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `magic`      tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `cooking`    tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `woodcut`    tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `fletching`  tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `fishing`    tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `firemaking` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `crafting`   tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `smithing`   tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `mining`     tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `herblaw`    tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `agility`    tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    `thieving`   tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+    PRIMARY KEY (`playerID`),
+    KEY `playerID` (`playerID`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+  
+DROP TABLE IF EXISTS `capped_experience`;
+CREATE TABLE IF NOT EXISTS `capped_experience`
+(
+    `playerID`       int(10) UNSIGNED    NOT NULL,
+    `attack`     int(10) UNSIGNED,
+    `defense`    int(10) UNSIGNED,
+    `strength`   int(10) UNSIGNED,
+    `hits`       int(10) UNSIGNED,
+    `ranged`     int(10) UNSIGNED,
+    `prayer`     int(10) UNSIGNED,
+    `magic`      int(10) UNSIGNED,
+    `cooking`    int(10) UNSIGNED,
+    `woodcut`    int(10) UNSIGNED,
+    `fletching`  int(10) UNSIGNED,
+    `fishing`    int(10) UNSIGNED,
+    `firemaking` int(10) UNSIGNED,
+    `crafting`   int(10) UNSIGNED,
+    `smithing`   int(10) UNSIGNED,
+    `mining`     int(10) UNSIGNED,
+    `herblaw`    int(10) UNSIGNED,
+    `agility`    int(10) UNSIGNED,
+    `thieving`   int(10) UNSIGNED,
+    PRIMARY KEY (`playerID`),
+    KEY `playerID` (`playerID`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS `friends`;
 CREATE TABLE IF NOT EXISTS `friends`

@@ -8,11 +8,11 @@ import java.util.HashMap;
 public class Skills {
 
 	//public static final int SKILL_COUNT = 19;
-	public final int MAXIMUM_EXP = 2000000000;
-	public final int GLOBAL_LEVEL_LIMIT = 135;
+	//public final int MAXIMUM_EXP = 2000000000;
+	//public final int GLOBAL_LEVEL_LIMIT = 135;
 	// technically maximum should be 1b if capped equating to 142
-	//public final int MAXIMUM_EXP = -294967296; //= 4B
-	//public final int GLOBAL_LEVEL_LIMIT = 142;
+	//public final int MAXIMUM_EXP = -294967296; //= 4B // read from the config
+	public final int GLOBAL_LEVEL_LIMIT = 142;
 
 	public static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
 		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
@@ -38,7 +38,7 @@ public class Skills {
 			int k = j + 1;
 			int i1 = (int) (k + 300D * Math.pow(2D, k / 7D));
 			i += i1;
-			experienceArray[j] = (i & 0xffffffc);
+			experienceArray[j] = i;
 		}
 		experienceCurves.put(SkillDef.EXP_CURVE.ORIGINAL, experienceArray);
 
@@ -104,8 +104,14 @@ public class Skills {
 
 	public int getLevelForExperience(int experience, int limit) {
 		for (int level = 0; level < limit - 1; level++) {
-			if (experience >= experienceCurves.get(SkillDef.EXP_CURVE.ORIGINAL)[level])
+			if (experience < 0 && experienceCurves.get(SkillDef.EXP_CURVE.ORIGINAL)[level] >= 0) {
+				// since its signed, reach onto the ones that would be negative for comparison
 				continue;
+			}
+			if (experience >= experienceCurves.get(SkillDef.EXP_CURVE.ORIGINAL)[level]) {
+				// we can do a normal comparison here
+				continue;
+			}
 			return (level + 1);
 		}
 		return limit;

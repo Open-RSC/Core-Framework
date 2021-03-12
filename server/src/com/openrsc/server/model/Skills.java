@@ -1,7 +1,9 @@
 package com.openrsc.server.model;
 
+import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.database.struct.PlayerExperience;
+import com.openrsc.server.database.struct.PlayerExperienceCapped;
 import com.openrsc.server.database.struct.PlayerSkills;
 import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.model.entity.Mob;
@@ -9,16 +11,22 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.Formulae;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static com.openrsc.server.constants.Skills.HITS;
 
 
 public class Skills {
+	private static final Logger LOGGER = LogManager.getLogger();
+
 	private final Mob mob;
 	private final World world; // TODO: Redundant and wastes memory. Needed for LoginPacketHandler to send a null mob to this method.
 	private int[] levels;
 	private int[] exps;
+	private int[] maxStats;
 	private int[] maxStatsMob;
+	private long[] expCaps;
 
 	/**
 	 * Creates a skills object.
@@ -31,11 +39,13 @@ public class Skills {
 
 		this.levels = new int[getWorld().getServer().getConstants().getSkills().getSkillsCount()];
 		this.exps = new int[getWorld().getServer().getConstants().getSkills().getSkillsCount()];
+		this.maxStats = new int[getWorld().getServer().getConstants().getSkills().getSkillsCount()];
 		this.maxStatsMob = new int[getWorld().getServer().getConstants().getSkills().getSkillsCount()];
+		this.expCaps = new long[getWorld().getServer().getConstants().getSkills().getSkillsCount()];
 
 		for (int i = 0; i < getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
 			SkillDef skill = getWorld().getServer().getConstants().getSkills().getSkill(i);
-			levels[i] = skill.getMinLevel();
+			maxStats[i] = levels[i] = skill.getMinLevel();
 			if (skill.getMinLevel() == 1)
 				exps[i] = 0;
 			else
@@ -43,8 +53,18 @@ public class Skills {
 		}
 	}
 
-	private int getLevelForExperience(int experience, int limit) {
-		for (int level = 0; level < limit - 1; level++) {
+	private int getLevelForExperience(int experience) {
+		return getLevelForExperience(experience, 1);
+	}
+
+	private int getLevelForExperience(int experience, int start) {
+		return getLevelForExperience(experience, start, getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT);
+	}
+
+	private int getLevelForExperience(int experience, int start, int limit) {
+		for (int level = start - 1; level < limit - 1; level++) {
+			if (experience < 0 && getWorld().getServer().getConstants().getSkills().experienceCurves.get(SkillDef.EXP_CURVE.ORIGINAL)[level] >= 0)
+				continue;
 			if (experience >= getWorld().getServer().getConstants().getSkills().experienceCurves.get(SkillDef.EXP_CURVE.ORIGINAL)[level])
 				continue;
 			return (level + 1);
@@ -105,9 +125,20 @@ public class Skills {
 	public void setExperience(int skill, int exp) {
 		int oldLvl = getMaxStat(skill);
 		exps[skill] = exp;
-		int newLvl = getMaxStat(skill);
+		int newLvl = getLevelForExperience(exps[skill]);
+		int levelDiff = newLvl - oldLvl;
 		if (oldLvl != newLvl) {
+			levels[skill] += levelDiff;
+			maxStats[skill] += levelDiff;
 			getMob().getUpdateFlags().setAppearanceChanged(true);
+			if (getMob().isPlayer()) {
+				Player player = (Player) getMob();
+				try {
+					getWorld().getServer().getDatabase().savePlayerMaxSkill(player.getDatabaseID(), skill, maxStats[skill]);
+				} catch (GameDatabaseException e) {
+					LOGGER.catching(e);
+				}
+			}
 		}
 		sendUpdate(skill);
 	}
@@ -160,11 +191,29 @@ public class Skills {
 
 	public void addExperience(int skill, int exp) {
 		int oldLevel = getMaxStat(skill);
+		int oldExp = exps[skill];
 		exps[skill] += exp;
-		if (exps[skill] > getWorld().getServer().getConstants().getSkills().MAXIMUM_EXP) {
-			exps[skill] = getWorld().getServer().getConstants().getSkills().MAXIMUM_EXP;
+		boolean completedCycle = oldExp < 0 && exps[skill] >= 0;
+		boolean achievedMax = (Integer.compareUnsigned(exps[skill], getWorld().getServer().getConfig().EXPERIENCE_LIMIT) >= 0);
+		if (completedCycle || achievedMax) {
+			// determine if we should xp cap
+			if (getWorld().getServer().getConfig().WANT_EXPERIENCE_CAP) {
+				exps[skill] = getWorld().getServer().getConfig().EXPERIENCE_LIMIT;
+			}
+			// determine if its first time player xp caps or completes the cycle
+			if (expCaps[skill] == 0 && getMob().isPlayer()) {
+				expCaps[skill] = System.currentTimeMillis() / 1000;
+				try {
+					getWorld().getServer().getDatabase().savePlayerExpCapped(((Player) getMob()).getDatabaseID(), skill, expCaps[skill]);
+				} catch (GameDatabaseException e) {
+					LOGGER.catching(e);
+				}
+			}
 		}
-		int newLevel = getMaxStat(skill);
+		int newLevel = oldLevel;
+		if (oldLevel < getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT) {
+			newLevel = getLevelForExperience(exps[skill], oldLevel);
+		}
 		int levelDiff = newLevel - oldLevel;
 		String skillName;
 
@@ -179,9 +228,15 @@ public class Skills {
 
 		if (levelDiff > 0) {
 			levels[skill] += levelDiff;
+			maxStats[skill] += levelDiff;
 			// TODO: Maybe a level up listener?
 			if (getMob().isPlayer()) {
 				Player player = (Player) getMob();
+				try {
+					getWorld().getServer().getDatabase().savePlayerMaxSkill(player.getDatabaseID(), skill, maxStats[skill]);
+				} catch (GameDatabaseException e) {
+					LOGGER.catching(e);
+				}
 				skillName = getWorld().getServer().getConstants().getSkills().getSkill(skill).getShortName().toLowerCase();
 				if (newLevel >= getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT - (getWorld().getServer().getConfig().SKILLING_EXP_RATE > 1.0 && !player.isOneXp() ? 9 : 19)
 					&& newLevel <= getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT - 1) {
@@ -232,11 +287,12 @@ public class Skills {
 
 	public int getMaxStat(int skill) {
 		if (getMob() instanceof Player) {
-			int level = getLevelForExperience(getExperience(skill), getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT);
-			if (skill == HITS) {
-				return Math.max(level, 10);
-			}
-			return level;
+			return maxStats[skill];
+			// int level = getLevelForExperience(getExperience(skill), getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT);
+			// if (skill == HITS) {
+			//	return Math.max(level, 10);
+			// }
+			// return level;
 		} else {
 			return maxStatsMob[skill];
 		}
@@ -270,6 +326,12 @@ public class Skills {
 	public void setLevelTo(int skill, int level) {
 		if (getMob() instanceof Player) {
 			exps[skill] = experienceForLevel(level);
+			maxStats[skill] = level;
+			try {
+				getWorld().getServer().getDatabase().savePlayerMaxSkill(((Player) getMob()).getDatabaseID(), skill, level);
+			} catch (GameDatabaseException e) {
+				LOGGER.catching(e);
+			}
 		} else {
 			maxStatsMob[skill] = level;
 		}
@@ -292,8 +354,30 @@ public class Skills {
 
 	public void loadLevels(final PlayerSkills[] lv) {
 		for(int i = 0; i < lv.length; i++) {
-			levels[lv[i].skillId] = lv[i].skillCurLevel;
+			levels[lv[i].skillId] = lv[i].skillLevel;
 		}
+	}
+
+	public void loadMaxLevels(final PlayerSkills[] lv) {
+		for(int i = 0; i < lv.length; i++) {
+			maxStats[lv[i].skillId] = lv[i].skillLevel;
+		}
+	}
+
+	public void loadExpCapped(final PlayerExperienceCapped[] xpCap) {
+		for(int i = 0; i < xpCap.length; i++) {
+			expCaps[xpCap[i].skillId] = xpCap[i].dateWhenCapped;
+		}
+	}
+
+	public PlayerSkills[] asLevels(final PlayerExperience[] ex) {
+		final PlayerSkills[] levs = new PlayerSkills[ex.length];
+		for (int i = 0; i < ex.length; i++) {
+			levs[i] = new PlayerSkills();
+			levs[i].skillId = ex[i].skillId;
+			levs[i].skillLevel = getLevelForExperience(ex[i].experience);
+		}
+		return levs;
 	}
 
 	public World getWorld() {

@@ -7,8 +7,8 @@ public class MySqlQueries {
 	public final String PREFIX;
 	public final String NAME;
 
-	public String updateExperience, updateStats, playerExp, playerCurExp;
-	public final String createPlayer, recentlyRegistered, initStats, initExp;
+	public String updateExperience, updateStats, updateMaxStats, updateMaxStat, updateExpCapped, playerExpCapped, playerExp, playerCurExp, playerMaxExp;
+	public final String createPlayer, recentlyRegistered, initMaxStats, initStats, initExp, initExpCapped;
 	public final String save_AddFriends, save_DeleteFriends, save_AddIgnored, save_DeleteIgnored;
 	public final String playerExists, playerGroupId, playerData, playerInvItems, playerEquipped, playerBankItems, playerBankPresets;
 	public final String playerFriends, playerIgnored, playerQuests, playerAchievements, playerCache;
@@ -26,7 +26,7 @@ public class MySqlQueries {
 	public final String clans, clanMembers, newClan, saveClanMember, deleteClan, deleteClanMembers, updateClan, updateClanMember;
 	public final String expiredAuction, collectibleItems, collectItem, newAuction, cancelAuction, auctionCount, playerAuctionCount, auctionItem, auctionItems, auctionSellOut, updateAuction;
 	public final String discordIdToPlayerId, playerIdFromPairToken, pairDiscord, deleteTokenFromCache, watchlist, watchlists, updateWatchlist, deleteWatchlist;
-	public final String checkColumnExists, checkColumnType, addColumn, modifyColumn;
+	public final String checkTableExists, checkColumnExists, checkColumnType, addColumn, modifyColumn;
 
 	private final Server server;
 
@@ -41,31 +41,49 @@ public class MySqlQueries {
 
 		updateExperience = "UPDATE `" + PREFIX + "experience` SET ";
 		updateStats = "UPDATE `" + PREFIX + "curstats` SET ";
+		updateMaxStats = "UPDATE `" + PREFIX + "maxstats` SET ";
+		updateMaxStat = "UPDATE `" + PREFIX + "maxstats` SET `%s`=? ";
+		updateExpCapped = "UPDATE `" + PREFIX + "capped_experience` SET `%s`=? ";
+		playerExpCapped = "SELECT ";
 		playerExp = "SELECT ";
 		playerCurExp = "SELECT ";
+		playerMaxExp = "SELECT ";
 
 		for (SkillDef skill : getServer().getConstants().getSkills().skills) {
 			updateExperience = updateExperience + "`" + skill.getShortName().toLowerCase() + "`=?, ";
 			updateStats = updateStats + "`" + skill.getShortName().toLowerCase() + "`=?, ";
+			updateMaxStats = updateMaxStats + "`" + skill.getShortName().toLowerCase() + "`=?, ";
+			playerExpCapped = playerExpCapped + "`" + skill.getShortName().toLowerCase() + "`, ";
 			playerExp = playerExp + "`" + skill.getShortName().toLowerCase() + "`, ";
 			playerCurExp = playerCurExp + "`" + skill.getShortName().toLowerCase() + "`, ";
+			playerMaxExp = playerMaxExp + "`" + skill.getShortName().toLowerCase() + "`, ";
 		}
 
 		updateExperience = updateExperience.substring(0, updateExperience.length() - 2) + " ";
 		updateStats = updateStats.substring(0, updateStats.length() - 2) + " ";
+		updateMaxStats = updateMaxStats.substring(0, updateMaxStats.length() - 2) + " ";
+		playerExpCapped = playerExpCapped.substring(0, playerExpCapped.length() - 2) + " ";
 		playerExp = playerExp.substring(0, playerExp.length() - 2) + " ";
 		playerCurExp = playerCurExp.substring(0, playerCurExp.length() - 2) + " ";
+		playerMaxExp = playerMaxExp.substring(0, playerMaxExp.length() - 2) + " ";
 
 		updateExperience = updateExperience + "WHERE `playerID`=?";
 		updateStats = updateStats + "WHERE `playerID`=?";
+		updateMaxStats = updateMaxStats + "WHERE `playerID`=?";
+		updateMaxStat = updateMaxStat + "WHERE `playerID`=?";
+		updateExpCapped = updateExpCapped + "WHERE `playerID`=?";
+		playerExpCapped = playerExpCapped + "FROM `" + PREFIX + "capped_experience` WHERE `playerID`=?";
 		playerExp = playerExp + "FROM `" + PREFIX + "experience` WHERE `playerID`=?";
 		playerCurExp = playerCurExp + "FROM `" + PREFIX + "curstats` WHERE `playerID`=?";
+		playerMaxExp = playerMaxExp + "FROM `" + PREFIX + "maxstats` WHERE `playerID`=?";
 
 		createPlayer = "INSERT INTO `" + PREFIX + "players` (`username`, `email`, `pass`, `creation_date`, `creation_ip`) VALUES (?, ?, ?, ?, ?)";
 		recentlyRegistered = "SELECT 1 FROM `" + PREFIX + "players` WHERE `creation_ip`=?" +
 			" AND `creation_date` > ?";
+		initMaxStats = "INSERT INTO `" + PREFIX + "maxstats` (`playerID`) VALUES (?)";
 		initStats = "INSERT INTO `" + PREFIX + "curstats` (`playerID`) VALUES (?)";
 		initExp = "INSERT INTO `" + PREFIX + "experience` (`playerID`) VALUES (?)";
+		initExpCapped = "INSERT INTO `" + PREFIX + "capped_experience` (`playerID`) VALUES (?)";
 
 		save_AddFriends = "INSERT INTO `" + PREFIX + "friends`(`playerID`, `friend`, `friendName`) VALUES(?, ?, ?)";
 		save_DeleteFriends = "DELETE FROM `" + PREFIX + "friends` WHERE `playerID` = ?";
@@ -200,6 +218,7 @@ public class MySqlQueries {
 		updateWatchlist = "UPDATE `" + PREFIX + "player_cache` SET `value`=? WHERE `key`=`watchlist_?`";
 		deleteWatchlist = "DELETE FROM `" + PREFIX + "player_cache` WHERE `key`=`watchlist_?`";
 
+		checkTableExists = "SELECT COUNT(*) > 0 AS exist FROM (SELECT `TABLE_NAME` FROM INFORMATION_SCHEMA.COLUMNS WHERE `TABLE_SCHEMA` LIKE '" + NAME + "' AND `TABLE_NAME` LIKE " + PREFIX + "?) AS tableCountRowCountYes";
 		checkColumnExists = "SELECT COUNT(*) AS exist FROM (SELECT `COLUMN_NAME` FROM INFORMATION_SCHEMA.COLUMNS WHERE `TABLE_SCHEMA` LIKE '" + NAME + "' AND `TABLE_NAME` LIKE " + PREFIX + "? AND `COLUMN_NAME` LIKE ?) AS columnCountRowCountYes";
 		checkColumnType = "SELECT `COLUMN_TYPE` FROM INFORMATION_SCHEMA.COLUMNS WHERE `TABLE_SCHEMA` LIKE '" + NAME + "' AND `TABLE_NAME` LIKE " + PREFIX + "? AND `COLUMN_NAME` LIKE ?";
 		addColumn = "ALTER TABLE `" + NAME + "`.`" + PREFIX + "%s` ADD %s %s";
