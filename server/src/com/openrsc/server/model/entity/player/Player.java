@@ -426,7 +426,7 @@ public final class Player extends Mob {
 	}
 
 	/**
-	 * Checks if the player is any type of Iron Man (except a transfer character
+	 * Checks if the player is any type of Iron Man (except a transfer character)
 	 * @return True if the player is any type of Iron Man, false otherwise
 	 */
 	public boolean isIronMan() {
@@ -1442,9 +1442,9 @@ public final class Player extends Mob {
 		// (save for the DXP multiplier if enabled).
 		if (isOneXp()) return multiplier;
 
-		// Check if the skill is a non-combat skill (all skills after index 4) and
+		// Check if the skill is a non-combat skill (all skills after index 6) and
 		// apply the non-combat skilling rate.
-		if (skill >= 4 ) {
+		if (skill > 6 ) {
 			multiplier = getConfig().SKILLING_EXP_RATE;
 		}
 
@@ -1514,12 +1514,12 @@ public final class Player extends Mob {
 				//	ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
 				//}
 
-				// Give fatigue for non-combat skills (all skills after skill ID 4
+				// Give fatigue for non-melee skills (all skills after skill ID 4
 				if (skill >= 4) {
 					fatigue += skillXP * 8;
 				}
 
-				// Give fatigue for combat skills (all skills between skill ID 0 and 3 inclusive)
+				// Give fatigue for melee skills (all skills between skill ID 0 and 3 inclusive)
 				else if (skill >= 0) {
 					fatigue += skillXP * 5;
 				}
