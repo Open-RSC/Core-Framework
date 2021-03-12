@@ -420,7 +420,7 @@ Event Commands
   - Usage: `::setstats [player]` to set all of your stats to the specified level
   - Usage: `::setstats [player] [level] [stat]` to set the specified player's specified stat to the specified level.
   - Usage: `::setstats [level] [stat]` to set your specified stat to the specified level
-  - Alias: `::stats` or `::stat` or ::setstat`
+  - Alias: `::stats` or `::stat` or `::setstat` or `::setstats`
   - Set the specified stats of the specified player to the specified level.
   - Accepts name or stat id of the specified stat.
   - If no player is specified, then the current player is targeted.
@@ -430,8 +430,18 @@ Event Commands
   - Usage: `::setcurrentstats [player]` to set all of your stats to the specified level
   - Usage: `::setcurrentstats [player] [level] [stat]` to set the specified player's specified stat to the specified level.
   - Usage: `::setcurrentstats [level] [stat]` to set your specified stat to the specified level
-  - Alias: `::currentstats` or `::currentstat` or ::setcurrentstat` or `::curstat` or `::curstats` or `::setcurstat` or `::setcurstats`
+  - Alias: `::currentstats` or `::currentstat` or `::setcurrentstat` or `::curstat` or `::curstats` or `::setcurstat` or `::setcurstats`
   - Set the specified current stats of the specified player to the specified level.
+  - Accepts name or stat id of the specified stat.
+  - If no player is specified, then the current player is targeted.
+  - If no stat is specified, then all stats are modified.
+- setxpstats
+  - Usage: `::setxpstats [player] [experience]` to set all of the specified player's stats to the specified experience.
+  - Usage: `::setxpstats [player]` to set all of your stats to the specified experience
+  - Usage: `::setxpstats [player] [experience] [stat]` to set the specified player's specified stat to the specified experience.
+  - Usage: `::setxpstats [experience] [stat]` to set your specified stat to the specified experience
+  - Alias: `::xpstats` or `::xpstat` or `::setxpstat` or `::setxpstats` or `::setxp`
+  - Set the specified current stats of the specified player to the specified experience.
   - Accepts name or stat id of the specified stat.
   - If no player is specified, then the current player is targeted.
   - If no stat is specified, then all stats are modified.

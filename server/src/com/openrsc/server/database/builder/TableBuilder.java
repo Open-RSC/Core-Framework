@@ -1,5 +1,6 @@
 package com.openrsc.server.database.builder;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TableBuilder {
@@ -8,7 +9,7 @@ public class TableBuilder {
 	private Map<String, String> tableProperties;
 
 	public TableBuilder(String tableName) {
-		this.tableName = tableName;
+		this(tableName, new LinkedHashMap<String, String>());
 	}
 
 	public TableBuilder(String tableName, Map<String, String> tableProperties) {

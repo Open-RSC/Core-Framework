@@ -95,7 +95,8 @@ public final class Event implements CommandTrigger {
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);
 		}
-		else if (command.equalsIgnoreCase("xpstat") || command.equalsIgnoreCase("xpstats") || command.equalsIgnoreCase("setxpstat") || command.equalsIgnoreCase("setxpstats")) {
+		else if (command.equalsIgnoreCase("xpstat") || command.equalsIgnoreCase("xpstats") || command.equalsIgnoreCase("setxpstat") || command.equalsIgnoreCase("setxpstats")
+			|| command.equalsIgnoreCase("setxp")) {
 			changeStatXP(player, command, args);
 		}
 		else if (command.equalsIgnoreCase("stat") || command.equalsIgnoreCase("stats") || command.equalsIgnoreCase("setstat") || command.equalsIgnoreCase("setstats")) {
@@ -657,10 +658,10 @@ public final class Event implements CommandTrigger {
 
 	private void changeStatXP(Player player, String command, String[] args) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [xp] OR ");
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [xp] OR ");
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [xp] [stat] OR");
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [xp] [stat]");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] OR ");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] OR ");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [player] [experience] [stat] OR");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [experience] [stat]");
 			return;
 		}
 
