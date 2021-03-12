@@ -93,9 +93,16 @@ public class GameEventHandler {
 	}
 
 	private void processEvents() {
-		// Update the number of threads in the pool. More servers could have been started so we want to allocate the right amount of threads.
-		//final int maxThreads = 1; // Sets the thread pool to fixed 1
-		final int maxThreads = (Runtime.getRuntime().availableProcessors() * 2) / (Server.serversList.size() > 0 ? Server.serversList.size() : 1);
+		final int maxThreads;
+		if (getServer().getConfig().WANT_THREADING__BREAK_PID_PRIORITY) {
+			// can be slightly faster if we don't care which order events are done in (you always should care!)
+			// TODO: currently also causes issues with scenery breaking from having two players accessing it
+			maxThreads = (Runtime.getRuntime().availableProcessors() * 2) / (Server.serversList.size() > 0 ? Server.serversList.size() : 1);
+		} else {
+			// single thread events so that PID order is always respected.
+			maxThreads = 1;
+		}
+
 		executor.setMaximumPoolSize(maxThreads);
 		executor.setCorePoolSize(maxThreads / 2);
 

@@ -65,6 +65,7 @@ public class ServerConfiguration {
 	public int MAX_PASSWORD_GUESSES_PER_FIVE_MINUTES;
 	public int NETWORK_FLOOD_IP_BAN_MINUTES;
 	public boolean WANT_PCAP_LOGGING;
+	public boolean WANT_THREADING__BREAK_PID_PRIORITY;
 
 	// Location of the server conf files.
 	public String CONFIG_DIR = "conf" + File.separator + "server";
@@ -301,6 +302,7 @@ public class ServerConfiguration {
 		AVATAR_GENERATOR = tryReadBool("avatar_generator").orElse(false);
 		MEMBER_WORLD = tryReadBool("member_world").orElse(true);
 		WANT_PCAP_LOGGING = tryReadBool("want_pcap_logging").orElse(false);
+		WANT_THREADING__BREAK_PID_PRIORITY = tryReadBool("want_threading__break_pid_priority").orElse(false);
 		WORLD_NUMBER = tryReadInt("world_number").orElse(1);
 		PLAYER_LEVEL_LIMIT = tryReadInt("player_level_limit").orElse(99);
 		WANT_EXPERIENCE_CAP = tryReadBool("want_experience_cap").orElse(false);
