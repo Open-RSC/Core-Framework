@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import static orsc.Config.isAndroid;
+
 public class PacketHandler {
 
 	private final RSBuffer_Bits packetsIncoming = new RSBuffer_Bits(30000);
@@ -392,7 +394,12 @@ public class PacketHandler {
 			else if (opcode == 117) showSleepScreen(length);
 
 				// Not Sleeping
-			else if (opcode == 84) mc.setIsSleeping(false);
+			else if (opcode == 84) {
+				mc.setIsSleeping(false);
+				if (isAndroid() && osConfig.F_SHOWING_KEYBOARD) {
+					mc.clientPort.closeKeyboard();
+				}
+			}
 
 				// Wrong Sleep Word
 			else if (opcode == 194) mc.setSleepingStatusText("Incorrect - Please wait...");
@@ -1830,7 +1837,7 @@ public class PacketHandler {
 
 	private void loadExperience() {
 		for (int skill = 0; skill < mudclient.skillCount; ++skill) {
-			mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
+			mc.setPlayerExperience(skill, (int)((packetsIncoming.get32() & 0xffffffffL) / 4));
 		}
 	}
 
@@ -2045,7 +2052,7 @@ public class PacketHandler {
 
 	private void updateIndividualExperience() {
 		int skill = packetsIncoming.getUnsignedByte();
-		mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
+		mc.setPlayerExperience(skill, (int)((packetsIncoming.get32() & 0xffffffffL) / 4));
 	}
 
 	private void closeDuelDialog() {
@@ -2145,7 +2152,7 @@ public class PacketHandler {
 		int oldLvl = mc.getPlayerStatBase(skill);
 		mc.setPlayerStatCurrent(skill, packetsIncoming.getUnsignedByte());
 		mc.setPlayerStatBase(skill, packetsIncoming.getUnsignedByte());
-		mc.setPlayerExperience(skill, packetsIncoming.get32() / 4);
+		mc.setPlayerExperience(skill, (int)((packetsIncoming.get32() & 0xffffffffL) / 4));
 		updateExperienceTracker(skill, oldXP, oldLvl);
 
 		// Update the discord status
@@ -2269,6 +2276,10 @@ public class PacketHandler {
 		mc.getSurface().createCaptchaSprite(sprite);
 
 		mc.setSleepingStatusText(null);
+
+		if (isAndroid() && !osConfig.F_SHOWING_KEYBOARD) {
+			mc.clientPort.drawKeyboard();
+		}
 	}
 
 	private void showServerMessageDialogTwo() {

@@ -263,7 +263,11 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	// Database Management
 	protected abstract boolean queryColumnExists(final String table, final String column) throws GameDatabaseException;
 
-	protected abstract void queryAddColumn(String table, String newColumn, String dataType) throws GameDatabaseException;
+	protected abstract String queryColumnType(final String table, final String column) throws GameDatabaseException;
+
+	protected abstract void queryAddColumn(final String table, final String newColumn, final String dataType) throws GameDatabaseException;
+
+	protected abstract void queryModifyColumn(final String table, final String modifiedColumn, final String dataType) throws GameDatabaseException;
 
 	public void open() {
 		synchronized (open) {
@@ -1328,8 +1332,16 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		return queryColumnExists(table, column);
 	}
 
+	public String columnType(String table, String column) throws GameDatabaseException {
+		return queryColumnType(table, column);
+	}
+
 	public void addColumn(String table, String newColumn, String dataType) throws GameDatabaseException {
 		queryAddColumn(table, newColumn, dataType);
+	}
+
+	public void modifyColumn(String table, String modifiedColumn, String dataType) throws GameDatabaseException {
+		queryModifyColumn(table, modifiedColumn, dataType);
 	}
 
 }
