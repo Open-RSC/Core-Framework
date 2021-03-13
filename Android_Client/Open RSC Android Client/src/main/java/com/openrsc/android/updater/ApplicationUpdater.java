@@ -112,6 +112,8 @@ public class ApplicationUpdater extends Activity {
             URL updatePage;
             try {
                 updatePage = new URL(osConfig.ANDROID_DOWNLOAD_PATH + "android_version.txt");
+				HttpURLConnection conn = (HttpURLConnection)updatePage.openConnection();
+				conn.setConnectTimeout(1000);
 
                 System.out.println(" ");
                 System.out.println(" ");
@@ -119,8 +121,9 @@ public class ApplicationUpdater extends Activity {
                 System.out.println(" ");
                 System.out.println(" ");
 
-                BufferedReader in = new BufferedReader(new InputStreamReader(updatePage.openStream()));
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 String inputLine = in.readLine();
+				in.close();
 
                 System.out.println(" ");
                 System.out.println(" ");
@@ -128,7 +131,6 @@ public class ApplicationUpdater extends Activity {
                 System.out.println(" ");
                 System.out.println(" ");
 
-                in.close();
                 if (Integer.parseInt(inputLine) > getVersion()) {
                     shouldUpdate = true;
                     publishProgress("New app version available!");

@@ -799,6 +799,86 @@ public class Server implements Runnable {
 			if (!getDatabase().columnExists("players", "transfer")) {
 				getDatabase().addColumn("players", "transfer", "INT (11)");
 			}
+			if (getDatabase().columnExists("experience", "attack")
+				&& getDatabase().columnType("experience", "attack").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "attack", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "defense")
+				&& getDatabase().columnType("experience", "defense").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "defense", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "strength")
+				&& getDatabase().columnType("experience", "strength").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "strength", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "hits")
+				&& getDatabase().columnType("experience", "hits").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "hits", "INT (9) NOT NULL DEFAULT 4616");
+			}
+			if (getDatabase().columnExists("experience", "ranged")
+				&& getDatabase().columnType("experience", "ranged").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "ranged", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "prayer")
+				&& getDatabase().columnType("experience", "prayer").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "prayer", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "magic")
+				&& getDatabase().columnType("experience", "magic").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "magic", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "cooking")
+				&& getDatabase().columnType("experience", "cooking").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "cooking", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "woodcut")
+				&& getDatabase().columnType("experience", "woodcut").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "woodcut", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "fletching")
+				&& getDatabase().columnType("experience", "fletching").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "fletching", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "fishing")
+				&& getDatabase().columnType("experience", "fishing").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "fishing", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "firemaking")
+				&& getDatabase().columnType("experience", "firemaking").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "firemaking", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "crafting")
+				&& getDatabase().columnType("experience", "crafting").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "crafting", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "smithing")
+				&& getDatabase().columnType("experience", "smithing").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "smithing", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "mining")
+				&& getDatabase().columnType("experience", "mining").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "mining", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "herblaw")
+				&& getDatabase().columnType("experience", "herblaw").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "herblaw", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "agility")
+				&& getDatabase().columnType("experience", "agility").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "agility", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "thieving")
+				&& getDatabase().columnType("experience", "thieving").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "thieving", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "runecraft")
+				&& getDatabase().columnType("experience", "runecraft").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "runecraft", "INT (9) NOT NULL DEFAULT 0");
+			}
+			if (getDatabase().columnExists("experience", "harvesting")
+				&& getDatabase().columnType("experience", "harvesting").toLowerCase().contains("unsigned")) {
+				getDatabase().modifyColumn("experience", "harvesting", "INT (9) NOT NULL DEFAULT 0");
+			}
 			return true;
 		} catch (GameDatabaseException e) {
 			LOGGER.error(e.toString());

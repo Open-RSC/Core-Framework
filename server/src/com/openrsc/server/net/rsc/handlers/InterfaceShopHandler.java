@@ -76,7 +76,8 @@ public final class InterfaceShopHandler implements PacketHandler {
 
 		// Normalize amount to the minimum shop count if we are trying to purchase more.
 		int originalAmount = amount;
-		amount = Math.min(amount, shop.getItemCount(catalogID));
+		int shopStock = shop.getItemCount(catalogID);
+		amount = Math.min(amount, shopStock);
 
 		if (amount <= 0) {
 			if (originalAmount > amount) {
@@ -139,6 +140,11 @@ public final class InterfaceShopHandler implements PacketHandler {
 			return;
 		}
 
+		// attempted to buy more
+		if (originalAmount > totalBought && totalBought < shopStock) {
+			player.message("You can't hold the objects you are trying to buy!");
+		}
+
 		player.playSound("coins");
 		player.getWorld().getServer().getGameLogger().addQuery(
 			new GenericLog(player.getWorld(),
@@ -181,11 +187,12 @@ public final class InterfaceShopHandler implements PacketHandler {
 			return;
 		}
 
+		int originalAmount = amount;
 		int totalMoney = 0;
 		int totalSold = 0;
 
 		amount = Math.min(
-			Math.min(amount,
+			Math.min(originalAmount,
 			player.getCarriedItems().getInventory().countId(catalogID, Optional.empty())),
 			(Short.MAX_VALUE - Short.MIN_VALUE) - shop.currentStock(new Item(catalogID)));
 
@@ -243,6 +250,11 @@ public final class InterfaceShopHandler implements PacketHandler {
 
 				shop.addShopItem(new Item(catalogID, 1));
 			}
+		}
+
+		// attempted to sell more
+		if (originalAmount > totalSold) {
+			player.message("You don't have that many items");
 		}
 
 		player.playSound("coins");

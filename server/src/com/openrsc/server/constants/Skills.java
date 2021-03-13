@@ -10,6 +10,9 @@ public class Skills {
 	//public static final int SKILL_COUNT = 19;
 	public final int MAXIMUM_EXP = 2000000000;
 	public final int GLOBAL_LEVEL_LIMIT = 135;
+	// technically maximum should be 1b if capped equating to 142
+	//public final int MAXIMUM_EXP = -294967296; //= 4B
+	//public final int GLOBAL_LEVEL_LIMIT = 142;
 
 	public static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
 		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,

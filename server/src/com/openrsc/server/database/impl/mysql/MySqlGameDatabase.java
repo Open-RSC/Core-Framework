@@ -2131,8 +2131,36 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
+	protected String queryColumnType(final String table, final String column) throws GameDatabaseException {
+		String type = "";
+		try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().checkColumnType);) {
+			statement.setString(1, table);
+			statement.setString(2, column);
+			statement.execute();
+
+			try (final ResultSet result = statement.getResultSet();) {
+				if (result.next()) {
+					type = result.getString("column_type");
+				}
+			}
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+		return type;
+	}
+
+	@Override
 	protected void queryAddColumn(final String table, final String newColumn, final String dataType) throws GameDatabaseException {
 		try (final PreparedStatement statement = getConnection().prepareStatement(String.format(getQueries().addColumn, table, newColumn, dataType));) {
+			statement.executeUpdate();
+		} catch (final SQLException ex) {
+			throw new GameDatabaseException(this, ex.getMessage());
+		}
+	}
+
+	@Override
+	protected void queryModifyColumn(final String table, final String modifiedColumn, final String dataType) throws GameDatabaseException {
+		try (final PreparedStatement statement = getConnection().prepareStatement(String.format(getQueries().modifyColumn, table, modifiedColumn, dataType));) {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			throw new GameDatabaseException(this, ex.getMessage());
