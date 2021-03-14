@@ -375,7 +375,14 @@ public class Skills {
 		for (int i = 0; i < ex.length; i++) {
 			levs[i] = new PlayerSkills();
 			levs[i].skillId = ex[i].skillId;
-			levs[i].skillLevel = getLevelForExperience(ex[i].experience);
+			// minimum hits was 10
+			if (ex[i].skillId == com.openrsc.server.constants.Skills.HITPOINTS
+				&& ex[i].experience >= 0 && ex[i].experience < 4616) {
+				levs[i].skillLevel = 10;
+			}
+			else {
+				levs[i].skillLevel = getLevelForExperience(ex[i].experience);
+			}
 		}
 		return levs;
 	}
