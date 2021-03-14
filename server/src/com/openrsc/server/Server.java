@@ -563,7 +563,7 @@ public class Server implements Runnable {
 			// Server fell behind, skip ticks
 			advanceTicks(ticksLate);
 			final String ticksSkipped = ticksLate > 1 ? "ticks (" + (currentTick+1) + " - " + (currentTick+ticksLate) + ")" : "tick (" + (currentTick+ticksLate) + ")";
-			final String message = "Tick " + currentTick + " " + getTimeLate() + "ms behind. Skipping " + ticksLate + " " + ticksSkipped;
+			final String message = "Tick " + currentTick + " " + getTimeLate() / 1000000 + "ms behind. Skipping " + ticksLate + " " + ticksSkipped;
 			sendMonitoringWarning(message, false);
 		}
 	}
