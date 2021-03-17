@@ -15,7 +15,3 @@ build:
   - cd server && ant compile_core && ant compile_plugins && cd ../
   - cd Client_Base && ant compile && cd ../
   - cd PC_Launcher && ant compile && cd ../
-sast:
-  stage: test
-include:
-- template: Security/SAST.gitlab-ci.yml
