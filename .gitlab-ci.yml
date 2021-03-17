@@ -48,30 +48,30 @@ before_script:
   - sdkmanager --sdk_root=${ANDROID_HOME} "build-tools;${ANDROID_BUILD_TOOLS}"
 
   # Not necessary, but just for security
-  - chmod +x ./gradlew
+  # - chmod +x ./Android_Client/Open\ RSC\ Android\ Client/build.gradle
 
 # Basic android and gradle stuff
 # Check linting
-lintDebug:
-  interruptible: true
-  stage: build
-  script:
-    - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
+#lintDebug:
+#  interruptible: true
+#  stage: build
+#  script:
+#    - ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
 
 # Make Project
 assembleDebug:
-  interruptible: true
+  interruptible: false
   stage: build
   script:
-    - ./build.gradle assembleDebug
+    - gradle -b Android_Client/Open\ RSC\ Android\ Client/build.gradle assembleDebug
   artifacts:
     paths:
       - Android_Client/Open\ RSC\ Android\ Client/build/outputs/
 #gradle -b Android_Client/Open\ RSC\ Android\ Client/build.gradle assembleDebug
 
 # Run all tests, if any fails, interrupt the pipeline(fail it)
-debugTests:
-  interruptible: true
-  stage: test
-  script:
-    - ./gradlew -Pci --console=plain :app:testDebug
+#debugTests:
+#  interruptible: true
+#  stage: test
+#  script:
+#    - ./gradlew -Pci --console=plain :app:testDebug
