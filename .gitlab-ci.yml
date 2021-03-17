@@ -1,69 +1,16 @@
 image: openjdk:8-jdk
 
-variables:
-
-  # ANDROID_COMPILE_SDK is the version of Android you're compiling with.
-  # It should match compileSdkVersion.
-  ANDROID_COMPILE_SDK: "29"
-
-  # ANDROID_BUILD_TOOLS is the version of the Android build tools you are using.
-  # It should match buildToolsVersion.
-  ANDROID_BUILD_TOOLS: "29.0.3"
-
-  # It's what version of the command line tools we're going to download from the official site.
-  # Official Site-> https://developer.android.com/studio/index.html
-  # There, look down below at the cli tools only, sdk tools package is of format:
-  #        commandlinetools-os_type-ANDROID_SDK_TOOLS_latest.zip
-  # when the script was last modified for latest compileSdkVersion, it was which is written down below
-  ANDROID_SDK_TOOLS: "6514223"
-
-  # Gradle version from https://gradle.org/releases/
-  GRADLE: "6.8.3"
-
 # Packages installation before running script
 before_script:
   - apt-get --quiet update --yes
-  - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
+  - apt-get --quiet install --yes ant
 
-  # Setup path as android_home for moving/exporting the downloaded sdk into it
-  - export ANDROID_HOME="${PWD}/android-home"
-  # Create a new directory at specified location
-  - install -d $ANDROID_HOME
-  # Here we are installing androidSDK tools from official source,
-  # (the key thing here is the url from where you are downloading these sdk tool for command line, so please do note this url pattern there and here as well)
-  # after that unzipping those tools and
-  # then running a series of SDK manager commands to install necessary android SDK packages that'll allow the app to build
-  - wget --output-document=$ANDROID_HOME/cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
-  # move to the archive at ANDROID_HOME
-  - pushd $ANDROID_HOME
-  - unzip -d cmdline-tools cmdline-tools.zip
-  - popd
-  - export PATH=$PATH:${ANDROID_HOME}/cmdline-tools/tools/bin/
+stages:
+  - build
 
-  # Nothing fancy here, just checking sdkManager version
-  - sdkmanager --version
-
-  # use yes to accept all licenses
-  - yes | sdkmanager --sdk_root=${ANDROID_HOME} --licenses || true
-  - sdkmanager --sdk_root=${ANDROID_HOME} "platforms;android-${ANDROID_COMPILE_SDK}"
-  - sdkmanager --sdk_root=${ANDROID_HOME} "platform-tools"
-  - sdkmanager --sdk_root=${ANDROID_HOME} "build-tools;${ANDROID_BUILD_TOOLS}"
-
-  - wget https://services.gradle.org/distributions/gradle-${GRADLE}-bin.zip -P /tmp
-  - unzip -d /opt/gradle /tmp/gradle-${GRADLE}-bin.zip
-  - ln -s /opt/gradle/gradle-${GRADLE} /opt/gradle/latest
-  - echo "export GRADLE_HOME=/opt/gradle/latest
-    export PATH=${GRADLE_HOME}/bin:${PATH}" > /etc/profile.d/gradle.sh
-  - chmod +x /etc/profile.d/gradle.sh
-  - source /etc/profile.d/gradle.sh
-  - gradle -v
-
-# Gradle compile Android client
-assembleDebug:
-  interruptible: true
+build:
   stage: build
   script:
-    - gradle -b Android_Client/Open\ RSC\ Android\ Client/build.gradle assembleDebug
-  artifacts:
-    paths:
-      - Android_Client/Open\ RSC\ Android\ Client/
+    - cd server && ant compile_core && ant compile_plugins && cd ../
+    - cd Client_Base && ant compile && cd ../
+    - cd PC_Launcher && ant compile && cd ../
