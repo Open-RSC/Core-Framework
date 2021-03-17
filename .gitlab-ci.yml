@@ -15,8 +15,10 @@ variables:
   # There, look down below at the cli tools only, sdk tools package is of format:
   #        commandlinetools-os_type-ANDROID_SDK_TOOLS_latest.zip
   # when the script was last modified for latest compileSdkVersion, it was which is written down below
-  # added by Marwolf below to match production server, was default 6514223 before being changed
-  ANDROID_SDK_TOOLS: "6200805"
+  ANDROID_SDK_TOOLS: "6514223"
+
+  # Gradle version from https://gradle.org/releases/
+  GRADLE: "6.8.3"
 
 # Packages installation before running script
 before_script:
@@ -47,30 +49,21 @@ before_script:
   - sdkmanager --sdk_root=${ANDROID_HOME} "platform-tools"
   - sdkmanager --sdk_root=${ANDROID_HOME} "build-tools;${ANDROID_BUILD_TOOLS}"
 
-  # Not necessary, but just for security
-  - chmod +x ./Android_Client/Open\ RSC\ Android\ Client/gradlew
+  - wget https://services.gradle.org/distributions/gradle-${GRADLE}-bin.zip -P /tmp
+  - unzip -d /opt/gradle /tmp/gradle-${GRADLE}-bin.zip
+  - ln -s /opt/gradle/gradle-${GRADLE} /opt/gradle/latest
+  - echo "export GRADLE_HOME=/opt/gradle/latest
+    export PATH=${GRADLE_HOME}/bin:${PATH}" > /etc/profile.d/gradle.sh
+  - chmod +x /etc/profile.d/gradle.sh
+  - source /etc/profile.d/gradle.sh
+  - gradle -v
 
-# Basic android and gradle stuff
-# Check linting
-lintDebug:
-  interruptible: true
-  stage: build
-  script:
-    - ./Android_Client/Open\ RSC\ Android\ Client/gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint
-
-# Make Project
+# Gradle compile Android client
 assembleDebug:
   interruptible: true
   stage: build
   script:
-    - ./Android_Client/Open\ RSC\ Android\ Client/gradlew assembleDebug
+    - gradle -b Android_Client/Open\ RSC\ Android\ Client/build.gradle assembleDebug
   artifacts:
     paths:
-      - Android_Client/Open\ RSC\ Android\ Client/build/outputs/
-
-# Run all tests, if any fails, interrupt the pipeline(fail it)
-debugTests:
-  interruptible: true
-  stage: test
-  script:
-    - ./Android_Client/Open\ RSC\ Android\ Client/gradlew -Pci --console=plain :app:testDebug
+      - Android_Client/Open\ RSC\ Android\ Client/
