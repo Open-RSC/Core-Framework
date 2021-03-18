@@ -469,6 +469,8 @@ public class Bank {
 					withdrawNoted = false;
 				}
 
+				int originalAmount = requestedAmount;
+
 				// Make sure they actually have the item in the bank
 				requestedAmount = Math.min(requestedAmount, countId(catalogID));
 				int requiredSlots = player.getCarriedItems().getInventory().getRequiredSlots(
@@ -500,6 +502,10 @@ public class Bank {
 				}
 
 				addToInventory(withdrawItem, withdrawDef, requestedAmount, updateClient);
+
+				if (originalAmount > requestedAmount) {
+					player.message("You don't have room to hold everything!");
+				}
 
 				// TODO: there are safeguards here which might be fine, but it may be better to
 				// implement a way to sort the packets in Player.outgoingPackets instead?

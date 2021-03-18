@@ -534,23 +534,23 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				delay(3);
 				player.message("kolodion teleports you to his cave");
 				player.teleport(446, 3370);
-				Npc kolodion = ifnearvisnpc(player, NpcId.KOLODION.id(), 5);
+				Npc kolodion = ifnearvisnpc(player, NpcId.KOLODION.id(), 8);
 				if (kolodion == null) {
 					player.message("kolodion is currently busy");
-					return;
-				}
-				say(player, kolodion, "what now kolodion? how can i learn some of those spells?");
-				npcsay(player, kolodion, "these spells are gifts from the gods", "first you must choose which god...",
-					"...you will represent in the mage arena");
-				say(player, kolodion, "cool");
-				npcsay(player, kolodion, "step into the magic pool, it will carry you to the chamber");
-				say(player, kolodion, "the chamber?");
+				} else {
+					say(player, kolodion, "what now kolodion? how can i learn some of those spells?");
+					npcsay(player, kolodion, "these spells are gifts from the gods", "first you must choose which god...",
+						"...you will represent in the mage arena");
+					say(player, kolodion, "cool");
+					npcsay(player, kolodion, "step into the magic pool, it will carry you to the chamber");
+					say(player, kolodion, "the chamber?");
 
-				npcsay(player, kolodion, "there you must decide your loyalty");
-				say(player, kolodion, "ok kolodion , thanks for the battle");
-				npcsay(player, kolodion, "remember young mage, you must use the spells...",
-					"...many times in the arena before you can use them outside");
-				say(player, kolodion, "no problem");
+					npcsay(player, kolodion, "there you must decide your loyalty");
+					say(player, kolodion, "ok kolodion , thanks for the battle");
+					npcsay(player, kolodion, "remember young mage, you must use the spells...",
+						"...many times in the arena before you can use them outside");
+					say(player, kolodion, "no problem");
+				}
 				player.getCache().set("mage_arena", 2);
 				player.getCache().remove("kolodion_stage");
 			}

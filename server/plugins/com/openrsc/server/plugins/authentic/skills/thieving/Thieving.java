@@ -11,9 +11,9 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.plugins.triggers.OpNpcTrigger;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.OpNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -24,8 +24,8 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.constants.ItemId.THIEVING_CAPE;
+import static com.openrsc.server.plugins.Functions.*;
 
 public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
@@ -443,13 +443,16 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			if (stall != null) {
 				stallThieving(player, obj, stall);
 			}
-		} else if (obj.getID() >= 334 && obj.getID() <= 339) {
-			if (command.contains("trap")) {
-				handleChestThieving(player, obj);
-			} else {
+		} else if (obj.getID() >= 334 && obj.getID() < 339) {
+			if (command.equalsIgnoreCase("Open")) {
 				player.playerServerMessage(MessageType.QUEST, "You have activated a trap on the chest");
 				player.damage(DataConversions.random(0, 8));
+			} else {
+				handleChestThieving(player, obj);
 			}
+		} else if (obj.getID() == 339) {
+			player.message("You search the chest for traps");
+			player.message("You find nothing");
 		} else if (obj.getID() == 379) { // HEMENSTER CHEST HARDCODE
 			if (command.equalsIgnoreCase("Open")) {
 				player.playerServerMessage(MessageType.QUEST, "This chest is locked");
