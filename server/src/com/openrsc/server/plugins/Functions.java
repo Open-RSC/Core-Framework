@@ -96,6 +96,13 @@ public class Functions {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
+	 * Used for the ifstatrandom RuneScript function.
+	 */
+	public static float lerp(final float v0, final float v1, final float t) {
+		return v0 + t * (v1 - v0);
+	}
+
+	/**
 	 * Displays item bubble above players head.
 	 *
 	 * @param item
