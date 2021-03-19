@@ -1051,7 +1051,61 @@ public class RuneScript {
 	 * Walks the player through the boundary to the opposite side.
 	 */
 	public static void boundaryteleport() {
-		// pass
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return;
+		final Player player = scriptContext.getContextPlayer();
+		if (player == null) return;
+		final GameObject interactingBoundary = scriptContext.getInteractingBoundary();
+		if (interactingBoundary == null) return;
+
+		if (interactingBoundary.getDirection() == 0) {
+			if (interactingBoundary.getLocation().equals(player.getLocation())) {
+				player.teleport(interactingBoundary.getX(), interactingBoundary.getY() - 1);
+			} else {
+				player.teleport(interactingBoundary.getX(), interactingBoundary.getY());
+			}
+		}
+
+		else if (interactingBoundary.getDirection() == 1) {
+			if (interactingBoundary.getLocation().equals(player.getLocation())) {
+				player.teleport(interactingBoundary.getX() - 1, interactingBoundary.getY());
+			} else {
+				player.teleport(interactingBoundary.getX(), interactingBoundary.getY());
+			}
+		}
+
+		else if (interactingBoundary.getDirection() == 2) {
+			// front
+			if (interactingBoundary.getX() == player.getX() && interactingBoundary.getY() == player.getY() + 1) {
+				player.teleport(interactingBoundary.getX(), interactingBoundary.getY() + 1);
+			} else if (interactingBoundary.getX() == player.getX() - 1 && interactingBoundary.getY() == player.getY()) {
+				player.teleport(interactingBoundary.getX() - 1, interactingBoundary.getY());
+			}
+
+			// back
+			else if (interactingBoundary.getX() == player.getX() && interactingBoundary.getY() == player.getY() - 1) {
+				player.teleport(interactingBoundary.getX(), interactingBoundary.getY() - 1);
+			} else if (interactingBoundary.getX() == player.getX() + 1 && interactingBoundary.getY() == player.getY()) {
+				player.teleport(interactingBoundary.getX() + 1, interactingBoundary.getY());
+			}
+		}
+
+		else if (interactingBoundary.getDirection() == 3) {
+			// front
+			if (interactingBoundary.getX() == player.getX() && interactingBoundary.getY() == player.getY() - 1) {
+				player.teleport(interactingBoundary.getX(), interactingBoundary.getY() - 1);
+			} else if (interactingBoundary.getX() == player.getX() + 1 && interactingBoundary.getY() == player.getY()) {
+				player.teleport(interactingBoundary.getX() + 1, interactingBoundary.getY());
+			}
+
+			// back
+			else if (interactingBoundary.getX() == player.getX() && interactingBoundary.getY() == player.getY() + 1) {
+				player.teleport(interactingBoundary.getX(), interactingBoundary.getY() + 1);
+			} else if (interactingBoundary.getX() == player.getX() - 1 && interactingBoundary.getY() == player.getY()) {
+				player.teleport(interactingBoundary.getX() - 1, interactingBoundary.getY());
+			}
+
+		}
 	}
 
 	/**
@@ -1339,7 +1393,7 @@ public class RuneScript {
 		final Npc npc = scriptContext.getInteractingNpc();
 		if (npc == null) return;
 
-		// TODO See the TODO on the NPCBehavior.retreat() function
+		// TODO NPCs need to retreat based on time and not just run to a random tile
 		npc.getBehavior().retreat();
 	}
 
