@@ -18,6 +18,13 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 public class RuneScript {
 
+	// The maximum value a big var can hold
+	final static int BIG_VAR_MAX = 268435455;
+	// The maximum value a var can hold
+	final static int VAR_MAX = 127;
+	// The minimum value a var can hold
+	final static int VAR_MIN = 0;
+
 	/**
 	 * Displays a thinkbubble above the player's head which contains the object they are
 	 * currently using.
@@ -570,6 +577,10 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
+		if (value < VAR_MIN || value > VAR_MAX) {
+			throw new IllegalArgumentException("Value must be 0-127");
+		}
+
 		player.getCache().set(variable, value);
 	}
 
@@ -587,10 +598,9 @@ public class RuneScript {
 
 		int newValue = player.getCache().getInt(variable) + value;
 
-		// Variables cannot hold more than 127 or less than 0.
-		// Not sure if I should throw an error or just cap at 0-127.
-		newValue = Math.max(0, newValue);
-		newValue = Math.min(newValue, 127);
+		if (newValue < VAR_MIN || newValue > VAR_MAX) {
+			throw new IllegalArgumentException("Provided value will put var out of range");
+		}
 
 		player.getCache().set(variable, newValue);
 	}
@@ -609,10 +619,9 @@ public class RuneScript {
 
 		int newValue = player.getCache().getInt(variable) - value;
 
-		// Variables cannot hold more than 127 or less than 0.
-		// Not sure if I should throw an error or just cap at 0-127.
-		newValue = Math.max(0, newValue);
-		newValue = Math.min(newValue, 127);
+		if (newValue < VAR_MIN || newValue > VAR_MAX) {
+			throw new IllegalArgumentException("Provided value will put var out of range");
+		}
 
 		player.getCache().set(variable, newValue);
 	}
@@ -627,9 +636,8 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
-		if (value > 128)
-		{
-			throw new IllegalArgumentException("Value cannot be greater than 128");
+		if (value > (VAR_MIN+1)) {
+			throw new IllegalArgumentException("Value cannot be greater than " + (VAR_MIN)+1);
 		}
 
 		player.getCache().set("random", DataConversions.random(0, value-1));
@@ -649,10 +657,9 @@ public class RuneScript {
 
 		int newValue = player.getCache().getInt(variable) + value;
 
-		// Variables cannot hold more than 127 or less than 0.
-		// Not sure if I should throw an error or just cap at 0-127.
-		newValue = Math.max(0, newValue);
-		newValue = Math.min(newValue, 268435455);
+		if (newValue < VAR_MIN || newValue > BIG_VAR_MAX) {
+			throw new IllegalArgumentException("Provided value will put var out of range");
+		}
 
 		player.getCache().set(variable, newValue);
 	}
@@ -671,10 +678,9 @@ public class RuneScript {
 
 		int newValue = player.getCache().getInt(variable) - value;
 
-		// Variables cannot hold more than 127 or less than 0.
-		// Not sure if I should throw an error or just cap at 0-127.
-		newValue = Math.max(0, newValue);
-		newValue = Math.min(newValue, 268435455);
+		if (newValue < VAR_MIN || newValue > BIG_VAR_MAX) {
+			throw new IllegalArgumentException("Provided value will put var out of range");
+		}
 
 		player.getCache().set(variable, newValue);
 	}
