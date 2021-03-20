@@ -1430,8 +1430,7 @@ public class RuneScript {
 		final Npc npc = scriptContext.getInteractingNpc();
 		if (npc == null) return;
 
-		// TODO NPCs need to retreat based on time and not just run to a random tile
-		npc.getBehavior().retreat();
+		npc.getBehavior().retreat(time);
 	}
 
 	/**

@@ -288,6 +288,10 @@ public class NpcBehavior {
 	}
 
 	public void retreat() {
+		retreat(-1);
+	}
+
+	public void retreat(int time) {
 		state = State.RETREAT;
 		Mob opponent = npc.getOpponent();
 		if (opponent == null) return;
@@ -306,8 +310,15 @@ public class NpcBehavior {
 
 		npc.resetCombatEvent();
 
-		Point walkTo = Point.location(DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX()),
-			DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY()));
+		Point walkTo;
+		if (time == -1) {
+			 walkTo = Point.location(DataConversions.random(npc.getLoc().minX(), npc.getLoc().maxX()),
+				DataConversions.random(npc.getLoc().minY(), npc.getLoc().maxY()));
+		} else {
+			final int newX = npc.getX() + (DataConversions.random(-1, 1) * time);
+			final int newY = npc.getY() + (DataConversions.random(-1, 1) * time);
+			walkTo = Point.location(newX, newY);
+		}
 		npc.walk(walkTo.getX(), walkTo.getY());
 	}
 
