@@ -15,8 +15,14 @@ import com.openrsc.server.model.entity.update.Bubble;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RuneScript {
+	/**
+	 * The asynchronous logger.
+	 */
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	// The maximum value a big var can hold
 	final static int BIG_VAR_MAX = 268435455;
@@ -24,6 +30,8 @@ public class RuneScript {
 	final static int VAR_MAX = 127;
 	// The minimum value a var can hold
 	final static int VAR_MIN = 0;
+	// The difference in Y coordinate between two floors
+	final static int FLOOR_OFFSET = 944;
 
 	/**
 	 * Displays a thinkbubble above the player's head which contains the object they are
@@ -270,41 +278,37 @@ public class RuneScript {
 
 		final Npc npc = scriptContext.getInteractingNpc();
 
+		LOGGER.info("enter multi, " + PluginTask.getContextPluginTask().getDescriptor() + " tick " + PluginTask.getContextPluginTask().getWorld().getServer().getCurrentTick());
 		final long start = System.currentTimeMillis();
 		if (npc != null) {
 			if (npc.isRemoved()) {
 				player.resetMenuHandler();
 				return -1;
-			}
-			else {
+			} else {
 				npc.face(player);
 			}
-		} else {
-			player.resetMenuHandler();
-			return -1;
 		}
 		player.face(npc);
 		player.setMenuHandler(new MenuOptionListener(options));
 		ActionSender.sendMenu(player, options);
 
-		synchronized (player.getMenuHandler()) {
-			while (!player.checkUnderAttack()) {
-				if (player.getOption() != -1) {
-					if (options[player.getOption()] != null) {
-						if (sendToClient)
-							say(options[player.getOption()]);
-					}
-					return player.getOption();
-				} else if (System.currentTimeMillis() - start > 90000 || player.getMenuHandler() == null) {
-					player.resetMenuHandler();
-					return -1;
+		while (!player.checkUnderAttack()) {
+			if (player.getOption() != -1) {
+				if (npc != null && options[player.getOption()] != null) {
+					if (sendToClient)
+						say(options[player.getOption()]);
 				}
-
-				delay();
+				return player.getOption();
+			} else if (System.currentTimeMillis() - start > 500L * player.getConfig().GAME_TICK || player.getMenuHandler() == null) {
+				player.resetMenuHandler();
+				return -1;
 			}
-			player.releaseUnderAttack();
-			return -1;
+
+			delay();
 		}
+		player.releaseUnderAttack();
+		return -1;
+
 	}
 
 	/**
@@ -317,8 +321,8 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
-		final int currentFloor = player.getY() / 944; // This is the distance between floors
-		player.teleport(player.getX(), player.getY() + ((level-currentFloor)*944));
+		final int currentFloor = player.getY() / FLOOR_OFFSET; // This is the distance between floors
+		player.teleport(player.getX(), player.getY() + ((level-currentFloor)*FLOOR_OFFSET));
 	}
 
 	/**
@@ -330,7 +334,14 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
-		player.teleport(player.getX(), player.getY() + 944);
+		final int newY = player.getY() + FLOOR_OFFSET;
+
+		// Check to see if the player will go above level 3
+		if (newY > FLOOR_OFFSET*4) {
+			return;
+		}
+
+		player.teleport(player.getX(), newY);
 	}
 
 	/**
@@ -342,7 +353,14 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
-		player.teleport(player.getX(), player.getY() - 944);
+		final int newY = player.getY() - FLOOR_OFFSET;
+
+		// Check to see if the player will go below level 0
+		if (newY < 0) {
+			return;
+		}
+
+		player.teleport(player.getX(), newY);
 	}
 
 	/**
@@ -998,8 +1016,15 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
+		final int newY = player.getY() + FLOOR_OFFSET;
+
+		// Check to see if the player will go above level 3
+		if (newY > FLOOR_OFFSET*4) {
+			return;
+		}
+
 		// TODO Add horizontal shift
-		player.teleport(player.getX(), player.getY() + 944);
+		player.teleport(player.getX(), newY);
 	}
 
 	/**
@@ -1012,9 +1037,15 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
+		final int newY = player.getY() - FLOOR_OFFSET;
+
+		// Check to see if the player will go above level 3
+		if (newY < 0) {
+			return;
+		}
 
 		// TODO Add horizontal shift
-		player.teleport(player.getX(), player.getY() - 944);
+		player.teleport(player.getX(), newY);
 	}
 
 	/**
@@ -1297,7 +1328,7 @@ public class RuneScript {
 	 * Temporarily subtracts constant+(current*percent)/100 from the NPC's specified stat.
 	 * @param statId The ID of the skill to be changed
 	 * @param constant Constant number for addition
-	 * @param percent Percentage of current skill level to add
+	 * @param percent Percentage of current skill level to subtract
 	 */
 	public static void subnpcstat(final int statId, final int constant, final int percent) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -1424,7 +1455,7 @@ public class RuneScript {
 	 * Temporarily subtracts constant+(current*percent)/100 from the second player's specified stat.
 	 * @param statId The ID of the skill to be changed
 	 * @param constant Constant number for addition
-	 * @param percent Percentage of current skill level to add
+	 * @param percent Percentage of current skill level to subtract
 	 */
 	public static void subplaystat(final int statId, final int constant, final int percent) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
