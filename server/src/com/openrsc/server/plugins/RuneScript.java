@@ -195,7 +195,7 @@ public class RuneScript {
 	public static void end() {
 		end("Script ended");
 	}
-	
+
 	public static void end(final String message) {
 		throw new ScriptEndedException(message);
 	}
@@ -632,7 +632,7 @@ public class RuneScript {
 		if (player == null) return;
 
 		if (value < VAR_MIN || value > VAR_MAX) {
-			throw new IllegalArgumentException("Value must be 0-127");
+			throw new IllegalArgumentException(String.format("Value must be %d-%d", VAR_MIN, VAR_MAX));
 		}
 
 		player.getCache().set(variable, value);
@@ -808,6 +808,10 @@ public class RuneScript {
 		player.getWorld().registerNpc(newNpc);
 	}
 
+	/**
+	 * Adds the specified location at the active coordinate.
+	 * @param location The ID of the location (GameObject/Scenery) to spawn
+	 */
 	public static void addloc(final int location) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
@@ -832,7 +836,6 @@ public class RuneScript {
 		final Point interactingCoordinate = scriptContext.getInteractingCoordinate();
 		if (interactingCoordinate == null) return false;
 
-		// This could be == instead of !=
 		final boolean isBlocked = (player.getWorld().getTile(interactingCoordinate).traversalMask & 64) != 0;
 		scriptContext.setExecutionFlag(isBlocked);
 		return isBlocked;
@@ -963,7 +966,7 @@ public class RuneScript {
 	}
 
 	/**
-	 * Deletes the active inventory object form the player's inventory
+	 * Deletes the active inventory object from the player's inventory
 	 */
 	public static void delinv() {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
