@@ -31,7 +31,9 @@ public class ScriptContext {
 	private volatile Point entityInteractingCoordinate;
 	private volatile Integer entityInteractingIndex;
 	private volatile Point interactingCoordinate;
+	private volatile Boolean executionFlag;
 	private volatile Boolean stopping;
+	private volatile Boolean shouldBlockDefault;
 
 	// Batching related
 	private volatile Boolean interrupted;
@@ -45,6 +47,7 @@ public class ScriptContext {
 		this.entityType = Action.idle.getDefaultEntityType();
 		this.entityInteractingIndex = null;
 		this.interactingCoordinate = null;
+		this.executionFlag = false;
 		this.interrupted = false;
 		this.batch = null;
 		this.stopping = false;
@@ -441,5 +444,21 @@ public class ScriptContext {
 
 	public synchronized void setInterrupted(final Boolean interrupted) {
 		this.interrupted = interrupted;
+	}
+
+	public Boolean getExecutionFlag() {
+		return executionFlag;
+	}
+
+	public void setExecutionFlag(final Boolean set) {
+		executionFlag = set;
+	}
+
+	public Boolean getShouldBlockDefault() {
+		return shouldBlockDefault;
+	}
+
+	public void setShouldBlockDefault(final Boolean shouldBlockDefault) {
+		this.shouldBlockDefault = shouldBlockDefault;
 	}
 }

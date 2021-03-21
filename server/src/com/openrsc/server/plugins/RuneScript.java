@@ -24,9 +24,9 @@ public class RuneScript {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	// The maximum value a big var can hold
+	// The maximum value a big var can hold (2^28 - 1)
 	final static int BIG_VAR_MAX = 268435455;
-	// The maximum value a var can hold
+	// The maximum value a var can hold (2^7 - 1, signed byte max)
 	final static int VAR_MAX = 127;
 	// The minimum value a var can hold
 	final static int VAR_MIN = 0;
@@ -64,14 +64,18 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return true;
 
-		return player.isMale();
+		final boolean isMale = player.isMale();
+		scriptContext.setExecutionFlag(isMale);
+		return isMale;
 	}
 
 	/**
 	 * Stops the game executing the default action when this script is complete.
 	 */
 	public static void nodefault() {
-		// pass
+		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		if (scriptContext == null) return;
+		scriptContext.setShouldBlockDefault(true);
 	}
 
 	/**
@@ -158,15 +162,20 @@ public class RuneScript {
 	 * @return
 	 */
 	public static boolean ifrandom(int probability) {
-		return probability >= DataConversions.random(1, 255);
+		ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+
+		final boolean isRandom = probability >= DataConversions.random(1, 255);
+		scriptContext.setExecutionFlag(isRandom);
+		return isRandom;
 	}
 
 	/**
 	 * Jumps to the script block with the trigger 'Label,labelname'
 	 * The other script will not return to this one
 	 */
-	public static void jump() {
-		// pass
+	public static void jump(final Runnable function) {
+		function.run();
+		end();
 	}
 
 	/**
@@ -184,7 +193,11 @@ public class RuneScript {
 	 * 	Terminates processing of the current script block
 	 */
 	public static void end() {
-		// pass
+		end("Script ended");
+	}
+	
+	public static void end(final String message) {
+		throw new ScriptEndedException(message);
 	}
 
 	/**
@@ -322,7 +335,12 @@ public class RuneScript {
 		if (player == null) return;
 
 		final int currentFloor = player.getY() / FLOOR_OFFSET; // This is the distance between floors
-		player.teleport(player.getX(), player.getY() + ((level-currentFloor)*FLOOR_OFFSET));
+		final int newY = player.getY() + ((level-currentFloor)*FLOOR_OFFSET);
+
+		if (newY < 0 || newY > FLOOR_OFFSET*4) {
+			return;
+		}
+		player.teleport(player.getX(), newY);
 	}
 
 	/**
@@ -380,7 +398,9 @@ public class RuneScript {
 
 		final int statLevel = player.getLevel(stat);
 		final int probability = (int)Math.floor(Functions.lerp(baseProbability, topProbability, (float)statLevel / 100.0f));
-		return probability >= DataConversions.random(1, 255);
+		final boolean isStatRandom = probability >= DataConversions.random(1, 255);
+		scriptContext.setExecutionFlag(isStatRandom);
+		return isStatRandom;
 	}
 
 	/**
@@ -464,7 +484,9 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 
-		return player.getSkills().getLevel(statId) > player.getSkills().getMaxStat(statId);
+		final boolean isStatUp = player.getSkills().getLevel(statId) > player.getSkills().getMaxStat(statId);
+		scriptContext.setExecutionFlag(isStatUp);
+		return isStatUp;
 	}
 
 	/**
@@ -478,7 +500,9 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 
-		return player.getSkills().getLevel(statId) < player.getSkills().getMaxStat(statId);
+		final boolean isStatDown = player.getSkills().getLevel(statId) < player.getSkills().getMaxStat(statId);
+		scriptContext.setExecutionFlag(isStatDown);
+		return isStatDown;
 	}
 
 	/**
@@ -493,7 +517,9 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 
-		return player.getSkills().getLevel(statId) > value;
+		final boolean isStatAbove = player.getSkills().getLevel(statId) > value;
+		scriptContext.setExecutionFlag(isStatAbove);
+		return isStatAbove;
 	}
 
 	/**
@@ -509,7 +535,9 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 
-		return player.getSkills().getLevel(statId) >= player.getCache().getInt(variable) + value;
+		final boolean isStatAtLeast = player.getSkills().getLevel(statId) >= player.getCache().getInt(variable) + value;
+		scriptContext.setExecutionFlag(isStatAtLeast);
+		return isStatAtLeast;
 	}
 
 	/**
@@ -536,11 +564,13 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 
-		return player.getQuestPoints() >= value;
+		final boolean isQp = player.getQuestPoints() >= value;
+		scriptContext.setExecutionFlag(isQp);
+		return isQp;
 	}
 
 	/**
-	 * Checks if the player variable is equal to the provided value.
+	 * Sets the condition flag if the player variable is equal to the provided value.
 	 * @param variable The player variable to check
 	 * @param value The value to check the player variable against
 	 * @return True if the variable is equal to the provided value, false otherwise.
@@ -551,11 +581,13 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 
-		return player.getCache().getInt(variable) == value;
+		final boolean isVar = player.getCache().getInt(variable) == value;
+		scriptContext.setExecutionFlag(isVar);
+		return isVar;
 	}
 
 	/**
-	 * Checks if the player variable is greater than to the provided value.
+	 * Sets the condition flag if the player variable is greater than to the provided value.
 	 * @param variable The player variable to check
 	 * @param value The value to check the player variable against
 	 * @return True if the variable is greater than the provided value, false otherwise.
@@ -566,11 +598,13 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 
-		return player.getCache().getInt(variable) > value;
+		final boolean isVarMore = player.getCache().getInt(variable) > value;
+		scriptContext.setExecutionFlag(isVarMore);
+		return isVarMore;
 	}
 
 	/**
-	 * Checks if the player variable is less than to the provided value.
+	 * Sets the condition flag if the player variable is less than to the provided value.
 	 * @param variable The player variable to check
 	 * @param value The value to check the player variable against
 	 * @return True if the variable is less than the provided value, false otherwise.
@@ -581,7 +615,9 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 
-		return player.getCache().getInt(variable) < value;
+		final boolean isVarLess = player.getCache().getInt(variable) < value;
+		scriptContext.setExecutionFlag(isVarLess);
+		return isVarLess;
 	}
 
 	/**
@@ -704,7 +740,7 @@ public class RuneScript {
 	}
 
 	/**
-	 * Checks if the player big variable is greater than to the provided value.
+	 * Sets the condition flag if the player big variable is greater than to the provided value.
 	 * @param variable The player big variable to check
 	 * @param value The value to check the player big variable against
 	 * @return True if the big variable is greater than the provided value, false otherwise.
@@ -797,7 +833,9 @@ public class RuneScript {
 		if (interactingCoordinate == null) return false;
 
 		// This could be == instead of !=
-		return (player.getWorld().getTile(interactingCoordinate).traversalMask & 64) != 0;
+		final boolean isBlocked = (player.getWorld().getTile(interactingCoordinate).traversalMask & 64) != 0;
+		scriptContext.setExecutionFlag(isBlocked);
+		return isBlocked;
 	}
 
 	/**
@@ -881,7 +919,9 @@ public class RuneScript {
 		final Player player = scriptContext.getInteractingPlayer();
 		if (player == null) return false;
 
-		return player.getCarriedItems().getEquipment().hasCatalogID(object);
+		final boolean isWorn = player.getCarriedItems().getEquipment().hasCatalogID(object);
+		scriptContext.setExecutionFlag(isWorn);
+		return isWorn;
 	}
 
 	/**
@@ -896,7 +936,9 @@ public class RuneScript {
 		final Player player = scriptContext.getInteractingPlayer();
 		if (player == null) return false;
 
-		return player.getCarriedItems().getInventory().countId(object) >= count;
+		final boolean isHeld = player.getCarriedItems().getInventory().countId(object) >= count;
+		scriptContext.setExecutionFlag(isHeld);
+		return isHeld;
 	}
 
 	/**
@@ -948,8 +990,10 @@ public class RuneScript {
 		if (interactingGroundItem == null) return false;
 
 
-		return player.getViewArea().getGroundItem(interactingGroundItem.getID(), interactingGroundItem.getLocation()) != null
+		final boolean isObjectVisible = player.getViewArea().getGroundItem(interactingGroundItem.getID(), interactingGroundItem.getLocation()) != null
 			&& player.canReach(interactingGroundItem);
+		scriptContext.setExecutionFlag(isObjectVisible);
+		return isObjectVisible;
 	}
 
 	/**
@@ -1167,10 +1211,12 @@ public class RuneScript {
 			boolean npcIsBusy = npcInView.isBusy();
 			if (isNpc && !npcIsBusy) {
 				scriptContext.setInteractingNpc(npcInView);
+				scriptContext.setExecutionFlag(true);
 				return true;
 			}
 		}
 
+		scriptContext.setExecutionFlag(false);
 		return false;
 	}
 
@@ -1200,10 +1246,12 @@ public class RuneScript {
 			boolean npcIsBusy = npcInView.isBusy();
 			if (isNpc && isInRange && isReachable && !npcIsBusy) {
 				scriptContext.setInteractingNpc(npcInView);
+				scriptContext.setExecutionFlag(true);
 				return true;
 			}
 		}
 
+		scriptContext.setExecutionFlag(false);
 		return false;
 	}
 
@@ -1304,7 +1352,9 @@ public class RuneScript {
 		final Npc npc = scriptContext.getInteractingNpc();
 		if (npc == null) return false;
 
-		return player.canReach(npc);
+		final boolean isNpcVisible = player.canReach(npc);
+		scriptContext.setExecutionFlag(isNpcVisible);
+		return isNpcVisible;
 	}
 
 	/**
@@ -1371,7 +1421,9 @@ public class RuneScript {
 		final Npc npc = scriptContext.getInteractingNpc();
 		if (npc == null) return false;
 
-		return npc.getSkills().getLevel(statId) > npc.getSkills().getMaxStat(statId);
+		final boolean isNpcStatUp = npc.getSkills().getLevel(statId) > npc.getSkills().getMaxStat(statId);
+		scriptContext.setExecutionFlag(isNpcStatUp);
+		return isNpcStatUp;
 	}
 
 	/**
@@ -1385,7 +1437,9 @@ public class RuneScript {
 		final Npc npc = scriptContext.getInteractingNpc();
 		if (npc == null) return false;
 
-		return npc.getSkills().getLevel(statId) < npc.getSkills().getMaxStat(statId);
+		final boolean isNpcStatDown = npc.getSkills().getLevel(statId) < npc.getSkills().getMaxStat(statId);
+		scriptContext.setExecutionFlag(isNpcStatDown);
+		return isNpcStatDown;
 	}
 
 	/**
@@ -1497,7 +1551,9 @@ public class RuneScript {
 		final Player player = scriptContext.getInteractingPlayer();
 		if (player == null) return false;
 
-		return player.getSkills().getLevel(statId) > player.getSkills().getMaxStat(statId);
+		final boolean isPlayerStatUp = player.getSkills().getLevel(statId) > player.getSkills().getMaxStat(statId);
+		scriptContext.setExecutionFlag(isPlayerStatUp);
+		return isPlayerStatUp;
 	}
 
 	/**
@@ -1511,7 +1567,9 @@ public class RuneScript {
 		final Player player = scriptContext.getInteractingPlayer();
 		if (player == null) return false;
 
-		return player.getSkills().getLevel(statId) < player.getSkills().getMaxStat(statId);
+		final boolean isPlayerStatDown = player.getSkills().getLevel(statId) < player.getSkills().getMaxStat(statId);
+		scriptContext.setExecutionFlag(isPlayerStatDown);
+		return isPlayerStatDown;
 	}
 
 	/**
@@ -1543,7 +1601,9 @@ public class RuneScript {
 		final Player interactingPlayer = scriptContext.getInteractingPlayer();
 		if (interactingPlayer == null) return false;
 
-		return player.canReach(interactingPlayer);
+		final boolean isPlayerVisable = player.canReach(interactingPlayer);
+		scriptContext.setExecutionFlag(isPlayerVisable);
+		return isPlayerVisable;
 	}
 
 	/**
