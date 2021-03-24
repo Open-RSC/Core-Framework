@@ -141,7 +141,7 @@ public final class GameStateUpdater {
 		for (final Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext(); ) {
 			Npc localNpc = it$.next();
 
-			if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isRespawning() || localNpc.isTeleporting() || localNpc.inCombat()) {
+			if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isRespawning() || localNpc.isTeleporting() || localNpc.inCombat() || !localNpc.withinAuthenticRange(playerToUpdate)) {
 				it$.remove();
 				packet.writeBits(1, 1);
 				packet.writeBits(1, 1);
@@ -163,12 +163,12 @@ public final class GameStateUpdater {
 		for (final Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
 			if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved() || newNPC.isRespawning()
 				|| newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")
-				|| !playerToUpdate.withinRange(newNPC, (getServer().getConfig().VIEW_DISTANCE * 8) - 1) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
+				|| !playerToUpdate.withinRange(newNPC) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
 				continue;
 			} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
 				break;
 			}
-			if (playerToUpdate.isUsingAuthenticClient() && !newNPC.within16TileRange(playerToUpdate))
+			if (!newNPC.withinAuthenticRange(playerToUpdate))
 				continue; // only have 5 bits in the rsc235 protocol, so the npc can only be shown up to 16 away
 
 			final byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
@@ -204,7 +204,8 @@ public final class GameStateUpdater {
 
 				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
 					|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
-					|| otherPlayer.inCombat() || otherPlayer.hasMoved()) {
+					|| otherPlayer.inCombat() || otherPlayer.hasMoved()
+				    || !otherPlayer.withinAuthenticRange(playerToUpdate)) {
 					positionBuilder.writeBits(1, 1); //Needs Update
 					positionBuilder.writeBits(1, 1); //Update Type
 					positionBuilder.writeBits(3, 2); //Animation type (Remove)
@@ -235,7 +236,7 @@ public final class GameStateUpdater {
 					|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
 					continue;
 				}
-				if (playerToUpdate.isUsingAuthenticClient() && !otherPlayer.within16TileRange(playerToUpdate))
+				if (!otherPlayer.withinAuthenticRange(playerToUpdate))
 					continue; // only have 5 bits in the rsc235 protocol, so the player can only be shown up to 16 tiles away
 
 				final byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
