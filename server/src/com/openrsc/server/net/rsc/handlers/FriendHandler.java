@@ -50,7 +50,7 @@ public final class FriendHandler implements PacketHandler {
 				return;
 			}
 
-			if (friend >= 0L) {
+			if (friend > 0L) {
 				try {
 					int friendId = player.getWorld().getServer().getDatabase().playerIdFromUsername(DataConversions.hashToUsername(friend));
 
@@ -99,7 +99,7 @@ public final class FriendHandler implements PacketHandler {
 				ActionSender.sendIgnoreList(player);
 				return;
 			}
-			if (friend >= 0L) {
+			if (friend > 0L) {
 				try {
 					int friendId = player.getWorld().getServer().getDatabase().playerIdFromUsername(DataConversions.hashToUsername(friend));
 
@@ -140,7 +140,7 @@ public final class FriendHandler implements PacketHandler {
 			}
 			String message = DataConversions.upperCaseAllFirst(
 				DataConversions.stripBadCharacters(
-					DataConversions.getEncryptedString(packet, 32576)));
+					DataConversions.getEncryptedString(packet)));
 			if (friendName.toLowerCase().startsWith("global$") && player.getConfig().WANT_GLOBAL_FRIEND) {
 				player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 			}

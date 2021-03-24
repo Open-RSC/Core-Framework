@@ -28,7 +28,7 @@ public final class ChatHandler implements PacketHandler {
 
 		String message = DataConversions.upperCaseAllFirst(
 			DataConversions.stripBadCharacters(
-				DataConversions.getEncryptedString(packet, Short.MAX_VALUE)));
+				DataConversions.getEncryptedString(packet)));
 
 
 		boolean mutedChat = (sender.getLocation().onTutorialIsland() || sender.isMuted()) && !sender.hasElevatedPriveledges();

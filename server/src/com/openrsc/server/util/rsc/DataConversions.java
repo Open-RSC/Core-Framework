@@ -29,16 +29,7 @@ public final class DataConversions {
 	 */
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final char[] special_characters = "~`!@#$%^&*()_-+={}[]|\'\";:?><,./".toCharArray();
-	public static StringEncryption encryption = new StringEncryption(StringEncryption.asByte(22, 22, 22, 22, 22, 22, 21,
-		22, 22, 20, 22, 22, 22, 21, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 3, 8,
-		22, 16, 22, 16, 17, 7, 13, 13, 13, 16, 7, 10, 6, 16, 10, 11, 12, 12, 12, 12, 13, 13, 14, 14, 11, 14, 19, 15,
-		17, 8, 11, 9, 10, 10, 10, 10, 11, 10, 9, 7, 12, 11, 10, 10, 9, 10, 10, 12, 10, 9, 8, 12, 12, 9, 14, 8, 12,
-		17, 16, 17, 22, 13, 21, 4, 7, 6, 5, 3, 6, 6, 5, 4, 10, 7, 5, 6, 4, 4, 6, 10, 5, 4, 4, 5, 7, 6, 10, 6, 10,
-		22, 19, 22, 14, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-		22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 21, 22, 21, 22, 22, 22, 21, 22, 22));
+	public static StringEncryption encryption = new StringEncryption();
 	private static char characters[] = {' ', 'e', 't', 'a', 'o', 'i',
 		'h', 'n', 's', 'r', 'd', 'l', 'u', 'm', 'w', 'c', 'y', 'f', 'g',
 		'p', 'b', 'v', 'k', 'x', 'j', 'q', 'z', '0', '1', '2', '3', '4',
@@ -304,19 +295,17 @@ public final class DataConversions {
 		return (int) (total / values.length);
 	}
 
-	public static String getEncryptedString(Packet src, int limit) {
+	public static String getEncryptedString(Packet src) {
 		try {
-			int count = src.getSmart08_16();// correct.
-			if (count > limit) {
-				count = limit;
-			}
+			int count = src.getSmart08_16();
 
 			byte[] srct = src.readRemainingData();
 			byte[] dest = new byte[count];
 			encryption.decryptString(srct, dest, 0, 0, -1, count);
 
 			return getStringFromBytes(dest, 0, count);
-		} catch (Exception var6) {
+		} catch (Exception ex) {
+			ex.printStackTrace();
 			return "Cabbage";
 		}
 	}

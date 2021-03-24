@@ -304,7 +304,7 @@ public final class RegularPlayer implements CommandTrigger {
 			sayDelay = player.getCache().getLong("say_delay");
 		}
 
-		long waitTime = 15000;
+		long waitTime = config().GLOBAL_MESSAGE_COOLDOWN;
 
 		if (player.isMod()) {
 			waitTime = 0;
@@ -325,8 +325,7 @@ public final class RegularPlayer implements CommandTrigger {
 		for (String arg : args) {
 			newStr.append(arg).append(" ");
 		}
-		newStr = new StringBuilder(newStr.toString().replace('~', ' '));
-		newStr = new StringBuilder(newStr.toString().replace('@', ' '));
+
 		if (config().WANT_GLOBAL_CHAT) {
 			String channelPrefix = command.equals("g") ? "@gr2@[General] " : "@or1@[PKing] ";
 			int channel = command.equalsIgnoreCase("g") ? 1 : 2;
@@ -359,7 +358,8 @@ public final class RegularPlayer implements CommandTrigger {
 				player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(PKing) " + newStr));
 			}
 		} else if (config().WANT_GLOBAL_FRIEND && command.equalsIgnoreCase("g")) {
-			player.getWorld().addGlobalMessage(new GlobalMessage(player, newStr.toString()));
+			String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(newStr.toString()));
+			player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 			player.getWorld().addEntryToSnapshots(new Chatlog(player.getUsername(), "(Global) " + newStr));
 		}
 	}

@@ -204,8 +204,8 @@ public class Packet {
 	}
 
 	public int getSmart08_16() {
-		int var2 = 255 & (getBuffer().getByte(getBuffer().readerIndex()) & 0xFF);
-		return var2 < 128 ? getBuffer().readUnsignedByte() : getBuffer().readShort() - '\u8000';
+		int byte1 = getBuffer().getByte(getBuffer().readerIndex()) & 0xFF;
+		return byte1 < 128 ? getBuffer().readUnsignedByte() : getBuffer().readUnsignedShort() - 32768;
 	}
 
 	public long getPacketNumber() {

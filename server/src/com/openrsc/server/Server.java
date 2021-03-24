@@ -3,9 +3,8 @@ package com.openrsc.server;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
+import com.openrsc.server.database.DatabaseUpgrades;
 import com.openrsc.server.database.GameDatabase;
-import com.openrsc.server.database.GameDatabaseException;
-import com.openrsc.server.database.builder.TableBuilder;
 import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
 import com.openrsc.server.database.impl.mysql.MySqlGameLogger;
 import com.openrsc.server.event.custom.DailyShutdownEvent;
@@ -35,7 +34,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -254,7 +252,7 @@ public class Server implements Runnable {
 				LOGGER.info("Database Connection Completed");
 
 				LOGGER.info("Checking For Database Structure Changes...");
-				if (checkForDatabaseStructureChanges()) {
+				if (DatabaseUpgrades.checkForDatabaseStructureChanges(getDatabase(), getConfig())) {
 					LOGGER.info("Database Structure Changes Good");
 				} else {
 					LOGGER.error("Unable to change database structure!");
@@ -792,165 +790,4 @@ public class Server implements Runnable {
 		return ++privateMessagesSent;
 	}
 
-	// This is used to modify the database when new features may break SQL compatibility while upgrading
-	private boolean checkForDatabaseStructureChanges() {
-		try {
-			if (!getDatabase().columnExists("logins", "clientVersion")) {
-				getDatabase().addColumn("logins", "clientVersion", "INT (11)");
-			}
-			if (!getDatabase().columnExists("players", "transfer")) {
-				getDatabase().addColumn("players", "transfer", "INT (11)");
-			}
-			if (getDatabase().columnExists("experience", "attack")
-				&& getDatabase().columnType("experience", "attack").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "attack", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "defense")
-				&& getDatabase().columnType("experience", "defense").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "defense", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "strength")
-				&& getDatabase().columnType("experience", "strength").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "strength", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "hits")
-				&& getDatabase().columnType("experience", "hits").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "hits", "INT (9) NOT NULL DEFAULT 4616");
-			}
-			if (getDatabase().columnExists("experience", "ranged")
-				&& getDatabase().columnType("experience", "ranged").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "ranged", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "prayer")
-				&& getDatabase().columnType("experience", "prayer").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "prayer", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "magic")
-				&& getDatabase().columnType("experience", "magic").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "magic", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "cooking")
-				&& getDatabase().columnType("experience", "cooking").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "cooking", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "woodcut")
-				&& getDatabase().columnType("experience", "woodcut").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "woodcut", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "fletching")
-				&& getDatabase().columnType("experience", "fletching").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "fletching", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "fishing")
-				&& getDatabase().columnType("experience", "fishing").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "fishing", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "firemaking")
-				&& getDatabase().columnType("experience", "firemaking").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "firemaking", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "crafting")
-				&& getDatabase().columnType("experience", "crafting").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "crafting", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "smithing")
-				&& getDatabase().columnType("experience", "smithing").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "smithing", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "mining")
-				&& getDatabase().columnType("experience", "mining").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "mining", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "herblaw")
-				&& getDatabase().columnType("experience", "herblaw").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "herblaw", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "agility")
-				&& getDatabase().columnType("experience", "agility").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "agility", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "thieving")
-				&& getDatabase().columnType("experience", "thieving").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "thieving", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "runecraft")
-				&& getDatabase().columnType("experience", "runecraft").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "runecraft", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (getDatabase().columnExists("experience", "harvesting")
-				&& getDatabase().columnType("experience", "harvesting").toLowerCase().contains("unsigned")) {
-				getDatabase().modifyColumn("experience", "harvesting", "INT (9) NOT NULL DEFAULT 0");
-			}
-			if (!getDatabase().tableExists("maxstats")) {
-				TableBuilder maxStatsTable = new TableBuilder("maxstats", new LinkedHashMap<String, String>(){{
-					put("ENGINE", "InnoDB");
-					put("DEFAULT CHARSET", "utf8");
-				}}).addColumn("playerID", "int(10) UNSIGNED NOT NULL")
-					.addColumn("attack", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("defense", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("strength", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("hits", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("ranged", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("prayer", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("magic", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("cooking", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("woodcut", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("fletching", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("fishing", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("firemaking", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("crafting", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("smithing", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("mining", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("herblaw", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("agility", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1")
-					.addColumn("thieving", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1");
-				if (getConfig().WANT_RUNECRAFT) {
-					maxStatsTable.addColumn("runecraft", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1");
-				}
-				if (getConfig().WANT_HARVESTING) {
-					maxStatsTable.addColumn("harvesting", "tinyint(3) UNSIGNED NOT NULL DEFAULT 1");
-				}
-				maxStatsTable.addPrimaryKey("playerID")
-					.addKey("playerID", "playerID");
-				getDatabase().addTable(maxStatsTable.toString());
-			}
-			if (!getDatabase().tableExists("capped_experience")) {
-				TableBuilder cappedXpTable = new TableBuilder("capped_experience", new LinkedHashMap<String, String>(){{
-					put("ENGINE", "InnoDB");
-					put("DEFAULT CHARSET", "utf8");
-				}}).addColumn("playerID", "int(10) UNSIGNED NOT NULL")
-					.addColumn("attack", "int(10) UNSIGNED")
-					.addColumn("defense", "int(10) UNSIGNED")
-					.addColumn("strength", "int(10) UNSIGNED")
-					.addColumn("hits", "int(10) UNSIGNED")
-					.addColumn("ranged", "int(10) UNSIGNED")
-					.addColumn("prayer", "int(10) UNSIGNED")
-					.addColumn("magic", "int(10) UNSIGNED")
-					.addColumn("cooking", "int(10) UNSIGNED")
-					.addColumn("woodcut", "int(10) UNSIGNED")
-					.addColumn("fletching", "int(10) UNSIGNED")
-					.addColumn("fishing", "int(10) UNSIGNED")
-					.addColumn("firemaking", "int(10) UNSIGNED")
-					.addColumn("crafting", "int(10) UNSIGNED")
-					.addColumn("smithing", "int(10) UNSIGNED")
-					.addColumn("mining", "int(10) UNSIGNED")
-					.addColumn("herblaw", "int(10) UNSIGNED")
-					.addColumn("agility", "int(10) UNSIGNED")
-					.addColumn("thieving", "int(10) UNSIGNED");
-				if (getConfig().WANT_RUNECRAFT) {
-					cappedXpTable.addColumn("runecraft", "int(10) UNSIGNED");
-				}
-				if (getConfig().WANT_HARVESTING) {
-					cappedXpTable.addColumn("harvesting", "int(10) UNSIGNED");
-				}
-				cappedXpTable.addPrimaryKey("playerID")
-					.addKey("playerID", "playerID");
-				getDatabase().addTable(cappedXpTable.toString());
-			}
-			return true;
-		} catch (GameDatabaseException e) {
-			LOGGER.error(e.toString());
-			return false;
-		}
-	}
 }

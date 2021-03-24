@@ -236,6 +236,7 @@ public abstract class Mob extends Entity {
 		return false;
 	}
 
+	// canReach EVER, not canReach this tick
 	public final boolean canReach(Entity e) {
 		int[] currentCoords = {getX(), getY()};
 		while (currentCoords[0] != e.getX() || currentCoords[1] != e.getY()) {
@@ -324,6 +325,13 @@ public abstract class Mob extends Entity {
 	public boolean withinRange(final Entity e) {
 		if (e != null) {
 			return getLocation().withinRange(e.getLocation(), getWorld().getServer().getConfig().VIEW_DISTANCE * 8);
+		}
+		return false;
+	}
+
+	public boolean within16TileRange(final Entity e) {
+		if (e != null) {
+			return getLocation().withinRange(e.getLocation(), 16);
 		}
 		return false;
 	}

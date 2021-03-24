@@ -71,6 +71,9 @@ public class ActionSender {
 		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
 		s.setID(big ? Opcode.SEND_BOX.opcode : Opcode.SEND_BOX2.opcode);
 		if (player.isUsingAuthenticClient()) {
+			if (message.length() > 4975) {
+				message = message.substring(0, 4975);
+			}
 		    s.writeZeroQuotedString(message);
         } else {
             s.writeString(message);
@@ -942,13 +945,34 @@ public class ActionSender {
                 }
             } else {
                 // IPv6
-                // Authentic server sends IP address as an 32 bit integer, IPv6 is not compatible here
-                // Going to concat IPv6 address to just last 3 "characters", and use 0 as first byte to mark "not IPv4"
-                s.writeByte(0);
-                int ipLen = ipString.length();
-                for (int i = ipLen - 3; i < ipLen; i++) {
-                    s.writeByte(Integer.parseInt(ipString.substring(i-1, i), 16) & 0xFF);
-                }
+                // Authentic server sends IP address as an 32 bit integer, IPv6 addresses can not be fully represented.
+                // Going to concat IPv6 address from 128 bits to just 24 bits, and use the first 8 bits of ipv4 to denote ipv6.
+				System.out.println("ipv6 user address: " + ipString);
+
+				// Mark this as an ipv6 address by writing "6" as the first octet of the ipv4 address.
+				// Technically this is naughty, since the 6.0.0.0/8 ipv4 block could be one day be networked on the internet.
+				// However, since 1990-03-26, the U.S. Army has reserved that IP block for their own internal use.
+				// If an IP address begins with a 6, it is a valid ipv4 address, but it is not one that you will ever see
+				// (assuming you are not running the Open RSC server inside a US Army network, or are borrowing their IP
+				//  block the way I am here...!).
+				//
+				// Another sane alternative would have been to write a 0 here, but I like 6 better.
+                s.writeByte(6);
+
+                String[] ipv6components = ipString.split(":");
+                byte[] writeMe = new byte[3];
+                int byteIdx = writeMe.length - 1;
+				for (int i = ipv6components.length - 1; i > 0 && byteIdx > 0; i--) {
+					try {
+						writeMe[byteIdx--] = (byte) (Integer.parseInt(ipv6components[i], 16) & 0xFF);
+					} catch (NumberFormatException ex) {
+						// will remain 0, or find some other ipv6 segment we understand
+					}
+				}
+				for (int i = 0; i < writeMe.length; i++) {
+					s.writeByte(writeMe[i]);
+				}
+
             }
 
             // TODO: this format may not be exactly compatible.
@@ -1739,12 +1763,6 @@ public class ActionSender {
 			if (player.getWorld().registerPlayer(player)) {
                 sendPrivacySettings(player);
                 sendMessage(player, null,  MessageType.QUEST, "Welcome to " + player.getConfig().SERVER_NAME + "!", 0, null);
-
-                // This warning can be removed soon, just want to make sure that scenery handler is really OK
-                if (player.isUsingAuthenticClient()) {
-					sendMessage(player, null,  MessageType.QUEST, "Authentic client support is nearly out of beta.", 0, "@lre@");
-					sendMessage(player, null,  MessageType.QUEST, "Please report any issues, and thanks for understanding.", 0, "@lre@");
-				}
 
 				if (HolidayDropEvent.isOccurring(player) && player.getWorld().getServer().getConfig().WANT_BANK_PINS) { // TODO: this is not a good way to detect that we are not using the RSCP config
 				    sendMessage(player, null, MessageType.QUEST, "@mag@There is a Holiday Drop Event going on now! Type @gre@::drop@mag@ for more information.", 0, null);

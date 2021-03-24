@@ -35,15 +35,20 @@ public class CombatEvent extends GameTickEvent {
 	}
 
 	private void onDeath(Mob killed, Mob killer) {
+
+		/* Commented out useless codeblock. Can be put back if these plugins are implemented some day. 2021-03-05
 		if (killer.isPlayer() && killed.isNpc()) {
+			// this interface doesn't even exist anymore, so this code block is dead, never returns. 2021-03-05
 			if (killed.getWorld().getServer().getPluginHandler().handlePlugin((Player)killer, "PlayerKilledNpc", new Object[]{((Player) killer), ((Npc) killed)})) {
 				return;
 			}
-		} else if(killer.isPlayer() && killed.isPlayer()) {
+		} else if (killer.isPlayer() && killed.isPlayer()) {
+			// no default action currently, so this code block is dead, never returns. 2021-03-05
 			if (killed.getWorld().getServer().getPluginHandler().handlePlugin((Player)killer, "PlayerKilledPlayer", new Object[]{((Player) killer), ((Player) killed)})) {
 				return;
 			}
 		}
+		*/
 
 		killed.setLastCombatState(CombatState.LOST);
 		killer.setLastCombatState(CombatState.WON);
@@ -74,6 +79,9 @@ public class CombatEvent extends GameTickEvent {
 			skillsDist[Skills.HITS] = 1;
 			playerKiller.incExp(skillsDist, exp, true);
 		}
+
+		// If `killed` is an NPC, xp distribution is handled by Npc.handleXpDistribution()
+
 		killer.setKillType(0);
 		killed.killedBy(killer);
 		if (killer.isPlayer()) {

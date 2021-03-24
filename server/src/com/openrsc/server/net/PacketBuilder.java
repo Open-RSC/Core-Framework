@@ -1,5 +1,6 @@
 package com.openrsc.server.net;
 
+import com.openrsc.server.util.rsc.CipheredMessage;
 import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -274,30 +275,18 @@ public class PacketBuilder {
 	public void writeSmart08_16(int value) {
 		if (value >= 0 && value < 128) {
 			this.writeByte(value);
-		} else if (value >= 0 && value < '\u8000') {
-			this.writeShort('\u8000' + value);
+		} else if (value >= 0 && value < 32768) {
+			this.writeShort(value + 32768);
 		} else {
 			throw new IllegalArgumentException();
 		}
 	}
 
-	//TODO: Make this more efficient
 	public void writeRSCString(String string) {
-		byte[] data = DataConversions.stringToBytes(string);
-
-		byte[] packet = new byte[256];
-		int value = data.length;
-		int pointer = 0;
-		if (value >= 0 && value < 128) {
-			packet[pointer++] = (byte) value;
-		} else if (value >= 0 && value < '\u8000') {
-			packet[pointer++] = (byte) (value >> 8);
-			packet[pointer++] = (byte) value;
-		}
-
-		DataConversions.encryption.encryptString(data.length, packet, pointer, data, 0);
-		payload.writeBytes(packet);
-
+		CipheredMessage message = new CipheredMessage();
+		DataConversions.encryption.encipher(string, message);
+		writeSmart08_16(message.decipheredLength);
+		payload.writeBytes(message.messageBuffer, 0, message.encipheredLength);
 	}
 
 	public void writeZeroQuotedString(String string) {
@@ -305,14 +294,4 @@ public class PacketBuilder {
 		payload.writeBytes(string.getBytes());
 		payload.writeByte(0);
 	}
-
-	/*public void writeRSCString(String string) {
-		string = DataConversions.formatToRSCString(string);
-		byte[] data = DataConversions.stringToBytes(string);
-
-		writeSmart08_16(data.length);
-		byte[] dest = new byte[data.length + 1];
-//		RSBufferUtils.stringEncryption.encryptString(data.length, dest.dataBuffer, dest.packetEnd, data, 0, 119);
-		DataConversions.encryption.encryptString(data.length, dest, 0, data, 0);
-	}*/
 }

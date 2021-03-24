@@ -168,6 +168,9 @@ public final class GameStateUpdater {
 			} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
 				break;
 			}
+			if (playerToUpdate.isUsingAuthenticClient() && !newNPC.within16TileRange(playerToUpdate))
+				continue; // only have 5 bits in the rsc235 protocol, so the npc can only be shown up to 16 away
+
 			final byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
 			packet.writeBits(newNPC.getIndex(), 12);
 			if (playerToUpdate.isUsingAuthenticClient()) {
@@ -232,6 +235,9 @@ public final class GameStateUpdater {
 					|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
 					continue;
 				}
+				if (playerToUpdate.isUsingAuthenticClient() && !otherPlayer.within16TileRange(playerToUpdate))
+					continue; // only have 5 bits in the rsc235 protocol, so the player can only be shown up to 16 tiles away
+
 				final byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
 					playerToUpdate.getLocation());
 				positionBuilder.writeBits(otherPlayer.getIndex(), 11);
@@ -404,10 +410,6 @@ public final class GameStateUpdater {
 			boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
 				== PlayerSettings.BlockingMode.None.id();
 
-			if(otherPlayer.getUsername().trim().equalsIgnoreCase("kenix") && player.getUsername().trim().equalsIgnoreCase("kenix")) {
-				LOGGER.info("UF: " + updateFlags + ", isTeleporting: " + otherPlayer.isTeleporting() + ", Override: " + player.requiresAppearanceUpdateForPeek(otherPlayer));
-			}
-
 			if (updateFlags.hasBubble()) {
 				final Bubble bubble = updateFlags.getActionBubble().get();
 				bubblesNeedingDisplayed.add(bubble);
@@ -449,12 +451,18 @@ public final class GameStateUpdater {
 		if (player.loggedIn()) {
 			final int updateSize = bubblesNeedingDisplayed.size() + chatMessagesNeedingDisplayed.size()
 				+ playersNeedingDamageUpdate.size() + projectilesNeedingDisplayed.size()
-				+ playersNeedingAppearanceUpdate.size() + playersNeedingHpUpdate.size();
+				+ playersNeedingAppearanceUpdate.size();
 
 			if (updateSize > 0) {
 				final PacketBuilder appearancePacket = new PacketBuilder();
 				appearancePacket.setID(ActionSender.Opcode.SEND_UPDATE_PLAYERS.opcode);
-				appearancePacket.writeShort(updateSize); // This is how many updates there are in this packet
+
+				// This is how many updates there are in this packet
+				if (!player.isUsingAuthenticClient()) {
+					appearancePacket.writeShort(updateSize + playersNeedingHpUpdate.size());
+				} else {
+					appearancePacket.writeShort(updateSize);
+				}
 
 				// Note: The order that these updates are written to packet 234 is not authentic.
 				// Probably the correct way to handle it is *not* having different arrays for every type of update.
