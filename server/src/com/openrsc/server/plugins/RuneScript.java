@@ -58,6 +58,7 @@ public class RuneScript {
 	 * Check if the player is male
 	 * @return Returns true if the player is male and false if female.
 	 */
+	@Deprecated
 	public static boolean ifmale() {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return true;
@@ -83,7 +84,7 @@ public class RuneScript {
 	 * NOTE: On a second pass, this needs to take something like a shop ID instead of a shop object
 	 * @param shop The shop to be shown to the player
 	 */
-	public static void openshop(Shop shop)
+	public static void openshop(final Shop shop)
 	{
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
@@ -96,7 +97,9 @@ public class RuneScript {
 	/**
 	 * Displays the player's current bank balance
 	 * @return The count of item ID 10 (coins) in the player's bank
+	 * @deprecated This function was used for the coin bank, which was removed July 26th 2001.
 	 */
+	@Deprecated
 	public static int displaybalance() {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return -1;
@@ -128,12 +131,12 @@ public class RuneScript {
 	 * @param mindelay
 	 * @param maxdelay
 	 */
-	public static void pause(int mindelay, int maxdelay) {
+	public static void pause(final int mindelay, final int maxdelay) {
 		final PluginTask pluginTask = PluginTask.getContextPluginTask();
 		if (pluginTask == null)
 			return;
 
-		int ticks = DataConversions.random(mindelay, maxdelay);
+		final int ticks = DataConversions.random(mindelay, maxdelay);
 		pluginTask.pause(ticks);
 	}
 
@@ -143,13 +146,13 @@ public class RuneScript {
 	 * @param mindelay
 	 * @param maxdelay
 	 */
-	public static void modpause(int mindelay, int maxdelay) {
+	public static void modpause(final int mindelay, final int maxdelay) {
 		final PluginTask pluginTask = PluginTask.getContextPluginTask();
 		if (pluginTask == null)
 			return;
 
 		int ticks = DataConversions.random(mindelay, maxdelay);
-		int playerCount = pluginTask.getWorld().getPlayers().size();
+		final int playerCount = pluginTask.getWorld().getPlayers().size();
 		if (playerCount > 60) {
 			ticks = (ticks*60)/playerCount;
 		}
@@ -161,7 +164,7 @@ public class RuneScript {
 	 * @param probability 0-256, 0 is impossible and 256 is certain
 	 * @return
 	 */
-	public static boolean ifrandom(int probability) {
+	public static boolean ifrandom(final int probability) {
 		ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 
 		final boolean isRandom = probability >= DataConversions.random(1, 255);
@@ -328,7 +331,7 @@ public class RuneScript {
 	 * Moves the player to the specified level, without changing the x and y position.
 	 * @param level 0=ground floor, 1=1st floor, 2=2nd floor, 3=basement
 	 */
-	public static void changelevel(int level) {
+	public static void changelevel(final int level) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
 		final Player player = scriptContext.getContextPlayer();
@@ -340,6 +343,7 @@ public class RuneScript {
 		if (newY < 0 || newY > FLOOR_OFFSET*4) {
 			return;
 		}
+
 		player.teleport(player.getX(), newY);
 	}
 
@@ -389,7 +393,9 @@ public class RuneScript {
 	 * @param baseProbability
 	 * @param topProbability
 	 * @return Returns true if the player has passed the skill check.
+	 * @deprecated Use the functions in the Formulae class to calculate success chances.
 	 */
+	@Deprecated
 	public static boolean ifstatrandom(final int stat, final int baseProbability, final int topProbability) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return false;
@@ -1062,6 +1068,8 @@ public class RuneScript {
 		if (scriptContext == null) return;
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
+		final GameObject stairs = scriptContext.getInteractingLocation();
+		if (stairs == null) return;
 
 		final int newY = player.getY() + FLOOR_OFFSET;
 
@@ -1070,8 +1078,23 @@ public class RuneScript {
 			return;
 		}
 
-		// TODO Add horizontal shift
-		player.teleport(player.getX(), newY);
+		int[] coords = {stairs.getX(), newY};
+		switch (stairs.getDirection()) {
+			case 0:
+				coords[1] += (stairs.getGameObjectDef().getHeight());
+				break;
+			case 2:
+				coords[0] += (stairs.getGameObjectDef().getHeight());
+				break;
+			case 4:
+				coords[1] += (-1);
+				break;
+			case 6:
+				coords[0] += (-1);
+				break;
+		}
+
+		player.teleport(coords[0], coords[1]);
 	}
 
 	/**
@@ -1083,16 +1106,33 @@ public class RuneScript {
 		if (scriptContext == null) return;
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
+		final GameObject stairs = scriptContext.getInteractingLocation();
+		if (stairs == null) return;
 
 		final int newY = player.getY() - FLOOR_OFFSET;
 
-		// Check to see if the player will go above level 3
+		// Check to see if the player will go below ground level
 		if (newY < 0) {
 			return;
 		}
 
-		// TODO Add horizontal shift
-		player.teleport(player.getX(), newY);
+		int[] coords = {stairs.getX(), newY};
+		switch (stairs.getDirection()) {
+			case 0:
+				coords[1] += (-1);
+				break;
+			case 2:
+				coords[0] += (-1);
+				break;
+			case 4:
+				coords[1] += (stairs.getGameObjectDef().getHeight());
+				break;
+			case 6:
+				coords[0] += (stairs.getGameObjectDef().getHeight());
+				break;
+		}
+
+		player.teleport(coords[0], coords[1]);
 	}
 
 	/**
@@ -1142,53 +1182,51 @@ public class RuneScript {
 		final GameObject interactingBoundary = scriptContext.getInteractingBoundary();
 		if (interactingBoundary == null) return;
 
-		if (interactingBoundary.getDirection() == 0) {
-			if (interactingBoundary.getLocation().equals(player.getLocation())) {
-				player.teleport(interactingBoundary.getX(), interactingBoundary.getY() - 1);
-			} else {
-				player.teleport(interactingBoundary.getX(), interactingBoundary.getY());
-			}
-		}
+		switch (interactingBoundary.getDirection()) {
+			case 0:
+				if (interactingBoundary.getLocation().equals(player.getLocation())) {
+					player.teleport(interactingBoundary.getX(), interactingBoundary.getY() - 1);
+				} else {
+					player.teleport(interactingBoundary.getX(), interactingBoundary.getY());
+				}
+				break;
+			case 1:
+				if (interactingBoundary.getLocation().equals(player.getLocation())) {
+					player.teleport(interactingBoundary.getX() - 1, interactingBoundary.getY());
+				} else {
+					player.teleport(interactingBoundary.getX(), interactingBoundary.getY());
+				}
+				break;
+			case 2:
+				// front
+				if (interactingBoundary.getX() == player.getX() && interactingBoundary.getY() == player.getY() + 1) {
+					player.teleport(interactingBoundary.getX(), interactingBoundary.getY() + 1);
+				} else if (interactingBoundary.getX() == player.getX() - 1 && interactingBoundary.getY() == player.getY()) {
+					player.teleport(interactingBoundary.getX() - 1, interactingBoundary.getY());
+				}
 
-		else if (interactingBoundary.getDirection() == 1) {
-			if (interactingBoundary.getLocation().equals(player.getLocation())) {
-				player.teleport(interactingBoundary.getX() - 1, interactingBoundary.getY());
-			} else {
-				player.teleport(interactingBoundary.getX(), interactingBoundary.getY());
-			}
-		}
+				// back
+				else if (interactingBoundary.getX() == player.getX() && interactingBoundary.getY() == player.getY() - 1) {
+					player.teleport(interactingBoundary.getX(), interactingBoundary.getY() - 1);
+				} else if (interactingBoundary.getX() == player.getX() + 1 && interactingBoundary.getY() == player.getY()) {
+					player.teleport(interactingBoundary.getX() + 1, interactingBoundary.getY());
+				}
+				break;
+			case 3:
+				// front
+				if (interactingBoundary.getX() == player.getX() && interactingBoundary.getY() == player.getY() - 1) {
+					player.teleport(interactingBoundary.getX(), interactingBoundary.getY() - 1);
+				} else if (interactingBoundary.getX() == player.getX() + 1 && interactingBoundary.getY() == player.getY()) {
+					player.teleport(interactingBoundary.getX() + 1, interactingBoundary.getY());
+				}
 
-		else if (interactingBoundary.getDirection() == 2) {
-			// front
-			if (interactingBoundary.getX() == player.getX() && interactingBoundary.getY() == player.getY() + 1) {
-				player.teleport(interactingBoundary.getX(), interactingBoundary.getY() + 1);
-			} else if (interactingBoundary.getX() == player.getX() - 1 && interactingBoundary.getY() == player.getY()) {
-				player.teleport(interactingBoundary.getX() - 1, interactingBoundary.getY());
-			}
-
-			// back
-			else if (interactingBoundary.getX() == player.getX() && interactingBoundary.getY() == player.getY() - 1) {
-				player.teleport(interactingBoundary.getX(), interactingBoundary.getY() - 1);
-			} else if (interactingBoundary.getX() == player.getX() + 1 && interactingBoundary.getY() == player.getY()) {
-				player.teleport(interactingBoundary.getX() + 1, interactingBoundary.getY());
-			}
-		}
-
-		else if (interactingBoundary.getDirection() == 3) {
-			// front
-			if (interactingBoundary.getX() == player.getX() && interactingBoundary.getY() == player.getY() - 1) {
-				player.teleport(interactingBoundary.getX(), interactingBoundary.getY() - 1);
-			} else if (interactingBoundary.getX() == player.getX() + 1 && interactingBoundary.getY() == player.getY()) {
-				player.teleport(interactingBoundary.getX() + 1, interactingBoundary.getY());
-			}
-
-			// back
-			else if (interactingBoundary.getX() == player.getX() && interactingBoundary.getY() == player.getY() + 1) {
-				player.teleport(interactingBoundary.getX(), interactingBoundary.getY() + 1);
-			} else if (interactingBoundary.getX() == player.getX() - 1 && interactingBoundary.getY() == player.getY()) {
-				player.teleport(interactingBoundary.getX() - 1, interactingBoundary.getY());
-			}
-
+				// back
+				else if (interactingBoundary.getX() == player.getX() && interactingBoundary.getY() == player.getY() + 1) {
+					player.teleport(interactingBoundary.getX(), interactingBoundary.getY() + 1);
+				} else if (interactingBoundary.getX() == player.getX() - 1 && interactingBoundary.getY() == player.getY()) {
+					player.teleport(interactingBoundary.getX() - 1, interactingBoundary.getY());
+				}
+				break;
 		}
 	}
 

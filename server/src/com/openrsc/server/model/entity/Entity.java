@@ -152,15 +152,9 @@ public abstract class Entity {
 	 * @return The player's Y coordinate if they were on the ground floor (British convention)
 	 */
 	public final int normalizeFloor(final int yPos) {
-		// Subtract 944 until the value becomes negative
-		int normalizedY = yPos;
-		do {
-			normalizedY -= 944;
-		} while (normalizedY >= 0);
-
-		// Add 944 back to it to get the ground floor y coordinate
-		normalizedY += 944;
-		return normalizedY;
+		// Each floor is 944 tiles apart, so we're subtracting the player's current position
+		// by the floor they're on.
+		return yPos - 944 * (yPos % 944);
 	}
 
 	public boolean isRemoved() {
