@@ -187,6 +187,10 @@ public final class EntityHandler {
 				fishDef.calculateFishRates();
 			}
 		}
+
+		for (int tree : objectWoodcutting.keySet()) {
+			objectWoodcutting.get(tree).calculateWoodRates();
+		}
 	}
 
 	private void loadNpcs(String filename) {

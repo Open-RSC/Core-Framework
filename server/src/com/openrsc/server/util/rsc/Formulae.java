@@ -70,7 +70,7 @@ public final class Formulae {
 		{new java.awt.Point(431, 0), new java.awt.Point(1007, 1007)},
 		{new java.awt.Point(335, 734), new java.awt.Point(437, 894)}};
 	// trawler: 297, 720
-	public static final int[] woodcuttingAxeIDs = {ItemId.RUNE_AXE.id(), ItemId.ADAMANTITE_AXE.id(), ItemId.MITHRIL_AXE.id(),
+	public static final int[] woodcuttingAxeIDs = {ItemId.DRAGON_WOODCUTTING_AXE.id(), ItemId.RUNE_AXE.id(), ItemId.ADAMANTITE_AXE.id(), ItemId.MITHRIL_AXE.id(),
 		ItemId.BLACK_AXE.id(), ItemId.STEEL_AXE.id(), ItemId.IRON_AXE.id(), ItemId.BRONZE_AXE.id()};
 	public static final int[] xbowIDs = {ItemId.PHOENIX_CROSSBOW.id(), ItemId.CROSSBOW.id(), ItemId.DRAGON_CROSSBOW.id()};
 	private final static int[] IRON = {ItemId.LARGE_IRON_HELMET.id(), ItemId.MEDIUM_IRON_HELMET.id(), ItemId.IRON_CHAIN_MAIL_BODY.id(),

@@ -1,10 +1,12 @@
 package com.openrsc.server.plugins.authentic.commands;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcDrops;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ObjectFishDef;
 import com.openrsc.server.external.ObjectFishingDef;
+import com.openrsc.server.external.ObjectWoodcuttingDef;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -14,6 +16,7 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.authentic.quests.members.touristtrap.Tourist_Trap_Mechanism;
 import com.openrsc.server.plugins.authentic.skills.fishing.Fishing;
+import com.openrsc.server.plugins.authentic.skills.woodcutting.Woodcutting;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
@@ -87,6 +90,9 @@ public final class Development implements CommandTrigger {
 		}
 		else if (command.equalsIgnoreCase("protodarts")) {
 			protoDartTipsTest(player, args);
+		}
+		else if (command.equalsIgnoreCase("logRate")) {
+			logRate(player, args);
 		}
 	}
 
@@ -612,5 +618,68 @@ public final class Development implements CommandTrigger {
 		mes("@gre@" + fletchSuccesses + "@whi@ fletching successes, @lre@" + (trials - fletchSuccesses) + "@whi@ failures.");
 		mes("@gre@" + smithSuccesses + "@whi@ smithing successes, @lre@" + (trials - smithSuccesses) + "@whi@ failures.");
 
+	}
+	private void logRate(Player player, String[] args) {
+		// parse input
+		if (args.length < 3) {
+			mes("::lograte [log name] [level] [axe name] (trials)");
+			return;
+		}
+		String logName = args[0];
+		int level = Integer.parseInt(args[1]);
+		String axe = args[2];
+		int trials = 10000;
+		if (args.length == 4) {
+			trials = Integer.parseInt(args[3]);
+		}
+
+		// translate log name to ObjectWoodcuttingDef
+		int treeId = -1;
+		if (logName.equalsIgnoreCase("normal")) {
+			treeId = 0; // 1 & 70 are identical
+		} else if (logName.equalsIgnoreCase("oak")) {
+			treeId = 306;
+		} else if (logName.equalsIgnoreCase("willow")) {
+			treeId = 307;
+		} else if (logName.equalsIgnoreCase("maple")) {
+			treeId = 308;
+		} else if (logName.equalsIgnoreCase("yew")) {
+			treeId = 309;
+		} else if (logName.equalsIgnoreCase("magic")) {
+			treeId = 310;
+		} else {
+			mes("invalid tree type specified");
+			return;
+		}
+		final ObjectWoodcuttingDef def = player.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(treeId);
+
+		// translate axe name to axeid
+		int axeId = -1;
+		if (axe.equalsIgnoreCase("bronze")) {
+			axeId = ItemId.BRONZE_AXE.id();
+		} else if (axe.equalsIgnoreCase("iron")) {
+			axeId = ItemId.IRON_AXE.id();
+		} else if (axe.equalsIgnoreCase("steel")) {
+			axeId = ItemId.STEEL_AXE.id();
+		} else if (axe.equalsIgnoreCase("black")) {
+			axeId = ItemId.BLACK_AXE.id();
+		} else if (axe.equalsIgnoreCase("mithril")) {
+			axeId = ItemId.MITHRIL_AXE.id();
+		} else if (axe.equalsIgnoreCase("adamantite") || axe.equalsIgnoreCase("addy") || axe.equalsIgnoreCase("adamant")) {
+			axeId = ItemId.ADAMANTITE_AXE.id();
+		} else if (axe.equalsIgnoreCase("rune")) {
+			axeId = ItemId.RUNE_AXE.id();
+		} else if (axe.equalsIgnoreCase("dragon")) {
+			axeId = ItemId.DRAGON_WOODCUTTING_AXE.id();
+		}
+
+		int logs = 0;
+		for (int i = 0; i < trials; i++) {
+			Woodcutting woody = new Woodcutting();
+			if (woody.getLog(def, level, axeId)) logs++;
+		}
+
+		mes("@whi@At level @mag@" + level + "@whi@ woodcut:");
+		mes("@gre@" + logs + " @whi@" + logName + " logs were received in @lre@" + trials + "@whi@ attempts with the @cya@" + axe + " axe");
 	}
 }

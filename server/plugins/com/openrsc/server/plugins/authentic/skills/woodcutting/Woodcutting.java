@@ -52,6 +52,8 @@ public class Woodcutting implements OpLocTrigger {
 			player.message("You need a woodcutting level of " + def.getReqLevel() + " to axe this tree");
 			return;
 		}
+
+		// determine axe, highest tier axes are authentically searched for first
 		int axeId = -1;
 		for (final int a : Formulae.woodcuttingAxeIDs) {
 			if (player.getCarriedItems().hasCatalogID(a, Optional.of(false))) {
@@ -91,7 +93,7 @@ public class Woodcutting implements OpLocTrigger {
 			return;
 		}
 
-		if (getLog(def.getReqLevel(), player.getSkills().getLevel(Skills.WOODCUT), axeId)) {
+		if (getLog(def, player.getSkills().getLevel(Skills.WOODCUT), axeId)) {
 			//check if the tree is still up
 			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 			if (obj == null) {
@@ -143,43 +145,10 @@ public class Woodcutting implements OpLocTrigger {
 	}
 
 	/**
-	 * How much of a bonus does the woodcut axe give?
-	 */
-	public int calcAxeBonus(int axeId) {
-		int axeBonus = 0;
-		switch (ItemId.getById(axeId)) {
-			case BRONZE_AXE:
-				axeBonus = 0;
-				break;
-			case IRON_AXE:
-				axeBonus = 1;
-				break;
-			case STEEL_AXE:
-				axeBonus = 2;
-				break;
-			case BLACK_AXE:
-				axeBonus = 3;
-				break;
-			case MITHRIL_AXE:
-				axeBonus = 4;
-				break;
-			case ADAMANTITE_AXE:
-				axeBonus = 8;
-				break;
-			case RUNE_AXE:
-				axeBonus = 16;
-				break;
-			default:
-				axeBonus = 0;
-				break;
-		}
-		return axeBonus;
-	}
-
-	/**
 	 * Should we get a log from the tree?
 	 */
-	private boolean getLog(int reqLevel, int woodcutLevel, int axeId) {
-		return Formulae.calcGatheringSuccessfulLegacy(reqLevel, woodcutLevel, calcAxeBonus(axeId));
+	public boolean getLog(ObjectWoodcuttingDef def, int woodcutLevel, int axeId) {
+		double roll = Math.random();
+		return def.getRate(woodcutLevel, axeId) > roll;
 	}
 }
