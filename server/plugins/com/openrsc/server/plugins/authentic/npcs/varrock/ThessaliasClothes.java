@@ -12,6 +12,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.AbstractShop;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -104,7 +105,7 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 				}
 			}
 			if(!player.getCache().hasKey("bunny_ears") || player.getCache().getInt("bunny_ears") == 0) {
-				player.getCache().put("bunny_ears", 1);
+				player.getCache().put("bunny_ears", LocalDate.now().getYear());
 			}
 		}
 		else if (i.getID() == ItemId.SCYTHE.id()) {
@@ -116,7 +117,7 @@ public final class ThessaliasClothes extends AbstractShop implements TakeObjTrig
 				}
 			}
 			if(!player.getCache().hasKey("scythe") || player.getCache().getInt("scythe") == 0) {
-				player.getCache().put("scythe", 1);
+				player.getCache().put("scythe", LocalDate.now().getYear());
 			}
 		}
 
