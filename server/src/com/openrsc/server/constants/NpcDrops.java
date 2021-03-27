@@ -965,6 +965,7 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 55, 1);
 		currentNpcDrops.addItemDrop(ItemId.CHEFS_HAT.id(), 1, 1);
 		currentNpcDrops.addItemDrop(ItemId.IRON_BAR.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 1, 1);
 		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.PIRATE_LVL27.id(), currentNpcDrops); // (137)
 		this.npcDrops.put(NpcId.PIRATE_LVL30.id(), currentNpcDrops); // (264)
