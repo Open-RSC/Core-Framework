@@ -37,9 +37,35 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 		//LOGGER.info("Saved player " + playerToSave.getUsername() + "");
 		try {
 			boolean success = getServer().getDatabase().savePlayer(getPlayer());
-			if (success && this.logout) getPlayer().logoutSaveSuccess();
+			if (success && this.logout)
+				logoutSaveSuccess();
 		} catch (final GameDatabaseException ex) {
 			LOGGER.catching(ex);
 		}
 	}
+
+	public void logoutSaveSuccess() {
+
+		getPlayer().setLoggedIn(false);
+
+		/* IP Tracking in wilderness removal */
+		/*if(player.getLocation().inWilderness())
+		{
+			wildernessIPTracker.remove(player.getCurrentIP());
+		}*/
+
+		for (Player other : getPlayer().getWorld().getPlayers()) {
+			other.getSocial().alertOfLogout(getPlayer());
+		}
+
+		getPlayer().getWorld().getClanManager().checkAndUnattachFromClan(getPlayer());
+		getPlayer().getWorld().getPartyManager().checkAndUnattachFromParty(getPlayer());
+
+		getServer().getPacketFilter().removeLoggedInPlayer(getPlayer().getCurrentIP());
+
+		getPlayer().remove();
+		getServer().getWorld().getPlayers().remove(getPlayer());
+		LOGGER.info("Removed player " + getPlayer().getUsername());
+	}
+
 }

@@ -19,9 +19,6 @@ public abstract class WalkToMobAction extends WalkToAction {
 		this.mob = mob;
 		this.radius = radius;
 		this.ignoreProjectileAllowed = ignoreProjectileAllowed;
-		if (shouldExecute()) {
-			execute();
-		}
 	}
 
 	public Mob getMob() {

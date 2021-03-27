@@ -271,7 +271,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	}
 
 	public EntityList<Player> getPlayers() {
-		return players;
+		return players; // TODO: backfill any open slots, to have authentic PID reassignment
 	}
 
 	/**

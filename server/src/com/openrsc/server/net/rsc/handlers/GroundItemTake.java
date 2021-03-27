@@ -40,8 +40,6 @@ public class GroundItemTake implements PacketHandler {
 			player.resetPath();
 			return;
 		}
-		if (item.isBeingPickedUp) return;
-		item.isBeingPickedUp = true;
 
 		int distance = item.getRegion().getGameObject(location, player) != null ? 1 : 0;
 		Player onTile = item.getRegion().getPlayer(location.getX(), location.getY(), player, true);
@@ -56,7 +54,6 @@ public class GroundItemTake implements PacketHandler {
 				if (getPlayer().isBusy() || getPlayer().isRanging() || item == null || item.isRemoved()
 					|| getPlayer().getRegion().getItem(itemId, getLocation(), getPlayer()) == null || !getPlayer().canReach(item)
 					|| item.getAmount() < 1) {
-					item.isBeingPickedUp = false;
 					return;
 				}
 
@@ -69,27 +66,23 @@ public class GroundItemTake implements PacketHandler {
 					&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
 					|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
 					getPlayer().message("You're an Iron Man, so you can't loot items from players.");
-					item.isBeingPickedUp = false;
 					return;
 				}
 				if (!item.belongsTo(getPlayer())
 					&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
 					|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
 					getPlayer().message("You're an Iron Man, so you can't take items that other players have dropped.");
-					item.isBeingPickedUp = false;
 					return;
 				}
 
 				if (!item.belongsTo(getPlayer()) && item.getAttribute("isTransferIronmanItem", false)) {
 					getPlayer().message("That belongs to a Transfer Ironman player.");
-					item.isBeingPickedUp = false;
 					return;
 				}
 
 				if (CertUtil.isCert(item.getID()) && getPlayer().getCertOptOut()
 					&& item.getOwnerUsernameHash() != 0 && !item.belongsTo(getPlayer())) {
 					getPlayer().message("You have opted out of taking certs that other players have dropped.");
-					item.isBeingPickedUp = false;
 					return;
 				}
 

@@ -116,6 +116,10 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		PlayerLoginData playerData;
 		int groupId = Group.USER;
 		try {
+			if (getServer().isRestarting() || getServer().isShuttingDown() || !getServer().getLoginExecutor().isRunning()) {
+				return (byte) LoginResponse.WORLD_DOES_NOT_ACCEPT_NEW_PLAYERS;
+			}
+
 			if(!getServer().getPacketFilter().shouldAllowLogin(getIpAddress(), false)) {
 				return (byte) LoginResponse.LOGIN_ATTEMPTS_EXCEEDED;
 			}

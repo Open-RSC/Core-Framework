@@ -366,6 +366,10 @@ public class Server implements Runnable {
 					return;
 				}
 
+				for (Player player : getWorld().getPlayers()) {
+					getWorld().unregisterPlayer(player);
+				}
+
 				scheduledExecutor.shutdown();
 				final boolean terminationResult = scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
 				if (!terminationResult) {
@@ -441,7 +445,10 @@ public class Server implements Runnable {
 					// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 					this.lastTickDuration = bench(() -> {
 						try {
+							// TODO: these stages should be done on the player, not on the server
 							this.lastIncomingPacketsDuration = processIncomingPackets();
+							this.getGameUpdater().setLastExecuteWalkToActionsDuration(
+								getGameUpdater().executeWalkToActions());
 							this.lastEventsDuration = getGameEventHandler().runGameEvents();
 							this.lastGameStateDuration = getGameUpdater().doUpdates();
 							this.lastOutgoingPacketsDuration = processOutgoingPackets();

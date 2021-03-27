@@ -1171,6 +1171,10 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 
+						if (affectedItem.isRemoved()) {
+							return;
+						}
+
 						if (!checkAndRemoveRunes(getPlayer(), spell)) {
 							return;
 						}

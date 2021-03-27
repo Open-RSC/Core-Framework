@@ -15,7 +15,6 @@ import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.login.PlayerRemoveRequest;
 import com.openrsc.server.login.PlayerSaveRequest;
 import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
@@ -2291,26 +2290,6 @@ public final class Player extends Mob {
 		save(true);
 	}
 
-	public void logoutSaveSuccess() {
-
-		setLoggedIn(false);
-
-		/* IP Tracking in wilderness removal */
-		/*if(player.getLocation().inWilderness())
-		{
-			wildernessIPTracker.remove(player.getCurrentIP());
-		}*/
-
-		for (Player other : getWorld().getPlayers()) {
-			other.getSocial().alertOfLogout(this);
-		}
-
-		getWorld().getClanManager().checkAndUnattachFromClan(this);
-		getWorld().getPartyManager().checkAndUnattachFromParty(this);
-
-		getWorld().getServer().getLoginExecutor().add(new PlayerRemoveRequest(getWorld().getServer(), this));
-	}
-
 	public void sendMemberErrorMessage() {
 		message(MEMBER_MESSAGE);
 	}
@@ -3273,7 +3252,10 @@ public final class Player extends Mob {
 		}
 
 		if (!getCarriedItems().getInventory().canHold(itemFinal)) {
-			item.isBeingPickedUp = false;
+			return false;
+		}
+
+		if (item.isRemoved()) {
 			return false;
 		}
 

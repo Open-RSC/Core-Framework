@@ -10,9 +10,6 @@ public abstract class WalkToPointAction extends WalkToAction {
 	public WalkToPointAction(final Player owner, final Point actionLocation, final int radius) {
 		super(owner, actionLocation);
 		this.radius = radius;
-		if (shouldExecute()) {
-			execute();
-		}
 	}
 
 	@Override

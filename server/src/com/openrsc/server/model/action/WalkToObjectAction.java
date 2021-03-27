@@ -10,9 +10,6 @@ public abstract class WalkToObjectAction extends WalkToAction {
 	public WalkToObjectAction(final Player owner, final GameObject object) {
 		super(owner, object.getLocation());
 		this.object = object;
-		if (shouldExecute()) {
-			execute();
-		}
 	}
 
 	@Override

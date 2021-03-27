@@ -2,6 +2,7 @@ package com.openrsc.server;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.login.LoginExecutorProcess;
+import com.openrsc.server.login.PlayerSaveRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,8 +35,11 @@ public class LoginExecutor implements Runnable {
 		this.requests = new ConcurrentLinkedQueue<>();
 	}
 
-	public void add(final LoginExecutorProcess request) {
-		requests.add(request);
+	public boolean add(final LoginExecutorProcess request) {
+		if (isRunning()) {
+			return requests.add(request);
+		}
+		return false;
 	}
 
 	@Override
@@ -56,6 +60,7 @@ public class LoginExecutor implements Runnable {
 
 	public void start() {
 		synchronized (running) {
+			clearRequests();
 			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : LoginThread").build());
 			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
 			running = true;
@@ -73,9 +78,26 @@ public class LoginExecutor implements Runnable {
 			} catch (final InterruptedException e) {
 				LOGGER.catching(e);
 			}
-			clearRequests();
+
 			scheduledExecutor = null;
 			running = false;
+
+			if (requests.size() > 0) {
+				run();
+			}
+
+			if (requests.size() > 0) {
+				LOGGER.error("There were " + requests.size() + " unprocessed requests. (Very bad!!!!!!!!!!)");
+				LoginExecutorProcess request;
+				while ((request = requests.poll()) != null) {
+					final PlayerSaveRequest playerSave = (PlayerSaveRequest)request;
+
+					if (playerSave != null) {
+						LOGGER.error("Could not save " + playerSave.getPlayer() + " during LoginExecutor shutdown.");
+					}
+				}
+				clearRequests();
+			}
 		}
 	}
 

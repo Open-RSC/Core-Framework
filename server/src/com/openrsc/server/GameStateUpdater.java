@@ -58,7 +58,7 @@ public final class GameStateUpdater {
 		lastProcessMessageQueuesDuration = 0;
 		lastUpdateClientsDuration = 0;
 		lastDoCleanupDuration = 0;
-		lastExecuteWalkToActionsDuration = 0;
+		setLastExecuteWalkToActionsDuration(0);
 	}
 
 	// private static final int PACKET_UPDATETIMEOUTS = 0;
@@ -970,7 +970,7 @@ public final class GameStateUpdater {
 			lastProcessMessageQueuesDuration = processMessageQueues();
 			lastUpdateClientsDuration = updateClients();
 			lastDoCleanupDuration = doCleanup();
-			lastExecuteWalkToActionsDuration = executeWalkToActions();
+			// lastExecuteWalkToActionsDuration = executeWalkToActions();
 		});
 	}
 
@@ -1165,5 +1165,10 @@ public final class GameStateUpdater {
 
 	public long getLastExecuteWalkToActionsDuration() {
 		return lastExecuteWalkToActionsDuration;
+	}
+
+
+	public void setLastExecuteWalkToActionsDuration(long lastExecuteWalkToActionsDuration) {
+		this.lastExecuteWalkToActionsDuration = lastExecuteWalkToActionsDuration;
 	}
 }
