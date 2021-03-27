@@ -16865,10 +16865,12 @@ public final class mudclient implements Runnable {
 			skillGuideChosenTabs.add("Thrown");
 		} else if (skillGuideChosen.equalsIgnoreCase("Prayer")) {
 			skillGuideChosenTabs.add("Prayers");
+			skillGuideChosenTabs.add("Other");
 		} else if (skillGuideChosen.equalsIgnoreCase("Magic")) {
 			skillGuideChosenTabs.add("Spells");
 			skillGuideChosenTabs.add("Armour");
 			skillGuideChosenTabs.add("Weapons");
+			skillGuideChosenTabs.add("Other");
 		} else if (skillGuideChosen.equalsIgnoreCase("Cooking")) {
 			skillGuideChosenTabs.add("Meats");
 			skillGuideChosenTabs.add("Pizzas");
@@ -16891,9 +16893,7 @@ public final class mudclient implements Runnable {
 			}
 		} else if (skillGuideChosen.equalsIgnoreCase("Fishing")) {
 			skillGuideChosenTabs.add("Catches");
-			if (Config.S_WANT_CUSTOM_SPRITES) {
-				skillGuideChosenTabs.add("Other");
-			}
+			skillGuideChosenTabs.add("Other");
 		} else if (skillGuideChosen.equalsIgnoreCase("Firemaking")) {
 			skillGuideChosenTabs.add("Burning");
 		} else if (skillGuideChosen.equalsIgnoreCase("Crafting")) {
