@@ -483,7 +483,7 @@ public final class Player extends Mob {
 		lastSaveTime = save;
 	}
 
-	private int getAppearanceID() {
+	public int getAppearanceID() {
 		return appearanceID;
 	}
 

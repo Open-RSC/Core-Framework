@@ -592,11 +592,7 @@ public final class GameStateUpdater {
 					appearancePacket.writeShort((short) playerNeedingAppearanceUpdate.getIndex());
 					appearancePacket.writeByte((byte) 5);
 					if (player.isUsingAuthenticClient()) {
-                        // This is unused by the authentic 233+ clients, but is meant to be "Appearance ID", which changes when the player's appearance changes
-                        // TODO: look into this more
-						appearancePacket.writeShort(0);
-					}
-					if (player.isUsingAuthenticClient()) {
+						appearancePacket.writeShort(player.getAppearanceID());
 						appearancePacket.writeZeroQuotedString(playerNeedingAppearanceUpdate.getUsername());
 						appearancePacket.writeZeroQuotedString(playerNeedingAppearanceUpdate.getUsername()); // Pretty sure this is unnecessary & always redundant authentically.
 					} else {
