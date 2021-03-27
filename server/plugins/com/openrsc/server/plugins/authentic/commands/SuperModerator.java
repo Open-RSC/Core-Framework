@@ -498,14 +498,11 @@ public final class SuperModerator implements CommandTrigger {
 			return;
 		}
 
-		if(targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
-		}
-
-		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
-			player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
-			return;
+		if (targetPlayer != null) {
+			if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
+				player.message(messagePrefix + "You can not ban a staff member of equal or greater rank.");
+				return;
+			}
 		}
 
 		player.message(messagePrefix + player.getWorld().getServer().getDatabase().banPlayer(usernameToBan, player, time));
