@@ -589,6 +589,8 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(636, "75", "Magic trees"));
 			} else if (curTab == 1) {
 				skillMenuEntries.add(new SkillMenuItem(405, "1", "All axes"));
+			} else if (curTab == 2) {
+				skillMenuEntries.add(new SkillMenuItem(88, "", "Woodcutting Guild (Coming soon)"));
 			}
 		}
 		if (mc.getSkillGuideChosen().equals("Fletching")) {
@@ -898,7 +900,7 @@ public final class SkillGuideInterface {
 				skillMenuEntries.add(new SkillMenuItem(1261, "31", "Adamant Pickaxe"));
 				skillMenuEntries.add(new SkillMenuItem(1262, "41", "Rune Pickaxe"));
 			} else if (curTab == 2) {
-				skillMenuEntries.add(new SkillMenuItem(1038, "60", "Mining Guild"));
+				skillMenuEntries.add(new SkillMenuItem(1259, "60", "Mining Guild"));
 				if (Config.S_WANT_CUSTOM_SPRITES) {
 					skillMenuEntries.add(new SkillMenuItem(1377, "99", "Mining Cape"));
 				}
