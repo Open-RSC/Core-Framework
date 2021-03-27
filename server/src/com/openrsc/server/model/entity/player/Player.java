@@ -3273,6 +3273,7 @@ public final class Player extends Mob {
 		}
 
 		if (!getCarriedItems().getInventory().canHold(itemFinal)) {
+			item.isBeingPickedUp = false;
 			return false;
 		}
 

@@ -36,6 +36,8 @@ public class GroundItem extends Entity {
 	 */
 	private long spawnedTime;
 
+	public boolean isBeingPickedUp = false;
+
 	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner) {
 		this(world, id, x, y, amount, owner, System.currentTimeMillis());
 	}
