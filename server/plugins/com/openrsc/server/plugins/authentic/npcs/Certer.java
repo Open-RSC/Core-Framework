@@ -63,6 +63,36 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 			ItemId.LIMPWURT_ROOT.id()});
 	}};
 
+	public static HashMap<Integer, Integer> certToItemIds = new HashMap<Integer, Integer>(){{
+		put(ItemId.SWORDFISH_CERTIFICATE.id(),ItemId.SWORDFISH.id());
+		put(ItemId.RAW_SWORDFISH_CERTIFICATE.id(), ItemId.RAW_SWORDFISH.id());
+		put(ItemId.LOBSTER_CERTIFICATE.id(), ItemId.LOBSTER.id());
+		put(ItemId.RAW_LOBSTER_CERTIFICATE.id(), ItemId.RAW_LOBSTER.id());
+		put(ItemId.BASS_CERTIFICATE.id(), ItemId.BASS.id());
+		put(ItemId.RAW_BASS_CERTIFICATE.id(), ItemId.RAW_BASS.id());
+		put(ItemId.SHARK_CERTIFICATE.id(), ItemId.SHARK.id());
+		put(ItemId.RAW_SHARK_CERTIFICATE.id(), ItemId.RAW_SHARK.id());
+		put(ItemId.IRON_ORE_CERTIFICATE.id(), ItemId.IRON_ORE.id());
+		put(ItemId.COAL_CERTIFICATE.id(), ItemId.COAL.id());
+		put(ItemId.SILVER_CERTIFICATE.id(), ItemId.SILVER.id());
+		put(ItemId.GOLD_CERTIFICATE.id(), ItemId.GOLD.id());
+		put(ItemId.MITHRIL_ORE_CERTIFICATE.id(), ItemId.MITHRIL_ORE.id());
+		put(ItemId.IRON_BAR_CERTIFICATE.id(), ItemId.IRON_BAR.id());
+		put(ItemId.SILVER_BAR_CERTIFICATE.id(), ItemId.SILVER_BAR.id());
+		put(ItemId.STEEL_BAR_CERTIFICATE.id(), ItemId.STEEL_BAR.id());
+		put(ItemId.GOLD_BAR_CERTIFICATE.id(), ItemId.GOLD_BAR.id());
+		put(ItemId.MITHRIL_BAR_CERTIFICATE.id(), ItemId.MITHRIL_BAR.id());
+		put(ItemId.WILLOW_LOGS_CERTIFICATE.id(), ItemId.WILLOW_LOGS.id());
+		put(ItemId.MAPLE_LOGS_CERTIFICATE.id(), ItemId.MAPLE_LOGS.id());
+		put(ItemId.YEW_LOGS_CERTIFICATE.id(), ItemId.YEW_LOGS.id());
+		put(ItemId.SUPER_ATTACK_POTION_CERTIFICATE.id(), ItemId.FULL_SUPER_ATTACK_POTION.id());
+		put(ItemId.SUPER_DEFENSE_POTION_CERTIFICATE.id(), ItemId.FULL_SUPER_DEFENSE_POTION.id());
+		put(ItemId.SUPER_STRENGTH_POTION_CERTIFICATE.id(), ItemId.FULL_SUPER_STRENGTH_POTION.id());
+		put(ItemId.PRAYER_POTION_CERTIFICATE.id(), ItemId.FULL_RESTORE_PRAYER_POTION.id());
+		put(ItemId.DRAGON_BONE_CERTIFICATE.id(), ItemId.DRAGON_BONES.id());
+		put(ItemId.LIMPWURT_ROOT_CERTIFICATE.id(), ItemId.LIMPWURT_ROOT.id());
+	}};
+
 	@Override
 	public void onTalkNpc(Player player, final Npc npc) {
 
@@ -376,6 +406,42 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		mes(npcName + " hands you back " + (toExchange > 1 ? "some " : "a ") +
 			itemName + (isNoted ? "" : " cert") + (toExchange > 1 ? "s" : ""));
 		delay(3);
+	}
+
+	public static void exchangeMarketForBankCerts(final Player player, final Npc npc, final Item item) {
+		// Setup variables
+		final String npcName = npc.getDef().getName();
+		final String certItemName = item.getDef(player.getWorld()).getName();
+		final int amountHeld = player.getCarriedItems().getInventory().countId(item.getCatalogId());
+		// We have to multiply this by 5 since a market cert counts for 5 items.
+		final int amountToGet = amountHeld * 5;
+		final int itemToGetId = certToItemIds.get(item.getCatalogId());
+		final Item itemToGet = new Item(itemToGetId, amountToGet, true);
+		final String newItemName = itemToGet.getDef(player.getWorld()).getName();
+
+		// Flavor text
+		say(player, npc, "Will you please exchange these near-useless market certs?",
+			"I'd like some much more useful bank certs");
+		npcsay(player, npc, "Of course " + (player.isMale() ? "sir" : "miss"));
+
+		mes(npc, "You hand " + npcName + " your " + certItemName);
+		delay(3);
+		mes(npc, String.format("%s hands you %d %s bank certificates", npcName, amountToGet, newItemName));
+		delay(3);
+		player.getCarriedItems().remove(new Item(item.getCatalogId(), amountHeld));
+		player.getCarriedItems().getInventory().add(itemToGet);
+
+		npcsay(player, npc, "There you go");
+		say(player, npc, "Thankyou very much");
+	}
+
+	public static boolean certExchangeBlock(final Player player, final Npc npc, final Item item) {
+		// Make sure the player is UIM
+		if (!player.isIronMan(IronmanMode.Ultimate.id())) return false;
+		// Make sure notes are enabled
+		if (!player.getConfig().WANT_BANK_NOTES) return false;
+		// Make sure they're using a market cert on the NPC
+		return certToItemIds.containsKey(item.getCatalogId());
 	}
 
 	public static boolean UIMCertBlock(Player player, Npc npc, Item item) {

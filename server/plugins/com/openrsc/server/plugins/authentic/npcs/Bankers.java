@@ -197,6 +197,12 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				}
 			}
 
+			// If a UIM uses a market cert on a banker, they will be able to exchange for
+			// bank certs.
+			if (Certer.certExchangeBlock(player, npc, item)) {
+				Certer.exchangeMarketForBankCerts(player, npc, item);
+			}
+
 		} else if (player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK) {
 			if (!player.getQolOptOut()) {
 				quickFeature(npc, player, false);
