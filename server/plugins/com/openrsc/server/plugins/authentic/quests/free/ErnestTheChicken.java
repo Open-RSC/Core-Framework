@@ -53,6 +53,7 @@ public class ErnestTheChicken implements QuestInterface,
 	@Override
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
 		return (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.POISONED_FISH_FOOD.id())
+			|| (obj.getID() == QuestObjects.FOUNTAIN && item.getCatalogId() == ItemId.FISH_FOOD.id())
 				|| (obj.getID() == QuestObjects.COMPOST && item.getCatalogId() == ItemId.SPADE.id());
 	}
 
@@ -228,7 +229,7 @@ public class ErnestTheChicken implements QuestInterface,
 
 	public String nameToMsg(String leverName) {
 		int length = leverName.length();
-		return leverName.substring(0, length - 2).toLowerCase() + " " + leverName.substring(length - 1);
+		return leverName.substring(0, length - 1).toLowerCase() + " " + leverName.substring(length - 1);
 	}
 
 	@Override
