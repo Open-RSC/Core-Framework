@@ -138,9 +138,15 @@ public final class FriendHandler implements PacketHandler {
 				}
 				return;
 			}
-			String message = DataConversions.upperCaseAllFirst(
-				DataConversions.stripBadCharacters(
-					DataConversions.getEncryptedString(packet)));
+
+			String message = DataConversions.getEncryptedString(packet);
+			if (!player.speakTongues) {
+				message = DataConversions.upperCaseAllFirst(
+					DataConversions.stripBadCharacters(message));
+			} else {
+				message = DataConversions.speakTongues(message);
+			}
+
 			if (friendName.toLowerCase().startsWith("global$") && player.getConfig().WANT_GLOBAL_FRIEND) {
 				player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 			}

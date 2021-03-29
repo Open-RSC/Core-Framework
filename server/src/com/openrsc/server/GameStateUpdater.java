@@ -1,5 +1,6 @@
 package com.openrsc.server;
 
+import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.database.impl.mysql.queries.logging.PMLog;
 import com.openrsc.server.model.GlobalMessage;
@@ -606,39 +607,25 @@ public final class GameStateUpdater {
                             playerNeedingAppearanceUpdate.stateIsInvulnerable())) {
                         int[] wornItems = playerNeedingAppearanceUpdate.getWornItems();
 
-                        // All possible boots to choose from
-                        final int regularBoots = 12;
-                        final int redGnomeBoots = 204;
-                        final int greenGnomeBoots = 205;
-                        final int blueGnomeBoots = 206;
-                        final int yellowGnomeBoots = 207;
-                        final int skyBlueGnomeBoots = 208;
-                        final int desertBoots = 212;
-                        final int shadowWarriorBoots = 227;
-                        int bootColour = shadowWarriorBoots; // default
-                        if (wornItems[9] != 0) {
+                        int bootColour = AppearanceId.SHADOW_WARRIOR_BOOTS.id(); // default
+                        if (wornItems[AppearanceId.SLOT_BOOTS] != 0) {
                             // if player is already wearing boots, we can let them choose their colour. :-)
-                            bootColour = wornItems[9];
+                            bootColour = wornItems[AppearanceId.SLOT_BOOTS];
                         }
 
-                        final int runeShieldSprite = 103;
-                        final int dragonShieldSprite = 225;
                         int shieldSprite = 0; // default to invisible
                         if (playerNeedingAppearanceUpdate.stateIsInvulnerable()) {
-                            if (wornItems[3] == dragonShieldSprite) {
-                                shieldSprite = runeShieldSprite;
+                            if (wornItems[AppearanceId.SLOT_SHIELD] == AppearanceId.DRAGON_SQUARE_SHIELD.id()) {
+                                shieldSprite = AppearanceId.RUNE_SQUARE_SHIELD.id();
                             } else {
-                                shieldSprite = dragonShieldSprite;
+                                shieldSprite = AppearanceId.DRAGON_SQUARE_SHIELD.id();
                             }
                         }
 
-                        // these two gloves are the only ones that exist.
-                        final int lightGloves = 47;
-                        final int darkGloves = 156;
-                        int gloveColour = wornItems[8]; // let player keep their gloves, even if they have none
-						if (wornItems[8] == 0 && wornItems[4] != 0) {
+                        int gloveColour = wornItems[AppearanceId.SLOT_GLOVES]; // let player keep their gloves, even if they have none
+						if (wornItems[AppearanceId.SLOT_GLOVES] == 0 && wornItems[AppearanceId.SLOT_WEAPON] != 0) {
 							// give player gloves if they are wielding a weapon
-							gloveColour = lightGloves;
+							gloveColour = AppearanceId.LEATHER_GLOVES.id();
 						}
 
                         // if player is just invulnerable & not invisible, give them a dark-robed appearance
@@ -648,23 +635,23 @@ public final class GameStateUpdater {
                         int legSprite = 0;
                         int pantsSprite = 0;
                         int shirtSprite = 0;
-                        int amuletSprite = wornItems[10];
+                        int amuletSprite = wornItems[AppearanceId.SLOT_AMULET];
                         if (!playerNeedingAppearanceUpdate.stateIsInvisible()) {
-                            headSprite = wornItems[0];
-                            if (wornItems[5] == 0) {
-                                hatSprite = 19; // black helm
-                                headSprite = 0;
+                            headSprite = wornItems[AppearanceId.SLOT_HEAD];
+                            if (wornItems[AppearanceId.SLOT_HAT] == 0) {
+                                hatSprite = AppearanceId.LARGE_BLACK_HELMET.id();
+                                headSprite = AppearanceId.NOTHING.id();
                             } else {
-                                hatSprite = wornItems[5];
+                                hatSprite = wornItems[AppearanceId.SLOT_HAT];
                             }
 
                             // dark robes
-                            bodySprite = 183;
-                            legSprite = 184;
-                            pantsSprite = 3;
-                            shirtSprite = 5;
-                            gloveColour = darkGloves;
-                            amuletSprite = 172; // amulet of lucien
+                            bodySprite = AppearanceId.SHADOW_WARRIOR_ROBE.id();
+                            legSprite = AppearanceId.SHADOW_WARRIOR_SKIRT.id();
+                            pantsSprite = AppearanceId.COLOURED_PANTS.id();
+                            shirtSprite = AppearanceId.FEMALE_BODY.id();
+                            gloveColour = AppearanceId.ICE_GLOVES.id();
+                            amuletSprite = AppearanceId.PENDANT_OF_LUCIEN.id();
                         }
 
                         appearancePacket.writeByte((byte) 11); // Equipment count
@@ -672,7 +659,7 @@ public final class GameStateUpdater {
                         appearancePacket.writeByte((byte) shirtSprite);
                         appearancePacket.writeByte((byte) pantsSprite);
                         appearancePacket.writeByte((byte) shieldSprite);  // Shield is used to denote if invulnerable while invisible
-                        appearancePacket.writeByte((byte) wornItems[4]);  // Weapon can stay
+                        appearancePacket.writeByte((byte) wornItems[AppearanceId.SLOT_WEAPON]);  // Weapon can stay
                         appearancePacket.writeByte((byte) hatSprite);
                         appearancePacket.writeByte((byte) bodySprite);
                         appearancePacket.writeByte((byte) legSprite);

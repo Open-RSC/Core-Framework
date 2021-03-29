@@ -26,10 +26,14 @@ public final class ChatHandler implements PacketHandler {
 			sender.message("Once you finish the tutorial, typing here sends messages to nearby players");
 		}
 
-		String message = DataConversions.upperCaseAllFirst(
-			DataConversions.stripBadCharacters(
-				DataConversions.getEncryptedString(packet)));
 
+		String message = DataConversions.getEncryptedString(packet);
+		if (!sender.speakTongues) {
+			message = DataConversions.upperCaseAllFirst(
+				DataConversions.stripBadCharacters(message));
+		} else {
+			message = DataConversions.speakTongues(message);
+		}
 
 		boolean mutedChat = (sender.getLocation().onTutorialIsland() || sender.isMuted()) && !sender.hasElevatedPriveledges();
 

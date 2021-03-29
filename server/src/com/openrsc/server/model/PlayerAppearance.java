@@ -13,6 +13,9 @@ public class PlayerAppearance {
 	private byte topColour;
 	private byte trouserColour;
 
+	private final int[] bodySprites = { 2, 5 };
+	private final int[] headSprites = { 1, 4, 6, 7, 8 };
+
 	public PlayerAppearance(int hairColour, int topColour, int trouserColour,
 							int skinColour, int head, int body) {
 		this.hairColour = (byte) hairColour;
@@ -47,6 +50,7 @@ public class PlayerAppearance {
 		}
 	}
 
+	// was originally implemented for use with some minigame pre-RSCR era
 	public void hideTrousers(boolean b) {
 		hideTrousers = b;
 	}
@@ -64,8 +68,8 @@ public class PlayerAppearance {
 	}
 
 	public boolean isValid() {
-		if (!DataConversions.inArray(Formulae.headSprites, getHead())
-			|| !DataConversions.inArray(Formulae.bodySprites, getBody())) {
+		if (!DataConversions.inArray(headSprites, getHead())
+			|| !DataConversions.inArray(bodySprites, getBody())) {
 			return false;
 		}
 		if (hairColour < 0 || topColour < 0 || trouserColour < 0

@@ -122,6 +122,7 @@ public final class Player extends Mob {
 	private boolean denyAllLogoutRequests = false;
 	private boolean qolOptOutWarned = false;
 	private boolean certOptOutWarned = false;
+	public boolean speakTongues = false;
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -2489,6 +2490,14 @@ public final class Player extends Mob {
 		return true;
 	}
 
+	public void updateWornItems(final AppearanceId appearanceId) {
+		this.updateWornItems(appearanceId.getSuggestedWieldPosition(), appearanceId.id());
+	}
+
+	public void updateWornItems(final int indexPosition, final AppearanceId appearanceId) {
+		this.updateWornItems(indexPosition, appearanceId.id());
+	}
+
 	public void updateWornItems(final int indexPosition, final int appearanceId) {
 		this.updateWornItems(indexPosition, appearanceId, 0, false);
 	}
@@ -2496,8 +2505,8 @@ public final class Player extends Mob {
 	public void updateWornItems(final int indexPosition, final int appearanceId, final int wearableId,final  boolean isEquipped) {
 		// metal skirts (ideally all !full pants should update pants appearance to minishorts when that anim exists)
 		if (getWorld().getServer().getConfig().WANT_CUSTOM_SPRITES && wearableId == 640) {
-			if (isEquipped) wornItems[2] = 0;
-			else wornItems[2] = 3;
+			if (isEquipped) wornItems[AppearanceId.SLOT_PANTS] = 0;
+			else wornItems[AppearanceId.SLOT_PANTS] = 3;
 		}
 
 		//Don't need to show arrows or rings

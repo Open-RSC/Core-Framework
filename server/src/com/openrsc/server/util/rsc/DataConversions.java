@@ -284,6 +284,51 @@ public final class DataConversions {
 		return s.toString();
 	}
 
+	public static String speakTongues(String commonTongue) {
+		char[] vowels = {'a', 'e', 'i', 'o', 'u'};
+		char[] vowelsUpper = {'A', 'E', 'I', 'O', 'U'};
+		char[] babble = commonTongue.toCharArray();
+		for (int idx = 0; idx < babble.length; idx++) {
+
+			if (babble[idx] == '@') {
+				idx += 5;
+				if (idx >= babble.length) break;
+			}
+
+			if (random(0, random(7,13)) == 0) {
+				babble[idx] = '\'';
+			}
+
+			switch (babble[idx]) {
+				case 'A':
+				case 'E':
+				case 'I':
+				case 'O':
+				case 'U':
+					babble[idx] = vowelsUpper[random(0,4)];
+					break;
+				case 'a':
+				case 'e':
+				case 'i':
+				case 'o':
+				case 'u':
+					babble[idx] = vowels[random(0,4)];
+					break;
+				default:
+					if (babble[idx] > 'A' && babble[idx] <= 'Z') {
+						if (random(0,5) == 0) {
+							babble[idx] = (char)random((int)'A', (int)'Z');
+						}
+					} else if (babble[idx] > 'a' && babble[idx] <= 'z') {
+						if (random(0,5) == 0) {
+							babble[idx] = (char)random((int)'a', (int)'z');
+						}
+					}
+			}
+		}
+		return new String(babble);
+	}
+
 	/**
 	 * Calculates the average of all values in the array
 	 */

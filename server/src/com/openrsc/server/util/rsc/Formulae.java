@@ -18,14 +18,12 @@ public final class Formulae {
 		ItemId.POISON_MITHRIL_ARROWS.id(), ItemId.MITHRIL_ARROWS.id(), ItemId.POISON_STEEL_ARROWS.id(),
 		ItemId.STEEL_ARROWS.id(), ItemId.POISON_IRON_ARROWS.id(), ItemId.IRON_ARROWS.id(),
 		ItemId.POISON_BRONZE_ARROWS.id(), ItemId.BRONZE_ARROWS.id()};
-	public static final int[] bodySprites = {2, 5};
 	public static final int[] boltIDs = {ItemId.OYSTER_PEARL_BOLTS.id(), ItemId.POISON_CROSSBOW_BOLTS.id(),
 		ItemId.CROSSBOW_BOLTS.id(), ItemId.DRAGON_BOLTS.id(), ItemId.POISON_DRAGON_BOLTS.id()};
 	public static final int[] bowIDs = {ItemId.LONGBOW.id(), ItemId.SHORTBOW.id(), ItemId.OAK_LONGBOW.id(),
 		ItemId.OAK_SHORTBOW.id(), ItemId.WILLOW_LONGBOW.id(), ItemId.WILLOW_SHORTBOW.id(),
 		ItemId.MAPLE_LONGBOW.id(), ItemId.MAPLE_SHORTBOW.id(), ItemId.YEW_LONGBOW.id(),
 		ItemId.YEW_SHORTBOW.id(), ItemId.MAGIC_LONGBOW.id(), ItemId.MAGIC_SHORTBOW.id(), ItemId.DRAGON_LONGBOW.id()};
-	public static final int[] headSprites = {1, 4, 6, 7, 8};
 	private static final int[] herbDropIDs = {ItemId.UNIDENTIFIED_GUAM_LEAF.id(), ItemId.UNIDENTIFIED_MARRENTILL.id(),
 		ItemId.UNIDENTIFIED_TARROMIN.id(), ItemId.UNIDENTIFIED_HARRALANDER.id(), ItemId.UNIDENTIFIED_RANARR_WEED.id(),
 		ItemId.UNIDENTIFIED_IRIT_LEAF.id(), ItemId.UNIDENTIFIED_AVANTOE.id(), ItemId.UNIDENTIFIED_KWUARM.id(),

@@ -285,6 +285,7 @@ public class PacketBuilder {
 	public void writeRSCString(String string) {
 		CipheredMessage message = new CipheredMessage();
 		DataConversions.encryption.encipher(string, message);
+
 		writeSmart08_16(message.decipheredLength);
 		payload.writeBytes(message.messageBuffer, 0, message.encipheredLength);
 	}
