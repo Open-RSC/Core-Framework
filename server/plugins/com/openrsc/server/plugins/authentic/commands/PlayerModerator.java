@@ -57,6 +57,12 @@ public final class PlayerModerator implements CommandTrigger {
 			speakTongues(player, 2);
 		} else if (command.equalsIgnoreCase("restorehumanity") || command.equalsIgnoreCase("resetappearance")) {
 			restoreHumanity(player);
+		} else if (command.equalsIgnoreCase("become")) {
+			if (args[0].equalsIgnoreCase("god")) {
+				becomeGod(player);
+			} else {
+				becomeNpc(player, args);
+			}
 		}
 	}
 
