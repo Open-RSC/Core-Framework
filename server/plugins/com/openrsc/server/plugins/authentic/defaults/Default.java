@@ -143,7 +143,6 @@ public class Default implements DefaultHandler,
 		// Get the amount to drop from our temporary item construct.
 		int amountToDrop = item.getAmount();
 		batchDrop(player, item, fromInventory, amountToDrop, amountToDrop);
-		player.isDropping = false;
 	}
 
 	private void batchDrop(Player player, Item item, Boolean fromInventory, int amountToDrop, int totalToDrop) {

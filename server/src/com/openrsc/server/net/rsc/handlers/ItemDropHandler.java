@@ -11,18 +11,13 @@ import java.util.Optional;
 public final class ItemDropHandler implements PacketHandler {
 
 	public void handlePacket(Packet packet, Player player) throws Exception{
-		if (player.isDropping) return;
-		player.isDropping = true;
-		
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			player.resetPath();
-			player.isDropping = false;
 			return;
 		}
 		if (player.isBusy()) {
 			player.resetPath();
-			player.isDropping = false;
 			return;
 		}
 
@@ -38,7 +33,6 @@ public final class ItemDropHandler implements PacketHandler {
 
 		if (inventorySlot < -1 || inventorySlot >= player.getCarriedItems().getInventory().size()) {
 			player.setSuspiciousPlayer(true, "item drop item inventorySlot < -1 or inventorySlot >= inv size");
-			player.isDropping = false;
 			return;
 		}
 		Item tempitem = null;
@@ -63,20 +57,17 @@ public final class ItemDropHandler implements PacketHandler {
 		}
 
 		if (tempitem == null || tempitem.getCatalogId() == ItemId.NOTHING.id()) {
-			player.isDropping = false;
 			return;
 		}
 		final Item item = new Item(tempitem.getCatalogId(), amount, tempitem.getNoted(), tempitem.getItemId());
 
 		if (amount <= 0) {
-			player.isDropping = false;
 			return;
 		}
 
 		if (item.getNoted() && !player.getConfig().WANT_BANK_NOTES) {
 			player.message("Notes have been disabled; you cannot drop them anymore.");
 			player.message("You may either deposit it in the bank or sell to a shop instead.");
-			player.isDropping = false;
 			return;
 		}
 
