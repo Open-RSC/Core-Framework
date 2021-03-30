@@ -454,15 +454,51 @@ Player Moderator Commands
   - Moderators are only allowed to mute for up to 2 hours.
   - Player Moderators are only allowed to mute for up to 1 hour.
   - You can not mute a staff member of equal or greater rank.
+- ungmute
+  - Usage: `::ungmute [name]`
+  - Unmutes the specified player from global chat.
+  - You can not unmute a staff member of equal or greater rank.
 - mute
   - Usage: `::mute [name] (time in minutes, -1 or exclude for permanent)`
   - Moderators are only allowed to mute for up to 2 hours.
   - Player Moderators are only allowed to mute for up to 1 hour.
   - Mutes the specified player from both in game and global chat.
   - You can not mute a staff member of equal or greater rank.
+- unmute
+  - Usage: `::unmute [name]`
+  - Unmutes the specified player
 - alert
   - Usage: `::alert [player] [message]`
   - Sends the specified player an alert box message.
+- set_icon
+  - Usage:  `::set_icon [integer] (0 for regular player, -1 to reset)`
+  - Changes the player's chat prefix icon (crown)
+- redhat
+  - Usage: `::redhat`
+  - Alias: `::rhel`
+  - Temporarily overlays unobtainable Zamorak hat as well as Zamorak robes on the player
+- robe
+  - Usage: `::robe [color]`
+  - Alias: `::setrobe [color`
+  - Alias: `::setrobes [color]`
+  - Temporarily overlays robes of a specified color on the player
+- becomeNpc
+  - Usage: `::becomenpc [npc name]`
+  - Alias: `::morph [npc name]`
+  - Alias: `::morphnpc [npc name]`
+  - Alias: `::become [npc name]`
+  - Temporarily replaces the player sprites with a NPC (scaled to the size of the player)
+- restoreHumanity
+  - Usage: `::restorehumanity`
+  - Alias: `::resetappearance`
+  - Resets the player to display the regular player sprites
+- becomeGod
+  - Usage: `::becomegod`
+  - Alias: `::become god`
+  - Temporarily sets the player sprite to a mix of random player and NPC sprites at once
+- speakTongues
+  - Usage: `::speaktongues`
+  - Translates player chat messages to random characters while enabled
 ------------------------
 Regular Player Commands
 ------------------------
