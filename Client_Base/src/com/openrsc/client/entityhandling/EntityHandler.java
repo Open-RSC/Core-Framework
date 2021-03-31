@@ -2855,7 +2855,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Candle", "A small slowly burning candle", "", 3, 196, "items:196", false, false, 0, 0, true, true, true, 601));
 		items.add(new ItemDef("black Candle", "A spooky candle", "", 3, 196, "items:196", false, false, 0, 2105376, true, true, true, 602));
 		items.add(new ItemDef("insect repellant", "Drives away all known 6 legged creatures", "", 3, 197, "items:197", false, false, 0, 0, true, true, true, 603));
-		items.add(new ItemDef("Bat bones", "Ew it's a pile of bones", "Bury", 1, 20, "items:20", false, false, 0, 0, true, false, true, 604));
+		items.add(new ItemDef("Bat bones", "Ew it's a pile of bones", "Bury", 1, 20, "items:bat_bones", false, false, 0, 0, true, false, true, 604));
 		items.add(new ItemDef("wax Bucket", "It's a wooden bucket", "", 2, 22, "items:22", false, false, 0, 16777181, true, true, true, 605));
 		items.add(new ItemDef("Excalibur", "This used to belong to king Arthur", "", 200, 115, "items:115", false, true, 16, 10072780, true, true, false, 606));
 		items.add(new ItemDef("Druids robe", "I feel closer to the Gods when I am wearing this", "", 40, 87, "items:87", false, true, 64, 16777215, true, false, true, 607));
@@ -3065,7 +3065,7 @@ public class EntityHandler {
 		items.add(new ItemDef("Sulphuric Broline", "it's highly poisonous", "", 1, 48, "items:48", false, false, 0, 11966902, true, true, false, 811));
 		items.add(new ItemDef("Plague sample", "An air tight tin container", "", 1, 281, "items:281", false, false, 0, 0, true, true, false, 812));
 		items.add(new ItemDef("Touch paper", "For scientific testing", "", 1, 282, "items:282", false, false, 0, 0, true, true, false, 813));
-		items.add(new ItemDef("Dragon Bones", "Ew it's a pile of bones", "Bury", 1, 137, "items:137", false, false, 0, 0, true, false, true, 814));
+		items.add(new ItemDef("Dragon Bones", "Ew it's a pile of bones", "Bury", 1, 137, "items:dragon_bones", false, false, 0, 0, true, false, true, 814));
 		items.add(new ItemDef("Herb", "I need a closer look to identify this", "Identify", 1, 75, "items:75", false, false, 0, 0, true, true, true, 815));
 		items.add(new ItemDef("Snake Weed", "A very rare jungle herb", "", 5, 75, "items:75", false, false, 0, 0, true, true, true, 816));
 		items.add(new ItemDef("Herb", "I need a closer look to identify this", "Identify", 1, 75, "items:75", false, false, 0, 0, true, true, true, 817));
