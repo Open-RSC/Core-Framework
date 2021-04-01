@@ -17,4 +17,4 @@ bash ./ant_launcher.sh default
 #bash ./ant_launcher.sh openrsc &&  \
 #bash ./ant_launcher.sh rsccabbage && \
 #bash ./ant_launcher.sh uranium && \
-#bash ./ant_launcher.sh rscoleslaw
+#bash ./ant_launcher.sh rsccoleslaw
