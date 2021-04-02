@@ -2241,9 +2241,9 @@ public class EntityHandler {
 		sprites = new int[]{3, 1, 2, -1, 122, 191, 197, 189, -1, -1, -1, 68};
 		npcs.add(new NPCDef("Ester", "She looks quite frazzled", "", 1, 99, 3, 1, false, sprites, 15618286, 3211263, 14540032, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{472, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Bunny", "A fluffy bunny", "", 1, 1, 10, 1, false, sprites, 1, 2, 3, 4, 150, 230, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Bunny", "A fluffy bunny", "", 1, 1, 10, 1, false, sprites, 0, 0, 0, 0, 95, 85, 7, 7, 10, i++));
 		sprites = new int[]{473, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("Duck", "Definitely not the ugly one", "", 1, 1, 10, 1, false, sprites, 1, 2, 3, 4, 150, 230, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Duck", "Definitely not the ugly one", "", 1, 1, 10, 1, false, sprites, 1, 2, 3, 4, 85, 95, 6, 6, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -3888,6 +3888,11 @@ public class EntityHandler {
 			items.add(new ItemDef("Super magic Potion", "1 dose of magic potion", "Drink", 144, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 6130854, true, false, true, 1479));
 		}
 
+		// Item 1480 is reserved for the Dragon Woodcutting axe.
+
+		// Easter 2021
+		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, false, false, 1481));
+
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
 		items.get(435).spriteLocation = "items:588";
@@ -4495,7 +4500,7 @@ public class EntityHandler {
 			animations.add(new AnimationDef("longbow", "equipment", 16711748, 0, false, false, 0)); //471 - dragon longbow
 
 			// Easter 2021
-			animations.add(new AnimationDef("bunny", "npc", 65280, 0, true, false, 0)); //472
+			animations.add(new AnimationDef("bunny", "npc", 65535, 0, true, false, 0)); //472
 			animations.add(new AnimationDef("duck", "npc", 65280, 0, true, false, 0));//473
 		}
 	}
