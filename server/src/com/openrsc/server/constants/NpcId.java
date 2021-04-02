@@ -818,7 +818,8 @@ public enum NpcId {
 	BALROG(809),
 	SILICIUS(810),
 	ROBIN_BANKS(811),
-	MUM(812);
+	MUM(812),
+	ESTER(813);
 
 	private int npcId;
 
