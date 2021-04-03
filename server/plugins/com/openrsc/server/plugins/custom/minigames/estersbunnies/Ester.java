@@ -49,9 +49,8 @@ public class Ester implements TalkNpcTrigger, MiniGameInterface {
 					break;
 				case 1:
 				case 2:
-				case 3:
-				case 4:
-				case 5:
+					npcsay("Oh my this is so stressful",
+						"How's it coming along? Have you found my bunnies?");
 					ArrayList<String> options = new ArrayList<String>();
 					options.add("About those riddles");
 					options.add("Who is that man upstairs?");
@@ -78,20 +77,86 @@ public class Ester implements TalkNpcTrigger, MiniGameInterface {
 							"And his sword just sits on the ground, collecting dust",
 							"I'm sure he wouldn't even mind if you just took it");
 					} else if (option == 2) {
-						final int feetLeft = 6 - stage;
 						npcsay("That's great!",
 							"But please hold onto them until you have all 5",
-							"I'm afraid I'll lose them if I take them",
-							"Just so you know you have " + feetLeft + " to find");
+							"I'm afraid I'll lose them if I take them now");
 					}
 					break;
+				case 3:
+					npcsay("Hello",
+						"Did you manage to find my bunnies?");
+					if (ifheld(ItemId.RABBITS_FOOT_ONE.id(), 1)
+						&& ifheld(ItemId.RABBITS_FOOT_TWO.id(), 1)
+						&& ifheld(ItemId.RABBITS_FOOT_THREE.id(), 1)
+						&& ifheld(ItemId.RABBITS_FOOT_FOUR.id(), 1)
+						&& ifheld(ItemId.RABBITS_FOOT_FIVE.id(), 1)) {
+
+						say("Yes! I have all of their feet right here");
+						npcsay("Excellent!", "Hand them over please");
+						mes("You hand the rabbit feet over to Ester");
+						delay(3);
+						remove(ItemId.RABBITS_FOOT_ONE.id(), 1);
+						remove(ItemId.RABBITS_FOOT_TWO.id(), 1);
+						remove(ItemId.RABBITS_FOOT_THREE.id(), 1);
+						remove(ItemId.RABBITS_FOOT_FOUR.id(), 1);
+						remove(ItemId.RABBITS_FOOT_FIVE.id(), 1);
+						player.getCache().set("esters_bunnies", 4);
+						npcsay("Now I can get started-",
+							"Oh wait...",
+							"Oh no!",
+							"It seems while I was occupied with the bunnies",
+							"My magical duck has also gotten away!",
+							"Can you please help me find it?");
+						magicDuck(player);
+
+					} else {
+						say("No not yet");
+						npcsay("Well, bring me their feet when you have them please",
+							"Easter doesn't last forever");
+					}
+					break;
+				case 4:
+					npcsay("Please can you help me find my magic duck?");
+					magicDuck(player);
+					break;
+				case 5:
+					npcsay("Have you found my duck yet?",
+						"I need one of his eggs");
+					say("No, not yet");
+					npcsay("Okay",
+						"Just remember that I think he is with his friend",
+						"And I think his friend is a jolly boar");
+					break;
 				case 6:
-					// Finish quest
+					// Quest complete
 					break;
 				default:
 					// Dialog for after quest
 					break;
 			}
+		}
+	}
+
+	public void magicDuck(final Player player) {
+		int option = multi("You have a magic duck?",
+			"No, I'm done helping you",
+			"Of course I'll help you");
+		if (option == 0) {
+			npcsay("Yes he's the last piece of the puzzle",
+				"I need one of his magic eggs to finish my enchantment",
+				"I promise this is the last thing I need");
+			magicDuck(player);
+		} else if (option == 1) {
+			npcsay("Alright I understand",
+				"But if you change your mind, I'll be here");
+		} else if (option == 2) {
+			say("Do you have any idea where he went?",
+				"Did he leave a riddle too?");
+			npcsay("No",
+				"But I do remember that he talked about a place he liked",
+				"I think he had a friend there?",
+				"He talked about a jolly boar");
+			player.getCache().set("esters_bunnies", 5);
 		}
 	}
 
@@ -107,7 +172,7 @@ public class Ester implements TalkNpcTrigger, MiniGameInterface {
 					say("What is the first riddle?");
 					npcsay("Let's see...",
 						"\"I'm a bunny that likes the ocean",
-						"My neighbor has a redberry pie adoration\"",
+						"My neighbor has a redberry pie addiction\"",
 						"What do you suppose that means?");
 					break;
 				case 1:

@@ -4505,7 +4505,7 @@ public class EntityHandler {
 
 			// Easter 2021
 			animations.add(new AnimationDef("bunny", "npc", 65535, 0, true, false, 0)); //472
-			animations.add(new AnimationDef("duck", "npc", 65280, 0, true, false, 0));//473
+			animations.add(new AnimationDef("duck", "npc", 16777215, 0, true, false, 0));//473
 		}
 	}
 
