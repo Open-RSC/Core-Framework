@@ -3891,11 +3891,13 @@ public class EntityHandler {
 		// Item 1480 is reserved for the Dragon Woodcutting axe.
 
 		// Easter 2021
-		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, false, false, 1481));
-		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, false, false, 1482));
-		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, false, false, 1483));
-		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, false, false, 1484));
-		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, false, false, 1485));
+		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, true, false, 1481));
+		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, true, false, 1482));
+		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, true, false, 1483));
+		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, true, false, 1484));
+		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, true, false, 1485));
+		items.add(new ItemDef("Ring of Bunny", "Imbued with the power of cuteness", "", 0, -1, "items:bunnyring", false, true, 1200, 0, false, true, false, 1486));
+		items.add(new ItemDef("Ring of Egg", "Imbued with egg-streme power", "", 0, -1, "items:eggring", false, true, 1200, 0, false, true, false, 1487));
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
@@ -4504,8 +4506,10 @@ public class EntityHandler {
 			animations.add(new AnimationDef("longbow", "equipment", 16711748, 0, false, false, 0)); //471 - dragon longbow
 
 			// Easter 2021
-			animations.add(new AnimationDef("bunny", "npc", 65535, 0, true, false, 0)); //472
+			animations.add(new AnimationDef("bunny", "npc", 16777215, 0, true, false, 0)); //472
 			animations.add(new AnimationDef("duck", "npc", 16777215, 0, true, false, 0));//473
+			animations.add(new AnimationDef("bunnymorph", "npc", 16777215, 0, true, false, 0));//474
+			animations.add(new AnimationDef("eggmorph", "npc", 16777215, 0, true, false, 0));//475
 		}
 	}
 

@@ -255,7 +255,11 @@ public enum AppearanceId {
 	SHADOW_WARRIOR_BOOTS(227, BOOTS),
 	SHADOW_WARRIOR_ROBE(228, BODY),
 	SCYTHE(229, WEAPON), // End of authentic animation sprites
-	BUNNY(473, NPC);
+	BUNNY(473, NPC),
+	DUCK(474, NPC),
+	BUNNY_MORPH(475, NPC),
+	EGG_MORPH(476, NPC),
+	NOT_MORPHED(-1, NPC);
 
 	private int appearanceId;
 	private int wieldPosition;
