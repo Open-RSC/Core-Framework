@@ -2239,7 +2239,7 @@ public class EntityHandler {
 		sprites = new int[]{3, 1, 2, -1, -1, -1, -1, -1, -1, -1, 9, -1};
 		npcs.add(new NPCDef("Mum", "The greatest woman in the world", "", 1, 99, 3, 1, false, sprites, 16752704, 3211263, 14540032, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{3, 1, 2, -1, 122, 191, 197, 189, -1, -1, -1, 68};
-		npcs.add(new NPCDef("Ester", "She looks quite frazzled", "", 1, 99, 3, 1, false, sprites, 15618286, 3211263, 14540032, 15523536, 145, 220, 6, 6, 5, i++));
+		npcs.add(new NPCDef("Ester", "She looks quite frazzled", "", 1, 99, 3, 1, false, sprites, 16763992, 3211263, 14540032, 15523536, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{472, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Bunny", "A fluffy bunny", "", 1, 1, 10, 1, false, sprites, 0, 0, 0, 0, 95, 85, 7, 7, 10, i++));
 		sprites = new int[]{473, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
@@ -3892,6 +3892,10 @@ public class EntityHandler {
 
 		// Easter 2021
 		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, false, false, 1481));
+		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, false, false, 1482));
+		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, false, false, 1483));
+		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, false, false, 1484));
+		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, false, false, 1485));
 
 		// Add muddy herb sprite
 		items.get(165).spriteLocation = "items:588";
