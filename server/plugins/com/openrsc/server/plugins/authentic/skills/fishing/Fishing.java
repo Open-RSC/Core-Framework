@@ -2,7 +2,6 @@ package com.openrsc.server.plugins.authentic.skills.fishing;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.external.ObjectFishDef;
 import com.openrsc.server.external.ObjectFishingDef;
 import com.openrsc.server.model.container.Item;
@@ -16,7 +15,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -269,7 +267,7 @@ public class Fishing implements OpLocTrigger {
 			} else {
 				// Award the fish
 				Item fish = new Item(fishLst.get(0).getId());
-				
+
 				// check & remove bait
 				if (baitId >= 0) {
 					int idx = player.getCarriedItems().getInventory().getLastIndexById(baitId, Optional.of(false));
