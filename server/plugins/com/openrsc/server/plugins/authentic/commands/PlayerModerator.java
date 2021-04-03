@@ -564,7 +564,6 @@ public final class PlayerModerator implements CommandTrigger {
 				break;
 			case "greywolf":
 			case "graywolf":
-			case "marwolf":
 			case "wolf":
 				updateAppearanceToNpc(player, GREY_WOLF, pos);
 				break;
@@ -594,6 +593,7 @@ public final class PlayerModerator implements CommandTrigger {
 			case "shadowwolf":
 			case "blackwolf":
 			case "hellhound":
+			case "marwolf":
 				updateAppearanceToNpc(player, HELLHOUND, pos);
 				break;
 			case "blackunicorn":
