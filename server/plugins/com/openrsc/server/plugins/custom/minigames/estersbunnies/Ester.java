@@ -9,6 +9,7 @@ import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static com.openrsc.server.plugins.RuneScript.*;
 
@@ -32,11 +33,12 @@ public class Ester implements TalkNpcTrigger, MiniGameInterface {
 	@Override
 	public void handleReward(final Player player) {
 		player.getCache().set("esters_bunnies", -1);
+		player.getCache().set("ester_rings", 1);
 	}
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc npc) {
-		if (npc.getID() == NpcId.ESTER.id()) {
+		if (blockTalkNpc(player, npc)) {
 			nodefault();
 			int stage = 0;
 			if (player.getCache().hasKey("esters_bunnies")) {
@@ -128,10 +130,51 @@ public class Ester implements TalkNpcTrigger, MiniGameInterface {
 						"And I think his friend is a jolly boar");
 					break;
 				case 6:
-					// Quest complete
+					say("I got the egg!");
+					npcsay("Oh wonderful",
+						"Give it here and I can finally get started!");
+					remove(ItemId.EASTER_EGG.id(), 1);
+					mes("You hand Ester the egg");
+					delay(3);
+					mes("She gathers the lucky rabbit feet and the egg");
+					delay(3);
+					npcsay("eggius bunnius maximus!");
+					mes("With a crack, Ester is now holding two rings");
+					delay(3);
+					npcsay("It worked!",
+						"I guess you could say that makes me pretty...");
+					delay(3);
+					npcsay("egg-static");
+					delay(3);
+					npcsay("Anyways, I want you to have these",
+						"The best Easter gifts ever",
+						"Try them on and see what happens");
+					give(ItemId.RING_OF_BUNNY.id(), 1);
+					give(ItemId.RING_OF_EGG.id(), 1);
+					mes("Ester hands you the two rings");
+					delay(3);
+					npcsay("Thank you again for all your help!");
+					say("Your welcome");
+					mes("You have completed the Ester's Bunnies Miniquest!");
+					player.sendMiniGameComplete(this.getMiniGameId(), Optional.empty());
 					break;
-				default:
-					// Dialog for after quest
+				case -1:
+					npcsay("Thank you again for helping me");
+					final int choice = multi("What should I do if I lose my rings?",
+						"Who is that man upstairs?",
+						"Your welcome");
+					if (choice == 0) {
+						npcsay("You can talk to my friend Thessalia",
+							"She'll be able to give you new ones");
+					} else if (choice == 1) {
+						npcsay("Oh, that's my husband",
+							"He used to be an adventurer, quite like yourself",
+							"But there was an accident at an archery range",
+							"He can't really do much with a shattered kneecap",
+							"So now he just stays inside all day",
+							"And his sword just sits on the ground, collecting dust",
+							"I'm sure he wouldn't even mind if you just took it");
+					}
 					break;
 			}
 		}
@@ -192,8 +235,8 @@ public class Ester implements TalkNpcTrigger, MiniGameInterface {
 				case 3:
 					say("What is the fourth riddle?");
 					npcsay("Let's see...",
-						"\"I'm a bunny that has no fear",
-						"You'd have to be brave to look for me here\"",
+						"\"I'm a bunny that likes things scary",
+						"Witches, ghosts, and spiders, hairy\"",
 						"Where in the world could that be?");
 					break;
 				case 4:

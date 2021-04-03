@@ -23,7 +23,7 @@ public class Bunny implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc npc) {
-		if (npc.getID() == NpcId.BUNNY.id() && player.getCache().hasKey("esters_bunnies")) {
+		if (blockTalkNpc(player, npc)) {
 			nodefault();
 
 			npcsay("Hello there human");
