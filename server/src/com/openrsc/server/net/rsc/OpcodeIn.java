@@ -144,23 +144,6 @@ public enum OpcodeIn {
 		return null;
 	}
 
-	// tells if the opcode given should be allowed to trigger more than once per tick
-	// TODO: if plugin system has double action bug fixed, refactor similar to 3e0981310ded1af26f08ab22bdfb1a7563df2a20
-	public static boolean useLastPerTick(int opcode) {
-		boolean allowMultiple =
-			opcode == ITEM_USE_ITEM.getOpcode()
-			|| opcode == BANK_DEPOSIT.getOpcode()
-			|| opcode == BANK_WITHDRAW.getOpcode()
-			|| opcode == SHOP_BUY.getOpcode()
-			|| opcode == SHOP_SELL.getOpcode()
-			|| opcode == PLAYER_ADDED_ITEMS_TO_TRADE_OFFER.getOpcode()
-			|| opcode == DUEL_OFFER_ITEM.getOpcode()
-			|| opcode == PRAYER_ACTIVATED.getOpcode()
-			|| opcode == PRAYER_DEACTIVATED.getOpcode()
-			|| opcode == COMBAT_STYLE_CHANGED.getOpcode();
-		return !allowMultiple;
-	}
-
 	// a basic check is done on authentic opcodes against their possible lengths
 	public static boolean isPossiblyValid(int opcode, int length, int protocolVer) {
 		// TODO: remove this if checking valid for other protocol vers is implemented e.g. 127

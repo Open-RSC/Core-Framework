@@ -22,7 +22,6 @@ public class GameEventHandler {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	private final ConcurrentHashMap<String, GameTickEvent> events = new ConcurrentHashMap<>();
-	private final ConcurrentHashMap<String, GameTickEvent> eventsToAdd = new ConcurrentHashMap<>();
 
 	private final ConcurrentHashMap<String, Integer> eventsCounts = new ConcurrentHashMap<String, Integer>();
 	private final ConcurrentHashMap<String, Long> eventsDurations = new ConcurrentHashMap<String, Long>();
@@ -55,7 +54,6 @@ public class GameEventHandler {
 		}
 
 		events.clear();
-		eventsToAdd.clear();
 		eventsCounts.clear();
 		eventsDurations.clear();
 	}
@@ -64,9 +62,9 @@ public class GameEventHandler {
 		final String className = String.valueOf(event.getClass());
 		if (event.isUniqueEvent() || !event.hasOwner()) {
 			final UUID uuid = UUID.randomUUID();
-			eventsToAdd.putIfAbsent(className + uuid, event);
+			events.putIfAbsent(className + uuid, event);
 		} else {
-			eventsToAdd.putIfAbsent(
+			events.putIfAbsent(
 				className + event.getOwner().getUUID()
 					+ (event.getOwner().isPlayer() ? "p" : "n"), event);
 		}
@@ -105,11 +103,6 @@ public class GameEventHandler {
 
 		executor.setMaximumPoolSize(maxThreads);
 		executor.setCorePoolSize(maxThreads / 2);
-
-		if (eventsToAdd.size() > 0) {
-			events.putAll(eventsToAdd);
-			eventsToAdd.clear();
-		}
 
 		// Sort events by PID in order to achieve PID priority.
 		final List<GameTickEvent> eventsByPID = new ArrayList<>(events.values());

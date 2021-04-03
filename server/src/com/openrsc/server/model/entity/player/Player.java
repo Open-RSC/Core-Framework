@@ -2084,17 +2084,13 @@ public final class Player extends Mob {
 				final long packetTime = getWorld().getServer().bench(
 					() -> {
 						activePackets.remove(activePackets.indexOf(curPacket.getID()));
-
-						// only consider the last packet sent for certain opcodes, to e.g., allow cancelling walk with another walk.
-						if (!(activePackets.contains(curPacket.getID()) && OpcodeIn.useLastPerTick(curPacket.getID()))) {
-							final PacketHandler ph = PacketHandlerLookup.get(curPacket.getID());
-							if (ph != null && curPacket.getBuffer().readableBytes() >= 0) {
-								try {
-									ph.handlePacket(curPacket, this);
-								} catch (final Exception e) {
-									LOGGER.catching(e);
-									unregister(false, "Malformed packet!");
-								}
+						final PacketHandler ph = PacketHandlerLookup.get(curPacket.getID());
+						if (ph != null && curPacket.getBuffer().readableBytes() >= 0) {
+							try {
+								ph.handlePacket(curPacket, this);
+							} catch (final Exception e) {
+								LOGGER.catching(e);
+								unregister(false, "Malformed packet!");
 							}
 						}
 					}

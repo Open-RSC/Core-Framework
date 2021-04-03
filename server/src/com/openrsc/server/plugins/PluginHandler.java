@@ -2,6 +2,7 @@ package com.openrsc.server.plugins;
 
 import com.openrsc.server.Server;
 import com.openrsc.server.event.custom.ShopRestockEvent;
+import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.event.rsc.PluginTickEvent;
 import com.openrsc.server.model.Shop;
@@ -333,8 +334,24 @@ public final class PluginHandler {
 				}
 
 				try {
+
 					final Method m = cls.getClass().getMethod("on" + interfce, dataClasses);
 					final String pluginName = cls.getClass().getSimpleName() + "." + m.getName();
+
+					boolean shouldFire = true;
+					HashMap<String, GameTickEvent> events = getServer().getGameEventHandler().getEvents();
+					for (GameTickEvent e : events.values()) {
+						if (e instanceof PluginTickEvent) {
+							PluginTickEvent pluginTickEvent = (PluginTickEvent)e;
+
+							if (pluginTickEvent.getPluginName().equals(pluginName) && pluginTickEvent.getOwner().equals(owner) ) {
+								shouldFire = false;
+							}
+						}
+					}
+
+					if (!shouldFire) return;
+
 					final PluginTask task = new PluginTask(world, owner, interfce, data) {
 						@Override
 						public int action() {

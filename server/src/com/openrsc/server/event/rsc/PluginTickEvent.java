@@ -14,12 +14,14 @@ public class PluginTickEvent extends GameTickEvent {
 
 	private final PluginTask pluginTask;
 	private final WalkToAction walkToAction; // Storing the Player's context walkToAction so we can cancel the plugin if the walking is cancelled
+	private final String pluginName;
 
-	public PluginTickEvent(final World world, final Mob owner, final String descriptor, final WalkToAction walkToAction, final PluginTask pluginTask) {
-		super(world, owner, 0, descriptor, true);
+	public PluginTickEvent(final World world, final Mob owner, final String pluginName, final WalkToAction walkToAction, final PluginTask pluginTask) {
+		super(world, owner, 0, pluginName, true);
 		this.walkToAction = walkToAction;
 		this.pluginTask = pluginTask;
 		this.getPluginTask().setPluginTickEvent(this);
+		this.pluginName = pluginName;
 	}
 
 	public void run() {
@@ -63,5 +65,9 @@ public class PluginTickEvent extends GameTickEvent {
 
 	public final PluginTask getPluginTask() {
 		return pluginTask;
+	}
+
+	public String getPluginName() {
+		return pluginName;
 	}
 }
