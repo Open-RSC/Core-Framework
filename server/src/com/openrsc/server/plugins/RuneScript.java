@@ -771,7 +771,7 @@ public class RuneScript {
 	public static void playercoord() {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
 		scriptContext.setInteractingCoordinate(player.getLocation());
@@ -787,7 +787,7 @@ public class RuneScript {
 	public static void addobject(final int object, final int count, final int time) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 		final Point interactingCoordinate = scriptContext.getInteractingCoordinate();
 		if (interactingCoordinate == null) return;
@@ -804,7 +804,7 @@ public class RuneScript {
 	public static void addnpc(final int npc) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 		final Point interactingCoordinate = scriptContext.getInteractingCoordinate();
 		if (interactingCoordinate == null) return;
@@ -821,7 +821,7 @@ public class RuneScript {
 	public static void addloc(final int location) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 		final Point interactingCoordinate = scriptContext.getInteractingCoordinate();
 		if (interactingCoordinate == null) return;
@@ -837,7 +837,7 @@ public class RuneScript {
 	public static boolean ifblocked() {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return false;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 		final Point interactingCoordinate = scriptContext.getInteractingCoordinate();
 		if (interactingCoordinate == null) return false;
@@ -853,7 +853,7 @@ public class RuneScript {
 	public static void teleport() {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 		final Point interactingCoordinate = scriptContext.getInteractingCoordinate();
 		if (interactingCoordinate == null) return;
@@ -877,7 +877,7 @@ public class RuneScript {
 	public static void give(final int object, final int count) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
 		final Item item = new Item(object, count);
@@ -899,7 +899,7 @@ public class RuneScript {
 	public static void remove(final int object, final int count) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
 		final Item itemToRemove = new Item(object, count);
@@ -925,7 +925,7 @@ public class RuneScript {
 	public static boolean ifworn(final int object) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return false;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 
 		final boolean isWorn = player.getCarriedItems().getEquipment().hasCatalogID(object);
@@ -942,7 +942,7 @@ public class RuneScript {
 	public static boolean ifheld(final int object, final int count) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return false;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 
 		final boolean isHeld = player.getCarriedItems().getInventory().countId(object) >= count;
@@ -959,7 +959,7 @@ public class RuneScript {
 	public static void sellinv(final int percentage) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 		final Item interactingItem = scriptContext.getInteractingInventory();
 		if (interactingItem == null) return;
@@ -977,7 +977,7 @@ public class RuneScript {
 	public static void delinv() {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 		final Item interactingItem = scriptContext.getInteractingInventory();
 		if (interactingItem == null) return;
@@ -993,7 +993,7 @@ public class RuneScript {
 	public static boolean ifobjectvisible() {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return false;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return false;
 		final GroundItem interactingGroundItem = scriptContext.getInteractingGroundItem();
 		if (interactingGroundItem == null) return false;
@@ -1027,7 +1027,7 @@ public class RuneScript {
 	public static void delobject() {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
-		final Player player = scriptContext.getInteractingPlayer();
+		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 		final GroundItem interactingGroundItem = scriptContext.getInteractingGroundItem();
 		if (interactingGroundItem == null) return;
