@@ -2,8 +2,6 @@ package com.openrsc.server.plugins.authentic.commands;
 
 import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
-import com.openrsc.server.external.ItemDefinition;
-import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
@@ -631,7 +629,16 @@ public final class PlayerModerator implements CommandTrigger {
 			case "bunny":
 			case "bun":
 			case "rabbit":
+				updateAppearanceToNpc(player, BUNNY_MORPH, pos);
+				break;
+			case "bigbunny":
+			case "bigbun":
+			case "bigrabbit":
 				updateAppearanceToNpc(player, BUNNY, pos);
+				break;
+			case "duck":
+			case "mallard":
+				updateAppearanceToNpc(player, DUCK, pos);
 				break;
 
 			case "disable":
@@ -649,6 +656,9 @@ public final class PlayerModerator implements CommandTrigger {
 			return;
 		}
 		if (wieldPosition == SLOT_NPC) {
+			// This whole function is probably broken
+			// This is my attempt at a temporary fix
+			player.setMorphSpriteIdentifier(appearanceId);
 			for (int pos = 0; pos < 12; pos++) {
 				if (pos != SLOT_WEAPON) {
 					player.updateWornItems(pos, NOTHING);
@@ -693,24 +703,6 @@ public final class PlayerModerator implements CommandTrigger {
 
 	private void restoreHumanity(Player player) {
 		speakTongues(player, 0);
-		for (int i = 0; i < 12; i++) {
-			player.updateWornItems(i, player.getSettings().getAppearance().getSprite(i));
-		}
-
-		if (player.getConfig().WANT_EQUIPMENT_TAB) {
-			for (Item item : player.getCarriedItems().getEquipment().getList()) {
-				if (item == null) continue;
-				ItemDefinition itemDef = item.getDef(player.getWorld());
-				player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
-			}
-		} else {
-			for (Item item : player.getCarriedItems().getInventory().getItems()) {
-				if (item == null) continue;
-				ItemDefinition itemDef = item.getDef(player.getWorld());
-				if (item.getItemStatus().isWielded()) {
-					player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
-				}
-			}
-		}
+		player.setMorphSpriteIdentifier(NOT_MORPHED);
 	}
 }

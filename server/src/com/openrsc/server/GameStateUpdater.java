@@ -3,10 +3,12 @@ package com.openrsc.server;
 import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.database.impl.mysql.queries.logging.PMLog;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.PlayerAppearance;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.PrivateMessage;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -24,6 +26,9 @@ import java.util.ArrayDeque;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import static com.openrsc.server.constants.AppearanceId.NOTHING;
+import static com.openrsc.server.constants.AppearanceId.SLOT_BODY;
 
 public final class GameStateUpdater {
 	/**
@@ -1111,12 +1116,40 @@ public final class GameStateUpdater {
 				}
 
 				// Only do the walking tick here if the Players' walking tick matches the game tick
-				if(!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
+				if (!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
 					player.updatePosition();
 				}
 
 				if (player.getUpdateFlags().hasAppearanceChanged()) {
 					player.incAppearanceID();
+				}
+
+				// Handle morphs
+				if (player.getMorphSpriteIdentifier() != AppearanceId.NOT_MORPHED) {
+					for (int pos = 0; pos < 12; pos++) {
+						player.updateWornItems(pos, NOTHING);
+					}
+					player.updateWornItems(SLOT_BODY, player.getMorphSpriteIdentifier());
+				} else {
+					for (int i = 0; i < 12; i++) {
+						player.updateWornItems(i, player.getSettings().getAppearance().getSprite(i));
+					}
+
+					if (player.getConfig().WANT_EQUIPMENT_TAB) {
+						for (Item item : player.getCarriedItems().getEquipment().getList()) {
+							if (item == null) continue;
+							ItemDefinition itemDef = item.getDef(player.getWorld());
+							player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
+						}
+					} else {
+						for (Item item : player.getCarriedItems().getInventory().getItems()) {
+							if (item == null) continue;
+							ItemDefinition itemDef = item.getDef(player.getWorld());
+							if (item.getItemStatus().isWielded()) {
+								player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
+							}
+						}
+					}
 				}
 			}
 		});

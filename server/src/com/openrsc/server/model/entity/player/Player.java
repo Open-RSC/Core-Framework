@@ -325,6 +325,8 @@ public final class Player extends Mob {
 	 */
 	private boolean changingDetails = false;
 
+	private AppearanceId morphSpriteIdentifier = AppearanceId.NOT_MORPHED;
+
 	/*
 	 * Restricts P2P stuff in F2P wilderness.
 	 */
@@ -3375,4 +3377,17 @@ public final class Player extends Mob {
 		return getCache().hasKey("cert_optout");
 	}
 
+	public AppearanceId getMorphSpriteIdentifier() {
+		if (getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_BUNNY.id())) {
+			return AppearanceId.BUNNY_MORPH;
+		} else if (getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_EGG.id())) {
+			return AppearanceId.EGG_MORPH;
+		}
+
+		return morphSpriteIdentifier;
+	}
+
+	public void setMorphSpriteIdentifier(final AppearanceId appearanceId) {
+		morphSpriteIdentifier = appearanceId;
+	}
 }
