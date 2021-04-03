@@ -628,6 +628,11 @@ public final class PlayerModerator implements CommandTrigger {
 			case "oomliebird":
 				updateAppearanceToNpc(player, OOMLIE_BIRD, pos);
 				break;
+			case "bunny":
+			case "bun":
+			case "rabbit":
+				updateAppearanceToNpc(player, BUNNY, pos);
+				break;
 
 			case "disable":
 			case "none":
@@ -694,11 +699,13 @@ public final class PlayerModerator implements CommandTrigger {
 
 		if (player.getConfig().WANT_EQUIPMENT_TAB) {
 			for (Item item : player.getCarriedItems().getEquipment().getList()) {
+				if (item == null) continue;
 				ItemDefinition itemDef = item.getDef(player.getWorld());
 				player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
 			}
 		} else {
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
+				if (item == null) continue;
 				ItemDefinition itemDef = item.getDef(player.getWorld());
 				if (item.getItemStatus().isWielded()) {
 					player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);

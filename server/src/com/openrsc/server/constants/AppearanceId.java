@@ -254,7 +254,8 @@ public enum AppearanceId {
 	CAPE_OF_LEGENDS(226, CAPE),
 	SHADOW_WARRIOR_BOOTS(227, BOOTS),
 	SHADOW_WARRIOR_ROBE(228, BODY),
-	SCYTHE(229, WEAPON); // End of authentic animation sprites
+	SCYTHE(229, WEAPON), // End of authentic animation sprites
+	BUNNY(473, NPC);
 
 	private int appearanceId;
 	private int wieldPosition;
