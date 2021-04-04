@@ -42,7 +42,7 @@
                 <pathelement location="${lib}/xstream-1.4.9.jar"/>
                 <pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar"/>
                 <pathelement location="${lib}/commons-lang-2.6.jar"/>
-                <pathelement location="${lib}/guava-25.0-jre.jar"/>
+                <pathelement location="${lib}/guava-30.1.1-jre.jar"/>
                 <pathelement location="${lib}/JDA-4.0.0_55-withDependencies.jar"/>
                 <pathelement location="${lib}/emoji-java-5.1.1.jar"/>
                 <pathelement location="${lib}/json-20190722.jar"/>

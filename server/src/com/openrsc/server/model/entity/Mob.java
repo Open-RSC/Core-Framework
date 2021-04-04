@@ -5,8 +5,13 @@ import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
-import com.openrsc.server.model.*;
+import com.openrsc.server.model.AStarPathfinder;
+import com.openrsc.server.model.Path;
 import com.openrsc.server.model.Path.PathType;
+import com.openrsc.server.model.Point;
+import com.openrsc.server.model.Skills;
+import com.openrsc.server.model.ViewArea;
+import com.openrsc.server.model.WalkingQueue;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -123,8 +128,8 @@ public abstract class Mob extends Entity {
 	 */
 	private ViewArea viewArea = new ViewArea(this);
 
-	public Mob (final World world) {
-		super(world);
+	public Mob(final World world, final EntityType type) {
+		super(world, type);
 		statRestorationEvent = new StatRestorationEvent(getWorld(), this);
 	}
 
@@ -132,12 +137,15 @@ public abstract class Mob extends Entity {
 	 * ABSTRACT
 	 */
 	public abstract int getWeaponAimPoints();
+
 	public abstract int getWeaponPowerPoints();
+
 	public abstract int getArmourPoints();
 
 	public abstract int getCombatStyle();
 
 	public abstract boolean stateIsInvisible();
+
 	public abstract boolean stateIsInvulnerable();
 
 	// TODO: To be made abstract later when different
@@ -161,8 +169,8 @@ public abstract class Mob extends Entity {
 				return getX() >= low.getX() && getX() <= high.getX() && getY() >= low.getY() && getY() <= high.getY();
 			} else {
 				return canReach(low.getX(), high.getX(), low.getY(), high.getY())
-					|| (finishedPath() && canReachDiagonal(low.getX(), high.getX(), low.getY(), high.getY()))
-					|| closeSpecObject(o);
+						|| (finishedPath() && canReachDiagonal(low.getX(), high.getX(), low.getY(), high.getY()))
+						|| closeSpecObject(o);
 			}
 		} else if (o.getType() == 1) {
 			return getX() >= low.getX() && getX() <= high.getX() && getY() >= low.getY() && getY() <= high.getY();
@@ -198,15 +206,15 @@ public abstract class Mob extends Entity {
 			return true;
 		}
 		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() && maxY >= getY()
-			&& (getWorld().getTile(getX() - 1, getY()).traversalMask & CollisionFlag.WALL_WEST) == 0) {
+				&& (getWorld().getTile(getX() - 1, getY()).traversalMask & CollisionFlag.WALL_WEST) == 0) {
 			return true;
 		}
 		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() >= minY && maxY >= getY()
-			&& (CollisionFlag.WALL_EAST & getWorld().getTile(getX() + 1, getY()).traversalMask) == 0) {
+				&& (CollisionFlag.WALL_EAST & getWorld().getTile(getX() + 1, getY()).traversalMask) == 0) {
 			return true;
 		}
 		if (minX <= getX() && maxX >= getX() && getY() - 1 >= minY && maxY >= getY() - 1
-			&& (CollisionFlag.WALL_SOUTH & getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
+				&& (CollisionFlag.WALL_SOUTH & getWorld().getTile(getX(), getY() - 1).traversalMask) == 0) {
 			return true;
 		}
 		return false;
@@ -214,23 +222,23 @@ public abstract class Mob extends Entity {
 
 	private boolean canReachDiagonal(int minX, int maxX, int minY, int maxY) {
 		if (minX <= getX() && getX() <= maxX && minY <= getY() + 1 && maxY >= getY() + 1
-			&& (CollisionFlag.WALL_NORTH & getWorld().getTile(getX(), getY() + 1).traversalMask) == 0) {
+				&& (CollisionFlag.WALL_NORTH & getWorld().getTile(getX(), getY() + 1).traversalMask) == 0) {
 			return true;
 		}
 		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() - 1 && maxY >= getY() - 1
-			&& (getWorld().getTile(getX() - 1, getY() - 1).traversalMask & CollisionFlag.WALL_SOUTH_WEST) == 0) {
+				&& (getWorld().getTile(getX() - 1, getY() - 1).traversalMask & CollisionFlag.WALL_SOUTH_WEST) == 0) {
 			return true;
 		}
 		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() - 1 >= minY && maxY >= getY() - 1
-			&& (CollisionFlag.WALL_SOUTH_EAST & getWorld().getTile(getX() + 1, getY() - 1).traversalMask) == 0) {
+				&& (CollisionFlag.WALL_SOUTH_EAST & getWorld().getTile(getX() + 1, getY() - 1).traversalMask) == 0) {
 			return true;
 		}
 		if (minX <= getX() - 1 && maxX >= getX() - 1 && minY <= getY() + 1 && maxY >= getY() + 1
-			&& (getWorld().getTile(getX() - 1, getY() + 1).traversalMask & CollisionFlag.WALL_NORTH_WEST) == 0) {
+				&& (getWorld().getTile(getX() - 1, getY() + 1).traversalMask & CollisionFlag.WALL_NORTH_WEST) == 0) {
 			return true;
 		}
 		if (1 + getX() >= minX && getX() + 1 <= maxX && getY() + 1 >= minY && maxY >= getY() + 1
-			&& (CollisionFlag.WALL_NORTH_EAST & getWorld().getTile(getX() + 1, getY() + 1).traversalMask) == 0) {
+				&& (CollisionFlag.WALL_NORTH_EAST & getWorld().getTile(getX() + 1, getY() + 1).traversalMask) == 0) {
 			return true;
 		}
 		return false;
@@ -318,8 +326,8 @@ public abstract class Mob extends Entity {
 			return true;
 		}
 		return (val & 64) != 0
-			&& (e instanceof Npc || e instanceof Player || (e instanceof GroundItem && !((GroundItem) e).isOn(x, y))
-			|| (e instanceof GameObject && !((GameObject) e).isOn(x, y)));
+				&& (e instanceof Npc || e instanceof Player || (e instanceof GroundItem && !((GroundItem) e).isOn(x, y))
+				|| (e instanceof GameObject && !((GameObject) e).isOn(x, y)));
 	}
 
 	public boolean withinRange(final Entity e) {
@@ -437,7 +445,7 @@ public abstract class Mob extends Entity {
 		followEvent = new GameTickEvent(getWorld(), null, 1, "Player Following Mob") {
 			public void run() {
 				if (!me.withinRange(mob) || mob.isRemoved()
-					|| (me.isPlayer() && !((Player) me).getDuel().isDuelActive() && me.isBusy())) {
+						|| (me.isPlayer() && !((Player) me).getDuel().isDuelActive() && me.isBusy())) {
 					if (!mob.isFollowing())
 						resetFollowing();
 				} else if (!me.finishedPath() && me.withinRange(mob, radius)) {
@@ -477,7 +485,7 @@ public abstract class Mob extends Entity {
 		final long now = System.currentTimeMillis();
 		final boolean doWalk = !getWorld().getServer().getConfig().WANT_CUSTOM_WALK_SPEED || now >= lastMovementTime + getWalkingTick();
 
-		if(doWalk) {
+		if (doWalk) {
 			getWalkingQueue().processNextMovement();
 			lastMovementTime = now;
 		}
@@ -500,11 +508,11 @@ public abstract class Mob extends Entity {
 	public void walkToEntityAStar(final int x, final int y, final int depth) {
 		getWalkingQueue().reset();
 		final Point mobPos = new Point(this.getX(), this.getY());
-		final AStarPathfinder pathFinder = new AStarPathfinder(this.getWorld(), mobPos, new Point(x,y), depth);
+		final AStarPathfinder pathFinder = new AStarPathfinder(this.getWorld(), mobPos, new Point(x, y), depth);
 		pathFinder.feedPath(new Path(this, PathType.WALK_TO_ENTITY));
 		Path newPath = pathFinder.findPath();
 		if (newPath == null)
-			walkToEntity(x,y);
+			walkToEntity(x, y);
 		else
 			getWalkingQueue().setPath(newPath);
 	}
@@ -546,7 +554,7 @@ public abstract class Mob extends Entity {
 
 			int victimSprite = 8;
 			int ourSprite = 9;
-			if(this.isNpc() && victim.isPlayer() || this.isNpc() && victim.isNpc()) {
+			if (this.isNpc() && victim.isPlayer() || this.isNpc() && victim.isNpc()) {
 				victimSprite = 9;
 				ourSprite = 8;
 			}
@@ -657,7 +665,7 @@ public abstract class Mob extends Entity {
 				return false;
 			}
 
-			final Player victim = (Player)mob;
+			final Player victim = (Player) mob;
 			if (victim.isInvulnerableTo(this) || victim.isInvisibleTo(this)) {
 				victim.message("You are not allowed to attack that person");
 				return false;
@@ -842,9 +850,13 @@ public abstract class Mob extends Entity {
 		return statRestorationEvent;
 	}
 
-	public void tryResyncStatEvent() { statRestorationEvent.tryResyncStat(); }
+	public void tryResyncStatEvent() {
+		statRestorationEvent.tryResyncStat();
+	}
 
-	public void tryResyncHitEvent() { statRestorationEvent.tryResyncHit(); }
+	public void tryResyncHitEvent() {
+		statRestorationEvent.tryResyncHit();
+	}
 
 	public UpdateFlags getUpdateFlags() {
 		return updateFlags;
@@ -1024,7 +1036,7 @@ public abstract class Mob extends Entity {
 			return this.withinRange(mob, radius);
 		}
 
-		Player player = (Player)this;
+		Player player = (Player) this;
 		radius = player.getProjectileRadius(radius);
 		return player.withinRange(mob, radius);
 	}

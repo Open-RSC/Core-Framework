@@ -25,8 +25,14 @@ public abstract class Entity {
 
 	private boolean removed = false;
 
-	public Entity(final World world) {
+	private final EntityType entityType;
+
+	public Entity(
+			final World world,
+			final EntityType entityType
+	) {
 		this.world = world;
+		this.entityType = entityType;
 	}
 
 	public void updateRegion() {
@@ -89,9 +95,13 @@ public abstract class Entity {
 		attributes.put(string, object);
 	}
 
-	public final World getWorld() { return world; }
+	public final World getWorld() {
+		return world;
+	}
 
-	public final ServerConfiguration getConfig() { return getWorld().getServer().getConfig(); }
+	public final ServerConfiguration getConfig() {
+		return getWorld().getServer().getConfig();
+	}
 
 	public final int getID() {
 		return id;
@@ -148,6 +158,7 @@ public abstract class Entity {
 	/**
 	 * Normalize the player's Y coordinate by returning the Y value they would be at
 	 * if they were on the ground floor (British convention)
+	 *
 	 * @param yPos The current Y coordinate of the player
 	 * @return The player's Y coordinate if they were on the ground floor (British convention)
 	 */
@@ -179,11 +190,19 @@ public abstract class Entity {
 		return false;
 	}
 
+	public boolean canSee(final Entity observed) {
+		return observed == null || !observed.isInvisibleTo(this);
+	}
+
+	public EntityType getEntityType() {
+		return entityType;
+	}
+
 	public boolean isPlayer() {
-		return false;
+		return entityType == EntityType.PLAYER;
 	}
 
 	public boolean isNpc() {
-		return false;
+		return entityType == EntityType.NPC;
 	}
 }

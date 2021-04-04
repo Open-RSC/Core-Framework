@@ -387,7 +387,7 @@ public class FishingTrawler extends DelayedEvent {
 			/* The ship is leaking hardcore. */
 			if (freeLeakIndex == -1) {
 				break;
-			} else if (getWorld().getRegionManager().getRegion(x, y).getGameObject(x, y, null) != null) {
+			} else if (getWorld().getRegionManager().getRegion(x, y).getGameObject(new Point(x, y)) != null) {
 				continue;
 			}
 			int southSide = currentStage == State.FIRST_SHIP ? spawnLocation.getY() - 1 : shipAreaWaterSpawn.getY() - 1;

@@ -57,7 +57,7 @@ public class GroundItem extends Entity {
 	}
 
 	public GroundItem(final World world, final int id, final int x, final int y, final int amount, final Player owner, final long spawnTime, final boolean noted) {
-		super(world);
+		super(world, EntityType.GROUND_ITEM);
 		setID(id);
 		setNoted(noted);
 		setAmount(amount);
@@ -73,7 +73,7 @@ public class GroundItem extends Entity {
 	}
 
 	public GroundItem(final World world, final ItemLoc loc) {
-		super(world);
+		super(world, EntityType.GROUND_ITEM);
 		this.loc = loc;
 		setID(loc.id);
 		setAmount(loc.amount);
@@ -85,9 +85,9 @@ public class GroundItem extends Entity {
 		if (o instanceof GroundItem) {
 			GroundItem item = (GroundItem) o;
 			return item.getID() == getID() && item.getAmount() == getAmount()
-				&& item.getSpawnedTime() == getSpawnedTime()
-				&& (item.getOwnerUsernameHash() == getOwnerUsernameHash())
-				&& item.getLocation().equals(getLocation());
+					&& item.getSpawnedTime() == getSpawnedTime()
+					&& (item.getOwnerUsernameHash() == getOwnerUsernameHash())
+					&& item.getLocation().equals(getLocation());
 		}
 		return false;
 	}
@@ -156,7 +156,9 @@ public class GroundItem extends Entity {
 		return ownerUsernameHash;
 	}
 
-	public boolean getNoted() { return noted; }
+	public boolean getNoted() {
+		return noted;
+	}
 
 	public void setNoted(final boolean noted) {
 		this.noted = noted;

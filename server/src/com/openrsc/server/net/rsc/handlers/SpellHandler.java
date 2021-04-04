@@ -1467,7 +1467,7 @@ public class SpellHandler implements PacketHandler {
 								getPlayer().getCache().set(spell.getName() + "_casts", 1);
 							}
 						}
-						if (affectedMob.getRegion().getGameObject(affectedMob.getX(), affectedMob.getY(), getPlayer()) == null) {
+						if (affectedMob.getRegion().getGameObject(affectedMob.getLocation(), getPlayer()) == null) {
 							godSpellObject(getPlayer(), affectedMob, spellID);
 						}
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateGodSpellDamage(getPlayer()), 1, setChasing));
