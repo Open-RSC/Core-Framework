@@ -16,7 +16,7 @@ public class GameObject extends Entity {
 	/**
 	 * Location definition of the object
 	 */
-	private GameObjectLoc loc = null;
+	private GameObjectLoc loc;
 	/**
 	 * The type of object
 	 * Type 0: Game Object
@@ -47,7 +47,7 @@ public class GameObject extends Entity {
 		int minY = getY();
 		int maxX = minX;
 		int maxY = minY;
-		if (isGameObject()) {
+		if (isScenery()) {
 			int worldWidth;
 			int worldHeight;
 			if (dir != 0 && dir != 4) {
@@ -78,7 +78,7 @@ public class GameObject extends Entity {
 				maxX = worldWidth + getX() - 1;
 				maxY = worldHeight + getY() - 1;
 			}
-		} else if (isWallObject()) {
+		} else if (isBoundary()) {
 
 			if (dir == 0) {
 				minX = getX();
@@ -140,7 +140,7 @@ public class GameObject extends Entity {
 
 	public boolean isOn(final int x, final int y) {
 		int width, height;
-		if (isWallObject()) {
+		if (isBoundary()) {
 			width = height = 1;
 		} else if (direction == 0 || direction == 4) {
 			width = getGameObjectDef().getWidth();
@@ -149,7 +149,7 @@ public class GameObject extends Entity {
 			height = getGameObjectDef().getWidth();
 			width = getGameObjectDef().getHeight();
 		}
-		if (isWallObject()) {
+		if (isBoundary()) {
 			return x >= getX()
 				&& x <= (getX() + width)
 				&& y >= getY()
@@ -210,12 +210,12 @@ public class GameObject extends Entity {
 		return getGameObjectType().getId();
 	}
 
-	public boolean isWallObject() {
-		return getGameObjectType() == GameObjectType.WALL_OBJECT;
+	public boolean isBoundary() {
+		return getGameObjectType() == GameObjectType.BOUNDARY;
 	}
 
-	public boolean isGameObject() {
-		return getGameObjectType() == GameObjectType.GAME_OBJECT;
+	public boolean isScenery() {
+		return getGameObjectType() == GameObjectType.SCENERY;
 	}
 
 	public void setGameObjectType(GameObjectType gameObjectType) {

@@ -1,8 +1,8 @@
 package com.openrsc.server.model.entity;
 
 public enum GameObjectType {
-	GAME_OBJECT("GameObject", 0),
-	WALL_OBJECT("WallObject", 1);
+	SCENERY("Scenery", 0),
+	BOUNDARY("Boundary", 1);
 
 	private final String label;
 	private final int id;
@@ -21,7 +21,7 @@ public enum GameObjectType {
 	}
 
 	public static GameObjectType fromInt(int value) {
-		return value == GAME_OBJECT.getId() ? GAME_OBJECT : WALL_OBJECT;
+		return value == SCENERY.getId() ? SCENERY : BOUNDARY;
 	}
 
 	@Override
