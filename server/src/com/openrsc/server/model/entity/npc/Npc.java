@@ -42,13 +42,13 @@ public class Npc extends Mob {
 	private NpcBehavior npcBehavior;
 	private ArrayList<NpcLootEvent> deathListeners = new ArrayList<NpcLootEvent>(1); // TODO: Should use a more generic class. Maybe PlayerKilledNpcListener, but that is in plugins jar.
 	private static int[] removeHandledInPlugin = {
-			NpcId.RAT_TUTORIAL.id(),
-			NpcId.DELRITH.id(),
-			NpcId.COUNT_DRAYNOR.id(),
-			NpcId.CHRONOZON.id(),
-			NpcId.SIR_MORDRED.id(),
-			NpcId.LUCIEN_EDGE.id(),
-			NpcId.BLACK_KNIGHT_TITAN.id()
+		NpcId.RAT_TUTORIAL.id(),
+		NpcId.DELRITH.id(),
+		NpcId.COUNT_DRAYNOR.id(),
+		NpcId.CHRONOZON.id(),
+		NpcId.SIR_MORDRED.id(),
+		NpcId.LUCIEN_EDGE.id(),
+		NpcId.BLACK_KNIGHT_TITAN.id()
 	};
 
 	/**
@@ -101,7 +101,7 @@ public class Npc extends Mob {
 		def = getWorld().getServer().getEntityHandler().getNpcDef(loc.getId());
 		if (def == null) {
 			throw new NullPointerException("NPC definition is invalid for NPC ID: " + loc.getId() + ", coordinates: " + "("
-					+ loc.startX() + ", " + loc.startY() + ")");
+				+ loc.startX() + ", " + loc.startY() + ")");
 		}
 		this.loc = loc;
 		this.setNpcBehavior(new NpcBehavior(this));
@@ -348,9 +348,9 @@ public class Npc extends Mob {
 
 	private void logNpcKill(Player owner) {
 		if (owner.getCache().hasKey("show_npc_kc") && owner.getCache().getBoolean("show_npc_kc")
-				&& getConfig().NPC_KILL_MESSAGES) {
+			&& getConfig().NPC_KILL_MESSAGES) {
 			owner.addNpcKill(this, !getConfig().NPC_KILL_MESSAGES_FILTER
-					|| getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName()));
+				|| getConfig().NPC_KILL_MESSAGES_NPCs.contains(this.getDef().getName()));
 		} else
 			owner.addNpcKill(this, false);
 	}
@@ -367,7 +367,7 @@ public class Npc extends Mob {
 		int bones = getBonesDrop();
 		if (bones != ItemId.NOTHING.id()) {
 			GroundItem groundItem = new GroundItem(
-					owner.getWorld(), bones, getX(), getY(), 1, owner
+				owner.getWorld(), bones, getX(), getY(), 1, owner
 			);
 			groundItem.setAttribute("npcdrop", true);
 			getWorld().registerItem(groundItem);
@@ -423,7 +423,7 @@ public class Npc extends Mob {
 					try {
 
 						getWorld().getServer().getDatabase().addDropLog(
-								owner, this, item.getCatalogId(), item.getAmount());
+							owner, this, item.getCatalogId(), item.getAmount());
 					} catch (final GameDatabaseException ex) {
 						LOGGER.catching(ex);
 					}
@@ -497,8 +497,8 @@ public class Npc extends Mob {
 		else amount = 1;
 		for (int count = 0; count < loop; count++) {
 			if (dropID != ItemId.NOTHING.id()
-					&& getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly()
-					&& !getConfig().MEMBER_WORLD) {
+				&& getWorld().getServer().getEntityHandler().getItemDef(dropID).isMembersOnly()
+				&& !getConfig().MEMBER_WORLD) {
 				continue; // Members item on a non-members world.
 			} else if (dropID != ItemId.NOTHING.id()) {
 				groundItem = new GroundItem(owner.getWorld(), dropID, getX(), getY(), amount, owner, item.getNoted());

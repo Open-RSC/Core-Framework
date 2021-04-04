@@ -189,12 +189,12 @@ public class Region {
 
 	private GameObject getGameObject(Point location, Entity observer, GameObjectType type, Integer direction) {
 		return objects.get(location)
-				.stream()
-				.filter(obj -> type == null || obj.getGameObjectType() == type)
-				.filter(obj -> observer == null || !obj.isInvisibleTo(observer))
-				.filter(obj -> direction == null || obj.getDirection() == direction)
-				.findFirst()
-				.orElse(null);
+			.stream()
+			.filter(obj -> type == null || obj.getGameObjectType() == type)
+			.filter(obj -> observer == null || !obj.isInvisibleTo(observer))
+			.filter(obj -> direction == null || obj.getDirection() == direction)
+			.findFirst()
+			.orElse(null);
 	}
 
 	public GameObject getGameObject(Point location) {
@@ -215,19 +215,19 @@ public class Region {
 
 	public Npc getNpc(Point location, Entity observer) {
 		return npcs.get(location)
-				.stream()
-				.filter(npc -> observer == null || !npc.isInvisibleTo(observer))
-				.findFirst()
-				.orElse(null);
+			.stream()
+			.filter(npc -> observer == null || !npc.isInvisibleTo(observer))
+			.findFirst()
+			.orElse(null);
 	}
 
 	public Player getPlayer(int x, int y, Entity observer, boolean includeSelf) {
 		return players.get(new Point(x, y))
-				.stream()
-				.filter(player -> observer == null || !player.isInvisibleTo(observer))
-				.filter(player -> observer == null || includeSelf || player.equals(observer))
-				.findFirst()
-				.orElse(null);
+			.stream()
+			.filter(player -> observer == null || !player.isInvisibleTo(observer))
+			.filter(player -> observer == null || includeSelf || player.equals(observer))
+			.findFirst()
+			.orElse(null);
 	}
 
 	public Player getPlayer(int x, int y, Entity observer) {

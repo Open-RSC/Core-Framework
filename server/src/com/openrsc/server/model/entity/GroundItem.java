@@ -85,9 +85,9 @@ public class GroundItem extends Entity {
 		if (o instanceof GroundItem) {
 			GroundItem item = (GroundItem) o;
 			return item.getID() == getID() && item.getAmount() == getAmount()
-					&& item.getSpawnedTime() == getSpawnedTime()
-					&& (item.getOwnerUsernameHash() == getOwnerUsernameHash())
-					&& item.getLocation().equals(getLocation());
+				&& item.getSpawnedTime() == getSpawnedTime()
+				&& (item.getOwnerUsernameHash() == getOwnerUsernameHash())
+				&& item.getLocation().equals(getLocation());
 		}
 		return false;
 	}
