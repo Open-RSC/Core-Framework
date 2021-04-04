@@ -411,7 +411,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public void registerGameObject(final GameObject o) {
 		Point objectCoordinates = Point.location(o.getLoc().getX(), o.getLoc().getY());
 		final GameObject collidingGameObject = getRegionManager().getRegion(objectCoordinates).getGameObject(objectCoordinates, null);
-		final GameObject collidingWallObject = getRegionManager().getRegion(objectCoordinates).getWallGameObject(objectCoordinates, o.getLoc().getDirection(), null);
+		final GameObject collidingWallObject = getRegionManager().getRegion(objectCoordinates).getWallGameObject(objectCoordinates, o.getLoc().getDirection());
 		if (collidingGameObject != null && o.getType() == 0) {
 			unregisterGameObject(collidingGameObject);
 		}
