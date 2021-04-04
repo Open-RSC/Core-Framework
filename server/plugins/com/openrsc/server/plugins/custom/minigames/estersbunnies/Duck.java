@@ -80,7 +80,7 @@ public class Duck implements TalkNpcTrigger {
 				say("Are you okay?");
 				mes("The duck holds up a wing to silence you");
 				delay(3);
-				mes("With a pop, the duck is now sitting on an egg");
+				mes("With a pop, the duck is now sitting on a magic-looking egg");
 				setcoord(npc.getLocation());
 				addobject(ItemId.EASTER_EGG.id(), 1, 200);
 				player.getCache().set("esters_bunnies", 6);

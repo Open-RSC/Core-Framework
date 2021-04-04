@@ -45,10 +45,9 @@ public class Bunny implements TalkNpcTrigger {
 			options.add(youCanTalk);
 			options.add(whyDidYouRun);
 			options.add(whyDidYouLeaveRiddles);
-			if (player.getCache().getInt("esters_bunnies") > 1) {
-				if (!ifheld(bunnyMap.get(bunny), 1)) {
-					options.add(iNeedFoot);
-				}
+			if (player.getCache().getInt("esters_bunnies") > 1
+				&& !ifheld(bunnyMap.get(bunny), 1)) {
+				options.add(iNeedFoot);
 			} else {
 				options.add(comeWithMe);
 			}

@@ -133,30 +133,38 @@ public class Ester implements TalkNpcTrigger, MiniGameInterface {
 					say("I got the egg!");
 					npcsay("Oh wonderful",
 						"Give it here and I can finally get started!");
-					remove(ItemId.EASTER_EGG.id(), 1);
-					mes("You hand Ester the egg");
-					delay(3);
-					mes("She gathers the lucky rabbit feet and the egg");
-					delay(3);
-					npcsay("eggius bunnius maximus!");
-					mes("With a crack, Ester is now holding two rings");
-					delay(3);
-					npcsay("It worked!",
-						"I guess you could say that makes me pretty...");
-					delay(3);
-					npcsay("egg-static");
-					delay(3);
-					npcsay("Anyways, I want you to have these",
-						"The best Easter gifts ever",
-						"Try them on and see what happens");
-					give(ItemId.RING_OF_BUNNY.id(), 1);
-					give(ItemId.RING_OF_EGG.id(), 1);
-					mes("Ester hands you the two rings");
-					delay(3);
-					npcsay("Thank you again for all your help!");
-					say("Your welcome");
-					mes("You have completed the Ester's Bunnies Miniquest!");
-					player.sendMiniGameComplete(this.getMiniGameId(), Optional.empty());
+					if (ifheld(ItemId.EASTER_EGG.id(), 1)) {
+						remove(ItemId.EASTER_EGG.id(), 1);
+						mes("You hand Ester the egg");
+						delay(3);
+						mes("She gathers the lucky rabbit feet and the egg");
+						delay(3);
+						npcsay("eggius bunnius maximus!");
+						mes("With a crack, Ester is now holding two rings");
+						delay(3);
+						npcsay("It worked!",
+							"I guess you could say that makes me pretty...");
+						delay(3);
+						npcsay("egg-static");
+						delay(3);
+						npcsay("Anyways, I want you to have these",
+							"The best Easter gifts ever",
+							"Try them on and see what happens");
+						give(ItemId.RING_OF_BUNNY.id(), 1);
+						give(ItemId.RING_OF_EGG.id(), 1);
+						mes("Ester hands you the two rings");
+						delay(3);
+						npcsay("Thank you again for all your help!");
+						say("Your welcome");
+						mes("You have completed the Ester's Bunnies Miniquest!");
+						player.sendMiniGameComplete(this.getMiniGameId(), Optional.empty());
+					} else {
+						say("Oh wait",
+							"I seem to have lost it");
+						npcsay("Oh no!",
+							"Well, you'll have to go get another one",
+							"Otherwise I can't preform the enchantment");
+					}
 					break;
 				case -1:
 					npcsay("Thank you again for helping me");
