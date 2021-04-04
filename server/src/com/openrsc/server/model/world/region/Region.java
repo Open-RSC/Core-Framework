@@ -179,7 +179,7 @@ public class Region {
 			sb.append(stringifyEntities("Npcs", npcs)).append("\n");
 		}
 		if (debugItems) {
-			sb.append(stringifyEntities("Items", players)).append("\n");
+			sb.append(stringifyEntities("Items", items)).append("\n");
 		}
 		if (debugObjects) {
 			sb.append(stringifyEntities("Objects", objects)).append("\n");
@@ -202,15 +202,15 @@ public class Region {
 	}
 
 	public GameObject getGameObject(Point location, Entity entity) {
-		return getGameObject(location, entity, GameObjectType.GAME_OBJECT, null);
+		return getGameObject(location, entity, GameObjectType.SCENERY, null);
 	}
 
 	public GameObject getWallGameObject(Point location, int direction) {
-		return getGameObject(location, null, GameObjectType.WALL_OBJECT, direction);
+		return getGameObject(location, null, GameObjectType.BOUNDARY, direction);
 	}
 
 	public GameObject getWallGameObject(Point location, Entity entity) {
-		return getGameObject(location, entity, GameObjectType.WALL_OBJECT, null);
+		return getGameObject(location, entity, GameObjectType.BOUNDARY, null);
 	}
 
 	public Npc getNpc(Point location, Entity observer) {
@@ -234,15 +234,13 @@ public class Region {
 		return getPlayer(x, y, observer, true);
 	}
 
-	public GroundItem getItem(final int id, final Point location, final Entity e) {
-		final int x = location.getX();
-		final int y = location.getY();
-		for (final GroundItem i : getGroundItems()) {
-			if (i.getID() == id && i.getX() == x && i.getY() == y && (e == null || !i.isInvisibleTo(e))) {
-				return i;
-			}
-		}
-		return null;
+	public GroundItem getItem(final int id, final Point location, final Entity observer) {
+		return items.get(location)
+				.stream()
+				.filter(item -> id == item.getID())
+				.filter(item -> observer == null || !item.isInvisibleTo(observer))
+				.findFirst()
+				.orElse(null);
 	}
 
 	public TileValue getTileValue(final int regionX, final int regionY) {

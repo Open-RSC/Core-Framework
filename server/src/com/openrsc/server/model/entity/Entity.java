@@ -123,18 +123,8 @@ public abstract class Entity {
 		return location.get();
 	}
 
-	public void setLocation(final Point player) {
-		/*if (this.isPlayer() && location != null) {
-			Player pl = (Player) this;
-			if (pl != null && getX() > 0 && getY() > 0) {
-				if (!Point.inWilderness(getX(), getY()) && Point.inWilderness(p.getX(), p.getY())
-						|| (getLocation().wildernessLevel() <= 48)) {
-					pl.unwieldMembersItems();
-				}
-			}
-
-		}*/
-		location.set(player);
+	public void setLocation(final Point point) {
+		location.set(point);
 		updateRegion();
 	}
 
