@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -12,11 +13,11 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.authentic.misc.Cannon;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
-import com.openrsc.server.plugins.triggers.OpBoundTrigger;
-import com.openrsc.server.plugins.authentic.misc.Cannon;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -185,7 +186,10 @@ public class DwarfCannon
 							int cannonX = player.getCache().getInt("cannon_x");
 							int cannonY = player.getCache().getInt("cannon_y");
 
-							GameObject cannon = player.getWorld().getRegionManager().getRegion(cannonX, cannonY).getGameObject(cannonX, cannonY, player);
+							GameObject cannon = player.getWorld()
+									.getRegionManager()
+									.getRegion(cannonX, cannonY)
+									.getGameObject(new Point(cannonX, cannonY), player);
 							// does not exist or the object there is not a cannon.
 							if (cannon == null || !DataConversions.inArray(Cannon.cannonObjectIDs, cannon.getID())) {
 								mes("the dwarf gives you a new cannon");

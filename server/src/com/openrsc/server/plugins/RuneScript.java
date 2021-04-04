@@ -56,6 +56,7 @@ public class RuneScript {
 
 	/**
 	 * Check if the player is male
+	 *
 	 * @return Returns true if the player is male and false if female.
 	 */
 	@Deprecated
@@ -82,10 +83,10 @@ public class RuneScript {
 	/**
 	 * Displays the specified shop to the player
 	 * NOTE: On a second pass, this needs to take something like a shop ID instead of a shop object
+	 *
 	 * @param shop The shop to be shown to the player
 	 */
-	public static void openshop(final Shop shop)
-	{
+	public static void openshop(final Shop shop) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
 		final Player player = scriptContext.getContextPlayer();
@@ -96,6 +97,7 @@ public class RuneScript {
 
 	/**
 	 * Displays the player's current bank balance
+	 *
 	 * @return The count of item ID 10 (coins) in the player's bank
 	 * @deprecated This function was used for the coin bank, which was removed July 26th 2001.
 	 */
@@ -110,12 +112,15 @@ public class RuneScript {
 	}
 
 	/**
-	 * 	Delays both the script and the player for the specified number of server cycles
+	 * Delays both the script and the player for the specified number of server cycles
 	 */
-	public static void delay() { delay(1); }
+	public static void delay() {
+		delay(1);
+	}
 
 	/**
 	 * Delays both the script and the player for the specified number of server cycles
+	 *
 	 * @param ticks How long to delay in server ticks
 	 */
 	public static void delay(final int ticks) {
@@ -128,6 +133,7 @@ public class RuneScript {
 
 	/**
 	 * Pauses the script for a random amount of time in between the specified minimum and maximum.
+	 *
 	 * @param mindelay
 	 * @param maxdelay
 	 */
@@ -143,6 +149,7 @@ public class RuneScript {
 	/**
 	 * Pauses the script for a random amount of time in between the specified minimum and maximum.
 	 * If the world's player count is greater than 60, then the wait time is modified.
+	 *
 	 * @param mindelay
 	 * @param maxdelay
 	 */
@@ -154,13 +161,14 @@ public class RuneScript {
 		int ticks = DataConversions.random(mindelay, maxdelay);
 		final int playerCount = pluginTask.getWorld().getPlayers().size();
 		if (playerCount > 60) {
-			ticks = (ticks*60)/playerCount;
+			ticks = (ticks * 60) / playerCount;
 		}
 		pluginTask.pause(ticks);
 	}
 
 	/**
 	 * Randomly returns true or false
+	 *
 	 * @param probability 0-256, 0 is impossible and 256 is certain
 	 * @return
 	 */
@@ -193,7 +201,7 @@ public class RuneScript {
 	}
 
 	/**
-	 * 	Terminates processing of the current script block
+	 * Terminates processing of the current script block
 	 */
 	public static void end() {
 		end("Script ended");
@@ -205,6 +213,7 @@ public class RuneScript {
 
 	/**
 	 * Displays server message(s)
+	 *
 	 * @param messages
 	 */
 	public static void mes(final String... messages) {
@@ -231,6 +240,7 @@ public class RuneScript {
 	 * Makes the player character say the specified string, all nearby players
 	 * will also see this. The command will then automatically delay the script
 	 * depending on the length of the string.
+	 *
 	 * @param messages The strings to be said by the player character
 	 */
 	public static void say(final String... messages) {
@@ -267,8 +277,9 @@ public class RuneScript {
 
 	/**
 	 * Displays a multiple choice menu.
+	 *
 	 * @param options Options to add to the multiple choice list.
-	 *                   Should only have a max of 5.
+	 *                Should only have a max of 5.
 	 * @return The zero-indexed selection of the player. If the player
 	 * selects nothing, -1 is returned.
 	 */
@@ -278,11 +289,12 @@ public class RuneScript {
 
 	/**
 	 * Displays a multiple choice menu.
+	 *
 	 * @param sendToClient If this is false, the player will not say the selected option.
 	 *                     This allows the menu option and the associated player dialog to
 	 *                     be different.
-	 * @param options Options to add to the multiple choice list.
-	 *                   Should only have a max of 5.
+	 * @param options      Options to add to the multiple choice list.
+	 *                     Should only have a max of 5.
 	 * @return The zero-indexed selection of the player. If the player
 	 * selects nothing, -1 is returned.
 	 */
@@ -329,6 +341,7 @@ public class RuneScript {
 
 	/**
 	 * Moves the player to the specified level, without changing the x and y position.
+	 *
 	 * @param level 0=ground floor, 1=1st floor, 2=2nd floor, 3=basement
 	 */
 	public static void changelevel(final int level) {
@@ -338,9 +351,9 @@ public class RuneScript {
 		if (player == null) return;
 
 		final int currentFloor = player.getY() / FLOOR_OFFSET; // This is the distance between floors
-		final int newY = player.getY() + ((level-currentFloor)*FLOOR_OFFSET);
+		final int newY = player.getY() + ((level - currentFloor) * FLOOR_OFFSET);
 
-		if (newY < 0 || newY > FLOOR_OFFSET*4) {
+		if (newY < 0 || newY > FLOOR_OFFSET * 4) {
 			return;
 		}
 
@@ -359,7 +372,7 @@ public class RuneScript {
 		final int newY = player.getY() + FLOOR_OFFSET;
 
 		// Check to see if the player will go above level 3
-		if (newY > FLOOR_OFFSET*4) {
+		if (newY > FLOOR_OFFSET * 4) {
 			return;
 		}
 
@@ -389,7 +402,8 @@ public class RuneScript {
 	 * Like the random command but stat modified, if the stat is 0 the
 	 * base-probability is used, if the stat is 100 the top-probability
 	 * is used. If the stat is in between then the 2 values are interpolated.
-	 * @param stat The player's skill level
+	 *
+	 * @param stat            The player's skill level
 	 * @param baseProbability
 	 * @param topProbability
 	 * @return Returns true if the player has passed the skill check.
@@ -403,7 +417,7 @@ public class RuneScript {
 		if (player == null) return false;
 
 		final int statLevel = player.getLevel(stat);
-		final int probability = (int)Math.floor(Functions.lerp(baseProbability, topProbability, (float)statLevel / 100.0f));
+		final int probability = (int) Math.floor(Functions.lerp(baseProbability, topProbability, (float) statLevel / 100.0f));
 		final boolean isStatRandom = probability >= DataConversions.random(1, 255);
 		scriptContext.setExecutionFlag(isStatRandom);
 		return isStatRandom;
@@ -428,9 +442,10 @@ public class RuneScript {
 
 	/**
 	 * Temporarily adds constant+(current*percent)/100 to the player's specified stat.
-	 * @param statId The ID of the skill to be changed
+	 *
+	 * @param statId   The ID of the skill to be changed
 	 * @param constant Constant number for addition
-	 * @param percent Percentage of current skill level to add
+	 * @param percent  Percentage of current skill level to add
 	 */
 	public static void addstat(final int statId, final int constant, final int percent) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -439,15 +454,16 @@ public class RuneScript {
 		if (player == null) return;
 
 		final int currentLevel = player.getSkills().getLevel(statId);
-		final int newLevel = currentLevel + (int)(constant + (currentLevel * percent) / 100.0);
+		final int newLevel = currentLevel + (int) (constant + (currentLevel * percent) / 100.0);
 		player.getSkills().setLevel(statId, newLevel);
 	}
 
 	/**
 	 * Temporarily subtracts constant+(current*percent)/100 from the player's specified stat.
-	 * @param statId The ID of the skill to be changed
+	 *
+	 * @param statId   The ID of the skill to be changed
 	 * @param constant Constant number for addition
-	 * @param percent Percentage of current skill level to add
+	 * @param percent  Percentage of current skill level to add
 	 */
 	public static void substat(final int statId, final int constant, final int percent) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -456,16 +472,17 @@ public class RuneScript {
 		if (player == null) return;
 
 		final int currentLevel = player.getSkills().getLevel(statId);
-		final int newLevel = currentLevel - (int)(constant + (currentLevel * percent) / 100.0);
+		final int newLevel = currentLevel - (int) (constant + (currentLevel * percent) / 100.0);
 		player.getSkills().setLevel(statId, newLevel);
 	}
 
 	/**
 	 * Temporarily adds constant+(current*percent)/100 to the player's specified stat.
 	 * Will not take the player's stat above the normal level.
-	 * @param statId The ID of the skill to be changed
+	 *
+	 * @param statId   The ID of the skill to be changed
 	 * @param constant Constant number for addition
-	 * @param percent Percentage of current skill level to add
+	 * @param percent  Percentage of current skill level to add
 	 */
 	public static void healstat(final int statId, final int constant, final int percent) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -474,13 +491,14 @@ public class RuneScript {
 		if (player == null) return;
 
 		final int currentLevel = player.getSkills().getLevel(statId);
-		final int newLevel = currentLevel + (int)(constant + (currentLevel * percent) / 100.0);
+		final int newLevel = currentLevel + (int) (constant + (currentLevel * percent) / 100.0);
 		player.getSkills().setLevel(statId,
-			Math.min(newLevel, player.getSkills().getMaxStat(statId)));
+				Math.min(newLevel, player.getSkills().getMaxStat(statId)));
 	}
 
 	/**
 	 * Checks if the player's stat is currently above the normal level
+	 *
 	 * @param statId The stat to check
 	 * @return True if the stat is above the normal level and false otherwise.
 	 */
@@ -497,6 +515,7 @@ public class RuneScript {
 
 	/**
 	 * Checks if the player's stat is currently below the normal level
+	 *
 	 * @param statId The stat to check
 	 * @return True if the stat is below the normal level and false otherwise.
 	 */
@@ -513,8 +532,9 @@ public class RuneScript {
 
 	/**
 	 * Checks if the player's stat is currently above (but not equal to) the specified value.
+	 *
 	 * @param statId The stat to check
-	 * @param value The value to check the player's stat against
+	 * @param value  The value to check the player's stat against
 	 * @return True if the player's stat is above the value, false otherwise.
 	 */
 	public static boolean ifstatabove(final int statId, final int value) {
@@ -530,9 +550,10 @@ public class RuneScript {
 
 	/**
 	 * Checks if the player's stat is greater than or equal to getvar(variable)+value
-	 * @param statId The stat to check
+	 *
+	 * @param statId   The stat to check
 	 * @param variable The variable to add the value to
-	 * @param value The value to be added to the variable
+	 * @param value    The value to be added to the variable
 	 * @return True if the player's stat is greater than or equal to, false otherwise.
 	 */
 	public static boolean ifstatatleast(final int statId, final String variable, final int value) {
@@ -548,6 +569,7 @@ public class RuneScript {
 
 	/**
 	 * Gives the player the specified number of quest points.
+	 *
 	 * @param value The number of quest points to be given to the player.
 	 */
 	public static void giveqp(final int value) {
@@ -561,6 +583,7 @@ public class RuneScript {
 
 	/**
 	 * Checks if the player's quest points are greater than or equal to a certain value.
+	 *
 	 * @param value The number of quest points to check against
 	 * @return True if the player has the correct number of quest points (or more), false otherwise.
 	 */
@@ -577,8 +600,9 @@ public class RuneScript {
 
 	/**
 	 * Sets the condition flag if the player variable is equal to the provided value.
+	 *
 	 * @param variable The player variable to check
-	 * @param value The value to check the player variable against
+	 * @param value    The value to check the player variable against
 	 * @return True if the variable is equal to the provided value, false otherwise.
 	 */
 	public static boolean ifvar(String variable, int value) {
@@ -594,8 +618,9 @@ public class RuneScript {
 
 	/**
 	 * Sets the condition flag if the player variable is greater than to the provided value.
+	 *
 	 * @param variable The player variable to check
-	 * @param value The value to check the player variable against
+	 * @param value    The value to check the player variable against
 	 * @return True if the variable is greater than the provided value, false otherwise.
 	 */
 	public static boolean ifvarmore(final String variable, final int value) {
@@ -611,8 +636,9 @@ public class RuneScript {
 
 	/**
 	 * Sets the condition flag if the player variable is less than to the provided value.
+	 *
 	 * @param variable The player variable to check
-	 * @param value The value to check the player variable against
+	 * @param value    The value to check the player variable against
 	 * @return True if the variable is less than the provided value, false otherwise.
 	 */
 	public static boolean ifvarless(final String variable, final int value) {
@@ -628,8 +654,9 @@ public class RuneScript {
 
 	/**
 	 * Sets the variable to the specified value.
+	 *
 	 * @param variable The name of the variable
-	 * @param value An integer between 0 and 127 to be stored
+	 * @param value    An integer between 0 and 127 to be stored
 	 */
 	public static void setvar(final String variable, final int value) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -647,8 +674,9 @@ public class RuneScript {
 	/**
 	 * Adds the specified amount to the variable's value.
 	 * NOTE: Variables can only hold numbers from 0-127
+	 *
 	 * @param variable The name of the variable
-	 * @param value The amount to add
+	 * @param value    The amount to add
 	 */
 	public static void addvar(final String variable, final int value) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -668,8 +696,9 @@ public class RuneScript {
 	/**
 	 * Subtracts the specified amount from the variable's value.
 	 * NOTE: Variables can only hold numbers from 0-127
+	 *
 	 * @param variable The name of the variable
-	 * @param value The amount to subtract
+	 * @param value    The amount to subtract
 	 */
 	public static void subvar(final String variable, final int value) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -688,6 +717,7 @@ public class RuneScript {
 
 	/**
 	 * Sets the variable 'random' to a random integer between 0 and value-1
+	 *
 	 * @param value
 	 */
 	public static void randomvar(final int value) {
@@ -696,18 +726,19 @@ public class RuneScript {
 		final Player player = scriptContext.getContextPlayer();
 		if (player == null) return;
 
-		if (value > (VAR_MIN+1)) {
-			throw new IllegalArgumentException("Value cannot be greater than " + (VAR_MIN)+1);
+		if (value > (VAR_MIN + 1)) {
+			throw new IllegalArgumentException("Value cannot be greater than " + (VAR_MIN) + 1);
 		}
 
-		player.getCache().set("random", DataConversions.random(0, value-1));
+		player.getCache().set("random", DataConversions.random(0, value - 1));
 	}
 
 	/**
 	 * Adds the specified amount to the big variable's value.
 	 * NOTE: Big variables can only hold numbers from 0-268435455
+	 *
 	 * @param variable The name of the variable
-	 * @param value The amount to add
+	 * @param value    The amount to add
 	 */
 	public static void addbigvar(final String variable, final int value) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -727,8 +758,9 @@ public class RuneScript {
 	/**
 	 * Subtracts the specified amount from the big variable's value.
 	 * NOTE: Big variables can only hold numbers from 0-268435455
+	 *
 	 * @param variable The name of the variable
-	 * @param value The amount to subtract
+	 * @param value    The amount to subtract
 	 */
 	public static void subbigvar(final String variable, final int value) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -747,8 +779,9 @@ public class RuneScript {
 
 	/**
 	 * Sets the condition flag if the player big variable is greater than to the provided value.
+	 *
 	 * @param variable The player big variable to check
-	 * @param value The value to check the player big variable against
+	 * @param value    The value to check the player big variable against
 	 * @return True if the big variable is greater than the provided value, false otherwise.
 	 */
 	public static boolean ifbigvarmore(String variable, int value) {
@@ -757,6 +790,7 @@ public class RuneScript {
 
 	/**
 	 * Sets the coordinate the player is interacting with
+	 *
 	 * @param coordinate The coordinate the player is interacting with
 	 */
 	public static void setcoord(final Point coordinate) {
@@ -780,9 +814,10 @@ public class RuneScript {
 	/**
 	 * Adds the specified object at the active coordinate.
 	 * Use setcoord or playercoord to set the active coordinate.
+	 *
 	 * @param object The Catalog ID of the item to spawn
-	 * @param count How much of the item to spawn (if stackable)
-	 * @param time How long (in ticks) the item should remain on the ground (usually 200).
+	 * @param count  How much of the item to spawn (if stackable)
+	 * @param time   How long (in ticks) the item should remain on the ground (usually 200).
 	 */
 	public static void addobject(final int object, final int count, final int time) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -793,12 +828,13 @@ public class RuneScript {
 		if (interactingCoordinate == null) return;
 
 		player.getWorld().registerItem(
-			new GroundItem(player.getWorld(), object, interactingCoordinate.getX(), interactingCoordinate.getY(), count, player),
-			player.getConfig().GAME_TICK * time);
+				new GroundItem(player.getWorld(), object, interactingCoordinate.getX(), interactingCoordinate.getY(), count, player),
+				player.getConfig().GAME_TICK * time);
 	}
 
 	/**
 	 * Spawns the specified npc at the active coordinate.
+	 *
 	 * @param npc The ID of the NPC to spawn
 	 */
 	public static void addnpc(final int npc) {
@@ -816,6 +852,7 @@ public class RuneScript {
 
 	/**
 	 * Adds the specified location at the active coordinate.
+	 *
 	 * @param location The ID of the location (GameObject/Scenery) to spawn
 	 */
 	public static void addloc(final int location) {
@@ -832,6 +869,7 @@ public class RuneScript {
 
 	/**
 	 * Checks if the square indicated by the active coordinate is blocked.
+	 *
 	 * @return True if the square indicated by the active coordinate is blocked, false otherwise
 	 */
 	public static boolean ifblocked() {
@@ -863,6 +901,7 @@ public class RuneScript {
 
 	/**
 	 * Displays a special effect animation of the specified type at the active coordinate.
+	 *
 	 * @param type The ID of the effect animation
 	 */
 	public static void showeffect(final int type) {
@@ -871,8 +910,9 @@ public class RuneScript {
 
 	/**
 	 * Gives the specified number of the specified object to the player's inventory
+	 *
 	 * @param object The ID of the item
-	 * @param count The amount of the item
+	 * @param count  The amount of the item
 	 */
 	public static void give(final int object, final int count) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -893,8 +933,9 @@ public class RuneScript {
 	/**
 	 * Removes the specified number of the specified object from player's inventory
 	 * (or as many as possible)
+	 *
 	 * @param object The ID of the item
-	 * @param count The amount of the item
+	 * @param count  The amount of the item
 	 */
 	public static void remove(final int object, final int count) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -919,6 +960,7 @@ public class RuneScript {
 
 	/**
 	 * Checks if the player is wearing the specified object.
+	 *
 	 * @param object The ID of the item
 	 * @return True if the player is wearing the specified item, false otherwise.
 	 */
@@ -935,8 +977,9 @@ public class RuneScript {
 
 	/**
 	 * Checks if the player is holding the specified object
+	 *
 	 * @param object The ID of the item
-	 * @param count The amount of the item
+	 * @param count  The amount of the item
 	 * @return True if the player is holding the specified item, false otherwise.
 	 */
 	public static boolean ifheld(final int object, final int count) {
@@ -953,6 +996,7 @@ public class RuneScript {
 	/**
 	 * Removes the active inventory object from the player's inventory and replaces
 	 * it with the specified percentage of its value in gold coins.
+	 *
 	 * @param percentage Percentage of the value of the item to be given to the player
 	 *                   in coins
 	 */
@@ -968,7 +1012,7 @@ public class RuneScript {
 		final int amount = interactingItem.getAmount();
 
 		remove(interactingItem.getCatalogId(), amount);
-		give(ItemId.COINS.id(), amount*(value*(percentage/100)));
+		give(ItemId.COINS.id(), amount * (value * (percentage / 100)));
 	}
 
 	/**
@@ -987,6 +1031,7 @@ public class RuneScript {
 
 	/**
 	 * Checks if the player has line-of-sight to the interacting ground item
+	 *
 	 * @return True if the player has line-of-sight with the interacting ground item,
 	 * false otherwise.
 	 */
@@ -1000,7 +1045,7 @@ public class RuneScript {
 
 
 		final boolean isObjectVisible = player.getViewArea().getGroundItem(interactingGroundItem.getID(), interactingGroundItem.getLocation()) != null
-			&& player.canReach(interactingGroundItem);
+				&& player.canReach(interactingGroundItem);
 		scriptContext.setExecutionFlag(isObjectVisible);
 		return isObjectVisible;
 	}
@@ -1033,11 +1078,12 @@ public class RuneScript {
 		if (interactingGroundItem == null) return;
 
 		player.getViewArea().getGroundItem(interactingGroundItem.getID(),
-			interactingGroundItem.getLocation()).remove();
+				interactingGroundItem.getLocation()).remove();
 	}
 
 	/**
 	 * Changes the location to the new specified location type
+	 *
 	 * @param location The GameObject/Location ID
 	 */
 	public static void changeloc(final int location) {
@@ -1051,11 +1097,11 @@ public class RuneScript {
 
 		// Add the new one
 		final GameObject obj = new GameObject(
-			interactingLocation.getWorld(),
-			interactingLocation.getLocation(),
-			location,
-			0,
-			0);
+				interactingLocation.getWorld(),
+				interactingLocation.getLocation(),
+				location,
+				0,
+				0);
 		obj.getWorld().registerGameObject(obj);
 	}
 
@@ -1074,7 +1120,7 @@ public class RuneScript {
 		final int newY = player.getY() + FLOOR_OFFSET;
 
 		// Check to see if the player will go above level 3
-		if (newY > FLOOR_OFFSET*4) {
+		if (newY > FLOOR_OFFSET * 4) {
 			return;
 		}
 
@@ -1149,6 +1195,7 @@ public class RuneScript {
 
 	/**
 	 * Changes the boundary to the new specified boundary type
+	 *
 	 * @param boundary The ID of the boundary type (GameObject) to change to
 	 */
 	public static void changebound(final int boundary) {
@@ -1164,10 +1211,10 @@ public class RuneScript {
 
 		// Add the new one using mostly the data from the old one
 		final GameObject newBoundary = new GameObject(interactingBoundary.getWorld(),
-			interactingBoundary.getLocation(),
-			boundary,
-			interactingBoundary.getDirection(),
-			interactingBoundary.getType());
+				interactingBoundary.getLocation(),
+				boundary,
+				interactingBoundary.getDirection(),
+				interactingBoundary.getType());
 		newBoundary.getWorld().registerGameObject(newBoundary);
 	}
 
@@ -1234,6 +1281,7 @@ public class RuneScript {
 	 * Attempt to find a nearby NPC of the type specified.
 	 * If successful, the player is marked as interacting with the NPC so the
 	 * other NPC commands can also be used.
+	 *
 	 * @param npc The ID of the NPC to look for
 	 * @return True if an NPC of the provided ID was found, false otherwise.
 	 */
@@ -1266,6 +1314,7 @@ public class RuneScript {
 	 * an 8 tile radius and be within the player's line-of-sight.
 	 * If successful, the player is marked as interacting with the NPC so the
 	 * other NPC commands can also be used.
+	 *
 	 * @param npc The ID of the NPC to look for
 	 * @return True if an NPC of the provided ID was found, false otherwise.
 	 */
@@ -1300,6 +1349,7 @@ public class RuneScript {
 	 * Makes the NPC say the specified strings. All nearby people will also see this.
 	 * The command will then automatically delay the script depending on the length
 	 * of the string.
+	 *
 	 * @param messages The list of strings the NPC will say
 	 */
 	public static void npcsay(final String... messages) {
@@ -1310,7 +1360,7 @@ public class RuneScript {
 		final Npc npc = scriptContext.getInteractingNpc();
 
 		// Reset the walk action on the Npc (stop them from walking).
-		if(npc != null) {
+		if (npc != null) {
 			npc.resetPath();
 			npc.face(player);
 		}
@@ -1361,6 +1411,7 @@ public class RuneScript {
 
 	/**
 	 * Fires a projectile at the NPC.
+	 *
 	 * @param projectile
 	 */
 	public static void shootnpc(final int projectile) {
@@ -1383,6 +1434,7 @@ public class RuneScript {
 
 	/**
 	 * Checks if the player has line-of-sight with the NPC
+	 *
 	 * @return True if the player has line-of-sight with the NPC, false otherwise.
 	 */
 	public static boolean ifnpcvisible() {
@@ -1400,9 +1452,10 @@ public class RuneScript {
 
 	/**
 	 * Temporarily adds constant+(current*percent)/100 to the NPC's specified stat.
-	 * @param statId The ID of the skill to be changed
+	 *
+	 * @param statId   The ID of the skill to be changed
 	 * @param constant Constant number for addition
-	 * @param percent Percentage of current skill level to add
+	 * @param percent  Percentage of current skill level to add
 	 */
 	public static void addnpcstat(final int statId, final int constant, final int percent) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -1411,15 +1464,16 @@ public class RuneScript {
 		if (npc == null) return;
 
 		final int currentLevel = npc.getSkills().getLevel(statId);
-		final int newLevel = currentLevel + (int)(constant + (currentLevel * percent) / 100.0);
+		final int newLevel = currentLevel + (int) (constant + (currentLevel * percent) / 100.0);
 		npc.getSkills().setLevel(statId, newLevel);
 	}
 
 	/**
 	 * Temporarily subtracts constant+(current*percent)/100 from the NPC's specified stat.
-	 * @param statId The ID of the skill to be changed
+	 *
+	 * @param statId   The ID of the skill to be changed
 	 * @param constant Constant number for addition
-	 * @param percent Percentage of current skill level to subtract
+	 * @param percent  Percentage of current skill level to subtract
 	 */
 	public static void subnpcstat(final int statId, final int constant, final int percent) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -1428,16 +1482,17 @@ public class RuneScript {
 		if (npc == null) return;
 
 		final int currentLevel = npc.getSkills().getLevel(statId);
-		final int newLevel = currentLevel - (int)(constant + (currentLevel * percent) / 100.0);
+		final int newLevel = currentLevel - (int) (constant + (currentLevel * percent) / 100.0);
 		npc.getSkills().setLevel(statId, newLevel);
 	}
 
 	/**
 	 * Temporarily adds constant+(current*percent)/100 to the NPC's specified stat.
 	 * Will not take the NPC's stat above the normal level.
-	 * @param statId The ID of the skill to be changed
+	 *
+	 * @param statId   The ID of the skill to be changed
 	 * @param constant Constant number for addition
-	 * @param percent Percentage of current skill level to add
+	 * @param percent  Percentage of current skill level to add
 	 */
 	public static void healnpcstat(final int statId, final int constant, final int percent) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -1446,13 +1501,14 @@ public class RuneScript {
 		if (npc == null) return;
 
 		final int currentLevel = npc.getSkills().getLevel(statId);
-		final int newLevel = currentLevel + (int)(constant + (currentLevel * percent) / 100.0);
+		final int newLevel = currentLevel + (int) (constant + (currentLevel * percent) / 100.0);
 		npc.getSkills().setLevel(statId,
-			Math.min(newLevel, npc.getSkills().getMaxStat(statId)));
+				Math.min(newLevel, npc.getSkills().getMaxStat(statId)));
 	}
 
 	/**
 	 * Checks if the NPC's stat is currently above the normal level
+	 *
 	 * @param statId The stat to check
 	 * @return True if the stat is above the normal level and false otherwise.
 	 */
@@ -1469,6 +1525,7 @@ public class RuneScript {
 
 	/**
 	 * Checks if the NPC's stat is currently below the normal level
+	 *
 	 * @param statId The stat to check
 	 * @return True if the stat is below the normal level and false otherwise.
 	 */
@@ -1498,6 +1555,7 @@ public class RuneScript {
 
 	/**
 	 * Changes the NPC to the new NPC type specified
+	 *
 	 * @param npc The ID of the new NPC
 	 */
 	public static void changenpc(final int npc) {
@@ -1517,6 +1575,7 @@ public class RuneScript {
 
 	/**
 	 * Causes the NPC to run away from the player for the specified number of server cycles
+	 *
 	 * @param time The amount of ticks the NPC should run for
 	 */
 	public static void npcretreat(int time) {
@@ -1530,9 +1589,10 @@ public class RuneScript {
 
 	/**
 	 * Temporarily adds constant+(current*percent)/100 to the second player's specified stat.
-	 * @param statId The ID of the skill to be changed
+	 *
+	 * @param statId   The ID of the skill to be changed
 	 * @param constant Constant number for addition
-	 * @param percent Percentage of current skill level to add
+	 * @param percent  Percentage of current skill level to add
 	 */
 	public static void addplaystat(final int statId, final int constant, final int percent) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -1541,15 +1601,16 @@ public class RuneScript {
 		if (player == null) return;
 
 		final int currentLevel = player.getSkills().getLevel(statId);
-		final int newLevel = currentLevel + (int)(constant + (currentLevel * percent) / 100.0);
+		final int newLevel = currentLevel + (int) (constant + (currentLevel * percent) / 100.0);
 		player.getSkills().setLevel(statId, newLevel);
 	}
 
 	/**
 	 * Temporarily subtracts constant+(current*percent)/100 from the second player's specified stat.
-	 * @param statId The ID of the skill to be changed
+	 *
+	 * @param statId   The ID of the skill to be changed
 	 * @param constant Constant number for addition
-	 * @param percent Percentage of current skill level to subtract
+	 * @param percent  Percentage of current skill level to subtract
 	 */
 	public static void subplaystat(final int statId, final int constant, final int percent) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -1558,16 +1619,17 @@ public class RuneScript {
 		if (player == null) return;
 
 		final int currentLevel = player.getSkills().getLevel(statId);
-		final int newLevel = currentLevel - (int)(constant + (currentLevel * percent) / 100.0);
+		final int newLevel = currentLevel - (int) (constant + (currentLevel * percent) / 100.0);
 		player.getSkills().setLevel(statId, newLevel);
 	}
 
 	/**
 	 * Temporarily adds constant+(current*percent)/100 to the second player's specified stat.
 	 * Will not take the player's stat above the normal level.
-	 * @param statId The ID of the skill to be changed
+	 *
+	 * @param statId   The ID of the skill to be changed
 	 * @param constant Constant number for addition
-	 * @param percent Percentage of current skill level to add
+	 * @param percent  Percentage of current skill level to add
 	 */
 	public static void healplaystat(final int statId, final int constant, final int percent) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
@@ -1576,13 +1638,14 @@ public class RuneScript {
 		if (player == null) return;
 
 		final int currentLevel = player.getSkills().getLevel(statId);
-		final int newLevel = currentLevel + (int)(constant + (currentLevel * percent) / 100.0);
+		final int newLevel = currentLevel + (int) (constant + (currentLevel * percent) / 100.0);
 		player.getSkills().setLevel(statId,
-			Math.min(newLevel, player.getSkills().getMaxStat(statId)));
+				Math.min(newLevel, player.getSkills().getMaxStat(statId)));
 	}
 
 	/**
 	 * Checks if the second player's stat is currently above the normal level
+	 *
 	 * @param statId The stat to check
 	 * @return True if the stat is above the normal level and false otherwise.
 	 */
@@ -1599,6 +1662,7 @@ public class RuneScript {
 
 	/**
 	 * Checks if the second player's stat is currently below the normal level
+	 *
 	 * @param statId The stat to check
 	 * @return True if the stat is below the normal level and false otherwise.
 	 */
@@ -1615,6 +1679,7 @@ public class RuneScript {
 
 	/**
 	 * Displays a message to the second player's screen
+	 *
 	 * @param messages The messages to be displayed to the second player
 	 */
 	public static void omes(final String... messages) {
@@ -1632,6 +1697,7 @@ public class RuneScript {
 
 	/**
 	 * Checks to see if line-of-sight can be traced between the two players
+	 *
 	 * @return True if line-of-sight can be traced between the two players, false otherwise.
 	 */
 	public static boolean ifplayervisible() {
@@ -1649,6 +1715,7 @@ public class RuneScript {
 
 	/**
 	 * Fires a projectile at the second player
+	 *
 	 * @param projectile
 	 */
 	public static void shootplayer(final int projectile) {

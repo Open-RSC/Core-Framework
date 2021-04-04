@@ -58,9 +58,9 @@ public class FishingTrawler extends DelayedEvent {
 	private CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<Player>();
 	private CopyOnWriteArrayList<Player> unteledPlayers = new CopyOnWriteArrayList<Player>();
 	private String[] murphys_messages_ship1 = new String[]{"That's the stuff, fill those holes",
-		"it's a fierce sea today traveller", "check those nets"};
+			"it's a fierce sea today traveller", "check those nets"};
 	private String[] murphys_messages_ship2 = new String[]{"we're going under", "we'll all end up in a watery grave",
-		"check those nets"};
+			"check those nets"};
 
 	private List<SimpleSubscriber<FishingTrawler>> subscribers = new ArrayList<SimpleSubscriber<FishingTrawler>>();
 
@@ -74,8 +74,7 @@ public class FishingTrawler extends DelayedEvent {
 			setShipAreaWater(new Area(245, 253, 727, 731, "FishingTrawler: Water"));
 			shipAreaWaterSpawn = new Point(251, 729);
 			spawnFail = SPAWN_EAST_FAIL;
-		}
-		else {
+		} else {
 			shipArea = new Area(318, 326, 740, 744, "FishingTrawler: Fine");
 			spawnLocation = new Point(320, 742);
 
@@ -119,8 +118,7 @@ public class FishingTrawler extends DelayedEvent {
 					try {
 						aPlayer.setLocation(spawnFail, true);
 						unteledPlayers.remove(aPlayer);
-					}
-					catch(RuntimeException e) {
+					} catch (RuntimeException e) {
 					}
 				}
 
@@ -132,16 +130,15 @@ public class FishingTrawler extends DelayedEvent {
 					resetGame();
 					stop();
 					subscribers.parallelStream().forEach(subscriber -> {
-	                    subscriber.update(FishingTrawler.this);
-	                });
+						subscriber.update(FishingTrawler.this);
+					});
 					unregisterAll();
 				}
 				return;
 			}
 			if (this.currentStage == State.STANDBY) {
 				//handled on add player
-			}
-			else {
+			} else {
 				Iterator<Player> iter = players.iterator();
 				Player pl;
 				// sweep players to see if they are still there
@@ -151,8 +148,7 @@ public class FishingTrawler extends DelayedEvent {
 						if (!pl.isLoggedIn() || pl.isRemoved()) {
 							try {
 								disconnectPlayer(pl, false);
-							}
-							catch(RuntimeException e) {
+							} catch (RuntimeException e) {
 							}
 						}
 					}
@@ -160,8 +156,7 @@ public class FishingTrawler extends DelayedEvent {
 				// players logged out or left
 				if (players.size() == 0) {
 					resetGame();
-				}
-				else if (currentStage == State.FIRST_SHIP) {
+				} else if (currentStage == State.FIRST_SHIP) {
 					if (getWaterLevel() >= SHIP_WATER_LIMIT_SECOND_BOAT) {
 						for (Player player : players) {
 							player.message("the boats full of water");
@@ -170,8 +165,7 @@ public class FishingTrawler extends DelayedEvent {
 							// in the other stage
 							try {
 								player.setLocation(shipAreaWaterSpawn, true);
-							}
-							catch(RuntimeException e) {
+							} catch (RuntimeException e) {
 								unteledPlayers.add(player);
 							}
 						}
@@ -193,8 +187,7 @@ public class FishingTrawler extends DelayedEvent {
 						try {
 							aPlayer.setLocation(shipAreaWaterSpawn, true);
 							unteledPlayers.remove(aPlayer);
-						}
-						catch(RuntimeException e) {
+						} catch (RuntimeException e) {
 						}
 					}
 					if (getWaterLevel() >= SHIP_WATER_LIMIT_SINK) {
@@ -205,8 +198,7 @@ public class FishingTrawler extends DelayedEvent {
 							// attempt to teleport in the cleanup stage
 							try {
 								player.setLocation(spawnFail, true);
-							}
-							catch(RuntimeException e) {
+							} catch (RuntimeException e) {
 								unteledPlayers.add(player);
 							}
 							ActionSender.hideFishingTrawlerInterface(player);
@@ -282,8 +274,8 @@ public class FishingTrawler extends DelayedEvent {
 			setNetBroken(true);
 			for (Player player : players) {
 				ActionSender.sendBox(player,
-					"@red@ The trawler net is damaged% %you cannot catch any fish with a damaged net",
-					false);
+						"@red@ The trawler net is damaged% %you cannot catch any fish with a damaged net",
+						false);
 			}
 		}
 	}
@@ -293,11 +285,11 @@ public class FishingTrawler extends DelayedEvent {
 		String message = "";
 		if (currentStage == State.FIRST_SHIP) {
 			npc = getWorld().getNpc(NpcId.MURPHY_BOAT.id(), shipArea.getMinX(), shipArea.getMaxX(), shipArea.getMinY(),
-				shipArea.getMaxY());
+					shipArea.getMaxY());
 			message = murphys_messages_ship1[DataConversions.random(0, murphys_messages_ship1.length - 1)];
 		} else if (currentStage == State.SECOND_SHIP) {
 			npc = getWorld().getNpc(NpcId.MURPHY_BOAT.id(), getShipAreaWater().getMinX(), getShipAreaWater().getMaxX(),
-				getShipAreaWater().getMinY(), getShipAreaWater().getMaxY());
+					getShipAreaWater().getMinY(), getShipAreaWater().getMaxY());
 			message = murphys_messages_ship2[DataConversions.random(0, murphys_messages_ship2.length - 1)];
 		}
 		if (npc != null) {
@@ -308,13 +300,12 @@ public class FishingTrawler extends DelayedEvent {
 	private void endGame() {
 		if (players.size() == 0 || fishCaught == 0) {
 			// no reward
-		}
-		else {
+		} else {
 			// x2 since about half will be filled with junk
 			int rewardForEach = 2 * fishCaught / players.size();
 			for (Player player : players) {
 				ActionSender.sendBox(player,
-					"@yel@you have trawled a full net% %@yel@It's time to go back in and inspect the catch", false);
+						"@yel@you have trawled a full net% %@yel@It's time to go back in and inspect the catch", false);
 				player.message("murphy turns the boat towards shore");
 				player.setLocation(SPAWN_LAND, true);
 				player.getCache().set("fishing_trawler_reward", rewardForEach);
@@ -327,7 +318,7 @@ public class FishingTrawler extends DelayedEvent {
 	}
 
 	public void start() {
-		timeTillReturn = DataConversions.random(5,12) * 60 * 1000; // time in ms
+		timeTillReturn = DataConversions.random(5, 12) * 60 * 1000; // time in ms
 		timeTillReturn = timeTillReturn / getWorld().getServer().getConfig().GAME_TICK; // corresponding ticks for world
 		currentStage = State.FIRST_SHIP;
 	}
@@ -387,7 +378,7 @@ public class FishingTrawler extends DelayedEvent {
 			/* The ship is leaking hardcore. */
 			if (freeLeakIndex == -1) {
 				break;
-			} else if (getWorld().getRegionManager().getRegion(x, y).getGameObject(x, y, null) != null) {
+			} else if (getWorld().getRegionManager().getRegion(x, y).getGameObject(new Point(x, y)) != null) {
 				continue;
 			}
 			int southSide = currentStage == State.FIRST_SHIP ? spawnLocation.getY() - 1 : shipAreaWaterSpawn.getY() - 1;
@@ -450,8 +441,7 @@ public class FishingTrawler extends DelayedEvent {
 	public void bailWater() {
 		if (this.currentStage == State.FIRST_SHIP) {
 			waterLevel -= DataConversions.random(1, 3);
-		}
-		else if (this.currentStage == State.SECOND_SHIP) {
+		} else if (this.currentStage == State.SECOND_SHIP) {
 			waterLevel -= DataConversions.random(2, 4);
 		}
 		if (waterLevel < 0)

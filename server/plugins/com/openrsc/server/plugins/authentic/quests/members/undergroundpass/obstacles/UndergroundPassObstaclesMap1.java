@@ -76,8 +76,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 					if (player.getQuestStage(Quests.BIOHAZARD) != -1) {
 						player.message("You must first complete the biohazard quest...");
 						player.message("...before you can enter");
-					}
-					else {
+					} else {
 						player.message("you must talk to king lathas before you can enter");
 					}
 					break;
@@ -100,13 +99,11 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 					player.teleport(673, 3420);
 					break;
 			}
-		}
-		else if (obj.getID() == CRUMBLED_ROCK) {
+		} else if (obj.getID() == CRUMBLED_ROCK) {
 			mes("you climb the rock pile");
 			delay(3);
 			player.teleport(713, 581);
-		}
-		else if (inArray(obj.getID(), READ_ROCKS)) {
+		} else if (inArray(obj.getID(), READ_ROCKS)) {
 			mes("the writing seems to have been scracthed...");
 			delay(3);
 			mes("..into the rock with bare hands, it reads..");
@@ -126,11 +123,9 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			} else if (obj.getID() == 881) {
 				ActionSender.sendBox(player, "@red@Leave this battered corpse be% %@red@For now he lives as spirit alone% %@red@Let his flesh rest and become one with the earth% %@red@As it is the soil that shall rise to protect him% %@red@Only as flesh becomes dust, as wood becomes ash...% %@red@..will Iban's corpse embrace nature and finally rest", true);
 			}
-		}
-		else if (inArray(obj.getID(), MAIN_ROCKS)) {
+		} else if (inArray(obj.getID(), MAIN_ROCKS)) {
 			doRock(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 42) + 1, true, -1);
-		}
-		else if (obj.getID() == FIRST_SWAMP) {
+		} else if (obj.getID() == FIRST_SWAMP) {
 			mes("you try to cross but you're unable to");
 			delay(3);
 			mes("the swamp seems to cling to your legs");
@@ -160,11 +155,9 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			delay(3);
 			mes("and land battered and bruised at the base");
 			delay(3);
-		}
-		else if (inArray(obj.getID(), FAIL_SWAMP_ROCKS)) {
+		} else if (inArray(obj.getID(), FAIL_SWAMP_ROCKS)) {
 			doRock(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 42) + 1, true, -1);
-		}
-		else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_1) {
+		} else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_1) {
 			mes("you climb up the mud pile");
 			delay(3);
 			player.teleport(685, 3420);
@@ -172,11 +165,9 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			delay(3);
 			mes("you surface by the swamp, covered in muck");
 			delay(3);
-		}
-		else if (inArray(obj.getID(), MAIN_LEDGE)) {
+		} else if (inArray(obj.getID(), MAIN_LEDGE)) {
 			doLedge(obj, player, (int) (getCurrentLevel(player, Skills.HITS) / 42) + 1);
-		}
-		else if (obj.getID() == LEVER) {
+		} else if (obj.getID() == LEVER) {
 			mes("you pull back on the old lever");
 			delay(3);
 			mes("the bridge slowly lowers");
@@ -191,22 +182,19 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			delay();
 			player.teleport(703, 3420);
 			player.message("you cross the bridge");
-		}
-		else if (obj.getID() == BLESSED_SPIDER_SWAMP_OBJ) {
+		} else if (obj.getID() == BLESSED_SPIDER_SWAMP_OBJ) {
 			mes("you step in rancid swamp");
 			delay(3);
 			mes("it clings to your feet, you cannot cross");
 			delay(3);
-		}
-		else if (obj.getID() == CLEAR_ROCKS || obj.getID() == CLEAR_ROCKS_INIT_WEST || obj.getID() == CLEAR_ROCKS_INIT_EAST) {
+		} else if (obj.getID() == CLEAR_ROCKS || obj.getID() == CLEAR_ROCKS_INIT_WEST || obj.getID() == CLEAR_ROCKS_INIT_EAST) {
 			if (player.getX() == 695 && (player.getY() == 3436 || player.getY() == 3435)) {
 				player.teleport(695, 3435);
 				return;
 			}
 			if (obj.getID() == CLEAR_ROCKS_INIT_WEST && player.getX() > obj.getX() && player.getY() == obj.getY()) {
 				player.teleport(obj.getX() + 1, obj.getY());
-			}
-			else if (obj.getID() == CLEAR_ROCKS_INIT_EAST && player.getX() < obj.getX() && player.getY() == obj.getY()) {
+			} else if (obj.getID() == CLEAR_ROCKS_INIT_EAST && player.getX() < obj.getX() && player.getY() == obj.getY()) {
 				player.teleport(obj.getX() + 1, obj.getY());
 			}
 			mes("you move the rocks from your path");
@@ -222,8 +210,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			say(player, null, "aaarrghhh");
 			mes("You've triggered a trap");
 			delay(3);
-		}
-		else if (inArray(obj.getID(), SPEAR_ROCKS)) {
+		} else if (inArray(obj.getID(), SPEAR_ROCKS)) {
 			if (cmd.equalsIgnoreCase("step over")) {
 				mes("you step over the rock");
 				delay(3);
@@ -231,8 +218,8 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 				player.message("it's a trap");
 				player.teleport(obj.getX(), obj.getY());
 				obj.getWorld().replaceGameObject(obj,
-					new GameObject(obj.getWorld(), obj.getLocation(), 805, obj.getDirection(), obj
-						.getType()));
+						new GameObject(obj.getWorld(), obj.getLocation(), 805, obj.getDirection(), obj
+								.getType()));
 				obj.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
 				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 6) + 1);
 				say(player, null, "aaarghh");
@@ -253,13 +240,12 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 							player.teleport(obj.getX() + 1, obj.getY());
 						else
 							player.teleport(obj.getX() - 1, obj.getY());
-					}
-					else {
+					} else {
 						player.message("but the trap activates");
 						player.teleport(obj.getX(), obj.getY());
 						obj.getWorld().replaceGameObject(obj,
-							new GameObject(obj.getWorld(), obj.getLocation(), 805, obj.getDirection(), obj
-								.getType()));
+								new GameObject(obj.getWorld(), obj.getLocation(), 805, obj.getDirection(), obj
+										.getType()));
 						obj.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
 						player.damage((int) (getCurrentLevel(player, Skills.HITS) / 6) + 1);
 						say(player, null, "aaarghh");
@@ -269,8 +255,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 					player.message("you back away from the trap");
 				}
 			}
-		}
-		else if (obj.getID() == DROP_DOWN_LEDGE) {
+		} else if (obj.getID() == DROP_DOWN_LEDGE) {
 			player.message("you drop down to the cave floor");
 			player.teleport(706, 3439);
 		}
@@ -336,7 +321,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 		boolean failRock = !Formulae.calcProductionSuccessfulLegacy(1, player.getSkills().getLevel(Skills.AGILITY), false, 71);
 		if (object != null && !failRock) {
 			if (object.getDirection() == 1 || object.getDirection() == 2 || object.getDirection() == 4
-				|| object.getDirection() == 3) {
+					|| object.getDirection() == 3) {
 				if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) { // X
 					teleport(player, object.getX() - 1, object.getY());
 				} else if (object.getX() == player.getX() + 1 && object.getY() == player.getY()) { // Y
@@ -415,7 +400,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 		}
 		if (eventMessage) {
 			player.getWorld().getServer().getGameEventHandler()
-				.add(new UndergroundPassMessages(player.getWorld(), player, config().GAME_TICK * DataConversions.random(3, 15)));
+					.add(new UndergroundPassMessages(player.getWorld(), player, config().GAME_TICK * DataConversions.random(3, 15)));
 		}
 	}
 }

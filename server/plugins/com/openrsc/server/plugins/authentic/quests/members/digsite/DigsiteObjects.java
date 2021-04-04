@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
+public class DigsiteObjects implements OpLocTrigger, UseLocTrigger {
 
 	private static final int[] SIGNPOST = {1060, 1061, 1062, 1063};
 	/* Objects */
@@ -47,7 +47,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 
 	@Override
 	public boolean blockOpLoc(Player player, GameObject obj, String command) {
-		return DataConversions.inArray(new int[] {HOUSE_EAST_CHEST_OPEN, HOUSE_EAST_CHEST_CLOSED, HOUSE_EAST_CUPBOARD_OPEN, HOUSE_EAST_CUPBOARD_CLOSED,
+		return DataConversions.inArray(new int[]{HOUSE_EAST_CHEST_OPEN, HOUSE_EAST_CHEST_CLOSED, HOUSE_EAST_CUPBOARD_OPEN, HOUSE_EAST_CUPBOARD_CLOSED,
 				HOUSE_WEST_CHESTS_OPEN, HOUSE_WEST_CHESTS_CLOSED, TENT_CHEST_OPEN, TENT_CHEST_LOCKED, HOUSE_BOOKCASE, SPECIMEN_TRAY,
 				CLIMB_UP_ROPE_SMALL_CAVE, CLIMB_UP_ROPE_BIG_CAVE, BRICK, X_BARREL_OPEN}, obj.getID()) || inArray(obj.getID(), SIGNPOST)
 				|| inArray(obj.getID(), SACKS) || inArray(obj.getID(), BURIED_SKELETON) || inArray(obj.getID(), BUSH);
@@ -59,25 +59,21 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 			player.message("You search the barrel");
 			player.message("The barrel has a foul-smelling liquid inside...");
 			say(player, null, "I can't pick this up with my bare hands!",
-				"I'll need something to put it in");
-		}
-		else if (obj.getID() == BRICK) {
+					"I'll need something to put it in");
+		} else if (obj.getID() == BRICK) {
 			say(player, null, "Hmmm, There's a room past these bricks",
-				"If I could move them out of the way",
-				"Then I could find out what's inside...");
-		}
-		else if (obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE || obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
+					"If I could move them out of the way",
+					"Then I could find out what's inside...");
+		} else if (obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE || obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
 			player.message("You climb the ladder");
 			if (obj.getID() == CLIMB_UP_ROPE_BIG_CAVE) {
 				player.teleport(25, 515);
 			} else if (obj.getID() == CLIMB_UP_ROPE_SMALL_CAVE) {
 				player.teleport(14, 506);
 			}
-		}
-		else if (obj.getID() == TENT_CHEST_LOCKED) {
+		} else if (obj.getID() == TENT_CHEST_LOCKED) {
 			player.message("The chest is locked");
-		}
-		else if (obj.getID() == TENT_CHEST_OPEN) {
+		} else if (obj.getID() == TENT_CHEST_OPEN) {
 			if (command.equalsIgnoreCase("Search")) {
 				mes("You search the chest");
 				delay(3);
@@ -85,14 +81,13 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 				give(player, ItemId.UNIDENTIFIED_POWDER.id(), 1);
 				player.getWorld().registerGameObject(
 						new GameObject(obj.getWorld(), obj.getLocation(), TENT_CHEST_LOCKED, obj.getDirection(),
-							obj.getType()));
+								obj.getType()));
 			}
 			//kosher special case - chest does not close on that command, player must search the chest
 			else {
 				player.message("Nothing interesting happens");
 			}
-		}
-		else if (inArray(obj.getID(), BUSH)) {
+		} else if (inArray(obj.getID(), BUSH)) {
 			player.message("You search the bush");
 			if (obj.getID() == BUSH[1]) {
 				say(player, null, "Hey, something has been dropped here...");
@@ -101,8 +96,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You find nothing of interest");
 			}
-		}
-		else if (obj.getID() == SPECIMEN_TRAY) {
+		} else if (obj.getID() == SPECIMEN_TRAY) {
 			if (!player.getCarriedItems().hasCatalogID(ItemId.SPECIMEN_JAR.id(), Optional.of(false))) {
 				Npc workmanCheck = ifnearvisnpc(player, NpcId.WORKMAN.id(), 15);
 				if (workmanCheck == null) {
@@ -111,27 +105,27 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 				npcsay(player, workmanCheck, "Oi! what are you doing ?");
 				npcWalkFromPlayer(player, workmanCheck);
 				int option = multi(player,
-					"I am on an errand",
-					"I am searching this tray");
+						"I am on an errand",
+						"I am searching this tray");
 				if (option == 0) {
 					npcsay(player, workmanCheck, "Oh yeah? and whose errand is that then...",
-						"Where is your specimen jar then?");
+							"Where is your specimen jar then?");
 					say(player, workmanCheck, "Oh I dont have one");
 					npcsay(player, workmanCheck, "And you reckon you have been sent on an errand...",
-						"Without a specimen jar - no sorry I can't let you do that!");
+							"Without a specimen jar - no sorry I can't let you do that!");
 				} else if (option == 1) {
 					npcsay(player, workmanCheck, "Oh you are, are you ?",
-						"Well, where's your specimen jar?");
+							"Well, where's your specimen jar?");
 					say(player, workmanCheck, "Ah, I don't have one...");
 					npcsay(player, workmanCheck, "In that case how can you handle the specimens without it?",
-						"As you should know, specimens are to be kept in sealed specimen jars",
-						"To keep them safe and preserved...",
-						"Next time bring it along!");
+							"As you should know, specimens are to be kept in sealed specimen jars",
+							"To keep them safe and preserved...",
+							"Next time bring it along!");
 				}
 				return;
 			}
 
-				int[] TRAY_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.IRON_DAGGER.id(), ItemId.BROKEN_ARROW.id(), ItemId.BROKEN_GLASS.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.COINS.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
+			int[] TRAY_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.IRON_DAGGER.id(), ItemId.BROKEN_ARROW.id(), ItemId.BROKEN_GLASS.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.COINS.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
 			player.incExp(Skills.MINING, 4, true);
 			mes("You sift through the earth in the tray");
 			delay(3);
@@ -141,8 +135,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 			if (chosenItem != ItemId.NOTHING.id()) {
 				give(player, chosenItem, 1);
 			}
-		}
-		else if (inArray(obj.getID(), SIGNPOST)) {
+		} else if (inArray(obj.getID(), SIGNPOST)) {
 			if (obj.getID() == SIGNPOST[0]) {
 				player.message("This site is for training purposes only");
 			} else if (obj.getID() == SIGNPOST[1]) {
@@ -152,8 +145,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 			} else if (obj.getID() == SIGNPOST[3]) {
 				player.message("Level 3 digs only");
 			}
-		}
-		else if (inArray(obj.getID(), SACKS)) {
+		} else if (inArray(obj.getID(), SACKS)) {
 			if (obj.getID() == SACKS[0] && Formulae.getHeight(obj.getLocation()) == 3) {
 				say(player, null, "There is nothing under the sack!");
 				return;
@@ -166,32 +158,26 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 				player.message("You find a specimen jar!");
 				give(player, ItemId.SPECIMEN_JAR.id(), 1);
 			}
-		}
-		else if (inArray(obj.getID(), BURIED_SKELETON)) {
+		} else if (inArray(obj.getID(), BURIED_SKELETON)) {
 			player.message("You search the skeleton");
 			player.message("You find nothing of interest");
-		}
-		else if (obj.getID() == HOUSE_EAST_CHEST_CLOSED) {
+		} else if (obj.getID() == HOUSE_EAST_CHEST_CLOSED) {
 			player.message("You open the chest");
 			changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), HOUSE_EAST_CHEST_OPEN, obj.getDirection(), obj.getType()));
-		}
-		else if (obj.getID() == HOUSE_EAST_CHEST_OPEN) {
+		} else if (obj.getID() == HOUSE_EAST_CHEST_OPEN) {
 			if (command.equalsIgnoreCase("Search")) {
 				player.message("You search the chest");
 				player.message("You find a rock sample");
 				give(player, ItemId.CRACKED_ROCK_SAMPLE.id(), 1);
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), HOUSE_EAST_CHEST_CLOSED, obj.getDirection(), obj.getType()));
 			}
-		}
-		else if (obj.getID() == HOUSE_BOOKCASE) {
+		} else if (obj.getID() == HOUSE_BOOKCASE) {
 			player.message("You search through the bookcase");
 			player.message("You find a book on chemicals");
 			give(player, ItemId.BOOK_OF_EXPERIMENTAL_CHEMISTRY.id(), 1);
-		}
-		else if (obj.getID() == HOUSE_EAST_CUPBOARD_CLOSED) {
+		} else if (obj.getID() == HOUSE_EAST_CUPBOARD_CLOSED) {
 			openCupboard(obj, player, HOUSE_EAST_CUPBOARD_OPEN);
-		}
-		else if (obj.getID() == HOUSE_EAST_CUPBOARD_OPEN) {
+		} else if (obj.getID() == HOUSE_EAST_CUPBOARD_OPEN) {
 			if (command.equalsIgnoreCase("search")) {
 				if (!player.getCarriedItems().hasCatalogID(ItemId.ROCK_PICK.id(), Optional.of(false))) {
 					player.message("You find a rock pick");
@@ -201,8 +187,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 				}
 				closeCupboard(obj, player, HOUSE_EAST_CUPBOARD_CLOSED);
 			}
-		}
-		else if (obj.getID() == HOUSE_WEST_CHESTS_OPEN || obj.getID() == HOUSE_WEST_CHESTS_CLOSED) {
+		} else if (obj.getID() == HOUSE_WEST_CHESTS_OPEN || obj.getID() == HOUSE_WEST_CHESTS_CLOSED) {
 			if (command.equalsIgnoreCase("Open")) {
 				player.message("You open the chest");
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), HOUSE_WEST_CHESTS_OPEN, obj.getDirection(), obj.getType()));
@@ -231,9 +216,8 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 			player.message("you open the chest");
 			player.getCarriedItems().remove(new Item(ItemId.DIGSITE_CHEST_KEY.id()));
 			say(player, null, "Oops I dropped the key",
-				"Never mind it's open now...");
-		}
-		else if (obj.getID() == X_BARREL) {
+					"Never mind it's open now...");
+		} else if (obj.getID() == X_BARREL) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case BRONZE_PICKAXE:
 					say(player, null, "I better not - it might break it to pieces!");
@@ -258,12 +242,11 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 					player.message("Nothing interesting happens");
 					break;
 			}
-		}
-		else if (obj.getID() == X_BARREL_OPEN) {
+		} else if (obj.getID() == X_BARREL_OPEN) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case PANNING_TRAY:
 					say(player, null, "Not the best idea i've had...",
-						"It's likely to spill everywhere in that!");
+							"It's likely to spill everywhere in that!");
 					break;
 				case SPECIMEN_JAR:
 					say(player, null, "Perhaps not, it might contaminate the samples");
@@ -281,15 +264,14 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 					player.getCarriedItems().getInventory().add(new Item(ItemId.UNIDENTIFIED_LIQUID.id()));
 					changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), X_BARREL, obj.getDirection(), obj.getType()));
 					say(player, null, "I'm not sure what this stuff is",
-						"I had better be very careful with it",
-						"I had better not spill any I think...");
+							"I had better be very careful with it",
+							"I had better not spill any I think...");
 					break;
 				default:
 					player.message("Nothing interesting happens");
 					break;
 			}
-		}
-		else if (obj.getID() == BRICK) {
+		} else if (obj.getID() == BRICK) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case EXPLOSIVE_COMPOUND:
 					player.message("You pour the compound over the bricks");
@@ -305,7 +287,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 						player.message("Fizz...");
 						delay();
 						say(player, null, "Whoa! this is going to blow!\"",
-							"I'd better run!");
+								"I'd better run!");
 						delay(3);
 						player.teleport(22, 3379);
 						player.updateQuestStage(Quests.DIGSITE, 6);
@@ -313,8 +295,8 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 						mes("\"Bang!!!\"");
 						delay(3);
 						say(player, null, "Wow that was a big explosion!",
-							"...What's that noise I can hear ?",
-							"...Sounds like bones moving or something");
+								"...What's that noise I can hear ?",
+								"...Sounds like bones moving or something");
 					} else {
 						say(player, null, "Now what am I trying to achieve here ?");
 					}
@@ -323,8 +305,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 					player.message("Nothing interesting happens");
 					break;
 			}
-		}
-		else if (obj.getID() == SPECIMEN_TRAY) {
+		} else if (obj.getID() == SPECIMEN_TRAY) {
 			switch (ItemId.getById(item.getCatalogId())) {
 				case TROWEL:
 				case SPADE:
@@ -334,10 +315,10 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 					}
 					if (item.getCatalogId() == ItemId.TROWEL.id()) {
 						npcsay(player, workmanCheck, "Excuse me...",
-							"No digging in the specimen trays please");
+								"No digging in the specimen trays please");
 					} else if (item.getCatalogId() == ItemId.SPADE.id()) {
 						npcsay(player, workmanCheck, "Oi! what do you think you are doing ?",
-							"Don't you realize there are fragile specimens around here ?");
+								"Don't you realize there are fragile specimens around here ?");
 					}
 					break;
 				case SPECIMEN_JAR:
@@ -358,11 +339,11 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 				workmanCheck = addnpc(player.getWorld(), NpcId.WORKMAN.id(), player.getX(), player.getY(), 30000);
 			}
 			npcsay(player, workmanCheck, "Hey! that's fragile!",
-				"Stop poking it around with that trowel!");
+					"Stop poking it around with that trowel!");
 			say(player, workmanCheck, "Oh okay, sorry");
 		} else if (obj.getID() == BRICK && item.getCatalogId() == ItemId.ROCK_PICK.id()) {
 			say(player, null, "That would be like cutting the lawn with nail scissors!",
-				"It would take a year to chip away these rocks...");
+					"It would take a year to chip away these rocks...");
 		}
 	}
 }

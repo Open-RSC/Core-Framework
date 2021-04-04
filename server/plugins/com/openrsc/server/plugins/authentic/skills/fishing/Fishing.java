@@ -33,7 +33,7 @@ public class Fishing implements OpLocTrigger {
 	@Override
 	public void onOpLoc(Player player, final GameObject object, String command) {
 		if (command.equals("lure") || command.equals("bait") || command.equals("net") || command.equals("harpoon")
-			|| command.equals("cage")) {
+				|| command.equals("cage")) {
 			handleFishing(object, player, player.click, command);
 		}
 	}
@@ -58,23 +58,23 @@ public class Fishing implements OpLocTrigger {
 		}
 		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
 			player.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel(player.getWorld()) + " "
-				+ fishingRequirementString(object, command) + " "
-				+ (!command.contains("cage") ? "these fish"
-				: player.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
-				.substring(4) + "s"));
+					+ fishingRequirementString(object, command) + " "
+					+ (!command.contains("cage") ? "these fish"
+					: player.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
+					.substring(4) + "s"));
 			return;
 		}
 		final int netId = def.getNetId();
 		if (player.getCarriedItems().getInventory().countId(netId, Optional.of(false)) <= 0) {
 			player.playerServerMessage(MessageType.QUEST,
-				"You need a "
-					+ player.getWorld().getServer().getEntityHandler()
-					.getItemDef(netId)
-					.getName().toLowerCase()
-					+ " to " + (command.equals("lure") || command.equals("bait") ? command : def.getBaitId() > 0 ? "bait" : "catch") + " "
-					+ (!command.contains("cage") ? "these fish"
-					: player.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
-					.substring(4) + "s"));
+					"You need a "
+							+ player.getWorld().getServer().getEntityHandler()
+							.getItemDef(netId)
+							.getName().toLowerCase()
+							+ " to " + (command.equals("lure") || command.equals("bait") ? command : def.getBaitId() > 0 ? "bait" : "catch") + " "
+							+ (!command.contains("cage") ? "these fish"
+							: player.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
+							.substring(4) + "s"));
 			return;
 		}
 		final int baitId = def.getBaitId();
@@ -116,7 +116,7 @@ public class Fishing implements OpLocTrigger {
 		mes("@whi@At level @gre@" + level + "@whi@ in @gre@" + trials + "@whi@ attempts:");
 		for (int i = 0; i < 1290; i++) {
 			if (results[i] > 0) {
-				mes( "@whi@We got @gre@" + results[i] + "@whi@ of id @mag@" + i);
+				mes("@whi@We got @gre@" + results[i] + "@whi@ of id @mag@" + i);
 			}
 		}
 	}
@@ -129,10 +129,10 @@ public class Fishing implements OpLocTrigger {
 
 		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
 			player.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel(player.getWorld()) + " "
-				+ fishingRequirementString(object, command) + " "
-				+ (!command.contains("cage") ? "these fish"
-				: player.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
-				.substring(4) + "s"));
+					+ fishingRequirementString(object, command) + " "
+					+ (!command.contains("cage") ? "these fish"
+					: player.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
+					.substring(4) + "s"));
 			return;
 		}
 		final int baitId = def.getBaitId();
@@ -349,7 +349,7 @@ public class Fishing implements OpLocTrigger {
 		if (obj.getID() == 351 || obj.getID() == 352 || obj.getID() == 353 || obj.getID() == 354)
 			return false;
 		if (command.equals("lure") || command.equals("bait") || command.equals("net") || command.equals("harpoon")
-			|| command.equals("cage")) {
+				|| command.equals("cage")) {
 			return true;
 		}
 		return false;
@@ -396,8 +396,8 @@ public class Fishing implements OpLocTrigger {
 	private boolean checkFatigue(Player player) {
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
-				player.playerServerMessage(MessageType.QUEST,"You are too tired to catch this fish");
+					&& player.getFatigue() >= player.MAX_FATIGUE) {
+				player.playerServerMessage(MessageType.QUEST, "You are too tired to catch this fish");
 				return true;
 			}
 		}

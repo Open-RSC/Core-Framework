@@ -1,6 +1,11 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.event.MiniEvent;
@@ -35,8 +40,14 @@ import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 
 import static com.openrsc.server.net.rsc.OpcodeIn.CAST_ON_SELF;
 import static com.openrsc.server.net.rsc.OpcodeIn.PLAYER_CAST_PVP;
@@ -196,10 +207,10 @@ public class SpellHandler implements PacketHandler {
 		}
 
 		OpcodeIn opcode = OpcodeIn.getFromList(packet.getID(),
-			CAST_ON_SELF, OpcodeIn.PLAYER_CAST_PVP,
-			OpcodeIn.CAST_ON_NPC, OpcodeIn.CAST_ON_INVENTORY_ITEM,
-			OpcodeIn.CAST_ON_BOUNDARY, OpcodeIn.CAST_ON_SCENERY,
-			OpcodeIn.CAST_ON_GROUND_ITEM, OpcodeIn.CAST_ON_LAND);
+				CAST_ON_SELF, OpcodeIn.PLAYER_CAST_PVP,
+				OpcodeIn.CAST_ON_NPC, OpcodeIn.CAST_ON_INVENTORY_ITEM,
+				OpcodeIn.CAST_ON_BOUNDARY, OpcodeIn.CAST_ON_SCENERY,
+				OpcodeIn.CAST_ON_GROUND_ITEM, OpcodeIn.CAST_ON_LAND);
 
 		if (opcode == null)
 			return;
@@ -295,7 +306,7 @@ public class SpellHandler implements PacketHandler {
 					}
 
 					if (spell.getSpellType() == 3
-						|| (runecraft && (idx == curse || idx == enfeeble))) {
+							|| (runecraft && (idx == curse || idx == enfeeble))) {
 
 						if (item == null) {
 							player.resetPath();
@@ -311,7 +322,7 @@ public class SpellHandler implements PacketHandler {
 
 						// Attempt to find a spell in a plugin, otherwise use this file.
 						if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellInv",
-							new Object[]{player, invIndex, item.getCatalogId(), idx})) {
+								new Object[]{player, invIndex, item.getCatalogId(), idx})) {
 							return;
 						}
 						handleItemCast(player, spell, idx, item);
@@ -348,7 +359,7 @@ public class SpellHandler implements PacketHandler {
 					}
 
 					if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellLoc",
-						new Object[]{player, gameObject, spell})) {
+							new Object[]{player, gameObject, spell})) {
 						return;
 					}
 
@@ -445,7 +456,7 @@ public class SpellHandler implements PacketHandler {
 					int enfeeble = 44;
 
 					if (spell.getSpellType() == 3
-						|| (runecraft && (idx == curse || idx == enfeeble))) {
+							|| (runecraft && (idx == curse || idx == enfeeble))) {
 
 						int invIndex = packet.readShort();
 						Item item = player.getCarriedItems().getInventory().get(invIndex);
@@ -463,7 +474,7 @@ public class SpellHandler implements PacketHandler {
 
 						// Attempt to find a spell in a plugin, otherwise use this file.
 						if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellInv",
-							new Object[]{player, invIndex, item.getCatalogId(), idx})) {
+								new Object[]{player, invIndex, item.getCatalogId(), idx})) {
 							return;
 						}
 						handleItemCast(player, spell, idx, item);
@@ -481,7 +492,7 @@ public class SpellHandler implements PacketHandler {
 					}
 
 					if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellLoc",
-						new Object[]{player, gameObject, spell})) {
+							new Object[]{player, gameObject, spell})) {
 						return;
 					}
 
@@ -624,13 +635,13 @@ public class SpellHandler implements PacketHandler {
 			}
 			/* How much to lower the stat */
 			int lowerBy = (spell != 34 ? (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy))
-				: (int) lowersBy);
+					: (int) lowersBy);
 
 			/* New current level */
 			final int newStat = affectedMob.getSkills().getLevel(affectsStat) - lowerBy;
 			/* Lowest stat you can weaken to with this spell */
 			final int maxWeaken = affectedMob.getSkills().getMaxStat(affectsStat)
-				- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy) * 4);
+					- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy) * 4);
 
 			if (newStat < maxWeaken && spell != 34) {
 				player.playerServerMessage(MessageType.QUEST, "Your opponent already has weakened " + player.getWorld().getServer().getConstants().getSkills().getSkillName(affectsStat));
@@ -658,9 +669,9 @@ public class SpellHandler implements PacketHandler {
 				}
 				for (int i = 0; i < boneCount; i++) {
 					player.getCarriedItems().remove(
-						player.getCarriedItems().getInventory().get(
-							player.getCarriedItems().getInventory().getLastIndexById(ItemId.BONES.id(), Optional.of(false))
-						)
+							player.getCarriedItems().getInventory().get(
+									player.getCarriedItems().getInventory().getLastIndexById(ItemId.BONES.id(), Optional.of(false))
+							)
 					);
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BANANA.id()));
 				}
@@ -675,12 +686,12 @@ public class SpellHandler implements PacketHandler {
 			}*/
 				if (!player.getLocation().inMageArena()) {
 					if ((!player.getCache().hasKey("Flames of Zamorak_casts") && !player.getCache().hasKey("Saradomin strike_casts") && !player.getCache().hasKey("Claws of Guthix_casts"))
-						||
-						((player.getCache().hasKey("Saradomin strike_casts") && player.getCache().getInt("Saradomin strike_casts") < 100))
-						||
-						((player.getCache().hasKey("Flames of Zamorak_casts") && player.getCache().getInt("Flames of Zamorak_casts") < 100))
-						||
-						((player.getCache().hasKey("Claws of Guthix_casts") && player.getCache().getInt("Claws of Guthix_casts") < 100))) {
+							||
+							((player.getCache().hasKey("Saradomin strike_casts") && player.getCache().getInt("Saradomin strike_casts") < 100))
+							||
+							((player.getCache().hasKey("Flames of Zamorak_casts") && player.getCache().getInt("Flames of Zamorak_casts") < 100))
+							||
+							((player.getCache().hasKey("Claws of Guthix_casts") && player.getCache().getInt("Claws of Guthix_casts") < 100))) {
 						player.message("this spell can only be used in the mage arena");
 						return;
 					}
@@ -767,7 +778,7 @@ public class SpellHandler implements PacketHandler {
 			}
 			int itemID = 0;
 			String jewelryType = "";
-			switch(ItemId.getById(affectedItem.getCatalogId())) {
+			switch (ItemId.getById(affectedItem.getCatalogId())) {
 				case SAPPHIRE_AMULET:
 					itemID = ItemId.SAPPHIRE_AMULET_OF_MAGIC.id();
 					jewelryType = AMULET;
@@ -793,18 +804,18 @@ public class SpellHandler implements PacketHandler {
 
 	private void buffTalisman(Player player, Item item, SpellDef spell) {
 		int talismen[] = {
-			ItemId.AIR_TALISMAN.id(),
-			ItemId.MIND_TALISMAN.id(),
-			ItemId.WATER_TALISMAN.id(),
-			ItemId.EARTH_TALISMAN.id(),
-			ItemId.FIRE_TALISMAN.id(),
-			ItemId.BODY_TALISMAN.id(),
-			ItemId.COSMIC_TALISMAN.id(),
-			ItemId.CHAOS_TALISMAN.id(),
-			ItemId.NATURE_TALISMAN.id(),
-			ItemId.LAW_TALISMAN.id(),
-			ItemId.DEATH_TALISMAN.id(),
-			ItemId.BLOOD_TALISMAN.id()
+				ItemId.AIR_TALISMAN.id(),
+				ItemId.MIND_TALISMAN.id(),
+				ItemId.WATER_TALISMAN.id(),
+				ItemId.EARTH_TALISMAN.id(),
+				ItemId.FIRE_TALISMAN.id(),
+				ItemId.BODY_TALISMAN.id(),
+				ItemId.COSMIC_TALISMAN.id(),
+				ItemId.CHAOS_TALISMAN.id(),
+				ItemId.NATURE_TALISMAN.id(),
+				ItemId.LAW_TALISMAN.id(),
+				ItemId.DEATH_TALISMAN.id(),
+				ItemId.BLOOD_TALISMAN.id()
 		};
 		int curse = 9;
 		int enfeeble = 44;
@@ -826,16 +837,15 @@ public class SpellHandler implements PacketHandler {
 
 		// Get last talisman in inventory.
 		item = player.getCarriedItems().getInventory().get(
-			player.getCarriedItems().getInventory().getLastIndexById(
-				item.getCatalogId(), Optional.of(false)));
+				player.getCarriedItems().getInventory().getLastIndexById(
+						item.getCatalogId(), Optional.of(false)));
 		if (item == null) return;
 
 		// Get the talisman to replace it with
 		Item newTalisman = null;
 		if (spell.getName().equalsIgnoreCase("curse")) {
 			newTalisman = new Item(ItemId.CURSED_AIR_TALISMAN.id() + talismanIndex);
-		}
-		else if (spell.getName().equalsIgnoreCase("enfeeble")) {
+		} else if (spell.getName().equalsIgnoreCase("enfeeble")) {
 			newTalisman = new Item(ItemId.ENFEEBLED_AIR_TALISMAN.id() + talismanIndex);
 		}
 		if (newTalisman == null) return;
@@ -844,7 +854,7 @@ public class SpellHandler implements PacketHandler {
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(newTalisman);
 		finalizeSpell(player, spell, "You successfully cast " + spell.getName()
-			+ " on the " + item.getDef(player.getWorld()).getName());
+				+ " on the " + item.getDef(player.getWorld()).getName());
 	}
 
 	private void enchantTierTwoJewelry(Player player, Item affectedItem, SpellDef spell) {
@@ -855,7 +865,7 @@ public class SpellHandler implements PacketHandler {
 			}
 			int itemID = 0;
 			String jewelryType = "";
-			switch(ItemId.getById(affectedItem.getCatalogId())) {
+			switch (ItemId.getById(affectedItem.getCatalogId())) {
 				case EMERALD_AMULET:
 					itemID = ItemId.EMERALD_AMULET_OF_PROTECTION.id();
 					jewelryType = AMULET;
@@ -883,7 +893,7 @@ public class SpellHandler implements PacketHandler {
 			}
 			int itemID = 0;
 			String jewelryType = "";
-			switch(ItemId.getById(affectedItem.getCatalogId())) {
+			switch (ItemId.getById(affectedItem.getCatalogId())) {
 				case RUBY_AMULET:
 					itemID = ItemId.RUBY_AMULET_OF_STRENGTH.id();
 					jewelryType = AMULET;
@@ -905,13 +915,13 @@ public class SpellHandler implements PacketHandler {
 
 	private void enchantTierFourJewelry(Player player, Item affectedItem, SpellDef spell) {
 		if (affectedItem.getCatalogId() == ItemId.DIAMOND_AMULET.id()
-				|| (player.getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.DIAMOND_RING.id())){
+				|| (player.getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.DIAMOND_RING.id())) {
 			if (!checkAndRemoveRunes(player, spell)) {
 				return;
 			}
 			int itemID = 0;
 			String jewelryType = "";
-			switch(ItemId.getById(affectedItem.getCatalogId())) {
+			switch (ItemId.getById(affectedItem.getCatalogId())) {
 				case DIAMOND_AMULET:
 					itemID = ItemId.DIAMOND_AMULET_OF_POWER.id();
 					jewelryType = AMULET;
@@ -936,7 +946,7 @@ public class SpellHandler implements PacketHandler {
 				|| (player.getConfig().WANT_EQUIPMENT_TAB && affectedItem.getCatalogId() == ItemId.DRAGONSTONE_RING.id())) {
 			int itemID = 0;
 			String jewelryType = "";
-			switch(ItemId.getById(affectedItem.getCatalogId())) {
+			switch (ItemId.getById(affectedItem.getCatalogId())) {
 				case UNENCHANTED_DRAGONSTONE_AMULET:
 					itemID = ItemId.DRAGONSTONE_AMULET.id();
 					jewelryType = AMULET;
@@ -1042,9 +1052,9 @@ public class SpellHandler implements PacketHandler {
 			for (ReqOreDef reqOre : smeltingDef.getReqOres()) {
 				int toUse = reqOre.getAmount();
 				if (reqOre.getId() == ItemId.COAL.id()
-					&& SkillCapes.shouldActivate(player, ItemId.SMITHING_CAPE)) {
+						&& SkillCapes.shouldActivate(player, ItemId.SMITHING_CAPE)) {
 
-					toUse = reqOre.getAmount()/2;
+					toUse = reqOre.getAmount() / 2;
 					player.message("You heat the ore using half the usual amount of coal");
 				}
 				for (int i = 0; i < toUse; i++) {
@@ -1076,30 +1086,30 @@ public class SpellHandler implements PacketHandler {
 						// fluffs gets its own message
 						// same case with ana
 						int[] ungrabbableArr = {
-							//scythe
-							ItemId.SCYTHE.id(),
-							//bunny ears
-							ItemId.BUNNY_EARS.id(),
-							//orbs
-							ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(), ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id(),
-							//cat (underground pass)
-							ItemId.KARDIA_CAT.id(),
-							//god capes
-							ItemId.ZAMORAK_CAPE.id(), ItemId.SARADOMIN_CAPE.id(), ItemId.GUTHIX_CAPE.id(),
-							//holy grail
-							ItemId.HOLY_GRAIL.id(),
-							//large cogs
-							ItemId.LARGE_COG_BLUE.id(), ItemId.LARGE_COG_BLACK.id(), ItemId.LARGE_COG_RED.id(), ItemId.LARGE_COG_PURPLE.id(),
-							//staff of armadyl,
-							ItemId.STAFF_OF_ARMADYL.id(),
-							//ice arrows
-							ItemId.ICE_ARROWS.id(),
-							//Firebird Feather
-							ItemId.RED_FIREBIRD_FEATHER.id(),
-							//Ball of Witch's House
-							ItemId.BALL.id(),
-							//skull of restless ghost
-							ItemId.QUEST_SKULL.id()
+								//scythe
+								ItemId.SCYTHE.id(),
+								//bunny ears
+								ItemId.BUNNY_EARS.id(),
+								//orbs
+								ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(), ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id(),
+								//cat (underground pass)
+								ItemId.KARDIA_CAT.id(),
+								//god capes
+								ItemId.ZAMORAK_CAPE.id(), ItemId.SARADOMIN_CAPE.id(), ItemId.GUTHIX_CAPE.id(),
+								//holy grail
+								ItemId.HOLY_GRAIL.id(),
+								//large cogs
+								ItemId.LARGE_COG_BLUE.id(), ItemId.LARGE_COG_BLACK.id(), ItemId.LARGE_COG_RED.id(), ItemId.LARGE_COG_PURPLE.id(),
+								//staff of armadyl,
+								ItemId.STAFF_OF_ARMADYL.id(),
+								//ice arrows
+								ItemId.ICE_ARROWS.id(),
+								//Firebird Feather
+								ItemId.RED_FIREBIRD_FEATHER.id(),
+								//Ball of Witch's House
+								ItemId.BALL.id(),
+								//skull of restless ghost
+								ItemId.QUEST_SKULL.id()
 						};
 						List<Integer> ungrabbables = new ArrayList<Integer>();
 						for (int item : ungrabbableArr) {
@@ -1147,15 +1157,15 @@ public class SpellHandler implements PacketHandler {
 						}
 
 						if (affectedItem.getLocation().inWilderness() && !affectedItem.belongsTo(getPlayer())
-							&& affectedItem.getAttribute("playerKill", false)
-							&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
-							|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
+								&& affectedItem.getAttribute("playerKill", false)
+								&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
+								|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
 							getPlayer().message("You're an Iron Man, so you can't loot items from players.");
 							return;
 						}
 						if (!affectedItem.belongsTo(getPlayer())
-							&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
-							|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
+								&& (getPlayer().isIronMan(IronmanMode.Ironman.id()) || getPlayer().isIronMan(IronmanMode.Ultimate.id())
+								|| getPlayer().isIronMan(IronmanMode.Hardcore.id()) || getPlayer().isIronMan(IronmanMode.Transfer.id()))) {
 							getPlayer().message("You're an Iron Man, so you can't take items that other players have dropped.");
 							return;
 						}
@@ -1166,7 +1176,7 @@ public class SpellHandler implements PacketHandler {
 						}
 
 						if (CertUtil.isCert(affectedItem.getID()) && getPlayer().getCertOptOut()
-							&& affectedItem.getOwnerUsernameHash() != 0 && !affectedItem.belongsTo(getPlayer())) {
+								&& affectedItem.getOwnerUsernameHash() != 0 && !affectedItem.belongsTo(getPlayer())) {
 							getPlayer().message("You have opted out of taking certs that other players have dropped.");
 							return;
 						}
@@ -1186,9 +1196,9 @@ public class SpellHandler implements PacketHandler {
 						getPlayer().getWorld().unregisterItem(affectedItem);
 						finalizeSpell(getPlayer(), spell, "Spell successful");
 						getPlayer().getWorld().getServer().getGameLogger().addQuery(
-							new GenericLog(getPlayer().getWorld(), getPlayer().getUsername() + " telegrabbed " + affectedItem.getDef().getName()
-								+ " x" + affectedItem.getAmount() + " from " + affectedItem.getLocation().toString()
-								+ " while standing at " + getPlayer().getLocation().toString()));
+								new GenericLog(getPlayer().getWorld(), getPlayer().getUsername() + " telegrabbed " + affectedItem.getDef().getName()
+										+ " x" + affectedItem.getAmount() + " from " + affectedItem.getLocation().toString()
+										+ " while standing at " + getPlayer().getLocation().toString()));
 						Item item = new Item(affectedItem.getID(), affectedItem.getAmount(), affectedItem.getNoted());
 
 						if (affectedItem.getOwnerUsernameHash() == 0 || affectedItem.getAttribute("npcdrop", false)) {
@@ -1205,7 +1215,7 @@ public class SpellHandler implements PacketHandler {
 		if (player.getDuel().isDuelActive() && affectedMob.isPlayer()) {
 			Player aff = (Player) affectedMob;
 			if (!player.getDuel().getDuelRecipient().getUsername().toLowerCase()
-				.equals(aff.getUsername().toLowerCase()))
+					.equals(aff.getUsername().toLowerCase()))
 				return;
 		}
 		if (!PathValidation.checkPath(player.getWorld(), player.getLocation(), affectedMob.getLocation())) {
@@ -1257,18 +1267,18 @@ public class SpellHandler implements PacketHandler {
 					// We want to make sure that player is in combat with the mob.
 					boolean inCombat = getPlayer().inCombat();
 					boolean isRightMob = inArray(affectedMob.getID(),
-						new int[]{
-							NpcId.SHAPESHIFTER_SPIDER.id(),
-							NpcId.SHAPESHIFTER_BEAR.id(),
-							NpcId.SHAPESHIFTER_WOLF.id(),
-							NpcId.THRANTAX.id(),
-							NpcId.GUARDIAN_OF_ARMADYL_FEMALE.id(),
-							NpcId.GUARDIAN_OF_ARMADYL_MALE.id(),
-							NpcId.OGRE_TRADER_FOOD.id(),
-							NpcId.OGRE_TRADER_ROCKCAKE.id(),
-							NpcId.OGRE_TRADER_FOOD.id(),
-							NpcId.CITY_GUARD.id(),
-							NpcId.TOBAN.id()});
+							new int[]{
+									NpcId.SHAPESHIFTER_SPIDER.id(),
+									NpcId.SHAPESHIFTER_BEAR.id(),
+									NpcId.SHAPESHIFTER_WOLF.id(),
+									NpcId.THRANTAX.id(),
+									NpcId.GUARDIAN_OF_ARMADYL_FEMALE.id(),
+									NpcId.GUARDIAN_OF_ARMADYL_MALE.id(),
+									NpcId.OGRE_TRADER_FOOD.id(),
+									NpcId.OGRE_TRADER_ROCKCAKE.id(),
+									NpcId.OGRE_TRADER_FOOD.id(),
+									NpcId.CITY_GUARD.id(),
+									NpcId.TOBAN.id()});
 					boolean shouldCastSpell = inCombat && isRightMob;
 					if (!shouldCastSpell) {
 						getPlayer().message("I can't attack that");
@@ -1302,8 +1312,8 @@ public class SpellHandler implements PacketHandler {
 							getPlayer().getSkills().setLevel(Skills.RANGED, newLevel);
 						}
 					} else if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
-						NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id(), NpcId.BATTLE_MAGE_GUTHIX.id(),
-						NpcId.BATTLE_MAGE_ZAMORAK.id(), NpcId.BATTLE_MAGE_SARADOMIN.id()) && getPlayer().getLocation().inMageArena()) {
+							NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id(), NpcId.BATTLE_MAGE_GUTHIX.id(),
+							NpcId.BATTLE_MAGE_ZAMORAK.id(), NpcId.BATTLE_MAGE_SARADOMIN.id()) && getPlayer().getLocation().inMageArena()) {
 						setChasing = false;
 						getPlayer().setAttribute("maged_kolodion", true);
 					}
@@ -1352,7 +1362,7 @@ public class SpellHandler implements PacketHandler {
 						final int newStat = affectedMob.getSkills().getLevel(affectsStat) - lowerBy;
 						/* Lowest stat you can weaken to with this spell */
 						final int maxWeaken = affectedMob.getSkills().getMaxStat(affectsStat)
-							- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy));
+								- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy));
 						if (newStat < maxWeaken) {
 							getPlayer().playerServerMessage(MessageType.QUEST, "Your opponent already has weakened " + getPlayer().getWorld().getServer().getConstants().getSkills().getSkillName(affectsStat));
 							return;
@@ -1403,7 +1413,7 @@ public class SpellHandler implements PacketHandler {
 							return;
 						}
 						if (getPlayer().getCache().hasKey(spell.getName() + "_casts")
-							&& getPlayer().getCache().getInt(spell.getName() + "_casts") < 1) {
+								&& getPlayer().getCache().getInt(spell.getName() + "_casts") < 1) {
 							getPlayer().message("you need to recharge the staff of iban");
 							getPlayer().message("at iban's temple");
 							return;
@@ -1443,13 +1453,13 @@ public class SpellHandler implements PacketHandler {
 
 						if (!getPlayer().getLocation().inMageArena()) {
 							if ((!getPlayer().getCache().hasKey(spell.getName() + "_casts"))
-								|| (getPlayer().getCache().hasKey(spell.getName() + "_casts")
-								&& getPlayer().getCache().getInt(spell.getName() + "_casts") < 100)) {
+									|| (getPlayer().getCache().hasKey(spell.getName() + "_casts")
+									&& getPlayer().getCache().getInt(spell.getName() + "_casts") < 100)) {
 								getPlayer().message("this spell can only be used in the mage arena");
 								getPlayer().message("You must learn this spell first, you need "
-									+ (getPlayer().getCache().hasKey(spell.getName() + "_casts")
-									? (100 - getPlayer().getCache().getInt(spell.getName() + "_casts")) : "100")
-									+ " more casts in the mage arena");
+										+ (getPlayer().getCache().hasKey(spell.getName() + "_casts")
+										? (100 - getPlayer().getCache().getInt(spell.getName() + "_casts")) : "100")
+										+ " more casts in the mage arena");
 								return;
 							}
 						}
@@ -1467,7 +1477,7 @@ public class SpellHandler implements PacketHandler {
 								getPlayer().getCache().set(spell.getName() + "_casts", 1);
 							}
 						}
-						if (affectedMob.getRegion().getGameObject(affectedMob.getX(), affectedMob.getY(), getPlayer()) == null) {
+						if (affectedMob.getRegion().getGameObject(affectedMob.getLocation(), getPlayer()) == null) {
 							godSpellObject(getPlayer(), affectedMob, spellID);
 						}
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateGodSpellDamage(getPlayer()), 1, setChasing));
@@ -1476,7 +1486,7 @@ public class SpellHandler implements PacketHandler {
 						break;
 					default:
 						if (spell.getReqLevel() == 62 || spell.getReqLevel() == 65 || spell.getReqLevel() == 70
-							|| spell.getReqLevel() == 75) {
+								|| spell.getReqLevel() == 75) {
 						/*if (!player.getLocation().isMembersWild()) {
 							player.message("Members content can only be used in wild levels: " + World.membersWildStart
 									+ " - " + World.membersWildMax);
@@ -1488,8 +1498,8 @@ public class SpellHandler implements PacketHandler {
 						}
 						/** SALARIN THE TWISTED - STRIKE SPELLS **/
 						if (affectedMob.getID() == NpcId.SALARIN_THE_TWISTED.id() && (spell.getName().equals("Wind strike")
-							|| spell.getName().equals("Water strike") || spell.getName().equals("Earth strike")
-							|| spell.getName().equals("Fire strike"))) {
+								|| spell.getName().equals("Water strike") || spell.getName().equals("Earth strike")
+								|| spell.getName().equals("Fire strike"))) {
 							int firstDamage = 0;
 							final int secondAdditionalDamage;
 							if (spell.getName().equals("Fire strike")) {
@@ -1517,7 +1527,7 @@ public class SpellHandler implements PacketHandler {
 									affectedMob.getUpdateFlags().setDamage(new Damage(affectedMob, secondAdditionalDamage));
 									if (affectedMob.isPlayer()) {
 										if (getPlayer().getConfig().WANT_PARTIES) {
-											if(getPlayer().getParty() != null){
+											if (getPlayer().getParty() != null) {
 												getPlayer().getParty().sendParty();
 											}
 										}
@@ -1543,7 +1553,7 @@ public class SpellHandler implements PacketHandler {
 						}
 
 						if (getPlayer().getMagicPoints() > 30
-							|| (getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
+								|| (getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_CHAOS.id()) && spell.getName().contains("bolt")))
 							max += 1;
 
 						int damage = CombatFormula.calculateMagicDamage(max + 1) - 1;
@@ -1560,8 +1570,8 @@ public class SpellHandler implements PacketHandler {
 	private boolean canTeleport(Player player, SpellDef spell, int id) {
 		boolean canTeleport = true;
 		if (player.getLocation().wildernessLevel() >= 20 || player.getLocation().isInFisherKingRealm()
-			|| player.getLocation().isInsideGrandTreeGround()
-			|| (player.getLocation().inModRoom() && !player.isAdmin())) {
+				|| player.getLocation().isInsideGrandTreeGround()
+				|| (player.getLocation().inModRoom() && !player.isAdmin())) {
 			player.message("A mysterious force blocks your teleport spell!");
 			player.message("You can't use teleport after level 20 wilderness");
 			canTeleport = false;
@@ -1576,13 +1586,11 @@ public class SpellHandler implements PacketHandler {
 			mes("It's just too difficult to concentrate.");
 			delay(3);
 			canTeleport = false;
-		}
-		else if (!player.getCache().hasKey("ardougne_scroll") && id == 26) {
+		} else if (!player.getCache().hasKey("ardougne_scroll") && id == 26) {
 			player.message("You don't know how to cast this spell yet");
 			player.message("You need to do the plague city quest");
 			canTeleport = false;
-		}
-		else if (!player.getCache().hasKey("watchtower_scroll") && id == 31) {
+		} else if (!player.getCache().hasKey("watchtower_scroll") && id == 31) {
 			player.message("You cannot cast this spell");
 			player.message("You need to finish the watchtower quest first");
 			canTeleport = false;

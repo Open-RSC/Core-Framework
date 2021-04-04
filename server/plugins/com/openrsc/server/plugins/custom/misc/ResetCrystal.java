@@ -92,13 +92,13 @@ public class ResetCrystal implements UseNpcTrigger, UseLocTrigger, OpInvTrigger 
 		player.playerServerMessage(MessageType.QUEST, "@ora@Use the crystal on them");
 		int opt = multi(player, "Smite Npcs", "Reset Sceneries", "Cancel");
 		if (opt == 0) {
-			for (Iterator<Npc> iter = player.getViewArea().getNpcsInView().iterator(); iter.hasNext();) {
+			for (Iterator<Npc> iter = player.getViewArea().getNpcsInView().iterator(); iter.hasNext(); ) {
 				Npc npc = iter.next();
 				smiteNpc(player, npc);
 			}
 			player.message("NPCs around view area were smited");
 		} else if (opt == 1) {
-			for (Iterator<GameObject> iter = player.getViewArea().getGameObjectsInView().iterator(); iter.hasNext();) {
+			for (Iterator<GameObject> iter = player.getViewArea().getGameObjectsInView().iterator(); iter.hasNext(); ) {
 				GameObject obj = iter.next();
 				if (obj.getType() == 0) {
 					// only for scenery

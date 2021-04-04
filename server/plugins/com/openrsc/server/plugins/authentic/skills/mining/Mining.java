@@ -88,7 +88,7 @@ public final class Mining implements OpLocTrigger {
 					}
 					if (player.getCarriedItems().hasCatalogID(ItemId.POWERING_CRYSTAL4.id(), Optional.empty())) {
 						say(player, null, "I already have this crystal",
-							"There is no benefit to getting another");
+								"There is no benefit to getting another");
 						return;
 					}
 					player.playSound("mine");
@@ -100,7 +100,7 @@ public final class Mining implements OpLocTrigger {
 					give(player, ItemId.POWERING_CRYSTAL4.id(), 1);
 				} else {
 					say(player, null, "I can't touch it...",
-						"Perhaps it is linked with the shaman some way ?");
+							"Perhaps it is linked with the shaman some way ?");
 				}
 			} else if (command.equalsIgnoreCase("prospect")) {
 				player.playSound("prospect");
@@ -169,9 +169,9 @@ public final class Mining implements OpLocTrigger {
 			if (rock.getID() == 496) {
 				// Tutorial Island rock handler
 				mes("This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName(),
-					"Sometimes you won't find the ore but trying again may find it",
-					"If a rock contains a high level ore",
-					"You will not find it until you increase your mining level");
+						"Sometimes you won't find the ore but trying again may find it",
+						"If a rock contains a high level ore",
+						"You will not find it until you increase your mining level");
 				if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 49)
 					player.getCache().set("tutorial", 50);
 			} else {
@@ -191,7 +191,7 @@ public final class Mining implements OpLocTrigger {
 			return;
 		}
 		if (config().STOP_SKILLING_FATIGUED >= 1
-			&& player.getFatigue() >= player.MAX_FATIGUE) {
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
 			// authentically on fatigued, shows pickaxe that would have been used
 			thinkbubble(new Item(axeId));
 			player.playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
@@ -202,7 +202,7 @@ public final class Mining implements OpLocTrigger {
 			return;
 		}
 
-		if(config().BATCH_PROGRESSION) {
+		if (config().BATCH_PROGRESSION) {
 			repeat = Formulae.getRepeatTimes(player, com.openrsc.server.constants.Skills.MINING);
 		}
 
@@ -219,7 +219,7 @@ public final class Mining implements OpLocTrigger {
 		final Item ore = new Item(def.getOreId());
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
+					&& player.getFatigue() >= player.MAX_FATIGUE) {
 				// authentically on fatigued, shows pickaxe that would have been used
 				thinkbubble(new Item(axeId));
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
@@ -308,11 +308,11 @@ public final class Mining implements OpLocTrigger {
 	}
 
 	private int calcAxeBonus(Server server, int axeId) {
-			//If server doesn't use batching, pickaxe shouldn't improve gathering chance
-			if (!server.getConfig().BATCH_PROGRESSION)
-				return 0;
-			int bonus = 0;
-			switch (ItemId.getById(axeId)) {
+		//If server doesn't use batching, pickaxe shouldn't improve gathering chance
+		if (!server.getConfig().BATCH_PROGRESSION)
+			return 0;
+		int bonus = 0;
+		switch (ItemId.getById(axeId)) {
 			case BRONZE_PICKAXE:
 				bonus = 0;
 				break;
@@ -331,8 +331,8 @@ public final class Mining implements OpLocTrigger {
 			case RUNE_PICKAXE:
 				bonus = 16;
 				break;
-			}
-			return bonus;
+		}
+		return bonus;
 	}
 
 	/**

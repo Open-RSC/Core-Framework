@@ -25,8 +25,9 @@ import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/** Functions.java
- *
+/**
+ * Functions.java
+ * <p>
  * addloc
  * addnpc
  * addobject
@@ -85,7 +86,6 @@ import org.apache.logging.log4j.Logger;
  * teleport
  * thinkbubble
  * validatebankpin
- *
  */
 
 
@@ -184,7 +184,7 @@ public class Functions {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return;
 		npc = npc != null ? npc : scriptContext.getInteractingNpc();
-		if(npc != null) {
+		if (npc != null) {
 			npc.face(player);
 		}
 		if (npc != null && !player.inCombat()) {
@@ -230,8 +230,7 @@ public class Functions {
 			if (npc.isRemoved()) {
 				player.resetMenuHandler();
 				return -1;
-			}
-			else {
+			} else {
 				npc.face(player);
 			}
 		}
@@ -426,7 +425,7 @@ public class Functions {
 			}
 		}
 
-		if(closestNpc != null) {
+		if (closestNpc != null) {
 			scriptContext.setInteractingNpc(closestNpc);
 		}
 
@@ -448,7 +447,7 @@ public class Functions {
 			}
 		}
 
-		if(closestNpc != null) {
+		if (closestNpc != null) {
 			scriptContext.setInteractingNpc(closestNpc);
 		}
 
@@ -457,14 +456,15 @@ public class Functions {
 
 	/**
 	 * Npc chat method
-	 *  @param player
+	 *
+	 * @param player
 	 * @param npc
 	 * @param messages - String array of npc dialogue lines.
 	 */
 	public static void npcsay(final Player player, final Npc npc, final String... messages) {
 
 		// Reset the walk action on the Npc (stop them from walking).
-		if(npc != null) {
+		if (npc != null) {
 			npc.resetPath();
 			npc.face(player);
 		}
@@ -675,14 +675,14 @@ public class Functions {
 		BankPinChangeRequest request;
 		String oldPin;
 
-		if(!player.getCache().hasKey("bank_pin")) {
+		if (!player.getCache().hasKey("bank_pin")) {
 			player.playerServerMessage(MessageType.QUEST, "You do not have a bank pin to remove");
 			return false;
 		}
 
 		oldPin = showbankpin(player, n);
 
-		if(oldPin == null) {
+		if (oldPin == null) {
 			player.playerServerMessage(MessageType.QUEST, "You have cancelled removing your bank pin");
 			return false;
 		}
@@ -690,7 +690,7 @@ public class Functions {
 		request = new BankPinChangeRequest(player.getWorld().getServer(), player, oldPin, null);
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
-		while(!request.isProcessed()) {
+		while (!request.isProcessed()) {
 			delay();
 		}
 
@@ -701,14 +701,14 @@ public class Functions {
 		BankPinChangeRequest request;
 		String newPin;
 
-		if(player.getCache().hasKey("bank_pin")) {
+		if (player.getCache().hasKey("bank_pin")) {
 			player.playerServerMessage(MessageType.QUEST, "You already have a bank pin");
 			return false;
 		}
 
 		newPin = showbankpin(player, n);
 
-		if(newPin == null) {
+		if (newPin == null) {
 			player.playerServerMessage(MessageType.QUEST, "You have cancelled creating your bank pin");
 			return false;
 		}
@@ -716,7 +716,7 @@ public class Functions {
 		request = new BankPinChangeRequest(player.getWorld().getServer(), player, null, newPin);
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
-		while(!request.isProcessed()) {
+		while (!request.isProcessed()) {
 			delay();
 		}
 
@@ -728,14 +728,14 @@ public class Functions {
 		String newPin;
 		String oldPin;
 
-		if(!player.getCache().hasKey("bank_pin")) {
+		if (!player.getCache().hasKey("bank_pin")) {
 			player.playerServerMessage(MessageType.QUEST, "You do not have a bank pin to change");
 			return false;
 		}
 
 		oldPin = showbankpin(player, n);
 
-		if(oldPin == null) {
+		if (oldPin == null) {
 			player.playerServerMessage(MessageType.QUEST, "You have cancelled changing your bankpin");
 			return false;
 		}
@@ -746,7 +746,7 @@ public class Functions {
 
 		newPin = showbankpin(player, n);
 
-		if(newPin == null) {
+		if (newPin == null) {
 			player.playerServerMessage(MessageType.QUEST, "You have cancelled changing your bankpin");
 			return false;
 		}
@@ -754,7 +754,7 @@ public class Functions {
 		request = new BankPinChangeRequest(player.getWorld().getServer(), player, oldPin, newPin);
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
-		while(!request.isProcessed()) {
+		while (!request.isProcessed()) {
 			delay();
 		}
 
@@ -769,12 +769,12 @@ public class Functions {
 			return true;
 		}
 
-		if(!player.getCache().hasKey("bank_pin")) {
+		if (!player.getCache().hasKey("bank_pin")) {
 			player.setAttribute("bankpin", true);
 			return true;
 		}
 
-		if(player.getAttribute("bankpin", false)) {
+		if (player.getAttribute("bankpin", false)) {
 			return true;
 		}
 
@@ -783,7 +783,7 @@ public class Functions {
 		request = new BankPinVerifyRequest(player.getWorld().getServer(), player, pin);
 		player.getWorld().getServer().getLoginExecutor().add(request);
 
-		while(!request.isProcessed()) {
+		while (!request.isProcessed()) {
 			delay();
 		}
 
@@ -794,7 +794,7 @@ public class Functions {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) return true;
 		final PluginTask contextPlugin = PluginTask.getContextPluginTask();
-		if(!contextPlugin.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
+		if (!contextPlugin.getWorld().getServer().getConfig().BATCH_PROGRESSION) {
 			return false;
 		}
 		return scriptContext.getInterrupted();
@@ -802,6 +802,7 @@ public class Functions {
 
 	/**
 	 * Starts a batch and, if enabled, shows a batch bar to the client
+	 *
 	 * @param totalBatch The total repetitions of a task
 	 */
 	public static void startbatch(int totalBatch) {
@@ -818,6 +819,7 @@ public class Functions {
 
 	/**
 	 * Increments the current batch progress by 1
+	 *
 	 * @return Returns false if batch is completed
 	 */
 	public static void updatebatchlocation(Point location) {
@@ -902,7 +904,7 @@ public class Functions {
 	/**
 	 * QuestData: Quest Points, Exp Skill ID, Base Exp, Variable Exp
 	 *
-	 * @param player         - the player
+	 * @param player    - the player
 	 * @param questData - the data, if skill id is < 0 means no exp is applied
 	 * @param applyQP   - apply the quest point increase
 	 */

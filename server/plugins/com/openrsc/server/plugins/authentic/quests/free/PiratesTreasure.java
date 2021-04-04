@@ -9,7 +9,9 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.triggers.*;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
@@ -18,7 +20,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 
 public class PiratesTreasure implements QuestInterface,
-	TalkNpcTrigger, OpLocTrigger, UseLocTrigger {
+		TalkNpcTrigger, OpLocTrigger, UseLocTrigger {
 
 	private static final int HECTORS_CHEST_OPEN = 186;
 	private static final int HECTORS_CHEST_CLOSED = 187;
@@ -67,25 +69,25 @@ public class PiratesTreasure implements QuestInterface,
 			if (player.getCache().hasKey("bananas")) {
 				if (player.getCache().getInt("bananas") >= 10) {
 					player.message(
-						"the crate is already full");
+							"the crate is already full");
 					return;
 				}
 				if (player.getCarriedItems().remove(item) > -1) {
 					player.message(
-						"you put a banana in the crate");
+							"you put a banana in the crate");
 
 					player.getCache().set("bananas",
-						player.getCache().getInt("bananas") + 1);
+							player.getCache().getInt("bananas") + 1);
 				}
 			} else {
 				player.message("I have no reason to do that");
 			}
 		} else if (item.getCatalogId() == ItemId.KARAMJA_RUM.id() && obj.getID() == 182
-			&& player.getQuestStage(this) > 0) {
+				&& player.getQuestStage(this) > 0) {
 			if (player.getCache().hasKey("bananas")) {
 				if (player.getCarriedItems().remove(item) > -1) {
 					player.message(
-						"You stash the rum in the crate");
+							"You stash the rum in the crate");
 					if (!player.getCache().hasKey("rum_in_crate")) {
 						player.getCache().store("rum_in_crate", true);
 					}
@@ -94,8 +96,8 @@ public class PiratesTreasure implements QuestInterface,
 		} else if (item.getCatalogId() == ItemId.CHEST_KEY.id() && obj.getID() == HECTORS_CHEST_CLOSED) {
 			player.message("You unlock the chest");
 			player.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getWorld(), obj.getLocation(), HECTORS_CHEST_OPEN, obj.getDirection(),
-					obj.getType()));
+					new GameObject(obj.getWorld(), obj.getLocation(), HECTORS_CHEST_OPEN, obj.getDirection(),
+							obj.getType()));
 			player.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 			player.getCarriedItems().remove(new Item(ItemId.CHEST_KEY.id()));
 			mes("All that is in the chest is a message");
@@ -149,18 +151,18 @@ public class PiratesTreasure implements QuestInterface,
 			case 0:
 				npcsay(player, n, "Arrrh Matey");
 				int choice = multi(player, n,
-					"I'm in search of treasure", "Arrrh",
-					"Do you want to trade?");
+						"I'm in search of treasure", "Arrrh",
+						"Do you want to trade?");
 				if (choice == 0) {
 					npcsay(player, n, "Arrrh treasure you be after eh?",
-						"Well I might be able to tell you where to find some.",
-						"For a price");
+							"Well I might be able to tell you where to find some.",
+							"For a price");
 					say(player, n, "What sort of price?");
 					npcsay(player, n,
-						"Well for example if you can get me a bottle of rum",
-						"Not just any rum mind",
-						"I'd like some rum brewed on Karamja island",
-						"There's no rum like Karamja rum");
+							"Well for example if you can get me a bottle of rum",
+							"Not just any rum mind",
+							"I'd like some rum brewed on Karamja island",
+							"There's no rum like Karamja rum");
 					player.updateQuestStage(this, 1);
 				} else if (choice == 1) {
 					npcsay(player, n, "Arrrh");
@@ -170,7 +172,7 @@ public class PiratesTreasure implements QuestInterface,
 				break;
 			case 1:
 				npcsay(player, n, "Arrrh Matey",
-					"Have Ye brought some rum for yer old mate Frank");
+						"Have Ye brought some rum for yer old mate Frank");
 				if (!player.getCarriedItems().hasCatalogID(ItemId.KARAMJA_RUM.id())) {
 					say(player, n, "No not yet");
 					return;
@@ -181,27 +183,27 @@ public class PiratesTreasure implements QuestInterface,
 				mes("Frank happily takes the rum");
 				delay(3);
 				npcsay(player,
-					n,
-					"Now a deals a deal, I'll tell ye about the treasure",
-					"I used to serve under a pirate captain called One Eyed Hector",
-					"Hector was a very succesful pirate and became very rich",
-					"but about a year ago we were boarded by the Royal Asgarnian Navy",
-					"Hector was killed along with many of the crew",
-					"I was one of the few to escape", "And I escaped with this");
+						n,
+						"Now a deals a deal, I'll tell ye about the treasure",
+						"I used to serve under a pirate captain called One Eyed Hector",
+						"Hector was a very succesful pirate and became very rich",
+						"but about a year ago we were boarded by the Royal Asgarnian Navy",
+						"Hector was killed along with many of the crew",
+						"I was one of the few to escape", "And I escaped with this");
 				mes("Frank hands you a key");
 				delay(3);
 				give(player, ItemId.CHEST_KEY.id(), 1);
 				player.updateQuestStage(this, 2);
 				npcsay(player, n, "This is Hector's key",
-					"I believe it opens his chest",
-					"In his old room in the blue moon inn in Varrock",
-					"With any luck his treasure will be in there");
+						"I believe it opens his chest",
+						"In his old room in the blue moon inn in Varrock",
+						"With any luck his treasure will be in there");
 				int menu = multi(player, n,
-					"Ok thanks, I'll go and get it",
-					"So why didn't you ever get it?");
+						"Ok thanks, I'll go and get it",
+						"So why didn't you ever get it?");
 				if (menu == 1) {
 					npcsay(player, n, "I'm not allowed in the blue moon inn",
-						"Apparently I'm a drunken trouble maker");
+							"Apparently I'm a drunken trouble maker");
 				}
 				break;
 			case 2:
@@ -209,7 +211,7 @@ public class PiratesTreasure implements QuestInterface,
 				if (player.getCarriedItems().hasCatalogID(ItemId.CHEST_KEY.id(), Optional.empty()) || player.getBank().hasItemId(ItemId.CHEST_KEY.id())) {
 					npcsay(player, n, "Arrrh Matey");
 					int menu1 = multi(player, n, "Arrrh",
-						"Do you want to trade?");
+							"Do you want to trade?");
 					if (menu1 == 0) {
 						npcsay(player, n, "Arrrh");
 					} else if (menu1 == 1) {
@@ -227,7 +229,7 @@ public class PiratesTreasure implements QuestInterface,
 			case -1:
 				npcsay(player, n, "Arrrh Matey");
 				int menu2 = multi(player, n, "Arrrh",
-					"Do you want to trade?");
+						"Do you want to trade?");
 				if (menu2 == 0) {
 					npcsay(player, n, "Arrrh");
 				} else if (menu2 == 1) {
@@ -241,17 +243,17 @@ public class PiratesTreasure implements QuestInterface,
 		if (cID == -1) {
 			if (!player.getCache().hasKey("bananas")) {
 				npcsay(player, n,
-					"Hello I'm Luthas, I run the banana plantation here");
+						"Hello I'm Luthas, I run the banana plantation here");
 				int choice = multi(player, n,
-					"Could you offer me employment on your plantation?",
-					"That customs officer is annoying isn't she?");
+						"Could you offer me employment on your plantation?",
+						"That customs officer is annoying isn't she?");
 				if (choice == 0) {
 					npcsay(player,
-						n,
-						"Yes, I can sort something out",
-						"Yes there's a crate outside ready for loading up on the ship",
-						"If you could fill it up with bananas",
-						"I'll pay you 30 gold");
+							n,
+							"Yes, I can sort something out",
+							"Yes there's a crate outside ready for loading up on the ship",
+							"If you could fill it up with bananas",
+							"I'll pay you 30 gold");
 					player.getCache().set("bananas", 0);
 				} else if (choice == 1) {
 					luthasDialogue(player, n, Luthas.ANNOYING);
@@ -272,22 +274,22 @@ public class PiratesTreasure implements QuestInterface,
 						player.getCache().store("rum_delivered", true);
 					}
 					int choice = multi(
-						player,
-						n,
-						"Will you pay me for another crate full?",
-						"Thankyou, I'll be on my way",
-						"So where are these bananas going to be delivered to?",
-						"That customs officer is annoying isn't she?");
+							player,
+							n,
+							"Will you pay me for another crate full?",
+							"Thankyou, I'll be on my way",
+							"So where are these bananas going to be delivered to?",
+							"That customs officer is annoying isn't she?");
 					if (choice == 0) {
 						player.getCache().set("bananas", 0);
 						npcsay(player,
-							n,
-							"Yes certainly",
-							"If you go outside you should see the old crate has been loaded on to the ship",
-							"and there is another empty crate in it's place");
+								n,
+								"Yes certainly",
+								"If you go outside you should see the old crate has been loaded on to the ship",
+								"and there is another empty crate in it's place");
 					} else if (choice == 2) {
 						npcsay(player, n,
-							"I sell them to Wydin who runs a grocery store in Port Sarim");
+								"I sell them to Wydin who runs a grocery store in Port Sarim");
 					} else if (choice == 3) {
 						luthasDialogue(player, n, Luthas.ANNOYING);
 					}
@@ -295,14 +297,14 @@ public class PiratesTreasure implements QuestInterface,
 				}
 				npcsay(player, n, "Have you completed your task yet?");
 				int choice = multi(player, n,
-					"What did I have to do again?",
-					"No, the crate isn't full yet");
+						"What did I have to do again?",
+						"No, the crate isn't full yet");
 				if (choice == 0) {
 					npcsay(player,
-						n,
-						"There's a crate outside ready for loading up on the ship",
-						"If you could fill it up with bananas",
-						"I'll pay you 30 gold");
+							n,
+							"There's a crate outside ready for loading up on the ship",
+							"If you could fill it up with bananas",
+							"I'll pay you 30 gold");
 				} else if (choice == 1) {
 					npcsay(player, n, "Well come back when it is");
 				}
@@ -312,9 +314,9 @@ public class PiratesTreasure implements QuestInterface,
 		switch (cID) {
 			case Luthas.ANNOYING:
 				npcsay(player, n, "Well I know her pretty well",
-					"She doesn't cause me any trouble any more",
-					"She doesn't even search my export crates any more",
-					"She knows they only contain bananas");
+						"She doesn't cause me any trouble any more",
+						"She doesn't even search my export crates any more",
+						"She knows they only contain bananas");
 				break;
 		}
 	}

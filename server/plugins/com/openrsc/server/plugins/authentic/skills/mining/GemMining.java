@@ -20,13 +20,13 @@ public class GemMining implements OpLocTrigger {
 	private static final int[] gemWeightsWithoutDragonstone = {64, 32, 16, 8, 3, 3, 2};
 	private static final int[] gemWeightsWithDragonstone = {60, 30, 15, 9, 5, 5, 4};
 	private static final int[] gemIds = {
-		ItemId.UNCUT_OPAL.id(),
-		ItemId.UNCUT_JADE.id(),
-		ItemId.UNCUT_RED_TOPAZ.id(),
-		ItemId.UNCUT_SAPPHIRE.id(),
-		ItemId.UNCUT_EMERALD.id(),
-		ItemId.UNCUT_RUBY.id(),
-		ItemId.UNCUT_DIAMOND.id()
+			ItemId.UNCUT_OPAL.id(),
+			ItemId.UNCUT_JADE.id(),
+			ItemId.UNCUT_RED_TOPAZ.id(),
+			ItemId.UNCUT_SAPPHIRE.id(),
+			ItemId.UNCUT_EMERALD.id(),
+			ItemId.UNCUT_RUBY.id(),
+			ItemId.UNCUT_DIAMOND.id()
 	};
 
 	private void handleGemRockMining(final GameObject obj, Player player, int click) {
@@ -90,7 +90,7 @@ public class GemMining implements OpLocTrigger {
 		}
 
 		if (config().STOP_SKILLING_FATIGUED >= 1
-			&& player.getFatigue() >= player.MAX_FATIGUE) {
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
 			// authentically on fatigued, shows pickaxe that would have been used
 			thinkbubble(new Item(axeId));
 			player.playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
@@ -112,7 +112,7 @@ public class GemMining implements OpLocTrigger {
 		delay(3);
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
+					&& player.getFatigue() >= player.MAX_FATIGUE) {
 				// authentically on fatigued, shows pickaxe that would have been used
 				thinkbubble(new Item(axeId));
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to mine this rock");
@@ -204,8 +204,8 @@ public class GemMining implements OpLocTrigger {
 	 */
 	private int getGemFormula(boolean dragonstoneAmmy) {
 		return dragonstoneAmmy ?
-			Formulae.weightedRandomChoice(gemIds, gemWeightsWithDragonstone) :
-			Formulae.weightedRandomChoice(gemIds, gemWeightsWithoutDragonstone);
+				Formulae.weightedRandomChoice(gemIds, gemWeightsWithDragonstone) :
+				Formulae.weightedRandomChoice(gemIds, gemWeightsWithoutDragonstone);
 	}
 
 	private String minedString(int gemID) {

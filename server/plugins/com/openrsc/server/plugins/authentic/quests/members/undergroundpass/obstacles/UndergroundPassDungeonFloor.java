@@ -7,9 +7,9 @@ import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import java.util.Optional;
 
@@ -38,8 +38,7 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 			delay(3);
 			player.message("it leads to some stairs, you walk up...");
 			player.teleport(782, 3549);
-		}
-		else if (obj.getID() == TOMB_OF_IBAN) {
+		} else if (obj.getID() == TOMB_OF_IBAN) {
 			mes("you try to open the door of the tomb");
 			delay(3);
 			player.message("but the door refuses to open");
@@ -52,8 +51,7 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 			say(player, null, "aaarrgghhh");
 			delay(2);
 			delloc(claws_of_iban);
-		}
-		else if (obj.getID() == DWARF_BARREL) {
+		} else if (obj.getID() == DWARF_BARREL) {
 			if (!player.getCarriedItems().hasCatalogID(ItemId.BUCKET.id(), Optional.of(false))) {
 				player.message("you need a bucket first");
 			} else {
@@ -61,8 +59,7 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 				player.getCarriedItems().remove(new Item(ItemId.BUCKET.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.DWARF_BREW.id()));
 			}
-		}
-		else if (obj.getID() == PILE_OF_MUD) {
+		} else if (obj.getID() == PILE_OF_MUD) {
 			mes("you climb the pile of mud");
 			delay(3);
 			player.message("it leads to an old stair way");
@@ -90,15 +87,14 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 				delay(3);
 				player.message("but it seems such a waste");
 			}
-		}
-		else if (obj.getID() == TOMB_OF_IBAN && item.getCatalogId() == ItemId.TINDERBOX.id()) {
+		} else if (obj.getID() == TOMB_OF_IBAN && item.getCatalogId() == ItemId.TINDERBOX.id()) {
 			mes("you try to set alight to the tomb");
 			delay(3);
 			if (player.getCache().hasKey("brew_on_tomb") && !player.getCache().hasKey("ash_on_doll")) {
 				mes("it bursts into flames");
 				delay(3);
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 97, obj.getDirection(), obj
-					.getType()));
+						.getType()));
 				addloc(obj.getWorld(), obj.getLoc(), 10000);
 				mes("you search through the remains");
 				delay(3);
@@ -130,8 +126,8 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 				delay(3);
 				player.message("would you like to try");
 				int menu = multi(player,
-					"nope",
-					"yes, lets do it");
+						"nope",
+						"yes, lets do it");
 				if (menu == 1) {
 					player.message("you squeeze through the old railings");
 					if (obj.getDirection() == 0) {

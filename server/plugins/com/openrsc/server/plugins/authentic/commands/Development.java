@@ -24,8 +24,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -45,53 +43,40 @@ public final class Development implements CommandTrigger {
 	 */
 	@Override
 	public void onCommand(Player player, String command, String[] args) {
-		if(messagePrefix == null) {
+		if (messagePrefix == null) {
 			messagePrefix = config().MESSAGE_PREFIX;
 		}
-		if(badSyntaxPrefix == null) {
+		if (badSyntaxPrefix == null) {
 			badSyntaxPrefix = config().BAD_SYNTAX_PREFIX;
 		}
 
-		if (command.equalsIgnoreCase("radiusnpc") || command.equalsIgnoreCase("createnpc") || command.equalsIgnoreCase("cnpc")|| command.equalsIgnoreCase("cpc")) {
+		if (command.equalsIgnoreCase("radiusnpc") || command.equalsIgnoreCase("createnpc") || command.equalsIgnoreCase("cnpc") || command.equalsIgnoreCase("cpc")) {
 			createNpc(player, command, args);
-		}
-		else if (command.equalsIgnoreCase("rpc") || command.equalsIgnoreCase("rnpc") || command.equalsIgnoreCase("removenpc")){
+		} else if (command.equalsIgnoreCase("rpc") || command.equalsIgnoreCase("rnpc") || command.equalsIgnoreCase("removenpc")) {
 			removeNpc(player, command, args);
-		}
-		else if (command.equalsIgnoreCase("removeobject") || command.equalsIgnoreCase("robject")) {
+		} else if (command.equalsIgnoreCase("removeobject") || command.equalsIgnoreCase("robject")) {
 			removeObject(player, command, args);
-		}
-		else if (command.equalsIgnoreCase("createobject") || command.equalsIgnoreCase("cobject") || command.equalsIgnoreCase("addobject") || command.equalsIgnoreCase("aobject")) {
+		} else if (command.equalsIgnoreCase("createobject") || command.equalsIgnoreCase("cobject") || command.equalsIgnoreCase("addobject") || command.equalsIgnoreCase("aobject")) {
 			createObject(player, command, args);
-		}
-		else if (command.equalsIgnoreCase("rotateobject")) {
+		} else if (command.equalsIgnoreCase("rotateobject")) {
 			rotateObject(player, command, args);
-		}
-		else if (command.equalsIgnoreCase("tile")) {
+		} else if (command.equalsIgnoreCase("tile")) {
 			tileInformation(player);
-		}
-		else if (command.equalsIgnoreCase("debugregion")) {
+		} else if (command.equalsIgnoreCase("debugregion")) {
 			regionInformation(player, command, args);
-		}
-		else if (command.equalsIgnoreCase("coords")) {
+		} else if (command.equalsIgnoreCase("coords")) {
 			currentCoordinates(player, args);
-		}
-		else if (command.equalsIgnoreCase("serverstats")) {
-			ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
-		}
-		else if (command.equalsIgnoreCase("droptest")) {
+		} else if (command.equalsIgnoreCase("serverstats")) {
+			ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true), true);
+		} else if (command.equalsIgnoreCase("droptest")) {
 			testNpcDrops(player, command, args);
-		}
-		else if (command.equalsIgnoreCase("fishingRate")) {
+		} else if (command.equalsIgnoreCase("fishingRate")) {
 			fishingRate(player, command, args);
-		}
-		else if (command.equalsIgnoreCase("setcombatstyle")) {
+		} else if (command.equalsIgnoreCase("setcombatstyle")) {
 			setCombatStyle(player, args);
-		}
-		else if (command.equalsIgnoreCase("protodarts")) {
+		} else if (command.equalsIgnoreCase("protodarts")) {
 			protoDartTipsTest(player, args);
-		}
-		else if (command.equalsIgnoreCase("logRate")) {
+		} else if (command.equalsIgnoreCase("logRate")) {
 			logRate(player, args);
 		}
 	}
@@ -105,8 +90,7 @@ public final class Development implements CommandTrigger {
 		int id = -1;
 		try {
 			id = Integer.parseInt(args[0]);
-		}
-		catch(NumberFormatException ex) {
+		} catch (NumberFormatException ex) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] [radius] (x) (y)");
 			return;
 		}
@@ -121,7 +105,7 @@ public final class Development implements CommandTrigger {
 
 		int x = -1;
 		int y = -1;
-		if(args.length >= 4) {
+		if (args.length >= 4) {
 			try {
 				x = Integer.parseInt(args[2]);
 				y = Integer.parseInt(args[3]);
@@ -129,19 +113,17 @@ public final class Development implements CommandTrigger {
 				player.message(badSyntaxPrefix + command.toUpperCase() + " [id] [radius] (x) (y)");
 				return;
 			}
-		}
-		else {
+		} else {
 			x = player.getX();
 			y = player.getY();
 		}
 
-		if(!player.getWorld().withinWorld(x, y))
-		{
+		if (!player.getWorld().withinWorld(x, y)) {
 			player.message(messagePrefix + "Invalid coordinates");
 			return;
 		}
 
-		Point npcLoc = new Point(x,y);
+		Point npcLoc = new Point(x, y);
 		final Npc n = new Npc(player.getWorld(), id, x, y, x - radius, x + radius, y - radius, y + radius);
 
 		if (player.getWorld().getServer().getEntityHandler().getNpcDef(id) == null) {
@@ -171,15 +153,14 @@ public final class Development implements CommandTrigger {
 		int id = -1;
 		try {
 			id = Integer.parseInt(args[0]);
-		}
-		catch(NumberFormatException ex) {
+		} catch (NumberFormatException ex) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_instance_id]");
 			return;
 		}
 
 		Npc npc = player.getWorld().getNpc(id);
 
-		if(npc == null) {
+		if (npc == null) {
 			player.message(messagePrefix + "Invalid npc instance id");
 			return;
 		}
@@ -205,15 +186,14 @@ public final class Development implements CommandTrigger {
 		int id = -1;
 		try {
 			id = Integer.parseInt(args[0]);
-		}
-		catch(NumberFormatException ex) {
+		} catch (NumberFormatException ex) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (x) (y)");
 			return;
 		}
 
 		int x = -1;
 		int y = -1;
-		if(args.length >= 3) {
+		if (args.length >= 3) {
 			try {
 				x = Integer.parseInt(args[1]);
 				y = Integer.parseInt(args[2]);
@@ -221,14 +201,12 @@ public final class Development implements CommandTrigger {
 				player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (x) (y)");
 				return;
 			}
-		}
-		else {
+		} else {
 			x = player.getX();
 			y = player.getY();
 		}
 
-		if(!player.getWorld().withinWorld(x, y))
-		{
+		if (!player.getWorld().withinWorld(x, y)) {
 			player.message(messagePrefix + "Invalid coordinates");
 			return;
 		}
@@ -261,13 +239,13 @@ public final class Development implements CommandTrigger {
 	}
 
 	private void removeObject(Player player, String command, String[] args) {
-		if(args.length == 1) {
+		if (args.length == 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " (x) (y)");
 			return;
 		}
 
 		int x = -1;
-		if(args.length >= 1) {
+		if (args.length >= 1) {
 			try {
 				x = Integer.parseInt(args[0]);
 			} catch (NumberFormatException ex) {
@@ -279,7 +257,7 @@ public final class Development implements CommandTrigger {
 		}
 
 		int y = -1;
-		if(args.length >=2) {
+		if (args.length >= 2) {
 			try {
 				y = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
@@ -290,8 +268,7 @@ public final class Development implements CommandTrigger {
 			y = player.getY();
 		}
 
-		if(!player.getWorld().withinWorld(x, y))
-		{
+		if (!player.getWorld().withinWorld(x, y)) {
 			player.message(messagePrefix + "Invalid coordinates");
 			return;
 		}
@@ -299,8 +276,7 @@ public final class Development implements CommandTrigger {
 		final Point objectLocation = Point.location(x, y);
 		final GameObject object = player.getViewArea().getGameObject(objectLocation);
 
-		if(object == null)
-		{
+		if (object == null) {
 			player.message(messagePrefix + "There is no object at coordinates " + objectLocation);
 			return;
 		}
@@ -318,13 +294,13 @@ public final class Development implements CommandTrigger {
 	}
 
 	private void rotateObject(Player player, String command, String[] args) {
-		if(args.length == 1) {
+		if (args.length == 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " (x) (y) (direction)");
 			return;
 		}
 
 		int x = -1;
-		if(args.length >= 1) {
+		if (args.length >= 1) {
 			try {
 				x = Integer.parseInt(args[0]);
 			} catch (NumberFormatException ex) {
@@ -336,7 +312,7 @@ public final class Development implements CommandTrigger {
 		}
 
 		int y = -1;
-		if(args.length >= 2) {
+		if (args.length >= 2) {
 			try {
 				y = Integer.parseInt(args[1]);
 			} catch (NumberFormatException ex) {
@@ -348,8 +324,7 @@ public final class Development implements CommandTrigger {
 		}
 
 
-		if(!player.getWorld().withinWorld(x, y))
-		{
+		if (!player.getWorld().withinWorld(x, y)) {
 			player.message(messagePrefix + "Invalid coordinates");
 			return;
 		}
@@ -357,14 +332,13 @@ public final class Development implements CommandTrigger {
 		final Point objectLocation = Point.location(x, y);
 		final GameObject object = player.getViewArea().getGameObject(objectLocation);
 
-		if(object == null)
-		{
+		if (object == null) {
 			player.message(messagePrefix + "There is no object at coordinates " + objectLocation);
 			return;
 		}
 
 		int direction = -1;
-		if(args.length >= 3) {
+		if (args.length >= 3) {
 			try {
 				direction = Integer.parseInt(args[2]);
 			} catch (NumberFormatException ex) {
@@ -378,7 +352,7 @@ public final class Development implements CommandTrigger {
 		if (direction >= 8) {
 			direction = 0;
 		}
-		if(direction < 0) {
+		if (direction < 0) {
 			direction = 8;
 		}
 
@@ -408,12 +382,12 @@ public final class Development implements CommandTrigger {
 	private void tileInformation(Player player) {
 		TileValue tv = player.getWorld().getTile(player.getLocation());
 		player.message(messagePrefix + "traversal: " + tv.traversalMask + ", vertVal:" + (tv.verticalWallVal & 0xff) + ", horiz: "
-			+ (tv.horizontalWallVal & 0xff) + ", diagVal: " + (tv.diagWallVal & 0xff) + ", projectile: " + tv.projectileAllowed);
+				+ (tv.horizontalWallVal & 0xff) + ", diagVal: " + (tv.diagWallVal & 0xff) + ", projectile: " + tv.projectileAllowed);
 	}
 
 	private void regionInformation(Player player, String command, String[] args) {
-		boolean debugPlayers ;
-		if(args.length >= 1) {
+		boolean debugPlayers;
+		if (args.length >= 1) {
 			try {
 				debugPlayers = DataConversions.parseBoolean(args[0]);
 			} catch (NumberFormatException e) {
@@ -424,8 +398,8 @@ public final class Development implements CommandTrigger {
 			debugPlayers = true;
 		}
 
-		boolean debugNpcs ;
-		if(args.length >= 2) {
+		boolean debugNpcs;
+		if (args.length >= 2) {
 			try {
 				debugNpcs = DataConversions.parseBoolean(args[1]);
 			} catch (NumberFormatException e) {
@@ -436,8 +410,8 @@ public final class Development implements CommandTrigger {
 			debugNpcs = true;
 		}
 
-		boolean debugItems ;
-		if(args.length >= 3) {
+		boolean debugItems;
+		if (args.length >= 3) {
 			try {
 				debugItems = DataConversions.parseBoolean(args[2]);
 			} catch (NumberFormatException e) {
@@ -448,8 +422,8 @@ public final class Development implements CommandTrigger {
 			debugItems = true;
 		}
 
-		boolean debugObjects ;
-		if(args.length >= 1) {
+		boolean debugObjects;
+		if (args.length >= 1) {
 			try {
 				debugObjects = DataConversions.parseBoolean(args[3]);
 			} catch (NumberFormatException e) {
@@ -461,15 +435,15 @@ public final class Development implements CommandTrigger {
 		}
 
 		ActionSender.sendBox(player, player.getRegion().toString(debugPlayers, debugNpcs, debugItems, debugObjects)
-			.replaceAll("\n", "%"), true);
+				.replaceAll("\n", "%"), true);
 	}
 
 	private void currentCoordinates(Player player, String[] args) {
 		Player targetPlayer = args.length > 0 ?
-			player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
-			player;
+				player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) :
+				player;
 
-		if(targetPlayer != null)
+		if (targetPlayer != null)
 			player.message(messagePrefix + targetPlayer.getStaffName() + " is at: " + targetPlayer.getLocation());
 		else
 			player.message(messagePrefix + "Invalid name or player is not online");
@@ -489,7 +463,8 @@ public final class Development implements CommandTrigger {
 		}
 		if (args.length > 2) {
 			ringOfWealth = Integer.parseInt(args[2]) == 1;
-		};
+		}
+		;
 		final int finalCount = count;
 		NpcDrops npcDrops = player.getWorld().getNpcDrops();
 		DropTable dropTable = npcDrops.getDropTable(npcId);
@@ -503,11 +478,10 @@ public final class Development implements CommandTrigger {
 			ArrayList<Item> items = dropTable.rollItem(ringOfWealth, player);
 			if (items.size() == 0) {
 				droppedCount.put("-1:0", droppedCount.getOrDefault("-1:0", 0) + 1);
-			}
-			else {
+			} else {
 				for (Item item : items) {
 					droppedCount.put(item.getCatalogId() + ":" + item.getAmount(),
-						droppedCount.getOrDefault(item.getCatalogId() + ":" + item.getAmount(), 0) + 1);
+							droppedCount.getOrDefault(item.getCatalogId() + ":" + item.getAmount(), 0) + 1);
 				}
 			}
 		}
@@ -520,7 +494,7 @@ public final class Development implements CommandTrigger {
 			if (i.getCatalogId() > -1) {
 				key = i.getDef(player.getWorld()).getName();
 			}
-			System.out.println(key + " (" + amount + "): " + entry.getValue() + " / " + finalCount + " (" + ((entry.getValue() / (double)finalCount) * 128) + "/128)");
+			System.out.println(key + " (" + amount + "): " + entry.getValue() + " / " + finalCount + " (" + ((entry.getValue() / (double) finalCount) * 128) + "/128)");
 		});
 	}
 
@@ -558,7 +532,7 @@ public final class Development implements CommandTrigger {
 		fishingDefs.put("tunaSwordfish3", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(557, 0));
 		fishingDefs.put("lavaeel", player.getWorld().getServer().getEntityHandler().getObjectFishingDef(271, 0));
 
-		HashMap<Integer,Integer> results = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> results = new HashMap<Integer, Integer>();
 		for (int i = 0; i < trials; i++) {
 			ObjectFishDef fish = fishingDefs.get(args[0]).fishingAttemptResult(Integer.parseInt(args[1]));
 			int result = -1;
@@ -591,7 +565,8 @@ public final class Development implements CommandTrigger {
 			try {
 				int proposedStyle = Integer.parseInt(args[0]);
 				player.setCombatStyle(proposedStyle);
-			} catch (Exception e) {}
+			} catch (Exception e) {
+			}
 		}
 	}
 
@@ -619,6 +594,7 @@ public final class Development implements CommandTrigger {
 		mes("@gre@" + smithSuccesses + "@whi@ smithing successes, @lre@" + (trials - smithSuccesses) + "@whi@ failures.");
 
 	}
+
 	private void logRate(Player player, String[] args) {
 		// parse input
 		if (args.length < 3) {

@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.openrsc.server.plugins.Functions.changeloc;
 
-public class HourlyResetEvent extends HourlyEvent  {
+public class HourlyResetEvent extends HourlyEvent {
 	private int actionedResets;
 	private final String eventMessage;
 
@@ -26,7 +26,7 @@ public class HourlyResetEvent extends HourlyEvent  {
 	}
 
 	private HourlyResetEvent(final World world, final int lifeTime, final int minute, final String eventMessage) {
-		super(world, lifeTime, minute,"Hourly Scenery Reset Event");
+		super(world, lifeTime, minute, "Hourly Scenery Reset Event");
 		this.eventMessage = eventMessage;
 	}
 
@@ -35,7 +35,7 @@ public class HourlyResetEvent extends HourlyEvent  {
 		for (final ConcurrentHashMap<Integer, Region> yRegionList : getWorld().getRegionManager().getRegions().values()) {
 			for (final Region region : yRegionList.values()) {
 				for (GameObject obj : new ArrayList<>(region.getGameObjects())) {
-					if (obj.getType() == 0) {
+					if (obj.isGameObject()) {
 						// only for scenery
 						resetScenery(obj);
 					}
@@ -44,7 +44,7 @@ public class HourlyResetEvent extends HourlyEvent  {
 		}
 
 		for (final Player p : getWorld().getPlayers()) {
-			if(!p.isAdmin()) {
+			if (!p.isAdmin()) {
 				continue;
 			}
 			if (getWorld().getServer().getConfig().DEBUG)

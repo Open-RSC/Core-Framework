@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.quests.members.undergroundpass.obstacles;
 
-import com.openrsc.server.model.Point;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
@@ -31,17 +31,13 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		if (inArray(obj.getID(), WORKING_GRILLS)) {
 			moveForward(player, obj);
-		}
-		else if (obj.getID() == FAIL_GRILL) {
+		} else if (obj.getID() == FAIL_GRILL) {
 			trap(player, obj);
-		}
-		else if (obj.getID() == WALK_HERE_ROCK_EAST) {
+		} else if (obj.getID() == WALK_HERE_ROCK_EAST) {
 			player.teleport(679, 3447);
-		}
-		else if (obj.getID() == WALK_HERE_ROCK_WEST) {
+		} else if (obj.getID() == WALK_HERE_ROCK_WEST) {
 			player.walkToEntity(689, 3452);
-		}
-		else if (obj.getID() == LEVER) {
+		} else if (obj.getID() == LEVER) {
 			mes("you pull on the lever");
 			delay(3);
 			mes("you hear a loud mechanical churning");
@@ -68,8 +64,8 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 		player.damage((int) (getCurrentLevel(player, Skills.HITS) * 0.2D));
 		player.message("you crawl out of the pit");
 		player.getWorld().replaceGameObject(obj,
-			new GameObject(obj.getWorld(), obj.getLocation(), 778, obj.getDirection(), obj
-				.getType()));
+				new GameObject(obj.getWorld(), obj.getLocation(), 778, obj.getDirection(), obj
+						.getType()));
 		player.getWorld().delayedSpawnObject(obj.getLoc(), 1000);
 		delay(3);
 		player.message("and off the metal grill");

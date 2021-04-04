@@ -17,7 +17,7 @@ public class RandomObjects implements OpLocTrigger {
 	public void onOpLoc(Player player, final GameObject object, String command) {
 		if (command.equals("search") && object.getID() == 17) {
 			player.message(
-				"You search the chest, but find nothing");
+					"You search the chest, but find nothing");
 			return;
 		}
 		switch (object.getID()) {
@@ -70,21 +70,21 @@ public class RandomObjects implements OpLocTrigger {
 					delay(3);
 					mes("Would you like to try?");
 					delay(3);
-						int menu = multi(player,
+					int menu = multi(player,
 							"Yes, I am am very nimble and agile!",
 							"No, I am happy where I am thanks!");
-						if (menu == 0) {
-							mes("You climb up onto the cart");
-							delay(3);
-							mes("You nimbly jump from one side of the cart to the other.");
-							delay(3);
-							player.teleport(386, 852);
-							player.playerServerMessage(MessageType.QUEST, "And climb down again");
-						} else if (menu == 1) {
-							mes("You think better of clambering over the cart, you might get dirty.");
-							delay(3);
-							say(player, null, "I'd probably have just scraped my knees up as well.");
-						}
+					if (menu == 0) {
+						mes("You climb up onto the cart");
+						delay(3);
+						mes("You nimbly jump from one side of the cart to the other.");
+						delay(3);
+						player.teleport(386, 852);
+						player.playerServerMessage(MessageType.QUEST, "And climb down again");
+					} else if (menu == 1) {
+						mes("You think better of clambering over the cart, you might get dirty.");
+						delay(3);
+						say(player, null, "I'd probably have just scraped my knees up as well.");
+					}
 				} else {
 					mes("You approach the cart and see undead creatures gathering by the village gates.");
 					delay(3);
@@ -130,7 +130,7 @@ public class RandomObjects implements OpLocTrigger {
 			case 1241:
 				if (player.getCache().hasKey("scotruth_to_chaos_altar")) {
 					player.message("You step into the tunnel...");
-					player.teleport(331,213, false);
+					player.teleport(331, 213, false);
 					delay(4);
 					player.message("And find your way into the wilderness");
 				} else {
@@ -140,7 +140,7 @@ public class RandomObjects implements OpLocTrigger {
 			case 1242:
 				player.message("You enter the rowboat...");
 				delay(3);
-				player.teleport(206,449);
+				player.teleport(206, 449);
 				player.message("And stop in Edgeville");
 				break;
 		}
@@ -188,7 +188,7 @@ public class RandomObjects implements OpLocTrigger {
 		if (obj.getID() == 202 || obj.getID() == 203 || inArray(obj.getID(), 241, 242, 243))
 			return true;
 		if (obj.getLocation().getX() == 94 && obj.getLocation().getY() == 521
-			&& obj.getID() == 60) {
+				&& obj.getID() == 60) {
 			if (player.getConfig().MEMBER_WORLD) {
 				return true;
 			}

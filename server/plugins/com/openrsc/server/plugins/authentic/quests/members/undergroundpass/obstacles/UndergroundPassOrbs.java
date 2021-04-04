@@ -8,9 +8,9 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
@@ -53,8 +53,8 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 					player.teleport(728, 3436);
 				}
 				obj.getWorld().replaceGameObject(obj,
-					new GameObject(obj.getWorld(), obj.getLocation(), 826, obj.getDirection(), obj
-						.getType()));
+						new GameObject(obj.getWorld(), obj.getLocation(), 826, obj.getDirection(), obj
+								.getType()));
 				obj.getWorld().delayedSpawnObject(obj.getLoc(), config().GAME_TICK * 8);
 				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 5) + 5);
 				say(player, null, "aaarghh");
@@ -66,8 +66,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 				mes("you may be able to wedge it open with something?");
 				delay(3);
 			}
-		}
-		else if (inArray(obj.getID(), WEST_PASSAGE)) {
+		} else if (inArray(obj.getID(), WEST_PASSAGE)) {
 			if (cmd.equalsIgnoreCase("clear")) {
 				player.message("you move the rocks from your path");
 				if (obj.getX() == player.getX() - 1) {
@@ -82,7 +81,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 				delay(3);
 				player.message("you find a trip wire");
 				int menu = multi(player,
-					"step over trip wire", "back away");
+						"step over trip wire", "back away");
 				if (menu == 0) {
 					mes("you carefully step over the trip wire");
 					delay(3);
@@ -107,8 +106,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 					}
 				}
 			}
-		}
-		else if (obj.getID() == SOUTH_WEST_PASSAGE) {
+		} else if (obj.getID() == SOUTH_WEST_PASSAGE) {
 			player.teleport(742, 3453);
 			delay(2);
 			mes("you walk down the passage way");
@@ -125,8 +123,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 				player.damage((int) (getCurrentLevel(player, Skills.HITS) / 5) + 5);
 				say(player, null, "aaarrrgh");
 			}
-		}
-		else if (obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP) {
+		} else if (obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP) {
 			mes("you begin to climb up the grill");
 			delay(3);
 			if (DataConversions.getRandom().nextInt(10) <= 2) { // fail
@@ -141,8 +138,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 				delay(3);
 				player.message("as the passage raises back to it's original position");
 			}
-		}
-		else if (obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP_ROPE) {
+		} else if (obj.getID() == SOUTH_WEST_PASSAGE_CLIMB_UP_ROPE) {
 			player.message("you pull your self up the rope");
 			mes("and climb back into the cavern");
 			delay();
@@ -150,8 +146,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 			mes("as you pull yourself up you hear a mechanical churning");
 			delay(3);
 			player.message("as the passage raises back to it's original position");
-		}
-		else if (obj.getID() == SOUTH_WEST_STALAGMITE) {
+		} else if (obj.getID() == SOUTH_WEST_STALAGMITE) {
 			mes("you search the stalagmite");
 			delay(3);
 			if (player.getCache().hasKey("stalagmite")) {
@@ -169,7 +164,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 		return (item.getCatalogId() == ItemId.PLANK.id() && (obj.getID() == NORTH_PASSAGE[0] || obj.getID() == NORTH_PASSAGE[2]))
 				|| (item.getCatalogId() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE)
 				|| (inArray(item.getCatalogId(), ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(),
-						ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id()) && obj.getID() == FURNACE);
+				ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id()) && obj.getID() == FURNACE);
 	}
 
 	@Override
@@ -188,8 +183,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 			} else if (obj.getID() == NORTH_PASSAGE[2]) {
 				player.teleport(728, 3441);
 			}
-		}
-		else if (item.getCatalogId() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE) {
+		} else if (item.getCatalogId() == ItemId.ROPE.id() && obj.getID() == SOUTH_WEST_STALAGMITE) {
 			mes("you tie one end of the rope to the stalagmite");
 			delay(3);
 			mes("and the other around your waist");
@@ -198,8 +192,7 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 			if (!player.getCache().hasKey("stalagmite")) {
 				player.getCache().store("stalagmite", true);
 			}
-		}
-		else if (inArray(item.getCatalogId(), ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(),
+		} else if (inArray(item.getCatalogId(), ItemId.ORB_OF_LIGHT_WHITE.id(), ItemId.ORB_OF_LIGHT_BLUE.id(),
 				ItemId.ORB_OF_LIGHT_PINK.id(), ItemId.ORB_OF_LIGHT_YELLOW.id()) && obj.getID() == FURNACE) {
 			player.message("you throw the glowing orb into the furnace");
 			mes("its light quickly dims and then dies");
@@ -234,18 +227,15 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 			if (player.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_WHITE.id(), Optional.empty())) {
 				player.message("you are already carrying this orb");
 			}
-		}
-		else if (i.getID() == ItemId.ORB_OF_LIGHT_BLUE.id()) {
+		} else if (i.getID() == ItemId.ORB_OF_LIGHT_BLUE.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_BLUE.id(), Optional.empty())) {
 				player.message("you are already carrying this orb");
 			}
-		}
-		else if (i.getID() == ItemId.ORB_OF_LIGHT_PINK.id()) {
+		} else if (i.getID() == ItemId.ORB_OF_LIGHT_PINK.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_PINK.id(), Optional.empty())) {
 				player.message("you are already carrying this orb");
 			}
-		}
-		else if (i.getID() == ItemId.ORB_OF_LIGHT_YELLOW.id()) {
+		} else if (i.getID() == ItemId.ORB_OF_LIGHT_YELLOW.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_YELLOW.id(), Optional.empty())) {
 				player.message("you are already carrying this orb");
 			}
@@ -259,20 +249,17 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 				return true;
 			}
 			return false;
-		}
-		else if (i.getID() == ItemId.ORB_OF_LIGHT_BLUE.id()) {
+		} else if (i.getID() == ItemId.ORB_OF_LIGHT_BLUE.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_BLUE.id(), Optional.empty())) {
 				return true;
 			}
 			return false;
-		}
-		else if (i.getID() == ItemId.ORB_OF_LIGHT_PINK.id()) {
+		} else if (i.getID() == ItemId.ORB_OF_LIGHT_PINK.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_PINK.id(), Optional.empty())) {
 				return true;
 			}
 			return false;
-		}
-		else if (i.getID() == ItemId.ORB_OF_LIGHT_YELLOW.id()) {
+		} else if (i.getID() == ItemId.ORB_OF_LIGHT_YELLOW.id()) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.ORB_OF_LIGHT_YELLOW.id(), Optional.empty())) {
 				return true;
 			}
@@ -354,8 +341,8 @@ public class UndergroundPassOrbs implements OpLocTrigger, UseLocTrigger, TakeObj
 		player.damage((int) ((getCurrentLevel(player, Skills.HITS) / 16) + 2));
 		if (_new == null) {
 			obj.getWorld().replaceGameObject(obj,
-				new GameObject(obj.getWorld(), obj.getLocation(), 773, obj.getDirection(), obj
-					.getType()));
+					new GameObject(obj.getWorld(), obj.getLocation(), 773, obj.getDirection(), obj
+							.getType()));
 			obj.getWorld().delayedSpawnObject(obj.getLoc(), 3000);
 			say(player, null, "aaarrghhh");
 		} else {

@@ -5,8 +5,8 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -16,7 +16,7 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WoodcutJungle implements OpLocTrigger,
-	OpBoundTrigger {
+		OpBoundTrigger {
 
 	private static int[] JUNGLE_TREES = {1086, 1100, 1099, 1092, 1091};
 
@@ -47,7 +47,7 @@ public class WoodcutJungle implements OpLocTrigger,
 
 	private void handleJungleWoodcut(GameObject obj, Player player) {
 		if (config().STOP_SKILLING_FATIGUED >= 1
-			&& player.getFatigue() >= player.MAX_FATIGUE) {
+				&& player.getFatigue() >= player.MAX_FATIGUE) {
 			player.playerServerMessage(MessageType.QUEST, "You are too tired to cut the " + (obj.getID() == JUNGLE_VINE ? "jungle vines" : "tree"));
 
 			// Shilo side of the jungle
@@ -114,7 +114,7 @@ public class WoodcutJungle implements OpLocTrigger,
 					if (!force)
 						// authentic does not send to quest tab
 						mes("You hack your way through the jungle.");
-						delay(2);
+					delay(2);
 				} else {
 					player.getWorld().replaceGameObject(obj, new GameObject(obj.getWorld(), obj.getLocation(), JUNGLE_TREE_STUMP, obj.getDirection(), obj.getType()));
 					player.getWorld().delayedSpawnObject(obj.getLoc(), 60 * 1000); // 1 minute.

@@ -5,15 +5,15 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public class AgilityShortcuts implements OpLocTrigger,
-	UseLocTrigger {
+		UseLocTrigger {
 
 	private static final int SHORTCUT_FALADOR_HANDHOLD = 693;
 	private static final int SHORTCUT_BRIMHAVEN_SWING = 694;
@@ -52,32 +52,32 @@ public class AgilityShortcuts implements OpLocTrigger,
 	@Override
 	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return inArray(obj.getID(), SHORTCUT_YANILLE_PIPE,
-			SHORTCUT_YANILLE_PIPE_BACK,
-			SHORTCUT_YANILLE_PILE_OF_RUBBLE,
-			SHORTCUT_YANILLE_PILE_OF_RUBBLE_UP,
-			SHORTCUT_YANILLE_AGILITY_LEDGE,
-			SHORTCUT_YANILLE_AGILITY_LEDGE_BACK, SHORTCUT_FALADOR_HANDHOLD,
-			SHORTCUT_BRIMHAVEN_SWING, SHORTCUT_BRIMHAVEN_BACK_SWING,
-			SHORTCUT_EDGE_DUNGEON_SWING, SHORTCUT_EDGE_DUNGEON_BACK_SWING,
-			SHORTCUT_WEST_COALTRUCKS_LOG, SHORTCUT_EAST_COALTRUCKS_LOG,
-			SHORTCUT_YANILLE_AGILITY_ROPESWING,
-			SHORTCUT_YANILLE_AGILITY_ROPESWING_BACK,
-			GREW_ISLAND_ROPE_ATTACHED,
-			GREW_ISLAND_SWING_BACK,
-			EAST_KARAMJA_LOG,
-			EAST_KARAMJA_STONES,
-			YANILLE_CLIMBING_ROCKS,
-			YANILLE_WATCHTOWER_HANDHOLDS,
-			SHILO_VILLAGE_ROCKS_TO_BRIDGE,
-			SHILO_VILLAGE_BRIDGE_BLOCKADE_JUMP,
-			TAVERLY_PIPE,
-			TAVERLY_PIPE_RETURN,
-			ENTRANA_RUBBLE,
-			TAVERLY_STEPPING_STONE,
-			CATHERBY_STEPPING_STONE,
-			FALADOR_MEMBERS_EXIT_HANDHOLDS,
-			KBD_TO_LAVADUNG_STEPPING_STONE, LAVADUNG_TO_KBD_STEPPING_STONE
-			);
+				SHORTCUT_YANILLE_PIPE_BACK,
+				SHORTCUT_YANILLE_PILE_OF_RUBBLE,
+				SHORTCUT_YANILLE_PILE_OF_RUBBLE_UP,
+				SHORTCUT_YANILLE_AGILITY_LEDGE,
+				SHORTCUT_YANILLE_AGILITY_LEDGE_BACK, SHORTCUT_FALADOR_HANDHOLD,
+				SHORTCUT_BRIMHAVEN_SWING, SHORTCUT_BRIMHAVEN_BACK_SWING,
+				SHORTCUT_EDGE_DUNGEON_SWING, SHORTCUT_EDGE_DUNGEON_BACK_SWING,
+				SHORTCUT_WEST_COALTRUCKS_LOG, SHORTCUT_EAST_COALTRUCKS_LOG,
+				SHORTCUT_YANILLE_AGILITY_ROPESWING,
+				SHORTCUT_YANILLE_AGILITY_ROPESWING_BACK,
+				GREW_ISLAND_ROPE_ATTACHED,
+				GREW_ISLAND_SWING_BACK,
+				EAST_KARAMJA_LOG,
+				EAST_KARAMJA_STONES,
+				YANILLE_CLIMBING_ROCKS,
+				YANILLE_WATCHTOWER_HANDHOLDS,
+				SHILO_VILLAGE_ROCKS_TO_BRIDGE,
+				SHILO_VILLAGE_BRIDGE_BLOCKADE_JUMP,
+				TAVERLY_PIPE,
+				TAVERLY_PIPE_RETURN,
+				ENTRANA_RUBBLE,
+				TAVERLY_STEPPING_STONE,
+				CATHERBY_STEPPING_STONE,
+				FALADOR_MEMBERS_EXIT_HANDHOLDS,
+				KBD_TO_LAVADUNG_STEPPING_STONE, LAVADUNG_TO_KBD_STEPPING_STONE
+		);
 	}
 
 	@Override
@@ -95,8 +95,8 @@ public class AgilityShortcuts implements OpLocTrigger,
 				delay(3);
 				player.message("Would you like to try?");
 				int jumpMenu = multi(player,
-					"No thanks! It looks far too dangerous!",
-					"Yes, I'm totally brave and quite agile!");
+						"No thanks! It looks far too dangerous!",
+						"Yes, I'm totally brave and quite agile!");
 				if (jumpMenu == 0) {
 					mes("You decide that common sense is the better part of valour.");
 					delay(3);
@@ -148,8 +148,8 @@ public class AgilityShortcuts implements OpLocTrigger,
 				delay(3);
 				player.message("Would you like to try?");
 				int menu = multi(player,
-					"Yes, I can easily climb this!",
-					"Nope, I'm sure I'll probably fall!");
+						"Yes, I can easily climb this!",
+						"Nope, I'm sure I'll probably fall!");
 				if (menu == 0) {
 					if (succeed(player, 32)) {
 						mes("You manage to climb the rocks succesfully and pick");
@@ -528,36 +528,36 @@ public class AgilityShortcuts implements OpLocTrigger,
 				break;
 
 			case TAVERLY_PIPE_RETURN:
-			if (getCurrentLevel(player, Skills.AGILITY) < 70) {
-				player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
-				return;
-			}
-			if (config().WANT_FATIGUE) {
-				if (player.getFatigue() >= player.MAX_FATIGUE) {
-					player.message("You are too tired to squeeze through the pipe");
+				if (getCurrentLevel(player, Skills.AGILITY) < 70) {
+					player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
 					return;
 				}
-			}
-			player.message("You squeeze through the pipe");
-			teleport(player, 372, 3352);
-			player.incExp(Skills.AGILITY, 30, true);
-			break;
+				if (config().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to squeeze through the pipe");
+						return;
+					}
+				}
+				player.message("You squeeze through the pipe");
+				teleport(player, 372, 3352);
+				player.incExp(Skills.AGILITY, 30, true);
+				break;
 
 			case TAVERLY_PIPE:
-			if (getCurrentLevel(player, Skills.AGILITY) < 70) {
-				player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
-				return;
-			}
-			if (config().WANT_FATIGUE) {
-				if (player.getFatigue() >= player.MAX_FATIGUE) {
-					player.message("You are too tired to squeeze through the pipe");
+				if (getCurrentLevel(player, Skills.AGILITY) < 70) {
+					player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
 					return;
 				}
-			}
-			player.message("You squeeze through the pipe");
-			teleport(player, 375, 3352);
-			player.incExp(Skills.AGILITY, 30, true);
-			break;
+				if (config().WANT_FATIGUE) {
+					if (player.getFatigue() >= player.MAX_FATIGUE) {
+						player.message("You are too tired to squeeze through the pipe");
+						return;
+					}
+				}
+				player.message("You squeeze through the pipe");
+				teleport(player, 375, 3352);
+				player.incExp(Skills.AGILITY, 30, true);
+				break;
 			case ENTRANA_RUBBLE:
 				if (getCurrentLevel(player, Skills.AGILITY) < 55) {
 					player.message("You need an agility level of 55 to climb the rubble");
@@ -671,7 +671,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 						return;
 					}
 				}
-				player.teleport(280,3015);
+				player.teleport(280, 3015);
 				player.face(274, 3015);
 				player.message("You focus on not slipping...");
 				delay(4);
@@ -685,7 +685,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 					player.teleport(272, 3015);
 					player.face(272, 3013);
 					delay(3);
-					player.teleport(272,3012);
+					player.teleport(272, 3012);
 					player.message("and skillfully cross the lava");
 					player.incExp(Skills.AGILITY, 160, true);
 				} else {
@@ -707,7 +707,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 						return;
 					}
 				}
-				player.teleport(272,3013);
+				player.teleport(272, 3013);
 				player.face(272, 3015);
 				player.message("You focus on not slipping...");
 				delay(4);
@@ -754,8 +754,8 @@ public class AgilityShortcuts implements OpLocTrigger,
 			player.message("you tie the rope to the tree");
 			player.getCarriedItems().remove(new Item(ItemId.ROPE.id()));
 			player.getWorld().replaceGameObject(obj,
-				new GameObject(player.getWorld(), obj.getLocation(), 663, obj.getDirection(), obj
-					.getType()));
+					new GameObject(player.getWorld(), obj.getLocation(), 663, obj.getDirection(), obj
+							.getType()));
 			player.getWorld().delayedSpawnObject(obj.getLoc(), 60000);
 		}
 	}

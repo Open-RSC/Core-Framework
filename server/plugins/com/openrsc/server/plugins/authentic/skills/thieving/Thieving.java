@@ -116,7 +116,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		}
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 2
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
+					&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to thieve here");
 				return;
 			}
@@ -144,7 +144,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 		// Replace stall with empty version
 		object.getWorld().replaceGameObject(object,
-			new GameObject(player.getWorld(), object.getLocation(), 341, object.getDirection(), object.getType()));
+				new GameObject(player.getWorld(), object.getLocation(), 341, object.getDirection(), object.getType()));
 		object.getWorld().delayedSpawnObject(object.getLoc(), stall.getRespawnTime());
 	}
 
@@ -190,7 +190,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				xptemp = 2000;
 				respawnTimetmep = 500000;
 				loottemp = getLootAsList(new LootItem(ItemId.COINS.id(), 1000, 100), new LootItem(ItemId.RAW_SHARK.id(), 1, 100),
-					new LootItem(ItemId.ADAMANTITE_ORE.id(), 1, 100), new LootItem(ItemId.UNCUT_SAPPHIRE.id(), 1, 100));
+						new LootItem(ItemId.ADAMANTITE_ORE.id(), 1, 100), new LootItem(ItemId.UNCUT_SAPPHIRE.id(), 1, 100));
 				teleLoctemp = Point.location(523, 606);
 				break;
 		}
@@ -209,7 +209,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		if (config().WANT_FATIGUE) {
 			// On OG thieving chests not thievable on 100% fatigue
 			if (config().STOP_SKILLING_FATIGUED >= 1
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
+					&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.message("You are too tired to thieve here");
 				return;
 			}
@@ -336,7 +336,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		//gnome local, child, trainer, waiter and barman all known as gnome for the thiev messages
 		//yanille watchman known simply as watchman
 		final String thievedMobString = (thievedMobName.contains("gnome") || thievedMobName.contains("blurberry")) ? "gnome" :
-			thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
+				thievedMobName.contains("watchman") ? "watchman" : thievedMobName;
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
@@ -368,7 +368,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		if (succeededPickpocket) {
 			if (config().WANT_FATIGUE) {
 				if (config().STOP_SKILLING_FATIGUED >= 2
-					&& player.getFatigue() >= player.MAX_FATIGUE) {
+						&& player.getFatigue() >= player.MAX_FATIGUE) {
 					player.message("You are too tired to pickpocket this mob");
 					npc.setBusy(false);
 					return;
@@ -409,7 +409,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobString + "'s pocket");
 			npc.getUpdateFlags()
-				.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
+					.setChatMessage(new ChatMessage(npc, pickpocket.shoutMessage, player));
 			delay();
 			npc.startCombat(player);
 			npc.setBusy(false);
@@ -426,8 +426,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			}
 			delay();
 			batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString);
-		}
-		else {
+		} else {
 			npc.setBusy(false);
 		}
 	}
@@ -460,7 +459,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				player.playerServerMessage(MessageType.QUEST, "you attempt to pick the lock");
 				if (config().WANT_FATIGUE) {
 					if (config().STOP_SKILLING_FATIGUED >= 2
-						&& player.getFatigue() >= player.MAX_FATIGUE) {
+							&& player.getFatigue() >= player.MAX_FATIGUE) {
 						player.message("You are too tired to pick the lock");
 						return;
 					}
@@ -487,7 +486,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				give(player, ItemId.STEEL_ARROW_HEADS.id(), 5);
 
 				player.getWorld().replaceGameObject(obj,
-					new GameObject(player.getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType()));
+						new GameObject(player.getWorld(), obj.getLocation(), 340, obj.getDirection(), obj.getType()));
 				player.getWorld().delayedSpawnObject(obj.getLoc(), 150000);
 			}
 		}
@@ -552,7 +551,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				break;
 			case 94: // Nature rune chest + 50 gp chest door id (94)
 				if (obj.getX() == 586 && obj.getY() == 581 || obj.getX() == 539 && obj.getY() == 599
-					|| obj.getX() == 581 && obj.getY() == 580) {
+						|| obj.getX() == 581 && obj.getY() == 580) {
 					req = 16;
 					exp = 60;
 					if (player.getX() == 539 && player.getY() >= 599) {
@@ -596,7 +595,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				exp = 140;
 				requiresLockpick = true;
 				if ((player.getX() >= 263 && player.getX() <= 269 && player.getY() == 104)
-					|| (player.getX() == 266 && player.getY() >= 100)) {
+						|| (player.getX() == 266 && player.getY() >= 100)) {
 					goThrough = true;
 				}
 				break;
@@ -672,8 +671,8 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	public void onOpNpc(Player player, Npc n, String command) {
 		if (command.equalsIgnoreCase("pickpocket")) {
 			Npc npc = player.getWorld().getNpc(n.getID(),
-				player.getX() - 2, player.getX() + 2,
-				player.getY() - 2, player.getY() + 2);
+					player.getX() - 2, player.getX() + 2,
+					player.getY() - 2, player.getY() + 2);
 			if (npc == null) return;
 			Pickpocket pickpocket = Pickpocket.valueOf(n.getDef().getName().toUpperCase().replace(" ", "_"));
 			if (pickpocket != null) {
@@ -691,82 +690,82 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 	enum Pickpocket {
 		MAN(1, 32, "Oi what do you think you're doing",
-			new LootItem(ItemId.COINS.id(), 3, 100)),
+				new LootItem(ItemId.COINS.id(), 3, 100)),
 		FARMER(10, 58, "What do you think you're doing",
-			new LootItem(ItemId.COINS.id(), 9, 100)),
+				new LootItem(ItemId.COINS.id(), 9, 100)),
 		WARRIOR(25, 104, "Hey what do you think you're doing",
-			new LootItem(ItemId.COINS.id(), 18, 100)),
+				new LootItem(ItemId.COINS.id(), 18, 100)),
 		WORKMAN(25, 0, "Hey what do you think you're doing",
-			new LootItem(ItemId.COINS.id(), 10, 30),
-			new LootItem(ItemId.SPADE.id(), 1, 20),
-			new LootItem(ItemId.BUCKET.id(), 1, 18),
-			new LootItem(ItemId.ROPE.id(), 1, 16),
-			new LootItem(ItemId.SPECIMEN_BRUSH.id(), 1, 14),
-			new LootItem(ItemId.ROCK_SAMPLE_GREEN.id(), 1, 12),
-			new LootItem(ItemId.LEATHER_GLOVES.id(), 1, 10),
-			new LootItem(ItemId.NOTHING.id(), 0, 8)),
+				new LootItem(ItemId.COINS.id(), 10, 30),
+				new LootItem(ItemId.SPADE.id(), 1, 20),
+				new LootItem(ItemId.BUCKET.id(), 1, 18),
+				new LootItem(ItemId.ROPE.id(), 1, 16),
+				new LootItem(ItemId.SPECIMEN_BRUSH.id(), 1, 14),
+				new LootItem(ItemId.ROCK_SAMPLE_GREEN.id(), 1, 12),
+				new LootItem(ItemId.LEATHER_GLOVES.id(), 1, 10),
+				new LootItem(ItemId.NOTHING.id(), 0, 8)),
 		ROGUE(32, 146, "Hey what do you think you're doing",
-			new LootItem(ItemId.COINS.id(), 25, 40),
-			new LootItem(ItemId.COINS.id(), 40, 30),
-			new LootItem(ItemId.WINE.id(), 1, 10),
-			new LootItem(ItemId.AIR_RUNE.id(), 8, 10),
-			new LootItem(ItemId.LOCKPICK.id(), 1, 10),
-			new LootItem(ItemId.POISONED_IRON_DAGGER.id(), 1, 3)),
+				new LootItem(ItemId.COINS.id(), 25, 40),
+				new LootItem(ItemId.COINS.id(), 40, 30),
+				new LootItem(ItemId.WINE.id(), 1, 10),
+				new LootItem(ItemId.AIR_RUNE.id(), 8, 10),
+				new LootItem(ItemId.LOCKPICK.id(), 1, 10),
+				new LootItem(ItemId.POISONED_IRON_DAGGER.id(), 1, 3)),
 		GUARD(40, 187, "Err what do you think you're doing",
-			new LootItem(ItemId.COINS.id(), 30, 100)),
+				new LootItem(ItemId.COINS.id(), 30, 100)),
 		KNIGHT(55, 337, "Err what do you think you're doing",
-			new LootItem(ItemId.COINS.id(), 50, 100)),
+				new LootItem(ItemId.COINS.id(), 50, 100)),
 		YANILLE_WATCHMAN(65, 550, "Oi you nasty little thief",
-			new LootItem(ItemId.COINS.id(), 60, 100),
-			new LootItem(ItemId.BREAD.id(), 1, 100)),
+				new LootItem(ItemId.COINS.id(), 60, 100),
+				new LootItem(ItemId.BREAD.id(), 1, 100)),
 		PALADIN(70, 607, "Get your hands off my valuables",
-			new LootItem(ItemId.COINS.id(), 80, 100),
-			new LootItem(ItemId.CHAOS_RUNE.id(), 1, 100)),
+				new LootItem(ItemId.COINS.id(), 80, 100),
+				new LootItem(ItemId.CHAOS_RUNE.id(), 1, 100)),
 		GNOME_LOCAL(75, 793, "Get your hands off my valuables human",
-			new LootItem(ItemId.COINS.id(), 200, 22),
-			new LootItem(ItemId.COINS.id(), 400, 18),
-			new LootItem(ItemId.GOLD.id(), 1, 10),
-			new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
-			new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
-			new LootItem(ItemId.KING_WORM.id(), 1, 20)),
+				new LootItem(ItemId.COINS.id(), 200, 22),
+				new LootItem(ItemId.COINS.id(), 400, 18),
+				new LootItem(ItemId.GOLD.id(), 1, 10),
+				new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
+				new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
+				new LootItem(ItemId.KING_WORM.id(), 1, 20)),
 		GNOME_CHILD(75, 793, "Get your hands off my valuables human",
-			new LootItem(ItemId.COINS.id(), 200, 22),
-			new LootItem(ItemId.COINS.id(), 400, 18),
-			new LootItem(ItemId.GOLD.id(), 1, 10),
-			new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
-			new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
-			new LootItem(ItemId.KING_WORM.id(), 1, 20)),
+				new LootItem(ItemId.COINS.id(), 200, 22),
+				new LootItem(ItemId.COINS.id(), 400, 18),
+				new LootItem(ItemId.GOLD.id(), 1, 10),
+				new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
+				new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
+				new LootItem(ItemId.KING_WORM.id(), 1, 20)),
 		GNOME_TRAINER(75, 793, "Get your hands off my valuables human",
-			new LootItem(ItemId.COINS.id(), 200, 22),
-			new LootItem(ItemId.COINS.id(), 400, 18),
-			new LootItem(ItemId.GOLD.id(), 1, 10),
-			new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
-			new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
-			new LootItem(ItemId.KING_WORM.id(), 1, 20)),
+				new LootItem(ItemId.COINS.id(), 200, 22),
+				new LootItem(ItemId.COINS.id(), 400, 18),
+				new LootItem(ItemId.GOLD.id(), 1, 10),
+				new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
+				new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
+				new LootItem(ItemId.KING_WORM.id(), 1, 20)),
 		GNOME_WAITER(75, 793, "Get your hands off my valuables human",
-			new LootItem(ItemId.COINS.id(), 200, 22),
-			new LootItem(ItemId.COINS.id(), 400, 18),
-			new LootItem(ItemId.GOLD.id(), 1, 10),
-			new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
-			new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
-			new LootItem(ItemId.KING_WORM.id(), 1, 20)),
+				new LootItem(ItemId.COINS.id(), 200, 22),
+				new LootItem(ItemId.COINS.id(), 400, 18),
+				new LootItem(ItemId.GOLD.id(), 1, 10),
+				new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
+				new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
+				new LootItem(ItemId.KING_WORM.id(), 1, 20)),
 		BLURBERRY_BARMAN(75, 793, "Get your hands off my valuables human",
-			new LootItem(ItemId.COINS.id(), 200, 22),
-			new LootItem(ItemId.COINS.id(), 400, 18),
-			new LootItem(ItemId.GOLD.id(), 1, 10),
-			new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
-			new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
-			new LootItem(ItemId.KING_WORM.id(), 1, 20)),
+				new LootItem(ItemId.COINS.id(), 200, 22),
+				new LootItem(ItemId.COINS.id(), 400, 18),
+				new LootItem(ItemId.GOLD.id(), 1, 10),
+				new LootItem(ItemId.EARTH_RUNE.id(), 1, 15),
+				new LootItem(ItemId.SWAMP_TOAD.id(), 1, 15),
+				new LootItem(ItemId.KING_WORM.id(), 1, 20)),
 		HERO(80, 1093, "Get your hands off my valuables",
-			new LootItem(ItemId.COINS.id(), 100, 25),
-			new LootItem(ItemId.COINS.id(), 200, 15),
-			new LootItem(ItemId.COINS.id(), 300, 10),
-			new LootItem(ItemId.FIRE_ORB.id(), 1, 10),
-			new LootItem(ItemId.WINE.id(), 1, 14),
-			new LootItem(ItemId.GOLD.id(), 1, 5),
-			new LootItem(ItemId.DEATH_RUNE.id(), 2, 10),
-			new LootItem(ItemId.BLOOD_RUNE.id(), 1, 5),
-			new LootItem(ItemId.DIAMOND.id(), 1, 1));
+				new LootItem(ItemId.COINS.id(), 100, 25),
+				new LootItem(ItemId.COINS.id(), 200, 15),
+				new LootItem(ItemId.COINS.id(), 300, 10),
+				new LootItem(ItemId.FIRE_ORB.id(), 1, 10),
+				new LootItem(ItemId.WINE.id(), 1, 14),
+				new LootItem(ItemId.GOLD.id(), 1, 5),
+				new LootItem(ItemId.DEATH_RUNE.id(), 2, 10),
+				new LootItem(ItemId.BLOOD_RUNE.id(), 1, 5),
+				new LootItem(ItemId.DIAMOND.id(), 1, 1));
 
 		private final ArrayList<LootItem> lootTable;
 		private final int xp;
@@ -799,22 +798,22 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 	enum Stall {
 		TEA_STALL(5, 64, NpcId.TEA_SELLER.id(), 5000,
-			"", new LootItem(ItemId.CUP_OF_TEA.id(), 1, 100)),
+				"", new LootItem(ItemId.CUP_OF_TEA.id(), 1, 100)),
 		BAKERS_STALL(5, 64, NpcId.BAKER.id(), 5000,
-			"", new LootItem(ItemId.CAKE.id(), 1, 100)),
+				"", new LootItem(ItemId.CAKE.id(), 1, 100)),
 		SILK_STALL(20, 96, NpcId.SILK_MERCHANT.id(), 8000,
-			piece_of, new LootItem(ItemId.SILK.id(), 1, 100)),
+				piece_of, new LootItem(ItemId.SILK.id(), 1, 100)),
 		FUR_STALL(35, 144, NpcId.FUR_TRADER.id(), 15000,
-			piece_of, new LootItem(ItemId.GREY_WOLF_FUR.id(), 1, 100)),
+				piece_of, new LootItem(ItemId.GREY_WOLF_FUR.id(), 1, 100)),
 		SILVER_STALL(50, 216, NpcId.SILVER_MERCHANT.id(), 30000,
-			piece_of, new LootItem(ItemId.SILVER.id(), 1, 100)),
+				piece_of, new LootItem(ItemId.SILVER.id(), 1, 100)),
 		SPICES_STALL(65, 324, NpcId.SPICE_MERCHANT.id(), 80000,
-			"pot of ", new LootItem(ItemId.SPICE.id(), 1, 100)),
+				"pot of ", new LootItem(ItemId.SPICE.id(), 1, 100)),
 		GEMS_STALL(75, 640, NpcId.GEM_MERCHANT.id(), 180000,
-			"", new LootItem(ItemId.UNCUT_SAPPHIRE.id(), 1, 65),
-			new LootItem(ItemId.UNCUT_EMERALD.id(), 1, 20),
-			new LootItem(ItemId.UNCUT_RUBY.id(), 1, 10),
-			new LootItem(ItemId.UNCUT_DIAMOND.id(), 1, 5));
+				"", new LootItem(ItemId.UNCUT_SAPPHIRE.id(), 1, 65),
+				new LootItem(ItemId.UNCUT_EMERALD.id(), 1, 20),
+				new LootItem(ItemId.UNCUT_RUBY.id(), 1, 10),
+				new LootItem(ItemId.UNCUT_DIAMOND.id(), 1, 5));
 
 		ArrayList<LootItem> lootTable;
 		private String lootPrefix;

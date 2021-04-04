@@ -31,14 +31,27 @@ import com.openrsc.server.net.PcapLogger;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.util.*;
+import com.openrsc.server.util.EntityList;
+import com.openrsc.server.util.IPTracker;
+import com.openrsc.server.util.PathfindingDebug;
+import com.openrsc.server.util.SimpleSubscriber;
+import com.openrsc.server.util.ThreadSafeIPTracker;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.MessageType;
 import io.netty.util.AttributeKey;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -101,9 +114,9 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		this.npcPositions = new HashMap<>();
 		this.sceneryLocs = new HashMap<>();
 		this.npcDrops = new NpcDrops(this);
-		this.quests = Collections.synchronizedList( new LinkedList<>() );
-		this.minigames = Collections.synchronizedList( new LinkedList<>() );
-		this.shops = Collections.synchronizedList( new ArrayList<>() );
+		this.quests = Collections.synchronizedList(new LinkedList<>());
+		this.minigames = Collections.synchronizedList(new LinkedList<>());
+		this.shops = Collections.synchronizedList(new ArrayList<>());
 		this.wildernessIPTracker = new ThreadSafeIPTracker<>();
 		this.playerUnderAttackMap = new ConcurrentHashMap<>();
 		this.npcUnderAttackMap = new ConcurrentHashMap<>();
@@ -177,7 +190,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		for (final Npc npc : getNpcs()) {
 			boolean exists = !npc.isRemoved() && !npc.isRespawning();
 			if (npc.getID() == id && npc.getX() >= minX && npc.getX() <= maxX && npc.getY() >= minY
-				&& npc.getY() <= maxY && exists) {
+					&& npc.getY() <= maxY && exists) {
 				return npc;
 			}
 		}
@@ -187,7 +200,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public Npc getNpc(final int id, final int minX, final int maxX, final int minY, final int maxY, final boolean notNull) {
 		for (final Npc npc : getNpcs()) {
 			if (npc.getID() == id && npc.getX() >= minX && npc.getX() <= maxX && npc.getY() >= minY
-				&& npc.getY() <= maxY) {
+					&& npc.getY() <= maxY) {
 				if (!npc.inCombat()) {
 					return npc;
 				}
@@ -408,41 +421,44 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		godSpellsMax = 5;
 	}
 
-	public void registerGameObject(final GameObject o) {
-		Point objectCoordinates = Point.location(o.getLoc().getX(), o.getLoc().getY());
-		final GameObject collidingGameObject = getRegionManager().getRegion(objectCoordinates).getGameObject(objectCoordinates, null);
-		final GameObject collidingWallObject = getRegionManager().getRegion(objectCoordinates).getWallGameObject(objectCoordinates, o.getLoc().getDirection(), null);
-		if (collidingGameObject != null && o.getType() == 0) {
+	public void registerGameObject(final GameObject gameObject) {
+		Point objectCoordinates = Point.location(gameObject.getLoc().getX(), gameObject.getLoc().getY());
+		final GameObject collidingGameObject = getRegionManager().getRegion(objectCoordinates).getGameObject(objectCoordinates);
+		final GameObject collidingWallObject = getRegionManager().getRegion(objectCoordinates).getWallGameObject(
+				objectCoordinates,
+				gameObject.getLoc().getDirection()
+		);
+		if (collidingGameObject != null && gameObject.isGameObject()) {
 			unregisterGameObject(collidingGameObject);
 		}
-		if (collidingWallObject != null && o.getType() == 1) {
+		if (collidingWallObject != null && gameObject.isWallObject()) {
 			unregisterGameObject(collidingWallObject);
 		}
-		o.setLocation(Point.location(o.getLoc().getX(), o.getLoc().getY()));
+		gameObject.setLocation(Point.location(gameObject.getLoc().getX(), gameObject.getLoc().getY()));
 
-		final int dir = o.getDirection();
-		if (o.getID() == 1147) {
+		final int dir = gameObject.getDirection();
+		if (gameObject.getID() == 1147) {
 			return;
 		}
-		switch (o.getType()) {
+		switch (gameObject.getType()) {
 			case 0:
-				if (o.getGameObjectDef().getType() != 1 && o.getGameObjectDef().getType() != 2) {
+				if (gameObject.getGameObjectDef().getType() != 1 && gameObject.getGameObjectDef().getType() != 2) {
 					return;
 				}
 				int width, height;
 				if (dir == 0 || dir == 4) {
-					width = o.getGameObjectDef().getWidth();
-					height = o.getGameObjectDef().getHeight();
+					width = gameObject.getGameObjectDef().getWidth();
+					height = gameObject.getGameObjectDef().getHeight();
 				} else {
-					height = o.getGameObjectDef().getWidth();
-					width = o.getGameObjectDef().getHeight();
+					height = gameObject.getGameObjectDef().getWidth();
+					width = gameObject.getGameObjectDef().getHeight();
 				}
-				for (int x = o.getX(); x < o.getX() + width; ++x) {
-					for (int y = o.getY(); y < o.getY() + height; ++y) {
-						if (isProjectileClipAllowed(o)) {
-							handleProjectileClipAllowance(x, y, dir, o.getType(), o.getGameObjectDef().getType(), -1);
+				for (int x = gameObject.getX(); x < gameObject.getX() + width; ++x) {
+					for (int y = gameObject.getY(); y < gameObject.getY() + height; ++y) {
+						if (isProjectileClipAllowed(gameObject)) {
+							handleProjectileClipAllowance(x, y, dir, gameObject.getType(), gameObject.getGameObjectDef().getType(), -1);
 						}
-						if (o.getGameObjectDef().getType() == 1) {
+						if (gameObject.getGameObjectDef().getType() == 1) {
 							getTile(x, y).traversalMask |= CollisionFlag.FULL_BLOCK_C;
 						} else if (dir == 0) {
 							getTile(x, y).traversalMask |= CollisionFlag.WALL_EAST;
@@ -466,12 +482,12 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 				break;
 
 			case 1:
-				if (o.getDoorDef().getDoorType() != 1) {
+				if (gameObject.getDoorDef().getDoorType() != 1) {
 					return;
 				}
-				int x = o.getX(), y = o.getY();
-				if (isProjectileClipAllowed(o)) {
-					handleProjectileClipAllowance(x, y, dir, o.getType(), -1, o.getDoorDef().getDoorType());
+				int x = gameObject.getX(), y = gameObject.getY();
+				if (isProjectileClipAllowed(gameObject)) {
+					handleProjectileClipAllowance(x, y, dir, gameObject.getType(), -1, gameObject.getDoorDef().getDoorType());
 				}
 				if (dir == 0) {
 
@@ -521,17 +537,11 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 		if (dir == 0 && getTile(x - 1, y) != null) {
 			getTile(x - 1, y).projectileAllowed = true;
-		}
-
-		else if (dir == 2 && getTile(x, y + 1) != null) {
+		} else if (dir == 2 && getTile(x, y + 1) != null) {
 			getTile(x, y + 1).projectileAllowed = true;
-		}
-
-		else if (dir == 4 && getTile(x + 1, y) != null) {
+		} else if (dir == 4 && getTile(x + 1, y) != null) {
 			getTile(x + 1, y).projectileAllowed = true;
-		}
-
-		else if (dir == 6 && getTile(x, y - 1) != null) {
+		} else if (dir == 6 && getTile(x, y - 1) != null) {
 			getTile(x, y - 1).projectileAllowed = true;
 		}
 	}
@@ -558,9 +568,9 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public Npc registerNpc(final Npc n) {
 		final NPCLoc npc = n.getLoc();
 		if (npc.startX < npc.minX || npc.startX > npc.maxX || npc.startY < npc.minY || npc.startY > npc.maxY
-			|| (getTile(npc.startX, npc.startY).overlay & 64) != 0) {
+				|| (getTile(npc.startX, npc.startY).overlay & 64) != 0) {
 			LOGGER.error("Broken Npc: <id>" + npc.id + "</id><startX>" + npc.startX + "</startX><startY>"
-				+ npc.startY + "</startY>");
+					+ npc.startY + "</startY>");
 		}
 
 		getNpcs().add(n);
@@ -618,7 +628,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		}
 
 		if (!getServer().getConfig().WANT_CUSTOM_QUESTS
-		&& quest.getQuestId() > Quests.LEGENDS_QUEST)
+				&& quest.getQuestId() > Quests.LEGENDS_QUEST)
 			return;
 
 		getQuests().add(quest);
@@ -946,8 +956,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 						break;
 					}
 				}
-			}
-			else {
+			} else {
 				npcPositions.remove(key);
 			}
 		}

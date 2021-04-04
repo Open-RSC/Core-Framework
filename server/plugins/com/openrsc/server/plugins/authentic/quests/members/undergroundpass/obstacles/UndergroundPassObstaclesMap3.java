@@ -33,7 +33,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 	public static final int DEMONS_CHEST_OPEN = 911;
 	public static final int DEMONS_CHEST_CLOSED = 912;
 
-	public static final int [] PIT_COORDS = {802, 3469};
+	public static final int[] PIT_COORDS = {802, 3469};
 	public static final Area boundArea = new Area(794, 800, 3467, 3471);
 
 	@Override
@@ -74,8 +74,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 						player.message("you find nothing");
 					}
 				}
-			}
-			else if (obj.getID() == CAGES[0]) {
+			} else if (obj.getID() == CAGES[0]) {
 				player.message("the man seems to be entranced");
 				mes("the cage is locked");
 				delay(3);
@@ -95,13 +94,12 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 					player.message("you find nothing");
 				}
 			}
-		}
-		else if (obj.getID() == DEMONS_CHEST_CLOSED) {
+		} else if (obj.getID() == DEMONS_CHEST_CLOSED) {
 			mes("you attempt to open the chest");
 			delay(3);
 			if (player.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_OTHAINIAN.id(), Optional.of(false))
-				&& player.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_DOOMION.id(), Optional.of(false))
-				&& player.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_HOLTHION.id(), Optional.of(false)) && !player.getCache().hasKey("shadow_on_doll")) {
+					&& player.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_DOOMION.id(), Optional.of(false))
+					&& player.getCarriedItems().hasCatalogID(ItemId.AMULET_OF_HOLTHION.id(), Optional.of(false)) && !player.getCache().hasKey("shadow_on_doll")) {
 				mes("the three amulets glow red in your satchel");
 				delay(3);
 				player.getCarriedItems().remove(new Item(ItemId.AMULET_OF_OTHAINIAN.id()));
@@ -116,18 +114,17 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 			} else {
 				player.message("but it's magically sealed");
 			}
-		}
-		else if (obj.getID() == ZAMORAKIAN_TEMPLE_DOOR) {
+		} else if (obj.getID() == ZAMORAKIAN_TEMPLE_DOOR) {
 			if (player.getX() <= 792) {
 				if (player.getQuestStage(Quests.UNDERGROUND_PASS) == -1 &&
-					!config().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
+						!config().LOCKED_POST_QUEST_REGIONS_ACCESSIBLE) {
 					mes("the temple is in ruins...");
 					delay(3);
 					player.message("...you cannot enter");
 					return;
 				}
 				if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.ROBE_OF_ZAMORAK_TOP.id())
-					&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id())) {
+						&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.ROBE_OF_ZAMORAK_BOTTOM.id())) {
 					changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), 914, obj.getDirection(), obj.getType()));
 					addloc(obj.getWorld(), obj.getLoc(), 3000);
 					player.teleport(792, 3469);
@@ -137,7 +134,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 					delay(3);
 					player.message("and walk into the temple");
 					if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 7 || (player.getCache().hasKey("poison_on_doll") && player.getCache().hasKey("cons_on_doll")
-						&& player.getCache().hasKey("ash_on_doll") && player.getCache().hasKey("shadow_on_doll"))) {
+							&& player.getCache().hasKey("ash_on_doll") && player.getCache().hasKey("shadow_on_doll"))) {
 						if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 6) {
 							player.updateQuestStage(Quests.UNDERGROUND_PASS, 7);
 						}
@@ -157,7 +154,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 						delay(3);
 						player.message("you are hit by ibans magic bolt");
 						displayTeleportBubble(player, player.getX() + 1, player.getY(), true);
-						player.damage((int)Math.floor(getCurrentLevel(player, Skills.HITS)/10.0) + 4 + DataConversions.random(-1,1));
+						player.damage((int) Math.floor(getCurrentLevel(player, Skills.HITS) / 10.0) + 4 + DataConversions.random(-1, 1));
 						say(player, null, "aarrgh");
 						mes("@yel@Iban:die foolish mortal");
 						delay(3);
@@ -169,7 +166,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 							public void run() {
 								/* Time-out fail, handle appropriately */
 								if (System.currentTimeMillis() - start > 1000 * 60 * 2 && getOwner().getLocation().inBounds(boundArea.getMinX(), boundArea.getMinY(),
-									boundArea.getMaxX(), boundArea.getMaxY())) {
+										boundArea.getMaxX(), boundArea.getMaxY())) {
 									getOwner().message("you're blasted out of the temple");
 									getOwner().message("@yel@Iban: and stay out");
 									getOwner().teleport(790, 3469);
@@ -177,22 +174,21 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 								}
 								/* If player has logged out or not region area */
 								else if (getOwner().isRemoved() || !getOwner().getLocation().inBounds(boundArea.getMinX(), boundArea.getMinY() - 3,
-									boundArea.getMaxX() + 4, boundArea.getMaxY() + 3)) {
+										boundArea.getMaxX() + 4, boundArea.getMaxY() + 3)) {
 									stop();
 								}
 								/* ends it */
 								else if (getOwner().getAttribute("iban_bubble_show", false)) {
 									stop();
-								}
-								else {
+								} else {
 									/* Get random point on the area */
 									Point blastPosition = new Point(
-										DataConversions.random(area.getMinX(), area.getMaxX()),
-										DataConversions.random(area.getMinY(), area.getMaxY()));
+											DataConversions.random(area.getMinX(), area.getMaxX()),
+											DataConversions.random(area.getMinY(), area.getMaxY()));
 									ActionSender.sendTeleBubble(getOwner(), blastPosition.getX(), blastPosition.getY(), true);
 									if (getOwner().getLocation().withinRange(blastPosition, 1)) {
 										/* Blast hit */
-										getOwner().damage((int)Math.floor(getCurrentLevel(getOwner(), Skills.HITS)/10.0) + 4 + DataConversions.random(-1,1));
+										getOwner().damage((int) Math.floor(getCurrentLevel(getOwner(), Skills.HITS) / 10.0) + 4 + DataConversions.random(-1, 1));
 										getOwner().teleport(795, 3469); // insert the coords
 										getOwner().getUpdateFlags().setChatMessage(new ChatMessage(getOwner(), "aarrgh"));
 										getOwner().message("you're blasted back to the door");

@@ -43,7 +43,7 @@ public class Woodcutting implements OpLocTrigger {
 		}
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
+					&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to cut the tree");
 				return;
 			}
@@ -83,7 +83,7 @@ public class Woodcutting implements OpLocTrigger {
 		final Item log = new Item(def.getLogId());
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
+					&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to cut the tree");
 				return;
 			}

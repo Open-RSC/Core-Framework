@@ -60,8 +60,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 			player.message("you light the cloth wrapped arrow head");
 			player.getCarriedItems().remove(new Item(ItemId.ARROW.id()));
 			give(player, ItemId.LIT_ARROW.id(), 1);
-		}
-		else if (item.getCatalogId() == ItemId.LIT_ARROW.id() && obj.getID() == OLD_BRIDGE) {
+		} else if (item.getCatalogId() == ItemId.LIT_ARROW.id() && obj.getID() == OLD_BRIDGE) {
 			if (hasABow(player)) {
 				player.getCarriedItems().remove(new Item(ItemId.LIT_ARROW.id()));
 				if ((getCurrentLevel(player, Skills.RANGED) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
@@ -85,8 +84,8 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 						mes("the bridge swings down creating a walkway");
 						delay(3);
 						player.getWorld().replaceGameObject(obj,
-							new GameObject(obj.getWorld(), obj.getLocation(), 727, obj.getDirection(), obj
-								.getType()));
+								new GameObject(obj.getWorld(), obj.getLocation(), 727, obj.getDirection(), obj
+										.getType()));
 						player.getWorld().delayedSpawnObject(obj.getLoc(), 10000);
 						player.teleport(702, 3420);
 						delay(2);
@@ -99,8 +98,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 			} else {
 				player.message("first you'll need a bow");
 			}
-		}
-		else if (item.getCatalogId() == ItemId.ROPE.id() && (obj.getID() == STALACTITE_1 || obj.getID() == STALACTITE_2 || obj.getID() == STALACTITE_2 + 1)) {
+		} else if (item.getCatalogId() == ItemId.ROPE.id() && (obj.getID() == STALACTITE_1 || obj.getID() == STALACTITE_2 || obj.getID() == STALACTITE_2 + 1)) {
 			mes("you lasso the rope around the stalactite");
 			delay(3);
 			mes("and pull yourself up");
@@ -113,8 +111,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 				player.teleport(682, 3436);
 			}
 			player.message("you climb from stalactite to stalactite and over the rocks");
-		}
-		else if (item.getCatalogId() == ItemId.ROCKS.id() && obj.getID() == SWAMP_CROSS) {
+		} else if (item.getCatalogId() == ItemId.ROCKS.id() && obj.getID() == SWAMP_CROSS) {
 			mes("you throw the rocks onto the swamp");
 			delay(3);
 			player.message("and carefully tread from one to another");
@@ -135,7 +132,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 	}
 
 	private boolean hasABow(Player player) {
-		synchronized(player.getCarriedItems().getInventory().getItems()) {
+		synchronized (player.getCarriedItems().getInventory().getItems()) {
 			for (Item bow : player.getCarriedItems().getInventory().getItems()) {
 				String bowName = bow.getDef(player.getWorld()).getName().toLowerCase();
 				if (bowName.contains("bow")) {

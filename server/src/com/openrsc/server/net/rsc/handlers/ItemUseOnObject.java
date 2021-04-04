@@ -18,23 +18,23 @@ public class ItemUseOnObject implements PacketHandler {
 			public void executeInternal() {
 				getPlayer().resetPath();
 				GameObject obj = getPlayer().getViewArea().getWallObjectWithDir(
-					object.getLocation(), object.getDirection());
+						object.getLocation(), object.getDirection());
 				if (getPlayer().isBusy() || getPlayer().isRanging()
-					|| !getPlayer().getCarriedItems().hasCatalogID(item.getCatalogId()) || obj == null
-					|| !obj.equals(object)) {
+						|| !getPlayer().getCarriedItems().hasCatalogID(item.getCatalogId()) || obj == null
+						|| !obj.equals(object)) {
 					return;
 				}
 				getPlayer().resetAll();
 
 				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
-					&& !getPlayer().getConfig().MEMBER_WORLD) {
+						&& !getPlayer().getConfig().MEMBER_WORLD) {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}
 				if (getPlayer().getWorld().getServer().getPluginHandler().handlePlugin(
-					getPlayer(),
-					"UseBound",
-					new Object[]{getPlayer(), object, item}, this))
+						getPlayer(),
+						"UseBound",
+						new Object[]{getPlayer(), object, item}, this))
 					return;
 			}
 		});
@@ -46,7 +46,7 @@ public class ItemUseOnObject implements PacketHandler {
 			player.resetPath();
 			player.resetAll();
 			if (player.getWorld().getServer().getPluginHandler().handlePlugin(
-				player, "UseLoc", new Object[]{player, object, item}))
+					player, "UseLoc", new Object[]{player, object, item}))
 				return;
 		}
 		player.setWalkToAction(new WalkToObjectAction(player, object) {
@@ -54,21 +54,21 @@ public class ItemUseOnObject implements PacketHandler {
 				getPlayer().resetPath();
 				GameObject obj = getPlayer().getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (obj == null || getPlayer().isBusy() || getPlayer().isRanging()
-					|| !getPlayer().getCarriedItems().getInventory().contains(item)
-					|| !getPlayer().atObject(object) || obj == null) {
+						|| !getPlayer().getCarriedItems().getInventory().contains(item)
+						|| !getPlayer().atObject(object) || obj == null) {
 					return;
 				}
 				getPlayer().resetAll();
 
 				if (item.getDef(getPlayer().getWorld()).isMembersOnly()
-					&& !getPlayer().getConfig().MEMBER_WORLD) {
+						&& !getPlayer().getConfig().MEMBER_WORLD) {
 					getPlayer().message(getPlayer().MEMBER_MESSAGE);
 					return;
 				}
 
 				if (getPlayer().getWorld().getServer().getPluginHandler()
-					.handlePlugin(getPlayer(), "UseLoc",
-						new Object[]{getPlayer(), (GameObject) object, item}, this))
+						.handlePlugin(getPlayer(), "UseLoc",
+								new Object[]{getPlayer(), (GameObject) object, item}, this))
 					return;
 			}
 		});
@@ -99,8 +99,7 @@ public class ItemUseOnObject implements PacketHandler {
 			}
 			int dir = object.getDirection();
 			int slotID = packet.readShort();
-			if (player.getConfig().WANT_EQUIPMENT_TAB && slotID == -1)
-			{
+			if (player.getConfig().WANT_EQUIPMENT_TAB && slotID == -1) {
 				//they used the item from their equipment slot
 				if (!player.isUsingAuthenticClient()) {
 					int itemID = packet.readShort();

@@ -15,7 +15,15 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
-import com.openrsc.server.model.entity.update.*;
+import com.openrsc.server.model.entity.update.Bubble;
+import com.openrsc.server.model.entity.update.BubbleNpc;
+import com.openrsc.server.model.entity.update.ChatMessage;
+import com.openrsc.server.model.entity.update.Damage;
+import com.openrsc.server.model.entity.update.HpUpdate;
+import com.openrsc.server.model.entity.update.Projectile;
+import com.openrsc.server.model.entity.update.Skull;
+import com.openrsc.server.model.entity.update.UpdateFlags;
+import com.openrsc.server.model.entity.update.Wield;
 import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -45,6 +53,7 @@ public final class GameStateUpdater {
 	private long lastExecuteWalkToActionsDuration = 0;
 
 	private final Server server;
+
 	public final Server getServer() {
 		return server;
 	}
@@ -134,7 +143,7 @@ public final class GameStateUpdater {
 				ActionSender.sendWakeUp(player, false, false);
 			}
 			player.message("@cya@You have been standing here for " + (timeoutLimit / 60000)
-				+ " mins! Please move to a new area");
+					+ " mins! Please move to a new area");
 			player.setWarnedToMove(true);
 		}
 	}
@@ -168,8 +177,8 @@ public final class GameStateUpdater {
 		}
 		for (final Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
 			if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved() || newNPC.isRespawning()
-				|| newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")
-				|| !playerToUpdate.withinRange(newNPC) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
+					|| newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")
+					|| !playerToUpdate.withinRange(newNPC) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
 				continue;
 			} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
 				break;
@@ -209,9 +218,9 @@ public final class GameStateUpdater {
 				final Player otherPlayer = it$.next();
 
 				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
-					|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
-					|| otherPlayer.inCombat() || otherPlayer.hasMoved()
-				    || !otherPlayer.withinAuthenticRange(playerToUpdate)) {
+						|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
+						|| otherPlayer.inCombat() || otherPlayer.hasMoved()
+						|| !otherPlayer.withinAuthenticRange(playerToUpdate)) {
 					positionBuilder.writeBits(1, 1); //Needs Update
 					positionBuilder.writeBits(1, 1); //Update Type
 					positionBuilder.writeBits(3, 2); //Animation type (Remove)
@@ -237,16 +246,16 @@ public final class GameStateUpdater {
 
 			for (final Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
 				if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
-					|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
-					|| otherPlayer.isRemoved() || otherPlayer.isInvisibleTo(playerToUpdate)
-					|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
+						|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
+						|| otherPlayer.isRemoved() || otherPlayer.isInvisibleTo(playerToUpdate)
+						|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
 					continue;
 				}
 				if (!otherPlayer.withinAuthenticRange(playerToUpdate))
 					continue; // only have 5 bits in the rsc235 protocol, so the player can only be shown up to 16 tiles away
 
 				final byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
-					playerToUpdate.getLocation());
+						playerToUpdate.getLocation());
 				positionBuilder.writeBits(otherPlayer.getIndex(), 11);
 				if (playerToUpdate.isUsingAuthenticClient()) {
 					positionBuilder.writeBits(offsets[0], 5);
@@ -301,12 +310,12 @@ public final class GameStateUpdater {
 				npcProjectilesNeedingDisplayed.add(projectileFired);
 			}
 			if (updateFlags.hasBubbleNpc()) {
-					BubbleNpc bubble = updateFlags.getActionBubbleNpc().get();
-					npcBubblesNeedingDisplayed.add(bubble);
+				BubbleNpc bubble = updateFlags.getActionBubbleNpc().get();
+				npcBubblesNeedingDisplayed.add(bubble);
 			}
 		}
 		final int updateSize = npcMessagesNeedingDisplayed.size() + npcsNeedingHitsUpdate.size()
-			+ npcProjectilesNeedingDisplayed.size() + npcSkullsNeedingDisplayed.size() + npcWieldsNeedingDisplayed.size() + npcBubblesNeedingDisplayed.size();
+				+ npcProjectilesNeedingDisplayed.size() + npcSkullsNeedingDisplayed.size() + npcWieldsNeedingDisplayed.size() + npcBubblesNeedingDisplayed.size();
 		if (updateSize > 0) {
 			final PacketBuilder npcAppearancePacket = new PacketBuilder();
 			npcAppearancePacket.setID(ActionSender.Opcode.SEND_UPDATE_NPC.opcode);
@@ -413,9 +422,9 @@ public final class GameStateUpdater {
 			final UpdateFlags updateFlags = otherPlayer.getUpdateFlags();
 
 			boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
-				== PlayerSettings.BlockingMode.All.id();
+					== PlayerSettings.BlockingMode.All.id();
 			boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
-				== PlayerSettings.BlockingMode.None.id();
+					== PlayerSettings.BlockingMode.None.id();
 
 			if (updateFlags.hasBubble()) {
 				final Bubble bubble = updateFlags.getActionBubble().get();
@@ -427,10 +436,10 @@ public final class GameStateUpdater {
 			}
 
 			if (updateFlags.hasChatMessage()
-				&& (((player.getSocial().isFriendsWith(otherPlayer.getUsernameHash()) && !blockAll)
-				|| (!player.getSocial().isFriendsWith(otherPlayer.getUsernameHash()) && blockNone))
-				&& !player.getSocial().isIgnoring(otherPlayer.getUsernameHash())
-				|| player.isMod()|| otherPlayer.isMod() || updateFlags.getChatMessage().getRecipient() != null)) {
+					&& (((player.getSocial().isFriendsWith(otherPlayer.getUsernameHash()) && !blockAll)
+					|| (!player.getSocial().isFriendsWith(otherPlayer.getUsernameHash()) && blockNone))
+					&& !player.getSocial().isIgnoring(otherPlayer.getUsernameHash())
+					|| player.isMod() || otherPlayer.isMod() || updateFlags.getChatMessage().getRecipient() != null)) {
 				ChatMessage chatMessage = updateFlags.getChatMessage();
 				if (!chatMessage.getMuted() || player.hasElevatedPriveledges())
 					chatMessagesNeedingDisplayed.add(chatMessage);
@@ -448,17 +457,17 @@ public final class GameStateUpdater {
 			}
 		}
 		issuePlayerAppearanceUpdatePacket(player, bubblesNeedingDisplayed, chatMessagesNeedingDisplayed,
-			projectilesNeedingDisplayed, playersNeedingDamageUpdate, playersNeedingHpUpdate, playersNeedingAppearanceUpdate);
+				projectilesNeedingDisplayed, playersNeedingDamageUpdate, playersNeedingHpUpdate, playersNeedingAppearanceUpdate);
 	}
 
 	private void issuePlayerAppearanceUpdatePacket(final Player player, final Queue<Bubble> bubblesNeedingDisplayed,
 												   final Queue<ChatMessage> chatMessagesNeedingDisplayed, final Queue<Projectile> projectilesNeedingDisplayed,
-												   final Queue<Damage> playersNeedingDamageUpdate,final Queue<HpUpdate> playersNeedingHpUpdate,
+												   final Queue<Damage> playersNeedingDamageUpdate, final Queue<HpUpdate> playersNeedingHpUpdate,
 												   final Queue<Player> playersNeedingAppearanceUpdate) {
 		if (player.loggedIn()) {
 			final int updateSize = bubblesNeedingDisplayed.size() + chatMessagesNeedingDisplayed.size()
-				+ playersNeedingDamageUpdate.size() + projectilesNeedingDisplayed.size()
-				+ playersNeedingAppearanceUpdate.size();
+					+ playersNeedingDamageUpdate.size() + projectilesNeedingDisplayed.size()
+					+ playersNeedingAppearanceUpdate.size();
 
 			if (updateSize > 0) {
 				final PacketBuilder appearancePacket = new PacketBuilder();
@@ -606,89 +615,89 @@ public final class GameStateUpdater {
 					}
 
 
-                    // Handle Invisibility & Invulnerability in the authentic client
+					// Handle Invisibility & Invulnerability in the authentic client
 					if (player.isUsingAuthenticClient() &&
-                        (playerNeedingAppearanceUpdate.stateIsInvisible() ||
-                            playerNeedingAppearanceUpdate.stateIsInvulnerable())) {
-                        int[] wornItems = playerNeedingAppearanceUpdate.getWornItems();
+							(playerNeedingAppearanceUpdate.stateIsInvisible() ||
+									playerNeedingAppearanceUpdate.stateIsInvulnerable())) {
+						int[] wornItems = playerNeedingAppearanceUpdate.getWornItems();
 
-                        int bootColour = AppearanceId.SHADOW_WARRIOR_BOOTS.id(); // default
-                        if (wornItems[AppearanceId.SLOT_BOOTS] != 0) {
-                            // if player is already wearing boots, we can let them choose their colour. :-)
-                            bootColour = wornItems[AppearanceId.SLOT_BOOTS];
-                        }
+						int bootColour = AppearanceId.SHADOW_WARRIOR_BOOTS.id(); // default
+						if (wornItems[AppearanceId.SLOT_BOOTS] != 0) {
+							// if player is already wearing boots, we can let them choose their colour. :-)
+							bootColour = wornItems[AppearanceId.SLOT_BOOTS];
+						}
 
-                        int shieldSprite = 0; // default to invisible
-                        if (playerNeedingAppearanceUpdate.stateIsInvulnerable()) {
-                            if (wornItems[AppearanceId.SLOT_SHIELD] == AppearanceId.DRAGON_SQUARE_SHIELD.id()) {
-                                shieldSprite = AppearanceId.RUNE_SQUARE_SHIELD.id();
-                            } else {
-                                shieldSprite = AppearanceId.DRAGON_SQUARE_SHIELD.id();
-                            }
-                        }
+						int shieldSprite = 0; // default to invisible
+						if (playerNeedingAppearanceUpdate.stateIsInvulnerable()) {
+							if (wornItems[AppearanceId.SLOT_SHIELD] == AppearanceId.DRAGON_SQUARE_SHIELD.id()) {
+								shieldSprite = AppearanceId.RUNE_SQUARE_SHIELD.id();
+							} else {
+								shieldSprite = AppearanceId.DRAGON_SQUARE_SHIELD.id();
+							}
+						}
 
-                        int gloveColour = wornItems[AppearanceId.SLOT_GLOVES]; // let player keep their gloves, even if they have none
+						int gloveColour = wornItems[AppearanceId.SLOT_GLOVES]; // let player keep their gloves, even if they have none
 						if (wornItems[AppearanceId.SLOT_GLOVES] == 0 && wornItems[AppearanceId.SLOT_WEAPON] != 0) {
 							// give player gloves if they are wielding a weapon
 							gloveColour = AppearanceId.LEATHER_GLOVES.id();
 						}
 
-                        // if player is just invulnerable & not invisible, give them a dark-robed appearance
-                        int headSprite = 0; // default to invisible
-                        int hatSprite = 0;
-                        int bodySprite = 0;
-                        int legSprite = 0;
-                        int pantsSprite = 0;
-                        int shirtSprite = 0;
-                        int amuletSprite = wornItems[AppearanceId.SLOT_AMULET];
-                        if (!playerNeedingAppearanceUpdate.stateIsInvisible()) {
-                            headSprite = wornItems[AppearanceId.SLOT_HEAD];
-                            if (wornItems[AppearanceId.SLOT_HAT] == 0) {
-                                hatSprite = AppearanceId.LARGE_BLACK_HELMET.id();
-                                headSprite = AppearanceId.NOTHING.id();
-                            } else {
-                                hatSprite = wornItems[AppearanceId.SLOT_HAT];
-                            }
+						// if player is just invulnerable & not invisible, give them a dark-robed appearance
+						int headSprite = 0; // default to invisible
+						int hatSprite = 0;
+						int bodySprite = 0;
+						int legSprite = 0;
+						int pantsSprite = 0;
+						int shirtSprite = 0;
+						int amuletSprite = wornItems[AppearanceId.SLOT_AMULET];
+						if (!playerNeedingAppearanceUpdate.stateIsInvisible()) {
+							headSprite = wornItems[AppearanceId.SLOT_HEAD];
+							if (wornItems[AppearanceId.SLOT_HAT] == 0) {
+								hatSprite = AppearanceId.LARGE_BLACK_HELMET.id();
+								headSprite = AppearanceId.NOTHING.id();
+							} else {
+								hatSprite = wornItems[AppearanceId.SLOT_HAT];
+							}
 
-                            // dark robes
-                            bodySprite = AppearanceId.SHADOW_WARRIOR_ROBE.id();
-                            legSprite = AppearanceId.SHADOW_WARRIOR_SKIRT.id();
-                            pantsSprite = AppearanceId.COLOURED_PANTS.id();
-                            shirtSprite = AppearanceId.FEMALE_BODY.id();
-                            gloveColour = AppearanceId.ICE_GLOVES.id();
-                            amuletSprite = AppearanceId.PENDANT_OF_LUCIEN.id();
-                        }
+							// dark robes
+							bodySprite = AppearanceId.SHADOW_WARRIOR_ROBE.id();
+							legSprite = AppearanceId.SHADOW_WARRIOR_SKIRT.id();
+							pantsSprite = AppearanceId.COLOURED_PANTS.id();
+							shirtSprite = AppearanceId.FEMALE_BODY.id();
+							gloveColour = AppearanceId.ICE_GLOVES.id();
+							amuletSprite = AppearanceId.PENDANT_OF_LUCIEN.id();
+						}
 
-                        appearancePacket.writeByte((byte) 11); // Equipment count
-                        appearancePacket.writeByte((byte) headSprite);
-                        appearancePacket.writeByte((byte) shirtSprite);
-                        appearancePacket.writeByte((byte) pantsSprite);
-                        appearancePacket.writeByte((byte) shieldSprite);  // Shield is used to denote if invulnerable while invisible
-                        appearancePacket.writeByte((byte) wornItems[AppearanceId.SLOT_WEAPON]);  // Weapon can stay
-                        appearancePacket.writeByte((byte) hatSprite);
-                        appearancePacket.writeByte((byte) bodySprite);
-                        appearancePacket.writeByte((byte) legSprite);
-                        appearancePacket.writeByte((byte) gloveColour);
-                        appearancePacket.writeByte((byte) bootColour);
-                        appearancePacket.writeByte((byte) amuletSprite);
-                        // No Cape
-                    } else {
-                        appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getWornItems().length);
-                        for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
-                            if (player.isUsingAuthenticClient()) {
-                                appearancePacket.writeByte(i & 0xFF);
-                            } else {
-                                appearancePacket.writeShort(i);
-                            }
-                        }
-                    }
+						appearancePacket.writeByte((byte) 11); // Equipment count
+						appearancePacket.writeByte((byte) headSprite);
+						appearancePacket.writeByte((byte) shirtSprite);
+						appearancePacket.writeByte((byte) pantsSprite);
+						appearancePacket.writeByte((byte) shieldSprite);  // Shield is used to denote if invulnerable while invisible
+						appearancePacket.writeByte((byte) wornItems[AppearanceId.SLOT_WEAPON]);  // Weapon can stay
+						appearancePacket.writeByte((byte) hatSprite);
+						appearancePacket.writeByte((byte) bodySprite);
+						appearancePacket.writeByte((byte) legSprite);
+						appearancePacket.writeByte((byte) gloveColour);
+						appearancePacket.writeByte((byte) bootColour);
+						appearancePacket.writeByte((byte) amuletSprite);
+						// No Cape
+					} else {
+						appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getWornItems().length);
+						for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
+							if (player.isUsingAuthenticClient()) {
+								appearancePacket.writeByte(i & 0xFF);
+							} else {
+								appearancePacket.writeShort(i);
+							}
+						}
+					}
 
-                    appearancePacket.writeByte(appearance.getHairColour());
-                    appearancePacket.writeByte(appearance.getTopColour());
-                    appearancePacket.writeByte(appearance.getTrouserColour());
-                    appearancePacket.writeByte(appearance.getSkinColour());
-                    appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getCombatLevel());
-                    appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getSkullType());
+					appearancePacket.writeByte(appearance.getHairColour());
+					appearancePacket.writeByte(appearance.getTopColour());
+					appearancePacket.writeByte(appearance.getTrouserColour());
+					appearancePacket.writeByte(appearance.getSkinColour());
+					appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getCombatLevel());
+					appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getSkullType());
 
 					if (!player.isUsingAuthenticClient()) {
 						if (playerNeedingAppearanceUpdate.getClan() != null) {
@@ -758,9 +767,9 @@ public final class GameStateUpdater {
 		// Add scenery
 		for (final GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
 			boolean skipAdd = newObject.isRemoved() ||
-				newObject.isInvisibleTo(playerToUpdate) ||
-				newObject.getType() != 0 || // not a wallObject
-				playerToUpdate.getLocalGameObjects().contains(newObject);
+					newObject.isInvisibleTo(playerToUpdate) ||
+					newObject.getType() != 0 || // not a wallObject
+					playerToUpdate.getLocalGameObjects().contains(newObject);
 			if (playerToUpdate.isUsingAuthenticClient()) {
 				// Honestly don't think this does anything because the scenery isn't iterated over in the view anyway
 				// TODO: funny behaviour where if a rock is mined > 16 tiles from you, it can be removed but not replaced until you get closer.
@@ -826,8 +835,8 @@ public final class GameStateUpdater {
 
 		for (final GroundItem groundItem : playerToUpdate.getViewArea().getItemsInView()) {
 			if (!playerToUpdate.withinGridRange(groundItem) || groundItem.isRemoved()
-				|| groundItem.isInvisibleTo(playerToUpdate)
-				|| playerToUpdate.getLocalGroundItems().contains(groundItem)) {
+					|| groundItem.isInvisibleTo(playerToUpdate)
+					|| playerToUpdate.getLocalGroundItems().contains(groundItem)) {
 				continue;
 			}
 			packet.writeShort(groundItem.getID());
@@ -861,30 +870,30 @@ public final class GameStateUpdater {
 				final int offsetY = o.getY() - playerToUpdate.getY();
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
 					if (playerToUpdate.isUsingAuthenticClient()) {
-                        // The authentic server does not really send removals for boundaries.
-                        // The client is able to handle having boundaries overwritten by new boundaries, but
-                        // it doesn't correctly handle having boundaries outright removed.
-                        //
-                        // The RSC server may have sent proper removals at one time, the structure is there in the client,
-                        // but in 2018, the server does something which confuses me, and it should be considered a bug in the server.
-                        //
-                        // Sometimes when adding a boundary, it will send a removal for some unrelated coordinate first.
-                        // The coordinate it specifies for boundary removal *does not* have a boundary at that location.
-                        // If it did have a boundary, it would cause erroneous extraneous removals of nearby boundaries.
-                        // I haven't spent a lot of time looking at it to discern any further pattern, if there is one. Sorry.
-                        //
-                        // TODO: determine the pattern that the server uses to send its buggy "random" boundary removal instructions
-                        // Until this is implemented, the server will not be 100% authentic to 2018 RSC.
-                        // (Also, removals & additions are intertwined, not in a removal block & addition block, as structured here)
-                        //
-                        // I went through the effort of writing code in the RSCMinus scraper to check if the boundary removal command
-                        // *ever* successfully removed a boundary.
-                        // ...
-                        // **It never does.**
-                        // ...
-                        // Because X & Y coordinates never match with the coordinate of a boundary that has been added,
-                        // all instances where 0xFF removal are invoked are effectively NO-OPs.
-                        // Therefore, no buggy behaviour from omitting the ability to remove boundaries should arise.
+						// The authentic server does not really send removals for boundaries.
+						// The client is able to handle having boundaries overwritten by new boundaries, but
+						// it doesn't correctly handle having boundaries outright removed.
+						//
+						// The RSC server may have sent proper removals at one time, the structure is there in the client,
+						// but in 2018, the server does something which confuses me, and it should be considered a bug in the server.
+						//
+						// Sometimes when adding a boundary, it will send a removal for some unrelated coordinate first.
+						// The coordinate it specifies for boundary removal *does not* have a boundary at that location.
+						// If it did have a boundary, it would cause erroneous extraneous removals of nearby boundaries.
+						// I haven't spent a lot of time looking at it to discern any further pattern, if there is one. Sorry.
+						//
+						// TODO: determine the pattern that the server uses to send its buggy "random" boundary removal instructions
+						// Until this is implemented, the server will not be 100% authentic to 2018 RSC.
+						// (Also, removals & additions are intertwined, not in a removal block & addition block, as structured here)
+						//
+						// I went through the effort of writing code in the RSCMinus scraper to check if the boundary removal command
+						// *ever* successfully removed a boundary.
+						// ...
+						// **It never does.**
+						// ...
+						// Because X & Y coordinates never match with the coordinate of a boundary that has been added,
+						// all instances where 0xFF removal are invoked are effectively NO-OPs.
+						// Therefore, no buggy behaviour from omitting the ability to remove boundaries should arise.
 
                         /* RSC235 Compatible removal code, shouldn't be used
                         packet.writeByte(0xFF);
@@ -897,7 +906,7 @@ public final class GameStateUpdater {
 						packet.writeByte(offsetX);
 						packet.writeByte(offsetY);
 						packet.writeByte(o.getDirection());
-                        changed = true;
+						changed = true;
 					}
 					it$.remove();
 				} else {
@@ -911,8 +920,8 @@ public final class GameStateUpdater {
 		// add all new boundaries to be added
 		for (final GameObject newObject : playerToUpdate.getViewArea().getGameObjectsInView()) {
 			if (!playerToUpdate.withinGridRange(newObject) || newObject.isRemoved()
-				|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 1
-				|| playerToUpdate.getLocalWallObjects().contains(newObject)) {
+					|| newObject.isInvisibleTo(playerToUpdate) || newObject.getType() != 1
+					|| playerToUpdate.getLocalWallObjects().contains(newObject)) {
 				continue;
 			}
 
@@ -1047,19 +1056,19 @@ public final class GameStateUpdater {
 					Player affectedPlayer = getServer().getWorld().getPlayer(pm.getFriend());
 					if (affectedPlayer != null) {
 						boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
-							== PlayerSettings.BlockingMode.All.id();
+								== PlayerSettings.BlockingMode.All.id();
 						boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
-							== PlayerSettings.BlockingMode.None.id();
+								== PlayerSettings.BlockingMode.None.id();
 						if (!player.getSocial().isFriendsWith(affectedPlayer.getUsernameHash())) {
 							player.message("Unable to send message - player not on your friendlist.");
 						} else if (((affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || blockNone)
-							&& !affectedPlayer.getSocial().isIgnoring(player.getUsernameHash()) || player.isMod()) {
+								&& !affectedPlayer.getSocial().isIgnoring(player.getUsernameHash()) || player.isMod()) {
 							ActionSender.sendPrivateMessageSent(player, affectedPlayer.getUsernameHash(), pm.getMessage(), false);
 							ActionSender.sendPrivateMessageReceived(affectedPlayer, player, pm.getMessage(), false);
 						}
 
 						player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), pm.getMessage(),
-							DataConversions.hashToUsername(pm.getFriend())));
+								DataConversions.hashToUsername(pm.getFriend())));
 					} else {
 						// player not online
 						if (pm.getFriend() >= 0L) {
@@ -1070,22 +1079,23 @@ public final class GameStateUpdater {
 									// player not online
 									player.message("Unable to send message - player unavailable.");
 								}
-							} catch (Exception e) { }
+							} catch (Exception e) {
+							}
 						}
 					}
 				}
 			}
-			GlobalMessage gm ;
-			while((gm = getServer().getWorld().getNextGlobalMessage()) != null) {
+			GlobalMessage gm;
+			while ((gm = getServer().getWorld().getNextGlobalMessage()) != null) {
 				for (final Player player : getServer().getWorld().getPlayers()) {
 					if (player == gm.getPlayer()) {
 						player.getWorld().getServer().getGameLogger().addQuery(new PMLog(player.getWorld(), player.getUsername(), gm.getMessage(),
-							"Global$"));
+								"Global$"));
 						ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
 					} else {
 						if (!player.getBlockGlobalFriend()) {
 							boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingAuthenticClient())
-								== PlayerSettings.BlockingMode.None.id();
+									== PlayerSettings.BlockingMode.None.id();
 							if (blockNone && !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
 								ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);
 							}

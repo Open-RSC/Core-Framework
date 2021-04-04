@@ -42,13 +42,16 @@ public final class Harvesting implements OpLocTrigger {
 		private int itemId;
 		private int level;
 		private int xp;
+
 		ItemLevelXPTrio(int itemId, int level, int xp) {
 			this.itemId = itemId;
 			this.level = level;
 			this.xp = xp;
 		}
 
-		int getItemId() { return itemId; }
+		int getItemId() {
+			return itemId;
+		}
 
 		int getLevel() {
 			return level;
@@ -61,22 +64,23 @@ public final class Harvesting implements OpLocTrigger {
 
 	enum HerbsProduce {
 		HERB(1274, new ItemLevelXPTrio(ItemId.UNIDENTIFIED_GUAM_LEAF.id(), 9, 50),
-			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_MARRENTILL.id(),14, 60),
-			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_TARROMIN.id(), 19, 72),
-			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_HARRALANDER.id(), 26, 96),
-			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_RANARR_WEED.id(), 32, 122),
-			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_IRIT_LEAF.id(), 44, 194),
-			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_AVANTOE.id(), 50, 246),
-			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_KWUARM.id(), 56, 312),
-			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_CADANTINE.id(), 67, 480),
-			new ItemLevelXPTrio(ItemId.UNIDENTIFIED_DWARF_WEED.id(), 79, 768)),
+				new ItemLevelXPTrio(ItemId.UNIDENTIFIED_MARRENTILL.id(), 14, 60),
+				new ItemLevelXPTrio(ItemId.UNIDENTIFIED_TARROMIN.id(), 19, 72),
+				new ItemLevelXPTrio(ItemId.UNIDENTIFIED_HARRALANDER.id(), 26, 96),
+				new ItemLevelXPTrio(ItemId.UNIDENTIFIED_RANARR_WEED.id(), 32, 122),
+				new ItemLevelXPTrio(ItemId.UNIDENTIFIED_IRIT_LEAF.id(), 44, 194),
+				new ItemLevelXPTrio(ItemId.UNIDENTIFIED_AVANTOE.id(), 50, 246),
+				new ItemLevelXPTrio(ItemId.UNIDENTIFIED_KWUARM.id(), 56, 312),
+				new ItemLevelXPTrio(ItemId.UNIDENTIFIED_CADANTINE.id(), 67, 480),
+				new ItemLevelXPTrio(ItemId.UNIDENTIFIED_DWARF_WEED.id(), 79, 768)),
 		SEAWEED(1280, new ItemLevelXPTrio(ItemId.SEAWEED.id(), 23, 84),
-			new ItemLevelXPTrio(ItemId.EDIBLE_SEAWEED.id(), 23, 84)),
+				new ItemLevelXPTrio(ItemId.EDIBLE_SEAWEED.id(), 23, 84)),
 		LIMPWURTROOT(1281, new ItemLevelXPTrio(ItemId.LIMPWURT_ROOT.id(), 42, 144)),
 		SNAPEGRASS(1273, new ItemLevelXPTrio(ItemId.SNAPE_GRASS.id(), 61, 328));
 
 		private int objId;
 		private ArrayList<ItemLevelXPTrio> produceTable;
+
 		HerbsProduce(int objId, ItemLevelXPTrio... produce) {
 			this.objId = objId;
 			produceTable = new ArrayList<>();
@@ -104,26 +108,26 @@ public final class Harvesting implements OpLocTrigger {
 	}
 
 	private final int[] itemsFruitTree = new int[]{
-		ItemId.LEMON.id(), ItemId.LIME.id(), ItemId.RED_APPLE.id(),
-		ItemId.ORANGE.id(), ItemId.GRAPEFRUIT.id(),
+			ItemId.LEMON.id(), ItemId.LIME.id(), ItemId.RED_APPLE.id(),
+			ItemId.ORANGE.id(), ItemId.GRAPEFRUIT.id(),
 	};
 
 	private final int[] itemsRegPalm = new int[]{
-		ItemId.BANANA.id(), ItemId.COCONUT.id(),
+			ItemId.BANANA.id(), ItemId.COCONUT.id(),
 	};
 
 	private final int[] itemsOtherPalm = new int[]{
-		ItemId.PAPAYA.id(),
+			ItemId.PAPAYA.id(),
 	};
 
 	private final int[] itemsBush = new int[]{
-		ItemId.REDBERRIES.id(), ItemId.CADAVABERRIES.id(), ItemId.DWELLBERRIES.id(),
-		ItemId.JANGERBERRIES.id(), ItemId.WHITE_BERRIES.id(),
+			ItemId.REDBERRIES.id(), ItemId.CADAVABERRIES.id(), ItemId.DWELLBERRIES.id(),
+			ItemId.JANGERBERRIES.id(), ItemId.WHITE_BERRIES.id(),
 	};
 
 	private final int[] itemsAllotments = new int[]{
-		ItemId.CABBAGE.id(), ItemId.RED_CABBAGE.id(), ItemId.WHITE_PUMPKIN.id(),
-		ItemId.POTATO.id(), ItemId.ONION.id(), ItemId.GARLIC.id()
+			ItemId.CABBAGE.id(), ItemId.RED_CABBAGE.id(), ItemId.WHITE_PUMPKIN.id(),
+			ItemId.POTATO.id(), ItemId.ONION.id(), ItemId.GARLIC.id()
 	};
 
 	private int chanceAskSoil = 5;
@@ -196,7 +200,7 @@ public final class Harvesting implements OpLocTrigger {
 	}
 
 	private void handleClipHarvesting(final GameObject object, final Player player,
-								  final int click) {
+									  final int click) {
 		if (!harvestingChecks(object, player)) return;
 
 		GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
@@ -206,17 +210,17 @@ public final class Harvesting implements OpLocTrigger {
 
 		if (!objName.contains("herb") && player.getSkills().getLevel(Skills.HARVESTING) < reqLevel) {
 			player.playerServerMessage(MessageType.QUEST, "You need at least level " + reqLevel
-				+ " harvesting to clip from the " + objName);
+					+ " harvesting to clip from the " + objName);
 			return;
 		}
 
 		if (player.getCarriedItems().getInventory().countId(ItemId.HERB_CLIPPERS.id(), Optional.of(false)) <= 0) {
 			player.playerServerMessage(MessageType.QUEST,
-				"You need some "
-					+ player.getWorld().getServer().getEntityHandler()
-					.getItemDef(ItemId.HERB_CLIPPERS.id())
-					.getName().toLowerCase()
-					+ " to clip from this havesting spot");
+					"You need some "
+							+ player.getWorld().getServer().getEntityHandler()
+							.getItemDef(ItemId.HERB_CLIPPERS.id())
+							.getName().toLowerCase()
+							+ " to clip from this havesting spot");
 			return;
 		}
 
@@ -233,20 +237,20 @@ public final class Harvesting implements OpLocTrigger {
 		// herb uses herb drop table
 		// seaweed 1/4 chance to be edible
 		int prodId = !objName.contains("herb")
-			? (objName.contains("sea weed") && DataConversions.random(1, 4) == 1 ? prodEnum.produceTable.get(1).getItemId()
-			: prodEnum.produceTable.get(0).getItemId() ) : Formulae.calculateHerbDrop();
+				? (objName.contains("sea weed") && DataConversions.random(1, 4) == 1 ? prodEnum.produceTable.get(1).getItemId()
+				: prodEnum.produceTable.get(0).getItemId()) : Formulae.calculateHerbDrop();
 		int reqLevel = prodEnum.produceTable.get(0).getLevel();
 		final Item produce = new Item(prodId);
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
+					&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to get produce");
 				return;
 			}
 		}
 		if (!objName.contains("herb") && player.getSkills().getLevel(Skills.HARVESTING) < reqLevel) {
 			player.playerServerMessage(MessageType.QUEST, "You need at least level " + reqLevel
-				+ " harvesting to clip from the " + objName);
+					+ " harvesting to clip from the " + objName);
 			return;
 		}
 
@@ -259,7 +263,7 @@ public final class Harvesting implements OpLocTrigger {
 			} else {
 				player.getCarriedItems().getInventory().add(produce);
 				player.playerServerMessage(MessageType.QUEST, "You get " + (objName.contains("herb") ? "a herb"
-					: "some " + (objName.contains(" ") ? objName.substring(objName.lastIndexOf(" ") + 1) : "produce")));
+						: "some " + (objName.contains(" ") ? objName.substring(objName.lastIndexOf(" ") + 1) : "produce")));
 				player.incExp(Skills.HARVESTING, prodEnum.get(prodId).getXp(), true);
 			}
 			if (DataConversions.random(1, 100) <= (!objName.contains("herb") ? 20 : 10)) {
@@ -313,13 +317,13 @@ public final class Harvesting implements OpLocTrigger {
 		final Item produce = new Item(def.getProdId());
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1
-				&& player.getFatigue() >= player.MAX_FATIGUE) {
+					&& player.getFatigue() >= player.MAX_FATIGUE) {
 				player.playerServerMessage(MessageType.QUEST, "You are too tired to get produce");
 				return;
 			}
 		}
 		if (player.getSkills().getLevel(Skills.HARVESTING) < def.getReqLevel()) {
-			player.playerServerMessage(MessageType.QUEST,"You need a harvesting level of " + def.getReqLevel() + " to get produce from here");
+			player.playerServerMessage(MessageType.QUEST, "You need a harvesting level of " + def.getReqLevel() + " to get produce from here");
 			return;
 		}
 
@@ -338,11 +342,11 @@ public final class Harvesting implements OpLocTrigger {
 				player.getCarriedItems().getInventory().add(produce);
 				// if player did soil (or have an active one) they get small chance for another produce
 				if (DataConversions.random(1, chanceAskSoil * 3) == 1
-					&& evt.get() == HarvestingEvents.SOIL.getID()) {
+						&& evt.get() == HarvestingEvents.SOIL.getID()) {
 					player.getCarriedItems().getInventory().add(produce);
 				}
 				player.playerServerMessage(MessageType.QUEST, "You get " +
-					(itemName.endsWith("s") ? "some " : (startsWithVowel(itemName) ? "an " : "a ")) + itemName);
+						(itemName.endsWith("s") ? "some " : (startsWithVowel(itemName) ? "an " : "a ")) + itemName);
 				player.incExp(Skills.HARVESTING, def.getExp(), true);
 			}
 			if (DataConversions.random(1, 100) <= def.getExhaust()) {
@@ -369,9 +373,8 @@ public final class Harvesting implements OpLocTrigger {
 				if (obj != null && obj.getID() == object.getID()) {
 					// if player did water (or have an active one) they get small chance not to deplete node
 					if (DataConversions.random(1, chanceAskWatering * 3) == 1
-						&& evt.get() == HarvestingEvents.WATER.getID()) {
-					}
-					else if (def.getRespawnTime() > 0) {
+							&& evt.get() == HarvestingEvents.WATER.getID()) {
+					} else if (def.getRespawnTime() > 0) {
 						GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), depId, object.getDirection(), object.getType());
 						player.getWorld().replaceGameObject(object, newObject);
 						player.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * 1000);
@@ -405,14 +408,14 @@ public final class Harvesting implements OpLocTrigger {
 	@Override
 	public boolean blockOpLoc(Player player, GameObject obj, String command) {
 		return command.equalsIgnoreCase("harvest") ||
-			command.equalsIgnoreCase("clip") || (command.equals("collect") && obj.getID() == 1238);
+				command.equalsIgnoreCase("clip") || (command.equals("collect") && obj.getID() == 1238);
 	}
 
 	private int checkCare(GameObject obj, Player player) {
 		long timestamp = System.currentTimeMillis() + 3 * 60000;
 		if (DataConversions.random(1, chanceAskWatering) == 1) {
 			if (player.getAttribute("watered", null) == null
-				|| expiredAction(obj, player, "watered")) {
+					|| expiredAction(obj, player, "watered")) {
 				if (!player.getCarriedItems().hasCatalogID(ItemId.WATERING_CAN.id(), Optional.of(false))) {
 					return HarvestingEvents.NEGLECTED.getID();
 				}
@@ -423,7 +426,7 @@ public final class Harvesting implements OpLocTrigger {
 			return HarvestingEvents.WATER.getID();
 		} else if (DataConversions.random(1, chanceAskSoil) == 1) {
 			if (player.getAttribute("soiled", null) == null
-				|| expiredAction(obj, player, "soiled")) {
+					|| expiredAction(obj, player, "soiled")) {
 				if (!player.getCarriedItems().hasCatalogID(ItemId.SOIL.id(), Optional.of(false))) {
 					return HarvestingEvents.NEGLECTED.getID();
 				}
