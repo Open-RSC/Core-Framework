@@ -83,11 +83,11 @@ public class RegionManager {
 				for (final Iterator<GameObject> o = objects.iterator(); o.hasNext(); ) {
 					final GameObject gameObject = o.next();
 					if (gameObject
-							.getLocation()
-							.withinGridRange(
-									entity.getLocation(),
-									getWorld().getServer().getConfig().VIEW_DISTANCE
-							)
+						.getLocation()
+						.withinGridRange(
+							entity.getLocation(),
+							getWorld().getServer().getConfig().VIEW_DISTANCE
+						)
 					) {
 						localObjects.add(gameObject);
 					}

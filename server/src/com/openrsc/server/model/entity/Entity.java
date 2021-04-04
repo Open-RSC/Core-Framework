@@ -28,8 +28,8 @@ public abstract class Entity {
 	private final EntityType entityType;
 
 	public Entity(
-			final World world,
-			final EntityType entityType
+		final World world,
+		final EntityType entityType
 	) {
 		this.world = world;
 		this.entityType = entityType;

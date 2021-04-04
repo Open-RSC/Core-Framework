@@ -151,9 +151,9 @@ public class GameObject extends Entity {
 		}
 		if (isWallObject()) {
 			return x >= getX()
-					&& x <= (getX() + width)
-					&& y >= getY()
-					&& y <= (getY() + height);
+				&& x <= (getX() + width)
+				&& y >= getY()
+				&& y <= (getY() + height);
 		} else { // Door
 			return x == getX() && y == getY();
 		}
@@ -164,9 +164,9 @@ public class GameObject extends Entity {
 		if (o instanceof GameObject) {
 			GameObject go = (GameObject) o;
 			return go.getLocation().equals(getLocation())
-					&& go.getID() == getID()
-					&& go.getDirection() == getDirection()
-					&& go.getType() == getType();
+				&& go.getID() == getID()
+				&& go.getDirection() == getDirection()
+				&& go.getType() == getType();
 		}
 		return false;
 	}
@@ -174,8 +174,8 @@ public class GameObject extends Entity {
 	@Override
 	public String toString() {
 		return getType() + ":id = " + getID()
-				+ "; dir = " + direction + "; location = "
-				+ getLocation().toString() + ";";
+			+ "; dir = " + direction + "; location = "
+			+ getLocation().toString() + ";";
 	}
 
 	public String getOwner() {

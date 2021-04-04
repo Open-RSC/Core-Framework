@@ -458,8 +458,8 @@ public final class Player extends Mob {
 	 */
 	public boolean isIronMan() {
 		return getIronMan() == IronmanMode.Ironman.id()
-				|| getIronMan() == IronmanMode.Ultimate.id()
-				|| getIronMan() == IronmanMode.Hardcore.id();
+			|| getIronMan() == IronmanMode.Ultimate.id()
+			|| getIronMan() == IronmanMode.Hardcore.id();
 	}
 
 	/**
@@ -658,8 +658,8 @@ public final class Player extends Mob {
 			return false;
 		}
 		return !isBusy() && (System.currentTimeMillis() - getLastClientActivity() > 30000 || System.currentTimeMillis() - getCombatTimer() > 10000)
-				&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000
-				&& System.currentTimeMillis() - getLastExchangeTime() > 3000;
+			&& System.currentTimeMillis() - getAttribute("last_shot", (long) 0) > 10000
+			&& System.currentTimeMillis() - getLastExchangeTime() > 3000;
 	}
 
 	public boolean canReport() {
@@ -789,7 +789,7 @@ public final class Player extends Mob {
 				@Override
 				public void run() {
 					if (getOwner().canLogout() || (!(getOwner().inCombat() && getOwner().getDuel().isDuelActive())
-							&& System.currentTimeMillis() - startDestroy > 60000)) {
+						&& System.currentTimeMillis() - startDestroy > 60000)) {
 						getOwner().unregister(true, reason);
 					}
 					running = false;
@@ -847,11 +847,11 @@ public final class Player extends Mob {
 			Optional<Integer> optionalSkillIndex = Optional.empty();
 			boolean unWield = false;
 			boolean bypass = !getWorld().getServer().getConfig().STRICT_CHECK_ALL &&
-					(itemLower.startsWith("poisoned") &&
-							((itemLower.endsWith("throwing dart") && !getWorld().getServer().getConfig().STRICT_PDART_CHECK) ||
-									(itemLower.endsWith("throwing knife") && !getWorld().getServer().getConfig().STRICT_PKNIFE_CHECK) ||
-									(itemLower.endsWith("spear") && !getWorld().getServer().getConfig().STRICT_PSPEAR_CHECK))
-					);
+				(itemLower.startsWith("poisoned") &&
+					((itemLower.endsWith("throwing dart") && !getWorld().getServer().getConfig().STRICT_PDART_CHECK) ||
+						(itemLower.endsWith("throwing knife") && !getWorld().getServer().getConfig().STRICT_PKNIFE_CHECK) ||
+						(itemLower.endsWith("spear") && !getWorld().getServer().getConfig().STRICT_PSPEAR_CHECK))
+				);
 			if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 				optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
 				optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.AGILITY);
@@ -921,11 +921,11 @@ public final class Player extends Mob {
 				Optional<Integer> optionalSkillIndex = Optional.empty();
 				boolean unWield = false;
 				boolean bypass = !getWorld().getServer().getConfig().STRICT_CHECK_ALL &&
-						(itemLower.startsWith("poisoned") &&
-								((itemLower.endsWith("throwing dart") && !getWorld().getServer().getConfig().STRICT_PDART_CHECK) ||
-										(itemLower.endsWith("throwing knife") && !getWorld().getServer().getConfig().STRICT_PKNIFE_CHECK) ||
-										(itemLower.endsWith("spear") && !getWorld().getServer().getConfig().STRICT_PSPEAR_CHECK))
-						);
+					(itemLower.startsWith("poisoned") &&
+						((itemLower.endsWith("throwing dart") && !getWorld().getServer().getConfig().STRICT_PDART_CHECK) ||
+							(itemLower.endsWith("throwing knife") && !getWorld().getServer().getConfig().STRICT_PKNIFE_CHECK) ||
+							(itemLower.endsWith("spear") && !getWorld().getServer().getConfig().STRICT_PSPEAR_CHECK))
+					);
 				if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 					optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
 					optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
@@ -958,9 +958,9 @@ public final class Player extends Mob {
 
 				if (unWield) {
 					UnequipRequest.RequestType type = getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB
-							? UnequipRequest.RequestType.FROM_EQUIPMENT : UnequipRequest.RequestType.FROM_INVENTORY;
+						? UnequipRequest.RequestType.FROM_EQUIPMENT : UnequipRequest.RequestType.FROM_INVENTORY;
 					getCarriedItems().getEquipment().unequipItem(
-							new UnequipRequest(this, item, type, true)
+						new UnequipRequest(this, item, type, true)
 					);
 				}
 			}
@@ -1227,7 +1227,7 @@ public final class Player extends Mob {
 			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
 				item = getCarriedItems().getEquipment().get(i);
 				if (item != null && (DataConversions.inArray(Formulae.bowIDs, item.getCatalogId())
-						|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
+					|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
 					return item.getCatalogId();
 				}
 			}
@@ -1235,7 +1235,7 @@ public final class Player extends Mob {
 			synchronized (getCarriedItems().getInventory().getItems()) {
 				for (Item item : getCarriedItems().getInventory().getItems()) {
 					if (item.isWielded() && (DataConversions.inArray(Formulae.bowIDs, item.getCatalogId())
-							|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
+						|| DataConversions.inArray(Formulae.xbowIDs, item.getCatalogId()))) {
 						return item.getCatalogId();
 					}
 				}
@@ -1450,7 +1450,7 @@ public final class Player extends Mob {
 			appliedAmount = (int) Math.round(getWorld().getServer().getConfig().SKILLING_EXP_RATE * amount);
 		if (isExperienceFrozen()) {
 			ActionSender.sendMessage(this, "You passed on " + appliedAmount / 4 + " " +
-					getWorld().getServer().getConstants().getSkills().getSkill(i).getLongName() + " experience because your exp is frozen.");
+				getWorld().getServer().getConstants().getSkills().getSkill(i).getLongName() + " experience because your exp is frozen.");
 			return;
 		}
 		getSkills().addExperience(i, appliedAmount);
@@ -1527,7 +1527,7 @@ public final class Player extends Mob {
 			// by accident.
 			else if (!this.getAttribute("warned_xp_off", false)) {
 				ActionSender.sendMessage(this, "You have disabled experience gain." +
-						"Use a sleeping bag or bed to re-enable,");
+					"Use a sleeping bag or bed to re-enable,");
 				this.setAttribute("warned_xp_off", true);
 			}
 			return;
@@ -1586,8 +1586,8 @@ public final class Player extends Mob {
 
 				// Make sure the player is in range.
 				final boolean inRange = getConfig().PARTY_SHARE_INFINITE_RANGE
-						|| (Math.abs(this.getX() - partyMemberPlayer.getX()) <= getConfig().PARTY_SHARE_MAX_X
-						&& Math.abs(normalizeFloor(this.getY()) - normalizeFloor(partyMemberPlayer.getY())) <= getConfig().PARTY_SHARE_MAX_Y);
+					|| (Math.abs(this.getX() - partyMemberPlayer.getX()) <= getConfig().PARTY_SHARE_MAX_X
+					&& Math.abs(normalizeFloor(this.getY()) - normalizeFloor(partyMemberPlayer.getY())) <= getConfig().PARTY_SHARE_MAX_Y);
 
 				// Make sure the player isn't on the same IP
 				final boolean notSameIp = getConfig().PARTY_SHARE_WITH_SAME_IP || !this.getCurrentIP().equals(partyMemberPlayer.getCurrentIP());
@@ -1612,11 +1612,11 @@ public final class Player extends Mob {
 				switch (getConfig().PARTY_SHARE_SIZE_ALGORITHM) {
 					case "linear":
 						xpLeftToReward *= 1.0 + (getConfig().PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER
-								* Math.min(shareCount, getConfig().PARTY_MAX_SIZE_FOR_ADDITIONAL_XP));
+							* Math.min(shareCount, getConfig().PARTY_MAX_SIZE_FOR_ADDITIONAL_XP));
 						break;
 					case "exponential":
 						xpLeftToReward *= Math.pow(1.0 + getConfig().PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER,
-								Math.min(shareCount, getConfig().PARTY_MAX_SIZE_FOR_ADDITIONAL_XP));
+							Math.min(shareCount, getConfig().PARTY_MAX_SIZE_FOR_ADDITIONAL_XP));
 						break;
 					default:
 						LOGGER.error("Unrecognized PARTY_SHARE_SIZE_ALGORITHM provided in config");
@@ -1634,17 +1634,17 @@ public final class Player extends Mob {
 
 					double xpDropoffPercent = 1.0;
 					final int playerDistance = Math.abs(this.getX() - partyMemberPlayer.getX())
-							+ Math.abs(normalizeFloor(this.getY()) - normalizeFloor(partyMemberPlayer.getY()));
+						+ Math.abs(normalizeFloor(this.getY()) - normalizeFloor(partyMemberPlayer.getY()));
 
 					// Decrease the amount of XP the player gets depending on how far away they are
 					switch (getConfig().PARTY_SHARE_DISTANCE_ALGORITHM) {
 						case "linear":
 							xpDropoffPercent *= 1.0 - (getConfig().PARTY_DISTANCE_PERCENT_DECREASE
-									* playerDistance);
+								* playerDistance);
 							break;
 						case "exponential":
 							xpDropoffPercent *= Math.pow(1.0 - getConfig().PARTY_DISTANCE_PERCENT_DECREASE,
-									playerDistance);
+								playerDistance);
 							break;
 						default:
 							LOGGER.error("Unrecognized PARTY_SHARE_DISTANCE_ALGORITHM provided in config");
@@ -2003,13 +2003,13 @@ public final class Player extends Mob {
 		removeSkull();
 
 		getWorld().getServer().getGameEventHandler().add(
-				new DelayedEvent(getWorld(), this, getConfig().GAME_TICK * 5, "Reset Killed") {
-					@Override
-					public void run() {
-						getOwner().killed = false;
-						stop();
-					}
+			new DelayedEvent(getWorld(), this, getConfig().GAME_TICK * 5, "Reset Killed") {
+				@Override
+				public void run() {
+					getOwner().killed = false;
+					stop();
 				}
+			}
 		);
 	}
 
@@ -2068,8 +2068,8 @@ public final class Player extends Mob {
 			float minutesFlagged = (float) (System.currentTimeMillis() - lastMouseMoved) / (float) 60000;
 			if (actionsMouseStill >= 30 && minutesFlagged >= 1) {
 				String string = "Check " + getUsername() + "! " + actionsMouseStill
-						+ " actions with mouse still. Mouse was last moved " + String.format("%.02f", minutesFlagged)
-						+ " mins ago";
+					+ " actions with mouse still. Mouse was last moved " + String.format("%.02f", minutesFlagged)
+					+ " mins ago";
 
 				for (Player player : getWorld().getPlayers()) {
 					if (player.isMod()) {
@@ -2113,18 +2113,18 @@ public final class Player extends Mob {
 				// Final copied variable needed to pass into lambda
 				final Packet curPacket = packet;
 				final long packetTime = getWorld().getServer().bench(
-						() -> {
-							activePackets.remove(activePackets.indexOf(curPacket.getID()));
-							final PacketHandler ph = PacketHandlerLookup.get(curPacket.getID());
-							if (ph != null && curPacket.getBuffer().readableBytes() >= 0) {
-								try {
-									ph.handlePacket(curPacket, this);
-								} catch (final Exception e) {
-									LOGGER.catching(e);
-									unregister(false, "Malformed packet!");
-								}
+					() -> {
+						activePackets.remove(activePackets.indexOf(curPacket.getID()));
+						final PacketHandler ph = PacketHandlerLookup.get(curPacket.getID());
+						if (ph != null && curPacket.getBuffer().readableBytes() >= 0) {
+							try {
+								ph.handlePacket(curPacket, this);
+							} catch (final Exception e) {
+								LOGGER.catching(e);
+								unregister(false, "Malformed packet!");
 							}
 						}
+					}
 				);
 				getWorld().getServer().addIncomingPacketDuration(curPacket.getID(), packetTime);
 				getWorld().getServer().incrementIncomingPacketCount(curPacket.getID());
@@ -2149,9 +2149,9 @@ public final class Player extends Mob {
 			try {
 				for (final Packet outgoing : outgoingPackets) {
 					final long packetTime = getWorld().getServer().bench(
-							() -> {
-								channel.writeAndFlush(outgoing);
-							}
+						() -> {
+							channel.writeAndFlush(outgoing);
+						}
 					);
 					getWorld().getServer().addOutgoingPacketDuration(outgoing.getID(), packetTime);
 					getWorld().getServer().incrementOutgoingPacketCount(outgoing.getID());
@@ -2327,16 +2327,16 @@ public final class Player extends Mob {
 			updateQuestStage(questId, -1);
 			ActionSender.sendStats(this);
 			getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this,
-					"has completed the " + getWorld().getQuest(questId).getQuestName()
-							+ " quest and now has " + this.getQuestPoints() + " quest points!"));
+				"has completed the " + getWorld().getQuest(questId).getQuestName()
+					+ " quest and now has " + this.getQuestPoints() + " quest points!"));
 		}
 	}
 
 	public void sendMiniGameComplete(final int miniGameId, final Optional<String> message) {
 		getWorld().getMiniGame(miniGameId).handleReward(this);
 		getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(this,
-				"has completed the " + getWorld().getMiniGame(miniGameId).getMiniGameName()
-						+ " minigame! " + (message.orElse(""))));
+			"has completed the " + getWorld().getMiniGame(miniGameId).getMiniGameName()
+				+ " minigame! " + (message.orElse(""))));
 	}
 
 	public void setAccessingBank(final boolean b) {
@@ -3290,15 +3290,15 @@ public final class Player extends Mob {
 		this.playSound("takeobject");
 		getCarriedItems().getInventory().add(itemFinal);
 		getWorld().getServer().getGameLogger().addQuery(new GenericLog(this.getWorld(), this.getUsername() + " picked up " + item.getDef().getName() + " x"
-				+ item.getAmount() + " at " + this.getLocation().toString()));
+			+ item.getAmount() + " at " + this.getLocation().toString()));
 
 		return true;
 	}
 
 	public boolean checkRingOfLife(final Mob hitter) {
 		if (this.isPlayer() && getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_LIFE.id())
-				&& (!this.getLocation().inWilderness()
-				|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
+			&& (!this.getLocation().inWilderness()
+			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
 			if (((float) this.getSkills().getLevel(Skills.HITS)) / ((float) this.getSkills().getMaxStat(Skills.HITS)) <= 0.1f) {
 				this.resetCombatEvent();
 				this.resetRange();
@@ -3339,7 +3339,7 @@ public final class Player extends Mob {
 
 		if (getConfig().WANT_CUSTOM_QUESTS) {
 			if (getCache().hasKey("want_unholy_symbol_drops") &&
-					getCache().getBoolean("want_unholy_symbol_drops")) {
+				getCache().getBoolean("want_unholy_symbol_drops")) {
 				return true;
 			}
 		}
