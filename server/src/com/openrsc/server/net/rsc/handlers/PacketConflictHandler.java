@@ -1,34 +1,25 @@
 package com.openrsc.server.net.rsc.handlers;
 
-import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+public class PacketConflictHandler /*implements PayloadProcessor<OpcodeIn>*/ {
 
-import java.util.HashMap;
-
-public class PacketConflictHandler implements PacketHandler {
-
-	public static HashMap<String, PacketHandler> packetHandlers = new HashMap<String, PacketHandler>();
+	/*public static HashMap<String, PacketHandler> packetHandlers = new HashMap<String, PacketHandler>();
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	static {
-		bind(OpcodeIn.DUEL_DECLINED.getOpcode(), 1, PlayerDuelHandler.class);
-		bind(OpcodeIn.CHANGE_RECOVERY_REQUEST.getOpcode(), 2, SecuritySettingsHandler.class);
-		bind(OpcodeIn.GROUND_ITEM_TAKE.getOpcode(), 1, GroundItemTake.class);
-		bind(OpcodeIn.CHANGE_DETAILS_REQUEST.getOpcode(), 2, SecuritySettingsHandler.class);
+		bind(OpcodeInn.DUEL_DECLINED.getOpcode(), 1, PlayerDuelHandler.class);
+		bind(OpcodeInn.CHANGE_RECOVERY_REQUEST.getOpcode(), 2, SecuritySettingsHandler.class);
+		bind(OpcodeInn.GROUND_ITEM_TAKE.getOpcode(), 1, GroundItemTake.class);
+		bind(OpcodeInn.CHANGE_DETAILS_REQUEST.getOpcode(), 2, SecuritySettingsHandler.class);
 	}
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(AbstractStruct<OpcodeIn> payload, Player player) throws Exception {
 		int pID = packet.getID();
 		int length = packet.getLength();
 		Player affectedPlayer;
 
-		OpcodeIn opcode = OpcodeIn.getFromList(packet.getID(),
-			OpcodeIn.DUEL_DECLINED, OpcodeIn.CHANGE_RECOVERY_REQUEST,
-			OpcodeIn.GROUND_ITEM_TAKE, OpcodeIn.CHANGE_DETAILS_REQUEST);
+		OpcodeInn opcode = OpcodeInn.getFromList(packet.getID(),
+			OpcodeInn.DUEL_DECLINED, OpcodeInn.CHANGE_RECOVERY_REQUEST,
+			OpcodeInn.GROUND_ITEM_TAKE, OpcodeInn.CHANGE_DETAILS_REQUEST);
 
 		if (opcode == null)
 			return;
@@ -83,5 +74,5 @@ public class PacketConflictHandler implements PacketHandler {
 
 	static String unique(int opcode, int num) {
 		return opcode + "-" + num;
-	}
+	}*/
 }

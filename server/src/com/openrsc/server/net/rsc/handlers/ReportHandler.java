@@ -3,23 +3,20 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.database.impl.mysql.queries.logging.GameReport;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.snapshot.Snapshot;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.ReportStruct;
 
 import java.util.Iterator;
 
-public final class ReportHandler implements PacketHandler {
+public final class ReportHandler implements PayloadProcessor<ReportStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(ReportStruct payload, Player player) throws Exception {
 
 		String playerName;
-		if (player.isUsingAuthenticClient()) {
-			playerName = packet.readZeroPaddedString();
-		} else {
-			playerName = packet.readString();
-		}
-		byte reason = packet.readByte();
-		byte suggestsOrMutes = packet.readByte();
+		playerName = payload.targetPlayerName;
+		byte reason = payload.reason;
+		byte suggestsOrMutes = payload.suggestsOrMutes;
 
 		if (playerName.equalsIgnoreCase(player.getUsername())) {
 			player.message("You can't report yourself!!");

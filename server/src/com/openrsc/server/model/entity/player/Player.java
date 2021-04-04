@@ -45,8 +45,12 @@ import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.net.rsc.PacketHandlerLookup;
+import com.openrsc.server.net.rsc.OpcodeIn;
+import com.openrsc.server.net.rsc.PayloadProcessorManager;
+import com.openrsc.server.net.rsc.parsers.PayloadParser;
+import com.openrsc.server.net.rsc.parsers.impl.Payload235Parser;
+import com.openrsc.server.net.rsc.parsers.impl.PayloadCustomParser;
+import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -2115,12 +2119,22 @@ public final class Player extends Mob {
 				final long packetTime = getWorld().getServer().bench(
 					() -> {
 						activePackets.remove(activePackets.indexOf(curPacket.getID()));
-						final PacketHandler ph = PacketHandlerLookup.get(curPacket.getID());
-						if (ph != null && curPacket.getBuffer().readableBytes() >= 0) {
+						PayloadParser<com.openrsc.server.net.rsc.enums.OpcodeIn> parser;
+						if (isUsingAuthenticClient()) {
+							parser = new Payload235Parser();
+						} else {
+							parser = new PayloadCustomParser();
+						}
+						AbstractStruct<com.openrsc.server.net.rsc.enums.OpcodeIn> res = parser.parse(curPacket, this);
+						if (res != null) {
+							boolean couldProcess;
 							try {
-								ph.handlePacket(curPacket, this);
+								couldProcess = PayloadProcessorManager.processed(res, this);
 							} catch (final Exception e) {
 								LOGGER.catching(e);
+								couldProcess = false;
+							}
+							if (!couldProcess) {
 								unregister(false, "Malformed packet!");
 							}
 						}

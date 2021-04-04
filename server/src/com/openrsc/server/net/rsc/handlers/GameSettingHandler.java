@@ -1,21 +1,22 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.GameSettingStruct;
 
-public final class GameSettingHandler implements PacketHandler {
+public final class GameSettingHandler implements PayloadProcessor<GameSettingStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) {
+	public void process(GameSettingStruct payload, Player player) throws Exception {
 
-		final int idx = (int) packet.readByte();
+		final int idx = payload.index;
 		if (idx < 0 || idx > 99) {
 			player.setSuspiciousPlayer(true, "game setting idx < 0 or idx > 99");
 			return;
 		}
 
-		final byte value = packet.readByte();
+		final byte value = payload.value;
 
 		if (idx >= 4) {
 			if (idx == 4) {

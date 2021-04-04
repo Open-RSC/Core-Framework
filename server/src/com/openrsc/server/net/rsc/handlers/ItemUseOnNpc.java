@@ -7,14 +7,15 @@ import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.ItemOnMobStruct;
 
 import static com.openrsc.server.plugins.Functions.inArray;
 
-public class ItemUseOnNpc implements PacketHandler {
+public class ItemUseOnNpc implements PayloadProcessor<ItemOnMobStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(ItemOnMobStruct payload, Player player) throws Exception {
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			return;
@@ -24,9 +25,9 @@ public class ItemUseOnNpc implements PacketHandler {
 			return;
 		}
 		player.resetAll();
-		int npcIndex = packet.readShort();
+		int npcIndex = payload.serverIndex;
 		final Npc affectedNpc = player.getWorld().getNpc(npcIndex);
-		int slotIndex = packet.readShort();
+		int slotIndex = payload.slotIndex;
 		if (player.getConfig().WANT_EQUIPMENT_TAB && slotIndex > Inventory.MAX_SIZE) {
 			player.message("Please unequip your item and try again.");
 			return;

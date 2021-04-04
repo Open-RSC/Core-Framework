@@ -1,16 +1,16 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.database.impl.mysql.queries.logging.TradeLog;
 import com.openrsc.server.model.PathValidation;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.struct.UnequipRequest;
-import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.database.impl.mysql.queries.logging.TradeLog;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.PlayerTradeStruct;
 import com.openrsc.server.util.rsc.CertUtil;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
@@ -18,13 +18,13 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.List;
 import java.util.Optional;
 
-public class PlayerTradeHandler implements PacketHandler {
+public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, OpcodeIn> {
 
 	private boolean busy(Player player) {
 		return player.isBusy() || player.isRanging() || player.accessingBank() || player.getDuel().isDuelActive() || player.inCombat();
 	}
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(PlayerTradeStruct payload, Player player) throws Exception {
 
 		/**
 		 * Opcodes covered by this handler
@@ -44,10 +44,11 @@ public class PlayerTradeHandler implements PacketHandler {
 
 		player.interruptPlugins();
 
-		OpcodeIn opcode = OpcodeIn.getFromList(packet.getID(),
-			OpcodeIn.PLAYER_INIT_TRADE_REQUEST, OpcodeIn.PLAYER_ACCEPTED_INIT_TRADE_REQUEST,
-			OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER, OpcodeIn.PLAYER_DECLINED_TRADE,
-			OpcodeIn.PLAYER_ACCEPTED_TRADE);
+		/*OpcodeInn opcode = OpcodeInn.getFromList(packet.getID(),
+			OpcodeInn.PLAYER_INIT_TRADE_REQUEST, OpcodeInn.PLAYER_ACCEPTED_INIT_TRADE_REQUEST,
+			OpcodeInn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER, OpcodeInn.PLAYER_DECLINED_TRADE,
+			OpcodeInn.PLAYER_ACCEPTED_TRADE);*/
+		OpcodeIn opcode = payload.getOpcode();
 
 		if (opcode == null)
 			return;
@@ -55,7 +56,7 @@ public class PlayerTradeHandler implements PacketHandler {
 		switch (opcode) {
 			case PLAYER_INIT_TRADE_REQUEST:
 				if (player.getWorld() != null) {
-					affectedPlayer = player.getWorld().getPlayer(packet.readShort());
+					affectedPlayer = player.getWorld().getPlayer(payload.targetPlayerID);
 				}
 
 				if (affectedPlayer == null) {
@@ -170,14 +171,10 @@ public class PlayerTradeHandler implements PacketHandler {
 				affectedPlayer.getTrade().setTradeConfirmAccepted(false);
 
 				player.getTrade().resetOffer();
-				int count = (int) packet.readByte();
+				int count = payload.tradeCount;
 				for (int slot = 0; slot < count; slot++) {
 					Item tItem;
-					if (player.isUsingAuthenticClient()) {
-						tItem = new Item(packet.readShort(), packet.readInt(), false);
-					} else {
-						tItem = new Item(packet.readShort(), packet.readInt(), packet.readShort() == 1);
-					}
+					tItem = new Item(payload.tradeCatalogIDs[slot], payload.tradeAmounts[slot], payload.tradeNoted[slot]);
 
 					if (tItem.getAmount() < 1) {
 						player.setSuspiciousPlayer(true, "item less than 0");

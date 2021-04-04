@@ -1,6 +1,5 @@
 package com.openrsc.server.external;
 
-import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.Formulae;
 
@@ -56,11 +55,11 @@ public class ObjectFishingDef {
 		}
 		return requiredLevel;
 	}
-	
+
 	public int getDepletion() {
 		return depletion;
 	}
-	
+
 	public int getRespawnTime() {
 		return respawnTime;
 	}
@@ -79,7 +78,7 @@ public class ObjectFishingDef {
 	 * Pre calculate the probability rate of each possible outcome of fishing at a fishing spot
 	 */
 	void calculateFishRates() {
-		final int maxLevelToCalcFor = 138;
+		final int maxLevelToCalcFor = 143;
 
 		SkillSuccessRate[] bounds = new SkillSuccessRate[defs.length];
 		int i = 0;

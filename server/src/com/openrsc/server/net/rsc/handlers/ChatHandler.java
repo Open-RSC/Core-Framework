@@ -4,13 +4,14 @@ import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.snapshot.Chatlog;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.StringStruct;
 import com.openrsc.server.util.rsc.DataConversions;
 
-public final class ChatHandler implements PacketHandler {
+public final class ChatHandler implements PayloadProcessor<StringStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player sender) throws Exception {
+	public void process(StringStruct payload, Player sender) throws Exception {
 		if (sender.isMuted()) {
 			if (sender.getMuteNotify()) {
 				//sender.message(sender.getConfig().MESSAGE_PREFIX + "You are muted " + (sender.getMuteExpires() == -1 ? "@red@permanently" : "for @cya@" + sender.getMinutesMuteLeft() + "@whi@ minutes."));
@@ -26,8 +27,7 @@ public final class ChatHandler implements PacketHandler {
 			sender.message("Once you finish the tutorial, typing here sends messages to nearby players");
 		}
 
-
-		String message = DataConversions.getEncryptedString(packet);
+		String message = payload.string;
 		if (!sender.speakTongues) {
 			message = DataConversions.upperCaseAllFirst(
 				DataConversions.stripBadCharacters(message));

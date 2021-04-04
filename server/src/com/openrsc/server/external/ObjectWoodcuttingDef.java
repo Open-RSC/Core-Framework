@@ -101,7 +101,7 @@ public final class ObjectWoodcuttingDef {
 	}
 
 	public void calculateWoodRates() {
-		final int maxLevelToCalcFor = 138;
+		final int maxLevelToCalcFor = 143;
 
 		rateBronze = new double[maxLevelToCalcFor];
 		for (int level = 0; level < maxLevelToCalcFor; level++) {

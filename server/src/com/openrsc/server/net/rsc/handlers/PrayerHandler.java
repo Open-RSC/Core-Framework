@@ -4,11 +4,11 @@ import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.PrayerStruct;
 
-public class PrayerHandler implements PacketHandler {
+public class PrayerHandler implements PayloadProcessor<PrayerStruct, OpcodeIn> {
 
 	private boolean activatePrayer(Player player, int prayerID) {
 		if (!player.getPrayers().isPrayerActivated(prayerID)) {
@@ -59,9 +59,9 @@ public class PrayerHandler implements PacketHandler {
 		return false;
 	}
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
-		int pID = packet.getID();
-		int prayerID = (int) packet.readByte();
+	public void process(PrayerStruct payload, Player player) throws Exception {
+		OpcodeIn pID = payload.getOpcode();
+		int prayerID = payload.prayerID;
 		if (prayerID < 0 || prayerID >= 14) {
 			player.setSuspiciousPlayer(true, "prayer id < 0 or prayer id >= 14");
 //			ActionSender.sendPrayers(player);TODO
@@ -79,8 +79,8 @@ public class PrayerHandler implements PacketHandler {
 		}
 
 		PrayerDef prayer = player.getWorld().getServer().getEntityHandler().getPrayerDef(prayerID);
-		int packetOne = OpcodeIn.PRAYER_ACTIVATED.getOpcode();
-		int packetTwo = OpcodeIn.PRAYER_DEACTIVATED.getOpcode();
+		OpcodeIn packetOne = OpcodeIn.PRAYER_ACTIVATED;
+		OpcodeIn packetTwo = OpcodeIn.PRAYER_DEACTIVATED;
 		if (pID == packetOne) {
 			if (player.getSkills().getMaxStat(Skills.PRAYER) < prayer.getReqLevel()) {
 				player.setSuspiciousPlayer(true, "max stat prayer < req level");

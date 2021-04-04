@@ -3,14 +3,15 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.ItemCommandStruct;
 
 import java.util.Optional;
 
-public final class ItemDropHandler implements PacketHandler {
+public final class ItemDropHandler implements PayloadProcessor<ItemCommandStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception{
+	public void process(ItemCommandStruct payload, Player player) throws Exception {
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			player.resetPath();
@@ -22,11 +23,11 @@ public final class ItemDropHandler implements PacketHandler {
 		}
 
 		player.resetAll();
-		int inventorySlot = (int) packet.readShort();
+		int inventorySlot = payload.index;
 		int amount;
 		boolean respectDropX = !player.isUsingAuthenticClient() && player.getWorld().getServer().getConfig().WANT_DROP_X;
 		if (respectDropX) {
-			amount = packet.readInt();
+			amount = payload.amount;
 		} else {
 			amount = 0;
 		}
@@ -39,7 +40,7 @@ public final class ItemDropHandler implements PacketHandler {
 
 		//User wants to drop the item from equipment tab
 		if (inventorySlot == -1 && !player.isUsingAuthenticClient() && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			int realid = (int) packet.readShort();
+			int realid = payload.realIndex;
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(realid);
 			if (slot != -1) {
 				tempitem = player.getCarriedItems().getEquipment().get(slot);

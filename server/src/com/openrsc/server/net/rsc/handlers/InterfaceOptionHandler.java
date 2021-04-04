@@ -11,14 +11,15 @@ import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.content.party.PartyRank;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.OptionsStruct;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
 
-public class InterfaceOptionHandler implements PacketHandler {
+public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, OpcodeIn> {
 
 
 	private static String[] badWords = {
@@ -26,29 +27,29 @@ public class InterfaceOptionHandler implements PacketHandler {
 		"whore", "pussy", "porn", "penis", "chink", "faggot", "cunt", "clit", "cock"};
 
 	@Override
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(OptionsStruct payload, Player player) throws Exception {
 		if (player.inCombat()) {
 			player.message("You can't do that whilst you are fighting");
 			return;
 		}
-		switch (packet.readByte()) {
+		switch (payload.index) {
 			case 0:
-				player.setAttribute("swap_cert", packet.readByte() == 1);
+				player.setAttribute("swap_cert", payload.value == 1);
 				break;
 			case 1:
-				player.setAttribute("swap_note", packet.readByte() == 1);
+				player.setAttribute("swap_note", payload.value == 1);
 				break;
 			case 2:
-				handleBankSwap(player, packet);
+				handleBankSwap(player, payload);
 				break;
 			case 3:
-				handleBankInsert(player, packet);
+				handleBankInsert(player, payload);
 				break;
 			case 4:
-				handleInventoryInsert(player, packet);
+				handleInventoryInsert(player, payload);
 				break;
 			case 5:
-				handleInventorySwap(player, packet);
+				handleInventorySwap(player, payload);
 				break;
 			case 6:
 				// Cancel Batch
@@ -57,29 +58,29 @@ public class InterfaceOptionHandler implements PacketHandler {
 				}
 				break;
 			case 7:
-				handleIronmanMode(player, packet);
+				handleIronmanMode(player, payload);
 				break;
 			case 8:
-				handleBankPinEntry(player, packet);
+				handleBankPinEntry(player, payload);
 				break;
 			case 10:
 				if (!player.getConfig().SPAWN_AUCTION_NPCS) return;
-				handleAuction(player, packet);
+				handleAuction(player, payload);
 				break;
 			case 11: // Clan Actions
 				if (!player.getConfig().WANT_CLANS) return;
-				handleClan(player, packet);
+				handleClan(player, payload);
 				break;
 			case 12: // Party
 				if (!player.getConfig().WANT_PARTIES) return;
-				handleParty(player, packet);
+				handleParty(player, payload);
 				break;
 		}
 	}
 
-	private void handleBankSwap(Player player, Packet packet) {
-		int slot = packet.readInt();
-		int to = packet.readInt();
+	private void handleBankSwap(Player player, OptionsStruct payload) {
+		int slot = payload.slot;
+		int to = payload.to;
 
 		if (player.getBank().swap(slot, to)) {
 			ActionSender.updateBankItem(player, slot, player.getBank().get(slot),
@@ -89,33 +90,33 @@ public class InterfaceOptionHandler implements PacketHandler {
 		}
 	}
 
-	private void handleBankInsert(Player player, Packet packet) {
-		int slot = packet.readInt();
-		int to = packet.readInt();
+	private void handleBankInsert(Player player, OptionsStruct payload) {
+		int slot = payload.slot;
+		int to = payload.to;
 		if (player.getBank().insert(slot, to)) {
 			ActionSender.showBank(player);
 		}
 	}
 
-	private void handleInventoryInsert(Player player, Packet packet) {
-		int slot = packet.readInt();
-		int to = packet.readInt();
+	private void handleInventoryInsert(Player player, OptionsStruct payload) {
+		int slot = payload.slot;
+		int to = payload.to;
 
 		player.getCarriedItems().getInventory().swap(slot, to);
 	}
 
-	private void handleInventorySwap(Player player, Packet packet) {
-		int slot = packet.readInt();
-		int to = packet.readInt();
+	private void handleInventorySwap(Player player, OptionsStruct payload) {
+		int slot = payload.slot;
+		int to = payload.to;
 
 		player.getCarriedItems().getInventory().insert(slot, to);
 		ActionSender.sendInventory(player);
 	}
 
-	private void handleIronmanMode(Player player, Packet packet) {
-		int secondary = (int) packet.readByte();
+	private void handleIronmanMode(Player player, OptionsStruct payload) {
+		int secondary = payload.value;
 		if (secondary == 0) {
-			int mode = (int) packet.readByte();
+			int mode = payload.value2;
 			if (mode < 0 || mode > 3) {
 				player.setSuspiciousPlayer(true, "mode < 0 or mode > 3");
 				return;
@@ -196,7 +197,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				ActionSender.sendIronManMode(player);
 			}
 		} else if (secondary == 1) {
-			int setting = (int) packet.readByte();
+			int setting = payload.value2;
 			if (setting < 0 || setting > 1) {
 				player.setSuspiciousPlayer(true, "setting < 0 or setting > 1");
 				return;
@@ -230,10 +231,10 @@ public class InterfaceOptionHandler implements PacketHandler {
 		}
 	}
 
-	private void handleBankPinEntry(Player player, Packet packet) {
-		int action = packet.readByte();
+	private void handleBankPinEntry(Player player, OptionsStruct payload) {
+		int action = payload.value;
 		if (action == 0) {
-			String bankpin = packet.readString();
+			String bankpin = payload.pin;
 			if (bankpin.length() != 4) {
 				return;
 			}
@@ -243,7 +244,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 		}
 	}
 
-	private void handleAuction(Player player, Packet packet) {
+	private void handleAuction(Player player, OptionsStruct payload) {
 		if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 			|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
 			player.message("As an Iron Man, you cannot use the Auction.");
@@ -263,17 +264,17 @@ public class InterfaceOptionHandler implements PacketHandler {
 			return;
 		}
 
-		int type = packet.readByte();
+		int type = payload.value;
 		switch (type) {
 			case 0: /* Buy */
-				auctionBuyItem(player, packet);
+				auctionBuyItem(player, payload);
 				break;
 
 			case 1: /* Create auction */
-				auctionCreate(player, packet);
+				auctionCreate(player, payload);
 				break;
 			case 2:
-				auctionCancel(player, packet);
+				auctionCancel(player, payload);
 				break;
 			case 3:
 				auctionRefresh(player);
@@ -283,16 +284,16 @@ public class InterfaceOptionHandler implements PacketHandler {
 				player.setAttribute("auctionhouse", false);
 				break;
 			case 5:
-				auctionModeratorDelete(player, packet);
+				auctionModeratorDelete(player, payload);
 				break;
 		}
 
 		player.setLastExchangeTime();
 	}
 
-	private void auctionBuyItem(Player player, Packet packet) {
-		int auctionBuyID = packet.readInt();
-		int amountBuy = packet.readInt();
+	private void auctionBuyItem(Player player, OptionsStruct payload) {
+		int auctionBuyID = payload.id;
+		int amountBuy = payload.amount;
 		if (System.currentTimeMillis() - player.getLastExchangeTime() < 3000) {
 			ActionSender.sendBox(player, "@ora@[Auction House - Warning] % @whi@ You are acting too quickly, please wait 3 seconds.", false);
 			return;
@@ -301,10 +302,10 @@ public class InterfaceOptionHandler implements PacketHandler {
 		player.getWorld().getMarket().addBuyAuctionItemTask(player, auctionBuyID, amountBuy);
 	}
 
-	private void auctionCreate(Player player, Packet packet) {
-		int catalogID = packet.readInt();
-		int amount = packet.readInt();
-		int price = packet.readInt();
+	private void auctionCreate(Player player, OptionsStruct payload) {
+		int catalogID = payload.id;
+		int amount = payload.amount;
+		int price = payload.price;
 		if (System.currentTimeMillis() - player.getLastExchangeTime() < 3000) {
 			ActionSender.sendBox(player,"@ora@[Auction House - Warning]@whi@ You are acting too quickly, please wait 3 seconds.", false);
 			return;
@@ -312,8 +313,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 		player.getWorld().getMarket().addNewAuctionItemTask(player, catalogID, amount, price);
 	}
 
-	private void auctionCancel(Player player, Packet packet) {
-		int auctionID = packet.readInt();
+	private void auctionCancel(Player player, OptionsStruct payload) {
+		int auctionID = payload.id;
 		if (System.currentTimeMillis() - player.getLastExchangeTime() < 3000) {
 			ActionSender.sendBox(player,"@ora@[Auction House - Warning]@whi@ You are acting too quickly, please wait 3 seconds.", false);
 			return;
@@ -333,17 +334,17 @@ public class InterfaceOptionHandler implements PacketHandler {
 		ActionSender.sendOpenAuctionHouse(player);
 	}
 
-	private void auctionModeratorDelete(Player player, Packet packet) {
-		int auctionID = packet.readInt();
+	private void auctionModeratorDelete(Player player, OptionsStruct payload) {
+		int auctionID = payload.id;
 		player.getWorld().getMarket().addModeratorDeleteItemTask(player, auctionID);
 	}
 
-	private void handleClan(Player player, Packet packet) {
-		int actionType = packet.readByte();
+	private void handleClan(Player player, OptionsStruct payload) {
+		int actionType = payload.value;
 		switch (actionType) {
 			case 0: // CREATE CLAN
-				String clanName = packet.readString();
-				String clanTag = packet.readString();
+				String clanName = payload.name;
+				String clanTag = payload.tag;
 				if (clanName.length() < 2) {
 					ActionSender.sendBox(player, "Clan name must be at least 2 characters in length", false);
 					return;
@@ -393,7 +394,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				}
 				break;
 			case 2:
-				String playerInvited = packet.readString();
+				String playerInvited = payload.player;
 				Player invited = player.getWorld().getPlayer(DataConversions.usernameToHash(playerInvited));
 						/*if (!player.getClan().isAllowed(1, player)) {
 							player.message("You are not allowed to invite into clan.");
@@ -417,7 +418,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				break;
 			case 5: // KICK
 				if (player.getClan() != null) {
-					String playerToKick = packet.readString();
+					String playerToKick = payload.player;
 					if (!player.getClan().isAllowed(0, player)) {
 						player.message("You are not allowed to kick.");
 						return;
@@ -429,10 +430,10 @@ public class InterfaceOptionHandler implements PacketHandler {
 					player.getClan().removePlayer(playerToKick);
 				}
 				break;
-			case 6: // RANK plaayer
+			case 6: // RANK player
 				if (player.getClan() != null) {
-					String playerRank = packet.readString();
-					int rank = packet.readByte();
+					String playerRank = payload.player;
+					int rank = payload.value2;
 					if (rank >= 3) {
 						rank = 0;
 					}
@@ -449,11 +450,11 @@ public class InterfaceOptionHandler implements PacketHandler {
 				break;
 			case 7: // CLAN SETTINGS
 				if (player.getClan() != null) {
-					int settingPreference = packet.readByte();
+					int settingPreference = payload.value2;
 					if (settingPreference > 3) {
 						return;
 					}
-					int state = packet.readByte();
+					int state = payload.value3;
 					if (state >= 3) {
 						state = 0;
 					}
@@ -491,8 +492,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 		}
 	}
 
-	private void handleParty(Player player, Packet packet) {
-		int actionType2 = packet.readByte();
+	private void handleParty(Player player, OptionsStruct payload) {
+		int actionType2 = payload.value;
 		switch (actionType2) {
 			case 0: // CREATE PARTY
 				if (player.getParty() != null) {
@@ -523,15 +524,15 @@ public class InterfaceOptionHandler implements PacketHandler {
 				}
 				break;
 			case 2:
-				Player invited = player.getWorld().getPlayer(packet.readShort());
+				Player invited = player.getWorld().getPlayer(payload.id);
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
 					player.message("You are an Iron Man. You stand alone.");
 					return;
 				}
 				if (player.getParty() == null) {
-					String partyName = packet.readString();
-					String partyTag = packet.readString();
+					String partyName = payload.name;
+					String partyTag = payload.tag;
 					Party party1 = new Party(player.getWorld());
 					party1.setPartyName(partyName);
 					party1.setPartyTag(partyTag);
@@ -570,7 +571,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				break;
 			case 5: // kick
 				if (player.getParty() != null) {
-					String playerToKick = packet.readString();
+					String playerToKick = payload.player;
 							/*if (!player.getParty().isAllowed(0, player)) {
 								player.message("You are not allowed to kick from this party.");
 								return;
@@ -584,8 +585,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 				break;
 			case 6: // rank
 				if (player.getParty() != null) {
-					String playerRank = packet.readString();
-					int rank = packet.readByte();
+					String playerRank = payload.player;
+					int rank = payload.value2;
 					if (rank >= 3) {
 						rank = 0;
 					}
@@ -602,11 +603,11 @@ public class InterfaceOptionHandler implements PacketHandler {
 				break;
 			case 7: // Party SETTINGS
 				if (player.getParty() != null) {
-					int settingPreference = packet.readByte();
+					int settingPreference = payload.value2;
 					if (settingPreference > 3) {
 						return;
 					}
-					int state = packet.readByte();
+					int state = payload.value3;
 					if (state >= 3) {
 						state = 0;
 					}
@@ -639,7 +640,7 @@ public class InterfaceOptionHandler implements PacketHandler {
 				ActionSender.sendParties(player);
 				break;
 			case 9:
-				String playerInvited2 = packet.readString();
+				String playerInvited2 = payload.player;
 				Player invited2 = player.getWorld().getPlayer(DataConversions.usernameToHash(playerInvited2));
 
 				if(player.getParty() != null){
@@ -688,8 +689,8 @@ public class InterfaceOptionHandler implements PacketHandler {
 							return;
 						}
 					} else {
-						String partyName = packet.readString();
-						String partyTag = packet.readString();
+						String partyName = payload.name;
+						String partyTag = payload.tag;
 						Party party1 = new Party(player.getWorld());
 						party1.setPartyName(partyName);
 						party1.setPartyTag(partyTag);

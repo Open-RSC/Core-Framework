@@ -5,35 +5,30 @@ import com.openrsc.server.model.GlobalMessage;
 import com.openrsc.server.model.PrivateMessage;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
-import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.StringStruct;
 import com.openrsc.server.util.rsc.DataConversions;
 
-public final class FriendHandler implements PacketHandler {
+public final class FriendHandler implements PayloadProcessor<StringStruct, OpcodeIn> {
 
 	private final int MAX_FRIENDS = 100;
 
 	private final int MEMBERS_MAX_FRIENDS = 200;
 
-	public void handlePacket(Packet packet, Player player) {
-		int pID = packet.getID();
+	public void process(StringStruct payload, Player player) throws Exception {
+		OpcodeIn pID = payload.getOpcode();
 
-		String friendName;
-		if (player.isUsingAuthenticClient()) {
-			friendName = packet.readZeroPaddedString();
-		} else {
-			friendName = packet.readString();
-		}
+		String friendName = payload.string;
 		long friend = DataConversions.usernameToHash(friendName);
 
-		int packetOne = OpcodeIn.SOCIAL_ADD_FRIEND.getOpcode();
-		int packetTwo = OpcodeIn.SOCIAL_REMOVE_FRIEND.getOpcode();
-		int packetThree = OpcodeIn.SOCIAL_ADD_IGNORE.getOpcode();
-		int packetFour = OpcodeIn.SOCIAL_REMOVE_IGNORE.getOpcode();
-		int packetFive = OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE.getOpcode();
-		int packetSix = OpcodeIn.SOCIAL_ADD_DELAYED_IGNORE.getOpcode();
+		OpcodeIn packetOne = OpcodeIn.SOCIAL_ADD_FRIEND;
+		OpcodeIn packetTwo = OpcodeIn.SOCIAL_REMOVE_FRIEND;
+		OpcodeIn packetThree = OpcodeIn.SOCIAL_ADD_IGNORE;
+		OpcodeIn packetFour = OpcodeIn.SOCIAL_REMOVE_IGNORE;
+		OpcodeIn packetFive = OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE;
+		OpcodeIn packetSix = OpcodeIn.SOCIAL_ADD_DELAYED_IGNORE;
 
 		Player affectedPlayer = player.getWorld().getPlayer(friend);
 		if (pID == packetOne) { // Add friend
@@ -139,7 +134,7 @@ public final class FriendHandler implements PacketHandler {
 				return;
 			}
 
-			String message = DataConversions.getEncryptedString(packet);
+			String message = payload.string2;
 			if (!player.speakTongues) {
 				message = DataConversions.upperCaseAllFirst(
 					DataConversions.stripBadCharacters(message));
