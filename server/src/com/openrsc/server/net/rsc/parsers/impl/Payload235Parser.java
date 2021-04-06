@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.parsers.impl;
 
+import com.openrsc.server.constants.Constants;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -485,7 +486,7 @@ public class Payload235Parser implements PayloadParser<OpcodeIn> {
 						sp.targetIndex = packet.readShort();
 					}
 				}
-				sp.spellIdx = packet.readShort();
+				sp.spell = Constants.spellToEnum(packet.readShort());
 				result = sp;
 				break;
 

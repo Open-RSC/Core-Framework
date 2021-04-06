@@ -1,5 +1,10 @@
 package com.openrsc.server.net.rsc.parsers.impl;
 
+import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.custom.AuctionOptions;
+import com.openrsc.server.constants.custom.ClanOptions;
+import com.openrsc.server.constants.custom.InterfaceOptions;
+import com.openrsc.server.constants.custom.PartyOptions;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -542,7 +547,7 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 			case CAST_ON_GROUND_ITEM:
 			case CAST_ON_LAND:
 				SpellStruct sp = new SpellStruct();
-				sp.spellIdx = packet.readShort();
+				sp.spell = Constants.spellToEnum(packet.readShort());
 				if (opcode == OpcodeIn.PLAYER_CAST_PVP || opcode == OpcodeIn.CAST_ON_NPC
 					|| opcode == OpcodeIn.CAST_ON_INVENTORY_ITEM) {
 					sp.targetIndex = packet.readShort();
@@ -678,82 +683,86 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 			case INTERFACE_OPTIONS:
 				OptionsStruct os = new OptionsStruct();
 				os.index = packet.readByte();
-				switch (os.index) {
-					case 0:
-					case 1:
+				final InterfaceOptions option = InterfaceOptions.getById(os.index);
+				switch (option) {
+					case SWAP_CERT:
+					case SWAP_NOTE:
 						os.value = packet.readByte();
 						break;
-					case 2:
-					case 3:
-					case 4:
-					case 5:
+					case BANK_SWAP:
+					case BANK_INSERT:
+					case INVENTORY_INSERT:
+					case INVENTORY_SWAP:
 						os.slot = packet.readInt();
 						os.to = packet.readInt();
 						break;
-					case 6:
+					case CANCEL_BATCH:
 						//nothing
 						break;
-					case 7:
+					case IRONMAN_MODE:
 						os.value = packet.readByte();
 						if (os.value == 0 || os.value == 1) {
 							os.value2 = packet.readByte();
 						}
 						break;
-					case 8:
+					case BANK_PIN:
 						os.value = packet.readByte();
 						if (os.value == 0) {
 							os.pin = packet.readString();
 						}
 						break;
-					case 9:
+					case UNUSED:
 						//inexistent
 						break;
-					case 10:
+					case AUCTION:
 						if (player.getConfig().SPAWN_AUCTION_NPCS) {
 							os.value = packet.readByte();
-							switch (os.value) {
-								case 0:
+							final AuctionOptions auctionOption = AuctionOptions.getById((int)os.value);
+							switch (auctionOption) {
+								case BUY:
 									os.id = packet.readInt();
 									os.amount = packet.readInt();
 									break;
-								case 1:
+								case CREATE:
 									os.id = packet.readInt();
 									os.amount = packet.readInt();
 									os.price = packet.readInt();
 									break;
-								case 2:
-								case 5:
+								case ABORT:
+								case DELETE:
 									os.id = packet.readInt();
 									break;
-								case 3:
-								case 4:
+								case REFRESH:
+								case CLOSE:
 									// nothing
 									break;
 							}
 						}
 						break;
-					case 11:
+					case CLAN:
 						if (player.getConfig().WANT_CLANS) {
 							os.value = packet.readByte();
-							switch (os.value) {
-								case 0:
+							final ClanOptions clanOption = ClanOptions.getById((int)os.value);
+							switch (clanOption) {
+								case CREATE:
 									os.name = packet.readString();
 									os.tag = packet.readString();
 									break;
-								case 1:
-								case 3:
-								case 4:
+								case LEAVE:
+								case ACCEPT_INVITE:
+								case DECLINE_INVITE:
+								case SEND_CLAN_INFO:
 									//nothing
 									break;
-								case 2:
-								case 5:
+								case INVITE_PLAYER:
+								case KICK_PLAYER:
 									os.player = packet.readString();
 									break;
-								case 6:
+								case RANK_PLAYER:
 									os.player = packet.readString();
 									os.value2 = packet.readByte();
 									break;
-								case 7:
+								case CLAN_SETTINGS:
 									os.value2 = packet.readByte();
 									if (os.value2 >= 0 && os.value2 <= 3) {
 										os.value3 = packet.readByte();
@@ -762,29 +771,37 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 							}
 						}
 						break;
-					case 12:
+					case PARTY:
 						if (player.getConfig().WANT_PARTIES) {
 							os.value = packet.readByte();
-							switch (os.value) {
-								case 2:
+							final PartyOptions partyOption = PartyOptions.getById((int)os.value);
+							switch (partyOption) {
+								case CREATE_OR_INVITE:
 									os.id = packet.readShort();
 									os.name = packet.readString();
 									os.tag = packet.readString();
 									break;
-								case 5:
+								case INIT:
+								case LEAVE:
+								case ACCEPT_INVITE:
+								case DECLINE_INVITE:
+								case SEND_PARTY_INFO:
+									//nothing
+									break;
+								case KICK_PLAYER:
 									os.player = packet.readString();
 									break;
-								case 6:
+								case RANK_PLAYER:
 									os.player = packet.readString();
 									os.value2 = packet.readByte();
 									break;
-								case 7:
+								case PARTY_SETTINGS:
 									os.value2 = packet.readByte();
 									if (os.value2 >= 0 && os.value2 <= 3) {
 										os.value3 = packet.readByte();
 									}
 									break;
-								case 9:
+								case INVITE_PLAYER_OR_MAKE:
 									os.player = packet.readString();
 									os.name = packet.readString();
 									os.tag = packet.readString();

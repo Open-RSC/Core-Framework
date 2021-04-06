@@ -206,7 +206,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 			switch (opcode) {
 				case CAST_ON_SELF:
-					idx = payload.spellIdx;
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -224,7 +224,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				case PLAYER_CAST_PVP:
 					Player affectedPlayer = player.getWorld().getPlayer(payload.targetIndex);
 
-					idx = payload.spellIdx;
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -249,7 +249,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				case CAST_ON_NPC:
 					Npc affectedNpc = player.getWorld().getNpc(payload.targetIndex);
 
-					idx = payload.spellIdx;
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -279,7 +279,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					int invIndex = payload.targetIndex;
 					Item item = player.getCarriedItems().getInventory().get(invIndex);
 
-					idx = payload.spellIdx;
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -327,7 +327,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					int objectX = payload.targetCoord.getX();
 					int objectY = payload.targetCoord.getY();
 
-					idx = payload.spellIdx;
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -352,7 +352,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					Point location = Point.location(payload.targetCoord.getX(), payload.targetCoord.getY());
 					int itemId = payload.targetIndex;
 
-					idx = payload.spellIdx;
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -369,7 +369,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					break;
 				case CAST_ON_LAND:
 					Point locationLand = Point.location(payload.targetCoord.getX(), payload.targetCoord.getY());
-					idx = payload.spellIdx;
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -387,7 +387,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 		} else {
 			// Inauthentic client conveniently places Spell ID at the front for all Spell related packets.
-			int idx = payload.spellIdx;
+			int idx = Constants.spellMap.get(payload.spell);
 
 			SpellDef spell = spellSanityChecks(idx, player, opcode);
 			if (spell == null) {

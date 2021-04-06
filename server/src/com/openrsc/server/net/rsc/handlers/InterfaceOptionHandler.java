@@ -1,6 +1,10 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.constants.custom.AuctionOptions;
+import com.openrsc.server.constants.custom.ClanOptions;
+import com.openrsc.server.constants.custom.InterfaceOptions;
+import com.openrsc.server.constants.custom.PartyOptions;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
 import com.openrsc.server.content.clan.ClanPlayer;
@@ -32,46 +36,47 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			player.message("You can't do that whilst you are fighting");
 			return;
 		}
-		switch (payload.index) {
-			case 0:
+		final InterfaceOptions option = InterfaceOptions.getById(payload.index);
+		switch (option) {
+			case SWAP_CERT:
 				player.setAttribute("swap_cert", payload.value == 1);
 				break;
-			case 1:
+			case SWAP_NOTE:
 				player.setAttribute("swap_note", payload.value == 1);
 				break;
-			case 2:
+			case BANK_SWAP:
 				handleBankSwap(player, payload);
 				break;
-			case 3:
+			case BANK_INSERT:
 				handleBankInsert(player, payload);
 				break;
-			case 4:
+			case INVENTORY_INSERT:
 				handleInventoryInsert(player, payload);
 				break;
-			case 5:
+			case INVENTORY_SWAP:
 				handleInventorySwap(player, payload);
 				break;
-			case 6:
+			case CANCEL_BATCH:
 				// Cancel Batch
 				if (player.getConfig().BATCH_PROGRESSION) {
 					player.interruptPlugins();
 				}
 				break;
-			case 7:
+			case IRONMAN_MODE:
 				handleIronmanMode(player, payload);
 				break;
-			case 8:
+			case BANK_PIN:
 				handleBankPinEntry(player, payload);
 				break;
-			case 10:
+			case AUCTION:
 				if (!player.getConfig().SPAWN_AUCTION_NPCS) return;
 				handleAuction(player, payload);
 				break;
-			case 11: // Clan Actions
+			case CLAN: // Clan Actions
 				if (!player.getConfig().WANT_CLANS) return;
 				handleClan(player, payload);
 				break;
-			case 12: // Party
+			case PARTY: // Party
 				if (!player.getConfig().WANT_PARTIES) return;
 				handleParty(player, payload);
 				break;
@@ -265,25 +270,26 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 		}
 
 		int type = payload.value;
-		switch (type) {
-			case 0: /* Buy */
+		final AuctionOptions auctionOption = AuctionOptions.getById(type);
+		switch (auctionOption) {
+			case BUY:
 				auctionBuyItem(player, payload);
 				break;
 
-			case 1: /* Create auction */
+			case CREATE:
 				auctionCreate(player, payload);
 				break;
-			case 2:
+			case ABORT:
 				auctionCancel(player, payload);
 				break;
-			case 3:
+			case REFRESH:
 				auctionRefresh(player);
 				break;
-			case 4:
+			case CLOSE:
 				// Close Auction House
 				player.setAttribute("auctionhouse", false);
 				break;
-			case 5:
+			case DELETE:
 				auctionModeratorDelete(player, payload);
 				break;
 		}
@@ -341,8 +347,9 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 
 	private void handleClan(Player player, OptionsStruct payload) {
 		int actionType = payload.value;
-		switch (actionType) {
-			case 0: // CREATE CLAN
+		final ClanOptions clanOption = ClanOptions.getById(actionType);
+		switch (clanOption) {
+			case CREATE:
 				String clanName = payload.name;
 				String clanTag = payload.tag;
 				if (clanName.length() < 2) {
@@ -388,12 +395,12 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				}
 
 				break;
-			case 1:
+			case LEAVE:
 				if (player.getClan() != null) {
 					player.getClan().removePlayer(player.getUsername());
 				}
 				break;
-			case 2:
+			case INVITE_PLAYER:
 				String playerInvited = payload.player;
 				Player invited = player.getWorld().getPlayer(DataConversions.usernameToHash(playerInvited));
 						/*if (!player.getClan().isAllowed(1, player)) {
@@ -406,17 +413,17 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					ActionSender.sendBox(player, "Player is not online or could not be found!", false);
 				}
 				break;
-			case 3:
+			case ACCEPT_INVITE:
 				if (player.getActiveClanInvite() != null) {
 					player.getActiveClanInvite().accept();
 				}
 				break;
-			case 4:
+			case DECLINE_INVITE:
 				if (player.getActiveClanInvite() != null) {
 					player.getActiveClanInvite().decline();
 				}
 				break;
-			case 5: // KICK
+			case KICK_PLAYER:
 				if (player.getClan() != null) {
 					String playerToKick = payload.player;
 					if (!player.getClan().isAllowed(0, player)) {
@@ -430,7 +437,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					player.getClan().removePlayer(playerToKick);
 				}
 				break;
-			case 6: // RANK player
+			case RANK_PLAYER:
 				if (player.getClan() != null) {
 					String playerRank = payload.player;
 					int rank = payload.value2;
@@ -448,7 +455,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					player.getClan().updateRankPlayer(player, playerRank, rank);
 				}
 				break;
-			case 7: // CLAN SETTINGS
+			case CLAN_SETTINGS:
 				if (player.getClan() != null) {
 					int settingPreference = payload.value2;
 					if (settingPreference > 3) {
@@ -483,19 +490,17 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 
 				}
 				break;
-			case 8:
+			case SEND_CLAN_INFO:
 				ActionSender.sendClans(player);
-				break;
-			case 9:
-
 				break;
 		}
 	}
 
 	private void handleParty(Player player, OptionsStruct payload) {
 		int actionType2 = payload.value;
-		switch (actionType2) {
-			case 0: // CREATE PARTY
+		final PartyOptions partyOption = PartyOptions.getById(actionType2);
+		switch (partyOption) {
+			case INIT: // CREATE PARTY
 				if (player.getParty() != null) {
 					ActionSender.sendBox(player, "Leave your current party before joining another", false);
 					return;
@@ -518,12 +523,12 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.message("You have created a party: ");
 
 				break;
-			case 1:
+			case LEAVE:
 				if (player.getParty() != null) {
 					player.getParty().removePlayer(player.getUsername());
 				}
 				break;
-			case 2:
+			case CREATE_OR_INVITE:
 				Player invited = player.getWorld().getPlayer(payload.id);
 				if (player.isIronMan(IronmanMode.Ironman.id()) || player.isIronMan(IronmanMode.Ultimate.id())
 					|| player.isIronMan(IronmanMode.Hardcore.id()) || player.isIronMan(IronmanMode.Transfer.id())) {
@@ -559,17 +564,17 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					return;
 				}
 				break;
-			case 3:
+			case ACCEPT_INVITE:
 				if (player.getActivePartyInvite() != null) {
 					player.getActivePartyInvite().accept();
 				}
 				break;
-			case 4:
+			case DECLINE_INVITE:
 				if (player.getActivePartyInvite() != null) {
 					player.getActivePartyInvite().decline();
 				}
 				break;
-			case 5: // kick
+			case KICK_PLAYER:
 				if (player.getParty() != null) {
 					String playerToKick = payload.player;
 							/*if (!player.getParty().isAllowed(0, player)) {
@@ -583,7 +588,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					player.getParty().removePlayer(playerToKick);
 				}
 				break;
-			case 6: // rank
+			case RANK_PLAYER:
 				if (player.getParty() != null) {
 					String playerRank = payload.player;
 					int rank = payload.value2;
@@ -601,7 +606,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					player.getParty().updateRankPlayer(player, playerRank, rank);
 				}
 				break;
-			case 7: // Party SETTINGS
+			case PARTY_SETTINGS:
 				if (player.getParty() != null) {
 					int settingPreference = payload.value2;
 					if (settingPreference > 3) {
@@ -636,10 +641,10 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 
 				}
 				break;
-			case 8:
+			case SEND_PARTY_INFO:
 				ActionSender.sendParties(player);
 				break;
-			case 9:
+			case INVITE_PLAYER_OR_MAKE:
 				String playerInvited2 = payload.player;
 				Player invited2 = player.getWorld().getPlayer(DataConversions.usernameToHash(playerInvited2));
 

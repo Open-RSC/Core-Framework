@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.parsers.impl;
 
+import com.openrsc.server.constants.Spells;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -349,7 +350,50 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 						sp.targetIndex = packet.readShort();
 					}
 				}
-				sp.spellIdx = packet.readShort();
+				// TODO: with good and evil magic could have been upper 1 byte if good and lower 1 byte if evil
+				int val = packet.readShort();
+				Spells spell = null;
+				if ((val & 0xff00) == 0) {
+					// good magic
+					val = (val >> 8) & 0xff;
+					switch (val) {
+						case 0:
+							spell = Spells.CHILL_BOLT;
+							break;
+						case 1:
+							spell = Spells.BURST_OF_STRENGTH;
+							break;
+						case 2:
+							spell = Spells.CAMOUFLAGE;
+							break;
+						case 3:
+							spell = Spells.ROCK_SKIN;
+							break;
+						case 4:
+							spell = Spells.WIND_BOLT_R;
+							break;
+					}
+				} else {
+					// evil magic
+					switch (val) {
+						case 0:
+							spell = Spells.CONFUSE_R;
+							break;
+						case 1:
+							spell = Spells.THICK_SKIN;
+							break;
+						case 2:
+							spell = Spells.SHOCK_BOLT;
+							break;
+						case 3:
+							spell = Spells.ELEMENTAL_BOLT;
+							break;
+						case 4:
+							spell = Spells.FEAR;
+							break;
+					}
+				}
+				sp.spell = spell;
 				result = sp;
 				break;
 
