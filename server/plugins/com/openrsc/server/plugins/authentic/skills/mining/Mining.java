@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.authentic.skills.mining;
 
-import com.openrsc.server.Server;
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
@@ -14,22 +14,15 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Mining implements OpLocTrigger {
 
-	/*static int[] ids;
-
-	static {
-		ids = new int[]{176, 100, 101, 102, 103, 104, 105, 106, 107, 108,
-			109, 110, 111, 112, 113, 114, 115, 195, 196, 210, 211};
-		Arrays.sort(ids);
-	}*/
-
 	public static int getAxe(Player player) {
-		int lvl = player.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
+		int lvl = player.getSkills().getLevel(Skills.MINING);
 		for (int i = 0; i < Formulae.miningAxeIDs.length; i++) {
 			if (player.getCarriedItems().getEquipment().hasCatalogID(Formulae.miningAxeIDs[i])) {
 				return Formulae.miningAxeIDs[i];
@@ -48,7 +41,7 @@ public final class Mining implements OpLocTrigger {
 		if (object.getID() == 269) {
 			if (command.equalsIgnoreCase("mine")) {
 				if (player.getCarriedItems().hasCatalogID(getAxe(player), Optional.of(false))) {
-					if (getCurrentLevel(player, com.openrsc.server.constants.Skills.MINING) >= 50) {
+					if (getCurrentLevel(player, Skills.MINING) >= 50) {
 						player.message("you manage to dig a way through the rockslide");
 						if (player.getX() <= 425) {
 							player.teleport(428, 438);
@@ -82,7 +75,7 @@ public final class Mining implements OpLocTrigger {
 						player.playerServerMessage(MessageType.QUEST, "You need a pickaxe to mine the rock");
 						return;
 					}
-					if (getCurrentLevel(player, com.openrsc.server.constants.Skills.MINING) < 40) {
+					if (getCurrentLevel(player, Skills.MINING) < 40) {
 						player.playerServerMessage(MessageType.QUEST, "You need a mining level of 40 to mine this crystal out");
 						return;
 					}
@@ -124,7 +117,7 @@ public final class Mining implements OpLocTrigger {
 		final ObjectMiningDef def = player.getWorld().getServer().getEntityHandler().getObjectMiningDef(rock.getID());
 		final int axeId = getAxe(player);
 		int repeat = 1;
-		final int mineLvl = player.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING);
+		final int mineLvl = player.getSkills().getLevel(Skills.MINING);
 		final int mineXP = player.getSkills().getExperience(Skills.MINING);
 		int reqlvl = 1;
 		switch (ItemId.getById(axeId)) {
@@ -149,14 +142,14 @@ public final class Mining implements OpLocTrigger {
 				break;
 		}
 
+		if (axeId < 0 || reqlvl > mineLvl) {
+			mes("You need a pickaxe to mine this rock");
+			delay(3);
+			mes("You do not have a pickaxe which you have the mining level to use");
+			delay(3);
+			return;
+		}
 		if (player.click == 0 && (def == null || (def.getRespawnTime() < 1 && rock.getID() != 496) || (def.getOreId() == 315 && player.getQuestStage(Quests.FAMILY_CREST) < 6))) {
-			if (axeId < 0 || reqlvl > mineLvl) {
-				mes("You need a pickaxe to mine this rock");
-				delay(3);
-				mes("You do not have a pickaxe which you have the mining level to use");
-				delay(3);
-				return;
-			}
 			player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
 			delay(3);
 			player.playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");
@@ -183,13 +176,6 @@ public final class Mining implements OpLocTrigger {
 			}
 			return;
 		}
-		if (axeId < 0 || reqlvl > mineLvl) {
-			mes("You need a pickaxe to mine this rock");
-			delay(3);
-			mes("You do not have a pickaxe which you have the mining level to use");
-			delay(3);
-			return;
-		}
 		if (config().STOP_SKILLING_FATIGUED >= 1
 			&& player.getFatigue() >= player.MAX_FATIGUE) {
 			// authentically on fatigued, shows pickaxe that would have been used
@@ -203,10 +189,10 @@ public final class Mining implements OpLocTrigger {
 		}
 
 		if(config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, com.openrsc.server.constants.Skills.MINING);
+			repeat = Formulae.getRepeatTimes(player, Skills.MINING);
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchMining(player, rock, def, axeId, mineLvl);
 	}
 
@@ -226,7 +212,7 @@ public final class Mining implements OpLocTrigger {
 				return;
 			}
 		}
-		if (getOre(player.getWorld().getServer(), def, player.getSkills().getLevel(com.openrsc.server.constants.Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
+		if (getOre(def, player.getSkills().getLevel(Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
 			if (DataConversions.random(1, 200) <= (player.getCarriedItems().getEquipment().hasEquipped(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
 				player.playSound("foundgem");
 				Item gem = new Item(getGem(), 1);
@@ -234,28 +220,25 @@ public final class Mining implements OpLocTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You just found a" + gem.getDef(player.getWorld()).getName().toLowerCase().replaceAll("uncut", "") + "!");
 				return;
 			} else {
-				//check if there is still ore at the rock
-				GameObject obj = player.getViewArea().getGameObject(rock.getID(), rock.getX(), rock.getY());
-				if (obj == null) {
-					player.playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
+				// Successful mining attempt
+				// It is authentic to allow multiple players to get the rock if they have already started mining it.
+				// However, if there is no ore in the rock, there will be no retry
+				if (SkillCapes.shouldActivate(player, ItemId.MINING_CAPE)) {
+					thinkbubble(new Item(ItemId.MINING_CAPE.id(), 1));
+					give(player, ore.getCatalogId(), 1);
+					player.playerServerMessage(MessageType.QUEST, "You manage to obtain two " + ore.getDef(player.getWorld()).getName().toLowerCase());
+					player.incExp(Skills.MINING, def.getExp() * 2, true);
+					give(player, ore.getCatalogId(), 1);
 				} else {
-					//Successful mining attempt
-					if (SkillCapes.shouldActivate(player, ItemId.MINING_CAPE)) {
-						thinkbubble(new Item(ItemId.MINING_CAPE.id(), 1));
-						give(player, ore.getCatalogId(), 1);
-						player.playerServerMessage(MessageType.QUEST, "You manage to obtain two " + ore.getDef(player.getWorld()).getName().toLowerCase());
-						player.incExp(com.openrsc.server.constants.Skills.MINING, def.getExp() * 2, true);
-						give(player, ore.getCatalogId(), 1);
-					} else {
-						player.getCarriedItems().getInventory().add(ore);
-						player.playerServerMessage(MessageType.QUEST, "You manage to obtain some " + ore.getDef(player.getWorld()).getName().toLowerCase());
-						player.incExp(com.openrsc.server.constants.Skills.MINING, def.getExp(), true);
-					}
+					player.getCarriedItems().getInventory().add(ore);
+					player.playerServerMessage(MessageType.QUEST, "You manage to obtain some " + ore.getDef(player.getWorld()).getName().toLowerCase());
+					player.incExp(Skills.MINING, def.getExp(), true);
 				}
-				if (rock.getID() == 496 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 51)
+				if (rock.getID() == 496 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 51) {
 					player.getCache().set("tutorial", 52);
+				}
 				if (!config().MINING_ROCKS_EXTENDED || DataConversions.random(1, 100) <= def.getDepletion()) {
-					if (obj != null && obj.getID() == rock.getID() && def.getRespawnTime() > 0) {
+					if (def.getRespawnTime() > 0) {
 						GameObject newObject = new GameObject(player.getWorld(), rock.getLocation(), 98, rock.getDirection(), rock.getType());
 						changeloc(rock, def.getRespawnTime() * 1000, newObject.getID());
 					}
@@ -267,7 +250,7 @@ public final class Mining implements OpLocTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You fail to make any real impact on the rock");
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
-				if (!ifbatchcompleted()) {
+				if (!isBatchComplete()) {
 					GameObject checkObj = player.getViewArea().getGameObject(rock.getID(), rock.getX(), rock.getY());
 					if (checkObj == null) {
 						return;
@@ -276,11 +259,18 @@ public final class Mining implements OpLocTrigger {
 			}
 		}
 
+		GameObject obj = player.getViewArea().getGameObject(rock.getID(), rock.getX(), rock.getY());
+		if(obj == null) {
+			// There is no more ore in the rock, end batch
+			stopBatch();
+			return;
+		}
+
 		// Repeat
-		updatebatch();
+		updateBatch();
 		boolean customBatch = config().BATCH_PROGRESSION;
-		if (!ifbatchcompleted()) {
-			if ((customBatch && !ifinterrupted()) || !customBatch) {
+		if (!isBatchComplete()) {
+			if (!customBatch || !ifinterrupted()) {
 				batchMining(player, rock, def, axeId, mineLvl);
 			}
 		}
@@ -307,12 +297,13 @@ public final class Mining implements OpLocTrigger {
 		}
 	}
 
-	private int calcAxeBonus(Server server, int axeId) {
-			//If server doesn't use batching, pickaxe shouldn't improve gathering chance
-			if (!server.getConfig().BATCH_PROGRESSION)
-				return 0;
-			int bonus = 0;
-			switch (ItemId.getById(axeId)) {
+	private int calcAxeBonus(int axeId) {
+		//If server doesn't use batching, pickaxe shouldn't improve gathering chance
+		if (config().BATCH_PROGRESSION) {
+			return 0;
+		}
+		int bonus = 0;
+		switch (ItemId.getById(axeId)) {
 			case BRONZE_PICKAXE:
 				bonus = 0;
 				break;
@@ -331,14 +322,14 @@ public final class Mining implements OpLocTrigger {
 			case RUNE_PICKAXE:
 				bonus = 16;
 				break;
-			}
-			return bonus;
+		}
+		return bonus;
 	}
 
 	/**
 	 * Should we can get an ore from the rock?
 	 */
-	private boolean getOre(Server server, ObjectMiningDef def, int miningLevel, int axeId) {
-		return Formulae.calcGatheringSuccessfulLegacy(def.getReqLevel(), miningLevel, calcAxeBonus(server, axeId));
+	private boolean getOre(ObjectMiningDef def, int miningLevel, int axeId) {
+		return Formulae.calcGatheringSuccessfulLegacy(def.getReqLevel(), miningLevel, calcAxeBonus(axeId));
 	}
 }

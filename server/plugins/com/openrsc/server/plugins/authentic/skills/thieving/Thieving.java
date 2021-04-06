@@ -344,7 +344,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			npc.setBusy(true);
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString);
 	}
 
@@ -417,8 +417,8 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		}
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			if (!player.withinRange(npc, 1)) {
 				player.message("The " + thievedMobString + " has moved.");
 				npc.setBusy(false);
@@ -626,7 +626,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				repeat = Formulae.getRepeatTimes(player, Skills.THIEVING);
 			}
 
-			startbatch(repeat);
+			startBatch(repeat);
 			batchPicklock(player, obj, req, exp, goThrough, requiresLockpick);
 		}
 	}
@@ -660,8 +660,8 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You fail to pick the lock");
 
 			// Repeat on failure
-			updatebatch();
-			if (!ifinterrupted() && !ifbatchcompleted()) {
+			updateBatch();
+			if (!ifinterrupted() && !isBatchComplete()) {
 				delay();
 				batchPicklock(player, obj, req, exp, goThrough, requiresLockpick);
 			}

@@ -466,7 +466,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 
 		int repeat = player.getCarriedItems().getInventory().countId(ItemId.RUNE_STONE.id(), Optional.of(false));
 		if (repeat <= 0) return;
-		startbatch(repeat);
+		startBatch(repeat);
 		batchChisel(player, chisel);
 	}
 
@@ -486,8 +486,8 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		player.incExp(Skills.CRAFTING, 20, true);
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay();
 			batchChisel(player, chisel);
 		}
@@ -496,7 +496,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 	private void imbueTalisman(Player player, Item rune) {
 		int repeat = player.getCarriedItems().getInventory().countId(ItemId.UNCHARGED_TALISMAN.id(), Optional.of(false));
 		if (repeat <= 0) return;
-		startbatch(repeat);
+		startBatch(repeat);
 		batchImbue(player, rune);
 	}
 
@@ -537,8 +537,8 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		player.message("You imbue the uncharged talisman and create a " + imbued.getDef(player.getWorld()).getName());
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay();
 			batchImbue(player, rune);
 		}

@@ -144,7 +144,7 @@ public final class Harvesting implements OpLocTrigger {
 	public void onOpLoc(Player player, final GameObject object, String command) {
 		// Harvest of Xmas Tree
 		if (object.getID() == 1238) {
-			startbatch(10);
+			startBatch(10);
 			handleXmasHarvesting(player, object);
 		} else if (command.equalsIgnoreCase("clip")) {
 			handleClipHarvesting(object, player, player.click);
@@ -180,7 +180,7 @@ public final class Harvesting implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to take from the tree");
-			if (!ifbatchcompleted()) {
+			if (!isBatchComplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (checkObj == null) {
 					return;
@@ -189,8 +189,8 @@ public final class Harvesting implements OpLocTrigger {
 		}
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			handleXmasHarvesting(player, object);
 		}
 	}
@@ -221,7 +221,7 @@ public final class Harvesting implements OpLocTrigger {
 		}
 
 		int repeat = Formulae.getRepeatTimes(player, Skills.HARVESTING);
-		startbatch(repeat);
+		startBatch(repeat);
 		batchClipping(player, object, objName, prodEnum);
 	}
 
@@ -274,7 +274,7 @@ public final class Harvesting implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to clip the plant");
-			if (!ifbatchcompleted()) {
+			if (!isBatchComplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (checkObj == null) {
 					return;
@@ -283,8 +283,8 @@ public final class Harvesting implements OpLocTrigger {
 		}
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			batchClipping(player, object, objName, prodEnum);
 		}
 	}
@@ -300,7 +300,7 @@ public final class Harvesting implements OpLocTrigger {
 		final int toolId = getTool(player, object);
 
 		int repeat = Formulae.getRepeatTimes(player, Skills.HARVESTING);
-		startbatch(repeat);
+		startBatch(repeat);
 		batchHarvest(player, toolId, object, def);
 	}
 
@@ -381,7 +381,7 @@ public final class Harvesting implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to obtain some usable produce");
-			if (!ifbatchcompleted()) {
+			if (!isBatchComplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (checkObj == null) {
 					return;
@@ -390,8 +390,8 @@ public final class Harvesting implements OpLocTrigger {
 		}
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 			batchHarvest(player, toolId, obj, def);
 		}
