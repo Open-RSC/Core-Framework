@@ -140,6 +140,28 @@ public final class Mining implements OpLocTrigger {
 				break;
 		}
 
+		if (player.click == 1) {
+			player.playSound("prospect");
+			player.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
+			delay(3);
+			if (rock.getID() == 496) {
+				// Tutorial Island rock handler
+				mes("This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName(),
+						"Sometimes you won't find the ore but trying again may find it",
+						"If a rock contains a high level ore",
+						"You will not find it until you increase your mining level");
+				if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 49)
+					player.getCache().set("tutorial", 50);
+			} else {
+				if (def == null || def.getRespawnTime() < 1) {
+					player.playerServerMessage(MessageType.QUEST, "You fail to find anything interesting");
+				} else {
+					player.playerServerMessage(MessageType.QUEST, "This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName());
+				}
+			}
+			return;
+		}
+
 		if (axeId < 0 || reqlvl > mineLvl) {
 			mes("You need a pickaxe to mine this rock");
 			delay(3);
@@ -151,27 +173,6 @@ public final class Mining implements OpLocTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
 			delay(3);
 			player.playerServerMessage(MessageType.QUEST, "There is currently no ore available in this rock");
-			return;
-		}
-		if (player.click == 1) {
-			player.playSound("prospect");
-			player.playerServerMessage(MessageType.QUEST, "You examine the rock for ores...");
-			delay(3);
-			if (rock.getID() == 496) {
-				// Tutorial Island rock handler
-				mes("This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName(),
-					"Sometimes you won't find the ore but trying again may find it",
-					"If a rock contains a high level ore",
-					"You will not find it until you increase your mining level");
-				if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 49)
-					player.getCache().set("tutorial", 50);
-			} else {
-				if (def == null || def.getRespawnTime() < 1) {
-					player.playerServerMessage(MessageType.QUEST, "You fail to find anything interesting");
-				} else {
-					player.playerServerMessage(MessageType.QUEST, "This rock contains " + new Item(def.getOreId()).getDef(player.getWorld()).getName());
-				}
-			}
 			return;
 		}
 		if (config().STOP_SKILLING_FATIGUED >= 1
