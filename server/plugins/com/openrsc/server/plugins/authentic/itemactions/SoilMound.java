@@ -31,7 +31,7 @@ public class SoilMound implements UseLocTrigger {
 			repeat = player.getCarriedItems().getInventory().countId(itemID, Optional.of(false));
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchFill(player, item, refilledID);
 	}
 
@@ -48,8 +48,8 @@ public class SoilMound implements UseLocTrigger {
 
 		delay();
 
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			batchFill(player, bucket, filledId);
 		}
 	}

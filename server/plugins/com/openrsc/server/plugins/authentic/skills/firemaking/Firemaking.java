@@ -74,7 +74,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchFiremaking(player, gItem, def);
 
 	}
@@ -114,9 +114,9 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			}
 
 			// Repeat on success
-			updatebatchlocation(player.getLocation());
-			updatebatch();
-			if (!ifinterrupted() && !ifbatchcompleted()) {
+			updateBatchLocation(player.getLocation());
+			updateBatch();
+			if (!ifinterrupted() && !isBatchComplete()) {
 
 				// Drop new log
 				Item log = player.getCarriedItems().getInventory().get(
@@ -136,9 +136,9 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
 
 			// Repeat on fail
-			updatebatchlocation(player.getLocation());
-			updatebatch();
-			if (!ifinterrupted() && !ifbatchcompleted()) {
+			updateBatchLocation(player.getLocation());
+			updateBatch();
+			if (!ifinterrupted() && !isBatchComplete()) {
 				delay(2);
 				batchFiremaking(player, gItem, def);
 			}
@@ -168,7 +168,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchCustomFiremaking(player, gItem, def);
 	}
 
@@ -207,9 +207,9 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			}
 
 			// Repeat if success
-			updatebatchlocation(player.getLocation());
-			updatebatch();
-			if (!ifinterrupted() && !ifbatchcompleted()) {
+			updateBatchLocation(player.getLocation());
+			updateBatch();
+			if (!ifinterrupted() && !isBatchComplete()) {
 				// Drop new log
 				Item log = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(gItem.getID(), Optional.of(false))
@@ -229,9 +229,9 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
 
-			updatebatchlocation(player.getLocation());
-			updatebatch();
-			if (!ifinterrupted() && !ifbatchcompleted()) {
+			updateBatchLocation(player.getLocation());
+			updateBatch();
+			if (!ifinterrupted() && !isBatchComplete()) {
 				delay(2);
 				batchCustomFiremaking(player, gItem, def);
 			}

@@ -31,7 +31,7 @@ public class PickFromTree implements OpLocTrigger {
 				repeat = getTotalPicks(obj.getID());
 			}
 
-			startbatch(repeat);
+			startBatch(repeat);
 			batchTreePick(player, obj);
 		}
 
@@ -61,8 +61,8 @@ public class PickFromTree implements OpLocTrigger {
 
 		delay();
 
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			batchTreePick(player, tree);
 		}
 	}

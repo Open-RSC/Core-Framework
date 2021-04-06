@@ -71,7 +71,7 @@ public class Woodcutting implements OpLocTrigger {
 			repeat = Formulae.getRepeatTimes(player, Skills.WOODCUT);
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchWoodcutting(player, object, def, axeId);
 	}
 
@@ -120,7 +120,7 @@ public class Woodcutting implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You slip and fail to hit the tree");
-			if (!ifbatchcompleted()) {
+			if (!isBatchComplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (checkObj == null) {
 					return;
@@ -129,8 +129,8 @@ public class Woodcutting implements OpLocTrigger {
 		}
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay();
 			batchWoodcutting(player, object, def, axeId);
 		}

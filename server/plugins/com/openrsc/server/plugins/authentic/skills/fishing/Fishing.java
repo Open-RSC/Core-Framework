@@ -90,7 +90,7 @@ public class Fishing implements OpLocTrigger {
 			repeat = Formulae.getRepeatTimes(player, Skills.FISHING);
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchFishing(player, netId, def, object, command);
 	}
 
@@ -258,7 +258,7 @@ public class Fishing implements OpLocTrigger {
 
 			if (fishLst.size() == 0) {
 				player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
-				if (!ifbatchcompleted()) {
+				if (!isBatchComplete()) {
 					GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 					if (checkObj == null) {
 						return;
@@ -317,8 +317,8 @@ public class Fishing implements OpLocTrigger {
 		}
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay();
 			batchFishing(player, netId, def, object, command);
 		}

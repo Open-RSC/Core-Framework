@@ -354,7 +354,7 @@ public class Crafting implements UseInvTrigger,
 			}
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchGoldJewelry(player, item, def, gem, gems, type, reply);
 	}
 
@@ -429,8 +429,8 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, def.getExp(), true);
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay();
 			batchGoldJewelry(player, item, def, gem, gems, type, reply);
 		}
@@ -464,7 +464,7 @@ public class Crafting implements UseInvTrigger,
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchSilverJewelry(player, item, results, type, reply);
 	}
 
@@ -498,8 +498,8 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, 200, true);
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay();
 			batchSilverJewelry(player, item, results, type, reply);
 		}
@@ -545,7 +545,7 @@ public class Crafting implements UseInvTrigger,
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchPotteryMoulding(player, item, reqLvl, result, msg, exp);
 	}
 
@@ -569,8 +569,8 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, exp, true);
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay();
 			batchPotteryMoulding(player, item, reqLvl, result, msg, exp);
 		}
@@ -612,7 +612,7 @@ public class Crafting implements UseInvTrigger,
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchPotteryFiring(player, item, reqLvl, result, msg, exp);
 	}
 
@@ -651,8 +651,8 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay();
 			batchPotteryFiring(player, item, reqLvl, result, msg, exp);
 		}
@@ -666,7 +666,7 @@ public class Crafting implements UseInvTrigger,
 			repeat = Math.min(player.getCarriedItems().getInventory().countId(otherItem, Optional.of(false)), repeat);
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchGlassMaking(player, item, otherItem);
 	}
 
@@ -692,8 +692,8 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, 80, true);
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay();
 			batchGlassMaking(player, item, otherItem);
 		}
@@ -748,7 +748,7 @@ public class Crafting implements UseInvTrigger,
 			repeat = player.getCarriedItems().getInventory().countId(glass.getCatalogId(), Optional.of(false));
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchGlassBlowing(player, glass, result, reqLvl, exp, resultGen);
 	}
 
@@ -804,8 +804,8 @@ public class Crafting implements UseInvTrigger,
 		player.incExp(Skills.CRAFTING, exp, true);
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay(2);
 			batchGlassBlowing(player, glass, result, reqLvl, exp, resultGen);
 		}
@@ -835,7 +835,7 @@ public class Crafting implements UseInvTrigger,
 			repeat = player.getCarriedItems().getInventory().countId(gem.getCatalogId(), Optional.of(false));
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchGemCutting(player, gem, gemDef);
 	}
 
@@ -887,8 +887,8 @@ public class Crafting implements UseInvTrigger,
 			player.incExp(Skills.CRAFTING, gemDef.getExp(), true);
 		}
 
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay(2);
 			batchGemCutting(player, gem, gemDef);
 		}
@@ -991,7 +991,7 @@ public class Crafting implements UseInvTrigger,
 			repeat = player.getCarriedItems().getInventory().countId(leather.getCatalogId(), Optional.of(false));
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchLeather(player, leather, result, reqLvl, exp);
 	}
 
@@ -1030,8 +1030,8 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay();
 			batchLeather(player, leather, result, reqLvl, exp);
 		}
@@ -1075,7 +1075,7 @@ public class Crafting implements UseInvTrigger,
 			repeat = Math.min(woolAmount, amuletAmount);
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchString(player, item, woolBall, newID);
 	}
 
@@ -1095,8 +1095,8 @@ public class Crafting implements UseInvTrigger,
 		delay();
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay();
 			batchString(player, item, woolBall, newID);
 		}
@@ -1109,7 +1109,7 @@ public class Crafting implements UseInvTrigger,
 				player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false)));
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchWaterClay(player, water, item);
 	}
 
@@ -1133,8 +1133,8 @@ public class Crafting implements UseInvTrigger,
 		player.message("You now have some soft workable clay");
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay();
 			batchWaterClay(player, water, item);
 		}

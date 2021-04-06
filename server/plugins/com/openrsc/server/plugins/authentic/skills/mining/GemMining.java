@@ -101,7 +101,7 @@ public class GemMining implements OpLocTrigger {
 			repeat = Formulae.getRepeatTimes(player, Skills.MINING);
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchMining(player, obj, axeId, mineLvl);
 	}
 
@@ -141,7 +141,7 @@ public class GemMining implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
-			if (!ifbatchcompleted()) {
+			if (!isBatchComplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 				if (checkObj == null) {
 					return;
@@ -150,9 +150,9 @@ public class GemMining implements OpLocTrigger {
 		}
 
 		// Repeat
-		updatebatch();
+		updateBatch();
 		boolean customBatch = config().BATCH_PROGRESSION;
-		if (!ifbatchcompleted()) {
+		if (!isBatchComplete()) {
 			if ((customBatch && !ifinterrupted()) || !customBatch) {
 				batchMining(player, obj, axeId, mineLvl);
 			}

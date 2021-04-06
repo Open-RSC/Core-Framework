@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins;
 
+import com.google.common.collect.Collections2;
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.rsc.PluginTask;
@@ -22,8 +23,12 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 /** Functions.java
  *
@@ -804,60 +809,46 @@ public class Functions {
 	 * Starts a batch and, if enabled, shows a batch bar to the client
 	 * @param totalBatch The total repetitions of a task
 	 */
-	public static void startbatch(int totalBatch) {
+	public static void startBatch(int totalBatch) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
-		if (scriptContext == null) return;
+		if (scriptContext == null) {
+			return;
+		}
 		Player player = scriptContext.getContextPlayer();
-		if (player == null) return;
+		if (player == null) {
+			return;
+		}
 		Batch batch = new Batch(player);
 		batch.initialize(totalBatch);
 		batch.start();
-
 		scriptContext.setBatch(batch);
 	}
 
-	/**
-	 * Increments the current batch progress by 1
-	 * @return Returns false if batch is completed
-	 */
-	public static void updatebatchlocation(Point location) {
-		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
-		if (scriptContext == null) return;
-		Batch batch = scriptContext.getBatch();
-		if (batch == null) return;
-
-		batch.setLocation(location);
+	private static Batch sniffBatchFromCurrentThread() {
+		ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		return scriptContext.getBatch();
 	}
 
-	public static void updatebatch() {
-		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
-		if (scriptContext == null) return;
-		Player player = scriptContext.getContextPlayer();
-		if (player == null) return;
-		Batch batch = scriptContext.getBatch();
-		if (batch == null) return;
-
-		batch.update();
+	public static void stopBatch() {
+		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(Batch::stop);
 	}
 
-	public static boolean ifbatchcompleted() {
-		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
-		if (scriptContext == null) return true;
-		Player player = scriptContext.getContextPlayer();
-		if (player == null) return true;
-		Batch batch = scriptContext.getBatch();
-		if (batch == null) return true;
-		return batch.isCompleted();
+	public static void updateBatchLocation(Point location) {
+		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(batch -> batch.setLocation(location));
 	}
 
-	public static boolean ifbeginningbatch() {
-		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
-		if (scriptContext == null) return false;
-		Player player = scriptContext.getContextPlayer();
-		if (player == null) return false;
-		Batch batch = scriptContext.getBatch();
-		if (batch == null) return false;
-		return batch.getBeginningBatch();
+	public static void updateBatch() {
+		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(Batch::update);
+	}
+
+	public static boolean isBatchComplete() {
+		Batch batch = sniffBatchFromCurrentThread();
+		return batch == null || batch.isComplete();
+	}
+
+	public static boolean isFirstInBatch() {
+		Batch batch = sniffBatchFromCurrentThread();
+		return batch != null && batch.isFirstInBatch();
 	}
 
 	/**
@@ -870,7 +861,7 @@ public class Functions {
 
 	public static boolean inArray(Object o, Object... oArray) {
 		for (Object object : oArray) {
-			if (o.equals(object) || o == object) {
+			if (o == object || o.equals(object)) {
 				return true;
 			}
 		}

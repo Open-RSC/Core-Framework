@@ -43,7 +43,7 @@ public class CustomInvUseOnItem implements UseInvTrigger {
 					player.getCarriedItems().getInventory().countId(item2.getCatalogId()));
 			}
 
-			startbatch(repeat);
+			startBatch(repeat);
 			batchSweeten(player, item1, item2, ItemId.SWEETENED_CHUNKS.id(), "You sweeten the fruit chunks");
 
 			return;
@@ -61,7 +61,7 @@ public class CustomInvUseOnItem implements UseInvTrigger {
 					player.getCarriedItems().getInventory().countId(item2.getCatalogId()));
 			}
 
-			startbatch(repeat);
+			startBatch(repeat);
 			batchSweeten(player, item1, item2, ItemId.SWEETENED_SLICES.id(), "You sweeten the fruit slices");
 
 			return;
@@ -82,8 +82,8 @@ public class CustomInvUseOnItem implements UseInvTrigger {
 		give(player, sweetenedId, 1);
 		delay();
 
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			batchSweeten(player, item1, item2, sweetenedId, processString);
 		}
 	}

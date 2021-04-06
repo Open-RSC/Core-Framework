@@ -35,7 +35,7 @@ public class Smelting implements UseLocTrigger {
 						repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
 					}
 
-					startbatch(repeat);
+					startBatch(repeat);
 					handleCannonBallSmelting(player);
 				} else { // No mould
 					player.message("you heat the steel bar");
@@ -139,8 +139,8 @@ public class Smelting implements UseLocTrigger {
 		player.message("it's very heavy");
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			player.message("you repeat the process");
 			delay();
 			handleCannonBallSmelting(player);
@@ -239,7 +239,7 @@ public class Smelting implements UseLocTrigger {
 			}
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchSmelt(player, item, smelt);
 	}
 
@@ -364,8 +364,8 @@ public class Smelting implements UseLocTrigger {
 			}
 
 			// Repeat
-			updatebatch();
-			if (!ifinterrupted() && !ifbatchcompleted()) {
+			updateBatch();
+			if (!ifinterrupted() && !isBatchComplete()) {
 				if (item.getCatalogId() == Smelt.IRON_ORE.getID()
 					&& getCurrentLevel(player, Skills.SMITHING) >= 30
 					&& ci.getInventory().countId(Smelt.COAL.getID()) >= 2) {

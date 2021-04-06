@@ -98,7 +98,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			repeat = player.getCarriedItems().getInventory().countId(herb.getCatalogId());
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchIdentify(player, herb, herbDef);
 	}
 
@@ -130,8 +130,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(2);
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			batchIdentify(player, herb, herbDef);
 		}
 	}
@@ -426,7 +426,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			repeat = Math.min(player.getCarriedItems().getInventory().countId(vialID, Optional.of(false)),
 				player.getCarriedItems().getInventory().countId(herbID, Optional.of(false)));
 		}
-		startbatch(repeat);
+		startBatch(repeat);
 		batchPotionMaking(player, herb, herbDef, vial);
 	}
 
@@ -459,8 +459,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(2);
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			batchPotionMaking(player, herb, herbDef, vial);
 		}
 	}
@@ -500,7 +500,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				player.getCarriedItems().getInventory().countId(unfinishedID));
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchPotionSecondary(player, unfinished, second, def, bubbleItem);
 	}
 
@@ -543,8 +543,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(2);
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			batchPotionSecondary(player, unfinished, second, def, bubbleItem);
 		}
 	}
@@ -616,7 +616,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 				player.getCarriedItems().getInventory().countId(unfinishedPotId));
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchCustomHerbSecond(player, unfinishedPotId, secondaryId, resultId, xp, requiredCount);
 	}
 
@@ -651,8 +651,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		delay(2);
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			batchCustomHerbSecond(player, unfinishedPotId, secondaryId, resultId, xp, requiredSecondaries);
 		}
 	}
@@ -762,7 +762,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId());
 		}
 
-		startbatch(repeat);
+		startBatch(repeat);
 		batchGrind(player, item, newID);
 	}
 
@@ -791,8 +791,8 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 		player.getCarriedItems().getInventory().add(new Item(newID, DataConversions.random(min, max)));
 
 		// Repeat
-		updatebatch();
-		if (!ifinterrupted() && !ifbatchcompleted()) {
+		updateBatch();
+		if (!ifinterrupted() && !isBatchComplete()) {
 			delay(2);
 			batchGrind(player, item, newID);
 		}
