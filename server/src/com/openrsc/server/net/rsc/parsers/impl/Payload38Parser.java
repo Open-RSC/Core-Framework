@@ -351,12 +351,12 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 					}
 				}
 				// TODO: with good and evil magic could have been upper 1 byte if good and lower 1 byte if evil
-				int val = packet.readShort();
+				// however no documentation exists yet
 				Spells spell = null;
-				if ((val & 0xff00) == 0) {
-					// good magic
-					val = (val >> 8) & 0xff;
-					switch (val) {
+				int goodSpell = packet.readByte();
+				int evilSpell = packet.readByte();
+				if (goodSpell == 0) {
+					switch (goodSpell) {
 						case 0:
 							spell = Spells.CHILL_BOLT;
 							break;
@@ -374,8 +374,7 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 							break;
 					}
 				} else {
-					// evil magic
-					switch (val) {
+					switch (evilSpell) {
 						case 0:
 							spell = Spells.CONFUSE_R;
 							break;
@@ -473,7 +472,7 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 			case WALK_TO_POINT:
 			case WALK_TO_ENTITY:
 				WalkStruct w = new WalkStruct();
-				w.firstStep = new Point(packet.readAnotherShort(), packet.readAnotherShort());
+				w.firstStep = new Point(packet.readShort(), packet.readShort());
 
 				int numWaypoints = packet.getReadableBytes() / 2;
 				for (int stepCount = 0; stepCount < numWaypoints; stepCount++) {
@@ -498,7 +497,7 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 	}
 
 	public static boolean isPossiblyValid(int opcode, int length, int protocolVer) {
-		if (protocolVer > 38) {
+		if (protocolVer != 38) {
 			return true;
 		}
 		int payloadLength = length - 1; // subtract off opcode length.

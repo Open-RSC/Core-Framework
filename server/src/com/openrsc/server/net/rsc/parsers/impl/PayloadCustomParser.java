@@ -840,7 +840,7 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 			case WALK_TO_POINT:
 			case WALK_TO_ENTITY:
 				WalkStruct w = new WalkStruct();
-				w.firstStep = new Point(packet.readAnotherShort(), packet.readAnotherShort());
+				w.firstStep = new Point(packet.readShort(), packet.readShort());
 
 				int numWaypoints = packet.getReadableBytes() / 2;
 				for (int stepCount = 0; stepCount < numWaypoints; stepCount++) {
