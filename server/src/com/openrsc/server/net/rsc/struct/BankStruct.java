@@ -7,5 +7,6 @@ public class BankStruct extends AbstractStruct<OpcodeIn> {
 	public int catalogID;
 	public int amount;
 	public boolean noted;
+	public int magicNumber;
 	public int presetSlot;
 }

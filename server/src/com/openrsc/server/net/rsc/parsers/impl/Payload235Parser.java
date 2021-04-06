@@ -336,45 +336,52 @@ public class Payload235Parser implements PayloadParser<OpcodeIn> {
 				break;
 
 			case CHAT_MESSAGE:
+				ChatStruct cs = new ChatStruct();
+				cs.message = packet.readString();
+				result = cs;
+				break;
 			case COMMAND:
+				CommandStruct co = new CommandStruct();
+				co.command = packet.readString();
+				result = co;
+				break;
 			case SOCIAL_ADD_FRIEND:
 			case SOCIAL_REMOVE_FRIEND:
 			case SOCIAL_ADD_IGNORE:
 			case SOCIAL_REMOVE_IGNORE:
 			case SOCIAL_SEND_PRIVATE_MESSAGE:
-				StringStruct ss = new StringStruct();
-				if (opcode == OpcodeIn.CHAT_MESSAGE) {
-					ss.string = DataConversions.getEncryptedString(packet);
-				} else {
-					ss.string = packet.readZeroPaddedString();
-					if (opcode == OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE) {
-						ss.string2 = DataConversions.getEncryptedString(packet);
-					}
+				FriendStruct fs = new FriendStruct();
+				fs.player = packet.readZeroPaddedString();
+				if (opcode == OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE) {
+					fs.message = DataConversions.getEncryptedString(packet);
 				}
-				result = ss;
+				result = fs;
 				break;
 
 			case BANK_CLOSE:
+				BankStruct b = new BankStruct();
+				result = b;
+				break;
 			case BANK_WITHDRAW:
 			case BANK_DEPOSIT:
-				BankStruct b = new BankStruct();
-				if (opcode == OpcodeIn.BANK_WITHDRAW || opcode == OpcodeIn.BANK_DEPOSIT) {
-					b.catalogID = packet.readShort();
-					b.amount = packet.readInt();
-				}
-				result = b;
+				BankStruct b1 = new BankStruct();
+				b1.catalogID = packet.readShort();
+				b1.amount = packet.readInt();
+				b1.magicNumber = packet.readInt();
+				result = b1;
 				break;
 
 			case SHOP_CLOSE:
+				ShopStruct s = new ShopStruct();
+				result = s;
+				break;
 			case SHOP_BUY:
 			case SHOP_SELL:
-				ShopStruct s = new ShopStruct();
-				if (opcode == OpcodeIn.SHOP_BUY || opcode == OpcodeIn.SHOP_SELL) {
-					s.catalogID = packet.readShort();
-					s.stockAmount = packet.readUnsignedShort();
-					s.amount = packet.readUnsignedShort();
-				}
-				result = s;
+				ShopStruct s1 = new ShopStruct();
+				s1.catalogID = packet.readShort();
+				s1.stockAmount = packet.readUnsignedShort();
+				s1.amount = packet.readUnsignedShort();
+				result = s1;
 				break;
 
 			case ITEM_UNEQUIP_FROM_INVENTORY:
@@ -502,9 +509,10 @@ public class Payload235Parser implements PayloadParser<OpcodeIn> {
 						pd.duelNoted[slot] = false;
 					}
 				} else if (opcode == OpcodeIn.DUEL_FIRST_SETTINGS_CHANGED) {
-					for (int i = 0; i < 4; i++) {
-						pd.newSettings[i] = packet.readByte();
-					}
+					pd.disallowRetreat = packet.readByte();
+					pd.disallowMagic = packet.readByte();
+					pd.disallowPrayer = packet.readByte();
+					pd.disallowWeapons = packet.readByte();
 				}
 				result = pd;
 				break;
@@ -540,16 +548,24 @@ public class Payload235Parser implements PayloadParser<OpcodeIn> {
 
 			case GAME_SETTINGS_CHANGED:
 				GameSettingStruct gs = new GameSettingStruct();
-				gs.index = packet.readByte();
-				gs.value = packet.readByte();
+				int setting = packet.readByte();
+				int value = packet.readByte();
+				if (setting == 0) {
+					gs.cameraModeAuto = value;
+				} else if (setting == 2) {
+					gs.mouseButtonOne = value;
+				} else if (setting == 3) {
+					gs.soundDisabled = value;
+				}
 				result = gs;
 				break;
 
 			case PRIVACY_SETTINGS_CHANGED:
 				PrivacySettingsStruct pr = new PrivacySettingsStruct();
-				for (int i = 0; i < 4; i++) {
-					pr.newSettings[i] = packet.readByte();
-				}
+				pr.blockChat = packet.readByte();
+				pr.blockPrivate = packet.readByte();
+				pr.blockTrade = packet.readByte();
+				pr.blockDuel = packet.readByte();
 				result = pr;
 				break;
 

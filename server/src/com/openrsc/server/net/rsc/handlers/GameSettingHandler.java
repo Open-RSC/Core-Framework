@@ -16,7 +16,7 @@ public final class GameSettingHandler implements PayloadProcessor<GameSettingStr
 			return;
 		}
 
-		final byte value = payload.value;
+		final byte value = (byte) payload.value;
 
 		if (idx >= 4) {
 			if (idx == 4) {
@@ -88,11 +88,13 @@ public final class GameSettingHandler implements PayloadProcessor<GameSettingStr
 		}
 
 		if (player.isUsingAuthenticClient()) {
-			// setting 1 is unused :-)
+			// setting 1 is unused yet, refers to player killer
 			if (idx == 0) { // Camera Mode Auto
-				player.getSettings().setGameSetting(idx, value == 1);
-			} else { // 2: Number of Mouse Buttons & 3: Sound Enabled
-				player.getSettings().setGameSetting(idx - 1, value == 1);
+				player.getSettings().setGameSetting(0, payload.cameraModeAuto == 1);
+			} else if (idx == 2) { // 2: Number of Mouse Buttons
+				player.getSettings().setGameSetting(1, payload.mouseButtonOne == 1);
+			} else if (idx == 3) { // 3: Sound Enabled
+				player.getSettings().setGameSetting(2, payload.soundDisabled == 1);
 			}
 		} else {
 			player.getSettings().setGameSetting(idx, value == 1);

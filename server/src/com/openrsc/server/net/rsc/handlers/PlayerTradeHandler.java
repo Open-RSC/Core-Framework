@@ -44,10 +44,6 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 
 		player.interruptPlugins();
 
-		/*OpcodeInn opcode = OpcodeInn.getFromList(packet.getID(),
-			OpcodeInn.PLAYER_INIT_TRADE_REQUEST, OpcodeInn.PLAYER_ACCEPTED_INIT_TRADE_REQUEST,
-			OpcodeInn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER, OpcodeInn.PLAYER_DECLINED_TRADE,
-			OpcodeInn.PLAYER_ACCEPTED_TRADE);*/
 		OpcodeIn opcode = payload.getOpcode();
 
 		if (opcode == null)

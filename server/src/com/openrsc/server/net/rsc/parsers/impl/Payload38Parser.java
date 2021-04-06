@@ -171,7 +171,7 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 				opcode = OpcodeIn.CHANGE_PASS;
 				break;
 			case 213:
-				opcode = OpcodeIn.SEND_CHANGE_PLAYER_KILLER;
+				opcode = OpcodeIn.GAME_SETTINGS_CHANGED;
 				break;
 			case 17:
 				opcode = OpcodeIn.SEND_DEBUG_INFO;
@@ -209,8 +209,8 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 				pl.topColour = packet.readByte();
 				pl.trouserColour = packet.readByte();
 				pl.skinColour = packet.readByte();
-				pl.playerMode1 = packet.readByte(); // player class
-				pl.playerMode2 = packet.readByte(); // pk mode
+				pl.chosenClass = packet.readByte();
+				pl.pkMode = packet.readByte();
 				result = pl;
 				break;
 
@@ -221,34 +221,35 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 				break;
 
 			case CHAT_MESSAGE:
+				ChatStruct cs = new ChatStruct();
+				cs.message = packet.readString();
+				result = cs;
+				break;
 			case SOCIAL_ADD_FRIEND:
 			case SOCIAL_REMOVE_FRIEND:
 			case SOCIAL_ADD_IGNORE:
 			case SOCIAL_REMOVE_IGNORE:
 			case SOCIAL_SEND_PRIVATE_MESSAGE:
-				StringStruct ss = new StringStruct();
-				if (opcode == OpcodeIn.CHAT_MESSAGE) {
-					ss.string = packet.readString();
-				} else {
-					ss.string = DataConversions.hashToUsername(packet.readLong());
-					if (opcode == OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE) {
-						int len = packet.readByte();
-						ss.string2 = packet.readString();
-					}
+				FriendStruct fs = new FriendStruct();
+				fs.player = DataConversions.hashToUsername(packet.readLong());
+				if (opcode == OpcodeIn.SOCIAL_SEND_PRIVATE_MESSAGE) {
+					int len = packet.readByte();
+					fs.message = packet.readString(len);
 				}
-				result = ss;
+				result = fs;
 				break;
 
 			case SHOP_CLOSE:
+				ShopStruct s = new ShopStruct();
+				result = s;
+				break;
 			case SHOP_BUY:
 			case SHOP_SELL:
-				ShopStruct s = new ShopStruct();
-				if (opcode == OpcodeIn.SHOP_BUY || opcode == OpcodeIn.SHOP_SELL) {
-					s.catalogID = packet.readShort();
-					int price = packet.readUnsignedShort(); // price of item
-					s.amount = 1;
-				}
-				result = s;
+				ShopStruct s1 = new ShopStruct();
+				s1.catalogID = packet.readShort();
+				s1.price = packet.readUnsignedShort();
+				s1.amount = 1;
+				result = s1;
 				break;
 
 			case ITEM_UNEQUIP_FROM_INVENTORY:
@@ -387,25 +388,33 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 				result = kp;
 				break;
 
-			case SEND_CHANGE_PLAYER_KILLER:
-				PlayerKillerStruct pk = new PlayerKillerStruct();
-				packet.readByte(); // first byte is "1"
-				pk.changedToKiller = packet.readByte();
-				result = pk;
+			case GAME_SETTINGS_CHANGED:
+				GameSettingStruct gs = new GameSettingStruct();
+				int setting = packet.readByte();
+				int value = packet.readByte();
+				if (setting == 0) {
+					gs.cameraModeAuto = value;
+				} else if (setting == 1) {
+					gs.playerKiller = value;
+				} else if (setting == 2) {
+					gs.mouseButtonOne = value;
+				}
+				result = gs;
 				break;
 
 			case PRIVACY_SETTINGS_CHANGED:
 				PrivacySettingsStruct pr = new PrivacySettingsStruct();
-				packet.readByte(); // todo: 5 privacy settings (since includes hide online status)
-				for (int i = 0; i < 4; i++) {
-					pr.newSettings[i] = packet.readByte();
-				}
+				pr.hideStatus = packet.readByte();
+				pr.blockChat = packet.readByte();
+				pr.blockPrivate = packet.readByte();
+				pr.blockTrade = packet.readByte();
+				packet.readByte(); // todo:? always sent 0 here
 				result = pr;
 				break;
 
 			case CHANGE_PASS:
 				SecuritySettingsStruct sec = new SecuritySettingsStruct();
-				String newPassword = packet.readString(); // only newPassword sent
+				String newPassword = packet.readString(20); // only newPassword sent
 				sec.passwords = new String[]{ "", newPassword };
 
 				result = sec;
@@ -430,9 +439,9 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 				break;
 
 			case SEND_DEBUG_INFO:
-				StringStruct ss2 = new StringStruct();
-				ss2.string = packet.readString();
-				result = ss2;
+				DebugInfoStruct ds = new DebugInfoStruct();
+				ds.infoString = packet.readString();
+				result = ds;
 				break;
 		}
 

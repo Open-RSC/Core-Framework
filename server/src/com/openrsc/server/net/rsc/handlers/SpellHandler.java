@@ -193,11 +193,6 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			return;
 		}
 
-		/*OpcodeInn opcode = OpcodeInn.getFromList(packet.getID(),
-			CAST_ON_SELF, OpcodeInn.PLAYER_CAST_PVP,
-			OpcodeInn.CAST_ON_NPC, OpcodeInn.CAST_ON_INVENTORY_ITEM,
-			OpcodeInn.CAST_ON_BOUNDARY, OpcodeInn.CAST_ON_SCENERY,
-			OpcodeInn.CAST_ON_GROUND_ITEM, OpcodeInn.CAST_ON_LAND);*/
 		OpcodeIn opcode = payload.getOpcode();
 
 		if (opcode == null)

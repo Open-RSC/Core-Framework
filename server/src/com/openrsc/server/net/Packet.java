@@ -182,6 +182,19 @@ public class Packet {
 	}
 
 	/**
+	 * Reads a RuneScape string.
+	 *
+	 * @return The string.
+	 */
+	public String readString(int len) {
+		StringBuilder bldr = new StringBuilder();
+		int length = len;
+		while (payload.readableBytes() > 0 && length-- > 0)
+			bldr.append((char) payload.readByte());
+		return bldr.toString();
+	}
+
+	/**
 	 * Reads a series of bytes.
 	 *
 	 * @param is     The tarread byte array.

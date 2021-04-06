@@ -38,8 +38,8 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 		int topColour = payload.topColour;
 		int trouserColour = payload.trouserColour;
 		int skinColour = payload.skinColour;
-		int playerMode1 = payload.playerMode1; // custom protocol & retro rsc
-		int playerMode2 = payload.playerMode2; // custom protocol & retro rsc
+		int ironmanMode = payload.ironmanMode; // custom protocol
+		int isOneXp = payload.isOneXp; // custom protocol
 
 		int headSprite = headType + 1;
 		int bodySprite = bodyType + 1;
@@ -89,8 +89,8 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 
 		if (player.getConfig().CHARACTER_CREATION_MODE == 1) {
 			if (player.getLastLogin() == 0L) {
-				player.setIronMan(playerMode1);
-				player.setOneXp(playerMode2 == 1);
+				player.setIronMan(ironmanMode);
+				player.setOneXp(isOneXp == 1);
 			}
 		}
 	}

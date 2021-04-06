@@ -12,6 +12,8 @@ public class PlayerAppearanceStruct extends AbstractStruct<OpcodeIn> {
 	public int topColour;
 	public int trouserColour;
 	public int skinColour;
-	public int playerMode1 = -1;
-	public int playerMode2 = -1;
+	public int chosenClass;
+	public int pkMode;
+	public int ironmanMode = -1;
+	public int isOneXp = -1;
 }

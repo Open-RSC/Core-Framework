@@ -8,19 +8,19 @@ import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.StringStruct;
+import com.openrsc.server.net.rsc.struct.FriendStruct;
 import com.openrsc.server.util.rsc.DataConversions;
 
-public final class FriendHandler implements PayloadProcessor<StringStruct, OpcodeIn> {
+public final class FriendHandler implements PayloadProcessor<FriendStruct, OpcodeIn> {
 
 	private final int MAX_FRIENDS = 100;
 
 	private final int MEMBERS_MAX_FRIENDS = 200;
 
-	public void process(StringStruct payload, Player player) throws Exception {
+	public void process(FriendStruct payload, Player player) throws Exception {
 		OpcodeIn pID = payload.getOpcode();
 
-		String friendName = payload.string;
+		String friendName = payload.player;
 		long friend = DataConversions.usernameToHash(friendName);
 
 		OpcodeIn packetOne = OpcodeIn.SOCIAL_ADD_FRIEND;
@@ -134,7 +134,7 @@ public final class FriendHandler implements PayloadProcessor<StringStruct, Opcod
 				return;
 			}
 
-			String message = payload.string2;
+			String message = payload.message;
 			if (!player.speakTongues) {
 				message = DataConversions.upperCaseAllFirst(
 					DataConversions.stripBadCharacters(message));

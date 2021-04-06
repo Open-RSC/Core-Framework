@@ -129,6 +129,7 @@ public class PayloadProcessorManager {
 		bind(OpcodeIn.ON_BLACK_HOLE, BlackHoleHandler.class);
 
 		bind(OpcodeIn.COMBAT_STYLE_CHANGED, StyleHandler.class);
+		bind(OpcodeIn.SEND_DEBUG_INFO, ClientDebugHandler.class);
 	}
 
 	private static void bind(OpcodeIn opcode, Class<?> clazz) {

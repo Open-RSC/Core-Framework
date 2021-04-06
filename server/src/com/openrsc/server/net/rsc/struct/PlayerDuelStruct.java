@@ -9,6 +9,9 @@ public class PlayerDuelStruct extends AbstractStruct<OpcodeIn> {
 	public int[] duelCatalogIDs;
 	public int[] duelAmounts;
 	public boolean[] duelNoted;
-	public byte[] newSettings = new byte[4];
+	public int disallowRetreat;
+	public int disallowMagic;
+	public int disallowPrayer;
+	public int disallowWeapons;
 
 }

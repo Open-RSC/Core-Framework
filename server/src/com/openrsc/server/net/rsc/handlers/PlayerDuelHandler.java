@@ -64,10 +64,6 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 			return;
 		}
 
-		/*OpcodeInn opcode = OpcodeInn.getFromList(packet.getID(),
-			OpcodeInn.DUEL_DECLINED, OpcodeInn.DUEL_OFFER_ITEM,
-			OpcodeInn.DUEL_FIRST_ACCEPTED, OpcodeInn.DUEL_SECOND_ACCEPTED,
-			OpcodeInn.PLAYER_DUEL, OpcodeInn.DUEL_FIRST_SETTINGS_CHANGED);*/
 		OpcodeIn opcode = payload.getOpcode();
 
 		if (opcode == null)
@@ -386,8 +382,9 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 				affectedPlayer.getDuel().setDuelAccepted(false);
 
 				// Read each setting and set them accordingly.
+				int[] settings = new int[] { payload.disallowRetreat, payload.disallowMagic, payload.disallowPrayer, payload.disallowWeapons };
 				for (int i = 0; i < 4; i++) {
-					boolean b = payload.newSettings[i] == 1;
+					boolean b = (byte)settings[i] == 1;
 					player.getDuel().setDuelSetting(i, b);
 					affectedPlayer.getDuel().setDuelSetting(i, b);
 				}

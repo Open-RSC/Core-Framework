@@ -6,12 +6,12 @@ import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.StringStruct;
+import com.openrsc.server.net.rsc.struct.ChatStruct;
 import com.openrsc.server.util.rsc.DataConversions;
 
-public final class ChatHandler implements PayloadProcessor<StringStruct, OpcodeIn> {
+public final class ChatHandler implements PayloadProcessor<ChatStruct, OpcodeIn> {
 
-	public void process(StringStruct payload, Player sender) throws Exception {
+	public void process(ChatStruct payload, Player sender) throws Exception {
 		if (sender.isMuted()) {
 			if (sender.getMuteNotify()) {
 				//sender.message(sender.getConfig().MESSAGE_PREFIX + "You are muted " + (sender.getMuteExpires() == -1 ? "@red@permanently" : "for @cya@" + sender.getMinutesMuteLeft() + "@whi@ minutes."));
@@ -27,7 +27,7 @@ public final class ChatHandler implements PayloadProcessor<StringStruct, OpcodeI
 			sender.message("Once you finish the tutorial, typing here sends messages to nearby players");
 		}
 
-		String message = payload.string;
+		String message = payload.message;
 		if (!sender.speakTongues) {
 			message = DataConversions.upperCaseAllFirst(
 				DataConversions.stripBadCharacters(message));

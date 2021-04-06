@@ -114,5 +114,4 @@ public enum OpcodeIn {
 
 	SEND_DEBUG_INFO, // part of rsc era protocol
 	KNOWN_PLAYERS, // part of rsc era protocol
-	SEND_CHANGE_PLAYER_KILLER, // retro rsc opcode
 }
