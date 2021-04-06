@@ -1,6 +1,5 @@
 package com.openrsc.server.plugins.authentic.skills.mining;
 
-import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
@@ -14,7 +13,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -250,7 +248,7 @@ public final class Mining implements OpLocTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You fail to make any real impact on the rock");
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
-				if (!isBatchComplete()) {
+				if (!isbatchcomplete()) {
 					GameObject checkObj = player.getViewArea().getGameObject(rock.getID(), rock.getX(), rock.getY());
 					if (checkObj == null) {
 						return;
@@ -262,14 +260,14 @@ public final class Mining implements OpLocTrigger {
 		GameObject obj = player.getViewArea().getGameObject(rock.getID(), rock.getX(), rock.getY());
 		if(obj == null) {
 			// There is no more ore in the rock, end batch
-			stopBatch();
+			stopbatch();
 			return;
 		}
 
 		// Repeat
 		updateBatch();
 		boolean customBatch = config().BATCH_PROGRESSION;
-		if (!isBatchComplete()) {
+		if (!isbatchcomplete()) {
 			if (!customBatch || !ifinterrupted()) {
 				batchMining(player, rock, def, axeId, mineLvl);
 			}
@@ -299,7 +297,7 @@ public final class Mining implements OpLocTrigger {
 
 	private int calcAxeBonus(int axeId) {
 		//If server doesn't use batching, pickaxe shouldn't improve gathering chance
-		if (config().BATCH_PROGRESSION) {
+		if (!config().BATCH_PROGRESSION) {
 			return 0;
 		}
 		int bonus = 0;

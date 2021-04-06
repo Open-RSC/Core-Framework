@@ -170,7 +170,7 @@ public class GrapeEmpowerment implements UseInvTrigger {
 		delay();
 
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchPower(player, grapes, poweredGrapesId, processString);
 		}
 	}

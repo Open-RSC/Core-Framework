@@ -418,7 +418,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			if (!player.withinRange(npc, 1)) {
 				player.message("The " + thievedMobString + " has moved.");
 				npc.setBusy(false);
@@ -661,7 +661,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 			// Repeat on failure
 			updateBatch();
-			if (!ifinterrupted() && !isBatchComplete()) {
+			if (!ifinterrupted() && !isbatchcomplete()) {
 				delay();
 				batchPicklock(player, obj, req, exp, goThrough, requiresLockpick);
 			}

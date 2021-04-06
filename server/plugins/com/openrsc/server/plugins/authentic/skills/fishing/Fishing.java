@@ -258,7 +258,7 @@ public class Fishing implements OpLocTrigger {
 
 			if (fishLst.size() == 0) {
 				player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
-				if (!isBatchComplete()) {
+				if (!isbatchcomplete()) {
 					GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 					if (checkObj == null) {
 						return;
@@ -318,7 +318,7 @@ public class Fishing implements OpLocTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchFishing(player, netId, def, object, command);
 		}

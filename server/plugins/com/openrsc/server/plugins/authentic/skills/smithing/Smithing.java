@@ -269,7 +269,7 @@ public class Smithing implements UseLocTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchSmithing(player, item, def);
 		}
 	}

@@ -140,7 +140,7 @@ public class Smelting implements UseLocTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			player.message("you repeat the process");
 			delay();
 			handleCannonBallSmelting(player);
@@ -365,7 +365,7 @@ public class Smelting implements UseLocTrigger {
 
 			// Repeat
 			updateBatch();
-			if (!ifinterrupted() && !isBatchComplete()) {
+			if (!ifinterrupted() && !isbatchcomplete()) {
 				if (item.getCatalogId() == Smelt.IRON_ORE.getID()
 					&& getCurrentLevel(player, Skills.SMITHING) >= 30
 					&& ci.getInventory().countId(Smelt.COAL.getID()) >= 2) {

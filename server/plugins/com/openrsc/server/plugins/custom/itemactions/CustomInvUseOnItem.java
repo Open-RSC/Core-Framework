@@ -83,7 +83,7 @@ public class CustomInvUseOnItem implements UseInvTrigger {
 		delay();
 
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchSweeten(player, item1, item2, sweetenedId, processString);
 		}
 	}

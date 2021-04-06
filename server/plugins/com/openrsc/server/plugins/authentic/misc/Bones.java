@@ -51,7 +51,7 @@ public class Bones implements OpInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			buryBones(player, item);
 		}
 	}

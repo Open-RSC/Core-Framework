@@ -66,7 +66,7 @@ public class Refill implements UseLocTrigger {
 		delay();
 
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchRefill(player, item, refilledId, fillString);
 		}
 	}

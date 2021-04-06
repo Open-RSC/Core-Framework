@@ -487,7 +487,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchChisel(player, chisel);
 		}
@@ -538,7 +538,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchImbue(player, rune);
 		}

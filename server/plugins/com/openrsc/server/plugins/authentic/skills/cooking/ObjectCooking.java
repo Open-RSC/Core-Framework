@@ -216,7 +216,7 @@ public class ObjectCooking implements UseLocTrigger {
 
 			// Repeat
 			updateBatch();
-			if (!ifinterrupted() && !isBatchComplete()) {
+			if (!ifinterrupted() && !isbatchcomplete()) {
 				delay();
 				batchCooking(player, item, timeToCook, cookingDef, gameObject);
 			}
@@ -272,7 +272,7 @@ public class ObjectCooking implements UseLocTrigger {
 		// TODO: Add back when `mes` is changed to not use a timer (if it ever is).
 		// delay();
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchInedibleCooking(player, itemID, product, hasBubble, messages);
 		}
 	}

@@ -87,7 +87,7 @@ public class SpinningWheel implements UseLocTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchSpin(player, item, resultString, resultCatalogID, requiredLevel, experience);
 		}

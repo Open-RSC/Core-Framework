@@ -49,7 +49,7 @@ public class RawRuneStone implements OpLocTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchRuneStone(player);
 		}
 	}

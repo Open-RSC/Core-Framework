@@ -143,7 +143,7 @@ public class DragonstoneAmulet implements OpInvTrigger, UseLocTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchAmuletCharge(player, item);
 		}
 	}

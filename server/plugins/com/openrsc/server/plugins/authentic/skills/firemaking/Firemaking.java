@@ -114,9 +114,9 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			}
 
 			// Repeat on success
-			updateBatchLocation(player.getLocation());
+			updatebatchlocation(player.getLocation());
 			updateBatch();
-			if (!ifinterrupted() && !isBatchComplete()) {
+			if (!ifinterrupted() && !isbatchcomplete()) {
 
 				// Drop new log
 				Item log = player.getCarriedItems().getInventory().get(
@@ -136,9 +136,9 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
 
 			// Repeat on fail
-			updateBatchLocation(player.getLocation());
+			updatebatchlocation(player.getLocation());
 			updateBatch();
-			if (!ifinterrupted() && !isBatchComplete()) {
+			if (!ifinterrupted() && !isbatchcomplete()) {
 				delay(2);
 				batchFiremaking(player, gItem, def);
 			}
@@ -207,9 +207,9 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			}
 
 			// Repeat if success
-			updateBatchLocation(player.getLocation());
+			updatebatchlocation(player.getLocation());
 			updateBatch();
-			if (!ifinterrupted() && !isBatchComplete()) {
+			if (!ifinterrupted() && !isbatchcomplete()) {
 				// Drop new log
 				Item log = player.getCarriedItems().getInventory().get(
 					player.getCarriedItems().getInventory().getLastIndexById(gItem.getID(), Optional.of(false))
@@ -229,9 +229,9 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
 
-			updateBatchLocation(player.getLocation());
+			updatebatchlocation(player.getLocation());
 			updateBatch();
-			if (!ifinterrupted() && !isBatchComplete()) {
+			if (!ifinterrupted() && !isbatchcomplete()) {
 				delay(2);
 				batchCustomFiremaking(player, gItem, def);
 			}

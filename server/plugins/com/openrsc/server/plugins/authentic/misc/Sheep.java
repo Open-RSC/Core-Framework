@@ -45,7 +45,7 @@ public class Sheep implements UseNpcTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchShear(player, item);
 		}
 	}

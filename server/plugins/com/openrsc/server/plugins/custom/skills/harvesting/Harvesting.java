@@ -180,7 +180,7 @@ public final class Harvesting implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to take from the tree");
-			if (!isBatchComplete()) {
+			if (!isbatchcomplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (checkObj == null) {
 					return;
@@ -190,7 +190,7 @@ public final class Harvesting implements OpLocTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			handleXmasHarvesting(player, object);
 		}
 	}
@@ -274,7 +274,7 @@ public final class Harvesting implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to clip the plant");
-			if (!isBatchComplete()) {
+			if (!isbatchcomplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (checkObj == null) {
 					return;
@@ -284,7 +284,7 @@ public final class Harvesting implements OpLocTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchClipping(player, object, objName, prodEnum);
 		}
 	}
@@ -381,7 +381,7 @@ public final class Harvesting implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to obtain some usable produce");
-			if (!isBatchComplete()) {
+			if (!isbatchcomplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (checkObj == null) {
 					return;
@@ -391,7 +391,7 @@ public final class Harvesting implements OpLocTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 			batchHarvest(player, toolId, obj, def);
 		}

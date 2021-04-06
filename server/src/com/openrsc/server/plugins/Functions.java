@@ -826,14 +826,18 @@ public class Functions {
 
 	private static Batch sniffBatchFromCurrentThread() {
 		ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
+		Player player = scriptContext.getContextPlayer();
+		if (player == null) {
+			return null;
+		}
 		return scriptContext.getBatch();
 	}
 
-	public static void stopBatch() {
+	public static void stopbatch() {
 		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(Batch::stop);
 	}
 
-	public static void updateBatchLocation(Point location) {
+	public static void updatebatchlocation(Point location) {
 		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(batch -> batch.setLocation(location));
 	}
 
@@ -841,12 +845,12 @@ public class Functions {
 		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(Batch::update);
 	}
 
-	public static boolean isBatchComplete() {
+	public static boolean isbatchcomplete() {
 		Batch batch = sniffBatchFromCurrentThread();
 		return batch == null || batch.isComplete();
 	}
 
-	public static boolean isFirstInBatch() {
+	public static boolean isfirstinbatch() {
 		Batch batch = sniffBatchFromCurrentThread();
 		return batch != null && batch.isFirstInBatch();
 	}

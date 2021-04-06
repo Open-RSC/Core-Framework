@@ -49,7 +49,7 @@ public class SoilMound implements UseLocTrigger {
 		delay();
 
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchFill(player, bucket, filledId);
 		}
 	}

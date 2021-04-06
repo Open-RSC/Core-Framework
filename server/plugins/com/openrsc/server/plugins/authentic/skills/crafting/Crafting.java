@@ -430,7 +430,7 @@ public class Crafting implements UseInvTrigger,
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchGoldJewelry(player, item, def, gem, gems, type, reply);
 		}
@@ -499,7 +499,7 @@ public class Crafting implements UseInvTrigger,
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchSilverJewelry(player, item, results, type, reply);
 		}
@@ -570,7 +570,7 @@ public class Crafting implements UseInvTrigger,
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchPotteryMoulding(player, item, reqLvl, result, msg, exp);
 		}
@@ -652,7 +652,7 @@ public class Crafting implements UseInvTrigger,
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchPotteryFiring(player, item, reqLvl, result, msg, exp);
 		}
@@ -693,7 +693,7 @@ public class Crafting implements UseInvTrigger,
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchGlassMaking(player, item, otherItem);
 		}
@@ -805,7 +805,7 @@ public class Crafting implements UseInvTrigger,
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay(2);
 			batchGlassBlowing(player, glass, result, reqLvl, exp, resultGen);
 		}
@@ -888,7 +888,7 @@ public class Crafting implements UseInvTrigger,
 		}
 
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay(2);
 			batchGemCutting(player, gem, gemDef);
 		}
@@ -1031,7 +1031,7 @@ public class Crafting implements UseInvTrigger,
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchLeather(player, leather, result, reqLvl, exp);
 		}
@@ -1096,7 +1096,7 @@ public class Crafting implements UseInvTrigger,
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchString(player, item, woolBall, newID);
 		}
@@ -1134,7 +1134,7 @@ public class Crafting implements UseInvTrigger,
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchWaterClay(player, water, item);
 		}

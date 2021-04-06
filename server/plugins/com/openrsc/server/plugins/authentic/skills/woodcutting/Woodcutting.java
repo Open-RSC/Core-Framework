@@ -120,7 +120,7 @@ public class Woodcutting implements OpLocTrigger {
 			}
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You slip and fail to hit the tree");
-			if (!isBatchComplete()) {
+			if (!isbatchcomplete()) {
 				GameObject checkObj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				if (checkObj == null) {
 					return;
@@ -130,7 +130,7 @@ public class Woodcutting implements OpLocTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchWoodcutting(player, object, def, axeId);
 		}

@@ -131,7 +131,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchIdentify(player, herb, herbDef);
 		}
 	}
@@ -460,7 +460,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchPotionMaking(player, herb, herbDef, vial);
 		}
 	}
@@ -544,7 +544,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchPotionSecondary(player, unfinished, second, def, bubbleItem);
 		}
 	}
@@ -652,7 +652,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchCustomHerbSecond(player, unfinishedPotId, secondaryId, resultId, xp, requiredSecondaries);
 		}
 	}
@@ -792,7 +792,7 @@ public class Herblaw implements OpInvTrigger, UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay(2);
 			batchGrind(player, item, newID);
 		}

@@ -62,7 +62,7 @@ public class PickFromTree implements OpLocTrigger {
 		delay();
 
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchTreePick(player, tree);
 		}
 	}

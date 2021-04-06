@@ -183,7 +183,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchGoldCrafting(player, item, def, gem);
 		}
@@ -253,7 +253,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchSilverCrafting(player, item, resultId);
 		}

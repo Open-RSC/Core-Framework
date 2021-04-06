@@ -220,7 +220,7 @@ public class Fletching implements UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchFeathers(player, feathers, attachment, resultID, experience);
 		}
 	}
@@ -295,7 +295,7 @@ public class Fletching implements UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchArrowheads(player, headlessArrows, arrowHeads, headDef);
 		}
 	}
@@ -347,7 +347,7 @@ public class Fletching implements UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay(2);
 			batchStringing(player, bow, bowString, stringDef);
 		}
@@ -435,7 +435,7 @@ public class Fletching implements UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay(2);
 			batchLogCutting(player, log, id, reqLvl, exp, cutMessage);
 		}
@@ -503,7 +503,7 @@ public class Fletching implements UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchPearlCutting(player, pearl, amount);
 		}
@@ -568,7 +568,7 @@ public class Fletching implements UseInvTrigger {
 
 		// Repeat
 		updateBatch();
-		if (!ifinterrupted() && !isBatchComplete()) {
+		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchBolts(player, bolts, tips);
 		}
 	}
