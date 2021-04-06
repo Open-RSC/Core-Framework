@@ -130,6 +130,8 @@ public class PayloadProcessorManager {
 
 		bind(OpcodeIn.COMBAT_STYLE_CHANGED, StyleHandler.class);
 		bind(OpcodeIn.SEND_DEBUG_INFO, ClientDebugHandler.class);
+
+		bind(OpcodeIn.KNOWN_PLAYERS, KnownPlayersHandler.class); //TODO: class logic needs to be implemented
 	}
 
 	private static void bind(OpcodeIn opcode, Class<?> clazz) {

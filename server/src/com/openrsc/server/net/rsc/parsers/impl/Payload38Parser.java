@@ -498,6 +498,187 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 	}
 
 	public static boolean isPossiblyValid(int opcode, int length, int protocolVer) {
-		return true;
+		if (protocolVer > 38) {
+			return true;
+		}
+		int payloadLength = length - 1; // subtract off opcode length.
+
+		switch (opcode) {
+			// HEARTBEAT
+			case 5:
+				return payloadLength == 0;
+			// WALK_TO_ENTITY
+			case 215:
+				return payloadLength >= 4;
+			// WALK_TO_POINT
+			case 255:
+				return payloadLength >= 4;
+			// CONFIRM_LOGOUT
+			case 1:
+				return payloadLength == 0;
+			// COMBAT_STYLE_CHANGE
+			case 231:
+				return payloadLength == 1;
+			// QUESTION_DIALOG_ANSWER
+			case 237:
+				return payloadLength == 1;
+
+			// PLAYER_APPEARANCE_CHANGE
+			case 236:
+				return payloadLength == 10;
+			// SOCIAL_ADD_IGNORE
+			case 29:
+				return payloadLength == 8;
+			// SOCIAL_ADD_FRIEND
+			case 26:
+				return payloadLength == 8;
+			// SOCIAL_SEND_PRIVATE_MESSAGE
+			case 28:
+				return payloadLength >= 9;
+			// SOCIAL_REMOVE_FRIEND
+			case 27:
+				return payloadLength == 8;
+			// SOCIAL_REMOVE_IGNORE
+			case 30:
+				return payloadLength == 8;
+
+			// INTERACT_WITH_BOUNDARY
+			case 238:
+				return payloadLength == 5;
+			// INTERACT_WITH_BOUNDARY2
+			case 229:
+				return payloadLength == 5;
+			// CAST_ON_BOUNDARY
+			case 223:
+				return payloadLength == 7;
+			// USE_WITH_BOUNDARY
+			case 239:
+				return payloadLength == 7;
+
+			// NPC_TALK_TO
+			case 245:
+				return payloadLength == 2;
+			// NPC_ATTACK
+			case 244:
+				return payloadLength == 2;
+			// CAST_ON_NPC
+			case 225:
+				return payloadLength == 4;
+			// NPC_USE_ITEM
+			case 243:
+				return payloadLength == 4;
+
+			// PLAYER_CAST_PVP
+			case 226:
+				return payloadLength == 4;
+			// PLAYER_USE_ITEM
+			case 219:
+				return payloadLength == 4;
+			// PLAYER_ATTACK
+			case 228:
+				return payloadLength == 2;
+			// PLAYER_INIT_TRADE_REQUEST
+			case 235:
+				return payloadLength == 2;
+			// PLAYER_FOLLOW
+			case 214:
+				return payloadLength == 2;
+
+			// CAST_ON_GROUND_ITEM
+			case 224:
+				return payloadLength == 8;
+			// GROUND_ITEM_USE_ITEM
+			case 250:
+				return payloadLength == 8;
+			// GROUND_ITEM_TAKE
+			case 252:
+				return payloadLength == 6;
+
+			// CAST_ON_INVENTORY_ITEM
+			case 220:
+				return payloadLength == 4;
+			// ITEM_USE_ITEM
+			case 240:
+				return payloadLength == 4;
+			// ITEM_UNEQUIP_FROM_INVENTORY
+			case 248:
+				return payloadLength == 2;
+			// ITEM_EQUIP_FROM_INVENTORY
+			case 249:
+				return payloadLength == 2;
+			// ITEM_COMMAND
+			case 246:
+				return payloadLength == 2;
+			// ITEM_DROP
+			case 251:
+				return payloadLength == 2;
+
+			// CAST_ON_SELF
+			case 227:
+				return payloadLength == 2;
+			// CAST_ON_LAND
+			case 221:
+				return payloadLength == 6;
+
+			// OBJECT_COMMAND
+			case 242:
+				return payloadLength == 4;
+			// OBJECT_COMMAND2
+			case 230:
+				return payloadLength == 4;
+			// CAST_ON_SCENERY
+			case 222:
+				return payloadLength == 6;
+			// USE_ITEM_ON_SCENERY
+			case 241:
+				return payloadLength == 6;
+
+			// SHOP_CLOSE
+			case 218:
+				return payloadLength == 0;
+			// SHOP_BUY
+			case 217:
+				return payloadLength == 4;
+			// SHOP_SELL
+			case 216:
+				return payloadLength == 4;
+
+			// PLAYER_DECLINED_TRADE
+			case 233:
+				return payloadLength == 0;
+			// PLAYER_ADDED_ITEMS_TO_TRADE_OFFER
+			case 234:
+				return payloadLength >= 1;
+			// PLAYER_ACCEPTED_TRADE
+			case 232:
+				return payloadLength == 1;
+
+			// GAME_SETTINGS_CHANGED
+			case 213:
+				return payloadLength == 2;
+			// CHAT_MESSAGE
+			case 3:
+				return payloadLength >= 0;
+			// PRIVACY_SETTINGS_CHANGED
+			case 31:
+				return payloadLength == 5;
+
+			// CHANGE_PASS
+			case 25:
+				return payloadLength == 20;
+
+			// KNOWN_PLAYERS
+			case 254:
+				return payloadLength >= 2;
+
+			// SEND_DEBUG_INFO
+			case 17:
+				return payloadLength > 0;
+
+			// Unknown OPCODE
+			default:
+				System.out.println(String.format("Received inauthentic opcode %d from authentic claiming client", opcode));
+				return false;
+		}
 	}
 }
