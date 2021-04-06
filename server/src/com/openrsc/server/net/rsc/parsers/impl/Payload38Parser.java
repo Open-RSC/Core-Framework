@@ -350,13 +350,13 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 						sp.targetIndex = packet.readShort();
 					}
 				}
-				// TODO: with good and evil magic could have been upper 1 byte if good and lower 1 byte if evil
-				// however no documentation exists yet
+				// reconstructed, since merged spellbook was 2 byte, likely split spellbook thought was
+				// upper byte: 0 - good magic book, 1 - evil magic book, and lower byte: spell index inside
 				Spells spell = null;
-				int goodSpell = packet.readByte();
-				int evilSpell = packet.readByte();
-				if (goodSpell == 0) {
-					switch (goodSpell) {
+				boolean isEvilMagic = packet.readByte() == 1;
+				int spellIndex = packet.readByte(); // spell inside the respective good/evil magic book
+				if (!isEvilMagic) {
+					switch (spellIndex) {
 						case 0:
 							spell = Spells.CHILL_BOLT;
 							break;
@@ -374,7 +374,7 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 							break;
 					}
 				} else {
-					switch (evilSpell) {
+					switch (spellIndex) {
 						case 0:
 							spell = Spells.CONFUSE_R;
 							break;
