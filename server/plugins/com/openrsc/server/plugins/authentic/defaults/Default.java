@@ -1,6 +1,8 @@
 package com.openrsc.server.plugins.authentic.defaults;
 
+import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SpellDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -180,8 +182,12 @@ public class Default implements DefaultHandler,
 			removingThisIteration = item.getAmount();
 			player.getCarriedItems().getEquipment().remove(item, removingThisIteration);
 			ActionSender.sendEquipmentStats(player);
-			if (item.getDef(player.getWorld()).getWieldPosition() < 12) {
-				player.updateWornItems(item.getDef(player.getWorld()).getWieldPosition(), player.getSettings().getAppearance().getSprite(item.getDef(player.getWorld()).getWieldPosition()));
+			final ItemDefinition itemDef = item.getDef(player.getWorld());
+			final AppearanceId appearance = AppearanceId.getById(itemDef.getAppearanceId());
+			if (itemDef.getWieldPosition() < 12 ||
+				(itemDef.getWieldPosition() == AppearanceId.SLOT_MORPHING_RING && appearance.id() != AppearanceId.NOTHING.id())) {
+				player.updateWornItems(itemDef.getWieldPosition(),
+					player.getSettings().getAppearance().getSprite(itemDef.getWieldPosition()));
 			}
 			amountToDrop = 0;
 		}

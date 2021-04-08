@@ -22,6 +22,8 @@ class AppearanceSlots {
 	static final int BOOTS = 9;
 	static final int AMULET = 10;
 	static final int CAPE = 11;
+	static final int ARROW = 12;
+	static final int MORPHING_RING = 13;
 }
 
 public enum AppearanceId {
@@ -185,7 +187,7 @@ public enum AppearanceId {
 	FIREBIRD(157, NPC),
 	UNUSED_PLATE_MAIL_TOP(158, BODY), // NO ITEM (COLOUR_BETWEEN_MITHRIL_&_RUNE)
 	SHADOW_WARRIOR_SKIRT(159, LEGS), // TODO: not sure this is actually shadow warrior
-	LIGHT_BROWN_WOLF(160, NPC), // Probably prototype hellhound?
+	GUARD_DOG(160, NPC),
 	ICE_SPIDER(161, NPC),
 	DRAGON_BATTLEAXE(162, WEAPON),
 	DRAGON_SWORD(163, WEAPON),
@@ -257,9 +259,8 @@ public enum AppearanceId {
 	SCYTHE(229, WEAPON), // End of authentic animation sprites
 	BUNNY(473, NPC),
 	DUCK(474, NPC),
-	BUNNY_MORPH(475, NPC),
-	EGG_MORPH(476, NPC),
-	NOT_MORPHED(-1, NPC);
+	BUNNY_MORPH(475, MORPHING_RING),
+	EGG_MORPH(476, MORPHING_RING);
 
 	private int appearanceId;
 	private int wieldPosition;
@@ -297,6 +298,17 @@ public enum AppearanceId {
 		return wieldPosition;
 	}
 
+	public static int maximumAnimationSprite(int clientVersion) {
+		switch (clientVersion) {
+			case 38:
+				return SCORPION.id();
+			case 235:
+				return SCYTHE.id();
+			default:
+				return Integer.MAX_VALUE;
+		}
+	}
+
 	public static final int SLOT_NPC = -2;
 	public static final int SLOT_ANY = -1;
 	public static final int SLOT_HEAD = 0;
@@ -311,4 +323,6 @@ public enum AppearanceId {
 	public static final int SLOT_BOOTS = 9;
 	public static final int SLOT_AMULET = 10;
 	public static final int SLOT_CAPE = 11;
+	public static final int SLOT_ARROW = 12;
+	public static final int SLOT_MORPHING_RING = 13;
 }

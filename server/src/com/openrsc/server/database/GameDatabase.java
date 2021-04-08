@@ -1,6 +1,7 @@
 package com.openrsc.server.database;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.achievement.AchievementReward;
@@ -861,14 +862,36 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 			synchronized (equipment.getList()) {
 				final PlayerEquipped[] equippedItems = queryLoadPlayerEquipped(player);
 
+				// check if player is morphed
+				ItemDefinition morph = null;
+				for (final PlayerEquipped equippedItem : equippedItems) {
+					final Item item = new Item(equippedItem.itemId, equippedItem.itemStatus);
+					final ItemDefinition itemDef = item.getDef(player.getWorld());
+					final AppearanceId appearance = AppearanceId.getById(itemDef.getAppearanceId());
+					if (appearance.getSuggestedWieldPosition() == AppearanceId.SLOT_MORPHING_RING) {
+						morph = itemDef;
+					}
+				}
+
+				// put items into slots & update appearance (if not morphed)
 				for (final PlayerEquipped equippedItem : equippedItems) {
 					final Item item = new Item(equippedItem.itemId, equippedItem.itemStatus);
 					final ItemDefinition itemDef = item.getDef(player.getWorld());
 					if (item.isWieldable(player.getWorld())) {
 						equipment.getList()[itemDef.getWieldPosition()] = item;
-						player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(),
-							itemDef.getWearableId(), true);
+						if (morph == null) {
+							if (itemDef.getWieldPosition() < 12) {
+								player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(),
+									itemDef.getWearableId(), true);
+							}
+						}
 					}
+				}
+
+				// apply morph
+				if (morph != null) {
+					player.updateWornItems(morph.getWieldPosition(), morph.getAppearanceId(),
+						morph.getWearableId(), true);
 				}
 
 				player.getCarriedItems().setEquipment(equipment);

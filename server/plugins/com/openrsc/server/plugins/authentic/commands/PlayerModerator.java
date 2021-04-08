@@ -570,8 +570,9 @@ public final class PlayerModerator implements CommandTrigger {
 				updateAppearanceToNpc(player, FIREBIRD, pos);
 				break;
 
+			case "guarddog":
 			case "brownwolf":
-				updateAppearanceToNpc(player, LIGHT_BROWN_WOLF, pos);
+				updateAppearanceToNpc(player, GUARD_DOG, pos);
 				break;
 
 			case "icespider":
@@ -626,19 +627,23 @@ public final class PlayerModerator implements CommandTrigger {
 			case "oomliebird":
 				updateAppearanceToNpc(player, OOMLIE_BIRD, pos);
 				break;
-			case "bunny":
-			case "bun":
-			case "rabbit":
-				updateAppearanceToNpc(player, BUNNY_MORPH, pos);
-				break;
 			case "bigbunny":
 			case "bigbun":
 			case "bigrabbit":
+			case "bigchungus":
 				updateAppearanceToNpc(player, BUNNY, pos);
 				break;
 			case "duck":
 			case "mallard":
 				updateAppearanceToNpc(player, DUCK, pos);
+				break;
+			case "bunny":
+			case "bun":
+			case "rabbit":
+				updateAppearanceToNpc(player, BUNNY_MORPH, pos);
+				break;
+			case "egg":
+				updateAppearanceToNpc(player, EGG_MORPH, pos);
 				break;
 
 			case "disable":
@@ -656,9 +661,6 @@ public final class PlayerModerator implements CommandTrigger {
 			return;
 		}
 		if (wieldPosition == SLOT_NPC) {
-			// This whole function is probably broken
-			// This is my attempt at a temporary fix
-			player.setMorphSpriteIdentifier(appearanceId);
 			for (int pos = 0; pos < 12; pos++) {
 				if (pos != SLOT_WEAPON) {
 					player.updateWornItems(pos, NOTHING);
@@ -703,6 +705,6 @@ public final class PlayerModerator implements CommandTrigger {
 
 	private void restoreHumanity(Player player) {
 		speakTongues(player, 0);
-		player.setMorphSpriteIdentifier(NOT_MORPHED);
+		player.exitMorph();
 	}
 }

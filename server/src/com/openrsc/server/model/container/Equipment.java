@@ -1,5 +1,6 @@
 package com.openrsc.server.model.container;
 
+import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
@@ -47,6 +48,12 @@ public class Equipment {
 	public Item getNeckItem() {
 		synchronized (list) {
 			return list[EquipmentSlot.SLOT_NECK.getIndex()];
+		}
+	}
+
+	public Item getRingItem() {
+		synchronized (list) {
+			return list[EquipmentSlot.SLOT_RING.getIndex()];
 		}
 	}
 
@@ -139,13 +146,13 @@ public class Equipment {
 			return false;
 		}
 
-		//Make sure they have the item equipped
+		// Make sure they have the item equipped
 		if (!hasEquipped(request.item.getCatalogId())) {
 			player.setSuspiciousPlayer(true, "tried to unequip something they don't have equipped");
 			return false;
 		}
 
-		//Check legitimacy of packet
+		// Check legitimacy of packet
 		if ((request.requestType == UnequipRequest.RequestType.FROM_EQUIPMENT
 			|| request.requestType == UnequipRequest.RequestType.FROM_BANK)
 			&& !player.getConfig().WANT_EQUIPMENT_TAB) {
@@ -163,7 +170,7 @@ public class Equipment {
 			case FROM_EQUIPMENT:
 				synchronized (list) {
 					synchronized (player) {
-						//Can't unequip something if inventory is full
+						// Can't unequip something if inventory is full
 						if (player.getCarriedItems().getInventory().full()) {
 							player.message("You need more inventory space to unequip that.");
 							return false;
@@ -179,7 +186,7 @@ public class Equipment {
 			case FROM_BANK:
 				synchronized (list) {
 					synchronized (player.getBank().getItems()) {
-						//Can't unequip something if bank is full
+						// Can't unequip something if bank is full
 						if (player.getBank().full()) {
 							player.message("You need more inventory space to unequip that.");
 							return false;
@@ -203,6 +210,12 @@ public class Equipment {
 				return unequipItem(request);
 		}
 
+		// unequipped morphing ring
+		AppearanceId appearance = AppearanceId.getById(request.item.getDef(player.getWorld()).getAppearanceId());
+		if (appearance.getSuggestedWieldPosition() == AppearanceId.SLOT_MORPHING_RING) {
+			player.exitMorph();
+		}
+
 		if (request.sound) {
 			player.playSound("click");
 		}
@@ -221,15 +234,15 @@ public class Equipment {
 		return equipItem(request, true);
 	}
 	public boolean equipItem(EquipRequest request, boolean updateClient) {
-		//Make sure the item isn't a note
+		// Make sure the item isn't a note
 		if (request.item.getNoted())
 			return false;
 
-		//Check that they are eligible to equip the item
+		// Check that they are eligible to equip the item
 		if (!ableToEquip(request.item))
 			return false;
 
-		//Logic changes depending on where the item is being equipped from
+		// Logic changes depending on where the item is being equipped from
 		switch (request.requestType) {
 			case FROM_INVENTORY:
 				if (!equipItemFromInventory(request, updateClient))
@@ -248,12 +261,33 @@ public class Equipment {
 			player.playSound("click");
 
 		ItemDefinition itemDef = request.item.getDef(player.getWorld());
-		player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
+		if (morphAllowsUpdate(itemDef)) {
+			player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
+		}
+
 		if (updateClient) {
 			ActionSender.sendEquipmentStats(player, request.item.getDef(player.getWorld()).getWieldPosition());
 			ActionSender.sendUpdatedPlayer(player);
 		}
 		return true;
+	}
+
+	private boolean morphAllowsUpdate(ItemDefinition newlyWieldedItem) {
+		if (newlyWieldedItem.getWieldPosition() == AppearanceId.SLOT_MORPHING_RING) {
+			return true;
+		} else {
+			if (player.getCarriedItems().getEquipment() == null) {
+				return true;
+			}
+			if (player.getCarriedItems().getEquipment().getRingItem() == null) {
+				return true;
+			}
+			final ItemDefinition wornRingDef = player.getCarriedItems().getEquipment().getRingItem().getDef(player.getWorld());
+			if (wornRingDef.getAppearanceId() == AppearanceId.NOTHING.id()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// Equipment::equipItemFromInventory(EquipRequest)
