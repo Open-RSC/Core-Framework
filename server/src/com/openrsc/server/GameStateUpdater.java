@@ -606,7 +606,6 @@ public final class GameStateUpdater {
 						appearancePacket.writeString(playerNeedingAppearanceUpdate.getUsername());
 					}
 
-
                     // Handle Invisibility & Invulnerability in the authentic client
 					if (player.isUsingAuthenticClient() &&
                         (playerNeedingAppearanceUpdate.stateIsInvisible() ||

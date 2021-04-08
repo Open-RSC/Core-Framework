@@ -182,6 +182,7 @@ public class Default implements DefaultHandler,
 			removingThisIteration = item.getAmount();
 			player.getCarriedItems().getEquipment().remove(item, removingThisIteration);
 			ActionSender.sendEquipmentStats(player);
+
 			final ItemDefinition itemDef = item.getDef(player.getWorld());
 			final AppearanceId appearance = AppearanceId.getById(itemDef.getAppearanceId());
 			if (itemDef.getWieldPosition() < 12 ||
