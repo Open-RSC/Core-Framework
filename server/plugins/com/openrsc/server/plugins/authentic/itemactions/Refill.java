@@ -38,7 +38,7 @@ public class Refill implements UseLocTrigger {
 					repeat = player.getCarriedItems().getInventory().countId(itemID, Optional.of(false));
 				}
 
-				startBatch(repeat);
+				startbatch(repeat);
 				batchRefill(player, item, refilledID, getFillString(player,obj,item));
 				break;
 			}
@@ -65,7 +65,7 @@ public class Refill implements UseLocTrigger {
 		give(player, refilledId, 1);
 		delay();
 
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchRefill(player, item, refilledId, fillString);
 		}

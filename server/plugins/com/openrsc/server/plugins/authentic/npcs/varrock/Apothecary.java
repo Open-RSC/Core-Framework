@@ -85,7 +85,7 @@ public final class Apothecary implements
 					int eggtimes = player.getCarriedItems().getInventory().countId(ItemId.RED_SPIDERS_EGGS.id());
 					int repeat = Math.min(cointimes, roottimes);
 					repeat = Math.min(eggtimes, repeat);
-					startBatch(repeat);
+					startbatch(repeat);
 					batchPotion(player);
 				}
 			} else {
@@ -350,7 +350,7 @@ public final class Apothecary implements
 		delay();
 
 		// Repeat
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchPotion(player);
 		}

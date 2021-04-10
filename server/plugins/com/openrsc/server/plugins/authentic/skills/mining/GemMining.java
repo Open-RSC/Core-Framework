@@ -101,7 +101,7 @@ public class GemMining implements OpLocTrigger {
 			repeat = Formulae.getRepeatTimes(player, Skills.MINING);
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchMining(player, obj, axeId, mineLvl);
 	}
 
@@ -150,7 +150,7 @@ public class GemMining implements OpLocTrigger {
 		}
 
 		// Repeat
-		updateBatch();
+		updatebatch();
 		boolean customBatch = config().BATCH_PROGRESSION;
 		if (!isbatchcomplete()) {
 			if ((customBatch && !ifinterrupted()) || !customBatch) {

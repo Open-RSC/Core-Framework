@@ -74,7 +74,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchFiremaking(player, gItem, def);
 
 	}
@@ -115,7 +115,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 			// Repeat on success
 			updatebatchlocation(player.getLocation());
-			updateBatch();
+			updatebatch();
 			if (!ifinterrupted() && !isbatchcomplete()) {
 
 				// Drop new log
@@ -137,7 +137,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 			// Repeat on fail
 			updatebatchlocation(player.getLocation());
-			updateBatch();
+			updatebatch();
 			if (!ifinterrupted() && !isbatchcomplete()) {
 				delay(2);
 				batchFiremaking(player, gItem, def);
@@ -168,7 +168,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchCustomFiremaking(player, gItem, def);
 	}
 
@@ -208,7 +208,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 			// Repeat if success
 			updatebatchlocation(player.getLocation());
-			updateBatch();
+			updatebatch();
 			if (!ifinterrupted() && !isbatchcomplete()) {
 				// Drop new log
 				Item log = player.getCarriedItems().getInventory().get(
@@ -230,7 +230,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You fail to light a fire");
 
 			updatebatchlocation(player.getLocation());
-			updateBatch();
+			updatebatch();
 			if (!ifinterrupted() && !isbatchcomplete()) {
 				delay(2);
 				batchCustomFiremaking(player, gItem, def);

@@ -29,7 +29,7 @@ public class SandPit implements UseLocTrigger {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchSand(player, item);
 	}
 
@@ -44,7 +44,7 @@ public class SandPit implements UseLocTrigger {
 		delay();
 
 		// Repeat
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchSand(player, item);
 		}

@@ -344,7 +344,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			npc.setBusy(true);
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchPickpocket(player, npc, pickpocket, lootTable, thievedMobString);
 	}
 
@@ -417,7 +417,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		}
 
 		// Repeat
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			if (!player.withinRange(npc, 1)) {
 				player.message("The " + thievedMobString + " has moved.");
@@ -626,7 +626,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				repeat = Formulae.getRepeatTimes(player, Skills.THIEVING);
 			}
 
-			startBatch(repeat);
+			startbatch(repeat);
 			batchPicklock(player, obj, req, exp, goThrough, requiresLockpick);
 		}
 	}
@@ -660,7 +660,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You fail to pick the lock");
 
 			// Repeat on failure
-			updateBatch();
+			updatebatch();
 			if (!ifinterrupted() && !isbatchcomplete()) {
 				delay();
 				batchPicklock(player, obj, req, exp, goThrough, requiresLockpick);
@@ -671,16 +671,18 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 	@Override
 	public void onOpNpc(Player player, Npc n, String command) {
 		if (command.equalsIgnoreCase("pickpocket")) {
-			Npc npc = player.getWorld().getNpc(n.getID(),
-				player.getX() - 2, player.getX() + 2,
-				player.getY() - 2, player.getY() + 2);
-			if (npc == null) return;
-			Pickpocket pickpocket = Pickpocket.valueOf(n.getDef().getName().toUpperCase().replace(" ", "_"));
-			if (pickpocket != null) {
-				doPickpocket(player, n, pickpocket);
-			} else {
-				player.message("ERROR: Pickpocket handler not found.");
+			Npc npc = player.getWorld().getNpc(
+					n.getID(),
+					player.getX() - 2,
+					player.getX() + 2,
+					player.getY() - 2,
+					player.getY() + 2
+			);
+			if (npc == null) {
+				return;
 			}
+			Pickpocket pickpocket = Pickpocket.valueOf(n.getDef().getName().toUpperCase().replace(" ", "_"));
+			doPickpocket(player, n, pickpocket);
 		}
 	}
 

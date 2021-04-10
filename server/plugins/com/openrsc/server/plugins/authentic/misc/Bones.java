@@ -32,7 +32,7 @@ public class Bones implements OpInvTrigger {
 				buryAmount = (item.getAmount() > invAmount) ? invAmount : item.getAmount();
 			}
 
-			startBatch(buryAmount);
+			startbatch(buryAmount);
 			buryBones(player, item);
 		}
 	}
@@ -50,7 +50,7 @@ public class Bones implements OpInvTrigger {
 		giveBonesExperience(player, item);
 
 		// Repeat
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			buryBones(player, item);
 		}

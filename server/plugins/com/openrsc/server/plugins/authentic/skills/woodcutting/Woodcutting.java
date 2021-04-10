@@ -71,7 +71,7 @@ public class Woodcutting implements OpLocTrigger {
 			repeat = Formulae.getRepeatTimes(player, Skills.WOODCUT);
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchWoodcutting(player, object, def, axeId);
 	}
 
@@ -129,7 +129,7 @@ public class Woodcutting implements OpLocTrigger {
 		}
 
 		// Repeat
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchWoodcutting(player, object, def, axeId);

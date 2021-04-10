@@ -71,7 +71,7 @@ public class GrapeEmpowerment implements UseInvTrigger {
 					currentPrayer);
 			}
 
-			startBatch(repeat);
+			startbatch(repeat);
 			batchPower(player, new Item(ItemId.GRAPES.id()), ItemId.GRAPES_OF_SARADOMIN.id(), "You bless the grapes");
 
 			return;
@@ -120,7 +120,7 @@ public class GrapeEmpowerment implements UseInvTrigger {
 					currentPrayer);
 			}
 
-			startBatch(repeat);
+			startbatch(repeat);
 			batchPower(player, new Item(ItemId.GRAPES.id()), ItemId.GRAPES_OF_ZAMORAK.id(), "You curse the grapes");
 
 			return;
@@ -169,7 +169,7 @@ public class GrapeEmpowerment implements UseInvTrigger {
 		give(player, poweredGrapesId, 1);
 		delay();
 
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchPower(player, grapes, poweredGrapesId, processString);
 		}

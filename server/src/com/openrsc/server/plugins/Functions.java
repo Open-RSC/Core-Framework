@@ -809,7 +809,7 @@ public class Functions {
 	 * Starts a batch and, if enabled, shows a batch bar to the client
 	 * @param totalBatch The total repetitions of a task
 	 */
-	public static void startBatch(int totalBatch) {
+	public static void startbatch(int totalBatch) {
 		final ScriptContext scriptContext = PluginTask.getContextPluginTask().getScriptContext();
 		if (scriptContext == null) {
 			return;
@@ -841,7 +841,7 @@ public class Functions {
 		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(batch -> batch.setLocation(location));
 	}
 
-	public static void updateBatch() {
+	public static void updatebatch() {
 		Optional.ofNullable(sniffBatchFromCurrentThread()).ifPresent(Batch::update);
 	}
 

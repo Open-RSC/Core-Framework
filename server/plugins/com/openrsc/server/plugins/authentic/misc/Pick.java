@@ -42,7 +42,7 @@ public final class Pick implements OpLocTrigger {
 			repeat = player.getCarriedItems().getInventory().getFreeSlots();
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchCropPickup(player, objId, pickMessage);
 	}
 
@@ -53,7 +53,7 @@ public final class Pick implements OpLocTrigger {
 
 		if (player.getCarriedItems().getInventory().full()) return;
 
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchCropPickup(player, objId, pickMessage);

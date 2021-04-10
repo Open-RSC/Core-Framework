@@ -166,7 +166,7 @@ public class ObjectCooking implements UseLocTrigger {
 				repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 			}
 
-			startBatch(repeat);
+			startbatch(repeat);
 			batchCooking(player, item, timeToCook, cookingDef, object);
 		}
 	}
@@ -215,7 +215,7 @@ public class ObjectCooking implements UseLocTrigger {
 			}
 
 			// Repeat
-			updateBatch();
+			updatebatch();
 			if (!ifinterrupted() && !isbatchcomplete()) {
 				delay();
 				batchCooking(player, item, timeToCook, cookingDef, gameObject);
@@ -252,7 +252,7 @@ public class ObjectCooking implements UseLocTrigger {
 			repeat = player.getCarriedItems().getInventory().countId(itemID);
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchInedibleCooking(player, itemID, product, hasBubble, messages);
 	}
 
@@ -271,7 +271,7 @@ public class ObjectCooking implements UseLocTrigger {
 
 		// TODO: Add back when `mes` is changed to not use a timer (if it ever is).
 		// delay();
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchInedibleCooking(player, itemID, product, hasBubble, messages);
 		}

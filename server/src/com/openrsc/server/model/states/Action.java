@@ -52,10 +52,10 @@ public enum Action {
 		return null;
 	}
 
-	private String description;
-	private EntityType defaultEntityType;
+	private final String description;
+	private final EntityType defaultEntityType;
 
-	Action(final EntityType defaultEntityType, final String description) {
+	Action(EntityType defaultEntityType, String description) {
 		this.defaultEntityType = defaultEntityType;
 		this.description = description;
 	}

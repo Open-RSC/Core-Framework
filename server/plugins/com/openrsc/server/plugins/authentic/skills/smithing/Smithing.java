@@ -225,7 +225,7 @@ public class Smithing implements UseLocTrigger {
 
 		if (makeCount == -1) return;
 
-		startBatch(makeCount);
+		startbatch(makeCount);
 		batchSmithing(player, item, def);
 	}
 
@@ -268,7 +268,7 @@ public class Smithing implements UseLocTrigger {
 		delay();
 
 		// Repeat
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchSmithing(player, item, def);
 		}

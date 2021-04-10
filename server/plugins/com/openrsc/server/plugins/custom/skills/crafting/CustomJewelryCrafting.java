@@ -131,7 +131,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 			}
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchGoldCrafting(player, item, def, gem);
 
 	}
@@ -182,7 +182,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		player.incExp(Skills.CRAFTING, def.getExp(), true);
 
 		// Repeat
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchGoldCrafting(player, item, def, gem);
@@ -224,7 +224,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 			repeat = player.getCarriedItems().getInventory().countId(item.getCatalogId(), Optional.of(false));
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchSilverCrafting(player, item, results[mould]);
 	}
 
@@ -252,7 +252,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		player.incExp(Skills.CRAFTING, 200, true);
 
 		// Repeat
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
 			batchSilverCrafting(player, item, resultId);

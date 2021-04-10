@@ -2,8 +2,10 @@ package com.openrsc.server.plugins.authentic.skills.fishing;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ObjectFishDef;
 import com.openrsc.server.external.ObjectFishingDef;
+import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -21,10 +23,10 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Fishing implements OpLocTrigger {
-	/**
-	 * The asynchronous logger.
-	 */
+
 	private static final Logger LOGGER = LogManager.getLogger(Fishing.class);
+	public static final int TUTORIAL_FISH_ID = 493;
+	public static final int DEPLETED_FISH_ROCK_ID = 668;
 
 	public ObjectFishDef getFish(ObjectFishingDef objectFishingDef, int fishingLevel) {
 		return objectFishingDef.fishingAttemptResult(fishingLevel);
@@ -32,57 +34,45 @@ public class Fishing implements OpLocTrigger {
 
 	@Override
 	public void onOpLoc(Player player, final GameObject object, String command) {
-		if (command.equals("lure") || command.equals("bait") || command.equals("net") || command.equals("harpoon")
-			|| command.equals("cage")) {
+		if (
+				command.equals("lure")
+						|| command.equals("bait")
+						|| command.equals("net")
+						|| command.equals("harpoon")
+						|| command.equals("cage")
+		) {
 			handleFishing(object, player, player.click, command);
 		}
 	}
 
 	private void handleFishing(final GameObject object, Player player, final int click, final String command) {
-		final ObjectFishingDef def = player.getWorld().getServer().getEntityHandler().getObjectFishingDef(object.getID(), click);
+		final EntityHandler entityHandler = player.getWorld().getServer().getEntityHandler();
 
-		if (!player.withinRange(object, 1)) {
+		final ObjectFishingDef def = entityHandler.getObjectFishingDef(object.getID(), click);
+		final Inventory inventory = player.getCarriedItems().getInventory();
+
+		if (def == null || !player.withinRange(object, 1) || isFatigued(player)) {
 			return;
 		}
-		if (def == null) { // This shouldn't happen
-			return;
-		}
-		if (checkFatigue(player)) return;
 
-		if (object.getID() == 493 && player.getSkills().getExperience(Skills.FISHING) >= 200) {
+		if (object.getID() == TUTORIAL_FISH_ID && player.getSkills().getExperience(Skills.FISHING) >= 200) {
 			mes("that's enough fishing for now");
 			delay(3);
 			mes("go through the next door to continue the tutorial");
 			delay(3);
 			return;
 		}
-		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
-			player.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel(player.getWorld()) + " "
-				+ fishingRequirementString(object, command) + " "
-				+ (!command.contains("cage") ? "these fish"
-				: player.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
-				.substring(4) + "s"));
+
+		if (!isFishingLevelOk(entityHandler, object, player, command, def)) {
 			return;
 		}
-		final int netId = def.getNetId();
-		if (player.getCarriedItems().getInventory().countId(netId, Optional.of(false)) <= 0) {
-			player.playerServerMessage(MessageType.QUEST,
-				"You need a "
-					+ player.getWorld().getServer().getEntityHandler()
-					.getItemDef(netId)
-					.getName().toLowerCase()
-					+ " to " + (command.equals("lure") || command.equals("bait") ? command : def.getBaitId() > 0 ? "bait" : "catch") + " "
-					+ (!command.contains("cage") ? "these fish"
-					: player.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
-					.substring(4) + "s"));
+
+		if(!hasNet(def, entityHandler, player, inventory, command)) {
 			return;
 		}
-		final int baitId = def.getBaitId();
-		if (baitId >= 0) {
-			if (player.getCarriedItems().getInventory().countId(baitId, Optional.of(false)) <= 0) {
-				player.playerServerMessage(MessageType.QUEST, outOfBait(baitId));
-				return;
-			}
+
+		if(!hasBait(def, player, inventory)) {
+			return;
 		}
 
 		int repeat = 1;
@@ -90,8 +80,60 @@ public class Fishing implements OpLocTrigger {
 			repeat = Formulae.getRepeatTimes(player, Skills.FISHING);
 		}
 
-		startBatch(repeat);
-		batchFishing(player, netId, def, object, command);
+		startbatch(repeat);
+		batchFishing(entityHandler, player, def, object);
+	}
+
+	private boolean hasBait(ObjectFishingDef def, Player player, Inventory inventory) {
+		final int baitId = def.getBaitId();
+		if (baitId >= 0) {
+			if (inventory.countId(baitId, Optional.of(false)) <= 0) {
+				player.playerServerMessage(MessageType.QUEST, outOfBait(baitId));
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean hasNet(
+			ObjectFishingDef def,
+			EntityHandler entityHandler,
+			Player player,
+			Inventory inventory,
+			String command
+	) {
+		final int netId = def.getNetId();
+		if (inventory.countId(netId, Optional.of(false)) <= 0) {
+			player.playerServerMessage(MessageType.QUEST,
+					"You need a "
+							+ entityHandler.getItemDef(netId).getName().toLowerCase()
+							+ " to " + (command.equals("lure") || command.equals("bait") ? command : def.getBaitId() > 0 ? "bait" : "catch") + " "
+							+ (!command.contains("cage") ? "these fish"
+							: entityHandler.getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
+							.substring(4) + "s"));
+			return false;
+		}
+		return true;
+	}
+
+	private boolean isFishingLevelOk(
+			EntityHandler entityHandler,
+			GameObject object,
+			Player player,
+			String command,
+			ObjectFishingDef def
+	) {
+		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
+			player.playerServerMessage(
+					MessageType.QUEST,
+					"You need at least level " + def.getReqLevel(player.getWorld()) + " "
+				+ fishingRequirementString(object, command) + " "
+				+ (!command.contains("cage") ? "these fish"
+				: entityHandler.getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase().substring(4) + "s")
+			);
+			return false;
+		}
+		return true;
 	}
 
 	public void testBigNetFishing(int level, int trials, Player player) {
@@ -121,41 +163,40 @@ public class Fishing implements OpLocTrigger {
 		}
 	}
 
-	private void batchFishing(Player player, int netId, ObjectFishingDef def, GameObject object, String command) {
+	private void batchFishing(
+			EntityHandler entityHandler,
+			Player player,
+			ObjectFishingDef def,
+			GameObject object
+	) {
+		final Inventory inventory = player.getCarriedItems().getInventory();
+		final int netId = def.getNetId();
+		final int baitId = def.getBaitId();
+
 		player.playerServerMessage(MessageType.QUEST, "You attempt to catch " + tryToCatchFishString(def));
 		player.playSound("fish");
-		thinkbubble(new Item(netId));
+		thinkbubble(new Item(def.getNetId()));
 		delay(4);
 
-		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
-			player.playerServerMessage(MessageType.QUEST, "You need at least level " + def.getReqLevel(player.getWorld()) + " "
-				+ fishingRequirementString(object, command) + " "
-				+ (!command.contains("cage") ? "these fish"
-				: player.getWorld().getServer().getEntityHandler().getItemDef(def.getFishDefs()[0].getId()).getName().toLowerCase()
-				.substring(4) + "s"));
+		if(!hasBait(def, player, inventory)) {
 			return;
 		}
-		final int baitId = def.getBaitId();
-		if (baitId >= 0) {
-			if (player.getCarriedItems().getInventory().countId(baitId, Optional.of(false)) <= 0) {
-				player.playerServerMessage(MessageType.QUEST, outOfBait(baitId));
-				return;
-			}
+
+		if (isFatigued(player)) {
+			return;
 		}
 
-		if (checkFatigue(player)) return;
-
 		List<ObjectFishDef> fishLst = new ArrayList<ObjectFishDef>();
-		ObjectFishDef aFishDef;
 		GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 
-		if (object.getID() == 493) { // Tutorial Island Shrimp
+		ObjectFishDef aFishDef;
+		if (object.getID() == TUTORIAL_FISH_ID) { // Tutorial Island Shrimp
 			aFishDef = getFish(def, player.getSkills().getLevel(Skills.FISHING));
 			if (aFishDef != null) fishLst.add(aFishDef);
 
 			if (fishLst.size() > 0) {
 				player.playerServerMessage(MessageType.QUEST, "You catch some shrimps");
-				player.getCarriedItems().getInventory().add(new Item(fishLst.get(0).getId()));
+				inventory.add(new Item(fishLst.get(0).getId()));
 				player.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
 				if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41) {
 					player.getCache().set("tutorial", 42);
@@ -170,7 +211,7 @@ public class Fishing implements OpLocTrigger {
 			}
 		} else if (netId == ItemId.BIG_NET.id()) {
 
-			ObjectFishingDef bigNet = player.getWorld().getServer().getEntityHandler().getObjectFishingDef(261, 0);
+			ObjectFishingDef bigNet = entityHandler.getObjectFishingDef(261, 0);
 			if (bigNet == null) {
 				LOGGER.error("Somehow bigNet fishing spot isn't defined. Check your cache files.");
 				return;
@@ -234,27 +275,14 @@ public class Fishing implements OpLocTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
 			}
 
-			// check if fishing spot should inauthentically deplete
+			// Check if fishing spot should inauthentically deplete
 			if (fishLst.size() > 0) {
-				if (config().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 250) <= def.getDepletion()) {
-					obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-					if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
-						GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), 668, object.getDirection(), object.getType());
-						player.getWorld().replaceGameObject(object, newObject);
-						player.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * config().GAME_TICK, true);
-					}
-				}
+				handleDepletableFishing(player, def, object);
 			}
 		} else { // NOT big net fishing & NOT tutorial island shrimp; normal fishing
 			// Roll for fish to be given to user
 			aFishDef = getFish(def, player.getSkills().getLevel(Skills.FISHING));
 			if (aFishDef != null) fishLst.add(aFishDef);
-
-			//check if the spot is still active
-			if (obj == null) {
-				player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
-				return;
-			}
 
 			if (fishLst.size() == 0) {
 				player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
@@ -301,26 +329,47 @@ public class Fishing implements OpLocTrigger {
 						break;
 				}
 
-				player.getCarriedItems().getInventory().add(fish);
+				inventory.add(fish);
 				player.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
 
-				// inauthentically check if the fishing spot should deplete
-				if (config().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 250) <= def.getDepletion()) {
-					obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-					if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
-						GameObject newObject = new GameObject(player.getWorld(), object.getLocation(), 668, object.getDirection(), object.getType());
-						player.getWorld().replaceGameObject(object, newObject);
-						player.getWorld().delayedSpawnObject(obj.getLoc(), def.getRespawnTime() * config().GAME_TICK, true);
-					}
-				}
+				// Inauthentically check if the fishing spot should deplete
+				handleDepletableFishing(player, def, object);
 			}
 		}
 
+		// If object has depleted, kill batch
+		GameObject fishingSpot = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+		if (fishingSpot == null) {
+			stopbatch();
+			return;
+		}
+
 		// Repeat
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			delay();
-			batchFishing(player, netId, def, object, command);
+			batchFishing(entityHandler, player, def, object);
+		}
+	}
+
+	private void handleDepletableFishing(Player player, ObjectFishingDef def, GameObject object) {
+		if (config().FISHING_SPOTS_DEPLETABLE && DataConversions.random(1, 250) <= def.getDepletion()) {
+			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+			if (obj != null && obj.getID() == object.getID() && def.getRespawnTime() > 0) {
+				GameObject newObject = new GameObject(
+						player.getWorld(),
+						object.getLocation(),
+						DEPLETED_FISH_ROCK_ID,
+						object.getDirection(),
+						object.getType()
+				);
+				player.getWorld().replaceGameObject(object, newObject);
+				player.getWorld().delayedSpawnObject(
+						obj.getLoc(),
+						def.getRespawnTime() * config().GAME_TICK,
+						true
+				);
+			}
 		}
 	}
 
@@ -393,7 +442,7 @@ public class Fishing implements OpLocTrigger {
 		return name;
 	}
 
-	private boolean checkFatigue(Player player) {
+	private boolean isFatigued(Player player) {
 		if (config().WANT_FATIGUE) {
 			if (config().STOP_SKILLING_FATIGUED >= 1
 				&& player.getFatigue() >= player.MAX_FATIGUE) {

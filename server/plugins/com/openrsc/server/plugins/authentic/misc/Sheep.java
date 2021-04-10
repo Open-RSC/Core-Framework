@@ -25,7 +25,7 @@ public class Sheep implements UseNpcTrigger {
 			repeat = player.getCarriedItems().getInventory().getFreeSlots();
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchShear(player, item);
 	}
 
@@ -44,7 +44,7 @@ public class Sheep implements UseNpcTrigger {
 		delay(2);
 
 		// Repeat
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchShear(player, item);
 		}

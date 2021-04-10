@@ -36,7 +36,7 @@ public class RawRuneStone implements OpLocTrigger {
 			repeat = player.getCarriedItems().getInventory().getFreeSlots();
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchRuneStone(player);
 	}
 
@@ -48,7 +48,7 @@ public class RawRuneStone implements OpLocTrigger {
 		delay();
 
 		// Repeat
-		updateBatch();
+		updatebatch();
 		if (!ifinterrupted() && !isbatchcomplete()) {
 			batchRuneStone(player);
 		}

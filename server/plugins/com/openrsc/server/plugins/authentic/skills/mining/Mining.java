@@ -104,9 +104,6 @@ public final class Mining implements OpLocTrigger {
 	}
 
 	private void handleMining(final GameObject rock, Player player, int click) {
-		/*if (player.isBusy()) {
-			return;
-		}*/
 
 		if (!player.withinRange(rock, 1)) {
 			return;
@@ -191,7 +188,7 @@ public final class Mining implements OpLocTrigger {
 			repeat = Formulae.getRepeatTimes(player, Skills.MINING);
 		}
 
-		startBatch(repeat);
+		startbatch(repeat);
 		batchMining(player, rock, def, axeId, mineLvl);
 	}
 
@@ -266,7 +263,7 @@ public final class Mining implements OpLocTrigger {
 		}
 
 		// Repeat
-		updateBatch();
+		updatebatch();
 		boolean customBatch = config().BATCH_PROGRESSION;
 		if (!isbatchcomplete()) {
 			if (!customBatch || !ifinterrupted()) {
