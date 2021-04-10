@@ -7,7 +7,6 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
-import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -95,16 +94,12 @@ public class Woodcutting implements OpLocTrigger {
 
 		if (getLog(def, player.getSkills().getLevel(Skills.WOODCUT), axeId)) {
 			//check if the tree is still up
-			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
-			if (obj == null) {
-				player.playerServerMessage(MessageType.QUEST, "You slip and fail to hit the tree");
-			} else {
-				player.getCarriedItems().getInventory().add(log);
-				player.playerServerMessage(MessageType.QUEST, "You get some wood");
-				player.incExp(Skills.WOODCUT, def.getExp(), true);
-			}
-			if (DataConversions.random(1, 100) <= def.getFell()) {
-				obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+			player.getCarriedItems().getInventory().add(log);
+			player.playerServerMessage(MessageType.QUEST, "You get some wood");
+			player.incExp(Skills.WOODCUT, def.getExp(), true);
+//			if (DataConversions.random(1, 100) <= def.getFell()) {
+			if(true) {
+				GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				int stumpId;
 				if (def.getLogId() == ItemId.LOGS.id() || def.getLogId() == ItemId.MAGIC_LOGS.id()) {
 					stumpId = 4; //narrow tree stump
@@ -126,6 +121,13 @@ public class Woodcutting implements OpLocTrigger {
 					return;
 				}
 			}
+		}
+
+		// If tree has felled, stop the batch.
+		GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+		if (obj == null) {
+			stopbatch();
+			return;
 		}
 
 		// Repeat
