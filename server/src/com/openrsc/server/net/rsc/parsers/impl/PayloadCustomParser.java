@@ -381,7 +381,7 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 				break;
 			case COMMAND:
 				CommandStruct co = new CommandStruct();
-				co.command = DataConversions.getEncryptedString(packet);
+				co.command = packet.readString();
 				result = co;
 				break;
 			case SOCIAL_ADD_FRIEND:
