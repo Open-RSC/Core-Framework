@@ -470,7 +470,7 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 					iot.direction = packet.readByte();
 				}
 				iot.slotID = packet.readShort();
-				if (opcode == OpcodeIn.USE_ITEM_ON_SCENERY && player.getConfig().WANT_EQUIPMENT_TAB) {
+				if (opcode == OpcodeIn.USE_WITH_BOUNDARY && player.getConfig().WANT_EQUIPMENT_TAB) {
 					iot.itemID = packet.readShort();
 				}
 				result = iot;
