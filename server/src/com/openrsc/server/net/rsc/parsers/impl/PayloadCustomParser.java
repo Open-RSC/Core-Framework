@@ -376,12 +376,12 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 
 			case CHAT_MESSAGE:
 				ChatStruct cs = new ChatStruct();
-				cs.message = packet.readString();
+				cs.message = DataConversions.getEncryptedString(packet);
 				result = cs;
 				break;
 			case COMMAND:
 				CommandStruct co = new CommandStruct();
-				co.command = packet.readString();
+				co.command = DataConversions.getEncryptedString(packet);
 				result = co;
 				break;
 			case SOCIAL_ADD_FRIEND:
