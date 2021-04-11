@@ -1022,9 +1022,9 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		while (player.getCarriedItems().getInventory().size() > 0) {
-			Item item = player.getCarriedItems().getInventory().get(0);
-			player.getCarriedItems().remove(item);
+		while (targetPlayer.getCarriedItems().getInventory().size() > 0) {
+			Item item = targetPlayer.getCarriedItems().getInventory().get(0);
+			targetPlayer.getCarriedItems().remove(item);
 		}
 
 		if (targetPlayer.getConfig().WANT_EQUIPMENT_TAB) {
@@ -1036,7 +1036,7 @@ public final class Admins implements CommandTrigger {
 				targetPlayer.getCarriedItems().getEquipment().unequipItem(
 					new UnequipRequest(targetPlayer, equipped, UnequipRequest.RequestType.FROM_EQUIPMENT, false), true
 				);
-				player.getCarriedItems().remove(new Item(equipped.getCatalogId(), equipped.getAmount()));
+				targetPlayer.getCarriedItems().remove(new Item(equipped.getCatalogId(), equipped.getAmount()));
 			}
 		}
 

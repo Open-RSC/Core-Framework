@@ -1,5 +1,6 @@
 package com.openrsc.server.net;
 
+import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.util.rsc.CipheredMessage;
 import com.openrsc.server.util.rsc.DataConversions;
 import io.netty.buffer.ByteBuf;
@@ -294,5 +295,21 @@ public class PacketBuilder {
 		payload.writeByte(0);
 		payload.writeBytes(string.getBytes());
 		payload.writeByte(0);
+	}
+
+	/**
+	 * Writes a byte in the range that is safe for the client to receive in the animation update packet
+	 *
+	 * @param i The byte to write.
+	 * @param clientVersion used to check if the client knows how to display the appearance id being sent.
+	 * @return The PacketBuilder instance, for chaining.
+	 */
+	public PacketBuilder writeAppearanceByte(int i, int clientVersion) {
+		if (i <= AppearanceId.maximumAnimationSprite(clientVersion)) {
+			payload.writeByte(i);
+		} else {
+			payload.writeByte(AppearanceId.NOTHING.id());
+		}
+		return this;
 	}
 }

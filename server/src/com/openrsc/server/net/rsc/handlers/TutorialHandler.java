@@ -1,14 +1,15 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.NoPayloadStruct;
 
-public class TutorialHandler implements PacketHandler {
+public class TutorialHandler implements PayloadProcessor<NoPayloadStruct, OpcodeIn> {
 
 	@Override
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(final NoPayloadStruct payload, final Player player) throws Exception {
 		if (player == null) {
 			return;
 		}

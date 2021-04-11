@@ -2,6 +2,7 @@ package com.openrsc.server.plugins.authentic.commands;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcDrops;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ObjectFishDef;
@@ -585,7 +586,7 @@ public final class Development implements CommandTrigger {
 	// test combat style desync
 	private void setCombatStyle(Player player, String[] args) {
 		if (args.length == 0) {
-			player.setCombatStyle(0);
+			player.setCombatStyle(Skills.CONTROLLED_MODE);
 		}
 		if (args.length == 1) {
 			try {

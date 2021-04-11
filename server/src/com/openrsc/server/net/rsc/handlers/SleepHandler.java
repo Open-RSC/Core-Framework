@@ -1,23 +1,22 @@
 package com.openrsc.server.net.rsc.handlers;
 
+import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.SleepStruct;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 
-public final class SleepHandler implements PacketHandler {
+public final class SleepHandler implements PayloadProcessor<SleepStruct, OpcodeIn> {
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(SleepStruct payload, Player player) throws Exception {
 		String sleepWord;
 		if (player.isUsingAuthenticClient()) {
-			int sleepDelay = packet.readUnsignedByte(); // TODO: use this somehow
-			sleepWord = packet.readZeroPaddedString().trim();
-		} else {
-			sleepWord = packet.readString().trim();
+			int sleepDelay = payload.sleepDelay; // TODO: use this somehow
 		}
+		sleepWord = payload.sleepWord.trim();
 		if (sleepWord.equalsIgnoreCase("-null-")) {
 			player.incrementSleepTries();
 

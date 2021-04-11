@@ -24,10 +24,10 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.struct.UnequipRequest;
-import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.OpcodeIn;
-import com.openrsc.server.net.rsc.PacketHandler;
+import com.openrsc.server.net.rsc.PayloadProcessor;
+import com.openrsc.server.net.rsc.enums.OpcodeIn;
+import com.openrsc.server.net.rsc.struct.SpellStruct;
 import com.openrsc.server.util.rsc.CertUtil;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
@@ -38,11 +38,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 import java.util.Map.Entry;
 
-import static com.openrsc.server.net.rsc.OpcodeIn.CAST_ON_SELF;
-import static com.openrsc.server.net.rsc.OpcodeIn.PLAYER_CAST_PVP;
 import static com.openrsc.server.plugins.Functions.*;
 
-public class SpellHandler implements PacketHandler {
+public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 	private static TreeMap<Integer, Item[]> staffs = new TreeMap<Integer, Item[]>();
 	private static final String AMULET = "amulet";
@@ -162,12 +160,12 @@ public class SpellHandler implements PacketHandler {
 		}
 
 		// Ensure player is allowed to teleport.
-		if (opcode == CAST_ON_SELF && spell.getSpellType() == 0 && !canTeleport(player, spell, spellIdx)) {
+		if (opcode == OpcodeIn.CAST_ON_SELF && spell.getSpellType() == 0 && !canTeleport(player, spell, spellIdx)) {
 			return null;
 		}
 
 		// You can't cast on things other than your opponent, while in a duel.
-		if (opcode != PLAYER_CAST_PVP && player.getDuel().isDuelActive()) {
+		if (opcode != OpcodeIn.PLAYER_CAST_PVP && player.getDuel().isDuelActive()) {
 			player.message("You can't do that during a duel!");
 			return null;
 		}
@@ -187,7 +185,7 @@ public class SpellHandler implements PacketHandler {
 		return true;
 	}
 
-	public void handlePacket(Packet packet, Player player) throws Exception {
+	public void process(SpellStruct payload, Player player) throws Exception {
 		if ((player.isBusy() && !player.inCombat()) || player.isRanging()) {
 			return;
 		}
@@ -195,11 +193,7 @@ public class SpellHandler implements PacketHandler {
 			return;
 		}
 
-		OpcodeIn opcode = OpcodeIn.getFromList(packet.getID(),
-			CAST_ON_SELF, OpcodeIn.PLAYER_CAST_PVP,
-			OpcodeIn.CAST_ON_NPC, OpcodeIn.CAST_ON_INVENTORY_ITEM,
-			OpcodeIn.CAST_ON_BOUNDARY, OpcodeIn.CAST_ON_SCENERY,
-			OpcodeIn.CAST_ON_GROUND_ITEM, OpcodeIn.CAST_ON_LAND);
+		OpcodeIn opcode = payload.getOpcode();
 
 		if (opcode == null)
 			return;
@@ -212,7 +206,7 @@ public class SpellHandler implements PacketHandler {
 
 			switch (opcode) {
 				case CAST_ON_SELF:
-					idx = packet.readShort();
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -228,9 +222,9 @@ public class SpellHandler implements PacketHandler {
 					handleGroundCast(player, spell, idx);
 					break;
 				case PLAYER_CAST_PVP:
-					Player affectedPlayer = player.getWorld().getPlayer(packet.readShort());
+					Player affectedPlayer = player.getWorld().getPlayer(payload.targetIndex);
 
-					idx = packet.readShort();
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -253,9 +247,9 @@ public class SpellHandler implements PacketHandler {
 					}
 					break;
 				case CAST_ON_NPC:
-					Npc affectedNpc = player.getWorld().getNpc(packet.readShort());
+					Npc affectedNpc = player.getWorld().getNpc(payload.targetIndex);
 
-					idx = packet.readShort();
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -282,10 +276,10 @@ public class SpellHandler implements PacketHandler {
 					int curse = 9;
 					int enfeeble = 44;
 
-					int invIndex = packet.readShort();
+					int invIndex = payload.targetIndex;
 					Item item = player.getCarriedItems().getInventory().get(invIndex);
 
-					idx = packet.readShort();
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -330,10 +324,10 @@ public class SpellHandler implements PacketHandler {
 					player.message("@or1@This type of spell is not yet implemented.");
 					break;
 				case CAST_ON_SCENERY:
-					int objectX = packet.readShort();
-					int objectY = packet.readShort();
+					int objectX = payload.targetCoord.getX();
+					int objectY = payload.targetCoord.getY();
 
-					idx = packet.readShort();
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -355,10 +349,10 @@ public class SpellHandler implements PacketHandler {
 					handleChargeOrb(player, gameObject, idx, spell);
 					break;
 				case CAST_ON_GROUND_ITEM:
-					Point location = Point.location(packet.readShort(), packet.readShort());
-					int itemId = packet.readShort();
+					Point location = Point.location(payload.targetCoord.getX(), payload.targetCoord.getY());
+					int itemId = payload.targetIndex;
 
-					idx = packet.readShort();
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -374,8 +368,8 @@ public class SpellHandler implements PacketHandler {
 					handleItemCast(player, spell, idx, affectedItem);
 					break;
 				case CAST_ON_LAND:
-					Point locationLand = Point.location(packet.readShort(), packet.readShort());
-					idx = packet.readShort();
+					Point locationLand = Point.location(payload.targetCoord.getX(), payload.targetCoord.getY());
+					idx = Constants.spellMap.get(payload.spell);
 					spell = spellSanityChecks(idx, player, opcode);
 					if (spell == null) {
 						return;
@@ -393,7 +387,7 @@ public class SpellHandler implements PacketHandler {
 
 		} else {
 			// Inauthentic client conveniently places Spell ID at the front for all Spell related packets.
-			int idx = packet.readShort();
+			int idx = Constants.spellMap.get(payload.spell);
 
 			SpellDef spell = spellSanityChecks(idx, player, opcode);
 			if (spell == null) {
@@ -414,7 +408,7 @@ public class SpellHandler implements PacketHandler {
 					break;
 				case PLAYER_CAST_PVP:
 					if (spell.getSpellType() == 1 || spell.getSpellType() == 2) {
-						Player affectedPlayer = player.getWorld().getPlayer(packet.readShort());
+						Player affectedPlayer = player.getWorld().getPlayer(payload.targetIndex);
 						if (affectedPlayer == null) {
 							player.resetPath();
 							return;
@@ -427,7 +421,7 @@ public class SpellHandler implements PacketHandler {
 					break;
 				case CAST_ON_NPC:
 					if (spell.getSpellType() == 2) {
-						Npc affectedNpc = player.getWorld().getNpc(packet.readShort());
+						Npc affectedNpc = player.getWorld().getNpc(payload.targetIndex);
 						if (affectedNpc == null) {
 							player.resetPath();
 							return;
@@ -447,7 +441,7 @@ public class SpellHandler implements PacketHandler {
 					if (spell.getSpellType() == 3
 						|| (runecraft && (idx == curse || idx == enfeeble))) {
 
-						int invIndex = packet.readShort();
+						int invIndex = payload.targetIndex;
 						Item item = player.getCarriedItems().getInventory().get(invIndex);
 						if (item == null) {
 							player.resetPath();
@@ -473,8 +467,8 @@ public class SpellHandler implements PacketHandler {
 					player.message("@or1@This type of spell is not yet implemented.");
 					break;
 				case CAST_ON_SCENERY:
-					int objectX = packet.readShort();
-					int objectY = packet.readShort();
+					int objectX = payload.targetCoord.getX();
+					int objectY = payload.targetCoord.getY();
 					GameObject gameObject = player.getViewArea().getGameObject(Point.location(objectX, objectY));
 					if (gameObject == null) {
 						return;
@@ -488,8 +482,8 @@ public class SpellHandler implements PacketHandler {
 					handleChargeOrb(player, gameObject, idx, spell);
 					break;
 				case CAST_ON_GROUND_ITEM:
-					Point location = Point.location(packet.readShort(), packet.readShort());
-					int itemId = packet.readShort();
+					Point location = Point.location(payload.targetCoord.getX(), payload.targetCoord.getY());
+					int itemId = payload.targetIndex;
 					GroundItem affectedItem = player.getViewArea().getGroundItem(itemId, location);
 					if (affectedItem == null) {
 						return;
@@ -497,6 +491,7 @@ public class SpellHandler implements PacketHandler {
 					handleItemCast(player, spell, idx, affectedItem);
 					break;
 				case CAST_ON_LAND:
+					Point locationLand = Point.location(payload.targetCoord.getX(), payload.targetCoord.getY());
 					handleGroundCast(player, spell, idx);
 					break;
 				default:

@@ -23,6 +23,7 @@ import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
 import com.openrsc.server.event.rsc.impl.ProjectileEvent;
 import com.openrsc.server.event.rsc.impl.RangeEvent;
 import com.openrsc.server.event.rsc.impl.ThrowingEvent;
+import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.PlayerSaveRequest;
 import com.openrsc.server.model.Cache;
@@ -45,8 +46,11 @@ import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
-import com.openrsc.server.net.rsc.PacketHandler;
-import com.openrsc.server.net.rsc.PacketHandlerLookup;
+import com.openrsc.server.net.rsc.PayloadProcessorManager;
+import com.openrsc.server.net.rsc.parsers.PayloadParser;
+import com.openrsc.server.net.rsc.parsers.impl.Payload235Parser;
+import com.openrsc.server.net.rsc.parsers.impl.PayloadCustomParser;
+import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.plugins.QuestInterface;
 import com.openrsc.server.plugins.menu.Menu;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -349,8 +353,6 @@ public final class Player extends Mob {
 	 * Controls if were allowed to accept contact details updates
 	 */
 	private boolean changingDetails = false;
-
-	private AppearanceId morphSpriteIdentifier = AppearanceId.NOT_MORPHED;
 
 	/*
 	 * Restricts P2P stuff in F2P wilderness.
@@ -2115,12 +2117,22 @@ public final class Player extends Mob {
 				final long packetTime = getWorld().getServer().bench(
 					() -> {
 						activePackets.remove(activePackets.indexOf(curPacket.getID()));
-						final PacketHandler ph = PacketHandlerLookup.get(curPacket.getID());
-						if (ph != null && curPacket.getBuffer().readableBytes() >= 0) {
+						PayloadParser<com.openrsc.server.net.rsc.enums.OpcodeIn> parser;
+						if (isUsingAuthenticClient()) {
+							parser = new Payload235Parser();
+						} else {
+							parser = new PayloadCustomParser();
+						}
+						AbstractStruct<com.openrsc.server.net.rsc.enums.OpcodeIn> res = parser.parse(curPacket, this);
+						if (res != null) {
+							boolean couldProcess;
 							try {
-								ph.handlePacket(curPacket, this);
+								couldProcess = PayloadProcessorManager.processed(res, this);
 							} catch (final Exception e) {
 								LOGGER.catching(e);
+								couldProcess = false;
+							}
+							if (!couldProcess) {
 								unregister(false, "Malformed packet!");
 							}
 						}
@@ -2535,11 +2547,40 @@ public final class Player extends Mob {
 			else wornItems[AppearanceId.SLOT_PANTS] = 3;
 		}
 
-		//Don't need to show arrows or rings
+		// Generally don't need to show arrows or rings
 		if (indexPosition <= 11) {
-			wornItems[indexPosition] = appearanceId;
-			getUpdateFlags().setAppearanceChanged(true);
+			if (ringMorphAllows()) {
+				wornItems[indexPosition] = appearanceId;
+				getUpdateFlags().setAppearanceChanged(true);
+			}
+		} else {
+			if (indexPosition == AppearanceId.SLOT_MORPHING_RING) {
+				final AppearanceId newAppearance = AppearanceId.getById(appearanceId);
+				if (newAppearance != AppearanceId.NOTHING) {
+					// update is for equipping (not unequipping)
+					if (appearanceId != AppearanceId.NOTHING.id()) {
+						// ring has an appearance id, so it is a morphing ring
+						enterMorph(appearanceId);
+					}
+				} else {
+					// may or may not be morphed, but a ring was removed.
+					exitMorph();
+				}
+			}
 		}
+	}
+
+	private boolean ringMorphAllows() {
+		if (getCarriedItems().getEquipment() == null) {
+			return true;
+		} else {
+			final Item wornRing = getCarriedItems().getEquipment().getRingItem();
+			if (wornRing == null ||
+				wornRing.getDef(getWorld()).getAppearanceId() == AppearanceId.NOTHING.id()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private Queue<PrivateMessage> getPrivateMessageQueue() {
@@ -3406,17 +3447,37 @@ public final class Player extends Mob {
 		return getCache().hasKey("cert_optout");
 	}
 
-	public AppearanceId getMorphSpriteIdentifier() {
-		if (getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_BUNNY.id())) {
-			return AppearanceId.BUNNY_MORPH;
-		} else if (getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_EGG.id())) {
-			return AppearanceId.EGG_MORPH;
+	private void enterMorph(int appearanceId) {
+		for (int i = 0; i < 12; i++) {
+			wornItems[i] = AppearanceId.NOTHING.id();
 		}
-
-		return morphSpriteIdentifier;
+		wornItems[AppearanceId.SLOT_BODY] = appearanceId;
+		getUpdateFlags().setAppearanceChanged(true);
 	}
 
-	public void setMorphSpriteIdentifier(final AppearanceId appearanceId) {
-		morphSpriteIdentifier = appearanceId;
+	public void exitMorph() {
+		for (int i = 0; i < 12; i++) {
+			updateWornItems(i, getSettings().getAppearance().getSprite(i));
+		}
+
+		if (getConfig().WANT_EQUIPMENT_TAB) {
+			synchronized (getCarriedItems().getEquipment().getList()) {
+				for (Item item : getCarriedItems().getEquipment().getList()) {
+					if (item == null) continue;
+					ItemDefinition itemDef = item.getDef(getWorld());
+					if (itemDef.getWieldPosition() < 12) {
+						updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
+					}
+				}
+			}
+		} else {
+			for (Item item : getCarriedItems().getInventory().getItems()) {
+				if (item == null) continue;
+				ItemDefinition itemDef = item.getDef(getWorld());
+				if (item.getItemStatus().isWielded()) {
+					updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
+				}
+			}
+		}
 	}
 }

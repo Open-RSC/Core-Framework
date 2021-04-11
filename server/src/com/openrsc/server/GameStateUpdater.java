@@ -594,6 +594,7 @@ public final class GameStateUpdater {
 				Player playerNeedingAppearanceUpdate;
 				while ((playerNeedingAppearanceUpdate = playersNeedingAppearanceUpdate.poll()) != null) {
 					PlayerAppearance appearance = playerNeedingAppearanceUpdate.getSettings().getAppearance();
+					final int clientVersion = playerNeedingAppearanceUpdate.getClientVersion();
 
 					appearancePacket.writeShort((short) playerNeedingAppearanceUpdate.getIndex());
 					appearancePacket.writeByte((byte) 5);
@@ -604,7 +605,6 @@ public final class GameStateUpdater {
 					} else {
 						appearancePacket.writeString(playerNeedingAppearanceUpdate.getUsername());
 					}
-
 
                     // Handle Invisibility & Invulnerability in the authentic client
 					if (player.isUsingAuthenticClient() &&
@@ -660,33 +660,33 @@ public final class GameStateUpdater {
                         }
 
                         appearancePacket.writeByte((byte) 11); // Equipment count
-                        appearancePacket.writeByte((byte) headSprite);
-                        appearancePacket.writeByte((byte) shirtSprite);
-                        appearancePacket.writeByte((byte) pantsSprite);
-                        appearancePacket.writeByte((byte) shieldSprite);  // Shield is used to denote if invulnerable while invisible
-                        appearancePacket.writeByte((byte) wornItems[AppearanceId.SLOT_WEAPON]);  // Weapon can stay
-                        appearancePacket.writeByte((byte) hatSprite);
-                        appearancePacket.writeByte((byte) bodySprite);
-                        appearancePacket.writeByte((byte) legSprite);
-                        appearancePacket.writeByte((byte) gloveColour);
-                        appearancePacket.writeByte((byte) bootColour);
-                        appearancePacket.writeByte((byte) amuletSprite);
+						appearancePacket.writeAppearanceByte((byte) headSprite, clientVersion);
+						appearancePacket.writeAppearanceByte((byte) shirtSprite, clientVersion);
+						appearancePacket.writeAppearanceByte((byte) pantsSprite, clientVersion);
+						appearancePacket.writeAppearanceByte((byte) shieldSprite, clientVersion);  // Shield is used to denote if invulnerable while invisible
+						appearancePacket.writeAppearanceByte((byte) wornItems[AppearanceId.SLOT_WEAPON], clientVersion);  // Weapon can stay
+						appearancePacket.writeAppearanceByte((byte) hatSprite, clientVersion);
+						appearancePacket.writeAppearanceByte((byte) bodySprite, clientVersion);
+						appearancePacket.writeAppearanceByte((byte) legSprite, clientVersion);
+						appearancePacket.writeAppearanceByte((byte) gloveColour, clientVersion);
+						appearancePacket.writeAppearanceByte((byte) bootColour, clientVersion);
+						appearancePacket.writeAppearanceByte((byte) amuletSprite, clientVersion);
                         // No Cape
                     } else {
                         appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getWornItems().length);
                         for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
                             if (player.isUsingAuthenticClient()) {
-                                appearancePacket.writeByte(i & 0xFF);
+								appearancePacket.writeAppearanceByte(i & 0xFF, clientVersion);
                             } else {
                                 appearancePacket.writeShort(i);
                             }
                         }
                     }
 
-                    appearancePacket.writeByte(appearance.getHairColour());
-                    appearancePacket.writeByte(appearance.getTopColour());
-                    appearancePacket.writeByte(appearance.getTrouserColour());
-                    appearancePacket.writeByte(appearance.getSkinColour());
+					appearancePacket.writeAppearanceByte(appearance.getHairColour(), clientVersion);
+					appearancePacket.writeAppearanceByte(appearance.getTopColour(), clientVersion);
+					appearancePacket.writeAppearanceByte(appearance.getTrouserColour(), clientVersion);
+					appearancePacket.writeAppearanceByte(appearance.getSkinColour(), clientVersion);
                     appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getCombatLevel());
                     appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getSkullType());
 
@@ -1123,34 +1123,6 @@ public final class GameStateUpdater {
 				if (player.getUpdateFlags().hasAppearanceChanged()) {
 					player.incAppearanceID();
 				}
-
-				// Handle morphs
-				if (player.getMorphSpriteIdentifier() != AppearanceId.NOT_MORPHED) {
-					for (int pos = 0; pos < 12; pos++) {
-						player.updateWornItems(pos, NOTHING);
-					}
-					player.updateWornItems(SLOT_BODY, player.getMorphSpriteIdentifier());
-				} else {
-					for (int i = 0; i < 12; i++) {
-						player.updateWornItems(i, player.getSettings().getAppearance().getSprite(i));
-					}
-
-					if (player.getConfig().WANT_EQUIPMENT_TAB) {
-						for (Item item : player.getCarriedItems().getEquipment().getList()) {
-							if (item == null) continue;
-							ItemDefinition itemDef = item.getDef(player.getWorld());
-							player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
-						}
-					} else {
-						for (Item item : player.getCarriedItems().getInventory().getItems()) {
-							if (item == null) continue;
-							ItemDefinition itemDef = item.getDef(player.getWorld());
-							if (item.getItemStatus().isWielded()) {
-								player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(), itemDef.getWearableId(), true);
-							}
-						}
-					}
-				}
 			}
 		});
 	}
@@ -1182,7 +1154,6 @@ public final class GameStateUpdater {
 	public long getLastExecuteWalkToActionsDuration() {
 		return lastExecuteWalkToActionsDuration;
 	}
-
 
 	public void setLastExecuteWalkToActionsDuration(long lastExecuteWalkToActionsDuration) {
 		this.lastExecuteWalkToActionsDuration = lastExecuteWalkToActionsDuration;
