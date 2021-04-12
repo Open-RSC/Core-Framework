@@ -97,8 +97,7 @@ public class Woodcutting implements OpLocTrigger {
 			player.getCarriedItems().getInventory().add(log);
 			player.playerServerMessage(MessageType.QUEST, "You get some wood");
 			player.incExp(Skills.WOODCUT, def.getExp(), true);
-//			if (DataConversions.random(1, 100) <= def.getFell()) {
-			if(true) {
+			if (DataConversions.random(1, 100) <= def.getFell()) {
 				GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				int stumpId;
 				if (def.getLogId() == ItemId.LOGS.id() || def.getLogId() == ItemId.MAGIC_LOGS.id()) {
