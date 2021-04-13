@@ -623,8 +623,8 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 
 			case GAME_SETTINGS_CHANGED:
 				GameSettingStruct gs = new GameSettingStruct();
-				int setting = packet.readByte();
-				int value = packet.readByte();
+				int setting = gs.index = packet.readByte();
+				int value = gs.value = packet.readByte();
 				if (setting == 0) {
 					gs.cameraModeAuto = value;
 				} else if (setting == 2) {
@@ -633,8 +633,6 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 					gs.soundDisabled = value;
 				} else {
 					// custom settings, too many to name individually
-					gs.index = setting;
-					gs.value = value;
 				}
 				result = gs;
 				break;

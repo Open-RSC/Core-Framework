@@ -434,8 +434,8 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 
 			case GAME_SETTINGS_CHANGED:
 				GameSettingStruct gs = new GameSettingStruct();
-				int setting = packet.readByte();
-				int value = packet.readByte();
+				int setting = gs.index = packet.readByte();
+				int value = gs.value = packet.readByte();
 				if (setting == 0) {
 					gs.cameraModeAuto = value;
 				} else if (setting == 1) {
