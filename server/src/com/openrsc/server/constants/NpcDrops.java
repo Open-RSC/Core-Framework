@@ -163,7 +163,7 @@ public class NpcDrops {
 		ultraRareDropTable.addItemDrop(ItemId.RUNE_CHAIN_MAIL_BODY.id(), 1, 2);
 		ultraRareDropTable.addItemDrop(ItemId.RUNE_PLATE_MAIL_LEGS.id(), 1, 2);
 		ultraRareDropTable.addItemDrop(ItemId.RUNE_KITE_SHIELD.id(), 1, 2);
-		ultraRareDropTable.addItemDrop(ItemId.DRAGON_MEDIUM_HELMET.id(), 1, 1);
+		ultraRareDropTable.addItemDrop(ItemId.DRAGON_MEDIUM_HELMET.id(), 1, 2);
 		ultraRareDropTable.addEmptyDrop(256 - ultraRareDropTable.getTotalWeight());
 	}
 
@@ -887,14 +887,14 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.BALL_OF_WOOL.id(), 1, 8);
 		currentNpcDrops.addItemDrop(ItemId.HAMMER.id(), 1, 8);
 		currentNpcDrops.addItemDrop(ItemId.BLUE_WIZARDSHAT.id(), 1, 8);
-		currentNpcDrops.addItemDrop(ItemId.WHITE_BEAD.id(), 1, 6);
-		currentNpcDrops.addItemDrop(ItemId.ASHES.id(), 1, 6);
-		currentNpcDrops.addItemDrop(ItemId.RED_BEAD.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.ASHES.id(), 1, 6);		
 		currentNpcDrops.addItemDrop(ItemId.EGG.id(), 1, 5);
 		currentNpcDrops.addItemDrop(ItemId.RAW_CHICKEN.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.RED_BEAD.id(), 1, 5);
 		currentNpcDrops.addItemDrop(ItemId.YELLOW_BEAD.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.BLACK_BEAD.id(), 1, 5);
+		currentNpcDrops.addItemDrop(ItemId.WHITE_BEAD.id(), 1, 5);
 		currentNpcDrops.addItemDrop(ItemId.TINDERBOX.id(), 1, 5);
-		currentNpcDrops.addItemDrop(ItemId.BLACK_BEAD.id(), 1, 4);
 		currentNpcDrops.addItemDrop(ItemId.BURNTBREAD.id(), 1, 4);
 		currentNpcDrops.addItemDrop(ItemId.BURNTMEAT.id(), 1, 4);
 		currentNpcDrops.addItemDrop(ItemId.BUCKET.id(), 1, 4);
@@ -1292,7 +1292,7 @@ public class NpcDrops {
 		currentNpcDrops = new DropTable("Black Dragon (291)");
 		currentNpcDrops.addTableDrop(herbDropTable, 3);
 		currentNpcDrops.addTableDrop(rareDropTable, 4);
-		currentNpcDrops.addTableDrop(ultraRareDropTable, 1);
+		currentNpcDrops.addTableDrop(ultraRareDropTable, 2);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 196, 38);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 66, 17);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 330, 9);
