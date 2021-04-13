@@ -8,7 +8,7 @@ import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.FriendStruct;
+import com.openrsc.server.net.rsc.struct.incoming.FriendStruct;
 import com.openrsc.server.util.rsc.DataConversions;
 
 public final class FriendHandler implements PayloadProcessor<FriendStruct, OpcodeIn> {

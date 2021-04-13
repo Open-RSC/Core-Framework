@@ -4,7 +4,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.EquipRequest;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.EquipStruct;
+import com.openrsc.server.net.rsc.struct.incoming.EquipStruct;
 
 public final class ItemEquip implements PayloadProcessor<EquipStruct, OpcodeIn> {
 

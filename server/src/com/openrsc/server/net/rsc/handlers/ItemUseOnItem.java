@@ -5,7 +5,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.ItemOnItemStruct;
+import com.openrsc.server.net.rsc.struct.incoming.ItemOnItemStruct;
 
 public final class ItemUseOnItem implements PayloadProcessor<ItemOnItemStruct, OpcodeIn> {
 

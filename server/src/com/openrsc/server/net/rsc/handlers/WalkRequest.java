@@ -12,7 +12,7 @@ import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.WalkStruct;
+import com.openrsc.server.net.rsc.struct.incoming.WalkStruct;
 
 public class WalkRequest implements PayloadProcessor<WalkStruct, OpcodeIn> {
 

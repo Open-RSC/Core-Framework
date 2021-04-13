@@ -3,12 +3,9 @@ package com.openrsc.server;
 import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.database.impl.mysql.queries.logging.PMLog;
-import com.openrsc.server.external.ItemDefinition;
-import com.openrsc.server.model.GlobalMessage;
-import com.openrsc.server.model.PlayerAppearance;
-import com.openrsc.server.model.Point;
-import com.openrsc.server.model.PrivateMessage;
-import com.openrsc.server.model.container.Item;
+import com.openrsc.server.external.GameObjectLoc;
+import com.openrsc.server.external.ItemLoc;
+import com.openrsc.server.model.*;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -16,19 +13,17 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.entity.update.*;
-import com.openrsc.server.net.PacketBuilder;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.net.rsc.enums.OpcodeOut;
+import com.openrsc.server.net.rsc.struct.outgoing.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayDeque;
-import java.util.Iterator;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static com.openrsc.server.constants.AppearanceId.NOTHING;
-import static com.openrsc.server.constants.AppearanceId.SLOT_BODY;
+import static com.openrsc.server.net.rsc.ActionSender.tryFinalizeAndSendPacket;
 
 public final class GameStateUpdater {
 	/**
@@ -140,130 +135,132 @@ public final class GameStateUpdater {
 	}
 
 	protected void updateNpcs(final Player playerToUpdate) {
-		final com.openrsc.server.net.PacketBuilder packet = new com.openrsc.server.net.PacketBuilder();
-		packet.setID(ActionSender.Opcode.SEND_NPC_COORDS.opcode);
-		packet.startBitAccess();
-		packet.writeBits(playerToUpdate.getLocalNpcs().size(), 8);
-		for (final Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext(); ) {
-			Npc localNpc = it$.next();
+		if (playerToUpdate.getClientVersion() == 38) {
+			// TODO: check impl
+		} else {
+			MobsUpdateStruct struct = new MobsUpdateStruct();
+			List<AbstractMap.SimpleEntry<Integer, Integer>> mobsUpdate = new ArrayList<>();
 
-			if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isRespawning() || localNpc.isTeleporting() || localNpc.inCombat() || !localNpc.withinAuthenticRange(playerToUpdate)) {
-				it$.remove();
-				packet.writeBits(1, 1);
-				packet.writeBits(1, 1);
-				packet.writeBits(3, 2);
-			} else {
-				if (localNpc.hasMoved()) {
-					packet.writeBits(1, 1);
-					packet.writeBits(0, 1);
-					packet.writeBits(localNpc.getSprite(), 3);
-				} else if (localNpc.spriteChanged()) {
-					packet.writeBits(1, 1);
-					packet.writeBits(1, 1);
-					packet.writeBits(localNpc.getSprite(), 4);
+			mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getLocalNpcs().size(), 8));
+			for (final Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext(); ) {
+				Npc localNpc = it$.next();
+
+				if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isRespawning() || localNpc.isTeleporting() || localNpc.inCombat() || !localNpc.withinAuthenticRange(playerToUpdate)) {
+					it$.remove();
+					mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
+					mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
+					mobsUpdate.add(new AbstractMap.SimpleEntry<>(3, 2));
 				} else {
-					packet.writeBits(0, 1);
+					if (localNpc.hasMoved()) {
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(0, 1));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(localNpc.getSprite(), 3));
+					} else if (localNpc.spriteChanged()) {
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1));
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(localNpc.getSprite(), 4));
+					} else {
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(0, 1));
+					}
 				}
 			}
-		}
-		for (final Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
-			if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved() || newNPC.isRespawning()
-				|| newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")
-				|| !playerToUpdate.withinRange(newNPC) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
-				continue;
-			} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
-				break;
-			}
-			if (!newNPC.withinAuthenticRange(playerToUpdate))
-				continue; // only have 5 bits in the rsc235 protocol, so the npc can only be shown up to 16 away
+			for (final Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
+				if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved() || newNPC.isRespawning()
+					|| newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")
+					|| !playerToUpdate.withinRange(newNPC) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
+					continue;
+				} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
+					break;
+				}
+				if (!newNPC.withinAuthenticRange(playerToUpdate))
+					continue; // only have 5 bits in the rsc235 protocol, so the npc can only be shown up to 16 away
 
-			final byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
-			packet.writeBits(newNPC.getIndex(), 12);
-			if (playerToUpdate.isUsingAuthenticClient()) {
-				packet.writeBits(offsets[0], 5);
-				packet.writeBits(offsets[1], 5);
-			} else {
-				packet.writeBits(offsets[0], 6);
-				packet.writeBits(offsets[1], 6);
-			}
-			packet.writeBits(newNPC.getSprite(), 4);
-			packet.writeBits(newNPC.getID(), 10);
+				final byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getIndex(), 12));
+				boolean forAuthentic = playerToUpdate.isUsingAuthenticClient();
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[0], forAuthentic ? 5 : 6));
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[1], forAuthentic ? 5 : 6));
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getSprite(), 4));
+				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getID(), 10));
 
-			playerToUpdate.getLocalNpcs().add(newNPC);
+				playerToUpdate.getLocalNpcs().add(newNPC);
+			}
+
+			struct.mobs = mobsUpdate;
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_NPC_COORDS, struct, playerToUpdate);
 		}
-		packet.finishBitAccess();
-		playerToUpdate.write(packet.toPacket());
 	}
 
 	protected void updatePlayers(final Player playerToUpdate) {
-		final com.openrsc.server.net.PacketBuilder positionBuilder = new com.openrsc.server.net.PacketBuilder();
-		positionBuilder.setID(ActionSender.Opcode.SEND_PLAYER_COORDS.opcode);
-		positionBuilder.startBitAccess();
-		positionBuilder.writeBits(playerToUpdate.getX(), 11);
-		positionBuilder.writeBits(playerToUpdate.getY(), 13);
-		positionBuilder.writeBits(playerToUpdate.getSprite(), 4);
-		positionBuilder.writeBits(playerToUpdate.getLocalPlayers().size(), 8);
+		if (playerToUpdate.getClientVersion() == 38) {
+			// TODO: check impl
+		} else {
+			MobsUpdateStruct struct = new MobsUpdateStruct();
+			List<AbstractMap.SimpleEntry<Integer, Integer>> mobsUpdate = new ArrayList<>();
 
-		if (playerToUpdate.loggedIn()) {
-			for (final Iterator<Player> it$ = playerToUpdate.getLocalPlayers().iterator(); it$.hasNext(); ) {
-				final Player otherPlayer = it$.next();
+			mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getX(), 11));
+			mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getY(), 13));
+			mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getSprite(), 4));
+			mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getLocalPlayers().size(), 8));
+			if (playerToUpdate.loggedIn()) {
+				for (final Iterator<Player> it$ = playerToUpdate.getLocalPlayers().iterator(); it$.hasNext(); ) {
+					final Player otherPlayer = it$.next();
 
-				if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
-					|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
-					|| otherPlayer.inCombat() || otherPlayer.hasMoved()
-				    || !otherPlayer.withinAuthenticRange(playerToUpdate)) {
-					positionBuilder.writeBits(1, 1); //Needs Update
-					positionBuilder.writeBits(1, 1); //Update Type
-					positionBuilder.writeBits(3, 2); //Animation type (Remove)
-					it$.remove();
-					playerToUpdate.getKnownPlayerAppearanceIDs().remove(otherPlayer.getUsernameHash());
-				} else {
-					if (!otherPlayer.hasMoved() && !otherPlayer.spriteChanged()) {
-						positionBuilder.writeBits(0, 1); //Needs Update
+					if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
+						|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
+						|| otherPlayer.inCombat() || otherPlayer.hasMoved()
+						|| !otherPlayer.withinAuthenticRange(playerToUpdate)) {
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1)); //Needs Update
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1)); //Update Type
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(3, 2)); //Animation type (Remove)
+						it$.remove();
+						playerToUpdate.getKnownPlayerAppearanceIDs().remove(otherPlayer.getUsernameHash());
 					} else {
-						// The player is actually going to be updated
-						if (otherPlayer.hasMoved()) {
-							positionBuilder.writeBits(1, 1); //Needs Update
-							positionBuilder.writeBits(0, 1); //Update Type
-							positionBuilder.writeBits(otherPlayer.getSprite(), 3);
-						} else if (otherPlayer.spriteChanged()) {
-							positionBuilder.writeBits(1, 1); //Needs Update
-							positionBuilder.writeBits(1, 1); //Update Type
-							positionBuilder.writeBits(otherPlayer.getSprite(), 4);
+						if (!otherPlayer.hasMoved() && !otherPlayer.spriteChanged()) {
+							mobsUpdate.add(new AbstractMap.SimpleEntry<>(0, 1)); //Needs Update
+						} else {
+							// The player is actually going to be updated
+							if (otherPlayer.hasMoved()) {
+								mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1)); //Needs Update
+								mobsUpdate.add(new AbstractMap.SimpleEntry<>(0, 1)); //Update Type
+								mobsUpdate.add(new AbstractMap.SimpleEntry<>(otherPlayer.getSprite(), 3));
+							} else if (otherPlayer.spriteChanged()) {
+								mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1)); //Needs Update
+								mobsUpdate.add(new AbstractMap.SimpleEntry<>(1, 1)); //Update Type
+								mobsUpdate.add(new AbstractMap.SimpleEntry<>(otherPlayer.getSprite(), 4));
+							}
 						}
+					}
+				}
+
+				for (final Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
+					if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
+						|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
+						|| otherPlayer.isRemoved() || otherPlayer.isInvisibleTo(playerToUpdate)
+						|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
+						continue;
+					}
+					if (!otherPlayer.withinAuthenticRange(playerToUpdate))
+						continue; // only have 5 bits in the rsc235 protocol, so the player can only be shown up to 16 tiles away
+
+					final byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
+						playerToUpdate.getLocation());
+					mobsUpdate.add(new AbstractMap.SimpleEntry<>(otherPlayer.getIndex(), 11));
+					boolean forAuthentic = playerToUpdate.isUsingAuthenticClient();
+					mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[0], forAuthentic ? 5 : 6));
+					mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[1], forAuthentic ? 5 : 6));
+					mobsUpdate.add(new AbstractMap.SimpleEntry<>(otherPlayer.getSprite(), 4));
+
+					playerToUpdate.getLocalPlayers().add(otherPlayer);
+					if (playerToUpdate.getLocalPlayers().size() >= 255) {
+						break;
 					}
 				}
 			}
 
-			for (final Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
-				if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
-					|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
-					|| otherPlayer.isRemoved() || otherPlayer.isInvisibleTo(playerToUpdate)
-					|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
-					continue;
-				}
-				if (!otherPlayer.withinAuthenticRange(playerToUpdate))
-					continue; // only have 5 bits in the rsc235 protocol, so the player can only be shown up to 16 tiles away
-
-				final byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
-					playerToUpdate.getLocation());
-				positionBuilder.writeBits(otherPlayer.getIndex(), 11);
-				if (playerToUpdate.isUsingAuthenticClient()) {
-					positionBuilder.writeBits(offsets[0], 5);
-					positionBuilder.writeBits(offsets[1], 5);
-				} else {
-					positionBuilder.writeBits(offsets[0], 6);
-					positionBuilder.writeBits(offsets[1], 6);
-				}
-				positionBuilder.writeBits(otherPlayer.getSprite(), 4);
-				playerToUpdate.getLocalPlayers().add(otherPlayer);
-				if (playerToUpdate.getLocalPlayers().size() >= 255) {
-					break;
-				}
-			}
+			struct.mobs = mobsUpdate;
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_PLAYER_COORDS, struct, playerToUpdate);
 		}
-		positionBuilder.finishBitAccess();
-		playerToUpdate.write(positionBuilder.toPacket());
 	}
 
 	public void updateNpcAppearances(final Player player) {
@@ -308,66 +305,72 @@ public final class GameStateUpdater {
 		final int updateSize = npcMessagesNeedingDisplayed.size() + npcsNeedingHitsUpdate.size()
 			+ npcProjectilesNeedingDisplayed.size() + npcSkullsNeedingDisplayed.size() + npcWieldsNeedingDisplayed.size() + npcBubblesNeedingDisplayed.size();
 		if (updateSize > 0) {
-			final PacketBuilder npcAppearancePacket = new PacketBuilder();
-			npcAppearancePacket.setID(ActionSender.Opcode.SEND_UPDATE_NPC.opcode);
-			npcAppearancePacket.writeShort(updateSize);
+			AppearanceUpdateStruct struct = new AppearanceUpdateStruct();
+			List<Object> updates = new ArrayList<>();
+
+			updates.add((short) updateSize);
 
 			ChatMessage chatMessage;
 			while ((chatMessage = npcMessagesNeedingDisplayed.poll()) != null) {
-				npcAppearancePacket.writeShort(chatMessage.getSender().getIndex());
-				npcAppearancePacket.writeByte((byte) 1);
-				npcAppearancePacket.writeShort(chatMessage.getRecipient() == null ? -1 : chatMessage.getRecipient().getIndex());
-				if (player.isUsingAuthenticClient()) {
-					npcAppearancePacket.writeRSCString(chatMessage.getMessageString());
+				updates.add((short) chatMessage.getSender().getIndex());
+				updates.add((byte) 1);
+				updates.add((short) (chatMessage.getRecipient() == null ? -1 : chatMessage.getRecipient().getIndex()));
+				if (player.getClientVersion() == 38) {
+					updates.add((byte) chatMessage.getMessageString().length());
+					updates.add(chatMessage.getMessageString());
+				} else if (player.isUsingAuthenticClient()) {
+					updates.add(new RSCString(chatMessage.getMessageString()));
 				} else {
-					npcAppearancePacket.writeString(chatMessage.getMessageString());
+					updates.add(chatMessage.getMessageString());
 				}
 			}
 			Damage npcNeedingHitsUpdate;
 			while ((npcNeedingHitsUpdate = npcsNeedingHitsUpdate.poll()) != null) {
-				npcAppearancePacket.writeShort(npcNeedingHitsUpdate.getIndex());
-				npcAppearancePacket.writeByte((byte) 2);
-				npcAppearancePacket.writeByte((byte) npcNeedingHitsUpdate.getDamage());
-				npcAppearancePacket.writeByte((byte) npcNeedingHitsUpdate.getCurHits());
-				npcAppearancePacket.writeByte((byte) npcNeedingHitsUpdate.getMaxHits());
+				updates.add((short) npcNeedingHitsUpdate.getIndex());
+				updates.add((byte) 2);
+				updates.add((byte) npcNeedingHitsUpdate.getDamage());
+				updates.add((byte) npcNeedingHitsUpdate.getCurHits());
+				updates.add(((byte) npcNeedingHitsUpdate.getMaxHits()));
 			}
-			if (!player.isUsingAuthenticClient()) {
+			if (!player.isUsingAuthenticClient() && player.getClientVersion() != 38) {
 				Projectile projectile;
 				while ((projectile = npcProjectilesNeedingDisplayed.poll()) != null) {
 					Entity victim = projectile.getVictim();
 					if (victim.isNpc()) {
-						npcAppearancePacket.writeShort(projectile.getCaster().getIndex());
-						npcAppearancePacket.writeByte((byte) 3);
-						npcAppearancePacket.writeShort(projectile.getType());
-						npcAppearancePacket.writeShort(((Npc) victim).getIndex());
+						updates.add((short) projectile.getCaster().getIndex());
+						updates.add((byte) 3);
+						updates.add((short) projectile.getType());
+						updates.add((short) victim.getIndex());
 					} else if (victim.isPlayer()) {
-						npcAppearancePacket.writeShort(projectile.getCaster().getIndex());
-						npcAppearancePacket.writeByte((byte) 4);
-						npcAppearancePacket.writeShort(projectile.getType());
-						npcAppearancePacket.writeShort(((Player) victim).getIndex());
+						updates.add((short) projectile.getCaster().getIndex());
+						updates.add((byte) 4);
+						updates.add((short) projectile.getType());
+						updates.add((short) victim.getIndex());
 					}
 				}
 				Skull npcNeedingSkullUpdate;
 				while ((npcNeedingSkullUpdate = npcSkullsNeedingDisplayed.poll()) != null) {
-					npcAppearancePacket.writeShort(npcNeedingSkullUpdate.getIndex());
-					npcAppearancePacket.writeByte((byte) 5);
-					npcAppearancePacket.writeByte((byte) npcNeedingSkullUpdate.getSkull());
+					updates.add((short) npcNeedingSkullUpdate.getIndex());
+					updates.add((byte) 5);
+					updates.add((byte) npcNeedingSkullUpdate.getSkull());
 				}
 				Wield npcNeedingWieldUpdate;
 				while ((npcNeedingWieldUpdate = npcWieldsNeedingDisplayed.poll()) != null) {
-					npcAppearancePacket.writeShort(npcNeedingWieldUpdate.getIndex());
-					npcAppearancePacket.writeByte((byte) 6);
-					npcAppearancePacket.writeByte((byte) npcNeedingWieldUpdate.getWield());
-					npcAppearancePacket.writeByte((byte) npcNeedingWieldUpdate.getWield2());
+					updates.add((short) npcNeedingWieldUpdate.getIndex());
+					updates.add((byte) 6);
+					updates.add((byte) npcNeedingWieldUpdate.getWield());
+					updates.add((byte) npcNeedingWieldUpdate.getWield2());
 				}
 				BubbleNpc npcNeedingBubbleUpdate;
 				while ((npcNeedingBubbleUpdate = npcBubblesNeedingDisplayed.poll()) != null) {
-					npcAppearancePacket.writeShort(npcNeedingBubbleUpdate.getOwner().getIndex());
-					npcAppearancePacket.writeByte((byte) 7);
-					npcAppearancePacket.writeShort(npcNeedingBubbleUpdate.getID());
+					updates.add((short) npcNeedingBubbleUpdate.getOwner().getIndex());
+					updates.add((byte) 7);
+					updates.add((short) npcNeedingBubbleUpdate.getID());
 				}
 			}
-			player.write(npcAppearancePacket.toPacket());
+
+			struct.info = updates;
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_UPDATE_NPC, struct, player);
 		}
 	}
 
@@ -460,15 +463,26 @@ public final class GameStateUpdater {
 				+ playersNeedingDamageUpdate.size() + projectilesNeedingDisplayed.size()
 				+ playersNeedingAppearanceUpdate.size();
 
+			// TODO: needs to be later revised for mc38
 			if (updateSize > 0) {
-				final PacketBuilder appearancePacket = new PacketBuilder();
-				appearancePacket.setID(ActionSender.Opcode.SEND_UPDATE_PLAYERS.opcode);
+				AppearanceUpdateStruct mainStruct = new AppearanceUpdateStruct();
+				AppearanceUpdateStruct altStruct = new AppearanceUpdateStruct(); // for early mudclient, appearance update was sent appart;
+				boolean isRetroClient = player.getClientVersion() == 38;
+				boolean isCustomClient = !player.isUsingAuthenticClient() && !isRetroClient;
 
-				// This is how many updates there are in this packet
-				if (!player.isUsingAuthenticClient()) {
-					appearancePacket.writeShort(updateSize + playersNeedingHpUpdate.size());
+				List<Object> updatesMain = new ArrayList<>();
+				List<Object> updatesAlt = new ArrayList<>();
+				if (isRetroClient) {
+					if (updateSize - playersNeedingAppearanceUpdate.size() > 0) {
+						updatesMain.add((short) (updateSize - playersNeedingAppearanceUpdate.size()));
+					}
+					if (playersNeedingAppearanceUpdate.size() > 0) {
+						updatesAlt.add((short) playersNeedingAppearanceUpdate.size());
+					}
+				} else if (player.isUsingAuthenticClient()) {
+					updatesMain.add((short) updateSize);
 				} else {
-					appearancePacket.writeShort(updateSize);
+					updatesMain.add((short) (updateSize + playersNeedingHpUpdate.size()));
 				}
 
 				// Note: The order that these updates are written to packet 234 is not authentic.
@@ -482,14 +496,14 @@ public final class GameStateUpdater {
 				// Update Type 0, Bubble
 				Bubble b;
 				while ((b = bubblesNeedingDisplayed.poll()) != null) {
-					appearancePacket.writeShort(b.getOwner().getIndex());
-					appearancePacket.writeByte((byte) 0);
-					appearancePacket.writeShort(b.getID());
+					updatesMain.add((short) b.getOwner().getIndex());
+					updatesMain.add((byte) 0);
+					updatesMain.add((short) b.getID());
 				}
 
 				// Update Type 1: Chat Message
 				// AND
-				// Update Type 6: Quest Chat Message
+				// Update Type 6: Quest Chat Message, 1 on retro client prefixed by "@que@"
 				ChatMessage cm;
 				while ((cm = chatMessagesNeedingDisplayed.poll()) != null) {
 					Player sender = (Player) cm.getSender();
@@ -516,7 +530,7 @@ public final class GameStateUpdater {
 						}
 					}
 
-					if (player.isUsingAuthenticClient()) {
+					if (!isCustomClient) {
 						String message = cm.getMessageString();
 						if (updateType == 7) {
 							if (player.hasElevatedPriveledges()) {
@@ -530,35 +544,42 @@ public final class GameStateUpdater {
 							}
 						}
 						if (updateType != 7) {
-							appearancePacket.writeShort(cm.getSender().getIndex());
-							appearancePacket.writeByte(updateType);
-							if (updateType != 6) {
-								appearancePacket.writeByte(sender.getIconAuthentic());
+							updatesMain.add((short) cm.getSender().getIndex());
+							updatesMain.add((byte) (!isRetroClient ? updateType : 1));
+							if (updateType != 6 && !isRetroClient) {
+								updatesMain.add((byte) sender.getIconAuthentic());
 							}
-							appearancePacket.writeRSCString(message);
+							if (isRetroClient) {
+								String messageUse = message;
+								if (updateType == 6) messageUse = "@que@" + message;
+								updatesMain.add((byte) messageUse.length());
+								updatesMain.add(messageUse);
+							} else {
+								updatesMain.add(new RSCString(message));
+							}
 						} else {
 							LOGGER.error("extraneous chat update packet will crash the authentic client...!");
 						}
 
 					} else {
 						// Non Authentic OpenRSC client
-						appearancePacket.writeShort(cm.getSender().getIndex());
-						appearancePacket.writeByte(updateType);
+						updatesMain.add((short) cm.getSender().getIndex());
+						updatesMain.add((byte) updateType);
 
 						if (updateType == 1 || updateType == 7) {
 							if (cm.getSender() != null && cm.getSender() instanceof Player)
-								appearancePacket.writeInt(sender.getIcon());
+								updatesMain.add((int) sender.getIcon());
 						}
 
 						if (updateType == 7) {
-							appearancePacket.writeByte(sender.isMuted() ? 1 : 0);
-							appearancePacket.writeByte(sender.getLocation().onTutorialIsland() ? 1 : 0);
+							updatesMain.add((byte) (sender.isMuted() ? 1 : 0));
+							updatesMain.add((byte) (sender.getLocation().onTutorialIsland() ? 1 : 0));
 						}
 
 						if (updateType != 7 || player.isAdmin()) {
-							appearancePacket.writeString(cm.getMessageString());
+							updatesMain.add(cm.getMessageString());
 						} else {
-							appearancePacket.writeString("");
+							updatesMain.add("");
 						}
 					}
 				}
@@ -566,11 +587,11 @@ public final class GameStateUpdater {
 				// Update Type 2: Damage Update
 				Damage playerNeedingHitsUpdate;
 				while ((playerNeedingHitsUpdate = playersNeedingDamageUpdate.poll()) != null) {
-					appearancePacket.writeShort(playerNeedingHitsUpdate.getIndex());
-					appearancePacket.writeByte((byte) 2);
-					appearancePacket.writeByte((byte) playerNeedingHitsUpdate.getDamage());
-					appearancePacket.writeByte((byte) playerNeedingHitsUpdate.getCurHits());
-					appearancePacket.writeByte((byte) playerNeedingHitsUpdate.getMaxHits());
+					updatesMain.add((short) playerNeedingHitsUpdate.getIndex());
+					updatesMain.add((byte) 2);
+					updatesMain.add((byte) playerNeedingHitsUpdate.getDamage());
+					updatesMain.add((byte) playerNeedingHitsUpdate.getCurHits());
+					updatesMain.add((byte) playerNeedingHitsUpdate.getMaxHits());
 				}
 
 				// Update Types 3 & 4: Projectile Update (draws the projectile)
@@ -578,15 +599,15 @@ public final class GameStateUpdater {
 				while ((projectile = projectilesNeedingDisplayed.poll()) != null) {
 					Entity victim = projectile.getVictim();
 					if (victim.isNpc()) {
-						appearancePacket.writeShort(projectile.getCaster().getIndex());
-						appearancePacket.writeByte((byte) 3);
-						appearancePacket.writeShort(projectile.getType());
-						appearancePacket.writeShort(((Npc) victim).getIndex());
+						updatesMain.add((short) projectile.getCaster().getIndex());
+						updatesMain.add((byte) 3);
+						updatesMain.add((short) projectile.getType());
+						updatesMain.add((short) victim.getIndex());
 					} else if (victim.isPlayer()) {
-						appearancePacket.writeShort(projectile.getCaster().getIndex());
-						appearancePacket.writeByte((byte) 4);
-						appearancePacket.writeShort(projectile.getType());
-						appearancePacket.writeShort(((Player) victim).getIndex());
+						updatesMain.add((short) projectile.getCaster().getIndex());
+						updatesMain.add((byte) 4);
+						updatesMain.add((short) projectile.getType());
+						updatesMain.add((short) victim.getIndex());
 					}
 				}
 
@@ -596,18 +617,23 @@ public final class GameStateUpdater {
 					PlayerAppearance appearance = playerNeedingAppearanceUpdate.getSettings().getAppearance();
 					final int clientVersion = playerNeedingAppearanceUpdate.getClientVersion();
 
-					appearancePacket.writeShort((short) playerNeedingAppearanceUpdate.getIndex());
-					appearancePacket.writeByte((byte) 5);
-					if (player.isUsingAuthenticClient()) {
-						appearancePacket.writeShort(player.getAppearanceID());
-						appearancePacket.writeZeroQuotedString(playerNeedingAppearanceUpdate.getUsername());
-						appearancePacket.writeZeroQuotedString(playerNeedingAppearanceUpdate.getUsername()); // Pretty sure this is unnecessary & always redundant authentically.
+					if (isRetroClient) {
+						updatesAlt.add((short) playerNeedingAppearanceUpdate.getIndex()); // server index
+						updatesAlt.add((short) player.getAppearanceID()); // server id
+						updatesAlt.add((long) DataConversions.usernameToHash(playerNeedingAppearanceUpdate.getUsername()));
 					} else {
-						appearancePacket.writeString(playerNeedingAppearanceUpdate.getUsername());
+						updatesMain.add((short) playerNeedingAppearanceUpdate.getIndex());
+						updatesMain.add((byte) 5);
+						if (player.isUsingAuthenticClient()) {
+							updatesMain.add((short) player.getAppearanceID());
+							updatesMain.add(playerNeedingAppearanceUpdate.getUsername());
+							updatesMain.add(playerNeedingAppearanceUpdate.getUsername()); // Pretty sure this is unnecessary & always redundant authentically.
+						} else {
+							updatesMain.add(playerNeedingAppearanceUpdate.getUsername());
+						}
 					}
-
                     // Handle Invisibility & Invulnerability in the authentic client
-					if (player.isUsingAuthenticClient() &&
+					if (!isCustomClient &&
                         (playerNeedingAppearanceUpdate.stateIsInvisible() ||
                             playerNeedingAppearanceUpdate.stateIsInvulnerable())) {
                         int[] wornItems = playerNeedingAppearanceUpdate.getWornItems();
@@ -659,72 +685,112 @@ public final class GameStateUpdater {
                             amuletSprite = AppearanceId.PENDANT_OF_LUCIEN.id();
                         }
 
-                        appearancePacket.writeByte((byte) 11); // Equipment count
-						appearancePacket.writeAppearanceByte((byte) headSprite, clientVersion);
-						appearancePacket.writeAppearanceByte((byte) shirtSprite, clientVersion);
-						appearancePacket.writeAppearanceByte((byte) pantsSprite, clientVersion);
-						appearancePacket.writeAppearanceByte((byte) shieldSprite, clientVersion);  // Shield is used to denote if invulnerable while invisible
-						appearancePacket.writeAppearanceByte((byte) wornItems[AppearanceId.SLOT_WEAPON], clientVersion);  // Weapon can stay
-						appearancePacket.writeAppearanceByte((byte) hatSprite, clientVersion);
-						appearancePacket.writeAppearanceByte((byte) bodySprite, clientVersion);
-						appearancePacket.writeAppearanceByte((byte) legSprite, clientVersion);
-						appearancePacket.writeAppearanceByte((byte) gloveColour, clientVersion);
-						appearancePacket.writeAppearanceByte((byte) bootColour, clientVersion);
-						appearancePacket.writeAppearanceByte((byte) amuletSprite, clientVersion);
+                        // as char to indicate to the generator to use appearancebyte
+						if (isRetroClient) {
+							updatesAlt.add((byte) 11); // Equipment count
+							updatesAlt.add((char) headSprite);
+							updatesAlt.add((char) shirtSprite);
+							updatesAlt.add((char) pantsSprite);
+							updatesAlt.add((char) shieldSprite);
+							updatesAlt.add((char) wornItems[AppearanceId.SLOT_WEAPON]);
+							updatesAlt.add((char) hatSprite);
+							updatesAlt.add((char) bodySprite);
+							updatesAlt.add((char) legSprite);
+							updatesAlt.add((char) gloveColour);
+							updatesAlt.add((char) bootColour);
+							updatesAlt.add((char) amuletSprite);
+						} else {
+							updatesMain.add((byte) 11); // Equipment count
+							updatesMain.add((char) headSprite);
+							updatesMain.add((char) shirtSprite);
+							updatesMain.add((char) pantsSprite);
+							updatesMain.add((char) shieldSprite);
+							updatesMain.add((char) wornItems[AppearanceId.SLOT_WEAPON]);
+							updatesMain.add((char) hatSprite);
+							updatesMain.add((char) bodySprite);
+							updatesMain.add((char) legSprite);
+							updatesMain.add((char) gloveColour);
+							updatesMain.add((char) bootColour);
+							updatesMain.add((char) amuletSprite);
+						}
                         // No Cape
                     } else {
-                        appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getWornItems().length);
+						if (isRetroClient) {
+							updatesAlt.add((byte) playerNeedingAppearanceUpdate.getWornItems().length);
+						} else {
+							updatesMain.add((byte) playerNeedingAppearanceUpdate.getWornItems().length);
+						}
                         for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
-                            if (player.isUsingAuthenticClient()) {
-								appearancePacket.writeAppearanceByte(i & 0xFF, clientVersion);
-                            } else {
-                                appearancePacket.writeShort(i);
-                            }
+                            if (isRetroClient) {
+								updatesAlt.add((char) (i & 0xFF));
+							} else if (player.isUsingAuthenticClient()) {
+								updatesMain.add((char) (i & 0xFF));
+							} else {
+								updatesMain.add((short) i);
+							}
                         }
                     }
 
-					appearancePacket.writeAppearanceByte(appearance.getHairColour(), clientVersion);
-					appearancePacket.writeAppearanceByte(appearance.getTopColour(), clientVersion);
-					appearancePacket.writeAppearanceByte(appearance.getTrouserColour(), clientVersion);
-					appearancePacket.writeAppearanceByte(appearance.getSkinColour(), clientVersion);
-                    appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getCombatLevel());
-                    appearancePacket.writeByte((byte) playerNeedingAppearanceUpdate.getSkullType());
+					if (isRetroClient) {
+						updatesAlt.add((char) appearance.getHairColour());
+						updatesAlt.add((char) appearance.getTopColour());
+						updatesAlt.add((char) appearance.getTrouserColour());
+						updatesAlt.add((char) appearance.getSkinColour());
+						updatesAlt.add((byte) playerNeedingAppearanceUpdate.getCombatLevel());
+						updatesAlt.add((byte) playerNeedingAppearanceUpdate.getSkullType());
+					} else {
+						updatesMain.add((char) appearance.getHairColour());
+						updatesMain.add((char) appearance.getTopColour());
+						updatesMain.add((char) appearance.getTrouserColour());
+						updatesMain.add((char) appearance.getSkinColour());
+						updatesMain.add((byte) playerNeedingAppearanceUpdate.getCombatLevel());
+						updatesMain.add((byte) playerNeedingAppearanceUpdate.getSkullType());
+					}
 
-					if (!player.isUsingAuthenticClient()) {
+					if (isCustomClient) {
 						if (playerNeedingAppearanceUpdate.getClan() != null) {
-							appearancePacket.writeByte(1);
-							appearancePacket.writeString(playerNeedingAppearanceUpdate.getClan().getClanTag());
+							updatesMain.add((byte) 1);
+							updatesMain.add(playerNeedingAppearanceUpdate.getClan().getClanTag());
 						} else {
-							appearancePacket.writeByte(0);
+							updatesMain.add((byte) 0);
 						}
 
-						appearancePacket.writeByte(playerNeedingAppearanceUpdate.stateIsInvisible() ? 1 : 0);
-						appearancePacket.writeByte(playerNeedingAppearanceUpdate.stateIsInvulnerable() ? 1 : 0);
-						appearancePacket.writeByte(playerNeedingAppearanceUpdate.getGroupID());
-						appearancePacket.writeInt(playerNeedingAppearanceUpdate.getIcon());
+						updatesMain.add((byte) (playerNeedingAppearanceUpdate.stateIsInvisible() ? 1 : 0));
+						updatesMain.add((byte) (playerNeedingAppearanceUpdate.stateIsInvulnerable() ? 1 : 0));
+						updatesMain.add((byte) playerNeedingAppearanceUpdate.getGroupID());
+						updatesMain.add((int) playerNeedingAppearanceUpdate.getIcon());
 					}
 				}
 
-				if (!player.isUsingAuthenticClient()) {
+				if (isCustomClient) {
 					// Non authentic type 9. In authentic network protocol, this information is just in type 2.
 					HpUpdate playerNeedingHpUpdate;
 					while ((playerNeedingHpUpdate = playersNeedingHpUpdate.poll()) != null) {
-						appearancePacket.writeShort(playerNeedingHpUpdate.getIndex());
-						appearancePacket.writeByte((byte) 9);
-						appearancePacket.writeByte((byte) playerNeedingHpUpdate.getCurHits());
-						appearancePacket.writeByte((byte) playerNeedingHpUpdate.getMaxHits());
+						updatesMain.add((short) playerNeedingHpUpdate.getIndex());
+						updatesMain.add((byte) 9);
+						updatesMain.add((byte) playerNeedingHpUpdate.getCurHits());
+						updatesMain.add((byte) playerNeedingHpUpdate.getMaxHits());
 					}
 				}
 
-				player.write(appearancePacket.toPacket());
+				mainStruct.info = updatesMain;
+				altStruct.info = updatesAlt;
+				if (updatesMain.size() > 0 ) {
+					tryFinalizeAndSendPacket(OpcodeOut.SEND_UPDATE_PLAYERS, mainStruct, player);
+				}
+				if (updatesAlt.size() > 0) {
+					tryFinalizeAndSendPacket(OpcodeOut.SEND_UPDATE_PLAYERS_RETRO, altStruct, player);
+				}
 			}
 		}
 	}
 
 	protected void updateGameObjects(final Player playerToUpdate) {
 		boolean changed = false;
-		final PacketBuilder packet = new PacketBuilder();
-		packet.setID(ActionSender.Opcode.SEND_SCENERY_HANDLER.opcode);
+
+		GameObjectsUpdateStruct struct = new GameObjectsUpdateStruct();
+		List<GameObjectLoc> objectLocs = new ArrayList<>();
+
 		// TODO: Unloading scenery is not handled correctly.
 		//       According to RSC+ replays, the server never tells the client to unload objects until
 		//       a region is unloaded. It then instructs the client to only unload the region.
@@ -737,13 +803,7 @@ public final class GameStateUpdater {
 				final int offsetY = o.getY() - playerToUpdate.getY();
 				//If the object is close enough we can use regular way to remove:
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
-					packet.writeShort(60000);
-					packet.writeByte(offsetX);
-					packet.writeByte(offsetY);
-					if (!playerToUpdate.isUsingAuthenticClient()) {
-						// the authentic client just gets this information from the cached map
-						packet.writeByte(o.getDirection());
-					}
+					objectLocs.add(new GameObjectLoc(60000, offsetX, offsetY, o.getDirection(), 0));
 					it$.remove();
 					changed = true;
 				} else {
@@ -772,25 +832,24 @@ public final class GameStateUpdater {
 				continue;
 			}
 
-			packet.writeShort(newObject.getID());
 			final int offsetX = newObject.getX() - playerToUpdate.getX();
 			final int offsetY = newObject.getY() - playerToUpdate.getY();
-			packet.writeByte(offsetX);
-			packet.writeByte(offsetY);
-			if (!playerToUpdate.isUsingAuthenticClient()) {
-				packet.writeByte(newObject.getDirection());
-			}
+			objectLocs.add(new GameObjectLoc(newObject.getID(), offsetX, offsetY, newObject.getDirection(), 0));
 			playerToUpdate.getLocalGameObjects().add(newObject);
 			changed = true;
 		}
-		if (changed)
-			playerToUpdate.write(packet.toPacket());
+		struct.objects = objectLocs;
+		if (changed) {
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_SCENERY_HANDLER, struct, playerToUpdate);
+		}
 	}
 
 	protected void updateGroundItems(final Player playerToUpdate) {
 		boolean changed = false;
-		final PacketBuilder packet = new PacketBuilder();
-		packet.setID(ActionSender.Opcode.SEND_GROUND_ITEM_HANDLER.opcode);
+
+		GroundItemsUpdateStruct struct = new GroundItemsUpdateStruct();
+		List<ItemLoc> itemLocs = new ArrayList<>();
+
 		for (final Iterator<GroundItem> it$ = playerToUpdate.getLocalGroundItems().iterator(); it$.hasNext(); ) {
 			final GroundItem groundItem = it$.next();
 			final int offsetX = (groundItem.getX() - playerToUpdate.getX());
@@ -798,26 +857,17 @@ public final class GameStateUpdater {
 
 			if (!playerToUpdate.withinGridRange(groundItem)) {
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
-					packet.writeByte(255);
-					packet.writeByte(offsetX);
-					packet.writeByte(offsetY);
-					if (!playerToUpdate.isUsingAuthenticClient()) {
-						if (getServer().getConfig().WANT_BANK_NOTES)
-							packet.writeByte(groundItem.getNoted() ? 1 : 0);
-					}
+					// respawnTime = -1 to indicate to clear not on range
+					itemLocs.add(new ItemLoc(groundItem.getID(), offsetX, offsetY, groundItem.getAmount(), -1,
+						groundItem.getNoted() && getServer().getConfig().WANT_BANK_NOTES ? 1 : 0));
 				} else {
 					playerToUpdate.getLocationsToClear().add(groundItem.getLocation());
 				}
 				it$.remove();
 				changed = true;
 			} else if (groundItem.isRemoved() || groundItem.isInvisibleTo(playerToUpdate)) {
-				packet.writeShort(groundItem.getID() + 32768);
-				packet.writeByte(offsetX);
-				packet.writeByte(offsetY);
-				if (!playerToUpdate.isUsingAuthenticClient()) {
-					if (getServer().getConfig().WANT_BANK_NOTES)
-						packet.writeByte(groundItem.getNoted() ? 1 : 0);
-				}
+				itemLocs.add(new ItemLoc(groundItem.getID() + 32768, offsetX, offsetY, groundItem.getAmount(), 0,
+					groundItem.getNoted() && getServer().getConfig().WANT_BANK_NOTES ? 1 : 0));
 				//System.out.println("Removing " + groundItem + " with isRemoved() remove: " + offsetX + ", " + offsetY);
 				it$.remove();
 				changed = true;
@@ -830,28 +880,24 @@ public final class GameStateUpdater {
 				|| playerToUpdate.getLocalGroundItems().contains(groundItem)) {
 				continue;
 			}
-			packet.writeShort(groundItem.getID());
 			final int offsetX = groundItem.getX() - playerToUpdate.getX();
 			final int offsetY = groundItem.getY() - playerToUpdate.getY();
-			packet.writeByte(offsetX);
-			packet.writeByte(offsetY);
-			if (!playerToUpdate.isUsingAuthenticClient()) {
-				if (getServer().getConfig().WANT_BANK_NOTES) {
-					packet.writeByte(groundItem.getNoted() ? 1 : 0);
-				}
-			}
+			itemLocs.add(new ItemLoc(groundItem.getID(), offsetX, offsetY, groundItem.getAmount(), 0,
+				groundItem.getNoted() && getServer().getConfig().WANT_BANK_NOTES ? 1 : 0));
 			playerToUpdate.getLocalGroundItems().add(groundItem);
 			changed = true;
 		}
+		struct.objects = itemLocs;
 		if (changed) {
-			playerToUpdate.write(packet.toPacket());
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_GROUND_ITEM_HANDLER, struct, playerToUpdate);
 		}
 	}
 
 	protected void updateWallObjects(final Player playerToUpdate) {
 		boolean changed = false;
-		final PacketBuilder packet = new PacketBuilder();
-		packet.setID(ActionSender.Opcode.SEND_BOUNDARY_HANDLER.opcode);
+
+		GameObjectsUpdateStruct struct = new GameObjectsUpdateStruct();
+		List<GameObjectLoc> objectLocs = new ArrayList<>();
 
 		// remove all boundaries that need to be removed
 		for (final Iterator<GameObject> it$ = playerToUpdate.getLocalWallObjects().iterator(); it$.hasNext(); ) {
@@ -893,10 +939,7 @@ public final class GameStateUpdater {
                         */
 
 					} else {
-						packet.writeShort(60000);
-						packet.writeByte(offsetX);
-						packet.writeByte(offsetY);
-						packet.writeByte(o.getDirection());
+						objectLocs.add(new GameObjectLoc(60000, offsetX, offsetY, o.getDirection(), 1));
                         changed = true;
 					}
 					it$.remove();
@@ -918,35 +961,32 @@ public final class GameStateUpdater {
 
 			final int offsetX = newObject.getX() - playerToUpdate.getX();
 			final int offsetY = newObject.getY() - playerToUpdate.getY();
-			packet.writeShort(newObject.getID());
-			packet.writeByte(offsetX);
-			packet.writeByte(offsetY);
-			packet.writeByte(newObject.getDirection());
-			playerToUpdate.getLocalWallObjects().add(newObject);
+			objectLocs.add(new GameObjectLoc(newObject.getID(), offsetX, offsetY, newObject.getDirection(), 1));
 			changed = true;
 		}
+		struct.objects = objectLocs;
 		if (changed) {
-			playerToUpdate.write(packet.toPacket());
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_BOUNDARY_HANDLER, struct, playerToUpdate);
 		}
 	}
 
 	protected void sendAppearanceKeepalive(final Player player) {
-		com.openrsc.server.net.PacketBuilder s = new com.openrsc.server.net.PacketBuilder();
-		s.setID(ActionSender.Opcode.SEND_APPEARANCE_KEEPALIVE.opcode); // 213
-		player.write(s.toPacket());
+		NoPayloadStruct struct = new NoPayloadStruct();
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_APPEARANCE_KEEPALIVE, struct, player);
 	}
 
 	protected void sendClearLocations(final Player player) {
 		if (player.getLocationsToClear().size() > 0) {
-			final PacketBuilder packetBuilder = new PacketBuilder(ActionSender.Opcode.SEND_REMOVE_WORLD_ENTITY.opcode);
+			ClearLocationsStruct struct = new ClearLocationsStruct();
+			List<Point> pointList = new ArrayList<>();
 			for (final Point point : player.getLocationsToClear()) {
 				final int offsetX = point.getX() - player.getX();
 				final int offsetY = point.getY() - player.getY();
-				packetBuilder.writeShort(offsetX);
-				packetBuilder.writeShort(offsetY);
+				pointList.add(new Point(offsetX, offsetY));
 			}
 			player.getLocationsToClear().clear();
-			player.write(packetBuilder.toPacket());
+			struct.points = pointList;
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_REMOVE_WORLD_ENTITY, struct, player);
 		}
 	}
 

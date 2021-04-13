@@ -6,7 +6,7 @@ import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.snapshot.Chatlog;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.ChatStruct;
+import com.openrsc.server.net.rsc.struct.incoming.ChatStruct;
 import com.openrsc.server.util.rsc.DataConversions;
 
 public final class ChatHandler implements PayloadProcessor<ChatStruct, OpcodeIn> {

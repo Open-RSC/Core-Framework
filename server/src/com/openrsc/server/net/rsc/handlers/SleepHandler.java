@@ -6,7 +6,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.SleepStruct;
+import com.openrsc.server.net.rsc.struct.incoming.SleepStruct;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 
 public final class SleepHandler implements PayloadProcessor<SleepStruct, OpcodeIn> {

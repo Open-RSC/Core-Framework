@@ -3,7 +3,7 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.NoPayloadStruct;
+import com.openrsc.server.net.rsc.struct.incoming.NoPayloadStruct;
 import com.openrsc.server.util.rsc.MessageType;
 
 public final class Logout implements PayloadProcessor<NoPayloadStruct, OpcodeIn> {

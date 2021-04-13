@@ -297,6 +297,10 @@ public class PacketBuilder {
 		payload.writeByte(0);
 	}
 
+	public void writeNonTerminatedString(String string) {
+		payload.writeBytes(string.getBytes());
+	}
+
 	/**
 	 * Writes a byte in the range that is safe for the client to receive in the animation update packet
 	 *

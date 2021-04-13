@@ -8,7 +8,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.TargetMobStruct;
+import com.openrsc.server.net.rsc.struct.incoming.TargetMobStruct;
 
 public final class NpcTalkTo implements PayloadProcessor<TargetMobStruct, OpcodeIn> {
 

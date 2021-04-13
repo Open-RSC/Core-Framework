@@ -8,7 +8,7 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.TargetPositionStruct;
+import com.openrsc.server.net.rsc.struct.incoming.TargetPositionStruct;
 import com.openrsc.server.util.rsc.CertUtil;
 
 public class GroundItemTake implements PayloadProcessor<TargetPositionStruct, OpcodeIn> {

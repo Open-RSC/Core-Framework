@@ -8,7 +8,7 @@ import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.PlayerAppearanceStruct;
+import com.openrsc.server.net.rsc.struct.incoming.PlayerAppearanceStruct;
 
 public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanceStruct, OpcodeIn> {
 

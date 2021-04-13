@@ -4,7 +4,7 @@ import com.openrsc.server.constants.Skills;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.CombatStyleStruct;
+import com.openrsc.server.net.rsc.struct.incoming.CombatStyleStruct;
 
 public class StyleHandler implements PayloadProcessor<CombatStyleStruct, OpcodeIn> {
 

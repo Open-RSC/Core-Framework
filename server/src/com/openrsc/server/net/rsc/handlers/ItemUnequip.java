@@ -6,7 +6,7 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.EquipStruct;
+import com.openrsc.server.net.rsc.struct.incoming.EquipStruct;
 
 import static com.openrsc.server.net.rsc.handlers.ItemEquip.passCheck;
 

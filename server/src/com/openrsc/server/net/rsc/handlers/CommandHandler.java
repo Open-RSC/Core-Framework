@@ -3,7 +3,7 @@ package com.openrsc.server.net.rsc.handlers;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.CommandStruct;
+import com.openrsc.server.net.rsc.struct.incoming.CommandStruct;
 
 public final class CommandHandler implements PayloadProcessor<CommandStruct, OpcodeIn> {
 	public void process(CommandStruct payload, Player player) throws Exception {

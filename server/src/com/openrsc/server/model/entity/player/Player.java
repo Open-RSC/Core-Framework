@@ -1424,6 +1424,13 @@ public final class Player extends Mob {
 		return Math.max(getCarriedItems().getEquipment().getMagic(), 1);
 	}
 
+	public int getHidingPoints() {
+		//Currently the only thing that affects hiding is the equipment
+		//no equipment known to have given hiding
+		return 1;
+		//return Math.max(getCarriedItems().getEquipment().getHiding(), 1);
+	}
+
 	public int[] getWornItems() {
 		return wornItems;
 	}

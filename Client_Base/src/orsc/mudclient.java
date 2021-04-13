@@ -6815,11 +6815,11 @@ public final class mudclient implements Runnable {
 			C_EXPERIENCE_COUNTER_COLOR == 1 ? 0xFFFF00 :
 				C_EXPERIENCE_COUNTER_COLOR == 2 ? 0xFF0000 :
 					C_EXPERIENCE_COUNTER_COLOR == 3 ? 0x0000FF : 0x00FF00;
-		int totalXp = 0;
+		long totalXp = 0;
 		long timePassed = 0;
 		if (C_EXPERIENCE_COUNTER_MODE == 1 || skill < 0) {
 			for (int i = 0; i < skillCount; i++) {
-				totalXp += this.playerExperience[i];
+				totalXp += Integer.toUnsignedLong(this.playerExperience[i]);
 			}
 
 			int stringWid = getSurface().stringWidth(3, "Total: " + totalXp);

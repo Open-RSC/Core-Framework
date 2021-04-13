@@ -9,7 +9,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.ShopStruct;
+import com.openrsc.server.net.rsc.struct.incoming.ShopStruct;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;

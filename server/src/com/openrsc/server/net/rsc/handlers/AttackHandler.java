@@ -9,7 +9,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.TargetMobStruct;
+import com.openrsc.server.net.rsc.struct.incoming.TargetMobStruct;
 
 import static com.openrsc.server.plugins.Functions.inArray;
 

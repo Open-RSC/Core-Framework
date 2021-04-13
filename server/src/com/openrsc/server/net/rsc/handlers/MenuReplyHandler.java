@@ -4,7 +4,7 @@ import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
-import com.openrsc.server.net.rsc.struct.MenuOptionStruct;
+import com.openrsc.server.net.rsc.struct.incoming.MenuOptionStruct;
 
 public class MenuReplyHandler implements PayloadProcessor<MenuOptionStruct, OpcodeIn> {
 
