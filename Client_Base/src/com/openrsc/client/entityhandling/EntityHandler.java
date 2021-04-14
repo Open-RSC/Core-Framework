@@ -4510,6 +4510,15 @@ public class EntityHandler {
 			animations.add(new AnimationDef("duck", "npc", 16777215, 0, true, false, 0));//473
 			animations.add(new AnimationDef("bunnymorph", "npc", 16777215, 0, true, false, 0));//474
 			animations.add(new AnimationDef("eggmorph", "npc", 16777215, 0, true, false, 0));//475
+
+			// Scimitar Animation
+			animations.add(new AnimationDef("scimitar", "equipment", 16737817, 0, true, false, 0)); // 476 Bronze Scimitar
+			animations.add(new AnimationDef("scimitar", "equipment", 15654365, 0, true, false, 0)); // 477 Iron Scimitar
+			animations.add(new AnimationDef("scimitar", "equipment", 15658734, 0, true, false, 0)); // 478 Steel Scimitar
+			animations.add(new AnimationDef("scimitar", "equipment", 3158064, 0, true, false, 0)); // 479 Black Scimitar
+			animations.add(new AnimationDef("scimitar", "equipment", 10072780, 0, true, false, 0)); // 480 Mithril Scimitar
+			animations.add(new AnimationDef("scimitar", "equipment", 11717785, 0, true, false, 0)); // 481 Adamantite Scimitar
+			animations.add(new AnimationDef("scimitar", "equipment", 65535, 0, true, false, 0)); // 482 Rune Scimitar
 		}
 	}
 
