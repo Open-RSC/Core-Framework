@@ -600,7 +600,7 @@ public class PathValidation {
 
 		if (mob.isNpc()) {
 			Region region = mob.getWorld().getRegionManager().getRegion(Point.location(x, y));
-			Player player = region.getPlayer(x, y, mob, true);
+			Player player = region.getPlayer(x, y, mob, false);
 			return player != null;
 		}
 		return false;
