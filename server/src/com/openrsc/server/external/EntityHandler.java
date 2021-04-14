@@ -521,6 +521,14 @@ public final class EntityHandler {
 
 			items.get(ItemId.DRAGON_LONGBOW.id()).setAppearanceId(472);
 			items.get(ItemId.DRAGON_CROSSBOW.id()).setAppearanceId(471);
+
+			items.get(ItemId.BRONZE_SCIMITAR.id()).setAppearanceId(477);
+			items.get(ItemId.IRON_SCIMITAR.id()).setAppearanceId(478);
+			items.get(ItemId.STEEL_SCIMITAR.id()).setAppearanceId(479);
+			items.get(ItemId.BLACK_SCIMITAR.id()).setAppearanceId(480);
+			items.get(ItemId.MITHRIL_SCIMITAR.id()).setAppearanceId(481);
+			items.get(ItemId.ADAMANTITE_SCIMITAR.id()).setAppearanceId(482);
+			items.get(ItemId.RUNE_SCIMITAR.id()).setAppearanceId(483);
 		}
 	}
 
