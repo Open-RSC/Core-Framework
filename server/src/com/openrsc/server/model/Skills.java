@@ -261,19 +261,7 @@ public class Skills {
 	}
 
 	public void reduceExperience(int skill, int exp) {
-		int oldLevel = getMaxStat(skill);
-		exps[skill] -= exp;
-		if (getWorld().getServer().getConfig().WANT_EXPERIENCE_CAP && exps[skill] > getWorld().getServer().getConfig().EXPERIENCE_LIMIT) {
-			exps[skill] = getWorld().getServer().getConfig().EXPERIENCE_LIMIT;
-		}
-		int newLevel = getMaxStat(skill);
-		int levelDiff = oldLevel - newLevel;
-
-		if (levelDiff > 0) {
-			levels[skill] -= levelDiff;
-			getMob().getUpdateFlags().setAppearanceChanged(true);
-		}
-		sendUpdate(skill);
+		setExperience(skill, getExperience(skill) - exp);
 	}
 
 	private void sendUpdate(int skill) {
