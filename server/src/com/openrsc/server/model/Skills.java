@@ -230,7 +230,7 @@ public class Skills {
 			levels[skill] += levelDiff;
 			maxStats[skill] += levelDiff;
 			// TODO: Maybe a level up listener?
-			if (getMob().isPlayer()) {
+			if (getMob().isPlayer() && !((Player) getMob()).getConfig().WANT_OPENPK_POINTS) {
 				Player player = (Player) getMob();
 				try {
 					getWorld().getServer().getDatabase().savePlayerMaxSkill(player.getDatabaseID(), skill, maxStats[skill]);
@@ -256,6 +256,22 @@ public class Skills {
 			getMob().getUpdateFlags().setAppearanceChanged(true);
 		}
 
+	}
+
+	public void reduceExperience(int skill, int exp) {
+		int oldLevel = getMaxStat(skill);
+		exps[skill] -= exp;
+		if (getWorld().getServer().getConfig().WANT_EXPERIENCE_CAP && exps[skill] > getWorld().getServer().getConfig().EXPERIENCE_LIMIT) {
+			exps[skill] = getWorld().getServer().getConfig().EXPERIENCE_LIMIT;
+		}
+		int newLevel = getMaxStat(skill);
+		int levelDiff = oldLevel - newLevel;
+
+		if (levelDiff > 0) {
+			levels[skill] -= levelDiff;
+			getMob().getUpdateFlags().setAppearanceChanged(true);
+		}
+		sendUpdate(skill);
 	}
 
 	private void sendUpdate(int skill) {

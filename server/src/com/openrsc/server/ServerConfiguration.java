@@ -158,6 +158,7 @@ public class ServerConfiguration {
 	public boolean WANT_EQUIPMENT_TAB;
 	public boolean WANT_BANK_PRESETS;
 	public boolean WANT_PARTIES;
+	public boolean WANT_OPENPK_POINTS = true;
 	public double PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER;
 	public double PARTY_DISTANCE_PERCENT_DECREASE;
 	public double PARTY_SAVE_XP_FOR_SKILLER_PERCENT;

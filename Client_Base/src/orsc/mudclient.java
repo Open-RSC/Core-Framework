@@ -5680,6 +5680,739 @@ public final class mudclient implements Runnable {
 				} else if (this.inputX_Action == InputXAction.EXIT_BLACK_HOLE) {
 					this.packetHandler.getClientStream().newPacket(86);
 					this.packetHandler.getClientStream().finishPacket();
+				} else if (this.inputX_Action == InputXAction.POINTS2GP) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(12);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("POINTS2GP number format exception: " + var13);
+					}
+				}  else if (this.inputX_Action == InputXAction.LOADPRESET_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(14);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.SAVEPRESET_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCPOINTS0_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(2);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCPOINTS1_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(1);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCPOINTS2_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(3);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCPOINTS3_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(4);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCPOINTS4_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(5);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCPOINTS5_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(6);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCLEVELS0_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n280;
+						n280 = this.playerStatBase[0] + var4;
+						if (n280 > 99) {
+							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 == 0) {
+							return;
+						}
+
+						int nextLev20;
+						int nextLev3;
+						nextLev20 = var4 - 2;
+						nextLev3 = this.experienceArray[this.playerStatBase[0] + nextLev20];
+						var4 = (nextLev3 - this.playerExperience[0]);
+
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(2);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCLEVELS1_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n281;
+						n281 = this.playerStatBase[1] + var4;
+						if (n281 > 99) {
+							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 == 0) {
+							return;
+						}
+
+						int nextLev21;
+						int nextLev31;
+						nextLev21 = var4 - 2;
+						nextLev31 = this.experienceArray[this.playerStatBase[1] + nextLev21];
+						var4 = (nextLev31 - this.playerExperience[1]);
+
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(1);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCLEVELS2_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n282;
+						n282 = this.playerStatBase[2] + var4;
+						if (n282 > 99) {
+							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 == 0) {
+							return;
+						}
+
+						int nextLev22;
+						int nextLev32;
+						nextLev22 = var4 - 2;
+						nextLev32 = this.experienceArray[this.playerStatBase[2] + nextLev22];
+						var4 = (nextLev32 - this.playerExperience[2]);
+
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(3);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCLEVELS3_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n283;
+						n283 = this.playerStatBase[4] + var4;
+						if (n283 > 99) {
+							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 == 0) {
+							return;
+						}
+
+						int nextLev23;
+						int nextLev33;
+						nextLev23 = var4 - 2;
+						nextLev33 = this.experienceArray[this.playerStatBase[4] + nextLev23];
+						var4 = (nextLev33 - this.playerExperience[4]);
+
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(4);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCLEVELS4_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n284;
+						n284 = this.playerStatBase[5] + var4;
+						if (n284 > 99) {
+							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 == 0) {
+							return;
+						}
+
+						int nextLev24;
+						int nextLev34;
+						nextLev24 = var4 - 2;
+						nextLev34 = this.experienceArray[this.playerStatBase[5] + nextLev24];
+						var4 = (nextLev34 - this.playerExperience[5]);
+
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(5);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCLEVELS5_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n285;
+						n285 = this.playerStatBase[6] + var4;
+						if (n285 > 99) {
+							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 == 0) {
+							return;
+						}
+
+						int nextLev25;
+						int nextLev35;
+						nextLev25 = var4 - 2;
+						nextLev35 = this.experienceArray[this.playerStatBase[6] + nextLev25];
+						var4 = (nextLev35 - this.playerExperience[6]);
+
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(6);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points inc X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS0_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(7);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points reduce X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS1_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(0);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points reduce X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS2_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(8);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points reduce X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS3_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(9);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points reduce X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS4_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(10);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points reduce X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS5_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(11);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points reduce X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCELEVELS0_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n2800;
+						n2800 = this.playerStatBase[0] - var4;
+						if (n2800 < 1) {
+							this.showMessage(false, null, "Stat cannot be lower then 1", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 > 99) {
+							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						int nL0;
+						int nL1;
+						nL0 = this.playerStatBase[0] - 2;
+						nL1 = this.playerStatBase[0] - 1;
+						if (n2800 == 1) {
+							var4 = this.playerExperience[0];
+						} else {
+							var4 = this.playerExperience[0] - this.experienceArray[nL0 - var4];
+						}
+						if (var4 < 1) {
+							return;
+						}
+
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(7);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points reduce X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCELEVELS1_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n2800;
+						n2800 = this.playerStatBase[1] - var4;
+						if (n2800 < 1) {
+							this.showMessage(false, null, "Stat cannot be lower then 1", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 > 99) {
+							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						int nL0;
+						int nL1;
+						nL0 = this.playerStatBase[1] - 2;
+						nL1 = this.playerStatBase[1] - 1;
+						if (n2800 == 1) {
+							var4 = this.playerExperience[1];
+						} else {
+							var4 = this.playerExperience[1] - this.experienceArray[nL0 - var4];
+						}
+						if (var4 < 1) {
+							return;
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(0);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points reduce X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCELEVELS2_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n2800;
+						n2800 = this.playerStatBase[2] - var4;
+						if (n2800 < 1) {
+							this.showMessage(false, null, "Stat cannot be lower then 1", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 > 99) {
+							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						int nL0;
+						int nL1;
+						nL0 = this.playerStatBase[2] - 2;
+						nL1 = this.playerStatBase[2] - 1;
+						if (n2800 == 1) {
+							var4 = this.playerExperience[2];
+						} else {
+							var4 = this.playerExperience[2] - this.experienceArray[nL0 - var4];
+						}
+						if (var4 < 1) {
+							return;
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(8);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points reduce X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCELEVELS3_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n2800;
+						n2800 = this.playerStatBase[4] - var4;
+						if (n2800 < 1) {
+							this.showMessage(false, null, "Stat cannot be lower then 1", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 > 99) {
+							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						int nL0;
+						int nL1;
+						nL0 = this.playerStatBase[4] - 2;
+						nL1 = this.playerStatBase[4] - 1;
+						if (n2800 == 1) {
+							var4 = this.playerExperience[4];
+						} else {
+							var4 = this.playerExperience[4] - this.experienceArray[nL0 - var4];
+						}
+						if (var4 < 1) {
+							return;
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(9);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points reduce X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCELEVELS4_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n2800;
+						n2800 = this.playerStatBase[5] - var4;
+						if (n2800 < 1) {
+							this.showMessage(false, null, "Stat cannot be lower then 1", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 > 99) {
+							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						int nL0;
+						int nL1;
+						nL0 = this.playerStatBase[5] - 2;
+						nL1 = this.playerStatBase[5] - 1;
+						if (n2800 == 1) {
+							var4 = this.playerExperience[5];
+						} else {
+							var4 = this.playerExperience[5] - this.experienceArray[nL0 - var4];
+						}
+						if (var4 < 1) {
+							return;
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(10);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points reduce X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCELEVELS5_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n2800;
+						n2800 = this.playerStatBase[6] - var4;
+						if (n2800 < 1) {
+							this.showMessage(false, null, "Stat cannot be lower then 1", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 > 99) {
+							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						int nL0;
+						int nL1;
+						nL0 = this.playerStatBase[6] - 2;
+						nL1 = this.playerStatBase[6] - 1;
+						if (n2800 == 1) {
+							var4 = this.playerExperience[6];
+						} else {
+							var4 = this.playerExperience[6] - this.experienceArray[nL0 - var4];
+						}
+						if (var4 < 1) {
+							return;
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(11);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("Points reduce X number format exception: " + var13);
+					}
 				} else if (this.inputX_Action == InputXAction.DROP_X) {
 					try {
 						if (str.length() > 10) {
@@ -14040,7 +14773,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putString(DataOperations.addCharacters(password, 20));
 
 						this.packetHandler.getClientStream().bufferBits.putLong(getUID());
-						//this.packetHandler.getClientStream().writeBuffer1.putString(getMacAddress());
+						//this.packetHandler.getClientStream().bufferBits.putString(getMacAddress());
 						/*
 						 * RSBuffer rsaBuffer = new RSBuffer(500);
 						 * rsaBuffer.putByte(10);
@@ -14051,20 +14784,20 @@ public final class mudclient implements Runnable {
 						 * rsaBuffer.encodeWithRSA(MiscFunctions.RSA_EXPONENT,
 						 * MiscFunctions.RSA_MODULUS);
 						 *
-						 * this.clientStream.writeBuffer1.writeBytes(rsaBuffer.
+						 * this.clientStream.bufferBits.writeBytes(rsaBuffer.
 						 * dataBuffer, 0, rsaBuffer.curPointerPosition);
 						 */
 
 						/*
-						 * this.clientStream.writeBuffer1.putShort(0); int
+						 * this.clientStream.bufferBits.putShort(0); int
 						 * oldSize =
-						 * this.clientStream.writeBuffer1.curPointerPosition;
+						 * this.clientStream.bufferBits.curPointerPosition;
 						 *
-						 * this.clientStream.writeBuffer1.a(oldSize, isaacSeed,
-						 * this.clientStream.writeBuffer1.curPointerPosition);
+						 * this.clientStream.bufferBits.a(oldSize, isaacSeed,
+						 * this.clientStream.bufferBits.curPointerPosition);
 						 *
-						 * this.clientStream.writeBuffer1.put16_Offset(this.
-						 * clientStream.writeBuffer1.curPointerPosition -
+						 * this.clientStream.bufferBits.put16_Offset(this.
+						 * clientStream.bufferBits.curPointerPosition -
 						 * oldSize);
 						 */
 						this.packetHandler.getClientStream().finishPacketAndFlush();

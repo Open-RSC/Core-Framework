@@ -60,6 +60,8 @@ public enum InputXAction {
 	public boolean requiresNumeric() {
 		return (id >= TRADE_OFFER.id && id <= DUEL_REMOVE.id)
 			|| id == EXIT_BLACK_HOLE.id
-			|| id == DROP_X.id;
+			|| id == DROP_X.id
+			|| id == SAVEPRESET_X.id
+			|| id == LOADPRESET_X.id;
 	}
 }

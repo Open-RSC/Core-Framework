@@ -1,10 +1,7 @@
 package com.openrsc.server.net.rsc.parsers.impl;
 
 import com.openrsc.server.constants.Constants;
-import com.openrsc.server.constants.custom.AuctionOptions;
-import com.openrsc.server.constants.custom.ClanOptions;
-import com.openrsc.server.constants.custom.InterfaceOptions;
-import com.openrsc.server.constants.custom.PartyOptions;
+import com.openrsc.server.constants.custom.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
@@ -804,6 +801,30 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 									os.player = packet.readString();
 									os.name = packet.readString();
 									os.tag = packet.readString();
+									break;
+							}
+						}
+						break;
+					case POINTS:
+						if (player.getConfig().WANT_OPENPK_POINTS) {
+							os.value = packet.readByte();
+							final PointsOptions pointsOption = PointsOptions.getById((int)os.value);
+							switch (pointsOption) {
+								case REDUCE_DEF:
+								case INC_DEF:
+								case INC_ATK:
+								case INC_STR:
+								case INC_RNG:
+								case INC_PRAY:
+								case INC_MAGE:
+								case REDUCE_ATK:
+								case REDUCE_STR:
+								case REDUCE_RNG:
+								case REDUCE_PRAY:
+								case REDUCE_MAGE:
+								case POINTS2GP:
+								case SAVE_PRESET:
+									os.amount = packet.readInt();
 									break;
 							}
 						}
