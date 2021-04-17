@@ -15975,7 +15975,7 @@ public final class mudclient implements Runnable {
 	}
 
 	public void setPlayerExperience(int stat, int experience) {
-		Thread.dumpStack();
+		//Thread.dumpStack();
 		System.out.println("playerExperience[stat] " + playerExperience[stat]);
 		System.out.println("experience " + experience);
 		this.playerExperience[stat] = experience;
