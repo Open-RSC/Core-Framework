@@ -424,6 +424,9 @@ public class PacketHandler {
 			else if (opcode == 147)
 				mc.setStatKills2(packetsIncoming.getShort());
 
+			else if (opcode == 148) // Set OpenPK Points
+				mc.setPoints(packetsIncoming.getLong(0));
+
 			else if (opcode == 98)
 				mc.setExpShared(packetsIncoming.getShort());
 

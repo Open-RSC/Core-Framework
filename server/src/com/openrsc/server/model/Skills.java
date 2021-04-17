@@ -230,7 +230,7 @@ public class Skills {
 			levels[skill] += levelDiff;
 			maxStats[skill] += levelDiff;
 			// TODO: Maybe a level up listener?
-			if (getMob().isPlayer() && !((Player) getMob()).getConfig().WANT_OPENPK_POINTS) {
+			if (getMob().isPlayer()) {
 				Player player = (Player) getMob();
 				try {
 					getWorld().getServer().getDatabase().savePlayerMaxSkill(player.getDatabaseID(), skill, maxStats[skill]);
@@ -238,18 +238,20 @@ public class Skills {
 					LOGGER.catching(e);
 				}
 				skillName = getWorld().getServer().getConstants().getSkills().getSkill(skill).getShortName().toLowerCase();
-				if (newLevel >= getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT - (getWorld().getServer().getConfig().SKILLING_EXP_RATE > 1.0 && !player.isOneXp() ? 9 : 19)
-					&& newLevel <= getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT - 1) {
+				if (!((Player) getMob()).getConfig().WANT_OPENPK_POINTS) {
+					if (newLevel >= getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT - (getWorld().getServer().getConfig().SKILLING_EXP_RATE > 1.0 && !player.isOneXp() ? 9 : 19)
+						&& newLevel <= getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT - 1) {
 
-					getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player,
-						"has achieved level-" + newLevel + " in " + skillName + "!"));
-				} else if (newLevel == getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT) {
-					getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, "has achieved level-" + newLevel
-						+ " in " + skillName + ", the maximum possible! Congratulations!"));
+						getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player,
+							"has achieved level-" + newLevel + " in " + skillName + "!"));
+					} else if (newLevel == getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT) {
+						getWorld().getServer().getGameLogger().addQuery(new LiveFeedLog(player, "has achieved level-" + newLevel
+							+ " in " + skillName + ", the maximum possible! Congratulations!"));
+					}
+					ActionSender.sendSound((Player) getMob(), "advance");
+					player.message("@gre@You just advanced " + levelDiff + " " + skillName + " level"
+						/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
 				}
-				ActionSender.sendSound((Player) getMob(), "advance");
-				player.message("@gre@You just advanced " + levelDiff + " " + skillName + " level"
-					/*+ (levelDiff > 1 ? "s" : "")*/ + "!");
 				sendUpdate(skill);
 			}
 
