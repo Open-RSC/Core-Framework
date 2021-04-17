@@ -140,6 +140,7 @@ public class Config {
 	public static boolean S_CUSTOM_PROTOCOL = true;
 	public static boolean S_WANT_EXTENDED_CATS_BEHAVIOR = false;
 	public static boolean S_WANT_CERT_AS_NOTES = false;
+	public static boolean S_WANT_OPENPK_SKILLS = true;
 
 	public static void set(String key, Object value) {
 		prop.setProperty(key, value.toString());

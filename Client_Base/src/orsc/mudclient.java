@@ -247,6 +247,8 @@ public final class mudclient implements Runnable {
 	public AuctionHouse auctionHouse;
 	public SkillGuideInterface skillGuideInterface;
 	public QuestGuideInterface questGuideInterface;
+	public PointInterface pointInterface;
+	public Point2GpInterface point2GpInterface;
 	public ExperienceConfigInterface experienceConfigInterface;
 	public DoSkillInterface doSkillInterface;
 	public LostOnDeathInterface lostOnDeathInterface;
@@ -561,6 +563,7 @@ public final class mudclient implements Runnable {
 	private int statKills2 = 0;
 	private int expShared = 0;
 	private int petFatigue = 0;
+	private long openPkPoints = 0;
 	private MudClientGraphics surface;
 	private int systemUpdate = 0;
 	private int elixirTimer = 0;
@@ -7037,6 +7040,10 @@ public final class mudclient implements Runnable {
 					this.drawDialogShop();
 				} else if (S_WANT_SKILL_MENUS && skillGuideInterface.isVisible() && !C_CUSTOM_UI) {
 					this.drawSkillGuide();
+				} else if (pointInterface.isVisible()) {
+					this.drawPointConfig();
+				} else if (point2GpInterface.isVisible()) {
+					this.drawPoint2GpConfig();
 				} else if (S_WANT_QUEST_MENUS && questGuideInterface.isVisible() && !C_CUSTOM_UI) {
 					this.drawQuestGuide();
 				} else if (experienceConfigInterface.isVisible()) {
@@ -10325,6 +10332,20 @@ public final class mudclient implements Runnable {
 							} else if (!isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && S_WANT_SKILL_MENUS) {
 								setSkillGuideChosen(skillNameLong[currentlyHoveredSkill]);
 								skillGuideInterface.setVisible(true);
+								if (!C_CUSTOM_UI)
+									this.showUiTab = 0;
+							}
+
+							if (isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
+								if (doubleClick() && S_WANT_OPENPK_SKILLS) {
+									//setSkillGuideChosen(skillNameLong[currentlyHoveredSkill]);
+									pointInterface.setVisible(true);
+									if (!C_CUSTOM_UI)
+										this.showUiTab = 0;
+								}
+							} else if (!isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && S_WANT_OPENPK_SKILLS) {
+								//setSkillGuideChosen(skillNameLong[currentlyHoveredSkill]);
+								pointInterface.setVisible(true);
 								if (!C_CUSTOM_UI)
 									this.showUiTab = 0;
 							}
@@ -15221,6 +15242,9 @@ public final class mudclient implements Runnable {
 	}
 
 	public void setPlayerExperience(int stat, int experience) {
+		Thread.dumpStack();
+		System.out.println("playerExperience[stat] " + playerExperience[stat]);
+		System.out.println("experience " + experience);
 		this.playerExperience[stat] = experience;
 	}
 
@@ -15810,6 +15834,14 @@ public final class mudclient implements Runnable {
 		this.expShared = expShared2;
 	}
 
+	public long getPoints() {
+		return this.openPkPoints;
+	}
+
+	public void setPoints(long openPkPoints) {
+		this.openPkPoints = openPkPoints;
+	}
+
 	public void setInputTextCurrent(String s) {
 		this.inputTextCurrent = s;
 	}
@@ -15943,6 +15975,10 @@ public final class mudclient implements Runnable {
 		}
 	}
 
+	public int[] getExperienceArray() {
+		return this.experienceArray;
+	}
+
 	private void getServerConfig() {
 		try {
 			if ((Config.SERVER_IP != null)) {
@@ -16062,6 +16098,8 @@ public final class mudclient implements Runnable {
 				skillGuideInterface = new SkillGuideInterface(this);
 				questGuideInterface = new QuestGuideInterface(this);
 				experienceConfigInterface = new ExperienceConfigInterface(this);
+				pointInterface = new PointInterface(this);
+				point2GpInterface = new Point2GpInterface(this);
 				doSkillInterface = new DoSkillInterface(this);
 				if (S_ITEMS_ON_DEATH_MENU)
 					lostOnDeathInterface = new LostOnDeathInterface(this);
@@ -16838,6 +16876,14 @@ public final class mudclient implements Runnable {
 		skillGuideInterface.onRender(this.getSurface());
 	}
 
+	private void drawPointConfig() {
+		pointInterface.onRender(this.getSurface());
+	}
+
+	private void drawPoint2GpConfig() {
+		point2GpInterface.onRender(this.getSurface());
+	}
+
 	public String getSkillGuideChosen() {
 		return skillGuideChosen;
 	}
@@ -17010,6 +17056,10 @@ public final class mudclient implements Runnable {
 		addSkill("Ranged");
 		addSkill("Prayer");
 		addSkill("Magic");
+		//If we only want OpenPK skills, we only want combat skills.
+		if (S_WANT_OPENPK_SKILLS) {
+			return;
+		}
 		addSkill("Cooking");
 		addSkill("Woodcutting", "Woodcut");
 		addSkill("Fletching");
@@ -17247,6 +17297,10 @@ public final class mudclient implements Runnable {
 	}
 
 	public void updateQuestRewards() {
+		//TODO: fix for now
+		if (S_WANT_OPENPK_SKILLS) {
+			return;
+		}
 		questGuideRewards = new String[][]{{"3 Quest Points", "2500 coins"}, {"1 Quest Point", "Lvl*50 + 250 Cooking experience", "Access to the Cook's range"}, {"3 Quest Points", "Silverlight"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "Ability to use Doric's anvils", "180 coins"}, {"1 Quest Point", "Lvl*62.5 + 500 Prayer experience", "Amulet of Ghostspeak"}, {"5 Quest Points", "Lvl*15 + 125 Crafting experience", "1 Gold bar"}, {"4 Quest Points", "300 coins"}, {"1 Quest Point", "Lvl*100 + 375 Magic experience", "An amulet of accuracy"}, {"2 Quest Points", "450 coins", "A gold ring", "An emerald"}, {"3 Quest points", "Free passage through the Al-Kharid tollgate", "700 coins"}, {"5 Quest Points"}, {"1 Quest Point", "Lvl*25 + 125 Crafting experience", "180 coins"}, {"1 Quest Point", "600 coins"}, {"1 Quest Point", "Lvl*375 + 350 Smithing experience"}, {"3 Quest Points", "Lvl*150 + 325 Attack experience"}, {"1 Quest Point", "Lvl*50 + 225 Magic experience"}, {"2 Quest Points", "Lvl*300 + 650 Defense experience", "Lvl*300 + 650 Strength experience", "The ability to wear a Rune plate mail body"}, {"4 Quest Points", "Lvl*150 + 325 Hits experience"}, {"3 Quest Points", "Ability to enter the city of Zanaris", "Ability to wield a Dragon sword"}, {"1 Quest Point", "Lvl*50 + 75 experience in the following skills: Attack, Defense, Hits, Strength, Cooking, Fishing, Mining, Smithing, Ranged, Firemaking, Woodcutting, and Herblaw", "Access to the Heroes' Guild", "Ability to wield the Dragon axe"}, {"4 Quest Points", "250 Herblaw experience", "Ability to use the Herblaw skill"}, {"6 Quest Points", "Excalibur"}, {"1 Quest Point", "Lvl*125 + 375 Strength experience", "Thormac will enchant your battlestaves for 40000 coins"}, {"1 Quest Point", "A pair of Steel gauntlets"}, {"1 Quest Point", "Lvl*75 + 200 Thieving experience", "5 swordfish"}, {"1 Quest Point", this.playerStatBase[10] < 24 ? "(Lvl - 10)*75 + 975 Fishing experience" : "(Lvl - 24)*75 + 2225 Fishing experience", "Access to the underground tunnel beneath White Wolf Mountain"}, {"1 Quest Point", "(Lvl + 1)*125 Woodcutting experience", "8 Law-Runes"}, {"1 Quest Point", "Lvl*250 + 500 experience in Ranged and Fletching"}, {"1 Quest Point", "500 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Defense experience", "(Lvl + 1)*250 Prayer experience"}, {"2 Quest Points", "Lvl*200 + 175 experience in Attack and Thieving", "1000 coins"}, {"2 Quest Points", "Lvl*225 + 200 Attack experience", "A Gnome amulet of protection", "Ability to use Spirit Trees"}, {"1 Quest Point", "Lvl*50 + 500 Thieving experience", "2000 coins"}, {"4 Quest Points", "3100 coins"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "A magic scroll granting the ability to cast Ardougne teleport"}, {"1 Quest Point", "Lvl*200 + 175 Fishing experience", "1 Oyster pearls"}, {"1 Quest Point", "Lvl*225 + 250 experience in Attack and Strength", "40 Mithril seeds", "2 Diamonds", "2 Gold bars"}, {"3 Quest Points", "Lvl*50 + 500 Thieving experience", "Ability to use King Lathas' Combat Training Camp", "Ability to travel freely between eastern and western Ardougne gate"}, {"1 Quest Point", "Lvl*125 + 400 Herblaw experience"}, {"5 Quest Points", "Lvl*300 + 400 experience in Agility and Attack", "Lvl*50 + 150 Magic experience", "Access to the Grand Tree mines", "Ability to use the Spirit Tree at the Grand Tree", "Ability to use the Gnome Gliders"}, {"2 Quest Points", "(Lvl + 1)*125 Crafting experience", "Access to Shilo Village"}, {"5 Quest Points", "Lvl*50 + 500 experience in Agility and Attack", "A Staff of Iban", "15 Death-Runes", "30 Fire-Runes"}, {"2 Quest Points", "Lvl*100 + 250 Crafting experience", "Another reward based on your constellation"}, {"2 Quest Points", "(Lvl + 1)*150 experience twice in a choice of Agility, Fletching, Thieving, Smithing", "Ability to make throwing darts", "Access to the Desert Mining Camp"}, {"4 Quest Points", "(Lvl + 1)*250 Magic experience", "A spell scroll granting the ability to cast the Watchtower teleport", "5000 coins"}, {"1 Quest Point", "Lvl*50 + 250 Crafting experience", "Ability to buy a dwarf cannon", "Ability to make cannon balls"}, {"3 Quest Points", "Lvl*37.5 + 187.5 Crafting experience", "2000 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Mining experience", "(Lvl + 1)*125 Herblaw experience", "2 Gold bars"}, {"1 Quest Point", "Lvl*45 + 175 Cooking experience", "A Kitten", "A Chocolate cake and stew"}, {"4 Quest Points", "(Lvl + 1)*150 experience in 4 of these skills of your choice: Attack, Strength, Defense, Hits, Prayer, Magic, Woodcutting, Crafting, Smithing, Herblaw, Agility, and Thieving", "Access to the Legend's Guild", "Ability to wear the Dragon Square Shield and Cape of Legends", "Ability to make Oomlie meat parcels and Blessed golden bowls"}, {"1 Quest Point", "1 air talisman", "The ability to mine rune stones", "The ability to enter mysterious ruins with the proper talisman"}};
 	}
 

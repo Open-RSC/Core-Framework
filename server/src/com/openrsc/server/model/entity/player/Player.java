@@ -108,6 +108,7 @@ public final class Player extends Mob {
 	private boolean sleeping = false;
 	private int activity = 0;
 	private int kills = 0;
+	private long openPkPoints = 0;
 	private int npcKills = 0;
 	private int expShared = 0;
 	private int deaths = 0;
@@ -812,6 +813,7 @@ public final class Player extends Mob {
 		sessionStart = System.currentTimeMillis();
 	}
 
+
 	private void updateSkullRemaining() {
 		if ((getCache().getLong("skull_remaining") <= 0) || (getCache().hasKey("skull_remaining") && !isSkulled())) { // Removes the skull remaining key once no longer needed
 			cache.remove("skull_remaining");
@@ -826,6 +828,10 @@ public final class Player extends Mob {
 		} else if (getChargeTime() - System.currentTimeMillis() > 0) {
 			cache.store("charge_remaining", (getChargeTime() - System.currentTimeMillis()));
 		}
+	}
+
+	private void updateOpenPkPoints() {
+		cache.store("openpk_points", getOpenPkPoints());
 	}
 
 	@Override
@@ -2604,6 +2610,15 @@ public final class Player extends Mob {
 
 	public void setKills(int i) {
 		this.kills = i;
+	}
+
+	public long getOpenPkPoints() {
+		return openPkPoints;
+	}
+
+	public void setOpenPkPoints(long openPkPoints) {
+		this.openPkPoints = openPkPoints;
+		ActionSender.sendPoints(this);
 	}
 
 	public int getDeaths() {
