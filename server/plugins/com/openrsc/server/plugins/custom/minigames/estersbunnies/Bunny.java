@@ -45,6 +45,7 @@ public class Bunny implements TalkNpcTrigger {
 			options.add(youCanTalk);
 			options.add(whyDidYouRun);
 			options.add(whyDidYouLeaveRiddles);
+			// TODO Fix this condition for next year. Bunnies should not give the comeWithMe option if the player already has the foot.
 			if (player.getCache().getInt("esters_bunnies") > 1
 				&& !ifheld(bunnyMap.get(bunny), 1)) {
 				options.add(iNeedFoot);
@@ -150,7 +151,9 @@ public class Bunny implements TalkNpcTrigger {
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc npc) {
-		return npc.getID() == NpcId.BUNNY.id() && player.getCache().hasKey("esters_bunnies");
+		return npc.getID() == NpcId.BUNNY.id()
+			&& player.getConfig().ESTERS_BUNNIES_EVENT
+			&& player.getCache().hasKey("esters_bunnies");
 	}
 
 	private enum BunnyEnum {

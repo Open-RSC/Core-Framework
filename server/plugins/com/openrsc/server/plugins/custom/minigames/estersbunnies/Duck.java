@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -25,12 +26,14 @@ public class Duck implements TalkNpcTrigger {
 			ArrayList<String> options = new ArrayList<String>();
 			options.add("Please impart me your wisdom");
 
-			if (stage == 5) {
-				options.add("I need one of your eggs");
-				options.add("Prithee bestow upon me one of thine eggs");
-			} else if (stage == 6 && !ifheld(ItemId.EASTER_EGG.id(), 1)) {
-				options.add("I need another one of your eggs");
-				options.add("Prithee bestow upon me another of thine eggs");
+			if (Functions.config().ESTERS_BUNNIES_EVENT) {
+				if (stage == 5) {
+					options.add("I need one of your eggs");
+					options.add("Prithee bestow upon me one of thine eggs");
+				} else if (stage == 6 && !ifheld(ItemId.EASTER_EGG.id(), 1)) {
+					options.add("I need another one of your eggs");
+					options.add("Prithee bestow upon me another of thine eggs");
+				}
 			}
 
 			final int option = multi(options.toArray(new String[0]));

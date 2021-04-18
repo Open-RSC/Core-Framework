@@ -219,6 +219,7 @@ public class ServerConfiguration {
 	// public String ADMIN_IP;
 	// public List<String> adminIp;
 	public boolean WANT_RANGED_FACE_PLAYER = false;
+	public boolean ESTERS_BUNNIES_EVENT = false;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -485,6 +486,7 @@ public class ServerConfiguration {
 		WANT_BARTER_WORMBRAINS = tryReadBool("want_barter_wormbrains").orElse(false);
 		LOCKED_POST_QUEST_REGIONS_ACCESSIBLE = tryReadBool("locked_post_quest_regions_accessible").orElse(false);
 		CAN_RETRIEVE_POST_QUEST_ITEMS = tryReadBool("can_retrieve_post_quest_items").orElse(false);
+		ESTERS_BUNNIES_EVENT = tryReadBool("esters_bunnies").orElse(false);
 		// adminIp = Arrays.asList(ADMIN_IP.split(","));
 	}
 

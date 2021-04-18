@@ -5,6 +5,7 @@ import com.openrsc.server.constants.Minigames;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.MiniGameInterface;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
@@ -40,9 +41,16 @@ public class Ester implements TalkNpcTrigger, MiniGameInterface {
 	public void onTalkNpc(final Player player, final Npc npc) {
 		if (blockTalkNpc(player, npc)) {
 			nodefault();
+
 			int stage = 0;
 			if (player.getCache().hasKey("esters_bunnies")) {
 				stage = player.getCache().getInt("esters_bunnies");
+			}
+
+			// If the event is not enabled and the player hasn't finished the quest
+			if (!Functions.config().ESTERS_BUNNIES_EVENT && stage != -1) {
+				mes("She looks busy; I wouldn't want to bother her");
+				return;
 			}
 
 			switch (stage) {
