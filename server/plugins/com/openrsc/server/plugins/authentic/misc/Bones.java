@@ -63,32 +63,16 @@ public class Bones implements OpInvTrigger {
 
 		switch (ItemId.getById(item.getCatalogId())) {
 			case BONES:
-				if(player.getConfig().WANT_OPENPK_POINTS) {
-					player.setOpenPkPoints(player.getOpenPkPoints() + 15);
-				} else {
-					player.incExp(com.openrsc.server.constants.Skills.PRAYER, 15, true); // 3.75
-				}
+				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 15, true); // 3.75
 				break;
 			case BAT_BONES:
-				if(player.getConfig().WANT_OPENPK_POINTS) {
-					player.setOpenPkPoints(player.getOpenPkPoints() + 18);
-				} else {
-					player.incExp(com.openrsc.server.constants.Skills.PRAYER, 18, true); // 4.5
-				}
+				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 18, true); // 4.5
 				break;
 			case BIG_BONES:
-				if(player.getConfig().WANT_OPENPK_POINTS) {
-					player.setOpenPkPoints(player.getOpenPkPoints() + 50);
-				} else {
-					player.incExp(com.openrsc.server.constants.Skills.PRAYER, 50, true); // 12.5
-				}
+				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 50, true); // 12.5
 				break;
 			case DRAGON_BONES:
-				if(player.getConfig().WANT_OPENPK_POINTS) {
-					player.setOpenPkPoints(player.getOpenPkPoints() + 240);
-				} else {
-					player.incExp(com.openrsc.server.constants.Skills.PRAYER, 240, true); // 60
-				}
+				player.incExp(com.openrsc.server.constants.Skills.PRAYER, 240, true); // 60
 				break;
 			default:
 				player.message("Nothing interesting happens");
