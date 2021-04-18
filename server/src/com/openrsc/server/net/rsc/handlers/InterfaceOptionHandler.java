@@ -1,10 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.custom.AuctionOptions;
-import com.openrsc.server.constants.custom.ClanOptions;
-import com.openrsc.server.constants.custom.InterfaceOptions;
-import com.openrsc.server.constants.custom.PartyOptions;
+import com.openrsc.server.constants.custom.*;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
 import com.openrsc.server.content.clan.ClanPlayer;
@@ -39,7 +36,6 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			return;
 		}
 		final InterfaceOptions option = InterfaceOptions.getById(payload.index);
-		//System.out.println("option is " + payload.index);
 		switch (option) {
 			case SWAP_CERT:
 				player.setAttribute("swap_cert", payload.value == 1);
@@ -446,7 +442,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case RANK_PLAYER:
 				if (player.getClan() != null) {
 					String playerRank = payload.player;
-					int rank= payload.amount;
+					int rank = payload.value2;
 					if (rank >= 3) {
 						rank = 0;
 					}
@@ -463,7 +459,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				break;
 			case CLAN_SETTINGS:
 				if (player.getClan() != null) {
-					int settingPreference= payload.amount;
+					int settingPreference = payload.value2;
 					if (settingPreference > 3) {
 						return;
 					}
@@ -734,11 +730,10 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 	}
 
 	private void handlePoints(Player player, OptionsStruct payload) {
-		int type0 = payload.value;
-		//System.out.println("type is " + type0);
-		switch (type0) {
-			case 0://reduce def
-				int amount1= payload.amount;
+		int option = payload.value;
+		switch (PointsOptions.getById(option)) {
+			case REDUCE_DEF:
+				int amount1 = payload.amount;
 				int amountx1 = amount1 * 4;
 				if (!checkReduceLevelReqs(player, amountx1, 1)) {
 					return;
@@ -752,8 +747,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
-			case 1://inc def
-				int amount= payload.amount;
+			case INC_DEF:
+				int amount = payload.amount;
 				int amountx = amount * 4;
 				if (!checkIncreaseLevelReqs(player, amount)) {
 					return;
@@ -763,9 +758,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.setOpenPkPoints(player.getOpenPkPoints() - amount);
 				ActionSender.sendPoints(player);
 			break;
-			case 2://inc atk
-				//System.out.println("increase attack");
-				int amount0= payload.amount;
+			case INC_ATK:
+				int amount0 = payload.amount;
 				int amountx0 = amount0 * 4;
 				if (!checkIncreaseLevelReqs(player, amount0)) {
 					return;
@@ -775,8 +769,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.setOpenPkPoints(player.getOpenPkPoints() - amount0);
 				ActionSender.sendPoints(player);
 			break;
-			case 3://inc str
-				int amount2= payload.amount;
+			case INC_STR:
+				int amount2 = payload.amount;
 				int amountx2 = amount2 * 4;
 				if (!checkIncreaseLevelReqs(player, amount2)) {
 					return;
@@ -786,8 +780,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.setOpenPkPoints(player.getOpenPkPoints() - amount2);
 				ActionSender.sendPoints(player);
 			break;
-			case 4://inc rng
-				int amount3= payload.amount;
+			case INC_RNG:
+				int amount3 = payload.amount;
 				int amountx3 = amount3 * 4;
 				if (!checkIncreaseLevelReqs(player, amount3)) {
 					return;
@@ -796,8 +790,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.setOpenPkPoints(player.getOpenPkPoints() - amount3);
 				ActionSender.sendPoints(player);
 			break;
-			case 5://inc pray
-				int amount4= payload.amount;
+			case INC_PRAY:
+				int amount4 = payload.amount;
 				int amountx4 = amount4 * 4;
 				if (!checkIncreaseLevelReqs(player, amount4)) {
 					return;
@@ -806,8 +800,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.setOpenPkPoints(player.getOpenPkPoints() - amount4);
 				ActionSender.sendPoints(player);
 			break;
-			case 6://inc mag
-				int amount5= payload.amount;
+			case INC_MAGE:
+				int amount5 = payload.amount;
 				int amountx5 = amount5 * 4;
 				if (!checkIncreaseLevelReqs(player, amount5)) {
 					return;
@@ -816,8 +810,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.setOpenPkPoints(player.getOpenPkPoints() - amount5);
 				ActionSender.sendPoints(player);
 			break;
-			case 7://reduce atk
-				int amount00= payload.amount;
+			case REDUCE_ATK:
+				int amount00 = payload.amount;
 				int amountx00 = amount00 * 4;
 				if (!checkReduceLevelReqs(player, amountx00, 0)) {
 					return;
@@ -831,8 +825,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
-			case 8://reduce str
-				int amount22= payload.amount;
+			case REDUCE_STR:
+				int amount22 = payload.amount;
 				int amountx22 = amount22 * 4;
 				if (!checkReduceLevelReqs(player, amountx22, 2)) {
 					return;
@@ -846,8 +840,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
-			case 9://reduce rng
-				int amount33= payload.amount;
+			case REDUCE_RNG:
+				int amount33 = payload.amount;
 				int amountx33 = amount33 * 4;
 				if (!checkReduceLevelReqs(player, amountx33, 2)) {
 					return;
@@ -857,8 +851,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
-			case 10://reduce pray
-				int amount44= payload.amount;
+			case REDUCE_PRAY:
+				int amount44 = payload.amount;
 				int amountx44 = amount44 * 4;
 				if (!checkReduceLevelReqs(player, amountx44, 5)) {
 					return;
@@ -868,8 +862,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
-			case 11://reduce mage
-				int amount55= payload.amount;
+			case REDUCE_MAGE:
+				int amount55 = payload.amount;
 				int amountx55 = amount55 * 4;
 				if (!checkReduceLevelReqs(player, amountx55, 6)) {
 					return;
@@ -879,8 +873,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
-			case 12://POINTS2GP
-				int amount28= payload.amount;
+			case POINTS2GP:
+				int amount28 = payload.amount;
 				if(player.getDuel().isDuelActive()){
 					player.message("You cannot do that while dueling");
 					return;

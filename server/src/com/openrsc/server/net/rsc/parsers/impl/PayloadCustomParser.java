@@ -806,27 +806,25 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 						}
 						break;
 					case POINTS:
-						if (player.getConfig().WANT_OPENPK_POINTS) {
-							os.value = packet.readByte();
-							final PointsOptions pointsOption = PointsOptions.getById((int)os.value);
-							switch (pointsOption) {
-								case REDUCE_DEF:
-								case INC_DEF:
-								case INC_ATK:
-								case INC_STR:
-								case INC_RNG:
-								case INC_PRAY:
-								case INC_MAGE:
-								case REDUCE_ATK:
-								case REDUCE_STR:
-								case REDUCE_RNG:
-								case REDUCE_PRAY:
-								case REDUCE_MAGE:
-								case POINTS2GP:
-								case SAVE_PRESET:
-									os.amount = packet.readInt();
-									break;
-							}
+						os.value = packet.readByte();
+						final PointsOptions pointsOption = PointsOptions.getById((int)os.value);
+						switch (pointsOption) {
+							case REDUCE_DEF:
+							case INC_DEF:
+							case INC_ATK:
+							case INC_STR:
+							case INC_RNG:
+							case INC_PRAY:
+							case INC_MAGE:
+							case REDUCE_ATK:
+							case REDUCE_STR:
+							case REDUCE_RNG:
+							case REDUCE_PRAY:
+							case REDUCE_MAGE:
+							case POINTS2GP:
+							case SAVE_PRESET:
+								os.amount = packet.readInt();
+								break;
 						}
 						break;
 				}
