@@ -123,7 +123,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 	private void handleIronmanMode(Player player, OptionsStruct payload) {
 		int secondary = payload.value;
 		if (secondary == 0) {
-			int mode= payload.amount;
+			int mode = payload.value2;
 			if (mode < 0 || mode > 3) {
 				player.setSuspiciousPlayer(true, "mode < 0 or mode > 3");
 				return;
@@ -204,7 +204,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendIronManMode(player);
 			}
 		} else if (secondary == 1) {
-			int setting= payload.amount;
+			int setting = payload.value2;
 			if (setting < 0 || setting > 1) {
 				player.setSuspiciousPlayer(true, "setting < 0 or setting > 1");
 				return;
@@ -593,7 +593,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case RANK_PLAYER:
 				if (player.getParty() != null) {
 					String playerRank = payload.player;
-					int rank= payload.amount;
+					int rank = payload.value2;
 					if (rank >= 3) {
 						rank = 0;
 					}
@@ -610,7 +610,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				break;
 			case PARTY_SETTINGS:
 				if (player.getParty() != null) {
-					int settingPreference= payload.amount;
+					int settingPreference = payload.value2;
 					if (settingPreference > 3) {
 						return;
 					}
