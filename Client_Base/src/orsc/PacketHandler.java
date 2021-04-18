@@ -925,7 +925,7 @@ public class PacketHandler {
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecraft, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
-		int globalFriendChat, wantRightClickTrade, nothingReuseMe, wantExtendedCatsBehavior, wantCertAsNotes;
+		int globalFriendChat, wantRightClickTrade, nothingReuseMe, wantExtendedCatsBehavior, wantCertAsNotes, wantOpenPkPoints;
 
 		String logoSpriteID;
 
@@ -1009,6 +1009,7 @@ public class PacketHandler {
 			nothingReuseMe = this.getClientStream().getUnsignedByte(); // 77
 			wantExtendedCatsBehavior = this.getClientStream().getUnsignedByte(); // 78
 			wantCertAsNotes = this.getClientStream().getUnsignedByte(); // 79
+			wantOpenPkPoints = this.getClientStream().getUnsignedByte(); // 80
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1089,6 +1090,7 @@ public class PacketHandler {
 			nothingReuseMe = packetsIncoming.getUnsignedByte(); // 77
 			wantExtendedCatsBehavior = packetsIncoming.getUnsignedByte(); // 78
 			wantCertAsNotes = packetsIncoming.getUnsignedByte(); // 79
+			wantOpenPkPoints = packetsIncoming.getUnsignedByte(); // 80
 		}
 
 		if (Config.DEBUG) {
@@ -1171,7 +1173,8 @@ public class PacketHandler {
 					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 77
 					"\nS_NOTHING_REUSE_ME " + nothingReuseMe + // 78
 					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior + // 79
-					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes // 80
+					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes + // 80
+					"\nS_WANT_OPENPK_POINTS " + wantOpenPkPoints // 81
 			);
 		}
 
@@ -1258,6 +1261,7 @@ public class PacketHandler {
 		props.setProperty("S_NOTHING_REUSE_ME", nothingReuseMe == 1 ? "true" : "false"); // 78
 		props.setProperty("S_WANT_EXTENDED_CATS_BEHAVIOR", wantExtendedCatsBehavior == 1 ? "true" : "false"); // 79
 		props.setProperty("S_WANT_CERT_AS_NOTES", wantCertAsNotes == 1 ? "true" : "false"); // 80
+		props.setProperty("S_WANT_OPENPK_POINTS", wantOpenPkPoints == 1 ? "true" : "false");
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(

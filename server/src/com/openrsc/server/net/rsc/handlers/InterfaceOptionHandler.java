@@ -84,7 +84,6 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				handleParty(player, payload);
 				break;
 			case POINTS: //OpenPK Points
-				System.out.println("handle points");
 				if (!player.getConfig().WANT_OPENPK_POINTS) return;
 				handlePoints(player, payload);
 		}
