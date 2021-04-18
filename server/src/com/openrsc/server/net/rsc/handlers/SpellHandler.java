@@ -577,11 +577,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		if (message != null) {
 			player.playerServerMessage(MessageType.QUEST, message.trim().isEmpty() ? "Cast spell successfully" : message);
 		}
-		if (player.getConfig().WANT_OPENPK_POINTS) {
-			player.setOpenPkPoints(spell.getExp() / 4);
-		} else {
-			player.incExp(Skills.MAGIC, spell.getExp(), true);
-		}
+		player.incExp(Skills.MAGIC, spell.getExp(), true);
 		player.setCastTimer();
 	}
 

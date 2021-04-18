@@ -1518,7 +1518,6 @@ public final class Player extends Mob {
 			for (int i = 0; i < 4; i++) {
 				ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
 			}
-			return;
 		} else {
 			int xp;
 			for (int i = 0; i < skillDist.length; i++) {
@@ -1669,7 +1668,11 @@ public final class Player extends Mob {
 					int playerXp = (int) (maxXpPerSharedPlayer * xpDropoffPercent);
 					xpLeftToReward -= playerXp;
 					playerXp *= partyMemberPlayer.getExperienceMultiplier(skill);
-					partyMemberPlayer.getSkills().addExperience(skill, playerXp);
+					if (getConfig().WANT_OPENPK_POINTS) {
+						partyMemberPlayer.addOpenPkPoints(playerXp);
+					} else {
+						partyMemberPlayer.getSkills().addExperience(skill, playerXp);
+					}
 				}
 				thisXp = xpLeftToReward;
 			}
@@ -1678,7 +1681,11 @@ public final class Player extends Mob {
 		// Update this player's XP.
 		thisXp = Math.min(thisXp, skillXP);
 		thisXp *= getExperienceMultiplier(skill);
-		getSkills().addExperience(skill, thisXp);
+		if (getConfig().WANT_OPENPK_POINTS) {
+			addOpenPkPoints(thisXp);
+		} else {
+			getSkills().addExperience(skill, thisXp);
+		}
 
 		// packet order; fatigue update comes after XP update authentically.
 		// still, will need to check fatigue is not too high before awarding XP, so this check is in 2 places
@@ -2617,6 +2624,11 @@ public final class Player extends Mob {
 
 	public void setOpenPkPoints(long openPkPoints) {
 		this.openPkPoints = openPkPoints;
+		ActionSender.sendPoints(this);
+	}
+
+	public void addOpenPkPoints(long openPkPoints) {
+		this.openPkPoints += openPkPoints;
 		ActionSender.sendPoints(this);
 	}
 
