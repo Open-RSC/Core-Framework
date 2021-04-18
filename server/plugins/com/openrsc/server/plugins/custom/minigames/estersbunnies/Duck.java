@@ -36,7 +36,12 @@ public class Duck implements TalkNpcTrigger {
 				}
 			}
 
-			final int option = multi(options.toArray(new String[0]));
+			int option = multi(options.toArray(new String[0]));
+			// Avoid packet manipulation
+			if (!Functions.config().ESTERS_BUNNIES_EVENT && option > 0) {
+				option = 0;
+			}
+
 			if (option == 0) {
 				final int wisdom = DataConversions.random(0, 9);
 				switch (wisdom) {

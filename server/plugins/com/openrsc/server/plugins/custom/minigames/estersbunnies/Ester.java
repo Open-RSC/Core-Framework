@@ -49,7 +49,10 @@ public class Ester implements TalkNpcTrigger, MiniGameInterface {
 
 			// If the event is not enabled and the player hasn't finished the quest
 			if (!Functions.config().ESTERS_BUNNIES_EVENT && stage != -1) {
-				mes("She looks busy; I wouldn't want to bother her");
+				npcsay("Hello there!",
+					"Welcome to my home",
+					"I'm a bit busy at the moment, but feel free to talk to my husband upstairs",
+					"Don't mind the rabbits");
 				return;
 			}
 

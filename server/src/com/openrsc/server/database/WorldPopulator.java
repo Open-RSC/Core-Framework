@@ -1,5 +1,6 @@
 package com.openrsc.server.database;
 
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
@@ -197,6 +198,19 @@ public final class WorldPopulator {
 				}
 				if (getWorld().getServer().getConfig().WANT_CUSTOM_QUESTS) {
 					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsCustomQuest.json");
+					// If the Ester's Bunnies event isn't active, move all the bunnies to the top floor of Ester's house.
+					if (!getWorld().getServer().getConfig().ESTERS_BUNNIES_EVENT) {
+						for (NPCLoc loc : npclocs) {
+							if (loc.id == NpcId.BUNNY.id()) {
+								loc.startX = 317;
+								loc.startY = 1607;
+								loc.maxX = 319;
+								loc.maxY = 1608;
+								loc.minX = 314;
+								loc.minY = 1603;
+							}
+						}
+					}
 				}
 				loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsOther.json");
 			}

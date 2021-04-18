@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.Functions;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.ArrayList;
@@ -27,6 +28,11 @@ public class Bunny implements TalkNpcTrigger {
 			nodefault();
 
 			npcsay("Hello there human");
+
+			if (!Functions.config().ESTERS_BUNNIES_EVENT) {
+				eventOver();
+				return;
+			}
 
 			// Just return if the quest is over
 			if (player.getCache().getInt("esters_bunnies") == -1) return;
@@ -149,10 +155,25 @@ public class Bunny implements TalkNpcTrigger {
 		return null;
 	}
 
+	public void eventOver() {
+		say("Hello", "Why have you come back to Ester's house?");
+		npcsay("We have finished contemplating the universe",
+			"We decided to come back so that we can be together",
+			"Now we can discuss the multiverse");
+		if (multi("What are the answers to the universe then?", "Sounds interesting, have fun") == 0) {
+			npcsay("the answer to life the universe and everything",
+				"Is forty...");
+			delay(3);
+			npcsay("seven");
+			delay(3);
+			say("What?");
+			mes("The bunny will say no more");
+		}
+	}
+
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc npc) {
 		return npc.getID() == NpcId.BUNNY.id()
-			&& player.getConfig().ESTERS_BUNNIES_EVENT
 			&& player.getCache().hasKey("esters_bunnies");
 	}
 
