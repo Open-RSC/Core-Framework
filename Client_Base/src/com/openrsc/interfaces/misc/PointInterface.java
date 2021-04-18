@@ -261,14 +261,9 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS1_X, true);
 			}
 		});
-		//System.out.println("experience array: " + Arrays.toString(mc.experienceArray));
 		int nextLevelExpS = mc.getExperienceArray()[2];
-		System.out.println("nextLevelExpS is " + nextLevelExpS);
 		nextLevelExpS = mc.getExperienceArray()[mc.getPlayerStatBase(2) - 1];
-		System.out.println("nextLevelExpS now " + nextLevelExpS);
 		int nL2 = nextLevelExpS - mc.getPlayerExperience(2);
-		System.out.println("mc.getPlayerExperience(2) is " + mc.getPlayerExperience(2));
-		System.out.println("nL2 is " + nL2);
 		this.drawString("Strength: ", x + 10, y + 120, 3, textColour);
 		this.drawString("" + mc.getPlayerExperience(2), x + 231, y + 120, 3, textColour);
 		this.drawString("               " + mc.getPlayerStatBase(2) + "     " + nL2 + "", x + 10, y + 120, 3, textColour);
