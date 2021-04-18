@@ -755,7 +755,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					case 1://inc def
 						int amount= payload.amount;
 						int amountx = amount * 4;
-						if (!checkIncreaseLevelReqs(player, amountx)) {
+						if (!checkIncreaseLevelReqs(player, amount)) {
 							return;
 						}
 						player.getSkills().addExperience(1, amountx);
