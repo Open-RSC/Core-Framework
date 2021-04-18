@@ -16201,6 +16201,10 @@ public final class mudclient implements Runnable {
 		this.showDialogShop = show;
 	}
 
+	public void setShowPoints2Gp(boolean show) {
+		point2GpInterface.setVisible(true);
+	}
+
 	public void setOptionCameraModeAuto(boolean auto) {
 		this.optionCameraModeAuto = auto;
 	}

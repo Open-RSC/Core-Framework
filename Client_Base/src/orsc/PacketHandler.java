@@ -454,6 +454,9 @@ public class PacketHandler {
 				// Shop Dialog
 			else if (opcode == 101) showShopDialog();
 
+			    // OpenPK gp exchange
+			else if (opcode == 144) showPoints2Gp();
+
 				// Trade Dialog Update
 			else if (opcode == 97) updateTradeDialog();
 
@@ -2401,6 +2404,10 @@ public class PacketHandler {
 
 		// Discord status
 		Discord.setLastUpdate("Shopping");
+	}
+
+	private void showPoints2Gp() {
+		mc.setShowPoints2Gp(true);
 	}
 
 	private void updateTradeDialog() {
