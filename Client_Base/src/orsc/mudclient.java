@@ -11155,6 +11155,11 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawString("Combat level: " + this.localPlayer.level, 5 + x, heightMargin, textColour, 1);
 					heightMargin += 12;
 
+					if (Config.S_WANT_OPENPK_POINTS) {
+						//TODO: we'll need to reposition this when we move to the Mini Stats menu for OpenPK.
+						this.getSurface().drawString("Points: " + this.openPkPoints, 5 + x, heightMargin, textColour, 1);
+					}
+
 					//exp freeze notification
 					if (!Config.S_WANT_FATIGUE)
 						if (experienceOff)
