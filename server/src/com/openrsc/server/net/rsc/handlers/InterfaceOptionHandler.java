@@ -39,7 +39,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			return;
 		}
 		final InterfaceOptions option = InterfaceOptions.getById(payload.index);
-		System.out.println("option is " + payload.index);
+		//System.out.println("option is " + payload.index);
 		switch (option) {
 			case SWAP_CERT:
 				player.setAttribute("swap_cert", payload.value == 1);
@@ -735,178 +735,178 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 
 	private void handlePoints(Player player, OptionsStruct payload) {
 		int type0 = payload.value;
-		System.out.println("type is " + type0);
-				switch (type0) {
-					case 0://reduce def
-						int amount1= payload.amount;
-						int amountx1 = amount1 * 4;
-						if (!checkReduceLevelReqs(player, amountx1, 1)) {
-							return;
-						}
-						player.getSkills().reduceExperience(1, amountx1);
-						player.getSkills().reduceExperience(3, amountx1 / 3);
-						if(player.getSkills().getMaxStat(3) < 10) {
-							player.getSkills().setSkill(3, 10, 4616);
-						}
-						player.setOpenPkPoints(player.getOpenPkPoints() + amount1);
-						ActionSender.sendPoints(player);
-						player.checkEquipment();
-					break;
-					case 1://inc def
-						int amount= payload.amount;
-						int amountx = amount * 4;
-						if (!checkIncreaseLevelReqs(player, amount)) {
-							return;
-						}
-						player.getSkills().addExperience(1, amountx);
-						player.getSkills().addExperience(3, amountx / 3);
-						player.setOpenPkPoints(player.getOpenPkPoints() - amount);
-						ActionSender.sendPoints(player);
-					break;
-					case 2://inc atk
-						System.out.println("increase attack");
-						int amount0= payload.amount;
-						int amountx0 = amount0 * 4;
-						if (!checkIncreaseLevelReqs(player, amount0)) {
-							return;
-						}
-						player.getSkills().addExperience(0, amountx0);
-						player.getSkills().addExperience(3, amountx0 / 3);
-						player.setOpenPkPoints(player.getOpenPkPoints() - amount0);
-						ActionSender.sendPoints(player);
-					break;
-					case 3://inc str
-						int amount2= payload.amount;
-						int amountx2 = amount2 * 4;
-						if (!checkIncreaseLevelReqs(player, amount2)) {
-							return;
-						}
-						player.getSkills().addExperience(2, amountx2);
-						player.getSkills().addExperience(3, amountx2 / 3);
-						player.setOpenPkPoints(player.getOpenPkPoints() - amount2);
-						ActionSender.sendPoints(player);
-					break;
-					case 4://inc rng
-						int amount3= payload.amount;
-						int amountx3 = amount3 * 4;
-						if (!checkIncreaseLevelReqs(player, amount3)) {
-							return;
-						}
-						player.getSkills().addExperience(4, amountx3);
-						player.setOpenPkPoints(player.getOpenPkPoints() - amount3);
-						ActionSender.sendPoints(player);
-					break;
-					case 5://inc pray
-						int amount4= payload.amount;
-						int amountx4 = amount4 * 4;
-						if (!checkIncreaseLevelReqs(player, amount4)) {
-							return;
-						}
-						player.getSkills().addExperience(5, amountx4);
-						player.setOpenPkPoints(player.getOpenPkPoints() - amount4);
-						ActionSender.sendPoints(player);
-					break;
-					case 6://inc mag
-						int amount5= payload.amount;
-						int amountx5 = amount5 * 4;
-						if (!checkIncreaseLevelReqs(player, amount5)) {
-							return;
-						}
-						player.getSkills().addExperience(6, amountx5);
-						player.setOpenPkPoints(player.getOpenPkPoints() - amount5);
-						ActionSender.sendPoints(player);
-					break;
-					case 7://reduce atk
-						int amount00= payload.amount;
-						int amountx00 = amount00 * 4;
-						if (!checkReduceLevelReqs(player, amountx00, 0)) {
-							return;
-						}
-						player.getSkills().reduceExperience(0, amountx00);
-						player.getSkills().reduceExperience(3, amountx00 / 3);
-						if(player.getSkills().getMaxStat(3) < 10) {
-							player.getSkills().setSkill(3, 10, 4616);
-						}
-						player.setOpenPkPoints(player.getOpenPkPoints() + amount00);
-						ActionSender.sendPoints(player);
-						player.checkEquipment();
-					break;
-					case 8://reduce str
-						int amount22= payload.amount;
-						int amountx22 = amount22 * 4;
-						if (!checkReduceLevelReqs(player, amountx22, 2)) {
-							return;
-						}
-						player.getSkills().reduceExperience(2, amountx22);
-						player.getSkills().reduceExperience(3, amountx22 / 3);
-						if(player.getSkills().getMaxStat(3) < 10) {
-							player.getSkills().setSkill(3, 10, 4616);
-						}
-						player.setOpenPkPoints(player.getOpenPkPoints() + amount22);
-						ActionSender.sendPoints(player);
-						player.checkEquipment();
-					break;
-					case 9://reduce rng
-						int amount33= payload.amount;
-						int amountx33 = amount33 * 4;
-						if (!checkReduceLevelReqs(player, amountx33, 2)) {
-							return;
-						}
-						player.getSkills().reduceExperience(4, amountx33);
-						player.setOpenPkPoints(player.getOpenPkPoints() + amount33);
-						ActionSender.sendPoints(player);
-						player.checkEquipment();
-					break;
-					case 10://reduce pray
-						int amount44= payload.amount;
-						int amountx44 = amount44 * 4;
-						if (!checkReduceLevelReqs(player, amountx44, 5)) {
-							return;
-						}
-						player.getSkills().reduceExperience(5, amountx44);
-						player.setOpenPkPoints(player.getOpenPkPoints() + amount44);
-						ActionSender.sendPoints(player);
-						player.checkEquipment();
-					break;
-					case 11://reduce mage
-						int amount55= payload.amount;
-						int amountx55 = amount55 * 4;
-						if (!checkReduceLevelReqs(player, amountx55, 6)) {
-							return;
-						}
-						player.getSkills().reduceExperience(6, amountx55);
-						player.setOpenPkPoints(player.getOpenPkPoints() + amount55);
-						ActionSender.sendPoints(player);
-						player.checkEquipment();
-					break;
-					case 12://POINTS2GP
-						int amount28= payload.amount;
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if(player.getOpenPkPoints() < amount28 * 3){
-							player.message("You do not have enough points");
-							return;
-						}
-						Item item = new Item(10, amount28);
-						if(player.getCarriedItems().getInventory().canHold(item)){
-							player.getCarriedItems().getInventory().add(item, false);
-							ActionSender.sendInventory(player);
-						} else {
-							player.getWorld().registerItem(
-							new GroundItem(player.getWorld(), 10, player.getX(), player.getY(), amount28, player),
-							94000);
-							player.message("You don't have room to hold the gp. It falls to the ground!");
-						}
-						player.setOpenPkPoints(player.getOpenPkPoints() - amount28 * 3);
-						ActionSender.sendPoints(player);
-					break;
+		//System.out.println("type is " + type0);
+		switch (type0) {
+			case 0://reduce def
+				int amount1= payload.amount;
+				int amountx1 = amount1 * 4;
+				if (!checkReduceLevelReqs(player, amountx1, 1)) {
+					return;
 				}
+				player.getSkills().reduceExperience(1, amountx1);
+				player.getSkills().reduceExperience(3, amountx1 / 3);
+				if(player.getSkills().getMaxStat(3) < 10) {
+					player.getSkills().setSkill(3, 10, 4616);
+				}
+				player.setOpenPkPoints(player.getOpenPkPoints() + amount1);
+				ActionSender.sendPoints(player);
+				player.checkEquipment();
+			break;
+			case 1://inc def
+				int amount= payload.amount;
+				int amountx = amount * 4;
+				if (!checkIncreaseLevelReqs(player, amount)) {
+					return;
+				}
+				player.getSkills().addExperience(1, amountx);
+				player.getSkills().addExperience(3, amountx / 3);
+				player.setOpenPkPoints(player.getOpenPkPoints() - amount);
+				ActionSender.sendPoints(player);
+			break;
+			case 2://inc atk
+				//System.out.println("increase attack");
+				int amount0= payload.amount;
+				int amountx0 = amount0 * 4;
+				if (!checkIncreaseLevelReqs(player, amount0)) {
+					return;
+				}
+				player.getSkills().addExperience(0, amountx0);
+				player.getSkills().addExperience(3, amountx0 / 3);
+				player.setOpenPkPoints(player.getOpenPkPoints() - amount0);
+				ActionSender.sendPoints(player);
+			break;
+			case 3://inc str
+				int amount2= payload.amount;
+				int amountx2 = amount2 * 4;
+				if (!checkIncreaseLevelReqs(player, amount2)) {
+					return;
+				}
+				player.getSkills().addExperience(2, amountx2);
+				player.getSkills().addExperience(3, amountx2 / 3);
+				player.setOpenPkPoints(player.getOpenPkPoints() - amount2);
+				ActionSender.sendPoints(player);
+			break;
+			case 4://inc rng
+				int amount3= payload.amount;
+				int amountx3 = amount3 * 4;
+				if (!checkIncreaseLevelReqs(player, amount3)) {
+					return;
+				}
+				player.getSkills().addExperience(4, amountx3);
+				player.setOpenPkPoints(player.getOpenPkPoints() - amount3);
+				ActionSender.sendPoints(player);
+			break;
+			case 5://inc pray
+				int amount4= payload.amount;
+				int amountx4 = amount4 * 4;
+				if (!checkIncreaseLevelReqs(player, amount4)) {
+					return;
+				}
+				player.getSkills().addExperience(5, amountx4);
+				player.setOpenPkPoints(player.getOpenPkPoints() - amount4);
+				ActionSender.sendPoints(player);
+			break;
+			case 6://inc mag
+				int amount5= payload.amount;
+				int amountx5 = amount5 * 4;
+				if (!checkIncreaseLevelReqs(player, amount5)) {
+					return;
+				}
+				player.getSkills().addExperience(6, amountx5);
+				player.setOpenPkPoints(player.getOpenPkPoints() - amount5);
+				ActionSender.sendPoints(player);
+			break;
+			case 7://reduce atk
+				int amount00= payload.amount;
+				int amountx00 = amount00 * 4;
+				if (!checkReduceLevelReqs(player, amountx00, 0)) {
+					return;
+				}
+				player.getSkills().reduceExperience(0, amountx00);
+				player.getSkills().reduceExperience(3, amountx00 / 3);
+				if(player.getSkills().getMaxStat(3) < 10) {
+					player.getSkills().setSkill(3, 10, 4616);
+				}
+				player.setOpenPkPoints(player.getOpenPkPoints() + amount00);
+				ActionSender.sendPoints(player);
+				player.checkEquipment();
+			break;
+			case 8://reduce str
+				int amount22= payload.amount;
+				int amountx22 = amount22 * 4;
+				if (!checkReduceLevelReqs(player, amountx22, 2)) {
+					return;
+				}
+				player.getSkills().reduceExperience(2, amountx22);
+				player.getSkills().reduceExperience(3, amountx22 / 3);
+				if(player.getSkills().getMaxStat(3) < 10) {
+					player.getSkills().setSkill(3, 10, 4616);
+				}
+				player.setOpenPkPoints(player.getOpenPkPoints() + amount22);
+				ActionSender.sendPoints(player);
+				player.checkEquipment();
+			break;
+			case 9://reduce rng
+				int amount33= payload.amount;
+				int amountx33 = amount33 * 4;
+				if (!checkReduceLevelReqs(player, amountx33, 2)) {
+					return;
+				}
+				player.getSkills().reduceExperience(4, amountx33);
+				player.setOpenPkPoints(player.getOpenPkPoints() + amount33);
+				ActionSender.sendPoints(player);
+				player.checkEquipment();
+			break;
+			case 10://reduce pray
+				int amount44= payload.amount;
+				int amountx44 = amount44 * 4;
+				if (!checkReduceLevelReqs(player, amountx44, 5)) {
+					return;
+				}
+				player.getSkills().reduceExperience(5, amountx44);
+				player.setOpenPkPoints(player.getOpenPkPoints() + amount44);
+				ActionSender.sendPoints(player);
+				player.checkEquipment();
+			break;
+			case 11://reduce mage
+				int amount55= payload.amount;
+				int amountx55 = amount55 * 4;
+				if (!checkReduceLevelReqs(player, amountx55, 6)) {
+					return;
+				}
+				player.getSkills().reduceExperience(6, amountx55);
+				player.setOpenPkPoints(player.getOpenPkPoints() + amount55);
+				ActionSender.sendPoints(player);
+				player.checkEquipment();
+			break;
+			case 12://POINTS2GP
+				int amount28= payload.amount;
+				if(player.getDuel().isDuelActive()){
+					player.message("You cannot do that while dueling");
+					return;
+				}
+				if(player.inCombat()){
+					player.message("You cannot do that whilst fighting");
+					return;
+				}
+				if(player.getOpenPkPoints() < amount28 * 3){
+					player.message("You do not have enough points");
+					return;
+				}
+				Item item = new Item(10, amount28);
+				if(player.getCarriedItems().getInventory().canHold(item)){
+					player.getCarriedItems().getInventory().add(item, false);
+					ActionSender.sendInventory(player);
+				} else {
+					player.getWorld().registerItem(
+					new GroundItem(player.getWorld(), 10, player.getX(), player.getY(), amount28, player),
+					94000);
+					player.message("You don't have room to hold the gp. It falls to the ground!");
+				}
+				player.setOpenPkPoints(player.getOpenPkPoints() - amount28 * 3);
+				ActionSender.sendPoints(player);
+			break;
+		}
 	}
 
 	private final boolean checkReduceLevelReqs(Player player, int exp, int stat) {
