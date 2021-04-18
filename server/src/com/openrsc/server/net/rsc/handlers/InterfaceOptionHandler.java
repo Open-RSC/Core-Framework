@@ -741,24 +741,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					case 0://reduce def
 						int amount1= payload.amount;
 						int amountx1 = amount1 * 4;
-						if(player.getLocation().inWilderness()){
-							player.message("You cannot do that in the wilderness");
-							return;
-						}
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
-							player.message("You must be out of combat for 10 seconds before changing stats");
-							return;
-						}
-						if(player.getSkills().getExperience(1) < amountx1){
-							player.message("You do not have that much exp in that stat");
+						if (!checkReduceLevelReqs(player, amountx1, 1)) {
 							return;
 						}
 						player.getSkills().reduceExperience(1, amountx1);
@@ -773,24 +756,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					case 1://inc def
 						int amount= payload.amount;
 						int amountx = amount * 4;
-						if(player.getLocation().inWilderness()){
-							player.message("You cannot do that in the wilderness");
-							return;
-						}
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
-							player.message("You must be out of combat for 10 seconds before changing stats");
-							return;
-						}
-						if(player.getOpenPkPoints() < amount){
-							player.message("You do not have enough points");
+						if (!checkIncreaseLevelReqs(player, amountx)) {
 							return;
 						}
 						player.getSkills().addExperience(1, amountx);
@@ -802,24 +768,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 						System.out.println("increase attack");
 						int amount0= payload.amount;
 						int amountx0 = amount0 * 4;
-						if(player.getLocation().inWilderness()){
-							player.message("You cannot do that in the wilderness");
-							return;
-						}
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
-							player.message("You must be out of combat for 10 seconds before changing stats");
-							return;
-						}
-						if(player.getOpenPkPoints() < amount0){
-							player.message("You do not have enough points");
+						if (!checkIncreaseLevelReqs(player, amount0)) {
 							return;
 						}
 						player.getSkills().addExperience(0, amountx0);
@@ -830,24 +779,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					case 3://inc str
 						int amount2= payload.amount;
 						int amountx2 = amount2 * 4;
-						if(player.getLocation().inWilderness()){
-							player.message("You cannot do that in the wilderness");
-							return;
-						}
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
-							player.message("You must be out of combat for 10 seconds before changing stats");
-							return;
-						}
-						if(player.getOpenPkPoints() < amount2){
-							player.message("You do not have enough points");
+						if (!checkIncreaseLevelReqs(player, amount2)) {
 							return;
 						}
 						player.getSkills().addExperience(2, amountx2);
@@ -858,24 +790,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					case 4://inc rng
 						int amount3= payload.amount;
 						int amountx3 = amount3 * 4;
-						if(player.getLocation().inWilderness()){
-							player.message("You cannot do that in the wilderness");
-							return;
-						}
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
-							player.message("You must be out of combat for 10 seconds before changing stats");
-							return;
-						}
-						if(player.getOpenPkPoints() < amount3){
-							player.message("You do not have enough points");
+						if (!checkIncreaseLevelReqs(player, amount3)) {
 							return;
 						}
 						player.getSkills().addExperience(4, amountx3);
@@ -885,24 +800,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					case 5://inc pray
 						int amount4= payload.amount;
 						int amountx4 = amount4 * 4;
-						if(player.getLocation().inWilderness()){
-							player.message("You cannot do that in the wilderness");
-							return;
-						}
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
-							player.message("You must be out of combat for 10 seconds before changing stats");
-							return;
-						}
-						if(player.getOpenPkPoints() < amount4){
-							player.message("You do not have enough points");
+						if (!checkIncreaseLevelReqs(player, amount4)) {
 							return;
 						}
 						player.getSkills().addExperience(5, amountx4);
@@ -912,24 +810,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					case 6://inc mag
 						int amount5= payload.amount;
 						int amountx5 = amount5 * 4;
-						if(player.getLocation().inWilderness()){
-							player.message("You cannot do that in the wilderness");
-							return;
-						}
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
-							player.message("You must be out of combat for 10 seconds before changing stats");
-							return;
-						}
-						if(player.getOpenPkPoints() < amount5){
-							player.message("You do not have enough points");
+						if (!checkIncreaseLevelReqs(player, amount5)) {
 							return;
 						}
 						player.getSkills().addExperience(6, amountx5);
@@ -939,24 +820,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					case 7://reduce atk
 						int amount00= payload.amount;
 						int amountx00 = amount00 * 4;
-						if(player.getLocation().inWilderness()){
-							player.message("You cannot do that in the wilderness");
-							return;
-						}
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
-							player.message("You must be out of combat for 10 seconds before changing stats");
-							return;
-						}
-						if(player.getSkills().getExperience(0) < amountx00){
-							player.message("You do not have that much exp in that stat");
+						if (!checkReduceLevelReqs(player, amountx00, 0)) {
 							return;
 						}
 						player.getSkills().reduceExperience(0, amountx00);
@@ -971,24 +835,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					case 8://reduce str
 						int amount22= payload.amount;
 						int amountx22 = amount22 * 4;
-						if(player.getLocation().inWilderness()){
-							player.message("You cannot do that in the wilderness");
-							return;
-						}
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if(player.getSkills().getExperience(2) < amountx22){
-							player.message("You do not have that much exp in that stat");
-							return;
-						}
-						if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
-							player.message("You must be out of combat for 10 seconds before changing stats");
+						if (!checkReduceLevelReqs(player, amountx22, 2)) {
 							return;
 						}
 						player.getSkills().reduceExperience(2, amountx22);
@@ -1003,24 +850,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					case 9://reduce rng
 						int amount33= payload.amount;
 						int amountx33 = amount33 * 4;
-						if(player.getLocation().inWilderness()){
-							player.message("You cannot do that in the wilderness");
-							return;
-						}
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
-							player.message("You must be out of combat for 10 seconds before changing stats");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if(player.getSkills().getExperience(4) < amountx33){
-							player.message("You do not have that much exp in that stat");
+						if (!checkReduceLevelReqs(player, amountx33, 2)) {
 							return;
 						}
 						player.getSkills().reduceExperience(4, amountx33);
@@ -1031,24 +861,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					case 10://reduce pray
 						int amount44= payload.amount;
 						int amountx44 = amount44 * 4;
-						if(player.getLocation().inWilderness()){
-							player.message("You cannot do that in the wilderness");
-							return;
-						}
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
-							player.message("You must be out of combat for 10 seconds before changing stats");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if(player.getSkills().getExperience(5) < amountx44){
-							player.message("You do not have that much exp in that stat");
+						if (!checkReduceLevelReqs(player, amountx44, 5)) {
 							return;
 						}
 						player.getSkills().reduceExperience(5, amountx44);
@@ -1059,24 +872,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					case 11://reduce mage
 						int amount55= payload.amount;
 						int amountx55 = amount55 * 4;
-						if(player.getLocation().inWilderness()){
-							player.message("You cannot do that in the wilderness");
-							return;
-						}
-						if(player.getDuel().isDuelActive()){
-							player.message("You cannot do that while dueling");
-							return;
-						}
-						if(player.inCombat()){
-							player.message("You cannot do that whilst fighting");
-							return;
-						}
-						if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
-							player.message("You must be out of combat for 10 seconds before changing stats");
-							return;
-						}
-						if(player.getSkills().getExperience(6) < amountx55){
-							player.message("You do not have that much exp in that stat");
+						if (!checkReduceLevelReqs(player, amountx55, 6)) {
 							return;
 						}
 						player.getSkills().reduceExperience(6, amountx55);
@@ -1112,5 +908,52 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 						ActionSender.sendPoints(player);
 					break;
 				}
+	}
+
+	private final boolean checkReduceLevelReqs(Player player, int exp, int stat) {
+		if(player.getLocation().inWilderness()){
+			player.message("You cannot do that in the wilderness");
+			return false;
+		}
+		if(player.getDuel().isDuelActive()){
+			player.message("You cannot do that while dueling");
+			return false;
+		}
+		if(player.inCombat()){
+			player.message("You cannot do that whilst fighting");
+			return false;
+		}
+		if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
+			player.message("You must be out of combat for 10 seconds before changing stats");
+			return false;
+		}
+		if(player.getSkills().getExperience(stat) < exp){
+			player.message("You do not have that much exp in that stat");
+			return false;
+		}
+		return true;
+	}
+	private final boolean checkIncreaseLevelReqs(Player player, int points) {
+		if(player.getLocation().inWilderness()){
+			player.message("You cannot do that in the wilderness");
+			return false;
+		}
+		if(player.getDuel().isDuelActive()){
+			player.message("You cannot do that while dueling");
+			return false;
+		}
+		if(player.inCombat()){
+			player.message("You cannot do that whilst fighting");
+			return false;
+		}
+		if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
+			player.message("You must be out of combat for 10 seconds before changing stats");
+			return false;
+		}
+		if(player.getOpenPkPoints() < points){
+			player.message("You do not have enough points");
+			return false;
+		}
+		return true;
 	}
 }
