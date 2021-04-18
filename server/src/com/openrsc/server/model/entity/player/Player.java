@@ -816,7 +816,6 @@ public final class Player extends Mob {
 		sessionStart = System.currentTimeMillis();
 	}
 
-
 	private void updateSkullRemaining() {
 		if ((getCache().getLong("skull_remaining") <= 0) || (getCache().hasKey("skull_remaining") && !isSkulled())) { // Removes the skull remaining key once no longer needed
 			cache.remove("skull_remaining");

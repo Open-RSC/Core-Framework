@@ -551,7 +551,6 @@ public class Npc extends Mob {
 				}
 				skillsDist[Skills.HITS] = 1;
 				player.incExp(skillsDist, totalXP, true);
-
 			}
 		}
 
@@ -567,7 +566,6 @@ public class Npc extends Mob {
 			if (player != null) {
 				int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
 				player.incExp(Skills.RANGED, totalXP * 4, true);
-
 				ActionSender.sendStat(player, Skills.RANGED);
 			}
 		}
