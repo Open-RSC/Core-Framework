@@ -11158,9 +11158,9 @@ public final class mudclient implements Runnable {
 					//exp freeze notification
 					if (!Config.S_WANT_FATIGUE)
 						if (experienceOff)
-							this.getSurface().drawString("Exp gain off", 122 + x, yOffset + 8, 0x00FF0000, 1);
+							this.getSurface().drawString(Config.S_WANT_OPENPK_POINTS ? "Points gain off" : "Exp gain off", Config.S_WANT_OPENPK_POINTS ? 110 + x : 122 + x, yOffset + 8, 0x00FF0000, 1);
 						else
-							this.getSurface().drawString("Exp gain on", 124 + x, yOffset + 8, 0x0000FF00, 1);
+							this.getSurface().drawString(Config.S_WANT_OPENPK_POINTS ? "Points gain on" : "Exp gain on", Config.S_WANT_OPENPK_POINTS ? 112 + x : 124 + x, yOffset + 8, 0x0000FF00, 1);
 				} else { //if there is a skill hovered over
 					this.getSurface().drawString(skillNameLong[currentlyHoveredSkill] + " skill", 5 + x, heightMargin, textColourHeading, 1);
 					heightMargin += 12;
