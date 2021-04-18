@@ -780,6 +780,9 @@ public final class Player extends Mob {
 				updateSkullRemaining();
 			if (isCharged())
 				updateChargeRemaining();
+			if (getConfig().WANT_OPENPK_POINTS) {
+				getCache().store("openpk_points", getOpenPkPoints());
+			}
 			getCache().store("last_spell_cast", lastSpellCast);
 			LOGGER.info("Requesting unregistration for " + getUsername() + ": " + reason);
 			unregistering = true;
@@ -828,10 +831,6 @@ public final class Player extends Mob {
 		} else if (getChargeTime() - System.currentTimeMillis() > 0) {
 			cache.store("charge_remaining", (getChargeTime() - System.currentTimeMillis()));
 		}
-	}
-
-	private void updateOpenPkPoints() {
-		cache.store("openpk_points", getOpenPkPoints());
 	}
 
 	@Override

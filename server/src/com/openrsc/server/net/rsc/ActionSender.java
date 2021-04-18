@@ -1738,7 +1738,9 @@ public class ActionSender {
                 sendEquipmentStats(player);
                 sendPrayers(player, player.getPrayers().getActivePrayers());
                 sendFatigue(player);
-
+				if (player.getConfig().WANT_OPENPK_POINTS) {
+					player.setOpenPkPoints(player.getCache().hasKey("openpk_points") ? player.getCache().getLong("openpk_points") : 0);
+				}
 				player.getWorld().getServer().getGameUpdater().sendUpdatePackets(player);
 				long timeTillShutdown = player.getWorld().getServer().getTimeUntilShutdown();
 				if (timeTillShutdown > -1)

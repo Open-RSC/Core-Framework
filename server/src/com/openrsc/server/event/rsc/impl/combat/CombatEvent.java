@@ -77,7 +77,11 @@ public class CombatEvent extends GameTickEvent {
 					break;
 			}
 			skillsDist[Skills.HITS] = 1;
-			playerKiller.incExp(skillsDist, exp, true);
+			if (playerKiller.getConfig().WANT_OPENPK_POINTS) {
+				playerKiller.setOpenPkPoints(playerKiller.getOpenPkPoints() + exp);
+			} else {
+				playerKiller.incExp(skillsDist, exp, true);
+			}
 		}
 
 		// If `killed` is an NPC, xp distribution is handled by Npc.handleXpDistribution()
