@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.constants.custom.*;
 import com.openrsc.server.content.clan.Clan;
@@ -889,14 +890,14 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					player.message("You do not have enough points");
 					return;
 				}
-				Item item = new Item(10, amount28);
+				Item item = new Item(ItemId.COINS.id(), amount28);
 				if(player.getCarriedItems().getInventory().canHold(item)){
 					player.getCarriedItems().getInventory().add(item, false);
 					ActionSender.sendInventory(player);
 				} else {
 					player.getWorld().registerItem(
 					new GroundItem(player.getWorld(), 10, player.getX(), player.getY(), amount28, player),
-					94000);
+					player.getConfig().GAME_TICK * 145);
 					player.message("You don't have room to hold the gp. It falls to the ground!");
 				}
 				player.subtractOpenPkPoints(amount28 * player.getConfig().OPENPK_POINTS_TO_GP);
