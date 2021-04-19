@@ -125,15 +125,19 @@ public class Region {
 		return items.values();
 	}
 
-	public void removeEntity(final Entity entity) {
+	public void removeEntity(Entity entity) {
+		removeEntity(entity.getLocation(), entity);
+	}
+
+	public void removeEntity(Point location, final Entity entity) {
 		if (entity.isPlayer()) {
-			players.remove(entity.getLocation(), entity);
+			players.remove(location, entity);
 		} else if (entity.isNpc()) {
-			npcs.remove(entity.getLocation(), entity);
+			npcs.remove(location, entity);
 		} else if (entity instanceof GameObject) {
-			objects.remove(entity.getLocation(), entity);
+			objects.remove(location, entity);
 		} else if (entity instanceof GroundItem) {
-			items.remove(entity.getLocation(), entity);
+			items.remove(location, entity);
 		}
 	}
 

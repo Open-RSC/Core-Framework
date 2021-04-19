@@ -290,7 +290,7 @@ public final class EntityHandler {
 					item.getInt("isNoteable") == 1
 				);
 
-				if (toAdd.getCommand().length == 1 && toAdd.getCommand()[0] == "") {
+				if (toAdd.getCommand().length == 1 && "".equals(toAdd.getCommand()[0])) {
 					toAdd.nullCommand();
 				}
 				items.add(toAdd);

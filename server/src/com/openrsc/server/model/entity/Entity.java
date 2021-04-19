@@ -19,9 +19,9 @@ public abstract class Entity {
 
 	private int index;
 
-	private AtomicReference<Point> location = new AtomicReference<Point>();
+	private final AtomicReference<Point> location = new AtomicReference<Point>();
 
-	private AtomicReference<Region> region = new AtomicReference<Region>();
+	private final AtomicReference<Region> region = new AtomicReference<Region>();
 
 	private boolean removed = false;
 
@@ -36,10 +36,14 @@ public abstract class Entity {
 	}
 
 	public void updateRegion() {
+		updateRegion(null);
+	}
+
+	public void updateRegion(Point oldLocation) {
 		final Region newRegion = getWorld().getRegionManager().getRegion(getLocation());
 		if (!newRegion.equals(getRegion())) {
-			if (getRegion() != null) {
-				region.get().removeEntity(this);
+			if (getRegion() != null && oldLocation != null) {
+				region.get().removeEntity(oldLocation, this);
 			}
 
 			if (!isRemoved()) {
@@ -124,8 +128,8 @@ public abstract class Entity {
 	}
 
 	public void setLocation(final Point point) {
-		location.set(point);
-		updateRegion();
+		Point oldLocation = location.getAndSet(point);
+		updateRegion(oldLocation);
 	}
 
 	public void setInitialLocation(Point player) {
