@@ -818,7 +818,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					return;
 				}
 				player.getSkills().reduceExperience(Skills.ATTACK, amountx00);
-				player.getSkills().reduceExperience(Skills.Hits, amountx00 / 3);
+				player.getSkills().reduceExperience(Skills.HITS, amountx00 / 3);
 				if(player.getSkills().getMaxStat(3) < 10) {
 					player.getSkills().setSkill(3, 10, 4616);
 				}
