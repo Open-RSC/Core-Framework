@@ -57,8 +57,8 @@ public final class Point2GpInterface {
 		mc.getSurface().drawBoxAlpha(x, y - 50, width, height, panelColour, 90);
 		mc.getSurface().drawBoxBorder(x, width, y - 50, height, bordColour);
 
-		this.drawString("Exchange Points to Gp ", x + 10, y - 35, 3, textColour);
-		this.drawString("3 Points = 1 Gp", x + 10, y - 18, 3, textColour);
+		this.drawString("Exchange Points to Gp", x + 10, y - 35, 3, textColour);
+		this.drawString(Config.S_OPENPK_POINTS_TO_GP + " Points = 1 Gp", x + 10, y - 18, 3, textColour);
 		this.drawString("Points: " + mc.getPoints(), x + 10, y + 20, 3, textColour);
 		this.drawButton(x + 198, y - 20, 85, 28, "@yel@Exchange", 3, false, new ButtonHandler() {
 			@Override
