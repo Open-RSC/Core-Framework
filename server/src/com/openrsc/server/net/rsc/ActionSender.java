@@ -415,7 +415,7 @@ public class ActionSender {
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_FATIGUE, struct, player);
 	}
 
-	public static void showPoints2Gp(Player player) {
+	public static void showPointsToGp(Player player) {
 		NoPayloadStruct struct = new NoPayloadStruct();
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_OPENPK_POINTS_TO_GP, struct, player);
 	}

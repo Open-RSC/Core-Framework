@@ -8,7 +8,7 @@ import orsc.graphics.gui.InputXPrompt;
 import orsc.mudclient;
 
 
-public final class Point2GpInterface {
+public final class PointsToGpInterface {
 	public Panel experienceConfig;
 	public int experienceConfigScroll;
 	public boolean selectSkillMenu = false;
@@ -18,7 +18,7 @@ public final class Point2GpInterface {
 	private int panelColour, textColour, bordColour, lineColour;
 	private int x, y;
 
-	public Point2GpInterface(mudclient mc) {
+	public PointsToGpInterface(mudclient mc) {
 		this.mc = mc;
 
 		x = (mc.getGameWidth() - width) / 2;
@@ -63,7 +63,7 @@ public final class Point2GpInterface {
 		this.drawButton(x + 198, y - 20, 85, 28, "@yel@Exchange", 3, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.pts2Gp, InputXAction.POINTS2GP, true);
+				mc.showItemModX(InputXPrompt.pointsToGp, InputXAction.POINTS_TO_GP, true);
 			}
 		});
 		this.drawCloseButton(x + 318, y - 44, 24, 24, "X", 5, new ButtonHandler() {

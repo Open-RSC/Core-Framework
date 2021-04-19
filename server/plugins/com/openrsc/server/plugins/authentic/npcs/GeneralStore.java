@@ -79,7 +79,7 @@ public final class GeneralStore extends AbstractShop {
 			if (option == 0) {
 				say(player, n, "Yes Please");
 				//p.setAccessingShop(shop);
-				ActionSender.showPoints2Gp(player);
+				ActionSender.showPointsToGp(player);
 			} else if (option == 1) {
 				say(player, n, "No thanks");
 			}
@@ -111,7 +111,7 @@ public final class GeneralStore extends AbstractShop {
 			if (option == 0) {
 				say(player, n, "Yes Please");
 				//p.setAccessingShop(shop);
-				ActionSender.showPoints2Gp(player);
+				ActionSender.showPointsToGp(player);
 			} else if (option == 1) {
 				say(player, n, "No thanks");
 			}

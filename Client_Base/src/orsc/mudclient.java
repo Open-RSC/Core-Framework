@@ -248,7 +248,7 @@ public final class mudclient implements Runnable {
 	public SkillGuideInterface skillGuideInterface;
 	public QuestGuideInterface questGuideInterface;
 	public PointInterface pointInterface;
-	public Point2GpInterface point2GpInterface;
+	public PointsToGpInterface pointsToGpInterface;
 	public ExperienceConfigInterface experienceConfigInterface;
 	public DoSkillInterface doSkillInterface;
 	public LostOnDeathInterface lostOnDeathInterface;
@@ -5680,7 +5680,7 @@ public final class mudclient implements Runnable {
 				} else if (this.inputX_Action == InputXAction.EXIT_BLACK_HOLE) {
 					this.packetHandler.getClientStream().newPacket(86);
 					this.packetHandler.getClientStream().finishPacket();
-				} else if (this.inputX_Action == InputXAction.POINTS2GP) {
+				} else if (this.inputX_Action == InputXAction.POINTS_TO_GP) {
 					try {
 						if (str.length() > 10) {
 							str = str.substring(str.length() - 10);
@@ -5696,7 +5696,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("POINTS2GP number format exception: " + var13);
+						System.out.println("POINTS_TO_GP number format exception: " + var13);
 					}
 				}  else if (this.inputX_Action == InputXAction.LOADPRESET_X) {
 					try {
@@ -5714,7 +5714,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("LOADPRESET_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.SAVEPRESET_X) {
 					try {
@@ -5732,7 +5732,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("SAVEPRESET_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.INCPOINTS0_X) {
 					try {
@@ -5750,7 +5750,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("INCPOINTS0_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.INCPOINTS1_X) {
 					try {
@@ -5768,7 +5768,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("INCPOINTS1_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.INCPOINTS2_X) {
 					try {
@@ -5786,7 +5786,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("INCPOINTS2_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.INCPOINTS3_X) {
 					try {
@@ -5804,7 +5804,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("INCPOINTS3_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.INCPOINTS4_X) {
 					try {
@@ -5822,7 +5822,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("INCPOINTS4_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.INCPOINTS5_X) {
 					try {
@@ -5840,7 +5840,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("INCPOINTS5_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.INCLEVELS0_X) {
 					try {
@@ -5875,7 +5875,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("INCLEVELS0_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.INCLEVELS1_X) {
 					try {
@@ -5910,7 +5910,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("INCLEVELS1_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.INCLEVELS2_X) {
 					try {
@@ -5945,7 +5945,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("INCLEVELS2_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.INCLEVELS3_X) {
 					try {
@@ -5980,7 +5980,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("INCLEVELS3_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.INCLEVELS4_X) {
 					try {
@@ -6015,7 +6015,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("INCLEVELS4_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.INCLEVELS5_X) {
 					try {
@@ -6050,7 +6050,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points inc X number format exception: " + var13);
+						System.out.println("INCLEVELS5_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS0_X) {
 					try {
@@ -6068,7 +6068,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points reduce X number format exception: " + var13);
+						System.out.println("REDUCEPOINTS0_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS1_X) {
 					try {
@@ -6086,7 +6086,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points reduce X number format exception: " + var13);
+						System.out.println("REDUCEPOINTS1_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS2_X) {
 					try {
@@ -6104,7 +6104,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points reduce X number format exception: " + var13);
+						System.out.println("REDUCEPOINTS2_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS3_X) {
 					try {
@@ -6122,7 +6122,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points reduce X number format exception: " + var13);
+						System.out.println("REDUCEPOINTS3_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS4_X) {
 					try {
@@ -6140,7 +6140,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points reduce X number format exception: " + var13);
+						System.out.println("REDUCEPOINTS4_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS5_X) {
 					try {
@@ -6158,7 +6158,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points reduce X number format exception: " + var13);
+						System.out.println("REDUCEPOINTS5_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.REDUCELEVELS0_X) {
 					try {
@@ -6201,7 +6201,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points reduce X number format exception: " + var13);
+						System.out.println("REDUCELEVELS0_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.REDUCELEVELS1_X) {
 					try {
@@ -6243,7 +6243,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points reduce X number format exception: " + var13);
+						System.out.println("REDUCELEVELS1_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.REDUCELEVELS2_X) {
 					try {
@@ -6285,7 +6285,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points reduce X number format exception: " + var13);
+						System.out.println("REDUCELEVELS2_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.REDUCELEVELS3_X) {
 					try {
@@ -6327,7 +6327,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points reduce X number format exception: " + var13);
+						System.out.println("REDUCELEVELS3_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.REDUCELEVELS4_X) {
 					try {
@@ -6369,7 +6369,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points reduce X number format exception: " + var13);
+						System.out.println("REDUCELEVELS4_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.REDUCELEVELS5_X) {
 					try {
@@ -6411,7 +6411,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putInt(var4);
 						this.packetHandler.getClientStream().finishPacket();
 					} catch (NumberFormatException var13) {
-						System.out.println("Points reduce X number format exception: " + var13);
+						System.out.println("REDUCELEVELS5_X number format exception: " + var13);
 					}
 				} else if (this.inputX_Action == InputXAction.DROP_X) {
 					try {
@@ -7775,8 +7775,8 @@ public final class mudclient implements Runnable {
 					this.drawSkillGuide();
 				} else if (pointInterface.isVisible()) {
 					this.drawPointConfig();
-				} else if (point2GpInterface.isVisible()) {
-					this.drawPoint2GpConfig();
+				} else if (pointsToGpInterface.isVisible()) {
+					this.drawPointsToGpConfig();
 				} else if (S_WANT_QUEST_MENUS && questGuideInterface.isVisible() && !C_CUSTOM_UI) {
 					this.drawQuestGuide();
 				} else if (experienceConfigInterface.isVisible()) {
@@ -16203,8 +16203,8 @@ public final class mudclient implements Runnable {
 		this.showDialogShop = show;
 	}
 
-	public void setShowPoints2Gp(boolean show) {
-		point2GpInterface.setVisible(true);
+	public void setShowPointsToGp(boolean show) {
+		pointsToGpInterface.setVisible(true);
 	}
 
 	public void setOptionCameraModeAuto(boolean auto) {
@@ -16838,7 +16838,7 @@ public final class mudclient implements Runnable {
 				questGuideInterface = new QuestGuideInterface(this);
 				experienceConfigInterface = new ExperienceConfigInterface(this);
 				pointInterface = new PointInterface(this);
-				point2GpInterface = new Point2GpInterface(this);
+				pointsToGpInterface = new PointsToGpInterface(this);
 				doSkillInterface = new DoSkillInterface(this);
 				if (S_ITEMS_ON_DEATH_MENU)
 					lostOnDeathInterface = new LostOnDeathInterface(this);
@@ -17619,8 +17619,8 @@ public final class mudclient implements Runnable {
 		pointInterface.onRender(this.getSurface());
 	}
 
-	private void drawPoint2GpConfig() {
-		point2GpInterface.onRender(this.getSurface());
+	private void drawPointsToGpConfig() {
+		pointsToGpInterface.onRender(this.getSurface());
 	}
 
 	public String getSkillGuideChosen() {

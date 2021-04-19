@@ -107,7 +107,9 @@ public class PacketHandler {
 		put(129, "COMBAT_STYLE_CHANGED");
 		put(135, "BANK_PIN_INTERFACE");
 		put(136, "ONLINE_LIST");
+		put(144, "SHOW_POINTS_TO_GP");
 		put(147, "SEND_KILLS2");
+		put(148, "SET_OPENPK_POINTS");
 		put(150, "UPDATE_PRESET");
 		put(254, "UPDATE_EQUIPMENT");
 		put(255, "UPDATE_EQUIPMENT_SLOT");
@@ -455,7 +457,7 @@ public class PacketHandler {
 			else if (opcode == 101) showShopDialog();
 
 			    // OpenPK gp exchange
-			else if (opcode == 144) showPoints2Gp();
+			else if (opcode == 144) showPointsToGp();
 
 				// Trade Dialog Update
 			else if (opcode == 97) updateTradeDialog();
@@ -2414,8 +2416,8 @@ public class PacketHandler {
 		Discord.setLastUpdate("Shopping");
 	}
 
-	private void showPoints2Gp() {
-		mc.setShowPoints2Gp(true);
+	private void showPointsToGp() {
+		mc.setShowPointsToGp(true);
 	}
 
 	private void updateTradeDialog() {

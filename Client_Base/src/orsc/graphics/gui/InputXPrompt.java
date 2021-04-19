@@ -19,7 +19,7 @@ public class InputXPrompt {
 	public static String[] incPointsX = new String[] { "Enter number of points to add and press enter" };
 	public static String[] incLevelsX = new String[] { "Enter number of levels to add and press enter" };
 	public static String[] savePreset = new String[] { "Enter preset number to overwrite and press enter" };
-	public static String[] pts2Gp = new String[] { "Enter number of gp you want to trade your points for and press enter" };
+	public static String[] pointsToGp = new String[] { "Enter number of gp you want to trade your points for and press enter" };
 	public static String[] reducePointsX = new String[] { "Enter number of points to reduce and press enter" };
 	public static String[] reduceLevelsX = new String[] { "Enter number of levels to reduce and press enter" };
 	public static String[] teamDuelOfferX = new String[] { "Enter number of items to stake and press enter" };
