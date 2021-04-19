@@ -736,7 +736,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case REDUCE_DEFENSE:
 				int amount1 = payload.amount;
 				int amountx1 = amount1 * 4;
-				if (!checkReduceLevelReqs(player, amountx1, 1)) {
+				if (!checkReduceLevelReqs(player, amountx1, Skills.DEFENSE)) {
 					return;
 				}
 				player.getSkills().reduceExperience(Skills.DEFENSE, amountx1);
@@ -814,7 +814,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case REDUCE_ATTACK:
 				int amount00 = payload.amount;
 				int amountx00 = amount00 * 4;
-				if (!checkReduceLevelReqs(player, amountx00, 0)) {
+				if (!checkReduceLevelReqs(player, amountx00, Skills.ATTACK)) {
 					return;
 				}
 				player.getSkills().reduceExperience(Skills.ATTACK, amountx00);
@@ -829,7 +829,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case REDUCE_STRENGTH:
 				int amount22 = payload.amount;
 				int amountx22 = amount22 * 4;
-				if (!checkReduceLevelReqs(player, amountx22, 2)) {
+				if (!checkReduceLevelReqs(player, amountx22, Skills.STRENGTH)) {
 					return;
 				}
 				player.getSkills().reduceExperience(Skills.STRENGTH, amountx22);
@@ -844,7 +844,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case REDUCE_RANGED:
 				int amount33 = payload.amount;
 				int amountx33 = amount33 * 4;
-				if (!checkReduceLevelReqs(player, amountx33, 2)) {
+				if (!checkReduceLevelReqs(player, amountx33, Skills.RANGED)) {
 					return;
 				}
 				player.getSkills().reduceExperience(Skills.RANGED, amountx33);
@@ -855,7 +855,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case REDUCE_PRAYER:
 				int amount44 = payload.amount;
 				int amountx44 = amount44 * 4;
-				if (!checkReduceLevelReqs(player, amountx44, 5)) {
+				if (!checkReduceLevelReqs(player, amountx44, Skills.PRAYER)) {
 					return;
 				}
 				player.getSkills().reduceExperience(Skills.PRAYER, amountx44);
@@ -866,7 +866,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case REDUCE_MAGIC:
 				int amount55 = payload.amount;
 				int amountx55 = amount55 * 4;
-				if (!checkReduceLevelReqs(player, amountx55, 6)) {
+				if (!checkReduceLevelReqs(player, amountx55, Skills.MAGIC)) {
 					return;
 				}
 				player.getSkills().reduceExperience(Skills.MAGIC, amountx55);
