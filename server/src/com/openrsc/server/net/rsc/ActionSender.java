@@ -417,7 +417,7 @@ public class ActionSender {
 
 	public static void showPoints2Gp(Player player) {
 		NoPayloadStruct struct = new NoPayloadStruct();
-		tryFinalizeAndSendPacket(OpcodeOut.SEND_POINTS2GP, struct, player);
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_OPENPK_POINTS_TO_GP, struct, player);
 	}
 
 	public static void sendNpcKills(Player player) {
@@ -429,7 +429,7 @@ public class ActionSender {
 	public static void sendPoints(Player player) {
 		PointsStruct struct = new PointsStruct();
 		struct.amount = player.getOpenPkPoints();
-		tryFinalizeAndSendPacket(OpcodeOut.SEND_POINTS, struct, player);
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_OPENPK_POINTS, struct, player);
 	}
 
 	public static void sendExpShared(Player player) {

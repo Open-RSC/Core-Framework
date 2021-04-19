@@ -809,19 +809,19 @@ public class PayloadCustomParser implements PayloadParser<OpcodeIn> {
 						os.value = packet.readByte();
 						final PointsOptions pointsOption = PointsOptions.getById((int)os.value);
 						switch (pointsOption) {
-							case REDUCE_DEF:
-							case INC_DEF:
-							case INC_ATK:
-							case INC_STR:
-							case INC_RNG:
-							case INC_PRAY:
-							case INC_MAGE:
-							case REDUCE_ATK:
-							case REDUCE_STR:
-							case REDUCE_RNG:
-							case REDUCE_PRAY:
-							case REDUCE_MAGE:
-							case POINTS2GP:
+							case REDUCE_DEFENSE:
+							case INCREASE_DEFENSE:
+							case INCREASE_ATTACK:
+							case INCREASE_STRENGTH:
+							case INCREASE_RANGED:
+							case INCREASE_PRAYER:
+							case INCREASE_MAGIC:
+							case REDUCE_ATTACK:
+							case REDUCE_STRENGTH:
+							case REDUCE_RANGED:
+							case REDUCE_PRAYER:
+							case REDUCE_MAGIC:
+							case POINTS_TO_GP:
 							case SAVE_PRESET:
 								os.amount = packet.readInt();
 								break;

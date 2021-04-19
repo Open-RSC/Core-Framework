@@ -732,7 +732,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 	private void handlePoints(Player player, OptionsStruct payload) {
 		int option = payload.value;
 		switch (PointsOptions.getById(option)) {
-			case REDUCE_DEF:
+			case REDUCE_DEFENSE:
 				int amount1 = payload.amount;
 				int amountx1 = amount1 * 4;
 				if (!checkReduceLevelReqs(player, amountx1, 1)) {
@@ -747,7 +747,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
-			case INC_DEF:
+			case INCREASE_DEFENSE:
 				int amount = payload.amount;
 				int amountx = amount * 4;
 				if (!checkIncreaseLevelReqs(player, amount)) {
@@ -758,7 +758,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.subtractOpenPkPoints(amount);
 				ActionSender.sendPoints(player);
 			break;
-			case INC_ATK:
+			case INCREASE_ATTACK:
 				int amount0 = payload.amount;
 				int amountx0 = amount0 * 4;
 				if (!checkIncreaseLevelReqs(player, amount0)) {
@@ -769,7 +769,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.subtractOpenPkPoints(amount0);
 				ActionSender.sendPoints(player);
 			break;
-			case INC_STR:
+			case INCREASE_STRENGTH:
 				int amount2 = payload.amount;
 				int amountx2 = amount2 * 4;
 				if (!checkIncreaseLevelReqs(player, amount2)) {
@@ -780,7 +780,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.subtractOpenPkPoints(amount2);
 				ActionSender.sendPoints(player);
 			break;
-			case INC_RNG:
+			case INCREASE_RANGED:
 				int amount3 = payload.amount;
 				int amountx3 = amount3 * 4;
 				if (!checkIncreaseLevelReqs(player, amount3)) {
@@ -790,7 +790,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.subtractOpenPkPoints(amount3);
 				ActionSender.sendPoints(player);
 			break;
-			case INC_PRAY:
+			case INCREASE_PRAYER:
 				int amount4 = payload.amount;
 				int amountx4 = amount4 * 4;
 				if (!checkIncreaseLevelReqs(player, amount4)) {
@@ -800,7 +800,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.subtractOpenPkPoints(amount4);
 				ActionSender.sendPoints(player);
 			break;
-			case INC_MAGE:
+			case INCREASE_MAGIC:
 				int amount5 = payload.amount;
 				int amountx5 = amount5 * 4;
 				if (!checkIncreaseLevelReqs(player, amount5)) {
@@ -810,7 +810,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				player.subtractOpenPkPoints(amount5);
 				ActionSender.sendPoints(player);
 			break;
-			case REDUCE_ATK:
+			case REDUCE_ATTACK:
 				int amount00 = payload.amount;
 				int amountx00 = amount00 * 4;
 				if (!checkReduceLevelReqs(player, amountx00, 0)) {
@@ -825,7 +825,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
-			case REDUCE_STR:
+			case REDUCE_STRENGTH:
 				int amount22 = payload.amount;
 				int amountx22 = amount22 * 4;
 				if (!checkReduceLevelReqs(player, amountx22, 2)) {
@@ -840,7 +840,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
-			case REDUCE_RNG:
+			case REDUCE_RANGED:
 				int amount33 = payload.amount;
 				int amountx33 = amount33 * 4;
 				if (!checkReduceLevelReqs(player, amountx33, 2)) {
@@ -851,7 +851,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
-			case REDUCE_PRAY:
+			case REDUCE_PRAYER:
 				int amount44 = payload.amount;
 				int amountx44 = amount44 * 4;
 				if (!checkReduceLevelReqs(player, amountx44, 5)) {
@@ -862,7 +862,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
-			case REDUCE_MAGE:
+			case REDUCE_MAGIC:
 				int amount55 = payload.amount;
 				int amountx55 = amount55 * 4;
 				if (!checkReduceLevelReqs(player, amountx55, 6)) {
@@ -873,7 +873,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
-			case POINTS2GP:
+			case POINTS_TO_GP:
 				int amount28 = payload.amount;
 				if(player.getDuel().isDuelActive()){
 					player.message("You cannot do that while dueling");
