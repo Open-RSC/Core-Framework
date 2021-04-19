@@ -1167,14 +1167,14 @@ public class PacketHandler {
 					"\nS_WANT_GLOBAL_FRIEND" + wantGlobalFriend + // 70
 					"\nS_CHARACTER_CREATION_MODE" + characterCreationMode + // 71
 					"\nS_SKILLING_EXP_RATE" + skillingExpRate + //72
-					"\nS_WANT_HARVESTING " + wantHarvesting + // 74
-					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 75
-					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 76
-					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 77
-					"\nS_NOTHING_REUSE_ME " + nothingReuseMe + // 78
-					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior + // 79
-					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes + // 80
-					"\nS_WANT_OPENPK_POINTS " + wantOpenPkPoints // 81
+					"\nS_WANT_HARVESTING " + wantHarvesting + // 73
+					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 74
+					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 75
+					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 76
+					"\nS_NOTHING_REUSE_ME " + nothingReuseMe + // 77
+					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior + // 78
+					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes + // 79
+					"\nS_WANT_OPENPK_POINTS " + wantOpenPkPoints // 80
 			);
 		}
 
