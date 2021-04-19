@@ -884,7 +884,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					player.message("You cannot do that whilst fighting");
 					return;
 				}
-				if(player.getOpenPkPoints() < amount28 * 3){
+				if(player.getOpenPkPoints() < amount28 * player.getConfig().OPENPK_POINTS_TO_GP){
 					player.message("You do not have enough points");
 					return;
 				}
@@ -898,7 +898,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					94000);
 					player.message("You don't have room to hold the gp. It falls to the ground!");
 				}
-				player.subtractOpenPkPoints(amount28 * 3);
+				player.subtractOpenPkPoints(amount28 * player.getConfig().OPENPK_POINTS_TO_GP);
 				ActionSender.sendPoints(player);
 			break;
 		}
