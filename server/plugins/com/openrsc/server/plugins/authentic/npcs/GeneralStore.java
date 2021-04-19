@@ -73,7 +73,7 @@ public final class GeneralStore extends AbstractShop {
 	public void onTalkNpc(final Player player, final Npc n) {
 		Shop shop = getShop(n, player);
 		if (player.getConfig().WANT_OPENPK_POINTS) {
-			npcsay(player, n, "Would you like to sell your points for Gp?", "1 Gp costs 3 Points.");
+			npcsay(player, n, "Would you like to sell your points for Gp?", "1 Gp costs " + player.getConfig().OPENPK_POINTS_TO_GP + " Points.");
 			int option = multi(player, n, false,
 				"Yes please", "No thanks");
 			if (option == 0) {
@@ -105,7 +105,7 @@ public final class GeneralStore extends AbstractShop {
 		if (storeOwner == null) return;
 		Shop shop = getShop(n, player);
 		if (player.getConfig().WANT_OPENPK_POINTS) {
-			npcsay(player, n, "Would you like to sell your points for Gp?", "1 Gp costs 3 Points.");
+			npcsay(player, n, "Would you like to sell your points for Gp?", "1 Gp costs  " + player.getConfig().OPENPK_POINTS_TO_GP + " Points.");
 			int option = multi(player, n, false,
 				"Yes please", "No thanks");
 			if (option == 0) {
