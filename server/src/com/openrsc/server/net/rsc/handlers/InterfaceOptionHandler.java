@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.constants.custom.*;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -738,8 +739,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkReduceLevelReqs(player, amountx1, 1)) {
 					return;
 				}
-				player.getSkills().reduceExperience(1, amountx1);
-				player.getSkills().reduceExperience(3, amountx1 / 3);
+				player.getSkills().reduceExperience(Skills.DEFENSE, amountx1);
+				player.getSkills().reduceExperience(Skills.HITS, amountx1 / 3);
 				if(player.getSkills().getMaxStat(3) < 10) {
 					player.getSkills().setSkill(3, 10, 4616);
 				}
@@ -753,8 +754,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkIncreaseLevelReqs(player, amount)) {
 					return;
 				}
-				player.getSkills().addExperience(1, amountx);
-				player.getSkills().addExperience(3, amountx / 3);
+				player.getSkills().addExperience(Skills.DEFENSE, amountx);
+				player.getSkills().addExperience(Skills.HITS, amountx / 3);
 				player.subtractOpenPkPoints(amount);
 				ActionSender.sendPoints(player);
 			break;
@@ -764,8 +765,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkIncreaseLevelReqs(player, amount0)) {
 					return;
 				}
-				player.getSkills().addExperience(0, amountx0);
-				player.getSkills().addExperience(3, amountx0 / 3);
+				player.getSkills().addExperience(Skills.ATTACK, amountx0);
+				player.getSkills().addExperience(Skills.HITS, amountx0 / 3);
 				player.subtractOpenPkPoints(amount0);
 				ActionSender.sendPoints(player);
 			break;
@@ -775,8 +776,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkIncreaseLevelReqs(player, amount2)) {
 					return;
 				}
-				player.getSkills().addExperience(2, amountx2);
-				player.getSkills().addExperience(3, amountx2 / 3);
+				player.getSkills().addExperience(Skills.STRENGTH, amountx2);
+				player.getSkills().addExperience(Skills.HITS, amountx2 / 3);
 				player.subtractOpenPkPoints(amount2);
 				ActionSender.sendPoints(player);
 			break;
@@ -786,7 +787,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkIncreaseLevelReqs(player, amount3)) {
 					return;
 				}
-				player.getSkills().addExperience(4, amountx3);
+				player.getSkills().addExperience(Skills.RANGED, amountx3);
 				player.subtractOpenPkPoints(amount3);
 				ActionSender.sendPoints(player);
 			break;
@@ -796,7 +797,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkIncreaseLevelReqs(player, amount4)) {
 					return;
 				}
-				player.getSkills().addExperience(5, amountx4);
+				player.getSkills().addExperience(Skills.PRAYER, amountx4);
 				player.subtractOpenPkPoints(amount4);
 				ActionSender.sendPoints(player);
 			break;
@@ -806,7 +807,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkIncreaseLevelReqs(player, amount5)) {
 					return;
 				}
-				player.getSkills().addExperience(6, amountx5);
+				player.getSkills().addExperience(Skills.MAGIC, amountx5);
 				player.subtractOpenPkPoints(amount5);
 				ActionSender.sendPoints(player);
 			break;
@@ -816,8 +817,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkReduceLevelReqs(player, amountx00, 0)) {
 					return;
 				}
-				player.getSkills().reduceExperience(0, amountx00);
-				player.getSkills().reduceExperience(3, amountx00 / 3);
+				player.getSkills().reduceExperience(Skills.ATTACK, amountx00);
+				player.getSkills().reduceExperience(Skills.Hits, amountx00 / 3);
 				if(player.getSkills().getMaxStat(3) < 10) {
 					player.getSkills().setSkill(3, 10, 4616);
 				}
@@ -831,8 +832,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkReduceLevelReqs(player, amountx22, 2)) {
 					return;
 				}
-				player.getSkills().reduceExperience(2, amountx22);
-				player.getSkills().reduceExperience(3, amountx22 / 3);
+				player.getSkills().reduceExperience(Skills.STRENGTH, amountx22);
+				player.getSkills().reduceExperience(Skills.HITS, amountx22 / 3);
 				if(player.getSkills().getMaxStat(3) < 10) {
 					player.getSkills().setSkill(3, 10, 4616);
 				}
@@ -846,7 +847,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkReduceLevelReqs(player, amountx33, 2)) {
 					return;
 				}
-				player.getSkills().reduceExperience(4, amountx33);
+				player.getSkills().reduceExperience(Skills.RANGED, amountx33);
 				player.addOpenPkPoints(amount33);
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
@@ -857,7 +858,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkReduceLevelReqs(player, amountx44, 5)) {
 					return;
 				}
-				player.getSkills().reduceExperience(5, amountx44);
+				player.getSkills().reduceExperience(Skills.PRAYER, amountx44);
 				player.addOpenPkPoints(amount44);
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
@@ -868,7 +869,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkReduceLevelReqs(player, amountx55, 6)) {
 					return;
 				}
-				player.getSkills().reduceExperience(6, amountx55);
+				player.getSkills().reduceExperience(Skills.MAGIC, amountx55);
 				player.addOpenPkPoints(amount55);
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
