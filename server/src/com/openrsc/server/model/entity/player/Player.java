@@ -2631,6 +2631,11 @@ public final class Player extends Mob {
 		ActionSender.sendPoints(this);
 	}
 
+	public void subtractOpenPkPoints(long openPkPoints) {
+		this.openPkPoints -= openPkPoints;
+		ActionSender.sendPoints(this);
+	}
+
 	public int getDeaths() {
 		return deaths;
 	}

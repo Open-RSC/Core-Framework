@@ -743,7 +743,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if(player.getSkills().getMaxStat(3) < 10) {
 					player.getSkills().setSkill(3, 10, 4616);
 				}
-				player.setOpenPkPoints(player.getOpenPkPoints() + amount1);
+				player.addOpenPkPoints(amount1);
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
@@ -755,7 +755,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				}
 				player.getSkills().addExperience(1, amountx);
 				player.getSkills().addExperience(3, amountx / 3);
-				player.setOpenPkPoints(player.getOpenPkPoints() - amount);
+				player.subtractOpenPkPoints(amount);
 				ActionSender.sendPoints(player);
 			break;
 			case INC_ATK:
@@ -766,7 +766,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				}
 				player.getSkills().addExperience(0, amountx0);
 				player.getSkills().addExperience(3, amountx0 / 3);
-				player.setOpenPkPoints(player.getOpenPkPoints() - amount0);
+				player.subtractOpenPkPoints(amount0);
 				ActionSender.sendPoints(player);
 			break;
 			case INC_STR:
@@ -777,7 +777,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				}
 				player.getSkills().addExperience(2, amountx2);
 				player.getSkills().addExperience(3, amountx2 / 3);
-				player.setOpenPkPoints(player.getOpenPkPoints() - amount2);
+				player.subtractOpenPkPoints(amount2);
 				ActionSender.sendPoints(player);
 			break;
 			case INC_RNG:
@@ -787,7 +787,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					return;
 				}
 				player.getSkills().addExperience(4, amountx3);
-				player.setOpenPkPoints(player.getOpenPkPoints() - amount3);
+				player.subtractOpenPkPoints(amount3);
 				ActionSender.sendPoints(player);
 			break;
 			case INC_PRAY:
@@ -797,7 +797,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					return;
 				}
 				player.getSkills().addExperience(5, amountx4);
-				player.setOpenPkPoints(player.getOpenPkPoints() - amount4);
+				player.subtractOpenPkPoints(amount4);
 				ActionSender.sendPoints(player);
 			break;
 			case INC_MAGE:
@@ -807,7 +807,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					return;
 				}
 				player.getSkills().addExperience(6, amountx5);
-				player.setOpenPkPoints(player.getOpenPkPoints() - amount5);
+				player.subtractOpenPkPoints(amount5);
 				ActionSender.sendPoints(player);
 			break;
 			case REDUCE_ATK:
@@ -821,7 +821,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if(player.getSkills().getMaxStat(3) < 10) {
 					player.getSkills().setSkill(3, 10, 4616);
 				}
-				player.setOpenPkPoints(player.getOpenPkPoints() + amount00);
+				player.addOpenPkPoints(amount00);
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
@@ -836,7 +836,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if(player.getSkills().getMaxStat(3) < 10) {
 					player.getSkills().setSkill(3, 10, 4616);
 				}
-				player.setOpenPkPoints(player.getOpenPkPoints() + amount22);
+				player.addOpenPkPoints(amount22);
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
@@ -847,7 +847,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					return;
 				}
 				player.getSkills().reduceExperience(4, amountx33);
-				player.setOpenPkPoints(player.getOpenPkPoints() + amount33);
+				player.addOpenPkPoints(amount33);
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
@@ -858,7 +858,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					return;
 				}
 				player.getSkills().reduceExperience(5, amountx44);
-				player.setOpenPkPoints(player.getOpenPkPoints() + amount44);
+				player.addOpenPkPoints(amount44);
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
@@ -869,7 +869,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					return;
 				}
 				player.getSkills().reduceExperience(6, amountx55);
-				player.setOpenPkPoints(player.getOpenPkPoints() + amount55);
+				player.addOpenPkPoints(amount55);
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
 			break;
@@ -897,7 +897,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					94000);
 					player.message("You don't have room to hold the gp. It falls to the ground!");
 				}
-				player.setOpenPkPoints(player.getOpenPkPoints() - amount28 * 3);
+				player.subtractOpenPkPoints(amount28 * 3);
 				ActionSender.sendPoints(player);
 			break;
 		}
