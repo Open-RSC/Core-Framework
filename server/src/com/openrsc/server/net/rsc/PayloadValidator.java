@@ -30,7 +30,7 @@ public class PayloadValidator {
 		put(OpcodeOut.SEND_SYSTEM_UPDATE, SystemUpdateStruct.class);
 		put(OpcodeOut.SEND_INVENTORY, InventoryStruct.class);
 		put(OpcodeOut.SEND_ELIXIR, ElixirUpdateStruct.class); // custom
-		put(OpcodeOut.SEND_APPEARANCE_CHANGE, NoPayloadStruct.class);
+		put(OpcodeOut.SEND_APPEARANCE_SCREEN, NoPayloadStruct.class);
 		put(OpcodeOut.SEND_NPC_COORDS, MobsUpdateStruct.class);
 		put(OpcodeOut.SEND_DEATH, NoPayloadStruct.class);
 		put(OpcodeOut.SEND_STOPSLEEP, NoPayloadStruct.class);
@@ -87,7 +87,7 @@ public class PayloadValidator {
 		put(OpcodeOut.SEND_SLEEPWORD_INCORRECT, NoPayloadStruct.class);
 		put(OpcodeOut.SEND_BANK_CLOSE, NoPayloadStruct.class);
 		put(OpcodeOut.SEND_PLAY_SOUND, PlaySoundStruct.class);
-		put(OpcodeOut.SEND_PRAYERS_ACTIVE, PrayerStruct.class);
+		put(OpcodeOut.SEND_PRAYERS_ACTIVE, PrayersActiveStruct.class);
 		put(OpcodeOut.SEND_DUEL_ACCEPTED, DuelAcceptStruct.class);
 		put(OpcodeOut.SEND_REMOVE_WORLD_ENTITY, ClearLocationsStruct.class);
 		put(OpcodeOut.SEND_REMOVE_WORLD_NPC, ClearMobsStruct.class); // retro rsc

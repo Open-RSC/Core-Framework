@@ -39,7 +39,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 		put(OpcodeOut.SEND_SYSTEM_UPDATE, 52);
 		put(OpcodeOut.SEND_INVENTORY, 53);
 		put(OpcodeOut.SEND_ELIXIR, 54); // custom
-		put(OpcodeOut.SEND_APPEARANCE_CHANGE, 59);
+		put(OpcodeOut.SEND_APPEARANCE_SCREEN, 59);
 		put(OpcodeOut.SEND_NPC_COORDS, 79);
 		put(OpcodeOut.SEND_DEATH, 83);
 		put(OpcodeOut.SEND_STOPSLEEP, 84);
@@ -142,7 +142,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 				case SEND_LOGOUT:
 				case SEND_LOGOUT_REQUEST_CONFIRM:
 				case SEND_CANT_LOGOUT:
-				case SEND_APPEARANCE_CHANGE:
+				case SEND_APPEARANCE_SCREEN:
 				case SEND_APPEARANCE_KEEPALIVE:
 				case SEND_OPEN_RECOVERY:
 				case SEND_OPEN_DETAILS:
@@ -210,12 +210,83 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_STATS:
 					StatInfoStruct si = (StatInfoStruct) payload;
-					for (int lvl : si.currentLevels)
-						builder.writeByte((byte) lvl);
-					for (int lvl : si.maxLevels)
-						builder.writeByte((byte) lvl);
-					for (int exp : si.experiences)
-						builder.writeInt(exp);
+					// 18 skills minimum - current level
+					builder.writeByte((byte) si.currentAttack);
+					builder.writeByte((byte) si.currentDefense);
+					builder.writeByte((byte) si.currentStrength);
+					builder.writeByte((byte) si.currentHits);
+					builder.writeByte((byte) si.currentRanged);
+					builder.writeByte((byte) si.currentPrayer);
+					builder.writeByte((byte) si.currentMagic);
+					builder.writeByte((byte) si.currentCooking);
+					builder.writeByte((byte) si.currentWoodcutting);
+					builder.writeByte((byte) si.currentFletching);
+					builder.writeByte((byte) si.currentFishing);
+					builder.writeByte((byte) si.currentFiremaking);
+					builder.writeByte((byte) si.currentCrafting);
+					builder.writeByte((byte) si.currentSmithing);
+					builder.writeByte((byte) si.currentMining);
+					builder.writeByte((byte) si.currentHerblaw);
+					builder.writeByte((byte) si.currentAgility);
+					builder.writeByte((byte) si.currentThieving);
+					if (player.getConfig().WANT_RUNECRAFT) {
+						builder.writeByte((byte) si.currentRunecrafting);
+					}
+					if (player.getConfig().WANT_HARVESTING) {
+						builder.writeByte((byte) si.currentHarvesting);
+					}
+
+					// 18 skills minimum - max level
+					builder.writeByte((byte) si.maxAttack);
+					builder.writeByte((byte) si.maxDefense);
+					builder.writeByte((byte) si.maxStrength);
+					builder.writeByte((byte) si.maxHits);
+					builder.writeByte((byte) si.maxRanged);
+					builder.writeByte((byte) si.maxPrayer);
+					builder.writeByte((byte) si.maxMagic);
+					builder.writeByte((byte) si.maxCooking);
+					builder.writeByte((byte) si.maxWoodcutting);
+					builder.writeByte((byte) si.maxFletching);
+					builder.writeByte((byte) si.maxFishing);
+					builder.writeByte((byte) si.maxFiremaking);
+					builder.writeByte((byte) si.maxCrafting);
+					builder.writeByte((byte) si.maxSmithing);
+					builder.writeByte((byte) si.maxMining);
+					builder.writeByte((byte) si.maxHerblaw);
+					builder.writeByte((byte) si.maxAgility);
+					builder.writeByte((byte) si.maxThieving);
+					if (player.getConfig().WANT_RUNECRAFT) {
+						builder.writeByte((byte) si.maxRunecrafting);
+					}
+					if (player.getConfig().WANT_HARVESTING) {
+						builder.writeByte((byte) si.maxHarvesting);
+					}
+
+					// 18 skills minimum - experiences
+					builder.writeInt(si.experienceAttack);
+					builder.writeInt(si.experienceDefense);
+					builder.writeInt(si.experienceStrength);
+					builder.writeInt(si.experienceHits);
+					builder.writeInt(si.experienceRanged);
+					builder.writeInt(si.experiencePrayer);
+					builder.writeInt(si.experienceMagic);
+					builder.writeInt(si.experienceCooking);
+					builder.writeInt(si.experienceWoodcutting);
+					builder.writeInt(si.experienceFletching);
+					builder.writeInt(si.experienceFishing);
+					builder.writeInt(si.experienceFiremaking);
+					builder.writeInt(si.experienceCrafting);
+					builder.writeInt(si.experienceSmithing);
+					builder.writeInt(si.experienceMining);
+					builder.writeInt(si.experienceHerblaw);
+					builder.writeInt(si.experienceAgility);
+					builder.writeInt(si.experienceThieving);
+					if (player.getConfig().WANT_RUNECRAFT) {
+						builder.writeInt(si.experienceRunecrafting);
+					}
+					if (player.getConfig().WANT_HARVESTING) {
+						builder.writeInt(si.experienceHarvesting);
+					}
 
 					builder.writeByte(si.questPoints);
 					break;
@@ -277,7 +348,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 					break;
 
 				case SEND_PRAYERS_ACTIVE:
-					PrayerStruct ps =  (PrayerStruct) payload;
+					PrayersActiveStruct ps =  (PrayersActiveStruct) payload;
 					for (int active : ps.prayerActive) {
 						builder.writeByte((byte) active);
 					}
@@ -449,7 +520,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 				case SEND_FRIEND_UPDATE:
 					FriendUpdateStruct fr = (FriendUpdateStruct) payload;
 					builder.writeString(fr.name);
-					builder.writeString(fr.formerName); // TODO: Allow name changes to fill this variable.
+					builder.writeString(fr.formerName);
 					builder.writeByte((byte) fr.onlineStatus);
 					if (!fr.worldName.equals(""))
 						builder.writeString(fr.worldName);
@@ -475,6 +546,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 						builder.writeShort(is.catalogIDs[i]);
 						builder.writeByte((byte) is.wielded[i]);
 						builder.writeByte((byte) is.noted[i]);
+						// amount[i] will only be > 0 if the item is stackable or noted.
 						if (is.amount[i] > 0) {
 							builder.writeInt(is.amount[i]);
 						}
@@ -493,6 +565,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 					if (!isItemNull) {
 						builder.writeShort(iup.catalogID + (iup.wielded == 1 ? 32768 : 0));
 						builder.writeByte((byte) iup.noted);
+						// amount will only be > 0 if the item is stackable or noted
 						if (iup.amount > 0) {
 							builder.writeInt(iup.amount);
 						}
@@ -509,6 +582,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 					for (int i = 0; i < eqs.realCount; i++) {
 						builder.writeByte((byte) eqs.wieldPositions[i]);
 						builder.writeShort(eqs.catalogIDs[i]);
+						// amount[i] will only be > 0 if the item is stackable.
 						if (eqs.amount[i] > 0)
 							builder.writeInt(eqs.amount[i]);
 					}
@@ -587,7 +661,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) s.isGeneralStore);
 					builder.writeByte((byte) s.sellModifier);
 					builder.writeByte((byte) s.buyModifier);
-					builder.writeByte((byte) s.priceModifier);
+					builder.writeByte((byte) s.stockSensitivity);
 					for (int i = 0; i < shopSize; i++) {
 						builder.writeShort(s.catalogIDs[i]);
 						builder.writeShort(s.amount[i]);
@@ -656,7 +730,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 				case SEND_PRIVATE_MESSAGE:
 					PrivateMessageStruct pm = (PrivateMessageStruct) payload;
 					builder.writeString(pm.playerName);
-					builder.writeString(pm.playerName);// former name
+					builder.writeString(pm.formerName);
 					builder.writeInt(pm.iconSprite);
 					builder.writeRSCString(pm.message);
 					break;

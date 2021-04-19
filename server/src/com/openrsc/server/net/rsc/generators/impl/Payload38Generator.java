@@ -38,7 +38,7 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 		put(OpcodeOut.SEND_TRADE_OTHER_ITEMS, 236);
 		put(OpcodeOut.SEND_TRADE_CLOSE, 237);
 		put(OpcodeOut.SEND_TRADE_WINDOW, 238);
-		put(OpcodeOut.SEND_APPEARANCE_CHANGE, 239);
+		put(OpcodeOut.SEND_APPEARANCE_SCREEN, 239);
 		put(OpcodeOut.SEND_REMOVE_WORLD_ENTITY, 240);
 		put(OpcodeOut.SEND_DEATH, 241);
 		put(OpcodeOut.SEND_EQUIPMENT_STATS, 242);
@@ -76,7 +76,7 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 		if (builder != null && possiblyValid) {
 			switch (payload.getOpcode()) {
 				// no payload opcodes
-				case SEND_APPEARANCE_CHANGE:
+				case SEND_APPEARANCE_SCREEN:
 				case SEND_DEATH:
 				case SEND_TRADE_CLOSE:
 				case SEND_SHOP_CLOSE:
@@ -106,10 +106,48 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_STATS:
 					StatInfoStruct si = (StatInfoStruct) payload;
-					for (int lvl : si.currentLevels)
-						builder.writeByte((byte) lvl);
-					for (int lvl : si.maxLevels)
-						builder.writeByte((byte) lvl);
+					// 19 skills - current level
+					builder.writeByte((byte) si.currentAttack);
+					builder.writeByte((byte) si.currentDefense);
+					builder.writeByte((byte) si.currentStrength);
+					builder.writeByte((byte) si.currentHits);
+					builder.writeByte((byte) si.currentRanged);
+					builder.writeByte((byte) si.currentThieving);
+					builder.writeByte((byte) si.currentInfluence);
+					builder.writeByte((byte) si.currentPrayGood);
+					builder.writeByte((byte) si.currentPrayEvil);
+					builder.writeByte((byte) si.currentGoodMagic);
+					builder.writeByte((byte) si.currentEvilMagic);
+					builder.writeByte((byte) si.currentCooking);
+					builder.writeByte((byte) si.currentTailoring);
+					builder.writeByte((byte) si.currentWoodcutting);
+					builder.writeByte((byte) si.currentFiremaking);
+					builder.writeByte((byte) si.currentCrafting);
+					builder.writeByte((byte) si.currentSmithing);
+					builder.writeByte((byte) si.currentMining);
+					builder.writeByte((byte) si.currentHerblaw);
+
+					// 19 skills - max level
+					builder.writeByte((byte) si.maxAttack);
+					builder.writeByte((byte) si.maxDefense);
+					builder.writeByte((byte) si.maxStrength);
+					builder.writeByte((byte) si.maxHits);
+					builder.writeByte((byte) si.maxRanged);
+					builder.writeByte((byte) si.maxThieving);
+					builder.writeByte((byte) si.maxInfluence);
+					builder.writeByte((byte) si.maxPrayGood);
+					builder.writeByte((byte) si.maxPrayEvil);
+					builder.writeByte((byte) si.maxGoodMagic);
+					builder.writeByte((byte) si.maxEvilMagic);
+					builder.writeByte((byte) si.maxCooking);
+					builder.writeByte((byte) si.maxTailoring);
+					builder.writeByte((byte) si.maxWoodcutting);
+					builder.writeByte((byte) si.maxFiremaking);
+					builder.writeByte((byte) si.maxCrafting);
+					builder.writeByte((byte) si.maxSmithing);
+					builder.writeByte((byte) si.maxMining);
+					builder.writeByte((byte) si.maxHerblaw);
+
 					break;
 
 				case SEND_EQUIPMENT_STATS:
@@ -189,8 +227,8 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 					int inventorySize = is.inventorySize;
 					builder.writeByte((byte) inventorySize);
 					for (int i = 0; i < inventorySize; i++) {
-						builder.writeShort((is.wielded[i] << 15) | // First bit is if it is wielded or not
-							is.catalogIDs[i]);
+						// First bit is if it is wielded or not
+						builder.writeShort((is.wielded[i] << 15) | is.catalogIDs[i]);
 						builder.writeShort(is.amount[i] & 0xffff);
 					}
 					break;
@@ -202,7 +240,7 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) s.isGeneralStore);
 					builder.writeByte((byte) s.sellModifier);
 					builder.writeByte((byte) s.buyModifier);
-					builder.writeByte((byte) s.priceModifier);
+					builder.writeByte((byte) s.stockSensitivity);
 					for (int i = 0; i < shopSize; i++) {
 						builder.writeShort(s.catalogIDs[i]);
 						builder.writeShort(s.amount[i]);

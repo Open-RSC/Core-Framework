@@ -1,5 +1,6 @@
 package com.openrsc.server.net.rsc.generators.impl;
 
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.model.Point;
@@ -7,6 +8,7 @@ import com.openrsc.server.model.RSCString;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.PacketBuilder;
+import com.openrsc.server.net.rsc.GameNetworkException;
 import com.openrsc.server.net.rsc.PayloadValidator;
 import com.openrsc.server.net.rsc.enums.OpcodeOut;
 import com.openrsc.server.net.rsc.generators.PayloadGenerator;
@@ -35,7 +37,7 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 		put(OpcodeOut.SEND_PRIVACY_SETTINGS, 51);
 		put(OpcodeOut.SEND_SYSTEM_UPDATE, 52);
 		put(OpcodeOut.SEND_INVENTORY, 53);
-		put(OpcodeOut.SEND_APPEARANCE_CHANGE, 59);
+		put(OpcodeOut.SEND_APPEARANCE_SCREEN, 59);
 		put(OpcodeOut.SEND_NPC_COORDS, 79);
 		put(OpcodeOut.SEND_DEATH, 83);
 		put(OpcodeOut.SEND_STOPSLEEP, 84);
@@ -117,7 +119,7 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 				case SEND_LOGOUT:
 				case SEND_LOGOUT_REQUEST_CONFIRM:
 				case SEND_CANT_LOGOUT:
-				case SEND_APPEARANCE_CHANGE:
+				case SEND_APPEARANCE_SCREEN:
 				case SEND_APPEARANCE_KEEPALIVE:
 				case SEND_OPEN_RECOVERY:
 				case SEND_OPEN_DETAILS:
@@ -162,12 +164,65 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_STATS:
 					StatInfoStruct si = (StatInfoStruct) payload;
-					for (int lvl : si.currentLevels)
-						builder.writeByte((byte) lvl);
-					for (int lvl : si.maxLevels)
-						builder.writeByte((byte) lvl);
-					for (int exp : si.experiences)
-						builder.writeInt(exp);
+					// 18 skills - current level
+					builder.writeByte((byte) si.currentAttack);
+					builder.writeByte((byte) si.currentDefense);
+					builder.writeByte((byte) si.currentStrength);
+					builder.writeByte((byte) si.currentHits);
+					builder.writeByte((byte) si.currentRanged);
+					builder.writeByte((byte) si.currentPrayer);
+					builder.writeByte((byte) si.currentMagic);
+					builder.writeByte((byte) si.currentCooking);
+					builder.writeByte((byte) si.currentWoodcutting);
+					builder.writeByte((byte) si.currentFletching);
+					builder.writeByte((byte) si.currentFishing);
+					builder.writeByte((byte) si.currentFiremaking);
+					builder.writeByte((byte) si.currentCrafting);
+					builder.writeByte((byte) si.currentSmithing);
+					builder.writeByte((byte) si.currentMining);
+					builder.writeByte((byte) si.currentHerblaw);
+					builder.writeByte((byte) si.currentAgility);
+					builder.writeByte((byte) si.currentThieving);
+
+					// 18 skills - max level
+					builder.writeByte((byte) si.maxAttack);
+					builder.writeByte((byte) si.maxDefense);
+					builder.writeByte((byte) si.maxStrength);
+					builder.writeByte((byte) si.maxHits);
+					builder.writeByte((byte) si.maxRanged);
+					builder.writeByte((byte) si.maxPrayer);
+					builder.writeByte((byte) si.maxMagic);
+					builder.writeByte((byte) si.maxCooking);
+					builder.writeByte((byte) si.maxWoodcutting);
+					builder.writeByte((byte) si.maxFletching);
+					builder.writeByte((byte) si.maxFishing);
+					builder.writeByte((byte) si.maxFiremaking);
+					builder.writeByte((byte) si.maxCrafting);
+					builder.writeByte((byte) si.maxSmithing);
+					builder.writeByte((byte) si.maxMining);
+					builder.writeByte((byte) si.maxHerblaw);
+					builder.writeByte((byte) si.maxAgility);
+					builder.writeByte((byte) si.maxThieving);
+
+					// 18 skills - experiences
+					builder.writeInt(si.experienceAttack);
+					builder.writeInt(si.experienceDefense);
+					builder.writeInt(si.experienceStrength);
+					builder.writeInt(si.experienceHits);
+					builder.writeInt(si.experienceRanged);
+					builder.writeInt(si.experiencePrayer);
+					builder.writeInt(si.experienceMagic);
+					builder.writeInt(si.experienceCooking);
+					builder.writeInt(si.experienceWoodcutting);
+					builder.writeInt(si.experienceFletching);
+					builder.writeInt(si.experienceFishing);
+					builder.writeInt(si.experienceFiremaking);
+					builder.writeInt(si.experienceCrafting);
+					builder.writeInt(si.experienceSmithing);
+					builder.writeInt(si.experienceMining);
+					builder.writeInt(si.experienceHerblaw);
+					builder.writeInt(si.experienceAgility);
+					builder.writeInt(si.experienceThieving);
 
 					builder.writeByte(si.questPoints);
 					break;
@@ -203,7 +258,7 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 					break;
 
 				case SEND_PRAYERS_ACTIVE:
-					PrayerStruct ps =  (PrayerStruct) payload;
+					PrayersActiveStruct ps =  (PrayersActiveStruct) payload;
 					for (int active : ps.prayerActive) {
 						builder.writeByte((byte) active);
 					}
@@ -255,8 +310,18 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_TRADE_OPEN_CONFIRM:
 					TradeConfirmStruct tc = (TradeConfirmStruct) payload;
-					builder.writeZeroQuotedString(tc.targetPlayer);
 					int tradedItemSize = tc.opponentTradeCount;
+
+					for (int i = 0; i < tradedItemSize; i++) {
+						// validate against any possible item id that are greater than allowed
+						// if so fail out
+						if (tc.opponentCatalogIDs[i] > ItemId.maxAuthentic) {
+							// fail out transaction
+							throw new GameNetworkException(tc, "Traded item id is greater than supported in generator", tc.opponentCatalogIDs[i] + "");
+						}
+					}
+
+					builder.writeZeroQuotedString(tc.targetPlayer);
 					builder.writeByte((byte) tradedItemSize);
 					for (int i = 0; i < tradedItemSize; i++) {
 						builder.writeShort(tc.opponentCatalogIDs[i]);
@@ -338,7 +403,7 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 				case SEND_FRIEND_UPDATE:
 					FriendUpdateStruct fr = (FriendUpdateStruct) payload;
 					builder.writeZeroQuotedString(fr.name);
-					builder.writeZeroQuotedString(fr.formerName); // TODO: Allow name changes to fill this variable.
+					builder.writeZeroQuotedString(fr.formerName);
 					builder.writeByte((byte) fr.onlineStatus);
 					if (!fr.worldName.equals(""))
 						builder.writeZeroQuotedString(fr.worldName);
@@ -350,9 +415,9 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) ignoreSize);
 					for (int i = 0; i < ignoreSize; i++) {
 						builder.writeZeroQuotedString(il.name[i]);
-						builder.writeZeroQuotedString(il.name[i]);
+						builder.writeZeroQuotedString(il.name[i]); // meant to be a duplicate
 						builder.writeZeroQuotedString(il.formerName[i]);
-						builder.writeZeroQuotedString(il.formerName[i]);
+						builder.writeZeroQuotedString(il.formerName[i]); // meant to be a duplicate
 					}
 					break;
 
@@ -361,8 +426,9 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 					int inventorySize = is.inventorySize;
 					builder.writeByte((byte) inventorySize);
 					for (int i = 0; i < inventorySize; i++) {
-						builder.writeShort((is.wielded[i] << 15) | // First bit is if it is wielded or not
-							is.catalogIDs[i]);
+						// First bit is if it is wielded or not
+						builder.writeShort((is.wielded[i] << 15) | is.catalogIDs[i]);
+						// amount[i] will only be > 0 if the item is stackable or noted.
 						if (is.amount[i] > 0) {
 							builder.writeUnsignedShortInt(is.amount[i]);
 						}
@@ -380,6 +446,7 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 					boolean isItemNull = iup.catalogID == 0 && iup.amount == 0;
 					if (!isItemNull) {
 						builder.writeShort(iup.catalogID + (iup.wielded == 1 ? 32768 : 0));
+						// amount will only be > 0 if the item is stackable or noted
 						if (iup.amount > 0) {
 							builder.writeUnsignedShortInt(iup.amount);
 						}
@@ -416,7 +483,7 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) s.isGeneralStore);
 					builder.writeByte((byte) s.sellModifier);
 					builder.writeByte((byte) s.buyModifier);
-					builder.writeByte((byte) s.priceModifier);
+					builder.writeByte((byte) s.stockSensitivity);
 					for (int i = 0; i < shopSize; i++) {
 						builder.writeShort(s.catalogIDs[i]);
 						builder.writeShort(s.amount[i]);
@@ -442,7 +509,7 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 				case SEND_PRIVATE_MESSAGE:
 					PrivateMessageStruct pm = (PrivateMessageStruct) payload;
 					builder.writeZeroQuotedString(pm.playerName);
-					builder.writeZeroQuotedString(pm.playerName); // former name
+					builder.writeZeroQuotedString(pm.formerName);
 					builder.writeByte((byte) pm.iconSprite);
 
 					// 8 byte "Message ID" field is next

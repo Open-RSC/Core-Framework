@@ -9,7 +9,7 @@ public class ShopStruct extends AbstractStruct<OpcodeOut> {
 	public int isGeneralStore;
 	public int sellModifier;
 	public int buyModifier;
-	public int priceModifier;
+	public int stockSensitivity;
 	public int[] catalogIDs;
 	public int[] amount;
 	public int[] baseAmount;

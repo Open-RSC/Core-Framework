@@ -72,9 +72,13 @@ public class ActionSender {
 	 * */
 	public static void tryFinalizeAndSendPacket(OpcodeOut opcode, AbstractStruct<OpcodeOut> payload, Player player) {
 		payload.setOpcode(opcode);
-		Packet p = getGenerator(player).generate(payload, player);
-		if (p != null)
-			player.write(p);
+		try {
+			Packet p = getGenerator(player).generate(payload, player);
+			if (p != null)
+				player.write(p);
+		} catch (GameNetworkException gne) {
+			throw new GameNetworkException(gne);
+		}
 	}
 
 	/**
@@ -131,7 +135,7 @@ public class ActionSender {
 	public static void sendAppearanceScreen(Player player) {
 		player.setChangingAppearance(true);
 		NoPayloadStruct struct = new NoPayloadStruct();
-		tryFinalizeAndSendPacket(OpcodeOut.SEND_APPEARANCE_CHANGE, struct, player);
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_APPEARANCE_SCREEN, struct, player);
 	}
 
 	public static void sendRecoveryScreen(Player player) {
@@ -1033,7 +1037,7 @@ public class ActionSender {
 	}
 
 	public static void sendPrayers(Player player, boolean[] activatedPrayers) {
-		PrayerStruct struct = new PrayerStruct();
+		PrayersActiveStruct struct = new PrayersActiveStruct();
 		int numPrayers = activatedPrayers.length;
 		struct.prayerActive = new int[numPrayers];
 		int i = 0;
@@ -1138,24 +1142,207 @@ public class ActionSender {
 	 */
 	public static void sendStats(Player player) {
 		StatInfoStruct struct = new StatInfoStruct();
-		struct.currentLevels = new int[player.getSkills().getLevels().length];
+		// TODO: method player.getWorld().getServer().getConstants().getSkills().getSkillName(i)
+		// should ensure uniqueness based on config or an alternative method may need to be used
+		// to identify named skill to place info on for retro client
 		int i = 0;
 		for (int lvl : player.getSkills().getLevels()) {
-			struct.currentLevels[i] = lvl;
+			switch (player.getWorld().getServer().getConstants().getSkills().getSkillName(i)) {
+				case "Attack":
+					struct.currentAttack = lvl;
+					break;
+				case "Defense":
+					struct.currentDefense = lvl;
+					break;
+				case "Strength":
+					struct.currentStrength = lvl;
+					break;
+				case "Hits":
+					struct.currentHits = lvl;
+					break;
+				case "Ranged":
+					struct.currentRanged = lvl;
+					break;
+				case "Prayer":
+					struct.currentPrayer = lvl;
+					break;
+				case "Magic":
+					struct.currentMagic = lvl;
+					break;
+				case "Cooking":
+					struct.currentCooking = lvl;
+					break;
+				case "Woodcut":
+					struct.currentWoodcutting = lvl;
+					break;
+				case "Fletching":
+					struct.currentFletching = lvl;
+					break;
+				case "Fishing":
+					struct.currentFishing = lvl;
+					break;
+				case "Firemaking":
+					struct.currentFiremaking = lvl;
+					break;
+				case "Crafting":
+					struct.currentCrafting = lvl;
+					break;
+				case "Smithing":
+					struct.currentSmithing = lvl;
+					break;
+				case "Mining":
+					struct.currentMining = lvl;
+					break;
+				case "Herblaw":
+					struct.currentHerblaw = lvl;
+					break;
+				case "Agility":
+					struct.currentAgility = lvl;
+					break;
+				case "Thieving":
+					struct.currentThieving = lvl;
+					break;
+				case "Runecraft":
+					struct.currentRunecrafting = lvl;
+					break;
+				case "Harvesting":
+					struct.currentHarvesting = lvl;
+					break;
+			}
 			i++;
 		}
 
-		struct.maxLevels = new int[player.getSkills().getMaxStats().length];
 		i = 0;
 		for (int lvl : player.getSkills().getMaxStats()) {
-			struct.maxLevels[i] = lvl;
+			switch (player.getWorld().getServer().getConstants().getSkills().getSkillName(i)) {
+				case "Attack":
+					struct.maxAttack = lvl;
+					break;
+				case "Defense":
+					struct.maxDefense = lvl;
+					break;
+				case "Strength":
+					struct.maxStrength = lvl;
+					break;
+				case "Hits":
+					struct.maxHits = lvl;
+					break;
+				case "Ranged":
+					struct.maxRanged = lvl;
+					break;
+				case "Prayer":
+					struct.maxPrayer = lvl;
+					break;
+				case "Magic":
+					struct.maxMagic = lvl;
+					break;
+				case "Cooking":
+					struct.maxCooking = lvl;
+					break;
+				case "Woodcut":
+					struct.maxWoodcutting = lvl;
+					break;
+				case "Fletching":
+					struct.maxFletching = lvl;
+					break;
+				case "Fishing":
+					struct.maxFishing = lvl;
+					break;
+				case "Firemaking":
+					struct.maxFiremaking = lvl;
+					break;
+				case "Crafting":
+					struct.maxCrafting = lvl;
+					break;
+				case "Smithing":
+					struct.maxSmithing = lvl;
+					break;
+				case "Mining":
+					struct.maxMining = lvl;
+					break;
+				case "Herblaw":
+					struct.maxHerblaw = lvl;
+					break;
+				case "Agility":
+					struct.maxAgility = lvl;
+					break;
+				case "Thieving":
+					struct.maxThieving = lvl;
+					break;
+				case "Runecraft":
+					struct.maxRunecrafting = lvl;
+					break;
+				case "Harvesting":
+					struct.maxHarvesting = lvl;
+					break;
+			}
 			i++;
 		}
 
-		struct.experiences = new int[player.getSkills().getExperiences().length];
 		i = 0;
 		for (int exp : player.getSkills().getExperiences()) {
-			struct.experiences[i] = exp;
+			switch (player.getWorld().getServer().getConstants().getSkills().getSkillName(i)) {
+				case "Attack":
+					struct.experienceAttack = exp;
+					break;
+				case "Defense":
+					struct.experienceDefense = exp;
+					break;
+				case "Strength":
+					struct.experienceStrength = exp;
+					break;
+				case "Hits":
+					struct.experienceHits = exp;
+					break;
+				case "Ranged":
+					struct.experienceRanged = exp;
+					break;
+				case "Prayer":
+					struct.experiencePrayer = exp;
+					break;
+				case "Magic":
+					struct.experienceMagic = exp;
+					break;
+				case "Cooking":
+					struct.experienceCooking = exp;
+					break;
+				case "Woodcut":
+					struct.experienceWoodcutting = exp;
+					break;
+				case "Fletching":
+					struct.experienceFletching = exp;
+					break;
+				case "Fishing":
+					struct.experienceFishing = exp;
+					break;
+				case "Firemaking":
+					struct.experienceFiremaking = exp;
+					break;
+				case "Crafting":
+					struct.experienceCrafting = exp;
+					break;
+				case "Smithing":
+					struct.experienceSmithing = exp;
+					break;
+				case "Mining":
+					struct.experienceMining = exp;
+					break;
+				case "Herblaw":
+					struct.experienceHerblaw = exp;
+					break;
+				case "Agility":
+					struct.experienceAgility = exp;
+					break;
+				case "Thieving":
+					struct.experienceThieving = exp;
+					break;
+				case "Runecraft":
+					struct.experienceRunecrafting = exp;
+					break;
+				case "Harvesting":
+					struct.experienceHarvesting = exp;
+					break;
+			}
 			i++;
 		}
 
@@ -1189,21 +1376,11 @@ public class ActionSender {
 		}
 		i = 0;
 		for (Item item : with.getTrade().getTradeOffer().getItems()) {
-			if (player.isUsingAuthenticClient() && item.getCatalogId() > ItemId.maxAuthentic) {
-				// fail out transaction
-				sendMessage(player, String.format("Cannot handle inauthentic item ID %d", item.getItemId()));
-				sendMessage(with, String.format("Other player cannot handle inauthentic item ID %d", item.getItemId()));
-				player.getTrade().setTradeActive(false);
-				with.getTrade().setTradeActive(false);
-				sendTradeWindowClose(player);
-				sendTradeWindowClose(with);
-				return;
-			}
 			struct.opponentCatalogIDs[i] = item.getCatalogId();
 			if (item.getNoted() && player.isUsingAuthenticClient()) {
 				String itemName = item.getDef(player.getWorld()).getName();
 				player.playerServerMessage(MessageType.QUEST,
-					String.format("@whi@Other player is staking @gre@%d @yel@%s", item.getAmount(), itemName));
+					String.format("@ran@Please Confirm: @whi@Other player is offering @gre@%d @yel@%s", item.getAmount(), itemName));
 			}
 			if (struct.opponentNoted != null) {
 				struct.opponentNoted[i] = item.getNoted() ? 1 : 0;
@@ -1229,7 +1406,17 @@ public class ActionSender {
 			i++;
 		}
 
-		tryFinalizeAndSendPacket(OpcodeOut.SEND_TRADE_OPEN_CONFIRM, struct, player);
+		try {
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_TRADE_OPEN_CONFIRM, struct, player);
+		} catch (GameNetworkException gne) {
+			// an unsupported catalog id was received for authentic client
+			sendMessage(player, String.format("Cannot handle inauthentic item ID %s", gne.getExposedDetail()));
+			sendMessage(with, String.format("Other player cannot handle inauthentic item ID %s", gne.getExposedDetail()));
+			player.getTrade().setTradeActive(false);
+			with.getTrade().setTradeActive(false);
+			sendTradeWindowClose(player);
+			sendTradeWindowClose(with);
+		}
 	}
 
 	public static void sendTradeAcceptUpdate(Player player) {
@@ -1408,7 +1595,7 @@ public class ActionSender {
 		struct.isGeneralStore = shop.isGeneral() ? 1 : 0;
 		struct.sellModifier = shop.getSellModifier();
 		struct.buyModifier = shop.getBuyModifier();
-		struct.priceModifier = shop.getPriceModifier(); // This is how much being over/understock affects the price
+		struct.stockSensitivity = shop.getPriceModifier(); // This is how much being over/understock affects the price
 		struct.catalogIDs = new int[shopSize];
 		struct.amount = new int[shopSize];
 		struct.baseAmount = new int[shopSize];
