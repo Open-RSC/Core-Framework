@@ -415,10 +415,21 @@ public class ActionSender {
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_FATIGUE, struct, player);
 	}
 
+	public static void showPoints2Gp(Player player) {
+		NoPayloadStruct struct = new NoPayloadStruct();
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_POINTS2GP, struct, player);
+	}
+
 	public static void sendNpcKills(Player player) {
 	    MobKillsStruct struct = new MobKillsStruct();
 	    struct.count = player.getNpcKills();
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_NPC_KILLS, struct, player);
+	}
+
+	public static void sendPoints(Player player) {
+		PointsStruct struct = new PointsStruct();
+		struct.amount = player.getOpenPkPoints();
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_POINTS, struct, player);
 	}
 
 	public static void sendExpShared(Player player) {
@@ -727,6 +738,7 @@ public class ActionSender {
 		configs.add((byte) (server.getConfig().NOTHING_REUSE_ME ? 1 : 0)); // 77
 		configs.add((byte) (server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR ? 1 : 0)); // 78
 		configs.add((byte) (server.getConfig().WANT_CERT_AS_NOTES ? 1 : 0)); // 79
+		configs.add((byte) (server.getConfig().WANT_OPENPK_POINTS ? 1 : 0)); // 80
 
 		struct.configs = configs;
 		struct.setOpcode(OpcodeOut.SEND_SERVER_CONFIGS);
@@ -2055,4 +2067,5 @@ public class ActionSender {
         struct.actionId = 2;
         tryFinalizeAndSendPacket(OpcodeOut.SEND_IRONMAN, struct, player);
 	}
+
 }
