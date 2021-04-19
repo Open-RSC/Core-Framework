@@ -741,8 +741,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				}
 				player.getSkills().reduceExperience(Skills.DEFENSE, amountx1);
 				player.getSkills().reduceExperience(Skills.HITS, amountx1 / 3);
-				if(player.getSkills().getMaxStat(3) < 10) {
-					player.getSkills().setSkill(3, 10, 4616);
+				if(player.getSkills().getMaxStat(Skills.HITS) < 10) {
+					player.getSkills().setSkill(Skills.HITS, 10, 4616);
 				}
 				player.addOpenPkPoints(amount1);
 				ActionSender.sendPoints(player);
@@ -819,8 +819,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				}
 				player.getSkills().reduceExperience(Skills.ATTACK, amountx00);
 				player.getSkills().reduceExperience(Skills.HITS, amountx00 / 3);
-				if(player.getSkills().getMaxStat(3) < 10) {
-					player.getSkills().setSkill(3, 10, 4616);
+				if(player.getSkills().getMaxStat(Skills.HITS) < 10) {
+					player.getSkills().setSkill(Skills.HITS, 10, 4616);
 				}
 				player.addOpenPkPoints(amount00);
 				ActionSender.sendPoints(player);
@@ -834,8 +834,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				}
 				player.getSkills().reduceExperience(Skills.STRENGTH, amountx22);
 				player.getSkills().reduceExperience(Skills.HITS, amountx22 / 3);
-				if(player.getSkills().getMaxStat(3) < 10) {
-					player.getSkills().setSkill(3, 10, 4616);
+				if(player.getSkills().getMaxStat(Skills.HITS) < 10) {
+					player.getSkills().setSkill(Skills.HITS, 10, 4616);
 				}
 				player.addOpenPkPoints(amount22);
 				ActionSender.sendPoints(player);
