@@ -40,16 +40,14 @@ public abstract class Entity {
 	}
 
 	public void updateRegion(Point oldLocation) {
-		final Region newRegion = getWorld().getRegionManager().getRegion(getLocation());
-		if (!newRegion.equals(getRegion())) {
-			if (getRegion() != null && oldLocation != null) {
-				region.get().removeEntity(oldLocation, this);
-			}
+		if (getRegion() != null && oldLocation != null) {
+			region.get().removeEntity(oldLocation, this);
+		}
 
-			if (!isRemoved()) {
-				region.set(newRegion);
-				region.get().addEntity(this);
-			}
+		final Region newRegion = getWorld().getRegionManager().getRegion(getLocation());
+		if (!isRemoved()) {
+			region.set(newRegion);
+			region.get().addEntity(this);
 		}
 	}
 
