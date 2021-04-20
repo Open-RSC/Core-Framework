@@ -5854,8 +5854,8 @@ public final class mudclient implements Runnable {
 						}
 						int n280;
 						n280 = this.playerStatBase[0] + var4;
-						if (n280 > 99) {
-							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+						if (n280 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
@@ -5889,8 +5889,8 @@ public final class mudclient implements Runnable {
 						}
 						int n281;
 						n281 = this.playerStatBase[1] + var4;
-						if (n281 > 99) {
-							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+						if (n281 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
@@ -5924,8 +5924,8 @@ public final class mudclient implements Runnable {
 						}
 						int n282;
 						n282 = this.playerStatBase[2] + var4;
-						if (n282 > 99) {
-							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+						if (n282 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
@@ -5959,8 +5959,8 @@ public final class mudclient implements Runnable {
 						}
 						int n283;
 						n283 = this.playerStatBase[4] + var4;
-						if (n283 > 99) {
-							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+						if (n283 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
@@ -5994,8 +5994,8 @@ public final class mudclient implements Runnable {
 						}
 						int n284;
 						n284 = this.playerStatBase[5] + var4;
-						if (n284 > 99) {
-							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+						if (n284 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
@@ -6029,8 +6029,8 @@ public final class mudclient implements Runnable {
 						}
 						int n285;
 						n285 = this.playerStatBase[6] + var4;
-						if (n285 > 99) {
-							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+						if (n285 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
@@ -6177,8 +6177,8 @@ public final class mudclient implements Runnable {
 							null, "@whi@");
 							return;
 						}
-						if (var4 > 99) {
-							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+						if (var4 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
@@ -6220,8 +6220,8 @@ public final class mudclient implements Runnable {
 							null, "@whi@");
 							return;
 						}
-						if (var4 > 99) {
-							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+						if (var4 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
@@ -6262,8 +6262,8 @@ public final class mudclient implements Runnable {
 							null, "@whi@");
 							return;
 						}
-						if (var4 > 99) {
-							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+						if (var4 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
@@ -6304,8 +6304,8 @@ public final class mudclient implements Runnable {
 							null, "@whi@");
 							return;
 						}
-						if (var4 > 99) {
-							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+						if (var4 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
@@ -6346,8 +6346,8 @@ public final class mudclient implements Runnable {
 							null, "@whi@");
 							return;
 						}
-						if (var4 > 99) {
-							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+						if (var4 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
@@ -6388,8 +6388,8 @@ public final class mudclient implements Runnable {
 							null, "@whi@");
 							return;
 						}
-						if (var4 > 99) {
-							this.showMessage(false, null, "Stat cannot be higher then 99", MessageType.GAME, 0,
+						if (var4 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
 							null, "@whi@");
 							return;
 						}
