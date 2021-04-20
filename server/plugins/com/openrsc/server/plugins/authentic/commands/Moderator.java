@@ -144,6 +144,7 @@ public final class Moderator implements CommandTrigger {
 			username = player.getUsername();
 			targetPlayer = player;
 		}
+		boolean showId = args.length > 1; // don't care what the second arg is
 
 		if (targetPlayer == null) {
 			targetOffline = true;
@@ -166,8 +167,14 @@ public final class Moderator implements CommandTrigger {
 		ArrayList<String> itemStrings = new ArrayList<>();
 
 		synchronized(inventory) {
-			for (Item invItem : inventory)
-				itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef(player.getWorld()).getName());
+			for (Item invItem : inventory) {
+				StringBuilder item = new StringBuilder();
+				item.append("@gre@").append(invItem.getAmount()).append(" @whi@").append(invItem.getDef(player.getWorld()).getName());
+				if (showId) {
+					item.append(" @yel@(").append(invItem.getCatalogId()).append(")");
+				}
+				itemStrings.add(item.toString());
+			}
 		}
 
 		ActionSender.sendBox(player, "@lre@Inventory of " + username + ":%" + "@whi@" + StringUtils.join(itemStrings, ", "), true);
@@ -213,7 +220,7 @@ public final class Moderator implements CommandTrigger {
 					StringBuilder item = new StringBuilder();
 					item.append("@gre@").append(bankItem.getAmount()).append(" @whi@").append(bankItem.getDef(player.getWorld()).getName());
 					if (showId) {
-						item.append("@yel@ (").append(bankItem.getCatalogId()).append(")");
+						item.append(" @yel@(").append(bankItem.getCatalogId()).append(")");
 					}
 					itemStrings.add(item.toString());
 				}
