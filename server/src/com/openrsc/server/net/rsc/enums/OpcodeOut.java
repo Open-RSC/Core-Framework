@@ -58,7 +58,7 @@ public enum OpcodeOut {
 	SEND_BANK_PIN_INTERFACE, // custom
 	SEND_ONLINE_LIST, // custom
 	SEND_SHOP_CLOSE,
-	SEND_OPENPK_POINTS_TO_GP, // custom
+	SEND_OPENPK_POINTS_TO_GP_RATIO, // custom
 	SEND_NPC_KILLS, // custom
 	SEND_OPENPK_POINTS, // custom
 	SEND_FRIEND_UPDATE,

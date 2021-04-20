@@ -78,7 +78,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 		put(OpcodeOut.SEND_BANK_PIN_INTERFACE, 135); // custom
 		put(OpcodeOut.SEND_ONLINE_LIST, 136); // custom
 		put(OpcodeOut.SEND_SHOP_CLOSE, 137);
-		put(OpcodeOut.SEND_OPENPK_POINTS_TO_GP, 144); // custom
+		put(OpcodeOut.SEND_OPENPK_POINTS_TO_GP_RATIO, 144); // custom
 		put(OpcodeOut.SEND_NPC_KILLS, 147); // custom
 		put(OpcodeOut.SEND_OPENPK_POINTS, 148); // custom
 		put(OpcodeOut.SEND_FRIEND_UPDATE, 149);

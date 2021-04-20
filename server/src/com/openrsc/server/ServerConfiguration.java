@@ -159,7 +159,7 @@ public class ServerConfiguration {
 	public boolean WANT_BANK_PRESETS;
 	public boolean WANT_PARTIES;
 	public boolean WANT_OPENPK_POINTS;
-	public int OPENPK_POINTS_TO_GP;
+	public int OPENPK_POINTS_TO_GP_RATIO;
 	public double PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER;
 	public double PARTY_DISTANCE_PERCENT_DECREASE;
 	public double PARTY_SAVE_XP_FOR_SKILLER_PERCENT;
@@ -420,7 +420,7 @@ public class ServerConfiguration {
 		WANT_RANGED_FACE_PLAYER = tryReadBool("want_ranged_face_player").orElse(false);
 		WANT_POISON_NPCS = tryReadBool("want_poison_npcs").orElse(false);
 		WANT_OPENPK_POINTS = tryReadBool("want_openpk_points").orElse(false);
-		OPENPK_POINTS_TO_GP = tryReadInt("openpk_points_to_gp").orElse(1);
+		OPENPK_POINTS_TO_GP_RATIO = tryReadInt("openpk_points_to_gp_ratio").orElse(1);
 
 		// Party settings
 		WANT_PARTIES = tryReadBool("want_parties").orElse(false);

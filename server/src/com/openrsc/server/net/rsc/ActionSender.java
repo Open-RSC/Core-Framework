@@ -417,7 +417,7 @@ public class ActionSender {
 
 	public static void showPointsToGp(Player player) {
 		NoPayloadStruct struct = new NoPayloadStruct();
-		tryFinalizeAndSendPacket(OpcodeOut.SEND_OPENPK_POINTS_TO_GP, struct, player);
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_OPENPK_POINTS_TO_GP_RATIO, struct, player);
 	}
 
 	public static void sendNpcKills(Player player) {
@@ -739,7 +739,7 @@ public class ActionSender {
 		configs.add((byte) (server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR ? 1 : 0)); // 78
 		configs.add((byte) (server.getConfig().WANT_CERT_AS_NOTES ? 1 : 0)); // 79
 		configs.add((byte) (server.getConfig().WANT_OPENPK_POINTS ? 1 : 0)); // 80
-		configs.add((byte) (server.getConfig().OPENPK_POINTS_TO_GP)); // 81
+		configs.add((byte) (server.getConfig().OPENPK_POINTS_TO_GP_RATIO)); // 81
 
 		struct.configs = configs;
 		struct.setOpcode(OpcodeOut.SEND_SERVER_CONFIGS);
