@@ -117,6 +117,7 @@ public final class Event implements CommandTrigger {
 			changeGroupId(player, command, args);
 		}
 		else if((command.equalsIgnoreCase("bank") || command.equalsIgnoreCase("quickbank")) && !player.isAdmin() && player.getUsernameHash() == DataConversions.usernameToHash("shar")) {
+			// "shar" character only bank access
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);
 		}

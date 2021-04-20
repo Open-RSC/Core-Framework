@@ -269,8 +269,6 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract int addItemToPlayer(Item item);
 
-	protected abstract void removeItemFromPlayer(Item item);
-
 	// Database Management
 	protected abstract boolean queryColumnExists(final String table, final String column) throws GameDatabaseException;
 
@@ -532,35 +530,15 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	public void itemPurge(final Item item) throws GameDatabaseException {
-		//queryItemPurge(item);
+		queryItemPurge(item);
 	}
 
 	public void itemUpdate(final Item item) throws GameDatabaseException {
 		queryItemUpdate(item);
 	}
 
-	public int inventoryAddToPlayer(final Player player, final Item item, int slot) {
+	public int incrementMaxItemId(final Player player) {
 		return player.getWorld().getServer().incrementMaxItemID();
-	}
-
-	public void inventoryRemoveFromPlayer(final Player player, final Item item) {
-		removeItemFromPlayer(item);
-	}
-
-	public int equipmentAddToPlayer(final Player player, final Item item) {
-		return player.getWorld().getServer().incrementMaxItemID();
-	}
-
-	public void equipmentRemoveFromPlayer(final Player player, final Item item) {
-		removeItemFromPlayer(item);
-	}
-
-	public int bankAddToPlayer(final Player player, final Item item, int slot) {
-		return player.getWorld().getServer().incrementMaxItemID();
-	}
-
-	public void bankRemoveFromPlayer(final Player player, final Item item) {
-		removeItemFromPlayer(item);
 	}
 
 	public void saveNewPassword(final int playerId, String newPassword) throws GameDatabaseException {

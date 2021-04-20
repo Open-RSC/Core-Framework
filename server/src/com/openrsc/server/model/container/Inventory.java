@@ -142,8 +142,7 @@ public class Inventory {
 				}
 
 				// Update the Database - Add to the last slot and create a new itemID
-				int itemID = player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size() - 1);
-
+				int itemID = player.getWorld().getServer().getDatabase().incrementMaxItemId(player);
 				itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), itemToAdd.getNoted(), itemID);
 
 				// Update the server inventory
@@ -190,10 +189,7 @@ public class Inventory {
 
 					// Update the existing stack amount to max value
 					existingStack.setAmount(Integer.MAX_VALUE);
-
-					// Update the Database - Add new stack to the last slot and create a new itemID
-					int itemID = player.getWorld().getServer().getDatabase().inventoryAddToPlayer(player, itemToAdd, list.size());
-
+					int itemID = player.getWorld().getServer().getDatabase().incrementMaxItemId(player);
 					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), itemToAdd.getNoted(), itemID);
 
 					// Update the server inventory
@@ -246,9 +242,6 @@ public class Inventory {
 						// Update the Server
 						iterator.remove();
 
-						// Update the Database - Remove item status
-						player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
-
 						// Update the client
 						if (sendInventory)
 							ActionSender.sendRemoveItem(player, index);
@@ -277,9 +270,6 @@ public class Inventory {
 
 					// Update the Server Bank
 					iterator.remove();
-
-					// Update the Database
-					player.getWorld().getServer().getDatabase().inventoryRemoveFromPlayer(player, inventoryItem);
 
 					// Update the client
 					if (sendInventory)
