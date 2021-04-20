@@ -409,16 +409,13 @@ public final class Event implements CommandTrigger {
 
 		String currentIp = null;
 		if (target == null) {
-			player.message(messagePrefix + "No online character found named '" + targetUsername + "'.. checking database..");
 			try {
 				currentIp = player.getWorld().getServer().getDatabase().playerLoginIp(targetUsername);
 
 				if(currentIp == null) {
-					player.message(messagePrefix + "No dabase character found named '" + targetUsername + "'");
+					player.message(messagePrefix + "No character named '" + targetUsername + "' is online or was found in the database.");
 					return;
 				}
-
-				player.message(messagePrefix + "Found character '" + targetUsername + "' fetching other characters..");
 			} catch (final GameDatabaseException e) {
 				LOGGER.catching(e);
 				player.message(messagePrefix + "A Database error has occurred! " + e.getMessage());
@@ -449,9 +446,11 @@ public final class Event implements CommandTrigger {
 					names.add(dbUsername);
 			}
 			StringBuilder builder = new StringBuilder("@red@")
-				.append(targetUsername.toUpperCase())
-				.append(" (" + target.getX() + "," + target.getY() + ")")
-				.append(" @whi@currently has ")
+				.append(targetUsername.toUpperCase());
+			if (target != null) {
+				builder.append(" (" + target.getX() + "," + target.getY() + ")");
+			}
+			builder.append(" @whi@currently has ")
 				.append(names.size() > 0 ? "@gre@" : "@red@")
 				.append(names.size())
 				.append(" @whi@registered characters.");
