@@ -39,7 +39,7 @@ public abstract class Entity {
 		updateRegion(null);
 	}
 
-	public void updateRegion(Point oldLocation) {
+	public synchronized void updateRegion(Point oldLocation) {
 		if (getRegion() != null && oldLocation != null) {
 			region.get().removeEntity(oldLocation, this);
 		}
