@@ -7,7 +7,7 @@
             <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n"/>
         </Console>
 
-        <RollingFile name="RollingFile" filename="logs/rolling.log" append="true">
+        <RollingFile name="RollingFile" filename="logs/${sys:world.name}_${sys:world.number}.log" append="true">
             <filepattern>logs/%d{YYYYMMdd}.log.zip</filepattern>
             <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n"/>
             <Policies>

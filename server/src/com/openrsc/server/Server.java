@@ -16,20 +16,31 @@ import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
-import com.openrsc.server.net.*;
+import com.openrsc.server.net.DiscordService;
+import com.openrsc.server.net.RSCConnectionHandler;
+import com.openrsc.server.net.RSCPacketFilter;
+import com.openrsc.server.net.RSCProtocolDecoder;
+import com.openrsc.server.net.RSCProtocolEncoder;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.Crypto;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.NamedThreadFactory;
+import com.openrsc.server.util.YMLReader;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.MessageType;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -94,20 +105,56 @@ public class Server implements Runnable {
 	private volatile int maxItemId;
 
 	static {
+
 		try {
 			Thread.currentThread().setName("InitThread");
+
+			String configFileName = sniffConfigFileNameFromCommandLine();
+			YMLReader configFile = new YMLReader();
+			ServerConfiguration.loadServerProps(configFile, configFileName);
+			String worldName = configFile.getAttribute("server_name");
+			String worldNumber = configFile.getAttribute("world_number");
+
+			if(StringUtils.isNotBlank(worldName)) {
+				worldName = worldName.toLowerCase().trim().replaceAll(" ", "_");
+			}
+			if(StringUtils.isNotBlank(worldNumber)) {
+				worldNumber = worldNumber.trim();
+			}
+			System.setProperty("world.name", worldName);
+			System.setProperty("world.number", worldNumber);
+
 			// Enables asynchronous, garbage-free logging.
 			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
-			System.setProperty("Log4jContextSelector",
-				"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+			System.setProperty(
+					"Log4jContextSelector",
+					"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
+			);
 
+			LoggerContext context = (LoggerContext) LogManager.getContext(false);
+			context.reconfigure();
 			LOGGER = LogManager.getLogger();
 		} catch (final Throwable t) {
 			throw new ExceptionInInitializerError(t);
 		}
 	}
 
-	public static final Server startServer(final String confName) throws IOException {
+	private static String sniffConfigFileNameFromCommandLine() {
+		String commandLine = System.getProperty("sun.java.command");
+		String[] args = commandLine.split(" ");
+		for(String arg : args) {
+			if(arg.toLowerCase().endsWith(".conf")) {
+				return arg;
+			}
+		}
+		return getDefaultConfigFileName();
+	}
+
+	private static String getDefaultConfigFileName() {
+		return "default.conf";
+	}
+
+	public static Server startServer(final String confName) throws IOException {
 		final long startTime = System.currentTimeMillis();
 		final Server server = new Server(confName);
 		if (!server.isRunning()) {
@@ -144,10 +191,13 @@ public class Server implements Runnable {
 		LOGGER.info("Launching Game Server...");
 
 		if (args.length == 0) {
-			LOGGER.info("Server Configuration file not provided. Loading from default.conf or local.conf.");
+			LOGGER.info(
+					"Server Configuration file not provided. Loading from {} or local.conf.",
+					getDefaultConfigFileName()
+			);
 
 			try {
-				startServer("default.conf");
+				startServer(getDefaultConfigFileName());
 			} catch (final Throwable t) {
 				LOGGER.catching(t);
 			}
