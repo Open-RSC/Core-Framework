@@ -896,7 +896,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 					ActionSender.sendInventory(player);
 				} else {
 					player.getWorld().registerItem(
-					new GroundItem(player.getWorld(), 10, player.getX(), player.getY(), amount28, player),
+					new GroundItem(player.getWorld(), ItemId.COINS.id(), player.getX(), player.getY(), amount28, player),
 					player.getConfig().GAME_TICK * 145);
 					player.message("You don't have room to hold the gp. It falls to the ground!");
 				}
