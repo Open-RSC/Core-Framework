@@ -448,9 +448,9 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected PlayerInventory[] queryLoadPlayerInvItems(final Player player) throws GameDatabaseException {
+	protected PlayerInventory[] queryLoadPlayerInvItems(final int playerDatabaseId) throws GameDatabaseException {
 		final ArrayList<PlayerInventory> list = new ArrayList<>();
-		try (final PreparedStatement statement = statementFromInteger(getQueries().playerInvItems, player.getDatabaseID());
+		try (final PreparedStatement statement = statementFromInteger(getQueries().playerInvItems, playerDatabaseId);
 			 final ResultSet result = statement.executeQuery();) {
 
 			while (result.next()) {
@@ -500,9 +500,9 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected PlayerBank[] queryLoadPlayerBankItems(final Player player) throws GameDatabaseException {
+	protected PlayerBank[] queryLoadPlayerBankItems(final int playerDatabaseId) throws GameDatabaseException {
 		final ArrayList<PlayerBank> list = new ArrayList<>();
-		try (final PreparedStatement statement = statementFromInteger(getQueries().playerBankItems, player.getDatabaseID());
+		try (final PreparedStatement statement = statementFromInteger(getQueries().playerBankItems, playerDatabaseId);
 			 final ResultSet result = statement.executeQuery();) {
 
 			while (result.next()) {

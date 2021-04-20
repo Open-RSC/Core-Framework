@@ -1,5 +1,8 @@
 package com.openrsc.server.plugins.authentic.commands;
 
+import com.openrsc.server.database.GameDatabase;
+import com.openrsc.server.database.GameDatabaseException;
+import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -130,13 +133,36 @@ public final class Moderator implements CommandTrigger {
 	}
 
 	private void queryPlayerInventory(Player player, String command, String[] args) {
-		Player targetPlayer = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-		if (targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
+		boolean targetOffline = false;
+		String username;
+		Player targetPlayer;
+		if (args.length > 0) {
+			username = args[0];
+			targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(username));
+		} else {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " (username) (want item ids)");
+			username = player.getUsername();
+			targetPlayer = player;
 		}
 
-		List<Item> inventory = targetPlayer.getCarriedItems().getInventory().getItems();
+		if (targetPlayer == null) {
+			targetOffline = true;
+		}
+
+		List<Item> inventory;
+		if (targetOffline) {
+			try {
+				inventory = player.getWorld().getServer().getDatabase().retrievePlayerInventory(username);
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Could not find player; invalid name.");
+				return;
+			}
+		} else {
+			// use the online player if they are online, because it will be more up-to-date than the database
+			username = targetPlayer.getUsername(); // can fix capitalization easy enough
+			inventory = targetPlayer.getCarriedItems().getInventory().getItems();
+		}
+
 		ArrayList<String> itemStrings = new ArrayList<>();
 
 		synchronized(inventory) {
@@ -144,23 +170,63 @@ public final class Moderator implements CommandTrigger {
 				itemStrings.add("@gre@" + invItem.getAmount() + " @whi@" + invItem.getDef(player.getWorld()).getName());
 		}
 
-		ActionSender.sendBox(player, "@lre@Inventory of " + targetPlayer.getUsername() + ":%" + "@whi@" + StringUtils.join(itemStrings, ", "), true);
+		ActionSender.sendBox(player, "@lre@Inventory of " + username + ":%" + "@whi@" + StringUtils.join(itemStrings, ", "), true);
 	}
 
 	private void queryPlayerBank(Player player, String command, String[] args) {
-		Player targetPlayer = args.length > 0 ? player.getWorld().getPlayer(DataConversions.usernameToHash(args[0])) : player;
-		if (targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
+		boolean targetOffline = false;
+		String username;
+		Player targetPlayer;
+		if (args.length > 0) {
+			username = args[0];
+			targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(username));
+		} else {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " (username) (want box) (want item ids)");
+			username = player.getUsername();
+			targetPlayer = player;
 		}
-		List<Item> inventory = targetPlayer.getBank().getItems();
-		ArrayList<String> itemStrings = new ArrayList<>();
-		synchronized(inventory) {
-			for (Item bankItem : inventory) {
-				itemStrings.add("@gre@" + bankItem.getAmount() + " @whi@" + bankItem.getDef(player.getWorld()).getName());
+		boolean showBox = args.length > 1; // don't care what the second arg is
+		boolean showId = args.length > 2; // don't care what the third arg is
+
+		if (targetPlayer == null) {
+			targetOffline = true;
+		}
+
+		List<Item> bank;
+		if (targetOffline) {
+			try {
+				bank = player.getWorld().getServer().getDatabase().retrievePlayerBank(username);
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Could not find player; invalid name.");
+				return;
+			}
+		} else {
+			// use the online player if they are online, because it will be more up-to-date than the database
+			username = targetPlayer.getUsername(); // can fix capitalization easy enough
+			bank = targetPlayer.getBank().getItems();
+		}
+
+		if (showBox) {
+			ArrayList<String> itemStrings = new ArrayList<>();
+			synchronized (bank) {
+				for (Item bankItem : bank) {
+					StringBuilder item = new StringBuilder();
+					item.append("@gre@").append(bankItem.getAmount()).append(" @whi@").append(bankItem.getDef(player.getWorld()).getName());
+					if (showId) {
+						item.append("@yel@ (").append(bankItem.getCatalogId()).append(")");
+					}
+					itemStrings.add(item.toString());
+				}
+			}
+			ActionSender.sendBox(player, "@lre@Bank of " + username + ":%" + "@whi@" + StringUtils.join(itemStrings, ", "), true);
+		} else {
+			// TODO: would be neat to set mode to be able to deposit/withdraw from other player's bank.
+			mes("@whi@Bank of @lre@" + username + "@whi@ shown.");
+			mes("@whi@Note that your own inventory items may be shown as well.");
+			synchronized (bank) {
+				ActionSender.showBankOther(player, bank);
 			}
 		}
-		ActionSender.sendBox(player, "@lre@Bank of " + targetPlayer.getUsername() + ":%" + "@whi@" + StringUtils.join(itemStrings, ", "), true);
 	}
 
 	private void sendAnnouncement(Player player, String command, String[] args) {

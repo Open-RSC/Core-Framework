@@ -1601,6 +1601,37 @@ public class ActionSender {
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_BANK_OPEN, struct, player);
 	}
 
+	public static void showBankOther(Player player, List<Item> bank) {
+		int itemsInBank = bank.size();
+		if (player.isUsingAuthenticClient()) {
+			if ((player.getWorld().getServer().getConfig().MEMBER_WORLD && itemsInBank > 192) ||
+				(!player.getWorld().getServer().getConfig().MEMBER_WORLD && itemsInBank > 48)) {
+				sendMessage(player, "Warning: Unable to display all items in bank!");
+			}
+			// If bank is filled to page 4 and bank size reports supporting more than 4 pages
+			if (itemsInBank > (192 - 48) && player.getBankSize() > 192) {
+				sendMessage(player, "Warning: Bank is unauthentically large. Deposited items may not be visible to be withdrawn!");
+			}
+		}
+
+		BankStruct struct = new BankStruct();
+		struct.itemsStoredSize = itemsInBank;
+		struct.maxBankSize = player.getBankSize();
+		struct.catalogIDs = new int[itemsInBank];
+		struct.amount = new int[itemsInBank];
+
+		int i = 0;
+		for (Item item : bank) {
+			struct.catalogIDs[i] = player.isUsingAuthenticClient() ?
+				item.getCatalogIdAuthenticNoting() : item.getCatalogId();
+			struct.amount[i] = item.getAmount();
+			i++;
+		}
+
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_BANK_OPEN, struct, player);
+
+	}
+
 	public static void showShop(Player player, Shop shop) {
 		ShopStruct struct = new ShopStruct();
 		int shopSize = shop.getShopSize();

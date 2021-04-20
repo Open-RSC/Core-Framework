@@ -113,11 +113,11 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract PlayerData queryLoadPlayerData(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerInventory[] queryLoadPlayerInvItems(Player player) throws GameDatabaseException;
+	protected abstract PlayerInventory[] queryLoadPlayerInvItems(int playerDatabaseId) throws GameDatabaseException;
 
 	protected abstract PlayerEquipped[] queryLoadPlayerEquipped(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerBank[] queryLoadPlayerBankItems(Player player) throws GameDatabaseException;
+	protected abstract PlayerBank[] queryLoadPlayerBankItems(int playerDatabaseId) throws GameDatabaseException;
 
 	protected abstract PlayerBankPreset[] queryLoadPlayerBankPresets(Player player) throws GameDatabaseException;
 
@@ -855,10 +855,23 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	private void loadPlayerInventory(final Player player) throws GameDatabaseException {
-		final PlayerInventory[] invItems = queryLoadPlayerInvItems(player);
+		final PlayerInventory[] invItems = queryLoadPlayerInvItems(player.getDatabaseID());
 		final Inventory inv = new Inventory(player, invItems);
 
 		player.getCarriedItems().setInventory(inv);
+	}
+
+	public List<Item> retrievePlayerInventory(final String username) throws GameDatabaseException {
+		int playerId = playerIdFromUsername(username);
+		if (playerId == -1) {
+			throw new GameDatabaseException(this, "Could not find player.");
+		}
+		List<Item> items = new ArrayList<Item>();
+		final PlayerInventory[] invItems = queryLoadPlayerInvItems(playerId);
+		for (PlayerInventory i : invItems) {
+			items.add(i.item);
+		}
+		return items;
 	}
 
 	private void loadPlayerEquipment(final Player player) throws GameDatabaseException {
@@ -906,12 +919,25 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	private void loadPlayerBank(final Player player) throws GameDatabaseException {
-		final PlayerBank[] bankItems = queryLoadPlayerBankItems(player);
+		final PlayerBank[] bankItems = queryLoadPlayerBankItems(player.getDatabaseID());
 		final Bank bank = new Bank(player);
 		for (int i = 0; i < bankItems.length; i++) {
 			bank.getItems().add(new Item(bankItems[i].itemId, bankItems[i].itemStatus));
 		}
 		player.setBank(bank);
+	}
+
+	public List<Item> retrievePlayerBank(final String username) throws GameDatabaseException {
+		int playerId = playerIdFromUsername(username);
+		if (playerId == -1) {
+			throw new GameDatabaseException(this, "Could not find player.");
+		}
+		final PlayerBank[] bankItems = queryLoadPlayerBankItems(playerId);
+		List<Item> bank = new ArrayList<Item>();
+		for (int i = 0; i < bankItems.length; i++) {
+			bank.add(new Item(bankItems[i].itemId, bankItems[i].itemStatus));
+		}
+		return bank;
 	}
 
 	private void loadPlayerBankPresets(final Player player) throws GameDatabaseException {
