@@ -3,7 +3,7 @@
 <Configuration status="WARN" target="SYSTEM_ERR">
 
     <Properties>
-        <Property name="logPattern">%d{YYYY-MM-dd HH:mm:ss} [%t] %-5p %c{1}:%L - %msg%n</Property>
+        <Property name="logPattern">%d{yyyy-MM-dd HH:mm:ss}%highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=green, TRACE=green} %style{%15.15t}{magenta} %style{%-30.30c{1.}}{cyan} : %m%n%ex</Property>
     </Properties>
 
     <Appenders>
