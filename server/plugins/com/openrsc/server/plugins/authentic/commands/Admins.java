@@ -196,6 +196,10 @@ public final class Admins implements CommandTrigger {
 			startResetEvent(player, command, args, false);
 		} else if (command.equalsIgnoreCase("stopresetevent") || command.equalsIgnoreCase("cancelresetevent")) {
 			stopResetEvent(player);
+		} else if (command.equalsIgnoreCase("givemodtools")) {
+			giveModTools(player);
+		} else if (command.equalsIgnoreCase("givetools")) {
+			giveTools(player);
 		}
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
 			fakeCrystalChest(player, args);
@@ -598,6 +602,22 @@ public final class Admins implements CommandTrigger {
 		player.getWorld().getServer().closeProcess(seconds, message);
 		// Services.lookup(DatabaseManager.class).addQuery(new
 		// StaffLog(player, 7));
+	}
+
+	private void giveModTools(Player player) {
+		player.getCarriedItems().getInventory().add(new Item(ItemId.INFO_DOCUMENT.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.RESETCRYSTAL.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.SUPERCHISEL.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.BALL_OF_WOOL.id(), 1)); // can be used on superchisel or fluffs
+		player.getCarriedItems().getInventory().add(new Item(ItemId.GERTRUDES_CAT.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.DIGSITE_INFO.id(), 1));
+	}
+
+	private void giveTools(Player player) {
+		player.getCarriedItems().getInventory().add(new Item(ItemId.RUNE_PICKAXE.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.RUNE_AXE.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.HARPOON.id(), 1));
+		player.getCarriedItems().getInventory().add(new Item(ItemId.SLEEPING_BAG.id(), 1));
 	}
 
 	private void spawnItemInventory(Player player, String command, String[] args) {
