@@ -5,8 +5,10 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.net.rsc.handlers.ItemUseOnItem;
 import com.openrsc.server.plugins.authentic.commands.RegularPlayer;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.UsePlayerTrigger;
 import com.openrsc.server.util.rsc.MessageType;
@@ -16,7 +18,7 @@ import static com.openrsc.server.plugins.Functions.*;
 // Fluffs is an unobtainable item, so it's safe to use them as a moderator tool.
 // Even if someone got Fluffs, they don't do anything very powerful.
 // All dialogue and behaviours in this file are inauthentic.
-public class Fluffs implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigger {
+public class Fluffs implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigger, UseInvTrigger {
 	@Override
 	public void onUsePlayer(Player player, Player otherPlayer, Item item) {
 		if (item.getCatalogId() == ItemId.GERTRUDES_CAT.id()) {
@@ -100,6 +102,21 @@ public class Fluffs implements UsePlayerTrigger, OpInvTrigger, UseNpcTrigger {
 		npcsay(player, npc, "with a very important job.");
 		npcsay(player, npc, "If you need her again, you know how to get her.");
 		say(player, npc, "1093.");
+	}
+
+	@Override
+	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
+		// TODO: make fluffs do some amazing moderator tool thing when using ball of wool on her
+		mes("Fluffs plays with the ball of wool and purrs");
+		delay(2);
+		mes("@whi@" + player.getUsername() + ": It'd be really cool if you did something useful with that!");
+		delay(2);
+		mes("@yel@Fluffs: Are you not entertained?");
+	}
+
+	@Override
+	public boolean blockUseInv(Player player, Integer invIndex, Item item1, Item item2) {
+		return compareItemsIds(item1, item2, ItemId.GERTRUDES_CAT.id(), ItemId.BALL_OF_WOOL.id());
 	}
 
 }

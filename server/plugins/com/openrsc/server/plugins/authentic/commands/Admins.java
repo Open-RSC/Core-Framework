@@ -16,6 +16,7 @@ import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
+import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -605,24 +606,33 @@ public final class Admins implements CommandTrigger {
 	}
 
 	private void giveModTools(Player player) {
-		player.getCarriedItems().getInventory().add(new Item(ItemId.INFO_DOCUMENT.id(), 1));
-		player.getCarriedItems().getInventory().add(new Item(ItemId.RESETCRYSTAL.id(), 1));
-		player.getCarriedItems().getInventory().add(new Item(ItemId.SUPERCHISEL.id(), 1));
-		player.getCarriedItems().getInventory().add(new Item(ItemId.BALL_OF_WOOL.id(), 1)); // can be used on superchisel or fluffs
-		player.getCarriedItems().getInventory().add(new Item(ItemId.GERTRUDES_CAT.id(), 1));
-		player.getCarriedItems().getInventory().add(new Item(ItemId.DIGSITE_INFO.id(), 1));
+		giveIfNotHave(player, ItemId.INFO_DOCUMENT);
+		giveIfNotHave(player, ItemId.RESETCRYSTAL);
+		giveIfNotHave(player, ItemId.SUPERCHISEL);
+		giveIfNotHave(player, ItemId.BALL_OF_WOOL); // can be used on superchisel or fluffs
+		giveIfNotHave(player, ItemId.GERTRUDES_CAT);
+		giveIfNotHave(player, ItemId.DIGSITE_INFO);
 	}
 
 	private void giveTools(Player player) {
-		player.getCarriedItems().getInventory().add(new Item(ItemId.RUNE_PICKAXE.id(), 1));
-		player.getCarriedItems().getInventory().add(new Item(ItemId.RUNE_AXE.id(), 1));
-		player.getCarriedItems().getInventory().add(new Item(ItemId.HARPOON.id(), 1));
-		player.getCarriedItems().getInventory().add(new Item(ItemId.SLEEPING_BAG.id(), 1));
+		giveIfNotHave(player, ItemId.RUNE_PICKAXE);
+		giveIfNotHave(player, ItemId.RUNE_AXE);
+		giveIfNotHave(player, ItemId.HARPOON);
+		giveIfNotHave(player, ItemId.SLEEPING_BAG);
+	}
+
+	private void giveIfNotHave(Player player, ItemId item) {
+		Inventory i = player.getCarriedItems().getInventory();
+		synchronized (i) {
+			if (!i.hasCatalogID(item.id())) {
+				i.add(new Item(item.id(), 1));
+			}
+		}
 	}
 
 	private void spawnItemInventory(Player player, String command, String[] args) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or itemId name] (amount) (noted) (player)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (noted) (player)");
 			return;
 		}
 
@@ -632,7 +642,7 @@ public final class Admins implements CommandTrigger {
 		} catch (NumberFormatException ex) {
 			ItemId item = ItemId.getByName(args[0]);
 			if (item == ItemId.NOTHING) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or itemId name] (amount) (noted) (player)");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (noted) (player)");
 				return;
 			} else {
 				id = item.id();
@@ -698,7 +708,7 @@ public final class Admins implements CommandTrigger {
 
 	private void spawnItemBank(Player player, String command, String[] args) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (amount) (player)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
 			return;
 		}
 
@@ -708,7 +718,7 @@ public final class Admins implements CommandTrigger {
 		} catch (NumberFormatException ex) {
 			ItemId item = ItemId.getByName(args[0]);
 			if (item == ItemId.NOTHING) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or itemId name] (amount) (player)");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
 				return;
 			} else {
 				id = item.id();
@@ -725,7 +735,7 @@ public final class Admins implements CommandTrigger {
 			try {
 				amount = Integer.parseInt(args[1]);
 			} catch (NumberFormatException e) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or itemId name] (amount) (player)");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
 				return;
 			}
 		} else {

@@ -70,6 +70,7 @@ public class ResetCrystal implements UseNpcTrigger, UseLocTrigger, OpInvTrigger 
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
 		player.playerServerMessage(MessageType.QUEST, "NPC id: " + npc.getID());
+		player.playerServerMessage(MessageType.QUEST, "NPC instance id: " + npc.getIndex());
 		player.playerServerMessage(MessageType.QUEST, "NPC UUID: " + npc.getUUID());
 		int opt = multi(player, "Smite", "Cancel");
 		if (opt == 0) {
