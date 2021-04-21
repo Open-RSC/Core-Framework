@@ -3,6 +3,7 @@ package com.openrsc.server;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.login.LoginExecutorProcess;
 import com.openrsc.server.login.PlayerSaveRequest;
+import com.openrsc.server.util.ServerAwareThreadFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -61,7 +62,12 @@ public class LoginExecutor implements Runnable {
 	public void start() {
 		synchronized (running) {
 			clearRequests();
-			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : LoginThread").build());
+			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(
+					new ServerAwareThreadFactory(
+							server.getName()+" : LoginThread",
+							server.getConfig()
+					)
+			);
 			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
 			running = true;
 		}

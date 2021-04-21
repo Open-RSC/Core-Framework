@@ -50,7 +50,7 @@ public final class PluginHandler {
 
 	public PluginHandler (final Server server) {
 		this.server = server;
-		this.threadFactory = new NamedThreadFactory(getServer().getName()+" : PluginThread");
+		this.threadFactory = new NamedThreadFactory(server.getName()+" : PluginThread", server.getConfig());
 		this.knownInterfaces = new ArrayList<>();
 		this.plugins = new HashMap<>();
 		this.loadedClassFiles = new ArrayList<>();

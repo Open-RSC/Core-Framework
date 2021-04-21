@@ -10,6 +10,7 @@ import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SkillDef;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.util.ServerAwareThreadFactory;
 import com.openrsc.server.util.rsc.MessageType;
 import com.vdurmont.emoji.EmojiParser;
 import net.dv8tion.jda.api.AccountType;
@@ -516,7 +517,12 @@ public class DiscordService implements Runnable{
 
 	public void start() {
 		synchronized(running) {
-			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName()+" : DiscordServiceThread").build());
+			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(
+					new ServerAwareThreadFactory(
+							server.getName()+" : DiscordServiceThread",
+							server.getConfig()
+					)
+			);
 			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
 			running = true;
 		}

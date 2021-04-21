@@ -24,7 +24,9 @@ import com.openrsc.server.net.RSCProtocolEncoder;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.Crypto;
 import com.openrsc.server.plugins.PluginHandler;
+import com.openrsc.server.util.LogUtil;
 import com.openrsc.server.util.NamedThreadFactory;
+import com.openrsc.server.util.ServerAwareThreadFactory;
 import com.openrsc.server.util.YMLReader;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.MessageType;
@@ -40,11 +42,13 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LoggerContext;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -96,10 +100,10 @@ public class Server implements Runnable {
 	private long lastTickDuration = 0;
 	private long timeLate = 0;
 	private long lastTickTimestamp = 0;
-	private final HashMap<Integer, Long> incomingTimePerPacketOpcode = new HashMap<>();
-	private final HashMap<Integer, Integer> incomingCountPerPacketOpcode = new HashMap<>();
-	private final HashMap<Integer, Long> outgoingTimePerPacketOpcode = new HashMap<>();
-	private final HashMap<Integer, Integer> outgoingCountPerPacketOpcode = new HashMap<>();
+	private final Map<Integer, Long> incomingTimePerPacketOpcode = new HashMap<>();
+	private final Map<Integer, Integer> incomingCountPerPacketOpcode = new HashMap<>();
+	private final Map<Integer, Long> outgoingTimePerPacketOpcode = new HashMap<>();
+	private final Map<Integer, Integer> outgoingCountPerPacketOpcode = new HashMap<>();
 	private int privateMessagesSent = 0;
 
 	private volatile int maxItemId;
@@ -109,21 +113,6 @@ public class Server implements Runnable {
 		try {
 			Thread.currentThread().setName("InitThread");
 
-			String configFileName = sniffConfigFileNameFromCommandLine();
-			YMLReader configFile = new YMLReader();
-			ServerConfiguration.loadServerProps(configFile, configFileName);
-			String worldName = configFile.getAttribute("server_name");
-			String worldNumber = configFile.getAttribute("world_number");
-
-			if(StringUtils.isNotBlank(worldName)) {
-				worldName = worldName.toLowerCase().trim().replaceAll(" ", "_");
-			}
-			if(StringUtils.isNotBlank(worldNumber)) {
-				worldNumber = worldNumber.trim();
-			}
-			System.setProperty("world.name", worldName);
-			System.setProperty("world.number", worldNumber);
-
 			// Enables asynchronous, garbage-free logging.
 			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
 			System.setProperty(
@@ -131,23 +120,10 @@ public class Server implements Runnable {
 					"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
 			);
 
-			LoggerContext context = (LoggerContext) LogManager.getContext(false);
-			context.reconfigure();
 			LOGGER = LogManager.getLogger();
 		} catch (final Throwable t) {
 			throw new ExceptionInInitializerError(t);
 		}
-	}
-
-	private static String sniffConfigFileNameFromCommandLine() {
-		String commandLine = System.getProperty("sun.java.command");
-		String[] args = commandLine.split(" ");
-		for(String arg : args) {
-			if(arg.toLowerCase().endsWith(".conf")) {
-				return arg;
-			}
-		}
-		return getDefaultConfigFileName();
 	}
 
 	private static String getDefaultConfigFileName() {
@@ -283,7 +259,12 @@ public class Server implements Runnable {
 					return;
 				}
 
-				scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getName() + " : GameThread").build());
+				scheduledExecutor = Executors.newSingleThreadScheduledExecutor(
+						new ServerAwareThreadFactory(
+								getName() + " : GameThread",
+								config
+						)
+				);
 				scheduledExecutor.scheduleAtFixedRate(this, 0, 10, TimeUnit.MILLISECONDS);
 
 				// Do not allow two servers to be started with the same name
@@ -364,8 +345,14 @@ public class Server implements Runnable {
 				maxItemId = getDatabase().getMaxItemID();
 				LOGGER.info("Set max item ID to : " + maxItemId);
 
-				bossGroup = new NioEventLoopGroup(0, new NamedThreadFactory(getName() + " : IOBossThread"));
-				workerGroup = new NioEventLoopGroup(0, new NamedThreadFactory(getName() + " : IOWorkerThread"));
+				bossGroup = new NioEventLoopGroup(
+						0,
+						new NamedThreadFactory(getName() + " : IOBossThread", getConfig())
+				);
+				workerGroup = new NioEventLoopGroup(
+						0,
+						new NamedThreadFactory(getName() + " : IOWorkerThread", getConfig())
+				);
 				final ServerBootstrap bootstrap = new ServerBootstrap();
 				final Server serverOwner = this;
 
@@ -486,11 +473,12 @@ public class Server implements Runnable {
 	}
 
 	public void run() {
+		LogUtil.populateThreadContext(getConfig());
 		synchronized (running) {
 			try {
 				this.timeLate = System.nanoTime() - lastTickTimestamp;
-				if (getTimeLate() >= getConfig().GAME_TICK * 1000000) {
-					this.timeLate -= getConfig().GAME_TICK * 1000000;
+				if (getTimeLate() >= getConfig().GAME_TICK * 1000000L) {
+					this.timeLate -= getConfig().GAME_TICK * 1000000L;
 
 					// Doing the set in two stages here such that the whole tick has access to the same values for profiling information.
 					this.lastTickDuration = bench(() -> {
@@ -498,7 +486,8 @@ public class Server implements Runnable {
 							// TODO: these stages should be done on the player, not on the server
 							this.lastIncomingPacketsDuration = processIncomingPackets();
 							this.getGameUpdater().setLastExecuteWalkToActionsDuration(
-								getGameUpdater().executeWalkToActions());
+								getGameUpdater().executeWalkToActions()
+							);
 							this.lastEventsDuration = getGameEventHandler().runGameEvents();
 							this.lastGameStateDuration = getGameUpdater().doUpdates();
 							this.lastOutgoingPacketsDuration = processOutgoingPackets();
@@ -525,11 +514,11 @@ public class Server implements Runnable {
 					//LOGGER.info("Tick " + getCurrentTick() + " processed.");
 				} else {
 					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
-						for (final Player p : getWorld().getPlayers()) {
+						World world = getWorld();
+						for (final Player p : world.getPlayers()) {
 							p.updatePosition();
 						}
-
-						for (final Npc n : getWorld().getNpcs()) {
+						for (final Npc n : world.getNpcs()) {
 							n.updatePosition();
 						}
 
@@ -791,19 +780,19 @@ public class Server implements Runnable {
 		return shuttingDown;
 	}
 
-	public HashMap<Integer, Long> getIncomingTimePerPacketOpcode() {
+	public Map<Integer, Long> getIncomingTimePerPacketOpcode() {
 		return incomingTimePerPacketOpcode;
 	}
 
-	public HashMap<Integer, Integer> getIncomingCountPerPacketOpcode() {
+	public Map<Integer, Integer> getIncomingCountPerPacketOpcode() {
 		return incomingCountPerPacketOpcode;
 	}
 
-	public HashMap<Integer, Long> getOutgoingTimePerPacketOpcode() {
+	public Map<Integer, Long> getOutgoingTimePerPacketOpcode() {
 		return outgoingTimePerPacketOpcode;
 	}
 
-	public HashMap<Integer, Integer> getOutgoingCountPerPacketOpcode() {
+	public Map<Integer, Integer> getOutgoingCountPerPacketOpcode() {
 		return outgoingCountPerPacketOpcode;
 	}
 

@@ -5,6 +5,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.database.GameLogger;
 import com.openrsc.server.database.impl.mysql.queries.Query;
 import com.openrsc.server.database.impl.mysql.queries.ResultQuery;
+import com.openrsc.server.util.ServerAwareThreadFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,7 +48,12 @@ public final class MySqlGameLogger extends GameLogger {
 	public void start() {
 		synchronized (running) {
 			running.set(true);
-			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat(getServer().getName() + " : DatabaseLogging").build());
+			scheduledExecutor = Executors.newSingleThreadScheduledExecutor(
+					new ServerAwareThreadFactory(
+							server.getName() + " : DatabaseLogging",
+							server.getConfig()
+					)
+			);
 			scheduledExecutor.scheduleAtFixedRate(this, 0, 50, TimeUnit.MILLISECONDS);
 		}
 	}
