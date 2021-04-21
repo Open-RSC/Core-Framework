@@ -739,12 +739,16 @@ public final class PlayerModerator implements CommandTrigger {
 
 	private void restoreHumanity(Player player, String[] args) {
 		if (args.length > 0) {
-			Player affectedPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
-			if (affectedPlayer == null) {
-				mes("Couldn't find that player.");
-				return;
+			if (player.isAdmin()) {
+				Player affectedPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+				if (affectedPlayer == null) {
+					mes("Couldn't find that player.");
+					return;
+				}
+				restoreHumanity(affectedPlayer);
+			} else {
+				mes("Sorry, but you must be an admin to restore the humanity of others.");
 			}
-			restoreHumanity(affectedPlayer);
 		} else {
 			restoreHumanity(player);
 		}
