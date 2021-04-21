@@ -1,6 +1,5 @@
 package com.openrsc.server;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
 import com.openrsc.server.database.DatabaseUpgrades;
@@ -27,7 +26,6 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.LogUtil;
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.ServerAwareThreadFactory;
-import com.openrsc.server.util.YMLReader;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.MessageType;
 import io.netty.bootstrap.ServerBootstrap;
@@ -39,11 +37,10 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
-import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.io.IoBuilder;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -121,6 +118,17 @@ public class Server implements Runnable {
 			);
 
 			LOGGER = LogManager.getLogger();
+
+			System.setOut(
+					IoBuilder.forLogger(LOGGER)
+							.setLevel(Level.INFO)
+							.buildPrintStream()
+			);
+			System.setErr(
+					IoBuilder.forLogger(LOGGER)
+							.setLevel(Level.ERROR)
+							.buildPrintStream()
+			);
 		} catch (final Throwable t) {
 			throw new ExceptionInInitializerError(t);
 		}
