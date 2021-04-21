@@ -622,7 +622,7 @@ public final class Admins implements CommandTrigger {
 
 	private void spawnItemInventory(Player player, String command, String[] args) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (amount) (noted) (player)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or itemId name] (amount) (noted) (player)");
 			return;
 		}
 
@@ -630,8 +630,13 @@ public final class Admins implements CommandTrigger {
 		try {
 			id = Integer.parseInt(args[0]);
 		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (amount) (noted) (player)");
-			return;
+			ItemId item = ItemId.getByName(args[0]);
+			if (item == ItemId.NOTHING) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or itemId name] (amount) (noted) (player)");
+				return;
+			} else {
+				id = item.id();
+			}
 		}
 
 		if (player.getWorld().getServer().getEntityHandler().getItemDef(id) == null) {

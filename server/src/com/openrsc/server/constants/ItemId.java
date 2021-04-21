@@ -1552,6 +1552,16 @@ public enum ItemId {
 		return byId.getOrDefault(id, ItemId.NOTHING);
 	}
 
+	public static ItemId getByName(String name) {
+		for (ItemId item : ItemId.values()) {
+			if (item.name().replaceAll("[\\W]", "").replaceAll("_", "")
+				.equalsIgnoreCase(name.replaceAll("[\\W]", "").replaceAll("_", ""))) {
+				return item;
+			}
+		}
+		return NOTHING;
+	}
+
 	/**
 	 * @param itemId The ID of the item.
 	 */
