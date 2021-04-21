@@ -706,8 +706,13 @@ public final class Admins implements CommandTrigger {
 		try {
 			id = Integer.parseInt(args[0]);
 		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (amount) (player)");
-			return;
+			ItemId item = ItemId.getByName(args[0]);
+			if (item == ItemId.NOTHING) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or itemId name] (amount) (player)");
+				return;
+			} else {
+				id = item.id();
+			}
 		}
 
 		if (player.getWorld().getServer().getEntityHandler().getItemDef(id) == null) {
@@ -717,7 +722,12 @@ public final class Admins implements CommandTrigger {
 
 		int amount;
 		if (args.length >= 2) {
-			amount = Integer.parseInt(args[1]);
+			try {
+				amount = Integer.parseInt(args[1]);
+			} catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or itemId name] (amount) (player)");
+				return;
+			}
 		} else {
 			amount = 1;
 		}
