@@ -52,8 +52,6 @@ public final class RegularPlayer implements CommandTrigger {
 
 		if (command.equalsIgnoreCase("gang")) {
 			queryGang(player);
-		} else if (command.equalsIgnoreCase("wilderness")) {
-			queryWildernessState(player);
 		} else if (command.equalsIgnoreCase("c") && config().WANT_CLANS) {
 			sendMessageClan(player, args);
 		} else if (command.equalsIgnoreCase("clanaccept") && config().WANT_CLANS) {
@@ -142,33 +140,6 @@ public final class RegularPlayer implements CommandTrigger {
 		} else {
 			player.message(messagePrefix + "You are not in a gang - you need to start the shield of arrav quest");
 		}
-	}
-
-	private void queryWildernessState(Player player) {
-		int TOTAL_PLAYERS_IN_WILDERNESS = 0;
-		int PLAYERS_IN_F2P_WILD = 0;
-		int PLAYERS_IN_P2P_WILD = 0;
-		int EDGE_DUNGEON = 0;
-		for (Player p : player.getWorld().getPlayers()) {
-			if (p.getLocation().inWilderness()) {
-				TOTAL_PLAYERS_IN_WILDERNESS++;
-			}
-			if (p.getLocation().inFreeWild() && !p.getLocation().inBounds(195, 3206, 234, 3258)) {
-				PLAYERS_IN_F2P_WILD++;
-			}
-			if ((p.getLocation().wildernessLevel() >= 48 && p.getLocation().wildernessLevel() <= 56)) {
-				PLAYERS_IN_P2P_WILD++;
-			}
-			if (p.getLocation().inBounds(195, 3206, 234, 3258)) {
-				EDGE_DUNGEON++;
-			}
-		}
-
-		ActionSender.sendBox(player, "There are currently @red@" + TOTAL_PLAYERS_IN_WILDERNESS + " @whi@player" + (TOTAL_PLAYERS_IN_WILDERNESS == 1 ? "" : "s") + " in wilderness % %"
-				+ "F2P wilderness(Wild Lvl. 1-48) : @dre@" + PLAYERS_IN_F2P_WILD + "@whi@ player" + (PLAYERS_IN_F2P_WILD == 1 ? "" : "s") + " %"
-				+ "P2P wilderness(Wild Lvl. 48-56) : @dre@" + PLAYERS_IN_P2P_WILD + "@whi@ player" + (PLAYERS_IN_P2P_WILD == 1 ? "" : "s") + " %"
-				+ "Edge dungeon wilderness(Wild Lvl. 1-9) : @dre@" + EDGE_DUNGEON + "@whi@ player" + (EDGE_DUNGEON == 1 ? "" : "s") + " %"
-			, false);
 	}
 
 	private void sendMessageClan(Player player, String[] args) {
