@@ -458,6 +458,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				invItem.itemId = result.getInt("itemId");
 				invItem.slot = result.getInt("slot");
 				invItem.item = new Item(result.getInt("catalogId"));
+				invItem.item.setItemId(invItem.itemId);
 				invItem.item.getItemStatus().setAmount(result.getInt("amount"));
 				invItem.item.getItemStatus().setNoted(result.getInt("noted") == 1);
 				invItem.item.getItemStatus().setWielded(result.getInt("wielded") == 1);

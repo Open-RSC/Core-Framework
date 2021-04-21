@@ -1378,6 +1378,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		return 0;
 	}
 
+	public void inventoryRemove(final int playerDatabaseId, final Item item) throws GameDatabaseException {
+		queryInventoryRemove(playerDatabaseId, item);
+	}
+
 	protected void queryInventoryAdd(final Player player, final Item item, int slot) throws GameDatabaseException {
 		queryInventoryAdd(player.getDatabaseID(), item, slot);
 	}
