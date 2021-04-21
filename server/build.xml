@@ -38,6 +38,7 @@
                 <pathelement location="${lib}/netty-3.4.6.final.jar"/>
                 <pathelement location="${lib}/log4j-api-2.8.jar"/>
                 <pathelement location="${lib}/log4j-core-2.8.jar"/>
+                <pathelement location="${lib}/log4j-iostreams-2.14.1.jar"/>
                 <pathelement location="${lib}/xpp3-1.1.4c.jar"/>
                 <pathelement location="${lib}/xstream-1.4.9.jar"/>
                 <pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar"/>
@@ -73,6 +74,7 @@
                 <pathelement location="${lib}/disruptor-3.3.0.jar"/>
                 <pathelement location="${lib}/log4j-api-2.8.jar"/>
                 <pathelement location="${lib}/log4j-core-2.8.jar"/>
+                <pathelement location="${lib}/log4j-iostreams-2.14.1.jar"/>
                 <pathelement location="${lib}/xpp3_min-1.1.4c.jar"/>
                 <pathelement location="${lib}/xpp3-1.1.4c.jar"/>
                 <pathelement location="${lib}/xstream-1.4.9.jar"/>
