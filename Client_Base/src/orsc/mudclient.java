@@ -10450,6 +10450,9 @@ public final class mudclient implements Runnable {
 				height = 275;
 			else
 				height = 262;
+			if (Config.S_WANT_OPENPK_POINTS) {
+				height = 186;
+			}
 			int var8;
 			int yFromTopDistance = var8 = GenUtil.buildColor(160, 160, 160);
 			if (this.uiTabPlayerInfoSubTab != 0) {
@@ -10478,7 +10481,7 @@ public final class mudclient implements Runnable {
 				int currentlyHoveredSkill = -1;
 				long totalXp = 0;
 				int currSkill = 0, i = 0;
-				int leftColLength = (int) Math.floor(skillCount / 2);
+				int leftColLength = Config.S_WANT_OPENPK_POINTS ? 3 : (int) Math.floor(skillCount / 2);
 				int rightColLength = skillCount - leftColLength;
 
 				this.getSurface().drawString("Skills", xOffset, heightMargin, textColourHeading, 3);
@@ -10524,6 +10527,7 @@ public final class mudclient implements Runnable {
 				}
 
 				for (currSkill = 0; currSkill < skillCount; currSkill++) {
+					if (Config.S_WANT_OPENPK_POINTS && currSkill > 6) break;
 
 					this.getSurface().drawString(this.getSkillNames()[currSkill] + ":@yel@" + this.playerStatCurrent[i]
 						+ "/" + this.playerStatBase[i], xOffset, yOffset, currentlyHoveredSkill == i ? textColourHovered : textColour, 1);
@@ -10541,7 +10545,9 @@ public final class mudclient implements Runnable {
 					xOffset = x + 5;
 				}
 
-				this.getSurface().drawString("Quest Points:@yel@" + this.questPoints, xOffset, yOffset, textColour, 1);
+				if (!Config.S_WANT_OPENPK_POINTS) {
+					this.getSurface().drawString("Quest Points:@yel@" + this.questPoints, xOffset, yOffset, textColour, 1);
+				}
 
 				if (Config.S_WANT_FATIGUE) {
 					if (xOffset == x + 5) {
@@ -10553,7 +10559,8 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue + "%", xOffset, yOffset,
 						textColour, 1);
 				}
-				yOffset += 20;
+
+				yOffset += (Config.S_WANT_OPENPK_POINTS ? 10 : 20);
 				this.getSurface().drawString("Equipment Status", 5 + x, yOffset, textColourHeading, 3);
 				yOffset += 13;
 
