@@ -27,13 +27,6 @@ public class MySqlGameDatabaseConnection {
 		close();
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (final ClassNotFoundException e) {
-			LOGGER.catching(e);
-			System.exit(1);
-		}
-
-		try {
 			connection = DriverManager.getConnection("jdbc:mysql://"
 					+ getServer().getConfig().DB_HOST + "/" + getServer().getConfig().DB_NAME + "?autoReconnect=true&useSSL=false&rewriteBatchedStatements=true&serverTimezone=UTC",
 				getServer().getConfig().DB_USER,

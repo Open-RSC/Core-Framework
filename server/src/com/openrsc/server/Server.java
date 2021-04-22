@@ -33,11 +33,17 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
@@ -143,7 +149,16 @@ public class Server implements Runnable {
 	public static void main(final String[] args) {
 		LOGGER.info("Launching Game Server...");
 
-		if (args.length == 0) {
+		List<String> configurationFiles = new ArrayList<>();
+		Optional.ofNullable(System.getProperty("conf")).ifPresent(files -> {
+			configurationFiles.addAll(
+					Arrays.stream(files.split(",")).map(file -> file + ".conf").collect(Collectors.toList())
+			);
+		});
+
+		configurationFiles.addAll(Arrays.asList(args));
+
+		if (configurationFiles.size() == 0) {
 			LOGGER.info("Server Configuration file not provided. Loading from default.conf or local.conf.");
 
 			try {
@@ -152,9 +167,9 @@ public class Server implements Runnable {
 				LOGGER.catching(t);
 			}
 		} else {
-			for (String arg : args) {
+			for (String configuration : configurationFiles) {
 				try {
-					startServer(arg);
+					startServer(configuration);
 				} catch (final Throwable t) {
 					LOGGER.catching(t);
 				}
@@ -246,7 +261,7 @@ public class Server implements Runnable {
 				try {
 					getDatabase().open();
 				} catch (final Exception ex) {
-					LOGGER.catching(ex);
+					LOGGER.error(ex);
 					System.exit(1);
 				}
 				LOGGER.info("Database Connection Completed");
