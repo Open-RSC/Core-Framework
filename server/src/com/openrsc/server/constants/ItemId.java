@@ -914,7 +914,7 @@ public enum ItemId {
 	GNOMECRUNCHIE(900),
 	CHEESE_AND_TOMATO_BATTA(901),
 	TOAD_BATTA(902),
-	GNOME_BATTA(903),
+	GNOME_BATTA_UNUSED(903),
 	WORM_BATTA(904),
 	FRUIT_BATTA(905),
 	VEG_BATTA(906),
@@ -935,7 +935,7 @@ public enum ItemId {
 	GLOUGHS_JOURNAL(921),
 	INVOICE(922),
 	UGTHANKI_KEBAB(923),
-	SPECIAL_CURRY(924),
+	SPECIAL_CURRY_UNUSED(924),
 	GLOUGHS_KEY(925),
 	GLOUGHS_NOTES(926),
 	PEBBLE_1(927),
@@ -957,7 +957,7 @@ public enum ItemId {
 	BLURBERRY_BARMAN_DRUNK_DRAGON(943),
 	GNOME_WAITER_CHEESE_AND_TOMATO_BATTA(944),
 	GNOME_WAITER_TOAD_BATTA(945),
-	GNOME_BATTA_UNUSED(946), // Appears to be unused.
+	GNOME_BATTA_PREMADE_UNUSED(946),
 	GNOME_WAITER_WORM_BATTA(947),
 	GNOME_WAITER_FRUIT_BATTA(948),
 	GNOME_WAITER_VEG_BATTA(949),
@@ -1546,7 +1546,9 @@ public enum ItemId {
 			if (byId.put(item.id(), item) != null) {
 				throw new IllegalArgumentException("duplicate id: " + item.id());
 			} else {
-				byName.put(sanitizeName(item.name()), item);
+				if (byName.put(sanitizeName(item.name()), item) != null) {
+					throw new IllegalArgumentException("duplicate sanitized name: " + item.id());
+				}
 			}
 		}
 	}

@@ -346,8 +346,8 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 		 * Items that are normally unobtainable & kind of make sense to give as xmas gifts
 		 * These are both food items.
 		 */
-		unobtainableTable.addItemDrop(ItemId.SPECIAL_CURRY.id(), 1, 2); // unobtainable item
-		unobtainableTable.addItemDrop(ItemId.GNOME_BATTA.id(), 1, 1); // unobtainable item
+		unobtainableTable.addItemDrop(ItemId.SPECIAL_CURRY_UNUSED.id(), 1, 2); // unobtainable item
+		unobtainableTable.addItemDrop(ItemId.GNOME_BATTA_UNUSED.id(), 1, 1); // unobtainable item
 
 		/**
 		 * Bring all the tables together
@@ -723,7 +723,7 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 				/**
 				 * Unobtainable items
 				 */
-				case SPECIAL_CURRY:
+				case SPECIAL_CURRY_UNUSED:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you can smell something strange...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a special christmas curry!!!");
@@ -731,7 +731,7 @@ public class Present implements UsePlayerTrigger, OpInvTrigger {
 					delay(readingDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "I wonder how they made it?"); // reference to it being unobtainable
 					break;
-				case GNOME_BATTA:
+				case GNOME_BATTA_UNUSED:
 					otherPlayer.playerServerMessage(MessageType.QUEST, "As you unwrap the present, you can smell something weird...");
 					delay(unwrapDelay);
 					otherPlayer.playerServerMessage(MessageType.QUEST, "it's a homemade gnome batta... kind of smells like pants");
