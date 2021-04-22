@@ -734,6 +734,10 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 
 	private void handlePoints(Player player, OptionsStruct payload) {
 		int option = payload.value;
+		if (payload.amount < 0) {
+			player.message("Please enter a positive number.");
+			return;
+		}
 		switch (PointsOptions.getById(option)) {
 			case REDUCE_DEFENSE:
 				int amount1 = payload.amount;
