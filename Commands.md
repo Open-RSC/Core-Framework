@@ -260,6 +260,9 @@ Developer Commands
 - droptest
   - Usage: `::droptest [npc_id] [count]`
   - Returns drop outcomes of `[count]` executions of drops on npc `[npc_id]`
+- error
+  - Usage: `::error (output to stdout)`
+  - Causes an ArrayOutOfBounds exception to occur if not passed an argument. Otherwise prints the first argument to stdout.
 ------------------------
 Super/Senior Moderator Commands
 ------------------------
