@@ -40,6 +40,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.io.IoBuilder;
 
 import java.io.IOException;
@@ -106,32 +107,9 @@ public class Server implements Runnable {
 	private volatile int maxItemId;
 
 	static {
-
-		try {
-			Thread.currentThread().setName("InitThread");
-
-			// Enables asynchronous, garbage-free logging.
-			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
-			System.setProperty(
-					"Log4jContextSelector",
-					"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
-			);
-
-			LOGGER = LogManager.getLogger();
-
-			System.setOut(
-					IoBuilder.forLogger(LOGGER)
-							.setLevel(Level.INFO)
-							.buildPrintStream()
-			);
-			System.setErr(
-					IoBuilder.forLogger(LOGGER)
-							.setLevel(Level.ERROR)
-							.buildPrintStream()
-			);
-		} catch (final Throwable t) {
-			throw new ExceptionInInitializerError(t);
-		}
+		Thread.currentThread().setName("InitThread");
+		LogUtil.configure();
+		LOGGER = LogManager.getLogger();
 	}
 
 	private static String getDefaultConfigFileName() {

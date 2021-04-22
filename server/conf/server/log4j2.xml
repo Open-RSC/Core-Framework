@@ -3,7 +3,7 @@
 <Configuration status="WARN" target="SYSTEM_ERR">
 
     <Properties>
-        <Property name="logPattern">%d{yyyy-MM-dd HH:mm:ss}%highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=green, TRACE=green} %style{%15.15t}{magenta} %style{%-30.30c{1.}}{cyan} : %m%n%ex</Property>
+        <Property name="logPattern">${sys:logPattern}</Property>
     </Properties>
 
     <Appenders>
@@ -12,7 +12,7 @@
         </Console>
 
         <RollingFile name="CatchAllAppender" filename="logs/default.log" append="true">
-            <filepattern>logs/default.%d{YYYYMMdd}.log.gz</filepattern>
+            <filepattern>logs/default.%d{YYYYMMdd_HH:mm:ss}.log.gz</filepattern>
             <PatternLayout pattern="${logPattern}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
