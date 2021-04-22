@@ -74,7 +74,7 @@ public class Equipment {
 
 			if (list[slotID] == null) {
 				Item toEquip = new Item(item.getCatalogId(), item.getAmount(), item.getNoted());
-				int itemID = player.getWorld().getServer().getDatabase().equipmentAddToPlayer(player, toEquip);
+				int itemID = player.getWorld().getServer().getDatabase().incrementMaxItemId(player);
 				toEquip = new Item(toEquip.getCatalogId(), toEquip.getAmount(), toEquip.getNoted(), itemID);
 				list[slotID] = toEquip;
 				return slotID;
@@ -123,7 +123,6 @@ public class Equipment {
 						player.updateWornItems(wieldPosition,
 							appearanceId,
 							curEquipDef.getWearableId(), false);
-						player.getWorld().getServer().getDatabase().equipmentRemoveFromPlayer(player, curEquip);
 					}
 					if (updateClient) {
 						ActionSender.sendEquipmentStats(player);

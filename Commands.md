@@ -52,13 +52,18 @@ Admin Commands
   - Usage: `::update (reason)`
   - Shuts down the server with a warning to users and a graceful timer to allow players to save their status.
 - item
-  - Usage: `::item [id] (amount) (player)`
+  - Usage: `::item [id or ItemID name] (amount) (player)`
   - Spawns an item for the specified player.
   - If no amount is specified, then 1 is used.
-  - If no player is specified, then it shows the appearance change screen to the current player.
+  - If no player is specified, then it spawns the item to the current player.
   - For non-stackable items, only up to 30 may be spawned at one time.
+- certeditem
+  - Usage: `::certeditem [id or ItemID name] (amount) (player)`
+  - Alias: `::noteditem`
+  - Spawns an item as a (custom server addition) certificate for the specified player.
+  - If no player is specified, then it spawns the item to the current player.
 - bankitem
-  - Usage: `::bankitem [id] (amount) (player)`
+  - Usage: `::bankitem [id or ItemID name] (amount) (player)`
   - Alias: `::bitem` or `::addbank`
   - Spawns an item into the bank of the specified player.
   - If no amount is specified, then 1 is used.
@@ -95,11 +100,9 @@ Admin Commands
   - Usage: `::wipeinventory [name]`
   - Alias: `::wipeinv`
   - Removes all items from the specified player's inventory.
-  - You can not wipe the inventory of a staff member of equal or greater rank.
 - wipebank
   - Usage: `::wipebank [name]`
   - Removes all items from the specified player's bank.
-  - You can not wipe the bank of a staff member of equal or greater rank.
 - massitem
   - Usage: `::massitem [id] [amount]`
   - Spawn the specified amount of the specified item on the ground temporarily for 3 minutes.
@@ -207,7 +210,12 @@ Admin Commands
 - winterholidayevent
   - Usage: `::winterholidayevent`
   - Turns on the winter holiday event (spawns tree objects).
-  
+- givemodtools
+  - Usage: `::givemodtools`
+  - Gives you info document, resetcrystal, superchisel, ball of wool, fluffs, and digsite info, if you don't already have the item.
+- givetools
+  - Usage: `::givetools`
+  - Gives you rune pick, rune axe, harpoon, and sleeping bag, if you don't already have the item.
 ------------------------
 Developer Commands
 ------------------------
@@ -252,6 +260,9 @@ Developer Commands
 - droptest
   - Usage: `::droptest [npc_id] [count]`
   - Returns drop outcomes of `[count]` executions of drops on npc `[npc_id]`
+- error
+  - Usage: `::error (output to stdout)`
+  - Causes an ArrayOutOfBounds exception to occur if not passed an argument. Otherwise prints the first argument to stdout.
 ------------------------
 Super/Senior Moderator Commands
 ------------------------
@@ -332,13 +343,14 @@ Moderator Commands
   - Shows information about the specified player.
   - If no player is specified, then it show info about the current player.
 - inventory
-  - Usage: `::inventory (player)`
+  - Usage: `::inventory (player) (want catalog ids)`
   - Shows inventory information about the specified player.
   - If no player is specified, then it show inventory info about the current player.
 - bank
-  - Usage: `::bank (player)`
+  - Usage: `::bank (player) (want box) (want catalog ids)`
   - Shows bank information for the specified player.
   - If no player is specified, then it show bank info about the current player.
+  - Shows items in the normal bank interface by default, unless (want box) is specified
 - summon
   - Usage: `::summon [player]`
   - Summons the specified player to the current player's location.
@@ -357,6 +369,9 @@ Moderator Commands
   - Usage: `::kick [player]`
   - Kicks the specified player from the server.
   - You can not kick a staff member of equal or greater rank.
+- wilderness
+  - Usage: `::wilderness`
+  - Shows how many players are in the wilderness and where they are.
 ------------------------
 Event Commands
 ------------------------
@@ -478,19 +493,19 @@ Player Moderator Commands
   - Alias: `::rhel`
   - Temporarily overlays unobtainable Zamorak hat as well as Zamorak robes on the player
 - robe
-  - Usage: `::robe [color]`
-  - Alias: `::setrobe [color`
-  - Alias: `::setrobes [color]`
+  - Usage: `::robe [color] (player)`
+  - Alias: `::setrobe [color (player)`
+  - Alias: `::setrobes [color] (player)`
   - Temporarily overlays robes of a specified color on the player
 - becomeNpc
-  - Usage: `::becomenpc [npc name]`
-  - Alias: `::morph [npc name]`
-  - Alias: `::morphnpc [npc name]`
-  - Alias: `::become [npc name]`
+  - Usage: `::becomenpc [npc name]  (player)`
+  - Alias: `::morph [npc name]  (player)`
+  - Alias: `::morphnpc [npc name]  (player)`
+  - Alias: `::become [npc name]  (player)`
   - Temporarily replaces the player sprites with a NPC (scaled to the size of the player)
 - restoreHumanity
-  - Usage: `::restorehumanity`
-  - Alias: `::resetappearance`
+  - Usage: `::restorehumanity  (player)`
+  - Alias: `::resetappearance  (player)`
   - Resets the player to display the regular player sprites
 - becomeGod
   - Usage: `::becomegod`
@@ -505,9 +520,6 @@ Regular Player Commands
 - gang
   - Usage: `::gang`
   - Shows which gang you are in: Black Arm, Phoneix, or none.
-- wilderness
-  - Usage: `::wilderness`
-  - Shows server wilderness rules.
 - c
   - Usage: `::c [message]
   - Send message to clan chat.

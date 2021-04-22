@@ -69,15 +69,6 @@ public class Skills {
 		if(constants.getServer().getConfig().WANT_HARVESTING) {
 			skills.add(new SkillDef("Harvesting", "Harvesting", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, skillIndex++));
 		}
-
-		/*if (constants.getServer().getConfig().WANT_RUNECRAFT)
-			SKILL_NAME = new String[]{"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
-				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
-				"agility", "thieving", "runecraft"};
-		else
-			SKILL_NAME = new String[]{"attack", "defense", "strength", "hits", "ranged", "prayer", "magic",
-				"cooking", "woodcut", "fletching", "fishing", "firemaking", "crafting", "smithing", "mining", "herblaw",
-				"agility", "thieving"};*/
 	}
 
 	public String getSkillName(int skillIndex) {
@@ -91,7 +82,8 @@ public class Skills {
 	public int getSkillIndex(String skillName) {
 		int i = 0;
 		for (SkillDef skill : skills) {
-			if (skill.getShortName().equalsIgnoreCase(skillName))
+			if (skill.getShortName().equalsIgnoreCase(skillName)
+				|| skill.getLongName().equalsIgnoreCase(skillName))
 				return i;
 			i++;
 		}

@@ -448,9 +448,9 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected PlayerInventory[] queryLoadPlayerInvItems(final Player player) throws GameDatabaseException {
+	protected PlayerInventory[] queryLoadPlayerInvItems(final int playerDatabaseId) throws GameDatabaseException {
 		final ArrayList<PlayerInventory> list = new ArrayList<>();
-		try (final PreparedStatement statement = statementFromInteger(getQueries().playerInvItems, player.getDatabaseID());
+		try (final PreparedStatement statement = statementFromInteger(getQueries().playerInvItems, playerDatabaseId);
 			 final ResultSet result = statement.executeQuery();) {
 
 			while (result.next()) {
@@ -458,6 +458,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				invItem.itemId = result.getInt("itemId");
 				invItem.slot = result.getInt("slot");
 				invItem.item = new Item(result.getInt("catalogId"));
+				invItem.item.setItemId(invItem.itemId);
 				invItem.item.getItemStatus().setAmount(result.getInt("amount"));
 				invItem.item.getItemStatus().setNoted(result.getInt("noted") == 1);
 				invItem.item.getItemStatus().setWielded(result.getInt("wielded") == 1);
@@ -500,9 +501,9 @@ public class MySqlGameDatabase extends GameDatabase {
 	}
 
 	@Override
-	protected PlayerBank[] queryLoadPlayerBankItems(final Player player) throws GameDatabaseException {
+	protected PlayerBank[] queryLoadPlayerBankItems(final int playerDatabaseId) throws GameDatabaseException {
 		final ArrayList<PlayerBank> list = new ArrayList<>();
-		try (final PreparedStatement statement = statementFromInteger(getQueries().playerBankItems, player.getDatabaseID());
+		try (final PreparedStatement statement = statementFromInteger(getQueries().playerBankItems, playerDatabaseId);
 			 final ResultSet result = statement.executeQuery();) {
 
 			while (result.next()) {
@@ -1820,8 +1821,6 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void queryInventoryRemove(final int playerId, final Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_InventoryRemove);) {
-				itemPurge(item);
-
 				statement.setInt(1, playerId);
 				statement.setInt(2, item.getItemId());
 				statement.executeUpdate();
@@ -1855,8 +1854,6 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void queryEquipmentRemove(final int playerId, final Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_EquipmentRemove);) {
-				itemPurge(item);
-
 				statement.setInt(1, playerId);
 				statement.setInt(2, item.getItemId());
 				statement.executeUpdate();
@@ -1891,8 +1888,6 @@ public class MySqlGameDatabase extends GameDatabase {
 	protected void queryBankRemove(final int playerId, final Item item) throws GameDatabaseException {
 		synchronized (itemIDList) {
 			try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_BankRemove);) {
-				itemPurge(item);
-
 				statement.setInt(1, playerId);
 				statement.setInt(2, item.getItemId());
 				statement.executeUpdate();
@@ -2417,15 +2412,6 @@ public class MySqlGameDatabase extends GameDatabase {
 			System.out.println(e);
 		}
 		return Item.ITEM_ID_UNASSIGNED;
-	}
-
-	public void removeItemFromPlayer(final Item item) {
-		try {
-			itemPurge(item);
-		}
-		catch (GameDatabaseException e) {
-			System.out.println(e);
-		}
 	}
 
 	public int assignItemID(final Item item) throws GameDatabaseException {

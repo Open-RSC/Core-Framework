@@ -113,11 +113,11 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract PlayerData queryLoadPlayerData(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerInventory[] queryLoadPlayerInvItems(Player player) throws GameDatabaseException;
+	protected abstract PlayerInventory[] queryLoadPlayerInvItems(int playerDatabaseId) throws GameDatabaseException;
 
 	protected abstract PlayerEquipped[] queryLoadPlayerEquipped(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerBank[] queryLoadPlayerBankItems(Player player) throws GameDatabaseException;
+	protected abstract PlayerBank[] queryLoadPlayerBankItems(int playerDatabaseId) throws GameDatabaseException;
 
 	protected abstract PlayerBankPreset[] queryLoadPlayerBankPresets(Player player) throws GameDatabaseException;
 
@@ -268,8 +268,6 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	protected abstract int queryMaxItemID() throws GameDatabaseException;
 
 	protected abstract int addItemToPlayer(Item item);
-
-	protected abstract void removeItemFromPlayer(Item item);
 
 	// Database Management
 	protected abstract boolean queryColumnExists(final String table, final String column) throws GameDatabaseException;
@@ -532,35 +530,15 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	public void itemPurge(final Item item) throws GameDatabaseException {
-		//queryItemPurge(item);
+		queryItemPurge(item);
 	}
 
 	public void itemUpdate(final Item item) throws GameDatabaseException {
 		queryItemUpdate(item);
 	}
 
-	public int inventoryAddToPlayer(final Player player, final Item item, int slot) {
+	public int incrementMaxItemId(final Player player) {
 		return player.getWorld().getServer().incrementMaxItemID();
-	}
-
-	public void inventoryRemoveFromPlayer(final Player player, final Item item) {
-		removeItemFromPlayer(item);
-	}
-
-	public int equipmentAddToPlayer(final Player player, final Item item) {
-		return player.getWorld().getServer().incrementMaxItemID();
-	}
-
-	public void equipmentRemoveFromPlayer(final Player player, final Item item) {
-		removeItemFromPlayer(item);
-	}
-
-	public int bankAddToPlayer(final Player player, final Item item, int slot) {
-		return player.getWorld().getServer().incrementMaxItemID();
-	}
-
-	public void bankRemoveFromPlayer(final Player player, final Item item) {
-		removeItemFromPlayer(item);
 	}
 
 	public void saveNewPassword(final int playerId, String newPassword) throws GameDatabaseException {
@@ -855,10 +833,23 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	private void loadPlayerInventory(final Player player) throws GameDatabaseException {
-		final PlayerInventory[] invItems = queryLoadPlayerInvItems(player);
+		final PlayerInventory[] invItems = queryLoadPlayerInvItems(player.getDatabaseID());
 		final Inventory inv = new Inventory(player, invItems);
 
 		player.getCarriedItems().setInventory(inv);
+	}
+
+	public List<Item> retrievePlayerInventory(final String username) throws GameDatabaseException {
+		int playerId = playerIdFromUsername(username);
+		if (playerId == -1) {
+			throw new GameDatabaseException(this, "Could not find player.");
+		}
+		List<Item> items = new ArrayList<Item>();
+		final PlayerInventory[] invItems = queryLoadPlayerInvItems(playerId);
+		for (PlayerInventory i : invItems) {
+			items.add(i.item);
+		}
+		return items;
 	}
 
 	private void loadPlayerEquipment(final Player player) throws GameDatabaseException {
@@ -906,12 +897,25 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	private void loadPlayerBank(final Player player) throws GameDatabaseException {
-		final PlayerBank[] bankItems = queryLoadPlayerBankItems(player);
+		final PlayerBank[] bankItems = queryLoadPlayerBankItems(player.getDatabaseID());
 		final Bank bank = new Bank(player);
 		for (int i = 0; i < bankItems.length; i++) {
 			bank.getItems().add(new Item(bankItems[i].itemId, bankItems[i].itemStatus));
 		}
 		player.setBank(bank);
+	}
+
+	public List<Item> retrievePlayerBank(final String username) throws GameDatabaseException {
+		int playerId = playerIdFromUsername(username);
+		if (playerId == -1) {
+			throw new GameDatabaseException(this, "Could not find player.");
+		}
+		final PlayerBank[] bankItems = queryLoadPlayerBankItems(playerId);
+		List<Item> bank = new ArrayList<Item>();
+		for (int i = 0; i < bankItems.length; i++) {
+			bank.add(new Item(bankItems[i].itemId, bankItems[i].itemStatus));
+		}
+		return bank;
 	}
 
 	private void loadPlayerBankPresets(final Player player) throws GameDatabaseException {
@@ -1372,6 +1376,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 			LOGGER.error(e);
 		}
 		return 0;
+	}
+
+	public void inventoryRemove(final int playerDatabaseId, final Item item) throws GameDatabaseException {
+		queryInventoryRemove(playerDatabaseId, item);
 	}
 
 	protected void queryInventoryAdd(final Player player, final Item item, int slot) throws GameDatabaseException {

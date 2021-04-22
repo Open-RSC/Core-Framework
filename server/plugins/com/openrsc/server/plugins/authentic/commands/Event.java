@@ -1,5 +1,6 @@
 package com.openrsc.server.plugins.authentic.commands;
 
+import com.google.common.collect.ImmutableMap;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
@@ -18,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -27,22 +29,46 @@ public final class Event implements CommandTrigger {
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
 
-	private static final String[] towns = {"varrock", "falador", "draynor", "portsarim", "karamja", "alkharid",
-		"lumbridge", "edgeville", "castle", "taverly", "clubhouse", "seers", "barbarian", "rimmington", "catherby",
-		"ardougne", "yanille", "lostcity", "gnome", "shilovillage", "tutorial", "modroom", "entrana", "waterfall",
-		"zanaris", "gertrude", "fishingguild", "taibwowannai", "brimhaven", "shantay", "trawler", "observatory",
-		"crandor", "icemountain", "champion", "hero", "digsite", "legend"};
-
-	private static final Point[] townLocations = {Point.location(122, 509), Point.location(304, 542),
-		Point.location(214, 632), Point.location(269, 643), Point.location(370, 685), Point.location(89, 693),
-		Point.location(120, 648), Point.location(217, 449), Point.location(270, 352), Point.location(373, 498),
-		Point.location(653, 491), Point.location(501, 450), Point.location(233, 513), Point.location(325, 663),
-		Point.location(440, 501), Point.location(549, 589), Point.location(583, 747), Point.location(127, 3518),
-		Point.location(703, 527), Point.location(400, 850), Point.location(217, 740), Point.location(75, 1641),
-		Point.location(425,564), Point.location(659, 3302), Point.location(127,3518), Point.location(160, 515),
-		Point.location(587, 503), Point.location(447, 749), Point.location(446, 694), Point.location(62, 729),
-		Point.location(549, 702), Point.location(713, 697), Point.location(419, 625), Point.location(288, 461),
-		Point.location(151, 556), Point.location(372, 438), Point.location(20, 527), Point.location(513, 543)};
+	private static final Map<String, Point> townLocations = new ImmutableMap.Builder<String, Point>()
+		.put("varrock", Point.location(122, 509))
+		.put("falador", Point.location(304, 542))
+		.put("draynor", Point.location(214, 632))
+		.put("portsarim", Point.location(269, 643))
+		.put("karamja", Point.location(370, 685))
+		.put("alkharid", Point.location(89, 693))
+		.put("lumbridge", Point.location(120, 648))
+		.put("edgeville", Point.location(217, 449))
+		.put("castle", Point.location(270, 352))
+		.put("taverly", Point.location(373, 498))
+		.put("clubhouse", Point.location(653, 491))
+		.put("seers", Point.location(501, 450))
+		.put("barbarian", Point.location(233, 513))
+		.put("rimmington", Point.location(325, 663))
+		.put("catherby", Point.location(440, 501))
+		.put("ardougne", Point.location(549, 589))
+		.put("yanille", Point.location(583, 747))
+		.put("lostcity", Point.location(127, 3518))
+		.put("gnome", Point.location(703, 527))
+		.put("shilovillage", Point.location(400, 850))
+		.put("tutorial", Point.location(217, 740))
+		.put("modroom", Point.location(75, 1641))
+		.put("entrana", Point.location(425,564))
+		.put("waterfall", Point.location(659, 3302))
+		.put("zanaris", Point.location(127,3518))
+		.put("gertrude", Point.location(160, 515))
+		.put("fishingguild", Point.location(587, 503))
+		.put("taibwowannai", Point.location(447, 749))
+		.put("brimhaven", Point.location(446, 694))
+		.put("shantay", Point.location(62, 729))
+		.put("trawler", Point.location(549, 702))
+		.put("observatory", Point.location(713, 697))
+		.put("crandor", Point.location(419, 625))
+		.put("icemountain", Point.location(288, 461))
+		.put("champion", Point.location(151, 556))
+		.put("hero", Point.location(372, 438))
+		.put("digsite", Point.location(20, 527))
+		.put("legend", Point.location(513, 543))
+		.build();
 
 	public boolean blockCommand(Player player, String command, String[] args) {
 		return player.isEvent();
@@ -92,6 +118,7 @@ public final class Event implements CommandTrigger {
 			changeGroupId(player, command, args);
 		}
 		else if((command.equalsIgnoreCase("bank") || command.equalsIgnoreCase("quickbank")) && !player.isAdmin() && player.getUsernameHash() == DataConversions.usernameToHash("shar")) {
+			// "shar" character only bank access
 			player.setAccessingBank(true);
 			ActionSender.showBank(player);
 		}
@@ -204,20 +231,11 @@ public final class Event implements CommandTrigger {
 			// Check player first
 			Player tpTo = player.getWorld().getPlayer(DataConversions.usernameToHash(town));
 			if (tpTo == null) {
-				int townIndex = -1;
-				for (int i = 0; i < towns.length; i++) {
-					if (town.equalsIgnoreCase(towns[i])) {
-						townIndex = i;
-						break;
-					}
-				}
-				if (townIndex == -1) {
+				teleportTo = townLocations.get(town.toLowerCase());
+				if (teleportTo == null) {
 					player.message(messagePrefix + "Invalid target");
 					return;
 				}
-
-				teleportTo = townLocations[townIndex];
-
 			} else {
 				if (tpTo.isInvisibleTo(player) && !player.isAdmin()) {
 					player.message(messagePrefix + "You can not teleport to an invisible player.");
@@ -409,16 +427,13 @@ public final class Event implements CommandTrigger {
 
 		String currentIp = null;
 		if (target == null) {
-			player.message(messagePrefix + "No online character found named '" + targetUsername + "'.. checking database..");
 			try {
 				currentIp = player.getWorld().getServer().getDatabase().playerLoginIp(targetUsername);
 
 				if(currentIp == null) {
-					player.message(messagePrefix + "No dabase character found named '" + targetUsername + "'");
+					player.message(messagePrefix + "No character named '" + targetUsername + "' is online or was found in the database.");
 					return;
 				}
-
-				player.message(messagePrefix + "Found character '" + targetUsername + "' fetching other characters..");
 			} catch (final GameDatabaseException e) {
 				LOGGER.catching(e);
 				player.message(messagePrefix + "A Database error has occurred! " + e.getMessage());
@@ -449,9 +464,11 @@ public final class Event implements CommandTrigger {
 					names.add(dbUsername);
 			}
 			StringBuilder builder = new StringBuilder("@red@")
-				.append(targetUsername.toUpperCase())
-				.append(" (" + target.getX() + "," + target.getY() + ")")
-				.append(" @whi@currently has ")
+				.append(targetUsername.toUpperCase());
+			if (target != null) {
+				builder.append(" (" + target.getX() + "," + target.getY() + ")");
+			}
+			builder.append(" @whi@currently has ")
 				.append(names.size() > 0 ? "@gre@" : "@red@")
 				.append(names.size())
 				.append(" @whi@registered characters.");

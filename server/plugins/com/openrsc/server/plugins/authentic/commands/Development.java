@@ -25,8 +25,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -79,6 +77,10 @@ public final class Development implements CommandTrigger {
 		}
 		else if (command.equalsIgnoreCase("serverstats")) {
 			ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
+		}
+		else if (command.equalsIgnoreCase("error")) {
+			// used to verify logging of errors/stdout
+			System.out.println(args[0]);
 		}
 		else if (command.equalsIgnoreCase("droptest")) {
 			testNpcDrops(player, command, args);
