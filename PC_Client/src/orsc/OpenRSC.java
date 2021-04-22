@@ -30,7 +30,7 @@ public class OpenRSC extends ORSCApplet {
 			jframe.setVisible(true);
 			//jframe.setAlwaysOnTop(true);
 			jframe.setBackground(Color.black);
-			jframe.setMinimumSize(new Dimension(528, 385));
+			jframe.setMinimumSize(new Dimension(518, 378));
 			jframe.pack();
 			jframe.setLocationRelativeTo(null);
 			applet.init();
