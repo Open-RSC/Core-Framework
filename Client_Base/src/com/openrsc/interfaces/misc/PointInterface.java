@@ -11,6 +11,23 @@ import java.util.Arrays;
 
 
 public final class PointInterface {
+	private static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6;
+
+
+	private static final int
+	    REDUCE_DEFENSE = 0,
+		INCREASE_DEFENSE = 1,
+		INCREASE_ATTACK = 2,
+		INCREASE_STRENGTH = 3,
+		INCREASE_RANGED = 4,
+		INCREASE_PRAYER = 5,
+		INCREASE_MAGIC = 6,
+		REDUCE_ATTACK = 7,
+		REDUCE_STRENGTH = 8,
+		REDUCE_RANGED = 9,
+		REDUCE_PRAYER = 10,
+		REDUCE_MAGIC = 11;
+
 	public Panel experienceConfig;
 	public int experienceConfigScroll;
 	public boolean selectSkillMenu = false;
@@ -73,121 +90,121 @@ public final class PointInterface {
 		mc.getSurface().drawLineHoriz(x, y + 35, width, lineColour);
 		mc.getSurface().drawLineHoriz(x, y + 219, width, lineColour);
 		mc.getSurface().drawLineHoriz(x, y + 248, width, lineColour);
-		int nextLevelExpA = mc.getExperienceArray()[0];
-		nextLevelExpA = mc.getExperienceArray()[mc.getPlayerStatBase(0) - 1];
-		int nL0 = nextLevelExpA - mc.getPlayerExperience(0);
+		int nextLevelExpA = mc.getExperienceArray()[ATTACK];
+		nextLevelExpA = mc.getExperienceArray()[mc.getPlayerStatBase(ATTACK) - 1];
+		int nL0 = nextLevelExpA - mc.getPlayerExperience(ATTACK);
 		this.drawString("Attack: ", x + 10, y + 60, 3, textColour);
-		this.drawString("" + mc.getPlayerExperience(0), x + 231, y + 60, 3, textColour);
-		this.drawString("               " + mc.getPlayerStatBase(0) + "     " + nL0 + "", x + 10, y + 60, 3, textColour);
+		this.drawString("" + mc.getPlayerExperience(ATTACK), x + 231, y + 60, 3, textColour);
+		this.drawString("               " + mc.getPlayerStatBase(ATTACK) + "     " + nL0 + "", x + 10, y + 60, 3, textColour);
 		this.drawButton(x + 170, y + 45, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(0);
-				mc.setPointsOptionId(7);
+				mc.setPointsSkillId(ATTACK);
+				mc.setPointsOptionId(REDUCE_ATTACK);
 				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 200, y + 45, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(0);
-				mc.setPointsOptionId(2);
+				mc.setPointsSkillId(ATTACK);
+				mc.setPointsOptionId(INCREASE_ATTACK);
 				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 300, y + 45, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(0);
-				mc.setPointsOptionId(7);
+				mc.setPointsSkillId(ATTACK);
+				mc.setPointsOptionId(REDUCE_ATTACK);
 				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 325, y + 45, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(0);
-				mc.setPointsOptionId(2);
+				mc.setPointsSkillId(ATTACK);
+				mc.setPointsOptionId(INCREASE_ATTACK);
 				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 300, y + 75, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(1);
-				mc.setPointsOptionId(0);
+				mc.setPointsSkillId(DEFENSE);
+				mc.setPointsOptionId(REDUCE_DEFENSE);
 				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 325, y + 75, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(1);
-				mc.setPointsOptionId(1);
+				mc.setPointsSkillId(DEFENSE);
+				mc.setPointsOptionId(INCREASE_DEFENSE);
 				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 300, y + 105, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(2);
-				mc.setPointsOptionId(8);
+				mc.setPointsSkillId(STRENGTH);
+				mc.setPointsOptionId(REDUCE_STRENGTH);
 				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 325, y + 105, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(2);
-				mc.setPointsOptionId(3);
+				mc.setPointsSkillId(STRENGTH);
+				mc.setPointsOptionId(INCREASE_STRENGTH);
 				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 300, y + 135, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(3);
-				mc.setPointsOptionId(9);
+				mc.setPointsSkillId(RANGED);
+				mc.setPointsOptionId(REDUCE_RANGED);
 				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 325, y + 135, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(3);
-				mc.setPointsOptionId(4);
+				mc.setPointsSkillId(RANGED);
+				mc.setPointsOptionId(INCREASE_RANGED);
 				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 300, y + 165, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(4);
-				mc.setPointsOptionId(10);
+				mc.setPointsSkillId(PRAYER);
+				mc.setPointsOptionId(REDUCE_PRAYER);
 				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 325, y + 165, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(4);
-				mc.setPointsOptionId(5);
+				mc.setPointsSkillId(PRAYER);
+				mc.setPointsOptionId(INCREASE_PRAYER);
 				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 300, y + 195, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(5);
-				mc.setPointsOptionId(11);
+				mc.setPointsSkillId(MAGIC);
+				mc.setPointsOptionId(REDUCE_MAGIC);
 				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 325, y + 195, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(5);
-				mc.setPointsOptionId(6);
+				mc.setPointsSkillId(MAGIC);
+				mc.setPointsOptionId(INCREASE_MAGIC);
 				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
@@ -271,70 +288,70 @@ public final class PointInterface {
 		});
 
 		experienceConfig.clearList(experienceConfigScroll);
-		int nextLevelExpD = mc.getExperienceArray()[1];
-		nextLevelExpD = mc.getExperienceArray()[mc.getPlayerStatBase(1) - 1];
-		int nL1 = nextLevelExpD - mc.getPlayerExperience(1);
+		int nextLevelExpD = mc.getExperienceArray()[DEFENSE];
+		nextLevelExpD = mc.getExperienceArray()[mc.getPlayerStatBase(DEFENSE) - 1];
+		int nL1 = nextLevelExpD - mc.getPlayerExperience(DEFENSE);
 		this.drawString("Defense: ", x + 10, y + 90, 3, textColour);
-		this.drawString("" + mc.getPlayerExperience(1), x + 231, y + 90, 3, textColour);
-		this.drawString("               " + mc.getPlayerStatBase(1) + "     " + nL1 + "", x + 10, y + 90, 3, textColour);
+		this.drawString("" + mc.getPlayerExperience(DEFENSE), x + 231, y + 90, 3, textColour);
+		this.drawString("               " + mc.getPlayerStatBase(DEFENSE) + "     " + nL1 + "", x + 10, y + 90, 3, textColour);
 		this.drawButton(x + 170, y + 75, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(1);
-				mc.setPointsOptionId(0);
+				mc.setPointsSkillId(DEFENSE);
+				mc.setPointsOptionId(REDUCE_DEFENSE);
 				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 200, y + 75, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(1);
-				mc.setPointsOptionId(1);
+				mc.setPointsSkillId(DEFENSE);
+				mc.setPointsOptionId(INCREASE_DEFENSE);
 				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
-		int nextLevelExpS = mc.getExperienceArray()[2];
-		nextLevelExpS = mc.getExperienceArray()[mc.getPlayerStatBase(2) - 1];
-		int nL2 = nextLevelExpS - mc.getPlayerExperience(2);
+		int nextLevelExpS = mc.getExperienceArray()[STRENGTH];
+		nextLevelExpS = mc.getExperienceArray()[mc.getPlayerStatBase(STRENGTH) - 1];
+		int nL2 = nextLevelExpS - mc.getPlayerExperience(STRENGTH);
 		this.drawString("Strength: ", x + 10, y + 120, 3, textColour);
-		this.drawString("" + mc.getPlayerExperience(2), x + 231, y + 120, 3, textColour);
-		this.drawString("               " + mc.getPlayerStatBase(2) + "     " + nL2 + "", x + 10, y + 120, 3, textColour);
+		this.drawString("" + mc.getPlayerExperience(STRENGTH), x + 231, y + 120, 3, textColour);
+		this.drawString("               " + mc.getPlayerStatBase(STRENGTH) + "     " + nL2 + "", x + 10, y + 120, 3, textColour);
 		this.drawButton(x + 200, y + 105, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(2);
-				mc.setPointsOptionId(3);
+				mc.setPointsSkillId(STRENGTH);
+				mc.setPointsOptionId(INCREASE_STRENGTH);
 				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 170, y + 105, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(2);
-				mc.setPointsOptionId(8);
+				mc.setPointsSkillId(STRENGTH);
+				mc.setPointsOptionId(REDUCE_STRENGTH);
 				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
 
 		this.drawString("Ranged:", x + 10, y + 150, 3, textColour);
-		this.drawString("" + mc.getPlayerExperience(4), x + 231, y + 150, 3, textColour);
-		int nextLevelExpR = mc.getExperienceArray()[4];
-		nextLevelExpR = mc.getExperienceArray()[mc.getPlayerStatBase(4) - 1];
-		int nL3 = nextLevelExpR - mc.getPlayerExperience(4);
-		this.drawString("               " + mc.getPlayerStatBase(4) + "     " + nL3 + "", x + 10, y + 150, 3, textColour);
+		this.drawString("" + mc.getPlayerExperience(RANGED), x + 231, y + 150, 3, textColour);
+		int nextLevelExpR = mc.getExperienceArray()[RANGED];
+		nextLevelExpR = mc.getExperienceArray()[mc.getPlayerStatBase(RANGED) - 1];
+		int nL3 = nextLevelExpR - mc.getPlayerExperience(RANGED);
+		this.drawString("               " + mc.getPlayerStatBase(RANGED) + "     " + nL3 + "", x + 10, y + 150, 3, textColour);
 		this.drawButton(x + 170, y + 135, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(3);
-				mc.setPointsOptionId(9);
+				mc.setPointsSkillId(RANGED);
+				mc.setPointsOptionId(REDUCE_RANGED);
 				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 200, y + 135, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(3);
-				mc.setPointsOptionId(4);
+				mc.setPointsSkillId(RANGED);
+				mc.setPointsOptionId(INCREASE_RANGED);
 				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
@@ -342,24 +359,24 @@ public final class PointInterface {
 		//this.drawString("HP: ", x + 275, y + 180, 3, textColour);
 		//this.drawString("" + mc.getPlayerStatBase(3), x + 300, y + 180, 3, textColour);
 		this.drawString("Prayer: ", x + 10, y + 180, 3, textColour);
-		this.drawString("" + mc.getPlayerExperience(5), x + 231, y + 180, 3, textColour);
-		int nextLevelExpP = mc.getExperienceArray()[5];
-		nextLevelExpP = mc.getExperienceArray()[mc.getPlayerStatBase(5) - 1];
-		int nL4 = nextLevelExpP - mc.getPlayerExperience(5);
-		this.drawString("               " + mc.getPlayerStatBase(5) + "     " + nL4 + "", x + 10, y + 180, 3, textColour);
+		this.drawString("" + mc.getPlayerExperience(PRAYER), x + 231, y + 180, 3, textColour);
+		int nextLevelExpP = mc.getExperienceArray()[PRAYER];
+		nextLevelExpP = mc.getExperienceArray()[mc.getPlayerStatBase(PRAYER) - 1];
+		int nL4 = nextLevelExpP - mc.getPlayerExperience(PRAYER);
+		this.drawString("               " + mc.getPlayerStatBase(PRAYER) + "     " + nL4 + "", x + 10, y + 180, 3, textColour);
 		this.drawButton(x + 170, y + 165, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(4);
-				mc.setPointsOptionId(10);
+				mc.setPointsSkillId(PRAYER);
+				mc.setPointsOptionId(REDUCE_PRAYER);
 				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 200, y + 165, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(4);
-				mc.setPointsOptionId(5);
+				mc.setPointsSkillId(PRAYER);
+				mc.setPointsOptionId(INCREASE_PRAYER);
 				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
@@ -373,20 +390,20 @@ public final class PointInterface {
 		this.drawButton(x + 170, y + 195, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(5);
-				mc.setPointsOptionId(11);
+				mc.setPointsSkillId(MAGIC);
+				mc.setPointsOptionId(REDUCE_MAGIC);
 				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 200, y + 195, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.setPointsSkillId(5);
-				mc.setPointsOptionId(6);
+				mc.setPointsSkillId(MAGIC);
+				mc.setPointsOptionId(INCREASE_MAGIC);
 				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
-		this.drawString("HP: " + mc.getPlayerStatBase(3) , x + 10, y + 240, 3, textColour);
+		this.drawString("HP: " + mc.getPlayerStatBase(HITS) , x + 10, y + 240, 3, textColour);
 		this.drawString("Points: " + mc.getPoints() , x + 232, y + 240, 3, textColour);
 		this.drawString("Combat Level: " + mc.getLocalPlayer().level , x + 70, y + 240, 3, textColour);
 
