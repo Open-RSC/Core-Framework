@@ -2,7 +2,6 @@ package com.openrsc.server.util;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.openrsc.server.ServerConfiguration;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ThreadFactory;
 
@@ -15,7 +14,7 @@ public class ServerAwareThreadFactory implements ThreadFactory {
     }
 
     @Override
-    public Thread newThread(final @NotNull Runnable runnable) {
+    public Thread newThread(final Runnable runnable) {
         return threadFactory.newThread(() -> {
             LogUtil.populateThreadContext(configuration);
             runnable.run();
