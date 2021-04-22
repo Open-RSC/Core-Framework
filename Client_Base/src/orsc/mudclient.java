@@ -17239,11 +17239,6 @@ public final class mudclient implements Runnable {
 		addSkill("Ranged");
 		addSkill("Prayer");
 		addSkill("Magic");
-		//TODO: why does this break the experience array? Old OpenPK src had no additional lines below addSkill Magic.
-		//If we only want OpenPK skills, we should return early.
-		/*if (S_WANT_OPENPK_POINTS) {
-			return;
-		}*/
 		addSkill("Cooking");
 		addSkill("Woodcutting", "Woodcut");
 		addSkill("Fletching");
