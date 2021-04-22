@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.authentic.commands;
 
 import com.openrsc.server.constants.*;
+import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
@@ -15,6 +16,7 @@ import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
+import com.openrsc.server.model.container.Inventory;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -104,7 +106,9 @@ public final class Admins implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("update")) {
 			serverUpdate(player, args);
 		} else if (command.equalsIgnoreCase("item")) {
-			spawnItemInventory(player, command, args);
+			spawnItemInventory(player, command, args, false);
+		} else if (command.equalsIgnoreCase("certeditem") || command.equals("noteditem")) {
+			spawnItemInventory(player, command, args, true);
 		} else if (command.equalsIgnoreCase("bankitem") || command.equalsIgnoreCase("bitem") || command.equalsIgnoreCase("addbank")) {
 			spawnItemBank(player, command, args);
 		} else if (command.equals("fillbank")) {
@@ -195,6 +199,10 @@ public final class Admins implements CommandTrigger {
 			startResetEvent(player, command, args, false);
 		} else if (command.equalsIgnoreCase("stopresetevent") || command.equalsIgnoreCase("cancelresetevent")) {
 			stopResetEvent(player);
+		} else if (command.equalsIgnoreCase("givemodtools")) {
+			giveModTools(player);
+		} else if (command.equalsIgnoreCase("givetools")) {
+			giveTools(player);
 		}
 		/*else if (command.equalsIgnoreCase("fakecrystalchest")) {
 			fakeCrystalChest(player, args);
@@ -599,9 +607,34 @@ public final class Admins implements CommandTrigger {
 		// StaffLog(player, 7));
 	}
 
-	private void spawnItemInventory(Player player, String command, String[] args) {
+	private void giveModTools(Player player) {
+		giveIfNotHave(player, ItemId.INFO_DOCUMENT);
+		giveIfNotHave(player, ItemId.RESETCRYSTAL);
+		giveIfNotHave(player, ItemId.SUPERCHISEL);
+		giveIfNotHave(player, ItemId.BALL_OF_WOOL); // can be used on superchisel or fluffs
+		giveIfNotHave(player, ItemId.GERTRUDES_CAT);
+		giveIfNotHave(player, ItemId.DIGSITE_INFO);
+	}
+
+	private void giveTools(Player player) {
+		giveIfNotHave(player, ItemId.RUNE_PICKAXE);
+		giveIfNotHave(player, ItemId.RUNE_AXE);
+		giveIfNotHave(player, ItemId.HARPOON);
+		giveIfNotHave(player, ItemId.SLEEPING_BAG);
+	}
+
+	private void giveIfNotHave(Player player, ItemId item) {
+		Inventory i = player.getCarriedItems().getInventory();
+		synchronized (i) {
+			if (!i.hasCatalogID(item.id())) {
+				i.add(new Item(item.id(), 1));
+			}
+		}
+	}
+
+	private void spawnItemInventory(Player player, String command, String[] args, Boolean noted) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (amount) (noted) (player)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
 			return;
 		}
 
@@ -609,8 +642,13 @@ public final class Admins implements CommandTrigger {
 		try {
 			id = Integer.parseInt(args[0]);
 		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (amount) (noted) (player)");
-			return;
+			ItemId item = ItemId.getByName(args[0]);
+			if (item == ItemId.NOTHING) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
+				return;
+			} else {
+				id = item.id();
+			}
 		}
 
 		if (player.getWorld().getServer().getEntityHandler().getItemDef(id) == null) {
@@ -625,20 +663,9 @@ public final class Admins implements CommandTrigger {
 			amount = 1;
 		}
 
-		boolean noted;
-		if (args.length >= 3) {
-			try {
-				noted = Integer.parseInt(args[2]) == 1;
-			} catch (NumberFormatException nfe) {
-				noted = Boolean.parseBoolean(args[2]);
-			}
-		} else {
-			noted = false;
-		}
-
 		Player p;
-		if (args.length >= 4) {
-			p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[3]));
+		if (args.length >= 3) {
+			p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[2]));
 		} else {
 			p = player;
 		}
@@ -672,7 +699,7 @@ public final class Admins implements CommandTrigger {
 
 	private void spawnItemBank(Player player, String command, String[] args) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (amount) (player)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
 			return;
 		}
 
@@ -680,8 +707,13 @@ public final class Admins implements CommandTrigger {
 		try {
 			id = Integer.parseInt(args[0]);
 		} catch (NumberFormatException ex) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id] (amount) (player)");
-			return;
+			ItemId item = ItemId.getByName(args[0]);
+			if (item == ItemId.NOTHING) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
+				return;
+			} else {
+				id = item.id();
+			}
 		}
 
 		if (player.getWorld().getServer().getEntityHandler().getItemDef(id) == null) {
@@ -691,7 +723,12 @@ public final class Admins implements CommandTrigger {
 
 		int amount;
 		if (args.length >= 2) {
-			amount = Integer.parseInt(args[1]);
+			try {
+				amount = Integer.parseInt(args[1]);
+			} catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
+				return;
+			}
 		} else {
 			amount = 1;
 		}
@@ -726,25 +763,64 @@ public final class Admins implements CommandTrigger {
 	private void removeItemBankAll(Player player, String targetPlayerName) {
 		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(targetPlayerName));
 
-		if (targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
+		// Note: Admins are not prohibited from wiping the banks of anyone, even other Admins.
+		// If this is a problem, please do not rank people you don't trust to become Admins.
+
+		boolean success = false;
+		if (targetPlayer != null) {
+			// player is currently online
+			synchronized (targetPlayer.getBank()) {
+				while (targetPlayer.getBank().size() > 0) {
+					Item item = targetPlayer.getBank().get(0);
+					targetPlayer.getBank().remove(item, false);
+				}
+			}
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "Your bank has been wiped by an admin");
+			}
+			success = true;
+		} else {
+			// player is offline
+			List<Item> bank;
+			try {
+				bank = player.getWorld().getServer().getDatabase().retrievePlayerBank(targetPlayerName);
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Could not find player; invalid name.");
+				return;
+			}
+
+			// delete items
+			try {
+				for (Item bankItem : bank) {
+					player.getWorld().getServer().getDatabase().itemPurge(bankItem);
+				}
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Database Error! Check the logs.");
+				LOGGER.error(e);
+				return;
+			}
+
+			// verify success
+			try {
+				int sizeAfter = player.getWorld().getServer().getDatabase().retrievePlayerBank(targetPlayerName).size();
+				if (sizeAfter == 0) {
+					success = true;
+				} else {
+					player.message(messagePrefix + "Player still has " + sizeAfter + " items in their bank. Fail.");
+				}
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Database Error! (Could not verify bank wipe). Check the logs.");
+				LOGGER.error(e);
+				return;
+			}
 		}
 
-		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
-			player.message(messagePrefix + "You can not wipe the bank of a staff member of equal or greater rank.");
-			return;
+		if (success) {
+			player.message(messagePrefix + "Wiped bank of " + targetPlayerName);
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Successfully wiped the bank of "+ targetPlayerName));
+		} else {
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully wiped the bank of "+ targetPlayerName));
 		}
-
-		while (targetPlayer.getBank().size() > 0) {
-			Item item = targetPlayer.getBank().get(0);
-			targetPlayer.getBank().remove(item, false);
-		}
-
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
-			targetPlayer.message(messagePrefix + "Your bank has been wiped by an admin");
-		}
-		player.message(messagePrefix + "Wiped bank of " + targetPlayer.getUsername());
 	}
 
 	private void openAuctionHouse(Player player, String[] args) {
@@ -1004,46 +1080,87 @@ public final class Admins implements CommandTrigger {
 	}
 
 	private void removeItemInventoryAll(Player player, String command, String[] args) {
-
 		if (args.length < 1) {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [player]");
 			return;
 		}
 
+		boolean success = false;
 		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		if (targetPlayer != null) {
+			// player is online
+			synchronized (targetPlayer.getCarriedItems().getInventory()) {
+				while (targetPlayer.getCarriedItems().getInventory().size() > 0) {
+					Item item = targetPlayer.getCarriedItems().getInventory().get(0);
+					targetPlayer.getCarriedItems().remove(item);
+				}
+			}
 
-		if (targetPlayer == null) {
-			player.message(messagePrefix + "Invalid name or player is not online");
-			return;
-		}
+			if (targetPlayer.getConfig().WANT_EQUIPMENT_TAB) {
+				int wearableId;
+				synchronized (targetPlayer.getCarriedItems().getEquipment()) {
+					for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
+						Item equipped = targetPlayer.getCarriedItems().getEquipment().get(i);
+						if (equipped == null)
+							continue;
+						targetPlayer.getCarriedItems().getEquipment().unequipItem(
+							new UnequipRequest(targetPlayer, equipped, UnequipRequest.RequestType.FROM_EQUIPMENT, false), true
+						);
+						targetPlayer.getCarriedItems().remove(new Item(equipped.getCatalogId(), equipped.getAmount()));
+					}
+				}
+			}
 
-		if (!targetPlayer.isDefaultUser() && targetPlayer.getUsernameHash() != player.getUsernameHash() && player.getGroupID() >= targetPlayer.getGroupID()) {
-			player.message(messagePrefix + "You can not wipe the inventory of a staff member of equal or greater rank.");
-			return;
-		}
+			if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
+				targetPlayer.message(messagePrefix + "Your inventory has been wiped by an admin");
+			}
+			success = true;
+		} else {
+			// player is offline
+			List<Item> inventory;
+			try {
+				inventory = player.getWorld().getServer().getDatabase().retrievePlayerInventory(args[0]);
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Could not find player; invalid name.");
+				return;
+			}
 
-		while (targetPlayer.getCarriedItems().getInventory().size() > 0) {
-			Item item = targetPlayer.getCarriedItems().getInventory().get(0);
-			targetPlayer.getCarriedItems().remove(item);
-		}
+			// delete items
+			try {
+				int playerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(args[0]);
+				if (playerId == -1) {
+					throw new GameDatabaseException(player.getWorld().getServer().getDatabase(), "Could not find player.");
+				}
+				for (Item inventoryItem : inventory) {
+					player.getWorld().getServer().getDatabase().inventoryRemove(playerId, inventoryItem);
+				}
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Database Error! Check the logs.");
+				LOGGER.error(e);
+				return;
+			}
 
-		if (targetPlayer.getConfig().WANT_EQUIPMENT_TAB) {
-			int wearableId;
-			for (int i = 0; i < Equipment.SLOT_COUNT; i++) {
-				Item equipped = targetPlayer.getCarriedItems().getEquipment().get(i);
-				if (equipped == null)
-					continue;
-				targetPlayer.getCarriedItems().getEquipment().unequipItem(
-					new UnequipRequest(targetPlayer, equipped, UnequipRequest.RequestType.FROM_EQUIPMENT, false), true
-				);
-				targetPlayer.getCarriedItems().remove(new Item(equipped.getCatalogId(), equipped.getAmount()));
+			// verify success
+			try {
+				int sizeAfter = player.getWorld().getServer().getDatabase().retrievePlayerInventory(args[0]).size();
+				if (sizeAfter == 0) {
+					success = true;
+				} else {
+					player.message(messagePrefix + "Player still has " + sizeAfter + " items in their inventory. Fail.");
+				}
+			} catch (GameDatabaseException e) {
+				player.message(messagePrefix + "Database Error! (Could not verify inventory wipe). Check the logs.");
+				LOGGER.error(e);
+				return;
 			}
 		}
 
-		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
-			targetPlayer.message(messagePrefix + "Your inventory has been wiped by an admin");
+		if (success) {
+			player.message(messagePrefix + "Wiped inventory of " + args[0]);
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Successfully wiped the inventory of "+ args[0]));
+		} else {
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully wiped the inventory of "+ args[0]));
 		}
-		player.message(messagePrefix + "Wiped inventory of " + targetPlayer.getUsername());
 	}
 
 	private void spawnGroundItemWorldwide(Player player, String command, String[] args) {

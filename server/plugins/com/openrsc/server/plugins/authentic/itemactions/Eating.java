@@ -400,7 +400,7 @@ public class Eating implements OpInvTrigger {
 		else if (id == ItemId.HALF_A_MEAT_PIE.id())
 			player.getCarriedItems().getInventory().add(new Item(ItemId.PIE_DISH.id()));
 
-		else if (id == ItemId.STEW.id() || id == ItemId.CURRY.id() || id == ItemId.SPECIAL_CURRY.id()
+		else if (id == ItemId.STEW.id() || id == ItemId.CURRY.id() || id == ItemId.SPECIAL_CURRY_UNUSED.id()
 			|| id == ItemId.SEAWEED_SOUP.id())
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BOWL.id()));
 	}

@@ -914,7 +914,7 @@ public enum ItemId {
 	GNOMECRUNCHIE(900),
 	CHEESE_AND_TOMATO_BATTA(901),
 	TOAD_BATTA(902),
-	GNOME_BATTA(903),
+	GNOME_BATTA_UNUSED(903),
 	WORM_BATTA(904),
 	FRUIT_BATTA(905),
 	VEG_BATTA(906),
@@ -935,7 +935,7 @@ public enum ItemId {
 	GLOUGHS_JOURNAL(921),
 	INVOICE(922),
 	UGTHANKI_KEBAB(923),
-	SPECIAL_CURRY(924),
+	SPECIAL_CURRY_UNUSED(924),
 	GLOUGHS_KEY(925),
 	GLOUGHS_NOTES(926),
 	PEBBLE_1(927),
@@ -957,7 +957,7 @@ public enum ItemId {
 	BLURBERRY_BARMAN_DRUNK_DRAGON(943),
 	GNOME_WAITER_CHEESE_AND_TOMATO_BATTA(944),
 	GNOME_WAITER_TOAD_BATTA(945),
-	//	GNOME_BATTA(946), // Appears to be unused.
+	GNOME_BATTA_PREMADE_UNUSED(946),
 	GNOME_WAITER_WORM_BATTA(947),
 	GNOME_WAITER_FRUIT_BATTA(948),
 	GNOME_WAITER_VEG_BATTA(949),
@@ -1196,10 +1196,10 @@ public enum ItemId {
 	YOMMI_TREE_SEED(1182),
 	TOTEM_POLE(1183),
 	// These appear to be unused
-//	DWARF_CANNON_BASE(1184),
-//	DWARF_CANNON_STAND(1185),
-//	DWARF_CANNON_BARRELS(1186),
-//	DWARF_CANNON_FURNACE(1187),
+    DWARF_CANNON_BASE_UNUSED(1184),
+	DWARF_CANNON_STAND_UNUSED(1185),
+	DWARF_CANNON_BARRELS_UNUSED(1186),
+	DWARF_CANNON_FURNACE_UNUSED(1187),
 	GOLDEN_BOWL(1188),
 	GOLDEN_BOWL_WITH_PURE_WATER(1189),
 	RAW_MANTA_RAY(1190),
@@ -1539,17 +1539,32 @@ public enum ItemId {
 	public static final int maxCustom = 1500;
 
 	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();
+	private static final Map<String, ItemId> byName = new HashMap<String, ItemId>();
 
 	static {
 		for (ItemId item : ItemId.values()) {
 			if (byId.put(item.id(), item) != null) {
 				throw new IllegalArgumentException("duplicate id: " + item.id());
+			} else {
+				if (byName.put(sanitizeName(item.name()), item) != null) {
+					throw new IllegalArgumentException("duplicate sanitized name: " + item.id());
+				}
 			}
 		}
 	}
 
 	public static ItemId getById(Integer id) {
-		return byId.getOrDefault(id, ItemId.NOTHING);
+		return byId.getOrDefault(id, NOTHING);
+	}
+
+	public static ItemId getByName(String name) {
+		return byName.getOrDefault(sanitizeName(name), NOTHING);
+	}
+
+	private static String sanitizeName(String name) {
+		return name.replaceAll("[\\W]", "")
+			.replaceAll("_", "")
+			.toLowerCase();
 	}
 
 	/**

@@ -25,8 +25,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -80,6 +78,10 @@ public final class Development implements CommandTrigger {
 		else if (command.equalsIgnoreCase("serverstats")) {
 			ActionSender.sendBox(player, player.getWorld().getServer().getGameEventHandler().buildProfilingDebugInformation(true),true);
 		}
+		else if (command.equalsIgnoreCase("error")) {
+			// used to verify logging of errors/stdout
+			System.out.println(args[0]);
+		}
 		else if (command.equalsIgnoreCase("droptest")) {
 			testNpcDrops(player, command, args);
 		}
@@ -94,6 +96,8 @@ public final class Development implements CommandTrigger {
 		}
 		else if (command.equalsIgnoreCase("logRate")) {
 			logRate(player, args);
+		} else if (command.equalsIgnoreCase("points")) {
+			points(player, args);
 		}
 	}
 
@@ -682,5 +686,14 @@ public final class Development implements CommandTrigger {
 
 		mes("@whi@At level @mag@" + level + "@whi@ woodcut:");
 		mes("@gre@" + logs + " @whi@" + logName + " logs were received in @lre@" + trials + "@whi@ attempts with the @cya@" + axe + " axe");
+	}
+	private void points(Player player, String[] args) {
+		if (args.length == 0) {
+			player.message("You have " + player.getOpenPkPoints() + " points.");
+		} else {
+			long points = Long.parseLong(args[0]);
+			player.message("Setting points to " + points);
+			player.setOpenPkPoints(points);
+		}
 	}
 }

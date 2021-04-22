@@ -108,6 +108,7 @@ public final class Player extends Mob {
 	private boolean sleeping = false;
 	private int activity = 0;
 	private int kills = 0;
+	private long openPkPoints = 0;
 	private int npcKills = 0;
 	private int expShared = 0;
 	private int deaths = 0;
@@ -779,6 +780,9 @@ public final class Player extends Mob {
 				updateSkullRemaining();
 			if (isCharged())
 				updateChargeRemaining();
+			if (getConfig().WANT_OPENPK_POINTS) {
+				getCache().store("openpk_points", getOpenPkPoints());
+			}
 			getCache().store("last_spell_cast", lastSpellCast);
 			LOGGER.info("Requesting unregistration for " + getUsername() + ": " + reason);
 			unregistering = true;
@@ -1513,7 +1517,6 @@ public final class Player extends Mob {
 			for (int i = 0; i < 4; i++) {
 				ActionSender.sendMessage(this, "@gre@You are too tired to gain experience, get some rest!");
 			}
-			return;
 		} else {
 			int xp;
 			for (int i = 0; i < skillDist.length; i++) {
@@ -1664,7 +1667,11 @@ public final class Player extends Mob {
 					int playerXp = (int) (maxXpPerSharedPlayer * xpDropoffPercent);
 					xpLeftToReward -= playerXp;
 					playerXp *= partyMemberPlayer.getExperienceMultiplier(skill);
-					partyMemberPlayer.getSkills().addExperience(skill, playerXp);
+					if (getConfig().WANT_OPENPK_POINTS) {
+						partyMemberPlayer.addOpenPkPoints(playerXp);
+					} else {
+						partyMemberPlayer.getSkills().addExperience(skill, playerXp);
+					}
 				}
 				thisXp = xpLeftToReward;
 			}
@@ -1673,7 +1680,11 @@ public final class Player extends Mob {
 		// Update this player's XP.
 		thisXp = Math.min(thisXp, skillXP);
 		thisXp *= getExperienceMultiplier(skill);
-		getSkills().addExperience(skill, thisXp);
+		if (getConfig().WANT_OPENPK_POINTS) {
+			addOpenPkPoints(thisXp);
+		} else {
+			getSkills().addExperience(skill, thisXp);
+		}
 
 		// packet order; fatigue update comes after XP update authentically.
 		// still, will need to check fatigue is not too high before awarding XP, so this check is in 2 places
@@ -2604,6 +2615,25 @@ public final class Player extends Mob {
 
 	public void setKills(int i) {
 		this.kills = i;
+	}
+
+	public long getOpenPkPoints() {
+		return openPkPoints;
+	}
+
+	public void setOpenPkPoints(long openPkPoints) {
+		this.openPkPoints = openPkPoints;
+		ActionSender.sendPoints(this);
+	}
+
+	public void addOpenPkPoints(long openPkPoints) {
+		this.openPkPoints += openPkPoints;
+		ActionSender.sendPoints(this);
+	}
+
+	public void subtractOpenPkPoints(long openPkPoints) {
+		this.openPkPoints -= openPkPoints;
+		ActionSender.sendPoints(this);
 	}
 
 	public int getDeaths() {

@@ -9,7 +9,7 @@ import java.util.zip.GZIPOutputStream;
 public class PcapLogger {
 
 	public String fname;
-	private LinkedList<ReplayPacket> m_packets = new LinkedList<ReplayPacket>();
+	final private LinkedList<ReplayPacket> m_packets = new LinkedList<ReplayPacket>();
 
 	private static final byte[] spoofedClientMAC = {(byte)0x00, (byte)0x00, (byte)0x00, (byte)0xCC, (byte)0xCC, (byte)0xCC};
 	private static final byte[] spoofedServerMAC = {(byte)0x00, (byte)0x00, (byte)0x00, (byte)0x55, (byte)0x55, (byte)0x55};
@@ -118,8 +118,10 @@ public class PcapLogger {
 			pcap.writeInt(65535); // Packet snapshot length
 			pcap.writeInt(1); // Data link type (Ethernet)
 
-			for (ReplayPacket packet : m_packets) {
-				writePCAPPacket(pcap, packet);
+			synchronized (m_packets) {
+				for (ReplayPacket packet : m_packets) {
+					writePCAPPacket(pcap, packet);
+				}
 			}
 
 			pcap.close();
