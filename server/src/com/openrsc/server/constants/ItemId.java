@@ -1539,27 +1539,30 @@ public enum ItemId {
 	public static final int maxCustom = 1500;
 
 	private static final Map<Integer, ItemId> byId = new HashMap<Integer, ItemId>();
+	private static final Map<String, ItemId> byName = new HashMap<String, ItemId>();
 
 	static {
 		for (ItemId item : ItemId.values()) {
 			if (byId.put(item.id(), item) != null) {
 				throw new IllegalArgumentException("duplicate id: " + item.id());
+			} else {
+				byName.put(sanitizeName(item.name()), item);
 			}
 		}
 	}
 
 	public static ItemId getById(Integer id) {
-		return byId.getOrDefault(id, ItemId.NOTHING);
+		return byId.getOrDefault(id, NOTHING);
 	}
 
 	public static ItemId getByName(String name) {
-		for (ItemId item : ItemId.values()) {
-			if (item.name().replaceAll("[\\W]", "").replaceAll("_", "")
-				.equalsIgnoreCase(name.replaceAll("[\\W]", "").replaceAll("_", ""))) {
-				return item;
-			}
-		}
-		return NOTHING;
+		return byName.getOrDefault(sanitizeName(name), NOTHING);
+	}
+
+	private static String sanitizeName(String name) {
+		return name.replaceAll("[\\W]", "")
+			.replaceAll("_", "")
+			.toLowerCase();
 	}
 
 	/**
