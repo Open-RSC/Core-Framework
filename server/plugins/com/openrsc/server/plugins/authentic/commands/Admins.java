@@ -817,6 +817,9 @@ public final class Admins implements CommandTrigger {
 
 		if (success) {
 			player.message(messagePrefix + "Wiped bank of " + targetPlayerName);
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Successfully wiped the bank of "+ targetPlayerName));
+		} else {
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully wiped the bank of "+ targetPlayerName));
 		}
 	}
 
@@ -1154,6 +1157,9 @@ public final class Admins implements CommandTrigger {
 
 		if (success) {
 			player.message(messagePrefix + "Wiped inventory of " + args[0]);
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Successfully wiped the inventory of "+ args[0]));
+		} else {
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully wiped the inventory of "+ args[0]));
 		}
 	}
 
