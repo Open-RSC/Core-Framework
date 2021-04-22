@@ -42,6 +42,10 @@ public enum InputXAction {
 			|| id == EXIT_BLACK_HOLE.id
 			|| id == DROP_X.id
 			|| id == SAVEPRESET_X.id
-			|| id == LOADPRESET_X.id;
+			|| id == LOADPRESET_X.id
+			|| id == INCPOINTS_X.id
+			|| id == REDUCEPOINTS_X.id
+			|| id == INCLEVELS_X.id
+			|| id == REDUCELEVELS_X.id;
 	}
 }
