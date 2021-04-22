@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -28,7 +29,7 @@ public final class Event implements CommandTrigger {
 	public static String messagePrefix = null;
 	public static String badSyntaxPrefix = null;
 
-	private static final ImmutableMap<String, Point> townLocations = new ImmutableMap.Builder<String, Point>()
+	private static final Map<String, Point> townLocations = new ImmutableMap.Builder<String, Point>()
 		.put("varrock", Point.location(122, 509))
 		.put("falador", Point.location(304, 542))
 		.put("draynor", Point.location(214, 632))
