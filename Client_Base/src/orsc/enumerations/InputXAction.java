@@ -46,6 +46,7 @@ public enum InputXAction {
 			|| id == INCPOINTS_X.id
 			|| id == REDUCEPOINTS_X.id
 			|| id == INCLEVELS_X.id
-			|| id == REDUCELEVELS_X.id;
+			|| id == REDUCELEVELS_X.id
+			|| id == POINTS_TO_GP.id;
 	}
 }
