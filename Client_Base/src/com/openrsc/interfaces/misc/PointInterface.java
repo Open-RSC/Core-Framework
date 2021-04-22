@@ -82,85 +82,113 @@ public final class PointInterface {
 		this.drawButton(x + 170, y + 45, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS0_X, true);
+				mc.setPointsSkillId(0);
+				mc.setPointsOptionId(7);
+				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 200, y + 45, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS0_X, true);
+				mc.setPointsSkillId(0);
+				mc.setPointsOptionId(2);
+				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 300, y + 45, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS0_X, true);
+				mc.setPointsSkillId(0);
+				mc.setPointsOptionId(7);
+				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 325, y + 45, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS0_X, true);
+				mc.setPointsSkillId(0);
+				mc.setPointsOptionId(2);
+				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 300, y + 75, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS1_X, true);
+				mc.setPointsSkillId(1);
+				mc.setPointsOptionId(0);
+				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 325, y + 75, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS1_X, true);
+				mc.setPointsSkillId(1);
+				mc.setPointsOptionId(1);
+				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 300, y + 105, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS2_X, true);
+				mc.setPointsSkillId(2);
+				mc.setPointsOptionId(8);
+				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 325, y + 105, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS2_X, true);
+				mc.setPointsSkillId(2);
+				mc.setPointsOptionId(3);
+				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 300, y + 135, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS3_X, true);
+				mc.setPointsSkillId(3);
+				mc.setPointsOptionId(9);
+				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 325, y + 135, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS3_X, true);
+				mc.setPointsSkillId(3);
+				mc.setPointsOptionId(4);
+				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 300, y + 165, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS4_X, true);
+				mc.setPointsSkillId(4);
+				mc.setPointsOptionId(10);
+				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 325, y + 165, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS4_X, true);
+				mc.setPointsSkillId(4);
+				mc.setPointsOptionId(5);
+				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 300, y + 195, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS5_X, true);
+				mc.setPointsSkillId(5);
+				mc.setPointsOptionId(11);
+				mc.showItemModX(InputXPrompt.reduceLevelsX, InputXAction.REDUCELEVELS_X, true);
 			}
 		});
 		this.drawButton(x + 325, y + 195, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS5_X, true);
+				mc.setPointsSkillId(5);
+				mc.setPointsOptionId(6);
+				mc.showItemModX(InputXPrompt.incLevelsX, InputXAction.INCLEVELS_X, true);
 			}
 		});
 
@@ -252,13 +280,17 @@ public final class PointInterface {
 		this.drawButton(x + 170, y + 75, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS1_X, true);
+				mc.setPointsSkillId(1);
+				mc.setPointsOptionId(0);
+				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 200, y + 75, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS1_X, true);
+				mc.setPointsSkillId(1);
+				mc.setPointsOptionId(1);
+				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
 		int nextLevelExpS = mc.getExperienceArray()[2];
@@ -270,13 +302,17 @@ public final class PointInterface {
 		this.drawButton(x + 200, y + 105, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS2_X, true);
+				mc.setPointsSkillId(2);
+				mc.setPointsOptionId(3);
+				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 170, y + 105, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS2_X, true);
+				mc.setPointsSkillId(2);
+				mc.setPointsOptionId(8);
+				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
 
@@ -289,13 +325,17 @@ public final class PointInterface {
 		this.drawButton(x + 170, y + 135, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS3_X, true);
+				mc.setPointsSkillId(3);
+				mc.setPointsOptionId(9);
+				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 200, y + 135, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS3_X, true);
+				mc.setPointsSkillId(3);
+				mc.setPointsOptionId(4);
+				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
 
@@ -310,13 +350,17 @@ public final class PointInterface {
 		this.drawButton(x + 170, y + 165, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS4_X, true);
+				mc.setPointsSkillId(4);
+				mc.setPointsOptionId(10);
+				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 200, y + 165, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS4_X, true);
+				mc.setPointsSkillId(4);
+				mc.setPointsOptionId(5);
+				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
 
@@ -329,13 +373,17 @@ public final class PointInterface {
 		this.drawButton(x + 170, y + 195, 20, 20, "@red@-", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS5_X, true);
+				mc.setPointsSkillId(5);
+				mc.setPointsOptionId(11);
+				mc.showItemModX(InputXPrompt.reducePointsX, InputXAction.REDUCEPOINTS_X, true);
 			}
 		});
 		this.drawButton(x + 200, y + 195, 20, 20, "@gre@+", 6, false, new ButtonHandler() {
 			@Override
 			void handle() {
-				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS5_X, true);
+				mc.setPointsSkillId(5);
+				mc.setPointsOptionId(6);
+				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
 		this.drawString("HP: " + mc.getPlayerStatBase(3) , x + 10, y + 240, 3, textColour);
