@@ -10510,7 +10510,7 @@ public final class mudclient implements Runnable {
 							}
 
 							if (isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
-								if (doubleClick() && S_WANT_OPENPK_POINTS) {
+								if (S_WANT_OPENPK_POINTS) {
 									//setSkillGuideChosen(skillNameLong[currentlyHoveredSkill]);
 									pointInterface.setVisible(true);
 									if (!C_CUSTOM_UI)
