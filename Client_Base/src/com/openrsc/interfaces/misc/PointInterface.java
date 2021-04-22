@@ -13,20 +13,7 @@ import java.util.Arrays;
 public final class PointInterface {
 	private static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6;
 
-
-	private static final int
-	    REDUCE_DEFENSE = 0,
-		INCREASE_DEFENSE = 1,
-		INCREASE_ATTACK = 2,
-		INCREASE_STRENGTH = 3,
-		INCREASE_RANGED = 4,
-		INCREASE_PRAYER = 5,
-		INCREASE_MAGIC = 6,
-		REDUCE_ATTACK = 7,
-		REDUCE_STRENGTH = 8,
-		REDUCE_RANGED = 9,
-		REDUCE_PRAYER = 10,
-		REDUCE_MAGIC = 11;
+	private static final int REDUCE_DEFENSE = 0, INCREASE_DEFENSE = 1, INCREASE_ATTACK = 2, INCREASE_STRENGTH = 3, INCREASE_RANGED = 4, INCREASE_PRAYER = 5, INCREASE_MAGIC = 6, REDUCE_ATTACK = 7, REDUCE_STRENGTH = 8, REDUCE_RANGED = 9, REDUCE_PRAYER = 10, REDUCE_MAGIC = 11;
 
 	public Panel experienceConfig;
 	public int experienceConfigScroll;
@@ -403,9 +390,9 @@ public final class PointInterface {
 				mc.showItemModX(InputXPrompt.incPointsX, InputXAction.INCPOINTS_X, true);
 			}
 		});
-		this.drawString("HP: " + mc.getPlayerStatBase(HITS) , x + 10, y + 240, 3, textColour);
-		this.drawString("Points: " + mc.getPoints() , x + 232, y + 240, 3, textColour);
-		this.drawString("Combat Level: " + mc.getLocalPlayer().level , x + 70, y + 240, 3, textColour);
+		this.drawString("HP: " + mc.getPlayerStatBase(HITS), x + 10, y + 240, 3, textColour);
+		this.drawString("Points: " + mc.getPoints(), x + 232, y + 240, 3, textColour);
+		this.drawString("Combat Level: " + mc.getLocalPlayer().level, x + 70, y + 240, 3, textColour);
 
 		if (selectSkillMenu)
 			mc.getSurface().drawBoxAlpha(x, y, width, height, 0, 192);
