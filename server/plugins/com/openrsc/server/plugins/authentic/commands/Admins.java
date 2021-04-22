@@ -106,7 +106,9 @@ public final class Admins implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("update")) {
 			serverUpdate(player, args);
 		} else if (command.equalsIgnoreCase("item")) {
-			spawnItemInventory(player, command, args);
+			spawnItemInventory(player, command, args, false);
+		} else if (command.equalsIgnoreCase("certeditem") || command.equals("noteditem")) {
+			spawnItemInventory(player, command, args, true);
 		} else if (command.equalsIgnoreCase("bankitem") || command.equalsIgnoreCase("bitem") || command.equalsIgnoreCase("addbank")) {
 			spawnItemBank(player, command, args);
 		} else if (command.equals("fillbank")) {
@@ -630,9 +632,9 @@ public final class Admins implements CommandTrigger {
 		}
 	}
 
-	private void spawnItemInventory(Player player, String command, String[] args) {
+	private void spawnItemInventory(Player player, String command, String[] args, Boolean noted) {
 		if (args.length < 1) {
-			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (noted) (player)");
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
 			return;
 		}
 
@@ -642,7 +644,7 @@ public final class Admins implements CommandTrigger {
 		} catch (NumberFormatException ex) {
 			ItemId item = ItemId.getByName(args[0]);
 			if (item == ItemId.NOTHING) {
-				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (noted) (player)");
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [id or ItemId name] (amount) (player)");
 				return;
 			} else {
 				id = item.id();
@@ -661,20 +663,9 @@ public final class Admins implements CommandTrigger {
 			amount = 1;
 		}
 
-		boolean noted;
-		if (args.length >= 3) {
-			try {
-				noted = Integer.parseInt(args[2]) == 1;
-			} catch (NumberFormatException nfe) {
-				noted = Boolean.parseBoolean(args[2]);
-			}
-		} else {
-			noted = false;
-		}
-
 		Player p;
-		if (args.length >= 4) {
-			p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[3]));
+		if (args.length >= 3) {
+			p = player.getWorld().getPlayer(DataConversions.usernameToHash(args[2]));
 		} else {
 			p = player;
 		}
