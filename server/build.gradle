@@ -1,0 +1,62 @@
+plugins {
+    id "application"
+    id "java"
+}
+
+group "org.rsc.better"
+version "1.0-SNAPSHOT"
+
+application {
+    mainClassName = "com.openrsc.server.Server"
+    applicationDefaultJvmArgs = ['-DcoloredLogging=true','-Dconf=default']
+}
+
+repositories {
+    jcenter() // jcenter is a superset of mavenCentral
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs "src"
+        }
+    }
+}
+
+dependencies {
+    // Class-path scanner for plugins
+    implementation "org.reflections:reflections:0.9.12"
+
+    // Discord
+    implementation "com.vdurmont:emoji-java:4.0.0"
+    implementation "net.dv8tion:JDA:4.2.0_247"
+    implementation "org.gitlab4j:gitlab4j-api:4.12.17"
+
+    // Others
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.1.2'
+
+    implementation "com.thoughtworks.xstream:xstream:1.4.9"
+    implementation "com.lmax:disruptor:3.3.11"
+
+    implementation "org.apache.commons:commons-collections4:4.0"
+    implementation "org.apache.commons:commons-lang3:3.12.0"
+    implementation "commons-lang:commons-lang:2.6"
+
+    implementation("org.apache.logging.log4j:log4j-api:2.14.1")
+    implementation("org.apache.logging.log4j:log4j-core:2.14.1")
+    implementation("org.apache.logging.log4j:log4j-iostreams:2.14.1")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.14.1")
+
+    implementation("org.json:json:20190722")
+    implementation("commons-codec:commons-codec:1.14")
+    implementation("xpp3:xpp3:1.1.4c")
+    implementation("com.google.guava:guava:25.0-jre")
+    implementation("io.netty:netty-all:4.1.33.Final")
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.0"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+}
+
+test {
+    useJUnitPlatform()
+}
