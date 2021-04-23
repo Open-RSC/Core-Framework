@@ -22,7 +22,14 @@ public enum InputXAction {
 	INVITE_PARTY_PLAYER(18),
 	KICK_PARTY_PLAYER(19),
 	PARTY_DELEGATE_LEADERSHIP(20),
-	PARTY_LEAVE(21);
+	PARTY_LEAVE(21),
+	INCPOINTS_X(22),
+	REDUCEPOINTS_X(23),
+	SAVEPRESET_X(24),
+	LOADPRESET_X(25),
+	POINTS_TO_GP(26),
+	REDUCELEVELS_X(27),
+	INCLEVELS_X(28);
 
 	public final int id;
 
@@ -33,6 +40,13 @@ public enum InputXAction {
 	public boolean requiresNumeric() {
 		return (id >= TRADE_OFFER.id && id <= DUEL_REMOVE.id)
 			|| id == EXIT_BLACK_HOLE.id
-			|| id == DROP_X.id;
+			|| id == DROP_X.id
+			|| id == SAVEPRESET_X.id
+			|| id == LOADPRESET_X.id
+			|| id == INCPOINTS_X.id
+			|| id == REDUCEPOINTS_X.id
+			|| id == INCLEVELS_X.id
+			|| id == REDUCELEVELS_X.id
+			|| id == POINTS_TO_GP.id;
 	}
 }

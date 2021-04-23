@@ -107,7 +107,9 @@ public class PacketHandler {
 		put(129, "COMBAT_STYLE_CHANGED");
 		put(135, "BANK_PIN_INTERFACE");
 		put(136, "ONLINE_LIST");
+		put(144, "SHOW_POINTS_TO_GP");
 		put(147, "SEND_KILLS2");
+		put(148, "SET_OPENPK_POINTS");
 		put(150, "UPDATE_PRESET");
 		put(254, "UPDATE_EQUIPMENT");
 		put(255, "UPDATE_EQUIPMENT_SLOT");
@@ -424,6 +426,9 @@ public class PacketHandler {
 			else if (opcode == 147)
 				mc.setStatKills2(packetsIncoming.getShort());
 
+			else if (opcode == 148) // Set OpenPK Points
+				mc.setPoints(packetsIncoming.getLong(0));
+
 			else if (opcode == 98)
 				mc.setExpShared(packetsIncoming.getShort());
 
@@ -450,6 +455,9 @@ public class PacketHandler {
 
 				// Shop Dialog
 			else if (opcode == 101) showShopDialog();
+
+			    // OpenPK gp exchange
+			else if (opcode == 144) showPointsToGp();
 
 				// Trade Dialog Update
 			else if (opcode == 97) updateTradeDialog();
@@ -919,7 +927,7 @@ public class PacketHandler {
 		int fishingSpotsDepletable, improvedItemObjectNames, wantRunecraft, wantCustomLandscape, wantEquipmentTab;
 		int wantBankPresets, wantParties, miningRocksExtended, movePerFrame, wantLeftclickWebs, npcKillMessages;
 		int wantCustomUI, wantGlobalFriend, characterCreationMode, skillingExpRate, wantHarvesting, hideLoginBox;
-		int globalFriendChat, wantRightClickTrade, nothingReuseMe, wantExtendedCatsBehavior, wantCertAsNotes;
+		int globalFriendChat, wantRightClickTrade, nothingReuseMe, wantExtendedCatsBehavior, wantCertAsNotes, wantOpenPkPoints, openPkPointsToGpRatio;
 
 		String logoSpriteID;
 
@@ -1003,6 +1011,8 @@ public class PacketHandler {
 			nothingReuseMe = this.getClientStream().getUnsignedByte(); // 77
 			wantExtendedCatsBehavior = this.getClientStream().getUnsignedByte(); // 78
 			wantCertAsNotes = this.getClientStream().getUnsignedByte(); // 79
+			wantOpenPkPoints = this.getClientStream().getUnsignedByte(); // 80
+			openPkPointsToGpRatio = this.getClientStream().getUnsignedByte(); // 81
 		} else {
 			serverName = packetsIncoming.readString(); // 1
 			serverNameWelcome = packetsIncoming.readString(); // 2
@@ -1083,6 +1093,8 @@ public class PacketHandler {
 			nothingReuseMe = packetsIncoming.getUnsignedByte(); // 77
 			wantExtendedCatsBehavior = packetsIncoming.getUnsignedByte(); // 78
 			wantCertAsNotes = packetsIncoming.getUnsignedByte(); // 79
+			wantOpenPkPoints = packetsIncoming.getUnsignedByte(); // 80
+			openPkPointsToGpRatio = packetsIncoming.getUnsignedByte(); // 81
 		}
 
 		if (Config.DEBUG) {
@@ -1159,13 +1171,15 @@ public class PacketHandler {
 					"\nS_WANT_GLOBAL_FRIEND" + wantGlobalFriend + // 70
 					"\nS_CHARACTER_CREATION_MODE" + characterCreationMode + // 71
 					"\nS_SKILLING_EXP_RATE" + skillingExpRate + //72
-					"\nS_WANT_HARVESTING " + wantHarvesting + // 74
-					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 75
-					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 76
-					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 77
-					"\nS_NOTHING_REUSE_ME " + nothingReuseMe + // 78
-					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior + // 79
-					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes // 80
+					"\nS_WANT_HARVESTING " + wantHarvesting + // 73
+					"\nS_HIDE_LOGIN_BOX " + hideLoginBox + // 74
+					"\nS_WANT_GLOBAL_FRIEND" + globalFriendChat + // 75
+					"\nS_RIGHT_CLICK_TRADE " + wantRightClickTrade + // 76
+					"\nS_NOTHING_REUSE_ME " + nothingReuseMe + // 77
+					"\nS_WANT_EXTENDED_CATS_BEHAVIOR " + wantExtendedCatsBehavior + // 78
+					"\nS_WANT_CERT_AS_NOTES " + wantCertAsNotes + // 79
+					"\nS_WANT_OPENPK_POINTS " + wantOpenPkPoints + // 80
+					"\nS_OPENPK_POINTS_TO_GP_RATIO " + openPkPointsToGpRatio // 81
 			);
 		}
 
@@ -1245,13 +1259,15 @@ public class PacketHandler {
 		props.setProperty("S_WANT_GLOBAL_FRIEND", wantGlobalFriend == 1 ? "true" : "false"); //70
 		props.setProperty("S_CHARACTER_CREATION_MODE", Integer.toString(characterCreationMode)); //71
 		props.setProperty("S_SKILLING_EXP_RATE", Integer.toString(skillingExpRate)); //72
-		props.setProperty("S_WANT_HARVESTING", wantHarvesting == 1 ? "true" : "false"); // 74
-		props.setProperty("S_HIDE_LOGIN_BOX", hideLoginBox == 1 ? "true" : "false"); // 75
-		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 76
-		props.setProperty("S_RIGHT_CLICK_TRADE", wantRightClickTrade == 1 ? "true" : "false"); // 77
-		props.setProperty("S_NOTHING_REUSE_ME", nothingReuseMe == 1 ? "true" : "false"); // 78
-		props.setProperty("S_WANT_EXTENDED_CATS_BEHAVIOR", wantExtendedCatsBehavior == 1 ? "true" : "false"); // 79
-		props.setProperty("S_WANT_CERT_AS_NOTES", wantCertAsNotes == 1 ? "true" : "false"); // 80
+		props.setProperty("S_WANT_HARVESTING", wantHarvesting == 1 ? "true" : "false"); // 73
+		props.setProperty("S_HIDE_LOGIN_BOX", hideLoginBox == 1 ? "true" : "false"); // 74
+		props.setProperty("S_WANT_GLOBAL_FRIEND", globalFriendChat == 1 ? "true" : "false"); // 75
+		props.setProperty("S_RIGHT_CLICK_TRADE", wantRightClickTrade == 1 ? "true" : "false"); // 76
+		props.setProperty("S_NOTHING_REUSE_ME", nothingReuseMe == 1 ? "true" : "false"); // 77
+		props.setProperty("S_WANT_EXTENDED_CATS_BEHAVIOR", wantExtendedCatsBehavior == 1 ? "true" : "false"); // 78
+		props.setProperty("S_WANT_CERT_AS_NOTES", wantCertAsNotes == 1 ? "true" : "false"); // 79
+		props.setProperty("S_WANT_OPENPK_POINTS", wantOpenPkPoints == 1 ? "true" : "false"); // 80
+		props.setProperty("S_OPENPK_POINTS_TO_GP_RATIO", String.valueOf(openPkPointsToGpRatio)); // 81
 		Config.updateServerConfiguration(props);
 
 		mc.authenticSettings = !(
@@ -2398,6 +2414,10 @@ public class PacketHandler {
 
 		// Discord status
 		Discord.setLastUpdate("Shopping");
+	}
+
+	private void showPointsToGp() {
+		mc.setShowPointsToGp(true);
 	}
 
 	private void updateTradeDialog() {

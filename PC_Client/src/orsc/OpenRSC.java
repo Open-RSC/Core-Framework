@@ -55,6 +55,9 @@ public class OpenRSC extends ORSCApplet {
 			case "RSC Cabbage":
 				jframe.setIconImage(Utils.getImage("cabbage.icon.png").getImage());
 				break;
+			case "OpenPK":
+				jframe.setIconImage(Utils.getImage("openpk.icon.png").getImage());
+				break;
 			default:
 				jframe.setIconImage(Utils.getImage("icon.png").getImage());
 		}

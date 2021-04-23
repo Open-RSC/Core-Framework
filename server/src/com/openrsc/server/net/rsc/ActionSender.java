@@ -415,10 +415,21 @@ public class ActionSender {
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_FATIGUE, struct, player);
 	}
 
+	public static void showPointsToGp(Player player) {
+		NoPayloadStruct struct = new NoPayloadStruct();
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_OPENPK_POINTS_TO_GP_RATIO, struct, player);
+	}
+
 	public static void sendNpcKills(Player player) {
 	    MobKillsStruct struct = new MobKillsStruct();
 	    struct.count = player.getNpcKills();
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_NPC_KILLS, struct, player);
+	}
+
+	public static void sendPoints(Player player) {
+		PointsStruct struct = new PointsStruct();
+		struct.amount = player.getOpenPkPoints();
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_OPENPK_POINTS, struct, player);
 	}
 
 	public static void sendExpShared(Player player) {
@@ -727,6 +738,8 @@ public class ActionSender {
 		configs.add((byte) (server.getConfig().NOTHING_REUSE_ME ? 1 : 0)); // 77
 		configs.add((byte) (server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR ? 1 : 0)); // 78
 		configs.add((byte) (server.getConfig().WANT_CERT_AS_NOTES ? 1 : 0)); // 79
+		configs.add((byte) (server.getConfig().WANT_OPENPK_POINTS ? 1 : 0)); // 80
+		configs.add((byte) (server.getConfig().OPENPK_POINTS_TO_GP_RATIO)); // 81
 
 		struct.configs = configs;
 		struct.setOpcode(OpcodeOut.SEND_SERVER_CONFIGS);
@@ -1588,6 +1601,37 @@ public class ActionSender {
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_BANK_OPEN, struct, player);
 	}
 
+	public static void showBankOther(Player player, List<Item> bank) {
+		int itemsInBank = bank.size();
+		if (player.isUsingAuthenticClient()) {
+			if ((player.getWorld().getServer().getConfig().MEMBER_WORLD && itemsInBank > 192) ||
+				(!player.getWorld().getServer().getConfig().MEMBER_WORLD && itemsInBank > 48)) {
+				sendMessage(player, "Warning: Unable to display all items in bank!");
+			}
+			// If bank is filled to page 4 and bank size reports supporting more than 4 pages
+			if (itemsInBank > (192 - 48) && player.getBankSize() > 192) {
+				sendMessage(player, "Warning: Bank is unauthentically large. Deposited items may not be visible to be withdrawn!");
+			}
+		}
+
+		BankStruct struct = new BankStruct();
+		struct.itemsStoredSize = itemsInBank;
+		struct.maxBankSize = player.getBankSize();
+		struct.catalogIDs = new int[itemsInBank];
+		struct.amount = new int[itemsInBank];
+
+		int i = 0;
+		for (Item item : bank) {
+			struct.catalogIDs[i] = player.isUsingAuthenticClient() ?
+				item.getCatalogIdAuthenticNoting() : item.getCatalogId();
+			struct.amount[i] = item.getAmount();
+			i++;
+		}
+
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_BANK_OPEN, struct, player);
+
+	}
+
 	public static void showShop(Player player, Shop shop) {
 		ShopStruct struct = new ShopStruct();
 		int shopSize = shop.getShopSize();
@@ -1738,6 +1782,10 @@ public class ActionSender {
                 sendEquipmentStats(player);
                 sendPrayers(player, player.getPrayers().getActivePrayers());
                 sendFatigue(player);
+
+                if (player.getCache().hasKey("openpk_points") && player.getCache().getLong("openpk_points") > 0) {
+                	player.setOpenPkPoints(player.getCache().getLong("openpk_points"));
+				}
 
 				player.getWorld().getServer().getGameUpdater().sendUpdatePackets(player);
 				long timeTillShutdown = player.getWorld().getServer().getTimeUntilShutdown();
@@ -2055,4 +2103,5 @@ public class ActionSender {
         struct.actionId = 2;
         tryFinalizeAndSendPacket(OpcodeOut.SEND_IRONMAN, struct, player);
 	}
+
 }

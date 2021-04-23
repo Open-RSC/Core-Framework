@@ -70,6 +70,8 @@ public class PayloadValidator {
 		put(OpcodeOut.SEND_ONLINE_LIST, OnlineListStruct.class); // custom
 		put(OpcodeOut.SEND_SHOP_CLOSE, NoPayloadStruct.class);
 		put(OpcodeOut.SEND_NPC_KILLS, MobKillsStruct.class); // custom
+		put(OpcodeOut.SEND_OPENPK_POINTS_TO_GP_RATIO, NoPayloadStruct.class); // custom
+		put(OpcodeOut.SEND_OPENPK_POINTS, PointsStruct.class); // custom
 		put(OpcodeOut.SEND_FRIEND_LIST, FriendListStruct.class); // retro rsc
 		put(OpcodeOut.SEND_FRIEND_UPDATE, FriendUpdateStruct.class);
 		put(OpcodeOut.SEND_BANK_PRESET, BankPresetStruct.class); // custom

@@ -247,6 +247,8 @@ public final class mudclient implements Runnable {
 	public AuctionHouse auctionHouse;
 	public SkillGuideInterface skillGuideInterface;
 	public QuestGuideInterface questGuideInterface;
+	public PointInterface pointInterface;
+	public PointsToGpInterface pointsToGpInterface;
 	public ExperienceConfigInterface experienceConfigInterface;
 	public DoSkillInterface doSkillInterface;
 	public LostOnDeathInterface lostOnDeathInterface;
@@ -561,6 +563,7 @@ public final class mudclient implements Runnable {
 	private int statKills2 = 0;
 	private int expShared = 0;
 	private int petFatigue = 0;
+	private long openPkPoints = 0;
 	private MudClientGraphics surface;
 	private int systemUpdate = 0;
 	private int elixirTimer = 0;
@@ -588,6 +591,8 @@ public final class mudclient implements Runnable {
 	private boolean welcomeScreenShown = false;
 	//private int welcomeUnreadMessages = 0;
 	private World world;
+	private int pointsSkillId;
+	private int pointsOptionId;
 	private int worldOffsetX = 0;
 	private int worldOffsetZ = 0;
 	private int prayerMenuIndex = 0;
@@ -5677,6 +5682,174 @@ public final class mudclient implements Runnable {
 				} else if (this.inputX_Action == InputXAction.EXIT_BLACK_HOLE) {
 					this.packetHandler.getClientStream().newPacket(86);
 					this.packetHandler.getClientStream().finishPacket();
+				} else if (this.inputX_Action == InputXAction.POINTS_TO_GP) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(12);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("POINTS_TO_GP number format exception: " + var13);
+					}
+				}  else if (this.inputX_Action == InputXAction.LOADPRESET_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(14);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("LOADPRESET_X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.SAVEPRESET_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("SAVEPRESET_X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCPOINTS_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(pointsOptionId);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("INCPOINTS_X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.INCLEVELS_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n280;
+						n280 = this.playerStatBase[pointsSkillId] + var4;
+						if (n280 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 == 0) {
+							return;
+						}
+
+						int nextLev20;
+						int nextLev3;
+						nextLev20 = var4 - 2;
+						nextLev3 = this.experienceArray[this.playerStatBase[pointsSkillId] + nextLev20];
+						var4 = (nextLev3 - this.playerExperience[pointsSkillId]);
+
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(pointsOptionId);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("INCLEVELS_X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCEPOINTS_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(pointsOptionId);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("REDUCEPOINTS_X number format exception: " + var13);
+					}
+				} else if (this.inputX_Action == InputXAction.REDUCELEVELS_X) {
+					try {
+						if (str.length() > 10) {
+							str = str.substring(str.length() - 10);
+						}
+						int var4 = Integer.MAX_VALUE;
+						long intOverflowCheck = Long.parseLong(str);
+						if (intOverflowCheck < Integer.MAX_VALUE) {
+							var4 = Integer.parseInt(str);
+						}
+						int n2800;
+						n2800 = this.playerStatBase[pointsSkillId] - var4;
+						if (n2800 < 1) {
+							this.showMessage(false, null, "Stat cannot be lower then 1", MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						if (var4 > Config.S_PLAYER_LEVEL_LIMIT) {
+							this.showMessage(false, null, "Stat cannot be higher than " + Config.S_PLAYER_LEVEL_LIMIT, MessageType.GAME, 0,
+							null, "@whi@");
+							return;
+						}
+						int nL0;
+						int nL1;
+						nL0 = this.playerStatBase[pointsSkillId] - 2;
+						nL1 = this.playerStatBase[pointsSkillId] - 1;
+						if (n2800 == 1) {
+							var4 = this.playerExperience[pointsSkillId];
+						} else {
+							var4 = this.playerExperience[pointsSkillId] - this.experienceArray[nL0 - var4];
+						}
+						if (var4 < 1) {
+							return;
+						}
+
+						this.packetHandler.getClientStream().newPacket(199);
+						this.packetHandler.getClientStream().bufferBits.putByte(13);
+						this.packetHandler.getClientStream().bufferBits.putByte(pointsOptionId);
+						this.packetHandler.getClientStream().bufferBits.putInt(var4);
+						this.packetHandler.getClientStream().finishPacket();
+					} catch (NumberFormatException var13) {
+						System.out.println("REDUCELEVELS_X number format exception: " + var13);
+					}
 				} else if (this.inputX_Action == InputXAction.DROP_X) {
 					try {
 						if (str.length() > 10) {
@@ -7037,6 +7210,10 @@ public final class mudclient implements Runnable {
 					this.drawDialogShop();
 				} else if (S_WANT_SKILL_MENUS && skillGuideInterface.isVisible() && !C_CUSTOM_UI) {
 					this.drawSkillGuide();
+				} else if (pointInterface.isVisible()) {
+					this.drawPointConfig();
+				} else if (pointsToGpInterface.isVisible()) {
+					this.drawPointsToGpConfig();
 				} else if (S_WANT_QUEST_MENUS && questGuideInterface.isVisible() && !C_CUSTOM_UI) {
 					this.drawQuestGuide();
 				} else if (experienceConfigInterface.isVisible()) {
@@ -10273,6 +10450,9 @@ public final class mudclient implements Runnable {
 				height = 275;
 			else
 				height = 262;
+			if (Config.S_WANT_OPENPK_POINTS) {
+				height = 186;
+			}
 			int var8;
 			int yFromTopDistance = var8 = GenUtil.buildColor(160, 160, 160);
 			if (this.uiTabPlayerInfoSubTab != 0) {
@@ -10301,7 +10481,7 @@ public final class mudclient implements Runnable {
 				int currentlyHoveredSkill = -1;
 				long totalXp = 0;
 				int currSkill = 0, i = 0;
-				int leftColLength = (int) Math.floor(skillCount / 2);
+				int leftColLength = Config.S_WANT_OPENPK_POINTS ? 3 : (int) Math.floor(skillCount / 2);
 				int rightColLength = skillCount - leftColLength;
 
 				this.getSurface().drawString("Skills", xOffset, heightMargin, textColourHeading, 3);
@@ -10328,11 +10508,26 @@ public final class mudclient implements Runnable {
 								if (!C_CUSTOM_UI)
 									this.showUiTab = 0;
 							}
+
+							if (isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0) {
+								if (S_WANT_OPENPK_POINTS) {
+									//setSkillGuideChosen(skillNameLong[currentlyHoveredSkill]);
+									pointInterface.setVisible(true);
+									if (!C_CUSTOM_UI)
+										this.showUiTab = 0;
+								}
+							} else if (!isAndroid() && this.mouseButtonClick == 1 && this.uiTabPlayerInfoSubTab == 0 && S_WANT_OPENPK_POINTS) {
+								//setSkillGuideChosen(skillNameLong[currentlyHoveredSkill]);
+								pointInterface.setVisible(true);
+								if (!C_CUSTOM_UI)
+									this.showUiTab = 0;
+							}
 						}
 					}
 				}
 
 				for (currSkill = 0; currSkill < skillCount; currSkill++) {
+					if (Config.S_WANT_OPENPK_POINTS && currSkill > 6) break;
 
 					this.getSurface().drawString(this.getSkillNames()[currSkill] + ":@yel@" + this.playerStatCurrent[i]
 						+ "/" + this.playerStatBase[i], xOffset, yOffset, currentlyHoveredSkill == i ? textColourHovered : textColour, 1);
@@ -10350,7 +10545,9 @@ public final class mudclient implements Runnable {
 					xOffset = x + 5;
 				}
 
-				this.getSurface().drawString("Quest Points:@yel@" + this.questPoints, xOffset, yOffset, textColour, 1);
+				if (!Config.S_WANT_OPENPK_POINTS) {
+					this.getSurface().drawString("Quest Points:@yel@" + this.questPoints, xOffset, yOffset, textColour, 1);
+				}
 
 				if (Config.S_WANT_FATIGUE) {
 					if (xOffset == x + 5) {
@@ -10362,7 +10559,8 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawString("Fatigue: @yel@" + this.statFatigue + "%", xOffset, yOffset,
 						textColour, 1);
 				}
-				yOffset += 20;
+
+				yOffset += (Config.S_WANT_OPENPK_POINTS ? 10 : 20);
 				this.getSurface().drawString("Equipment Status", 5 + x, yOffset, textColourHeading, 3);
 				yOffset += 13;
 
@@ -10401,12 +10599,17 @@ public final class mudclient implements Runnable {
 					this.getSurface().drawString("Combat level: " + this.localPlayer.level, 5 + x, heightMargin, textColour, 1);
 					heightMargin += 12;
 
+					if (Config.S_WANT_OPENPK_POINTS) {
+						//TODO: we'll need to reposition this when we move to the Mini Stats menu for OpenPK.
+						this.getSurface().drawString("Points: " + this.openPkPoints, 5 + x, heightMargin, textColour, 1);
+					}
+
 					//exp freeze notification
 					if (!Config.S_WANT_FATIGUE)
 						if (experienceOff)
-							this.getSurface().drawString("Exp gain off", 122 + x, yOffset + 8, 0x00FF0000, 1);
+							this.getSurface().drawString(Config.S_WANT_OPENPK_POINTS ? "Points gain off" : "Exp gain off", Config.S_WANT_OPENPK_POINTS ? 110 + x : 122 + x, yOffset + 8, 0x00FF0000, 1);
 						else
-							this.getSurface().drawString("Exp gain on", 124 + x, yOffset + 8, 0x0000FF00, 1);
+							this.getSurface().drawString(Config.S_WANT_OPENPK_POINTS ? "Points gain on" : "Exp gain on", Config.S_WANT_OPENPK_POINTS ? 112 + x : 124 + x, yOffset + 8, 0x0000FF00, 1);
 				} else { //if there is a skill hovered over
 					this.getSurface().drawString(skillNameLong[currentlyHoveredSkill] + " skill", 5 + x, heightMargin, textColourHeading, 1);
 					heightMargin += 12;
@@ -14019,7 +14222,7 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putString(DataOperations.addCharacters(password, 20));
 
 						this.packetHandler.getClientStream().bufferBits.putLong(getUID());
-						//this.packetHandler.getClientStream().writeBuffer1.putString(getMacAddress());
+						//this.packetHandler.getClientStream().bufferBits.putString(getMacAddress());
 						/*
 						 * RSBuffer rsaBuffer = new RSBuffer(500);
 						 * rsaBuffer.putByte(10);
@@ -14030,20 +14233,20 @@ public final class mudclient implements Runnable {
 						 * rsaBuffer.encodeWithRSA(MiscFunctions.RSA_EXPONENT,
 						 * MiscFunctions.RSA_MODULUS);
 						 *
-						 * this.clientStream.writeBuffer1.writeBytes(rsaBuffer.
+						 * this.clientStream.bufferBits.writeBytes(rsaBuffer.
 						 * dataBuffer, 0, rsaBuffer.curPointerPosition);
 						 */
 
 						/*
-						 * this.clientStream.writeBuffer1.putShort(0); int
+						 * this.clientStream.bufferBits.putShort(0); int
 						 * oldSize =
-						 * this.clientStream.writeBuffer1.curPointerPosition;
+						 * this.clientStream.bufferBits.curPointerPosition;
 						 *
-						 * this.clientStream.writeBuffer1.a(oldSize, isaacSeed,
-						 * this.clientStream.writeBuffer1.curPointerPosition);
+						 * this.clientStream.bufferBits.a(oldSize, isaacSeed,
+						 * this.clientStream.bufferBits.curPointerPosition);
 						 *
-						 * this.clientStream.writeBuffer1.put16_Offset(this.
-						 * clientStream.writeBuffer1.curPointerPosition -
+						 * this.clientStream.bufferBits.put16_Offset(this.
+						 * clientStream.bufferBits.curPointerPosition -
 						 * oldSize);
 						 */
 						this.packetHandler.getClientStream().finishPacketAndFlush();
@@ -15444,6 +15647,10 @@ public final class mudclient implements Runnable {
 		this.showDialogShop = show;
 	}
 
+	public void setShowPointsToGp(boolean show) {
+		pointsToGpInterface.setVisible(true);
+	}
+
 	public void setOptionCameraModeAuto(boolean auto) {
 		this.optionCameraModeAuto = auto;
 	}
@@ -15810,6 +16017,14 @@ public final class mudclient implements Runnable {
 		this.expShared = expShared2;
 	}
 
+	public long getPoints() {
+		return this.openPkPoints;
+	}
+
+	public void setPoints(long openPkPoints) {
+		this.openPkPoints = openPkPoints;
+	}
+
 	public void setInputTextCurrent(String s) {
 		this.inputTextCurrent = s;
 	}
@@ -15943,6 +16158,10 @@ public final class mudclient implements Runnable {
 		}
 	}
 
+	public int[] getExperienceArray() {
+		return this.experienceArray;
+	}
+
 	private void getServerConfig() {
 		try {
 			if ((Config.SERVER_IP != null)) {
@@ -16062,6 +16281,8 @@ public final class mudclient implements Runnable {
 				skillGuideInterface = new SkillGuideInterface(this);
 				questGuideInterface = new QuestGuideInterface(this);
 				experienceConfigInterface = new ExperienceConfigInterface(this);
+				pointInterface = new PointInterface(this);
+				pointsToGpInterface = new PointsToGpInterface(this);
 				doSkillInterface = new DoSkillInterface(this);
 				if (S_ITEMS_ON_DEATH_MENU)
 					lostOnDeathInterface = new LostOnDeathInterface(this);
@@ -16838,6 +17059,14 @@ public final class mudclient implements Runnable {
 		skillGuideInterface.onRender(this.getSurface());
 	}
 
+	private void drawPointConfig() {
+		pointInterface.onRender(this.getSurface());
+	}
+
+	private void drawPointsToGpConfig() {
+		pointsToGpInterface.onRender(this.getSurface());
+	}
+
 	public String getSkillGuideChosen() {
 		return skillGuideChosen;
 	}
@@ -17247,6 +17476,10 @@ public final class mudclient implements Runnable {
 	}
 
 	public void updateQuestRewards() {
+		//TODO: fix for now
+		if (S_WANT_OPENPK_POINTS) {
+			return;
+		}
 		questGuideRewards = new String[][]{{"3 Quest Points", "2500 coins"}, {"1 Quest Point", "Lvl*50 + 250 Cooking experience", "Access to the Cook's range"}, {"3 Quest Points", "Silverlight"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "Ability to use Doric's anvils", "180 coins"}, {"1 Quest Point", "Lvl*62.5 + 500 Prayer experience", "Amulet of Ghostspeak"}, {"5 Quest Points", "Lvl*15 + 125 Crafting experience", "1 Gold bar"}, {"4 Quest Points", "300 coins"}, {"1 Quest Point", "Lvl*100 + 375 Magic experience", "An amulet of accuracy"}, {"2 Quest Points", "450 coins", "A gold ring", "An emerald"}, {"3 Quest points", "Free passage through the Al-Kharid tollgate", "700 coins"}, {"5 Quest Points"}, {"1 Quest Point", "Lvl*25 + 125 Crafting experience", "180 coins"}, {"1 Quest Point", "600 coins"}, {"1 Quest Point", "Lvl*375 + 350 Smithing experience"}, {"3 Quest Points", "Lvl*150 + 325 Attack experience"}, {"1 Quest Point", "Lvl*50 + 225 Magic experience"}, {"2 Quest Points", "Lvl*300 + 650 Defense experience", "Lvl*300 + 650 Strength experience", "The ability to wear a Rune plate mail body"}, {"4 Quest Points", "Lvl*150 + 325 Hits experience"}, {"3 Quest Points", "Ability to enter the city of Zanaris", "Ability to wield a Dragon sword"}, {"1 Quest Point", "Lvl*50 + 75 experience in the following skills: Attack, Defense, Hits, Strength, Cooking, Fishing, Mining, Smithing, Ranged, Firemaking, Woodcutting, and Herblaw", "Access to the Heroes' Guild", "Ability to wield the Dragon axe"}, {"4 Quest Points", "250 Herblaw experience", "Ability to use the Herblaw skill"}, {"6 Quest Points", "Excalibur"}, {"1 Quest Point", "Lvl*125 + 375 Strength experience", "Thormac will enchant your battlestaves for 40000 coins"}, {"1 Quest Point", "A pair of Steel gauntlets"}, {"1 Quest Point", "Lvl*75 + 200 Thieving experience", "5 swordfish"}, {"1 Quest Point", this.playerStatBase[10] < 24 ? "(Lvl - 10)*75 + 975 Fishing experience" : "(Lvl - 24)*75 + 2225 Fishing experience", "Access to the underground tunnel beneath White Wolf Mountain"}, {"1 Quest Point", "(Lvl + 1)*125 Woodcutting experience", "8 Law-Runes"}, {"1 Quest Point", "Lvl*250 + 500 experience in Ranged and Fletching"}, {"1 Quest Point", "500 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Defense experience", "(Lvl + 1)*250 Prayer experience"}, {"2 Quest Points", "Lvl*200 + 175 experience in Attack and Thieving", "1000 coins"}, {"2 Quest Points", "Lvl*225 + 200 Attack experience", "A Gnome amulet of protection", "Ability to use Spirit Trees"}, {"1 Quest Point", "Lvl*50 + 500 Thieving experience", "2000 coins"}, {"4 Quest Points", "3100 coins"}, {"1 Quest Point", "Lvl*75 + 175 Mining experience", "A magic scroll granting the ability to cast Ardougne teleport"}, {"1 Quest Point", "Lvl*200 + 175 Fishing experience", "1 Oyster pearls"}, {"1 Quest Point", "Lvl*225 + 250 experience in Attack and Strength", "40 Mithril seeds", "2 Diamonds", "2 Gold bars"}, {"3 Quest Points", "Lvl*50 + 500 Thieving experience", "Ability to use King Lathas' Combat Training Camp", "Ability to travel freely between eastern and western Ardougne gate"}, {"1 Quest Point", "Lvl*125 + 400 Herblaw experience"}, {"5 Quest Points", "Lvl*300 + 400 experience in Agility and Attack", "Lvl*50 + 150 Magic experience", "Access to the Grand Tree mines", "Ability to use the Spirit Tree at the Grand Tree", "Ability to use the Gnome Gliders"}, {"2 Quest Points", "(Lvl + 1)*125 Crafting experience", "Access to Shilo Village"}, {"5 Quest Points", "Lvl*50 + 500 experience in Agility and Attack", "A Staff of Iban", "15 Death-Runes", "30 Fire-Runes"}, {"2 Quest Points", "Lvl*100 + 250 Crafting experience", "Another reward based on your constellation"}, {"2 Quest Points", "(Lvl + 1)*150 experience twice in a choice of Agility, Fletching, Thieving, Smithing", "Ability to make throwing darts", "Access to the Desert Mining Camp"}, {"4 Quest Points", "(Lvl + 1)*250 Magic experience", "A spell scroll granting the ability to cast the Watchtower teleport", "5000 coins"}, {"1 Quest Point", "Lvl*50 + 250 Crafting experience", "Ability to buy a dwarf cannon", "Ability to make cannon balls"}, {"3 Quest Points", "Lvl*37.5 + 187.5 Crafting experience", "2000 coins"}, {"2 Quest Points", "(Lvl + 1)*300 Mining experience", "(Lvl + 1)*125 Herblaw experience", "2 Gold bars"}, {"1 Quest Point", "Lvl*45 + 175 Cooking experience", "A Kitten", "A Chocolate cake and stew"}, {"4 Quest Points", "(Lvl + 1)*150 experience in 4 of these skills of your choice: Attack, Strength, Defense, Hits, Prayer, Magic, Woodcutting, Crafting, Smithing, Herblaw, Agility, and Thieving", "Access to the Legend's Guild", "Ability to wear the Dragon Square Shield and Cape of Legends", "Ability to make Oomlie meat parcels and Blessed golden bowls"}, {"1 Quest Point", "1 air talisman", "The ability to mine rune stones", "The ability to enter mysterious ruins with the proper talisman"}};
 	}
 
@@ -17316,6 +17549,22 @@ public final class mudclient implements Runnable {
 
 	public Item getDuelOpponentConfirmItem(int index) {
 		return duelOpponentConfirm[index];
+	}
+
+	public int getPointsSkillId() {
+		return pointsSkillId;
+	}
+
+	public void setPointsSkillId(int pointsSkillId) {
+		this.pointsSkillId = pointsSkillId;
+	}
+
+	public int getPointsOptionId() {
+		return pointsOptionId;
+	}
+
+	public void setPointsOptionId(int pointsOptionId) {
+		this.pointsOptionId = pointsOptionId;
 	}
 
 	class XPNotification {

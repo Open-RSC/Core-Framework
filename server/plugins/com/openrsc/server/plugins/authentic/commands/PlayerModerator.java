@@ -54,7 +54,7 @@ public final class PlayerModerator implements CommandTrigger {
 		} else if (command.equalsIgnoreCase("speaktongues")) {
 			speakTongues(player, 2);
 		} else if (command.equalsIgnoreCase("restorehumanity") || command.equalsIgnoreCase("resetappearance")) {
-			restoreHumanity(player);
+			restoreHumanity(player, args);
 		} else if (command.equalsIgnoreCase("become")) {
 			if (args[0].equalsIgnoreCase("god")) {
 				becomeGod(player);
@@ -322,71 +322,86 @@ public final class PlayerModerator implements CommandTrigger {
 
 	private void setRobes(Player player, String[] args) {
 		if (args.length == 0) {
-			mes("Usage: @mag@::setRobes [colour description]");
+			mes("Usage: @mag@::setRobes [colour description] (username)");
 		}
+
+		Player affectedPlayer = player;
+		if (args.length > 1) {
+			if (player.isAdmin()) {
+				affectedPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[1]));
+				if (affectedPlayer == null) {
+					mes("Couldn't find that player.");
+					return;
+				}
+			} else {
+				mes("Sorry, but only admins may bestow special robes for other players.");
+				return;
+			}
+		}
+
 		String colourName = args[0].trim().toLowerCase();
 		switch (colourName) {
 			case "red":
 			case "zamorak":
 			case "zammy":
-				player.updateWornItems(ZAMORAK_WIZARDSHAT);
-				player.updateWornItems(ZAMORAK_MONK_ROBE);
-				player.updateWornItems(ZAMORAK_MONK_SKIRT);
+				affectedPlayer.updateWornItems(ZAMORAK_WIZARDSHAT);
+				affectedPlayer.updateWornItems(ZAMORAK_MONK_ROBE);
+				affectedPlayer.updateWornItems(ZAMORAK_MONK_SKIRT);
 				break;
 			case "blue":
 			case "wizard":
-				player.updateWornItems(WIZARDSHAT);
-				player.updateWornItems(WIZARDS_ROBE);
-				player.updateWornItems(BLUE_SKIRT);
+				affectedPlayer.updateWornItems(WIZARDSHAT);
+				affectedPlayer.updateWornItems(WIZARDS_ROBE);
+				affectedPlayer.updateWornItems(BLUE_SKIRT);
 
 				break;
 			case "darkwizard":
 			case "blackwizard":
 			case "grey":
 			case "gray":
-				player.updateWornItems(DARKWIZARDSHAT);
-				player.updateWornItems(DARKWIZARDS_ROBE);
-				player.updateWornItems(BLACK_SKIRT);
+				affectedPlayer.updateWornItems(DARKWIZARDSHAT);
+				affectedPlayer.updateWornItems(DARKWIZARDS_ROBE);
+				affectedPlayer.updateWornItems(BLACK_SKIRT);
 				break;
 
 			case "monk":
 			case "brown":
 			case "sara":
 			case "saradomin":
-				player.updateWornItems(BALD_HEAD);
-				player.updateWornItems(SARADOMIN_MONK_ROBE);
-				player.updateWornItems(SARADOMIN_MONK_SKIRT);
+				affectedPlayer.updateWornItems(BALD_HEAD);
+				affectedPlayer.updateWornItems(SARADOMIN_MONK_ROBE);
+				affectedPlayer.updateWornItems(SARADOMIN_MONK_SKIRT);
 				break;
 
 			case "pink":
 			case "gnomepink":
 			case "gnomered":
-				player.updateWornItems(PASTEL_PINK_GNOMESHAT);
-				player.updateWornItems(PASTEL_PINK_GNOME_TOP);
-				player.updateWornItems(PASTEL_PINK_GNOME_SKIRT);
+				affectedPlayer.updateWornItems(PASTEL_PINK_GNOMESHAT);
+				affectedPlayer.updateWornItems(PASTEL_PINK_GNOME_TOP);
+				affectedPlayer.updateWornItems(PASTEL_PINK_GNOME_SKIRT);
 				break;
 
 			case "green":
 			case "gnomegreen":
-				player.updateWornItems(PASTEL_GREEN_GNOMESHAT);
-				player.updateWornItems(PASTEL_GREEN_GNOME_TOP);
-				player.updateWornItems(PASTEL_GREEN_GNOME_SKIRT);
+				affectedPlayer.updateWornItems(PASTEL_GREEN_GNOMESHAT);
+				affectedPlayer.updateWornItems(PASTEL_GREEN_GNOME_TOP);
+				affectedPlayer.updateWornItems(PASTEL_GREEN_GNOME_SKIRT);
 				break;
 
 			case "purple":
 			case "gnomeblue":
 			case "gnomepurple":
-				player.updateWornItems(PASTEL_BLUE_GNOMESHAT);
-				player.updateWornItems(PASTEL_BLUE_GNOME_TOP);
-				player.updateWornItems(PASTEL_BLUE_GNOME_SKIRT);
+				affectedPlayer.updateWornItems(PASTEL_BLUE_GNOMESHAT);
+				affectedPlayer.updateWornItems(PASTEL_BLUE_GNOME_TOP);
+				affectedPlayer.updateWornItems(PASTEL_BLUE_GNOME_SKIRT);
 				break;
 
 			case "yellow":
 			case "gnomeyellow":
 			case "canary":
-				player.updateWornItems(PASTEL_YELLOW_GNOMESHAT);
-				player.updateWornItems(PASTEL_YELLOW_GNOME_TOP);
-				player.updateWornItems(PASTEL_YELLOW_GNOME_SKIRT);
+				affectedPlayer.updateWornItems(PASTEL_YELLOW_GNOMESHAT);
+				affectedPlayer.updateWornItems(PASTEL_YELLOW_GNOME_TOP);
+				affectedPlayer.updateWornItems(PASTEL_YELLOW_GNOME_SKIRT);
 				break;
 
 			case "gnomelightblue":
@@ -395,37 +410,37 @@ public final class PlayerModerator implements CommandTrigger {
 			case "lightblue":
 			case "turquoise":
 			case "cyan":
-				player.updateWornItems(PASTEL_CYAN_GNOMESHAT);
-				player.updateWornItems(PASTEL_CYAN_GNOME_TOP);
-				player.updateWornItems(PASTEL_CYAN_GNOME_SKIRT);
+				affectedPlayer.updateWornItems(PASTEL_CYAN_GNOMESHAT);
+				affectedPlayer.updateWornItems(PASTEL_CYAN_GNOME_TOP);
+				affectedPlayer.updateWornItems(PASTEL_CYAN_GNOME_SKIRT);
 				break;
 
 			case "fullwhite":
-				player.updateWornItems(CHEFS_HAT); // the only white hat, other than armour
+				affectedPlayer.updateWornItems(CHEFS_HAT); // the only white hat, other than armour
 			case "white":
 			case "guthix":
 			case "druid":
-				player.updateWornItems(DRUID_ROBE);
-				player.updateWornItems(DRUID_SKIRT);
+				affectedPlayer.updateWornItems(DRUID_ROBE);
+				affectedPlayer.updateWornItems(DRUID_SKIRT);
 				break;
 
 			case "pitchblack":
 			case "black":
 			case "shadowwarrior":
-				player.updateWornItems(SHADOW_WARRIOR_ROBE);
-				player.updateWornItems(SHADOW_WARRIOR_SKIRT);
+				affectedPlayer.updateWornItems(SHADOW_WARRIOR_ROBE);
+				affectedPlayer.updateWornItems(SHADOW_WARRIOR_SKIRT);
 				break;
 
 			case "mourner":
-				player.updateWornItems(GAS_MASK);
-				player.updateWornItems(LEATHER_ARMOUR);
-				player.updateWornItems(MOURNER_LEGS);
+				affectedPlayer.updateWornItems(GAS_MASK);
+				affectedPlayer.updateWornItems(LEATHER_ARMOUR);
+				affectedPlayer.updateWornItems(MOURNER_LEGS);
 				break;
 
 			case "disable":
 			case "none":
 			case "reset":
-				restoreHumanity(player);
+				restoreHumanity(affectedPlayer);
 				break;
 			default:
 				mes("don't know that one, sorry.");
@@ -434,7 +449,7 @@ public final class PlayerModerator implements CommandTrigger {
 
 	private void becomeNpc(Player player, String[] args) {
 		if (args.length == 0) {
-			mes("Usage: @mag@::becomeNpc [npc name] (position)");
+			mes("Usage: @mag@::becomeNpc [npc name] (position) (username)");
 		}
 		String npcName = args[0].trim().toLowerCase();
 		int pos = AppearanceId.SLOT_NPC;
@@ -483,173 +498,187 @@ public final class PlayerModerator implements CommandTrigger {
 			}
 		}
 
+		Player affectedPlayer = player;
+		if (args.length > 2) {
+			if (player.isAdmin()) {
+				affectedPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[2]));
+				if (affectedPlayer == null) {
+					mes("Couldn't find that player.");
+					return;
+				}
+			} else {
+				mes("Sorry, but only admins may bestow NPC appearances for other players.");
+				return;
+			}
+		}
+
 		switch (npcName) {
 			// TODO: NPCs other than monsters, like Ned.
 
 			case "rat":
-				updateAppearanceToNpc(player, RAT, pos);
+				updateAppearanceToNpc(affectedPlayer, RAT, pos);
 				break;
 			case "demon":
-				updateAppearanceToNpc(player, DEMON, pos);
+				updateAppearanceToNpc(affectedPlayer, DEMON, pos);
 				break;
 			case "spider":
-				updateAppearanceToNpc(player, SPIDER, pos);
+				updateAppearanceToNpc(affectedPlayer, SPIDER, pos);
 				break;
 			case "redspider":
-				updateAppearanceToNpc(player, RED_SPIDER, pos);
+				updateAppearanceToNpc(affectedPlayer, RED_SPIDER, pos);
 				break;
 			case "camel":
-				updateAppearanceToNpc(player, CAMEL, pos);
+				updateAppearanceToNpc(affectedPlayer, CAMEL, pos);
 				break;
 			case "cow":
-				updateAppearanceToNpc(player, COW, pos);
+				updateAppearanceToNpc(affectedPlayer, COW, pos);
 				break;
 			case "sheep":
 			case "bheep":
-				updateAppearanceToNpc(player, SHEEP, pos); // I think the only NPC without fighting animations
+				updateAppearanceToNpc(affectedPlayer, SHEEP, pos); // I think the only NPC without fighting animations
 				break;
 			case "unicorn":
-				updateAppearanceToNpc(player, UNICORN, pos);
+				updateAppearanceToNpc(affectedPlayer, UNICORN, pos);
 				break;
 			case "bear":
-				updateAppearanceToNpc(player, BEAR, pos);
+				updateAppearanceToNpc(affectedPlayer, BEAR, pos);
 				break;
 			case "chicken":
-				updateAppearanceToNpc(player, CHICKEN, pos);
+				updateAppearanceToNpc(affectedPlayer, CHICKEN, pos);
 				break;
 			case "armedskeleton":
 				player.updateWornItems(SKELETON_SCIMITAR_AND_SHIELD);
 			case "skeleton":
-				updateAppearanceToNpc(player, SKELETON, pos);
+				updateAppearanceToNpc(affectedPlayer, SKELETON, pos);
 				break;
 			case "armedzombie":
 				player.updateWornItems(ZOMBIE_AXE);
 			case "zombie":
-				updateAppearanceToNpc(player, ZOMBIE, pos);
+				updateAppearanceToNpc(affectedPlayer, ZOMBIE, pos);
 				break;
 			case "ghost":
-				updateAppearanceToNpc(player, GHOST, pos);
+				updateAppearanceToNpc(affectedPlayer, GHOST, pos);
 				break;
 			case "bat":
-				updateAppearanceToNpc(player, BAT, pos);
+				updateAppearanceToNpc(affectedPlayer, BAT, pos);
 				break;
 			case "armedgoblin":
 				player.updateWornItems(GOBLIN_SPEAR);
 			case "goblin":
-				updateAppearanceToNpc(player, GOBLIN, pos);
+				updateAppearanceToNpc(affectedPlayer, GOBLIN, pos);
 				break;
 			case "redgoblin":
-				updateAppearanceToNpc(player, GOBLIN_WITH_RED_ARMOUR, pos);
+				updateAppearanceToNpc(affectedPlayer, GOBLIN_WITH_RED_ARMOUR, pos);
 				break;
 			case "greengoblin":
-				updateAppearanceToNpc(player, GOBLIN_WITH_GREEN_ARMOUR, pos);
+				updateAppearanceToNpc(affectedPlayer, GOBLIN_WITH_GREEN_ARMOUR, pos);
 				break;
 			case "scorpion":
-				updateAppearanceToNpc(player, SCORPION, pos);
+				updateAppearanceToNpc(affectedPlayer, SCORPION, pos);
 				break;
 			case "elvarg":
 			case "greendragon":
-				updateAppearanceToNpc(player, ELVARG, pos);
+				updateAppearanceToNpc(affectedPlayer, ELVARG, pos);
 				break;
 			case "reddragon":
-				updateAppearanceToNpc(player, RED_DRAGON, pos);
+				updateAppearanceToNpc(affectedPlayer, RED_DRAGON, pos);
 				break;
 			case "bluedragon":
-				updateAppearanceToNpc(player, BLUE_DRAGON, pos);
+				updateAppearanceToNpc(affectedPlayer, BLUE_DRAGON, pos);
 				break;
 			case "whitewolf":
-				updateAppearanceToNpc(player, WHITE_WOLF, pos);
+				updateAppearanceToNpc(affectedPlayer, WHITE_WOLF, pos);
 				break;
 			case "greywolf":
 			case "graywolf":
 			case "wolf":
-				updateAppearanceToNpc(player, GREY_WOLF, pos);
+				updateAppearanceToNpc(affectedPlayer, GREY_WOLF, pos);
 				break;
 			case "firebird":
 			case "firechicken":
-				updateAppearanceToNpc(player, FIREBIRD, pos);
+				updateAppearanceToNpc(affectedPlayer, FIREBIRD, pos);
 				break;
 
 			case "guarddog":
 			case "brownwolf":
-				updateAppearanceToNpc(player, GUARD_DOG, pos);
+				updateAppearanceToNpc(affectedPlayer, GUARD_DOG, pos);
 				break;
 
 			case "icespider":
 			case "bluespider":
-				updateAppearanceToNpc(player, ICE_SPIDER, pos);
+				updateAppearanceToNpc(affectedPlayer, ICE_SPIDER, pos);
 				break;
 
 			case "blackdemon":
-				updateAppearanceToNpc(player, BLACK_DEMON, pos);
+				updateAppearanceToNpc(affectedPlayer, BLACK_DEMON, pos);
 				break;
 			case "blackdragon":
-				updateAppearanceToNpc(player, BLACK_DRAGON, pos);
+				updateAppearanceToNpc(affectedPlayer, BLACK_DRAGON, pos);
 				break;
 			case "poisonspider":
-				updateAppearanceToNpc(player, POISON_SPIDER, pos);
+				updateAppearanceToNpc(affectedPlayer, POISON_SPIDER, pos);
 				break;
 			case "shadowwolf":
 			case "blackwolf":
 			case "hellhound":
 			case "marwolf":
-				updateAppearanceToNpc(player, HELLHOUND, pos);
+				updateAppearanceToNpc(affectedPlayer, HELLHOUND, pos);
 				break;
 			case "blackunicorn":
-				updateAppearanceToNpc(player, BLACK_UNICORN, pos);
+				updateAppearanceToNpc(affectedPlayer, BLACK_UNICORN, pos);
 				break;
 			case "darkreddemon":
 			case "chronozon":
-				updateAppearanceToNpc(player, CHRONOZON, pos);
+				updateAppearanceToNpc(affectedPlayer, CHRONOZON, pos);
 				break;
 			case "shadowspider":
 			case "blackspider":
-				updateAppearanceToNpc(player, SHADOW_SPIDER, pos);
+				updateAppearanceToNpc(affectedPlayer, SHADOW_SPIDER, pos);
 				break;
 			case "dungeonrat":
 			case "lightrat":
-				updateAppearanceToNpc(player, DUNGEON_RAT, pos);
+				updateAppearanceToNpc(affectedPlayer, DUNGEON_RAT, pos);
 				break;
 			case "junglespider":
-				updateAppearanceToNpc(player, JUNGLE_SPIDER, pos);
+				updateAppearanceToNpc(affectedPlayer, JUNGLE_SPIDER, pos);
 				break;
 			case "souless":
 			case "soulless":
-				updateAppearanceToNpc(player, SOULESS, pos);
+				updateAppearanceToNpc(affectedPlayer, SOULESS, pos);
 				break;
 			case "desertwolf":
-				updateAppearanceToNpc(player, DESERT_WOLF, pos);
+				updateAppearanceToNpc(affectedPlayer, DESERT_WOLF, pos);
 				break;
 			case "junglewolf":
 			case "karamjawolf":
-				updateAppearanceToNpc(player, KARAMJA_WOLF, pos);
+				updateAppearanceToNpc(affectedPlayer, KARAMJA_WOLF, pos);
 				break;
 			case "oomliebird":
-				updateAppearanceToNpc(player, OOMLIE_BIRD, pos);
+				updateAppearanceToNpc(affectedPlayer, OOMLIE_BIRD, pos);
 				break;
 			case "bigbunny":
 			case "bigbun":
 			case "bigrabbit":
 			case "bigchungus":
-				updateAppearanceToNpc(player, BUNNY, pos);
+				updateAppearanceToNpc(affectedPlayer, BUNNY, pos);
 				break;
 			case "duck":
 			case "mallard":
-				updateAppearanceToNpc(player, DUCK, pos);
+				updateAppearanceToNpc(affectedPlayer, DUCK, pos);
 				break;
 			case "bunny":
 			case "bun":
 			case "rabbit":
-				updateAppearanceToNpc(player, BUNNY_MORPH, pos);
+				updateAppearanceToNpc(affectedPlayer, BUNNY_MORPH, pos);
 				break;
 			case "egg":
-				updateAppearanceToNpc(player, EGG_MORPH, pos);
+				updateAppearanceToNpc(affectedPlayer, EGG_MORPH, pos);
 				break;
 
 			case "disable":
 			case "none":
 			case "reset":
-				restoreHumanity(player);
+				restoreHumanity(affectedPlayer);
 
 
 		}
@@ -706,5 +735,23 @@ public final class PlayerModerator implements CommandTrigger {
 	private void restoreHumanity(Player player) {
 		speakTongues(player, 0);
 		player.exitMorph();
+	}
+
+	private void restoreHumanity(Player player, String[] args) {
+		if (args.length > 0) {
+			if (player.isAdmin()) {
+				Player affectedPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+				if (affectedPlayer == null) {
+					mes("Couldn't find that player.");
+					return;
+				}
+				restoreHumanity(affectedPlayer);
+			} else {
+				mes("Sorry, but you must be an admin to restore the humanity of others.");
+			}
+		} else {
+			restoreHumanity(player);
+		}
+
 	}
 }

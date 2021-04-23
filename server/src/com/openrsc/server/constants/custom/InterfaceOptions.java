@@ -17,7 +17,8 @@ public enum InterfaceOptions {
 	UNUSED(9), // 9 unused
 	AUCTION(10),
 	CLAN(11),
-	PARTY(12);
+	PARTY(12),
+	POINTS(13);
 
 	private int option;
 

@@ -72,6 +72,19 @@ public final class GeneralStore extends AbstractShop {
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
 		Shop shop = getShop(n, player);
+		if (player.getConfig().WANT_OPENPK_POINTS) {
+			npcsay(player, n, "Would you like to sell your points for Gp?", "1 Gp costs " + player.getConfig().OPENPK_POINTS_TO_GP_RATIO + " Points.");
+			int option = multi(player, n, false,
+				"Yes please", "No thanks");
+			if (option == 0) {
+				say(player, n, "Yes Please");
+				//p.setAccessingShop(shop);
+				ActionSender.showPointsToGp(player);
+			} else if (option == 1) {
+				say(player, n, "No thanks");
+			}
+			return;
+		}
 		if (shop != null) {
 			npcsay(player, n, "Can I help you at all?");
 			int menu = multi(player, n, "Yes please, what are you selling?", "No thanks");
@@ -91,6 +104,19 @@ public final class GeneralStore extends AbstractShop {
 			player.getY() - 2, player.getY() + 2);
 		if (storeOwner == null) return;
 		Shop shop = getShop(n, player);
+		if (player.getConfig().WANT_OPENPK_POINTS) {
+			npcsay(player, n, "Would you like to sell your points for Gp?", "1 Gp costs  " + player.getConfig().OPENPK_POINTS_TO_GP_RATIO + " Points.");
+			int option = multi(player, n, false,
+				"Yes please", "No thanks");
+			if (option == 0) {
+				say(player, n, "Yes Please");
+				//p.setAccessingShop(shop);
+				ActionSender.showPointsToGp(player);
+			} else if (option == 1) {
+				say(player, n, "No thanks");
+			}
+			return;
+		}
 		if (command.equalsIgnoreCase("Trade") && config().RIGHT_CLICK_TRADE) {
 			if (!player.getQolOptOut()) {
 				player.setAccessingShop(shop);

@@ -83,8 +83,8 @@ public final class SleepHandler implements PayloadProcessor<SleepStruct, OpcodeI
 		player.toggleFreezeXp();
 		ActionSender.sendExperienceToggle(player);
 		if (player.isExperienceFrozen())
-			player.message("You have @red@DISABLED@whi@ experience gain!");
+			player.message("You have @red@DISABLED@whi@ " + (player.getConfig().WANT_OPENPK_POINTS ? "points" : "experience") + " gain!");
 		else
-			player.message("You have @gre@ENABLED@whi@ experience gain!");
+			player.message("You have @gre@ENABLED@whi@ " + (player.getConfig().WANT_OPENPK_POINTS ? "points" : "experience") + " gain!");
 	}
 }

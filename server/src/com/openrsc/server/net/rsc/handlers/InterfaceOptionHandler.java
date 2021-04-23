@@ -1,10 +1,9 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.custom.AuctionOptions;
-import com.openrsc.server.constants.custom.ClanOptions;
-import com.openrsc.server.constants.custom.InterfaceOptions;
-import com.openrsc.server.constants.custom.PartyOptions;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.custom.*;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
 import com.openrsc.server.content.clan.ClanPlayer;
@@ -13,6 +12,8 @@ import com.openrsc.server.content.party.Party;
 import com.openrsc.server.content.party.PartyInvite;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.content.party.PartyRank;
+import com.openrsc.server.model.container.Item;
+import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -79,6 +80,10 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case PARTY: // Party
 				if (!player.getConfig().WANT_PARTIES) return;
 				handleParty(player, payload);
+				break;
+			case POINTS: //OpenPK Points
+				if (!player.getConfig().WANT_OPENPK_POINTS) return;
+				handlePoints(player, payload);
 				break;
 		}
 	}
@@ -725,5 +730,230 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				}
 				break;
 		}
+	}
+
+	private void handlePoints(Player player, OptionsStruct payload) {
+		int option = payload.value;
+		if (payload.amount < 0) {
+			player.message("Please enter a positive number.");
+			return;
+		}
+		switch (PointsOptions.getById(option)) {
+			case REDUCE_DEFENSE:
+				int amount1 = payload.amount;
+				int amountx1 = amount1 * 4;
+				if (!checkReduceLevelReqs(player, amountx1, Skills.DEFENSE)) {
+					return;
+				}
+				player.getSkills().reduceExperience(Skills.DEFENSE, amountx1);
+				player.getSkills().reduceExperience(Skills.HITS, amountx1 / 3);
+				if(player.getSkills().getMaxStat(Skills.HITS) < 10) {
+					player.getSkills().setSkill(Skills.HITS, 10, 4616);
+				}
+				player.addOpenPkPoints(amount1);
+				ActionSender.sendPoints(player);
+				player.checkEquipment();
+			break;
+			case INCREASE_DEFENSE:
+				int amount = payload.amount;
+				int amountx = amount * 4;
+				if (!checkIncreaseLevelReqs(player, amount)) {
+					return;
+				}
+				player.getSkills().addExperience(Skills.DEFENSE, amountx);
+				player.getSkills().addExperience(Skills.HITS, amountx / 3);
+				player.subtractOpenPkPoints(amount);
+				ActionSender.sendPoints(player);
+			break;
+			case INCREASE_ATTACK:
+				int amount0 = payload.amount;
+				int amountx0 = amount0 * 4;
+				if (!checkIncreaseLevelReqs(player, amount0)) {
+					return;
+				}
+				player.getSkills().addExperience(Skills.ATTACK, amountx0);
+				player.getSkills().addExperience(Skills.HITS, amountx0 / 3);
+				player.subtractOpenPkPoints(amount0);
+				ActionSender.sendPoints(player);
+			break;
+			case INCREASE_STRENGTH:
+				int amount2 = payload.amount;
+				int amountx2 = amount2 * 4;
+				if (!checkIncreaseLevelReqs(player, amount2)) {
+					return;
+				}
+				player.getSkills().addExperience(Skills.STRENGTH, amountx2);
+				player.getSkills().addExperience(Skills.HITS, amountx2 / 3);
+				player.subtractOpenPkPoints(amount2);
+				ActionSender.sendPoints(player);
+			break;
+			case INCREASE_RANGED:
+				int amount3 = payload.amount;
+				int amountx3 = amount3 * 4;
+				if (!checkIncreaseLevelReqs(player, amount3)) {
+					return;
+				}
+				player.getSkills().addExperience(Skills.RANGED, amountx3);
+				player.subtractOpenPkPoints(amount3);
+				ActionSender.sendPoints(player);
+			break;
+			case INCREASE_PRAYER:
+				int amount4 = payload.amount;
+				int amountx4 = amount4 * 4;
+				if (!checkIncreaseLevelReqs(player, amount4)) {
+					return;
+				}
+				player.getSkills().addExperience(Skills.PRAYER, amountx4);
+				player.subtractOpenPkPoints(amount4);
+				ActionSender.sendPoints(player);
+			break;
+			case INCREASE_MAGIC:
+				int amount5 = payload.amount;
+				int amountx5 = amount5 * 4;
+				if (!checkIncreaseLevelReqs(player, amount5)) {
+					return;
+				}
+				player.getSkills().addExperience(Skills.MAGIC, amountx5);
+				player.subtractOpenPkPoints(amount5);
+				ActionSender.sendPoints(player);
+			break;
+			case REDUCE_ATTACK:
+				int amount00 = payload.amount;
+				int amountx00 = amount00 * 4;
+				if (!checkReduceLevelReqs(player, amountx00, Skills.ATTACK)) {
+					return;
+				}
+				player.getSkills().reduceExperience(Skills.ATTACK, amountx00);
+				player.getSkills().reduceExperience(Skills.HITS, amountx00 / 3);
+				if(player.getSkills().getMaxStat(Skills.HITS) < 10) {
+					player.getSkills().setSkill(Skills.HITS, 10, 4616);
+				}
+				player.addOpenPkPoints(amount00);
+				ActionSender.sendPoints(player);
+				player.checkEquipment();
+			break;
+			case REDUCE_STRENGTH:
+				int amount22 = payload.amount;
+				int amountx22 = amount22 * 4;
+				if (!checkReduceLevelReqs(player, amountx22, Skills.STRENGTH)) {
+					return;
+				}
+				player.getSkills().reduceExperience(Skills.STRENGTH, amountx22);
+				player.getSkills().reduceExperience(Skills.HITS, amountx22 / 3);
+				if(player.getSkills().getMaxStat(Skills.HITS) < 10) {
+					player.getSkills().setSkill(Skills.HITS, 10, 4616);
+				}
+				player.addOpenPkPoints(amount22);
+				ActionSender.sendPoints(player);
+				player.checkEquipment();
+			break;
+			case REDUCE_RANGED:
+				int amount33 = payload.amount;
+				int amountx33 = amount33 * 4;
+				if (!checkReduceLevelReqs(player, amountx33, Skills.RANGED)) {
+					return;
+				}
+				player.getSkills().reduceExperience(Skills.RANGED, amountx33);
+				player.addOpenPkPoints(amount33);
+				ActionSender.sendPoints(player);
+				player.checkEquipment();
+			break;
+			case REDUCE_PRAYER:
+				int amount44 = payload.amount;
+				int amountx44 = amount44 * 4;
+				if (!checkReduceLevelReqs(player, amountx44, Skills.PRAYER)) {
+					return;
+				}
+				player.getSkills().reduceExperience(Skills.PRAYER, amountx44);
+				player.addOpenPkPoints(amount44);
+				ActionSender.sendPoints(player);
+				player.checkEquipment();
+			break;
+			case REDUCE_MAGIC:
+				int amount55 = payload.amount;
+				int amountx55 = amount55 * 4;
+				if (!checkReduceLevelReqs(player, amountx55, Skills.MAGIC)) {
+					return;
+				}
+				player.getSkills().reduceExperience(Skills.MAGIC, amountx55);
+				player.addOpenPkPoints(amount55);
+				ActionSender.sendPoints(player);
+				player.checkEquipment();
+			break;
+			case POINTS_TO_GP:
+				int amount28 = payload.amount;
+				if(player.getDuel().isDuelActive()){
+					player.message("You cannot do that while dueling");
+					return;
+				}
+				if(player.inCombat()){
+					player.message("You cannot do that whilst fighting");
+					return;
+				}
+				if(player.getOpenPkPoints() < amount28 * player.getConfig().OPENPK_POINTS_TO_GP_RATIO){
+					player.message("You do not have enough points");
+					return;
+				}
+				Item item = new Item(ItemId.COINS.id(), amount28);
+				if(player.getCarriedItems().getInventory().canHold(item)){
+					player.getCarriedItems().getInventory().add(item, false);
+					ActionSender.sendInventory(player);
+				} else {
+					player.getWorld().registerItem(
+					new GroundItem(player.getWorld(), ItemId.COINS.id(), player.getX(), player.getY(), amount28, player),
+					player.getConfig().GAME_TICK * 145);
+					player.message("You don't have room to hold the gp. It falls to the ground!");
+				}
+				player.subtractOpenPkPoints(amount28 * player.getConfig().OPENPK_POINTS_TO_GP_RATIO);
+				ActionSender.sendPoints(player);
+			break;
+		}
+	}
+
+	private final boolean checkReduceLevelReqs(Player player, int exp, int stat) {
+		if(player.getLocation().inWilderness()){
+			player.message("You cannot do that in the wilderness");
+			return false;
+		}
+		if(player.getDuel().isDuelActive()){
+			player.message("You cannot do that while dueling");
+			return false;
+		}
+		if(player.inCombat()){
+			player.message("You cannot do that whilst fighting");
+			return false;
+		}
+		if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
+			player.message("You must be out of combat for 10 seconds before changing stats");
+			return false;
+		}
+		if(player.getSkills().getExperience(stat) < exp){
+			player.message("You do not have that much exp in that stat");
+			return false;
+		}
+		return true;
+	}
+	private final boolean checkIncreaseLevelReqs(Player player, int points) {
+		if(player.getLocation().inWilderness()){
+			player.message("You cannot do that in the wilderness");
+			return false;
+		}
+		if(player.getDuel().isDuelActive()){
+			player.message("You cannot do that while dueling");
+			return false;
+		}
+		if(player.inCombat()){
+			player.message("You cannot do that whilst fighting");
+			return false;
+		}
+		if (System.currentTimeMillis() - player.getCombatTimer() < 10000){
+			player.message("You must be out of combat for 10 seconds before changing stats");
+			return false;
+		}
+		if(player.getOpenPkPoints() < points){
+			player.message("You do not have enough points");
+			return false;
+		}
+		return true;
 	}
 }
