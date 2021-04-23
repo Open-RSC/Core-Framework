@@ -141,6 +141,8 @@ public class LoginPacketHandler {
                         e.printStackTrace();
                     }
 
+					ClientLimitations cl = new ClientLimitations(clientVersion);
+
                     final LoginRequest request = new LoginRequest(server, channel, username, password, clientVersion) {
                         @Override
                         public void loginValidated(int response) {
@@ -177,6 +179,7 @@ public class LoginPacketHandler {
                             }
 
                             loadedPlayer.setClientVersion(clientVersion);
+                            loadedPlayer.setClientLimitations(cl);
 
 							initializePcapLogger(loadedPlayer, attachment);
 
@@ -193,6 +196,33 @@ public class LoginPacketHandler {
 
                     final String username = getString(packet.getBuffer()).trim();
                     final String password = getString(packet.getBuffer()).trim();
+
+                    long uid = packet.readLong(); // random data, not used...
+
+					// determine if client is too out of date to support everything the server will want to show it
+					ClientLimitations cl = new ClientLimitations(clientVersion);
+					if (packet.getReadableBytes() > 0) {
+						cl.maxAnimationId = packet.readShort();
+						cl.maxItemId = packet.readInt();
+						cl.maxNpcId = packet.readInt();
+						cl.maxSceneryId = packet.readInt();
+						cl.maxPrayerId = packet.readShort();
+						cl.maxSpellId = packet.readShort();
+						cl.maxSkillId = packet.readUnsignedByte() & 0xFF;
+						cl.maxRoofId = packet.readShort();
+						cl.maxTextureId = packet.readShort();
+						cl.maxTileId = packet.readShort();
+						cl.maxBoundaryId = packet.readInt();
+						cl.maxTeleBubbleId = packet.readUnsignedByte() & 0xFF;
+						cl.maxProjectileSprite = packet.readShort();
+						cl.maxSkinColor = packet.readInt();
+						cl.maxHairColor = packet.readInt();
+						cl.maxClothingColor = packet.readInt();
+						cl.maxQuestId = packet.readShort();
+						cl.numberOfSounds = packet.readInt();
+						cl.supportsModSprites = packet.readUnsignedByte() & 0xFF;
+						cl.mapHash = packet.readString();
+					}
 
                     final LoginRequest request = new LoginRequest(server, channel, username, password, clientVersion) {
                         @Override
@@ -221,6 +251,7 @@ public class LoginPacketHandler {
                             }
 
                             loadedPlayer.setClientVersion(clientVersion);
+                            loadedPlayer.setClientLimitations(cl);
 
 							initializePcapLogger(loadedPlayer, attachment);
 

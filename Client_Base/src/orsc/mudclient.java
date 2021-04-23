@@ -18,6 +18,7 @@ import com.openrsc.interfaces.misc.*;
 import com.openrsc.interfaces.misc.clan.Clan;
 import com.openrsc.interfaces.misc.party.Party;
 import orsc.buffers.RSBufferUtils;
+import orsc.buffers.RSBuffer_Bits;
 import orsc.enumerations.*;
 import orsc.graphics.gui.*;
 import orsc.graphics.three.CollisionFlag;
@@ -14222,6 +14223,8 @@ public final class mudclient implements Runnable {
 						this.packetHandler.getClientStream().bufferBits.putString(DataOperations.addCharacters(password, 20));
 
 						this.packetHandler.getClientStream().bufferBits.putLong(getUID());
+
+						tellLimitations(this.packetHandler.getClientStream().bufferBits);
 						//this.packetHandler.getClientStream().bufferBits.putString(getMacAddress());
 						/*
 						 * RSBuffer rsaBuffer = new RSBuffer(500);
@@ -14390,6 +14393,29 @@ public final class mudclient implements Runnable {
 			throw GenUtil.makeThrowable(var16, "client.IB(" + var1 + ',' + (pass != null ? "{...}" : "null") + ','
 				+ (user != null ? "{...}" : "null") + ',' + reconnecting + ')');
 		}
+	}
+
+	private void tellLimitations(RSBuffer_Bits bufferBits) {
+		bufferBits.putShort(EntityHandler.animationCount() - 1);
+		bufferBits.putInt(EntityHandler.itemCount() - 1);
+		bufferBits.putInt(EntityHandler.npcCount() - 1);
+		bufferBits.putInt(EntityHandler.objectCount() - 1);
+		bufferBits.putShort(EntityHandler.prayerCount() - 1);
+		bufferBits.putShort(EntityHandler.spellCount() - 1);
+		bufferBits.putByte((skillCount - 1) & 0xFF);
+		bufferBits.putShort(EntityHandler.elevationCount() - 1); // roofs, called "elevation" here for whatever reason
+		bufferBits.putShort(EntityHandler.textureCount() - 1);
+		bufferBits.putShort(EntityHandler.tileCount() - 1);
+		bufferBits.putInt(EntityHandler.doorCount() - 1);
+		bufferBits.putByte((((teleportBubbleType.length) / 25) & 0xFF) - 1); // 25 frames of animation
+		bufferBits.putShort(EntityHandler.projectilesCount() - 1);
+		bufferBits.putInt(playerSkinColors.length - 1);
+		bufferBits.putInt(playerHairColors.length - 1);
+		bufferBits.putInt(playerClothingColors.length - 1);
+		bufferBits.putShort(questNames.length - 1);
+		bufferBits.putInt(soundCache.size());
+		bufferBits.putByte((EntityHandler.crownCount() - 1) & 0xFF);
+		bufferBits.putString(this.world.mapHash);
 	}
 
 	private void lostConnection(int var1) {

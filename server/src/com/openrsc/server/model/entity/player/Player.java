@@ -46,6 +46,7 @@ import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.ActionSender;
+import com.openrsc.server.net.rsc.ClientLimitations;
 import com.openrsc.server.net.rsc.PayloadProcessorManager;
 import com.openrsc.server.net.rsc.parsers.PayloadParser;
 import com.openrsc.server.net.rsc.parsers.impl.Payload235Parser;
@@ -152,6 +153,7 @@ public final class Player extends Mob {
 	private boolean qolOptOutWarned = false;
 	private boolean certOptOutWarned = false;
 	public boolean speakTongues = false;
+	private ClientLimitations clientLimitations;
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -3516,5 +3518,12 @@ public final class Player extends Mob {
 				}
 			}
 		}
+	}
+
+	public void setClientLimitations(ClientLimitations cl) {
+		this.clientLimitations = cl;
+	}
+	public ClientLimitations getClientLimitations() {
+		return this.clientLimitations;
 	}
 }
