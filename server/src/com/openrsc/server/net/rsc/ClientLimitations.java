@@ -7,7 +7,8 @@ public class ClientLimitations {
 
 	int maxAnimationId, maxItemId, maxNpcId, maxSceneryId, maxPrayerId, maxSpellId,
 		maxSkillId, maxRoofId, maxTextureId, maxTileId, maxBoundaryId, maxTeleBubbleId,
-		maxProjectileSprite, maxSkinColor, maxHairColor, maxClothingColor, maxQuestId;
+		maxProjectileSprite, maxSkinColor, maxHairColor, maxClothingColor, maxQuestId,
+		maxDialogueOptions, maxBankItems;
 	String mapHash;
 	int supportsModSprites = NO_SUPPORT;
 	int numberOfSounds = NO_SUPPORT;
@@ -23,8 +24,13 @@ public class ClientLimitations {
 			maxNpcId = 157;
 			maxSceneryId = 179;
 			maxPrayerId = -1;
-			maxSpellId = 8; // TODO: different for 38 than 40
-			maxSkillId = 15; // different skill indexing, but this is the maximum value of the byte received
+			if (clientVersion == 38) {
+				maxSkillId = 18;
+				maxSpellId = 10;
+			} else {
+				maxSkillId = 15;
+				maxSpellId = 8;
+			}
 			maxRoofId = -1; // not implemented until client 115 on 2001-12-24
 			maxTextureId = -1; // not implemented until client 115 on 2001-12-24
 			maxTileId = 2;
@@ -35,6 +41,8 @@ public class ClientLimitations {
 			maxHairColor = 9;
 			maxClothingColor = 14;
 			maxQuestId = -1; // quest list not implemented until 2001-05-28
+			maxDialogueOptions = 5;
+			maxBankItems = 0; // item bank not implemented until client 72 on 2001-07-26
 			mapHash = "14";
 		}
 
@@ -62,6 +70,8 @@ public class ClientLimitations {
 			maxClothingColor = 14;
 			maxQuestId = 49;
 			mapHash = "63";
+			maxDialogueOptions = 5;
+			maxBankItems = 48 * 4;
 			numberOfSounds = AUTHENTIC_SOUNDS_ONLY;
 		}
 
@@ -89,7 +99,18 @@ public class ClientLimitations {
 			maxQuestId = 99;
 			numberOfSounds = 37;
 			supportsModSprites = 4;
+			maxDialogueOptions = 20;
+			maxBankItems = Integer.MAX_VALUE;
 			mapHash = "0dd0a1e47767f7f64b7931688131512f";
 		}
+	}
+
+	@Override
+	public String toString() {
+		return String.format("@ora@Client Limitations%%@gre@maxAnimationId: @whi@%d, @gre@maxItemId: @whi@%d, @gre@maxNpcId: @whi@%d, @gre@maxSceneryId: @whi@%d, @gre@maxPrayerId: @whi@%d, @gre@maxSpellId: @whi@%d, @gre@maxSkillId: @whi@%d, @gre@maxRoofId: @whi@%d, @gre@maxTextureId: @whi@%d, @gre@maxTileId: @whi@%d, @gre@maxBoundaryId: @whi@%d, @gre@maxTeleBubbleId: @whi@%d, @gre@maxProjectileSprite: @whi@%d, @gre@maxSkinColor: @whi@%d, @gre@maxHairColor: @whi@%d, @gre@maxClothingColor: @whi@%d, @gre@maxQuestId: @whi@%d, @gre@maxDialogueOptions: @whi@%d, @gre@maxBankItems: @whi@%d, @gre@mapHash: @whi@%s",
+			maxAnimationId, maxItemId, maxNpcId, maxSceneryId, maxPrayerId, maxSpellId,
+			maxSkillId, maxRoofId, maxTextureId, maxTileId, maxBoundaryId, maxTeleBubbleId,
+			maxProjectileSprite, maxSkinColor, maxHairColor, maxClothingColor, maxQuestId,
+			maxDialogueOptions, maxBankItems, mapHash);
 	}
 }

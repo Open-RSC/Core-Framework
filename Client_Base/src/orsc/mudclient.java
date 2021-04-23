@@ -14415,6 +14415,8 @@ public final class mudclient implements Runnable {
 		bufferBits.putShort(questNames.length - 1);
 		bufferBits.putInt(soundCache.size());
 		bufferBits.putByte((EntityHandler.crownCount() - 1) & 0xFF);
+		bufferBits.putByte(optionsMenuText.length & 0xFF);
+		bufferBits.putInt(bank.maximumBankItemsSupported());
 		bufferBits.putString(this.world.mapHash);
 	}
 

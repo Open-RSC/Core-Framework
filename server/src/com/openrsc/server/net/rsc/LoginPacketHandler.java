@@ -221,6 +221,8 @@ public class LoginPacketHandler {
 						cl.maxQuestId = packet.readShort();
 						cl.numberOfSounds = packet.readInt();
 						cl.supportsModSprites = packet.readUnsignedByte() & 0xFF;
+						cl.maxDialogueOptions = packet.readUnsignedByte() & 0xFF;
+						cl.maxBankItems = packet.readInt();
 						cl.mapHash = packet.readString();
 					}
 
