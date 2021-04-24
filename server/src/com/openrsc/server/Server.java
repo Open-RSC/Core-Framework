@@ -21,6 +21,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.Crypto;
 import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.NamedThreadFactory;
+import com.openrsc.server.util.SystemUtil;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.MessageType;
 import io.netty.bootstrap.ServerBootstrap;
@@ -104,8 +105,7 @@ public class Server implements Runnable {
 			Thread.currentThread().setName("InitThread");
 			// Enables asynchronous, garbage-free logging.
 			System.setProperty("log4j.configurationFile", "conf/server/log4j2.xml");
-			System.setProperty("Log4jContextSelector",
-				"org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
+			System.setProperty("Log4jContextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
 
 			LOGGER = LogManager.getLogger();
 		} catch (final Throwable t) {
@@ -148,48 +148,54 @@ public class Server implements Runnable {
 
 	public static void main(final String[] args) {
 		LOGGER.info("Launching Game Server...");
+		try {
+			List<String> configurationFiles = new ArrayList<>();
+			Optional.ofNullable(System.getProperty("conf")).ifPresent(files -> {
+				configurationFiles.addAll(
+						Arrays.stream(files.split(",")).map(file -> file + ".conf").collect(Collectors.toList())
+				);
+			});
 
-		List<String> configurationFiles = new ArrayList<>();
-		Optional.ofNullable(System.getProperty("conf")).ifPresent(files -> {
-			configurationFiles.addAll(
-					Arrays.stream(files.split(",")).map(file -> file + ".conf").collect(Collectors.toList())
-			);
-		});
+			configurationFiles.addAll(Arrays.asList(args));
 
-		configurationFiles.addAll(Arrays.asList(args));
+			if (configurationFiles.size() == 0) {
+				LOGGER.info("Server Configuration file not provided. Loading from default.conf or local.conf.");
 
-		if (configurationFiles.size() == 0) {
-			LOGGER.info("Server Configuration file not provided. Loading from default.conf or local.conf.");
-
-			try {
-				startServer("default.conf");
-			} catch (final Throwable t) {
-				LOGGER.catching(t);
-			}
-		} else {
-			for (String configuration : configurationFiles) {
 				try {
-					startServer(configuration);
+					startServer("default.conf");
 				} catch (final Throwable t) {
 					LOGGER.catching(t);
+					SystemUtil.exit(1);
+				}
+			} else {
+				for (String configuration : configurationFiles) {
+					try {
+						startServer(configuration);
+					} catch (final Throwable t) {
+						LOGGER.catching(t);
+						SystemUtil.exit(1);
+					}
 				}
 			}
-		}
 
-		while (serversList.size() > 0) {
-			try {
-				Thread.sleep(1000);
-			} catch (final InterruptedException e) {
-				e.printStackTrace();
-			}
+			while (serversList.size() > 0) {
+				try {
+					Thread.sleep(1000);
+				} catch (final InterruptedException e) {
+					e.printStackTrace();
+				}
 
-			for (final Server server : serversList.values()) {
-				server.checkShutdown();
+				for (final Server server : serversList.values()) {
+					server.checkShutdown();
+				}
 			}
+		} catch(Exception ex) {
+			LOGGER.error("Error starting server: ", ex);
+			SystemUtil.exit(1);
 		}
 
 		LOGGER.info("Exiting server process...");
-		System.exit(0);
+		SystemUtil.exit(0);
 	}
 
 	public Server(final String configFile) throws IOException {
@@ -211,7 +217,7 @@ public class Server implements Runnable {
 			default:
 				database = null;
 				LOGGER.error("No database type");
-				System.exit(1);
+				SystemUtil.exit(1);
 				break;
 		}
 
@@ -261,8 +267,8 @@ public class Server implements Runnable {
 				try {
 					getDatabase().open();
 				} catch (final Exception ex) {
-					LOGGER.error(ex);
-					System.exit(1);
+					LOGGER.catching(ex);
+					SystemUtil.exit(1);
 				}
 				LOGGER.info("Database Connection Completed");
 
@@ -271,7 +277,7 @@ public class Server implements Runnable {
 					LOGGER.info("Database Structure Changes Good");
 				} else {
 					LOGGER.error("Unable to change database structure!");
-					System.exit(1);
+					SystemUtil.exit(1);
 				}
 
 				LOGGER.info("Loading Prerendered Sleepword Images...");
@@ -357,7 +363,7 @@ public class Server implements Runnable {
                     LOGGER.info("RSA exponent: " + Crypto.getPublicExponent());
                     LOGGER.info("RSA modulus: " + Crypto.getPublicModulus());
 				} catch (final InterruptedException e) {
-					LOGGER.catching(e);
+					LOGGER.error(e);
 				}
 
 				// Only add this server to the active servers list if it's not already there
@@ -369,7 +375,7 @@ public class Server implements Runnable {
 				running = true;
 			} catch (final Throwable t) {
 				LOGGER.catching(t);
-				System.exit(1);
+				SystemUtil.exit(1);
 			}
 		}
 	}
@@ -438,7 +444,7 @@ public class Server implements Runnable {
 				LOGGER.info("Server unloaded");
 			} catch (final Throwable t) {
 				LOGGER.catching(t);
-				System.exit(1);
+				SystemUtil.exit(1);
 			}
 		}
 	}

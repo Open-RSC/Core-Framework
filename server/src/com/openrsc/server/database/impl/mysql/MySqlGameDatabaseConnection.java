@@ -1,6 +1,7 @@
 package com.openrsc.server.database.impl.mysql;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.util.SystemUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,7 +43,8 @@ public class MySqlGameDatabaseConnection {
 		if(isConnected()) {
 			LOGGER.info(getServer().getName() + " : " + getServer().getName() + " - Connected to MySQL!");
 		} else {
-			LOGGER.info("Unable to connect to MySQL");
+			LOGGER.error("Unable to connect to MySQL");
+			SystemUtil.exit(1);
 		}
 
 		return isConnected();

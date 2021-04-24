@@ -12,7 +12,10 @@ application {
 }
 
 repositories {
-    jcenter() // jcenter is a superset of mavenCentral
+    mavenCentral()
+    maven {
+        url = uri("https://repo.spring.io/libs-release/")
+    }
 }
 
 sourceSets {
@@ -24,12 +27,11 @@ sourceSets {
 }
 
 dependencies {
-    // Class-path scanner for plugins
-    implementation "org.reflections:reflections:0.9.12"
+    // Only available on jcenter which is due to be shutdown, reference locally
+    implementation files("lib/JDA-4.0.0_55-withDependencies.jar")
 
     // Discord
     implementation "com.vdurmont:emoji-java:4.0.0"
-    implementation "net.dv8tion:JDA:4.2.0_247"
     implementation "org.gitlab4j:gitlab4j-api:4.12.17"
 
     // Others
@@ -55,6 +57,12 @@ dependencies {
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.0"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+}
+
+ant.importBuild("build.xml")
+
+run {
+    dependsOn compile_plugins
 }
 
 test {

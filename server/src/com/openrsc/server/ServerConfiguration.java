@@ -2,6 +2,7 @@ package com.openrsc.server;
 
 import com.google.common.collect.ImmutableList;
 import com.openrsc.server.database.DatabaseType;
+import com.openrsc.server.util.SystemUtil;
 import com.openrsc.server.util.YMLReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -250,8 +251,7 @@ public class ServerConfiguration {
 			LOGGER.info("Loaded connections.conf");
 		} catch (Exception e) {
 			LOGGER.info("Properties file connections.conf not found, terminating server.");
-			System.exit(1);
-
+			SystemUtil.exit(1);
 		}
 
 		// Always try to load from local.conf first.
@@ -517,7 +517,7 @@ public class ServerConfiguration {
 		catch (NumberFormatException ex) {
 			LOGGER.error("Error reading value for key \"" + key + "\" " + ex.getMessage() +
 				". Should be an integer. Terminating server.");
-			System.exit(1);
+			SystemUtil.exit(1);
 		}
 		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
@@ -535,7 +535,7 @@ public class ServerConfiguration {
 		catch (NumberFormatException ex) {
 			LOGGER.error("Error reading value for key \"" + key + "\" " + ex.getMessage() +
 				". Should be a double. Terminating server.");
-			System.exit(1);
+			SystemUtil.exit(1);
 		}
 		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");
 		return Optional.empty();
@@ -556,7 +556,7 @@ public class ServerConfiguration {
 				LOGGER.error("Error reading value for key \"" + key + "\" for input string \"" +
 					serverProps.getAttribute(key) + ".\"" +
 					" Should be true or false. Terminating server.");
-				System.exit(1);
+				SystemUtil.exit(1);
 			}
 		}
 		LOGGER.info("Key: \"" + key + "\" does not exist in the provided conf file. Using default.");

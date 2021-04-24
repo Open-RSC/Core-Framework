@@ -5,14 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71958bef-0dea-46c2-9e76-8d436da768c3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/util/SystemUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client_Base/src/orsc/graphics/three/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client_Base/src/orsc/graphics/three/World.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client_Base/src/orsc/graphics/two/GraphicsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client_Base/src/orsc/graphics/two/GraphicsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client_Base/src/orsc/mudclient.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client_Base/src/orsc/mudclient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC_Client/src/orsc/ORSCApplet.java" beforeDir="false" afterPath="$PROJECT_DIR$/PC_Client/src/orsc/ORSCApplet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC_Launcher/src/main/java/launcher/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/PC_Launcher/src/main/java/launcher/Launcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC_Launcher/src/main/java/launcher/Utils/ClientLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/PC_Launcher/src/main/java/launcher/Utils/ClientLauncher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PC_Launcher/src/main/java/launcher/listeners/ButtonListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/PC_Launcher/src/main/java/launcher/listeners/ButtonListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portable_Windows/apache-ant-1.10.5/WHATSNEW" beforeDir="false" afterPath="$PROJECT_DIR$/Portable_Windows/apache-ant-1.10.5/WHATSNEW" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/server/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/conf/server/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/conf/server/log4j2.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/connections.conf" beforeDir="false" afterPath="$PROJECT_DIR$/server/connections.conf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/default.conf" beforeDir="false" afterPath="$PROJECT_DIR$/server/default.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/server/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/ServerConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/ServerConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/GameDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/GameDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/WorldPopulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/WorldPopulator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameDatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameDatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/util/LogUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/util/LogUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/uranium.conf" beforeDir="false" afterPath="$PROJECT_DIR$/server/uranium.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameLogger.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,24 +66,7 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="server" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="application" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="server" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="server" type="f1a62948:ProjectNode" />
-                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="server" type="f1a62948:ProjectNode" />
-                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
-                <item name="runtimeClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
               </path>
             </expand>
             <select />
@@ -116,16 +113,20 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
     <property name="show.migrate.to.gradle.popup" value="false" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.openrsc.server.util" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/server/lib" />
       <recent name="file://$PROJECT_DIR$/core/server" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.Build &amp; Run Server (Gradle)">
+  <component name="RunManager" selected="JAR Application.Run Server">
     <configuration name="Compile Client" type="AntRunConfiguration">
       <method v="2">
         <option name="AntTarget" enabled="true" antfile="file://$PROJECT_DIR$/Client_Base/build.xml" target="compile" />
@@ -143,22 +144,6 @@
         <option name="AntTarget" enabled="true" antfile="file://$PROJECT_DIR$/server/build.xml" target="compile_plugins" />
       </method>
     </configuration>
-    <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.openrsc.server.Server" />
-      <module name="server.main" />
-      <option name="PROGRAM_PARAMETERS" value="default.conf" />
-      <option name="VM_PARAMETERS" value="-DcoloredLogging=true" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/server/" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.openrsc.server.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -169,6 +154,27 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="Build Plugins (Gradle)" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/server" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="compile_plugins" />
+          </list>
+        </option>
+        <option name="vmOptions" value="" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
     </configuration>
     <configuration name="Build &amp; Run Server (Gradle)" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
@@ -188,7 +194,7 @@
       </ExternalSystemSettings>
       <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
+      <DebugAllEnabled>true</DebugAllEnabled>
       <method v="2" />
     </configuration>
     <configuration name="Run Client" type="JarApplication" singleton="false">
@@ -223,7 +229,7 @@
       <item itemvalue="Ant Target.Compile Server" />
       <item itemvalue="Ant Target.Compile Client" />
       <item itemvalue="Ant Target.Compile Launcher" />
-      <item itemvalue="Application.Server" />
+      <item itemvalue="Gradle.Build Plugins (Gradle)" />
       <item itemvalue="Gradle.Build &amp; Run Server (Gradle)" />
       <item itemvalue="JAR Application.Run Server" />
       <item itemvalue="JAR Application.Run Client" />
@@ -232,7 +238,6 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.Build &amp; Run Server (Gradle)" />
-        <item itemvalue="Application.Server" />
       </list>
     </recent_temporary>
   </component>
@@ -263,6 +268,9 @@
       <workItem from="1618913715306" duration="13216000" />
       <workItem from="1619012058823" duration="7511000" />
       <workItem from="1619087848257" duration="7911000" />
+      <workItem from="1619136345329" duration="5514000" />
+      <workItem from="1619181088992" duration="4646000" />
+      <workItem from="1619231489122" duration="2708000" />
     </task>
     <servers />
   </component>
@@ -280,33 +288,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/server/src/com/openrsc/server/Server.java</url>
-          <line>274</line>
+          <line>280</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/server/src/com/openrsc/server/Server.java</url>
-          <line>271</line>
+          <line>277</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/server/src/com/openrsc/server/Server.java</url>
-          <line>273</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/server/src/com/openrsc/server/database/GameDatabase.java</url>
-          <line>289</line>
+          <line>290</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/server/src/com/openrsc/server/Server.java</url>
-          <line>341</line>
+          <line>347</line>
           <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/server/src/com/openrsc/server/Server.java</url>
-          <line>370</line>
-          <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/server/src/com/openrsc/server/util/LogUtil.java</url>

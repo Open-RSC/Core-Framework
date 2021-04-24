@@ -5,6 +5,7 @@ import com.openrsc.server.Server;
 import com.openrsc.server.database.GameLogger;
 import com.openrsc.server.database.impl.mysql.queries.Query;
 import com.openrsc.server.database.impl.mysql.queries.ResultQuery;
+import com.openrsc.server.util.SystemUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,7 +36,7 @@ public final class MySqlGameLogger extends GameLogger {
 		// TODO: Implement GameLogger into the database driver.
 		if (database == null) {
 			LOGGER.error("GameDatabase provided was null or not a MySqlGameDatabase.");
-			System.exit(1);
+			SystemUtil.exit(1);
 		}
 		this.database = database;
 	}
