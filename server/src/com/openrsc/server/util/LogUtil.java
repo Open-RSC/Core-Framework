@@ -32,7 +32,7 @@ public class LogUtil {
             StringBuilder logPattern = new StringBuilder();
             if ("true".equalsIgnoreCase(System.getProperty("coloredLogging"))) {
                 logPattern.append("%d{yyyy-MM-dd HH:mm:ss}");
-                logPattern.append("%highlight{[${LOG_LEVEL_PATTERN:-%5p}]}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=green, TRACE=green}");
+                logPattern.append(" %highlight{[${LOG_LEVEL_PATTERN:-%5p}]}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=green, TRACE=green}");
                 logPattern.append("%style{[%t]}{magenta}");
                 logPattern.append("%style{[%c{1}]}{cyan}");
                 logPattern.append(" %m%n%ex");

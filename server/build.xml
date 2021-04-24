@@ -63,12 +63,13 @@
     </target>
 
     <property name="confFile" value="default" />
+    <property name="coloredLogging" value="false" />
     <target name="runserver">
         <java classname="com.openrsc.server.Server" fork="true">
             <!-- usage: `ant runserver -DconfFile=openrsc` to run server with config file openrsc.conf -->
             <!-- see also: Deployment_Scripts/run.sh -->
             <arg value="${confFile}.conf"/>
-            <jvmarg line="-Xdiag -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=64m"/>
+            <jvmarg line="-Xdiag -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=64m -DcoloredLogging=${coloredLogging}"/>
             <classpath>
                 <pathelement location="${lib}/netty-all-4.1.8.Final.jar"/>
                 <pathelement location="${lib}/disruptor-3.3.0.jar"/>
