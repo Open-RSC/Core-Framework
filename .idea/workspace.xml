@@ -5,28 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="71958bef-0dea-46c2-9e76-8d436da768c3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/util/SystemUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Client_Base/src/orsc/graphics/three/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client_Base/src/orsc/graphics/three/World.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Client_Base/src/orsc/graphics/two/GraphicsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client_Base/src/orsc/graphics/two/GraphicsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Client_Base/src/orsc/mudclient.java" beforeDir="false" afterPath="$PROJECT_DIR$/Client_Base/src/orsc/mudclient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PC_Client/src/orsc/ORSCApplet.java" beforeDir="false" afterPath="$PROJECT_DIR$/PC_Client/src/orsc/ORSCApplet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PC_Launcher/src/main/java/launcher/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/PC_Launcher/src/main/java/launcher/Launcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PC_Launcher/src/main/java/launcher/Utils/ClientLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/PC_Launcher/src/main/java/launcher/Utils/ClientLauncher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PC_Launcher/src/main/java/launcher/listeners/ButtonListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/PC_Launcher/src/main/java/launcher/listeners/ButtonListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Portable_Windows/apache-ant-1.10.5/WHATSNEW" beforeDir="false" afterPath="$PROJECT_DIR$/Portable_Windows/apache-ant-1.10.5/WHATSNEW" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/server/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/conf/server/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/conf/server/log4j2.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/connections.conf" beforeDir="false" afterPath="$PROJECT_DIR$/server/connections.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/default.conf" beforeDir="false" afterPath="$PROJECT_DIR$/server/default.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/server/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/ServerConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/ServerConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/GameDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/GameDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/WorldPopulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/WorldPopulator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameDatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameDatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/com/openrsc/server/database/impl/mysql/MySqlGameLogger.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +106,7 @@
       <recent name="file://$PROJECT_DIR$/core/server" />
     </key>
   </component>
-  <component name="RunManager" selected="JAR Application.Run Server">
+  <component name="RunManager" selected="Gradle.Build Plugins (Gradle)">
     <configuration name="Compile Client" type="AntRunConfiguration">
       <method v="2">
         <option name="AntTarget" enabled="true" antfile="file://$PROJECT_DIR$/Client_Base/build.xml" target="compile" />
@@ -144,13 +124,15 @@
         <option name="AntTarget" enabled="true" antfile="file://$PROJECT_DIR$/server/build.xml" target="compile_plugins" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -212,12 +194,9 @@
     <configuration name="Run Server" type="JarApplication" singleton="false">
       <option name="JAR_PATH" value="$PROJECT_DIR$/server/core.jar" />
       <option name="VM_PARAMETERS" value="-DcoloredLogging=true -Xdiag -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:+UseBiasedLocking -XX:NewSize=64m" />
-      <option name="PROGRAM_PARAMETERS" value="uranium.conf default.conf" />
+      <option name="PROGRAM_PARAMETERS" value="default.conf" />
       <option name="WORKING_DIRECTORY" value="server" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <envs>
-        <env name="logFilename" value="test2" />
-      </envs>
       <method v="2" />
     </configuration>
     <configuration default="true" type="JarApplication">
