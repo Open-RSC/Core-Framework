@@ -783,7 +783,7 @@ public final class Admins implements CommandTrigger {
 			// player is offline
 			List<Item> bank;
 			try {
-				bank = player.getWorld().getServer().getDatabase().retrievePlayerBank(targetPlayerName);
+				bank = player.getWorld().getServer().getPlayerService().retrievePlayerBank(targetPlayerName);
 			} catch (GameDatabaseException e) {
 				player.message(messagePrefix + "Could not find player; invalid name.");
 				return;
@@ -802,7 +802,7 @@ public final class Admins implements CommandTrigger {
 
 			// verify success
 			try {
-				int sizeAfter = player.getWorld().getServer().getDatabase().retrievePlayerBank(targetPlayerName).size();
+				int sizeAfter = player.getWorld().getServer().getPlayerService().retrievePlayerBank(targetPlayerName).size();
 				if (sizeAfter == 0) {
 					success = true;
 				} else {
@@ -1119,7 +1119,7 @@ public final class Admins implements CommandTrigger {
 			// player is offline
 			List<Item> inventory;
 			try {
-				inventory = player.getWorld().getServer().getDatabase().retrievePlayerInventory(args[0]);
+				inventory = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(args[0]);
 			} catch (GameDatabaseException e) {
 				player.message(messagePrefix + "Could not find player; invalid name.");
 				return;
@@ -1129,7 +1129,7 @@ public final class Admins implements CommandTrigger {
 			try {
 				int playerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(args[0]);
 				if (playerId == -1) {
-					throw new GameDatabaseException(player.getWorld().getServer().getDatabase(), "Could not find player.");
+					throw new GameDatabaseException(Admins.class, "Could not find player.");
 				}
 				for (Item inventoryItem : inventory) {
 					player.getWorld().getServer().getDatabase().inventoryRemove(playerId, inventoryItem);
@@ -1142,7 +1142,7 @@ public final class Admins implements CommandTrigger {
 
 			// verify success
 			try {
-				int sizeAfter = player.getWorld().getServer().getDatabase().retrievePlayerInventory(args[0]).size();
+				int sizeAfter = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(args[0]).size();
 				if (sizeAfter == 0) {
 					success = true;
 				} else {

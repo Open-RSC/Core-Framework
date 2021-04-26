@@ -34,9 +34,9 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 	}
 
 	protected void processInternal() {
-		//LOGGER.info("Saved player " + playerToSave.getUsername() + "");
+		LOGGER.info("Saved player " + player.getUsername() + "");
 		try {
-			boolean success = getServer().getDatabase().savePlayer(getPlayer());
+			boolean success = getServer().getPlayerService().savePlayer(player);
 			if (success && this.logout)
 				logoutSaveSuccess();
 		} catch (final GameDatabaseException ex) {

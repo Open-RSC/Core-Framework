@@ -134,7 +134,7 @@ public class Skills {
 			if (getMob().isPlayer()) {
 				Player player = (Player) getMob();
 				try {
-					getWorld().getServer().getDatabase().savePlayerMaxSkill(player.getDatabaseID(), skill, maxStats[skill]);
+					getWorld().getServer().getPlayerService().savePlayerMaxSkill(player.getDatabaseID(), skill, maxStats[skill]);
 				} catch (GameDatabaseException e) {
 					LOGGER.catching(e);
 				}
@@ -204,7 +204,7 @@ public class Skills {
 			if (expCaps[skill] == 0 && getMob().isPlayer()) {
 				expCaps[skill] = System.currentTimeMillis() / 1000;
 				try {
-					getWorld().getServer().getDatabase().savePlayerExpCapped(((Player) getMob()).getDatabaseID(), skill, expCaps[skill]);
+					getWorld().getServer().getPlayerService().savePlayerExpCapped(((Player) getMob()).getDatabaseID(), skill, expCaps[skill]);
 				} catch (GameDatabaseException e) {
 					LOGGER.catching(e);
 				}
@@ -233,7 +233,7 @@ public class Skills {
 			if (getMob().isPlayer()) {
 				Player player = (Player) getMob();
 				try {
-					getWorld().getServer().getDatabase().savePlayerMaxSkill(player.getDatabaseID(), skill, maxStats[skill]);
+					getWorld().getServer().getPlayerService().savePlayerMaxSkill(player.getDatabaseID(), skill, maxStats[skill]);
 				} catch (GameDatabaseException e) {
 					LOGGER.catching(e);
 				}
@@ -334,7 +334,7 @@ public class Skills {
 			exps[skill] = experienceForLevel(level);
 			maxStats[skill] = level;
 			try {
-				getWorld().getServer().getDatabase().savePlayerMaxSkill(((Player) getMob()).getDatabaseID(), skill, level);
+				getWorld().getServer().getPlayerService().savePlayerMaxSkill(((Player) getMob()).getDatabaseID(), skill, level);
 			} catch (GameDatabaseException e) {
 				LOGGER.catching(e);
 			}

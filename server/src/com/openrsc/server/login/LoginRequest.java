@@ -96,7 +96,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		final int loginResponse = validateLogin();
 		loginValidated(loginResponse);
 		if ((loginResponse & 0x40) != LoginResponse.LOGIN_UNSUCCESSFUL) {
-			final Player loadedPlayer = getServer().getDatabase().loadPlayer(this);
+			final Player loadedPlayer = getServer().getPlayerService().loadPlayer(this);
 			loadedPlayer.setLoggedIn(true);
 
 			LOGGER.info("Player Loaded: " + getUsername() +  String.format("; Client Version: %d", clientVersion));

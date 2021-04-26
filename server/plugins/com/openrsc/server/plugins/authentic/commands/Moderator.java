@@ -155,7 +155,7 @@ public final class Moderator implements CommandTrigger {
 		List<Item> inventory;
 		if (targetOffline) {
 			try {
-				inventory = player.getWorld().getServer().getDatabase().retrievePlayerInventory(username);
+				inventory = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(username);
 			} catch (GameDatabaseException e) {
 				player.message(messagePrefix + "Could not find player; invalid name.");
 				return;
@@ -204,7 +204,7 @@ public final class Moderator implements CommandTrigger {
 		List<Item> bank;
 		if (targetOffline) {
 			try {
-				bank = player.getWorld().getServer().getDatabase().retrievePlayerBank(username);
+				bank = player.getWorld().getServer().getPlayerService().retrievePlayerBank(username);
 			} catch (GameDatabaseException e) {
 				player.message(messagePrefix + "Could not find player; invalid name.");
 				return;

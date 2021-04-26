@@ -22,6 +22,7 @@ sourceSets {
     main {
         java {
             srcDirs "src"
+            srcDirs "plugins"
         }
     }
 }
@@ -35,7 +36,9 @@ dependencies {
     implementation "org.gitlab4j:gitlab4j-api:4.12.17"
 
     // Others
-    implementation 'org.mariadb.jdbc:mariadb-java-client:2.1.2'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '5.1.40'
+//    implementation "org.mariadb.jdbc:mariadb-java-client:2.1.2"
+    implementation "org.xerial:sqlite-jdbc:3.34.0"
 
     implementation "com.thoughtworks.xstream:xstream:1.4.9"
     implementation "com.lmax:disruptor:3.3.11"

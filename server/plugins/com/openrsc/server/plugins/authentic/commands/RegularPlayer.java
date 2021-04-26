@@ -742,7 +742,7 @@ public final class RegularPlayer implements CommandTrigger {
 				player.getCache().store("pair_token", builder.toString());
 
 				try {
-					player.getWorld().getServer().getDatabase().savePlayerCache(player);
+					player.getWorld().getServer().getPlayerService().savePlayerCache(player);
 					player.message("Your pair token is: " + builder.toString());
 				} catch (final GameDatabaseException ex) {
 					LOGGER.catching(ex);

@@ -20,6 +20,8 @@ import com.openrsc.server.net.*;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.Crypto;
 import com.openrsc.server.plugins.PluginHandler;
+import com.openrsc.server.service.IPlayerService;
+import com.openrsc.server.service.PlayerService;
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.SystemUtil;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
@@ -71,6 +73,7 @@ public class Server implements Runnable {
 	private final AchievementSystem achievementSystem;
 	private final Constants constants;
 	private final RSCPacketFilter packetFilter;
+	private final IPlayerService playerService;
 
 	private final World world;
 	private final String name;
@@ -232,6 +235,7 @@ public class Server implements Runnable {
 		gameLogger = new MySqlGameLogger(this, (MySqlGameDatabase)database);
 		entityHandler = new EntityHandler(this);
 		achievementSystem = new AchievementSystem(this);
+		playerService = new PlayerService(world, config, database);
 
 		maxItemId = 0;
 	}
@@ -749,6 +753,8 @@ public class Server implements Runnable {
 	public GameDatabase getDatabase() {
 		return database;
 	}
+
+	public IPlayerService getPlayerService() { return playerService; }
 
 	public AchievementSystem getAchievementSystem() {
 		return achievementSystem;

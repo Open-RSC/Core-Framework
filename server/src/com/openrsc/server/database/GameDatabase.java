@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Supplier;
 
 public abstract class GameDatabase extends GameDatabaseQueries {
 	/**
@@ -76,13 +77,13 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract FloorItem[] queryGroundItems() throws GameDatabaseException;
 
-	protected abstract Integer[] queryInUseItemIds() throws GameDatabaseException;
+	public abstract Integer[] queryInUseItemIds() throws GameDatabaseException;
 
-	protected abstract void queryAddDropLog(ItemDrop drop) throws GameDatabaseException;
+	public abstract void queryAddDropLog(ItemDrop drop) throws GameDatabaseException;
 
-	protected abstract PlayerLoginData queryPlayerLoginData(String username) throws GameDatabaseException;
+	public abstract PlayerLoginData queryPlayerLoginData(String username) throws GameDatabaseException;
 
-	protected abstract PlayerRecoveryQuestions[] queryPlayerRecoveryChanges(Player player) throws GameDatabaseException;
+	public abstract PlayerRecoveryQuestions[] queryPlayerRecoveryChanges(Player player) throws GameDatabaseException;
 
 	protected abstract String queryPlayerLoginIp(String username) throws GameDatabaseException;
 
@@ -104,171 +105,171 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	protected abstract boolean queryRecentlyRegistered(String ipAddress) throws GameDatabaseException;
 
-	protected abstract void queryInitializeMaxStats(int playerId) throws GameDatabaseException;
+	public abstract void queryInitializeMaxStats(int playerId) throws GameDatabaseException;
 
-	protected abstract void queryInitializeStats(int playerId) throws GameDatabaseException;
+	public abstract void queryInitializeStats(int playerId) throws GameDatabaseException;
 
-	protected abstract void queryInitializeExp(int playerId) throws GameDatabaseException;
+	public abstract void queryInitializeExp(int playerId) throws GameDatabaseException;
 
-	protected abstract void queryInitializeExpCapped(int playerId) throws GameDatabaseException;
+	public abstract void queryInitializeExpCapped(int playerId) throws GameDatabaseException;
 
-	protected abstract PlayerData queryLoadPlayerData(Player player) throws GameDatabaseException;
+	public abstract PlayerData queryLoadPlayerData(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerInventory[] queryLoadPlayerInvItems(int playerDatabaseId) throws GameDatabaseException;
+	public abstract PlayerInventory[] queryLoadPlayerInvItems(int playerDatabaseId) throws GameDatabaseException;
 
-	protected abstract PlayerEquipped[] queryLoadPlayerEquipped(Player player) throws GameDatabaseException;
+	public abstract PlayerEquipped[] queryLoadPlayerEquipped(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerBank[] queryLoadPlayerBankItems(int playerDatabaseId) throws GameDatabaseException;
+	public abstract PlayerBank[] queryLoadPlayerBankItems(int playerDatabaseId) throws GameDatabaseException;
 
-	protected abstract PlayerBankPreset[] queryLoadPlayerBankPresets(Player player) throws GameDatabaseException;
+	public abstract PlayerBankPreset[] queryLoadPlayerBankPresets(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerFriend[] queryLoadPlayerFriends(Player player) throws GameDatabaseException;
+	public abstract PlayerFriend[] queryLoadPlayerFriends(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerIgnore[] queryLoadPlayerIgnored(Player player) throws GameDatabaseException;
+	public abstract PlayerIgnore[] queryLoadPlayerIgnored(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerQuest[] queryLoadPlayerQuests(Player player) throws GameDatabaseException;
+	public abstract PlayerQuest[] queryLoadPlayerQuests(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerAchievement[] queryLoadPlayerAchievements(Player player) throws GameDatabaseException;
+	public abstract PlayerAchievement[] queryLoadPlayerAchievements(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerCache[] queryLoadPlayerCache(Player player) throws GameDatabaseException;
+	public abstract PlayerCache[] queryLoadPlayerCache(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerNpcKills[] queryLoadPlayerNpcKills(Player player) throws GameDatabaseException;
+	public abstract PlayerNpcKills[] queryLoadPlayerNpcKills(Player player) throws GameDatabaseException;
 
-	protected abstract PlayerSkills[] queryLoadPlayerSkills(Player player, boolean isMax) throws GameDatabaseException, NoSuchElementException;
+	public abstract PlayerSkills[] queryLoadPlayerSkills(Player player, boolean isMax) throws GameDatabaseException, NoSuchElementException;
 
-	protected abstract PlayerExperience[] queryLoadPlayerExperience(final int playerId) throws GameDatabaseException;
+	public abstract PlayerExperience[] queryLoadPlayerExperience(final int playerId) throws GameDatabaseException;
 
-	protected abstract PlayerExperienceCapped[] queryLoadPlayerExperienceCapped(final int playerId) throws GameDatabaseException;
+	public abstract PlayerExperienceCapped[] queryLoadPlayerExperienceCapped(final int playerId) throws GameDatabaseException;
 
-	protected abstract String queryPreviousPassword(int playerId) throws GameDatabaseException;
+	public abstract String queryPreviousPassword(int playerId) throws GameDatabaseException;
 
-	protected abstract LinkedList<Achievement> queryLoadAchievements() throws GameDatabaseException;
+	public abstract LinkedList<Achievement> queryLoadAchievements() throws GameDatabaseException;
 
-	protected abstract ArrayList<AchievementReward> queryLoadAchievementRewards(int achievementId) throws GameDatabaseException;
+	public abstract ArrayList<AchievementReward> queryLoadAchievementRewards(int achievementId) throws GameDatabaseException;
 
-	protected abstract ArrayList<AchievementTask> queryLoadAchievementTasks(int achievementId) throws GameDatabaseException;
+	public abstract ArrayList<AchievementTask> queryLoadAchievementTasks(int achievementId) throws GameDatabaseException;
 
-	protected abstract PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId, String tableName) throws GameDatabaseException;
+	public abstract PlayerRecoveryQuestions queryPlayerRecoveryData(int playerId, String tableName) throws GameDatabaseException;
 
-	protected abstract void queryInsertPlayerRecoveryData(int playerId, PlayerRecoveryQuestions recoveryQuestions, String tableName) throws GameDatabaseException;
+	public abstract void queryInsertPlayerRecoveryData(int playerId, PlayerRecoveryQuestions recoveryQuestions, String tableName) throws GameDatabaseException;
 
-	protected abstract int queryInsertRecoveryAttempt(int playerId, String username, long time, String ip) throws GameDatabaseException;
+	public abstract int queryInsertRecoveryAttempt(int playerId, String username, long time, String ip) throws GameDatabaseException;
 
-	protected abstract void queryCancelRecoveryChange(int playerId) throws GameDatabaseException;
+	public abstract void queryCancelRecoveryChange(int playerId) throws GameDatabaseException;
 
-	protected abstract PlayerContactDetails queryContactDetails(int playerId) throws GameDatabaseException;
+	public abstract PlayerContactDetails queryContactDetails(int playerId) throws GameDatabaseException;
 
-	protected abstract void queryInsertContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException;
+	public abstract void queryInsertContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException;
 
-	protected abstract void queryUpdateContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException;
+	public abstract void queryUpdateContactDetails(int playerId, PlayerContactDetails contactDetails) throws GameDatabaseException;
 
-	protected abstract ClanDef[] queryClans() throws GameDatabaseException;
+	public abstract ClanDef[] queryClans() throws GameDatabaseException;
 
-	protected abstract ClanMember[] queryClanMembers(final int clanId) throws GameDatabaseException;
+	public abstract ClanMember[] queryClanMembers(final int clanId) throws GameDatabaseException;
 
-	protected abstract int queryNewClan(final String name, final String tag, final String leader) throws GameDatabaseException;
+	public abstract int queryNewClan(final String name, final String tag, final String leader) throws GameDatabaseException;
 
-	protected abstract void querySaveClanMembers(final int clanId, final ClanMember[] clanMembers) throws GameDatabaseException;
+	public abstract void querySaveClanMembers(final int clanId, final ClanMember[] clanMembers) throws GameDatabaseException;
 
-	protected abstract void queryDeleteClan(final int clanId) throws GameDatabaseException;
+	public abstract void queryDeleteClan(final int clanId) throws GameDatabaseException;
 
-	protected abstract void queryDeleteClanMembers(final int clanId) throws GameDatabaseException;
+	public abstract void queryDeleteClanMembers(final int clanId) throws GameDatabaseException;
 
-	protected abstract void queryUpdateClan(final ClanDef clan) throws GameDatabaseException;
+	public abstract void queryUpdateClan(final ClanDef clan) throws GameDatabaseException;
 
-	protected abstract void queryUpdateClanMember(final ClanMember clanMember) throws GameDatabaseException;
+	public abstract void queryUpdateClanMember(final ClanMember clanMember) throws GameDatabaseException;
 
-	protected abstract void queryExpiredAuction(final ExpiredAuction expiredAuction) throws GameDatabaseException;
-	protected abstract ExpiredAuction[] queryCollectibleItems(final int playerId) throws GameDatabaseException;
-	protected abstract void queryCollectItems(final ExpiredAuction[] claimedItems) throws GameDatabaseException;
-	protected abstract void queryNewAuction(final AuctionItem auctionItem) throws GameDatabaseException;
-	protected abstract void queryCancelAuction(final int auctionId) throws GameDatabaseException;
-	protected abstract int queryAuctionCount() throws GameDatabaseException;
-	protected abstract int queryPlayerAuctionCount(final int playerId) throws GameDatabaseException;
-	protected abstract AuctionItem queryAuctionItem(final int auctionId) throws GameDatabaseException;
-	protected abstract AuctionItem[] queryAuctionItems() throws GameDatabaseException;
-	protected abstract void querySetSoldOut(final AuctionItem auctionItem) throws GameDatabaseException;
-	protected abstract void queryUpdateAuction(final AuctionItem auctionItem) throws GameDatabaseException;
+	public abstract void queryExpiredAuction(final ExpiredAuction expiredAuction) throws GameDatabaseException;
+	public abstract ExpiredAuction[] queryCollectibleItems(final int playerId) throws GameDatabaseException;
+	public abstract void queryCollectItems(final ExpiredAuction[] claimedItems) throws GameDatabaseException;
+	public abstract void queryNewAuction(final AuctionItem auctionItem) throws GameDatabaseException;
+	public abstract void queryCancelAuction(final int auctionId) throws GameDatabaseException;
+	public abstract int queryAuctionCount() throws GameDatabaseException;
+	public abstract int queryPlayerAuctionCount(final int playerId) throws GameDatabaseException;
+	public abstract AuctionItem queryAuctionItem(final int auctionId) throws GameDatabaseException;
+	public abstract AuctionItem[] queryAuctionItems() throws GameDatabaseException;
+	public abstract void querySetSoldOut(final AuctionItem auctionItem) throws GameDatabaseException;
+	public abstract void queryUpdateAuction(final AuctionItem auctionItem) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException;
+	public abstract void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException;
+	public abstract void querySavePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerEquipped(int playerId, PlayerEquipped[] equipment) throws GameDatabaseException;
+	public abstract void querySavePlayerEquipped(int playerId, PlayerEquipped[] equipment) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerBank(int playerId, PlayerBank[] bank) throws GameDatabaseException;
+	public abstract void querySavePlayerBank(int playerId, PlayerBank[] bank) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerBankPresets(int playerId, PlayerBankPreset[] bankPreset) throws GameDatabaseException;
+	public abstract void querySavePlayerBankPresets(int playerId, PlayerBankPreset[] bankPreset) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerFriends(int playerId, PlayerFriend[] friends) throws GameDatabaseException;
+	public abstract void querySavePlayerFriends(int playerId, PlayerFriend[] friends) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerIgnored(int playerId, PlayerIgnore[] ignoreList) throws GameDatabaseException;
+	public abstract void querySavePlayerIgnored(int playerId, PlayerIgnore[] ignoreList) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerQuests(int playerId, PlayerQuest[] quests) throws GameDatabaseException;
+	public abstract void querySavePlayerQuests(int playerId, PlayerQuest[] quests) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerAchievements(int playerId, PlayerAchievement[] achievements) throws GameDatabaseException;
+	public abstract void querySavePlayerAchievements(int playerId, PlayerAchievement[] achievements) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerCache(int playerId, PlayerCache[] cache) throws GameDatabaseException;
+	public abstract void querySavePlayerCache(int playerId, PlayerCache[] cache) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerNpcKills(int playerId, PlayerNpcKills[] kills) throws GameDatabaseException;
+	public abstract void querySavePlayerNpcKills(int playerId, PlayerNpcKills[] kills) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerMaxSkills(int playerId, PlayerSkills[] maxSkillLevels) throws GameDatabaseException;
+	public abstract void querySavePlayerMaxSkills(int playerId, PlayerSkills[] maxSkillLevels) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerSkills(int playerId, PlayerSkills[] currSkillLevels) throws GameDatabaseException;
+	public abstract void querySavePlayerSkills(int playerId, PlayerSkills[] currSkillLevels) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerExperience(int playerId, PlayerExperience[] experience) throws GameDatabaseException;
+	public abstract void querySavePlayerExperience(int playerId, PlayerExperience[] experience) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerMaxSkill(int playerId, int skillId, int level) throws GameDatabaseException;
+	public abstract void querySavePlayerMaxSkill(int playerId, int skillId, int level) throws GameDatabaseException;
 
-	protected abstract void querySavePlayerExpCapped(int playerId, int skillId, long dateCapped) throws GameDatabaseException;
+	public abstract void querySavePlayerExpCapped(int playerId, int skillId, long dateCapped) throws GameDatabaseException;
 
-	protected abstract void querySavePassword(int playerId, String newPassword) throws GameDatabaseException;
+	public abstract void querySavePassword(int playerId, String newPassword) throws GameDatabaseException;
 
-	protected abstract void querySavePreviousPasswords(int playerId, String newLastPass, String newEarlierPass) throws GameDatabaseException;
+	public abstract void querySavePreviousPasswords(int playerId, String newLastPass, String newEarlierPass) throws GameDatabaseException;
 
-	protected abstract void querySaveLastRecoveryTryId(final int playerId, final int lastRecoveryTryId) throws GameDatabaseException;
+	public abstract void querySaveLastRecoveryTryId(final int playerId, final int lastRecoveryTryId) throws GameDatabaseException;
 
 	//Item and Container operations
-	protected abstract int queryItemCreate(Item item) throws GameDatabaseException;
+	public abstract int queryItemCreate(Item item) throws GameDatabaseException;
 
-	protected abstract void queryItemPurge(Item item) throws GameDatabaseException;
+	public abstract void queryItemPurge(Item item) throws GameDatabaseException;
 
-	protected abstract void queryItemUpdate(Item item) throws GameDatabaseException;
+	public abstract void queryItemUpdate(Item item) throws GameDatabaseException;
 
-	protected abstract void queryInventoryAdd(int playerId, Item item, int slot) throws GameDatabaseException;
+	public abstract void queryInventoryAdd(int playerId, Item item, int slot) throws GameDatabaseException;
 
-	protected abstract void queryInventoryRemove(int playerId, Item item) throws GameDatabaseException;
+	public abstract void queryInventoryRemove(int playerId, Item item) throws GameDatabaseException;
 
-	protected abstract void queryEquipmentAdd(int playerId, Item item) throws GameDatabaseException;
+	public abstract void queryEquipmentAdd(int playerId, Item item) throws GameDatabaseException;
 
-	protected abstract void queryEquipmentRemove(int playerId, Item item) throws GameDatabaseException;
+	public abstract void queryEquipmentRemove(int playerId, Item item) throws GameDatabaseException;
 
-	protected abstract void queryBankAdd(int playerId, Item item, int slot) throws GameDatabaseException;
+	public abstract void queryBankAdd(int playerId, Item item, int slot) throws GameDatabaseException;
 
-	protected abstract void queryBankRemove(int playerId, Item item) throws GameDatabaseException;
+	public abstract void queryBankRemove(int playerId, Item item) throws GameDatabaseException;
 
 	// Discord service queries
-	protected abstract int queryPlayerIdFromToken(final String token) throws GameDatabaseException;
+	public abstract int queryPlayerIdFromToken(final String token) throws GameDatabaseException;
 
-	protected abstract void queryPairPlayer(final int playerId, final long discordId) throws GameDatabaseException;
+	public abstract void queryPairPlayer(final int playerId, final long discordId) throws GameDatabaseException;
 
-	protected abstract void queryRemovePairToken(final int playerId) throws GameDatabaseException;
+	public abstract void queryRemovePairToken(final int playerId) throws GameDatabaseException;
 
-	protected abstract String queryWatchlist(final long discordId) throws GameDatabaseException;
+	public abstract String queryWatchlist(final long discordId) throws GameDatabaseException;
 
-	protected abstract void queryUpdateWatchlist(final long discordId, String watchlist) throws GameDatabaseException;
+	public abstract void queryUpdateWatchlist(final long discordId, String watchlist) throws GameDatabaseException;
 
-	protected abstract void queryNewWatchlist(final long discordId, String watchlist) throws GameDatabaseException;
+	public abstract void queryNewWatchlist(final long discordId, String watchlist) throws GameDatabaseException;
 
-	protected abstract void queryDeleteWatchlist(final long discordId) throws GameDatabaseException;
+	public abstract void queryDeleteWatchlist(final long discordId) throws GameDatabaseException;
 
-	protected abstract DiscordWatchlist[] queryWatchlists() throws GameDatabaseException;
+	public abstract DiscordWatchlist[] queryWatchlists() throws GameDatabaseException;
 
-	protected abstract int queryPlayerIdFromDiscordId(final long discordId) throws GameDatabaseException;
+	public abstract int queryPlayerIdFromDiscordId(final long discordId) throws GameDatabaseException;
 
-	protected abstract int queryMaxItemID() throws GameDatabaseException;
+	public abstract int queryMaxItemID() throws GameDatabaseException;
 
-	protected abstract int addItemToPlayer(Item item);
+	public abstract int addItemToPlayer(Item item);
 
 	// Database Management
 	protected abstract boolean queryColumnExists(final String table, final String column) throws GameDatabaseException;
@@ -300,6 +301,24 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		synchronized (open) {
 			closeInternal();
 			open = false;
+		}
+	}
+
+	public boolean atomically(Runnable runnable) {
+		try {
+			startTransaction();
+			runnable.run();
+			commitTransaction();
+			return true;
+		} catch(GameDatabaseException ex) {
+			LOGGER.catching(ex);
+			try {
+				rollbackTransaction();
+				LOGGER.error("Rolling back transaction: ", ex);
+			} catch (final Exception rollbackTxEx) {
+				LOGGER.error("Failed to rollback transaction: " + rollbackTxEx);
+			}
+			return false;
 		}
 	}
 
@@ -358,76 +377,6 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	public boolean checkRecentlyRegistered(String ipAddress) throws GameDatabaseException {
 		return queryRecentlyRegistered(ipAddress);
-	}
-
-	public Player loadPlayer(final LoginRequest rq) {
-		try {
-			startTransaction();
-
-			final Player loaded = new Player(getServer().getWorld(), rq);
-
-			loadPlayerData(loaded);
-			loadPlayerSkills(loaded);
-			loadPlayerLastRecoveryChangeRequest(loaded);
-			loadPlayerEquipment(loaded);
-			loadPlayerInventory(loaded);
-			loadPlayerBank(loaded);
-			loadPlayerBankPresets(loaded);
-			loadPlayerSocial(loaded);
-			loadPlayerQuests(loaded);
-			//loadPlayerAchievements(loaded);
-			loadPlayerCache(loaded);
-			loadPlayerLastSpellCast(loaded);
-			loadPlayerNpcKills(loaded);
-
-			commitTransaction();
-
-			return loaded;
-		} catch (final Exception ex) {
-			try {
-				rollbackTransaction();
-				LOGGER.error(ex.getMessage());
-			} catch (final Exception e) {
-			}
-			LOGGER.catching(ex);
-			return null;
-		}
-	}
-
-	public boolean savePlayer(final Player player) throws GameDatabaseException {
-		try {
-			startTransaction();
-
-			if (!playerExists(player.getDatabaseID())) {
-				LOGGER.error("ERROR SAVING : PLAYER DOES NOT EXIST : " + player.getUsername());
-				return false;
-			}
-
-			savePlayerBankPresets(player);
-			savePlayerInventory(player);
-			savePlayerEquipment(player);
-			querySavePlayerBank(player);
-			//savePlayerAchievements(player);
-			savePlayerQuests(player);
-			savePlayerCastTime(player);
-			savePlayerCache(player);
-			savePlayerNpcKills(player);
-			savePlayerData(player);
-			savePlayerSkills(player);
-			savePlayerSocial(player);
-
-			commitTransaction();
-
-			return true;
-		} catch (final Exception ex) {
-			try {
-				rollbackTransaction();
-				LOGGER.error(ex.getMessage());
-			} catch (final Exception e) {
-			}
-			LOGGER.catching(ex);
-			return false;
-		}
 	}
 
 	public boolean playerExists(final int playerId) throws GameDatabaseException {
@@ -774,319 +723,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		return queryPlayerIdFromDiscordId(discordId);
 	}
 
-	private void loadPlayerData(final Player player) throws GameDatabaseException {
-		final PlayerData playerData = queryLoadPlayerData(player);
 
-		player.setOwner(playerData.playerId);
-		player.setDatabaseID(playerData.playerId);
-		player.setGroupID(playerData.groupId);
-		player.setUsername(playerData.username);
-		player.setTotalLevel(playerData.totalLevel);
-		if (!player.isUsingAuthenticClient()) {
-			player.setCombatStyle((byte) playerData.combatStyle);
-		} else {
-			// authentically, server does not remember your combat style & can't tell you it.
-			player.setCombatStyle((byte) Skills.CONTROLLED_MODE);
-		}
-		player.setLastLogin(playerData.loginDate);
-		player.setLastIP(playerData.loginIp);
-		player.setInitialLocation(new Point(playerData.xLocation, playerData.yLocation));
-
-		player.setFatigue(playerData.fatigue);
-		player.setKills(playerData.kills);
-		player.setDeaths(playerData.deaths);
-		player.setNpcKills(playerData.npcKills);
-		if (getServer().getConfig().SPAWN_IRON_MAN_NPCS) {
-			player.setIronMan(playerData.ironMan);
-			player.setIronManRestriction(playerData.ironManRestriction);
-			player.setHCIronmanDeath(playerData.hcIronManDeath);
-		}
-		player.setQuestPoints(playerData.questPoints);
-
-		player.getSettings().setPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, playerData.blockChat); // done
-		player.getSettings().setPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, playerData.blockPrivate);
-		player.getSettings().setPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, playerData.blockTrade);
-		player.getSettings().setPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, playerData.blockDuel);
-
-		player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_AUTO_CAMERA, playerData.cameraAuto);
-		player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_MOUSE_BUTTONS, playerData.oneMouse);
-		player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_SOUND_EFFECTS, playerData.soundOff);
-
-		//player.setBankSize(playerData.bankSize);
-
-		PlayerAppearance pa = new PlayerAppearance(
-			playerData.hairColour,
-			playerData.topColour,
-			playerData.trouserColour,
-			playerData.skinColour,
-			playerData.headSprite,
-			playerData.bodySprite
-		);
-		if (!pa.isValid()) {
-			pa = new PlayerAppearance(
-				0, 0, 0, 0, 1, 2
-			);
-		}
-
-		player.getSettings().setAppearance(pa);
-		player.setMale(playerData.male);
-		player.setWornItems(player.getSettings().getAppearance().getSprites());
-	}
-
-	private void loadPlayerInventory(final Player player) throws GameDatabaseException {
-		final PlayerInventory[] invItems = queryLoadPlayerInvItems(player.getDatabaseID());
-		final Inventory inv = new Inventory(player, invItems);
-
-		player.getCarriedItems().setInventory(inv);
-	}
-
-	public List<Item> retrievePlayerInventory(final String username) throws GameDatabaseException {
-		int playerId = playerIdFromUsername(username);
-		if (playerId == -1) {
-			throw new GameDatabaseException(this, "Could not find player.");
-		}
-		List<Item> items = new ArrayList<Item>();
-		final PlayerInventory[] invItems = queryLoadPlayerInvItems(playerId);
-		for (PlayerInventory i : invItems) {
-			items.add(i.item);
-		}
-		return items;
-	}
-
-	private void loadPlayerEquipment(final Player player) throws GameDatabaseException {
-		if (getServer().getConfig().WANT_EQUIPMENT_TAB) {
-			final Equipment equipment = new Equipment(player);
-			synchronized (equipment.getList()) {
-				final PlayerEquipped[] equippedItems = queryLoadPlayerEquipped(player);
-
-				// check if player is morphed
-				ItemDefinition morph = null;
-				for (final PlayerEquipped equippedItem : equippedItems) {
-					final Item item = new Item(equippedItem.itemId, equippedItem.itemStatus);
-					final ItemDefinition itemDef = item.getDef(player.getWorld());
-					final AppearanceId appearance = AppearanceId.getById(itemDef.getAppearanceId());
-					if (appearance.getSuggestedWieldPosition() == AppearanceId.SLOT_MORPHING_RING) {
-						morph = itemDef;
-					}
-				}
-
-				// put items into slots & update appearance (if not morphed)
-				for (final PlayerEquipped equippedItem : equippedItems) {
-					final Item item = new Item(equippedItem.itemId, equippedItem.itemStatus);
-					final ItemDefinition itemDef = item.getDef(player.getWorld());
-					if (item.isWieldable(player.getWorld())) {
-						equipment.getList()[itemDef.getWieldPosition()] = item;
-						if (morph == null) {
-							if (itemDef.getWieldPosition() < 12) {
-								player.updateWornItems(itemDef.getWieldPosition(), itemDef.getAppearanceId(),
-									itemDef.getWearableId(), true);
-							}
-						}
-					}
-				}
-
-				// apply morph
-				if (morph != null) {
-					player.updateWornItems(morph.getWieldPosition(), morph.getAppearanceId(),
-						morph.getWearableId(), true);
-				}
-
-				player.getCarriedItems().setEquipment(equipment);
-			}
-		} else
-			player.getCarriedItems().setEquipment(new Equipment(player));
-	}
-
-	private void loadPlayerBank(final Player player) throws GameDatabaseException {
-		final PlayerBank[] bankItems = queryLoadPlayerBankItems(player.getDatabaseID());
-		final Bank bank = new Bank(player);
-		for (int i = 0; i < bankItems.length; i++) {
-			bank.getItems().add(new Item(bankItems[i].itemId, bankItems[i].itemStatus));
-		}
-		player.setBank(bank);
-	}
-
-	public List<Item> retrievePlayerBank(final String username) throws GameDatabaseException {
-		int playerId = playerIdFromUsername(username);
-		if (playerId == -1) {
-			throw new GameDatabaseException(this, "Could not find player.");
-		}
-		final PlayerBank[] bankItems = queryLoadPlayerBankItems(playerId);
-		List<Item> bank = new ArrayList<Item>();
-		for (int i = 0; i < bankItems.length; i++) {
-			bank.add(new Item(bankItems[i].itemId, bankItems[i].itemStatus));
-		}
-		return bank;
-	}
-
-	private void loadPlayerBankPresets(final Player player) throws GameDatabaseException {
-
-		//Check the player is on a world with bank presets
-		if (!player.getConfig().WANT_BANK_PRESETS)
-			return;
-
-		//Make sure the player's bank isn't null
-		if (player.getBank() == null)
-			return;
-
-		final PlayerBankPreset[] bankPresets = queryLoadPlayerBankPresets(player);
-
-		for (PlayerBankPreset bankPreset : bankPresets) {
-			final int slot = bankPreset.slot;
-			final byte[] inventoryItems = bankPreset.inventory;
-			final byte[] equipmentItems = bankPreset.equipment;
-			player.getBank().getBankPreset(slot).loadFromByteData(inventoryItems, equipmentItems);
-		}
-
-	}
-
-	private void loadPlayerSocial(final Player player) throws GameDatabaseException {
-		player.getSocial().addFriends(queryLoadPlayerFriends(player));
-		player.getSocial().addIgnore(queryLoadPlayerIgnored(player));
-	}
-
-	private void loadPlayerQuests(final Player player) throws GameDatabaseException {
-		final PlayerQuest[] quests = queryLoadPlayerQuests(player);
-
-		for (int i = 0; i < quests.length; i++) {
-			player.setQuestStage(quests[i].questId, quests[i].stage);
-		}
-
-		player.setQuestPoints(player.calculateQuestPoints());
-	}
-
-	private void loadPlayerAchievements(final Player player) throws GameDatabaseException {
-		final PlayerAchievement achievements[] = queryLoadPlayerAchievements(player);
-		for (int i = 0; i < achievements.length; i++) {
-			player.setAchievementStatus(achievements[i].achievementId, achievements[i].status);
-		}
-	}
-
-	private void loadPlayerCache(final Player player) throws GameDatabaseException {
-		final PlayerCache playerCache[] = queryLoadPlayerCache(player);
-		for (int i = 0; i < playerCache.length; i++) {
-			final int identifier = playerCache[i].type;
-			final String key = playerCache[i].key;
-			switch (identifier) {
-				case 0:
-					player.getCache().put(key, Integer.parseInt(playerCache[i].value));
-					break;
-				case 1:
-					player.getCache().put(key, playerCache[i].value);
-					break;
-				case 2:
-					player.getCache().put(key, Boolean.parseBoolean(playerCache[i].value));
-					break;
-				case 3:
-					player.getCache().put(key, Long.parseLong(playerCache[i].value));
-					break;
-			}
-		}
-	}
-
-	private void loadPlayerLastSpellCast(final Player player) {
-		try {
-			player.setCastTimer(player.getCache().getLong("last_spell_cast"));
-		} catch (Throwable t) {
-			player.setCastTimer();
-		}
-	}
-
-	private void loadPlayerNpcKills(final Player player) throws GameDatabaseException {
-		final PlayerNpcKills kills[] = queryLoadPlayerNpcKills(player);
-		for (PlayerNpcKills kill : kills) {
-			final int key = kill.npcId;
-			final int value = kill.killCount;
-			player.getKillCache().put(key, value);
-		}
-	}
-
-	private void loadPlayerSkills(final Player player) throws GameDatabaseException {
-		final PlayerExperience[] exp = queryLoadPlayerExperience(player.getDatabaseID());
-		player.getSkills().loadExp(exp);
-		player.getSkills().loadLevels(queryLoadPlayerSkills(player, false));
-		try {
-			player.getSkills().loadMaxLevels(queryLoadPlayerSkills(player, true));
-		} catch(NoSuchElementException e) {
-			// from old architecture to new one, compute the expected max level and store back in
-			PlayerSkills[] lvls = player.getSkills().asLevels(exp);
-			player.getSkills().loadMaxLevels(lvls);
-			queryInitializeMaxStats(player.getDatabaseID());
-			querySavePlayerMaxSkills(player.getDatabaseID(), lvls);
-		}
-		player.getSkills().loadExpCapped(queryLoadPlayerExperienceCapped(player.getDatabaseID()));
-	}
-
-	private void loadPlayerLastRecoveryChangeRequest(final Player player) throws GameDatabaseException {
-		long dateSet = 0;
-		final PlayerRecoveryQuestions recoveryChanges[] = queryPlayerRecoveryChanges(player);
-		for (PlayerRecoveryQuestions recoveryChange : recoveryChanges) {
-			dateSet = Math.max(dateSet, recoveryChange.dateSet);
-		}
-		player.setLastRecoveryChangeRequest(dateSet);
-	}
-
-	private void savePlayerData(final Player player) throws GameDatabaseException {
-		querySavePlayerData(player);
-	}
-
-	private void savePlayerInventory(final Player player) throws GameDatabaseException {
-		querySavePlayerInventory(player);
-	}
-
-	private void savePlayerEquipment(final Player player) throws GameDatabaseException {
-		querySavePlayerEquipped(player);
-	}
-
-	private void savePlayerBank(final Player player) throws GameDatabaseException {
-		querySavePlayerBank(player);
-	}
-
-	private void savePlayerBankPresets(final Player player) throws GameDatabaseException {
-		querySavePlayerBankPresets(player);
-	}
-
-	private void savePlayerSocial(final Player player) throws GameDatabaseException {
-		querySavePlayerFriends(player);
-		querySavePlayerIgnored(player);
-	}
-
-	private void savePlayerQuests(final Player player) throws GameDatabaseException {
-		querySavePlayerQuests(player);
-	}
-
-	private void savePlayerAchievements(final Player player) throws GameDatabaseException {
-		querySavePlayerAchievements(player);
-	}
-
-	public void savePlayerCache(final Player player) throws GameDatabaseException {
-		player.getCache().store("last_spell_cast", player.getCastTimer());
-		querySavePlayerCache(player);
-	}
-
-	private void savePlayerNpcKills(final Player player) throws GameDatabaseException {
-		if (player.getKillCacheUpdated()) {
-			querySavePlayerNpcKills(player);
-			player.setKillCacheUpdated(false);
-		}
-	}
-
-	private void savePlayerSkills(final Player player) throws GameDatabaseException {
-		querySavePlayerSkills(player);
-		querySavePlayerExperience(player);
-	}
-
-	public void savePlayerMaxSkill(final int playerId, final int skillId, final int level) throws GameDatabaseException {
-		querySavePlayerMaxSkill(playerId, skillId, level);
-	}
-
-	public void savePlayerExpCapped(final int playerId, final int skillId, final long dateCapped) throws GameDatabaseException {
-		querySavePlayerExpCapped(playerId, skillId, dateCapped);
-	}
-
-	private void savePlayerCastTime(final Player player) {
-		player.getCache().store("last_spell_cast", player.getCastTimer());
-	}
 
 	public void addDropLog(final Player player, final Npc npc, final int dropId, final int dropAmount) throws GameDatabaseException {
 		final ItemDrop drop = new ItemDrop();
@@ -1105,7 +742,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		return open;
 	}
 
-	protected void querySavePlayerData(Player player) throws GameDatabaseException {
+	public void querySavePlayerData(Player player) throws GameDatabaseException {
 		final PlayerData playerData = new PlayerData();
 
 		playerData.combatLevel = player.getCombatLevel();
@@ -1145,7 +782,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		querySavePlayerData(player.getDatabaseID(), playerData);
 	}
 
-	protected void querySavePlayerInventory(Player player) throws GameDatabaseException {
+	public void querySavePlayerInventory(Player player) throws GameDatabaseException {
 		final int invSize = player.getCarriedItems().getInventory().size();
 		final PlayerInventory[] inventory = new PlayerInventory[invSize];
 
@@ -1164,7 +801,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		querySavePlayerInventory(player.getDatabaseID(), inventory);
 	}
 
-	protected void querySavePlayerEquipped(Player player) throws GameDatabaseException {
+	public void querySavePlayerEquipped(Player player) throws GameDatabaseException {
 		if (getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			final int equipSize = Equipment.SLOT_COUNT;
 
@@ -1186,7 +823,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		}
 	}
 
-	protected void querySavePlayerBank(Player player) throws GameDatabaseException {
+	public void querySavePlayerBank(Player player) throws GameDatabaseException {
 		final int bankSize = player.getBank().size();
 		final PlayerBank[] bank = new PlayerBank[bankSize];
 
@@ -1199,7 +836,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		querySavePlayerBank(player.getDatabaseID(), bank);
 	}
 
-	protected void querySavePlayerBankPresets(Player player) throws GameDatabaseException {
+	public void querySavePlayerBankPresets(Player player) throws GameDatabaseException {
 		try {
 			if (getServer().getConfig().WANT_BANK_PRESETS) {
 				final ArrayList<PlayerBankPreset> list = new ArrayList<>();
@@ -1249,11 +886,11 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 			}
 		} catch (final IOException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(this, ex.getMessage());
+			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
 		}
 	}
 
-	protected void querySavePlayerFriends(Player player) throws GameDatabaseException {
+	public void querySavePlayerFriends(Player player) throws GameDatabaseException {
 		final ArrayList<PlayerFriend> list = new ArrayList<>();
 		final Set<Map.Entry<Long, Integer>> entrySet = player.getSocial().getFriendList().entrySet();
 
@@ -1268,7 +905,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		querySavePlayerFriends(player.getDatabaseID(), friends);
 	}
 
-	protected void querySavePlayerIgnored(Player player) throws GameDatabaseException {
+	public void querySavePlayerIgnored(Player player) throws GameDatabaseException {
 		final int ignoreSize = player.getSocial().getIgnoreList().size();
 		final PlayerIgnore[] ignores = new PlayerIgnore[ignoreSize];
 
@@ -1280,7 +917,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		querySavePlayerIgnored(player.getDatabaseID(), ignores);
 	}
 
-	protected void querySavePlayerQuests(Player player) throws GameDatabaseException {
+	public void querySavePlayerQuests(Player player) throws GameDatabaseException {
 		final ArrayList<PlayerQuest> list = new ArrayList<>();
 		final Set<Integer> keys = player.getQuestStages().keySet();
 
@@ -1296,11 +933,11 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		querySavePlayerQuests(player.getDatabaseID(), quests);
 	}
 
-	protected void querySavePlayerAchievements(Player player) throws GameDatabaseException {
+	public void querySavePlayerAchievements(Player player) throws GameDatabaseException {
 
 	}
 
-	protected void querySavePlayerCache(Player player) throws GameDatabaseException {
+	public void querySavePlayerCache(Player player) throws GameDatabaseException {
 		final int cacheSize = player.getCache().getCacheMap().size();
 		final PlayerCache[] caches = new PlayerCache[cacheSize];
 
@@ -1327,7 +964,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		querySavePlayerCache(player.getDatabaseID(), caches);
 	}
 
-	protected void querySavePlayerNpcKills(Player player) throws GameDatabaseException {
+	public void querySavePlayerNpcKills(Player player) throws GameDatabaseException {
 		final int killsSize = player.getKillCache().size();
 		final PlayerNpcKills[] killMap = new PlayerNpcKills[killsSize];
 
@@ -1343,7 +980,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		querySavePlayerNpcKills(player.getDatabaseID(), killMap);
 	}
 
-	protected void querySavePlayerSkills(Player player) throws GameDatabaseException {
+	public void querySavePlayerSkills(Player player) throws GameDatabaseException {
 		final int skillsSize = getServer().getConstants().getSkills().getSkillsCount();
 		final PlayerSkills[] skills = new PlayerSkills[skillsSize];
 
@@ -1356,7 +993,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		querySavePlayerSkills(player.getDatabaseID(), skills);
 	}
 
-	protected void querySavePlayerExperience(Player player) throws GameDatabaseException {
+	public void querySavePlayerExperience(Player player) throws GameDatabaseException {
 		final int skillsSize = getServer().getConstants().getSkills().getSkillsCount();
 		final PlayerExperience[] skills = new PlayerExperience[skillsSize];
 

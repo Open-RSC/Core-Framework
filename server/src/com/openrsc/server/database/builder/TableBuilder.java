@@ -4,9 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TableBuilder {
-	private String tableName;
+	private final String tableName;
 	private String tableContents;
-	private Map<String, String> tableProperties;
+	private final Map<String, String> tableProperties;
 
 	public TableBuilder(String tableName) {
 		this(tableName, new LinkedHashMap<String, String>());
