@@ -18,6 +18,7 @@ import com.openrsc.server.model.container.*;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
+import com.openrsc.server.util.SystemUtil;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -290,7 +291,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 				open = true;
 			} catch (final GameDatabaseException ex) {
 				LOGGER.catching(ex);
-				System.exit(1);
+				SystemUtil.exit(1);
 			}
 		}
 	}

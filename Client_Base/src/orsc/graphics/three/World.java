@@ -50,6 +50,7 @@ public final class World {
 	private int mapPointZ = 0;
 	private ZipFile tileArchive;
 	private Sector[] sectors;
+	public String mapHash;
 
 	public World(Scene var1, GraphicsController var2) {
 		try {
@@ -75,10 +76,13 @@ public final class World {
 			sectors = new Sector[4];
 
 			try {
+				String path;
 				if (Config.S_WANT_CUSTOM_LANDSCAPE)
-					tileArchive = new ZipFile(new File(Config.F_CACHE_DIR + File.separator + "video" + File.separator + "Custom_Landscape.orsc"));
+					path = Config.F_CACHE_DIR + File.separator + "video" + File.separator + "Custom_Landscape.orsc";
 				else
-					tileArchive = new ZipFile(new File(Config.F_CACHE_DIR + File.separator + "video" + File.separator + "Authentic_Landscape.orsc"));
+					path = Config.F_CACHE_DIR + File.separator + "video" + File.separator + "Authentic_Landscape.orsc";
+				tileArchive = new ZipFile(new File(path));
+				mapHash = generateMapHash(path);
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(1);
@@ -87,6 +91,14 @@ public final class World {
 		} catch (RuntimeException var4) {
 			throw GenUtil.makeThrowable(var4,
 				"k.<init>(" + (var1 != null ? "{...}" : "null") + ',' + (var2 != null ? "{...}" : "null") + ')');
+		}
+	}
+
+	private String generateMapHash(String path) {
+		try {
+			return GenUtil.getMD5Checksum(path);
+		} catch (Exception e) {
+			return "failed-" + path;
 		}
 	}
 

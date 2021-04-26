@@ -638,6 +638,16 @@ public class BankInterface {
 		return null;
 	}
 
+	public int maximumBankItemsSupported() {
+		if (bankItems instanceof ArrayList) {
+			// Depends on ArrayList implementation, but this is a generally safe upper limit for its capacity
+			return Integer.MAX_VALUE;
+		} else {
+			// this just gets arbitrarily resized by the server & isn't a real limitation
+			return mc.bankItemsMax;
+		}
+	}
+
 	class BankItem {
 
 		int bankID;

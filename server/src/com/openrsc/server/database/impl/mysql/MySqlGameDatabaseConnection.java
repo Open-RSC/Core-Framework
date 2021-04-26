@@ -1,6 +1,7 @@
 package com.openrsc.server.database.impl.mysql;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.util.SystemUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,13 +28,6 @@ public class MySqlGameDatabaseConnection {
 		close();
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (final ClassNotFoundException e) {
-			LOGGER.catching(e);
-			System.exit(1);
-		}
-
-		try {
 			connection = DriverManager.getConnection("jdbc:mysql://"
 					+ getServer().getConfig().DB_HOST + "/" + getServer().getConfig().DB_NAME + "?autoReconnect=true&useSSL=false&rewriteBatchedStatements=true&serverTimezone=UTC",
 				getServer().getConfig().DB_USER,
@@ -49,7 +43,8 @@ public class MySqlGameDatabaseConnection {
 		if(isConnected()) {
 			LOGGER.info(getServer().getName() + " : " + getServer().getName() + " - Connected to MySQL!");
 		} else {
-			LOGGER.info("Unable to connect to MySQL");
+			LOGGER.error("Unable to connect to MySQL");
+			SystemUtil.exit(1);
 		}
 
 		return isConnected();

@@ -26,6 +26,7 @@ import com.openrsc.server.plugins.PluginHandler;
 import com.openrsc.server.util.LogUtil;
 import com.openrsc.server.util.NamedThreadFactory;
 import com.openrsc.server.util.ServerAwareThreadFactory;
+import com.openrsc.server.util.SystemUtil;
 import com.openrsc.server.util.rsc.CaptchaGenerator;
 import com.openrsc.server.util.rsc.MessageType;
 import io.netty.bootstrap.ServerBootstrap;
@@ -45,12 +46,17 @@ import org.apache.logging.log4j.io.IoBuilder;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static org.apache.logging.log4j.util.Unbox.box;
 
@@ -151,42 +157,57 @@ public class Server implements Runnable {
 
 	public static void main(final String[] args) {
 		LOGGER.info("Launching Game Server...");
+		try {
+			List<String> configurationFiles = new ArrayList<>();
+			Optional.ofNullable(System.getProperty("conf")).ifPresent(files -> {
+				configurationFiles.addAll(
+						Arrays.stream(files.split(",")).map(file -> file + ".conf").collect(Collectors.toList())
+				);
+			});
 
-		if (args.length == 0) {
-			LOGGER.info(
+			configurationFiles.addAll(Arrays.asList(args));
+
+			if (configurationFiles.size() == 0) {
+				LOGGER.info(
 					"Server Configuration file not provided. Loading from {} or local.conf.",
 					getDefaultConfigFileName()
 			);
 
-			try {
-				startServer(getDefaultConfigFileName());
-			} catch (final Throwable t) {
-				LOGGER.catching(t);
-			}
-		} else {
-			for (String arg : args) {
 				try {
-					startServer(arg);
+					startServer(getDefaultConfigFileName());
 				} catch (final Throwable t) {
 					LOGGER.catching(t);
+					SystemUtil.exit(1);
+				}
+			} else {
+				for (String configuration : configurationFiles) {
+					try {
+						startServer(configuration);
+					} catch (final Throwable t) {
+						LOGGER.catching(t);
+						SystemUtil.exit(1);
+					}
 				}
 			}
-		}
 
-		while (serversList.size() > 0) {
-			try {
-				Thread.sleep(1000);
-			} catch (final InterruptedException e) {
-				e.printStackTrace();
-			}
+			while (serversList.size() > 0) {
+				try {
+					Thread.sleep(1000);
+				} catch (final InterruptedException e) {
+					e.printStackTrace();
+				}
 
-			for (final Server server : serversList.values()) {
-				server.checkShutdown();
+				for (final Server server : serversList.values()) {
+					server.checkShutdown();
+				}
 			}
+		} catch(Exception ex) {
+			LOGGER.error("Error starting server: ", ex);
+			SystemUtil.exit(1);
 		}
 
 		LOGGER.info("Exiting server process...");
-		System.exit(0);
+		SystemUtil.exit(0);
 	}
 
 	public Server(final String configFile) throws IOException {
@@ -208,7 +229,7 @@ public class Server implements Runnable {
 			default:
 				database = null;
 				LOGGER.error("No database type");
-				System.exit(1);
+				SystemUtil.exit(1);
 				break;
 		}
 
@@ -264,7 +285,7 @@ public class Server implements Runnable {
 					getDatabase().open();
 				} catch (final Exception ex) {
 					LOGGER.catching(ex);
-					System.exit(1);
+					SystemUtil.exit(1);
 				}
 				LOGGER.info("Database Connection Completed");
 
@@ -273,7 +294,7 @@ public class Server implements Runnable {
 					LOGGER.info("Database Structure Changes Good");
 				} else {
 					LOGGER.error("Unable to change database structure!");
-					System.exit(1);
+					SystemUtil.exit(1);
 				}
 
 				LOGGER.info("Loading Prerendered Sleepword Images...");
@@ -365,7 +386,7 @@ public class Server implements Runnable {
                     LOGGER.info("RSA exponent: " + Crypto.getPublicExponent());
                     LOGGER.info("RSA modulus: " + Crypto.getPublicModulus());
 				} catch (final InterruptedException e) {
-					LOGGER.catching(e);
+					LOGGER.error(e);
 				}
 
 				// Only add this server to the active servers list if it's not already there
@@ -377,7 +398,7 @@ public class Server implements Runnable {
 				running = true;
 			} catch (final Throwable t) {
 				LOGGER.catching(t);
-				System.exit(1);
+				SystemUtil.exit(1);
 			}
 		}
 	}
@@ -446,7 +467,7 @@ public class Server implements Runnable {
 				LOGGER.info("Server unloaded");
 			} catch (final Throwable t) {
 				LOGGER.catching(t);
-				System.exit(1);
+				SystemUtil.exit(1);
 			}
 		}
 	}

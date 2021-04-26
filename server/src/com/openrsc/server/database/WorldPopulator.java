@@ -9,6 +9,7 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.world.World;
+import com.openrsc.server.util.SystemUtil;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -146,7 +147,7 @@ public final class WorldPopulator {
 
 		} catch (Exception e) {
 			LOGGER.catching(e);
-			System.exit(1);
+			SystemUtil.exit(1);
 		}
 	}
 
