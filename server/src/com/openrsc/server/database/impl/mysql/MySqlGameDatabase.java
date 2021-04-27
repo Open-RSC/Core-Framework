@@ -48,7 +48,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			getConnection().executeQuery("START TRANSACTION");
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -57,7 +57,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			getConnection().executeQuery("COMMIT");
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -66,7 +66,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			getConnection().executeQuery("ROLLBACK");
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -75,7 +75,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			getConnection().executeUpdate(getQueries().initializeOnlineUsers);
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -85,7 +85,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			return hasNextFromInt(getQueries().playerExists, playerId);
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -97,7 +97,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			playerExists = result.isBeforeFirst();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return playerExists;
 	}
@@ -112,7 +112,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return group;
 	}
@@ -127,7 +127,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return pId;
 	}
@@ -142,7 +142,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return username;
 	}
@@ -155,7 +155,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
     }
 
@@ -183,7 +183,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return replyMessage;
 	}
@@ -207,7 +207,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				npcLocs.add(npcLocation);
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return npcLocs.toArray(new NpcLocation[npcLocs.size()]);
 	}
@@ -229,7 +229,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				objects.add(object);
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return objects.toArray(new SceneryObject[objects.size()]);
 	}
@@ -251,7 +251,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				groundItems.add(groundItem);
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return groundItems.toArray(new FloorItem[groundItems.size()]);
 	}
@@ -266,7 +266,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				inUseItemIds.add(result.getInt("itemID"));
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return inUseItemIds.toArray(new Integer[inUseItemIds.size()]);
 	}
@@ -282,7 +282,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statementInsert.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -305,7 +305,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return hasData ? loginData : null;
 	}
@@ -321,7 +321,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -338,7 +338,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return recentlyRegistered;
 	}
@@ -350,7 +350,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -361,7 +361,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -372,7 +372,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -383,7 +383,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -442,7 +442,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return hasData ? playerData : null;
 	}
@@ -467,7 +467,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return list.toArray(new PlayerInventory[list.size()]);
 	}
@@ -495,7 +495,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return list.toArray(new PlayerEquipped[list.size()]);
 	}
@@ -521,7 +521,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return list.toArray(new PlayerBank[list.size()]);
 	}
@@ -566,7 +566,7 @@ public class MySqlGameDatabase extends GameDatabase {
 		} catch (final SQLException | IOException ex) {
 			// We want to trigger a rollback so sending out the GameDatabaseException
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return list.toArray(new PlayerBankPreset[list.size()]);
 	}
@@ -590,7 +590,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return list.toArray(new PlayerFriend[list.size()]);
 	}
@@ -614,7 +614,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return list.toArray(new PlayerIgnore[list.size()]);
 	}
@@ -634,7 +634,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return list.toArray(new PlayerQuest[list.size()]);
 	}
@@ -654,7 +654,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return list.toArray(new PlayerAchievement[list.size()]);
 	}
@@ -675,7 +675,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return list.toArray(new PlayerCache[list.size()]);
 	}
@@ -695,7 +695,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return list.toArray(new PlayerNpcKills[list.size()]);
 	}
@@ -713,7 +713,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			return playerSkills;
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		} catch (final NoSuchElementException nse) {
 			throw nse;
 		}
@@ -732,7 +732,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			return playerExperiences;
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -755,7 +755,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			return playerExperienceCaps;
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -772,7 +772,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return returnVal;
 	}
@@ -793,7 +793,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return loadedAchievements;
 	}
@@ -814,7 +814,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return rewards;
 	}
@@ -833,7 +833,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return tasks;
 	}
@@ -871,7 +871,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return hasData ? recoveryQuestions : null;
 	}
@@ -898,7 +898,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -918,7 +918,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return result;
 	}
@@ -929,7 +929,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.setInt(1, playerId);
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -955,7 +955,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return hasData ? contactDetails : null;
 	}
@@ -974,7 +974,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -991,7 +991,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1014,7 +1014,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				clans.add(clan);
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return clans.toArray(new ClanDef[clans.size()]);
 	}
@@ -1037,7 +1037,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return clanMembers.toArray(new ClanMember[clanMembers.size()]);
 	}
@@ -1057,7 +1057,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return result;
 	}
@@ -1076,7 +1076,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeBatch();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1087,7 +1087,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1098,7 +1098,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1116,7 +1116,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException e) {
-			throw new GameDatabaseException(GameDatabase.class, e.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, e.getMessage());
 		}
 	}
 
@@ -1128,7 +1128,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException e) {
-			throw new GameDatabaseException(GameDatabase.class, e.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, e.getMessage());
 		}
 	}
 
@@ -1143,7 +1143,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1166,7 +1166,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return expiredAuctions.toArray(new ExpiredAuction[expiredAuctions.size()]);
 	}
@@ -1182,7 +1182,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeBatch();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1200,7 +1200,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1211,7 +1211,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1225,7 +1225,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				auctionCount = result.getInt("auction_count");
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return auctionCount;
 	}
@@ -1242,7 +1242,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return auctionCount;
 	}
@@ -1270,7 +1270,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return hasData ? auctionItem : null;
 	}
@@ -1296,7 +1296,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				auctionItems.add(auctionItem);
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return auctionItems.toArray(new AuctionItem[auctionItems.size()]);
 	}
@@ -1311,7 +1311,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1325,7 +1325,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException e) {
-			throw new GameDatabaseException(GameDatabase.class, e.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, e.getMessage());
 		}
 	}
 
@@ -1370,7 +1370,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1383,7 +1383,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1397,7 +1397,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1409,7 +1409,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1438,7 +1438,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement2.executeBatch();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1466,7 +1466,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement2.executeBatch();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1498,7 +1498,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1525,7 +1525,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1547,7 +1547,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeBatch();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1565,7 +1565,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeBatch();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1584,7 +1584,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeBatch();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1609,7 +1609,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeBatch();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1646,7 +1646,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statementInsert.executeBatch();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1661,7 +1661,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1676,7 +1676,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1691,7 +1691,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1706,7 +1706,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1721,7 +1721,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1736,7 +1736,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return maxId;
 	}
@@ -1759,7 +1759,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return itemId;
 	}
@@ -1773,7 +1773,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1781,7 +1781,7 @@ public class MySqlGameDatabase extends GameDatabase {
 	public void queryItemUpdate(final Item item) throws GameDatabaseException {
 		try (final PreparedStatement statement = getConnection().prepareStatement(getQueries().save_ItemUpdate);) {
 			if (item.getItemId() == Item.ITEM_ID_UNASSIGNED) {
-				throw new GameDatabaseException(GameDatabase.class, "An unassigned item attempted to be updated: " + item.getCatalogId());
+				throw new GameDatabaseException(MySqlGameDatabase.class, "An unassigned item attempted to be updated: " + item.getCatalogId());
 			} else {
 				statement.setInt(1, item.getAmount());
 				statement.setInt(2, item.getNoted() ? 1 : 0);
@@ -1793,7 +1793,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1812,7 +1812,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.executeUpdate();
 			} catch (final SQLException ex) {
 				// Convert SQLException to a general usage exception
-				throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+				throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 			}
 		}
 	}
@@ -1826,7 +1826,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.executeUpdate();
 			} catch (final SQLException ex) {
 				// Convert SQLException to a general usage exception
-				throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+				throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 			}
 		}
 	}
@@ -1845,7 +1845,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.executeUpdate();
 			} catch (final SQLException ex) {
 				// Convert SQLException to a general usage exception
-				throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+				throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 			}
 		}
 	}
@@ -1859,7 +1859,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.executeUpdate();
 			} catch (final SQLException ex) {
 				// Convert SQLException to a general usage exception
-				throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+				throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 			}
 		}
 	}
@@ -1879,7 +1879,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.executeUpdate();
 			} catch (final SQLException ex) {
 				// Convert SQLException to a general usage exception
-				throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+				throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 			}
 		}
 	}
@@ -1893,7 +1893,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				statement.executeUpdate();
 			} catch (final SQLException ex) {
 				// Convert SQLException to a general usage exception
-				throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+				throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 			}
 		}
 	}
@@ -1910,7 +1910,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return pId;
 	}
@@ -1925,7 +1925,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1936,7 +1936,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1952,7 +1952,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return resultSt;
 	}
@@ -1965,7 +1965,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1979,7 +1979,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -1990,7 +1990,7 @@ public class MySqlGameDatabase extends GameDatabase {
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -2007,7 +2007,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				watchlists.add(watchlist);
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return watchlists.toArray(new DiscordWatchlist[watchlists.size()]);
 	}
@@ -2024,7 +2024,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return pId;
 	}
@@ -2052,7 +2052,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return list.toArray(new PlayerRecoveryQuestions[list.size()]);
 	}
@@ -2070,7 +2070,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return ip;
 	}
@@ -2095,7 +2095,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			}
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return list.toArray(new LinkedPlayer[list.size()]);
 	}
@@ -2114,7 +2114,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -2132,7 +2132,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -2148,7 +2148,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -2164,7 +2164,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -2178,7 +2178,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -2194,7 +2194,7 @@ public class MySqlGameDatabase extends GameDatabase {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
 			// Convert SQLException to a general usage exception
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -2212,7 +2212,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return exists; // Do not want to continue adding column if can't determine if column exists
 	}
@@ -2231,7 +2231,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return type;
 	}
@@ -2241,7 +2241,7 @@ public class MySqlGameDatabase extends GameDatabase {
 		try (final PreparedStatement statement = getConnection().prepareStatement(String.format(getQueries().addColumn, table, newColumn, dataType));) {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -2250,7 +2250,7 @@ public class MySqlGameDatabase extends GameDatabase {
 		try (final PreparedStatement statement = getConnection().prepareStatement(String.format(getQueries().modifyColumn, table, modifiedColumn, dataType));) {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
@@ -2267,7 +2267,7 @@ public class MySqlGameDatabase extends GameDatabase {
 				}
 			}
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 		return exists; // Do not want to continue creating table if table exists
 	}
@@ -2277,7 +2277,7 @@ public class MySqlGameDatabase extends GameDatabase {
 		try (final PreparedStatement statement = getConnection().prepareStatement(statementString)) {
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
-			throw new GameDatabaseException(GameDatabase.class, ex.getMessage());
+			throw new GameDatabaseException(MySqlGameDatabase.class, ex.getMessage());
 		}
 	}
 
