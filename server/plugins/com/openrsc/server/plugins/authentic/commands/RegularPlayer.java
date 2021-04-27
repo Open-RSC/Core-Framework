@@ -129,6 +129,8 @@ public final class RegularPlayer implements CommandTrigger {
 			player.getSettings().toggleBlockTrade(player);
 		} else if (command.equalsIgnoreCase("toggleblockduel")) {
 			player.getSettings().toggleBlockDuel(player);
+		} else if (command.equalsIgnoreCase("clientlimitations")) {
+			ActionSender.sendBox(player, player.getClientLimitations().toString(), true);
 		}
 	}
 

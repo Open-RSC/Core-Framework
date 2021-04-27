@@ -324,7 +324,7 @@ public class EntityHandler {
 		GNOMEBALL(3),
 		SKULL(4),
 		SPIKEBALL(5),
-		BLANK(6);//not sure if this is even used for anything
+		BLANK(6); //not sure if this is even used for anything
 
 		private final int value;
 
@@ -335,6 +335,10 @@ public class EntityHandler {
 		public int id() {
 			return value;
 		}
+	}
+
+	public static int projectilesCount() {
+		return projectiles.size();
 	}
 
 	private static void loadProjectiles() {
@@ -491,6 +495,10 @@ public class EntityHandler {
 		public int id() {
 			return value;
 		}
+	}
+
+	public static int crownCount() {
+		return crowns.size();
 	}
 
 	private static void loadCrowns() {

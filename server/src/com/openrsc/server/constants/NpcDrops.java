@@ -190,6 +190,7 @@ public class NpcDrops {
 		this.bonelessNpcs.add(NpcId.GHOST2.id());
 		this.bonelessNpcs.add(NpcId.COUNT_DRAYNOR.id());
 		this.bonelessNpcs.add(NpcId.DEADLY_RED_SPIDER.id());
+		this.bonelessNpcs.add(NpcId.ICE_SPIDER.id());
 		this.bonelessNpcs.add(NpcId.IMP.id());
 		this.bonelessNpcs.add(NpcId.KING_SCORPION.id());
 		this.bonelessNpcs.add(NpcId.GHOST_WMAZEKEY.id());
@@ -304,21 +305,25 @@ public class NpcDrops {
 		this.npcDrops.put(NpcId.CHICKEN.id(), currentNpcDrops);
 
 		currentNpcDrops = new DropTable("Goblin Level 13 (4, 153, 154)");
-		currentNpcDrops.addTableDrop(herbDropTable, 2);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 34);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 3, 13);
-		currentNpcDrops.addItemDrop(ItemId.BRONZE_SPEAR.id(), 1, 9);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 8);
-		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 16, 7);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SCIMITAR.id(), 1, 1);
 		currentNpcDrops.addItemDrop(ItemId.BRONZE_AXE.id(), 1, 3);
+		currentNpcDrops.addItemDrop(ItemId.BRONZE_SPEAR.id(), 1, 9);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 1, 1);
 		currentNpcDrops.addItemDrop(ItemId.MIND_RUNE.id(), 1, 3);
 		currentNpcDrops.addItemDrop(ItemId.EARTH_RUNE.id(), 3, 3);
 		currentNpcDrops.addItemDrop(ItemId.BODY_RUNE.id(), 1, 3);
 		currentNpcDrops.addItemDrop(ItemId.BRONZE_ARROWS.id(), 7, 3);
+		currentNpcDrops.addTableDrop(herbDropTable, 2);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 24, 3);
-		currentNpcDrops.addItemDrop(ItemId.BRONZE_SCIMITAR.id(), 1, 1);
-		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 1, 1);
-		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 16, 7);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 5, 8);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 3, 13);
+		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 1, 34);
+		currentNpcDrops.addItemDrop(ItemId.TIN_ORE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.RED_CAPE.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.GRAPES.id(), 1, 1);
+		currentNpcDrops.addItemDrop(ItemId.GOBLIN_ARMOUR.id(), 1, 10);
 		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
 		this.npcDrops.put(NpcId.GOBLIN_LVL13.id(), currentNpcDrops); // (4)
 		this.npcDrops.put(NpcId.GOBLIN_RED_ARMOUR_LVL13.id(), currentNpcDrops); // (153)

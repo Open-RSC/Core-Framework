@@ -254,21 +254,7 @@ public class ServerConfiguration {
 			SystemUtil.exit(1);
 		}
 
-		// Always try to load from local.conf first.
-		try {
-			serverProps.loadFromYML("local.conf");
-			configFile = "local.conf";
-		} catch (Exception e) { // Otherwise try to load from command line.
-			try {
-				serverProps.loadFromYML(defaultFile);
-				LOGGER.info("Properties file local.conf not found, loading properties from " + defaultFile);
-				configFile = defaultFile;
-			} catch (Exception ex) { // If not, we use the defaults listed below.
-				LOGGER.info("Properties file local.conf not found, no other properties file provided." +
-					" Using default properties.");
-				configFile = "Default values";
-			}
-		}
+		configFile = ServerConfiguration.loadServerProps(serverProps, defaultFile);
 
 		notifyDeprecated();
 
@@ -492,6 +478,24 @@ public class ServerConfiguration {
 		CAN_RETRIEVE_POST_QUEST_ITEMS = tryReadBool("can_retrieve_post_quest_items").orElse(false);
 		ESTERS_BUNNIES_EVENT = tryReadBool("esters_bunnies").orElse(false);
 		// adminIp = Arrays.asList(ADMIN_IP.split(","));
+	}
+
+	protected static String loadServerProps(YMLReader reader, String defaultFile) {
+		// Always try to load from local.conf first.
+		try {
+			reader.loadFromYML("local.conf");
+			return "local.conf";
+		} catch (Exception e) { // Otherwise try to load from command line.
+			try {
+				reader.loadFromYML(defaultFile);
+				LOGGER.info("Properties file local.conf not found, loading properties from " + defaultFile);
+				return defaultFile;
+			} catch (Exception ex) { // If not, we use the defaults listed below.
+				LOGGER.info("Properties file local.conf not found, no other properties file provided." +
+					" Using default properties.");
+				return "Default values";
+			}
+		}
 	}
 
 	// Notify the user if they have any deprecated
