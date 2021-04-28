@@ -34,7 +34,7 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 	}
 
 	protected void processInternal() {
-		LOGGER.info("Saved player " + player.getUsername() + "");
+//		LOGGER.info("Saved player " + player.getUsername() + "");
 		try {
 			boolean success = getServer().getPlayerService().savePlayer(player);
 			if (success && this.logout)
