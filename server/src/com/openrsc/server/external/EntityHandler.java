@@ -474,7 +474,14 @@ public final class EntityHandler {
 			items.get(ItemId.STEEL_SPEAR.id()).setAppearanceId(390);
 			items.get(ItemId.MITHRIL_SPEAR.id()).setAppearanceId(391);
 			items.get(ItemId.ADAMANTITE_SPEAR.id()).setAppearanceId(392);
-			items.get(ItemId.RUNE_SPEAR.id()).setAppearanceId(393);
+			items.get(ItemId.RUNE_SPEAR.id()).setAppearanceId(220);
+
+			items.get(ItemId.POISONED_BRONZE_SPEAR.id()).setAppearanceId(388);
+			items.get(ItemId.POISONED_IRON_SPEAR.id()).setAppearanceId(389);
+			items.get(ItemId.POISONED_STEEL_SPEAR.id()).setAppearanceId(390);
+			items.get(ItemId.POISONED_MITHRIL_SPEAR.id()).setAppearanceId(391);
+			items.get(ItemId.POISONED_ADAMANTITE_SPEAR.id()).setAppearanceId(392);
+			items.get(ItemId.POISONED_RUNE_SPEAR.id()).setAppearanceId(393);
 
 			items.get(ItemId.SAPPHIRE_NECKLACE.id()).setAppearanceId(405);
 			items.get(ItemId.SAPPHIRE_AMULET.id()).setAppearanceId(406);
