@@ -84,8 +84,8 @@ Servers\Local\SSL_CA<|||>1<|||>
 Servers\Local\SSL_Cipher<|||>1<|||>
 Servers\Local\IgnoreDatabasePattern<|||>1<|||>
 Servers\Local\RefusedCount<|||>3<|||>4
-Servers\Local\ServerVersionFull<|||>1<|||>10.5.8-MariaDB - mariadb.org binary distribution
-Servers\Local\ConnectCount<|||>3<|||>8
-Servers\Local\ServerVersion<|||>3<|||>100508
-Servers\Local\LastConnect<|||>1<|||>2020-11-13 23:26:14
+Servers\Local\ServerVersionFull<|||>1<|||>10.5.9-MariaDB-1:10.5.9+maria~focal - mariadb.org binary distribution
+Servers\Local\ConnectCount<|||>3<|||>9
+Servers\Local\ServerVersion<|||>3<|||>100509
+Servers\Local\LastConnect<|||>1<|||>2021-05-04 21:44:15
 Servers\Local\lastUsedDB<|||>1<|||>preservation

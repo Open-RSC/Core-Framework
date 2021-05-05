@@ -144,7 +144,7 @@ echo Type the username of the player you wish to set as a regular player and pre
 echo:
 SET /P username=""
 echo:
-echo Type the name of the database where the player is saved. (Generally named "preservation", "openrsc", or "cabbage")
+echo Type the name of the database where the player is saved. (Generally named "preservation", "retrorsc", "openrsc", "cabbage", "uranium", or "coleslaw")
 echo:
 SET /P db=""
 call START "" %mariadbpath%mysqld.exe --console
@@ -167,7 +167,7 @@ taskkill /F /IM Java*
 REM Performs a full database export
 cls
 echo:
-echo Type the name of the database you wish to back up. (Generally named "preservation", "openrsc", or "cabbage")
+echo Type the name of the database you wish to back up. (Generally named "preservation", "retrorsc", "openrsc", "cabbage", "uranium", or "coleslaw")
 echo:
 SET /P db=""
 call START "" %mariadbpath%mysqld.exe --console
@@ -194,7 +194,7 @@ echo Type the full name of the database listed above that you wish to restore.
 echo:
 SET /P filename=""
 echo:
-echo Which database should this be restored to? (Generally named "preservation", "openrsc", or "cabbage")
+echo Which database should this be restored to? (Generally named "preservation", "retrorsc", "openrsc", "cabbage", "uranium", or "coleslaw")
 echo:
 SET /P db=""
 call START "" %mariadbpath%mysqld.exe --console
@@ -236,14 +236,23 @@ cls
 call %mariadbpath%mysql.exe -uroot -proot -e "DROP DATABASE IF EXISTS preservation;"
 call %mariadbpath%mysql.exe -uroot -proot -e "DROP DATABASE IF EXISTS openrsc;"
 call %mariadbpath%mysql.exe -uroot -proot -e "DROP DATABASE IF EXISTS cabbage;"
+call %mariadbpath%mysql.exe -uroot -proot -e "DROP DATABASE IF EXISTS retrorsc;"
+call %mariadbpath%mysql.exe -uroot -proot -e "DROP DATABASE IF EXISTS uranium;"
+call %mariadbpath%mysql.exe -uroot -proot -e "DROP DATABASE IF EXISTS coleslaw;"
 
 call %mariadbpath%mysql.exe -uroot -proot -e "CREATE DATABASE `preservation`;"
 call %mariadbpath%mysql.exe -uroot -proot -e "CREATE DATABASE `openrsc`;"
 call %mariadbpath%mysql.exe -uroot -proot -e "CREATE DATABASE `cabbage`;"
+call %mariadbpath%mysql.exe -uroot -proot -e "CREATE DATABASE `retrorsc`;"
+call %mariadbpath%mysql.exe -uroot -proot -e "CREATE DATABASE `uranium`;"
+call %mariadbpath%mysql.exe -uroot -proot -e "CREATE DATABASE `coleslaw`;"
 
 call %mariadbpath%mysql.exe -uroot -proot preservation < Databases\core.sql
 call %mariadbpath%mysql.exe -uroot -proot openrsc < Databases\core.sql
 call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases\core.sql
+call %mariadbpath%mysql.exe -uroot -proot retrorsc < Databases\retro.sql
+call %mariadbpath%mysql.exe -uroot -proot uranium < Databases\core.sql
+call %mariadbpath%mysql.exe -uroot -proot coleslaw < Databases\core.sql
 
 call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_auctionhouse.sql
 call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_bank_presets.sql
@@ -256,6 +265,19 @@ call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_harvest
 call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_ironman.sql
 call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_npc_kill_counting.sql
 call %mariadbpath%mysql.exe -uroot -proot cabbage < Databases/Addons/add_runecraft.sql
+
+call %mariadbpath%mysql.exe -uroot -proot coleslaw < Databases/Addons/add_auctionhouse.sql
+call %mariadbpath%mysql.exe -uroot -proot coleslaw < Databases/Addons/add_bank_presets.sql
+call %mariadbpath%mysql.exe -uroot -proot coleslaw < Databases/Addons/add_clans.sql
+call %mariadbpath%mysql.exe -uroot -proot coleslaw < Databases/Addons/add_custom_items.sql
+call %mariadbpath%mysql.exe -uroot -proot coleslaw < Databases/Addons/add_custom_npcs.sql
+call %mariadbpath%mysql.exe -uroot -proot coleslaw < Databases/Addons/add_custom_objects.sql
+call %mariadbpath%mysql.exe -uroot -proot coleslaw < Databases/Addons/add_equipment_tab.sql
+call %mariadbpath%mysql.exe -uroot -proot coleslaw < Databases/Addons/add_harvesting.sql
+call %mariadbpath%mysql.exe -uroot -proot coleslaw < Databases/Addons/add_ironman.sql
+call %mariadbpath%mysql.exe -uroot -proot coleslaw < Databases/Addons/add_npc_kill_counting.sql
+call %mariadbpath%mysql.exe -uroot -proot coleslaw < Databases/Addons/add_runecraft.sql
+
 echo:
 echo Fresh install complete!
 echo:

@@ -76,7 +76,13 @@ import-custom:
 	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_harvesting.sql
 	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_ironman.sql
 	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_npc_kill_counting.sql
-		docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_runecraft.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_runecraft.sql
+
+# Imports the core.sql and custom.sql files to a specified database
+# Call via "make import-retro db=retrorsc"
+import-retro:
+	@[ "${db}" ] || ( echo ">> db is not set"; exit 1 )
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/retro.sql
 
 # Imports specified add-on SQL file
 # Call via "make import-addon db=cabbage name=add_custom_items.sql
