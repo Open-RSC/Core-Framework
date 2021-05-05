@@ -99,6 +99,7 @@ public enum OpcodeIn {
 	NPC_DEFINITION_REQUEST, // custom
 
 	LOGIN,
+	RELOGIN, // retro rsc
 	REGISTER_ACCOUNT, // part of rsc era protocol
 	FORGOT_PASSWORD, // part of rsc era protocol
 	RECOVERY_ATTEMPT, // part of rsc era protocol

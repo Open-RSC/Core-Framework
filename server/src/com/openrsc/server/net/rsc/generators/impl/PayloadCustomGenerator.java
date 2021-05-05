@@ -290,7 +290,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 						builder.writeInt(si.experienceHarvesting);
 					}
 
-					builder.writeByte(si.questPoints);
+					builder.writeByte((byte) si.questPoints);
 					break;
 
 				case SEND_STAT:
@@ -592,7 +592,7 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_EQUIPMENT_UPDATE:
 					EquipmentUpdateStruct equ = (EquipmentUpdateStruct) payload;
-					builder.writeByte(equ.slotIndex);
+					builder.writeByte((byte) equ.slotIndex);
 					if (equ.catalogID != 0xFFFF) {
 						builder.writeShort(equ.catalogID);
 						if (equ.amount > 0)
@@ -708,17 +708,17 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 						// additional details
 						builder.writeShort(tu.waterLevel);
 						builder.writeShort(tu.fishCaught);
-						builder.writeByte(tu.minutesLeft);
-						builder.writeByte(tu.isNetBroken);
+						builder.writeByte((byte) tu.minutesLeft);
+						builder.writeByte((byte) tu.isNetBroken);
 					}
 					break;
 
 				case SEND_SERVER_MESSAGE:
 					MessageStruct m = (MessageStruct) payload;
 					builder.writeInt(m.iconSprite);
-					builder.writeByte(m.messageTypeRsId);
+					builder.writeByte((byte) m.messageTypeRsId);
 					int infoContained = m.infoContained;
-					builder.writeByte(infoContained);
+					builder.writeByte((byte) infoContained);
 					builder.writeString(m.message);
 					if ((infoContained & 1) != 0) {
 						builder.writeString(m.senderName);
@@ -828,9 +828,9 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 					GameObjectsUpdateStruct go = (GameObjectsUpdateStruct) payload;
 					for (GameObjectLoc objectLoc : go.objects) {
 						builder.writeShort(objectLoc.getId());
-						builder.writeByte(objectLoc.getX());
-						builder.writeByte(objectLoc.getY());
-						builder.writeByte(objectLoc.getDirection());
+						builder.writeByte((byte) objectLoc.getX());
+						builder.writeByte((byte) objectLoc.getY());
+						builder.writeByte((byte) objectLoc.getDirection());
 					}
 					break;
 
@@ -838,14 +838,14 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 					GroundItemsUpdateStruct gri = (GroundItemsUpdateStruct) payload;
 					for (ItemLoc it : gri.objects) {
 						if (it.respawnTime == -1) {
-							builder.writeByte(255);
+							builder.writeByte((byte) 255);
 						} else {
 							builder.writeShort(it.getId());
 						}
-						builder.writeByte(it.getX());
-						builder.writeByte(it.getY());
+						builder.writeByte((byte) it.getX());
+						builder.writeByte((byte) it.getY());
 						if (player.getConfig().WANT_BANK_NOTES)
-							builder.writeByte(it.getNoted());
+							builder.writeByte((byte) it.getNoted());
 					}
 					break;
 
@@ -860,17 +860,17 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 				case SEND_CLAN:
 					ClanStruct cls = (ClanStruct) payload;
 					// 0 = create, 1 = leave, 2 = invite
-					builder.writeByte(cls.actionId);
+					builder.writeByte((byte) cls.actionId);
 					if (cls.actionId == 0) {
 						builder.writeString(cls.clanName);
 						builder.writeString(cls.clanTag);
 						builder.writeString(cls.leaderName);
-						builder.writeByte(cls.isLeader);
-						builder.writeByte(cls.clanSize);
+						builder.writeByte((byte) cls.isLeader);
+						builder.writeByte((byte) cls.clanSize);
 						for (int i = 0; i < cls.clanSize; i++) {
 							builder.writeString(cls.clanMembers[i]);
-							builder.writeByte(cls.memberRanks[i]);
-							builder.writeByte(cls.isMemberOnline[i]);
+							builder.writeByte((byte) cls.memberRanks[i]);
+							builder.writeByte((byte) cls.isMemberOnline[i]);
 						}
 					} else if (cls.actionId == 2) {
 						builder.writeString(cls.nameInviter);
@@ -880,14 +880,14 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_CLAN_LIST:
 					ClanListStruct clls = (ClanListStruct) payload;
-					builder.writeByte(clls.actionId);
+					builder.writeByte((byte) clls.actionId);
 					builder.writeShort(clls.totalClans);
 					for (int i = 0; i < clls.totalClans; i++) {
 						builder.writeShort(clls.clansInfo[i].clanId);
 						builder.writeString(clls.clansInfo[i].clanName);
 						builder.writeString(clls.clansInfo[i].clanTag);
-						builder.writeByte(clls.clansInfo[i].clanSize);
-						builder.writeByte(clls.clansInfo[i].allowsSearchedJoin);
+						builder.writeByte((byte) clls.clansInfo[i].clanSize);
+						builder.writeByte((byte) clls.clansInfo[i].allowsSearchedJoin);
 						builder.writeInt(clls.clansInfo[i].clanPoints);
 						builder.writeShort(i + 1);
 					}
@@ -895,35 +895,35 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_CLAN_SETTINGS:
 					ClanSettingsStruct css = (ClanSettingsStruct) payload;
-					builder.writeByte(css.magicNumber);
-					builder.writeByte(css.kickSetting);
-					builder.writeByte(css.inviteSetting);
-					builder.writeByte(css.allowSearchJoin);
-					builder.writeByte(css.allowSetting0);
-					builder.writeByte(css.allowSetting1);
+					builder.writeByte((byte) css.magicNumber);
+					builder.writeByte((byte) css.kickSetting);
+					builder.writeByte((byte) css.inviteSetting);
+					builder.writeByte((byte) css.allowSearchJoin);
+					builder.writeByte((byte) css.allowSetting0);
+					builder.writeByte((byte) css.allowSetting1);
 					break;
 
 				case SEND_PARTY:
 					PartyStruct pst = (PartyStruct) payload;
 					// 0 = create, 1 = leave, 2 = invite
-					builder.writeByte(pst.actionId);
+					builder.writeByte((byte) pst.actionId);
 					if (pst.actionId == 0) {
 						builder.writeString(pst.leaderName);
-						builder.writeByte(pst.isLeader);
-						builder.writeByte(pst.partySize);
+						builder.writeByte((byte) pst.isLeader);
+						builder.writeByte((byte) pst.partySize);
 						for (int i = 0; i < pst.partySize; i++) {
 							builder.writeString(pst.partyMembers[i]);
-							builder.writeByte(pst.memberRanks[i]);
-							builder.writeByte(pst.isMemberOnline[i]);
-							builder.writeByte(pst.currentHitsMembers[i]);
-							builder.writeByte(pst.maximumHitsMembers[i]);
-							builder.writeByte(pst.combatLevelsMembers[i]);
-							builder.writeByte(pst.isMemberSkulled[i]);
-							builder.writeByte(pst.isMemberDead[i]);
-							builder.writeByte(pst.isShareLoot[i]);
-							builder.writeByte(pst.partyMemberTotal[i]); //total level?
-							builder.writeByte(pst.isInCombat[i]);
-							builder.writeByte(pst.shareExp[i]);
+							builder.writeByte((byte) pst.memberRanks[i]);
+							builder.writeByte((byte) pst.isMemberOnline[i]);
+							builder.writeByte((byte) pst.currentHitsMembers[i]);
+							builder.writeByte((byte) pst.maximumHitsMembers[i]);
+							builder.writeByte((byte) pst.combatLevelsMembers[i]);
+							builder.writeByte((byte) pst.isMemberSkulled[i]);
+							builder.writeByte((byte) pst.isMemberDead[i]);
+							builder.writeByte((byte) pst.isShareLoot[i]);
+							builder.writeByte((byte) pst.partyMemberTotal[i]); //total level?
+							builder.writeByte((byte) pst.isInCombat[i]);
+							builder.writeByte((byte) pst.shareExp[i]);
 							builder.writeLong(pst.shareExp2[i]);
 						}
 					} else if (pst.actionId == 2) {
@@ -934,12 +934,12 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_PARTY_LIST:
 					PartyListStruct plst = (PartyListStruct) payload;
-					builder.writeByte(plst.actionId);
+					builder.writeByte((byte) plst.actionId);
 					builder.writeShort(plst.totalParties);
 					for (int i = 0; i < plst.totalParties; i++) {
 						builder.writeShort(plst.partyInfo[i].partyId);
-						builder.writeByte(plst.partyInfo[i].partySize);
-						builder.writeByte(plst.partyInfo[i].allowsSearchedJoin);
+						builder.writeByte((byte) plst.partyInfo[i].partySize);
+						builder.writeByte((byte) plst.partyInfo[i].allowsSearchedJoin);
 						builder.writeInt(plst.partyInfo[i].partyPoints);
 						builder.writeShort(i + 1);
 					}
@@ -947,12 +947,12 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_PARTY_SETTINGS:
 					PartySettingsStruct pss = (PartySettingsStruct) payload;
-					builder.writeByte(pss.magicNumber);
-					builder.writeByte(pss.kickSetting);
-					builder.writeByte(pss.inviteSetting);
-					builder.writeByte(pss.allowSearchJoin);
-					builder.writeByte(pss.allowSetting0);
-					builder.writeByte(pss.allowSetting1);
+					builder.writeByte((byte) pss.magicNumber);
+					builder.writeByte((byte) pss.kickSetting);
+					builder.writeByte((byte) pss.inviteSetting);
+					builder.writeByte((byte) pss.allowSearchJoin);
+					builder.writeByte((byte) pss.allowSetting0);
+					builder.writeByte((byte) pss.allowSetting1);
 					break;
 			}
 		}

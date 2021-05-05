@@ -1,11 +1,7 @@
 package com.openrsc.server.model.entity.player;
 
-import com.openrsc.server.constants.AppearanceId;
-import com.openrsc.server.constants.Constants;
-import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -17,30 +13,17 @@ import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.PluginTask;
-import com.openrsc.server.event.rsc.impl.FireCannonEvent;
-import com.openrsc.server.event.rsc.impl.PoisonEvent;
-import com.openrsc.server.event.rsc.impl.PrayerDrainEvent;
-import com.openrsc.server.event.rsc.impl.ProjectileEvent;
-import com.openrsc.server.event.rsc.impl.RangeEvent;
-import com.openrsc.server.event.rsc.impl.ThrowingEvent;
+import com.openrsc.server.event.rsc.impl.*;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.login.PlayerSaveRequest;
-import com.openrsc.server.model.Cache;
-import com.openrsc.server.model.MenuOptionListener;
-import com.openrsc.server.model.Point;
-import com.openrsc.server.model.PrivateMessage;
-import com.openrsc.server.model.Shop;
+import com.openrsc.server.model.*;
 import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.container.Bank;
 import com.openrsc.server.model.container.CarriedItems;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
-import com.openrsc.server.model.entity.Entity;
-import com.openrsc.server.model.entity.EntityType;
-import com.openrsc.server.model.entity.GameObject;
-import com.openrsc.server.model.entity.GroundItem;
-import com.openrsc.server.model.entity.Mob;
+import com.openrsc.server.model.entity.*;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.struct.UnequipRequest;
 import com.openrsc.server.model.world.World;
@@ -50,6 +33,7 @@ import com.openrsc.server.net.rsc.ClientLimitations;
 import com.openrsc.server.net.rsc.PayloadProcessorManager;
 import com.openrsc.server.net.rsc.parsers.PayloadParser;
 import com.openrsc.server.net.rsc.parsers.impl.Payload235Parser;
+import com.openrsc.server.net.rsc.parsers.impl.Payload38Parser;
 import com.openrsc.server.net.rsc.parsers.impl.PayloadCustomParser;
 import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.plugins.QuestInterface;
@@ -62,20 +46,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -2138,7 +2110,9 @@ public final class Player extends Mob {
 					() -> {
 						activePackets.remove(activePackets.indexOf(curPacket.getID()));
 						PayloadParser<com.openrsc.server.net.rsc.enums.OpcodeIn> parser;
-						if (isUsingAuthenticClient()) {
+						if (isRetroClient()) {
+							parser = new Payload38Parser();
+						} else if (isUsingAuthenticClient()) {
 							parser = new Payload235Parser();
 						} else {
 							parser = new PayloadCustomParser();
@@ -3450,8 +3424,15 @@ public final class Player extends Mob {
 		return this.clientVersion;
 	}
 
+	// TODO: needs to be redefined
 	public boolean isUsingAuthenticClient() {
 		return this.clientVersion == 235;
+	}
+
+	// TODO: needs to be redefined
+	public boolean isRetroClient() {
+		// temporary for setversion command to not break if player enters in range
+		return this.clientVersion >= 14 && this.clientVersion < 93;
 	}
 
 	public boolean getQolOptOutWarned() {

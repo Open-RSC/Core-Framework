@@ -215,6 +215,7 @@ public class ServerConfiguration {
 	public int RESTART_HOUR;
 	public boolean WANT_RESET_EVENT = false;
 	public boolean CHAR_NAME_CAN_CONTAIN_MOD;
+	public boolean CHAR_NAME_CAN_EQUAL_GLOBAL;
 	public boolean WANT_CHAIN_LEGS;
 	public boolean WANT_APOTHECARY_QOL;
 	public boolean WANT_CERT_AS_NOTES;
@@ -223,6 +224,27 @@ public class ServerConfiguration {
 	// public List<String> adminIp;
 	public boolean WANT_RANGED_FACE_PLAYER = false;
 	public boolean ESTERS_BUNNIES_EVENT = false;
+	public int BASED_MAP_DATA = 64;
+
+	public boolean GATHER_TOOL_ON_SCENERY;
+	public boolean COIN_BANK;
+	public boolean INFLUENCE_INSTEAD_QP;
+	public boolean USES_CLASSES;
+	public boolean USES_PK_MODE;
+	public boolean ARRIVE_LUMBRIDGE;
+	public boolean SCALED_WOODCUT_XP;
+	public boolean OLD_PRAY_XP;
+	public boolean DIVIDED_GOOD_EVIL;
+	public boolean HAS_FEAR_SPELL;
+	public boolean WAIT_TO_REBOOST;
+	public boolean NO_LEVEL_REQUIREMENT_WIELD;
+	public boolean FERMENTED_WINE;
+	public boolean OLD_QUEST_MECHANICS;
+	public boolean CAN_INFLUENCE_NPCS;
+	public boolean NO_CONFIRM_TRADES;
+	public boolean SHORT_MAX_STACKS;
+	public boolean BLOCK_USE_MAGIC_IN_COMBAT;
+	public boolean RAPID_CAST_SPELLS;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -277,7 +299,7 @@ public class ServerConfiguration {
 		WANT_CUSTOM_WALK_SPEED = tryReadBool("want_custom_walking_speed").orElse(false);
 		IDLE_TIMER = tryReadInt("idle_timer").orElse(300000); // 5 minutes
 		AUTO_SAVE = tryReadInt("auto_save").orElse(30000); // 30 seconds
-		CLIENT_VERSION = tryReadInt("client_version").orElse(8); // version 8
+		CLIENT_VERSION = tryReadInt("client_version").orElse(10008); // version 10008
 		SERVER_PORT = tryReadInt("server_port").orElse(43594);
 		MAX_CONNECTIONS_PER_IP = tryReadInt("max_connections_per_ip").orElse(20);
 		MAX_CONNECTIONS_PER_SECOND = tryReadInt("max_connections_per_second").orElse(20);
@@ -324,6 +346,7 @@ public class ServerConfiguration {
 		WANT_AUTO_SERVER_SHUTDOWN = tryReadBool("want_auto_server_shutdown").orElse(false);
 		RESTART_HOUR = tryReadInt("restart_hour").orElse(7);
 		WANT_RESET_EVENT = tryReadBool("want_reset_event").orElse(false);
+		BASED_MAP_DATA = tryReadInt("based_map_data").orElse(64);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
@@ -346,6 +369,28 @@ public class ServerConfiguration {
 		ALLOW_RESIZE = tryReadBool("allow_resize").orElse(false);
 		LENIENT_CONTACT_DETAILS = tryReadBool("lenient_contact_details").orElse(false);
 		CHAR_NAME_CAN_CONTAIN_MOD = tryReadBool("char_name_can_contain_mod").orElse(false);
+		CHAR_NAME_CAN_EQUAL_GLOBAL = tryReadBool("char_name_can_equal_global").orElse(false);
+
+		// Retro features
+		GATHER_TOOL_ON_SCENERY = tryReadBool("gather_tool_on_scenery").orElse(false);
+		COIN_BANK = tryReadBool("coin_bank").orElse(false);
+		INFLUENCE_INSTEAD_QP = tryReadBool("influence_instead_qp").orElse(false);
+		USES_CLASSES = tryReadBool("uses_classes").orElse(false);
+		USES_PK_MODE = tryReadBool("uses_pk_mode").orElse(false);
+		ARRIVE_LUMBRIDGE = tryReadBool("arrive_lumbridge").orElse(false);
+		SCALED_WOODCUT_XP = tryReadBool("scaled_woodcut_xp").orElse(false);
+		OLD_PRAY_XP = tryReadBool("old_pray_xp").orElse(false);
+		DIVIDED_GOOD_EVIL = tryReadBool("divided_good_evil").orElse(false);
+		HAS_FEAR_SPELL = tryReadBool("has_fear_spell").orElse(false);
+		WAIT_TO_REBOOST = tryReadBool("wait_to_reboost").orElse(false);
+		NO_LEVEL_REQUIREMENT_WIELD = tryReadBool("no_level_requirement_wield").orElse(false);
+		FERMENTED_WINE = tryReadBool("fermented_wine").orElse(false);
+		OLD_QUEST_MECHANICS = tryReadBool("old_quest_mechanics").orElse(false);
+		CAN_INFLUENCE_NPCS = tryReadBool("can_influence_npcs").orElse(false);
+		NO_CONFIRM_TRADES = tryReadBool("no_confirm_trades").orElse(false);
+		SHORT_MAX_STACKS = tryReadBool("short_max_stacks").orElse(false);
+		BLOCK_USE_MAGIC_IN_COMBAT = tryReadBool("block_use_magic_in_combat").orElse(false);
+		RAPID_CAST_SPELLS = tryReadBool("rapid_cast_spells").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);

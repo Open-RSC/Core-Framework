@@ -50,7 +50,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 				player = att.player.get();
 			}
 			if (player == null) {
-				if (packet.getID() == 19) {
+				if (packet.getID() == 19 && packet.getLength() < 2) {
 					if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel(), false)) {
 						ctx.channel().close();
 

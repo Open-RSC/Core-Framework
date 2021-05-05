@@ -99,7 +99,7 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) numOptions);
 					for (int i = 0; i < 5 && i < numOptions; i++){
 						int optionLength = mo.optionTexts[i].length();
-						builder.writeByte(optionLength);
+						builder.writeByte((byte) optionLength);
 						builder.writeNonTerminatedString(mo.optionTexts[i]);
 					}
 					break;
@@ -204,13 +204,14 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) friendSize);
 					for (int i = 0; i < friendSize; i++) {
 						builder.writeLong(DataConversions.usernameToHash(fl.name[i]));
+						builder.writeByte((byte) onlineStatusConverter(fl.onlineStatus[i]));
 					}
 					break;
 
 				case SEND_FRIEND_UPDATE:
 					FriendUpdateStruct fr = (FriendUpdateStruct) payload;
 					builder.writeLong(DataConversions.usernameToHash(fr.name));
-					builder.writeByte((byte) fr.onlineStatus);
+					builder.writeByte((byte) onlineStatusConverter(fr.onlineStatus));
 					break;
 
 				case SEND_IGNORE_LIST:
@@ -225,7 +226,6 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 				case SEND_INVENTORY:
 					InventoryStruct is = (InventoryStruct) payload;
 					int inventorySize = is.inventorySize;
-					builder.writeByte((byte) inventorySize);
 					for (int i = 0; i < inventorySize; i++) {
 						// First bit is if it is wielded or not
 						builder.writeShort((is.wielded[i] << 15) | is.catalogIDs[i]);
@@ -240,7 +240,6 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) s.isGeneralStore);
 					builder.writeByte((byte) s.sellModifier);
 					builder.writeByte((byte) s.buyModifier);
-					builder.writeByte((byte) s.stockSensitivity);
 					for (int i = 0; i < shopSize; i++) {
 						builder.writeShort(s.catalogIDs[i]);
 						builder.writeShort(s.amount[i]);
@@ -261,7 +260,6 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_WORLD_INFO:
 					WorldInfoStruct wi = (WorldInfoStruct) payload;
-					builder.writeShort(wi.serverIndex);
 					builder.writeShort(wi.planeWidth);
 					builder.writeShort(wi.planeHeight);
 					builder.writeShort(wi.planeFloor);
@@ -271,6 +269,14 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 				case SEND_NPC_COORDS:
 				case SEND_PLAYER_COORDS:
 					// TODO: CHECK IMPL
+					MobsUpdateStruct mu = (MobsUpdateStruct) payload;
+					for (Object entry : mu.mobsUpdate) {
+						if (entry instanceof Byte) {
+							builder.writeByte((byte) entry);
+						} else if (entry instanceof Short) {
+							builder.writeShort((short) entry);
+						}
+					}
 					break;
 
 				case SEND_UPDATE_NPC: //VERIFIED
@@ -287,6 +293,8 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 							builder.writeAppearanceByte((byte) value, 38);
 						} else if (entry instanceof String) {
 							builder.writeNonTerminatedString((String) entry);
+						} else if (entry instanceof Long) {
+							builder.writeLong((long) entry);
 						}
 					}
 					break;
@@ -294,32 +302,44 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 				case SEND_SCENERY_HANDLER:
 					GameObjectsUpdateStruct go = (GameObjectsUpdateStruct) payload;
 					for (GameObjectLoc objectLoc : go.objects) {
+						if (objectLoc.getId() > 179 && objectLoc.getId() != 60000) {
+							// TODO: may want to define some pattern
+							continue;
+						}
 						builder.writeShort(objectLoc.getId());
-						builder.writeByte(objectLoc.getX());
-						builder.writeByte(objectLoc.getY());
+						builder.writeByte((byte) objectLoc.getX());
+						builder.writeByte((byte) objectLoc.getY());
 					}
 					break;
 
 				case SEND_BOUNDARY_HANDLER:
 					GameObjectsUpdateStruct go1 = (GameObjectsUpdateStruct) payload;
 					for (GameObjectLoc objectLoc : go1.objects) {
+						if (objectLoc.getId() > 46 && objectLoc.getId() != 60000) {
+							// TODO: may want to define some pattern
+							continue;
+						}
 						builder.writeShort(objectLoc.getId());
-						builder.writeByte(objectLoc.getX());
-						builder.writeByte(objectLoc.getY());
-						builder.writeByte(objectLoc.getDirection());
+						builder.writeByte((byte) objectLoc.getX());
+						builder.writeByte((byte) objectLoc.getY());
+						builder.writeByte((byte) objectLoc.getDirection());
 					}
 					break;
 
 				case SEND_GROUND_ITEM_HANDLER:
 					GroundItemsUpdateStruct gri = (GroundItemsUpdateStruct) payload;
 					for (ItemLoc it : gri.objects) {
+						if ((it.getId() & 0x7FFF) > 306) {
+							// TODO: may want to define some pattern
+							continue;
+						}
 						if (it.respawnTime == -1) {
-							builder.writeByte(255);
+							builder.writeByte((byte) 255);
 						} else {
 							builder.writeShort(it.getId());
 						}
-						builder.writeByte(it.getX());
-						builder.writeByte(it.getY());
+						builder.writeByte((byte) it.getX());
+						builder.writeByte((byte) it.getY());
 					}
 					break;
 
@@ -342,5 +362,24 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 		}
 
 		return builder != null ? builder.toPacket() : null;
+	}
+
+	public int onlineStatusConverter(int modernStatus) {
+		int onlineStatus = 0;
+		switch ((modernStatus & 0x6) >> 1) {
+			case 3:
+				// online and same world
+				onlineStatus = 2;
+				break;
+			case 2:
+				// online but different world;
+				onlineStatus = 1;
+				break;
+			case 1:
+			case 0:
+				onlineStatus = 0;
+				break;
+		}
+		return onlineStatus;
 	}
 }

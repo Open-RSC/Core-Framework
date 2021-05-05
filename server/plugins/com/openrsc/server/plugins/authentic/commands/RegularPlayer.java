@@ -131,6 +131,8 @@ public final class RegularPlayer implements CommandTrigger {
 			player.getSettings().toggleBlockDuel(player);
 		} else if (command.equalsIgnoreCase("clientlimitations")) {
 			ActionSender.sendBox(player, player.getClientLimitations().toString(), true);
+		} else if (command.equalsIgnoreCase("setversion")) {
+			setClientVersion(player, args);
 		}
 	}
 
@@ -804,6 +806,37 @@ public final class RegularPlayer implements CommandTrigger {
 				+ "@whi@::toggleblockduel - toggle blocking all duel requests %"
 				+ "@whi@::groups - shows available ranks on the server %",true
 			);
+		}
+
+	}
+
+	private void setClientVersion(Player player, String[] args) {
+		int currentVersion = player.getClientVersion();
+		int desiredVersion = 0;
+		if (currentVersion > 14 && currentVersion < 93) {
+			if (args.length < 1) {
+				player.message(badSyntaxPrefix + "setversion" + " [clientVersion]");
+				return;
+			}
+
+			try {
+				desiredVersion = Integer.parseInt(args[0]);
+			} catch (NumberFormatException nfe) {
+				player.message(badSyntaxPrefix + "setversion" + " [clientVersion]");
+				return;
+			}
+
+			if (desiredVersion > 14 && desiredVersion < 93) {
+				player.setClientVersion(desiredVersion);
+				player.message("The client version was successfully set to " + desiredVersion + "!");
+				player.message("For best user experience, issue the setversion command when switching versions");
+				player.getCache().set("client_version", desiredVersion);
+			} else {
+				player.message("The requested client version is out of bounds of what we think your client could be.");
+				player.message("Select a protocol version between 14 and 93."); // TODO: can probably restrict this narrower depending on what the detected version was
+			}
+		} else {
+			player.message("Sorry this command is only for old clients");
 		}
 	}
 }

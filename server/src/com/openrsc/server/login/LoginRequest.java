@@ -28,13 +28,15 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 	private String password;
 	private long usernameHash;
 	private int clientVersion;
+	private boolean authenticClient;
 
 
-	protected LoginRequest(final Server server, final Channel channel, final String username, final String password, final int clientVersion) {
+	protected LoginRequest(final Server server, final Channel channel, final String username, final String password, final boolean isAuthenticClient, final int clientVersion) {
 		this.server = server;
 		this.channel = channel;
 		this.setUsername(username);
 		this.setPassword(password);
+		this.setAuthenticClient(isAuthenticClient);
 		this.setIpAddress(((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress());
 		this.setClientVersion(clientVersion);
 		this.setUsernameHash(DataConversions.usernameToHash(username));
@@ -72,6 +74,14 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 		this.usernameHash = usernameHash;
 	}
 
+	public boolean getAuthenticClient() {
+		return authenticClient;
+	}
+
+	private void setAuthenticClient(final boolean authenticClient) {
+		this.authenticClient = authenticClient;
+	}
+
 	public Channel getChannel() {
 		return channel;
 	}
@@ -95,7 +105,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 	protected void processInternal() {
 		final int loginResponse = validateLogin();
 		loginValidated(loginResponse);
-		if ((loginResponse & 0x40) != LoginResponse.LOGIN_UNSUCCESSFUL) {
+		if (isLoginSuccessful(loginResponse)) {
 			final Player loadedPlayer = getServer().getPlayerService().loadPlayer(this);
 			loadedPlayer.setLoggedIn(true);
 
@@ -140,7 +150,8 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
-			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION && !isAdmin && getClientVersion() != 235) {
+			if (getClientVersion() != getServer().getConfig().CLIENT_VERSION
+				&& !isAdmin && getClientVersion() < 14) {
 				return (byte) LoginResponse.CLIENT_UPDATED;
 			}
 
@@ -191,6 +202,15 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 			LOGGER.catching(e);
 			return (byte) LoginResponse.LOGIN_UNSUCCESSFUL;
 		}
-		return (byte) LoginResponse.LOGIN_SUCCESSFUL[groupId];
+		return (byte) getLoginSuccessResponse(getClientVersion(), groupId);
+	}
+
+	public boolean isLoginSuccessful(int loginResponse) {
+		return (loginResponse & 0x40) != LoginResponse.LOGIN_UNSUCCESSFUL
+			|| (loginResponse == 0 && this.getClientVersion() <= 204);
+	}
+
+	public int getLoginSuccessResponse(int clientVersion, int groupId) {
+		return clientVersion > 204 || !getAuthenticClient() ? LoginResponse.LOGIN_SUCCESSFUL[groupId] : 0;
 	}
 }

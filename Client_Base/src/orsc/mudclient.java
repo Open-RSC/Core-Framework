@@ -10323,7 +10323,7 @@ public final class mudclient implements Runnable {
 		yFromTopDistance += 15;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12 && this.mouseY < yFromTopDistance + 4
 			&& mouseButtonClick == 1) {
-			this.packetHandler.getClientStream().newPacket(200);
+			this.packetHandler.getClientStream().newPacket(197);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 
@@ -10331,7 +10331,7 @@ public final class mudclient implements Runnable {
 		yFromTopDistance += 15;
 		if (this.mouseX > var6 && this.mouseX < var5 + var6 && this.mouseY > yFromTopDistance - 12 && this.mouseY < yFromTopDistance + 4
 			&& mouseButtonClick == 1) {
-			this.packetHandler.getClientStream().newPacket(201);
+			this.packetHandler.getClientStream().newPacket(247);
 			this.packetHandler.getClientStream().finishPacket();
 		}
 

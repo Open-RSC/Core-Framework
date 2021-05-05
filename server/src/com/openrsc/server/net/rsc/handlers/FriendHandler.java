@@ -142,7 +142,9 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 				message = DataConversions.speakTongues(message);
 			}
 
-			if (friendName.toLowerCase().startsWith("global$") && player.getConfig().WANT_GLOBAL_FRIEND) {
+			if ((friendName.toLowerCase().startsWith("global$") || friendName.equalsIgnoreCase("global"))
+				&& player.getConfig().WANT_GLOBAL_FRIEND
+			) {
 				player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 			}
 			else {

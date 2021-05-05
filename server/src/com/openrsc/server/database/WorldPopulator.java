@@ -46,8 +46,20 @@ public final class WorldPopulator {
 		try {
 			// LOAD OBJECTS //
 			int countOBJ = 0;
-			loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/BoundaryLocs.json", LocType.Boundary);
-			loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/SceneryLocs.json", LocType.Scenery);
+			String authenticSceneryFile, authenticBoundaryFile, authenticGroundItemsFile, authenticMobFile;
+			if (getWorld().getServer().getConfig().BASED_MAP_DATA == 14) {
+				authenticSceneryFile = "/defs/locs/SceneryLocs14.json";
+				authenticBoundaryFile = "/defs/locs/BoundaryLocs14.json";
+				authenticGroundItemsFile = "/defs/locs/GroundItems14.json";
+				authenticMobFile = "/defs/locs/NpcLocs14.json";
+			} else {
+				authenticSceneryFile = "/defs/locs/SceneryLocs.json";
+				authenticBoundaryFile = "/defs/locs/BoundaryLocs.json";
+				authenticGroundItemsFile = "/defs/locs/GroundItems.json";
+				authenticMobFile = "/defs/locs/NpcLocs.json";
+			}
+			loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + authenticBoundaryFile, LocType.Boundary);
+			loadGameObjLocs(getWorld().getServer().getConfig().CONFIG_DIR + authenticSceneryFile, LocType.Scenery);
 			loadCustomLocs(LocType.Scenery);
 			// SceneryObject objects[] = getWorld().getServer().getDatabase().getObjects();
 			// for (SceneryObject object : objects) {
@@ -70,7 +82,7 @@ public final class WorldPopulator {
 			LOGGER.info("Loaded {}", box(countOBJ) + " Objects.");
 
 			// LOAD NPC LOCS //
-			loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocs.json");
+			loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + authenticMobFile);
 			loadCustomLocs(LocType.NPC);
 			// NpcLocation[] npcLocations = getWorld().getServer().getDatabase().getNpcLocs();
 			// for (NpcLocation npcLocation : npcLocations) {
@@ -111,7 +123,7 @@ public final class WorldPopulator {
 
 			// LOAD GROUND ITEMS //
 			int countGI = 0;
-			loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/GroundItems.json");
+			loadItemLocs(getWorld().getServer().getConfig().CONFIG_DIR + authenticGroundItemsFile);
 			loadCustomLocs(LocType.GroundItem);
 			// FloorItem[] groundItems = getWorld().getServer().getDatabase().getGroundItems();
 			// for (FloorItem groundItem : groundItems) {

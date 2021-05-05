@@ -267,6 +267,8 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 		final String[] staff = {"mod", "moderator", "mordorator", "admin", "administrator",
 			"afman", "owner", "jagex", "java"};
 
+		final String global = "global";
+
 		boolean notAllowed = false;
 		String user = username.toLowerCase();
 		user = user.replaceAll("1", "i");
@@ -319,6 +321,14 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 						break;
 					}
 				}
+			}
+		}
+
+		if (!notAllowed && !getServer().getConfig().CHAR_NAME_CAN_EQUAL_GLOBAL) {
+			// pre 2009 clients cant have friends with special characters, in those cases
+			// Global$ will be Global for them
+			if (user.equals(global)) {
+				notAllowed = true;
 			}
 		}
 

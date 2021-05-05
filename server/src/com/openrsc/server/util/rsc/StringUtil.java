@@ -231,4 +231,10 @@ public class StringUtil {
     public static boolean isIPv6Address(final String input) {
   		return isIPv6StdAddress(input) || isIPv6HexCompressedAddress(input);
     }
+
+    public static String getChatString(final String input) throws RuntimeException {
+  		if (input.startsWith("::"))
+			throw new RuntimeException("Command string entered");
+  		return input;
+	}
 }

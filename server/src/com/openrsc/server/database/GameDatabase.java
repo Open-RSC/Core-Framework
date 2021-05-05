@@ -1,7 +1,6 @@
 package com.openrsc.server.database;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.constants.AppearanceId;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.achievement.AchievementReward;
@@ -10,11 +9,13 @@ import com.openrsc.server.content.market.CollectibleItem;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.database.struct.*;
-import com.openrsc.server.external.*;
-import com.openrsc.server.login.LoginRequest;
-import com.openrsc.server.model.PlayerAppearance;
-import com.openrsc.server.model.Point;
-import com.openrsc.server.model.container.*;
+import com.openrsc.server.external.GameObjectLoc;
+import com.openrsc.server.external.ItemLoc;
+import com.openrsc.server.external.NPCLoc;
+import com.openrsc.server.external.SkillDef;
+import com.openrsc.server.model.container.BankPreset;
+import com.openrsc.server.model.container.Equipment;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
@@ -27,7 +28,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Supplier;
 
 public abstract class GameDatabase extends GameDatabaseQueries {
 	/**

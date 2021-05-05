@@ -16,6 +16,7 @@ import com.openrsc.server.model.entity.update.*;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.enums.OpcodeOut;
 import com.openrsc.server.net.rsc.struct.outgoing.*;
+import com.openrsc.server.util.rsc.AppearanceRetroConverter;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -135,10 +136,61 @@ public final class GameStateUpdater {
 	}
 
 	protected void updateNpcs(final Player playerToUpdate) {
-		if (playerToUpdate.getClientVersion() == 38) {
+		MobsUpdateStruct struct = new MobsUpdateStruct();
+		ClearMobsStruct clearStruct = new ClearMobsStruct();
+		if (playerToUpdate.isRetroClient()) {
 			// TODO: check impl
+			List<Object> mobsUpdate = new ArrayList<>();
+			List<Integer> clearIdx = new ArrayList<>();
+
+			for (final Iterator<Npc> it$ = playerToUpdate.getLocalNpcs().iterator(); it$.hasNext(); ) {
+				Npc localNpc = it$.next();
+
+				if (!playerToUpdate.withinRange(localNpc) || localNpc.isRemoved() || localNpc.isRespawning() || localNpc.isTeleporting() || localNpc.inCombat() || !localNpc.withinAuthenticRange(playerToUpdate)) {
+					if (localNpc.isRemoved() || localNpc.isTeleporting()) {
+						// TODO: check if more conditions need to be added from outer if
+						clearIdx.add(localNpc.getIndex());
+					}
+					it$.remove();
+				} else {
+					final byte[] offsets = DataConversions.getMobPositionOffsets(localNpc.getLocation(), playerToUpdate.getLocation());
+
+					int X = offsets[0];
+					int Y = offsets[1];
+					int packed = (localNpc.getIndex() << 6) | ((X & 0x1F) << 1) | ((Y & 0x1F) >> 4);
+					mobsUpdate.add((short) packed);
+					int packed2 = ((Y & 0xF) << 4) | (localNpc.getSprite() & 0xF);
+					mobsUpdate.add((byte) packed2);
+					mobsUpdate.add((byte) localNpc.getID());
+				}
+			}
+			clearStruct.indices = clearIdx;
+			for (final Npc newNPC : playerToUpdate.getViewArea().getNpcsInView()) {
+				if (playerToUpdate.getLocalNpcs().contains(newNPC) || newNPC.equals(playerToUpdate) || newNPC.isRemoved() || newNPC.isRespawning()
+					|| newNPC.getID() == NpcId.NED_BOAT.id() && !playerToUpdate.getCache().hasKey("ned_hired")
+					|| !playerToUpdate.withinRange(newNPC) || (newNPC.isTeleporting() && !newNPC.inCombat())) {
+					continue;
+				} else if (playerToUpdate.getLocalNpcs().size() >= 255) {
+					break;
+				}
+				if (!newNPC.withinAuthenticRange(playerToUpdate))
+					continue; // only have 5 bits in the rsc38 protocol, so the npc can only be shown up to 16 away
+
+				final byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
+
+				int X = offsets[0];
+				int Y = offsets[1];
+				int packed = (newNPC.getIndex() << 6) | ((X & 0x1F) << 1) | ((Y & 0x1F) >> 4);
+				mobsUpdate.add((short) packed);
+				int packed2 = ((Y & 0xF) << 4) | (newNPC.getSprite() & 0xF);
+				mobsUpdate.add((byte) packed2);
+				mobsUpdate.add((byte) newNPC.getID());
+
+				playerToUpdate.getLocalNpcs().add(newNPC);
+			}
+
+			struct.mobsUpdate = mobsUpdate;
 		} else {
-			MobsUpdateStruct struct = new MobsUpdateStruct();
 			List<AbstractMap.SimpleEntry<Integer, Integer>> mobsUpdate = new ArrayList<>();
 
 			mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getLocalNpcs().size(), 8));
@@ -187,15 +239,98 @@ public final class GameStateUpdater {
 			}
 
 			struct.mobs = mobsUpdate;
-			tryFinalizeAndSendPacket(OpcodeOut.SEND_NPC_COORDS, struct, playerToUpdate);
 		}
+		if (clearStruct.indices != null && clearStruct.indices.size() > 0) {
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_REMOVE_WORLD_NPC, clearStruct, playerToUpdate);
+		}
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_NPC_COORDS, struct, playerToUpdate);
 	}
 
 	protected void updatePlayers(final Player playerToUpdate) {
-		if (playerToUpdate.getClientVersion() == 38) {
+		MobsUpdateStruct struct = new MobsUpdateStruct();
+		ClearMobsStruct clearStruct = new ClearMobsStruct();
+		if (playerToUpdate.isRetroClient()) {
 			// TODO: check impl
+			List<Object> mobsUpdate = new ArrayList<>();
+			List<Integer> clearIdx = new ArrayList<>();
+
+			mobsUpdate.add((short) playerToUpdate.getIndex());
+			mobsUpdate.add((short) playerToUpdate.getX());
+			mobsUpdate.add((short) playerToUpdate.getY());
+			mobsUpdate.add((byte) playerToUpdate.getSprite());
+
+			if (playerToUpdate.loggedIn()) {
+				for (final Iterator<Player> it$ = playerToUpdate.getLocalPlayers().iterator(); it$.hasNext(); ) {
+					final Player otherPlayer = it$.next();
+
+					if (!playerToUpdate.withinRange(otherPlayer) || !otherPlayer.loggedIn() || otherPlayer.isRemoved()
+						|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)
+						|| otherPlayer.inCombat() || otherPlayer.hasMoved()
+						|| !otherPlayer.withinAuthenticRange(playerToUpdate)) {
+						if (!otherPlayer.loggedIn() || otherPlayer.isRemoved()
+							|| otherPlayer.isTeleporting() || otherPlayer.isInvisibleTo(playerToUpdate)) {
+							// TODO: check if more conditions need to be added from outer if
+							clearIdx.add(otherPlayer.getIndex());
+						}
+						it$.remove();
+						playerToUpdate.getKnownPlayerAppearanceIDs().remove(otherPlayer.getUsernameHash());
+					} else {
+						final byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
+							playerToUpdate.getLocation());
+
+						int X = offsets[0];
+						int Y = offsets[1];
+						if (otherPlayer.equals(playerToUpdate)) {
+							int packed = ((X & 0x1F) << 5) | (Y & 0x1F);
+							mobsUpdate.add((short) packed);
+							int packed2 = (otherPlayer.getIndex() << 4) | (otherPlayer.getSprite() & 0xF);
+							mobsUpdate.add((short) packed2);
+						} else {
+							int packed = (otherPlayer.getIndex() << 6) | ((X & 0x1F) << 1) | ((Y & 0x1F) >> 4);
+							mobsUpdate.add((short) packed);
+							int packed2 = ((Y & 0xF) << 4) | (otherPlayer.getSprite() & 0xF);
+							mobsUpdate.add((byte) packed2);
+						}
+					}
+				}
+				clearStruct.indices = clearIdx;
+
+				for (final Player otherPlayer : playerToUpdate.getViewArea().getPlayersInView()) {
+					if (playerToUpdate.getLocalPlayers().contains(otherPlayer) || otherPlayer.equals(playerToUpdate)
+						|| !otherPlayer.withinRange(playerToUpdate) || !otherPlayer.loggedIn()
+						|| otherPlayer.isRemoved() || otherPlayer.isInvisibleTo(playerToUpdate)
+						|| (otherPlayer.isTeleporting() && !otherPlayer.inCombat())) {
+						continue;
+					}
+					if (!otherPlayer.withinAuthenticRange(playerToUpdate))
+						continue; // only have 5 bits in the rsc38 protocol, so the player can only be shown up to 16 tiles away
+
+					final byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
+						playerToUpdate.getLocation());
+
+					int X = offsets[0];
+					int Y = offsets[1];
+					if (otherPlayer.equals(playerToUpdate)) {
+						int packed = ((X & 0x1F) << 5) | (Y & 0x1F);
+						mobsUpdate.add((short) packed);
+						int packed2 = (otherPlayer.getIndex() << 4) | (otherPlayer.getSprite() & 0xF);
+						mobsUpdate.add((short) packed2);
+					} else {
+						int packed = (otherPlayer.getIndex() << 6) | ((X & 0x1F) << 1) | ((Y & 0x1F) >> 4);
+						mobsUpdate.add((short) packed);
+						int packed2 = ((Y & 0xF) << 4) | (otherPlayer.getSprite() & 0xF);
+						mobsUpdate.add((byte) packed2);
+					}
+
+					playerToUpdate.getLocalPlayers().add(otherPlayer);
+					if (playerToUpdate.getLocalPlayers().size() >= 255) {
+						break;
+					}
+				}
+			}
+
+			struct.mobsUpdate = mobsUpdate;
 		} else {
-			MobsUpdateStruct struct = new MobsUpdateStruct();
 			List<AbstractMap.SimpleEntry<Integer, Integer>> mobsUpdate = new ArrayList<>();
 
 			mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.getX(), 11));
@@ -259,8 +394,11 @@ public final class GameStateUpdater {
 			}
 
 			struct.mobs = mobsUpdate;
-			tryFinalizeAndSendPacket(OpcodeOut.SEND_PLAYER_COORDS, struct, playerToUpdate);
 		}
+		if (clearStruct.indices != null && clearStruct.indices.size() > 0) {
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_REMOVE_WORLD_PLAYER, clearStruct, playerToUpdate);
+		}
+		tryFinalizeAndSendPacket(OpcodeOut.SEND_PLAYER_COORDS, struct, playerToUpdate);
 	}
 
 	public void updateNpcAppearances(final Player player) {
@@ -315,7 +453,7 @@ public final class GameStateUpdater {
 				updates.add((short) chatMessage.getSender().getIndex());
 				updates.add((byte) 1);
 				updates.add((short) (chatMessage.getRecipient() == null ? -1 : chatMessage.getRecipient().getIndex()));
-				if (player.getClientVersion() == 38) {
+				if (player.isRetroClient()) {
 					updates.add((byte) chatMessage.getMessageString().length());
 					updates.add(chatMessage.getMessageString());
 				} else if (player.isUsingAuthenticClient()) {
@@ -467,7 +605,7 @@ public final class GameStateUpdater {
 			if (updateSize > 0) {
 				AppearanceUpdateStruct mainStruct = new AppearanceUpdateStruct();
 				AppearanceUpdateStruct altStruct = new AppearanceUpdateStruct(); // for early mudclient, appearance update was sent appart;
-				boolean isRetroClient = player.getClientVersion() == 38;
+				boolean isRetroClient = player.isRetroClient();
 				boolean isCustomClient = !player.isUsingAuthenticClient() && !isRetroClient;
 
 				List<Object> updatesMain = new ArrayList<>();
@@ -619,7 +757,7 @@ public final class GameStateUpdater {
 
 					if (isRetroClient) {
 						updatesAlt.add((short) playerNeedingAppearanceUpdate.getIndex()); // server index
-						updatesAlt.add((short) player.getAppearanceID()); // server id
+						updatesAlt.add((short) playerNeedingAppearanceUpdate.getIndex()); // server id
 						updatesAlt.add((long) DataConversions.usernameToHash(playerNeedingAppearanceUpdate.getUsername()));
 					} else {
 						updatesMain.add((short) playerNeedingAppearanceUpdate.getIndex());
@@ -722,7 +860,7 @@ public final class GameStateUpdater {
 						}
                         for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
                             if (isRetroClient) {
-								updatesAlt.add((char) (i & 0xFF));
+								updatesAlt.add((char) (AppearanceRetroConverter.convert(i) & 0xFF));
 							} else if (player.isUsingAuthenticClient()) {
 								updatesMain.add((char) (i & 0xFF));
 							} else {
@@ -736,6 +874,7 @@ public final class GameStateUpdater {
 						updatesAlt.add((char) appearance.getTopColour());
 						updatesAlt.add((char) appearance.getTrouserColour());
 						updatesAlt.add((char) appearance.getSkinColour());
+						updatesAlt.add((byte) 0); //is player attackable?
 						updatesAlt.add((byte) playerNeedingAppearanceUpdate.getCombatLevel());
 						updatesAlt.add((byte) playerNeedingAppearanceUpdate.getSkullType());
 					} else {

@@ -224,7 +224,7 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 					builder.writeInt(si.experienceAgility);
 					builder.writeInt(si.experienceThieving);
 
-					builder.writeByte(si.questPoints);
+					builder.writeByte((byte) si.questPoints);
 					break;
 
 				case SEND_STAT:
@@ -253,7 +253,7 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 				case SEND_QUESTS:
 					QuestInfoStruct qi = (QuestInfoStruct) payload;
 					for (int i = 0; i < 50; i++) {
-						builder.writeByte(qi.questCompleted[i]);
+						builder.writeByte((byte) qi.questCompleted[i]);
 					}
 					break;
 
@@ -493,9 +493,9 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 
 				case SEND_SERVER_MESSAGE:
 					MessageStruct m = (MessageStruct) payload;
-					builder.writeByte(m.messageTypeRsId);
+					builder.writeByte((byte) m.messageTypeRsId);
 					int infoContained = m.infoContained;
-					builder.writeByte(infoContained);
+					builder.writeByte((byte) infoContained);
 					builder.writeZeroQuotedString(m.message);
 					if ((infoContained & 1) != 0) {
 						builder.writeZeroQuotedString(m.senderName);
@@ -639,8 +639,8 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 					GameObjectsUpdateStruct go = (GameObjectsUpdateStruct) payload;
 					for (GameObjectLoc objectLoc : go.objects) {
 						builder.writeShort(objectLoc.getId());
-						builder.writeByte(objectLoc.getX());
-						builder.writeByte(objectLoc.getY());
+						builder.writeByte((byte) objectLoc.getX());
+						builder.writeByte((byte) objectLoc.getY());
 					}
 					break;
 
@@ -648,9 +648,9 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 					GameObjectsUpdateStruct go1 = (GameObjectsUpdateStruct) payload;
 					for (GameObjectLoc objectLoc : go1.objects) {
 						builder.writeShort(objectLoc.getId());
-						builder.writeByte(objectLoc.getX());
-						builder.writeByte(objectLoc.getY());
-						builder.writeByte(objectLoc.getDirection());
+						builder.writeByte((byte) objectLoc.getX());
+						builder.writeByte((byte) objectLoc.getY());
+						builder.writeByte((byte) objectLoc.getDirection());
 					}
 					break;
 
@@ -658,12 +658,12 @@ public class Payload235Generator implements PayloadGenerator<OpcodeOut> {
 					GroundItemsUpdateStruct gri = (GroundItemsUpdateStruct) payload;
 					for (ItemLoc it : gri.objects) {
 						if (it.respawnTime == -1) {
-							builder.writeByte(255);
+							builder.writeByte((byte) 255);
 						} else {
 							builder.writeShort(it.getId());
 						}
-						builder.writeByte(it.getX());
-						builder.writeByte(it.getY());
+						builder.writeByte((byte) it.getX());
+						builder.writeByte((byte) it.getY());
 					}
 					break;
 

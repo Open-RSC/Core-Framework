@@ -9,6 +9,7 @@ import com.openrsc.server.net.rsc.parsers.PayloadParser;
 import com.openrsc.server.net.rsc.struct.*;
 import com.openrsc.server.net.rsc.struct.incoming.*;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.StringUtil;
 
 /**
  * RSC Protocol-38 (Recreated) Parser of Incoming Packets to respective Protocol Independent Structs
@@ -223,9 +224,17 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 				break;
 
 			case CHAT_MESSAGE:
-				ChatStruct cs = new ChatStruct();
-				cs.message = packet.readString();
-				result = cs;
+				String message = packet.readString();
+				try {
+					ChatStruct cs = new ChatStruct();
+					cs.message = StringUtil.getChatString(message);
+					result = cs;
+				} catch (RuntimeException re) {
+					CommandStruct cms = new CommandStruct();
+					cms.command = message.substring(2); // strip out ::
+					result = cms;
+					opcode = OpcodeIn.COMMAND;
+				}
 				break;
 			case SOCIAL_ADD_FRIEND:
 			case SOCIAL_REMOVE_FRIEND:

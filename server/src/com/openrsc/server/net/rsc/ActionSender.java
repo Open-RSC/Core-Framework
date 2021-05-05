@@ -37,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -55,7 +56,7 @@ public class ActionSender {
 	 * */
 	public static PayloadGenerator<OpcodeOut> getGenerator(Player player) {
 		PayloadGenerator<OpcodeOut> generator;
-		if (player.getClientVersion() == 38) {
+		if (player.isRetroClient()) {
 			generator = new Payload38Generator();
 		} else if (player.isUsingAuthenticClient()) {
 			generator = new Payload235Generator();
@@ -79,6 +80,11 @@ public class ActionSender {
 		} catch (GameNetworkException gne) {
 			throw new GameNetworkException(gne);
 		}
+	}
+
+	public static boolean isRetroClient(Player player) {
+		//return player.getClientVersion() == 38;
+		return player.isRetroClient();
 	}
 
 	/**
@@ -456,16 +462,61 @@ public class ActionSender {
 	 * @param player
 	 */
 	public static void sendFriendList(Player player) {
-		for (int currentFriend = 0; currentFriend < player.getSocial().getFriendListEntry().size() + 1; ++currentFriend) {
-			int iteratorIndex = 0;
-			for (Entry<Long, Integer> entry : player.getSocial().getFriendListEntry()) {
-				if (iteratorIndex == currentFriend) {
-					sendFriendUpdate(player, entry.getKey());
-					break;
+		if (isRetroClient(player)) {
+			FriendListStruct struct = new FriendListStruct();
+			int listSize = player.getSocial().getFriendList().size();
+			int i = 0;
+			struct.listSize = listSize;
+			struct.name = new String[listSize];
+			struct.formerName = new String[listSize];
+			struct.onlineStatus = new int[listSize];
+			for (final Map.Entry<Long, Integer> entry : player.getSocial().getFriendList().entrySet()) {
+				long usernameHash = entry.getKey();
+				String username = DataConversions.hashToUsername(usernameHash);
+
+				int onlineStatus = 0; // offline
+				if (usernameHash == Long.MIN_VALUE && player.getConfig().WANT_GLOBAL_FRIEND) {
+					if (player.getBlockGlobalFriend()) continue;
+					onlineStatus = 6; // online and same world
+					username = "Global$";
+				} else if (player.getWorld().getPlayer(usernameHash) != null &&
+					player.getWorld().getPlayer(usernameHash).isLoggedIn()) {
+					onlineStatus = getPlayerOnlineStatus(player, usernameHash);
 				}
-				iteratorIndex++;
+
+				struct.name[i] = username;
+				struct.formerName[i] = "";
+				struct.onlineStatus[i] = onlineStatus;
+				i++;
+			}
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_FRIEND_LIST, struct, player);
+		} else {
+			for (int currentFriend = 0; currentFriend < player.getSocial().getFriendListEntry().size() + 1; ++currentFriend) {
+				int iteratorIndex = 0;
+				for (Entry<Long, Integer> entry : player.getSocial().getFriendListEntry()) {
+					if (iteratorIndex == currentFriend) {
+						sendFriendUpdate(player, entry.getKey());
+						break;
+					}
+					iteratorIndex++;
+				}
 			}
 		}
+	}
+
+	public static int getPlayerOnlineStatus(Player player, long friendHash) {
+		int onlineStatus = 0;
+
+		Player otherPlayer = player.getWorld().getPlayer(friendHash);
+		boolean blockAll = otherPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, otherPlayer.isUsingAuthenticClient())
+			== PlayerSettings.BlockingMode.All.id();
+		boolean blockNone = otherPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, otherPlayer.isUsingAuthenticClient())
+			== PlayerSettings.BlockingMode.None.id();
+		if (blockNone || (otherPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || player.isMod()) {
+			onlineStatus |= 4 | 2; // 4 for is online and 2 for on same world. 1 would be if the User's name changed from original
+		}
+
+		return onlineStatus;
 	}
 
 	/**
@@ -482,18 +533,9 @@ public class ActionSender {
 			if (player.getBlockGlobalFriend()) return;
 			onlineStatus = 6;
 			username = "Global$";
-		}
-
-		else if (player.getWorld().getPlayer(usernameHash) != null &&
-				player.getWorld().getPlayer(usernameHash).isLoggedIn()) {
-			Player otherPlayer = player.getWorld().getPlayer(usernameHash);
-			boolean blockAll = otherPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, otherPlayer.isUsingAuthenticClient())
-				== PlayerSettings.BlockingMode.All.id();
-			boolean blockNone = otherPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, otherPlayer.isUsingAuthenticClient())
-				== PlayerSettings.BlockingMode.None.id();
-			if (blockNone || (otherPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || player.isMod()) {
-				onlineStatus |= 4 | 2; // 4 for is online and 2 for on same world. 1 would be if the User's name changed from original
-			}
+		} else if (player.getWorld().getPlayer(usernameHash) != null &&
+			player.getWorld().getPlayer(usernameHash).isLoggedIn()) {
+			onlineStatus = getPlayerOnlineStatus(player, usernameHash);
 		}
 
 		struct.name = username;
@@ -938,7 +980,7 @@ public class ActionSender {
 	public static void sendLogoutRequestConfirm(final Player player) {
 		Packet p;
 		AbstractStruct<OpcodeOut> struct;
-		if (player.getClientVersion() != 38) {
+		if (!player.isRetroClient()) {
 			NoPayloadStruct npStruct = new NoPayloadStruct();
 			npStruct.setOpcode(OpcodeOut.SEND_LOGOUT_REQUEST_CONFIRM);
 			struct = npStruct;
@@ -1090,6 +1132,9 @@ public class ActionSender {
 			if (player.isUsingAuthenticClient()) {
 				struct.playerName = struct.formerName = "Global$";
 				struct.message = "@ora@[@gre@" + sender.getUsername() + "@ora@]:@cya@ " + message;
+			} else if (isRetroClient(player)) {
+				struct.playerName = struct.formerName = "Global";
+				struct.message = "@ora@[@gre@" + sender.getUsername() + "@ora@]:@cya@ " + message;
 			} else {
 				struct.playerName = struct.formerName = "Global$" + sender.getUsername();
 			}
@@ -1106,9 +1151,14 @@ public class ActionSender {
 	}
 
 	public static void sendRemoveItem(Player player, int slot) {
-		InventoryUpdateStruct struct = new InventoryUpdateStruct();
-		struct.slot = slot;
-		tryFinalizeAndSendPacket(OpcodeOut.SEND_INVENTORY_REMOVE_ITEM, struct, player);
+		if (isRetroClient(player)) {
+			// doesn't have the ability to update per item & must send entire inventory
+			sendInventory(player);
+		} else {
+			InventoryUpdateStruct struct = new InventoryUpdateStruct();
+			struct.slot = slot;
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_INVENTORY_REMOVE_ITEM, struct, player);
+		}
 	}
 
 	/**
@@ -1524,21 +1574,26 @@ public class ActionSender {
 	}
 
 	public static void sendInventoryUpdateItem(Player player, int slot) {
-		InventoryUpdateStruct struct = new InventoryUpdateStruct();
-		struct.slot = slot;
-		Item item = player.getCarriedItems().getInventory().get(slot);
-		if (item != null) {
-			struct.catalogID = player.isUsingAuthenticClient() ? item.getCatalogIdAuthenticNoting() : item.getCatalogId();
-			struct.wielded = item.isWielded() ? 1 : 0;
-			struct.noted = item.getNoted() ? 1 : 0;
-			struct.amount = item.getDef(player.getWorld()).isStackable() || item.getNoted() ? item.getAmount() : 0;
+		if (isRetroClient(player)) {
+			// doesn't have the ability to update per item & must send entire inventory
+			sendInventory(player);
 		} else {
-			LOGGER.warn(String.format("Null item in %s's inventory! (slot %d)", player.getUsername(), slot ));
-			struct.catalogID = 0;
-			struct.wielded = 0;
-			struct.amount = 0;
+			InventoryUpdateStruct struct = new InventoryUpdateStruct();
+			struct.slot = slot;
+			Item item = player.getCarriedItems().getInventory().get(slot);
+			if (item != null) {
+				struct.catalogID = player.isUsingAuthenticClient() ? item.getCatalogIdAuthenticNoting() : item.getCatalogId();
+				struct.wielded = item.isWielded() ? 1 : 0;
+				struct.noted = item.getNoted() ? 1 : 0;
+				struct.amount = item.getDef(player.getWorld()).isStackable() || item.getNoted() ? item.getAmount() : 0;
+			} else {
+				LOGGER.warn(String.format("Null item in %s's inventory! (slot %d)", player.getUsername(), slot ));
+				struct.catalogID = 0;
+				struct.wielded = 0;
+				struct.amount = 0;
+			}
+			tryFinalizeAndSendPacket(OpcodeOut.SEND_INVENTORY_UPDATEITEM, struct, player);
 		}
-		tryFinalizeAndSendPacket(OpcodeOut.SEND_INVENTORY_UPDATEITEM, struct, player);
 	}
 
 	public static void sendWakeUp(Player player, boolean success, boolean silent) {

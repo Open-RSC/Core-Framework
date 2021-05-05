@@ -87,7 +87,7 @@ public final class GameSettingHandler implements PayloadProcessor<GameSettingStr
 			return;
 		}
 
-		if (player.isUsingAuthenticClient()) {
+		if (player.getClientVersion() <= 235) {
 			// setting 1 is unused yet, refers to player killer
 			if (idx == 0) { // Camera Mode Auto
 				player.getSettings().setGameSetting(0, payload.cameraModeAuto == 1);

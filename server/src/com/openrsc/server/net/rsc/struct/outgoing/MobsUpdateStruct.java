@@ -9,4 +9,5 @@ import java.util.List;
 public class MobsUpdateStruct extends AbstractStruct<OpcodeOut> {
 
 	public List<AbstractMap.SimpleEntry<Integer, Integer>> mobs;
+	public List<Object> mobsUpdate; // retro can be byte or short
 }
