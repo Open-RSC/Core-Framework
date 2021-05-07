@@ -96,8 +96,12 @@ public final class Development implements CommandTrigger {
 		}
 		else if (command.equalsIgnoreCase("logRate")) {
 			logRate(player, args);
-		} else if (command.equalsIgnoreCase("points")) {
+		}
+		else if (command.equalsIgnoreCase("points")) {
 			points(player, args);
+		}
+		else if (command.equalsIgnoreCase("sound")) {
+			playSound(player, args);
 		}
 	}
 
@@ -687,6 +691,7 @@ public final class Development implements CommandTrigger {
 		mes("@whi@At level @mag@" + level + "@whi@ woodcut:");
 		mes("@gre@" + logs + " @whi@" + logName + " logs were received in @lre@" + trials + "@whi@ attempts with the @cya@" + axe + " axe");
 	}
+
 	private void points(Player player, String[] args) {
 		if (args.length == 0) {
 			player.message("You have " + player.getOpenPkPoints() + " points.");
@@ -694,6 +699,12 @@ public final class Development implements CommandTrigger {
 			long points = Long.parseLong(args[0]);
 			player.message("Setting points to " + points);
 			player.setOpenPkPoints(points);
+		}
+	}
+
+	private void playSound(Player player, String[] args) {
+		if (args.length == 1) {
+			ActionSender.sendSound(player, args[0]);
 		}
 	}
 }

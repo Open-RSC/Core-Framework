@@ -1518,8 +1518,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							});
 							// Send finalize spell without giving XP
 							getPlayer().lastCast = System.currentTimeMillis();
-							getPlayer().playSound("spellok");
 							getPlayer().playerServerMessage(MessageType.QUEST, "Cast spell successfully");
+							// Note: it is authentic not to play the "spellok" sound when casting mind spells on Salarin. See kRiStOf/Salarin The Twisted
 							getPlayer().setCastTimer();
 							return;
 						}
