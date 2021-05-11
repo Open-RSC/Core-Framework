@@ -42,7 +42,7 @@ public final class SpellDef extends EntityDef {
 	private int type;
 
 	/**
-	 * Wether the spell is members only
+	 * Whether the spell is members only
 	 */
 	private boolean members;
 

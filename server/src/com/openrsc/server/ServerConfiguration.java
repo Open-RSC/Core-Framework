@@ -190,7 +190,7 @@ public class ServerConfiguration {
 	public boolean LENIENT_CONTACT_DETAILS;
 	//loosened checks
 	public boolean LOOSE_SHALLOW_WATER_CHECK;
-	public boolean NOTHING_REUSE_ME;
+	public boolean FEATURES_SLEEP;
 	public int PACKET_LIMIT;
 	//quest-minigame related
 	public boolean WANT_GIANNE_BADGE;
@@ -235,6 +235,7 @@ public class ServerConfiguration {
 	public boolean SCALED_WOODCUT_XP;
 	public boolean OLD_PRAY_XP;
 	public boolean DIVIDED_GOOD_EVIL;
+	public boolean LACKS_PRAYERS;
 	public boolean HAS_FEAR_SPELL;
 	public boolean WAIT_TO_REBOOST;
 	public boolean NO_LEVEL_REQUIREMENT_WIELD;
@@ -245,6 +246,7 @@ public class ServerConfiguration {
 	public boolean SHORT_MAX_STACKS;
 	public boolean BLOCK_USE_MAGIC_IN_COMBAT;
 	public boolean RAPID_CAST_SPELLS;
+	public boolean MEAT_HEAL_LEVEL_DEPENDENT;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -347,6 +349,7 @@ public class ServerConfiguration {
 		RESTART_HOUR = tryReadInt("restart_hour").orElse(7);
 		WANT_RESET_EVENT = tryReadBool("want_reset_event").orElse(false);
 		BASED_MAP_DATA = tryReadInt("based_map_data").orElse(64);
+		FEATURES_SLEEP = tryReadBool("features_sleep").orElse(true);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
@@ -381,6 +384,7 @@ public class ServerConfiguration {
 		SCALED_WOODCUT_XP = tryReadBool("scaled_woodcut_xp").orElse(false);
 		OLD_PRAY_XP = tryReadBool("old_pray_xp").orElse(false);
 		DIVIDED_GOOD_EVIL = tryReadBool("divided_good_evil").orElse(false);
+		LACKS_PRAYERS = tryReadBool("lacks_prayers").orElse(false);
 		HAS_FEAR_SPELL = tryReadBool("has_fear_spell").orElse(false);
 		WAIT_TO_REBOOST = tryReadBool("wait_to_reboost").orElse(false);
 		NO_LEVEL_REQUIREMENT_WIELD = tryReadBool("no_level_requirement_wield").orElse(false);
@@ -391,6 +395,7 @@ public class ServerConfiguration {
 		SHORT_MAX_STACKS = tryReadBool("short_max_stacks").orElse(false);
 		BLOCK_USE_MAGIC_IN_COMBAT = tryReadBool("block_use_magic_in_combat").orElse(false);
 		RAPID_CAST_SPELLS = tryReadBool("rapid_cast_spells").orElse(false);
+		MEAT_HEAL_LEVEL_DEPENDENT = tryReadBool("meat_heal_level_dependent").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);

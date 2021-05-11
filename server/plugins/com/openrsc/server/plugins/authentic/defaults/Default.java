@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.authentic.defaults;
 
 import com.openrsc.server.constants.AppearanceId;
+import com.openrsc.server.constants.Spells;
 import com.openrsc.server.database.impl.mysql.queries.logging.GenericLog;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.external.SpellDef;
@@ -371,22 +372,22 @@ public class Default implements DefaultHandler,
 	}
 
 	@Override
-	public void onSpellInv(Player player, Integer invIndex, Integer itemID, Integer spellID) {
+	public void onSpellInv(Player player, Integer invIndex, Integer itemID, Spells spellEnum) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockSpellInv(Player player, Integer invIndex, Integer itemID, Integer spellID) {
+	public boolean blockSpellInv(Player player, Integer invIndex, Integer itemID, Spells spellEnum) {
 		return false;
 	}
 
 	@Override
-	public void onSpellPlayer(Player player, Player affectedPlayer, Integer spell) {
+	public void onSpellPlayer(Player player, Player affectedPlayer, Spells spellEnum) {
 		// No default actions
 	}
 
 	@Override
-	public boolean blockSpellPlayer(Player player, Player affectedPlayer, Integer spell) {
+	public boolean blockSpellPlayer(Player player, Player affectedPlayer, Spells spellEnum) {
 		return false;
 	}
 

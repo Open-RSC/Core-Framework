@@ -672,7 +672,7 @@ public class ActionSender {
 			LOGGER.info(server.getConfig().HIDE_LOGIN_BOX_TOGGLE + " 74");
 			LOGGER.info(server.getConfig().WANT_GLOBAL_FRIEND + " 75");
 			LOGGER.info(server.getConfig().RIGHT_CLICK_TRADE + " 76");
-			LOGGER.info(server.getConfig().NOTHING_REUSE_ME + " 77");
+			LOGGER.info(server.getConfig().FEATURES_SLEEP + " 77");
 			LOGGER.info(server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR + " 78");
 			LOGGER.info(server.getConfig().WANT_CERT_AS_NOTES + " 79");
 		}
@@ -777,7 +777,7 @@ public class ActionSender {
 		configs.add((byte) (server.getConfig().HIDE_LOGIN_BOX_TOGGLE ? 1 : 0)); // 74
 		configs.add((byte) (server.getConfig().WANT_GLOBAL_FRIEND ? 1 : 0)); // 75
 		configs.add((byte) (server.getConfig().RIGHT_CLICK_TRADE ? 1 : 0)); // 76
-		configs.add((byte) (server.getConfig().NOTHING_REUSE_ME ? 1 : 0)); // 77
+		configs.add((byte) (server.getConfig().FEATURES_SLEEP ? 1 : 0)); // 77
 		configs.add((byte) (server.getConfig().WANT_EXTENDED_CATS_BEHAVIOR ? 1 : 0)); // 78
 		configs.add((byte) (server.getConfig().WANT_CERT_AS_NOTES ? 1 : 0)); // 79
 		configs.add((byte) (server.getConfig().WANT_OPENPK_POINTS ? 1 : 0)); // 80
@@ -1226,8 +1226,20 @@ public class ActionSender {
 				case "Ranged":
 					struct.currentRanged = lvl;
 					break;
+				case "PrayGood":
+					struct.currentPrayGood = lvl;
+					break;
+				case "PrayEvil":
+					struct.currentPrayEvil = lvl;
+					break;
 				case "Prayer":
 					struct.currentPrayer = lvl;
+					break;
+				case "GoodMagic":
+					struct.currentGoodMagic = lvl;
+					break;
+				case "EvilMagic":
+					struct.currentEvilMagic = lvl;
 					break;
 				case "Magic":
 					struct.currentMagic = lvl;
@@ -1236,6 +1248,7 @@ public class ActionSender {
 					struct.currentCooking = lvl;
 					break;
 				case "Woodcut":
+				case "Woodcutting":
 					struct.currentWoodcutting = lvl;
 					break;
 				case "Fletching":
@@ -1271,6 +1284,12 @@ public class ActionSender {
 				case "Harvesting":
 					struct.currentHarvesting = lvl;
 					break;
+				case "Influence":
+					struct.currentInfluence = lvl;
+					break;
+				case "Tailoring":
+					struct.currentTailoring = lvl;
+					break;
 			}
 			i++;
 		}
@@ -1293,8 +1312,20 @@ public class ActionSender {
 				case "Ranged":
 					struct.maxRanged = lvl;
 					break;
+				case "PrayGood":
+					struct.maxPrayGood = lvl;
+					break;
+				case "PrayEvil":
+					struct.maxPrayEvil = lvl;
+					break;
 				case "Prayer":
 					struct.maxPrayer = lvl;
+					break;
+				case "GoodMagic":
+					struct.maxGoodMagic = lvl;
+					break;
+				case "EvilMagic":
+					struct.maxEvilMagic = lvl;
 					break;
 				case "Magic":
 					struct.maxMagic = lvl;
@@ -1303,6 +1334,7 @@ public class ActionSender {
 					struct.maxCooking = lvl;
 					break;
 				case "Woodcut":
+				case "Woodcutting":
 					struct.maxWoodcutting = lvl;
 					break;
 				case "Fletching":
@@ -1338,6 +1370,12 @@ public class ActionSender {
 				case "Harvesting":
 					struct.maxHarvesting = lvl;
 					break;
+				case "Influence":
+					struct.maxInfluence = lvl;
+					break;
+				case "Tailoring":
+					struct.maxTailoring = lvl;
+					break;
 			}
 			i++;
 		}
@@ -1360,8 +1398,20 @@ public class ActionSender {
 				case "Ranged":
 					struct.experienceRanged = exp;
 					break;
+				case "PrayGood":
+					struct.experiencePrayGood = exp;
+					break;
+				case "PrayEvil":
+					struct.experiencePrayEvil = exp;
+					break;
 				case "Prayer":
 					struct.experiencePrayer = exp;
+					break;
+				case "GoodMagic":
+					struct.experienceGoodMagic= exp;
+					break;
+				case "EvilMagic":
+					struct.experienceEvilMagic = exp;
 					break;
 				case "Magic":
 					struct.experienceMagic = exp;
@@ -1370,6 +1420,7 @@ public class ActionSender {
 					struct.experienceCooking = exp;
 					break;
 				case "Woodcut":
+				case "Woodcutting":
 					struct.experienceWoodcutting = exp;
 					break;
 				case "Fletching":
@@ -1405,11 +1456,25 @@ public class ActionSender {
 				case "Harvesting":
 					struct.experienceHarvesting = exp;
 					break;
+				case "Influence":
+					struct.experienceInfluence = exp;
+					break;
+				case "Tailoring":
+					struct.experienceTailoring = exp;
+					break;
 			}
 			i++;
 		}
 
-		struct.questPoints = player.getQuestPoints();
+		int questPoints = player.getQuestPoints();
+		struct.questPoints = questPoints;
+
+		// computed for compat if retro client on modern world
+		struct.useInfluence = player.getConfig().INFLUENCE_INSTEAD_QP;
+		int computedInfluence = DataConversions.questPointsToInfluence(questPoints, player.getConfig().PLAYER_LEVEL_LIMIT);
+		struct.computedInfluence = computedInfluence;
+		struct.computedExperienceInfluence = player.getSkills().experienceForLevel(computedInfluence);
+
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_STATS, struct, player);
 	}
 

@@ -62,6 +62,13 @@ public class PrayerHandler implements PayloadProcessor<PrayerStruct, OpcodeIn> {
 	public void process(PrayerStruct payload, Player player) throws Exception {
 		OpcodeIn pID = payload.getOpcode();
 		int prayerID = payload.prayerID;
+
+		if (player.getConfig().LACKS_PRAYERS) {
+			player.getPrayers().resetPrayers();
+			player.message("World does not feature prayers!");
+			return;
+		}
+
 		if (prayerID < 0 || prayerID >= 14) {
 			player.setSuspiciousPlayer(true, "prayer id < 0 or prayer id >= 14");
 //			ActionSender.sendPrayers(player);TODO

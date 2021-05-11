@@ -12,7 +12,11 @@ public class Prayer implements OpLocTrigger {
 
 	@Override
 	public void onOpLoc(Player player, final GameObject object, String command) {
-		if (command.equalsIgnoreCase("recharge at")) {
+		boolean wantsRecharge = command.equalsIgnoreCase("recharge at");
+		boolean allowRecharge = !player.getConfig().LACKS_PRAYERS;
+		if (wantsRecharge && !allowRecharge) {
+			player.message("World does not feature prayers!");
+		} else if (wantsRecharge && allowRecharge) {
 			int maxPray = getMaxLevel(player, Skills.PRAYER) + (object.getID() == 200 ? 2 : 0);
 			if (getCurrentLevel(player, Skills.PRAYER) == maxPray) {
 				player.playerServerMessage(MessageType.QUEST, "You already have full prayer points");
@@ -23,14 +27,14 @@ public class Prayer implements OpLocTrigger {
 				if (getCurrentLevel(player, Skills.PRAYER) < maxPray) {
 					player.getSkills().setLevel(Skills.PRAYER, maxPray);
 				}
-
 			}
-			if (object.getID() == 625 && object.getY() == 3573) {
-				delay();
-				mes("Suddenly a trapdoor opens beneath you");
-				delay(3);
-				player.teleport(608, 3525);
-			}
+		}
+		// chaos altar in Yanille dungeon is a trapdoor
+		if (wantsRecharge && (object.getID() == 625 && object.getY() == 3573)) {
+			delay();
+			mes("Suddenly a trapdoor opens beneath you");
+			delay(3);
+			player.teleport(608, 3525);
 		}
 	}
 

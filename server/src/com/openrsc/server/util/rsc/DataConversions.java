@@ -58,6 +58,12 @@ public final class DataConversions {
 		}
 	}
 
+	/** Returns a virtual like influence from given quest points */
+	public static int questPointsToInfluence(int numberPoints, int maxLevel) {
+		// based on May 10 2001 conversion, about max influence 22 where max QP became 30
+		return Math.min(Math.max(1, (int)Math.floor(numberPoints * 0.75)), maxLevel);
+	}
+
 	public static String getDateFromMsec(long diffMSec) {
 		int left = 0;
 		int ss = 0;

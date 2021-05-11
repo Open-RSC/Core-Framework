@@ -10606,7 +10606,7 @@ public final class mudclient implements Runnable {
 					}
 
 					//exp freeze notification
-					if (!Config.S_WANT_FATIGUE)
+					if (Config.S_FEATURES_SLEEP && !Config.S_WANT_FATIGUE)
 						if (experienceOff)
 							this.getSurface().drawString(Config.S_WANT_OPENPK_POINTS ? "Points gain off" : "Exp gain off", Config.S_WANT_OPENPK_POINTS ? 110 + x : 122 + x, yOffset + 8, 0x00FF0000, 1);
 						else
@@ -16273,7 +16273,7 @@ public final class mudclient implements Runnable {
 			System.out.println(S_WANT_BANK_PRESETS + " 63");
 			System.out.println(Config.S_WANT_HARVESTING + " 66");
 			System.out.println(S_RIGHT_CLICK_BANK + " 67");
-			System.out.println(S_CUSTOM_PROTOCOL + " 68");
+			System.out.println(S_FEATURES_SLEEP + " 68");
 			System.out.println(S_WANT_EXTENDED_CATS_BEHAVIOR + " 69");
 		}
 		try {

@@ -504,7 +504,10 @@ public class Equipment {
 	// Equipment::ableToEquip(Item)
 	// Returns true if the item may be equipped to the player.
 	public boolean ableToEquip(Item item) {
-		int requiredLevel = item.getDef(player.getWorld()).getRequiredLevel();
+		// Retro RSC mechanic - did not use to require level to wield
+		boolean hasRequirement = !player.getConfig().NO_LEVEL_REQUIREMENT_WIELD;
+
+		int requiredLevel = hasRequirement ? item.getDef(player.getWorld()).getRequiredLevel() : 1;
 		int requiredSkillIndex = item.getDef(player.getWorld()).getRequiredSkillIndex();
 		String itemLower = item.getDef(player.getWorld()).getName().toLowerCase();
 		Optional<Integer> optionalLevel = Optional.empty();
@@ -532,6 +535,10 @@ public class Equipment {
 		if (itemLower.contains("battlestaff")) {
 			optionalLevel = Optional.of(requiredLevel);
 			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+		}
+
+		if (optionalLevel.isPresent() && !hasRequirement) {
+			optionalLevel = Optional.of(1);
 		}
 
 		// Check if the skill is a high enough level

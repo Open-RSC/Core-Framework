@@ -218,8 +218,8 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) si.currentStrength);
 					builder.writeByte((byte) si.currentHits);
 					builder.writeByte((byte) si.currentRanged);
-					builder.writeByte((byte) si.currentPrayer);
-					builder.writeByte((byte) si.currentMagic);
+					builder.writeByte((byte) si.getCurrentPrayer());
+					builder.writeByte((byte) si.getCurrentMagic());
 					builder.writeByte((byte) si.currentCooking);
 					builder.writeByte((byte) si.currentWoodcutting);
 					builder.writeByte((byte) si.currentFletching);
@@ -244,8 +244,8 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 					builder.writeByte((byte) si.maxStrength);
 					builder.writeByte((byte) si.maxHits);
 					builder.writeByte((byte) si.maxRanged);
-					builder.writeByte((byte) si.maxPrayer);
-					builder.writeByte((byte) si.maxMagic);
+					builder.writeByte((byte) si.getMaxPrayer());
+					builder.writeByte((byte) si.getMaxMagic());
 					builder.writeByte((byte) si.maxCooking);
 					builder.writeByte((byte) si.maxWoodcutting);
 					builder.writeByte((byte) si.maxFletching);
@@ -270,8 +270,8 @@ public class PayloadCustomGenerator implements PayloadGenerator<OpcodeOut> {
 					builder.writeInt(si.experienceStrength);
 					builder.writeInt(si.experienceHits);
 					builder.writeInt(si.experienceRanged);
-					builder.writeInt(si.experiencePrayer);
-					builder.writeInt(si.experienceMagic);
+					builder.writeInt(si.getExperiencePrayer());
+					builder.writeInt(si.getExperienceMagic());
 					builder.writeInt(si.experienceCooking);
 					builder.writeInt(si.experienceWoodcutting);
 					builder.writeInt(si.experienceFletching);

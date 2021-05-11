@@ -23,7 +23,6 @@ public final class GeneralStore extends AbstractShop {
 		2), new Item(ItemId.TINDERBOX.id(), 2), new Item(ItemId.CHISEL.id(), 2), new Item(ItemId.HAMMER.id(), 5),
 		new Item(ItemId.SLEEPING_BAG.id(), 10) };
 
-	private final Shop baseShop = new Shop(true, 12400, 130, 40, 3, shopItems);
 	private final Shop dwarvenShop = new Shop(true, 12400, 130, 40, 3, Arrays.copyOfRange(shopItems, 0, 7));
 	private Shop[] shops = null;
 
@@ -45,15 +44,18 @@ public final class GeneralStore extends AbstractShop {
 	public Shop[] getShops(World world) {
 		if (shops == null) {
 			shops = new Shop[9];
+			final int toIndex = world.getServer().getConfig().FEATURES_SLEEP ? 8 : 7; // do not stock sleeping bag if server does not feature sleep
+			final Shop genShop = new Shop(true, 12400, 130, 40, 3, Arrays.copyOfRange(shopItems, 0, toIndex));
+
 			shops[0] = new Shop(dwarvenShop, "Dwarven Mine", NpcId.DWARVEN_SHOPKEEPER.id());
-			shops[1] = new Shop(baseShop, "Varrock", NpcId.SHOPKEEPER_VARROCK.id(), NpcId.SHOP_ASSISTANT_VARROCK.id());
-			shops[2] = new Shop(baseShop, "Falador", NpcId.SHOPKEEPER_FALADOR.id(), NpcId.SHOP_ASSISTANT_FALADOR.id());
-			shops[3] = new Shop(baseShop, "Lumbridge", NpcId.SHOPKEEPER_LUMBRIDGE.id(), NpcId.SHOP_ASSISTANT_LUMBRIDGE.id());
-			shops[4] = new Shop(baseShop, "Rimmington", NpcId.SHOPKEEPER_RIMMINGTON.id(), NpcId.SHOP_ASSISTANT_RIMMINGTON.id());
-			shops[5] = new Shop(baseShop, "Karamja", NpcId.SHOPKEEPER_KARAMJA.id(), NpcId.SHOP_ASSISTANT_KARAMJA.id());
-			shops[6] = new Shop(baseShop, "Al_Kharid", NpcId.SHOPKEEPER_ALKHARID.id(), NpcId.SHOP_ASSISTANT_ALKHARID.id());
-			shops[7] = new Shop(baseShop, "Edgeville", NpcId.SHOPKEEPER_EDGEVILLE.id(), NpcId.SHOP_ASSISTANT_EDGEVILLE.id());
-			shops[8] = new Shop(baseShop, "Lostcity", NpcId.FAIRY_SHOPKEEPER.id(), NpcId.FAIRY_SHOP_ASSISTANT.id());
+			shops[1] = new Shop(genShop, "Varrock", NpcId.SHOPKEEPER_VARROCK.id(), NpcId.SHOP_ASSISTANT_VARROCK.id());
+			shops[2] = new Shop(genShop, "Falador", NpcId.SHOPKEEPER_FALADOR.id(), NpcId.SHOP_ASSISTANT_FALADOR.id());
+			shops[3] = new Shop(genShop, "Lumbridge", NpcId.SHOPKEEPER_LUMBRIDGE.id(), NpcId.SHOP_ASSISTANT_LUMBRIDGE.id());
+			shops[4] = new Shop(genShop, "Rimmington", NpcId.SHOPKEEPER_RIMMINGTON.id(), NpcId.SHOP_ASSISTANT_RIMMINGTON.id());
+			shops[5] = new Shop(genShop, "Karamja", NpcId.SHOPKEEPER_KARAMJA.id(), NpcId.SHOP_ASSISTANT_KARAMJA.id());
+			shops[6] = new Shop(genShop, "Al_Kharid", NpcId.SHOPKEEPER_ALKHARID.id(), NpcId.SHOP_ASSISTANT_ALKHARID.id());
+			shops[7] = new Shop(genShop, "Edgeville", NpcId.SHOPKEEPER_EDGEVILLE.id(), NpcId.SHOP_ASSISTANT_EDGEVILLE.id());
+			shops[8] = new Shop(genShop, "Lostcity", NpcId.FAIRY_SHOPKEEPER.id(), NpcId.FAIRY_SHOP_ASSISTANT.id());
 
 		}
 		return shops;

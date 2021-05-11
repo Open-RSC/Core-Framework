@@ -86,6 +86,20 @@ public class ManPhoenix implements TalkNpcTrigger {
 			give(player, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
 			mes("Straven hands you a key");
 			delay(3);
+		} else if (player.getConfig().OLD_QUEST_MECHANICS && !player.getBank().hasItemId(ItemId.PHOENIX_GANG_KEY.id()) && !player.getCarriedItems().hasCatalogID(ItemId.PHOENIX_GANG_KEY.id(), Optional.of(false)) &&
+			(player.getQuestStage(Quests.SHIELD_OF_ARRAV) >= 5 || player.getQuestStage(Quests.SHIELD_OF_ARRAV) < 0)
+			&& isPhoenixGang(player)) {
+			// unknown real dialogue for reclaiming
+			// placed here similar to how is for retrieving weapon key
+			npcsay(player, n, "Greetings fellow gang member");
+			say(player, n, "I have lost the hideout key you gave me");
+			npcsay(player, n, "You need to be more careful",
+				"We don't want that key falling into the wrong hands",
+				"Ah well",
+				"Have this spare");
+			give(player, ItemId.PHOENIX_GANG_KEY.id(), 1);
+			mes("Straven hands you a key");
+			delay(3);
 		} else if ((player.getQuestStage(Quests.SHIELD_OF_ARRAV) == 4 && isPhoenixGang(player))
 			|| (player.getCache().hasKey("arrav_mission") && (player.getCache().getInt("arrav_mission") & 2) == PHOENIX_MISSION)) {
 			npcsay(player, n, "Hows your little mission going?");
@@ -107,6 +121,14 @@ public class ManPhoenix implements TalkNpcTrigger {
 				give(player, ItemId.PHOENIX_GANG_WEAPON_KEY.id(), 1);
 				npcsay(player, n, "It will let you enter our weapon supply area",
 					"Round the front of this building");
+				if (player.getConfig().OLD_QUEST_MECHANICS) {
+					// Recreated RSC retro mechanic
+					npcsay(player, n, "And here is another key");
+					mes("Straven hands you another key");
+					delay(3);
+					give(player, ItemId.PHOENIX_GANG_KEY.id(), 1);
+					npcsay(player, n, "It will let you enter our hideout");
+				}
 				player.updateQuestStage(Quests.SHIELD_OF_ARRAV, 5);
 				if (!player.getCache().hasKey("arrav_gang")) {
 					// player got traded the report or had it before starting mission

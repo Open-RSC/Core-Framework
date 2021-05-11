@@ -69,7 +69,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 	}
 
 	private static boolean canCast(Player player) {
-		if (!player.castTimer()) {
+		// Retro RSC mechanic, could rapid cast spells
+		if (!player.castTimer() && !player.getConfig().RAPID_CAST_SPELLS) {
 			player.message("You need to wait " + player.getSpellWait() + " seconds before you can cast another spell");
 			player.resetPath();
 			return false;
@@ -134,13 +135,13 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 	// Check all prohibiting factors that would prevent spell from being cast
 	// If all good, return correct spell
-	private SpellDef spellSanityChecks(int spellIdx, Player player, OpcodeIn opcode) {
-		if (spellIdx < 0 || spellIdx >= 49) {
-			player.setSuspiciousPlayer(true, "idx < 0 or idx >= 49");
+	private SpellDef spellSanityChecks(Spells spellEnum, Player player, OpcodeIn opcode) {
+		SpellDef spell = player.getWorld().getServer().getEntityHandler().getSpellDef(spellEnum);
+
+		if (spell == null) {
 			return null;
 		}
 
-		SpellDef spell = player.getWorld().getServer().getEntityHandler().getSpellDef(spellIdx);
 		if (spell.isMembers() && !player.getConfig().MEMBER_WORLD) {
 			player.message("You need to login to a members world to use this spell");
 			player.resetPath();
@@ -160,7 +161,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		}
 
 		// Ensure player is allowed to teleport.
-		if (opcode == OpcodeIn.CAST_ON_SELF && spell.getSpellType() == 0 && !canTeleport(player, spell, spellIdx)) {
+		if (opcode == OpcodeIn.CAST_ON_SELF && spell.getSpellType() == 0 && !canTeleport(player, spell, spellEnum)) {
 			return null;
 		}
 
@@ -201,12 +202,12 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		player.resetAllExceptDueling();
 
 		if (player.isUsingAuthenticClient() || player.getClientVersion() >= 38) {
-			int idx = Constants.spellMap.getOrDefault(payload.spell, 0);;
+			//int idx = Constants.spellMap.getOrDefault(payload.spell, 0);
 			SpellDef spell;
 
 			switch (opcode) {
 				case CAST_ON_SELF:
-					spell = spellSanityChecks(idx, player, opcode);
+					spell = spellSanityChecks(payload.spell, player, opcode);
 					if (spell == null) {
 						return;
 					}
@@ -215,15 +216,15 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					}
 
 					if (spell.getSpellType() == 0) {
-						handleTeleport(player, spell, idx);
+						handleTeleport(player, spell, payload.spell);
 						return;
 					}
-					handleGroundCast(player, spell, idx);
+					handleGroundCast(player, spell, payload.spell);
 					break;
 				case PLAYER_CAST_PVP:
 					Player affectedPlayer = player.getWorld().getPlayer(payload.targetIndex);
 
-					spell = spellSanityChecks(idx, player, opcode);
+					spell = spellSanityChecks(payload.spell, player, opcode);
 					if (spell == null) {
 						return;
 					}
@@ -239,15 +240,15 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							return;
 						}
 
-						if (checkCastOnPlayer(player, affectedPlayer, idx)) return;
+						if (checkCastOnPlayer(player, affectedPlayer, payload.spell)) return;
 
-						handleMobCast(player, affectedPlayer, idx);
+						handleMobCast(player, affectedPlayer, payload.spell);
 					}
 					break;
 				case CAST_ON_NPC:
 					Npc affectedNpc = player.getWorld().getNpc(payload.targetIndex);
 
-					spell = spellSanityChecks(idx, player, opcode);
+					spell = spellSanityChecks(payload.spell, player, opcode);
 					if (spell == null) {
 						return;
 					}
@@ -264,19 +265,17 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 						if (checkCastOnNpc(player, affectedNpc, spell)) return;
 
-						handleMobCast(player, affectedNpc, idx);
+						handleMobCast(player, affectedNpc, payload.spell);
 					}
 					break;
 				case CAST_ON_INVENTORY_ITEM:
 					// Have to throw in ugly exceptions for curse and enfeeble
 					boolean runecraft = player.getConfig().WANT_RUNECRAFT;
-					int curse = 9;
-					int enfeeble = 44;
 
 					int invIndex = payload.targetIndex;
 					Item item = player.getCarriedItems().getInventory().get(invIndex);
 
-					spell = spellSanityChecks(idx, player, opcode);
+					spell = spellSanityChecks(payload.spell, player, opcode);
 					if (spell == null) {
 						return;
 					}
@@ -285,7 +284,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					}
 
 					if (spell.getSpellType() == 3
-						|| (runecraft && (idx == curse || idx == enfeeble))) {
+						|| (runecraft && (payload.spell == Spells.CURSE || payload.spell == Spells.ENFEEBLE))) {
 
 						if (item == null) {
 							player.resetPath();
@@ -301,10 +300,10 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 						// Attempt to find a spell in a plugin, otherwise use this file.
 						if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellInv",
-							new Object[]{player, invIndex, item.getCatalogId(), idx})) {
+							new Object[]{player, invIndex, item.getCatalogId(), payload.spell})) {
 							return;
 						}
-						handleItemCast(player, spell, idx, item);
+						handleItemCast(player, spell, payload.spell, item);
 					}
 					break;
 				case CAST_ON_BOUNDARY:
@@ -323,7 +322,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					int objectX = payload.targetCoord.getX();
 					int objectY = payload.targetCoord.getY();
 
-					spell = spellSanityChecks(idx, player, opcode);
+					spell = spellSanityChecks(payload.spell, player, opcode);
 					if (spell == null) {
 						return;
 					}
@@ -341,13 +340,13 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						return;
 					}
 
-					handleChargeOrb(player, gameObject, idx, spell);
+					handleChargeOrb(player, gameObject, payload.spell, spell);
 					break;
 				case CAST_ON_GROUND_ITEM:
 					Point location = Point.location(payload.targetCoord.getX(), payload.targetCoord.getY());
 					int itemId = payload.targetIndex;
 
-					spell = spellSanityChecks(idx, player, opcode);
+					spell = spellSanityChecks(payload.spell, player, opcode);
 					if (spell == null) {
 						return;
 					}
@@ -359,11 +358,11 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					if (affectedItem == null) {
 						return;
 					}
-					handleItemCast(player, spell, idx, affectedItem);
+					handleItemCast(player, spell, payload.spell, affectedItem);
 					break;
 				case CAST_ON_LAND:
 					Point locationLand = Point.location(payload.targetCoord.getX(), payload.targetCoord.getY());
-					spell = spellSanityChecks(idx, player, opcode);
+					spell = spellSanityChecks(payload.spell, player, opcode);
 					if (spell == null) {
 						return;
 					}
@@ -371,7 +370,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						return;
 					}
 
-					handleGroundCast(player, spell, idx);
+					handleGroundCast(player, spell, payload.spell);
 					break;
 				default:
 					LOGGER.error("Wrong OPCODE passed to Spell Handler.");
@@ -380,9 +379,9 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 		} else {
 			// Inauthentic client conveniently places Spell ID at the front for all Spell related packets.
-			int idx = Constants.spellMap.get(payload.spell);
+			//int idx = Constants.spellMap.get(payload.spell);
 
-			SpellDef spell = spellSanityChecks(idx, player, opcode);
+			SpellDef spell = spellSanityChecks(payload.spell, player, opcode);
 			if (spell == null) {
 				return;
 			}
@@ -394,10 +393,10 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			switch (opcode) {
 				case CAST_ON_SELF:
 					if (spell.getSpellType() == 0) {
-						handleTeleport(player, spell, idx);
+						handleTeleport(player, spell, payload.spell);
 						return;
 					}
-					handleGroundCast(player, spell, idx);
+					handleGroundCast(player, spell, payload.spell);
 					break;
 				case PLAYER_CAST_PVP:
 					if (spell.getSpellType() == 1 || spell.getSpellType() == 2) {
@@ -407,9 +406,9 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							return;
 						}
 
-						if (checkCastOnPlayer(player, affectedPlayer, idx)) return;
+						if (checkCastOnPlayer(player, affectedPlayer, payload.spell)) return;
 
-						handleMobCast(player, affectedPlayer, idx);
+						handleMobCast(player, affectedPlayer, payload.spell);
 					}
 					break;
 				case CAST_ON_NPC:
@@ -422,17 +421,15 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 						if (checkCastOnNpc(player, affectedNpc, spell)) return;
 
-						handleMobCast(player, affectedNpc, idx);
+						handleMobCast(player, affectedNpc, payload.spell);
 					}
 					break;
 				case CAST_ON_INVENTORY_ITEM:
 					// Have to throw in ugly exceptions for curse and enfeeble
 					boolean runecraft = player.getConfig().WANT_RUNECRAFT;
-					int curse = 9;
-					int enfeeble = 44;
 
 					if (spell.getSpellType() == 3
-						|| (runecraft && (idx == curse || idx == enfeeble))) {
+						|| (runecraft && (payload.spell == Spells.CURSE || payload.spell == Spells.ENFEEBLE))) {
 
 						int invIndex = payload.targetIndex;
 						Item item = player.getCarriedItems().getInventory().get(invIndex);
@@ -450,10 +447,10 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 						// Attempt to find a spell in a plugin, otherwise use this file.
 						if (player.getWorld().getServer().getPluginHandler().handlePlugin(player, "SpellInv",
-							new Object[]{player, invIndex, item.getCatalogId(), idx})) {
+							new Object[]{player, invIndex, item.getCatalogId(), payload.spell})) {
 							return;
 						}
-						handleItemCast(player, spell, idx, item);
+						handleItemCast(player, spell, payload.spell, item);
 					}
 					break;
 				case CAST_ON_BOUNDARY:
@@ -472,7 +469,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						return;
 					}
 
-					handleChargeOrb(player, gameObject, idx, spell);
+					handleChargeOrb(player, gameObject, payload.spell, spell);
 					break;
 				case CAST_ON_GROUND_ITEM:
 					Point location = Point.location(payload.targetCoord.getX(), payload.targetCoord.getY());
@@ -481,11 +478,11 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					if (affectedItem == null) {
 						return;
 					}
-					handleItemCast(player, spell, idx, affectedItem);
+					handleItemCast(player, spell, payload.spell, affectedItem);
 					break;
 				case CAST_ON_LAND:
 					Point locationLand = Point.location(payload.targetCoord.getX(), payload.targetCoord.getY());
-					handleGroundCast(player, spell, idx);
+					handleGroundCast(player, spell, payload.spell);
 					break;
 				default:
 					LOGGER.error("Wrong OPCODE passed to Spell Handler.");
@@ -494,7 +491,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		}
 	}
 
-	private boolean checkCastOnPlayer(Player player, Player affectedPlayer, int idx) {
+	private boolean checkCastOnPlayer(Player player, Player affectedPlayer, Spells spellEnum) {
 
 		// Duel with "No Magic" selected.
 		if (player.getDuel().isDuelActive() && player.getDuel().getDuelSetting(1)) {
@@ -512,7 +509,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		}
 
 		return player.getWorld().getServer().getPluginHandler()
-				.handlePlugin(player, "SpellPlayer", new Object[]{player, affectedPlayer, idx});
+				.handlePlugin(player, "SpellPlayer", new Object[]{player, affectedPlayer, spellEnum});
 	}
 
 	private boolean checkCastOnNpc(Player player, Npc affectedNpc, SpellDef spell) {
@@ -574,44 +571,44 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		player.setCastTimer();
 	}
 
-	public void godSpellObject(Player player, Mob affectedMob, int spell) {
-		switch (spell) {
-			case 33:
+	public void godSpellObject(Player player, Mob affectedMob, Spells spellEnum) {
+		switch (spellEnum) {
+			case CLAWS_OF_GUTHIX:
 				GameObject guthix = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1142, 0, 0);
 				player.getWorld().registerGameObject(guthix);
 				player.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(player.getWorld(), guthix, 2));
 				break;
-			case 34:
+			case SARADOMIN_STRIKE:
 				GameObject sara = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1031, 0, 0);
 				player.getWorld().registerGameObject(sara);
 				player.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(player.getWorld(), sara, 2));
 				break;
-			case 35:
+			case FLAMES_OF_ZAMORAK:
 				GameObject zammy = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1036, 0, 0);
 				player.getWorld().registerGameObject(zammy);
 				player.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(player.getWorld(), zammy, 2));
 				break;
-			case 47:
+			case CHARGE:
 				GameObject charge = new GameObject(affectedMob.getWorld(), affectedMob.getLocation(), 1147, 0, 0);
 				player.getWorld().registerGameObject(charge);
 				player.getWorld().getServer().getGameEventHandler().add(new ObjectRemover(player.getWorld(), charge, 2));
 				break;
 		}
-		if (spell != 47) {
+		if (spellEnum != Spells.CHARGE) {
 			double lowersBy = -1;
 			int affectsStat = -1;
-			if (spell == 33) {
+			if (spellEnum == Spells.CLAWS_OF_GUTHIX) {
 				lowersBy = 0.02;
-				affectsStat = 1; // defense
-			} else if (spell == 34) { // SARADOMIN
+				affectsStat = Skills.DEFENSE;
+			} else if (spellEnum == Spells.SARADOMIN_STRIKE) {
 				lowersBy = 1;
-				affectsStat = 5; // prayer
-			} else if (spell == 35) {
+				affectsStat = Skills.PRAYER;
+			} else if (spellEnum == Spells.FLAMES_OF_ZAMORAK) {
 				lowersBy = 0.02;
-				affectsStat = 6; // magic
+				affectsStat = Skills.MAGIC;
 			}
 			/* How much to lower the stat */
-			int lowerBy = (spell != 34 ? (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy))
+			int lowerBy = (spellEnum != Spells.SARADOMIN_STRIKE ? (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy))
 				: (int) lowersBy);
 
 			/* New current level */
@@ -620,7 +617,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			final int maxWeaken = affectedMob.getSkills().getMaxStat(affectsStat)
 				- (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy) * 4);
 
-			if (newStat < maxWeaken && spell != 34) {
+			if (newStat < maxWeaken && spellEnum != Spells.SARADOMIN_STRIKE) {
 				player.playerServerMessage(MessageType.QUEST, "Your opponent already has weakened " + player.getWorld().getServer().getConstants().getSkills().getSkillName(affectsStat));
 				return;
 			}
@@ -632,9 +629,9 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		}
 	}
 
-	private void handleGroundCast(Player player, SpellDef spell, int id) {
-		switch (id) {
-			case 7: // Bones to bananas
+	private void handleGroundCast(Player player, SpellDef spell, Spells spellEnum) {
+		switch (spellEnum) {
+			case BONES_TO_BANANAS:
 				if (!checkAndRemoveRunes(player, spell)) {
 					return;
 				}
@@ -655,7 +652,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				// needs verify if default message
 				finalizeSpell(player, spell, DEFAULT);
 				break;
-			case 47: // Charge
+			case CHARGE:
 			/*if (!player.getLocation().isMembersWild()) {
 				player.message("Members content can only be used in wild levels: " + World.membersWildStart + " - "
 						+ World.membersWildMax);
@@ -684,58 +681,58 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				player.addCharge(6 * 60000);
 				player.getCache().store("charge_remaining", 6 * 60000);
 				// charge is on self
-				godSpellObject(player, player, 47);
+				godSpellObject(player, player, Spells.CHARGE);
 				finalizeSpell(player, spell, DEFAULT);
 				return;
 		}
 	}
 
-	private void handleItemCast(Player player, SpellDef spell, int id, Item affectedItem) {
-		switch (id) {
+	private void handleItemCast(Player player, SpellDef spell, Spells spellEnum, Item affectedItem) {
+		switch (spellEnum) {
 
 			// Enchant lvl-1 Sapphire amulet
-			case 3:
+			case ENCHANT_LVL1_AMULET:
 				enchantTierOneJewelry(player, affectedItem, spell);
 				break;
 
 			// Curse or Enfeeble on talisman
-			case 9:
-			case 44:
+			case CURSE:
+			case ENFEEBLE:
 				buffTalisman(player, affectedItem, spell);
 				break;
 
 			// Low level alchemy
-			case 10:
+			case LOW_LEVEL_ALCHEMY:
 				lowLevelAlchemy(player, affectedItem, spell);
 				break;
 
 			// Enchant lvl-2 emerald amulet
-			case 13:
+			case ENCHANT_LVL2_AMULET:
 				enchantTierTwoJewelry(player, affectedItem, spell);
 				break;
 
 			// Superheat item
-			case 21:
+			case SUPERHEAT_ITEM:
 				superheatItem(player, affectedItem, spell);
 				break;
 
 			// Enchant lvl-3 ruby amulet
-			case 24:
+			case ENCHANT_LVL3_AMULET:
 				enchantTierThreeJewelry(player, affectedItem, spell);
 				break;
 
 			// High level alchemy
-			case 28:
+			case HIGH_LEVEL_ALCHEMY:
 				highLevelAlchemy(player, affectedItem, spell);
 				break;
 
 			// Enchant lvl-4 diamond amulet
-			case 30:
+			case ENCHANT_LVL4_AMULET:
 				enchantTierFourJewelry(player, affectedItem, spell);
 				break;
 
 			// Enchant lvl-5 dragonstone amulet
-			case 42:
+			case ENCHANT_LVL5_AMULET:
 				enchantTierFiveJewelry(player, affectedItem, spell);
 				break;
 
@@ -1046,7 +1043,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		finalizeSpellNoMessage(player, spell);
 	}
 
-	private void handleItemCast(Player player, final SpellDef spell, final int id, final GroundItem affectedItem) {
+	private void handleItemCast(Player player, final SpellDef spell, Spells spellEnum, final GroundItem affectedItem) {
 		player.setWalkToAction(new WalkToPointAction(player, affectedItem.getLocation(), 4) {
 			public void executeInternal() {
 				getPlayer().resetPath();
@@ -1059,8 +1056,8 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					return;
 				}
 				getPlayer().resetAllExceptDueling();
-				switch (id) {
-					case 16: // Telekinetic grab
+				switch (spellEnum) {
+					case TELEKINETIC_GRAB:
 						// fluffs gets its own message
 						// same case with ana
 						int[] ungrabbableArr = {
@@ -1189,7 +1186,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		});
 	}
 
-	private void handleMobCast(final Player player, final Mob affectedMob, final int spellID) {
+	private void handleMobCast(final Player player, final Mob affectedMob, Spells spellEnum) {
 		if (player.getDuel().isDuelActive() && affectedMob.isPlayer()) {
 			Player aff = (Player) affectedMob;
 			if (!player.getDuel().getDuelRecipient().getUsername().toLowerCase()
@@ -1221,6 +1218,12 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		// Do not cast if the mob is too far away and we are already in a fight.
 		if (!player.withinRange(affectedMob, 4) && player.inCombat()) return;
 
+		// Retro RSC mechanic, could not use magic if already engaged in combat
+		if (player.inCombat() && player.getConfig().BLOCK_USE_MAGIC_IN_COMBAT) {
+			player.message("You cannot do that whilst fighting!");
+			return;
+		}
+
 		player.setFollowing(affectedMob);
 		player.setWalkToAction(new WalkToMobAction(player, affectedMob, 4, false) {
 			public void executeInternal() {
@@ -1231,7 +1234,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				}
 				getPlayer().resetFollowing();
 				getPlayer().resetPath();
-				SpellDef spell = getPlayer().getWorld().getServer().getEntityHandler().getSpellDef(spellID);
+				SpellDef spell = getPlayer().getWorld().getServer().getEntityHandler().getSpellDef(spellEnum);
 				if (!canCast(getPlayer()) || affectedMob.getSkills().getLevel(Skills.HITS) <= 0) {
 					getPlayer().resetPath();
 					return;
@@ -1298,7 +1301,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 				}
 				getPlayer().resetAllExceptDueling();
-				switch (spellID) {
+				switch (spellEnum) {
 					/*
 					 * Confuse, reduces attack by 5% Weaken, reduces strength by 5%
 					 * Curse reduces defense by 5%
@@ -1306,32 +1309,32 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					 * Vulnerability, reduces defense by 10% Enfeeble, reduces
 					 * strength by 10% Stun, reduces attack by 10%
 					 */
-					case 1: // Confuse
-					case 5: // Weaken
-					case 9: // Curse
-					case 41: // vulnerability
-					case 44: // Enfeeble
-					case 46: // Stun
+					case CONFUSE:
+					case WEAKEN:
+					case CURSE:
+					case VULNERABILITY:
+					case ENFEEBLE:
+					case STUN:
 						double lowersBy = 0.0;
 						int affectsStat = -1;
-						if (spellID == 1) {
+						if (spellEnum == Spells.CONFUSE) {
 							lowersBy = 0.05;
-							affectsStat = 0;
-						} else if (spellID == 5) {
+							affectsStat = Skills.ATTACK;
+						} else if (spellEnum == Spells.WEAKEN) {
 							lowersBy = 0.05;
-							affectsStat = 2;
-						} else if (spellID == 9) {
+							affectsStat = Skills.STRENGTH;
+						} else if (spellEnum == Spells.CURSE) {
 							lowersBy = 0.05;
-							affectsStat = 1;
-						} else if (spellID == 41) {
+							affectsStat = Skills.DEFENSE;
+						} else if (spellEnum == Spells.VULNERABILITY) {
 							lowersBy = 0.10;
-							affectsStat = 1;
-						} else if (spellID == 44) {
+							affectsStat = Skills.DEFENSE;
+						} else if (spellEnum == Spells.ENFEEBLE) {
 							lowersBy = 0.10;
-							affectsStat = 2;
-						} else if (spellID == 46) {
+							affectsStat = Skills.STRENGTH;
+						} else if (spellEnum == Spells.STUN) {
 							lowersBy = 0.10;
-							affectsStat = 0;
+							affectsStat = Skills.ATTACK;
 						}
 
 						/* How much to lower the stat */
@@ -1360,7 +1363,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						});
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						return;
-					case 19: // Crumble undead
+					case CRUMBLE_UNDEAD:
 						if (affectedMob.isPlayer()) {
 							getPlayer().message("You can not use this spell on a Player");
 							return;
@@ -1381,7 +1384,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						return;
 
-					case 25: /* Iban Blast */
+					case IBAN_BLAST:
 						if (getPlayer().getQuestStage(Quests.UNDERGROUND_PASS) != -1) {
 							getPlayer().message("you need to complete underground pass quest to cast this spell");
 							return;
@@ -1406,18 +1409,18 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateIbanSpellDamage(), 1, setChasing));
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
-					case 33: // Guthix cast
-					case 34: // Saradomin cast
-					case 35: // Zamorak cast
-						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_GUTHIX.id()) && spellID == 33) {
+					case CLAWS_OF_GUTHIX:
+					case SARADOMIN_STRIKE:
+					case FLAMES_OF_ZAMORAK:
+						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_GUTHIX.id()) && spellEnum == Spells.CLAWS_OF_GUTHIX) {
 							getPlayer().message("you must weild the staff of guthix to cast this spell");
 							return;
 						}
-						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_SARADOMIN.id()) && spellID == 34) {
+						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_SARADOMIN.id()) && spellEnum == Spells.SARADOMIN_STRIKE) {
 							getPlayer().message("you must weild the staff of saradomin to cast this spell");
 							return;
 						}
-						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_ZAMORAK.id()) && spellID == 35) {
+						if (!getPlayer().getCarriedItems().getEquipment().hasEquipped(ItemId.STAFF_OF_ZAMORAK.id()) && spellEnum == Spells.FLAMES_OF_ZAMORAK) {
 							getPlayer().message("you must weild the staff of zamorak to cast this spell");
 							return;
 						}
@@ -1456,7 +1459,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							}
 						}
 						if (affectedMob.getRegion().getGameObject(affectedMob.getLocation(), getPlayer()) == null) {
-							godSpellObject(getPlayer(), affectedMob, spellID);
+							godSpellObject(getPlayer(), affectedMob, spellEnum);
 						}
 						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, CombatFormula.calculateGodSpellDamage(getPlayer()), 1, setChasing));
 
@@ -1475,18 +1478,18 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							return;
 						}
 						/** SALARIN THE TWISTED - STRIKE SPELLS **/
-						if (affectedMob.getID() == NpcId.SALARIN_THE_TWISTED.id() && (spell.getName().equals("Wind strike")
-							|| spell.getName().equals("Water strike") || spell.getName().equals("Earth strike")
-							|| spell.getName().equals("Fire strike"))) {
+						if (affectedMob.getID() == NpcId.SALARIN_THE_TWISTED.id() && (spellEnum == Spells.WIND_STRIKE
+							|| spellEnum == Spells.WATER_STRIKE || spellEnum == Spells.EARTH_STRIKE
+							|| spellEnum == Spells.FIRE_STRIKE)) {
 							int firstDamage = 0;
 							final int secondAdditionalDamage;
-							if (spell.getName().equals("Fire strike")) {
+							if (spellEnum == Spells.FIRE_STRIKE) {
 								firstDamage = 12;
 								secondAdditionalDamage = DataConversions.getRandom().nextInt(5); // 4 // max.
-							} else if (spell.getName().equals("Earth strike")) {
+							} else if (spellEnum == Spells.EARTH_STRIKE) {
 								firstDamage = 11;
 								secondAdditionalDamage = DataConversions.getRandom().nextInt(4); // 3 // max.
-							} else if (spell.getName().equals("Water strike")) {
+							} else if (spellEnum == Spells.WATER_STRIKE) {
 								firstDamage = 10;
 								secondAdditionalDamage = DataConversions.getRandom().nextInt(3); // 2 // max.
 							} else {
@@ -1545,7 +1548,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		});
 	}
 
-	private boolean canTeleport(Player player, SpellDef spell, int id) {
+	private boolean canTeleport(Player player, SpellDef spell, Spells spellEnum) {
 		boolean canTeleport = true;
 		if (player.getLocation().wildernessLevel() >= 20 || player.getLocation().isInFisherKingRealm()
 			|| player.getLocation().isInsideGrandTreeGround()
@@ -1565,12 +1568,12 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			delay(3);
 			canTeleport = false;
 		}
-		else if (!player.getCache().hasKey("ardougne_scroll") && id == 26) {
+		else if (!player.getCache().hasKey("ardougne_scroll") && spellEnum == Spells.ARDOUGNE_TELEPORT) {
 			player.message("You don't know how to cast this spell yet");
 			player.message("You need to do the plague city quest");
 			canTeleport = false;
 		}
-		else if (!player.getCache().hasKey("watchtower_scroll") && id == 31) {
+		else if (!player.getCache().hasKey("watchtower_scroll") && spellEnum == Spells.WATCHTOWER_TELEPORT) {
 			player.message("You cannot cast this spell");
 			player.message("You need to finish the watchtower quest first");
 			canTeleport = false;
@@ -1581,7 +1584,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		return canTeleport;
 	}
 
-	private void handleTeleport(Player player, SpellDef spell, int id) {
+	private void handleTeleport(Player player, SpellDef spell, Spells spellEnum) {
 		if (!checkAndRemoveRunes(player, spell)) {
 			return;
 		}
@@ -1600,23 +1603,23 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				player.getCarriedItems().remove(new Item(ItemId.PLAGUE_SAMPLE.id()));
 			}
 		}
-		switch (id) {
-			case 12: // Varrock
+		switch (spellEnum) {
+			case VARROCK_TELEPORT:
 				player.teleport(120, 504, true);
 				break;
-			case 15: // Lumbridge
+			case LUMBRIDGE_TELEPORT:
 				player.teleport(120, 648, true);
 				break;
-			case 18: // Falador
+			case FALADOR_TELEPORT:
 				player.teleport(312, 552, true);
 				break;
-			case 22: // Camelot
+			case CAMELOT_TELEPORT:
 				player.teleport(456, 456, true);
 				break;
-			case 26: // Ardougne
+			case ARDOUGNE_TELEPORT:
 				player.teleport(588, 621, true);
 				break;
-			case 31: // Watchtower
+			case WATCHTOWER_TELEPORT:
 				player.teleport(493, 3525, true);
 				break;
 			default:
@@ -1625,31 +1628,31 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		finalizeSpellNoMessage(player, spell);
 	}
 
-	private void handleChargeOrb(Player player, GameObject gameObject, int idx, SpellDef spell) {
+	private void handleChargeOrb(Player player, GameObject gameObject, Spells spellEnum, SpellDef spell) {
 		int chargedOrb = ItemId.NOTHING.id();
-		switch (idx) {
-			case 40:
+		switch (spellEnum) {
+			case CHARGE_AIR_ORB:
 				if (gameObject.getID() == 303) {
 					chargedOrb = ItemId.AIR_ORB.id();
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on air obelisks");
 				}
 				break;
-			case 29:
+			case CHARGE_WATER_ORB:
 				if (gameObject.getID() == 300) {
 					chargedOrb = ItemId.WATER_ORB.id();
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on water obelisks");
 				}
 				break;
-			case 36:
+			case CHARGE_EARTH_ORB:
 				if (gameObject.getID() == 304) {
 					chargedOrb = ItemId.EARTH_ORB.id();
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "This spell can only be used on earth obelisks");
 				}
 				break;
-			case 38:
+			case CHARGE_FIRE_ORB:
 				if (gameObject.getID() == 301) {
 					chargedOrb = ItemId.FIRE_ORB.id();
 				} else {

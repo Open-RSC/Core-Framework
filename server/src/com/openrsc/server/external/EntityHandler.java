@@ -3,6 +3,7 @@ package com.openrsc.server.external;
 import com.openrsc.server.Server;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Spells;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.TelePoint;
 import com.openrsc.server.util.PersistenceManager;
@@ -155,7 +156,12 @@ public final class EntityHandler {
 		doors = (DoorDef[]) getPersistenceManager().load("defs/DoorDef.xml");
 		gameObjects = (GameObjectDef[]) getPersistenceManager().load("defs/GameObjectDef.xml");
 		prayers = (PrayerDef[]) getPersistenceManager().load("defs/PrayerDef.xml");
-		spells = (SpellDef[]) getPersistenceManager().load("defs/SpellDef.xml");
+		if (!getServer().getConfig().LACKS_PRAYERS) {
+			// On May 24 2001 original magic/prayer rework, new spells featured
+			spells = (SpellDef[]) getPersistenceManager().load("defs/SpellDef.xml");
+		} else {
+			spells = (SpellDef[]) getPersistenceManager().load("defs/SpellDefRetro.xml");
+		}
 		tiles = (TileDef[]) getPersistenceManager().load("defs/TileDef.xml");
 
 		herbSeconds = (ItemHerbSecond[]) getPersistenceManager().load("defs/extras/ItemHerbSecond.xml");
@@ -814,11 +820,30 @@ public final class EntityHandler {
 	 * @param id the entities ID
 	 * @return the SpellDef with the given ID
 	 */
+	@Deprecated
 	public SpellDef getSpellDef(int id) {
 		if (id < 0 || id >= spells.length) {
 			return null;
 		}
 		return spells[id];
+	}
+
+	/**
+	 * Return spell definition from Spell enum
+	 * @param spellEnum
+	 * @return
+	 */
+	public SpellDef getSpellDef(Spells spellEnum) {
+		SpellDef result = null;
+		String defName;
+		for (SpellDef spell : spells) {
+			defName = spell.getName().replaceAll("[-()]", "").replaceAll(" ", "_");
+			if (spellEnum.toString().equalsIgnoreCase(defName)) {
+				result = spell;
+				break;
+			}
+		}
+		return result;
 	}
 
 	/**

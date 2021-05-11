@@ -72,7 +72,7 @@ public class Skills {
 		return limit;
 	}
 
-	private int experienceForLevel(int level) {
+	public int experienceForLevel(int level) {
 		int lvlArrayIndex = level - 2;
 		if (lvlArrayIndex == -1)
 			return 0;
