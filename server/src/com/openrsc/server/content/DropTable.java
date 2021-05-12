@@ -82,6 +82,10 @@ public class DropTable {
 	}
 
 	public void addEmptyDrop(int weight) {
+		if (weight < 0) {
+			LOGGER.error("One of the drop tables doesn't add up as expected!!!");
+			System.exit(0);
+		}
 		drops.add(new Drop(ItemId.NOTHING.id(), 0, weight, false, dropType.NOTHING));
 		this.totalWeight += weight;
 	}

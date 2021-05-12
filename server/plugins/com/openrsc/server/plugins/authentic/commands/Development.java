@@ -20,6 +20,7 @@ import com.openrsc.server.plugins.authentic.skills.fishing.Fishing;
 import com.openrsc.server.plugins.authentic.skills.woodcutting.Woodcutting;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -485,52 +486,8 @@ public final class Development implements CommandTrigger {
 	}
 
 	private void testNpcDrops(Player player, String command, String[] args) {
-		if (args.length < 1) {
-			mes("::droptest [npc_id]  or  ::droptest [npc_id] [count]");
-			delay(3);
-			return;
-		}
-		int npcId = Integer.parseInt(args[0]);
-		int count = 1;
-		boolean ringOfWealth = false;
-		if (args.length > 1) {
-			count = Integer.parseInt(args[1]);
-		}
-		if (args.length > 2) {
-			ringOfWealth = Integer.parseInt(args[2]) == 1;
-		};
-		final int finalCount = count;
-		NpcDrops npcDrops = player.getWorld().getNpcDrops();
-		DropTable dropTable = npcDrops.getDropTable(npcId);
-		if (dropTable == null) {
-			mes("No NPC for id: " + npcId);
-			delay(4);
-			return;
-		}
-		HashMap<String, Integer> droppedCount = new HashMap<>();
-		for (int i = 0; i < count; i++) {
-			ArrayList<Item> items = dropTable.rollItem(ringOfWealth, player);
-			if (items.size() == 0) {
-				droppedCount.put("-1:0", droppedCount.getOrDefault("-1:0", 0) + 1);
-			}
-			else {
-				for (Item item : items) {
-					droppedCount.put(item.getCatalogId() + ":" + item.getAmount(),
-						droppedCount.getOrDefault(item.getCatalogId() + ":" + item.getAmount(), 0) + 1);
-				}
-			}
-		}
-		System.out.println("Dropped counts (RoW: " + ringOfWealth + "):");
-		droppedCount.entrySet().forEach(entry -> {
-			String key = "NOTHING";
-			int catalogId = Integer.parseInt(entry.getKey().split(":")[0]);
-			int amount = Integer.parseInt(entry.getKey().split(":")[1]);
-			Item i = new Item(catalogId, amount);
-			if (i.getCatalogId() > -1) {
-				key = i.getDef(player.getWorld()).getName();
-			}
-			System.out.println(key + " (" + amount + "): " + entry.getValue() + " / " + finalCount + " (" + ((entry.getValue() / (double)finalCount) * 128) + "/128)");
-		});
+		Thread t = new Thread(new DropTest(player, args));
+		t.start();
 	}
 
 
@@ -706,5 +663,95 @@ public final class Development implements CommandTrigger {
 		if (args.length == 1) {
 			ActionSender.sendSound(player, args[0]);
 		}
+	}
+}
+
+class DropTest implements Runnable {
+	private long packCatalogAmount(int catalogId, int amount) {
+		return ((long)catalogId << 32 | amount);
+	}
+
+	private int[] unpackCatalogAmount(long packedCatalogAmount) {
+		return new int[] { (int)((packedCatalogAmount & 0xFFFF0000) >> 32), (int)(packedCatalogAmount & 0xFFFF) };
+	}
+	Player player;
+	String[] args;
+	private static final Logger LOGGER = LogManager.getLogger(DropTest.class);
+
+	DropTest(Player player, String[] args) {
+		this.player = player;
+		this.args = args;
+	}
+
+
+	@Override
+	public void run() {
+		if (args.length < 1) {
+			player.playerServerMessage(MessageType.QUEST, "::droptest [npc_id]  or  ::droptest [npc_id] [count]");
+			return;
+		}
+		int npcId = Integer.parseInt(args[0]);
+		long count = 1;
+		boolean ringOfWealth = false;
+		if (args.length > 1) {
+			count = Long.parseLong(args[1]);
+		}
+		if (args.length > 2) {
+			ringOfWealth = Integer.parseInt(args[2]) == 1;
+		};
+
+		NpcDrops npcDrops = player.getWorld().getNpcDrops();
+		DropTable dropTable = npcDrops.getDropTable(npcId);
+		if (dropTable == null) {
+			player.playerServerMessage(MessageType.QUEST, "No NPC for id: " + npcId);
+			return;
+		}
+
+		if (count >= 20000000)
+			player.playerServerMessage(MessageType.QUEST, "Calculating...");
+
+		HashMap<Long, Integer> droppedCount = new HashMap<>();
+		for (long i = 0; i < count; i++) {
+			ArrayList<Item> items = dropTable.rollItem(ringOfWealth, player);
+			if (items.size() == 0) {
+				// increment item ID -1, amount 0
+				droppedCount.put(-4294967296L,
+					droppedCount.getOrDefault(-4294967296L, 0) + 1);
+			} else {
+				for (Item item : items) {
+					droppedCount.put(packCatalogAmount(item.getCatalogId(), item.getAmount()),
+						droppedCount.getOrDefault(packCatalogAmount(item.getCatalogId(), item.getAmount()), 0) + 1);
+				}
+			}
+		}
+
+		String rowUsed = "Dropped counts out of " + count + " trials (RoW: " + ringOfWealth + "):";
+		LOGGER.info(rowUsed);
+		player.playerServerMessage(MessageType.QUEST, rowUsed);
+		final long finalCount = count;
+		droppedCount.forEach((key, value) -> {
+			String itemName = "NOTHING";
+			int[] unpacked = unpackCatalogAmount(key);
+			int catalogId = unpacked[0];
+			int amount = unpacked[1];
+			Item i = new Item(catalogId, amount);
+			if (i.getCatalogId() > -1) {
+				itemName = i.getDef(player.getWorld()).getName();
+			}
+
+			StringBuilder output = new StringBuilder();
+			output.append("@cya@").append(itemName).append(" (").append(amount).append("): @yel@ ");
+			double rate128 = (value / (double)finalCount) * 128;
+			if (rate128 > 1) {
+				output.append(String.format("%,.2f", rate128)).append(" in 128");
+			} else {
+				output.append("1 in ").append(String.format("%,.1f", (double)finalCount / value));
+			}
+			output.append(" @whi@ (").append(value).append(String.format(" drop%s)", value == 1 ? "" : "s"));
+
+			LOGGER.info(output.toString().replaceAll("@...@", ""));
+			player.playerServerMessage(MessageType.QUEST, output.toString());
+		});
+
 	}
 }
