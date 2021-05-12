@@ -80,9 +80,9 @@ public final class InterfaceShopHandler implements PayloadProcessor<ShopStruct, 
 		amount = Math.min(amount, shopStock);
 
 		if (amount <= 0) {
-			if (originalAmount > amount) {
-				player.message("You can't hold the objects you are trying to buy!");
-			}
+			// if (originalAmount > amount) {
+				// TODO: need to find if there is a specific error message when trying to buy more than the shop has
+			// }
 			return;
 		}
 
