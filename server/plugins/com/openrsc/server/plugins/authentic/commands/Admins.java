@@ -105,6 +105,8 @@ public final class Admins implements CommandTrigger {
 			serverShutdown(player, args);
 		} else if (command.equalsIgnoreCase("update")) {
 			serverUpdate(player, args);
+    } else if (command.equalsIgnoreCase("clearipbans")) {
+      clearIpBans(player);
 		} else if (command.equalsIgnoreCase("item")) {
 			spawnItemInventory(player, command, args, false);
 		} else if (command.equalsIgnoreCase("certeditem") || command.equals("noteditem")) {
@@ -562,6 +564,11 @@ public final class Admins implements CommandTrigger {
 
 		player.getWorld().getServer().restart(seconds);
 	}
+
+  private void clearIpBans(Player player){
+    int removedIpAddresses = player.getWorld().getServer().clearAllIpBans();
+    player.message(messagePrefix + "Cleared " + removedIpAddresses + " from the Banned IP Table.");
+  }
 
 	private void serverShutdown(Player player, String[] args) {
 		int seconds = 300;

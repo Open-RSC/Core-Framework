@@ -715,6 +715,10 @@ public class Server implements Runnable {
 		return packetFilter;
 	}
 
+  public final int clearAllIpBans() {
+    return packetFilter.clearAllIpBans();
+  }
+
 	public final long getLastIncomingPacketsDuration() {
 		return lastIncomingPacketsDuration;
 	}

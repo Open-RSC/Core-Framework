@@ -432,6 +432,17 @@ public class RSCPacketFilter {
 		return ipBans;
 	}
 
+public int clearAllIpBans() {
+		synchronized(ipBans) {
+				int banListSize = ipBans.size();
+				if (banListSize > 0) {
+						ipBans.clear();
+						return banListSize;
+				}
+		}
+		return 0;
+}
+
 	public final Server getServer() {
 		return server;
 	}
