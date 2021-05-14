@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.custom.skills.crafting;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.external.ItemCraftingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class CustomJewelryCrafting implements UseLocTrigger {
 
@@ -137,7 +138,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 	}
 
 	private void batchGoldCrafting(Player player, Item item, ItemCraftingDef def, int gem) {
-		if (player.getSkills().getLevel(Skills.CRAFTING) < def.getReqLevel()) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < def.getReqLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level " + def.getReqLevel() + " to make this");
 			return;
 		}
@@ -179,7 +180,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 
 		player.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(player.getWorld()).getName());
 		player.getCarriedItems().getInventory().add(result);
-		player.incExp(Skills.CRAFTING, def.getExp(), true);
+		player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), def.getExp(), true);
 
 		// Repeat
 		updatebatch();
@@ -229,7 +230,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 	}
 
 	private void batchSilverCrafting(Player player, Item item, int resultId) {
-		if (player.getSkills().getLevel(Skills.CRAFTING) < 16) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < 16) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level 16 to make this");
 			return;
 		}
@@ -249,7 +250,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		Item result = new Item(resultId);
 		player.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(player.getWorld()).getName());
 		player.getCarriedItems().getInventory().add(result);
-		player.incExp(Skills.CRAFTING, 200, true);
+		player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 200, true);
 
 		// Repeat
 		updatebatch();

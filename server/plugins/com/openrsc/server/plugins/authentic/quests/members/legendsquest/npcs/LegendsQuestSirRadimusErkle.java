@@ -1,15 +1,13 @@
 package com.openrsc.server.plugins.authentic.quests.members.legendsquest.npcs;
 
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
+import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
 import java.util.Optional;
 
@@ -122,11 +120,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						"* Strength * ",
 						"--- Go to Skill Menu 2 ----");
 					if (menu_one == 0) {
-						skillReward(player, n, Skills.ATTACK);
+						skillReward(player, n, SkillsEnum.ATTACK);
 					} else if (menu_one == 1) {
-						skillReward(player, n, Skills.DEFENSE);
+						skillReward(player, n, SkillsEnum.DEFENSE);
 					} else if (menu_one == 2) {
-						skillReward(player, n, Skills.STRENGTH);
+						skillReward(player, n, SkillsEnum.STRENGTH);
 					} else if (menu_one == 3) {
 						radimusInGuildDialogue(player, n, RadimusInGuild.SKILL_MENU_TWO);
 					}
@@ -138,11 +136,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						"* Magic *",
 						"--- Go to Skill Menu 3  ----");
 					if (menu_two == 0) {
-						skillReward(player, n, Skills.HITS);
+						skillReward(player, n, SkillsEnum.HITS);
 					} else if (menu_two == 1) {
-						skillReward(player, n, Skills.PRAYER);
+						skillReward(player, n, SkillsEnum.PRAYER);
 					} else if (menu_two == 2) {
-						skillReward(player, n, Skills.MAGIC);
+						skillReward(player, n, SkillsEnum.MAGIC);
 					} else if (menu_two == 3) {
 						radimusInGuildDialogue(player, n, RadimusInGuild.SKILL_MENU_THREE);
 					}
@@ -154,11 +152,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						"* Smithing * ",
 						"--- Go to Skill Menu 4 ----");
 					if (menu_three == 0) {
-						skillReward(player, n, Skills.WOODCUT);
+						skillReward(player, n, SkillsEnum.WOODCUTTING);
 					} else if (menu_three == 1) {
-						skillReward(player, n, Skills.CRAFTING);
+						skillReward(player, n, SkillsEnum.CRAFTING);
 					} else if (menu_three == 2) {
-						skillReward(player, n, Skills.SMITHING);
+						skillReward(player, n, SkillsEnum.SMITHING);
 					} else if (menu_three == 3) {
 						radimusInGuildDialogue(player, n, RadimusInGuild.SKILL_MENU_FOUR);
 					}
@@ -170,11 +168,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						"* Thieving *",
 						"--- Go to Skill Menu 1 ----");
 					if (menu_four == 0) {
-						skillReward(player, n, Skills.HERBLAW);
+						skillReward(player, n, SkillsEnum.HERBLAW);
 					} else if (menu_four == 1) {
-						skillReward(player, n, Skills.AGILITY);
+						skillReward(player, n, SkillsEnum.AGILITY);
 					} else if (menu_four == 2) {
-						skillReward(player, n, Skills.THIEVING);
+						skillReward(player, n, SkillsEnum.THIEVING);
 					} else if (menu_four == 3) {
 						radimusInGuildDialogue(player, n, RadimusInGuild.SKILL_MENU_ONE);
 					}
@@ -200,12 +198,12 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 		}
 	}
 
-	private void skillReward(Player player, Npc n, int skill) {
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.LEGENDS_QUEST);
-		questData[Quests.MAPIDX_SKILL] = skill;
+	private void skillReward(Player player, Npc n, SkillsEnum skill) {
+		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.LEGENDS_QUEST);
+		questData[Quests.MAPIDX_SKILL] = Either.right(skill);
 		incQuestReward(player, questData, false);
 		updateRewardClaimCount(player);
-		player.message("You receive some training and increase experience to your " + player.getWorld().getServer().getConstants().getSkills().getSkillName(skill) + ".");
+		player.message("You receive some training and increase experience to your " + skill.toString() + ".");
 		if (getRewardClaimCount(player) == 0) {
 			npcsay(player, n, "Right, that's all the training I can offer.! ",
 				"Hope you're happy with your new skills.",

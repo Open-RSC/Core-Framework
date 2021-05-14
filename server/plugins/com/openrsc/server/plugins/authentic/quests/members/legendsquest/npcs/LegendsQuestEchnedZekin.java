@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members.legendsquest.npcs;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 
@@ -61,12 +62,12 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 				delay(2);
 				mes(second_nezikchened, "The spell seems to weaken the Demon.");
 				delay();
-				second_nezikchened.getSkills().setLevel(Skills.DEFENSE, second_nezikchened.getSkills().getLevel(Skills.DEFENSE) - 5);
+				second_nezikchened.getSkills().setLevel(getSkillId(second_nezikchened.getWorld(), SkillsEnum.DEFENSE), second_nezikchened.getSkills().getLevel(getSkillId(second_nezikchened.getWorld(), SkillsEnum.DEFENSE)) - 5);
 			}
 			second_nezikchened.startCombat(player);
 			if (useHolySpell) {
-				int newPray = (int) Math.ceil((double) player.getSkills().getLevel(Skills.PRAYER) / 2);
-				if (player.getSkills().getLevel(Skills.PRAYER) - newPray < 30) {
+				int newPray = (int) Math.ceil((double) player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER)) / 2);
+				if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER)) - newPray < 30) {
 					mes("A sense of fear comes over you ");
 					delay(2);
 					mes("You feel a sense of loss...");
@@ -77,7 +78,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 					mes("You feel a great sense of loss...");
 					delay(2);
 				}
-				player.getSkills().setLevel(Skills.PRAYER, newPray);
+				player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER), newPray);
 
 				delay(11);
 				mes("The Demon takes out a dark dagger and throws it at you...");
@@ -95,7 +96,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 				delay(2);
 				mes("You feel a terrible sense of loss...");
 				delay(2);
-				player.getSkills().setLevel(Skills.PRAYER, 0);
+				player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER), 0);
 			}
 		}
 	}
@@ -161,7 +162,7 @@ public class LegendsQuestEchnedZekin implements TalkNpcTrigger {
 								delay();
 								second_nezikchened.startCombat(player);
 								player.message("You feel a terrible sense of loss...");
-								player.getSkills().setLevel(Skills.PRAYER, 0);
+								player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER), 0);
 							}
 						}
 						/**

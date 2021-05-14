@@ -1,17 +1,13 @@
 package com.openrsc.server.model.entity;
 
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.PoisonEvent;
 import com.openrsc.server.event.rsc.impl.RangeEventNpc;
 import com.openrsc.server.event.rsc.impl.StatRestorationEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatEvent;
-import com.openrsc.server.model.AStarPathfinder;
-import com.openrsc.server.model.Path;
+import com.openrsc.server.model.*;
 import com.openrsc.server.model.Path.PathType;
-import com.openrsc.server.model.Point;
-import com.openrsc.server.model.Skills;
-import com.openrsc.server.model.ViewArea;
-import com.openrsc.server.model.WalkingQueue;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -27,6 +23,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public abstract class Mob extends Entity {
 
@@ -714,7 +712,7 @@ public abstract class Mob extends Entity {
 	}
 
 	public void damage(final int damage) {
-		final int newHp = skills.getLevel(com.openrsc.server.constants.Skills.HITS) - damage;
+		final int newHp = skills.getLevel(getSkillId(getWorld(), SkillsEnum.HITS)) - damage;
 		if (newHp <= 0) {
 			if (this.isPlayer()) {
 				killedBy(combatWith);
@@ -722,11 +720,11 @@ public abstract class Mob extends Entity {
 				killedBy(combatWith);
 			}
 		} else {
-			skills.setLevel(com.openrsc.server.constants.Skills.HITS, newHp);
+			skills.setLevel(getSkillId(getWorld(), SkillsEnum.HITS), newHp);
 		}
 		if (this.isPlayer()) {
 			Player player = (Player) this;
-			ActionSender.sendStat(player, com.openrsc.server.constants.Skills.HITS);
+			ActionSender.sendStat(player, getSkillId(getWorld(), SkillsEnum.HITS));
 		}
 		getUpdateFlags().setDamage(new Damage(this, damage));
 	}
@@ -949,11 +947,11 @@ public abstract class Mob extends Entity {
 	}
 
 	public int getCombatLevel(final boolean isSpecial) {
-		return getSkills().getCombatLevel(isSpecial);
+		return getSkills().getCombatLevel(this, isSpecial);
 	}
 
 	public int getCombatLevel() {
-		return getSkills().getCombatLevel(false);
+		return getSkills().getCombatLevel(this, false);
 	}
 
 	public boolean isTeleporting() {

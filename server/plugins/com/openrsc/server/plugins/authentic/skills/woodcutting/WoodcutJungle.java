@@ -1,12 +1,12 @@
 package com.openrsc.server.plugins.authentic.skills.woodcutting;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -14,6 +14,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class WoodcutJungle implements OpLocTrigger,
 	OpBoundTrigger {
@@ -66,7 +67,7 @@ public class WoodcutJungle implements OpLocTrigger,
 		//	return;
 		//}
 
-		if (getCurrentLevel(player, Skills.WOODCUT) < 50) {
+		if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING)) < 50) {
 			player.message("You need a woodcutting level of 50 to axe this tree");
 			return;
 		}
@@ -105,7 +106,7 @@ public class WoodcutJungle implements OpLocTrigger,
 	}
 
 	private void cutJungle(int axeId, GameObject obj, Player player, boolean force) {
-		if (force || getLog(50, player.getSkills().getLevel(Skills.WOODCUT), axeId)) {
+		if (force || getLog(50, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING)), axeId)) {
 			GameObject jungleObject = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 			if (jungleObject != null && jungleObject.getID() == obj.getID()) {
 				if (obj.getID() == JUNGLE_VINE) {
@@ -121,7 +122,7 @@ public class WoodcutJungle implements OpLocTrigger,
 				}
 
 				if (!force)
-					player.incExp(Skills.WOODCUT, 20, true);
+					player.incExp(getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING), 20, true);
 			}
 			if (DataConversions.random(0, 10) == 8) {
 				final Item log = new Item(ItemId.LOGS.id());

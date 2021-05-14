@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members.legendsquest.npcs;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 
@@ -1138,7 +1139,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 	}
 
 	public void gujuoBlessBowl(Player player, Npc npc) {
-		if (getCurrentLevel(player, Skills.PRAYER) < 42) {
+		if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.PRAYER)) < 42) {
 			npcsay(player, npc, "Bwana, I am very sorry,",
 				"But you are too inexperienced to bless this bowl.");
 			player.message("You need a prayer ability of 42 to complete this task.");
@@ -1153,7 +1154,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 			npcsay(player, npc, "Ohhhhhmmmmmm");
 			say(player, npc, "Oooooohhhhmmmmmmmmmm");
 			npcsay(player, npc, "Ohhhhhmmmmmm");
-			if (Formulae.failCalculation(player, Skills.PRAYER, 42)) {
+			if (Formulae.failCalculation(player, getSkillId(player.getWorld(), SkillsEnum.PRAYER), 42)) {
 				mes("A totally peacefull aura surrounds you and you ");
 				delay(2);
 				mes("bring down the blessings of your god on the bowl.");
@@ -1174,7 +1175,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 				delay(2);
 				mes("You lose some prayer...");
 				delay(2);
-				player.getSkills().setLevel(Skills.PRAYER, player.getSkills().getLevel(Skills.PRAYER) - 5);
+				player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER), player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER)) - 5);
 				npcsay(player, npc, "Would you like to try again.");
 				int failMenu = multi(player, npc, false, //do not send over
 					"Yes, I'd like to bless my golden bowl.",

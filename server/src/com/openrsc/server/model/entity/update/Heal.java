@@ -1,7 +1,9 @@
 package com.openrsc.server.model.entity.update;
 
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.entity.Mob;
+
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Heal {
 
@@ -16,7 +18,7 @@ public class Heal {
 	}
 
 	public int getCurHits() {
-		return mob.getSkills().getLevel(Skills.HITPOINTS);
+		return mob.getSkills().getLevel(getSkillId(mob.getWorld(), SkillsEnum.HITS));
 	}
 
 	public int getHeal() {
@@ -28,7 +30,7 @@ public class Heal {
 	}
 
 	public int getMaxHits() {
-		return mob.getSkills().getMaxStat(Skills.HITPOINTS);
+		return mob.getSkills().getMaxStat(getSkillId(mob.getWorld(), SkillsEnum.HITS));
 	}
 
 	public int getIndex() {

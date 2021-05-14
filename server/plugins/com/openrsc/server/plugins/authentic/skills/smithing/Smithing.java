@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.skills.smithing;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.external.ItemSmithingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -17,6 +17,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.ArrayList;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Smithing implements UseLocTrigger {
 
@@ -43,13 +44,13 @@ public class Smithing implements UseLocTrigger {
 						player.message("You need a hammer to do that");
 						return;
 					}
-					if (getCurrentLevel(player, Skills.SMITHING) < 90) {
+					if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.SMITHING)) < 90) {
 						player.message("You need 90 smithing to work dragon metal");
 						return;
 					}
 					if (player.getCarriedItems().remove(new Item(ItemId.DRAGON_BAR.id())) > -1) {
 						give(player, ItemId.DRAGON_METAL_CHAIN.id(), 50);
-						player.incExp(Skills.SMITHING, 1000, true);
+						player.incExp(getSkillId(player.getWorld(), SkillsEnum.SMITHING), 1000, true);
 					}
 				} else
 					player.message("Nothing interesting happens");
@@ -99,7 +100,7 @@ public class Smithing implements UseLocTrigger {
 			return false;
 		}
 
-		if (player.getSkills().getLevel(Skills.SMITHING) < minSmithingLevel) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.SMITHING)) < minSmithingLevel) {
 			player.message("You need at least level "
 				+ minSmithingLevel + " smithing to work with "
 				+ item.getDef(player.getWorld()).getName().toLowerCase().replaceAll("bar", ""));
@@ -141,7 +142,7 @@ public class Smithing implements UseLocTrigger {
 	}
 
 	private void attemptDragonSquareCombine(Item item, Player player) {
-		if (player.getSkills().getLevel(Skills.SMITHING) < 60) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.SMITHING)) < 60) {
 			player.message("You need a smithing ability of at least 60 to complete this task.");
 		}
 		// non-kosher this message
@@ -160,7 +161,7 @@ public class Smithing implements UseLocTrigger {
 			player.getCarriedItems().remove(new Item(ItemId.RIGHT_HALF_DRAGON_SQUARE_SHIELD.id()));
 			player.getCarriedItems().remove(new Item(ItemId.LEFT_HALF_DRAGON_SQUARE_SHIELD.id()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.DRAGON_SQUARE_SHIELD.id()));
-			player.incExp(Skills.SMITHING, 300, true);
+			player.incExp(getSkillId(player.getWorld(), SkillsEnum.SMITHING), 300, true);
 		}
 	}
 
@@ -175,18 +176,18 @@ public class Smithing implements UseLocTrigger {
 			if (player.getCarriedItems().getInventory().countId(ItemId.GOLD_BAR.id()) < 2) {
 				player.message("You need two bars of gold to make this item.");
 			} else {
-				if (!Formulae.breakGoldenItem(50, player.getSkills().getLevel(Skills.SMITHING))) {
+				if (!Formulae.breakGoldenItem(50, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.SMITHING)))) {
 					for (int x = 0; x < 2; x++) {
 						player.getCarriedItems().remove(new Item(ItemId.GOLD_BAR.id()));
 					}
 					player.message("You forge a beautiful bowl made out of solid gold.");
 					player.getCarriedItems().getInventory().add(new Item(ItemId.GOLDEN_BOWL.id(), 1));
-					player.incExp(Skills.SMITHING, 120, true);
+					player.incExp(getSkillId(player.getWorld(), SkillsEnum.SMITHING), 120, true);
 				} else {
 					player.message("You make a mistake forging the bowl..");
 					player.message("You pour molten gold all over the floor..");
 					player.getCarriedItems().remove(new Item(ItemId.GOLD_BAR.id()));
-					player.incExp(Skills.SMITHING, 4, true);
+					player.incExp(getSkillId(player.getWorld(), SkillsEnum.SMITHING), 4, true);
 				}
 			}
 		}
@@ -230,7 +231,7 @@ public class Smithing implements UseLocTrigger {
 	}
 
 	private void batchSmithing(Player player, Item item, ItemSmithingDef def) {
-		if (player.getSkills().getLevel(Skills.SMITHING) < def.getRequiredLevel()) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.SMITHING)) < def.getRequiredLevel()) {
 			player.message("You need to be at least level "
 				+ def.getRequiredLevel() + " smithing to do that");
 			return;
@@ -264,7 +265,7 @@ public class Smithing implements UseLocTrigger {
 				player.getCarriedItems().getInventory().add(new Item(def.getItemID(), 1));
 			}
 		}
-		player.incExp(Skills.SMITHING, getSmithingExp(item.getCatalogId(), def.getRequiredBars()), true);
+		player.incExp(getSkillId(player.getWorld(), SkillsEnum.SMITHING), getSmithingExp(item.getCatalogId(), def.getRequiredBars()), true);
 		delay();
 
 		// Repeat
@@ -380,7 +381,7 @@ public class Smithing implements UseLocTrigger {
 	}
 
 	private void makeNails(Item item, Player player) {
-		if (player.getSkills().getLevel(Skills.SMITHING) < 34) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.SMITHING)) < 34) {
 			player.message("You need to be at least level 34 smithing to do that");
 			return;
 		}
@@ -392,7 +393,7 @@ public class Smithing implements UseLocTrigger {
 		player.getCarriedItems().remove(new Item(ItemId.STEEL_BAR.id()));
 		player.playerServerMessage(MessageType.QUEST, "You hammer the metal and make some nails");
 		player.getCarriedItems().getInventory().add(new Item(ItemId.NAILS.id(), 2));
-		player.incExp(Skills.SMITHING, 150, true);
+		player.incExp(getSkillId(player.getWorld(), SkillsEnum.SMITHING), 150, true);
 	}
 
 	private void makeWire(Item item, Player player) {
@@ -401,7 +402,7 @@ public class Smithing implements UseLocTrigger {
 		/*if (player.isBusy()) {
 			return;
 		}*/
-		if (player.getSkills().getLevel(Skills.SMITHING) < 4) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.SMITHING)) < 4) {
 			player.message("You need to be at least level 4 smithing to do that");
 			return;
 		}
@@ -414,7 +415,7 @@ public class Smithing implements UseLocTrigger {
 			player.getCarriedItems().remove(new Item(ItemId.BRONZE_BAR.id()));
 			player.playerServerMessage(MessageType.QUEST, "You hammer the Bronze Bar and make some bronze wire");
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BRONZE_WIRE.id(), 1));
-			player.incExp(Skills.SMITHING, 50, true);
+			player.incExp(getSkillId(player.getWorld(), SkillsEnum.SMITHING), 50, true);
 		}
 	}
 

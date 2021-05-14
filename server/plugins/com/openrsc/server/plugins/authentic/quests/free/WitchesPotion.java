@@ -3,6 +3,8 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -37,7 +39,15 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the witches potion quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WITCHS_POTION), true);
+		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WITCHS_POTION);
+		SkillsEnum magicSkill;
+		if (player.getConfig().DIVIDED_GOOD_EVIL) {
+			magicSkill = SkillsEnum.EVILMAGIC;
+		} else {
+			magicSkill = SkillsEnum.MAGIC;
+		}
+		questData[1] = Either.right(magicSkill);
+		incQuestReward(player, questData, true);
 		player.message("@gre@You haved gained 1 quest point!");
 	}
 

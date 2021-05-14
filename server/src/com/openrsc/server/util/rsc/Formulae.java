@@ -1,7 +1,7 @@
 package com.openrsc.server.util.rsc;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Mob;
@@ -11,6 +11,8 @@ import java.security.InvalidParameterException;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getMaxLevel;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
+
 public final class Formulae {
 
 	public static final int[] arrowIDs = {ItemId.POISON_DRAGON_ARROWS.id(), ItemId.DRAGON_ARROWS.id(), ItemId.ICE_ARROWS.id(), ItemId.POISON_RUNE_ARROWS.id(),
@@ -375,8 +377,19 @@ public final class Formulae {
 	/**
 	 * Calculate a mobs combat level based on their stats
 	 */
-	public static int getCombatlevel(int[] stats, boolean isSpecial) {
-		return getCombatLevel(stats[Skills.ATTACK], stats[Skills.DEFENSE], stats[Skills.STRENGTH], stats[Skills.HITS], stats[Skills.MAGIC], stats[Skills.PRAYER], stats[Skills.RANGED], isSpecial);
+	public static int getCombatlevel(Mob mob, int[] stats, boolean isSpecial) {
+		if (mob.getConfig().DIVIDED_GOOD_EVIL) {
+			return getCombatLevel(stats[getSkillId(mob.getWorld(), SkillsEnum.ATTACK)], stats[getSkillId(mob.getWorld(), SkillsEnum.DEFENSE)],
+				stats[getSkillId(mob.getWorld(), SkillsEnum.STRENGTH)],stats[getSkillId(mob.getWorld(), SkillsEnum.HITS)],
+				stats[getSkillId(mob.getWorld(), SkillsEnum.GOODMAGIC)] + stats[getSkillId(mob.getWorld(), SkillsEnum.EVILMAGIC)],
+				stats[getSkillId(mob.getWorld(), SkillsEnum.PRAYGOOD)] + stats[getSkillId(mob.getWorld(), SkillsEnum.PRAYEVIL)],
+				stats[getSkillId(mob.getWorld(), SkillsEnum.RANGED)], true, isSpecial);
+		} else {
+			return getCombatLevel(stats[getSkillId(mob.getWorld(), SkillsEnum.ATTACK)], stats[getSkillId(mob.getWorld(), SkillsEnum.DEFENSE)],
+				stats[getSkillId(mob.getWorld(), SkillsEnum.STRENGTH)],stats[getSkillId(mob.getWorld(), SkillsEnum.HITS)],
+				stats[getSkillId(mob.getWorld(), SkillsEnum.MAGIC)], stats[getSkillId(mob.getWorld(), SkillsEnum.PRAYER)],
+				stats[getSkillId(mob.getWorld(), SkillsEnum.RANGED)], false, isSpecial);
+		}
 	}
 
 	/**
@@ -384,14 +397,15 @@ public final class Formulae {
 	 * isSpecial considers hits as half as important in cb level calc
 	 * compared to the other melee stats, used in npc xp given
 	 */
-	public static int getCombatLevel(int att, int def, int str, int hits, int magic, int pray, int range, boolean isSpecial) {
+	public static int getCombatLevel(int att, int def, int str, int hits, int magic, int pray, int range, boolean isCombined, boolean isSpecial) {
 		// OG RSC combat level to use with xp calc (for npc): (2 * (att + str + def) + hits) / 7
 		// OG RSC combat level to use with xp calc (for player) - seems to be regular well known combat level formula
 		int multiplier = isSpecial ? 2 : 1;
+		int divider = isCombined ? 2 : 1; // if on good/magic we have to divide by 2 see below
 		double attack = multiplier * (att + str);
 		double defense = multiplier * def + hits;
 		double mage = pray + magic;
-		mage /= 8D;
+		mage /= (8D * divider);
 		double ranged = multiplier * range;
 
 		double level;
@@ -569,8 +583,8 @@ public final class Formulae {
 
 	public static int getLevelsToReduceAttackKBD(Player player) {
 		int levels = 0;
-		int currLvl = getCurrentLevel(player, Skills.RANGED);
-		int maxLvl = getMaxLevel(player, Skills.RANGED);
+		int currLvl = getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.RANGED));
+		int maxLvl = getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.RANGED));
 		int ratio = currLvl * 100 / maxLvl;
 		if (currLvl <= 3) {
 			return 0;

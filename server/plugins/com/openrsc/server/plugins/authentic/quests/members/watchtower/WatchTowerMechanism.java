@@ -1,20 +1,24 @@
 package com.openrsc.server.plugins.authentic.quests.members.watchtower;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.UseInvTrigger;
-import com.openrsc.server.plugins.triggers.UseNpcTrigger;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
+import com.openrsc.server.plugins.triggers.UseInvTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpcTrigger, TakeObjTrigger {
 
@@ -363,9 +367,9 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 				delay(3);
 				mes("The force renews your magic level");
 				delay(3);
-				int maxMagic = getMaxLevel(player, Skills.MAGIC);
-				if (getCurrentLevel(player, Skills.MAGIC) < maxMagic) {
-					player.getSkills().setLevel(Skills.MAGIC, maxMagic);
+				int maxMagic = getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.MAGIC));
+				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.MAGIC)) < maxMagic) {
+					player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.MAGIC), maxMagic);
 				}
 			} else {
 				player.message("You take the crystal");

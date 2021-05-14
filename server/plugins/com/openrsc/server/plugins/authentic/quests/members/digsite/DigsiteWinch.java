@@ -1,15 +1,19 @@
 package com.openrsc.server.plugins.authentic.quests.members.digsite;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 
@@ -42,7 +46,7 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 							player.message("The bucket descends, but does not reach the bottom");
 							say(player, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
-							if (getCurrentLevel(player, Skills.AGILITY) < 10) {
+							if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 10) {
 								player.message("You need an agility level of 10 to do this");
 								return;
 							}
@@ -50,7 +54,7 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 							delay(3);
 							mes("You lower yourself into the shaft");
 							delay(3);
-							player.incExp(Skills.AGILITY, 20, true);
+							player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 20, true);
 							player.teleport(26, 3346);
 							player.playerServerMessage(MessageType.QUEST, "You find yourself in a cavern...");
 						}
@@ -65,7 +69,7 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 							player.message("The bucket descends, but does not reach the bottom");
 							say(player, null, "Hey I think I could fit down here...", "I need something to help me get all the way down");
 						} else {
-							if (getCurrentLevel(player, Skills.AGILITY) < 10) {
+							if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 10) {
 								player.message("You need an agility level of 10 to do this");
 								return;
 							}
@@ -73,7 +77,7 @@ public class DigsiteWinch implements OpLocTrigger, UseLocTrigger {
 							delay(3);
 							mes("You lower yourself into the shaft");
 							delay(3);
-							player.incExp(Skills.AGILITY, 20, true);
+							player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 20, true);
 							if (player.getQuestStage(Quests.DIGSITE) >= 6) {
 								player.teleport(19, 3385);
 							} else {

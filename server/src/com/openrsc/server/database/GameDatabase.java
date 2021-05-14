@@ -1,7 +1,7 @@
 package com.openrsc.server.database;
 
 import com.openrsc.server.Server;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.content.achievement.Achievement;
 import com.openrsc.server.content.achievement.AchievementReward;
 import com.openrsc.server.content.achievement.AchievementTask;
@@ -28,6 +28,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
+
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public abstract class GameDatabase extends GameDatabaseQueries {
 	/**
@@ -358,7 +360,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 					experiences[i].experience = 0;
 				}
 				else {
-					if (i == Skills.HITPOINTS) { // Hits
+					if (i == getSkillId(getServer(), SkillsEnum.HITS)) { // Hits
 						experiences[i].experience = 4000;
 					}
 					else {

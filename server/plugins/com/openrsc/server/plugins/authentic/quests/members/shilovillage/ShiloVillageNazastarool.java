@@ -2,18 +2,19 @@ package com.openrsc.server.plugins.authentic.quests.members.shilovillage;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
-import com.openrsc.server.plugins.triggers.KillNpcTrigger;
-import com.openrsc.server.plugins.triggers.SpellNpcTrigger;
 import com.openrsc.server.plugins.triggers.EscapeNpcTrigger;
+import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.SpellNpcTrigger;
 
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class ShiloVillageNazastarool implements OpLocTrigger,
 	KillNpcTrigger, EscapeNpcTrigger,
@@ -87,7 +88,7 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 	private void choke(Player player) {
 		mes("@red@You feel invisible hands starting to choke you...");
 		delay(3);
-		player.damage(getCurrentLevel(player, Skills.HITS) / 2);
+		player.damage(getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 2);
 	}
 
 	private void runFromNazastarool(Player player, Npc n) {
@@ -206,7 +207,7 @@ public class ShiloVillageNazastarool implements OpLocTrigger,
 			if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.BEADS_OF_THE_DEAD.id())) {
 				choke(player);
 			}
-			n.getSkills().setLevel(Skills.HITS, n.getSkills().getMaxStat(Skills.HITS));
+			n.getSkills().setLevel(getSkillId(n.getWorld(), SkillsEnum.HITS), n.getSkills().getMaxStat(getSkillId(n.getWorld(), SkillsEnum.HITS)));
 		}
 	}
 }

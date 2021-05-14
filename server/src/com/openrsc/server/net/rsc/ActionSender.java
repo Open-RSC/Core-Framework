@@ -550,11 +550,11 @@ public class ActionSender {
 	 */
 	public static void sendGameSettings(Player player) {
 		GameSettingsStruct struct = new GameSettingsStruct();
-		struct.cameraModeAuto = player.getSettings().getGameSetting(0) ? 1 : 0;
-		struct.mouseButtonOne = player.getSettings().getGameSetting(1) ? 1 : 0;
-		struct.soundDisabled = player.getSettings().getGameSetting(2) ? 1 : 0;
-		struct.playerKiller = 0; // TODO: include in gameSetting
-		struct.pkChangesLeft = 0; // TODO: include in gameSetting
+		struct.cameraModeAuto = player.getSettings().getGameSetting(PlayerSettings.GAME_SETTING_AUTO_CAMERA) ? 1 : 0;
+		struct.mouseButtonOne = player.getSettings().getGameSetting(PlayerSettings.GAME_SETTING_MOUSE_BUTTONS) ? 1 : 0;
+		struct.soundDisabled = player.getSettings().getGameSetting(PlayerSettings.GAME_SETTING_SOUND_EFFECTS) ? 1 : 0;
+		struct.playerKiller = player.getPkMode();
+		struct.pkChangesLeft = player.getPkChanges();
 		List<Integer> customOptions = new ArrayList<>();
 		if (!player.isUsingAuthenticClient()) { // custom options
 			// keep order same that custom client expects!
@@ -1887,9 +1887,11 @@ public class ActionSender {
 				sendPlayerOnBlackHole(player);
 				if (player.getLastLogin() == 0L) {
 					sendAppearanceScreen(player);
-					for (int itemId : player.getWorld().getServer().getConstants().STARTER_ITEMS) {
-						Item i = new Item(itemId);
-						player.getCarriedItems().getInventory().add(i, false);
+					if (!player.getConfig().USES_CLASSES) {
+						for (int itemId : player.getWorld().getServer().getConstants().STARTER_ITEMS) {
+							Item i = new Item(itemId);
+							player.getCarriedItems().getInventory().add(i, false);
+						}
 					}
 					//Block PK chat by default.
 					player.getCache().set("setting_block_global", 3);

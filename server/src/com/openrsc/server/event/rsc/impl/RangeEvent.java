@@ -2,7 +2,7 @@ package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.content.DropTable;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
@@ -22,6 +22,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.Objects;
 
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class RangeEvent extends GameTickEvent {
 
@@ -82,7 +83,7 @@ public class RangeEvent extends GameTickEvent {
 		int bowID = getPlayerOwner().getRangeEquip();
 		if (!getPlayerOwner().loggedIn() || getPlayerOwner().inCombat()
 			|| (target.isPlayer() && !((Player) target).loggedIn())
-			|| target.getSkills().getLevel(Skills.HITS) <= 0 || !getPlayerOwner().checkAttack(target, true)
+			|| target.getSkills().getLevel(getSkillId(getWorld(), SkillsEnum.HITS)) <= 0 || !getPlayerOwner().checkAttack(target, true)
 			|| !getPlayerOwner().withinRange(target) || bowID < 0) {
 			getPlayerOwner().resetRange();
 			stop();
@@ -301,17 +302,17 @@ public class RangeEvent extends GameTickEvent {
 					}
 					getPlayerOwner().playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 				}
-				fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skills.HITS) * percentage / 100.0);
+				fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), getSkillId(getWorld(), SkillsEnum.HITS)) * percentage / 100.0);
 				getPlayerOwner().damage(fireDamage);
 
 				//reduce ranged level (case for KBD)
 				if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-					int newLevel = getCurrentLevel(getPlayerOwner(), Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
-					getPlayerOwner().getSkills().setLevel(Skills.RANGED, newLevel);
+					int newLevel = getCurrentLevel(getPlayerOwner(), getSkillId(getWorld(), SkillsEnum.RANGED)) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
+					getPlayerOwner().getSkills().setLevel(getSkillId(getWorld(), SkillsEnum.RANGED), newLevel);
 				}
 			}
 		} else if (target.isPlayer() && damage > 0) {
-			getPlayerOwner().incExp(Skills.RANGED, Formulae.rangedHitExperience(target, damage), true);
+			getPlayerOwner().incExp(getSkillId(getWorld(), SkillsEnum.RANGED), Formulae.rangedHitExperience(target, damage), true);
 		}
 		if (Formulae.looseArrow(damage)) {
 			GroundItem arrows = getArrows(arrowID);

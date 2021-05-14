@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.skills.fishing;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.external.EntityHandler;
 import com.openrsc.server.external.ObjectFishDef;
 import com.openrsc.server.external.ObjectFishingDef;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Fishing implements OpLocTrigger {
 
@@ -55,7 +56,7 @@ public class Fishing implements OpLocTrigger {
 			return;
 		}
 
-		if (object.getID() == TUTORIAL_FISH_ID && player.getSkills().getExperience(Skills.FISHING) >= 200) {
+		if (object.getID() == TUTORIAL_FISH_ID && player.getSkills().getExperience(getSkillId(player.getWorld(), SkillsEnum.FISHING)) >= 200) {
 			mes("that's enough fishing for now");
 			delay(3);
 			mes("go through the next door to continue the tutorial");
@@ -77,7 +78,7 @@ public class Fishing implements OpLocTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, Skills.FISHING);
+			repeat = Formulae.getRepeatTimes(player, getSkillId(player.getWorld(), SkillsEnum.FISHING));
 		}
 
 		startbatch(repeat);
@@ -123,7 +124,7 @@ public class Fishing implements OpLocTrigger {
 			String command,
 			ObjectFishingDef def
 	) {
-		if (player.getSkills().getLevel(Skills.FISHING) < def.getReqLevel(player.getWorld())) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FISHING)) < def.getReqLevel(player.getWorld())) {
 			player.playerServerMessage(
 					MessageType.QUEST,
 					"You need at least level " + def.getReqLevel(player.getWorld()) + " "
@@ -191,13 +192,13 @@ public class Fishing implements OpLocTrigger {
 
 		ObjectFishDef aFishDef;
 		if (object.getID() == TUTORIAL_FISH_ID) { // Tutorial Island Shrimp
-			aFishDef = getFish(def, player.getSkills().getLevel(Skills.FISHING));
+			aFishDef = getFish(def, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FISHING)));
 			if (aFishDef != null) fishLst.add(aFishDef);
 
 			if (fishLst.size() > 0) {
 				player.playerServerMessage(MessageType.QUEST, "You catch some shrimps");
 				inventory.add(new Item(fishLst.get(0).getId()));
-				player.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.FISHING), fishLst.get(0).getExp(), true);
 				if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41) {
 					player.getCache().set("tutorial", 42);
 				}
@@ -218,7 +219,7 @@ public class Fishing implements OpLocTrigger {
 			}
 
 			// add the fish gained to fishLst, report how many rolls were able to be done
-			int fishRolls = doBigNetFishingRoll(fishLst, bigNet, player.getSkills().getLevel(Skills.FISHING));
+			int fishRolls = doBigNetFishingRoll(fishLst, bigNet, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FISHING)));
 
 			//check if the spot is still active
 			if (obj == null) {
@@ -260,7 +261,7 @@ public class Fishing implements OpLocTrigger {
 						break;
 				}
 				player.getCarriedItems().getInventory().add(fish);
-				player.incExp(Skills.FISHING, fishDef.getExp(), true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.FISHING), fishDef.getExp(), true);
 			}
 			if (fishLst.size() == 0 && fishRolls == 9) {
 				// An erroneous (mostly authentic) additional check on fishRolls here,
@@ -281,7 +282,7 @@ public class Fishing implements OpLocTrigger {
 			}
 		} else { // NOT big net fishing & NOT tutorial island shrimp; normal fishing
 			// Roll for fish to be given to user
-			aFishDef = getFish(def, player.getSkills().getLevel(Skills.FISHING));
+			aFishDef = getFish(def, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FISHING)));
 			if (aFishDef != null) fishLst.add(aFishDef);
 
 			if (fishLst.size() == 0) {
@@ -330,7 +331,7 @@ public class Fishing implements OpLocTrigger {
 				}
 
 				inventory.add(fish);
-				player.incExp(Skills.FISHING, fishLst.get(0).getExp(), true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.FISHING), fishLst.get(0).getExp(), true);
 
 				// Inauthentically check if the fishing spot should deplete
 				handleDepletableFishing(player, def, object);

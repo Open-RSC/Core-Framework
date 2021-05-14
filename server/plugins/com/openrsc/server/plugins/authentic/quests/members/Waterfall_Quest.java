@@ -1,9 +1,7 @@
 package com.openrsc.server.plugins.authentic.quests.members;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
+import com.openrsc.server.model.Either;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -57,9 +55,9 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 		give(player, ItemId.MITHRIL_SEED.id(), 40);
 		give(player, ItemId.GOLD_BAR.id(), 2);
 		give(player, ItemId.DIAMOND.id(), 2);
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WATERFALL_QUEST);
+		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WATERFALL_QUEST);
 		//keep order kosher
-		int[] skillIDs = {Skills.STRENGTH, Skills.ATTACK};
+		Either<Integer, SkillsEnum>[] skillIDs = new Either[]{Either.right(SkillsEnum.STRENGTH), Either.right(SkillsEnum.ATTACK)};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(player, questData, i == (skillIDs.length - 1));

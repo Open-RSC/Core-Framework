@@ -3,7 +3,8 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	OpBoundTrigger,
@@ -43,11 +45,11 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the holy grail quest");
 		player.message("@gre@You haved gained 2 quest points!");
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_HOLY_GRAIL);
+		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_HOLY_GRAIL);
 		//keep order kosher
-		int[] skillIDs = {Skills.PRAYER, Skills.DEFENSE};
+		Either<Integer, SkillsEnum>[] skillIDs = new Either[]{Either.right(SkillsEnum.PRAYER), Either.right(SkillsEnum.DEFENSE)};
 		//1000 for prayer, 1200 for defense
-		int[] amounts = {1000, 1200};
+		Either<Integer, SkillsEnum>[] amounts = new Either[]{Either.left(1000), Either.left(1200)};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			questData[Quests.MAPIDX_BASE] = amounts[i];
@@ -393,7 +395,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 					npc.remove();
 				} else {
 					npc.teleport(413, 11);
-					npc.getSkills().setLevel(Skills.HITS, npc.getDef().hits);
+					npc.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.HITS), npc.getDef().hits);
 					npcsay(player, otherTitan, "You can't defeat me little man",
 						"I'm invincible!");
 					npc.killed = false;

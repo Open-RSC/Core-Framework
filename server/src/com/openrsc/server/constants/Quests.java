@@ -1,5 +1,7 @@
 package com.openrsc.server.constants;
 
+import com.openrsc.server.model.Either;
+
 import java.util.HashMap;
 
 public final class Quests {
@@ -63,67 +65,118 @@ public final class Quests {
 	public static final int QUEST_STAGE_NOT_STARTED = 0;
 	public static final int QUEST_STAGE_COMPLETED = -1;
 
-	public final HashMap<Integer, int[]> questData;
+	public final HashMap<Integer, Either<Integer, SkillsEnum>[]> questData;
 
 	private final Constants constants;
 
 	public Quests(Constants constants) {
 		this.constants = constants;
-		this.questData = new HashMap<Integer, int[]>() {{
+		this.questData = new HashMap<Integer, Either<Integer, SkillsEnum>[]>() {{
 			// QuestID -> Quest Points, Exp Skill ID, Base Exp, Variable Exp
-			put(BLACK_KNIGHTS_FORTRESS, new int[]{3, -1, 0, 0});
-			put(COOKS_ASSISTANT, new int[]{1, Skills.COOKING, 1000, 200});
-			put(DEMON_SLAYER, new int[]{3, -1, 0, 0});
-			put(DORICS_QUEST, new int[]{1, Skills.MINING, 700, 300});
-			put(THE_RESTLESS_GHOST, new int[]{1, Skills.PRAYER, 2000, 250});
-			put(GOBLIN_DIPLOMACY, new int[]{5, Skills.CRAFTING, 500, 60});
-			put(ERNEST_THE_CHICKEN, new int[]{4, -1, 0, 0});
-			put(IMP_CATCHER, new int[]{1, Skills.MAGIC, 1500, 400});
-			put(PIRATES_TREASURE, new int[]{2, -1, 0, 0});
-			put(PRINCE_ALI_RESCUE, new int[]{3, -1, 0, 0});
-			put(ROMEO_N_JULIET, new int[]{5, -1, 0, 0});
-			put(SHEEP_SHEARER, new int[]{1, Skills.CRAFTING, 500, 100});
-			put(SHIELD_OF_ARRAV, new int[]{1, -1, 0, 0});
-			put(THE_KNIGHTS_SWORD, new int[]{1, Skills.SMITHING, 1400, 1500});
-			put(VAMPIRE_SLAYER, new int[]{3, Skills.ATTACK, 1300, 600});
-			put(WITCHS_POTION, new int[]{1, Skills.MAGIC, 900, 200});
-			put(DRAGON_SLAYER, new int[]{2, -1, 2600, 1200}); // Skill ID in Dragon Slayer files
-			put(WITCHS_HOUSE, new int[]{4, Skills.HITS, 1300, 600});
-			put(LOST_CITY, new int[]{3, -1, 0, 0});
-			put(HEROS_QUEST, new int[]{1, -1, 300, 200}); // Skill ID Handled in Heros files
-			put(DRUIDIC_RITUAL, new int[]{4, Skills.HERBLAW, 1000, 0});
-			put(MERLINS_CRYSTAL, new int[]{6, -1, 0, 0});
-			put(SCORPION_CATCHER, new int[]{1, Skills.STRENGTH, 1500, 500});
-			put(FAMILY_CREST, new int[]{1, -1, 0, 0});
-			put(TRIBAL_TOTEM, new int[]{1, Skills.THIEVING, 800, 300});
-			put(FISHING_CONTEST, new int[]{1, Skills.FISHING, 0, 300}); // Base XP Handled in Fishing Contest files
-			put(MONKS_FRIEND, new int[]{1, Skills.WOODCUT, 500, 500});
-			put(TEMPLE_OF_IKOV, new int[]{1, -1, 2000, 1000}); // Skill ID Handled in Ikov files
-			put(CLOCK_TOWER, new int[]{1, -1, 0, 0});
-			put(THE_HOLY_GRAIL, new int[]{2, -1, 0, 0}); // XP Handled in Grail files
-			put(FIGHT_ARENA, new int[]{2, -1, 700, 800}); // Skill ID Handled in Arena files
-			put(TREE_GNOME_VILLAGE, new int[]{2, Skills.ATTACK, 800, 900});
-			put(THE_HAZEEL_CULT, new int[]{1, Skills.THIEVING, 2000, 200});
-			put(SHEEP_HERDER, new int[]{4, -1, 0, 0});
-			put(PLAGUE_CITY, new int[]{1, Skills.MINING, 700, 300});
-			put(SEA_SLUG, new int[]{1, Skills.FISHING, 700, 800});
-			put(WATERFALL_QUEST, new int[]{1, -1, 1000, 900}); // Skill ID Handled in Waterfall files
-			put(BIOHAZARD, new int[]{3, Skills.THIEVING, 2000, 200});
-			put(JUNGLE_POTION, new int[]{1, Skills.HERBLAW, 1600, 500});
-			put(GRAND_TREE, new int[]{5, -1, 0, 0}); // XP Handled in Grade Tree files
-			put(SHILO_VILLAGE, new int[]{2, Skills.CRAFTING, 500, 500});
-			put(UNDERGROUND_PASS, new int[]{5, -1, 2000, 200}); // Skill ID Handled in Pass files
-			put(OBSERVATORY_QUEST, new int[]{2, -1, 1000, 400}); // Skill ID and adjustments Handled in Observatory files
-			put(TOURIST_TRAP, new int[]{2, -1, 600, 600}); // Skill ID Handled in Trap files
-			put(WATCHTOWER, new int[]{4, Skills.MAGIC, 1000, 1000});
-			put(DWARF_CANNON, new int[]{1, Skills.CRAFTING, 1000, 200});
-			put(MURDER_MYSTERY, new int[]{3, Skills.CRAFTING, 750, 150});
-			put(DIGSITE, new int[]{2, -1, 0, 0}); // XP Handled in Digsite files
-			put(GERTRUDES_CAT, new int[]{1, Skills.COOKING, 700, 180});
-			put(LEGENDS_QUEST, new int[]{4, -1, 600, 600}); // Skill ID Handled in Legends files
+			put(BLACK_KNIGHTS_FORTRESS, new Either[]{Either.left(3), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)});
+			put(COOKS_ASSISTANT, new Either[]{Either.left(1), Either.right(SkillsEnum.COOKING),
+				Either.left(1000), Either.left(200)});
+			put(DEMON_SLAYER, new Either[]{Either.left(3), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)});
+			put(DORICS_QUEST, new Either[]{Either.left(1), Either.right(SkillsEnum.MINING),
+				Either.left(700), Either.left(300)});
+			put(THE_RESTLESS_GHOST, new Either[]{Either.left(1), Either.right(SkillsEnum.PRAYGOOD),
+				Either.left(2000), Either.left(250)}); // In file need to be checked if world has divided good/evil
+			put(GOBLIN_DIPLOMACY, new Either[]{Either.left(5), Either.right(SkillsEnum.CRAFTING),
+				Either.left(500), Either.left(60)});
+			put(ERNEST_THE_CHICKEN, new Either[]{Either.left(4), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)});
+			put(IMP_CATCHER, new Either[]{Either.left(1), Either.right(SkillsEnum.GOODMAGIC),
+				Either.left(1500), Either.left(400)}); // In file to be checked if world has divided good/evil
+			put(PIRATES_TREASURE, new Either[]{Either.left(2), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)});
+			put(PRINCE_ALI_RESCUE, new Either[]{Either.left(3), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)});
+			put(ROMEO_N_JULIET, new Either[]{Either.left(5), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)});
+			put(SHEEP_SHEARER, new Either[]{Either.left(1), Either.right(SkillsEnum.CRAFTING),
+				Either.left(500), Either.left(100)});
+			put(SHIELD_OF_ARRAV, new Either[]{Either.left(1), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)});
+			put(THE_KNIGHTS_SWORD, new Either[]{Either.left(1), Either.right(SkillsEnum.SMITHING),
+				Either.left(1400), Either.left(1500)});
+			put(VAMPIRE_SLAYER, new Either[]{Either.left(3), Either.right(SkillsEnum.ATTACK),
+				Either.left(1300), Either.left(600)});
+			put(WITCHS_POTION, new Either[]{Either.left(1), Either.right(SkillsEnum.EVILMAGIC),
+				Either.left(900), Either.left(200)}); // In file to be checked if world has divided good/evil
+			put(DRAGON_SLAYER, new Either[]{Either.left(2), Either.right(SkillsEnum.NONE),
+				Either.left(2600), Either.left(1200)}); // Skill ID in Dragon Slayer files
+			put(WITCHS_HOUSE, new Either[]{Either.left(4), Either.right(SkillsEnum.HITS),
+				Either.left(1300), Either.left(600)});
+			put(LOST_CITY, new Either[]{Either.left(3), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)});
+			put(HEROS_QUEST, new Either[]{Either.left(1), Either.right(SkillsEnum.NONE),
+				Either.left(300), Either.left(200)}); // Skill ID Handled in Heros files
+			put(DRUIDIC_RITUAL, new Either[]{Either.left(4), Either.right(SkillsEnum.HERBLAW),
+				Either.left(1000), Either.left(0)});
+			put(MERLINS_CRYSTAL, new Either[]{Either.left(6), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)});
+			put(SCORPION_CATCHER, new Either[]{Either.left(1), Either.right(SkillsEnum.STRENGTH),
+				Either.left(1500), Either.left(500)});
+			put(FAMILY_CREST, new Either[]{Either.left(1), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)});
+			put(TRIBAL_TOTEM, new Either[]{Either.left(1), Either.right(SkillsEnum.THIEVING),
+				Either.left(800), Either.left(300)});
+			put(FISHING_CONTEST, new Either[]{Either.left(1), Either.right(SkillsEnum.FISHING),
+				Either.left(0), Either.left(300)}); // Base XP Handled in Fishing Contest files
+			put(MONKS_FRIEND, new Either[]{Either.left(1), Either.right(SkillsEnum.WOODCUTTING),
+				Either.left(500), Either.left(500)});
+			put(TEMPLE_OF_IKOV, new Either[]{Either.left(1), Either.right(SkillsEnum.NONE),
+				Either.left(2000), Either.left(1000)}); // Skill ID Handled in Ikov files
+			put(CLOCK_TOWER, new Either[]{Either.left(1), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)});
+			put(THE_HOLY_GRAIL, new Either[]{Either.left(2), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)}); // XP Handled in Grail files
+			put(FIGHT_ARENA, new Either[]{Either.left(2), Either.right(SkillsEnum.NONE),
+				Either.left(700), Either.left(800)}); // Skill ID Handled in Arena files
+			put(TREE_GNOME_VILLAGE, new Either[]{Either.left(2), Either.right(SkillsEnum.ATTACK),
+				Either.left(800), Either.left(900)});
+			put(THE_HAZEEL_CULT, new Either[]{Either.left(1), Either.right(SkillsEnum.THIEVING),
+				Either.left(2000), Either.left(200)});
+			put(SHEEP_HERDER, new Either[]{Either.left(4), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)});
+			put(PLAGUE_CITY, new Either[]{Either.left(1), Either.right(SkillsEnum.MINING),
+				Either.left(700), Either.left(300)});
+			put(SEA_SLUG, new Either[]{Either.left(1), Either.right(SkillsEnum.FISHING),
+				Either.left(700), Either.left(800)});
+			put(WATERFALL_QUEST, new Either[]{Either.left(1), Either.right(SkillsEnum.NONE),
+				Either.left(1000), Either.left(900)}); // Skill ID Handled in Waterfall files
+			put(BIOHAZARD, new Either[]{Either.left(3), Either.right(SkillsEnum.THIEVING),
+				Either.left(2000), Either.left(200)});
+			put(JUNGLE_POTION, new Either[]{Either.left(1), Either.right(SkillsEnum.HERBLAW),
+				Either.left(1600), Either.left(500)});
+			put(GRAND_TREE, new Either[]{Either.left(5), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)}); // XP Handled in Grade Tree files
+			put(SHILO_VILLAGE, new Either[]{Either.left(2), Either.right(SkillsEnum.CRAFTING),
+				Either.left(500), Either.left(500)});
+			put(UNDERGROUND_PASS, new Either[]{Either.left(5), Either.right(SkillsEnum.NONE),
+				Either.left(2000), Either.left(200)}); // Skill ID Handled in Pass files
+			put(OBSERVATORY_QUEST, new Either[]{Either.left(2), Either.right(SkillsEnum.NONE),
+				Either.left(1000), Either.left(400)}); // Skill ID and adjustments Handled in Observatory files
+			put(TOURIST_TRAP, new Either[]{Either.left(2), Either.right(SkillsEnum.NONE),
+				Either.left(600), Either.left(600)}); // Skill ID Handled in Trap files
+			put(WATCHTOWER, new Either[]{Either.left(4), Either.right(SkillsEnum.MAGIC),
+				Either.left(1000), Either.left(1000)});
+			put(DWARF_CANNON, new Either[]{Either.left(1), Either.right(SkillsEnum.CRAFTING),
+				Either.left(1000), Either.left(200)});
+			put(MURDER_MYSTERY, new Either[]{Either.left(3), Either.right(SkillsEnum.CRAFTING),
+				Either.left(750), Either.left(150)});
+			put(DIGSITE, new Either[]{Either.left(2), Either.right(SkillsEnum.NONE),
+				Either.left(0), Either.left(0)}); // XP Handled in Digsite files
+			put(GERTRUDES_CAT, new Either[]{Either.left(1), Either.right(SkillsEnum.COOKING),
+				Either.left(700), Either.left(180)});
+			put(LEGENDS_QUEST, new Either[]{Either.left(4), Either.right(SkillsEnum.NONE),
+				Either.left(600), Either.left(600)}); // Skill ID Handled in Legends files
 
 			if(constants.getServer().getConfig().WANT_RUNECRAFT) {
-				put(RUNE_MYSTERIES, new int[]{1, -1, 0, 0});
+				put(RUNE_MYSTERIES, new Either[]{Either.left(1), Either.right(SkillsEnum.NONE),
+					Either.left(0), Either.left(0)});
 			}
 		}};
 	}

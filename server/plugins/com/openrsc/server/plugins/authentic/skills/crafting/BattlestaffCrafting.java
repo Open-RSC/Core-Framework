@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.skills.crafting;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
@@ -10,6 +10,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class BattlestaffCrafting implements UseInvTrigger {
 
@@ -30,7 +31,7 @@ public class BattlestaffCrafting implements UseInvTrigger {
 				combine = c;
 			}
 		}
-		if (player.getSkills().getLevel(Skills.CRAFTING) < combine.requiredLevel) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < combine.requiredLevel) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting level of " + combine.requiredLevel + " to make " + resultItemString(combine));
 			return;
 		}
@@ -54,7 +55,7 @@ public class BattlestaffCrafting implements UseInvTrigger {
 		}
 
 		give(player, combine.resultItem, 1);
-		player.incExp(Skills.CRAFTING, combine.experience, true);
+		player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), combine.experience, true);
 
 		if (combine.messages.length > 1) {
 			player.message(combine.messages[1]);

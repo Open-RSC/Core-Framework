@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class LostCity implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger,
@@ -99,7 +100,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 				break;
 			case 245:
 				if (atQuestStages(player, this, 4, 3, 2, -1)) {
-					if (getCurrentLevel(player, Skills.WOODCUT) < 36) {
+					if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING)) < 36) {
 						mes("You are not a high enough woodcutting level to chop down this tree");
 						delay(3);
 						mes("You need a woodcutting level of 36");
@@ -325,12 +326,12 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 				delay(2);
 				teleport(player, 427, 3380);
 				/* What is the point of this? */
-				if (getCurrentLevel(player, Skills.PRAYER) <= 3)
-					setCurrentLevel(player, Skills.PRAYER, 1);
-				else if (getCurrentLevel(player, Skills.PRAYER) <= 39)
-					setCurrentLevel(player, Skills.PRAYER, 2);
+				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.PRAYER)) <= 3)
+					setCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.PRAYER), 1);
+				else if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.PRAYER)) <= 39)
+					setCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.PRAYER), 2);
 				else
-					setCurrentLevel(player, Skills.PRAYER, 3);
+					setCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.PRAYER), 3);
 			}
 		}
 	}
@@ -416,7 +417,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (player.getCarriedItems().hasCatalogID(ItemId.DRAMEN_BRANCH.id(), Optional.of(false))) {
-			if (getCurrentLevel(player, Skills.CRAFTING) < 31) {
+			if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < 31) {
 				mes("You are not a high enough crafting level to craft this staff");
 				delay(3);
 				mes("You need a crafting level of 31");

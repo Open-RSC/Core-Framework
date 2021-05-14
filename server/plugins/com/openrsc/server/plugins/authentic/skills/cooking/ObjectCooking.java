@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.skills.cooking;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.external.ItemCookingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class ObjectCooking implements UseLocTrigger {
 	@Override
@@ -56,7 +57,7 @@ public class ObjectCooking implements UseLocTrigger {
 					player.playerServerMessage(MessageType.QUEST, "The meat is now nicely cooked");
 					mes("Now speak to the cooking instructor again");
 					delay(3);
-					player.incExp(Skills.COOKING, cookingDef.getExp(), true);
+					player.incExp(getSkillId(player.getWorld(), SkillsEnum.COOKING), cookingDef.getExp(), true);
 					player.getCache().set("tutorial", 31);
 					player.getCarriedItems().remove(new Item(ItemId.RAW_RAT_MEAT.id()));
 					player.getCarriedItems().getInventory().add(new Item(ItemId.COOKEDMEAT.id()));
@@ -126,7 +127,7 @@ public class ObjectCooking implements UseLocTrigger {
 				player.message("Nothing interesting happens");
 				return;
 			}
-			if (player.getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
+			if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.COOKING)) < cookingDef.getReqLevel()) {
 				String itemName = item.getDef(player.getWorld()).getName().toLowerCase();
 				itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
 					itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
@@ -174,7 +175,7 @@ public class ObjectCooking implements UseLocTrigger {
 	private void batchCooking(Player player, Item item, int timeToCook, ItemCookingDef cookingDef, GameObject gameObject) {
 		if (gameObject.isRemoved()) return;
 
-		if (player.getSkills().getLevel(Skills.COOKING) < cookingDef.getReqLevel()) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.COOKING)) < cookingDef.getReqLevel()) {
 			String itemName = item.getDef(player.getWorld()).getName().toLowerCase();
 			itemName = itemName.startsWith("raw ") ? itemName.substring(4) :
 				itemName.startsWith("uncooked ") ? itemName.substring(9) : itemName;
@@ -197,12 +198,12 @@ public class ObjectCooking implements UseLocTrigger {
 		player.playSound("cooking");
 		delay(timeToCook);
 		if (player.getCarriedItems().remove(item) > -1) {
-			if (!Formulae.burnFood(player, item.getCatalogId(), player.getSkills().getLevel(Skills.COOKING))
+			if (!Formulae.burnFood(player, item.getCatalogId(), player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.COOKING)))
 					|| item.getCatalogId() == ItemId.RAW_LAVA_EEL.id()
-					|| (item.getCatalogId() == ItemId.UNCOOKED_PITTA_BREAD.id() && player.getSkills().getLevel(Skills.COOKING) >= 58)) {
+					|| (item.getCatalogId() == ItemId.UNCOOKED_PITTA_BREAD.id() && player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.COOKING)) >= 58)) {
 				player.getCarriedItems().getInventory().add(cookedFood);
 				player.message(cookedMessage(player, cookedFood, isOvenFood(item)));
-				player.incExp(Skills.COOKING, cookingDef.getExp(), true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.COOKING), cookingDef.getExp(), true);
 			} else {
 				player.getCarriedItems().getInventory().add(new Item(cookingDef.getBurnedId()));
 				if (cookedFood.getCatalogId() == ItemId.COOKEDMEAT.id()) {

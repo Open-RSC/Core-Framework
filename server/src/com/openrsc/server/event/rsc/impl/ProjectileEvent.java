@@ -1,7 +1,7 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.event.rsc.SingleTickEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
@@ -11,6 +11,8 @@ import com.openrsc.server.model.entity.update.Damage;
 import com.openrsc.server.model.entity.update.Projectile;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
+
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class ProjectileEvent extends SingleTickEvent {
 
@@ -65,7 +67,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			if (opponent.isPlayer()) {
 				if (((Player) opponent).getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_RECOIL.id())) {
 					recoilDamage((Player) opponent, caster, damage);
-				} else if (opponent.getSkills().getLevel(Skills.HITS) > 0) {
+				} else if (opponent.getSkills().getLevel(getSkillId(opponent.getWorld(), SkillsEnum.HITS)) > 0) {
 					if (((Player) opponent).checkRingOfLife(caster))
 						return;
 				}
@@ -96,10 +98,10 @@ public class ProjectileEvent extends SingleTickEvent {
 			opponent.message("You start a new ring of recoil");
 		}
 
-		caster.getSkills().subtractLevel(Skills.HITS, reflectedDamage, false);
+		caster.getSkills().subtractLevel(getSkillId(caster.getWorld(), SkillsEnum.HITS), reflectedDamage, false);
 		caster.getUpdateFlags().setDamage(new Damage(caster, reflectedDamage));
 
-		if (caster.getSkills().getLevel(Skills.HITS) <= 0) {
+		if (caster.getSkills().getLevel(getSkillId(caster.getWorld(), SkillsEnum.HITS)) <= 0) {
 			if (opponent.isPlayer()) {
 				Player player = (Player) opponent;
 				if (type == 2 || type == 5) {
@@ -130,8 +132,8 @@ public class ProjectileEvent extends SingleTickEvent {
 			}
 		}
 
-		int lastHits = opponent.getLevel(Skills.HITPOINTS);
-		opponent.getSkills().subtractLevel(Skills.HITS, damage, false);
+		int lastHits = opponent.getLevel(getSkillId(opponent.getWorld(), SkillsEnum.HITS));
+		opponent.getSkills().subtractLevel(getSkillId(opponent.getWorld(), SkillsEnum.HITS), damage, false);
 		opponent.getUpdateFlags().setDamage(new Damage(opponent, damage));
 
 
@@ -153,7 +155,7 @@ public class ProjectileEvent extends SingleTickEvent {
 		// Update party menu with new HITS stat.
 		if (opponent.isPlayer()) {
 			Player affectedPlayer = (Player) opponent;
-			ActionSender.sendStat(affectedPlayer, Skills.HITS);
+			ActionSender.sendStat(affectedPlayer, getSkillId(opponent.getWorld(), SkillsEnum.HITS));
 			if (affectedPlayer.getConfig().WANT_PARTIES) {
 				if (affectedPlayer.getParty() != null) {
 					affectedPlayer.getParty().sendParty();
@@ -161,7 +163,7 @@ public class ProjectileEvent extends SingleTickEvent {
 			}
 		}
 
-		if (opponent.getSkills().getLevel(Skills.HITS) <= 0) {
+		if (opponent.getSkills().getLevel(getSkillId(opponent.getWorld(), SkillsEnum.HITS)) <= 0) {
 			if (caster.isPlayer()) {
 				Player player = (Player) caster;
 				if (type == 2 || type == 5) {

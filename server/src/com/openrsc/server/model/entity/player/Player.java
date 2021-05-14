@@ -51,6 +51,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.openrsc.server.util.SkillSolver.getSkillEnum;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
+
 /**
  * A single player.
  */
@@ -465,6 +468,22 @@ public final class Player extends Mob {
 		return false;
 	}
 
+	public void setPkMode(int isPk) {
+		getCache().set("pk_mode", isPk);
+	}
+
+	public int getPkMode() {
+		return getCache().hasKey("pk_mode") ? getCache().getInt("pk_mode") : 0;
+	}
+
+	public void setPkChanges(int changesLeft) {
+		getCache().set("pk_changes_left", changesLeft);
+	}
+
+	public int getPkChanges() {
+		return getCache().hasKey("pk_changes_left") ? getCache().getInt("pk_changes_left") : 0;
+	}
+
 	public void resetCannonEvent() {
 		if (cannonEvent != null) {
 			cannonEvent.stop();
@@ -684,22 +703,30 @@ public final class Player extends Mob {
 				}
 			}
 
-			int myWildLvl = getLocation().wildernessLevel();
-			int victimWildLvl = victim.getLocation().wildernessLevel();
-			if (myWildLvl < 1 || victimWildLvl < 1) {
-				message("You can't attack other players here. Move to the wilderness");
-				return false;
-			}
-			int combDiff = Math.abs(getCombatLevel() - victim.getCombatLevel());
-			if (combDiff > myWildLvl) {
-				message("You can only attack players within " + (myWildLvl) + " levels of your own here");
-				message("Move further into the wilderness for less restrictions");
-				return false;
-			}
-			if (combDiff > victimWildLvl) {
-				message("You can only attack players within " + (victimWildLvl) + " levels of your own here");
-				message("Move further into the wilderness for less restrictions");
-				return false;
+			if (getConfig().USES_PK_MODE) {
+				if (getPkMode() == 0 || victim.getPkMode() == 0) {
+					message("You are not allowed to attack that person");
+					return false;
+				}
+				// TODO: make Lumbridge safe
+			} else {
+				int myWildLvl = getLocation().wildernessLevel();
+				int victimWildLvl = victim.getLocation().wildernessLevel();
+				if (myWildLvl < 1 || victimWildLvl < 1) {
+					message("You can't attack other players here. Move to the wilderness");
+					return false;
+				}
+				int combDiff = Math.abs(getCombatLevel() - victim.getCombatLevel());
+				if (combDiff > myWildLvl) {
+					message("You can only attack players within " + (myWildLvl) + " levels of your own here");
+					message("Move further into the wilderness for less restrictions");
+					return false;
+				}
+				if (combDiff > victimWildLvl) {
+					message("You can only attack players within " + (victimWildLvl) + " levels of your own here");
+					message("Move further into the wilderness for less restrictions");
+					return false;
+				}
 			}
 
 			if (victim.isInvulnerableTo(this) || victim.isInvisibleTo(this)) {
@@ -727,13 +754,13 @@ public final class Player extends Mob {
 
 	public int combatStyleToIndex() {
 		if (getCombatStyle() == Skills.AGGRESSIVE_MODE) {
-			return Skills.STRENGTH;
+			return getSkillId(getWorld(), SkillsEnum.STRENGTH);
 		}
 		if (getCombatStyle() == Skills.ACCURATE_MODE) {
-			return Skills.ATTACK;
+			return getSkillId(getWorld(), SkillsEnum.ATTACK);
 		}
 		if (getCombatStyle() == Skills.DEFENSIVE_MODE) {
-			return Skills.DEFENSE;
+			return getSkillId(getWorld(), SkillsEnum.DEFENSE);
 		}
 		return -1;
 	}
@@ -834,17 +861,17 @@ public final class Player extends Mob {
 				);
 			if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 				optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-				optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.AGILITY);
+				optionalSkillIndex = Optional.of(getSkillId(getWorld(), SkillsEnum.AGILITY));
 			}
 			//staff of iban (usable)
 			if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 				optionalLevel = Optional.of(requiredLevel);
-				optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.AGILITY);
+				optionalSkillIndex = Optional.of(getSkillId(getWorld(), SkillsEnum.AGILITY));
 			}
 			//battlestaves (incl. enchanted version)
 			if (itemLower.contains("battlestaff")) {
 				optionalLevel = Optional.of(requiredLevel);
-				optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.AGILITY);
+				optionalSkillIndex = Optional.of(getSkillId(getWorld(), SkillsEnum.AGILITY));
 			}
 
 			if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
@@ -908,17 +935,17 @@ public final class Player extends Mob {
 					);
 				if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 					optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-					optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+					optionalSkillIndex = Optional.of(getSkillId(getWorld(), SkillsEnum.ATTACK));
 				}
 				//staff of iban (usable)
 				if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 					optionalLevel = Optional.of(requiredLevel);
-					optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+					optionalSkillIndex = Optional.of(getSkillId(getWorld(), SkillsEnum.ATTACK));
 				}
 				//battlestaves (incl. enchanted version)
 				if (itemLower.contains("battlestaff")) {
 					optionalLevel = Optional.of(requiredLevel);
-					optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+					optionalSkillIndex = Optional.of(getSkillId(getWorld(), SkillsEnum.ATTACK));
 				}
 
 				if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
@@ -1176,11 +1203,11 @@ public final class Player extends Mob {
 
 	public int calculateQuestPoints() {
 		int qps = 0;
-		for (Map.Entry<Integer, int[]> quest : getWorld().getServer().getConstants().getQuests().questData.entrySet()) {
+		for (Map.Entry<Integer, Either<Integer, SkillsEnum>[]> quest : getWorld().getServer().getConstants().getQuests().questData.entrySet()) {
 			Integer q = quest.getKey();
-			int[] data = quest.getValue();
+			Either<Integer, SkillsEnum>[] data = quest.getValue();
 			if (this.getQuestStage(q) < 0) {
-				qps += data[0];
+				qps += data[0].fromLeft().get();
 			}
 		}
 		this.setQuestPoints(qps);
@@ -1461,9 +1488,13 @@ public final class Player extends Mob {
 		// (save for the DXP multiplier if enabled).
 		if (isOneXp()) return multiplier;
 
-		// Check if the skill is a non-combat skill (all skills after index 6) and
+		// Check if the skill is a non-combat skill and
 		// apply the non-combat skilling rate.
-		if (skill > 6) {
+		SkillsEnum enumSkill = getSkillEnum(getWorld(), skill);
+		if (enumSkill != SkillsEnum.ATTACK && enumSkill != SkillsEnum.DEFENSE
+			&& enumSkill != SkillsEnum.STRENGTH && enumSkill != SkillsEnum.HITS && enumSkill != SkillsEnum.RANGED
+			&& enumSkill != SkillsEnum.PRAYGOOD && enumSkill != SkillsEnum.PRAYEVIL && enumSkill != SkillsEnum.PRAYER
+			&& enumSkill != SkillsEnum.GOODMAGIC && enumSkill != SkillsEnum.EVILMAGIC && enumSkill != SkillsEnum.MAGIC) {
 			multiplier = getConfig().SKILLING_EXP_RATE;
 		}
 
@@ -1532,12 +1563,14 @@ public final class Player extends Mob {
 				//}
 
 				// Give fatigue for non-melee skills (all skills after skill ID 4
-				if (skill >= 4) {
+				SkillsEnum enumSkill = getSkillEnum(getWorld(), skill);
+				if (enumSkill != SkillsEnum.ATTACK && enumSkill != SkillsEnum.DEFENSE
+				&& enumSkill != SkillsEnum.STRENGTH && enumSkill != SkillsEnum.HITS) {
 					fatigue += skillXP * 8;
 				}
 
 				// Give fatigue for melee skills (all skills between skill ID 0 and 3 inclusive)
-				else if (skill >= 0) {
+				else if (enumSkill != SkillsEnum.NONE) {
 					fatigue += skillXP * 5;
 				}
 				if (fatigue > this.MAX_FATIGUE) {
@@ -1549,7 +1582,7 @@ public final class Player extends Mob {
 		// Player cannot gain more than 200 fishing xp on tutorial island
 		if (getLocation().onTutorialIsland()) {
 			if (getSkills().getExperience(skill) + skillXP > 200) {
-				if (skill == Skills.FISHING) {
+				if (skill == getSkillId(getWorld(), SkillsEnum.FISHING)) {
 					getSkills().setExperience(skill, 200);
 				}
 			}
@@ -1807,9 +1840,11 @@ public final class Player extends Mob {
 				PoisonEvent poisonEvent = getAttribute("poisonEvent", null);
 				poisonEvent.setPoisonPower(getCache().getInt("poisoned"));
 			}
-			prayerStatePoints = getSkills().getLevel(Skills.PRAYER) * 120;
-			prayerDrainEvent = new PrayerDrainEvent(getWorld(), this, Integer.MAX_VALUE);
-			getWorld().getServer().getGameEventHandler().add(prayerDrainEvent);
+			if (!getConfig().LACKS_PRAYERS) {
+				prayerStatePoints = getSkills().getLevel(getSkillId(getWorld(), SkillsEnum.PRAYER)) * 120;
+				prayerDrainEvent = new PrayerDrainEvent(getWorld(), this, Integer.MAX_VALUE);
+				getWorld().getServer().getGameEventHandler().add(prayerDrainEvent);
+			}
 			getWorld().getServer().getGameEventHandler().add(getStatRestorationEvent());
 		}
 		this.loggedIn = loggedIn;
@@ -3353,7 +3388,7 @@ public final class Player extends Mob {
 		if (this.isPlayer() && getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_LIFE.id())
 			&& (!this.getLocation().inWilderness()
 			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
-			if (((float) this.getSkills().getLevel(Skills.HITS)) / ((float) this.getSkills().getMaxStat(Skills.HITS)) <= 0.1f) {
+			if (((float) this.getSkills().getLevel(getSkillId(getWorld(), SkillsEnum.HITS))) / ((float) this.getSkills().getMaxStat(getSkillId(getWorld(), SkillsEnum.HITS))) <= 0.1f) {
 				this.resetCombatEvent();
 				this.resetRange();
 				this.resetAll();

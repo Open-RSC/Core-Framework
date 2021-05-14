@@ -1,12 +1,13 @@
 package com.openrsc.server.net.rsc.parsers.impl;
 
+import com.openrsc.server.constants.Classes;
 import com.openrsc.server.constants.Spells;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.parsers.PayloadParser;
-import com.openrsc.server.net.rsc.struct.*;
+import com.openrsc.server.net.rsc.struct.AbstractStruct;
 import com.openrsc.server.net.rsc.struct.incoming.*;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.StringUtil;
@@ -212,7 +213,26 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 				pl.topColour = packet.readByte();
 				pl.trouserColour = packet.readByte();
 				pl.skinColour = packet.readByte();
-				pl.chosenClass = packet.readByte();
+				Classes characterClass = null;
+				int classIndex = packet.readByte();
+				switch (classIndex) {
+					case 0:
+						characterClass = Classes.ADVENTURER;
+						break;
+					case 1:
+						characterClass = Classes.WARRIOR;
+						break;
+					case 2:
+						characterClass = Classes.WIZARD;
+						break;
+					case 3:
+						characterClass = Classes.NECROMANCER;
+						break;
+					case 4:
+						characterClass = Classes.RANGER;
+						break;
+				}
+				pl.chosenClass = characterClass;
 				pl.pkMode = packet.readByte();
 				result = pl;
 				break;

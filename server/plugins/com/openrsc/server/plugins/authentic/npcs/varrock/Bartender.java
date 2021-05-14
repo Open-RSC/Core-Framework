@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.npcs.varrock;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,6 +12,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Bartender implements TalkNpcTrigger {
 
@@ -105,7 +106,7 @@ public class Bartender implements TalkNpcTrigger {
 	}
 
 	private void drinkAle(Player player) {
-		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH, Skills.SMITHING};
+		int[] skillIDs = {getSkillId(player.getWorld(), SkillsEnum.ATTACK), getSkillId(player.getWorld(), SkillsEnum.DEFENSE), getSkillId(player.getWorld(), SkillsEnum.STRENGTH), getSkillId(player.getWorld(), SkillsEnum.SMITHING)};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(player, skillIDs[i]);
 		}

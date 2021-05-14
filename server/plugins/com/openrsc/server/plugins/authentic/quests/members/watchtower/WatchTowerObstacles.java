@@ -4,7 +4,7 @@ package com.openrsc.server.plugins.authentic.quests.members.watchtower;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -18,6 +18,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpcTrigger {
 
@@ -293,13 +294,13 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 				npcsay(player, ogre_trader, "Grr! get your hands off those cakes");
 				ogre_trader.startCombat(player);
 			} else {
-				if (getCurrentLevel(player, Skills.THIEVING) < 15) {
+				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.THIEVING)) < 15) {
 					player.message("You need a thieving level of 15 to steal from this stall");
 					return;
 				}
 				player.message("You cautiously grab a cake from the stall");
 				give(player, ItemId.ROCK_CAKE.id(), 1);
-				player.incExp(Skills.THIEVING, 64, true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.THIEVING), 64, true);
 				changeloc(obj, new GameObject(obj.getWorld(), obj.getLocation(), ROCK_CAKE_COUNTER_EMPTY, obj.getDirection(), obj.getType()));
 				addloc(obj.getWorld(), obj.getLoc(), 5000);
 			}
@@ -325,7 +326,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 				player.message("The bridge has collapsed");
 				player.message("It seems this rock is placed here to jump from");
 			} else if (command.equalsIgnoreCase("jump over")) {
-				if (getCurrentLevel(player, Skills.AGILITY) < 30) {
+				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 30) {
 					player.message("You need agility level of 30 to attempt this jump");
 					return;
 				}
@@ -358,7 +359,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 								}
 								player.message("You daringly jump across the chasm");
 								player.teleport(647, 799);
-								player.incExp(Skills.AGILITY, 50, true);
+								player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 50, true);
 								say(player, null, "Phew! I just made it");
 							}
 						} else if (menu == 1) {
@@ -375,7 +376,7 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 						}
 						player.message("You daringly jump across the chasm");
 						player.teleport(647, 799);
-						player.incExp(Skills.AGILITY, 50, true);
+						player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 50, true);
 						say(player, null, "Phew! I just made it");
 					}
 				}

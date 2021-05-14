@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
@@ -13,17 +13,18 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.authentic.misc.Cannon;
+import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
-import com.openrsc.server.plugins.triggers.OpBoundTrigger;
-import com.openrsc.server.plugins.authentic.misc.Cannon;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class DwarfCannon
 	implements QuestInterface, TakeObjTrigger,
@@ -782,7 +783,7 @@ public class DwarfCannon
 						mes("after some tinkering you manage to fix it");
 						delay(3);
 						player.getCache().store("pipe", true);
-						player.incExp(Skills.CRAFTING, 5, true);
+						player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 5, true);
 					}
 				} else if (cannonMenu == 1) {
 					if (player.getCache().hasKey("barrel")) {
@@ -801,7 +802,7 @@ public class DwarfCannon
 						mes("after some tinkering you manage to fix it");
 						delay(3);
 						player.getCache().store("barrel", true);
-						player.incExp(Skills.CRAFTING, 5, true);
+						player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 5, true);
 					}
 				} else if (cannonMenu == 2) {
 					if (player.getCache().hasKey("axle")) {
@@ -820,7 +821,7 @@ public class DwarfCannon
 						mes("after some tinkering you manage to fix it");
 						delay(3);
 						player.getCache().store("axle", true);
-						player.incExp(Skills.CRAFTING, 5, true);
+						player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 5, true);
 					}
 				} else if (cannonMenu == 3) {
 					if (player.getCache().hasKey("shaft")) {
@@ -839,7 +840,7 @@ public class DwarfCannon
 						mes("after some tinkering you manage to fix it");
 						delay(3);
 						player.getCache().store("shaft", true);
-						player.incExp(Skills.CRAFTING, 5, true);
+						player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 5, true);
 					}
 				} else if (cannonMenu == 4) {
 					// nothing

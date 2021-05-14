@@ -39,6 +39,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
@@ -153,7 +154,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		// player.getLocation()));
 
 		// Check player's magic level prior to allowing cast.
-		if (player.getSkills().getLevel(Skills.MAGIC) < spell.getReqLevel()) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.MAGIC)) < spell.getReqLevel()) {
 			player.setSuspiciousPlayer(true, "player magic ability not high enough");
 			player.message("Your magic ability is not high enough for this spell.");
 			player.resetPath();
@@ -176,7 +177,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 	private boolean spellSuccessCheck(Player player, SpellDef spell) {
 		// Check for failed spell.
-		if (!Formulae.castSpell(spell, player.getSkills().getLevel(Skills.MAGIC), player.getMagicPoints())) {
+		if (!Formulae.castSpell(spell, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.MAGIC)), player.getMagicPoints())) {
 			player.message("The spell fails! You may try again in 20 seconds");
 			player.playSound("spellfail");
 			player.setSpellFail();
@@ -567,7 +568,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		if (message != null) {
 			player.playerServerMessage(MessageType.QUEST, message.trim().isEmpty() ? "Cast spell successfully" : message);
 		}
-		player.incExp(Skills.MAGIC, spell.getExp(), true);
+		player.incExp(getSkillId(player.getWorld(), SkillsEnum.MAGIC), spell.getExp(), true);
 		player.setCastTimer();
 	}
 
@@ -599,13 +600,13 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			int affectsStat = -1;
 			if (spellEnum == Spells.CLAWS_OF_GUTHIX) {
 				lowersBy = 0.02;
-				affectsStat = Skills.DEFENSE;
+				affectsStat = getSkillId(player.getWorld(), SkillsEnum.DEFENSE);
 			} else if (spellEnum == Spells.SARADOMIN_STRIKE) {
 				lowersBy = 1;
-				affectsStat = Skills.PRAYER;
+				affectsStat = getSkillId(player.getWorld(), SkillsEnum.PRAYER);
 			} else if (spellEnum == Spells.FLAMES_OF_ZAMORAK) {
 				lowersBy = 0.02;
-				affectsStat = Skills.MAGIC;
+				affectsStat = getSkillId(player.getWorld(), SkillsEnum.MAGIC);
 			}
 			/* How much to lower the stat */
 			int lowerBy = (spellEnum != Spells.SARADOMIN_STRIKE ? (int) Math.ceil((affectedMob.getSkills().getLevel(affectsStat) * lowersBy))
@@ -1014,7 +1015,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			}
 		}
 
-		if (player.getSkills().getLevel(Skills.SMITHING) < smeltingDef.getReqLevel()) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.SMITHING)) < smeltingDef.getReqLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "You need to be at least level-" + smeltingDef.getReqLevel() + " smithing to smelt "
 					+ player.getWorld().getServer().getEntityHandler().getItemDef(smeltingDef.barId).getName().toLowerCase().replaceAll("bar", ""));
 			return;
@@ -1038,7 +1039,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 			}
 			player.playerServerMessage(MessageType.QUEST, "You make a bar of " + bar.getDef(player.getWorld()).getName().replace("bar", "").toLowerCase());
 			player.getCarriedItems().getInventory().add(bar);
-			player.incExp(Skills.SMITHING, smeltingDef.getExp(), true);
+			player.incExp(getSkillId(player.getWorld(), SkillsEnum.SMITHING), smeltingDef.getExp(), true);
 		}
 		finalizeSpellNoMessage(player, spell);
 	}
@@ -1235,7 +1236,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 				getPlayer().resetFollowing();
 				getPlayer().resetPath();
 				SpellDef spell = getPlayer().getWorld().getServer().getEntityHandler().getSpellDef(spellEnum);
-				if (!canCast(getPlayer()) || affectedMob.getSkills().getLevel(Skills.HITS) <= 0) {
+				if (!canCast(getPlayer()) || affectedMob.getSkills().getLevel(getSkillId(affectedMob.getWorld(), SkillsEnum.HITS)) <= 0) {
 					getPlayer().resetPath();
 					return;
 				}
@@ -1284,13 +1285,13 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							}
 							getPlayer().playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 						}
-						fireDamage = (int) Math.floor(getCurrentLevel(getPlayer(), Skills.HITS) * percentage / 100.0);
+						fireDamage = (int) Math.floor(getCurrentLevel(getPlayer(), getSkillId(getPlayer().getWorld(), SkillsEnum.HITS)) * percentage / 100.0);
 						getPlayer().damage(fireDamage);
 
 						//reduce ranged level (case for KBD)
 						if (n.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-							int newLevel = getCurrentLevel(getPlayer(), Skills.RANGED) - Formulae.getLevelsToReduceAttackKBD(getPlayer());
-							getPlayer().getSkills().setLevel(Skills.RANGED, newLevel);
+							int newLevel = getCurrentLevel(getPlayer(), getSkillId(getPlayer().getWorld(), SkillsEnum.RANGED)) - Formulae.getLevelsToReduceAttackKBD(getPlayer());
+							getPlayer().getSkills().setLevel(getSkillId(getPlayer().getWorld(), SkillsEnum.RANGED), newLevel);
 						}
 					} else if (inArray(n.getID(), NpcId.KOLODION_HUMAN.id(), NpcId.KOLODION_OGRE.id(), NpcId.KOLODION_SPIDER.id(),
 						NpcId.KOLODION_SOULESS.id(), NpcId.KOLODION_DEMON.id(), NpcId.BATTLE_MAGE_GUTHIX.id(),
@@ -1319,22 +1320,22 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						int affectsStat = -1;
 						if (spellEnum == Spells.CONFUSE) {
 							lowersBy = 0.05;
-							affectsStat = Skills.ATTACK;
+							affectsStat = getSkillId(getPlayer().getWorld(), SkillsEnum.ATTACK);
 						} else if (spellEnum == Spells.WEAKEN) {
 							lowersBy = 0.05;
-							affectsStat = Skills.STRENGTH;
+							affectsStat = getSkillId(getPlayer().getWorld(), SkillsEnum.STRENGTH);
 						} else if (spellEnum == Spells.CURSE) {
 							lowersBy = 0.05;
-							affectsStat = Skills.DEFENSE;
+							affectsStat = getSkillId(getPlayer().getWorld(), SkillsEnum.DEFENSE);
 						} else if (spellEnum == Spells.VULNERABILITY) {
 							lowersBy = 0.10;
-							affectsStat = Skills.DEFENSE;
+							affectsStat = getSkillId(getPlayer().getWorld(), SkillsEnum.DEFENSE);
 						} else if (spellEnum == Spells.ENFEEBLE) {
 							lowersBy = 0.10;
-							affectsStat = Skills.STRENGTH;
+							affectsStat = getSkillId(getPlayer().getWorld(), SkillsEnum.STRENGTH);
 						} else if (spellEnum == Spells.STUN) {
 							lowersBy = 0.10;
-							affectsStat = Skills.ATTACK;
+							affectsStat = getSkillId(getPlayer().getWorld(), SkillsEnum.ATTACK);
 						}
 
 						/* How much to lower the stat */
@@ -1504,7 +1505,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 							getPlayer().getWorld().getServer().getGameEventHandler().add(new MiniEvent(getPlayer().getWorld(), getPlayer(), getPlayer().getConfig().GAME_TICK, "Salarin the Twisted Strike") {
 								@Override
 								public void action() {
-									affectedMob.getSkills().subtractLevel(Skills.HITS, secondAdditionalDamage, false);
+									affectedMob.getSkills().subtractLevel(getSkillId(affectedMob.getWorld(), SkillsEnum.HITS), secondAdditionalDamage, false);
 									affectedMob.getUpdateFlags().setDamage(new Damage(affectedMob, secondAdditionalDamage));
 									if (affectedMob.isPlayer()) {
 										if (getPlayer().getConfig().WANT_PARTIES) {
@@ -1513,7 +1514,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 											}
 										}
 									}
-									if (affectedMob.getSkills().getLevel(Skills.HITS) <= 0) {
+									if (affectedMob.getSkills().getLevel(getSkillId(affectedMob.getWorld(), SkillsEnum.HITS)) <= 0) {
 										affectedMob.killedBy(getPlayer());
 									}
 
@@ -1671,7 +1672,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		player.lastCast = System.currentTimeMillis();
 		player.playSound("spellok");
 		player.playerServerMessage(MessageType.QUEST, "You succesfully charge the orb");
-		player.incExp(Skills.MAGIC, spell.getExp(), true);
+		player.incExp(getSkillId(player.getWorld(), SkillsEnum.MAGIC), spell.getExp(), true);
 		player.setCastTimer();
 	}
 

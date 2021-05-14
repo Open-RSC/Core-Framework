@@ -1,12 +1,13 @@
 package com.openrsc.server.plugins;
 
-import com.google.common.collect.Collections2;
 import com.openrsc.server.ServerConfiguration;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.login.BankPinChangeRequest;
 import com.openrsc.server.login.BankPinVerifyRequest;
+import com.openrsc.server.model.Either;
 import com.openrsc.server.model.MenuOptionListener;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -23,12 +24,12 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
 import java.util.Optional;
+
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 /** Functions.java
  *
@@ -901,13 +902,14 @@ public class Functions {
 	 * @param questData - the data, if skill id is < 0 means no exp is applied
 	 * @param applyQP   - apply the quest point increase
 	 */
-	public static void incQuestReward(Player player, int[] questData, boolean applyQP) {
-		int qp = questData[0];
-		int skillId = questData[1];
-		int baseXP = questData[2];
-		int varXP = questData[3];
-		if (skillId >= 0 && baseXP > 0 && varXP >= 0) {
-			player.incQuestExp(skillId, player.getSkills().getMaxStat(skillId) * varXP + baseXP);
+	public static void incQuestReward(Player player, Either<Integer, SkillsEnum>[] questData, boolean applyQP) {
+		int qp = questData[0].fromLeft().get();
+		SkillsEnum skill = questData[1].fromRight().get();
+		int baseXP = questData[2].fromLeft().get();
+		int varXP = questData[3].fromLeft().get();
+		if (skill != SkillsEnum.NONE && baseXP > 0 && varXP >= 0) {
+			player.incQuestExp(getSkillId(player.getWorld(), skill),
+				player.getSkills().getMaxStat(getSkillId(player.getWorld(), skill)) * varXP + baseXP);
 		}
 		if (applyQP) {
 			player.incQuestPoints(qp);

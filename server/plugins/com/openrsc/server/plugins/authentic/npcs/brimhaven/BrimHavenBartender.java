@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.npcs.brimhaven;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,6 +11,7 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public final class BrimHavenBartender implements
 	TalkNpcTrigger {
@@ -78,7 +79,7 @@ public final class BrimHavenBartender implements
 	}
 
 	private void drinkAle(Player player) {
-		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.PRAYER, Skills.COOKING, Skills.HERBLAW};
+		int[] skillIDs = {getSkillId(player.getWorld(), SkillsEnum.ATTACK), getSkillId(player.getWorld(), SkillsEnum.DEFENSE), getSkillId(player.getWorld(), SkillsEnum.PRAYER), getSkillId(player.getWorld(), SkillsEnum.COOKING), getSkillId(player.getWorld(), SkillsEnum.HERBLAW)};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(player, skillIDs[i]);
 		}

@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.skills.fletching;
 
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.external.ItemArrowHeadDef;
 import com.openrsc.server.external.ItemBowStringDef;
@@ -18,6 +18,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Fletching implements UseInvTrigger {
 
@@ -208,13 +209,13 @@ public class Fletching implements UseInvTrigger {
 			ci.remove(new Item(attachment.getCatalogId(), 1), authenticClientUpdates);
 			ci.getInventory().add(new Item(resultID), authenticClientUpdates);
 			if (authenticClientUpdates) {
-				player.incExp(Skills.FLETCHING, experience, true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.FLETCHING), experience, true);
 			}
 			timesLooped++;
 		}
 		if (!authenticClientUpdates) {
 			ActionSender.sendInventory(player);
-			player.incExp(Skills.FLETCHING, experience * timesLooped, true);
+			player.incExp(getSkillId(player.getWorld(), SkillsEnum.FLETCHING), experience * timesLooped, true);
 		}
 		delay();
 
@@ -236,7 +237,7 @@ public class Fletching implements UseInvTrigger {
 			return;
 		}
 
-		if (player.getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FLETCHING)) < headDef.getReqLevel()) {
 			player.message("You need a fletching skill of "
 				+ headDef.getReqLevel() + " or above to do that");
 			return;
@@ -269,7 +270,7 @@ public class Fletching implements UseInvTrigger {
 		boolean authenticClientUpdates = !config().CUSTOM_IMPROVEMENTS;
 		int timesLooped = 0;
 		for (int i = 0; i < loopAmount; ++i) {
-			if (player.getSkills().getLevel(Skills.FLETCHING) < headDef.getReqLevel()) {
+			if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FLETCHING)) < headDef.getReqLevel()) {
 				player.message("You need a fletching skill of "
 					+ headDef.getReqLevel() + " or above to do that");
 				return;
@@ -283,13 +284,13 @@ public class Fletching implements UseInvTrigger {
 			ci.getInventory().add(new Item(headDef.getArrowID(), skillCapeMultiplier), authenticClientUpdates);
 
 			if (authenticClientUpdates) {
-				player.incExp(Skills.FLETCHING, headDef.getExp() * skillCapeMultiplier, true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.FLETCHING), headDef.getExp() * skillCapeMultiplier, true);
 			}
 			timesLooped++;
 		}
 		if (!authenticClientUpdates) {
 			ActionSender.sendInventory(player);
-			player.incExp(Skills.FLETCHING, headDef.getExp() * skillCapeMultiplier * timesLooped, true);
+			player.incExp(getSkillId(player.getWorld(), SkillsEnum.FLETCHING), headDef.getExp() * skillCapeMultiplier * timesLooped, true);
 		}
 		delay();
 
@@ -322,7 +323,7 @@ public class Fletching implements UseInvTrigger {
 	}
 
 	private void batchStringing(Player player, Item bow, Item bowString, ItemBowStringDef stringDef) {
-		if (player.getSkills().getLevel(Skills.FLETCHING) < stringDef.getReqLevel()) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FLETCHING)) < stringDef.getReqLevel()) {
 			player.message("You need a fletching skill of "
 				+ stringDef.getReqLevel() + " or above to do that");
 			return;
@@ -342,7 +343,7 @@ public class Fletching implements UseInvTrigger {
 		player.getCarriedItems().remove(bow);
 		player.message("You add a string to the bow");
 		player.getCarriedItems().getInventory().add(new Item(stringDef.getBowID(), 1));
-		player.incExp(Skills.FLETCHING, stringDef.getExp(), true);
+		player.incExp(getSkillId(player.getWorld(), SkillsEnum.FLETCHING), stringDef.getExp(), true);
 		delay();
 
 		// Repeat
@@ -415,7 +416,7 @@ public class Fletching implements UseInvTrigger {
 	}
 
 	private void batchLogCutting(Player player, Item log, int id, int reqLvl, int exp, String cutMessage) {
-		if (player.getSkills().getLevel(Skills.FLETCHING) < reqLvl) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FLETCHING)) < reqLvl) {
 			player.message("You need a fletching skill of " + reqLvl + " or above to do that");
 			return;
 		}
@@ -429,7 +430,7 @@ public class Fletching implements UseInvTrigger {
 		if (player.getCarriedItems().remove(log) > -1) {
 			player.message(cutMessage);
 			give(player, id, id == ItemId.ARROW_SHAFTS.id() ? getNumberOfShafts(player, log.getCatalogId()) : 1);
-			player.incExp(Skills.FLETCHING, exp, true);
+			player.incExp(getSkillId(player.getWorld(), SkillsEnum.FLETCHING), exp, true);
 			delay();
 		}
 
@@ -482,7 +483,7 @@ public class Fletching implements UseInvTrigger {
 	}
 
 	private void batchPearlCutting(Player player, Item pearl, int amount) {
-		if (player.getSkills().getLevel(Skills.FLETCHING) < 34) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FLETCHING)) < 34) {
 			player.message("You need a fletching skill of 34 to do that");
 			return;
 		}
@@ -498,7 +499,7 @@ public class Fletching implements UseInvTrigger {
 		player.getCarriedItems().remove(new Item(pearl.getCatalogId()));
 		player.message("you chisel the pearls into small bolt tips");
 		give(player, ItemId.OYSTER_PEARL_BOLT_TIPS.id(), amount);
-		player.incExp(Skills.FLETCHING, 100, true);
+		player.incExp(getSkillId(player.getWorld(), SkillsEnum.FLETCHING), 100, true);
 		delay();
 
 		// Repeat
@@ -544,7 +545,7 @@ public class Fletching implements UseInvTrigger {
 		int timesLooped = 0;
 		boolean authenticClientUpdates = !config().CUSTOM_IMPROVEMENTS;
 		for (int i = 0; i < loopCount; ++i) {
-			if (player.getSkills().getLevel(Skills.FLETCHING) < 34) {
+			if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FLETCHING)) < 34) {
 				player.message("You need a fletching skill of 34 to do that");
 				return;
 			}
@@ -555,13 +556,13 @@ public class Fletching implements UseInvTrigger {
 			ci.remove(new Item(tips.getCatalogId(), 1), authenticClientUpdates);
 			ci.getInventory().add(new Item(ItemId.OYSTER_PEARL_BOLTS.id(), skillCapeMultiplier), authenticClientUpdates);
 			if (authenticClientUpdates) {
-				player.incExp(Skills.FLETCHING, 25 * skillCapeMultiplier, true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.FLETCHING), 25 * skillCapeMultiplier, true);
 			}
 			timesLooped++;
 		}
 		if (!authenticClientUpdates) {
 			ActionSender.sendInventory(player);
-			player.incExp(Skills.FLETCHING, 25 * skillCapeMultiplier * timesLooped, true);
+			player.incExp(getSkillId(player.getWorld(), SkillsEnum.FLETCHING), 25 * skillCapeMultiplier * timesLooped, true);
 		}
 
 		delay();

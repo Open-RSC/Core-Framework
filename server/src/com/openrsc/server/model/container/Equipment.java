@@ -1,9 +1,6 @@
 package com.openrsc.server.model.container;
 
-import com.openrsc.server.constants.AppearanceId;
-import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.struct.EquipRequest;
@@ -15,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Optional;
+
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Equipment {
 
@@ -523,18 +522,18 @@ public class Equipment {
 		// Spears and throwing knives
 		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+			optionalSkillIndex = Optional.of(getSkillId(player.getWorld(), SkillsEnum.ATTACK));
 		}
 		// Staff of iban (usable)
 		if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+			optionalSkillIndex = Optional.of(getSkillId(player.getWorld(), SkillsEnum.ATTACK));
 		}
 
 		// Battlestaves (incl. enchanted version)
 		if (itemLower.contains("battlestaff")) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(com.openrsc.server.constants.Skills.ATTACK);
+			optionalSkillIndex = Optional.of(getSkillId(player.getWorld(), SkillsEnum.ATTACK));
 		}
 
 		if (optionalLevel.isPresent() && !hasRequirement) {

@@ -3,6 +3,8 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -33,7 +35,15 @@ public class ImpCatcher implements QuestInterface, TalkNpcTrigger {
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done. You have completed the Imp catcher quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.IMP_CATCHER), true);
+		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.IMP_CATCHER);
+		SkillsEnum magicSkill;
+		if (player.getConfig().DIVIDED_GOOD_EVIL) {
+			magicSkill = SkillsEnum.GOODMAGIC;
+		} else {
+			magicSkill = SkillsEnum.MAGIC;
+		}
+		questData[1] = Either.right(magicSkill);
+		incQuestReward(player, questData, true);
 		player.message("@gre@You haved gained 1 quest point!");
 	}
 

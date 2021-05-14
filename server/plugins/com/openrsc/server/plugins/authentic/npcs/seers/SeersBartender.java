@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.npcs.seers;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public final class SeersBartender implements
 	TalkNpcTrigger {
@@ -124,7 +125,7 @@ public final class SeersBartender implements
 	}
 
 	private void drinkAle(Player player) {
-		int[] skillIDs = {Skills.ATTACK, Skills.DEFENSE, Skills.WOODCUT, Skills.FLETCHING, Skills.FIREMAKING};
+		int[] skillIDs = {getSkillId(player.getWorld(), SkillsEnum.ATTACK), getSkillId(player.getWorld(), SkillsEnum.DEFENSE), getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING), getSkillId(player.getWorld(), SkillsEnum.FLETCHING), getSkillId(player.getWorld(), SkillsEnum.FIREMAKING)};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(player, skillIDs[i]);
 		}

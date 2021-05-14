@@ -1,15 +1,13 @@
 package com.openrsc.server.plugins.authentic.quests.members.digsite;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.*;
+import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
 import static com.openrsc.server.plugins.Functions.*;
@@ -35,11 +33,11 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 	public void handleReward(Player player) {
 		player.message("Congratulations, you have finished the digsite quest");
 		player.message("@gre@You haved gained 2 quest points!");
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DIGSITE);
+		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DIGSITE);
 		//keep order kosher
-		int[] skillIDs = {Skills.MINING, Skills.HERBLAW};
+		Either<Integer, SkillsEnum>[] skillIDs = new Either[]{Either.right(SkillsEnum.MINING), Either.right(SkillsEnum.HERBLAW)};
 		//1200 for mining, 500 for herblaw
-		int[] amounts = {1200, 500};
+		Either<Integer, SkillsEnum>[] amounts = new Either[]{Either.left(1200), Either.left(500)};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			questData[Quests.MAPIDX_BASE] = amounts[i];

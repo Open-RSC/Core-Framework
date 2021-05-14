@@ -1,9 +1,10 @@
 package com.openrsc.server.content.party;
 
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.entity.player.Player;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.getMaxLevel;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class PartyPlayer {
 	private String username;
@@ -58,7 +59,7 @@ public class PartyPlayer {
 	}
 
 	public int getCurHp() {
-		return playerReference.getSkills().getLevel(Skills.HITS);
+		return playerReference.getSkills().getLevel(getSkillId(playerReference.getWorld(), SkillsEnum.HITS));
 	}
 
 	public int getShareLoot() {
@@ -128,7 +129,7 @@ public class PartyPlayer {
 	}
 
 	public int getMaxHp() {
-		return getMaxLevel(playerReference, Skills.HITPOINTS);
+		return getMaxLevel(playerReference, getSkillId(playerReference.getWorld(), SkillsEnum.HITS));
 	}
 
 	public void setKills(int kills) {

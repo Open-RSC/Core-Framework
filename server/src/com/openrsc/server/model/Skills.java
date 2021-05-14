@@ -1,5 +1,6 @@
 package com.openrsc.server.model;
 
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.database.struct.PlayerExperience;
@@ -14,7 +15,7 @@ import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static com.openrsc.server.constants.Skills.HITS;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 
 public class Skills {
@@ -94,8 +95,8 @@ public class Skills {
 		return total;
 	}
 
-	public int getCombatLevel(boolean isSpecial) {
-		return Formulae.getCombatlevel(getMaxStats(), isSpecial);
+	public int getCombatLevel(Mob mob, boolean isSpecial) {
+		return Formulae.getCombatlevel(mob, getMaxStats(), isSpecial);
 	}
 
 	public void setSkill(int skill, int level, int exp) {
@@ -110,10 +111,12 @@ public class Skills {
 			levels[skill] = 0;
 		}
 		sendUpdate(skill);
-		if (skill != com.openrsc.server.constants.Skills.PRAYER
-			&& skill != HITS && !fromRestoreEvent) {
+		if (skill != getSkillId(getWorld(), SkillsEnum.PRAYER)
+			&& skill != getSkillId(getWorld(), SkillsEnum.HITS)
+			&& !fromRestoreEvent) {
 			mob.tryResyncStatEvent();
-		} else if (skill == com.openrsc.server.constants.Skills.PRAYER && mob.isPlayer()) {
+		} else if (skill == getSkillId(getWorld(), SkillsEnum.PRAYER)
+			&& mob.isPlayer()) {
 			((Player)mob).setPrayerStatePoints(level * 120);
 		}
 	}
@@ -141,6 +144,24 @@ public class Skills {
 			}
 		}
 		sendUpdate(skill);
+	}
+
+	public void setExperienceAndLevel(int skill, int exp, int lvl, boolean sendUpdate) {
+		exps[skill] = exp;
+		levels[skill] = lvl;
+		maxStats[skill] = lvl;
+		getMob().getUpdateFlags().setAppearanceChanged(true);
+		if (getMob().isPlayer()) {
+			Player player = (Player) getMob();
+			try {
+				getWorld().getServer().getPlayerService().savePlayerMaxSkill(player.getDatabaseID(), skill, maxStats[skill]);
+			} catch (GameDatabaseException e) {
+				LOGGER.catching(e);
+			}
+		}
+		if (sendUpdate) {
+			sendUpdate(skill);
+		}
 	}
 
 	public void incrementLevel(int skill) {
@@ -312,7 +333,7 @@ public class Skills {
 		levels[skill] = getMaxStat(skill);
 		if (sendUpdate)
 			sendUpdate(skill);
-		if (skill == com.openrsc.server.constants.Skills.PRAYER && mob.isPlayer()) {
+		if (skill == getSkillId(getWorld(), SkillsEnum.PRAYER) && mob.isPlayer()) {
 			((Player) getMob()).setPrayerStatePoints(levels[skill] * 120);
 		}
 	}
@@ -382,7 +403,7 @@ public class Skills {
 			levs[i] = new PlayerSkills();
 			levs[i].skillId = ex[i].skillId;
 			// minimum hits was 10
-			if (ex[i].skillId == com.openrsc.server.constants.Skills.HITPOINTS
+			if (ex[i].skillId == getWorld().getServer().getConstants().getSkills().getSkillId(SkillsEnum.HITS)
 				&& ex[i].experience >= 0 && ex[i].experience < 4616) {
 				levs[i].skillLevel = 10;
 			}

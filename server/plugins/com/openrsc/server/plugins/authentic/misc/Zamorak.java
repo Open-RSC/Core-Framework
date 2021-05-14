@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.misc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -10,6 +10,7 @@ import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.triggers.*;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger, PlayerRangeNpcTrigger, SpellNpcTrigger {
 
@@ -73,9 +74,9 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 		zam.getUpdateFlags().setChatMessage(new ChatMessage(zam, "A curse be upon you", player));
 		delay(4);
 		player.message("You feel slightly weakened");
-		int dmg = (int) Math.ceil(((player.getSkills().getMaxStat(Skills.HITS) + 20) * 0.05));
+		int dmg = (int) Math.ceil(((player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS)) + 20) * 0.05));
 		player.damage(dmg);
-		int[] stats = {Skills.ATTACK, Skills.DEFENSE, Skills.STRENGTH};
+		int[] stats = {getSkillId(player.getWorld(), SkillsEnum.ATTACK), getSkillId(player.getWorld(), SkillsEnum.DEFENSE), getSkillId(player.getWorld(), SkillsEnum.STRENGTH)};
 		for(int affectedStat : stats) {
 			/* How much to lower the stat */
 			int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) + 20) * 0.05));

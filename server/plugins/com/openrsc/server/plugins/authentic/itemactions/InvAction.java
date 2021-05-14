@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.itemactions;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -13,6 +13,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class InvAction implements OpInvTrigger {
 
@@ -411,7 +412,7 @@ public class InvAction implements OpInvTrigger {
 
 	private void handleDrySticks(Player player) {
 		player.message("you rub together the dry sticks");
-		if (getCurrentLevel(player, Skills.FIREMAKING) < 30) {
+		if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.FIREMAKING)) < 30) {
 			player.message("you need a firemaking level of 30 or above");
 			player.message("the sticks smoke momentarily then die out");
 			return;
@@ -422,7 +423,7 @@ public class InvAction implements OpInvTrigger {
 			player.message("you place the smouldering twigs to your torch");
 			player.message("your torch lights");
 			player.getCarriedItems().getInventory().add(new Item(ItemId.LIT_TORCH.id()));
-			player.incExp(Skills.FIREMAKING, Firemaking.getExp(player.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
+			player.incExp(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING), Firemaking.getExp(player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING)), 25), true);
 			if (player.getQuestStage(Quests.SEA_SLUG) == 5 && !player.getCache().hasKey("lit_torch")) {
 				player.getCache().store("lit_torch", true);
 			}
@@ -596,24 +597,24 @@ public class InvAction implements OpInvTrigger {
 		mes("You eat the Jangerberries");
 		delay(3);
 		player.getCarriedItems().remove(new Item(ItemId.JANGERBERRIES.id()));
-		int Attack = player.getSkills().getMaxStat(Skills.ATTACK) + 2;
-		int Strength = player.getSkills().getMaxStat(Skills.STRENGTH) + 1;
-		if (player.getSkills().getLevel(Skills.HITS) < player.getSkills().getMaxStat(Skills.HITS)) {
-			player.getSkills().setLevel(Skills.HITS, player.getSkills().getLevel(Skills.HITS) + 2);
+		int Attack = player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.ATTACK)) + 2;
+		int Strength = player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.STRENGTH)) + 1;
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) < player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS))) {
+			player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.HITS), player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) + 2);
 		}
-		if (player.getSkills().getLevel(Skills.PRAYER) < player.getSkills().getMaxStat(Skills.PRAYER)) {
-			player.getSkills().setLevel(Skills.PRAYER, player.getSkills().getLevel(Skills.PRAYER) + 1);
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER)) < player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.PRAYER))) {
+			player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER), player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER)) + 1);
 		}
-		if (player.getSkills().getLevel(Skills.DEFENSE) < 1) {
-			player.getSkills().setLevel(Skills.DEFENSE, 0);
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.DEFENSE)) < 1) {
+			player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.DEFENSE), 0);
 		} else {
-			player.getSkills().setLevel(Skills.DEFENSE, player.getSkills().getLevel(Skills.DEFENSE) - 1);
+			player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.DEFENSE), player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.DEFENSE)) - 1);
 		}
-		if (player.getSkills().getLevel(Skills.ATTACK) < Attack) {
-			player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) + 1);
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.ATTACK)) < Attack) {
+			player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.ATTACK), player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.ATTACK)) + 1);
 		}
-		if (player.getSkills().getLevel(Skills.STRENGTH) < Strength) {
-			player.getSkills().setLevel(Skills.STRENGTH, player.getSkills().getLevel(Skills.STRENGTH) + 1);
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.STRENGTH)) < Strength) {
+			player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.STRENGTH), player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.STRENGTH)) + 1);
 		}
 		player.message("They taste very bitter");
 	}
@@ -706,7 +707,7 @@ public class InvAction implements OpInvTrigger {
 		player.message("You eat the nightshade...");
 		player.getCarriedItems().remove(new Item(ItemId.NIGHTSHADE.id()));
 		say(player, null, "Ahhhh! what have I done !");
-		player.damage((int) ((getCurrentLevel(player, Skills.HITS) * 0.2D) + 10));
+		player.damage((int) ((getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) * 0.2D) + 10));
 		player.message("The nightshade was highly poisonous");
 	}
 

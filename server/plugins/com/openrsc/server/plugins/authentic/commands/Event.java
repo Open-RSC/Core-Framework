@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.commands;
 
 import com.google.common.collect.ImmutableMap;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
 import com.openrsc.server.database.struct.LinkedPlayer;
@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.plugins.Functions.config;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public final class Event implements CommandTrigger {
 	public static final Logger LOGGER = LogManager.getLogger(Event.class);
@@ -802,8 +803,8 @@ public final class Event implements CommandTrigger {
 		String experienceSt = Integer.toUnsignedString(experience);
 		if(stat != -1) {
 			otherPlayer.getSkills().setExperience(stat, experience);
-			if (stat == Skills.PRAYER) {
-				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skills.PRAYER) * 120);
+			if (stat == getSkillId(otherPlayer.getWorld(), SkillsEnum.PRAYER)) {
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(getSkillId(otherPlayer.getWorld(), SkillsEnum.PRAYER)) * 120);
 			}
 
 			otherPlayer.checkEquipment();
@@ -818,7 +819,7 @@ public final class Event implements CommandTrigger {
 			for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
 				otherPlayer.getSkills().setExperience(i, experience);
 			}
-			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skills.PRAYER) * 120);
+			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(getSkillId(otherPlayer.getWorld(), SkillsEnum.PRAYER)) * 120);
 
 			otherPlayer.checkEquipment();
 			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s stats to experience " + experienceSt);
@@ -959,8 +960,8 @@ public final class Event implements CommandTrigger {
 
 		if(stat != -1) {
 			otherPlayer.getSkills().setLevelTo(stat, level);
-			if (stat == Skills.PRAYER) {
-				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skills.PRAYER) * 120);
+			if (stat == getSkillId(otherPlayer.getWorld(), SkillsEnum.PRAYER)) {
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(getSkillId(otherPlayer.getWorld(), SkillsEnum.PRAYER)) * 120);
 			}
 
 			otherPlayer.checkEquipment();
@@ -975,7 +976,7 @@ public final class Event implements CommandTrigger {
 			for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
 				otherPlayer.getSkills().setLevelTo(i, level);
 			}
-			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skills.PRAYER) * 120);
+			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(getSkillId(otherPlayer.getWorld(), SkillsEnum.PRAYER)) * 120);
 
 			otherPlayer.checkEquipment();
 			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s stats to level " + level);

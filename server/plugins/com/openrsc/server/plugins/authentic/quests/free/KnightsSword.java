@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger {
@@ -235,7 +236,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 
 	private boolean canBuyCape(Player player) {
 		if (config().WANT_CUSTOM_SPRITES
-			&& getMaxLevel(player, Skills.SMITHING) >= 99) { return true; }
+			&& getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.SMITHING)) >= 99) { return true; }
 		return false;
 	}
 

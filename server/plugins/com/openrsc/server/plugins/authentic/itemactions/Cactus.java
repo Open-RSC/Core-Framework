@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.itemactions;
 
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -12,6 +12,7 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Cactus implements UseLocTrigger {
 
@@ -37,7 +38,7 @@ public class Cactus implements UseLocTrigger {
 				boolean fail = Formulae.cutCacti();
 				if (fail) {
 					player.message("You make a mistake and fail to fill your waterskin.");
-					player.incExp(Skills.WOODCUT, 4, true);
+					player.incExp(getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING), 4, true);
 					player.getCarriedItems().getInventory().add(new Item(s, 1));
 					return;
 				}
@@ -57,7 +58,7 @@ public class Cactus implements UseLocTrigger {
 
 				// Remove healthy cacti
 				player.getWorld().unregisterGameObject(object);
-				player.incExp(Skills.WOODCUT, 100, true); // Woodcutting XP
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING), 100, true); // Woodcutting XP
 
 				// Swap cacti back after 30 seconds.
 				player.getWorld().getServer().getGameEventHandler().add(

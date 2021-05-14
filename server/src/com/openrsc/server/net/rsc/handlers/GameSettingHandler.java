@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
@@ -88,13 +89,18 @@ public final class GameSettingHandler implements PayloadProcessor<GameSettingStr
 		}
 
 		if (player.getClientVersion() <= 235) {
-			// setting 1 is unused yet, refers to player killer
 			if (idx == 0) { // Camera Mode Auto
-				player.getSettings().setGameSetting(0, payload.cameraModeAuto == 1);
+				player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_AUTO_CAMERA, payload.cameraModeAuto == 1);
+			} else if (idx == 1) { // 1: Change in PkMode
+				int changesLeft = player.getPkChanges();
+				if (changesLeft > 0) {
+					player.setPkMode(payload.playerKiller);
+					player.setPkChanges(changesLeft - 1);
+				}
 			} else if (idx == 2) { // 2: Number of Mouse Buttons
-				player.getSettings().setGameSetting(1, payload.mouseButtonOne == 1);
+				player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_MOUSE_BUTTONS, payload.mouseButtonOne == 1);
 			} else if (idx == 3) { // 3: Sound Enabled
-				player.getSettings().setGameSetting(2, payload.soundDisabled == 1);
+				player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_SOUND_EFFECTS, payload.soundDisabled == 1);
 			}
 		} else {
 			player.getSettings().setGameSetting(idx, value == 1);

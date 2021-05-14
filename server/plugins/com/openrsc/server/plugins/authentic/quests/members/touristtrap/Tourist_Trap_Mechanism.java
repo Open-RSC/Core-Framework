@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members.touristtrap;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -17,6 +17,7 @@ import com.openrsc.server.util.rsc.Formulae;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, OpLocTrigger, UseLocTrigger, UseInvTrigger, TakeObjTrigger,
 	DropObjTrigger, TalkNpcTrigger {
@@ -184,7 +185,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 					player.message("You need a hammer to work anything on the anvil.");
 					return;
 				}
-				if (getCurrentLevel(player, Skills.SMITHING) < 20) {
+				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.SMITHING)) < 20) {
 					player.message("You need level 20 in smithing before you can attempt this.");
 					return;
 				}
@@ -195,7 +196,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				delay(2);
 				mes("And after a long time of careful work.");
 				delay(2);
-				if (protoDartSmithSuccessful(player.getSkills().getLevel(Skills.SMITHING))) {
+				if (protoDartSmithSuccessful(player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.SMITHING)))) {
 					mes("You finally manage to forge a sharp, pointed...");
 					delay(2);
 					mes("... dart tip...");
@@ -220,7 +221,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				player.message("You need at least ten feathers to make this item.");
 				return;
 			}
-			if (getCurrentLevel(player, Skills.FLETCHING) < 10) {
+			if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.FLETCHING)) < 10) {
 				player.message("You need a fletching level of at least 10 to complete this.");
 				return;
 			}
@@ -229,13 +230,13 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			mes("Following the plans is tricky, but you persevere.");
 			delay(2);
 			player.getCarriedItems().remove(new Item(ItemId.FEATHER.id(), 10));
-			if (protoDartFletchSuccessful(player.getSkills().getLevel(Skills.FLETCHING))) {
+			if (protoDartFletchSuccessful(player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FLETCHING)))) {
 				mes("You succesfully attach the feathers to the dart tip.");
 				delay(2);
 				player.getCarriedItems().remove(new Item(ItemId.PROTOTYPE_DART_TIP.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.PROTOTYPE_THROWING_DART.id()));
 				//kosher: dependent on fletching level!
-				player.incExp(Skills.FLETCHING, getMaxLevel(player, Skills.FLETCHING) * 50, true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.FLETCHING), getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.FLETCHING)) * 50, true);
 			} else {
 				mes("An unlucky accident causes you to waste the feathers.");
 				delay(2);

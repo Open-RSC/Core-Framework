@@ -3,22 +3,24 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.triggers.UseNpcTrigger;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
+import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class FishingContest implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger,
@@ -45,12 +47,12 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 		player.updateQuestStage(Quests.FISHING_CONTEST, -1);
 		player.message("Well done you have completed the fishing competition quest");
 		player.message("@gre@You haved gained 1 quest point!");
-		int[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FISHING_CONTEST);
-		if (player.getSkills().getMaxStat(Skills.FISHING) <= 23) {
-			questData[Quests.MAPIDX_BASE] = 900;
+		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FISHING_CONTEST);
+		if (player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.FISHING)) <= 23) {
+			questData[Quests.MAPIDX_BASE] = Either.left(900);
 			incQuestReward(player, questData, true);
-		} else if (player.getSkills().getMaxStat(Skills.FISHING) >= 24) {
-			questData[Quests.MAPIDX_BASE] = 1700;
+		} else if (player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.FISHING)) >= 24) {
+			questData[Quests.MAPIDX_BASE] = Either.left(1700);
 			incQuestReward(player, questData, true);
 		}
 	}
@@ -600,7 +602,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				//cases: not enough level
 				//no bait
 				//else do catch
-				if (player.getSkills().getLevel(Skills.FISHING) < 10) {
+				if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FISHING)) < 10) {
 					player.message("You need at least level 10 fishing to lure these fish");
 				} else if (!player.getCarriedItems().hasCatalogID(ItemId.FISHING_ROD.id(), Optional.of(false))) {
 					// probably non-kosher
@@ -652,7 +654,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				//no rod
 				//no bait
 				//else do catch
-				if (player.getSkills().getLevel(Skills.FISHING) < 10) {
+				if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FISHING)) < 10) {
 					player.message("You need at least level 10 fishing to lure these fish");
 				} else if (!player.getCarriedItems().hasCatalogID(ItemId.FISHING_ROD.id(), Optional.of(false))) {
 					// probably non-kosher

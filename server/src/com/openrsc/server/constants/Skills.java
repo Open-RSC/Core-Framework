@@ -14,14 +14,16 @@ public class Skills {
 	//public final int MAXIMUM_EXP = -294967296; //= 4B // read from the config
 	public final int GLOBAL_LEVEL_LIMIT = 142;
 
-	public static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
+	/*public static final int ATTACK = 0, DEFENSE = 1, STRENGTH = 2, HITPOINTS = 3, HITS = 3, RANGED = 4, PRAYER = 5, MAGIC = 6,
 		COOKING = 7, WOODCUT = 8, FLETCHING = 9, FISHING = 10, FIREMAKING = 11, CRAFTING = 12, SMITHING = 13,
-		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, RUNECRAFT = 18, HARVESTING = 19, SLAYER = 20, PETMELEE = 21, PETMAGIC = 22, PETRANGED = 23;
+		MINING = 14, HERBLAW = 15, AGILITY = 16, THIEVING = 17, RUNECRAFT = 18, HARVESTING = 19, SLAYER = 20, PETMELEE = 21, PETMAGIC = 22, PETRANGED = 23;*/
 
 	public static final int CONTROLLED_MODE = 0, AGGRESSIVE_MODE = 1, ACCURATE_MODE = 2, DEFENSIVE_MODE = 3;
 
 	public HashMap<SkillDef.EXP_CURVE, int[]> experienceCurves;
 	public ArrayList<SkillDef> skills;
+	public HashMap<SkillsEnum, Integer> skillEnumToId = new HashMap<>();
+	public HashMap<Integer, SkillsEnum> skillIdToEnum = new HashMap<>();
 
 	//private final String[] SKILL_NAME;
 
@@ -93,6 +95,17 @@ public class Skills {
 				skills.add(new SkillDef("Harvesting", "Harvesting", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, skillIndex++));
 			}
 		}
+
+		int id;
+		for (SkillsEnum skill : SkillsEnum.values()) {
+			id = getSkillIndex(skill.toString());
+			skillEnumToId.put(skill, id);
+			if (id != -1) {
+				skillIdToEnum.put(id, skill);
+			} else {
+				skillIdToEnum.putIfAbsent(-1, SkillsEnum.NONE);
+			}
+		}
 	}
 
 	public String getSkillName(int skillIndex) {
@@ -112,6 +125,14 @@ public class Skills {
 			i++;
 		}
 		return -1;
+	}
+
+	public int getSkillId(SkillsEnum skillEnum) {
+		return skillEnumToId.getOrDefault(skillEnum, -1);
+	}
+
+	public SkillsEnum getSkillEnum(int skillId) {
+		return skillIdToEnum.getOrDefault(skillId, SkillsEnum.NONE);
 	}
 
 	public SkillDef getSkill(int index) {

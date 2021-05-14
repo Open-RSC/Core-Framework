@@ -1,6 +1,9 @@
 package com.openrsc.server.plugins.authentic.quests.members.legendsquest.npcs;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
@@ -9,11 +12,12 @@ import com.openrsc.server.plugins.triggers.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigger, KillNpcTrigger, PlayerRangeNpcTrigger, AttackNpcTrigger {
 
 	/**
-	 * @param p public method to use for third fight summons and nezichened
+	 * @param player public method to use for third fight summons and nezichened
 	 */
 	private static void summonViyeldiCompanions(Player player) {
 		Npc COMPANION = null;
@@ -62,7 +66,7 @@ public class LegendsQuestNezikchened implements SpellNpcTrigger, EscapeNpcTrigge
 					"I'll kill you myself !");
 				third_nezikchened.startCombat(player);
 				player.message("You feel a great sense of loss...");
-				player.getSkills().setLevel(Skills.PRAYER, (int) Math.ceil((double) player.getSkills().getLevel(Skills.PRAYER) / 4));
+				player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER), (int) Math.ceil((double) player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER)) / 4));
 				npcsay(player, third_nezikchened, "Your faith will help you little here.");
 			} else {
 				third_nezikchened.startCombat(player);

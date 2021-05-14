@@ -3,16 +3,18 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import java.util.Optional;
 
@@ -43,7 +45,15 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed the restless ghost quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_RESTLESS_GHOST), true);
+		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_RESTLESS_GHOST);
+		SkillsEnum prayerSkill;
+		if (player.getConfig().DIVIDED_GOOD_EVIL) {
+			prayerSkill = SkillsEnum.PRAYGOOD;
+		} else {
+			prayerSkill = SkillsEnum.PRAYER;
+		}
+		questData[1] = Either.right(prayerSkill);
+		incQuestReward(player, questData, true);
 		player.message("@gre@You haved gained 1 quest point!");
 
 	}

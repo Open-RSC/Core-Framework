@@ -874,7 +874,7 @@ public final class GameStateUpdater {
 						updatesAlt.add((char) appearance.getTopColour());
 						updatesAlt.add((char) appearance.getTrouserColour());
 						updatesAlt.add((char) appearance.getSkinColour());
-						updatesAlt.add((byte) 0); //is player attackable?
+						updatesAlt.add((byte) playerNeedingAppearanceUpdate.getPkMode()); //is player attackable?
 						updatesAlt.add((byte) playerNeedingAppearanceUpdate.getCombatLevel());
 						updatesAlt.add((byte) playerNeedingAppearanceUpdate.getSkullType());
 					} else {

@@ -2,19 +2,20 @@ package com.openrsc.server.plugins.custom.npcs;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class RobinBanks implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
-		if (getMaxLevel(player, Skills.THIEVING) >= 99) {
+		if (getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.THIEVING)) >= 99) {
 			if (config().WANT_CUSTOM_QUESTS) {
 				npcsay(player, n, "think you've mastered thieving?",
 					"you know nothing",

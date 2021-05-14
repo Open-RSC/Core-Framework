@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.quests.members.undergroundpass.mech
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -12,6 +12,7 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigger {
 
@@ -64,7 +65,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 		else if (item.getCatalogId() == ItemId.LIT_ARROW.id() && obj.getID() == OLD_BRIDGE) {
 			if (hasABow(player)) {
 				player.getCarriedItems().remove(new Item(ItemId.LIT_ARROW.id()));
-				if ((getCurrentLevel(player, Skills.RANGED) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
+				if ((getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.RANGED)) < 25) || (player.getY() != 3417 && player.getX() < 701)) {
 					mes("you fire the lit arrow at the bridge");
 					delay(3);
 					mes("it burns out and has little effect");

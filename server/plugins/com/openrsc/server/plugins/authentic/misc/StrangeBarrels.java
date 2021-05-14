@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.misc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
@@ -12,6 +12,7 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class StrangeBarrels implements OpLocTrigger {
 
@@ -166,7 +167,7 @@ public class StrangeBarrels implements OpLocTrigger {
 						delay(2);
 						int reduceAttack = DataConversions.random(1, 3);
 						player.message("Your attack is reduced by " + reduceAttack + ".");
-						player.getSkills().setLevel(Skills.ATTACK, player.getSkills().getLevel(Skills.ATTACK) - reduceAttack);
+						player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.ATTACK), player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.ATTACK)) - reduceAttack);
 					} else {
 						player.message("You were unable to smash this barrel open.");
 					}

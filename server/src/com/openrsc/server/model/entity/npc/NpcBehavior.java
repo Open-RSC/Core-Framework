@@ -2,7 +2,7 @@ package com.openrsc.server.model.entity.npc;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.event.rsc.impl.combat.AggroEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -16,6 +16,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 
 public class NpcBehavior {
@@ -215,7 +216,7 @@ public class NpcBehavior {
 			target = npc.getOpponent();
 
 			// Retreat if NPC hits remaining and > round 3
-			if (shouldRetreat(npc) && npc.getSkills().getLevel(Skills.HITS) > 0
+			if (shouldRetreat(npc) && npc.getSkills().getLevel(getSkillId(npc.getWorld(), SkillsEnum.HITS)) > 0
 				&& npc.getOpponent().getHitsMade() >= 3) {
 				retreat();
 			}
@@ -270,7 +271,7 @@ public class NpcBehavior {
 			//successful avoiding tackles gives agility xp
 			player.playerServerMessage(MessageType.QUEST, "You manage to push him away");
 			npcYell(player, npc, "grrrrr");
-			player.incExp(Skills.AGILITY, TACKLING_XP[DataConversions.random(0, 3)], true);
+			player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), TACKLING_XP[DataConversions.random(0, 3)], true);
 		} else {
 			if (!inArray(player.getAttribute("gnomeball_npc", -1), -1, 0) || player.getAttribute("throwing_ball_game", false)) {
 				// some other gnome beat here or player is shooting at goal
@@ -280,7 +281,7 @@ public class NpcBehavior {
 			player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
 			player.playerServerMessage(MessageType.QUEST, "he takes the ball...");
 			player.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
-			player.damage((int) (Math.ceil(player.getSkills().getLevel(Skills.HITS) * 0.05)));
+			player.damage((int) (Math.ceil(player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) * 0.05)));
 			say(player, "ouch");
 			npcYell(player, npc, "yeah");
 		}
@@ -422,7 +423,7 @@ public class NpcBehavior {
 	private boolean shouldRetreat(final Npc npc) {
 		if (!npc.getConfig().NPC_DONT_RETREAT) {
 			if (npc.getWorld().getServer().getConstants().getRetreats().npcData.containsKey(npc.getID())) {
-				return npc.getSkills().getLevel(Skills.HITS) <= npc.getWorld().getServer().getConstants().getRetreats().npcData.get(npc.getID());
+				return npc.getSkills().getLevel(getSkillId(npc.getWorld(), SkillsEnum.HITS)) <= npc.getWorld().getServer().getConstants().getRetreats().npcData.get(npc.getID());
 			}
 		}
 

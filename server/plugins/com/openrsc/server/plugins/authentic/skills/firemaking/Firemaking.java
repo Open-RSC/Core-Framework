@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.skills.firemaking;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.FiremakingDef;
 import com.openrsc.server.model.Point;
@@ -10,8 +10,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.region.TileValue;
-import com.openrsc.server.plugins.triggers.UseObjTrigger;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
+import com.openrsc.server.plugins.triggers.UseObjTrigger;
 import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -19,6 +19,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
@@ -71,7 +72,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
+			repeat = Formulae.getRepeatTimes(player, getSkillId(player.getWorld(), SkillsEnum.FIREMAKING));
 		}
 
 		startbatch(repeat);
@@ -83,7 +84,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		thinkbubble(new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
 		delay(3);
-		if (Formulae.lightLogs(player.getSkills().getLevel(Skills.FIREMAKING))) {
+		if (Formulae.lightLogs(player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING)))) {
 			if (!gItem.isRemoved()) {
 				player.playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
 
@@ -105,7 +106,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 						}
 					}
 				);
-				player.incExp(Skills.FIREMAKING, getExp(player.getSkills().getMaxStat(Skills.FIREMAKING), 25), true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING), getExp(player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING)), 25), true);
 			}
 
 			if (config().BATCH_PROGRESSION) {
@@ -153,7 +154,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			return;
 		}
 
-		if (player.getSkills().getLevel(Skills.FIREMAKING) < def.getRequiredLevel()) {
+		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING)) < def.getRequiredLevel()) {
 			player.message("You need at least " + def.getRequiredLevel() + " firemaking to light these logs");
 			return;
 		}
@@ -165,7 +166,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, Skills.FIREMAKING);
+			repeat = Formulae.getRepeatTimes(player, getSkillId(player.getWorld(), SkillsEnum.FIREMAKING));
 		}
 
 		startbatch(repeat);
@@ -176,7 +177,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		thinkbubble(new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
 		delay(3);
-		if (Formulae.lightCustomLogs(def, player.getSkills().getLevel(Skills.FIREMAKING))) {
+		if (Formulae.lightCustomLogs(def, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING)))) {
 			if (!gItem.isRemoved()) {
 				player.playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
 				player.getWorld().unregisterItem(gItem);
@@ -200,7 +201,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 						}
 					});
 
-				player.incExp(Skills.FIREMAKING, def.getExp(), true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING), def.getExp(), true);
 				if (config().BATCH_PROGRESSION) {
 					firemakingWalk(player);
 				}

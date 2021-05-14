@@ -1,6 +1,9 @@
 package com.openrsc.server.plugins.authentic.minigames.gnomebar;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Minigames;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -14,6 +17,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger, DropObjTrigger {
 
@@ -179,7 +183,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 				player.getCarriedItems().remove(new Item(ItemId.PINEAPPLE_PUNCH.id()));
 				player.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_SATURDAY.id()));
 				player.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
-				player.incExp(Skills.COOKING, 360, true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.COOKING), 360, true);
 				npcsay(player, n, "that's blurberry-tastic");
 				player.message("blurberry gives you 100 gold coins");
 				give(player, ItemId.COINS.id(), 100);
@@ -198,7 +202,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 					player.getCarriedItems().remove(new Item(ItemId.WIZARD_BLIZZARD.id()));
 				}
 				player.getCarriedItems().remove(new Item(ItemId.SGG.id()));
-				player.incExp(Skills.COOKING, 360, true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.COOKING), 360, true);
 				npcsay(player, n, "that's excellent, here's your share of the profit");
 				player.message("blurberry gives you 150 gold coins");
 				give(player, ItemId.COINS.id(), 150);
@@ -224,7 +228,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 				for (int i = 0; i < 2; i++) {
 					player.getCarriedItems().remove(new Item(ItemId.FRUIT_BLAST.id()));
 				}
-				player.incExp(Skills.COOKING, 540, true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.COOKING), 540, true);
 				npcsay(player, n, "wow fantastic, here's your share of the profit");
 				player.message("blurberry gives you 179 gold coins");
 				give(player, ItemId.COINS.id(), 179);
@@ -245,7 +249,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 					player.getCarriedItems().remove(new Item(ItemId.SGG.id()));
 				}
 				player.getCarriedItems().remove(new Item(ItemId.BLURBERRY_SPECIAL.id()));
-				player.incExp(Skills.COOKING, 360, true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.COOKING), 360, true);
 				npcsay(player, n, "great, here's your share of the profit");
 				player.message("blurberry gives you 120 gold coins");
 				give(player, ItemId.COINS.id(), 120);
@@ -261,7 +265,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 				say(player, n, "here you go, one fruit blast");
 				player.message("you give blurberry one fruit blast");
 				player.getCarriedItems().remove(new Item(ItemId.FRUIT_BLAST.id()));
-				player.incExp(Skills.COOKING, 240, true);
+				player.incExp(getSkillId(player.getWorld(), SkillsEnum.COOKING), 240, true);
 				npcsay(player, n, "that's frutty-licious");
 				player.message("blurberry gives you 10 gold coins");
 				give(player, ItemId.COINS.id(), 10);
@@ -442,7 +446,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 		mes("you give blurberry the drunk dragon");
 		delay(3);
 		player.getCarriedItems().remove(new Item(ItemId.DRUNK_DRAGON.id()));
-		player.incExp(Skills.COOKING, 160, true);
+		player.incExp(getSkillId(player.getWorld(), SkillsEnum.COOKING), 160, true);
 		player.message("he takes a sip");
 		npcsay(player, npc, "woooo, that's some good stuff",
 			"i can sell that",
@@ -467,7 +471,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 		mes("you give blurberry the short green guy");
 		delay(3);
 		player.getCarriedItems().remove(new Item(ItemId.SGG.id()));
-		player.incExp(Skills.COOKING, 160, true);
+		player.incExp(getSkillId(player.getWorld(), SkillsEnum.COOKING), 160, true);
 		player.message("he takes a sip");
 		npcsay(player, npc, "hmmm, not bad, not bad at all",
 			"i can sell that",
@@ -494,7 +498,7 @@ public class GnomeBar implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger
 		mes("you give blurberry the cocktail");
 		delay(3);
 		player.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_SATURDAY.id()));
-		player.incExp(Skills.COOKING, 160, true);
+		player.incExp(getSkillId(player.getWorld(), SkillsEnum.COOKING), 160, true);
 		player.message("he takes a sip");
 		npcsay(player, npc, "that's blurberry-tastic",
 			"you're quite a bartender",

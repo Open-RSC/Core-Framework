@@ -1,11 +1,13 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
-import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.util.rsc.MessageType;
+
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class ShadowSpiderPrayerDrain implements OnCombatStartScript {
 
@@ -20,10 +22,10 @@ public class ShadowSpiderPrayerDrain implements OnCombatStartScript {
 		/* Double down from your current prayer rate. */
 		/* Drains even is player was the attacker */
 		if (attacker.isNpc() && defender.isPlayer()) {
-			defender.getSkills().setLevel(Skills.PRAYER, (int) Math.round((double) defender.getSkills().getLevel(Skills.PRAYER) / 2));
+			defender.getSkills().setLevel(getSkillId(defender.getWorld(), SkillsEnum.PRAYER), (int) Math.round((double) defender.getSkills().getLevel(getSkillId(defender.getWorld(), SkillsEnum.PRAYER)) / 2));
 			((Player) defender).playerServerMessage(MessageType.QUEST, "The spider drains your prayer");
 		} else if (attacker.isPlayer()) {
-			attacker.getSkills().setLevel(Skills.PRAYER, (int) Math.round((double) attacker.getSkills().getLevel(Skills.PRAYER) / 2));
+			attacker.getSkills().setLevel(getSkillId(attacker.getWorld(), SkillsEnum.PRAYER), (int) Math.round((double) attacker.getSkills().getLevel(getSkillId(attacker.getWorld(), SkillsEnum.PRAYER)) / 2));
 			((Player) attacker).playerServerMessage(MessageType.QUEST, "The spider drains your prayer");
 		}
 

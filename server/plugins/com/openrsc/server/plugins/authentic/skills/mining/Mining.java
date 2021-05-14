@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.skills.mining;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skills;
+import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.content.SkillCapes;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
@@ -16,11 +16,12 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
+import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public final class Mining implements OpLocTrigger {
 
 	public static int getAxe(Player player) {
-		int lvl = player.getSkills().getLevel(Skills.MINING);
+		int lvl = player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.MINING));
 		for (int i = 0; i < Formulae.miningAxeIDs.length; i++) {
 			if (player.getCarriedItems().getEquipment().hasCatalogID(Formulae.miningAxeIDs[i])) {
 				return Formulae.miningAxeIDs[i];
@@ -39,7 +40,7 @@ public final class Mining implements OpLocTrigger {
 		if (object.getID() == 269) {
 			if (command.equalsIgnoreCase("mine")) {
 				if (player.getCarriedItems().hasCatalogID(getAxe(player), Optional.of(false))) {
-					if (getCurrentLevel(player, Skills.MINING) >= 50) {
+					if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.MINING)) >= 50) {
 						player.message("you manage to dig a way through the rockslide");
 						if (player.getX() <= 425) {
 							player.teleport(428, 438);
@@ -73,7 +74,7 @@ public final class Mining implements OpLocTrigger {
 						player.playerServerMessage(MessageType.QUEST, "You need a pickaxe to mine the rock");
 						return;
 					}
-					if (getCurrentLevel(player, Skills.MINING) < 40) {
+					if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.MINING)) < 40) {
 						player.playerServerMessage(MessageType.QUEST, "You need a mining level of 40 to mine this crystal out");
 						return;
 					}
@@ -112,8 +113,8 @@ public final class Mining implements OpLocTrigger {
 		final ObjectMiningDef def = player.getWorld().getServer().getEntityHandler().getObjectMiningDef(rock.getID());
 		final int axeId = getAxe(player);
 		int repeat = 1;
-		final int mineLvl = player.getSkills().getLevel(Skills.MINING);
-		final int mineXP = player.getSkills().getExperience(Skills.MINING);
+		final int mineLvl = player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.MINING));
+		final int mineXP = player.getSkills().getExperience(getSkillId(player.getWorld(), SkillsEnum.MINING));
 		int reqlvl = 1;
 		switch (ItemId.getById(axeId)) {
 			case IRON_PICKAXE:
@@ -185,7 +186,7 @@ public final class Mining implements OpLocTrigger {
 		}
 
 		if(config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, Skills.MINING);
+			repeat = Formulae.getRepeatTimes(player, getSkillId(player.getWorld(), SkillsEnum.MINING));
 		}
 
 		startbatch(repeat);
@@ -208,7 +209,7 @@ public final class Mining implements OpLocTrigger {
 				return;
 			}
 		}
-		if (getOre(def, player.getSkills().getLevel(Skills.MINING), axeId) && mineLvl >= def.getReqLevel()) {
+		if (getOre(def, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.MINING)), axeId) && mineLvl >= def.getReqLevel()) {
 			if (DataConversions.random(1, 200) <= (player.getCarriedItems().getEquipment().hasEquipped(ItemId.CHARGED_DRAGONSTONE_AMULET.id()) ? 2 : 1)) {
 				player.playSound("foundgem");
 				Item gem = new Item(getGem(), 1);
@@ -223,12 +224,12 @@ public final class Mining implements OpLocTrigger {
 					thinkbubble(new Item(ItemId.MINING_CAPE.id(), 1));
 					give(player, ore.getCatalogId(), 1);
 					player.playerServerMessage(MessageType.QUEST, "You manage to obtain two " + ore.getDef(player.getWorld()).getName().toLowerCase());
-					player.incExp(Skills.MINING, def.getExp() * 2, true);
+					player.incExp(getSkillId(player.getWorld(), SkillsEnum.MINING), def.getExp() * 2, true);
 					give(player, ore.getCatalogId(), 1);
 				} else {
 					player.getCarriedItems().getInventory().add(ore);
 					player.playerServerMessage(MessageType.QUEST, "You manage to obtain some " + ore.getDef(player.getWorld()).getName().toLowerCase());
-					player.incExp(Skills.MINING, def.getExp(), true);
+					player.incExp(getSkillId(player.getWorld(), SkillsEnum.MINING), def.getExp(), true);
 				}
 				if (rock.getID() == 496 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 51) {
 					player.getCache().set("tutorial", 52);
