@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.constants.Skills.CRAFTING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class MasterCrafter implements TalkNpcTrigger {
@@ -21,7 +20,7 @@ public class MasterCrafter implements TalkNpcTrigger {
 				"Accomplished crafters from all over the land come here",
 				"All to use our top notch workshops");
 			if (config().WANT_CUSTOM_SPRITES
-				&& getMaxLevel(player, Skill.of(CRAFTING).id()) >= 99) {
+				&& getMaxLevel(player, Skill.CRAFTING.id()) >= 99) {
 
 				if (multi(player, n, "That's a nice cape you've got on there",
 					"Thank you. Have a nice day") == 0) {

@@ -1,6 +1,9 @@
 package com.openrsc.server.plugins.authentic.quests.members;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -14,7 +17,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
@@ -44,7 +46,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 		player.message("@gre@You haved gained 2 quest points!");
 		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_HOLY_GRAIL);
 		//keep order kosher
-		Either<Integer, String>[] skillIDs = new Either[]{Either.right(PRAYER), Either.right(DEFENSE)};
+		Either<Integer, String>[] skillIDs = new Either[]{Either.right(Skill.PRAYER.name()), Either.right(Skill.DEFENSE.name())};
 		//1000 for prayer, 1200 for defense
 		Either<Integer, String>[] amounts = new Either[]{Either.left(1000), Either.left(1200)};
 		for (int i = 0; i < skillIDs.length; i++) {
@@ -392,7 +394,7 @@ public class TheHolyGrail implements QuestInterface, TalkNpcTrigger,
 					npc.remove();
 				} else {
 					npc.teleport(413, 11);
-					npc.getSkills().setLevel(Skill.of(HITS).id(), npc.getDef().hits);
+					npc.getSkills().setLevel(Skill.HITS.id(), npc.getDef().hits);
 					npcsay(player, otherTitan, "You can't defeat me little man",
 						"I'm invincible!");
 					npc.killed = false;

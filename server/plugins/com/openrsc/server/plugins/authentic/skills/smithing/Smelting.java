@@ -18,7 +18,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.SMITHING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Smelting implements UseLocTrigger {
@@ -59,7 +58,7 @@ public class Smelting implements UseLocTrigger {
 				player.message("Nothing interesting happens");
 				return;
 			}
-			if (getCurrentLevel(player, Skill.of(SMITHING).id()) < 90) {
+			if (getCurrentLevel(player, Skill.SMITHING.id()) < 90) {
 				player.message("90 smithing is required to use this forge");
 				return;
 			}
@@ -73,7 +72,7 @@ public class Smelting implements UseLocTrigger {
 	}
 
 	private void handleCannonBallSmelting(Player player) {
-		if (getCurrentLevel(player, Skill.of(SMITHING).id()) < 30) {
+		if (getCurrentLevel(player, Skill.SMITHING.id()) < 30) {
 			player.message("You need at least level 30 smithing to make cannon balls");
 			return;
 		}
@@ -120,7 +119,7 @@ public class Smelting implements UseLocTrigger {
 				return;
 			}
 		}
-		player.incExp(Skill.of(SMITHING).id(), 100, true);
+		player.incExp(Skill.SMITHING.id(), 100, true);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id()));
 		if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.DWARVEN_RING.id())) {
 			player.getCarriedItems().getInventory().add(new Item(ItemId.MULTI_CANNON_BALL.id(), config().DWARVEN_RING_BONUS));
@@ -161,7 +160,7 @@ public class Smelting implements UseLocTrigger {
 		Smelt smelt;
 		CarriedItems ci = player.getCarriedItems();
 		if (item.getCatalogId() == Smelt.IRON_ORE.getID()
-				&& getCurrentLevel(player, Skill.of(SMITHING).id()) >= 30
+				&& getCurrentLevel(player, Skill.SMITHING.id()) >= 30
 				&& ci.getInventory().countId(Smelt.COAL.getID()) >= 2) {
 			String coalChange = player.getWorld().getServer().getEntityHandler().getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
 			smelt = Smelt.valueOf(coalChange);
@@ -193,7 +192,7 @@ public class Smelting implements UseLocTrigger {
 				return;
 			}
 		}
-		if (getCurrentLevel(player, Skill.of(SMITHING).id()) < smelt.getRequiredLevel()) {
+		if (getCurrentLevel(player, Skill.SMITHING.id()) < smelt.getRequiredLevel()) {
 			String smeltOrWork = smelt.getSmeltBarId() == ItemId.SILVER_BAR.id()
 				|| smelt.getSmeltBarId() == ItemId.GOLD_BAR.id()
 				|| smelt.getSmeltBarId() == ItemId.GOLD_BAR_FAMILYCREST.id() ? "work " : "smelt ";
@@ -226,7 +225,7 @@ public class Smelting implements UseLocTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			// repeat = Formulae.getRepeatTimes(player, Skill.of(SMITHING).id();
+			// repeat = Formulae.getRepeatTimes(player, Skill.SMITHING.id();
 			int carriedOre = player.getCarriedItems().getInventory().countId(
 				smelt.getID(), Optional.of(false));
 			if (smelt.getReqOreId() == -1) {
@@ -263,7 +262,7 @@ public class Smelting implements UseLocTrigger {
 				return;
 			}
 		}
-		if (getCurrentLevel(player, Skill.of(SMITHING).id()) < smelt.getRequiredLevel()) {
+		if (getCurrentLevel(player, Skill.SMITHING.id()) < smelt.getRequiredLevel()) {
 			String smeltOrWork = smelt.getSmeltBarId() == ItemId.SILVER_BAR.id() || smelt.getSmeltBarId() == ItemId.GOLD_BAR.id()
 				|| smelt.getSmeltBarId() == ItemId.GOLD_BAR_FAMILYCREST.id() ? "work " : "smelt ";
 			player.playerServerMessage(MessageType.QUEST,
@@ -358,9 +357,9 @@ public class Smelting implements UseLocTrigger {
 
 				/** Gauntlets of Goldsmithing provide an additional 23 experience when smelting gold ores **/
 				if (ci.getEquipment().hasEquipped(ItemId.GAUNTLETS_OF_GOLDSMITHING.id()) && new Item(smelt.getSmeltBarId()).getCatalogId() == ItemId.GOLD_BAR.id()) {
-					player.incExp(Skill.of(SMITHING).id(), smelt.getXp() + 45, true);
+					player.incExp(Skill.SMITHING.id(), smelt.getXp() + 45, true);
 				} else {
-					player.incExp(Skill.of(SMITHING).id(), smelt.getXp(), true);
+					player.incExp(Skill.SMITHING.id(), smelt.getXp(), true);
 				}
 			}
 
@@ -368,7 +367,7 @@ public class Smelting implements UseLocTrigger {
 			updatebatch();
 			if (!ifinterrupted() && !isbatchcomplete()) {
 				if (item.getCatalogId() == Smelt.IRON_ORE.getID()
-					&& getCurrentLevel(player, Skill.of(SMITHING).id()) >= 30
+					&& getCurrentLevel(player, Skill.SMITHING.id()) >= 30
 					&& ci.getInventory().countId(Smelt.COAL.getID()) >= 2) {
 					String coalChange = player.getWorld().getServer().getEntityHandler().getItemDef(Smelt.COAL.getID()).getName().toUpperCase();
 					smelt = Smelt.valueOf(coalChange);

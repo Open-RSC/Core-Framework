@@ -15,9 +15,6 @@ import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static com.openrsc.server.constants.Skills.HITS;
-import static com.openrsc.server.constants.Skills.PRAYER;
-
 
 public class Skills {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -112,11 +109,11 @@ public class Skills {
 			levels[skill] = 0;
 		}
 		sendUpdate(skill);
-		if (skill != Skill.of(PRAYER).id()
-			&& skill != Skill.of(HITS).id()
+		if (skill != Skill.PRAYER.id()
+			&& skill != Skill.HITS.id()
 			&& !fromRestoreEvent) {
 			mob.tryResyncStatEvent();
-		} else if (skill == Skill.of(PRAYER).id()
+		} else if (skill == Skill.PRAYER.id()
 			&& mob.isPlayer()) {
 			((Player)mob).setPrayerStatePoints(level * 120);
 		}
@@ -334,7 +331,7 @@ public class Skills {
 		levels[skill] = getMaxStat(skill);
 		if (sendUpdate)
 			sendUpdate(skill);
-		if (skill == Skill.of(PRAYER).id() && mob.isPlayer()) {
+		if (skill == Skill.PRAYER.id() && mob.isPlayer()) {
 			((Player) getMob()).setPrayerStatePoints(levels[skill] * 120);
 		}
 	}
@@ -404,7 +401,7 @@ public class Skills {
 			levs[i] = new PlayerSkills();
 			levs[i].skillId = ex[i].skillId;
 			// minimum hits was 10
-			if (ex[i].skillId == Skill.of(HITS).id()
+			if (ex[i].skillId == Skill.HITS.id()
 				&& ex[i].experience >= 0 && ex[i].experience < 4616) {
 				levs[i].skillLevel = 10;
 			}

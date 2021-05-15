@@ -11,7 +11,6 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class SeersBartender implements
@@ -125,7 +124,7 @@ public final class SeersBartender implements
 	}
 
 	private void drinkAle(Player player) {
-		int[] skillIDs = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(WOODCUTTING).id(), Skill.of(FLETCHING).id(), Skill.of(FIREMAKING).id()};
+		int[] skillIDs = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.WOODCUTTING.id(), Skill.FLETCHING.id(), Skill.FIREMAKING.id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(player, skillIDs[i]);
 		}

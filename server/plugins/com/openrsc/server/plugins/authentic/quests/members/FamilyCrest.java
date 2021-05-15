@@ -16,7 +16,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
@@ -819,7 +818,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 				}
 			}
 			if (regenerate) {
-				npc.getSkills().setLevel(Skill.of(HITS).id(), npc.getDef().hits);
+				npc.getSkills().setLevel(Skill.HITS.id(), npc.getDef().hits);
 				player.message("Chronozon regenerates");
 				npc.killed = false;
 			} else {

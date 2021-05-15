@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.custom.misc.FishingCape;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.constants.Skills.FISHING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class MasterFisher implements TalkNpcTrigger {
@@ -22,14 +21,14 @@ public class MasterFisher implements TalkNpcTrigger {
 	@Override
 	public void onTalkNpc(Player player, Npc n) {
 		if (config().WANT_MISSING_GUILD_GREETINGS && n.getID() == NpcId.MASTER_FISHER.id()) {
-			if (getCurrentLevel(player, Skill.of(FISHING).id()) < 68) {
+			if (getCurrentLevel(player, Skill.FISHING.id()) < 68) {
 				npcsay(player, n, "Hello only the top fishers are allowed in here");
 				player.message("You need a fishing level of 68 to enter");
 			} else {
 				npcsay(player, n, "Hello, welcome to the fishing guild",
 					"Please feel free to make use of any of our facilities");
 				if (config().WANT_CUSTOM_SPRITES
-					&& getMaxLevel(player, Skill.of(FISHING).id()) >= 99) {
+					&& getMaxLevel(player, Skill.FISHING.id()) >= 99) {
 
 					if (multi(player, n, "I like your cape", "Thank you") == 0) {
 						npcsay(player, n, "Huh?", "Oh it's just me Fishing cape",

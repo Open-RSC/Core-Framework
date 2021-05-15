@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LostCity implements QuestInterface, TalkNpcTrigger,
@@ -100,7 +99,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 				break;
 			case 245:
 				if (atQuestStages(player, this, 4, 3, 2, -1)) {
-					if (getCurrentLevel(player, Skill.of(WOODCUTTING).id()) < 36) {
+					if (getCurrentLevel(player, Skill.WOODCUTTING.id()) < 36) {
 						mes("You are not a high enough woodcutting level to chop down this tree");
 						delay(3);
 						mes("You need a woodcutting level of 36");
@@ -326,12 +325,12 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 				delay(2);
 				teleport(player, 427, 3380);
 				/* What is the point of this? */
-				if (getCurrentLevel(player, Skill.of(PRAYER).id()) <= 3)
-					setCurrentLevel(player, Skill.of(PRAYER).id(), 1);
-				else if (getCurrentLevel(player, Skill.of(PRAYER).id()) <= 39)
-					setCurrentLevel(player, Skill.of(PRAYER).id(), 2);
+				if (getCurrentLevel(player, Skill.PRAYER.id()) <= 3)
+					setCurrentLevel(player, Skill.PRAYER.id(), 1);
+				else if (getCurrentLevel(player, Skill.PRAYER.id()) <= 39)
+					setCurrentLevel(player, Skill.PRAYER.id(), 2);
 				else
-					setCurrentLevel(player, Skill.of(PRAYER).id(), 3);
+					setCurrentLevel(player, Skill.PRAYER.id(), 3);
 			}
 		}
 	}
@@ -417,7 +416,7 @@ public class LostCity implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (player.getCarriedItems().hasCatalogID(ItemId.DRAMEN_BRANCH.id(), Optional.of(false))) {
-			if (getCurrentLevel(player, Skill.of(CRAFTING).id()) < 31) {
+			if (getCurrentLevel(player, Skill.CRAFTING.id()) < 31) {
 				mes("You are not a high enough crafting level to craft this staff");
 				delay(3);
 				mes("You need a crafting level of 31");

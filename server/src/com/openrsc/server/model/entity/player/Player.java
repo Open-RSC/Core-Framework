@@ -51,8 +51,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.openrsc.server.constants.Skills.*;
-
 /**
  * A single player.
  */
@@ -753,13 +751,13 @@ public final class Player extends Mob {
 
 	public int combatStyleToIndex() {
 		if (getCombatStyle() == Skills.AGGRESSIVE_MODE) {
-			return Skill.of(STRENGTH).id();
+			return Skill.STRENGTH.id();
 		}
 		if (getCombatStyle() == Skills.ACCURATE_MODE) {
-			return Skill.of(ATTACK).id();
+			return Skill.ATTACK.id();
 		}
 		if (getCombatStyle() == Skills.DEFENSIVE_MODE) {
-			return Skill.of(DEFENSE).id();
+			return Skill.DEFENSE.id();
 		}
 		return -1;
 	}
@@ -860,17 +858,17 @@ public final class Player extends Mob {
 				);
 			if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 				optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-				optionalSkillIndex = Optional.of(Skill.of(AGILITY).id());
+				optionalSkillIndex = Optional.of(Skill.AGILITY.id());
 			}
 			//staff of iban (usable)
 			if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 				optionalLevel = Optional.of(requiredLevel);
-				optionalSkillIndex = Optional.of(Skill.of(AGILITY).id());
+				optionalSkillIndex = Optional.of(Skill.AGILITY.id());
 			}
 			//battlestaves (incl. enchanted version)
 			if (itemLower.contains("battlestaff")) {
 				optionalLevel = Optional.of(requiredLevel);
-				optionalSkillIndex = Optional.of(Skill.of(AGILITY).id());
+				optionalSkillIndex = Optional.of(Skill.AGILITY.id());
 			}
 
 			if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
@@ -934,17 +932,17 @@ public final class Player extends Mob {
 					);
 				if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 					optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-					optionalSkillIndex = Optional.of(Skill.of(ATTACK).id());
+					optionalSkillIndex = Optional.of(Skill.ATTACK.id());
 				}
 				//staff of iban (usable)
 				if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 					optionalLevel = Optional.of(requiredLevel);
-					optionalSkillIndex = Optional.of(Skill.of(ATTACK).id());
+					optionalSkillIndex = Optional.of(Skill.ATTACK.id());
 				}
 				//battlestaves (incl. enchanted version)
 				if (itemLower.contains("battlestaff")) {
 					optionalLevel = Optional.of(requiredLevel);
-					optionalSkillIndex = Optional.of(Skill.of(ATTACK).id());
+					optionalSkillIndex = Optional.of(Skill.ATTACK.id());
 				}
 
 				if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
@@ -1490,9 +1488,9 @@ public final class Player extends Mob {
 		// Check if the skill is a non-combat skill and
 		// apply the non-combat skilling rate.
 		int[] skillIDs = {
-			Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(STRENGTH).id(), Skill.of(HITS).id(),
-			Skill.of(RANGED).id(), Skill.of(PRAYGOOD).id(), Skill.of(PRAYEVIL).id(), Skill.of(PRAYER).id(),
-			Skill.of(GOODMAGIC).id(), Skill.of(EVILMAGIC).id(), Skill.of(MAGIC).id()
+			Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id(), Skill.HITS.id(),
+			Skill.RANGED.id(), Skill.PRAYGOOD.id(), Skill.PRAYEVIL.id(), Skill.PRAYER.id(),
+			Skill.GOODMAGIC.id(), Skill.EVILMAGIC.id(), Skill.MAGIC.id()
 		};
 		if (!DataConversions.inArray(skillIDs, skill)) {
 			multiplier = getConfig().SKILLING_EXP_RATE;
@@ -1564,7 +1562,7 @@ public final class Player extends Mob {
 
 				// Give fatigue for non-melee skills (all skills after skill ID 4)
 				int[] skillIDs = {
-					Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(STRENGTH).id(), Skill.of(HITS).id()
+					Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id(), Skill.HITS.id()
 				};
 				if (!DataConversions.inArray(skillIDs, skill)) {
 					fatigue += skillXP * 8;
@@ -1583,7 +1581,7 @@ public final class Player extends Mob {
 		// Player cannot gain more than 200 fishing xp on tutorial island
 		if (getLocation().onTutorialIsland()) {
 			if (getSkills().getExperience(skill) + skillXP > 200) {
-				if (skill == Skill.of(FISHING).id()) {
+				if (skill == Skill.FISHING.id()) {
 					getSkills().setExperience(skill, 200);
 				}
 			}
@@ -1842,7 +1840,7 @@ public final class Player extends Mob {
 				poisonEvent.setPoisonPower(getCache().getInt("poisoned"));
 			}
 			if (!getConfig().LACKS_PRAYERS) {
-				prayerStatePoints = getSkills().getLevel(Skill.of(PRAYER).id()) * 120;
+				prayerStatePoints = getSkills().getLevel(Skill.PRAYER.id()) * 120;
 				prayerDrainEvent = new PrayerDrainEvent(getWorld(), this, Integer.MAX_VALUE);
 				getWorld().getServer().getGameEventHandler().add(prayerDrainEvent);
 			}
@@ -3389,7 +3387,7 @@ public final class Player extends Mob {
 		if (this.isPlayer() && getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_LIFE.id())
 			&& (!this.getLocation().inWilderness()
 			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
-			if (((float) this.getSkills().getLevel(Skill.of(HITS).id())) / ((float) this.getSkills().getMaxStat(Skill.of(HITS).id())) <= 0.1f) {
+			if (((float) this.getSkills().getLevel(Skill.HITS.id())) / ((float) this.getSkills().getMaxStat(Skill.HITS.id())) <= 0.1f) {
 				this.resetCombatEvent();
 				this.resetRange();
 				this.resetAll();

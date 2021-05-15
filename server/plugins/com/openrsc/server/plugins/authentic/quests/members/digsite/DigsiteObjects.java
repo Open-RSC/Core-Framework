@@ -16,7 +16,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.MINING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
@@ -133,7 +132,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 			}
 
 			int[] TRAY_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.IRON_DAGGER.id(), ItemId.BROKEN_ARROW.id(), ItemId.BROKEN_GLASS.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.COINS.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
-			player.incExp(Skill.of(MINING).id(), 4, true);
+			player.incExp(Skill.MINING.id(), 4, true);
 			mes("You sift through the earth in the tray");
 			delay(3);
 			int randomize = DataConversions.random(0, (TRAY_ITEMS.length - 1));

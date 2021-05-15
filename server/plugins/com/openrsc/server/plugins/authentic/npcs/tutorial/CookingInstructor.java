@@ -7,7 +7,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class CookingInstructor implements TalkNpcTrigger {
@@ -57,7 +56,7 @@ public class CookingInstructor implements TalkNpcTrigger {
 				"If the number on the left is lower eat some food to be healed");
 			player.getCache().set("tutorial", 34);
 		} else if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") >= 34) {
-			if (player.getCarriedItems().hasCatalogID(ItemId.COOKEDMEAT.id()) && getCurrentLevel(player, Skill.of(HITS).id()) < 10) {
+			if (player.getCarriedItems().hasCatalogID(ItemId.COOKEDMEAT.id()) && getCurrentLevel(player, Skill.HITS.id()) < 10) {
 				npcsay(player, n, "to eat the food left click on it in your inventory");
 			} else {
 				npcsay(player, n, "There are many other sorts of food you can cook",

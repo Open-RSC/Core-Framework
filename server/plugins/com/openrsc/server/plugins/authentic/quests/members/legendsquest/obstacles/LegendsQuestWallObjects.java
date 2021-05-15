@@ -17,8 +17,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.AGILITY;
-import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger {
@@ -102,7 +100,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 			}
 		}
 		else if (obj.getID() == RUINED_WALL) {
-			if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 50) {
+			if (getCurrentLevel(player, Skill.AGILITY.id()) < 50) {
 				player.message("You need an agility level of 50 to jump this wall");
 				return;
 			}
@@ -141,7 +139,7 @@ public class LegendsQuestWallObjects implements OpBoundTrigger, UseBoundTrigger 
 					if (DataConversions.random(0, 9) <= 3) {
 						mes("The heat is so intense that it burns you.");
 						delay(2);
-						player.damage((int) Math.ceil((double) player.getSkills().getLevel(Skill.of(HITS).id()) / 10 + 1));
+						player.damage((int) Math.ceil((double) player.getSkills().getLevel(Skill.HITS.id()) / 10 + 1));
 						say(player, null, "Owwww!");
 					} else {
 						mes("The heat is intense and just before you burn yourself,");

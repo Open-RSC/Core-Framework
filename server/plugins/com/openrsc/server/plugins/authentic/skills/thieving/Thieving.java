@@ -25,7 +25,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.openrsc.server.constants.ItemId.THIEVING_CAPE;
-import static com.openrsc.server.constants.Skills.THIEVING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
@@ -34,12 +33,12 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 	public static boolean succeedPickLockThieving(Player player, int req_level) {
 		//lockpick said to make picking a bit easier
-		int effectiveLevel = player.getSkills().getLevel(Skill.of(THIEVING).id()) + (player.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false)) ? 10 : 0);
+		int effectiveLevel = player.getSkills().getLevel(Skill.THIEVING.id()) + (player.getCarriedItems().hasCatalogID(ItemId.LOCKPICK.id(), Optional.of(false)) ? 10 : 0);
 		return Formulae.calcGatheringSuccessfulLegacy(req_level, effectiveLevel);
 	}
 
 	private boolean succeedThieving(Player player, int req_level) {
-		return Formulae.calcGatheringSuccessfulLegacy(req_level, player.getSkills().getLevel(Skill.of(THIEVING).id()), 40);
+		return Formulae.calcGatheringSuccessfulLegacy(req_level, player.getSkills().getLevel(Skill.THIEVING.id()), 40);
 	}
 
 	public void stallThieving(Player player, GameObject object, final Stall stall) {
@@ -67,7 +66,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		if (!failNoun.endsWith("s")) {
 			failNoun += "s";
 		}
-		if (player.getSkills().getLevel(Skill.of(THIEVING).id()) < stall.getRequiredLevel()) {
+		if (player.getSkills().getLevel(Skill.THIEVING.id()) < stall.getRequiredLevel()) {
 			player.message("You are not a high enough level to steal the " + failNoun);
 			return;
 		}
@@ -127,7 +126,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		String loot = stall.equals(Stall.GEMS_STALL) ? "gem" : selectedLoot.getDef(player.getWorld()).getName().toLowerCase();
 		player.message("You steal a " + stall.getLootPrefix() + loot);
 
-		player.incExp(Skill.of(THIEVING).id(), stall.getXp(), true);
+		player.incExp(Skill.THIEVING.id(), stall.getXp(), true);
 
 		if (stall.equals(Stall.BAKERS_STALL)) { // Cake
 			player.getCache().put("cakeStolen", Instant.now().getEpochSecond());
@@ -203,7 +202,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 		player.message("You search the chest for traps");
 		boolean makeChestStuck = config().LOOTED_CHESTS_STUCK;
 		AtomicReference<GameObject> tempChest = new AtomicReference<GameObject>();
-		if (player.getSkills().getLevel(Skill.of(THIEVING).id()) < req) {
+		if (player.getSkills().getLevel(Skill.THIEVING.id()) < req) {
 			player.message("You find nothing");
 			return;
 		}
@@ -244,7 +243,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				player.getCarriedItems().getInventory().add(new Item(l.getId(), l.getAmount()));
 			}
 		}
-		player.incExp(Skill.of(THIEVING).id(), xp, true);
+		player.incExp(Skill.THIEVING.id(), xp, true);
 		mes("You find treasure inside!");
 		delay(3);
 		if (!makeChestStuck) {
@@ -341,7 +340,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, Skill.of(THIEVING).id());
+			repeat = Formulae.getRepeatTimes(player, Skill.THIEVING.id());
 			npc.setBusy(true);
 		}
 
@@ -354,7 +353,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			npc.setBusy(false);
 			return;
 		}
-		if (player.getSkills().getLevel(Skill.of(THIEVING).id()) < pickpocket.getRequiredLevel()) {
+		if (player.getSkills().getLevel(Skill.THIEVING.id()) < pickpocket.getRequiredLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "You need to be a level " + pickpocket.getRequiredLevel() + " thief to pick the " + thievedMobString + "'s pocket");
 			npc.setBusy(false);
 			return;
@@ -406,7 +405,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				player.getCarriedItems().getInventory().add(selectedLoot);
 			}
 
-			player.incExp(Skill.of(THIEVING).id(), pickpocket.getXp(), true);
+			player.incExp(Skill.THIEVING.id(), pickpocket.getXp(), true);
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to pick the " + thievedMobString + "'s pocket");
 			npc.getUpdateFlags()
@@ -466,7 +465,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 						return;
 					}
 				}
-				if (player.getSkills().getLevel(Skill.of(THIEVING).id()) < 47) {
+				if (player.getSkills().getLevel(Skill.THIEVING.id()) < 47) {
 					player.playerServerMessage(MessageType.QUEST, "You are not a high enough level to pick this lock");
 					return;
 				}
@@ -483,7 +482,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 				mes("You find a treasure inside!");
 				delay(3);
 
-				player.incExp(Skill.of(THIEVING).id(), 600, true);
+				player.incExp(Skill.THIEVING.id(), 600, true);
 				give(player, ItemId.COINS.id(), 20);
 				give(player, ItemId.STEEL_ARROW_HEADS.id(), 5);
 
@@ -624,7 +623,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 
 			int repeat = 1;
 			if (config().BATCH_PROGRESSION) {
-				repeat = Formulae.getRepeatTimes(player, Skill.of(THIEVING).id());
+				repeat = Formulae.getRepeatTimes(player, Skill.THIEVING.id());
 			}
 
 			startbatch(repeat);
@@ -636,7 +635,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 							  int exp, boolean goThrough, boolean requiresLockpick) {
 		player.playerServerMessage(MessageType.QUEST, "you attempt to pick the lock");
 
-		if (getCurrentLevel(player, Skill.of(THIEVING).id()) < req) {
+		if (getCurrentLevel(player, Skill.THIEVING.id()) < req) {
 			player.playerServerMessage(MessageType.QUEST, "You are not a high enough level to pick this lock");
 			return;
 		}
@@ -656,7 +655,7 @@ public class Thieving implements OpLocTrigger, OpNpcTrigger, OpBoundTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You manage to pick the lock");
 			doDoor(obj, player);
 			player.message("You go through the door");
-			player.incExp(Skill.of(THIEVING).id(), (int) exp, true);
+			player.incExp(Skill.THIEVING.id(), (int) exp, true);
 		} else {
 			player.playerServerMessage(MessageType.QUEST, "You fail to pick the lock");
 

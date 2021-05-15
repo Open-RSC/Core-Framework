@@ -13,9 +13,6 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.openrsc.server.constants.Skills.HITS;
-import static com.openrsc.server.constants.Skills.PRAYER;
-
 /**
  * Hit restoration event is independent of the other stats
  * The restoration tick may be re-synced if player has no stats to restore and new
@@ -49,7 +46,7 @@ public class StatRestorationEvent extends GameTickEvent {
 
 		// Add new skills to the restoration cycle
 		for (int skillIndex = 0; skillIndex < numberSkills; skillIndex++) {
-			if (skillIndex == Skill.of(PRAYER).id() && !getOwner().getConfig().LACKS_PRAYERS) {
+			if (skillIndex == Skill.PRAYER.id() && !getOwner().getConfig().LACKS_PRAYERS) {
 				continue;
 			}
 			checkAndStartRestoration(skillIndex);
@@ -66,7 +63,7 @@ public class StatRestorationEvent extends GameTickEvent {
 			}
 			deltaCycles = (System.currentTimeMillis() - this.lastHitRestoration) / delay;
 			if (System.currentTimeMillis() - this.lastHitRestoration > delay && getOwner().isPlayer()) {
-				normalizeLevel(Skill.of(HITS).id());
+				normalizeLevel(Skill.HITS.id());
 				restoredHits = true;
 				if (((Player) getOwner()).getParty() != null) {
 					getOwner().getUpdateFlags().setHpUpdate(new HpUpdate(getOwner(), 0));
@@ -79,7 +76,7 @@ public class StatRestorationEvent extends GameTickEvent {
 			} else if (!getOwner().isPlayer() &&
 				(System.currentTimeMillis() - (this.lastHitRestoration + deltaCycles * delay)) / (delay / 100) == 1) {
 				// npc only gets heal cycle sync on (re)spawn
-				normalizeLevel(Skill.of(HITS).id());
+				normalizeLevel(Skill.HITS.id());
 			}
 		}
 
@@ -139,7 +136,7 @@ public class StatRestorationEvent extends GameTickEvent {
 
 		cur += diff;
 		if (cur == norm) {
-			if (skill == Skill.of(HITS).id()) {
+			if (skill == Skill.HITS.id()) {
 				restoringHits.set(false);
 			} else {
 				restoringStats.put(skill, 0);
@@ -156,7 +153,7 @@ public class StatRestorationEvent extends GameTickEvent {
 	private void checkAndStartRestoration(int id) {
 		boolean toRestore = needsRestore(id);
 
-		if (id == Skill.of(HITS).id()) {
+		if (id == Skill.HITS.id()) {
 			if (restoringHits.get()) {
 				return;
 			}
@@ -180,7 +177,7 @@ public class StatRestorationEvent extends GameTickEvent {
 	}
 
 	public void tryResyncHit() {
-		boolean toRestore = needsRestore(Skill.of(HITS).id());
+		boolean toRestore = needsRestore(Skill.HITS.id());
 
 		if (!toRestore) {
 			this.lastHitRestoration = System.currentTimeMillis();

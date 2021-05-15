@@ -16,8 +16,6 @@ import com.openrsc.server.util.rsc.Formulae;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.FLETCHING;
-import static com.openrsc.server.constants.Skills.SMITHING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, OpLocTrigger, UseLocTrigger, UseInvTrigger, TakeObjTrigger,
@@ -186,7 +184,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 					player.message("You need a hammer to work anything on the anvil.");
 					return;
 				}
-				if (getCurrentLevel(player, Skill.of(SMITHING).id()) < 20) {
+				if (getCurrentLevel(player, Skill.SMITHING.id()) < 20) {
 					player.message("You need level 20 in smithing before you can attempt this.");
 					return;
 				}
@@ -197,7 +195,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				delay(2);
 				mes("And after a long time of careful work.");
 				delay(2);
-				if (protoDartSmithSuccessful(player.getSkills().getLevel(Skill.of(SMITHING).id()))) {
+				if (protoDartSmithSuccessful(player.getSkills().getLevel(Skill.SMITHING.id()))) {
 					mes("You finally manage to forge a sharp, pointed...");
 					delay(2);
 					mes("... dart tip...");
@@ -222,7 +220,7 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 				player.message("You need at least ten feathers to make this item.");
 				return;
 			}
-			if (getCurrentLevel(player, Skill.of(FLETCHING).id()) < 10) {
+			if (getCurrentLevel(player, Skill.FLETCHING.id()) < 10) {
 				player.message("You need a fletching level of at least 10 to complete this.");
 				return;
 			}
@@ -231,13 +229,13 @@ public class Tourist_Trap_Mechanism implements RemoveObjTrigger, UseNpcTrigger, 
 			mes("Following the plans is tricky, but you persevere.");
 			delay(2);
 			player.getCarriedItems().remove(new Item(ItemId.FEATHER.id(), 10));
-			if (protoDartFletchSuccessful(player.getSkills().getLevel(Skill.of(FLETCHING).id()))) {
+			if (protoDartFletchSuccessful(player.getSkills().getLevel(Skill.FLETCHING.id()))) {
 				mes("You succesfully attach the feathers to the dart tip.");
 				delay(2);
 				player.getCarriedItems().remove(new Item(ItemId.PROTOTYPE_DART_TIP.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.PROTOTYPE_THROWING_DART.id()));
 				//kosher: dependent on fletching level!
-				player.incExp(Skill.of(FLETCHING).id(), getMaxLevel(player, Skill.of(FLETCHING).id()) * 50, true);
+				player.incExp(Skill.FLETCHING.id(), getMaxLevel(player, Skill.FLETCHING.id()) * 50, true);
 			} else {
 				mes("An unlucky accident causes you to waste the feathers.");
 				delay(2);

@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,8 +13,6 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.GOODMAGIC;
-import static com.openrsc.server.constants.Skills.MAGIC;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ImpCatcher implements QuestInterface, TalkNpcTrigger {
@@ -39,9 +38,9 @@ public class ImpCatcher implements QuestInterface, TalkNpcTrigger {
 		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.IMP_CATCHER);
 		String magicSkill;
 		if (player.getConfig().DIVIDED_GOOD_EVIL) {
-			magicSkill = GOODMAGIC;
+			magicSkill = Skill.GOODMAGIC.name();
 		} else {
-			magicSkill = MAGIC;
+			magicSkill = Skill.MAGIC.name();
 		}
 		questData[1] = Either.right(magicSkill);
 		incQuestReward(player, questData, true);

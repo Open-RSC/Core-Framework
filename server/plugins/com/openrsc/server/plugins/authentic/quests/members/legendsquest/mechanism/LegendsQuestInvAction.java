@@ -16,7 +16,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
@@ -61,15 +60,15 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 				if (second_nezikchened != null) {
 					mes(second_nezikchened, "The spell seems to weaken the Demon.");
 					delay();
-					second_nezikchened.getSkills().setLevel(Skill.of(DEFENSE).id(), second_nezikchened.getSkills().getLevel(Skill.of(DEFENSE).id()) - 5);
+					second_nezikchened.getSkills().setLevel(Skill.DEFENSE.id(), second_nezikchened.getSkills().getLevel(Skill.DEFENSE.id()) - 5);
 					if (player.getCache().hasKey("ran_from_2nd_nezi")) {
 						second_nezikchened.getUpdateFlags().setChatMessage(new ChatMessage(second_nezikchened, "So you have returned and I am prepared for you now!", player));
 					} else {
 						second_nezikchened.getUpdateFlags().setChatMessage(new ChatMessage(second_nezikchened, "Now I am revealed to you Vacu, so shall ye perish.", player));
 					}
 					second_nezikchened.startCombat(player);
-					int newPray = (int) Math.ceil((double) player.getSkills().getLevel(Skill.of(PRAYER).id()) / 2);
-					if (player.getSkills().getLevel(Skill.of(PRAYER).id()) - newPray < 30) {
+					int newPray = (int) Math.ceil((double) player.getSkills().getLevel(Skill.PRAYER.id()) / 2);
+					if (player.getSkills().getLevel(Skill.PRAYER.id()) - newPray < 30) {
 						mes("A sense of fear comes over you ");
 						delay(2);
 						mes("You feel a sense of loss...");
@@ -80,7 +79,7 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 						mes("You feel a great sense of loss...");
 						delay(2);
 					}
-					player.getSkills().setLevel(Skill.of(PRAYER).id(), newPray);
+					player.getSkills().setLevel(Skill.PRAYER.id(), newPray);
 					if (player.getCache().hasKey("ran_from_2nd_nezi")) {
 						delay(11);
 						mes("The Demon takes out a dark dagger and throws it at you...");
@@ -146,11 +145,11 @@ public class LegendsQuestInvAction implements OpInvTrigger, UseInvTrigger {
 				//authentic, didn't matter option chosen
 				if (opt == 0 || opt == 1)
 				{
-					if (getCurrentLevel(player, Skill.of(PRAYER).id()) < 10) {
+					if (getCurrentLevel(player, Skill.PRAYER.id()) < 10) {
 						player.message("You need at least ten prayer points to cast this spell.");
 						return;
 					}
-					if (getCurrentLevel(player, Skill.of(MAGIC).id()) < 10) {
+					if (getCurrentLevel(player, Skill.MAGIC.id()) < 10) {
 						player.message("You need at least ten magic points to cast this spell.");
 						return;
 					}

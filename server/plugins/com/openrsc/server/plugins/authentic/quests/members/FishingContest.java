@@ -1,6 +1,9 @@
 package com.openrsc.server.plugins.authentic.quests.members;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -16,7 +19,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.FISHING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class FishingContest implements QuestInterface, TalkNpcTrigger,
@@ -45,10 +47,10 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 		player.message("Well done you have completed the fishing competition quest");
 		player.message("@gre@You haved gained 1 quest point!");
 		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FISHING_CONTEST);
-		if (player.getSkills().getMaxStat(Skill.of(FISHING).id()) <= 23) {
+		if (player.getSkills().getMaxStat(Skill.FISHING.id()) <= 23) {
 			questData[Quests.MAPIDX_BASE] = Either.left(900);
 			incQuestReward(player, questData, true);
-		} else if (player.getSkills().getMaxStat(Skill.of(FISHING).id()) >= 24) {
+		} else if (player.getSkills().getMaxStat(Skill.FISHING.id()) >= 24) {
 			questData[Quests.MAPIDX_BASE] = Either.left(1700);
 			incQuestReward(player, questData, true);
 		}
@@ -599,7 +601,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				//cases: not enough level
 				//no bait
 				//else do catch
-				if (player.getSkills().getLevel(Skill.of(FISHING).id()) < 10) {
+				if (player.getSkills().getLevel(Skill.FISHING.id()) < 10) {
 					player.message("You need at least level 10 fishing to lure these fish");
 				} else if (!player.getCarriedItems().hasCatalogID(ItemId.FISHING_ROD.id(), Optional.of(false))) {
 					// probably non-kosher
@@ -651,7 +653,7 @@ public class FishingContest implements QuestInterface, TalkNpcTrigger,
 				//no rod
 				//no bait
 				//else do catch
-				if (player.getSkills().getLevel(Skill.of(FISHING).id()) < 10) {
+				if (player.getSkills().getLevel(Skill.FISHING.id()) < 10) {
 					player.message("You need at least level 10 fishing to lure these fish");
 				} else if (!player.getCarriedItems().hasCatalogID(ItemId.FISHING_ROD.id(), Optional.of(false))) {
 					// probably non-kosher

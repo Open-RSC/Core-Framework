@@ -8,7 +8,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.authentic.skills.mining.Mining;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-import static com.openrsc.server.constants.Skills.MINING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class RawRuneStone implements OpLocTrigger {
@@ -45,7 +44,7 @@ public class RawRuneStone implements OpLocTrigger {
 		player.playSound("mine");
 		thinkbubble(new Item(ItemId.IRON_PICKAXE.id()));
 		give(player, ItemId.RUNE_STONE.id(), 1);
-		player.incExp(Skill.of(MINING).id(), 20, true);
+		player.incExp(Skill.MINING.id(), 20, true);
 		delay();
 
 		// Repeat

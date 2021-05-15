@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -17,8 +18,6 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.PRAYER;
-import static com.openrsc.server.constants.Skills.PRAYGOOD;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
@@ -49,9 +48,9 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_RESTLESS_GHOST);
 		String prayerSkill;
 		if (player.getConfig().DIVIDED_GOOD_EVIL) {
-			prayerSkill = PRAYGOOD;
+			prayerSkill = Skill.PRAYGOOD.name();
 		} else {
-			prayerSkill = PRAYER;
+			prayerSkill = Skill.PRAYER.name();
 		}
 		questData[1] = Either.right(prayerSkill);
 		incQuestReward(player, questData, true);

@@ -6,8 +6,6 @@ import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 
-import static com.openrsc.server.constants.Skills.PRAYER;
-
 public class KingBlackDragonPrayerDrain implements OnCombatStartScript {
 
 	@Override
@@ -25,12 +23,12 @@ public class KingBlackDragonPrayerDrain implements OnCombatStartScript {
 	@Override
 	public void executeScript(Mob attacker, Mob defender) {
 		if (attacker.isPlayer()) {
-			if (attacker.getSkills().getLevel(Skill.of(PRAYER).id()) > 1)
-				attacker.getSkills().setLevel(Skill.of(PRAYER).id(), 1);
+			if (attacker.getSkills().getLevel(Skill.PRAYER.id()) > 1)
+				attacker.getSkills().setLevel(Skill.PRAYER.id(), 1);
 
 		} else if (defender.isPlayer()) {
-			if (defender.getSkills().getLevel(Skill.of(PRAYER).id()) > 1)
-				defender.getSkills().setLevel(Skill.of(PRAYER).id(), 1);
+			if (defender.getSkills().getLevel(Skill.PRAYER.id()) > 1)
+				defender.getSkills().setLevel(Skill.PRAYER.id(), 1);
 		}
 
 	}

@@ -6,7 +6,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class MonkHealer implements TalkNpcTrigger {
@@ -22,11 +21,11 @@ public class MonkHealer implements TalkNpcTrigger {
 			delay(3);
 			mes("You feel a little better");
 			delay(3);
-			int newHp = getCurrentLevel(player, Skill.of(HITS).id()) + 5;
-			if (newHp > getMaxLevel(player, Skill.of(HITS).id())) {
-				newHp = getMaxLevel(player, Skill.of(HITS).id());
+			int newHp = getCurrentLevel(player, Skill.HITS.id()) + 5;
+			if (newHp > getMaxLevel(player, Skill.HITS.id())) {
+				newHp = getMaxLevel(player, Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skill.of(HITS).id(), newHp);
+			player.getSkills().setLevel(Skill.HITS.id(), newHp);
 		} else if (option == 1) {
 			say(player, n, "Isn't this place built a bit out the way?");
 			npcsay(player, n, "We like it that way",

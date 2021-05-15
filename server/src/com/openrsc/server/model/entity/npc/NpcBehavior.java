@@ -15,8 +15,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.AGILITY;
-import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
 
 
@@ -217,7 +215,7 @@ public class NpcBehavior {
 			target = npc.getOpponent();
 
 			// Retreat if NPC hits remaining and > round 3
-			if (shouldRetreat(npc) && npc.getSkills().getLevel(Skill.of(HITS).id()) > 0
+			if (shouldRetreat(npc) && npc.getSkills().getLevel(Skill.HITS.id()) > 0
 				&& npc.getOpponent().getHitsMade() >= 3) {
 				retreat();
 			}
@@ -272,7 +270,7 @@ public class NpcBehavior {
 			//successful avoiding tackles gives agility xp
 			player.playerServerMessage(MessageType.QUEST, "You manage to push him away");
 			npcYell(player, npc, "grrrrr");
-			player.incExp(Skill.of(AGILITY).id(), TACKLING_XP[DataConversions.random(0, 3)], true);
+			player.incExp(Skill.AGILITY.id(), TACKLING_XP[DataConversions.random(0, 3)], true);
 		} else {
 			if (!inArray(player.getAttribute("gnomeball_npc", -1), -1, 0) || player.getAttribute("throwing_ball_game", false)) {
 				// some other gnome beat here or player is shooting at goal
@@ -282,7 +280,7 @@ public class NpcBehavior {
 			player.getCarriedItems().remove(new Item(ItemId.GNOME_BALL.id()));
 			player.playerServerMessage(MessageType.QUEST, "he takes the ball...");
 			player.playerServerMessage(MessageType.QUEST, "and pushes you to the floor");
-			player.damage((int) (Math.ceil(player.getSkills().getLevel(Skill.of(HITS).id()) * 0.05)));
+			player.damage((int) (Math.ceil(player.getSkills().getLevel(Skill.HITS.id()) * 0.05)));
 			say(player, "ouch");
 			npcYell(player, npc, "yeah");
 		}
@@ -424,7 +422,7 @@ public class NpcBehavior {
 	private boolean shouldRetreat(final Npc npc) {
 		if (!npc.getConfig().NPC_DONT_RETREAT) {
 			if (npc.getWorld().getServer().getConstants().getRetreats().npcData.containsKey(npc.getID())) {
-				return npc.getSkills().getLevel(Skill.of(HITS).id()) <= npc.getWorld().getServer().getConstants().getRetreats().npcData.get(npc.getID());
+				return npc.getSkills().getLevel(Skill.HITS.id()) <= npc.getWorld().getServer().getConstants().getRetreats().npcData.get(npc.getID());
 			}
 		}
 

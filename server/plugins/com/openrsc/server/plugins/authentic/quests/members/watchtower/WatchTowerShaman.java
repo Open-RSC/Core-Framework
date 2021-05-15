@@ -10,8 +10,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
-import static com.openrsc.server.constants.Skills.HITS;
-import static com.openrsc.server.constants.Skills.MAGIC;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WatchTowerShaman implements TalkNpcTrigger, UseNpcTrigger {
@@ -28,7 +26,7 @@ public class WatchTowerShaman implements TalkNpcTrigger, UseNpcTrigger {
 				"We will destroy you!");
 			player.message("A magic blast comes from the shaman");
 			n.displayNpcTeleportBubble(n.getX(), n.getY());
-			player.damage((int) (getCurrentLevel(player, Skill.of(HITS).id()) * 0.2D + 10));
+			player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) * 0.2D + 10));
 			player.message("You are badly injured by the blast");
 		}
 	}
@@ -42,7 +40,7 @@ public class WatchTowerShaman implements TalkNpcTrigger, UseNpcTrigger {
 	@Override
 	public void onUseNpc(Player player, Npc n, Item item) {
 		if (n.getID() == NpcId.OGRE_SHAMAN.id() && item.getCatalogId() == ItemId.MAGIC_OGRE_POTION.id()) {
-			if (getCurrentLevel(player, Skill.of(MAGIC).id()) < 14) {
+			if (getCurrentLevel(player, Skill.MAGIC.id()) < 14) {
 				player.message("You need a level of 14 magic first");
 				return;
 			}

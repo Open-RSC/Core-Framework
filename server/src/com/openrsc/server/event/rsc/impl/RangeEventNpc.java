@@ -14,8 +14,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.constants.Skills.HITS;
-
 public class RangeEventNpc extends GameTickEvent {
 
 	private boolean deliveredFirstProjectile;
@@ -83,7 +81,7 @@ public class RangeEventNpc extends GameTickEvent {
 			int targetWildLvl = target.getLocation().wildernessLevel();
 			int myWildLvl = getOwner().getLocation().wildernessLevel();
 			if ((target.isPlayer() && !((Player) target).loggedIn())
-				|| target.getSkills().getLevel(Skill.of(HITS).id()) <= 0
+				|| target.getSkills().getLevel(Skill.HITS.id()) <= 0
 				|| !getOwner().withinRange(target)) {
 				getOwner().resetRange();
 				stop();

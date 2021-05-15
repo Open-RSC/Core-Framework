@@ -16,7 +16,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.MINING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigger {
@@ -183,7 +182,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 					}
 				}
 				thinkbubble(new Item(ItemId.ROCK_PICK.id()));
-				player.incExp(Skill.of(MINING).id(), 70, true);
+				player.incExp(Skill.MINING.id(), 70, true);
 				mes("You dig through the earth");
 				delay(3);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL2_ITEMS.length - 1));
@@ -200,7 +199,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 		if (item.getCatalogId() == ItemId.TROWEL.id() && inArray(obj.getID(), SOIL)) {
 			if (getTrainingAreas(player)) {
 				thinkbubble(new Item(ItemId.TROWEL.id()));
-				player.incExp(Skill.of(MINING).id(), 50, true);
+				player.incExp(Skill.MINING.id(), 50, true);
 				mes("You dig with the trowel...");
 				delay(3);
 				int randomize = DataConversions.random(0, (TRAINING_AREA_ITEMS.length - 1));
@@ -246,7 +245,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 					}
 				}
 				thinkbubble(new Item(ItemId.TROWEL.id()));
-				player.incExp(Skill.of(MINING).id(), 60, true);
+				player.incExp(Skill.MINING.id(), 60, true);
 				mes("You dig through the earth");
 				delay(3);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL1_ITEMS.length - 1));
@@ -306,7 +305,7 @@ public class DigsiteDigAreas implements OpLocTrigger, UseLocTrigger, OpInvTrigge
 					return;
 				}
 				thinkbubble(new Item(ItemId.TROWEL.id()));
-				player.incExp(Skill.of(MINING).id(), 80, true);
+				player.incExp(Skill.MINING.id(), 80, true);
 				mes("You dig through the earth");
 				delay(3);
 				int randomize = DataConversions.random(0, (DIGSITE_LEVEL3_ITEMS.length - 1));

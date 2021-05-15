@@ -1,6 +1,9 @@
 package com.openrsc.server.plugins.authentic.quests.members.undergroundpass.npcs;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -9,8 +12,6 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.AGILITY;
-import static com.openrsc.server.constants.Skills.ATTACK;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
@@ -38,7 +39,7 @@ public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
 		player.message("@gre@You haved gained 5 quest points!");
 		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.UNDERGROUND_PASS);
 		//keep order kosher
-		Either<Integer, String>[] skillIDs = new Either[]{Either.right(AGILITY), Either.right(ATTACK)};
+		Either<Integer, String>[] skillIDs = new Either[]{Either.right(Skill.AGILITY.name()), Either.right(Skill.ATTACK.name())};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(player, questData, i == (skillIDs.length - 1));

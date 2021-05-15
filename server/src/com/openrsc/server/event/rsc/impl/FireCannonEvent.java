@@ -13,9 +13,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.ArrayList;
 
-import static com.openrsc.server.constants.Skills.HITS;
-import static com.openrsc.server.constants.Skills.RANGED;
-
 public class FireCannonEvent extends GameTickEvent {
 
 	protected int count;
@@ -37,7 +34,7 @@ public class FireCannonEvent extends GameTickEvent {
 		for (Npc n : npcsInView) {
 			if ((n.getLocation().inBounds(getOwner().getX() - 8, getOwner().getY() - 8, getOwner().getX() + 8, getOwner().getY() + 8))
 				&& (n.getDef().isAttackable()) && PathValidation.checkPath(getOwner().getWorld(), getOwner().getLocation(), n.getLocation())) {
-				if(n.getSkills().getLevel(Skill.of(HITS).id()) <= 0) continue;
+				if(n.getSkills().getLevel(Skill.HITS.id()) <= 0) continue;
 				if (lastTarget != null && n.getUUID() == lastTarget.getUUID()) continue;
 				possibleTargets.add(n);
 			}
@@ -54,7 +51,7 @@ public class FireCannonEvent extends GameTickEvent {
 
 		getPlayerOwner().face(target);
 		//35 at level 99 per wayback tip.it
-		int max = getOwner().getSkills().getMaxStat(Skill.of(RANGED).id()) / 3 + 2;
+		int max = getOwner().getSkills().getMaxStat(Skill.RANGED.id()) / 3 + 2;
 		int cannonBallDamage = DataConversions.random(0, max);
 		getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getWorld(), getOwner(), target, cannonBallDamage, 5, false));
 		getPlayerOwner().playSound("shoot");

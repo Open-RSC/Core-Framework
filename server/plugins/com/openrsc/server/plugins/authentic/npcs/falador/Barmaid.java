@@ -11,7 +11,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class Barmaid implements
@@ -116,7 +115,7 @@ public final class Barmaid implements
 	}
 
 	private void drinkAle(Player player) {
-		int[] skillIDs = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(RANGED).id(), Skill.of(FISHING).id()};
+		int[] skillIDs = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.RANGED.id(), Skill.FISHING.id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(player, skillIDs[i]);
 		}

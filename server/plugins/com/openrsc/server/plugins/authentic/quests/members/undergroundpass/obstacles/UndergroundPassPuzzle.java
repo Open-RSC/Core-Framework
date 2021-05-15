@@ -6,7 +6,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassPuzzle implements OpLocTrigger {
@@ -66,7 +65,7 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 		mes("you fall onto a pit of spikes");
 		delay(3);
 		player.teleport(679, 3448);
-		player.damage((int) (getCurrentLevel(player, Skill.of(HITS).id()) * 0.2D));
+		player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) * 0.2D));
 		player.message("you crawl out of the pit");
 		player.getWorld().replaceGameObject(obj,
 			new GameObject(obj.getWorld(), obj.getLocation(), 778, obj.getDirection(), obj

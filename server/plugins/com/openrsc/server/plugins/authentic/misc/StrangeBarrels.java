@@ -11,7 +11,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.constants.Skills.ATTACK;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class StrangeBarrels implements OpLocTrigger {
@@ -167,7 +166,7 @@ public class StrangeBarrels implements OpLocTrigger {
 						delay(2);
 						int reduceAttack = DataConversions.random(1, 3);
 						player.message("Your attack is reduced by " + reduceAttack + ".");
-						player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) - reduceAttack);
+						player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - reduceAttack);
 					} else {
 						player.message("You were unable to smash this barrel open.");
 					}

@@ -7,7 +7,6 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.constants.Skills.AGILITY;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestCaveAgility implements OpLocTrigger {
@@ -41,7 +40,7 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 				if (succeed(player, 50)) {
 					player.message("You manage to keep your balance.");
 					player.teleport(obj.getX(), obj.getY());
-					player.incExp(Skill.of(AGILITY).id(), 20, true);
+					player.incExp(Skill.AGILITY.id(), 20, true);
 				} else {
 					player.teleport(421, 3699);
 					player.message("You slip and fall...");
@@ -69,11 +68,11 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 						player.damage(DataConversions.random(24, 31));
 						player.message("...and take some major damage.");
 					}
-					player.incExp(Skill.of(AGILITY).id(), 5, true);
+					player.incExp(Skill.AGILITY.id(), 5, true);
 				}
 				break;
 			case ROCK_HEWN_STAIRS_4:
-				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 50) {
+				if (getCurrentLevel(player, Skill.AGILITY.id()) < 50) {
 					player.message("You need an agility level of 50 to step these stairs");
 					return;
 				}
@@ -82,13 +81,13 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 						player.message("You climb down the steps.");
 						player.teleport(421, 3707);
 						delay();
-						player.incExp(Skill.of(AGILITY).id(), 20, true);
+						player.incExp(Skill.AGILITY.id(), 20, true);
 						player.teleport(423, 3707);
 					} else {
 						player.message("You climb up the stairs.");
 						player.teleport(421, 3707);
 						delay();
-						player.incExp(Skill.of(AGILITY).id(), 20, true);
+						player.incExp(Skill.AGILITY.id(), 20, true);
 						player.teleport(419, 3707);
 					}
 				} else {
@@ -96,12 +95,12 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					player.damage(DataConversions.random(2, 3));
 					player.teleport(421, 3707);
 					delay();
-					player.incExp(Skill.of(AGILITY).id(), 5, true);
+					player.incExp(Skill.AGILITY.id(), 5, true);
 					player.teleport(423, 3707);
 				}
 				break;
 			case ROCK_HEWN_STAIRS_3:
-				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 50) {
+				if (getCurrentLevel(player, Skill.AGILITY.id()) < 50) {
 					player.message("You need an agility level of 50 to step these stairs");
 					return;
 				}
@@ -110,13 +109,13 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 						player.message("You climb down the steps.");
 						player.teleport(419, 3704);
 						delay();
-						player.incExp(Skill.of(AGILITY).id(), 20, true);
+						player.incExp(Skill.AGILITY.id(), 20, true);
 						player.teleport(419, 3706);
 					} else {
 						player.message("You climb up the stairs.");
 						player.teleport(419, 3704);
 						delay();
-						player.incExp(Skill.of(AGILITY).id(), 20, true);
+						player.incExp(Skill.AGILITY.id(), 20, true);
 						player.teleport(419, 3702);
 					}
 				} else {
@@ -124,12 +123,12 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					player.damage(DataConversions.random(2, 3));
 					player.teleport(419, 3704);
 					delay();
-					player.incExp(Skill.of(AGILITY).id(), 5, true);
+					player.incExp(Skill.AGILITY.id(), 5, true);
 					player.teleport(419, 3706);
 				}
 				break;
 			case ROCK_HEWN_STAIRS_2:
-				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 50) {
+				if (getCurrentLevel(player, Skill.AGILITY.id()) < 50) {
 					player.message("You need an agility level of 50 to step these stairs");
 					return;
 				}
@@ -138,13 +137,13 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 						player.message("You climb down the steps.");
 						player.teleport(424, 3702);
 						delay();
-						player.incExp(Skill.of(AGILITY).id(), 20, true);
+						player.incExp(Skill.AGILITY.id(), 20, true);
 						player.teleport(422, 3702);
 					} else {
 						player.message("You climb up the stairs.");
 						player.teleport(424, 3702);
 						delay();
-						player.incExp(Skill.of(AGILITY).id(), 20, true);
+						player.incExp(Skill.AGILITY.id(), 20, true);
 						player.teleport(426, 3702);
 					}
 				} else {
@@ -152,12 +151,12 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					player.damage(DataConversions.random(2, 3));
 					player.teleport(424, 3702);
 					delay();
-					player.incExp(Skill.of(AGILITY).id(), 5, true);
+					player.incExp(Skill.AGILITY.id(), 5, true);
 					player.teleport(422, 3702);
 				}
 				break;
 			case ROCK_HEWN_STAIRS_1:
-				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 50) {
+				if (getCurrentLevel(player, Skill.AGILITY.id()) < 50) {
 					player.message("You need an agility level of 50 to step these stairs");
 					return;
 				}
@@ -166,13 +165,13 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 						player.message("You climb down the steps.");
 						player.teleport(426, 3704);
 						delay();
-						player.incExp(Skill.of(AGILITY).id(), 20, true);
+						player.incExp(Skill.AGILITY.id(), 20, true);
 						player.teleport(426, 3702);
 					} else {
 						player.message("You climb up the stairs.");
 						player.teleport(426, 3704);
 						delay();
-						player.incExp(Skill.of(AGILITY).id(), 20, true);
+						player.incExp(Skill.AGILITY.id(), 20, true);
 						player.teleport(426, 3706);
 					}
 				} else {
@@ -180,7 +179,7 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 					player.damage(DataConversions.random(2, 3));
 					player.teleport(426, 3704);
 					delay();
-					player.incExp(Skill.of(AGILITY).id(), 5, true);
+					player.incExp(Skill.AGILITY.id(), 5, true);
 					player.teleport(426, 3702);
 				}
 				break;
@@ -188,6 +187,6 @@ public class LegendsQuestCaveAgility implements OpLocTrigger {
 	}
 
 	boolean succeed(Player player, int req) {
-		return Formulae.calcProductionSuccessfulLegacy(req, getCurrentLevel(player, Skill.of(AGILITY).id()), false, req + 30);
+		return Formulae.calcProductionSuccessfulLegacy(req, getCurrentLevel(player, Skill.AGILITY.id()), false, req + 30);
 	}
 }

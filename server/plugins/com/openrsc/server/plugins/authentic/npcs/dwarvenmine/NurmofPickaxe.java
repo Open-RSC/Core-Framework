@@ -14,7 +14,6 @@ import com.openrsc.server.plugins.AbstractShop;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.openrsc.server.constants.Skills.MINING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class NurmofPickaxe extends AbstractShop {
@@ -53,7 +52,7 @@ public final class NurmofPickaxe extends AbstractShop {
 		options.add("No thankyou");
 		options.add("Are your pickaxes better than other pickaxes then?");
 		if (config().WANT_CUSTOM_QUESTS
-			&& getMaxLevel(player, Skill.of(MINING).id()) >= 99)
+			&& getMaxLevel(player, Skill.MINING.id()) >= 99)
 			options.add("Mining Skillcape");
 
 		int option = multi(player, n, false, //do not send over
@@ -70,7 +69,7 @@ public final class NurmofPickaxe extends AbstractShop {
 				"My pickaxes are made of higher grade metal than your ordinary bronze pickaxes",
 				"Allowing you to have multiple swings at a rock until you get the ore from it");
 		} else if (option == 3) {
-			if (getMaxLevel(player, Skill.of(MINING).id()) >= 99) {
+			if (getMaxLevel(player, Skill.MINING.id()) >= 99) {
 				npcsay(player, n, "it's clear you are a miner",
 					"i can offer you cape",
 					"made for those who excel in the skill",

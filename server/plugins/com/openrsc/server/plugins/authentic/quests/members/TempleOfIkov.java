@@ -1,6 +1,9 @@
 package com.openrsc.server.plugins.authentic.quests.members;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -14,7 +17,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
@@ -51,7 +53,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 		player.getCache().remove("killedLesarkus");
 		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TEMPLE_OF_IKOV);
 		//keep order kosher
-		Either<Integer, String>[] skillIDs = new Either[]{Either.right(RANGED), Either.right(FLETCHING)};
+		Either<Integer, String>[] skillIDs = new Either[]{Either.right(Skill.RANGED.name()), Either.right(Skill.FLETCHING.name())};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(player, questData, i == (skillIDs.length - 1));
@@ -487,7 +489,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 			if (command.equals("pull")) {
 				if (!player.getCache().hasKey("ikovLever")) {
 					player.message("You have activated a trap on the lever");
-					player.damage(DataConversions.roundUp(player.getSkills().getLevel(Skill.of(HITS).id()) / 5));
+					player.damage(DataConversions.roundUp(player.getSkills().getLevel(Skill.HITS.id()) / 5));
 				} else {
 					mes("You pull the lever");
 					delay(3);
@@ -504,7 +506,7 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 				}
 			} else if (command.equals("searchfortraps")) {
 				player.message("You search the lever for traps");
-				if (getCurrentLevel(player, Skill.of(THIEVING).id()) < 42) {
+				if (getCurrentLevel(player, Skill.THIEVING.id()) < 42) {
 					player.message("You have not high thieving enough to disable this trap");
 					return;
 				}
@@ -626,11 +628,11 @@ public class TempleOfIkov implements QuestInterface, TalkNpcTrigger,
 		else if (npc.getID() == NpcId.LUCIEN_EDGE.id()) {
 			if (player.getQuestStage(this) == -1 || player.getQuestStage(this) == -2) {
 				player.message("You have already completed this quest");
-				npc.getSkills().setLevel(Skill.of(HITS).id(), npc.getSkills().getMaxStat(Skill.of(HITS).id()));
+				npc.getSkills().setLevel(Skill.HITS.id(), npc.getSkills().getMaxStat(Skill.HITS.id()));
 				npc.killed = false;
 				return;
 			}
-			npc.getSkills().setLevel(Skill.of(HITS).id(), npc.getSkills().getMaxStat(Skill.of(HITS).id()));
+			npc.getSkills().setLevel(Skill.HITS.id(), npc.getSkills().getMaxStat(Skill.HITS.id()));
 			npcsay(player, npc, "You may have defeated me for now",
 				"But I will be back");
 			player.sendQuestComplete(Quests.TEMPLE_OF_IKOV);

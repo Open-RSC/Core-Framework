@@ -9,9 +9,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 
-import static com.openrsc.server.constants.Skills.ATTACK;
-import static com.openrsc.server.constants.Skills.STRENGTH;
-
 public class SalarinTheTwistedDrain implements CombatAggroScript, OnCombatStartScript {
 
 	// Melee AI for Salarin The Twisted NPC.
@@ -36,7 +33,7 @@ public class SalarinTheTwistedDrain implements CombatAggroScript, OnCombatStartS
 
 			player.message("You suddenly feel much weaker");
 
-			int[] stats = {Skill.of(ATTACK).id(), Skill.of(STRENGTH).id()};
+			int[] stats = {Skill.ATTACK.id(), Skill.STRENGTH.id()};
 			for(int affectedStat : stats) {
 				/* How much to lower the stat */
 				int lowerBy = (int) Math.floor(((player.getSkills().getLevel(affectedStat) + 20) * 0.5));

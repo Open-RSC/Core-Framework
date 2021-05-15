@@ -29,8 +29,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-import static com.openrsc.server.constants.Skills.HITS;
-
 public abstract class GameDatabase extends GameDatabaseQueries {
 	/**
 	 * The asynchronous logger.
@@ -360,7 +358,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 					experiences[i].experience = 0;
 				}
 				else {
-					if (i == Skill.of(HITS).id()) { // Hits
+					if (i == Skill.HITS.id()) { // Hits
 						experiences[i].experience = 4000;
 					}
 					else {

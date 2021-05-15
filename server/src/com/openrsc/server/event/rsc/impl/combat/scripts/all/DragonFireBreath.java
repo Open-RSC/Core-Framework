@@ -11,8 +11,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.constants.Skills.HITS;
-import static com.openrsc.server.constants.Skills.RANGED;
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getMaxLevel;
 
@@ -74,19 +72,19 @@ public class DragonFireBreath implements OnCombatStartScript {
 				} else {
 					percentage = 0;
 				}
-				fireDamage = (int) Math.floor(getCurrentLevel(player, Skill.of(HITS).id()) * percentage / 100.0);
+				fireDamage = (int) Math.floor(getCurrentLevel(player, Skill.HITS.id()) * percentage / 100.0);
 			} else {
-				fireDamage = Math.min(getCurrentLevel(player, Skill.of(HITS).id()), DataConversions.random(0, maxHit));
+				fireDamage = Math.min(getCurrentLevel(player, Skill.HITS.id()), DataConversions.random(0, maxHit));
 			}
-			if (fireDamage >= 25 || (fireDamage >= 20 && getMaxLevel(player, Skill.of(HITS).id()) * 2/5 < 25)) {
+			if (fireDamage >= 25 || (fireDamage >= 20 && getMaxLevel(player, Skill.HITS.id()) * 2/5 < 25)) {
 				player.message("You are fried");
 			}
 			player.damage(fireDamage);
 
 			//reduce ranged level (case for KBD if engaging with melee or ranging)
 			if (dragon.getID() == NpcId.KING_BLACK_DRAGON.id() && (player.isRanging() || attacker.isPlayer())) {
-				int newLevel = getCurrentLevel(player, Skill.of(RANGED).id()) - Formulae.getLevelsToReduceAttackKBD(player);
-				player.getSkills().setLevel(Skill.of(RANGED).id(), newLevel);
+				int newLevel = getCurrentLevel(player, Skill.RANGED.id()) - Formulae.getLevelsToReduceAttackKBD(player);
+				player.getSkills().setLevel(Skill.RANGED.id(), newLevel);
 			}
 		}
 	}

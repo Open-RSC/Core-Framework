@@ -24,8 +24,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.openrsc.server.constants.Skills.HITS;
-
 public abstract class Mob extends Entity {
 
 	/**
@@ -712,7 +710,7 @@ public abstract class Mob extends Entity {
 	}
 
 	public void damage(final int damage) {
-		final int newHp = skills.getLevel(Skill.of(HITS).id()) - damage;
+		final int newHp = skills.getLevel(Skill.HITS.id()) - damage;
 		if (newHp <= 0) {
 			if (this.isPlayer()) {
 				killedBy(combatWith);
@@ -720,11 +718,11 @@ public abstract class Mob extends Entity {
 				killedBy(combatWith);
 			}
 		} else {
-			skills.setLevel(Skill.of(HITS).id(), newHp);
+			skills.setLevel(Skill.HITS.id(), newHp);
 		}
 		if (this.isPlayer()) {
 			Player player = (Player) this;
-			ActionSender.sendStat(player, Skill.of(HITS).id());
+			ActionSender.sendStat(player, Skill.HITS.id());
 		}
 		getUpdateFlags().setDamage(new Damage(this, damage));
 	}

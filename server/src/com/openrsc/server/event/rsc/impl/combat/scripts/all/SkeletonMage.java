@@ -9,8 +9,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 
-import static com.openrsc.server.constants.Skills.*;
-
 public class SkeletonMage implements CombatAggroScript, OnCombatStartScript {
 
 	@Override
@@ -23,7 +21,7 @@ public class SkeletonMage implements CombatAggroScript, OnCombatStartScript {
 
 			player.message("You feel slightly weakened");
 
-			int[] stats = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(STRENGTH).id()};
+			int[] stats = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
 			for(int affectedStat : stats) {
 				/* How much to lower the stat */
 				int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) + 20) * 0.05));

@@ -14,7 +14,6 @@ import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.constants.Skills.MINING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpInvTrigger {
@@ -51,7 +50,7 @@ public class Panning implements OpLocTrigger, UseLocTrigger, UseNpcTrigger, OpIn
 		player.playerServerMessage(MessageType.QUEST, "You lift the full tray from the water");
 		player.getCarriedItems().remove(new Item(ItemId.PANNING_TRAY.id()));
 		player.getCarriedItems().getInventory().add(new Item(ItemId.PANNING_TRAY_FULL.id()));
-		player.incExp(Skill.of(MINING).id(), 20, true);
+		player.incExp(Skill.MINING.id(), 20, true);
 		return false;
 	}
 

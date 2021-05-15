@@ -1,6 +1,9 @@
 package com.openrsc.server.plugins.authentic.quests.members.grandtree;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -15,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, AttackNpcTrigger, KillNpcTrigger, UseLocTrigger {
@@ -66,7 +68,7 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 		player.message("well done you have completed the grand tree quest");
 		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.GRAND_TREE);
 		//keep order kosher
-		Either<Integer, String>[] skillIDs = new Either[]{Either.right(AGILITY), Either.right(ATTACK), Either.right(MAGIC)};
+		Either<Integer, String>[] skillIDs = new Either[]{Either.right(Skill.AGILITY.name()), Either.right(Skill.ATTACK.name()), Either.right(Skill.MAGIC.name())};
 		//1600 for agility, 1600 for attack, 600 for magic
 		Either<Integer, String>[] baseAmounts = new Either[]{Either.left(1600), Either.left(1600), Either.left(600)};
 		//1200 for agility, 1200 for attack, 200 for magic
@@ -1406,10 +1408,10 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 			delay(3);
 		}
 		else if (obj.getID() == WATCH_TOWER_UP) {
-			if (getCurrentLevel(player, Skill.of(AGILITY).id()) >= 25) {
+			if (getCurrentLevel(player, Skill.AGILITY.id()) >= 25) {
 				player.message("you jump up and grab hold of the platform");
 				player.teleport(710, 2364);
-				player.incExp(Skill.of(AGILITY).id(), 30, true);
+				player.incExp(Skill.AGILITY.id(), 30, true);
 				delay(5);
 				player.message("and pull yourself up");
 			} else {

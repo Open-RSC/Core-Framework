@@ -13,7 +13,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.WOODCUTTING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Woodcutting implements OpLocTrigger {
@@ -49,7 +48,7 @@ public class Woodcutting implements OpLocTrigger {
 				return;
 			}
 		}
-		if (player.getSkills().getLevel(Skill.of(WOODCUTTING).id()) < def.getReqLevel()) {
+		if (player.getSkills().getLevel(Skill.WOODCUTTING.id()) < def.getReqLevel()) {
 			player.message("You need a woodcutting level of " + def.getReqLevel() + " to axe this tree");
 			return;
 		}
@@ -69,7 +68,7 @@ public class Woodcutting implements OpLocTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, Skill.of(WOODCUTTING).id());
+			repeat = Formulae.getRepeatTimes(player, Skill.WOODCUTTING.id());
 		}
 
 		startbatch(repeat);
@@ -89,19 +88,19 @@ public class Woodcutting implements OpLocTrigger {
 				return;
 			}
 		}
-		if (player.getSkills().getLevel(Skill.of(WOODCUTTING).id()) < def.getReqLevel()) {
+		if (player.getSkills().getLevel(Skill.WOODCUTTING.id()) < def.getReqLevel()) {
 			player.message("You need a woodcutting level of " + def.getReqLevel() + " to axe this tree");
 			return;
 		}
 
-		if (getLog(def, player.getSkills().getLevel(Skill.of(WOODCUTTING).id()), axeId)) {
+		if (getLog(def, player.getSkills().getLevel(Skill.WOODCUTTING.id()), axeId)) {
 			//check if the tree is still up
 			player.getCarriedItems().getInventory().add(log);
 			player.playerServerMessage(MessageType.QUEST, "You get some wood");
 			if (player.getConfig().SCALED_WOODCUT_XP && def.getLogId() == ItemId.LOGS.id()) {
-				player.incExp(Skill.of(WOODCUTTING).id(), getExp(player.getSkills().getMaxStat(Skill.of(WOODCUTTING).id()), 25), true);
+				player.incExp(Skill.WOODCUTTING.id(), getExp(player.getSkills().getMaxStat(Skill.WOODCUTTING.id()), 25), true);
 			} else {
-				player.incExp(Skill.of(WOODCUTTING).id(), def.getExp(), true);
+				player.incExp(Skill.WOODCUTTING.id(), def.getExp(), true);
 			}
 			if (DataConversions.random(1, 100) <= def.getFell()) {
 				GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());

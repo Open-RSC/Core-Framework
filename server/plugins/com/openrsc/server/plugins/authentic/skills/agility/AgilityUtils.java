@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.openrsc.server.constants.Skills.AGILITY;
-
 public class AgilityUtils {
 
 	public static void completedObstacle(Player player, int id, Set<Integer> obstacles, Integer lastObstacle, int bonus) {
@@ -26,7 +24,7 @@ public class AgilityUtils {
 				player.setAttribute("obstaclesDone", obstaclesDone);
 			}
 			else if (id == lastObstacle && obstaclesDone.containsAll(obstacles)) {
-				player.incExp(Skill.of(AGILITY).id(), bonus, true);
+				player.incExp(Skill.AGILITY.id(), bonus, true);
 				player.setAttribute("obstaclesDone", new HashSet<Integer>());
 			}
 		}
@@ -52,7 +50,7 @@ public class AgilityUtils {
 				for (int i = 0; i < obstacleOrder.length; i++) {
 					if (obstacleOrder[i] == id) {
 						if (i == obstacleOrder.length - 1) {
-							player.incExp(Skill.of(AGILITY).id(), bonus, true);
+							player.incExp(Skill.AGILITY.id(), bonus, true);
 							player.setAttribute("nextObstacle", obstacleOrder[0]);
 							break;
 						}

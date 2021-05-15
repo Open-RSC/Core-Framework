@@ -17,7 +17,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.MAGIC;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpcTrigger, TakeObjTrigger {
@@ -367,9 +366,9 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 				delay(3);
 				mes("The force renews your magic level");
 				delay(3);
-				int maxMagic = getMaxLevel(player, Skill.of(MAGIC).id());
-				if (getCurrentLevel(player, Skill.of(MAGIC).id()) < maxMagic) {
-					player.getSkills().setLevel(Skill.of(MAGIC).id(), maxMagic);
+				int maxMagic = getMaxLevel(player, Skill.MAGIC.id());
+				if (getCurrentLevel(player, Skill.MAGIC.id()) < maxMagic) {
+					player.getSkills().setLevel(Skill.MAGIC.id(), maxMagic);
 				}
 			} else {
 				player.message("You take the crystal");

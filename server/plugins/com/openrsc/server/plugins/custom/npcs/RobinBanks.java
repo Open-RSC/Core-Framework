@@ -8,14 +8,13 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.constants.Skills.THIEVING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class RobinBanks implements TalkNpcTrigger {
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
-		if (getMaxLevel(player, Skill.of(THIEVING).id()) >= 99) {
+		if (getMaxLevel(player, Skill.THIEVING.id()) >= 99) {
 			if (config().WANT_CUSTOM_QUESTS) {
 				npcsay(player, n, "think you've mastered thieving?",
 					"you know nothing",

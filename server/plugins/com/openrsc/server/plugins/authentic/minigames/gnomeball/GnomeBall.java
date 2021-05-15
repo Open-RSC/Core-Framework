@@ -21,8 +21,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.AGILITY;
-import static com.openrsc.server.constants.Skills.RANGED;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTrigger,
@@ -206,8 +204,8 @@ public class GnomeBall implements MiniGameInterface, UsePlayerTrigger, TakeObjTr
 	private void handleScore(Player player, int score_zone) {
 		loadIfNotMemory(player, "gnomeball_goals");
 		int prev_goalCount = player.getAttribute("gnomeball_goals", 0);
-		player.incExp(Skill.of(RANGED).id(), SCORES_XP[score_zone][prev_goalCount], true);
-		player.incExp(Skill.of(AGILITY).id(), SCORES_XP[score_zone][prev_goalCount], true);
+		player.incExp(Skill.RANGED.id(), SCORES_XP[score_zone][prev_goalCount], true);
+		player.incExp(Skill.AGILITY.id(), SCORES_XP[score_zone][prev_goalCount], true);
 		showScoreWindow(player, prev_goalCount+1);
 		if (prev_goalCount+1 == 5) {
 			ActionSender.sendTeleBubble(player, player.getX(), player.getY(), true);

@@ -16,7 +16,6 @@ import com.openrsc.server.util.rsc.Formulae;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.PRAYER;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
@@ -1139,7 +1138,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 	}
 
 	public void gujuoBlessBowl(Player player, Npc npc) {
-		if (getCurrentLevel(player, Skill.of(PRAYER).id()) < 42) {
+		if (getCurrentLevel(player, Skill.PRAYER.id()) < 42) {
 			npcsay(player, npc, "Bwana, I am very sorry,",
 				"But you are too inexperienced to bless this bowl.");
 			player.message("You need a prayer ability of 42 to complete this task.");
@@ -1154,7 +1153,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 			npcsay(player, npc, "Ohhhhhmmmmmm");
 			say(player, npc, "Oooooohhhhmmmmmmmmmm");
 			npcsay(player, npc, "Ohhhhhmmmmmm");
-			if (Formulae.failCalculation(player, Skill.of(PRAYER).id(), 42)) {
+			if (Formulae.failCalculation(player, Skill.PRAYER.id(), 42)) {
 				mes("A totally peacefull aura surrounds you and you ");
 				delay(2);
 				mes("bring down the blessings of your god on the bowl.");
@@ -1175,7 +1174,7 @@ public class LegendsQuestGujuo implements TalkNpcTrigger, UseNpcTrigger {
 				delay(2);
 				mes("You lose some prayer...");
 				delay(2);
-				player.getSkills().setLevel(Skill.of(PRAYER).id(), player.getSkills().getLevel(Skill.of(PRAYER).id()) - 5);
+				player.getSkills().setLevel(Skill.PRAYER.id(), player.getSkills().getLevel(Skill.PRAYER.id()) - 5);
 				npcsay(player, npc, "Would you like to try again.");
 				int failMenu = multi(player, npc, false, //do not send over
 					"Yes, I'd like to bless my golden bowl.",

@@ -13,8 +13,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.AGILITY;
-import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRangeNpcTrigger, TalkNpcTrigger, OpNpcTrigger {
@@ -312,13 +310,13 @@ public class GnomeNpcs implements AttackNpcTrigger, SpellNpcTrigger, PlayerRange
 				player.playerServerMessage(MessageType.QUEST, "and push the gnome to the floor");
 				npcsay(player, n, "grrrr");
 				give(player, ItemId.GNOME_BALL.id(), 1);
-				player.incExp(Skill.of(AGILITY).id(), TACKLING_XP[DataConversions.random(0,1)], true);
+				player.incExp(Skill.AGILITY.id(), TACKLING_XP[DataConversions.random(0,1)], true);
 				player.setAttribute("gnomeball_npc", 0);
 				n.setCombatTimer(-player.getConfig().GAME_TICK * 4);
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You're pushed away by the gnome");
 				say(player, n, "ouch");
-				player.damage((int)(Math.ceil(player.getSkills().getLevel(Skill.of(HITS).id())*0.05)));
+				player.damage((int)(Math.ceil(player.getSkills().getLevel(Skill.HITS.id())*0.05)));
 				npcsay(player, n, "hee hee");
 			}
 		}

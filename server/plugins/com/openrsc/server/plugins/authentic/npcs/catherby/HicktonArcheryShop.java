@@ -14,7 +14,6 @@ import com.openrsc.server.plugins.AbstractShop;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.openrsc.server.constants.Skills.FLETCHING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class HicktonArcheryShop extends AbstractShop {
@@ -57,7 +56,7 @@ public class HicktonArcheryShop extends AbstractShop {
 		choices.add("Yes please");
 		choices.add("No, I prefer to bash things close up");
 		if (config().WANT_CUSTOM_QUESTS
-		&& getMaxLevel(player, Skill.of(FLETCHING).id()) >= 99)
+		&& getMaxLevel(player, Skill.FLETCHING.id()) >= 99)
 			choices.add("Fletching Skillcape");
 
 		final int option = multi(player, n, false, //do not send over
@@ -69,7 +68,7 @@ public class HicktonArcheryShop extends AbstractShop {
 		} else if (option == 1) {
 			say(player, n, "No, I prefer to bash things close up");
 		} else if (option == 2) {
-			if (getMaxLevel(player, Skill.of(FLETCHING).id()) >= 99) {
+			if (getMaxLevel(player, Skill.FLETCHING.id()) >= 99) {
 				npcsay(player, n, "I see you've carved your way to the top",
 					"i can offer you cape",
 					"made for those who excel in fletching",

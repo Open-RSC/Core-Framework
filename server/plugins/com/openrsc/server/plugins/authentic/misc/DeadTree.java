@@ -5,7 +5,6 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
-import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.delay;
 
 public class DeadTree implements OpLocTrigger {
@@ -19,7 +18,7 @@ public class DeadTree implements OpLocTrigger {
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		player.message("The tree seems to lash out at you!");
 		delay();
-		player.damage((int) (player.getSkills().getLevel(Skill.of(HITS).id()) * 0.2D));
+		player.damage((int) (player.getSkills().getLevel(Skill.HITS.id()) * 0.2D));
 		player.message("You are badly scratched by the tree");
 	}
 }

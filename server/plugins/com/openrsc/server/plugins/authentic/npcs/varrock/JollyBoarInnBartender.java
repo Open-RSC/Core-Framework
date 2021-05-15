@@ -10,7 +10,6 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class JollyBoarInnBartender implements TalkNpcTrigger {
@@ -99,7 +98,7 @@ public class JollyBoarInnBartender implements TalkNpcTrigger {
 	}
 
 	private void drinkAle(Player player) {
-		int[] skillIDs = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(MAGIC).id(), Skill.of(CRAFTING).id(), Skill.of(MINING).id()};
+		int[] skillIDs = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.MAGIC.id(), Skill.CRAFTING.id(), Skill.MINING.id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(player, skillIDs[i]);
 		}

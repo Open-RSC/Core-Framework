@@ -29,8 +29,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.NONE;
-
 /** Functions.java
  *
  * addloc
@@ -907,7 +905,7 @@ public class Functions {
 		String skill = questData[1].fromRight().get();
 		int baseXP = questData[2].fromLeft().get();
 		int varXP = questData[3].fromLeft().get();
-		if (skill != NONE && baseXP > 0 && varXP >= 0) {
+		if (skill != Skill.NONE.name() && baseXP > 0 && varXP >= 0) {
 			player.incQuestExp(Skill.of(skill).id(),
 				player.getSkills().getMaxStat(Skill.of(skill).id()) * varXP + baseXP);
 		}

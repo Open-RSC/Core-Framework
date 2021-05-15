@@ -10,7 +10,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.CRAFTING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestMapJungle implements OpInvTrigger {
@@ -116,7 +115,7 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 					canMap = false;
 				}
 				//potentially this check was done earlier?
-				if (getCurrentLevel(player, Skill.of(CRAFTING).id()) < 50) {
+				if (getCurrentLevel(player, Skill.CRAFTING.id()) < 50) {
 					player.message("You need a crafting level of 50 to perform this task.");
 					return;
 				}

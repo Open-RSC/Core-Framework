@@ -13,7 +13,6 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger, UseLocTrigger {
@@ -49,7 +48,7 @@ public class UndergroundPassDungeonFloor implements OpLocTrigger, OpBoundTrigger
 			player.message("@red@leave me be");
 			GameObject claws_of_iban = new GameObject(player.getWorld(), Point.location(player.getX(), player.getY()), 879, 0, 0);
 			addloc(claws_of_iban);
-			player.damage(((int) getCurrentLevel(player, Skill.of(HITS).id()) / 5) + 5);
+			player.damage(((int) getCurrentLevel(player, Skill.HITS.id()) / 5) + 5);
 			say(player, null, "aaarrgghhh");
 			delay(2);
 			delloc(claws_of_iban);

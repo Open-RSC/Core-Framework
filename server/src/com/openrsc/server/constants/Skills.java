@@ -4,6 +4,7 @@ import com.openrsc.server.external.SkillDef;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Skills {
 
@@ -28,6 +29,7 @@ public class Skills {
 
 	public HashMap<SkillDef.EXP_CURVE, int[]> experienceCurves;
 	public ArrayList<SkillDef> skills;
+	private Map<String, Integer> mapSkills;
 
 	//private final String[] SKILL_NAME;
 
@@ -99,9 +101,12 @@ public class Skills {
 			}
 		}
 
+		mapSkills = new HashMap<>();
+
 		for (int j = 0; j < skills.size(); j++) {
-			Skill.addSkill(skills.get(j).getLongName().toUpperCase(), j);
+			mapSkills.put(skills.get(j).getLongName().toUpperCase(), j);
 		}
+		Skill.init(mapSkills);
 	}
 
 	public String getSkillName(int skillIndex) {

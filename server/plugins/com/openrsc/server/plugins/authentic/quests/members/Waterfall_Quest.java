@@ -1,6 +1,9 @@
 package com.openrsc.server.plugins.authentic.quests.members;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -14,8 +17,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.ATTACK;
-import static com.openrsc.server.constants.Skills.STRENGTH;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
@@ -59,7 +60,7 @@ public class Waterfall_Quest implements QuestInterface, TalkNpcTrigger,
 		give(player, ItemId.DIAMOND.id(), 2);
 		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WATERFALL_QUEST);
 		//keep order kosher
-		Either<Integer, String>[] skillIDs = new Either[]{Either.right(STRENGTH), Either.right(ATTACK)};
+		Either<Integer, String>[] skillIDs = new Either[]{Either.right(Skill.STRENGTH.name()), Either.right(Skill.ATTACK.name())};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(player, questData, i == (skillIDs.length - 1));

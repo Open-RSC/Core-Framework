@@ -8,7 +8,6 @@ import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Drinkables implements OpInvTrigger {
@@ -83,25 +82,25 @@ public class Drinkables implements OpInvTrigger {
 			handlePoisonChalice(player, item);
 
 		else if (id == ItemId.FULL_STRENGTH_POTION.id())
-			useNormalPotion(player, item, Skill.of(STRENGTH).id(), 10, 2, ItemId.THREE_STRENGTH_POTION.id(), 3);
+			useNormalPotion(player, item, Skill.STRENGTH.id(), 10, 2, ItemId.THREE_STRENGTH_POTION.id(), 3);
 
 		else if (id == ItemId.THREE_STRENGTH_POTION.id())
-			useNormalPotion(player, item, Skill.of(STRENGTH).id(), 10, 2, ItemId.TWO_STRENGTH_POTION.id(), 2);
+			useNormalPotion(player, item, Skill.STRENGTH.id(), 10, 2, ItemId.TWO_STRENGTH_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_STRENGTH_POTION.id())
-			useNormalPotion(player, item, Skill.of(STRENGTH).id(), 10, 2, ItemId.ONE_STRENGTH_POTION.id(), 1);
+			useNormalPotion(player, item, Skill.STRENGTH.id(), 10, 2, ItemId.ONE_STRENGTH_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_STRENGTH_POTION.id())
-			useNormalPotion(player, item, Skill.of(STRENGTH).id(), 10, 2, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skill.STRENGTH.id(), 10, 2, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_ATTACK_POTION.id())
-			useNormalPotion(player, item, Skill.of(ATTACK).id(), 10, 2, ItemId.TWO_ATTACK_POTION.id(), 2);
+			useNormalPotion(player, item, Skill.ATTACK.id(), 10, 2, ItemId.TWO_ATTACK_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_ATTACK_POTION.id())
-			useNormalPotion(player, item, Skill.of(ATTACK).id(), 10, 2, ItemId.ONE_ATTACK_POTION.id(), 1);
+			useNormalPotion(player, item, Skill.ATTACK.id(), 10, 2, ItemId.ONE_ATTACK_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_ATTACK_POTION.id())
-			useNormalPotion(player, item, Skill.of(ATTACK).id(), 10, 2, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skill.ATTACK.id(), 10, 2, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_STAT_RESTORATION_POTION.id())
 			useStatRestorePotion(player, item, ItemId.TWO_STAT_RESTORATION_POTION.id(), 2);
@@ -113,13 +112,13 @@ public class Drinkables implements OpInvTrigger {
 			useStatRestorePotion(player, item, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_DEFENSE_POTION.id())
-			useNormalPotion(player, item, Skill.of(DEFENSE).id(), 10, 2, ItemId.TWO_DEFENSE_POTION.id(), 2);
+			useNormalPotion(player, item, Skill.DEFENSE.id(), 10, 2, ItemId.TWO_DEFENSE_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_DEFENSE_POTION.id())
-			useNormalPotion(player, item, Skill.of(DEFENSE).id(), 10, 2, ItemId.ONE_DEFENSE_POTION.id(), 1);
+			useNormalPotion(player, item, Skill.DEFENSE.id(), 10, 2, ItemId.ONE_DEFENSE_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_DEFENSE_POTION.id())
-			useNormalPotion(player, item, Skill.of(DEFENSE).id(), 10, 2, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skill.DEFENSE.id(), 10, 2, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_RESTORE_PRAYER_POTION.id())
 			usePrayerPotion(player, item, ItemId.TWO_RESTORE_PRAYER_POTION.id(), 2);
@@ -131,13 +130,13 @@ public class Drinkables implements OpInvTrigger {
 			usePrayerPotion(player, item, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_SUPER_ATTACK_POTION.id())
-			useNormalPotion(player, item, Skill.of(ATTACK).id(), 15, 4, ItemId.TWO_SUPER_ATTACK_POTION.id(), 2);
+			useNormalPotion(player, item, Skill.ATTACK.id(), 15, 4, ItemId.TWO_SUPER_ATTACK_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_SUPER_ATTACK_POTION.id())
-			useNormalPotion(player, item, Skill.of(ATTACK).id(), 15, 4, ItemId.ONE_SUPER_ATTACK_POTION.id(), 1);
+			useNormalPotion(player, item, Skill.ATTACK.id(), 15, 4, ItemId.ONE_SUPER_ATTACK_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_SUPER_ATTACK_POTION.id())
-			useNormalPotion(player, item, Skill.of(ATTACK).id(), 15, 4, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skill.ATTACK.id(), 15, 4, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_FISHING_POTION.id())
 			useFishingPotion(player, item, ItemId.TWO_FISHING_POTION.id(), 2);
@@ -149,31 +148,31 @@ public class Drinkables implements OpInvTrigger {
 			useFishingPotion(player, item, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_SUPER_STRENGTH_POTION.id())
-			useNormalPotion(player, item, Skill.of(STRENGTH).id(), 15, 4, ItemId.TWO_SUPER_STRENGTH_POTION.id(), 2);
+			useNormalPotion(player, item, Skill.STRENGTH.id(), 15, 4, ItemId.TWO_SUPER_STRENGTH_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_SUPER_STRENGTH_POTION.id())
-			useNormalPotion(player, item, Skill.of(STRENGTH).id(), 15, 4, ItemId.ONE_SUPER_STRENGTH_POTION.id(), 1);
+			useNormalPotion(player, item, Skill.STRENGTH.id(), 15, 4, ItemId.ONE_SUPER_STRENGTH_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_SUPER_STRENGTH_POTION.id())
-			useNormalPotion(player, item, Skill.of(STRENGTH).id(), 15, 4, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skill.STRENGTH.id(), 15, 4, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_SUPER_DEFENSE_POTION.id())
-			useNormalPotion(player, item, Skill.of(DEFENSE).id(), 15, 4, ItemId.TWO_SUPER_DEFENSE_POTION.id(), 2);
+			useNormalPotion(player, item, Skill.DEFENSE.id(), 15, 4, ItemId.TWO_SUPER_DEFENSE_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_SUPER_DEFENSE_POTION.id())
-			useNormalPotion(player, item, Skill.of(DEFENSE).id(), 15, 4, ItemId.ONE_SUPER_DEFENSE_POTION.id(), 1);
+			useNormalPotion(player, item, Skill.DEFENSE.id(), 15, 4, ItemId.ONE_SUPER_DEFENSE_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_SUPER_DEFENSE_POTION.id())
-			useNormalPotion(player, item, Skill.of(DEFENSE).id(), 15, 4, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skill.DEFENSE.id(), 15, 4, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_RANGING_POTION.id())
-			useNormalPotion(player, item, Skill.of(RANGED).id(), 10, 3, ItemId.TWO_RANGING_POTION.id(), 2);
+			useNormalPotion(player, item, Skill.RANGED.id(), 10, 3, ItemId.TWO_RANGING_POTION.id(), 2);
 
 		else if (id == ItemId.TWO_RANGING_POTION.id())
-			useNormalPotion(player, item, Skill.of(RANGED).id(), 10, 3, ItemId.ONE_RANGING_POTION.id(), 1);
+			useNormalPotion(player, item, Skill.RANGED.id(), 10, 3, ItemId.ONE_RANGING_POTION.id(), 1);
 
 		else if (id == ItemId.ONE_RANGING_POTION.id())
-			useNormalPotion(player, item, Skill.of(RANGED).id(), 10, 3, ItemId.EMPTY_VIAL.id(), 0);
+			useNormalPotion(player, item, Skill.RANGED.id(), 10, 3, ItemId.EMPTY_VIAL.id(), 0);
 
 		else if (id == ItemId.FULL_CURE_POISON_POTION.id())
 			useCurePotion(player, item, ItemId.TWO_CURE_POISON_POTION.id(), 2);
@@ -227,31 +226,31 @@ public class Drinkables implements OpInvTrigger {
 			}
 
 			if (id == ItemId.FULL_MAGIC_POTION.id())
-				useNormalPotion(player, item, Skill.of(MAGIC).id(), 10, 3, ItemId.TWO_MAGIC_POTION.id(), 2);
+				useNormalPotion(player, item, Skill.MAGIC.id(), 10, 3, ItemId.TWO_MAGIC_POTION.id(), 2);
 
 			else if (id == ItemId.TWO_MAGIC_POTION.id())
-				useNormalPotion(player, item, Skill.of(MAGIC).id(), 10, 3, ItemId.ONE_MAGIC_POTION.id(), 1);
+				useNormalPotion(player, item, Skill.MAGIC.id(), 10, 3, ItemId.ONE_MAGIC_POTION.id(), 1);
 
 			else if (id == ItemId.ONE_MAGIC_POTION.id())
-				useNormalPotion(player, item, Skill.of(MAGIC).id(), 10, 3, ItemId.EMPTY_VIAL.id(), 0);
+				useNormalPotion(player, item, Skill.MAGIC.id(), 10, 3, ItemId.EMPTY_VIAL.id(), 0);
 
 			else if (id == ItemId.FULL_SUPER_RANGING_POTION.id())
-				useNormalPotion(player, item, Skill.of(RANGED).id(), 15, 4, ItemId.TWO_SUPER_RANGING_POTION.id(), 2);
+				useNormalPotion(player, item, Skill.RANGED.id(), 15, 4, ItemId.TWO_SUPER_RANGING_POTION.id(), 2);
 
 			else if (id == ItemId.TWO_SUPER_RANGING_POTION.id())
-				useNormalPotion(player, item, Skill.of(RANGED).id(), 15, 4, ItemId.ONE_SUPER_RANGING_POTION.id(), 1);
+				useNormalPotion(player, item, Skill.RANGED.id(), 15, 4, ItemId.ONE_SUPER_RANGING_POTION.id(), 1);
 
 			else if (id == ItemId.ONE_SUPER_RANGING_POTION.id())
-				useNormalPotion(player, item, Skill.of(RANGED).id(), 15, 4, ItemId.EMPTY_VIAL.id(), 0);
+				useNormalPotion(player, item, Skill.RANGED.id(), 15, 4, ItemId.EMPTY_VIAL.id(), 0);
 
 			else if (id == ItemId.FULL_SUPER_MAGIC_POTION.id())
-				useNormalPotion(player, item, Skill.of(MAGIC).id(), 15, 4, ItemId.TWO_SUPER_MAGIC_POTION.id(), 2);
+				useNormalPotion(player, item, Skill.MAGIC.id(), 15, 4, ItemId.TWO_SUPER_MAGIC_POTION.id(), 2);
 
 			else if (id == ItemId.TWO_SUPER_MAGIC_POTION.id())
-				useNormalPotion(player, item, Skill.of(MAGIC).id(), 15, 4, ItemId.ONE_SUPER_MAGIC_POTION.id(), 1);
+				useNormalPotion(player, item, Skill.MAGIC.id(), 15, 4, ItemId.ONE_SUPER_MAGIC_POTION.id(), 1);
 
 			else if (id == ItemId.ONE_SUPER_MAGIC_POTION.id())
-				useNormalPotion(player, item, Skill.of(MAGIC).id(), 15, 4, ItemId.EMPTY_VIAL.id(), 0);
+				useNormalPotion(player, item, Skill.MAGIC.id(), 15, 4, ItemId.EMPTY_VIAL.id(), 0);
 
 			else if (id == ItemId.FULL_POTION_OF_SARADOMIN.id())
 				useSaradominPotion(player, item, ItemId.TWO_POTION_OF_SARADOMIN.id(), 2);
@@ -270,8 +269,8 @@ public class Drinkables implements OpInvTrigger {
 		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(newItem));
-		player.getSkills().setLevel(Skill.of(FISHING).id(),
-			player.getSkills().getMaxStat(Skill.of(FISHING).id()) + 3);
+		player.getSkills().setLevel(Skill.FISHING.id(),
+			player.getSkills().getMaxStat(Skill.FISHING.id()) + 3);
 		delay(2);
 		if (left <= 0) {
 			player.message("You have finished your potion");
@@ -331,11 +330,11 @@ public class Drinkables implements OpInvTrigger {
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(newItem));
 		boolean isLastDose = item.getCatalogId() == ItemId.ONE_POTION_OF_ZAMORAK.id();
-		int[] affectedStats = {Skill.of(ATTACK).id(),
-			Skill.of(DEFENSE).id(),
-			Skill.of(STRENGTH).id(),
-			Skill.of(HITS).id(),
-			Skill.of(PRAYER).id()};
+		int[] affectedStats = {Skill.ATTACK.id(),
+			Skill.DEFENSE.id(),
+			Skill.STRENGTH.id(),
+			Skill.HITS.id(),
+			Skill.PRAYER.id()};
 		int[] percentageIncrease = {20, -10, 12, -10, 10};
 		int[] modifier = {1, -1, 1, 0, 0};
 		if (isLastDose) {
@@ -349,7 +348,7 @@ public class Drinkables implements OpInvTrigger {
 				int newStat = baseStat
 					+ DataConversions.roundUp((player.getSkills().getMaxStat(affectedStats[i]) / 100D) * percentageIncrease[i])
 					+ modifier[i];
-				newStat = affectedStats[i] != Skill.of(PRAYER).id() ? newStat : Math.min(newStat, player.getSkills().getMaxStat(Skill.of(PRAYER).id()));
+				newStat = affectedStats[i] != Skill.PRAYER.id() ? newStat : Math.min(newStat, player.getSkills().getMaxStat(Skill.PRAYER.id()));
 				if (newStat > player.getSkills().getLevel(affectedStats[i])) {
 					player.getSkills().setLevel(affectedStats[i], newStat);
 				}
@@ -377,12 +376,12 @@ public class Drinkables implements OpInvTrigger {
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(newItem));
 		boolean isLastDose = item.getCatalogId() == ItemId.ONE_POTION_OF_SARADOMIN.id();
-		int[] affectedStats = {Skill.of(ATTACK).id(),
-			Skill.of(DEFENSE).id(),
-			Skill.of(STRENGTH).id(),
-			Skill.of(HITS).id(),
-			Skill.of(RANGED).id(),
-			Skill.of(MAGIC).id()};
+		int[] affectedStats = {Skill.ATTACK.id(),
+			Skill.DEFENSE.id(),
+			Skill.STRENGTH.id(),
+			Skill.HITS.id(),
+			Skill.RANGED.id(),
+			Skill.MAGIC.id()};
 		int[] percentageIncrease = {-10, 20, -10, 15, -10, -10};
 		int[] modifier = {-1, 1, -1, 1, -1, -1};
 		if (isLastDose) {
@@ -396,7 +395,7 @@ public class Drinkables implements OpInvTrigger {
 				int newStat = baseStat
 					+ DataConversions.roundUp((player.getSkills().getMaxStat(affectedStats[i]) / 100D) * percentageIncrease[i])
 					+ modifier[i];
-				newStat = affectedStats[i] != Skill.of(PRAYER).id() ? newStat : Math.min(newStat, player.getSkills().getMaxStat(Skill.of(PRAYER).id()));
+				newStat = affectedStats[i] != Skill.PRAYER.id() ? newStat : Math.min(newStat, player.getSkills().getMaxStat(Skill.PRAYER.id()));
 				if (newStat > player.getSkills().getLevel(affectedStats[i])) {
 					player.getSkills().setLevel(affectedStats[i], newStat);
 				}
@@ -423,11 +422,11 @@ public class Drinkables implements OpInvTrigger {
 		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(newItem));
-		int newPrayer = player.getSkills().getLevel(Skill.of(PRAYER).id()) + (int) ((player.getSkills().getMaxStat(Skill.of(PRAYER).id()) * 0.25) + 7);
-		if (newPrayer > player.getSkills().getMaxStat(Skill.of(PRAYER).id())) {
-			newPrayer = player.getSkills().getMaxStat(Skill.of(PRAYER).id());
+		int newPrayer = player.getSkills().getLevel(Skill.PRAYER.id()) + (int) ((player.getSkills().getMaxStat(Skill.PRAYER.id()) * 0.25) + 7);
+		if (newPrayer > player.getSkills().getMaxStat(Skill.PRAYER.id())) {
+			newPrayer = player.getSkills().getMaxStat(Skill.PRAYER.id());
 		}
-		player.getSkills().setLevel(Skill.of(PRAYER).id(), newPrayer);
+		player.getSkills().setLevel(Skill.PRAYER.id(), newPrayer);
 		delay(2);
 		if (left <= 0) {
 			player.message("You have finished your potion");
@@ -441,7 +440,7 @@ public class Drinkables implements OpInvTrigger {
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(newItem));
 		for (int i = 0; i < Skill.maxId(); i++) {
-			if (i == Skill.of(HITS).id() || i == Skill.of(PRAYER).id()) {
+			if (i == Skill.HITS.id() || i == Skill.PRAYER.id()) {
 				continue;
 			}
 			if (player.getSkills().getLevel(i) > player.getSkills().getMaxStat(i)) {
@@ -472,17 +471,17 @@ public class Drinkables implements OpInvTrigger {
 		int newStat;
 		// TODO Should probably put the boost values in some kind of configuration or definition at some point.
 		// Restore stat
-		if (player.getSkills().getLevel(Skill.of(RUNECRAFT).id()) <= player.getSkills().getMaxStat(Skill.of(RUNECRAFT).id())) {
-			newStat = player.getSkills().getLevel(Skill.of(RUNECRAFT).id()) + (superPot ? 6 : 3);
+		if (player.getSkills().getLevel(Skill.RUNECRAFT.id()) <= player.getSkills().getMaxStat(Skill.RUNECRAFT.id())) {
+			newStat = player.getSkills().getLevel(Skill.RUNECRAFT.id()) + (superPot ? 6 : 3);
 		}
 
 		// Boost stat
 		else {
-			final int boostedStat = player.getSkills().getMaxStat(Skill.of(RUNECRAFT).id()) + (superPot ? 6 : 3);
-			newStat = Math.max(boostedStat, player.getSkills().getLevel(Skill.of(RUNECRAFT).id()));
+			final int boostedStat = player.getSkills().getMaxStat(Skill.RUNECRAFT.id()) + (superPot ? 6 : 3);
+			newStat = Math.max(boostedStat, player.getSkills().getLevel(Skill.RUNECRAFT.id()));
 		}
 
-		player.getSkills().setLevel(Skill.of(RUNECRAFT).id(), newStat);
+		player.getSkills().setLevel(Skill.RUNECRAFT.id(), newStat);
 		delay(2);
 		if (left <= 0) {
 			player.message("You have finished your potion");
@@ -521,27 +520,27 @@ public class Drinkables implements OpInvTrigger {
 		player.playerServerMessage(MessageType.QUEST, "You feel slightly reinvigorated");
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
 		if (item.getCatalogId() == ItemId.WHISKY.id())
-			player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) - 6);
+			player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - 6);
 		else
-			player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) - 3);
-		if (player.getSkills().getLevel(Skill.of(STRENGTH).id()) <= player.getSkills().getMaxStat(Skill.of(STRENGTH).id())) {
-			player.getSkills().setLevel(Skill.of(STRENGTH).id(), player.getSkills().getLevel(Skill.of(STRENGTH).id()) + 5);
+			player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - 3);
+		if (player.getSkills().getLevel(Skill.STRENGTH.id()) <= player.getSkills().getMaxStat(Skill.STRENGTH.id())) {
+			player.getSkills().setLevel(Skill.STRENGTH.id(), player.getSkills().getLevel(Skill.STRENGTH.id()) + 5);
 		}
-		final boolean heals = player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id());
+		final boolean heals = player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id());
 		if (heals) {
-			int newHp = player.getSkills().getLevel(Skill.of(HITS).id()) + 4;
-			if (newHp > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-				newHp = player.getSkills().getMaxStat(Skill.of(HITS).id());
+			int newHp = player.getSkills().getLevel(Skill.HITS.id()) + 4;
+			if (newHp > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newHp = player.getSkills().getMaxStat(Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skill.of(HITS).id(), newHp);
+			player.getSkills().setLevel(Skill.HITS.id(), newHp);
 		}
 		player.getCarriedItems().remove(item);
 	}
 
 	private void handleCocktail(Player player, Item item) {
-		player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) - 3);
-		player.getSkills().setLevel(Skill.of(DEFENSE).id(), player.getSkills().getLevel(Skill.of(DEFENSE).id()) - 1);
-		player.getSkills().setLevel(Skill.of(STRENGTH).id(), player.getSkills().getLevel(Skill.of(STRENGTH).id()) - 4);
+		player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - 3);
+		player.getSkills().setLevel(Skill.DEFENSE.id(), player.getSkills().getLevel(Skill.DEFENSE.id()) - 1);
+		player.getSkills().setLevel(Skill.STRENGTH.id(), player.getSkills().getLevel(Skill.STRENGTH.id()) - 4);
 		player.playerServerMessage(MessageType.QUEST, "You drink the cocktail");
 		player.playerServerMessage(MessageType.QUEST, "It tastes awful..yuck");
 		player.getCarriedItems().remove(item);
@@ -550,13 +549,13 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void handleFruitCocktail(Player player, Item item) {
-		if (player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-			int newHp = player.getSkills().getLevel(Skill.of(HITS).id()) + 8
+		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			int newHp = player.getSkills().getLevel(Skill.HITS.id()) + 8
 					+ (item.getCatalogId() == ItemId.PINEAPPLE_PUNCH.id() ? 1 : 0);
-			if (newHp > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-				newHp = player.getSkills().getMaxStat(Skill.of(HITS).id());
+			if (newHp > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newHp = player.getSkills().getMaxStat(Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skill.of(HITS).id(), newHp);
+			player.getSkills().setLevel(Skill.HITS.id(), newHp);
 		}
 		player.playerServerMessage(MessageType.QUEST, "You drink the cocktail");
 		player.playerServerMessage(MessageType.QUEST, "yum ..it tastes great");
@@ -566,16 +565,16 @@ public class Drinkables implements OpInvTrigger {
 	}
 
 	private void handleSpecialCocktail(Player player, Item item) {
-		if (player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-			int newHp = player.getSkills().getLevel(Skill.of(HITS).id()) + 5;
-			if (newHp > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-				newHp = player.getSkills().getMaxStat(Skill.of(HITS).id());
+		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			int newHp = player.getSkills().getLevel(Skill.HITS.id()) + 5;
+			if (newHp > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newHp = player.getSkills().getMaxStat(Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skill.of(HITS).id(), newHp);
+			player.getSkills().setLevel(Skill.HITS.id(), newHp);
 		}
-		player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) - 4);
-		if (player.getSkills().getLevel(Skill.of(STRENGTH).id()) <= player.getSkills().getMaxStat(Skill.of(STRENGTH).id())) {
-			player.getSkills().setLevel(Skill.of(STRENGTH).id(), player.getSkills().getLevel(Skill.of(STRENGTH).id()) + 6);
+		player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - 4);
+		if (player.getSkills().getLevel(Skill.STRENGTH.id()) <= player.getSkills().getMaxStat(Skill.STRENGTH.id())) {
+			player.getSkills().setLevel(Skill.STRENGTH.id(), player.getSkills().getLevel(Skill.STRENGTH.id()) + 6);
 		}
 		player.playerServerMessage(MessageType.QUEST, "You drink the cocktail");
 		player.playerServerMessage(MessageType.QUEST, "yum ..it tastes great");
@@ -591,7 +590,7 @@ public class Drinkables implements OpInvTrigger {
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.JUG.id()));
 
-		player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) - 3);
+		player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - 3);
 		delay(2);
 		player.message("You start to feel sick");
 	}
@@ -608,14 +607,14 @@ public class Drinkables implements OpInvTrigger {
 		} else {
 			player.getCarriedItems().getInventory().add(new Item(ItemId.JUG.id()));
 		}
-		if (player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-			int newStat = player.getSkills().getLevel(Skill.of(HITS).id()) + 11;
-			if (newStat > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-				newStat = player.getSkills().getMaxStat(Skill.of(HITS).id());
+		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			int newStat = player.getSkills().getLevel(Skill.HITS.id()) + 11;
+			if (newStat > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newStat = player.getSkills().getMaxStat(Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skill.of(HITS).id(), newStat);
+			player.getSkills().setLevel(Skill.HITS.id(), newStat);
 		}
-		player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) - 3);
+		player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - 3);
 	}
 
 	private void handleChocolatyMilk(Player player, Item item) {
@@ -623,12 +622,12 @@ public class Drinkables implements OpInvTrigger {
 		player.message("You drink the chocolaty milk");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BUCKET.id()));
-		if (player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-			int newHp = player.getSkills().getLevel(Skill.of(HITS).id()) + 4;
-			if (newHp > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-				newHp = player.getSkills().getMaxStat(Skill.of(HITS).id());
+		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			int newHp = player.getSkills().getLevel(Skill.HITS.id()) + 4;
+			if (newHp > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newHp = player.getSkills().getMaxStat(Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skill.of(HITS).id(), newHp);
+			player.getSkills().setLevel(Skill.HITS.id(), newHp);
 		}
 	}
 
@@ -637,12 +636,12 @@ public class Drinkables implements OpInvTrigger {
 		player.message("You drink the cold milk");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEVERAGE_GLASS.id()));
-		if (player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-			int newHp = player.getSkills().getLevel(Skill.of(HITS).id()) + 2;
-			if (newHp > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-				newHp = player.getSkills().getMaxStat(Skill.of(HITS).id());
+		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			int newHp = player.getSkills().getLevel(Skill.HITS.id()) + 2;
+			if (newHp > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newHp = player.getSkills().getMaxStat(Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skill.of(HITS).id(), newHp);
+			player.getSkills().setLevel(Skill.HITS.id(), newHp);
 		}
 	}
 
@@ -651,22 +650,22 @@ public class Drinkables implements OpInvTrigger {
 		// authentic does not send to quest tab
 		player.message("You drink the cup of tea");
 		player.getCarriedItems().remove(item);
-		int changeHp = (player.getSkills().getMaxStat(Skill.of(HITS).id()) > 55 ? 3 : 2);
-		if (player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-			int newHp = player.getSkills().getLevel(Skill.of(HITS).id()) + changeHp;
-			if (newHp > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-				newHp = player.getSkills().getMaxStat(Skill.of(HITS).id());
+		int changeHp = (player.getSkills().getMaxStat(Skill.HITS.id()) > 55 ? 3 : 2);
+		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			int newHp = player.getSkills().getLevel(Skill.HITS.id()) + changeHp;
+			if (newHp > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newHp = player.getSkills().getMaxStat(Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skill.of(HITS).id(), newHp);
+			player.getSkills().setLevel(Skill.HITS.id(), newHp);
 		}
-		int changeAtt = (player.getSkills().getMaxStat(Skill.of(ATTACK).id()) > 55 ? 3 : 2);
-		int maxWithTea = (player.getSkills().getMaxStat(Skill.of(ATTACK).id()) + changeAtt);
-		if (maxWithTea - player.getSkills().getLevel(Skill.of(ATTACK).id()) < changeAtt) {
-			changeAtt = maxWithTea - player.getSkills().getLevel(Skill.of(ATTACK).id());
+		int changeAtt = (player.getSkills().getMaxStat(Skill.ATTACK.id()) > 55 ? 3 : 2);
+		int maxWithTea = (player.getSkills().getMaxStat(Skill.ATTACK.id()) + changeAtt);
+		if (maxWithTea - player.getSkills().getLevel(Skill.ATTACK.id()) < changeAtt) {
+			changeAtt = maxWithTea - player.getSkills().getLevel(Skill.ATTACK.id());
 		}
-		if (player.getSkills().getLevel(Skill.of(ATTACK).id()) <=
-				(player.getSkills().getMaxStat(Skill.of(ATTACK).id()) + (player.getSkills().getMaxStat(Skill.of(ATTACK).id()) > 55 ? 3 : 2))) {
-			player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) + changeAtt);
+		if (player.getSkills().getLevel(Skill.ATTACK.id()) <=
+				(player.getSkills().getMaxStat(Skill.ATTACK.id()) + (player.getSkills().getMaxStat(Skill.ATTACK.id()) > 55 ? 3 : 2))) {
+			player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) + changeAtt);
 		}
 	}
 
@@ -677,16 +676,16 @@ public class Drinkables implements OpInvTrigger {
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
-		player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) - 4);
-		if (player.getSkills().getLevel(Skill.of(STRENGTH).id()) <= player.getSkills().getMaxStat(Skill.of(STRENGTH).id())) {
-			player.getSkills().setLevel(Skill.of(STRENGTH).id(), player.getSkills().getLevel(Skill.of(STRENGTH).id()) + 2);
+		player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - 4);
+		if (player.getSkills().getLevel(Skill.STRENGTH.id()) <= player.getSkills().getMaxStat(Skill.STRENGTH.id())) {
+			player.getSkills().setLevel(Skill.STRENGTH.id(), player.getSkills().getLevel(Skill.STRENGTH.id()) + 2);
 		}
-		if (player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-			int newStat = player.getSkills().getLevel(Skill.of(HITS).id()) + 1;
-			if (newStat > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-				newStat = player.getSkills().getMaxStat(Skill.of(HITS).id());
+		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			int newStat = player.getSkills().getLevel(Skill.HITS.id()) + 1;
+			if (newStat > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newStat = player.getSkills().getMaxStat(Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skill.of(HITS).id(), newStat);
+			player.getSkills().setLevel(Skill.HITS.id(), newStat);
 		}
 	}
 
@@ -697,12 +696,12 @@ public class Drinkables implements OpInvTrigger {
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 		delay(2);
 		player.playerServerMessage(MessageType.QUEST, "It has a strange taste");
-		int[] meleeIds = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(STRENGTH).id()};
+		int[] meleeIds = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
 		for (int statId : meleeIds) {
 			player.getSkills().setLevel(statId, player.getSkills().getLevel(statId) - 4);
 		}
-		if (player.getSkills().getLevel(Skill.of(HERBLAW).id()) <= player.getSkills().getMaxStat(Skill.of(HERBLAW).id())) {
-			player.getSkills().setLevel(Skill.of(HERBLAW).id(), player.getSkills().getLevel(Skill.of(HERBLAW).id()) + 1);
+		if (player.getSkills().getLevel(Skill.HERBLAW.id()) <= player.getSkills().getMaxStat(Skill.HERBLAW.id())) {
+			player.getSkills().setLevel(Skill.HERBLAW.id(), player.getSkills().getLevel(Skill.HERBLAW.id()) + 1);
 		}
 	}
 
@@ -713,19 +712,19 @@ public class Drinkables implements OpInvTrigger {
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 		delay(2);
 		player.playerServerMessage(MessageType.QUEST, "You feel very strange");
-		int[] meleeIds = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(STRENGTH).id()};
+		int[] meleeIds = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
 		for (int statId : meleeIds) {
 			player.getSkills().setLevel(statId, player.getSkills().getLevel(statId) - 4);
 		}
-		int change = (player.getSkills().getMaxStat(Skill.of(MAGIC).id()) > 55 ? 3 : 2);
-		int maxWithBomb = (player.getSkills().getMaxStat(Skill.of(MAGIC).id()) + change);
-		if (maxWithBomb - player.getSkills().getLevel(Skill.of(MAGIC).id()) < change) {
-			change = maxWithBomb - player.getSkills().getLevel(Skill.of(MAGIC).id());
+		int change = (player.getSkills().getMaxStat(Skill.MAGIC.id()) > 55 ? 3 : 2);
+		int maxWithBomb = (player.getSkills().getMaxStat(Skill.MAGIC.id()) + change);
+		if (maxWithBomb - player.getSkills().getLevel(Skill.MAGIC.id()) < change) {
+			change = maxWithBomb - player.getSkills().getLevel(Skill.MAGIC.id());
 		}
-		if (player.getSkills().getLevel(Skill.of(MAGIC).id())
-				<= (player.getSkills().getMaxStat(Skill.of(MAGIC).id()) + (player.getSkills().getMaxStat(Skill.of(MAGIC).id())
+		if (player.getSkills().getLevel(Skill.MAGIC.id())
+				<= (player.getSkills().getMaxStat(Skill.MAGIC.id()) + (player.getSkills().getMaxStat(Skill.MAGIC.id())
 				> 55 ? 3 : 2))) {
-			player.getSkills().setLevel(Skill.of(MAGIC).id(), player.getSkills().getLevel(Skill.of(MAGIC).id()) + change);
+			player.getSkills().setLevel(Skill.MAGIC.id(), player.getSkills().getLevel(Skill.MAGIC.id()) + change);
 		}
 	}
 
@@ -737,15 +736,15 @@ public class Drinkables implements OpInvTrigger {
 		player.getCarriedItems().getInventory().add(new Item(ItemId.BEER_GLASS.id()));
 		delay(3);
 		player.playerServerMessage(MessageType.QUEST, "It tastes pretty strong too");
-		int[] meleeIds = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(STRENGTH).id()};
+		int[] meleeIds = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
 		for (int statId : meleeIds) {
 			player.getSkills().setLevel(statId, player.getSkills().getLevel(statId) - 4);
 		}
-		if (player.getSkills().getLevel(Skill.of(SMITHING).id()) <= player.getSkills().getMaxStat(Skill.of(SMITHING).id())) {
-			player.getSkills().setLevel(Skill.of(SMITHING).id(), player.getSkills().getLevel(Skill.of(SMITHING).id()) + 1);
+		if (player.getSkills().getLevel(Skill.SMITHING.id()) <= player.getSkills().getMaxStat(Skill.SMITHING.id())) {
+			player.getSkills().setLevel(Skill.SMITHING.id(), player.getSkills().getLevel(Skill.SMITHING.id()) + 1);
 		}
-		if (player.getSkills().getLevel(Skill.of(MINING).id()) <= player.getSkills().getMaxStat(Skill.of(MINING).id())) {
-			player.getSkills().setLevel(Skill.of(MINING).id(), player.getSkills().getLevel(Skill.of(MINING).id()) + 1);
+		if (player.getSkills().getLevel(Skill.MINING.id()) <= player.getSkills().getMaxStat(Skill.MINING.id())) {
+			player.getSkills().setLevel(Skill.MINING.id(), player.getSkills().getLevel(Skill.MINING.id()) + 1);
 		}
 	}
 
@@ -757,16 +756,16 @@ public class Drinkables implements OpInvTrigger {
 		delay(2);
 		player.playerServerMessage(MessageType.QUEST, "You feel slightly reinvigorated");
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
-		player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) - 4);
-		if (player.getSkills().getLevel(Skill.of(STRENGTH).id()) <= player.getSkills().getMaxStat(Skill.of(STRENGTH).id())) {
-			player.getSkills().setLevel(Skill.of(STRENGTH).id(), player.getSkills().getLevel(Skill.of(STRENGTH).id()) + 2);
+		player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - 4);
+		if (player.getSkills().getLevel(Skill.STRENGTH.id()) <= player.getSkills().getMaxStat(Skill.STRENGTH.id())) {
+			player.getSkills().setLevel(Skill.STRENGTH.id(), player.getSkills().getLevel(Skill.STRENGTH.id()) + 2);
 		}
-		if (player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-			int newStat = player.getSkills().getLevel(Skill.of(HITS).id()) + 2;
-			if (newStat > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-				newStat = player.getSkills().getMaxStat(Skill.of(HITS).id());
+		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			int newStat = player.getSkills().getLevel(Skill.HITS.id()) + 2;
+			if (newStat > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newStat = player.getSkills().getMaxStat(Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skill.of(HITS).id(), newStat);
+			player.getSkills().setLevel(Skill.HITS.id(), newStat);
 		}
 	}
 
@@ -778,9 +777,9 @@ public class Drinkables implements OpInvTrigger {
 		delay(2);
 		player.playerServerMessage(MessageType.QUEST, "You feel slightly reinvigorated");
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
-		player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) - 4);
-		if (player.getSkills().getLevel(Skill.of(STRENGTH).id()) <= player.getSkills().getMaxStat(Skill.of(STRENGTH).id())) {
-			player.getSkills().setLevel(Skill.of(STRENGTH).id(), player.getSkills().getLevel(Skill.of(STRENGTH).id()) + 2);
+		player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - 4);
+		if (player.getSkills().getLevel(Skill.STRENGTH.id()) <= player.getSkills().getMaxStat(Skill.STRENGTH.id())) {
+			player.getSkills().setLevel(Skill.STRENGTH.id(), player.getSkills().getLevel(Skill.STRENGTH.id()) + 2);
 		}
 	}
 
@@ -792,16 +791,16 @@ public class Drinkables implements OpInvTrigger {
 		delay(2);
 		player.playerServerMessage(MessageType.QUEST, "You feel slightly reinvigorated");
 		player.playerServerMessage(MessageType.QUEST, "And slightly dizzy too");
-		player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) - 6);
-		if (player.getSkills().getLevel(Skill.of(STRENGTH).id()) <= player.getSkills().getMaxStat(Skill.of(STRENGTH).id())) {
-			player.getSkills().setLevel(Skill.of(STRENGTH).id(), player.getSkills().getLevel(Skill.of(STRENGTH).id()) + 3);
+		player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - 6);
+		if (player.getSkills().getLevel(Skill.STRENGTH.id()) <= player.getSkills().getMaxStat(Skill.STRENGTH.id())) {
+			player.getSkills().setLevel(Skill.STRENGTH.id(), player.getSkills().getLevel(Skill.STRENGTH.id()) + 3);
 		}
-		if (player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-			int newStat = player.getSkills().getLevel(Skill.of(HITS).id()) + 3;
-			if (newStat > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-				newStat = player.getSkills().getMaxStat(Skill.of(HITS).id());
+		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			int newStat = player.getSkills().getLevel(Skill.HITS.id()) + 3;
+			if (newStat > player.getSkills().getMaxStat(Skill.HITS.id())) {
+				newStat = player.getSkills().getMaxStat(Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skill.of(HITS).id(), newStat);
+			player.getSkills().setLevel(Skill.HITS.id(), newStat);
 		}
 	}
 
@@ -812,72 +811,72 @@ public class Drinkables implements OpInvTrigger {
 		switch (chance) {
 			case 0: // Hits -1 or -3
 				int c = DataConversions.random(0, 1);
-				int hp = player.getSkills().getLevel(Skill.of(HITS).id());
-				player.getSkills().setLevel(Skill.of(HITS).id(), c == 0 ? hp - 1 : hp - 3);
+				int hp = player.getSkills().getLevel(Skill.HITS.id());
+				player.getSkills().setLevel(Skill.HITS.id(), c == 0 ? hp - 1 : hp - 3);
 				player.message("That tasted a bit dodgy. You feel a bit ill");
 				break;
 			case 1: // Hits + 7
 				needs = (
-					player.getSkills().getMaxStat(Skill.of(HITS).id())
-						- player.getSkills().getLevel(Skill.of(HITS).id()));
+					player.getSkills().getMaxStat(Skill.HITS.id())
+						- player.getSkills().getLevel(Skill.HITS.id()));
 				needs = needs < 7 ? needs : 7;
-				player.getSkills().setLevel(Skill.of(HITS).id(),
-					player.getSkills().getLevel(Skill.of(HITS).id()) + needs);
+				player.getSkills().setLevel(Skill.HITS.id(),
+					player.getSkills().getLevel(Skill.HITS.id()) + needs);
 				player.message("It heals some health");
 				break;
 			case 2: // Crafting +1 Attack & Defence -1
 				needs = (
-					player.getSkills().getMaxStat(Skill.of(CRAFTING).id()) + 1
-						- player.getSkills().getLevel(Skill.of(CRAFTING).id()));
+					player.getSkills().getMaxStat(Skill.CRAFTING.id()) + 1
+						- player.getSkills().getLevel(Skill.CRAFTING.id()));
 				needs = needs < 4 ? needs : 4;
-				player.getSkills().setLevel(Skill.of(CRAFTING).id(),
-					player.getSkills().getLevel(Skill.of(CRAFTING).id()) + needs);
-				player.getSkills().setLevel(Skill.of(ATTACK).id(),
-					player.getSkills().getLevel(Skill.of(ATTACK).id()) - 1);
-				player.getSkills().setLevel(Skill.of(DEFENSE).id(),
-					player.getSkills().getLevel(Skill.of(DEFENSE).id()) - 1);
+				player.getSkills().setLevel(Skill.CRAFTING.id(),
+					player.getSkills().getLevel(Skill.CRAFTING.id()) + needs);
+				player.getSkills().setLevel(Skill.ATTACK.id(),
+					player.getSkills().getLevel(Skill.ATTACK.id()) - 1);
+				player.getSkills().setLevel(Skill.DEFENSE.id(),
+					player.getSkills().getLevel(Skill.DEFENSE.id()) - 1);
 				player.message("You feel a little strange");
 				break;
 			case 3: // Hits +? Thieving + 1
 				needs = (
-					player.getSkills().getMaxStat(Skill.of(HITS).id())
-						- player.getSkills().getLevel(Skill.of(HITS).id()));
+					player.getSkills().getMaxStat(Skill.HITS.id())
+						- player.getSkills().getLevel(Skill.HITS.id()));
 				needs = needs < 30 ? needs : 30;
-				player.getSkills().setLevel(Skill.of(HITS).id(),
-					player.getSkills().getLevel(Skill.of(HITS).id()) + needs);
+				player.getSkills().setLevel(Skill.HITS.id(),
+					player.getSkills().getLevel(Skill.HITS.id()) + needs);
 				needs = (
-					player.getSkills().getMaxStat(Skill.of(THIEVING).id()) + 1
-						- player.getSkills().getLevel(Skill.of(THIEVING).id()));
+					player.getSkills().getMaxStat(Skill.THIEVING.id()) + 1
+						- player.getSkills().getLevel(Skill.THIEVING.id()));
 				needs = needs < 1 ? needs : 1;
-				player.getSkills().setLevel(Skill.of(THIEVING).id(),
-					player.getSkills().getLevel(Skill.of(THIEVING).id()) + needs);
+				player.getSkills().setLevel(Skill.THIEVING.id(),
+					player.getSkills().getLevel(Skill.THIEVING.id()) + needs);
 				player.message("You feel a lot better");
 				break;
 			case 4: // Hits +? Attack, Defence, Strength +4
 				needs = (
-					player.getSkills().getMaxStat(Skill.of(HITS).id())
-						- player.getSkills().getLevel(Skill.of(HITS).id()));
+					player.getSkills().getMaxStat(Skill.HITS.id())
+						- player.getSkills().getLevel(Skill.HITS.id()));
 				needs = needs < 30 ? needs : 30;
-				player.getSkills().setLevel(Skill.of(HITS).id(),
-					player.getSkills().getLevel(Skill.of(HITS).id()) + needs);
+				player.getSkills().setLevel(Skill.HITS.id(),
+					player.getSkills().getLevel(Skill.HITS.id()) + needs);
 				needs = (
-					player.getSkills().getMaxStat(Skill.of(ATTACK).id()) + 4
-						- player.getSkills().getLevel(Skill.of(ATTACK).id()));
+					player.getSkills().getMaxStat(Skill.ATTACK.id()) + 4
+						- player.getSkills().getLevel(Skill.ATTACK.id()));
 				needs = needs < 4 ? needs : 4;
-				player.getSkills().setLevel(Skill.of(ATTACK).id(),
-					player.getSkills().getLevel(Skill.of(ATTACK).id()) + needs);
+				player.getSkills().setLevel(Skill.ATTACK.id(),
+					player.getSkills().getLevel(Skill.ATTACK.id()) + needs);
 				needs = (
-					player.getSkills().getMaxStat(Skill.of(STRENGTH).id()) + 4
-						- player.getSkills().getLevel(Skill.of(STRENGTH).id()));
+					player.getSkills().getMaxStat(Skill.STRENGTH.id()) + 4
+						- player.getSkills().getLevel(Skill.STRENGTH.id()));
 				needs = needs < 4 ? needs : 4;
-				player.getSkills().setLevel(Skill.of(STRENGTH).id(),
-					player.getSkills().getLevel(Skill.of(STRENGTH).id()) + needs);
+				player.getSkills().setLevel(Skill.STRENGTH.id(),
+					player.getSkills().getLevel(Skill.STRENGTH.id()) + needs);
 				needs = (
-					player.getSkills().getMaxStat(Skill.of(DEFENSE).id()) + 4
-						- player.getSkills().getLevel(Skill.of(DEFENSE).id()));
+					player.getSkills().getMaxStat(Skill.DEFENSE.id()) + 4
+						- player.getSkills().getLevel(Skill.DEFENSE.id()));
 				needs = needs < 4 ? needs : 4;
-				player.getSkills().setLevel(Skill.of(DEFENSE).id(),
-					player.getSkills().getLevel(Skill.of(DEFENSE).id()) + needs);
+				player.getSkills().setLevel(Skill.DEFENSE.id(),
+					player.getSkills().getLevel(Skill.DEFENSE.id()) + needs);
 				player.message("Wow that was an amazing!! You feel really invigorated");
 				break;
 			case 5: // No effect

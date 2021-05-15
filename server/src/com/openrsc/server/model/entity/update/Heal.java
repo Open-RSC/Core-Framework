@@ -3,8 +3,6 @@ package com.openrsc.server.model.entity.update;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.Mob;
 
-import static com.openrsc.server.constants.Skills.HITS;
-
 public class Heal {
 
 	private Mob mob;
@@ -18,7 +16,7 @@ public class Heal {
 	}
 
 	public int getCurHits() {
-		return mob.getSkills().getLevel(Skill.of(HITS).id());
+		return mob.getSkills().getLevel(Skill.HITS.id());
 	}
 
 	public int getHeal() {
@@ -30,7 +28,7 @@ public class Heal {
 	}
 
 	public int getMaxHits() {
-		return mob.getSkills().getMaxStat(Skill.of(HITS).id());
+		return mob.getSkills().getMaxStat(Skill.HITS.id());
 	}
 
 	public int getIndex() {

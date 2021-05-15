@@ -18,7 +18,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.THIEVING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TribalTotem implements QuestInterface, TalkNpcTrigger,
@@ -393,7 +392,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			if (command.equalsIgnoreCase("Search for traps")) {
-				if (getCurrentLevel(player, Skill.of(THIEVING).id()) < 21) {
+				if (getCurrentLevel(player, Skill.THIEVING.id()) < 21) {
 					mes("You don't find anything interesting");
 					delay(3);
 				} else {

@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -17,8 +18,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.DEFENSE;
-import static com.openrsc.server.constants.Skills.STRENGTH;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class DragonSlayer implements QuestInterface, UseLocTrigger,
@@ -68,7 +67,7 @@ public class DragonSlayer implements QuestInterface, UseLocTrigger,
 		player.message("@gre@You haved gained 2 quest points!");
 		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DRAGON_SLAYER);
 		//keep order kosher
-		Either<Integer, String>[] skillIDs = new Either[]{Either.right(STRENGTH), Either.right(DEFENSE)};
+		Either<Integer, String>[] skillIDs = new Either[]{Either.right(Skill.STRENGTH.name()), Either.right(Skill.DEFENSE.name())};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(player, questData, i == (skillIDs.length - 1));

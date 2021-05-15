@@ -21,8 +21,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Objects;
 
-import static com.openrsc.server.constants.Skills.HITS;
-import static com.openrsc.server.constants.Skills.RANGED;
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 
 public class RangeEvent extends GameTickEvent {
@@ -84,7 +82,7 @@ public class RangeEvent extends GameTickEvent {
 		int bowID = getPlayerOwner().getRangeEquip();
 		if (!getPlayerOwner().loggedIn() || getPlayerOwner().inCombat()
 			|| (target.isPlayer() && !((Player) target).loggedIn())
-			|| target.getSkills().getLevel(Skill.of(HITS).id()) <= 0 || !getPlayerOwner().checkAttack(target, true)
+			|| target.getSkills().getLevel(Skill.HITS.id()) <= 0 || !getPlayerOwner().checkAttack(target, true)
 			|| !getPlayerOwner().withinRange(target) || bowID < 0) {
 			getPlayerOwner().resetRange();
 			stop();
@@ -303,17 +301,17 @@ public class RangeEvent extends GameTickEvent {
 					}
 					getPlayerOwner().playerServerMessage(MessageType.QUEST, "Your shield prevents some of the damage from the flames");
 				}
-				fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skill.of(HITS).id()) * percentage / 100.0);
+				fireDamage = (int) Math.floor(getCurrentLevel(getPlayerOwner(), Skill.HITS.id()) * percentage / 100.0);
 				getPlayerOwner().damage(fireDamage);
 
 				//reduce ranged level (case for KBD)
 				if (npc.getID() == NpcId.KING_BLACK_DRAGON.id()) {
-					int newLevel = getCurrentLevel(getPlayerOwner(), Skill.of(RANGED).id()) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
-					getPlayerOwner().getSkills().setLevel(Skill.of(RANGED).id(), newLevel);
+					int newLevel = getCurrentLevel(getPlayerOwner(), Skill.RANGED.id()) - Formulae.getLevelsToReduceAttackKBD(getPlayerOwner());
+					getPlayerOwner().getSkills().setLevel(Skill.RANGED.id(), newLevel);
 				}
 			}
 		} else if (target.isPlayer() && damage > 0) {
-			getPlayerOwner().incExp(Skill.of(RANGED).id(), Formulae.rangedHitExperience(target, damage), true);
+			getPlayerOwner().incExp(Skill.RANGED.id(), Formulae.rangedHitExperience(target, damage), true);
 		}
 		if (Formulae.looseArrow(damage)) {
 			GroundItem arrows = getArrows(arrowID);

@@ -14,7 +14,6 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.constants.Skills.RANGED;
 import static com.openrsc.server.plugins.Functions.*;
 
 public final class MonkOfEntrana implements OpLocTrigger,
@@ -76,7 +75,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 			if (def.getWieldPosition() == Equipment.EquipmentSlot.SLOT_NECK.getIndex()
 				|| def.getWieldPosition() == Equipment.EquipmentSlot.SLOT_CAPE.getIndex()) return false;
 			// don't allow anything with a ranged level requirement
-			if (def.getRequiredSkillIndex() == Skill.of(RANGED).id()) return true;
+			if (def.getRequiredSkillIndex() == Skill.RANGED.id()) return true;
 			// allow anything without melee combat stats and armor, otherwise block
 			if (def.getWeaponPowerBonus() == 0 && def.getWeaponAimBonus() == 0 && def.getArmourBonus() == 0)  return false;
 				else return true;

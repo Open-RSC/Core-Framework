@@ -11,8 +11,6 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.constants.Skills.AGILITY;
-import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassAgilityObstacles implements OpLocTrigger {
@@ -126,13 +124,13 @@ public class UndergroundPassAgilityObstacles implements OpLocTrigger {
 	}
 
 	boolean succeed(Player player, int req) {
-		return Formulae.calcProductionSuccessfulLegacy(req, player.getSkills().getLevel(Skill.of(AGILITY).id()), false, req + 70);
+		return Formulae.calcProductionSuccessfulLegacy(req, player.getSkills().getLevel(Skill.AGILITY.id()), false, req + 70);
 	}
 
 	private void failBlackAreaObstacle(Player player, GameObject obj) {
 		player.message("..but you slip and tumble into the darkness");
 		fallTeleportLocation(player, obj);
-		player.damage(((int) getCurrentLevel(player, Skill.of(HITS).id()) / 5) + 5); // 6 lowest, 25 max.
+		player.damage(((int) getCurrentLevel(player, Skill.HITS.id()) / 5) + 5); // 6 lowest, 25 max.
 		say(player, null, "ouch!");
 		if (player.getQuestStage(Quests.UNDERGROUND_PASS) >= 4) {
 			if (player.getQuestStage(Quests.UNDERGROUND_PASS) == 4) {

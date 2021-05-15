@@ -16,7 +16,6 @@ import com.openrsc.server.plugins.triggers.UseInvTrigger;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTrigger, TakeObjTrigger {
@@ -49,7 +48,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				player.damage(1);
 				delay();
 				player.teleport(352, 3650);
-				player.damage((int) (getCurrentLevel(player, Skill.of(HITS).id()) * 0.2 + 10));
+				player.damage((int) (getCurrentLevel(player, Skill.HITS.id()) * 0.2 + 10));
 				mes("You hit the floor and it knocks the wind out of you!");
 				delay(3);
 				say(player, null, "Ugghhhh!!");
@@ -64,7 +63,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				say(player, null, "Yay!");
 				player.teleport(352, 3650);
 			}
-			player.incExp(Skill.of(AGILITY).id(), 30, true);
+			player.incExp(Skill.AGILITY.id(), 30, true);
 			if(player.getQuestStage(Quests.SHILO_VILLAGE) == 2) {
 				player.updateQuestStage(Quests.SHILO_VILLAGE, 3);
 			}
@@ -76,7 +75,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 	}
 
 	public static boolean succeed(Player player, int req) {
-		int level_difference = getCurrentLevel(player, Skill.of(AGILITY).id()) - req;
+		int level_difference = getCurrentLevel(player, Skill.AGILITY.id()) - req;
 		int percent = random(1, 100);
 
 		if (level_difference < 0)
@@ -314,7 +313,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				"Yes, that seems fine.",
 				"No, it sounds a bit dangerous.");
 			if (menu == 0) {
-				if (getCurrentLevel(player, Skill.of(PRAYER).id()) < 10) {
+				if (getCurrentLevel(player, Skill.PRAYER.id()) < 10) {
 					player.message("You have no spiritual energy that the crystal can draw from.");
 					delay(2);
 					player.message("You need to have at least 10 prayer points for it to work.");
@@ -324,19 +323,19 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				//TODO: check ranges
 				if (objectX - player.getX() <= 5 && objectX - player.getX() >= -5) {
 					player.message("The crystal blazes brilliantly.");
-					player.getSkills().subtractLevel(Skill.of(PRAYER).id(), 1);
+					player.getSkills().subtractLevel(Skill.PRAYER.id(), 1);
 				} else if (objectX - player.getX() <= 7 && objectX - player.getX() >= -7) {
 					player.message("@yel@The crystal is very bright.");
-					player.getSkills().subtractLevel(Skill.of(PRAYER).id(), 1);
+					player.getSkills().subtractLevel(Skill.PRAYER.id(), 1);
 				}else if (objectX - player.getX() <= 10 && objectX - player.getX() >= -10) {
 					player.message("@red@The crystal glows brightly");
-					player.getSkills().subtractLevel(Skill.of(PRAYER).id(), 1);
+					player.getSkills().subtractLevel(Skill.PRAYER.id(), 1);
 				} else if (objectX - player.getX() <= 20 && objectX - player.getX() >= -20) {
 					player.message("The crystal glows feintly");
-					player.getSkills().subtractLevel(Skill.of(PRAYER).id(), 1);
+					player.getSkills().subtractLevel(Skill.PRAYER.id(), 1);
 				} else {
 					player.message("Nothing seems different about the Crystal.");
-					player.getSkills().subtractLevel(Skill.of(PRAYER).id(), 2);
+					player.getSkills().subtractLevel(Skill.PRAYER.id(), 2);
 				}
 			} else if (menu == 1) {
 				player.message("You decide not to allow the crystal to draw spiritual energy from your body.");
@@ -435,7 +434,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 	@Override
 	public void onUseInv(Player player, Integer invIndex, Item item1, Item item2) {
 		if (compareItemsIds(item1, item2, ItemId.BONE_BEADS.id(), ItemId.BRONZE_WIRE.id())) {
-			if (getCurrentLevel(player, Skill.of(CRAFTING).id()) < 20) {
+			if (getCurrentLevel(player, Skill.CRAFTING.id()) < 20) {
 				player.message("You need a level of 20 Crafting to craft this.");
 				return;
 			}
@@ -452,7 +451,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				return;
 			}
 			if (player.getCache().hasKey("can_chisel_bone")) {
-				if (getCurrentLevel(player, Skill.of(CRAFTING).id()) < 20) {
+				if (getCurrentLevel(player, Skill.CRAFTING.id()) < 20) {
 					player.message("You need a level of 20 Crafting to craft this.");
 					return;
 				}
@@ -463,7 +462,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 				player.message("You succesfully make a key out of the bone shard.");
 				player.getCarriedItems().remove(new Item(ItemId.BONE_SHARD.id()));
 				player.getCarriedItems().getInventory().add(new Item(ItemId.BONE_KEY.id()));
-				player.incExp(Skill.of(CRAFTING).id(), 35, true);
+				player.incExp(Skill.CRAFTING.id(), 35, true);
 			} else {
 				mes("You're not quite sure what to make with this.");
 				delay(3);
@@ -471,7 +470,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			}
 		}
 		else if (compareItemsIds(item1, item2, ItemId.CHISEL.id(), ItemId.SWORD_POMMEL.id())) {
-			if (getCurrentLevel(player, Skill.of(CRAFTING).id()) < 20) {
+			if (getCurrentLevel(player, Skill.CRAFTING.id()) < 20) {
 				player.message("You need a level of 20 Crafting to craft this.");
 				return;
 			}
@@ -480,7 +479,7 @@ public class ShiloVillageUtils implements DropObjTrigger, OpInvTrigger, UseInvTr
 			mes("You successfully craft some of the ivory into beads.");
 			delay(3);
 			player.message("They may look good as part of a necklace.");
-			player.incExp(Skill.of(CRAFTING).id(), 35, true);
+			player.incExp(Skill.CRAFTING.id(), 35, true);
 			player.getCarriedItems().remove(new Item(ItemId.SWORD_POMMEL.id()));
 			player.getCarriedItems().getInventory().add(new Item(ItemId.BONE_BEADS.id()));
 		}

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.FISHING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Fishing implements OpLocTrigger {
@@ -56,7 +55,7 @@ public class Fishing implements OpLocTrigger {
 			return;
 		}
 
-		if (object.getID() == TUTORIAL_FISH_ID && player.getSkills().getExperience(Skill.of(FISHING).id()) >= 200) {
+		if (object.getID() == TUTORIAL_FISH_ID && player.getSkills().getExperience(Skill.FISHING.id()) >= 200) {
 			mes("that's enough fishing for now");
 			delay(3);
 			mes("go through the next door to continue the tutorial");
@@ -78,7 +77,7 @@ public class Fishing implements OpLocTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, Skill.of(FISHING).id());
+			repeat = Formulae.getRepeatTimes(player, Skill.FISHING.id());
 		}
 
 		startbatch(repeat);
@@ -124,7 +123,7 @@ public class Fishing implements OpLocTrigger {
 			String command,
 			ObjectFishingDef def
 	) {
-		if (player.getSkills().getLevel(Skill.of(FISHING).id()) < def.getReqLevel(player.getWorld())) {
+		if (player.getSkills().getLevel(Skill.FISHING.id()) < def.getReqLevel(player.getWorld())) {
 			player.playerServerMessage(
 					MessageType.QUEST,
 					"You need at least level " + def.getReqLevel(player.getWorld()) + " "
@@ -192,13 +191,13 @@ public class Fishing implements OpLocTrigger {
 
 		ObjectFishDef aFishDef;
 		if (object.getID() == TUTORIAL_FISH_ID) { // Tutorial Island Shrimp
-			aFishDef = getFish(def, player.getSkills().getLevel(Skill.of(FISHING).id()));
+			aFishDef = getFish(def, player.getSkills().getLevel(Skill.FISHING.id()));
 			if (aFishDef != null) fishLst.add(aFishDef);
 
 			if (fishLst.size() > 0) {
 				player.playerServerMessage(MessageType.QUEST, "You catch some shrimps");
 				inventory.add(new Item(fishLst.get(0).getId()));
-				player.incExp(Skill.of(FISHING).id(), fishLst.get(0).getExp(), true);
+				player.incExp(Skill.FISHING.id(), fishLst.get(0).getExp(), true);
 				if (player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 41) {
 					player.getCache().set("tutorial", 42);
 				}
@@ -219,7 +218,7 @@ public class Fishing implements OpLocTrigger {
 			}
 
 			// add the fish gained to fishLst, report how many rolls were able to be done
-			int fishRolls = doBigNetFishingRoll(fishLst, bigNet, player.getSkills().getLevel(Skill.of(FISHING).id()));
+			int fishRolls = doBigNetFishingRoll(fishLst, bigNet, player.getSkills().getLevel(Skill.FISHING.id()));
 
 			//check if the spot is still active
 			if (obj == null) {
@@ -261,7 +260,7 @@ public class Fishing implements OpLocTrigger {
 						break;
 				}
 				player.getCarriedItems().getInventory().add(fish);
-				player.incExp(Skill.of(FISHING).id(), fishDef.getExp(), true);
+				player.incExp(Skill.FISHING.id(), fishDef.getExp(), true);
 			}
 			if (fishLst.size() == 0 && fishRolls == 9) {
 				// An erroneous (mostly authentic) additional check on fishRolls here,
@@ -282,7 +281,7 @@ public class Fishing implements OpLocTrigger {
 			}
 		} else { // NOT big net fishing & NOT tutorial island shrimp; normal fishing
 			// Roll for fish to be given to user
-			aFishDef = getFish(def, player.getSkills().getLevel(Skill.of(FISHING).id()));
+			aFishDef = getFish(def, player.getSkills().getLevel(Skill.FISHING.id()));
 			if (aFishDef != null) fishLst.add(aFishDef);
 
 			if (fishLst.size() == 0) {
@@ -331,7 +330,7 @@ public class Fishing implements OpLocTrigger {
 				}
 
 				inventory.add(fish);
-				player.incExp(Skill.of(FISHING).id(), fishLst.get(0).getExp(), true);
+				player.incExp(Skill.FISHING.id(), fishLst.get(0).getExp(), true);
 
 				// Inauthentically check if the fishing spot should deplete
 				handleDepletableFishing(player, def, object);

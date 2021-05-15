@@ -11,7 +11,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.constants.Skills.WOODCUTTING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Cactus implements UseLocTrigger {
@@ -38,7 +37,7 @@ public class Cactus implements UseLocTrigger {
 				boolean fail = Formulae.cutCacti();
 				if (fail) {
 					player.message("You make a mistake and fail to fill your waterskin.");
-					player.incExp(Skill.of(WOODCUTTING).id(), 4, true);
+					player.incExp(Skill.WOODCUTTING.id(), 4, true);
 					player.getCarriedItems().getInventory().add(new Item(s, 1));
 					return;
 				}
@@ -58,7 +57,7 @@ public class Cactus implements UseLocTrigger {
 
 				// Remove healthy cacti
 				player.getWorld().unregisterGameObject(object);
-				player.incExp(Skill.of(WOODCUTTING).id(), 100, true); // Woodcutting XP
+				player.incExp(Skill.WOODCUTTING.id(), 100, true); // Woodcutting XP
 
 				// Swap cacti back after 30 seconds.
 				player.getWorld().getServer().getGameEventHandler().add(

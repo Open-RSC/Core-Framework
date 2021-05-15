@@ -9,7 +9,6 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.CRAFTING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class SpinningWheel implements UseLocTrigger {
@@ -60,7 +59,7 @@ public class SpinningWheel implements UseLocTrigger {
 	}
 
 	private void batchSpin(Player player, Item item, String resultString, int resultCatalogID, int requiredLevel, int experience) {
-		if (player.getSkills().getLevel(Skill.of(CRAFTING).id()) < requiredLevel) {
+		if (player.getSkills().getLevel(Skill.CRAFTING.id()) < requiredLevel) {
 			mes("You need to have a crafting of level "
 				+ requiredLevel + " or higher to make a "
 				+ new Item(resultCatalogID).getDef(player.getWorld()).getName().toLowerCase());
@@ -84,7 +83,7 @@ public class SpinningWheel implements UseLocTrigger {
 		player.playSound("mechanical");
 		player.message(resultString);
 		player.getCarriedItems().getInventory().add(new Item(resultCatalogID, 1));
-		player.incExp(Skill.of(CRAFTING).id(), experience, true);
+		player.incExp(Skill.CRAFTING.id(), experience, true);
 
 		// Repeat
 		updatebatch();

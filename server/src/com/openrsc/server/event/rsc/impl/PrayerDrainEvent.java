@@ -9,8 +9,6 @@ import com.openrsc.server.model.world.World;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.openrsc.server.constants.Skills.PRAYER;
-
 public class PrayerDrainEvent extends GameTickEvent {
 
 	private Set<PrayerDef> activePrayers = new HashSet<PrayerDef>();
@@ -38,13 +36,13 @@ public class PrayerDrainEvent extends GameTickEvent {
 				newPrayerStatePoints = currentPrayerStatePoints - pointDrainage;
 				getPlayerOwner().setPrayerStatePoints(newPrayerStatePoints);
 				normPrayer = (int) Math.ceil(newPrayerStatePoints / 120.0);
-				if (normPrayer < getPlayerOwner().getSkills().getLevel(Skill.of(PRAYER).id())) {
-					getPlayerOwner().getSkills().setLevel(Skill.of(PRAYER).id(), normPrayer);
+				if (normPrayer < getPlayerOwner().getSkills().getLevel(Skill.PRAYER.id())) {
+					getPlayerOwner().getSkills().setLevel(Skill.PRAYER.id(), normPrayer);
 				}
 			}
 			else {
 				getPlayerOwner().setPrayerStatePoints(0);
-				getPlayerOwner().getSkills().setLevel(Skill.of(PRAYER).id(), 0);
+				getPlayerOwner().getSkills().setLevel(Skill.PRAYER.id(), 0);
 				getPlayerOwner().getPrayers().resetPrayers();
 				getPlayerOwner().message("You have run out of prayer points. Return to a church to recharge");
 				activePrayers.clear();

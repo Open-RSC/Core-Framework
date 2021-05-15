@@ -17,7 +17,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
@@ -265,7 +264,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 			}
 			if (shouldShock) {
 				int damage;
-				if (player.getSkills().getLevel(Skill.of(HITS).id()) < 20) {
+				if (player.getSkills().getLevel(Skill.HITS.id()) < 20) {
 					damage = DataConversions.getRandom().nextInt(9) + 1;
 				} else {
 					damage = DataConversions.getRandom().nextInt(14) + 1;
@@ -434,7 +433,7 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 		player.message("The shapeshifter glares at you");
 		//delay of about 2 ticks
 		player.message("You feel slightly weakened");
-		int[] stats = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(STRENGTH).id()};
+		int[] stats = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
 		for(int affectedStat : stats) {
 			/* How much to lower the stat */
 			int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) - 4) / 15.0));

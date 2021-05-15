@@ -1,6 +1,9 @@
 package com.openrsc.server.event.rsc.impl.combat;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.Constants;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.Skill;
+import com.openrsc.server.constants.Skills;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.Mob;
@@ -13,8 +16,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
-
-import static com.openrsc.server.constants.Skills.*;
 
 public class CombatEvent extends GameTickEvent {
 
@@ -54,7 +55,8 @@ public class CombatEvent extends GameTickEvent {
 		killer.setLastCombatState(CombatState.WON);
 
 		if (killed.isPlayer() && killer.isPlayer()) {
-			int[] skillsDist = new int[Skill.maxId(ATTACK, DEFENSE, STRENGTH, HITS) + 1];
+			int[] skillsDist = new int[Skill.maxId(Skill.ATTACK.name(), Skill.DEFENSE.name(),
+				Skill.STRENGTH.name(), Skill.HITS.name()) + 1];
 
 			Player playerKiller = (Player) killer;
 			Player playerKilled = (Player) killed;
@@ -62,21 +64,21 @@ public class CombatEvent extends GameTickEvent {
 			int exp = Formulae.combatExperience(playerKilled);
 			switch (playerKiller.getCombatStyle()) {
 				case Skills.CONTROLLED_MODE:
-					for (String skill : new String[]{ATTACK, DEFENSE, STRENGTH}) {
-						skillsDist[Skill.of(skill).id()] = 1;
+					for (int skillId : new int[]{Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()}) {
+						skillsDist[skillId] = 1;
 					}
 					break;
 				case Skills.AGGRESSIVE_MODE:
-					skillsDist[Skill.of(STRENGTH).id()] = 3;
+					skillsDist[Skill.STRENGTH.id()] = 3;
 					break;
 				case Skills.ACCURATE_MODE:
-					skillsDist[Skill.of(ATTACK).id()] = 3;
+					skillsDist[Skill.ATTACK.id()] = 3;
 					break;
 				case Skills.DEFENSIVE_MODE:
-					skillsDist[Skill.of(DEFENSE).id()] = 3;
+					skillsDist[Skill.DEFENSE.id()] = 3;
 					break;
 			}
-			skillsDist[Skill.of(HITS).id()] = 1;
+			skillsDist[Skill.HITS.id()] = 1;
 			playerKiller.incExp(skillsDist, exp, true);
 		}
 
@@ -171,8 +173,8 @@ public class CombatEvent extends GameTickEvent {
 		}
 
 		// Reduce targets hits by supplied damage amount.
-		int lastHits = target.getLevel(Skill.of(HITS).id());
-		target.getSkills().subtractLevel(Skill.of(HITS).id(), damage, false);
+		int lastHits = target.getLevel(Skill.HITS.id());
+		target.getSkills().subtractLevel(Skill.HITS.id(), damage, false);
 		target.getUpdateFlags().setDamage(new Damage(target, damage));
 		if (target.isNpc() && hitter.isPlayer()) {
 			Npc n = (Npc) target;
@@ -191,7 +193,7 @@ public class CombatEvent extends GameTickEvent {
 			updateParty((Player)hitter);
 		}
 
-		if (target.getSkills().getLevel(Skill.of(HITS).id()) > 0) {
+		if (target.getSkills().getLevel(Skill.HITS.id()) > 0) {
 
 			// NPCs can run special combat scripts.
 			// Custom: Ring of Life execution

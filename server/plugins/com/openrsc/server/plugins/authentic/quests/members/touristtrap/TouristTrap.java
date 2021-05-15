@@ -1,6 +1,9 @@
 package com.openrsc.server.plugins.authentic.quests.members.touristtrap;
 
-import com.openrsc.server.constants.*;
+import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
+import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.Point;
@@ -18,7 +21,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigger, OpLocTrigger, OpNpcTrigger,
@@ -295,7 +297,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			"Smithing.",
 			"Thieving");
 		if (lastRewardMenu == 0) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(FLETCHING);
+			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.FLETCHING.name());
 			incQuestReward(player, questData, false);
 			mes("You advance your stat in Fletching.");
 			delay(3);
@@ -304,7 +306,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				player.getCache().remove("advanced1");
 			}
 		} else if (lastRewardMenu == 1) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(AGILITY);
+			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.AGILITY.name());
 			incQuestReward(player, questData, false);
 			mes("You advance your stat in Agility.");
 			delay(3);
@@ -313,7 +315,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				player.getCache().remove("advanced1");
 			}
 		} else if (lastRewardMenu == 2) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(SMITHING);
+			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.SMITHING.name());
 			incQuestReward(player, questData, false);
 			mes("You advance your stat in Smithing.");
 			delay(3);
@@ -322,7 +324,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				player.getCache().remove("advanced1");
 			}
 		} else if (lastRewardMenu == 3) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(THIEVING);
+			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.THIEVING.name());
 			incQuestReward(player, questData, false);
 			mes("You advance your stat in Thieving.");
 			delay(3);
@@ -345,7 +347,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			"Smithing.",
 			"Thieving");
 		if (rewardMenu == 0) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(FLETCHING);
+			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.FLETCHING.name());
 			incQuestReward(player, questData, false);
 			mes("You advance your stat in Fletching.");
 			delay(3);
@@ -356,7 +358,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			}
 			lastRewardMenu(player, n, false);
 		} else if (rewardMenu == 1) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(AGILITY);
+			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.AGILITY.name());
 			incQuestReward(player, questData, false);
 			mes("You advance your stat in Agility.");
 			delay(3);
@@ -367,7 +369,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			}
 			lastRewardMenu(player, n, false);
 		} else if (rewardMenu == 2) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(SMITHING);
+			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.SMITHING.name());
 			incQuestReward(player, questData, false);
 			mes("You advance your stat in Smithing.");
 			delay(3);
@@ -378,7 +380,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			}
 			lastRewardMenu(player, n, false);
 		} else if (rewardMenu == 3) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(THIEVING);
+			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.THIEVING.name());
 			incQuestReward(player, questData, false);
 			mes("You advance your stat in Thieving.");
 			delay(3);
@@ -3355,7 +3357,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				} else {
 					mes("You manage to bend the bar and climb out of the window.");
 					delay(3);
-					player.incExp(Skill.of(STRENGTH).id(), 40, true);
+					player.incExp(Skill.STRENGTH.id(), 40, true);
 					player.teleport(90, 802);
 					player.message("You land near some rough rocks, which you may be able to climb.");
 				}
@@ -3382,7 +3384,7 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				} else {
 					mes("You manage to bend the bar !");
 					delay(3);
-					player.incExp(Skill.of(STRENGTH).id(), 40, true);
+					player.incExp(Skill.STRENGTH.id(), 40, true);
 					player.teleport(89, 802);
 					player.message("You climb back inside the cell.");
 				}

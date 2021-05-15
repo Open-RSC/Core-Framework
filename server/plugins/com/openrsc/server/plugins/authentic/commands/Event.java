@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.openrsc.server.constants.Skills.PRAYER;
 import static com.openrsc.server.plugins.Functions.config;
 
 public final class Event implements CommandTrigger {
@@ -803,8 +802,8 @@ public final class Event implements CommandTrigger {
 		String experienceSt = Integer.toUnsignedString(experience);
 		if(stat != -1) {
 			otherPlayer.getSkills().setExperience(stat, experience);
-			if (stat == Skill.of(PRAYER).id()) {
-				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.of(PRAYER).id()) * 120);
+			if (stat == Skill.PRAYER.id()) {
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
 			}
 
 			otherPlayer.checkEquipment();
@@ -819,7 +818,7 @@ public final class Event implements CommandTrigger {
 			for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
 				otherPlayer.getSkills().setExperience(i, experience);
 			}
-			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.of(PRAYER).id()) * 120);
+			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
 
 			otherPlayer.checkEquipment();
 			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s stats to experience " + experienceSt);
@@ -960,8 +959,8 @@ public final class Event implements CommandTrigger {
 
 		if(stat != -1) {
 			otherPlayer.getSkills().setLevelTo(stat, level);
-			if (stat == Skill.of(PRAYER).id()) {
-				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.of(PRAYER).id()) * 120);
+			if (stat == Skill.PRAYER.id()) {
+				otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
 			}
 
 			otherPlayer.checkEquipment();
@@ -976,7 +975,7 @@ public final class Event implements CommandTrigger {
 			for(int i = 0; i < player.getWorld().getServer().getConstants().getSkills().getSkillsCount(); i++) {
 				otherPlayer.getSkills().setLevelTo(i, level);
 			}
-			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.of(PRAYER).id()) * 120);
+			otherPlayer.setPrayerStatePoints(otherPlayer.getLevel(Skill.PRAYER.id()) * 120);
 
 			otherPlayer.checkEquipment();
 			player.message(messagePrefix + "You have set " + otherPlayer.getUsername() + "'s stats to level " + level);

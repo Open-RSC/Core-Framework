@@ -13,7 +13,6 @@ import com.openrsc.server.util.rsc.MessageType;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.CRAFTING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class CustomJewelryCrafting implements UseLocTrigger {
@@ -138,7 +137,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 	}
 
 	private void batchGoldCrafting(Player player, Item item, ItemCraftingDef def, int gem) {
-		if (player.getSkills().getLevel(Skill.of(CRAFTING).id()) < def.getReqLevel()) {
+		if (player.getSkills().getLevel(Skill.CRAFTING.id()) < def.getReqLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level " + def.getReqLevel() + " to make this");
 			return;
 		}
@@ -180,7 +179,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 
 		player.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(player.getWorld()).getName());
 		player.getCarriedItems().getInventory().add(result);
-		player.incExp(Skill.of(CRAFTING).id(), def.getExp(), true);
+		player.incExp(Skill.CRAFTING.id(), def.getExp(), true);
 
 		// Repeat
 		updatebatch();
@@ -230,7 +229,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 	}
 
 	private void batchSilverCrafting(Player player, Item item, int resultId) {
-		if (player.getSkills().getLevel(Skill.of(CRAFTING).id()) < 16) {
+		if (player.getSkills().getLevel(Skill.CRAFTING.id()) < 16) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level 16 to make this");
 			return;
 		}
@@ -250,7 +249,7 @@ public class CustomJewelryCrafting implements UseLocTrigger {
 		Item result = new Item(resultId);
 		player.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(player.getWorld()).getName());
 		player.getCarriedItems().getInventory().add(result);
-		player.incExp(Skill.of(CRAFTING).id(), 200, true);
+		player.incExp(Skill.CRAFTING.id(), 200, true);
 
 		// Repeat
 		updatebatch();

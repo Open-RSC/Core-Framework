@@ -17,7 +17,6 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
@@ -288,7 +287,7 @@ public class VampireSlayer implements QuestInterface, TalkNpcTrigger,
 					player.sendQuestComplete(Quests.VAMPIRE_SLAYER);
 				}
 			} else {
-				npc.getSkills().setLevel(Skill.of(HITS).id(), 25);
+				npc.getSkills().setLevel(Skill.HITS.id(), 25);
 				player.message("The vampire seems to regenerate");
 				npc.killed = false;
 			}

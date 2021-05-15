@@ -14,8 +14,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.MINING;
-import static com.openrsc.server.constants.Skills.PRAYER;
 import static com.openrsc.server.plugins.Functions.*;
 
 
@@ -145,7 +143,7 @@ public class Ladders {
 						"Oh sorry");
 					if (op == 0) {
 						say(player, abbot, "Well can I join your order?");
-						if (getCurrentLevel(player, Skill.of(PRAYER).id()) >= 31) {
+						if (getCurrentLevel(player, Skill.PRAYER.id()) >= 31) {
 							npcsay(player, abbot, "Ok I see you are someone suitable for our order",
 								"You may join");
 							player.getCache().set("prayer_guild", 1);
@@ -169,7 +167,7 @@ public class Ladders {
 		} else if (obj.getID() == 223 && obj.getX() == 274 && obj.getY() == 566) { // Mining
 			// Guild
 			// Ladder
-			if (getCurrentLevel(player, Skill.of(MINING).id()) < 60) {
+			if (getCurrentLevel(player, Skill.MINING.id()) < 60) {
 				Npc dwarf = player.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 272, 277, 563, 567);
 				if (dwarf != null) {
 					npcYell(player, dwarf,

@@ -9,7 +9,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Bones implements OpInvTrigger {
@@ -64,26 +63,26 @@ public class Bones implements OpInvTrigger {
 		// TODO: Config for custom sounds.
 		//owner.playSound("takeobject");
 
-		String prayerSkill;
+		int prayerSkillId;
 		if (player.getConfig().DIVIDED_GOOD_EVIL) {
-			prayerSkill = DataConversions.random(0, 1) == 0 ? PRAYGOOD : PRAYEVIL;
+			prayerSkillId = DataConversions.random(0, 1) == 0 ? Skill.PRAYGOOD.id() : Skill.PRAYEVIL.id();
 		} else {
-			prayerSkill = PRAYER;
+			prayerSkillId = Skill.PRAYER.id();
 		}
 		int factor = player.getConfig().OLD_PRAY_XP ? 3 : 2; // factor to divide by modern is 2 / 2 or 1
 
 		switch (ItemId.getById(item.getCatalogId())) {
 			case BONES:
-				player.incExp(Skill.of(prayerSkill).id(), 2 * 15 / factor, true); // 3.75
+				player.incExp(prayerSkillId, 2 * 15 / factor, true); // 3.75
 				break;
 			case BAT_BONES:
-				player.incExp(Skill.of(prayerSkill).id(), 2 * 18 / factor, true); // 4.5
+				player.incExp(prayerSkillId, 2 * 18 / factor, true); // 4.5
 				break;
 			case BIG_BONES:
-				player.incExp(Skill.of(prayerSkill).id(), 2 * 50 / factor, true); // 12.5
+				player.incExp(prayerSkillId, 2 * 50 / factor, true); // 12.5
 				break;
 			case DRAGON_BONES:
-				player.incExp(Skill.of(prayerSkill).id(), 2 * 240 / factor, true); // 60
+				player.incExp(prayerSkillId, 2 * 240 / factor, true); // 60
 				break;
 			default:
 				player.message("Nothing interesting happens");

@@ -9,7 +9,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.CRAFTING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class BattlestaffCrafting implements UseInvTrigger {
@@ -31,7 +30,7 @@ public class BattlestaffCrafting implements UseInvTrigger {
 				combine = c;
 			}
 		}
-		if (player.getSkills().getLevel(Skill.of(CRAFTING).id()) < combine.requiredLevel) {
+		if (player.getSkills().getLevel(Skill.CRAFTING.id()) < combine.requiredLevel) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting level of " + combine.requiredLevel + " to make " + resultItemString(combine));
 			return;
 		}
@@ -55,7 +54,7 @@ public class BattlestaffCrafting implements UseInvTrigger {
 		}
 
 		give(player, combine.resultItem, 1);
-		player.incExp(Skill.of(CRAFTING).id(), combine.experience, true);
+		player.incExp(Skill.CRAFTING.id(), combine.experience, true);
 
 		if (combine.messages.length > 1) {
 			player.message(combine.messages[1]);

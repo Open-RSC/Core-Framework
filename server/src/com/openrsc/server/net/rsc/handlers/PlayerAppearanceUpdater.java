@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.openrsc.server.constants.Skills.*;
-
 public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanceStruct, OpcodeIn> {
 
 	public void process(PlayerAppearanceStruct payload, Player player) throws Exception {
@@ -106,30 +104,30 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 						// 2 GoodMagic / EvilMagic / Magic,
 						// 11 Hits (original)
 						// items: tinderbox, bronze axe, empty jug, pot
-						player.getSkills().setExperienceAndLevel(Skill.of(ATTACK).id(), 400, 2, false);
-						player.getSkills().setExperienceAndLevel(Skill.of(STRENGTH).id(), 400, 2, false);
-						player.getSkills().setExperienceAndLevel(Skill.of(DEFENSE).id(), 400, 2, false);
-						player.getSkills().setExperienceAndLevel(Skill.of(RANGED).id(), 400, 2, false);
+						player.getSkills().setExperienceAndLevel(Skill.ATTACK.id(), 400, 2, false);
+						player.getSkills().setExperienceAndLevel(Skill.STRENGTH.id(), 400, 2, false);
+						player.getSkills().setExperienceAndLevel(Skill.DEFENSE.id(), 400, 2, false);
+						player.getSkills().setExperienceAndLevel(Skill.RANGED.id(), 400, 2, false);
 						if (player.getConfig().DIVIDED_GOOD_EVIL) {
-							player.getSkills().setExperienceAndLevel(Skill.of(PRAYGOOD).id(), 400, 2, false);
-							player.getSkills().setExperienceAndLevel(Skill.of(PRAYEVIL).id(), 400, 2, false);
-							player.getSkills().setExperienceAndLevel(Skill.of(GOODMAGIC).id(), 400, 2, false);
-							player.getSkills().setExperienceAndLevel(Skill.of(EVILMAGIC).id(), 400, 2, false);
+							player.getSkills().setExperienceAndLevel(Skill.PRAYGOOD.id(), 400, 2, false);
+							player.getSkills().setExperienceAndLevel(Skill.PRAYEVIL.id(), 400, 2, false);
+							player.getSkills().setExperienceAndLevel(Skill.GOODMAGIC.id(), 400, 2, false);
+							player.getSkills().setExperienceAndLevel(Skill.EVILMAGIC.id(), 400, 2, false);
 						} else {
-							player.getSkills().setExperienceAndLevel(Skill.of(PRAYER).id(), 400, 2, false);
-							player.getSkills().setExperienceAndLevel(Skill.of(MAGIC).id(), 400, 2, false);
+							player.getSkills().setExperienceAndLevel(Skill.PRAYER.id(), 400, 2, false);
+							player.getSkills().setExperienceAndLevel(Skill.MAGIC.id(), 400, 2, false);
 						}
-						player.getSkills().setExperienceAndLevel(Skill.of(HITS).id(), 4000, 11, false);
+						player.getSkills().setExperienceAndLevel(Skill.HITS.id(), 4000, 11, false);
 						starterItems.addAll(Arrays.asList(new Item(ItemId.TINDERBOX.id()), new Item(ItemId.BRONZE_AXE.id()), new Item(ItemId.JUG.id()), new Item(ItemId.POT.id())));
 						break;
 					case WARRIOR:
 						// 3 Attack, Strength, Defense
 						// 12 Hits
 						// items: bronze short sword, wooden shield
-						player.getSkills().setExperienceAndLevel(Skill.of(ATTACK).id(), 800, 3, false);
-						player.getSkills().setExperienceAndLevel(Skill.of(STRENGTH).id(), 800, 3, false);
-						player.getSkills().setExperienceAndLevel(Skill.of(DEFENSE).id(), 800, 3, false);
-						player.getSkills().setExperienceAndLevel(Skill.of(HITS).id(), 4400, 12, false);
+						player.getSkills().setExperienceAndLevel(Skill.ATTACK.id(), 800, 3, false);
+						player.getSkills().setExperienceAndLevel(Skill.STRENGTH.id(), 800, 3, false);
+						player.getSkills().setExperienceAndLevel(Skill.DEFENSE.id(), 800, 3, false);
+						player.getSkills().setExperienceAndLevel(Skill.HITS.id(), 4400, 12, false);
 						starterItems.addAll(Arrays.asList(new Item(ItemId.BRONZE_SHORT_SWORD.id()), new Item(ItemId.WOODEN_SHIELD.id())));
 						break;
 					case WIZARD:
@@ -137,11 +135,11 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 						// 10 Hits
 						// items: blue wizardhat, regular staff
 						if (player.getConfig().DIVIDED_GOOD_EVIL) {
-							player.getSkills().setExperienceAndLevel(Skill.of(GOODMAGIC).id(), 2400, 7, false);
+							player.getSkills().setExperienceAndLevel(Skill.GOODMAGIC.id(), 2400, 7, false);
 						} else {
-							player.getSkills().setExperienceAndLevel(Skill.of(MAGIC).id(), 2400, 7, false);
+							player.getSkills().setExperienceAndLevel(Skill.MAGIC.id(), 2400, 7, false);
 						}
-						player.getSkills().setExperienceAndLevel(Skill.of(HITS).id(), 3600, 10, false);
+						player.getSkills().setExperienceAndLevel(Skill.HITS.id(), 3600, 10, false);
 						starterItems.addAll(Arrays.asList(new Item(ItemId.BLUE_WIZARDSHAT.id()), new Item(ItemId.STAFF.id())));
 						break;
 					case NECROMANCER:
@@ -149,27 +147,27 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 						// 10 Hits
 						// items: black wizardhat, regular staff
 						if (player.getConfig().DIVIDED_GOOD_EVIL) {
-							player.getSkills().setExperienceAndLevel(Skill.of(EVILMAGIC).id(), 2400, 7, false);
+							player.getSkills().setExperienceAndLevel(Skill.EVILMAGIC.id(), 2400, 7, false);
 						} else {
-							player.getSkills().setExperienceAndLevel(Skill.of(MAGIC).id(), 2400, 7, false);
+							player.getSkills().setExperienceAndLevel(Skill.MAGIC.id(), 2400, 7, false);
 						}
-						player.getSkills().setExperienceAndLevel(Skill.of(HITS).id(), 3600, 10, false);
+						player.getSkills().setExperienceAndLevel(Skill.HITS.id(), 3600, 10, false);
 						starterItems.addAll(Arrays.asList(new Item(ItemId.BLACK_WIZARDSHAT.id()), new Item(ItemId.STAFF.id())));
 						break;
 					case RANGER:
 						// 6 Ranged
 						// 12 Hits
 						// items: shortbow, 10 (bronze) arrows
-						player.getSkills().setExperienceAndLevel(Skill.of(RANGED).id(), 2000, 6, false);
-						player.getSkills().setExperienceAndLevel(Skill.of(HITS).id(), 4400, 12, false);
+						player.getSkills().setExperienceAndLevel(Skill.RANGED.id(), 2000, 6, false);
+						player.getSkills().setExperienceAndLevel(Skill.HITS.id(), 4400, 12, false);
 						starterItems.addAll(Arrays.asList(new Item(ItemId.SHORTBOW.id()), new Item(ItemId.BRONZE_ARROWS.id(), 10)));
 						break;
 					case MINER:
 						// 7 Mining
 						// 10 Hits
 						// items: (bronze) pickaxe
-						player.getSkills().setExperienceAndLevel(Skill.of(MINING).id(), 2400, 7, false);
-						player.getSkills().setExperienceAndLevel(Skill.of(HITS).id(), 3600, 10, false);
+						player.getSkills().setExperienceAndLevel(Skill.MINING.id(), 2400, 7, false);
+						player.getSkills().setExperienceAndLevel(Skill.HITS.id(), 3600, 10, false);
 						starterItems.addAll(Arrays.asList(new Item(ItemId.BRONZE_PICKAXE.id())));
 						break;
 				}
@@ -179,6 +177,7 @@ public class PlayerAppearanceUpdater implements PayloadProcessor<PlayerAppearanc
 				}
 				ActionSender.sendInventory(player);
 			}
+			Skill.AGILITY.id();
 
 			if (player.getConfig().USES_PK_MODE) {
 				player.setPkMode(payload.pkMode);

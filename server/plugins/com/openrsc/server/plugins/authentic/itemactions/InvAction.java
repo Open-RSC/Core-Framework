@@ -12,7 +12,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class InvAction implements OpInvTrigger {
@@ -412,7 +411,7 @@ public class InvAction implements OpInvTrigger {
 
 	private void handleDrySticks(Player player) {
 		player.message("you rub together the dry sticks");
-		if (getCurrentLevel(player, Skill.of(FIREMAKING).id()) < 30) {
+		if (getCurrentLevel(player, Skill.FIREMAKING.id()) < 30) {
 			player.message("you need a firemaking level of 30 or above");
 			player.message("the sticks smoke momentarily then die out");
 			return;
@@ -423,7 +422,7 @@ public class InvAction implements OpInvTrigger {
 			player.message("you place the smouldering twigs to your torch");
 			player.message("your torch lights");
 			player.getCarriedItems().getInventory().add(new Item(ItemId.LIT_TORCH.id()));
-			player.incExp(Skill.of(FIREMAKING).id(), Firemaking.getExp(player.getSkills().getMaxStat(Skill.of(FIREMAKING).id()), 25), true);
+			player.incExp(Skill.FIREMAKING.id(), Firemaking.getExp(player.getSkills().getMaxStat(Skill.FIREMAKING.id()), 25), true);
 			if (player.getQuestStage(Quests.SEA_SLUG) == 5 && !player.getCache().hasKey("lit_torch")) {
 				player.getCache().store("lit_torch", true);
 			}
@@ -597,24 +596,24 @@ public class InvAction implements OpInvTrigger {
 		mes("You eat the Jangerberries");
 		delay(3);
 		player.getCarriedItems().remove(new Item(ItemId.JANGERBERRIES.id()));
-		int Attack = player.getSkills().getMaxStat(Skill.of(ATTACK).id()) + 2;
-		int Strength = player.getSkills().getMaxStat(Skill.of(STRENGTH).id()) + 1;
-		if (player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
-			player.getSkills().setLevel(Skill.of(HITS).id(), player.getSkills().getLevel(Skill.of(HITS).id()) + 2);
+		int Attack = player.getSkills().getMaxStat(Skill.ATTACK.id()) + 2;
+		int Strength = player.getSkills().getMaxStat(Skill.STRENGTH.id()) + 1;
+		if (player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id())) {
+			player.getSkills().setLevel(Skill.HITS.id(), player.getSkills().getLevel(Skill.HITS.id()) + 2);
 		}
-		if (player.getSkills().getLevel(Skill.of(PRAYER).id()) < player.getSkills().getMaxStat(Skill.of(PRAYER).id())) {
-			player.getSkills().setLevel(Skill.of(PRAYER).id(), player.getSkills().getLevel(Skill.of(PRAYER).id()) + 1);
+		if (player.getSkills().getLevel(Skill.PRAYER.id()) < player.getSkills().getMaxStat(Skill.PRAYER.id())) {
+			player.getSkills().setLevel(Skill.PRAYER.id(), player.getSkills().getLevel(Skill.PRAYER.id()) + 1);
 		}
-		if (player.getSkills().getLevel(Skill.of(DEFENSE).id()) < 1) {
-			player.getSkills().setLevel(Skill.of(DEFENSE).id(), 0);
+		if (player.getSkills().getLevel(Skill.DEFENSE.id()) < 1) {
+			player.getSkills().setLevel(Skill.DEFENSE.id(), 0);
 		} else {
-			player.getSkills().setLevel(Skill.of(DEFENSE).id(), player.getSkills().getLevel(Skill.of(DEFENSE).id()) - 1);
+			player.getSkills().setLevel(Skill.DEFENSE.id(), player.getSkills().getLevel(Skill.DEFENSE.id()) - 1);
 		}
-		if (player.getSkills().getLevel(Skill.of(ATTACK).id()) < Attack) {
-			player.getSkills().setLevel(Skill.of(ATTACK).id(), player.getSkills().getLevel(Skill.of(ATTACK).id()) + 1);
+		if (player.getSkills().getLevel(Skill.ATTACK.id()) < Attack) {
+			player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) + 1);
 		}
-		if (player.getSkills().getLevel(Skill.of(STRENGTH).id()) < Strength) {
-			player.getSkills().setLevel(Skill.of(STRENGTH).id(), player.getSkills().getLevel(Skill.of(STRENGTH).id()) + 1);
+		if (player.getSkills().getLevel(Skill.STRENGTH.id()) < Strength) {
+			player.getSkills().setLevel(Skill.STRENGTH.id(), player.getSkills().getLevel(Skill.STRENGTH.id()) + 1);
 		}
 		player.message("They taste very bitter");
 	}
@@ -707,7 +706,7 @@ public class InvAction implements OpInvTrigger {
 		player.message("You eat the nightshade...");
 		player.getCarriedItems().remove(new Item(ItemId.NIGHTSHADE.id()));
 		say(player, null, "Ahhhh! what have I done !");
-		player.damage((int) ((getCurrentLevel(player, Skill.of(HITS).id()) * 0.2D) + 10));
+		player.damage((int) ((getCurrentLevel(player, Skill.HITS.id()) * 0.2D) + 10));
 		player.message("The nightshade was highly poisonous");
 	}
 

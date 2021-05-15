@@ -8,7 +8,6 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.constants.Skills.MAGIC;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WizardFrumscone implements TalkNpcTrigger {
@@ -25,7 +24,7 @@ public class WizardFrumscone implements TalkNpcTrigger {
 				"Feel free to kill them",
 				"Theres plenty more where these came from");
 			if (config().WANT_CUSTOM_SPRITES
-				&& getMaxLevel(player, Skill.of(MAGIC).id()) >= 99) {
+				&& getMaxLevel(player, Skill.MAGIC.id()) >= 99) {
 				if (multi(player, n, "Does your cape have any magical properties?",
 					"I was going to kill them with or without your permission") == 0) {
 

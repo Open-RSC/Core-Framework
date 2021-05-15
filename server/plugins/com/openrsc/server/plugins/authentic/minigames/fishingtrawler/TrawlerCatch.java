@@ -9,7 +9,6 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.constants.Skills.FISHING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class TrawlerCatch implements OpLocTrigger {
@@ -54,51 +53,51 @@ public class TrawlerCatch implements OpLocTrigger {
 					isFishRoll = DataConversions.random(0,1) == 1;
 					// roll for a fish
 					if (isFishRoll) {
-						if (catchFish(81, player.getSkills().getLevel(Skill.of(FISHING).id()))) {
+						if (catchFish(81, player.getSkills().getLevel(Skill.FISHING.id()))) {
 							mes("..a manta ray!");
 							delay(2);
 							give(player, ItemId.RAW_MANTA_RAY.id(), 1);
-							player.incExp(Skill.of(FISHING).id(), 460, false);
-						} else if (catchFish(79, player.getSkills().getLevel(Skill.of(FISHING).id()))) {
+							player.incExp(Skill.FISHING.id(), 460, false);
+						} else if (catchFish(79, player.getSkills().getLevel(Skill.FISHING.id()))) {
 							mes("..a sea turtle!");
 							delay(2);
 							give(player, ItemId.RAW_SEA_TURTLE.id(), 1);
-							player.incExp(Skill.of(FISHING).id(), 380, false);
-						} else if (catchFish(76, player.getSkills().getLevel(Skill.of(FISHING).id()))) {
+							player.incExp(Skill.FISHING.id(), 380, false);
+						} else if (catchFish(76, player.getSkills().getLevel(Skill.FISHING.id()))) {
 							mes("..a shark!");
 							delay(2);
 							give(player, ItemId.RAW_SHARK.id(), 1);
-							player.incExp(Skill.of(FISHING).id(), 440, false);
-						} else if (catchFish(50, player.getSkills().getLevel(Skill.of(FISHING).id()))) {
+							player.incExp(Skill.FISHING.id(), 440, false);
+						} else if (catchFish(50, player.getSkills().getLevel(Skill.FISHING.id()))) {
 							mes("..a sword fish");
 							delay(2);
 							give(player, ItemId.RAW_SWORDFISH.id(), 1);
-							player.incExp(Skill.of(FISHING).id(), 400, false);
-						} else if (catchFish(40, player.getSkills().getLevel(Skill.of(FISHING).id()))) {
+							player.incExp(Skill.FISHING.id(), 400, false);
+						} else if (catchFish(40, player.getSkills().getLevel(Skill.FISHING.id()))) {
 							mes("..a lobster");
 							delay(2);
 							give(player, ItemId.RAW_LOBSTER.id(), 1);
-							player.incExp(Skill.of(FISHING).id(), 360, false);
-						} else if (catchFish(30, player.getSkills().getLevel(Skill.of(FISHING).id()))) {
+							player.incExp(Skill.FISHING.id(), 360, false);
+						} else if (catchFish(30, player.getSkills().getLevel(Skill.FISHING.id()))) {
 							mes("..some tuna");
 							delay(2);
 							give(player, ItemId.RAW_TUNA.id(), 1);
-							player.incExp(Skill.of(FISHING).id(), 320, false);
-						} else if (catchFish(15, player.getSkills().getLevel(Skill.of(FISHING).id()))) {
+							player.incExp(Skill.FISHING.id(), 320, false);
+						} else if (catchFish(15, player.getSkills().getLevel(Skill.FISHING.id()))) {
 							mes("..some anchovies");
 							delay(2);
 							give(player, ItemId.RAW_ANCHOVIES.id(), 1);
-							player.incExp(Skill.of(FISHING).id(), 160, false);
-						} else if (catchFish(5, player.getSkills().getLevel(Skill.of(FISHING).id()))) {
+							player.incExp(Skill.FISHING.id(), 160, false);
+						} else if (catchFish(5, player.getSkills().getLevel(Skill.FISHING.id()))) {
 							mes("..a sardine");
 							delay(2);
 							give(player, ItemId.RAW_SARDINE.id(), 1);
-							player.incExp(Skill.of(FISHING).id(), 80, false);
+							player.incExp(Skill.FISHING.id(), 80, false);
 						} else {
 							mes("..some shrimp");
 							delay(2);
 							give(player, ItemId.RAW_SHRIMP.id(), 1);
-							player.incExp(Skill.of(FISHING).id(), 40, false);
+							player.incExp(Skill.FISHING.id(), 40, false);
 						}
 					}
 					 else {
@@ -107,12 +106,12 @@ public class TrawlerCatch implements OpLocTrigger {
 							mes("..some seaweed");
 							delay(2);
 							give(player, ItemId.EDIBLE_SEAWEED.id(), 1);
-							player.incExp(Skill.of(FISHING).id(), 20, false);
+							player.incExp(Skill.FISHING.id(), 20, false);
 						} else if (randomJunkItem == ItemId.OYSTER.id()) { // Oyster
 							mes("..an oyster!");
 							delay(2);
 							give(player, ItemId.OYSTER.id(), 1);
-							player.incExp(Skill.of(FISHING).id(), 40, false);
+							player.incExp(Skill.FISHING.id(), 40, false);
 						} else {
 							// Broken glass, buttons, damaged armour, ceramic remains
 							if (randomJunkItem == ItemId.BROKEN_GLASS_DIGSITE_LVL_2.id() || randomJunkItem == ItemId.BUTTONS.id()
@@ -132,7 +131,7 @@ public class TrawlerCatch implements OpLocTrigger {
 								delay(2);
 							}
 							give(player, randomJunkItem, 1);
-							player.incExp(Skill.of(FISHING).id(), 5, false);
+							player.incExp(Skill.FISHING.id(), 5, false);
 						}
 					}
 				}

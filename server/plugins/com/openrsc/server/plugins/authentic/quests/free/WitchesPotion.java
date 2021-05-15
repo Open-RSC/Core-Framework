@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -14,8 +15,6 @@ import com.openrsc.server.plugins.triggers.KillNpcTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
-import static com.openrsc.server.constants.Skills.EVILMAGIC;
-import static com.openrsc.server.constants.Skills.MAGIC;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
@@ -43,9 +42,9 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WITCHS_POTION);
 		String magicSkill;
 		if (player.getConfig().DIVIDED_GOOD_EVIL) {
-			magicSkill = EVILMAGIC;
+			magicSkill = Skill.EVILMAGIC.name();
 		} else {
-			magicSkill = MAGIC;
+			magicSkill = Skill.MAGIC.name();
 		}
 		questData[1] = Either.right(magicSkill);
 		incQuestReward(player, questData, true);

@@ -13,7 +13,6 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.WOODCUTTING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WoodcutJungle implements OpLocTrigger,
@@ -67,7 +66,7 @@ public class WoodcutJungle implements OpLocTrigger,
 		//	return;
 		//}
 
-		if (getCurrentLevel(player, Skill.of(WOODCUTTING).id()) < 50) {
+		if (getCurrentLevel(player, Skill.WOODCUTTING.id()) < 50) {
 			player.message("You need a woodcutting level of 50 to axe this tree");
 			return;
 		}
@@ -106,7 +105,7 @@ public class WoodcutJungle implements OpLocTrigger,
 	}
 
 	private void cutJungle(int axeId, GameObject obj, Player player, boolean force) {
-		if (force || getLog(50, player.getSkills().getLevel(Skill.of(WOODCUTTING).id()), axeId)) {
+		if (force || getLog(50, player.getSkills().getLevel(Skill.WOODCUTTING.id()), axeId)) {
 			GameObject jungleObject = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
 			if (jungleObject != null && jungleObject.getID() == obj.getID()) {
 				if (obj.getID() == JUNGLE_VINE) {
@@ -122,7 +121,7 @@ public class WoodcutJungle implements OpLocTrigger,
 				}
 
 				if (!force)
-					player.incExp(Skill.of(WOODCUTTING).id(), 20, true);
+					player.incExp(Skill.WOODCUTTING.id(), 20, true);
 			}
 			if (DataConversions.random(0, 10) == 8) {
 				final Item log = new Item(ItemId.LOGS.id());

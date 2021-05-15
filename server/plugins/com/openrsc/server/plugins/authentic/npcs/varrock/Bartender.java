@@ -11,7 +11,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Bartender implements TalkNpcTrigger {
@@ -106,7 +105,7 @@ public class Bartender implements TalkNpcTrigger {
 	}
 
 	private void drinkAle(Player player) {
-		int[] skillIDs = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(STRENGTH).id(), Skill.of(SMITHING).id()};
+		int[] skillIDs = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id(), Skill.SMITHING.id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(player, skillIDs[i]);
 		}

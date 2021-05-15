@@ -16,7 +16,6 @@ import com.openrsc.server.plugins.triggers.UseBoundTrigger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigger, TakeObjTrigger, UseBoundTrigger {
@@ -56,7 +55,7 @@ public class UndergroundPassKardiaTheWitch implements OpLocTrigger, OpBoundTrigg
 						delay(2);
 						player.message("the witch raises her hands above her");
 						displayTeleportBubble(player, player.getX(), player.getY(), true);
-						player.damage(((int) getCurrentLevel(player, Skill.of(HITS).id()) / 5) + 5); // 6 lowest, 25 max.
+						player.damage(((int) getCurrentLevel(player, Skill.HITS.id()) / 5) + 5); // 6 lowest, 25 max.
 						npcsay(player, witch, "haa haa.. die mortal");
 					} else {
 						// TODO: find if something happens here authentically

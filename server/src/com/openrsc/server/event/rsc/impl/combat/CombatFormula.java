@@ -15,7 +15,6 @@ import java.util.Random;
 
 import static com.openrsc.server.constants.ItemId.ATTACK_CAPE;
 import static com.openrsc.server.constants.ItemId.STRENGTH_CAPE;
-import static com.openrsc.server.constants.Skills.*;
 
 public class CombatFormula {
 	/**
@@ -63,7 +62,7 @@ public class CombatFormula {
 	 * @return The randomized value.
 	 */
 	private static int calculateMeleeDamage(final Mob source) {
-		if(source.isNpc() && source.getSkills().getLevel(Skill.of(STRENGTH).id()) < 5)
+		if(source.isNpc() && source.getSkills().getLevel(Skill.STRENGTH.id()) < 5)
 			return 0;
 
 		return calculateDamage(getMeleeDamage(source));
@@ -210,7 +209,7 @@ public class CombatFormula {
 			Prayers.SUPERHUMAN_STRENGTH,
 			Prayers.ULTIMATE_STRENGTH);
 
-		final double strength = (source.getSkills().getLevel(Skill.of(STRENGTH).id()) * prayerBonus) + styleBonus;
+		final double strength = (source.getSkills().getLevel(Skill.STRENGTH.id()) * prayerBonus) + styleBonus;
 		final double weaponMultiplier = (source.getWeaponPowerPoints() * (1.0D/600.0D))+0.1D;
 
 		return (int)Math.ceil(strength * weaponMultiplier);
@@ -223,7 +222,7 @@ public class CombatFormula {
 	 * @return The max hit
 	 */
 	private static int getRangedDamage(final Mob source, final int arrowId) {
-		final int ranged = source.getSkills().getLevel(Skill.of(RANGED).id());
+		final int ranged = source.getSkills().getLevel(Skill.RANGED.id());
 		final double weaponMultiplier = (rangedPower(arrowId) * 0.00175D)+0.1D;
 
 		return (int)Math.ceil(ranged * weaponMultiplier);
@@ -241,7 +240,7 @@ public class CombatFormula {
 			Prayers.ROCK_SKIN,
 			Prayers.STEEL_SKIN);
 
-		final double defense = (defender.getSkills().getLevel(Skill.of(DEFENSE).id()) * prayerBonus) + styleBonus;
+		final double defense = (defender.getSkills().getLevel(Skill.DEFENSE.id()) * prayerBonus) + styleBonus;
 		final double armourMultiplier = (defender.getArmourPoints() * (1.0D/600.0D))+0.1D;
 
 		return defense * armourMultiplier;
@@ -255,7 +254,7 @@ public class CombatFormula {
 	 * @return The ranged accuracy
 	 */
 	private static double getRangedAccuracy(final Mob attacker, final int bowId) {
-		final double ranged = attacker.getSkills().getLevel(Skill.of(RANGED).id());
+		final double ranged = attacker.getSkills().getLevel(Skill.RANGED.id());
 		final double weaponMultiplier = (rangedAim(bowId) * (1.0D/600.0D))+0.1D;
 
 		return ranged * weaponMultiplier;
@@ -273,7 +272,7 @@ public class CombatFormula {
 			Prayers.IMPROVED_REFLEXES,
 			Prayers.INCREDIBLE_REFLEXES);
 
-		final double attack = (attacker.getSkills().getLevel(Skill.of(ATTACK).id()) * prayerBonus) + styleBonus;
+		final double attack = (attacker.getSkills().getLevel(Skill.ATTACK.id()) * prayerBonus) + styleBonus;
 		final double weaponMultiplier = (attacker.getWeaponAimPoints() * (1.0D/600.0D))+0.1D;
 
 		return Math.ceil(attack * weaponMultiplier);
@@ -293,8 +292,8 @@ public class CombatFormula {
 		if (style == Skills.CONTROLLED_MODE)
 			return 1;
 
-		return (skill == Skill.of(ATTACK).id() && style == Skills.ACCURATE_MODE) || (skill == Skill.of(DEFENSE).id() && style == Skills.DEFENSIVE_MODE)
-			|| (skill == Skill.of(STRENGTH).id() && style == Skills.AGGRESSIVE_MODE) ? 3 : 0;
+		return (skill == Skill.ATTACK.id() && style == Skills.ACCURATE_MODE) || (skill == Skill.DEFENSE.id() && style == Skills.DEFENSIVE_MODE)
+			|| (skill == Skill.STRENGTH.id() && style == Skills.AGGRESSIVE_MODE) ? 3 : 0;
 	}
 
 	/**

@@ -16,7 +16,6 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.COOKING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInvTrigger, DropObjTrigger {
@@ -204,7 +203,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				say(player, n, "all done, here you go");
 				mes("you give aluft two worm batta's a veg batta and a toad batta");
 				delay(3);
-				player.incExp(Skill.of(COOKING).id(), 425, true);
+				player.incExp(Skill.COOKING.id(), 425, true);
 				for (int i = 0; i < 2; i++) {
 					player.getCarriedItems().remove(new Item(ItemId.WORM_BATTA.id()));
 				}
@@ -236,7 +235,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				for (int i = 0; i < 2; i++) {
 					player.getCarriedItems().remove(new Item(ItemId.TOAD_CRUNCHIES.id()));
 				}
-				player.incExp(Skill.of(COOKING).id(), 675, true);
+				player.incExp(Skill.COOKING.id(), 675, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
 				player.message("mr gianne gives you 75 gold coins");
@@ -257,7 +256,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				for (int i = 0; i < 2; i++) {
 					player.getCarriedItems().remove(new Item(ItemId.CHOC_CRUNCHIES.id()));
 				}
-				player.incExp(Skill.of(COOKING).id(), 300, true);
+				player.incExp(Skill.COOKING.id(), 300, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
 				player.message("mr gianne gives you 30 gold coins");
@@ -279,7 +278,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				for (int i = 0; i < 2; i++) {
 					player.getCarriedItems().remove(new Item(ItemId.CHOC_CRUNCHIES.id()));
 				}
-				player.incExp(Skill.of(COOKING).id(), 425, true);
+				player.incExp(Skill.COOKING.id(), 425, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
 				player.message("mr gianne gives you 45 gold coins");
@@ -300,7 +299,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 					player.getCarriedItems().remove(new Item(ItemId.VEG_BATTA.id()));
 				}
 				player.getCarriedItems().remove(new Item(ItemId.WORM_HOLE.id()));
-				player.incExp(Skill.of(COOKING).id(), 425, true);
+				player.incExp(Skill.COOKING.id(), 425, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
 				player.message("mr gianne gives you 45 gold coins");
@@ -323,7 +322,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				player.getCarriedItems().remove(new Item(ItemId.VEGBALL.id()));
 				player.getCarriedItems().remove(new Item(ItemId.TANGLED_TOADS_LEGS.id()));
 				player.getCarriedItems().remove(new Item(ItemId.WORM_HOLE.id()));
-				player.incExp(Skill.of(COOKING).id(), 425, true);
+				player.incExp(Skill.COOKING.id(), 425, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
 				player.message("mr gianne gives you 45 gold coins");
@@ -348,7 +347,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				for (int i = 0; i < 2; i++) {
 					player.getCarriedItems().remove(new Item(ItemId.WORM_CRUNCHIES.id()));
 				}
-				player.incExp(Skill.of(COOKING).id(), 550, true);
+				player.incExp(Skill.COOKING.id(), 550, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
 				player.message("mr gianne gives you 60 gold coins");
@@ -375,7 +374,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				player.getCarriedItems().remove(new Item(ItemId.FRUIT_BATTA.id()));
 				player.getCarriedItems().remove(new Item(ItemId.CHOCOLATE_BOMB.id()));
 				player.getCarriedItems().remove(new Item(ItemId.VEGBALL.id()));
-				player.incExp(Skill.of(COOKING).id(), 425, true);
+				player.incExp(Skill.COOKING.id(), 425, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
 				player.message("mr gianne gives you 45 gold coins");
@@ -400,7 +399,7 @@ public class GnomeRestaurant implements MiniGameInterface, TalkNpcTrigger, OpInv
 				for (int i = 0; i < 2; i++) {
 					player.getCarriedItems().remove(new Item(ItemId.WORM_CRUNCHIES.id()));
 				}
-				player.incExp(Skill.of(COOKING).id(), 425, true);
+				player.incExp(Skill.COOKING.id(), 425, true);
 				npcsay(player, n, "they look great, well done",
 					"here's your share of the profit");
 				player.message("mr gianne gives you 45 gold coins");

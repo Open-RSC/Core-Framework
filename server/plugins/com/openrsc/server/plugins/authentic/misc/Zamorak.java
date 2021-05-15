@@ -9,7 +9,6 @@ import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.triggers.*;
 
-import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger, PlayerRangeNpcTrigger, SpellNpcTrigger {
@@ -74,9 +73,9 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 		zam.getUpdateFlags().setChatMessage(new ChatMessage(zam, "A curse be upon you", player));
 		delay(4);
 		player.message("You feel slightly weakened");
-		int dmg = (int) Math.ceil(((player.getSkills().getMaxStat(Skill.of(HITS).id()) + 20) * 0.05));
+		int dmg = (int) Math.ceil(((player.getSkills().getMaxStat(Skill.HITS.id()) + 20) * 0.05));
 		player.damage(dmg);
-		int[] stats = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(STRENGTH).id()};
+		int[] stats = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
 		for(int affectedStat : stats) {
 			/* How much to lower the stat */
 			int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) + 20) * 0.05));

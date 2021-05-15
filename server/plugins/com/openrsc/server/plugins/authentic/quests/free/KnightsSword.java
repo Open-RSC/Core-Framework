@@ -15,7 +15,6 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static com.openrsc.server.constants.Skills.SMITHING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class KnightsSword implements QuestInterface, TalkNpcTrigger,
@@ -236,7 +235,7 @@ public class KnightsSword implements QuestInterface, TalkNpcTrigger,
 
 	private boolean canBuyCape(Player player) {
 		if (config().WANT_CUSTOM_SPRITES
-			&& getMaxLevel(player, Skill.of(SMITHING).id()) >= 99) { return true; }
+			&& getMaxLevel(player, Skill.SMITHING.id()) >= 99) { return true; }
 		return false;
 	}
 
