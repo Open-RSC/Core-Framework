@@ -17,10 +17,19 @@ public class Skill {
 		this.id = id;
 	}
 
+	/**
+	 * Returns the index associated to the Skill
+	 * @return
+	 */
 	public Integer id() {
 		return id;
 	}
 
+	/**
+	 * Retrieves a Skill with the present name or one associated to NONE if not found.
+	 * @param name the skill name. These are found on {@link com.openrsc.server.constants.Skills}, e.g. ATTACK
+	 * @return the appropriate Skill object
+	 */
 	public static Skill of(String name) {
 		if (nameMap.containsKey(name.toUpperCase())) {
 			return nameMap.get(name.toUpperCase());
