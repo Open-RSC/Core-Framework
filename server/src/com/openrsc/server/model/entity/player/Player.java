@@ -51,8 +51,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.openrsc.server.util.SkillSolver.getSkillEnum;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.*;
 
 /**
  * A single player.
@@ -754,13 +753,13 @@ public final class Player extends Mob {
 
 	public int combatStyleToIndex() {
 		if (getCombatStyle() == Skills.AGGRESSIVE_MODE) {
-			return getSkillId(getWorld(), SkillsEnum.STRENGTH);
+			return Skill.of(STRENGTH).id();
 		}
 		if (getCombatStyle() == Skills.ACCURATE_MODE) {
-			return getSkillId(getWorld(), SkillsEnum.ATTACK);
+			return Skill.of(ATTACK).id();
 		}
 		if (getCombatStyle() == Skills.DEFENSIVE_MODE) {
-			return getSkillId(getWorld(), SkillsEnum.DEFENSE);
+			return Skill.of(DEFENSE).id();
 		}
 		return -1;
 	}
@@ -861,17 +860,17 @@ public final class Player extends Mob {
 				);
 			if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 				optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-				optionalSkillIndex = Optional.of(getSkillId(getWorld(), SkillsEnum.AGILITY));
+				optionalSkillIndex = Optional.of(Skill.of(AGILITY).id());
 			}
 			//staff of iban (usable)
 			if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 				optionalLevel = Optional.of(requiredLevel);
-				optionalSkillIndex = Optional.of(getSkillId(getWorld(), SkillsEnum.AGILITY));
+				optionalSkillIndex = Optional.of(Skill.of(AGILITY).id());
 			}
 			//battlestaves (incl. enchanted version)
 			if (itemLower.contains("battlestaff")) {
 				optionalLevel = Optional.of(requiredLevel);
-				optionalSkillIndex = Optional.of(getSkillId(getWorld(), SkillsEnum.AGILITY));
+				optionalSkillIndex = Optional.of(Skill.of(AGILITY).id());
 			}
 
 			if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
@@ -935,17 +934,17 @@ public final class Player extends Mob {
 					);
 				if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 					optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-					optionalSkillIndex = Optional.of(getSkillId(getWorld(), SkillsEnum.ATTACK));
+					optionalSkillIndex = Optional.of(Skill.of(ATTACK).id());
 				}
 				//staff of iban (usable)
 				if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 					optionalLevel = Optional.of(requiredLevel);
-					optionalSkillIndex = Optional.of(getSkillId(getWorld(), SkillsEnum.ATTACK));
+					optionalSkillIndex = Optional.of(Skill.of(ATTACK).id());
 				}
 				//battlestaves (incl. enchanted version)
 				if (itemLower.contains("battlestaff")) {
 					optionalLevel = Optional.of(requiredLevel);
-					optionalSkillIndex = Optional.of(getSkillId(getWorld(), SkillsEnum.ATTACK));
+					optionalSkillIndex = Optional.of(Skill.of(ATTACK).id());
 				}
 
 				if (getSkills().getMaxStat(requiredSkillIndex) < requiredLevel) {
@@ -1203,9 +1202,9 @@ public final class Player extends Mob {
 
 	public int calculateQuestPoints() {
 		int qps = 0;
-		for (Map.Entry<Integer, Either<Integer, SkillsEnum>[]> quest : getWorld().getServer().getConstants().getQuests().questData.entrySet()) {
+		for (Map.Entry<Integer, Either<Integer, String>[]> quest : getWorld().getServer().getConstants().getQuests().questData.entrySet()) {
 			Integer q = quest.getKey();
-			Either<Integer, SkillsEnum>[] data = quest.getValue();
+			Either<Integer, String>[] data = quest.getValue();
 			if (this.getQuestStage(q) < 0) {
 				qps += data[0].fromLeft().get();
 			}
@@ -1490,11 +1489,12 @@ public final class Player extends Mob {
 
 		// Check if the skill is a non-combat skill and
 		// apply the non-combat skilling rate.
-		SkillsEnum enumSkill = getSkillEnum(getWorld(), skill);
-		if (enumSkill != SkillsEnum.ATTACK && enumSkill != SkillsEnum.DEFENSE
-			&& enumSkill != SkillsEnum.STRENGTH && enumSkill != SkillsEnum.HITS && enumSkill != SkillsEnum.RANGED
-			&& enumSkill != SkillsEnum.PRAYGOOD && enumSkill != SkillsEnum.PRAYEVIL && enumSkill != SkillsEnum.PRAYER
-			&& enumSkill != SkillsEnum.GOODMAGIC && enumSkill != SkillsEnum.EVILMAGIC && enumSkill != SkillsEnum.MAGIC) {
+		int[] skillIDs = {
+			Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(STRENGTH).id(), Skill.of(HITS).id(),
+			Skill.of(RANGED).id(), Skill.of(PRAYGOOD).id(), Skill.of(PRAYEVIL).id(), Skill.of(PRAYER).id(),
+			Skill.of(GOODMAGIC).id(), Skill.of(EVILMAGIC).id(), Skill.of(MAGIC).id()
+		};
+		if (!DataConversions.inArray(skillIDs, skill)) {
 			multiplier = getConfig().SKILLING_EXP_RATE;
 		}
 
@@ -1562,15 +1562,16 @@ public final class Player extends Mob {
 				//	ActionSender.sendMessage(this, "@gre@You start to feel tired, maybe you should rest soon.");
 				//}
 
-				// Give fatigue for non-melee skills (all skills after skill ID 4
-				SkillsEnum enumSkill = getSkillEnum(getWorld(), skill);
-				if (enumSkill != SkillsEnum.ATTACK && enumSkill != SkillsEnum.DEFENSE
-				&& enumSkill != SkillsEnum.STRENGTH && enumSkill != SkillsEnum.HITS) {
+				// Give fatigue for non-melee skills (all skills after skill ID 4)
+				int[] skillIDs = {
+					Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(STRENGTH).id(), Skill.of(HITS).id()
+				};
+				if (!DataConversions.inArray(skillIDs, skill)) {
 					fatigue += skillXP * 8;
 				}
 
 				// Give fatigue for melee skills (all skills between skill ID 0 and 3 inclusive)
-				else if (enumSkill != SkillsEnum.NONE) {
+				else {
 					fatigue += skillXP * 5;
 				}
 				if (fatigue > this.MAX_FATIGUE) {
@@ -1582,7 +1583,7 @@ public final class Player extends Mob {
 		// Player cannot gain more than 200 fishing xp on tutorial island
 		if (getLocation().onTutorialIsland()) {
 			if (getSkills().getExperience(skill) + skillXP > 200) {
-				if (skill == getSkillId(getWorld(), SkillsEnum.FISHING)) {
+				if (skill == Skill.of(FISHING).id()) {
 					getSkills().setExperience(skill, 200);
 				}
 			}
@@ -1841,7 +1842,7 @@ public final class Player extends Mob {
 				poisonEvent.setPoisonPower(getCache().getInt("poisoned"));
 			}
 			if (!getConfig().LACKS_PRAYERS) {
-				prayerStatePoints = getSkills().getLevel(getSkillId(getWorld(), SkillsEnum.PRAYER)) * 120;
+				prayerStatePoints = getSkills().getLevel(Skill.of(PRAYER).id()) * 120;
 				prayerDrainEvent = new PrayerDrainEvent(getWorld(), this, Integer.MAX_VALUE);
 				getWorld().getServer().getGameEventHandler().add(prayerDrainEvent);
 			}
@@ -3388,7 +3389,7 @@ public final class Player extends Mob {
 		if (this.isPlayer() && getCarriedItems().getEquipment().hasEquipped(ItemId.RING_OF_LIFE.id())
 			&& (!this.getLocation().inWilderness()
 			|| (this.getLocation().inWilderness() && this.getLocation().wildernessLevel() <= Constants.GLORY_TELEPORT_LIMIT))) {
-			if (((float) this.getSkills().getLevel(getSkillId(getWorld(), SkillsEnum.HITS))) / ((float) this.getSkills().getMaxStat(getSkillId(getWorld(), SkillsEnum.HITS))) <= 0.1f) {
+			if (((float) this.getSkills().getLevel(Skill.of(HITS).id())) / ((float) this.getSkills().getMaxStat(Skill.of(HITS).id())) <= 0.1f) {
 				this.resetCombatEvent();
 				this.resetRange();
 				this.resetAll();

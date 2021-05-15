@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.skills.crafting;
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.ItemCraftingDef;
 import com.openrsc.server.external.ItemGemDef;
 import com.openrsc.server.model.Point;
@@ -23,8 +23,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.openrsc.server.constants.Skills.CRAFTING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Crafting implements UseInvTrigger,
 	UseLocTrigger {
@@ -90,7 +90,7 @@ public class Crafting implements UseInvTrigger,
 				if (inventory.hasInInventory(ItemId.TEDDY_HEAD.id())
 					&& inventory.hasInInventory(ItemId.TEDDY_BOTTOM.id())
 					&& inventory.hasInInventory(ItemId.THREAD.id())) {
-					if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < 15) {
+					if (getCurrentLevel(player, Skill.of(CRAFTING).id()) < 15) {
 						player.message("You need level 15 crafting to fix the teddy");
 						return;
 					}
@@ -117,7 +117,7 @@ public class Crafting implements UseInvTrigger,
 				if (inventory.hasInInventory(ItemId.TEDDY_HEAD.id())
 					&& inventory.hasInInventory(ItemId.TEDDY_BOTTOM.id())
 					&& inventory.hasInInventory(ItemId.THREAD.id())) {
-					if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < 15) {
+					if (getCurrentLevel(player, Skill.of(CRAFTING).id()) < 15) {
 						player.message("You need level 15 crafting to fix the teddy");
 						return;
 					}
@@ -152,7 +152,7 @@ public class Crafting implements UseInvTrigger,
 				say(player, null, "Perhaps I should speak to the professor first");
 				return;
 			}
-			if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < 10) {
+			if (getCurrentLevel(player, Skill.of(CRAFTING).id()) < 10) {
 				player.message("You need a crafting level of 10 to make the lens");
 				return;
 			}
@@ -360,7 +360,7 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchGoldJewelry(Player player, Item item, ItemCraftingDef def, int gem, int[] gems, int type, AtomicReference<String> reply) {
-		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < def.getReqLevel()) {
+		if (player.getSkills().getLevel(Skill.of(CRAFTING).id()) < def.getReqLevel()) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level " + def.getReqLevel() + " to make this");
 			return;
 		}
@@ -427,7 +427,7 @@ public class Crafting implements UseInvTrigger,
 			player.getCarriedItems().remove(new Item(gems[gem]));
 		}
 		player.getCarriedItems().getInventory().add(result);
-		player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), def.getExp(), true);
+		player.incExp(Skill.of(CRAFTING).id(), def.getExp(), true);
 
 		// Repeat
 		updatebatch();
@@ -470,7 +470,7 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchSilverJewelry(Player player, Item item, int[] results, int type, AtomicReference<String> reply) {
-		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < 16) {
+		if (player.getSkills().getLevel(Skill.of(CRAFTING).id()) < 16) {
 			player.playerServerMessage(MessageType.QUEST, "You need a crafting skill of level 16 to make this");
 			return;
 		}
@@ -496,7 +496,7 @@ public class Crafting implements UseInvTrigger,
 		Item result = new Item(results[type]);
 		player.playerServerMessage(MessageType.QUEST, "You make a " + result.getDef(player.getWorld()).getName());
 		player.getCarriedItems().getInventory().add(result);
-		player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 200, true);
+		player.incExp(Skill.of(CRAFTING).id(), 200, true);
 
 		// Repeat
 		updatebatch();
@@ -551,7 +551,7 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchPotteryMoulding(Player player, Item item, int reqLvl, Item result, AtomicReference<String> msg, int exp) {
-		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < reqLvl) {
+		if (player.getSkills().getLevel(Skill.of(CRAFTING).id()) < reqLvl) {
 			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
 			return;
 		}
@@ -567,7 +567,7 @@ public class Crafting implements UseInvTrigger,
 		thinkbubble(softClay);
 		player.playerServerMessage(MessageType.QUEST, "you make the clay into a " + potteryItemName(result.getDef(player.getWorld()).getName()));
 		player.getCarriedItems().getInventory().add(result);
-		player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), exp, true);
+		player.incExp(Skill.of(CRAFTING).id(), exp, true);
 
 		// Repeat
 		updatebatch();
@@ -618,7 +618,7 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchPotteryFiring(Player player, Item item, int reqLvl, Item result, AtomicReference<String> msg, int exp) {
-		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < reqLvl) {
+		if (player.getSkills().getLevel(Skill.of(CRAFTING).id()) < reqLvl) {
 			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + msg.get());
 			return;
 		}
@@ -635,7 +635,7 @@ public class Crafting implements UseInvTrigger,
 		player.getCarriedItems().remove(unfiredClay);
 		delay(3);
 
-		if (Formulae.crackPot(reqLvl, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)))) {
+		if (Formulae.crackPot(reqLvl, player.getSkills().getLevel(Skill.of(CRAFTING).id()))) {
 			player.playerServerMessage(MessageType.QUEST, "The " // TODO: Check if is authentic message
 				+ potteryItem + " cracks in the oven, you throw it away.");
 		} else {
@@ -648,7 +648,7 @@ public class Crafting implements UseInvTrigger,
 				+ result.getDef(player.getWorld()).getName().toLowerCase()
 				+ " from the oven");
 			player.getCarriedItems().getInventory().add(result);
-			player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), exp, true);
+			player.incExp(Skill.of(CRAFTING).id(), exp, true);
 		}
 
 		// Repeat
@@ -690,7 +690,7 @@ public class Crafting implements UseInvTrigger,
 		delay();
 		inventory.add(new Item(ItemId.MOLTEN_GLASS.id(), 1));
 		inventory.add(new Item(ItemId.BUCKET.id(), 1));
-		player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 80, true);
+		player.incExp(Skill.of(CRAFTING).id(), 80, true);
 
 		// Repeat
 		updatebatch();
@@ -756,7 +756,7 @@ public class Crafting implements UseInvTrigger,
 	private void batchGlassBlowing(Player player, Item glass, Item result, int reqLvl, int exp, String resultGen) {
 		Inventory inventory = player.getCarriedItems().getInventory();
 		ServerConfiguration config = config();
-		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < reqLvl) {
+		if (player.getSkills().getLevel(Skill.of(CRAFTING).id()) < reqLvl) {
 			player.message(
 				"You need a crafting level of " + reqLvl + " to make " + resultGen);
 			return;
@@ -776,7 +776,7 @@ public class Crafting implements UseInvTrigger,
 		int amount = 1;
 		if (result.getCatalogId() == ItemId.EMPTY_VIAL.id()) {
 			if (config.WANT_CUSTOM_QUESTS) {
-				double breakChance = 91.66667 - getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) / 1.32;
+				double breakChance = 91.66667 - getCurrentLevel(player, Skill.of(CRAFTING).id()) / 1.32;
 				for (int loop = 0; loop < 5; ++loop) {
 					double hit = new Random().nextDouble() * 99;
 					if (hit > breakChance) {
@@ -802,7 +802,7 @@ public class Crafting implements UseInvTrigger,
 			}
 		}
 
-		player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), exp, true);
+		player.incExp(Skill.of(CRAFTING).id(), exp, true);
 
 		// Repeat
 		updatebatch();
@@ -816,14 +816,14 @@ public class Crafting implements UseInvTrigger,
 		final ItemGemDef gemDef = player.getWorld().getServer().getEntityHandler().getItemGemDef(gem.getCatalogId());
 		if (gemDef == null) {
 			if (gem.getCatalogId() == ItemId.KING_BLACK_DRAGON_SCALE.id()) {
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < 90) {
+				if (getCurrentLevel(player, Skill.of(CRAFTING).id()) < 90) {
 					player.message("You need 90 crafting to split the scales");
 					return;
 				}
 				if (player.getCarriedItems().remove(new Item(ItemId.KING_BLACK_DRAGON_SCALE.id(), 1)) > -1) {
 					player.message("You chip the massive scale into 5 pieces");
 					give(player, ItemId.CHIPPED_DRAGON_SCALE.id(), 5);
-					player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), config().GAME_TICK * 2, true);
+					player.incExp(Skill.of(CRAFTING).id(), config().GAME_TICK * 2, true);
 				}
 			} else {
 				player.message("Nothing interesting happens");
@@ -841,7 +841,7 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchGemCutting(Player player, Item gem, ItemGemDef gemDef) {
-		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < gemDef.getReqLevel()) {
+		if (player.getSkills().getLevel(Skill.of(CRAFTING).id()) < gemDef.getReqLevel()) {
 			boolean pluralize = gemDef.getGemID() <= ItemId.UNCUT_DRAGONSTONE.id();
 			player.playerServerMessage(MessageType.QUEST,
 				"you need a crafting level of " + gemDef.getReqLevel()
@@ -860,16 +860,16 @@ public class Crafting implements UseInvTrigger,
 		// Jade, Opal and red topaz fail handler - 25% chance to fail
 
 		if (DataConversions.inArray(gemsThatFail, gem.getCatalogId()) &&
-			Formulae.smashGem(gem.getCatalogId(), gemDef.getReqLevel(), player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)))) {
+			Formulae.smashGem(gem.getCatalogId(), gemDef.getReqLevel(), player.getSkills().getLevel(Skill.of(CRAFTING).id()))) {
 			player.message("You miss hit the chisel and smash the " + cutGem.getDef(player.getWorld()).getName() + " to pieces!");
 			player.getCarriedItems().getInventory().add(new Item(ItemId.CRUSHED_GEMSTONE.id()));
 
 			if (gem.getCatalogId() == ItemId.UNCUT_RED_TOPAZ.id()) {
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 25, true);
+				player.incExp(Skill.of(CRAFTING).id(), 25, true);
 			} else if (gem.getCatalogId() == ItemId.UNCUT_JADE.id()) {
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 20, true);
+				player.incExp(Skill.of(CRAFTING).id(), 20, true);
 			} else {
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 15, true);
+				player.incExp(Skill.of(CRAFTING).id(), 15, true);
 			}
 		} else {
 			player.getCarriedItems().getInventory().add(cutGem, true);
@@ -885,7 +885,7 @@ public class Crafting implements UseInvTrigger,
             }
 			player.message("You cut the " + gemName);
 			player.playSound("chisel");
-			player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), gemDef.getExp(), true);
+			player.incExp(Skill.of(CRAFTING).id(), gemDef.getExp(), true);
 		}
 
 		updatebatch();
@@ -997,7 +997,7 @@ public class Crafting implements UseInvTrigger,
 	}
 
 	private void batchLeather(Player player, Item leather, Item result, int reqLvl, int exp) {
-		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < reqLvl) {
+		if (player.getSkills().getLevel(Skill.of(CRAFTING).id()) < reqLvl) {
 			player.playerServerMessage(MessageType.QUEST, "You need to have a crafting of level " + reqLvl + " or higher to make " + result.getDef(player.getWorld()).getName());
 			return;
 		}
@@ -1012,7 +1012,7 @@ public class Crafting implements UseInvTrigger,
 		delay();
 		player.message("You make some " + result.getDef(player.getWorld()).getName());
 		player.getCarriedItems().getInventory().add(result);
-		player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), exp, true);
+		player.incExp(Skill.of(CRAFTING).id(), exp, true);
 		// A reel of thread accounts for 5 uses
 		if (!player.getCache().hasKey("part_reel_thread")) {
 			player.getCache().set("part_reel_thread", 1);

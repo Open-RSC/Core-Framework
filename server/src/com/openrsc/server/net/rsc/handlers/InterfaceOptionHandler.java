@@ -2,7 +2,7 @@ package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.constants.custom.*;
 import com.openrsc.server.content.clan.Clan;
 import com.openrsc.server.content.clan.ClanInvite;
@@ -22,8 +22,8 @@ import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.OptionsStruct;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.ifnearvisnpc;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, OpcodeIn> {
 
@@ -743,13 +743,13 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case REDUCE_DEFENSE:
 				int amount1 = payload.amount;
 				int amountx1 = amount1 * 4;
-				if (!checkReduceLevelReqs(player, amountx1, getSkillId(player.getWorld(), SkillsEnum.DEFENSE))) {
+				if (!checkReduceLevelReqs(player, amountx1, Skill.of(DEFENSE).id())) {
 					return;
 				}
-				player.getSkills().reduceExperience(getSkillId(player.getWorld(), SkillsEnum.DEFENSE), amountx1);
-				player.getSkills().reduceExperience(getSkillId(player.getWorld(), SkillsEnum.HITS), amountx1 / 3);
-				if(player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS)) < 10) {
-					player.getSkills().setSkill(getSkillId(player.getWorld(), SkillsEnum.HITS), 10, 4616);
+				player.getSkills().reduceExperience(Skill.of(DEFENSE).id(), amountx1);
+				player.getSkills().reduceExperience(Skill.of(HITS).id(), amountx1 / 3);
+				if(player.getSkills().getMaxStat(Skill.of(HITS).id()) < 10) {
+					player.getSkills().setSkill(Skill.of(HITS).id(), 10, 4616);
 				}
 				player.addOpenPkPoints(amount1);
 				ActionSender.sendPoints(player);
@@ -761,8 +761,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkIncreaseLevelReqs(player, amount)) {
 					return;
 				}
-				player.getSkills().addExperience(getSkillId(player.getWorld(), SkillsEnum.DEFENSE), amountx);
-				player.getSkills().addExperience(getSkillId(player.getWorld(), SkillsEnum.HITS), amountx / 3);
+				player.getSkills().addExperience(Skill.of(DEFENSE).id(), amountx);
+				player.getSkills().addExperience(Skill.of(HITS).id(), amountx / 3);
 				player.subtractOpenPkPoints(amount);
 				ActionSender.sendPoints(player);
 			break;
@@ -772,8 +772,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkIncreaseLevelReqs(player, amount0)) {
 					return;
 				}
-				player.getSkills().addExperience(getSkillId(player.getWorld(), SkillsEnum.ATTACK), amountx0);
-				player.getSkills().addExperience(getSkillId(player.getWorld(), SkillsEnum.HITS), amountx0 / 3);
+				player.getSkills().addExperience(Skill.of(ATTACK).id(), amountx0);
+				player.getSkills().addExperience(Skill.of(HITS).id(), amountx0 / 3);
 				player.subtractOpenPkPoints(amount0);
 				ActionSender.sendPoints(player);
 			break;
@@ -783,8 +783,8 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkIncreaseLevelReqs(player, amount2)) {
 					return;
 				}
-				player.getSkills().addExperience(getSkillId(player.getWorld(), SkillsEnum.STRENGTH), amountx2);
-				player.getSkills().addExperience(getSkillId(player.getWorld(), SkillsEnum.HITS), amountx2 / 3);
+				player.getSkills().addExperience(Skill.of(STRENGTH).id(), amountx2);
+				player.getSkills().addExperience(Skill.of(HITS).id(), amountx2 / 3);
 				player.subtractOpenPkPoints(amount2);
 				ActionSender.sendPoints(player);
 			break;
@@ -794,7 +794,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkIncreaseLevelReqs(player, amount3)) {
 					return;
 				}
-				player.getSkills().addExperience(getSkillId(player.getWorld(), SkillsEnum.RANGED), amountx3);
+				player.getSkills().addExperience(Skill.of(RANGED).id(), amountx3);
 				player.subtractOpenPkPoints(amount3);
 				ActionSender.sendPoints(player);
 			break;
@@ -804,7 +804,7 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkIncreaseLevelReqs(player, amount4)) {
 					return;
 				}
-				player.getSkills().addExperience(getSkillId(player.getWorld(), SkillsEnum.PRAYER), amountx4);
+				player.getSkills().addExperience(Skill.of(PRAYER).id(), amountx4);
 				player.subtractOpenPkPoints(amount4);
 				ActionSender.sendPoints(player);
 			break;
@@ -814,20 +814,20 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 				if (!checkIncreaseLevelReqs(player, amount5)) {
 					return;
 				}
-				player.getSkills().addExperience(getSkillId(player.getWorld(), SkillsEnum.MAGIC), amountx5);
+				player.getSkills().addExperience(Skill.of(MAGIC).id(), amountx5);
 				player.subtractOpenPkPoints(amount5);
 				ActionSender.sendPoints(player);
 			break;
 			case REDUCE_ATTACK:
 				int amount00 = payload.amount;
 				int amountx00 = amount00 * 4;
-				if (!checkReduceLevelReqs(player, amountx00, getSkillId(player.getWorld(), SkillsEnum.ATTACK))) {
+				if (!checkReduceLevelReqs(player, amountx00, Skill.of(ATTACK).id())) {
 					return;
 				}
-				player.getSkills().reduceExperience(getSkillId(player.getWorld(), SkillsEnum.ATTACK), amountx00);
-				player.getSkills().reduceExperience(getSkillId(player.getWorld(), SkillsEnum.HITS), amountx00 / 3);
-				if(player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS)) < 10) {
-					player.getSkills().setSkill(getSkillId(player.getWorld(), SkillsEnum.HITS), 10, 4616);
+				player.getSkills().reduceExperience(Skill.of(ATTACK).id(), amountx00);
+				player.getSkills().reduceExperience(Skill.of(HITS).id(), amountx00 / 3);
+				if(player.getSkills().getMaxStat(Skill.of(HITS).id()) < 10) {
+					player.getSkills().setSkill(Skill.of(HITS).id(), 10, 4616);
 				}
 				player.addOpenPkPoints(amount00);
 				ActionSender.sendPoints(player);
@@ -836,13 +836,13 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case REDUCE_STRENGTH:
 				int amount22 = payload.amount;
 				int amountx22 = amount22 * 4;
-				if (!checkReduceLevelReqs(player, amountx22, getSkillId(player.getWorld(), SkillsEnum.STRENGTH))) {
+				if (!checkReduceLevelReqs(player, amountx22, Skill.of(STRENGTH).id())) {
 					return;
 				}
-				player.getSkills().reduceExperience(getSkillId(player.getWorld(), SkillsEnum.STRENGTH), amountx22);
-				player.getSkills().reduceExperience(getSkillId(player.getWorld(), SkillsEnum.HITS), amountx22 / 3);
-				if(player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS)) < 10) {
-					player.getSkills().setSkill(getSkillId(player.getWorld(), SkillsEnum.HITS), 10, 4616);
+				player.getSkills().reduceExperience(Skill.of(STRENGTH).id(), amountx22);
+				player.getSkills().reduceExperience(Skill.of(HITS).id(), amountx22 / 3);
+				if(player.getSkills().getMaxStat(Skill.of(HITS).id()) < 10) {
+					player.getSkills().setSkill(Skill.of(HITS).id(), 10, 4616);
 				}
 				player.addOpenPkPoints(amount22);
 				ActionSender.sendPoints(player);
@@ -851,10 +851,10 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case REDUCE_RANGED:
 				int amount33 = payload.amount;
 				int amountx33 = amount33 * 4;
-				if (!checkReduceLevelReqs(player, amountx33, getSkillId(player.getWorld(), SkillsEnum.RANGED))) {
+				if (!checkReduceLevelReqs(player, amountx33, Skill.of(RANGED).id())) {
 					return;
 				}
-				player.getSkills().reduceExperience(getSkillId(player.getWorld(), SkillsEnum.RANGED), amountx33);
+				player.getSkills().reduceExperience(Skill.of(RANGED).id(), amountx33);
 				player.addOpenPkPoints(amount33);
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
@@ -862,10 +862,10 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case REDUCE_PRAYER:
 				int amount44 = payload.amount;
 				int amountx44 = amount44 * 4;
-				if (!checkReduceLevelReqs(player, amountx44, getSkillId(player.getWorld(), SkillsEnum.PRAYER))) {
+				if (!checkReduceLevelReqs(player, amountx44, Skill.of(PRAYER).id())) {
 					return;
 				}
-				player.getSkills().reduceExperience(getSkillId(player.getWorld(), SkillsEnum.PRAYER), amountx44);
+				player.getSkills().reduceExperience(Skill.of(PRAYER).id(), amountx44);
 				player.addOpenPkPoints(amount44);
 				ActionSender.sendPoints(player);
 				player.checkEquipment();
@@ -873,10 +873,10 @@ public class InterfaceOptionHandler implements PayloadProcessor<OptionsStruct, O
 			case REDUCE_MAGIC:
 				int amount55 = payload.amount;
 				int amountx55 = amount55 * 4;
-				if (!checkReduceLevelReqs(player, amountx55, getSkillId(player.getWorld(), SkillsEnum.MAGIC))) {
+				if (!checkReduceLevelReqs(player, amountx55, Skill.of(MAGIC).id())) {
 					return;
 				}
-				player.getSkills().reduceExperience(getSkillId(player.getWorld(), SkillsEnum.MAGIC), amountx55);
+				player.getSkills().reduceExperience(Skill.of(MAGIC).id(), amountx55);
 				player.addOpenPkPoints(amount55);
 				ActionSender.sendPoints(player);
 				player.checkEquipment();

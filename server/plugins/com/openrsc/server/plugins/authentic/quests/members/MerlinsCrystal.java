@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -20,8 +20,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger,
@@ -133,7 +133,7 @@ public class MerlinsCrystal implements QuestInterface, TalkNpcTrigger,
 				npc.getCombatEvent().resetCombat();
 			}
 			// from replay should do full heal
-			npc.getSkills().setLevel(getSkillId(npc.getWorld(), SkillsEnum.HITS), npc.getDef().hits);
+			npc.getSkills().setLevel(Skill.of(HITS).id(), npc.getDef().hits);
 			Npc leFaye = ifnearvisnpc(player, NpcId.MORGAN_LE_FAYE.id(), 8);
 			if (leFaye == null) {
 				leFaye = addnpc(player.getWorld(), NpcId.MORGAN_LE_FAYE.id(), 461, 2407, (int)TimeUnit.SECONDS.toMillis(63));

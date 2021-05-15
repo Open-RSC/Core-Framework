@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members.digsite;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -16,8 +16,8 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.MINING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 
@@ -133,7 +133,7 @@ public class DigsiteObjects implements OpLocTrigger, UseLocTrigger{
 			}
 
 			int[] TRAY_ITEMS = {ItemId.NOTHING.id(), ItemId.BONES.id(), ItemId.CRACKED_ROCK_SAMPLE.id(), ItemId.IRON_DAGGER.id(), ItemId.BROKEN_ARROW.id(), ItemId.BROKEN_GLASS.id(), ItemId.CERAMIC_REMAINS.id(), ItemId.COINS.id(), ItemId.A_LUMP_OF_CHARCOAL.id()};
-			player.incExp(getSkillId(player.getWorld(), SkillsEnum.MINING), 4, true);
+			player.incExp(Skill.of(MINING).id(), 4, true);
 			mes("You sift through the earth in the tray");
 			delay(3);
 			int randomize = DataConversions.random(0, (TRAY_ITEMS.length - 1));

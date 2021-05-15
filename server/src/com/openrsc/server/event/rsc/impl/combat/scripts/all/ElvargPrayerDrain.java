@@ -1,12 +1,12 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.PRAYER;
 
 public class ElvargPrayerDrain implements OnCombatStartScript {
 
@@ -25,20 +25,20 @@ public class ElvargPrayerDrain implements OnCombatStartScript {
 	@Override
 	public void executeScript(Mob attacker, Mob defender) {
 		if (attacker.isPlayer()) {
-			if (attacker.getSkills().getLevel(getSkillId(attacker.getWorld(), SkillsEnum.PRAYER)) >= 30)
-				attacker.getSkills().setLevel(getSkillId(attacker.getWorld(), SkillsEnum.PRAYER), (int) Math.ceil((double) attacker.getSkills().getLevel(getSkillId(attacker.getWorld(), SkillsEnum.PRAYER)) * 0.2));
-			else if (attacker.getSkills().getLevel(getSkillId(attacker.getWorld(), SkillsEnum.PRAYER)) > 2)
-				attacker.getSkills().setLevel(getSkillId(attacker.getWorld(), SkillsEnum.PRAYER), 2);
-			else if (attacker.getSkills().getLevel(getSkillId(attacker.getWorld(), SkillsEnum.PRAYER)) == 2)
-				attacker.getSkills().setLevel(getSkillId(attacker.getWorld(), SkillsEnum.PRAYER), 1);
+			if (attacker.getSkills().getLevel(Skill.of(PRAYER).id()) >= 30)
+				attacker.getSkills().setLevel(Skill.of(PRAYER).id(), (int) Math.ceil((double) attacker.getSkills().getLevel(Skill.of(PRAYER).id()) * 0.2));
+			else if (attacker.getSkills().getLevel(Skill.of(PRAYER).id()) > 2)
+				attacker.getSkills().setLevel(Skill.of(PRAYER).id(), 2);
+			else if (attacker.getSkills().getLevel(Skill.of(PRAYER).id()) == 2)
+				attacker.getSkills().setLevel(Skill.of(PRAYER).id(), 1);
 
 		} else if (defender.isPlayer()) {
-			if (defender.getSkills().getLevel(getSkillId(defender.getWorld(), SkillsEnum.PRAYER)) >= 30)
-				defender.getSkills().setLevel(getSkillId(defender.getWorld(), SkillsEnum.PRAYER), (int) Math.ceil((double) defender.getSkills().getLevel(getSkillId(defender.getWorld(), SkillsEnum.PRAYER)) * 0.2));
-			else if (defender.getSkills().getLevel(getSkillId(defender.getWorld(), SkillsEnum.PRAYER)) > 2)
-				defender.getSkills().setLevel(getSkillId(defender.getWorld(), SkillsEnum.PRAYER), 2);
-			else if (defender.getSkills().getLevel(getSkillId(defender.getWorld(), SkillsEnum.PRAYER)) == 2)
-				defender.getSkills().setLevel(getSkillId(defender.getWorld(), SkillsEnum.PRAYER), 1);
+			if (defender.getSkills().getLevel(Skill.of(PRAYER).id()) >= 30)
+				defender.getSkills().setLevel(Skill.of(PRAYER).id(), (int) Math.ceil((double) defender.getSkills().getLevel(Skill.of(PRAYER).id()) * 0.2));
+			else if (defender.getSkills().getLevel(Skill.of(PRAYER).id()) > 2)
+				defender.getSkills().setLevel(Skill.of(PRAYER).id(), 2);
+			else if (defender.getSkills().getLevel(Skill.of(PRAYER).id()) == 2)
+				defender.getSkills().setLevel(Skill.of(PRAYER).id(), 1);
 		}
 
 	}

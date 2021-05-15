@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.defaults;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -15,8 +15,8 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 
 public class DoorAction {
@@ -451,7 +451,7 @@ public class DoorAction {
 					player.message("You fall through the bridge");
 					delay(2);
 					player.message("The lava singes you");
-					player.damage(DataConversions.roundUp(player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) / 5));
+					player.damage(DataConversions.roundUp(player.getSkills().getLevel(Skill.of(HITS).id()) / 5));
 				}
 				break;
 
@@ -653,7 +653,7 @@ public class DoorAction {
 					break;
 				}
 				if (player.getY() > 523) {
-					if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.FISHING)) < 68) {
+					if (getCurrentLevel(player, Skill.of(FISHING).id()) < 68) {
 						Npc masterFisher = player.getWorld().getNpc(NpcId.MASTER_FISHER.id(), 582, 588,
 							524, 527);
 						if (masterFisher != null) {
@@ -673,7 +673,7 @@ public class DoorAction {
 				if (obj.getX() != 268 || obj.getY() != 3381) {
 					break;
 				}
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.MINING)) < 60) {
+				if (getCurrentLevel(player, Skill.of(MINING).id()) < 60) {
 					Npc dwarf = player.getWorld().getNpc(NpcId.DWARF_MINING_GUILD.id(), 265, 270, 3379, 3380);
 					if (dwarf != null) {
 						npcsay(player, dwarf, "Sorry only the top miners are allowed in there");
@@ -689,7 +689,7 @@ public class DoorAction {
 				if (obj.getX() != 347 || obj.getY() != 601) {
 					return;
 				}
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < 40) {
+				if (getCurrentLevel(player, Skill.of(CRAFTING).id()) < 40) {
 					Npc master = player.getWorld().getNpc(NpcId.MASTER_CRAFTER.id(), 341, 349, 599, 612);
 					if (master != null) {
 						npcsay(player, master, "Sorry only experienced craftsmen are allowed in here");
@@ -712,7 +712,7 @@ public class DoorAction {
 				if (obj.getX() != 179 || obj.getY() != 488) {
 					break;
 				}
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.COOKING)) < 32) {
+				if (getCurrentLevel(player, Skill.of(COOKING).id()) < 32) {
 					Npc chef = player.getWorld().getNpc(NpcId.HEAD_CHEF.id(), 176, 181, 480, 487);
 					if (chef != null) {
 						npcsay(player, chef, "Sorry. Only the finest chefs are allowed in here");
@@ -734,7 +734,7 @@ public class DoorAction {
 				if (obj.getX() != 599 || obj.getY() != 757) {
 					break;
 				}
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.MAGIC)) < 66) {
+				if (getCurrentLevel(player, Skill.of(MAGIC).id()) < 66) {
 					Npc wizard = player.getWorld().getNpc(NpcId.HEAD_WIZARD.id(), 596, 597, 755, 758);
 					if (wizard != null) {
 						npcsay(player, wizard, "You need a magic level of 66 to get in here",
@@ -1234,7 +1234,7 @@ public class DoorAction {
 					}
 				} else {
 					if (config().WANT_WOODCUTTING_GUILD) {
-						if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING)) < 70) {
+						if (getCurrentLevel(player, Skill.of(WOODCUTTING).id()) < 70) {
 							final Npc forester = player.getWorld().getNpc(NpcId.FORESTER.id(), 562, 565,
 								468, 472);
 							if (forester != null) {

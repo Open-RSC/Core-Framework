@@ -1,13 +1,13 @@
 package com.openrsc.server.plugins.authentic.skills.agility;
 
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.player.Player;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.AGILITY;
 
 public class AgilityUtils {
 
@@ -26,7 +26,7 @@ public class AgilityUtils {
 				player.setAttribute("obstaclesDone", obstaclesDone);
 			}
 			else if (id == lastObstacle && obstaclesDone.containsAll(obstacles)) {
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), bonus, true);
+				player.incExp(Skill.of(AGILITY).id(), bonus, true);
 				player.setAttribute("obstaclesDone", new HashSet<Integer>());
 			}
 		}
@@ -52,7 +52,7 @@ public class AgilityUtils {
 				for (int i = 0; i < obstacleOrder.length; i++) {
 					if (obstacleOrder[i] == id) {
 						if (i == obstacleOrder.length - 1) {
-							player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), bonus, true);
+							player.incExp(Skill.of(AGILITY).id(), bonus, true);
 							player.setAttribute("nextObstacle", obstacleOrder[0]);
 							break;
 						}

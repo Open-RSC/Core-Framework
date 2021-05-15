@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.skills.firemaking;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.external.FiremakingDef;
 import com.openrsc.server.model.Point;
@@ -18,8 +18,8 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.FIREMAKING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
@@ -72,7 +72,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, getSkillId(player.getWorld(), SkillsEnum.FIREMAKING));
+			repeat = Formulae.getRepeatTimes(player, Skill.of(FIREMAKING).id());
 		}
 
 		startbatch(repeat);
@@ -84,7 +84,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		thinkbubble(new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
 		delay(3);
-		if (Formulae.lightLogs(player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING)))) {
+		if (Formulae.lightLogs(player.getSkills().getLevel(Skill.of(FIREMAKING).id()))) {
 			if (!gItem.isRemoved()) {
 				player.playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
 
@@ -106,7 +106,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 						}
 					}
 				);
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING), getExp(player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING)), 25), true);
+				player.incExp(Skill.of(FIREMAKING).id(), getExp(player.getSkills().getMaxStat(Skill.of(FIREMAKING).id()), 25), true);
 			}
 
 			if (config().BATCH_PROGRESSION) {
@@ -154,7 +154,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 			return;
 		}
 
-		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING)) < def.getRequiredLevel()) {
+		if (player.getSkills().getLevel(Skill.of(FIREMAKING).id()) < def.getRequiredLevel()) {
 			player.message("You need at least " + def.getRequiredLevel() + " firemaking to light these logs");
 			return;
 		}
@@ -166,7 +166,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, getSkillId(player.getWorld(), SkillsEnum.FIREMAKING));
+			repeat = Formulae.getRepeatTimes(player, Skill.of(FIREMAKING).id());
 		}
 
 		startbatch(repeat);
@@ -177,7 +177,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 		thinkbubble(new Item(TINDERBOX));
 		player.playerServerMessage(MessageType.QUEST, "You attempt to light the logs");
 		delay(3);
-		if (Formulae.lightCustomLogs(def, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING)))) {
+		if (Formulae.lightCustomLogs(def, player.getSkills().getLevel(Skill.of(FIREMAKING).id()))) {
 			if (!gItem.isRemoved()) {
 				player.playerServerMessage(MessageType.QUEST, "The fire catches and the logs begin to burn");
 				player.getWorld().unregisterItem(gItem);
@@ -201,7 +201,7 @@ public class Firemaking implements UseObjTrigger, UseInvTrigger {
 						}
 					});
 
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.FIREMAKING), def.getExp(), true);
+				player.incExp(Skill.of(FIREMAKING).id(), def.getExp(), true);
 				if (config().BATCH_PROGRESSION) {
 					firemakingWalk(player);
 				}

@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.npcs.falador;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,8 +11,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public final class Barmaid implements
 	TalkNpcTrigger {
@@ -116,7 +116,7 @@ public final class Barmaid implements
 	}
 
 	private void drinkAle(Player player) {
-		int[] skillIDs = {getSkillId(player.getWorld(), SkillsEnum.ATTACK), getSkillId(player.getWorld(), SkillsEnum.DEFENSE), getSkillId(player.getWorld(), SkillsEnum.RANGED), getSkillId(player.getWorld(), SkillsEnum.FISHING)};
+		int[] skillIDs = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(RANGED).id(), Skill.of(FISHING).id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(player, skillIDs[i]);
 		}

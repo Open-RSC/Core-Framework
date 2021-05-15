@@ -1,14 +1,14 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.constants.IronmanMode;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.PrayerStruct;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.PRAYER;
 
 public class PrayerHandler implements PayloadProcessor<PrayerStruct, OpcodeIn> {
 
@@ -91,12 +91,12 @@ public class PrayerHandler implements PayloadProcessor<PrayerStruct, OpcodeIn> {
 		OpcodeIn packetOne = OpcodeIn.PRAYER_ACTIVATED;
 		OpcodeIn packetTwo = OpcodeIn.PRAYER_DEACTIVATED;
 		if (pID == packetOne) {
-			if (player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.PRAYER)) < prayer.getReqLevel()) {
+			if (player.getSkills().getMaxStat(Skill.of(PRAYER).id()) < prayer.getReqLevel()) {
 				player.setSuspiciousPlayer(true, "max stat prayer < req level");
 				player.message("Your prayer ability is not high enough to use this prayer");
 				return;
 			}
-			if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER)) <= 0) {
+			if (player.getSkills().getLevel(Skill.of(PRAYER).id()) <= 0) {
 				player.getPrayers().setPrayer(prayerID, false);
 				player.message("You have run out of prayer points. Return to a church to recharge");
 				return;

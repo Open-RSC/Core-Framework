@@ -16,6 +16,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static com.openrsc.server.constants.Skills.ATTACK;
+import static com.openrsc.server.constants.Skills.THIEVING;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class FightArena implements QuestInterface, TalkNpcTrigger,
@@ -51,9 +53,9 @@ public class FightArena implements QuestInterface, TalkNpcTrigger,
 		delay(3);
 		give(player, ItemId.COINS.id(), 1000);
 		player.message("@gre@You haved gained 2 quest points!");
-		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FIGHT_ARENA);
+		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.FIGHT_ARENA);
 		//keep order kosher
-		Either<Integer, SkillsEnum>[] skillIDs = new Either[]{Either.right(SkillsEnum.ATTACK), Either.right(SkillsEnum.THIEVING)};
+		Either<Integer, String>[] skillIDs = new Either[]{Either.right(ATTACK), Either.right(THIEVING)};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(player, questData, i == (skillIDs.length - 1));

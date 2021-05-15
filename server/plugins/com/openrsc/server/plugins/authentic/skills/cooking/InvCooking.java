@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.skills.cooking;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
@@ -9,8 +9,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import static com.openrsc.server.constants.Skills.COOKING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class InvCooking implements UseInvTrigger {
 
@@ -37,13 +37,13 @@ public class InvCooking implements UseInvTrigger {
 		}
 		if (item1.getCatalogId() == ItemId.GRAPES.id() && item2.getCatalogId() == ItemId.JUG_OF_WATER.id()
 			|| item1.getCatalogId() == ItemId.JUG_OF_WATER.id() && item2.getCatalogId() == ItemId.GRAPES.id()) {
-			if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.COOKING)) < 35) {
+			if (player.getSkills().getLevel(Skill.of(COOKING).id()) < 35) {
 				player.message("You need level 35 cooking to do this");
 				return;
 			}
 			if (player.getCarriedItems().getInventory().contains(item1)
 				&& player.getCarriedItems().getInventory().contains(item2)) {
-				if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.COOKING)) < 35) {
+				if (player.getSkills().getLevel(Skill.of(COOKING).id()) < 35) {
 					player.playerServerMessage(MessageType.QUEST, "You need level 35 cooking to do this");
 					return;
 				}
@@ -51,10 +51,10 @@ public class InvCooking implements UseInvTrigger {
 				player.getCarriedItems().remove(new Item(ItemId.JUG_OF_WATER.id()));
 				player.getCarriedItems().remove(new Item(ItemId.GRAPES.id()));
 				delay(5);
-				if (Formulae.goodWine(player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.COOKING)))) {
+				if (Formulae.goodWine(player.getSkills().getLevel(Skill.of(COOKING).id()))) {
 					player.playerServerMessage(MessageType.QUEST, "You make some nice wine");
 					player.getCarriedItems().getInventory().add(new Item(ItemId.WINE.id()));
-					player.incExp(getSkillId(player.getWorld(), SkillsEnum.COOKING), 440, true);
+					player.incExp(Skill.of(COOKING).id(), 440, true);
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "You accidentally make some bad wine");
 					player.getCarriedItems().getInventory().add(new Item(ItemId.BAD_WINE.id()));
@@ -114,7 +114,7 @@ public class InvCooking implements UseInvTrigger {
 				combine = c;
 			}
 		}
-		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.COOKING)) < combine.requiredLevel) {
+		if (player.getSkills().getLevel(Skill.of(COOKING).id()) < combine.requiredLevel) {
 			player.playerServerMessage(MessageType.QUEST, "You need level " + combine.requiredLevel + " cooking to do this");
 			return;
 		}
@@ -142,7 +142,7 @@ public class InvCooking implements UseInvTrigger {
 				player.message(combine.messages[0]);
 
 			give(player, combine.resultItem, 1);
-			player.incExp(getSkillId(player.getWorld(), SkillsEnum.COOKING), combine.experience, true);
+			player.incExp(Skill.of(COOKING).id(), combine.experience, true);
 
 			if (combine.messages.length > 1)
 				player.playerServerMessage(MessageType.QUEST, combine.messages[1]);

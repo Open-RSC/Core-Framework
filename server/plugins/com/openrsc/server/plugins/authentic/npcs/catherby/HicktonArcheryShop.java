@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.npcs.catherby;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Shop;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -14,8 +14,8 @@ import com.openrsc.server.plugins.AbstractShop;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.openrsc.server.constants.Skills.FLETCHING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class HicktonArcheryShop extends AbstractShop {
 
@@ -57,7 +57,7 @@ public class HicktonArcheryShop extends AbstractShop {
 		choices.add("Yes please");
 		choices.add("No, I prefer to bash things close up");
 		if (config().WANT_CUSTOM_QUESTS
-		&& getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.FLETCHING)) >= 99)
+		&& getMaxLevel(player, Skill.of(FLETCHING).id()) >= 99)
 			choices.add("Fletching Skillcape");
 
 		final int option = multi(player, n, false, //do not send over
@@ -69,7 +69,7 @@ public class HicktonArcheryShop extends AbstractShop {
 		} else if (option == 1) {
 			say(player, n, "No, I prefer to bash things close up");
 		} else if (option == 2) {
-			if (getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.FLETCHING)) >= 99) {
+			if (getMaxLevel(player, Skill.of(FLETCHING).id()) >= 99) {
 				npcsay(player, n, "I see you've carved your way to the top",
 					"i can offer you cape",
 					"made for those who excel in fletching",

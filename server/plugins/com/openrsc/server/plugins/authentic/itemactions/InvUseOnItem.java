@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.itemactions;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.UseInvTrigger;
@@ -9,8 +9,8 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.CRAFTING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class InvUseOnItem implements UseInvTrigger {
 	private int[] capes = {
@@ -185,7 +185,7 @@ public class InvUseOnItem implements UseInvTrigger {
 				player.message("You join the two halves of the key together");
 				player.getCarriedItems().getInventory().add(new Item(ItemId.CRYSTAL_KEY.id(), 1));
 				if (config().CRYSTAL_KEY_GIVES_XP) {
-					player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 40, true);
+					player.incExp(Skill.of(CRAFTING).id(), 40, true);
 				}
 			}
 		}
@@ -230,7 +230,7 @@ public class InvUseOnItem implements UseInvTrigger {
 								&& player.getCarriedItems().remove(new Item(item2.getCatalogId())) > -1) {
 							player.message("You dye the Cape");
 							player.getCarriedItems().getInventory().add(new Item(newCapes[i]));
-							player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 10, true);
+							player.incExp(Skill.of(CRAFTING).id(), 10, true);
 							return;
 						}
 					}
@@ -244,7 +244,7 @@ public class InvUseOnItem implements UseInvTrigger {
 								&& player.getCarriedItems().remove(new Item(item2.getCatalogId())) > -1) {
 							player.message("You dye the Cape");
 							player.getCarriedItems().getInventory().add(new Item(newCapes[i]));
-							player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 10, true);
+							player.incExp(Skill.of(CRAFTING).id(), 10, true);
 							return;
 						}
 					}

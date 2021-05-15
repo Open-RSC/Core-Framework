@@ -1,7 +1,7 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatAggroScript;
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.model.entity.Mob;
@@ -9,7 +9,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.*;
 
 public class MonkZamorak implements CombatAggroScript, OnCombatStartScript {
 
@@ -23,7 +23,7 @@ public class MonkZamorak implements CombatAggroScript, OnCombatStartScript {
 
 			player.message("You feel slightly weakened");
 
-			int[] stats = {getSkillId(player.getWorld(), SkillsEnum.ATTACK), getSkillId(player.getWorld(), SkillsEnum.DEFENSE), getSkillId(player.getWorld(), SkillsEnum.STRENGTH)};
+			int[] stats = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(STRENGTH).id()};
 			for(int affectedStat : stats) {
 				/* How much to lower the stat */
 				int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) + 20) * 0.05));

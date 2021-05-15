@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.skills.agility;
 
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,8 +12,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.openrsc.server.constants.Skills.AGILITY;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class GnomeAgilityCourse implements OpLocTrigger {
 
@@ -60,7 +60,7 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				boundaryTeleport(player, Point.location(692, 499));
 				delay();
 				player.message("and walk across");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 30, true);
+				player.incExp(Skill.of(AGILITY).id(), 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
 				return;
 			case NET:
@@ -72,7 +72,7 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				delay(3);
 				teleport(player, 692, 1448);
 				player.message("and pull yourself onto the platform");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 30, true);
+				player.incExp(Skill.of(AGILITY).id(), 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
 				return;
 			case WATCH_TOWER:
@@ -84,7 +84,7 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				delay(2);
 				teleport(player, 693, 2394);
 				player.message("to the platform above");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 30, true);
+				player.incExp(Skill.of(AGILITY).id(), 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
 				return;
 			case ROPE_SWING:
@@ -94,7 +94,7 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				delay(4);
 				teleport(player, 685, 2396);
 				player.message("and swing to the oppisite platform");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 30, true);
+				player.incExp(Skill.of(AGILITY).id(), 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
 				return;
 			case LANDING:
@@ -103,7 +103,7 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				teleport(player, 683, 506);
 				player.message("and drop to the floor");
 				say(player, null, "ooof");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 30, true);
+				player.incExp(Skill.of(AGILITY).id(), 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
 				return;
 			case SECOND_NET:
@@ -117,7 +117,7 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				player.message("and run towards the net");
 				delay();
 				teleport(player, 683, 501);
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 30, true);
+				player.incExp(Skill.of(AGILITY).id(), 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
 				return;
 			case PIPE:
@@ -130,7 +130,7 @@ public class GnomeAgilityCourse implements OpLocTrigger {
 				if (gnomeTrainer != null && !AgilityUtils.hasDoneObstacle(player, PIPE, obstacles)) {
 					npcsay(player, gnomeTrainer, "that's the way, well done");
 				}
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 30, true);
+				player.incExp(Skill.of(AGILITY).id(), 30, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 150);
 				return;
 		}

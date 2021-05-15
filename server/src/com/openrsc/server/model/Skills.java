@@ -1,6 +1,6 @@
 package com.openrsc.server.model;
 
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.LiveFeedLog;
 import com.openrsc.server.database.struct.PlayerExperience;
@@ -15,7 +15,8 @@ import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.HITS;
+import static com.openrsc.server.constants.Skills.PRAYER;
 
 
 public class Skills {
@@ -111,11 +112,11 @@ public class Skills {
 			levels[skill] = 0;
 		}
 		sendUpdate(skill);
-		if (skill != getSkillId(getWorld(), SkillsEnum.PRAYER)
-			&& skill != getSkillId(getWorld(), SkillsEnum.HITS)
+		if (skill != Skill.of(PRAYER).id()
+			&& skill != Skill.of(HITS).id()
 			&& !fromRestoreEvent) {
 			mob.tryResyncStatEvent();
-		} else if (skill == getSkillId(getWorld(), SkillsEnum.PRAYER)
+		} else if (skill == Skill.of(PRAYER).id()
 			&& mob.isPlayer()) {
 			((Player)mob).setPrayerStatePoints(level * 120);
 		}
@@ -333,7 +334,7 @@ public class Skills {
 		levels[skill] = getMaxStat(skill);
 		if (sendUpdate)
 			sendUpdate(skill);
-		if (skill == getSkillId(getWorld(), SkillsEnum.PRAYER) && mob.isPlayer()) {
+		if (skill == Skill.of(PRAYER).id() && mob.isPlayer()) {
 			((Player) getMob()).setPrayerStatePoints(levels[skill] * 120);
 		}
 	}
@@ -403,7 +404,7 @@ public class Skills {
 			levs[i] = new PlayerSkills();
 			levs[i].skillId = ex[i].skillId;
 			// minimum hits was 10
-			if (ex[i].skillId == getWorld().getServer().getConstants().getSkills().getSkillId(SkillsEnum.HITS)
+			if (ex[i].skillId == Skill.of(HITS).id()
 				&& ex[i].experience >= 0 && ex[i].experience < 4616) {
 				levs[i].skillLevel = 10;
 			}

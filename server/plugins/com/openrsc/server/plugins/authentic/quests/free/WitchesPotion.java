@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -11,10 +10,12 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
-import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.KillNpcTrigger;
+import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
+import static com.openrsc.server.constants.Skills.EVILMAGIC;
+import static com.openrsc.server.constants.Skills.MAGIC;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
@@ -39,12 +40,12 @@ public class WitchesPotion implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the witches potion quest");
-		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WITCHS_POTION);
-		SkillsEnum magicSkill;
+		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WITCHS_POTION);
+		String magicSkill;
 		if (player.getConfig().DIVIDED_GOOD_EVIL) {
-			magicSkill = SkillsEnum.EVILMAGIC;
+			magicSkill = EVILMAGIC;
 		} else {
-			magicSkill = SkillsEnum.MAGIC;
+			magicSkill = MAGIC;
 		}
 		questData[1] = Either.right(magicSkill);
 		incQuestReward(player, questData, true);

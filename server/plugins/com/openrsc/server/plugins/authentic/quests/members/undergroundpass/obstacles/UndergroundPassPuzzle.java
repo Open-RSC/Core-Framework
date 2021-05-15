@@ -1,13 +1,13 @@
 package com.openrsc.server.plugins.authentic.quests.members.undergroundpass.obstacles;
 
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
+import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class UndergroundPassPuzzle implements OpLocTrigger {
 
@@ -66,7 +66,7 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 		mes("you fall onto a pit of spikes");
 		delay(3);
 		player.teleport(679, 3448);
-		player.damage((int) (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) * 0.2D));
+		player.damage((int) (getCurrentLevel(player, Skill.of(HITS).id()) * 0.2D));
 		player.message("you crawl out of the pit");
 		player.getWorld().replaceGameObject(obj,
 			new GameObject(obj.getWorld(), obj.getLocation(), 778, obj.getDirection(), obj

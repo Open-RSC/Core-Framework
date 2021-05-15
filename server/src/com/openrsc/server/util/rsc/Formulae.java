@@ -1,7 +1,7 @@
 package com.openrsc.server.util.rsc;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.*;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.Mob;
@@ -9,9 +9,9 @@ import com.openrsc.server.model.entity.player.Player;
 
 import java.security.InvalidParameterException;
 
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.getCurrentLevel;
 import static com.openrsc.server.plugins.Functions.getMaxLevel;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public final class Formulae {
 
@@ -379,16 +379,16 @@ public final class Formulae {
 	 */
 	public static int getCombatlevel(Mob mob, int[] stats, boolean isSpecial) {
 		if (mob.getConfig().DIVIDED_GOOD_EVIL) {
-			return getCombatLevel(stats[getSkillId(mob.getWorld(), SkillsEnum.ATTACK)], stats[getSkillId(mob.getWorld(), SkillsEnum.DEFENSE)],
-				stats[getSkillId(mob.getWorld(), SkillsEnum.STRENGTH)],stats[getSkillId(mob.getWorld(), SkillsEnum.HITS)],
-				stats[getSkillId(mob.getWorld(), SkillsEnum.GOODMAGIC)] + stats[getSkillId(mob.getWorld(), SkillsEnum.EVILMAGIC)],
-				stats[getSkillId(mob.getWorld(), SkillsEnum.PRAYGOOD)] + stats[getSkillId(mob.getWorld(), SkillsEnum.PRAYEVIL)],
-				stats[getSkillId(mob.getWorld(), SkillsEnum.RANGED)], true, isSpecial);
+			return getCombatLevel(stats[Skill.of(ATTACK).id()], stats[Skill.of(DEFENSE).id()],
+				stats[Skill.of(STRENGTH).id()],stats[Skill.of(HITS).id()],
+				stats[Skill.of(GOODMAGIC).id()] + stats[Skill.of(EVILMAGIC).id()],
+				stats[Skill.of(PRAYGOOD).id()] + stats[Skill.of(PRAYEVIL).id()],
+				stats[Skill.of(RANGED).id()], true, isSpecial);
 		} else {
-			return getCombatLevel(stats[getSkillId(mob.getWorld(), SkillsEnum.ATTACK)], stats[getSkillId(mob.getWorld(), SkillsEnum.DEFENSE)],
-				stats[getSkillId(mob.getWorld(), SkillsEnum.STRENGTH)],stats[getSkillId(mob.getWorld(), SkillsEnum.HITS)],
-				stats[getSkillId(mob.getWorld(), SkillsEnum.MAGIC)], stats[getSkillId(mob.getWorld(), SkillsEnum.PRAYER)],
-				stats[getSkillId(mob.getWorld(), SkillsEnum.RANGED)], false, isSpecial);
+			return getCombatLevel(stats[Skill.of(ATTACK).id()], stats[Skill.of(DEFENSE).id()],
+				stats[Skill.of(STRENGTH).id()],stats[Skill.of(HITS).id()],
+				stats[Skill.of(MAGIC).id()], stats[Skill.of(PRAYER).id()],
+				stats[Skill.of(RANGED).id()], false, isSpecial);
 		}
 	}
 
@@ -583,8 +583,8 @@ public final class Formulae {
 
 	public static int getLevelsToReduceAttackKBD(Player player) {
 		int levels = 0;
-		int currLvl = getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.RANGED));
-		int maxLvl = getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.RANGED));
+		int currLvl = getCurrentLevel(player, Skill.of(RANGED).id());
+		int maxLvl = getMaxLevel(player, Skill.of(RANGED).id());
 		int ratio = currLvl * 100 / maxLvl;
 		if (currLvl <= 3) {
 			return 0;

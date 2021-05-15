@@ -1,15 +1,15 @@
 package com.openrsc.server.plugins.custom.skills.runecraft;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.authentic.skills.mining.Mining;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
+import static com.openrsc.server.constants.Skills.MINING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class RawRuneStone implements OpLocTrigger {
 	@Override
@@ -45,7 +45,7 @@ public class RawRuneStone implements OpLocTrigger {
 		player.playSound("mine");
 		thinkbubble(new Item(ItemId.IRON_PICKAXE.id()));
 		give(player, ItemId.RUNE_STONE.id(), 1);
-		player.incExp(getSkillId(player.getWorld(), SkillsEnum.MINING), 20, true);
+		player.incExp(Skill.of(MINING).id(), 20, true);
 		delay();
 
 		// Repeat

@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.itemactions;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.HpUpdate;
@@ -10,8 +10,8 @@ import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Eating implements OpInvTrigger {
 
@@ -45,10 +45,10 @@ public class Eating implements OpInvTrigger {
 				if (id == ItemId.SPECIAL_DEFENSE_CABBAGE.id()) {
 					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 					player.playerServerMessage(MessageType.QUEST, "It seems to taste nicer than normal");
-					int lv = player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.DEFENSE));
-					int newStat = player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.DEFENSE)) + 1;
+					int lv = player.getSkills().getMaxStat(Skill.of(DEFENSE).id());
+					int newStat = player.getSkills().getLevel(Skill.of(DEFENSE).id()) + 1;
 					if (newStat <= (lv + 1))
-						player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.DEFENSE), newStat);
+						player.getSkills().setLevel(Skill.of(DEFENSE).id(), newStat);
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase()
 						+ ". Yuck!");
@@ -202,13 +202,13 @@ public class Eating implements OpInvTrigger {
 			} else
 				player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName().toLowerCase());
 
-			final boolean heals = player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) < player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS));
+			final boolean heals = player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id());
 			if (heals) {
-				int newHp = player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) + item.eatingHeals(player.getWorld());
-				if (newHp > player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS))) {
-					newHp = player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS));
+				int newHp = player.getSkills().getLevel(Skill.of(HITS).id()) + item.eatingHeals(player.getWorld());
+				if (newHp > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
+					newHp = player.getSkills().getMaxStat(Skill.of(HITS).id());
 				}
-				player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.HITS), newHp);
+				player.getSkills().setLevel(Skill.of(HITS).id(), newHp);
 			}
 			if (heals && !isKebabVariant && !gaveMessage) {
 				player.playerServerMessage(MessageType.QUEST, "It heals some health");
@@ -229,14 +229,14 @@ public class Eating implements OpInvTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You eat the fish oil");
 
 			// Heal
-			if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) < player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS))) {
+			if (player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
 				// See if it heals
 				if (DataConversions.random(1, 2) == 1) {
-					int newHp = player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) + 1;
-					if (newHp > player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS))) {
-						newHp = player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS));
+					int newHp = player.getSkills().getLevel(Skill.of(HITS).id()) + 1;
+					if (newHp > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
+						newHp = player.getSkills().getMaxStat(Skill.of(HITS).id());
 					}
-					player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.HITS), newHp);
+					player.getSkills().setLevel(Skill.of(HITS).id(), newHp);
 					player.playerServerMessage(MessageType.QUEST, "It heals some health");
 				} else {
 					player.playerServerMessage(MessageType.QUEST, "You don't feel a difference");
@@ -251,12 +251,12 @@ public class Eating implements OpInvTrigger {
 			player.playerServerMessage(MessageType.QUEST, "You eat the sweetened fruit");
 
 			// Heal
-			if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) < player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS))) {
-				int newHp = player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) + DataConversions.random(1, 2);
-				if (newHp > player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS))) {
-					newHp = player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS));
+			if (player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
+				int newHp = player.getSkills().getLevel(Skill.of(HITS).id()) + DataConversions.random(1, 2);
+				if (newHp > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
+					newHp = player.getSkills().getMaxStat(Skill.of(HITS).id());
 				}
-				player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.HITS), newHp);
+				player.getSkills().setLevel(Skill.of(HITS).id(), newHp);
 				player.playerServerMessage(MessageType.QUEST, "It heals some health");
 			}
 			// Remove
@@ -271,16 +271,16 @@ public class Eating implements OpInvTrigger {
 		if (rand == 0) { // 1/32 or 3% chance chance of 2-4 damage (can never kill)
 			player.playerServerMessage(MessageType.QUEST, "That tasted a bit dodgy");
 			player.message("You feel a bit ill");
-			if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) > 2) {
+			if (player.getSkills().getLevel(Skill.of(HITS).id()) > 2) {
 				int dmg = DataConversions.random(2, 4);
-				int newHp = Math.max(player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) - dmg, 1);
-				player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.HITS), newHp);
+				int newHp = Math.max(player.getSkills().getLevel(Skill.of(HITS).id()) - dmg, 1);
+				player.getSkills().setLevel(Skill.of(HITS).id(), newHp);
 			}
 		} else if (rand <= 1) { // 1/32 or 3% chance to heal 30 hits and gaining 1-3 levels att, str, def
 			player.playerServerMessage(MessageType.QUEST, "Wow that was an amazing kebab!");
 			player.message("You feel slightly invigorated");
 			int boost = DataConversions.random(1, 3);
-			int[] skills = {getSkillId(player.getWorld(), SkillsEnum.ATTACK), getSkillId(player.getWorld(), SkillsEnum.STRENGTH), getSkillId(player.getWorld(), SkillsEnum.DEFENSE)};
+			int[] skills = {Skill.of(ATTACK).id(), Skill.of(STRENGTH).id(), Skill.of(DEFENSE).id()};
 			for (int skill : skills) {
 				if (player.getSkills().getLevel(skill) <= player.getSkills().getMaxStat(skill)) {
 					player.getSkills().setLevel(skill, player.getSkills().getLevel(skill) + boost);
@@ -293,17 +293,17 @@ public class Eating implements OpInvTrigger {
 			hpRestored = DataConversions.random(10, 20);
 		} else if (rand <= 28) { // 20/32 or 62% chance of healing 10% max hits
 			player.playerServerMessage(MessageType.QUEST, "It heals some health");
-			hpRestored = player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS)) * 10 / 100;
+			hpRestored = player.getSkills().getMaxStat(Skill.of(HITS).id()) * 10 / 100;
 		} else { // 3/32 or 9% that does nothing
 			player.playerServerMessage(MessageType.QUEST, "The kebab didn't seem to do a lot");
 			hpRestored = 0;
 		}
-		if (hpRestored > 0 && player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) < player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS))) {
-			int newStat = player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) + hpRestored;
-			if (newStat > player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS))) {
-				newStat = player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS));
+		if (hpRestored > 0 && player.getSkills().getLevel(Skill.of(HITS).id()) < player.getSkills().getMaxStat(Skill.of(HITS).id())) {
+			int newStat = player.getSkills().getLevel(Skill.of(HITS).id()) + hpRestored;
+			if (newStat > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
+				newStat = player.getSkills().getMaxStat(Skill.of(HITS).id());
 			}
-			player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.HITS), newStat);
+			player.getSkills().setLevel(Skill.of(HITS).id(), newStat);
 		}
 	}
 
@@ -312,11 +312,11 @@ public class Eating implements OpInvTrigger {
 		player.playerServerMessage(MessageType.QUEST, "You eat the " + item.getDef(player.getWorld()).getName());
 		player.playerServerMessage(MessageType.QUEST, "It heals some health");
 		// restores up to 19
-		int newStat = player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) + 19;
-		if (newStat > player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS))) {
-			newStat = player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.HITS));
+		int newStat = player.getSkills().getLevel(Skill.of(HITS).id()) + 19;
+		if (newStat > player.getSkills().getMaxStat(Skill.of(HITS).id())) {
+			newStat = player.getSkills().getMaxStat(Skill.of(HITS).id());
 		}
-		player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.HITS), newStat);
+		player.getSkills().setLevel(Skill.of(HITS).id(), newStat);
 		switch(DataConversions.random(0,2)) {
 			case 0:
 				say(player, null, "Yummmmm!");

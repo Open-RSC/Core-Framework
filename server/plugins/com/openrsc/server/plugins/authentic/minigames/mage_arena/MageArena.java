@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.minigames.mage_arena;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Minigames;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.event.rsc.impl.ObjectRemover;
 import com.openrsc.server.external.ItemDefinition;
@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrigger, OpLocTrigger, TakeObjTrigger, SpellNpcTrigger, AttackNpcTrigger, PlayerDeathTrigger {
 
@@ -54,7 +54,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 
 	@Override
 	public void onTalkNpc(final Player player, final Npc n) {
-		if (getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.MAGIC)) < 60) { // TODO: Enter the arena game.
+		if (getMaxLevel(player, Skill.of(MAGIC).id()) < 60) { // TODO: Enter the arena game.
 			say(player, n, "hello there", "what is this place?");
 			npcsay(player, n, "do not waste my time with trivial questions!",
 				"i am the great kolodion, master of battle magic", "i have an arena to run");
@@ -76,8 +76,8 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				}
 				teleport(player, 229, 130);
 				delay();
-				setCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.ATTACK), 0);
-				setCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.STRENGTH), 0);
+				setCurrentLevel(player, Skill.of(ATTACK).id(), 0);
+				setCurrentLevel(player, Skill.of(STRENGTH).id(), 0);
 				spawnKolodion(player, player.getCache().getInt("kolodion_stage"), true);
 
 			} else if (stage == 2) {
@@ -206,8 +206,8 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				}
 				teleport(player, 229, 130);
 				delay();
-				setCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.ATTACK), 0);
-				setCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.STRENGTH), 0);
+				setCurrentLevel(player, Skill.of(ATTACK).id(), 0);
+				setCurrentLevel(player, Skill.of(STRENGTH).id(), 0);
 
 				// first time
 				spawnKolodion(player, NpcId.KOLODION_HUMAN.id(), false);
@@ -242,9 +242,9 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					getOwner().setAttribute("maged_kolodion", false);
 					return;
 				}
-				if (getOwner().getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.ATTACK)) > 0 || getOwner().getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.STRENGTH)) > 0) {
-					getOwner().getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.ATTACK), 0);
-					getOwner().getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.STRENGTH), 0);
+				if (getOwner().getSkills().getLevel(Skill.of(ATTACK).id()) > 0 || getOwner().getSkills().getLevel(Skill.of(STRENGTH).id()) > 0) {
+					getOwner().getSkills().setLevel(Skill.of(ATTACK).id(), 0);
+					getOwner().getSkills().setLevel(Skill.of(STRENGTH).id(), 0);
 				}
 				Npc Guthix = ifnearvisnpc(player, NpcId.BATTLE_MAGE_GUTHIX.id(), 2);
 				Npc Zamorak = ifnearvisnpc(player, NpcId.BATTLE_MAGE_ZAMORAK.id(), 2);
@@ -254,26 +254,26 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 				if (Guthix != null && Guthix.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 33);
 					player.message(randomMessage[2]);
-					if (getCurrentLevel(getOwner(), getSkillId(player.getWorld(), SkillsEnum.HITS)) < 20) {
+					if (getCurrentLevel(getOwner(), Skill.of(HITS).id()) < 20) {
 						getOwner().damage(2);
 					} else {
-						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), getSkillId(player.getWorld(), SkillsEnum.HITS)) * 0.08));
+						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skill.of(HITS).id()) * 0.08));
 					}
 				} else if (Zamorak != null && Zamorak.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 35);
 					player.message(randomMessage[0]);
-					if (getCurrentLevel(getOwner(), getSkillId(player.getWorld(), SkillsEnum.HITS)) < 20) {
+					if (getCurrentLevel(getOwner(), Skill.of(HITS).id()) < 20) {
 						getOwner().damage(2);
 					} else {
-						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), getSkillId(player.getWorld(), SkillsEnum.HITS)) * 0.08));
+						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skill.of(HITS).id()) * 0.08));
 					}
 				} else if (Saradomin != null && Saradomin.withinRange(getOwner(), 1)) {
 					godSpellObject(getOwner(), 34);
 					player.message(randomMessage[1]);
-					if (getCurrentLevel(getOwner(), getSkillId(player.getWorld(), SkillsEnum.HITS)) < 20) {
+					if (getCurrentLevel(getOwner(), Skill.of(HITS).id()) < 20) {
 						getOwner().damage(2);
 					} else {
-						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), getSkillId(player.getWorld(), SkillsEnum.HITS)) * 0.08));
+						getOwner().damage((int)Math.ceil(getCurrentLevel(getOwner(), Skill.of(HITS).id()) * 0.08));
 					}
 				}
 			}
@@ -363,9 +363,9 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 						break;
 				}
 				// how many lvls needed for +1 dmg (min 16, max 25)
-				int reciprocalSlope = (int) Math.floor(1.0 / (0.06 - (0.01 / 48.0) * getMaxLevel(getOwner(), getSkillId(player.getWorld(), SkillsEnum.HITS))));
+				int reciprocalSlope = (int) Math.floor(1.0 / (0.06 - (0.01 / 48.0) * getMaxLevel(getOwner(), Skill.of(HITS).id())));
 				// what is the lvl "shift" per new transformation to calculate dmg
-				int shiftPerPhase = (int) Math.round((0.004 * getMaxLevel(getOwner(), getSkillId(player.getWorld(), SkillsEnum.HITS)) + 0.4) * reciprocalSlope);
+				int shiftPerPhase = (int) Math.round((0.004 * getMaxLevel(getOwner(), Skill.of(HITS).id()) + 0.4) * reciprocalSlope);
 				ArrayList<String[]> messages = new ArrayList<String[]>() {
 					{
 						add(new String[]{"@yel@kolodion: roooaar", "claws grab you from below"});
@@ -386,7 +386,7 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					delay(2);
 				}
 				delay(3);
-				getOwner().damage((int) Math.ceil(Math.max(getCurrentLevel(getOwner(), getSkillId(player.getWorld(), SkillsEnum.HITS)) + (transformStage - 1.0) * shiftPerPhase, 0) / reciprocalSlope) + 1);
+				getOwner().damage((int) Math.ceil(Math.max(getCurrentLevel(getOwner(), Skill.of(HITS).id()) + (transformStage - 1.0) * shiftPerPhase, 0) / reciprocalSlope) + 1);
 			}
 		};
 		if (kolE != null) {

@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.quests.members.undergroundpass.obst
 
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.custom.UndergroundPassMessages;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
@@ -14,8 +14,8 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 
@@ -129,7 +129,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			}
 		}
 		else if (inArray(obj.getID(), MAIN_ROCKS)) {
-			doRock(obj, player, (int) (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 42) + 1, true, -1);
+			doRock(obj, player, (int) (getCurrentLevel(player, Skill.of(HITS).id()) / 42) + 1, true, -1);
 		}
 		else if (obj.getID() == FIRST_SWAMP) {
 			mes("you try to cross but you're unable to");
@@ -140,7 +140,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			say(player, null, "gulp!");
 			player.teleport(674, 3462);
 			say(player, null, "aargh");
-			player.damage((int) (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 42) + 1);
+			player.damage((int) (getCurrentLevel(player, Skill.of(HITS).id()) / 42) + 1);
 			delay(3);
 			player.teleport(677, 3462);
 			delay();
@@ -155,7 +155,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			player.teleport(687, 3462);
 			delay();
 			say(player, null, "aargh");
-			player.damage((int) (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 42) + 1);
+			player.damage((int) (getCurrentLevel(player, Skill.of(HITS).id()) / 42) + 1);
 			player.teleport(690, 3461);
 			mes("you tumble deep into the cravass");
 			delay(3);
@@ -163,7 +163,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			delay(3);
 		}
 		else if (inArray(obj.getID(), FAIL_SWAMP_ROCKS)) {
-			doRock(obj, player, (int) (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 42) + 1, true, -1);
+			doRock(obj, player, (int) (getCurrentLevel(player, Skill.of(HITS).id()) / 42) + 1, true, -1);
 		}
 		else if (obj.getID() == PILE_OF_MUD_MAP_LEVEL_1) {
 			mes("you climb up the mud pile");
@@ -175,7 +175,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			delay(3);
 		}
 		else if (inArray(obj.getID(), MAIN_LEDGE)) {
-			doLedge(obj, player, (int) (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 42) + 1);
+			doLedge(obj, player, (int) (getCurrentLevel(player, Skill.of(HITS).id()) / 42) + 1);
 		}
 		else if (obj.getID() == LEVER) {
 			mes("you pull back on the old lever");
@@ -219,7 +219,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 			player.message("you hear a strange mechanical sound");
 			GameObject checkObj = player.getViewArea().getGameObject(CLEAR_ROCKS, obj.getX(), obj.getY());
 			changeloc(checkObj, 3000, CLEAR_ROCKS + 1);
-			player.damage((int) (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) * 0.2D));
+			player.damage((int) (getCurrentLevel(player, Skill.of(HITS).id()) * 0.2D));
 			say(player, null, "aaarrghhh");
 			mes("You've triggered a trap");
 			delay(3);
@@ -235,7 +235,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 					new GameObject(obj.getWorld(), obj.getLocation(), 805, obj.getDirection(), obj
 						.getType()));
 				obj.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
-				player.damage((int) (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 6) + 1);
+				player.damage((int) (getCurrentLevel(player, Skill.of(HITS).id()) / 6) + 1);
 				say(player, null, "aaarghh");
 			} else {
 				mes("you search the rock");
@@ -262,7 +262,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 							new GameObject(obj.getWorld(), obj.getLocation(), 805, obj.getDirection(), obj
 								.getType()));
 						obj.getWorld().delayedSpawnObject(obj.getLoc(), 5000);
-						player.damage((int) (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 6) + 1);
+						player.damage((int) (getCurrentLevel(player, Skill.of(HITS).id()) / 6) + 1);
 						say(player, null, "aaarghh");
 					}
 
@@ -278,7 +278,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 	}
 
 	boolean succeed(Player player, int req) {
-		int level_difference = getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.THIEVING)) - req;
+		int level_difference = getCurrentLevel(player, Skill.of(THIEVING).id()) - req;
 		int percent = random(1, 100);
 
 		if (level_difference < 0)
@@ -295,7 +295,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 
 	public static void doLedge(final GameObject object, final Player player, int damage) {
 		player.message("you climb the ledge");
-		boolean failLedge = !Formulae.calcProductionSuccessfulLegacy(1, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.AGILITY)), false, 71);
+		boolean failLedge = !Formulae.calcProductionSuccessfulLegacy(1, player.getSkills().getLevel(Skill.of(AGILITY).id()), false, 71);
 		if (object != null && !failLedge) {
 			if (object.getDirection() == 2 || object.getDirection() == 6) {
 				if (object.getX() == player.getX() - 1 && object.getY() == player.getY()) { // X
@@ -334,7 +334,7 @@ public class UndergroundPassObstaclesMap1 implements OpLocTrigger {
 	public static void doRock(final GameObject object, final Player player, int damage, boolean eventMessage,
 							  int spikeLocation) {
 		player.message("you climb onto the rock");
-		boolean failRock = !Formulae.calcProductionSuccessfulLegacy(1, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.AGILITY)), false, 71);
+		boolean failRock = !Formulae.calcProductionSuccessfulLegacy(1, player.getSkills().getLevel(Skill.of(AGILITY).id()), false, 71);
 		if (object != null && !failRock) {
 			if (object.getDirection() == 1 || object.getDirection() == 2 || object.getDirection() == 4
 				|| object.getDirection() == 3) {

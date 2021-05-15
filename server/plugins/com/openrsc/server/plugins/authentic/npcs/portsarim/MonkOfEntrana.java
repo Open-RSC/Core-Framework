@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.npcs.portsarim;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
@@ -14,8 +14,8 @@ import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 
+import static com.openrsc.server.constants.Skills.RANGED;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public final class MonkOfEntrana implements OpLocTrigger,
 	TalkNpcTrigger {
@@ -76,7 +76,7 @@ public final class MonkOfEntrana implements OpLocTrigger,
 			if (def.getWieldPosition() == Equipment.EquipmentSlot.SLOT_NECK.getIndex()
 				|| def.getWieldPosition() == Equipment.EquipmentSlot.SLOT_CAPE.getIndex()) return false;
 			// don't allow anything with a ranged level requirement
-			if (def.getRequiredSkillIndex() == getSkillId(player.getWorld(), SkillsEnum.RANGED)) return true;
+			if (def.getRequiredSkillIndex() == Skill.of(RANGED).id()) return true;
 			// allow anything without melee combat stats and armor, otherwise block
 			if (def.getWeaponPowerBonus() == 0 && def.getWeaponAimBonus() == 0 && def.getArmourBonus() == 0)  return false;
 				else return true;

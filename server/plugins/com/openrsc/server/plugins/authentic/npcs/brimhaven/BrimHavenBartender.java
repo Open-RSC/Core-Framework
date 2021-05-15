@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.authentic.npcs.brimhaven;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -10,8 +10,8 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public final class BrimHavenBartender implements
 	TalkNpcTrigger {
@@ -79,7 +79,7 @@ public final class BrimHavenBartender implements
 	}
 
 	private void drinkAle(Player player) {
-		int[] skillIDs = {getSkillId(player.getWorld(), SkillsEnum.ATTACK), getSkillId(player.getWorld(), SkillsEnum.DEFENSE), getSkillId(player.getWorld(), SkillsEnum.PRAYER), getSkillId(player.getWorld(), SkillsEnum.COOKING), getSkillId(player.getWorld(), SkillsEnum.HERBLAW)};
+		int[] skillIDs = {Skill.of(ATTACK).id(), Skill.of(DEFENSE).id(), Skill.of(PRAYER).id(), Skill.of(COOKING).id(), Skill.of(HERBLAW).id()};
 		for (int i = 0; i < skillIDs.length; i++) {
 			setAleEffect(player, skillIDs[i]);
 		}

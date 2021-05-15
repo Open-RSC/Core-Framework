@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.itemactions;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -9,8 +9,8 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.CRAFTING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class SpinningWheel implements UseLocTrigger {
 
@@ -60,7 +60,7 @@ public class SpinningWheel implements UseLocTrigger {
 	}
 
 	private void batchSpin(Player player, Item item, String resultString, int resultCatalogID, int requiredLevel, int experience) {
-		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < requiredLevel) {
+		if (player.getSkills().getLevel(Skill.of(CRAFTING).id()) < requiredLevel) {
 			mes("You need to have a crafting of level "
 				+ requiredLevel + " or higher to make a "
 				+ new Item(resultCatalogID).getDef(player.getWorld()).getName().toLowerCase());
@@ -84,7 +84,7 @@ public class SpinningWheel implements UseLocTrigger {
 		player.playSound("mechanical");
 		player.message(resultString);
 		player.getCarriedItems().getInventory().add(new Item(resultCatalogID, 1));
-		player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), experience, true);
+		player.incExp(Skill.of(CRAFTING).id(), experience, true);
 
 		// Repeat
 		updatebatch();

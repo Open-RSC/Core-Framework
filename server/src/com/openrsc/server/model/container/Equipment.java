@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.ATTACK;
 
 public class Equipment {
 
@@ -522,18 +522,18 @@ public class Equipment {
 		// Spears and throwing knives
 		if (itemLower.endsWith("spear") || itemLower.endsWith("throwing knife")) {
 			optionalLevel = Optional.of(requiredLevel <= 10 ? requiredLevel : requiredLevel + 5);
-			optionalSkillIndex = Optional.of(getSkillId(player.getWorld(), SkillsEnum.ATTACK));
+			optionalSkillIndex = Optional.of(Skill.of(ATTACK).id());
 		}
 		// Staff of iban (usable)
 		if (item.getCatalogId() == ItemId.STAFF_OF_IBAN.id()) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(getSkillId(player.getWorld(), SkillsEnum.ATTACK));
+			optionalSkillIndex = Optional.of(Skill.of(ATTACK).id());
 		}
 
 		// Battlestaves (incl. enchanted version)
 		if (itemLower.contains("battlestaff")) {
 			optionalLevel = Optional.of(requiredLevel);
-			optionalSkillIndex = Optional.of(getSkillId(player.getWorld(), SkillsEnum.ATTACK));
+			optionalSkillIndex = Optional.of(Skill.of(ATTACK).id());
 		}
 
 		if (optionalLevel.isPresent() && !hasRequirement) {

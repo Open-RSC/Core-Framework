@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.authentic.quests.members.grandtree;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -18,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, AttackNpcTrigger, KillNpcTrigger, UseLocTrigger {
 
@@ -67,13 +64,13 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 	@Override
 	public void handleReward(Player player) {
 		player.message("well done you have completed the grand tree quest");
-		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.GRAND_TREE);
+		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.GRAND_TREE);
 		//keep order kosher
-		Either<Integer, SkillsEnum>[] skillIDs = new Either[]{Either.right(SkillsEnum.AGILITY), Either.right(SkillsEnum.ATTACK), Either.right(SkillsEnum.MAGIC)};
+		Either<Integer, String>[] skillIDs = new Either[]{Either.right(AGILITY), Either.right(ATTACK), Either.right(MAGIC)};
 		//1600 for agility, 1600 for attack, 600 for magic
-		Either<Integer, SkillsEnum>[] baseAmounts = new Either[]{Either.left(1600), Either.left(1600), Either.left(600)};
+		Either<Integer, String>[] baseAmounts = new Either[]{Either.left(1600), Either.left(1600), Either.left(600)};
 		//1200 for agility, 1200 for attack, 200 for magic
-		Either<Integer, SkillsEnum>[] varAmounts = new Either[]{Either.left(1200), Either.left(1200), Either.left(200)};
+		Either<Integer, String>[] varAmounts = new Either[]{Either.left(1200), Either.left(1200), Either.left(200)};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			questData[Quests.MAPIDX_BASE] = baseAmounts[i];
@@ -1409,10 +1406,10 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 			delay(3);
 		}
 		else if (obj.getID() == WATCH_TOWER_UP) {
-			if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) >= 25) {
+			if (getCurrentLevel(player, Skill.of(AGILITY).id()) >= 25) {
 				player.message("you jump up and grab hold of the platform");
 				player.teleport(710, 2364);
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 30, true);
+				player.incExp(Skill.of(AGILITY).id(), 30, true);
 				delay(5);
 				player.message("and pull yourself up");
 			} else {

@@ -2,7 +2,7 @@ package com.openrsc.server.plugins.custom.skills.runecraft;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.ObjectRunecraftDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -15,8 +15,9 @@ import com.openrsc.server.util.rsc.DataConversions;
 import java.util.HashMap;
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.CRAFTING;
+import static com.openrsc.server.constants.Skills.RUNECRAFT;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 
@@ -294,13 +295,13 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 				return;
 			}
 
-			if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT)) < def.getRequiredLvl()) {
+			if (player.getSkills().getLevel(Skill.of(RUNECRAFT).id()) < def.getRequiredLvl()) {
 				player.message("You require more skill to use this altar.");
 				return;
 			}
 
 			if ((cursed || enfeebled)
-				&& player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT)) < def.getRequiredLvl() + levelAdd) {
+				&& player.getSkills().getLevel(Skill.of(RUNECRAFT).id()) < def.getRequiredLvl() + levelAdd) {
 				player.message("You require more skill to use this talisman with this altar.");
 				return;
 			}
@@ -355,15 +356,15 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 					delay(3);
 					player.message("You feel strange");
 
-					int subtractLevel = (int)Math.round(player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT)) * 0.15D);
-					player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT),
-						(player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT)) - subtractLevel));
+					int subtractLevel = (int)Math.round(player.getSkills().getLevel(Skill.of(RUNECRAFT).id()) * 0.15D);
+					player.getSkills().setLevel(Skill.of(RUNECRAFT).id(),
+						(player.getSkills().getLevel(Skill.of(RUNECRAFT).id()) - subtractLevel));
 					player.damage(3);
 					say(player, "ouch");
 				}
 			}
 
-			player.incExp(getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT), def.getExp() * successCount * multiplier, true);
+			player.incExp(Skill.of(RUNECRAFT).id(), def.getExp() * successCount * multiplier, true);
 		}
 	}
 
@@ -484,7 +485,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		delay();
 		player.message("You chisel the rune stone into a talisman.");
 		player.getCarriedItems().getInventory().add(new Item(ItemId.UNCHARGED_TALISMAN.id()));
-		player.incExp(getSkillId(player.getWorld(), SkillsEnum.CRAFTING), 20, true);
+		player.incExp(Skill.of(CRAFTING).id(), 20, true);
 
 		// Repeat
 		updatebatch();
@@ -507,7 +508,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		int talismanId = talismanIds.getOrDefault(rune.getCatalogId(), -1);
 		if (talismanId <= 0) return;
 
-		if (player.getLevel(getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT)) < talismanInformation.get(talismanId)[LEVEL_INDEX]) {
+		if (player.getLevel(Skill.of(RUNECRAFT).id()) < talismanInformation.get(talismanId)[LEVEL_INDEX]) {
 			mes("You must be at least level " + talismanInformation.get(talismanId)[LEVEL_INDEX] + " to imbue that");
 			delay(3);
 			return;
@@ -534,7 +535,7 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 		player.getCarriedItems().remove(new Item(rune.getCatalogId(), 10));
 		delay();
 		player.getCarriedItems().getInventory().add(imbued);
-		player.incExp(getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT), talismanInformation.get(talismanId)[EXP_INDEX], true);
+		player.incExp(Skill.of(RUNECRAFT).id(), talismanInformation.get(talismanId)[EXP_INDEX], true);
 		player.message("You imbue the uncharged talisman and create a " + imbued.getDef(player.getWorld()).getName());
 
 		// Repeat
@@ -561,43 +562,43 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 
 		switch(ItemId.getById(runeId)) {
 			case AIR_RUNE:
-				retVal =  (int)Math.floor(getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT))/11.0)+1;
+				retVal =  (int)Math.floor(getCurrentLevel(player, Skill.of(RUNECRAFT).id())/11.0)+1;
 				if (retVal > 10)
 					retVal = 10;
 				break;
 			case MIND_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT))/14.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skill.of(RUNECRAFT).id())/14.0)+1;
 				if (retVal > 8)
 					retVal = 8;
 				break;
 			case WATER_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT))/19.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skill.of(RUNECRAFT).id())/19.0)+1;
 				if (retVal > 6)
 					retVal = 6;
 				break;
 			case EARTH_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT))/26.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skill.of(RUNECRAFT).id())/26.0)+1;
 				if (retVal > 4)
 					retVal = 4;
 				break;
 			case FIRE_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT))/35.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skill.of(RUNECRAFT).id())/35.0)+1;
 				if (retVal > 3)
 					retVal = 3;
 				break;
 			case BODY_RUNE:
-				retVal = (int)Math.floor(getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT))/46.0)+1;
+				retVal = (int)Math.floor(getCurrentLevel(player, Skill.of(RUNECRAFT).id())/46.0)+1;
 				if (retVal > 2)
 					retVal = 2;
 				break;
 			case COSMIC_RUNE:
-				retVal = getCurrentLevel(player,getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT)) >= 59 ? 2 : 1;
+				retVal = getCurrentLevel(player,Skill.of(RUNECRAFT).id()) >= 59 ? 2 : 1;
 				break;
 			case CHAOS_RUNE:
-				retVal = getCurrentLevel(player,getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT)) >= 74 ? 2 : 1;
+				retVal = getCurrentLevel(player,Skill.of(RUNECRAFT).id()) >= 74 ? 2 : 1;
 				break;
 			case NATURE_RUNE:
-				retVal = getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.RUNECRAFT)) >= 91 ? 2 : 1;
+				retVal = getCurrentLevel(player, Skill.of(RUNECRAFT).id()) >= 91 ? 2 : 1;
 				break;
 		}
 

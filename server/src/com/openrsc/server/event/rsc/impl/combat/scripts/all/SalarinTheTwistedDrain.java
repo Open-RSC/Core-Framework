@@ -1,7 +1,7 @@
 package com.openrsc.server.event.rsc.impl.combat.scripts.all;
 
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatAggroScript;
 import com.openrsc.server.event.rsc.impl.combat.scripts.OnCombatStartScript;
 import com.openrsc.server.model.entity.Mob;
@@ -9,7 +9,8 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.ATTACK;
+import static com.openrsc.server.constants.Skills.STRENGTH;
 
 public class SalarinTheTwistedDrain implements CombatAggroScript, OnCombatStartScript {
 
@@ -35,7 +36,7 @@ public class SalarinTheTwistedDrain implements CombatAggroScript, OnCombatStartS
 
 			player.message("You suddenly feel much weaker");
 
-			int[] stats = {getSkillId(player.getWorld(), SkillsEnum.ATTACK), getSkillId(player.getWorld(), SkillsEnum.STRENGTH)};
+			int[] stats = {Skill.of(ATTACK).id(), Skill.of(STRENGTH).id()};
 			for(int affectedStat : stats) {
 				/* How much to lower the stat */
 				int lowerBy = (int) Math.floor(((player.getSkills().getLevel(affectedStat) + 20) * 0.5));

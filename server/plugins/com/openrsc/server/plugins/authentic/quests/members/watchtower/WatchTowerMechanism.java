@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members.watchtower;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -17,8 +17,8 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.MAGIC;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpcTrigger, TakeObjTrigger {
 
@@ -367,9 +367,9 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 				delay(3);
 				mes("The force renews your magic level");
 				delay(3);
-				int maxMagic = getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.MAGIC));
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.MAGIC)) < maxMagic) {
-					player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.MAGIC), maxMagic);
+				int maxMagic = getMaxLevel(player, Skill.of(MAGIC).id());
+				if (getCurrentLevel(player, Skill.of(MAGIC).id()) < maxMagic) {
+					player.getSkills().setLevel(Skill.of(MAGIC).id(), maxMagic);
 				}
 			} else {
 				player.message("You take the crystal");

@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.Gauntlets;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -16,8 +16,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger,
@@ -819,7 +819,7 @@ public class FamilyCrest implements QuestInterface, TalkNpcTrigger,
 				}
 			}
 			if (regenerate) {
-				npc.getSkills().setLevel(getSkillId(npc.getWorld(), SkillsEnum.HITS), npc.getDef().hits);
+				npc.getSkills().setLevel(Skill.of(HITS).id(), npc.getDef().hits);
 				player.message("Chronozon regenerates");
 				npc.killed = false;
 			} else {

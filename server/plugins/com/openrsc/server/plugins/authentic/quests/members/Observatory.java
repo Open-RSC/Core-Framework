@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -18,6 +17,7 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Observatory implements QuestInterface, TalkNpcTrigger,
@@ -44,8 +44,8 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("@gre@You haved gained 2 quest points!");
-		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.OBSERVATORY_QUEST);
-		questData[Quests.MAPIDX_SKILL] = Either.right(SkillsEnum.CRAFTING);
+		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.OBSERVATORY_QUEST);
+		questData[Quests.MAPIDX_SKILL] = Either.right(CRAFTING);
 		incQuestReward(player, questData, true);
 		player.getCache().remove("keep_key_gate");
 	}
@@ -617,13 +617,13 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 	private void constellationNameAndReward(Player player, Npc n) {
 		int baseReductor = 2;
 		int varReductor = 4;
-		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.OBSERVATORY_QUEST);
+		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.OBSERVATORY_QUEST);
 		questData[Quests.MAPIDX_BASE] = Either.left(questData[Quests.MAPIDX_BASE].fromLeft().get() / baseReductor);
 		questData[Quests.MAPIDX_VAR] = Either.left(questData[Quests.MAPIDX_VAR].fromLeft().get() / varReductor);
 		if (selectedNumber == 0) {
 			npcsay(player, n, "Virgo the virtuous",
 				"The strong and peaceful nature of virgo boosts your defence");
-			questData[Quests.MAPIDX_SKILL] = Either.right(SkillsEnum.DEFENSE);
+			questData[Quests.MAPIDX_SKILL] = Either.right(DEFENSE);
 			incQuestReward(player, questData, false);
 		} else if (selectedNumber == 1) {
 			npcsay(player, n, "Libra the scales",
@@ -652,7 +652,7 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 		} else if (selectedNumber == 7) {
 			npcsay(player, n, "Aries the ram",
 				"The ram's strength improves your attack abilites");
-			questData[Quests.MAPIDX_SKILL] = Either.right(SkillsEnum.ATTACK);
+			questData[Quests.MAPIDX_SKILL] = Either.right(ATTACK);
 			incQuestReward(player, questData, false);
 		} else if (selectedNumber == 8) {
 			npcsay(player, n, "Sagittarius the Centaur",
@@ -661,12 +661,12 @@ public class Observatory implements QuestInterface, TalkNpcTrigger,
 		} else if (selectedNumber == 9) {
 			npcsay(player, n, "Leo the lion",
 				"The power of the lion has increased your hitpoints");
-			questData[Quests.MAPIDX_SKILL] = Either.right(SkillsEnum.HITS);
+			questData[Quests.MAPIDX_SKILL] = Either.right(HITS);
 			incQuestReward(player, questData, false);
 		} else if (selectedNumber == 10) {
 			npcsay(player, n, "Capricorn the goat",
 				"you are granted an increase in strength");
-			questData[Quests.MAPIDX_SKILL] = Either.right(SkillsEnum.STRENGTH);
+			questData[Quests.MAPIDX_SKILL] = Either.right(STRENGTH);
 			incQuestReward(player, questData, false);
 		} else if (selectedNumber == 11) {
 			npcsay(player, n, "Cancer the crab",

@@ -3,7 +3,6 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -13,6 +12,8 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.GOODMAGIC;
+import static com.openrsc.server.constants.Skills.MAGIC;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class ImpCatcher implements QuestInterface, TalkNpcTrigger {
@@ -35,12 +36,12 @@ public class ImpCatcher implements QuestInterface, TalkNpcTrigger {
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done. You have completed the Imp catcher quest");
-		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.IMP_CATCHER);
-		SkillsEnum magicSkill;
+		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.IMP_CATCHER);
+		String magicSkill;
 		if (player.getConfig().DIVIDED_GOOD_EVIL) {
-			magicSkill = SkillsEnum.GOODMAGIC;
+			magicSkill = GOODMAGIC;
 		} else {
-			magicSkill = SkillsEnum.MAGIC;
+			magicSkill = MAGIC;
 		}
 		questData[1] = Either.right(magicSkill);
 		incQuestReward(player, questData, true);

@@ -1,9 +1,9 @@
 package com.openrsc.server.model.entity.update;
 
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.Mob;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.HITS;
 
 public class Damage {
 
@@ -18,7 +18,7 @@ public class Damage {
 	}
 
 	public int getCurHits() {
-		return mob.getSkills().getLevel(getSkillId(mob.getWorld(), SkillsEnum.HITS));
+		return mob.getSkills().getLevel(Skill.of(HITS).id());
 	}
 
 	public int getDamage() {
@@ -30,7 +30,7 @@ public class Damage {
 	}
 
 	public int getMaxHits() {
-		return mob.getSkills().getMaxStat(getSkillId(mob.getWorld(), SkillsEnum.HITS));
+		return mob.getSkills().getMaxStat(Skill.of(HITS).id());
 	}
 
 	public int getIndex() {

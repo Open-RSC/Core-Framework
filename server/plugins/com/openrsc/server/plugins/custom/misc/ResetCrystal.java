@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.custom.misc;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -15,8 +15,8 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Iterator;
 
+import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class ResetCrystal implements UseNpcTrigger, UseLocTrigger, OpInvTrigger {
 
@@ -26,8 +26,8 @@ public class ResetCrystal implements UseNpcTrigger, UseLocTrigger, OpInvTrigger 
 		player.getWorld().registerGameObject(sara);
 		player.getWorld().delayedRemoveObject(sara, 600);
 		npc.getUpdateFlags().setDamage(new Damage(npc, damage));
-		npc.getSkills().subtractLevel(getSkillId(player.getWorld(), SkillsEnum.HITS), damage);
-		if (npc.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) < 1) {
+		npc.getSkills().subtractLevel(Skill.of(HITS).id(), damage);
+		if (npc.getSkills().getLevel(Skill.of(HITS).id()) < 1) {
 			if (npc.killed) {
 				// visible npc but killed flag is true
 				// if ever occurs, reset it for damageNpc to work

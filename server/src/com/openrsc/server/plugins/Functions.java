@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins;
 
 import com.openrsc.server.ServerConfiguration;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.event.rsc.PluginTask;
 import com.openrsc.server.external.GameObjectLoc;
@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.NONE;
 
 /** Functions.java
  *
@@ -902,14 +902,14 @@ public class Functions {
 	 * @param questData - the data, if skill id is < 0 means no exp is applied
 	 * @param applyQP   - apply the quest point increase
 	 */
-	public static void incQuestReward(Player player, Either<Integer, SkillsEnum>[] questData, boolean applyQP) {
+	public static void incQuestReward(Player player, Either<Integer, String>[] questData, boolean applyQP) {
 		int qp = questData[0].fromLeft().get();
-		SkillsEnum skill = questData[1].fromRight().get();
+		String skill = questData[1].fromRight().get();
 		int baseXP = questData[2].fromLeft().get();
 		int varXP = questData[3].fromLeft().get();
-		if (skill != SkillsEnum.NONE && baseXP > 0 && varXP >= 0) {
-			player.incQuestExp(getSkillId(player.getWorld(), skill),
-				player.getSkills().getMaxStat(getSkillId(player.getWorld(), skill)) * varXP + baseXP);
+		if (skill != NONE && baseXP > 0 && varXP >= 0) {
+			player.incQuestExp(Skill.of(skill).id(),
+				player.getSkills().getMaxStat(Skill.of(skill).id()) * varXP + baseXP);
 		}
 		if (applyQP) {
 			player.incQuestPoints(qp);

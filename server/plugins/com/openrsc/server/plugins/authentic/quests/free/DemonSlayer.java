@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
@@ -16,8 +16,9 @@ import com.openrsc.server.util.rsc.DataConversions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.openrsc.server.constants.Skills.ATTACK;
+import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class DemonSlayer implements QuestInterface,
 	KillNpcTrigger, TalkNpcTrigger, OpLocTrigger,
@@ -167,7 +168,7 @@ public class DemonSlayer implements QuestInterface,
 				choices.add("Yes I know but this important");
 
 			if (config().WANT_CUSTOM_QUESTS
-				&& getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.ATTACK)) >= 99)
+				&& getMaxLevel(player, Skill.of(ATTACK).id()) >= 99)
 				choices.add("Attack Skillcape");
 
 			int choice = multi(player, n, false, choices.toArray(new String[0])); // Do not send choice to client
@@ -179,7 +180,7 @@ public class DemonSlayer implements QuestInterface,
 				captainRovinDialogue(player, n, CaptainRovin.KING);
 			} else {
 				if (choice != -1 && choices.get(choice).equalsIgnoreCase("Attack Skillcape")) {
-					if (getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.ATTACK)) >= 99) {
+					if (getMaxLevel(player, Skill.of(ATTACK).id()) >= 99) {
 						npcsay(player, n, "I see you too are a master of attack",
 							"You are worthy to wield the Attack Skillcape",
 							"The cost is 99,000 coins");
@@ -1213,7 +1214,7 @@ public class DemonSlayer implements QuestInterface,
 						say(player, null, "Maybe I'd better wield silverlight first");
 					} else {
 						// silverlight effect shared in its own file
-						affectedmob.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.HITS), affectedmob.getDef().getHits());
+						affectedmob.getSkills().setLevel(Skill.of(HITS).id(), affectedmob.getDef().getHits());
 						player.resetMenuHandler();
 						player.setOption(-1);
 					}
@@ -1246,7 +1247,7 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	public void onKillNpc(Player player, Npc npc) {
-		npc.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.HITS), npc.getDef().getHits());
+		npc.getSkills().setLevel(Skill.of(HITS).id(), npc.getDef().getHits());
 
 		if (player.getMenuHandler() == null
 			&& player.getCarriedItems().getEquipment().hasEquipped(ItemId.SILVERLIGHT.id())

@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.authentic.quests.members;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
@@ -19,9 +16,9 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 import static com.openrsc.server.plugins.authentic.quests.free.ShieldOfArrav.isBlackArmGang;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 	OpBoundTrigger, UseBoundTrigger, OpLocTrigger, AttackNpcTrigger, PlayerRangeNpcTrigger, SpellNpcTrigger,
@@ -59,12 +56,12 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 		player.getCache().remove("blackarm_mission");
 		player.getCache().remove("garv_door");
 		player.getCache().remove("armband");
-		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.HEROS_QUEST);
+		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.HEROS_QUEST);
 		//keep order kosher
-		Either<Integer, SkillsEnum>[] skillIDs = new Either[]{Either.right(SkillsEnum.STRENGTH), Either.right(SkillsEnum.DEFENSE), Either.right(SkillsEnum.HITS),
-			Either.right(SkillsEnum.ATTACK), Either.right(SkillsEnum.RANGED), Either.right(SkillsEnum.HERBLAW),
-			Either.right(SkillsEnum.FISHING), Either.right(SkillsEnum.COOKING), Either.right(SkillsEnum.FIREMAKING),
-			Either.right(SkillsEnum.WOODCUTTING), Either.right(SkillsEnum.MINING), Either.right(SkillsEnum.SMITHING)};
+		Either<Integer, String>[] skillIDs = new Either[]{Either.right(STRENGTH), Either.right(DEFENSE), Either.right(HITS),
+			Either.right(ATTACK), Either.right(RANGED), Either.right(HERBLAW),
+			Either.right(FISHING), Either.right(COOKING), Either.right(FIREMAKING),
+			Either.right(WOODCUTTING), Either.right(MINING), Either.right(SMITHING)};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(player, questData, i == (skillIDs.length - 1));
@@ -396,7 +393,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 
 	private boolean canBuyCape(Player player) {
 		if (config().WANT_CUSTOM_SPRITES
-			&& getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.STRENGTH)) >= 99) { return true; }
+			&& getMaxLevel(player, Skill.of(STRENGTH).id()) >= 99) { return true; }
 		return false;
 	}
 
@@ -432,7 +429,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 			} else if (!player.getCarriedItems().getEquipment().hasEquipped(ItemId.ICE_GLOVES.id())) {
 				player.message("Ouch that is too hot to take");
 				player.message("I need something cold to pick it up with");
-				int damage = (int) Math.round((player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS))) * 0.15D);
+				int damage = (int) Math.round((player.getSkills().getLevel(Skill.of(HITS).id())) * 0.15D);
 				player.damage(damage);
 			}
 		}

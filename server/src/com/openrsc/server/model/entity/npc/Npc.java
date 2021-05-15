@@ -26,8 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.openrsc.server.util.SkillSolver.getMaxSkillId;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.*;
 
 public class Npc extends Mob {
 	/**
@@ -108,11 +107,11 @@ public class Npc extends Mob {
 		super.setID(loc.getId());
 		super.setLocation(Point.location(loc.startX(), loc.startY()), true);
 
-		getSkills().setLevelTo(getSkillId(getWorld(), SkillsEnum.ATTACK), def.getAtt());
-		getSkills().setLevelTo(getSkillId(getWorld(), SkillsEnum.DEFENSE), def.getDef());
-		getSkills().setLevelTo(getSkillId(getWorld(), SkillsEnum.RANGED), def.getRanged());
-		getSkills().setLevelTo(getSkillId(getWorld(), SkillsEnum.STRENGTH), def.getStr());
-		getSkills().setLevelTo(getSkillId(getWorld(), SkillsEnum.HITS), def.getHits());
+		getSkills().setLevelTo(Skill.of(ATTACK).id(), def.getAtt());
+		getSkills().setLevelTo(Skill.of(DEFENSE).id(), def.getDef());
+		getSkills().setLevelTo(Skill.of(RANGED).id(), def.getRanged());
+		getSkills().setLevelTo(Skill.of(STRENGTH).id(), def.getStr());
+		getSkills().setLevelTo(Skill.of(HITS).id(), def.getHits());
 
 		/*
 		  Unique ID for event tracking.
@@ -530,26 +529,26 @@ public class Npc extends Mob {
 
 			Player player = getWorld().getPlayerUUID(ID);
 			if (player != null) {
-				int[] skillsDist = new int[getMaxSkillId(getWorld(), SkillsEnum.ATTACK, SkillsEnum.DEFENSE, SkillsEnum.STRENGTH, SkillsEnum.HITS) + 1];
+				int[] skillsDist = new int[Skill.maxId(ATTACK, DEFENSE, STRENGTH, HITS) + 1];
 				// Give the player their share of the experience.
 				int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
 				switch (player.getCombatStyle()) {
 					case Skills.CONTROLLED_MODE: // CONTROLLED
-						for (SkillsEnum skill : new SkillsEnum[]{SkillsEnum.ATTACK, SkillsEnum.DEFENSE, SkillsEnum.STRENGTH}) {
-							skillsDist[getSkillId(getWorld(), skill)] = 1;
+						for (String skill : new String[]{ATTACK, DEFENSE, STRENGTH}) {
+							skillsDist[Skill.of(skill).id()] = 1;
 						}
 						break;
 					case Skills.AGGRESSIVE_MODE: // AGGRESSIVE
-						skillsDist[getSkillId(getWorld(), SkillsEnum.STRENGTH)] = 3;
+						skillsDist[Skill.of(STRENGTH).id()] = 3;
 						break;
 					case Skills.ACCURATE_MODE: // ACCURATE
-						skillsDist[getSkillId(getWorld(), SkillsEnum.ATTACK)] = 3;
+						skillsDist[Skill.of(ATTACK).id()] = 3;
 						break;
 					case Skills.DEFENSIVE_MODE: // DEFENSIVE
-						skillsDist[getSkillId(getWorld(), SkillsEnum.DEFENSE)] = 3;
+						skillsDist[Skill.of(DEFENSE).id()] = 3;
 						break;
 				}
-				skillsDist[getSkillId(getWorld(), SkillsEnum.HITS)] = 1;
+				skillsDist[Skill.of(HITS).id()] = 1;
 				player.incExp(skillsDist, totalXP, true);
 			}
 		}
@@ -565,8 +564,8 @@ public class Npc extends Mob {
 			Player player = getWorld().getPlayerUUID(ID);
 			if (player != null) {
 				int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
-				player.incExp(getSkillId(getWorld(), SkillsEnum.RANGED), totalXP * 4, true);
-				ActionSender.sendStat(player, getSkillId(getWorld(), SkillsEnum.RANGED));
+				player.incExp(Skill.of(RANGED).id(), totalXP * 4, true);
+				ActionSender.sendStat(player, Skill.of(RANGED).id());
 			}
 		}
 

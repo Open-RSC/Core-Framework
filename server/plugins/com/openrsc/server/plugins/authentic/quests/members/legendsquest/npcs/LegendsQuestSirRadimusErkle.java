@@ -11,6 +11,7 @@ import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigger, UseNpcTrigger {
@@ -120,11 +121,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						"* Strength * ",
 						"--- Go to Skill Menu 2 ----");
 					if (menu_one == 0) {
-						skillReward(player, n, SkillsEnum.ATTACK);
+						skillReward(player, n, ATTACK);
 					} else if (menu_one == 1) {
-						skillReward(player, n, SkillsEnum.DEFENSE);
+						skillReward(player, n, DEFENSE);
 					} else if (menu_one == 2) {
-						skillReward(player, n, SkillsEnum.STRENGTH);
+						skillReward(player, n, STRENGTH);
 					} else if (menu_one == 3) {
 						radimusInGuildDialogue(player, n, RadimusInGuild.SKILL_MENU_TWO);
 					}
@@ -136,11 +137,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						"* Magic *",
 						"--- Go to Skill Menu 3  ----");
 					if (menu_two == 0) {
-						skillReward(player, n, SkillsEnum.HITS);
+						skillReward(player, n, HITS);
 					} else if (menu_two == 1) {
-						skillReward(player, n, SkillsEnum.PRAYER);
+						skillReward(player, n, PRAYER);
 					} else if (menu_two == 2) {
-						skillReward(player, n, SkillsEnum.MAGIC);
+						skillReward(player, n, MAGIC);
 					} else if (menu_two == 3) {
 						radimusInGuildDialogue(player, n, RadimusInGuild.SKILL_MENU_THREE);
 					}
@@ -152,11 +153,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						"* Smithing * ",
 						"--- Go to Skill Menu 4 ----");
 					if (menu_three == 0) {
-						skillReward(player, n, SkillsEnum.WOODCUTTING);
+						skillReward(player, n, WOODCUTTING);
 					} else if (menu_three == 1) {
-						skillReward(player, n, SkillsEnum.CRAFTING);
+						skillReward(player, n, CRAFTING);
 					} else if (menu_three == 2) {
-						skillReward(player, n, SkillsEnum.SMITHING);
+						skillReward(player, n, SMITHING);
 					} else if (menu_three == 3) {
 						radimusInGuildDialogue(player, n, RadimusInGuild.SKILL_MENU_FOUR);
 					}
@@ -168,11 +169,11 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 						"* Thieving *",
 						"--- Go to Skill Menu 1 ----");
 					if (menu_four == 0) {
-						skillReward(player, n, SkillsEnum.HERBLAW);
+						skillReward(player, n, HERBLAW);
 					} else if (menu_four == 1) {
-						skillReward(player, n, SkillsEnum.AGILITY);
+						skillReward(player, n, AGILITY);
 					} else if (menu_four == 2) {
-						skillReward(player, n, SkillsEnum.THIEVING);
+						skillReward(player, n, THIEVING);
 					} else if (menu_four == 3) {
 						radimusInGuildDialogue(player, n, RadimusInGuild.SKILL_MENU_ONE);
 					}
@@ -198,8 +199,8 @@ public class LegendsQuestSirRadimusErkle implements QuestInterface, TalkNpcTrigg
 		}
 	}
 
-	private void skillReward(Player player, Npc n, SkillsEnum skill) {
-		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.LEGENDS_QUEST);
+	private void skillReward(Player player, Npc n, String skill) {
+		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.LEGENDS_QUEST);
 		questData[Quests.MAPIDX_SKILL] = Either.right(skill);
 		incQuestReward(player, questData, false);
 		updateRewardClaimCount(player);

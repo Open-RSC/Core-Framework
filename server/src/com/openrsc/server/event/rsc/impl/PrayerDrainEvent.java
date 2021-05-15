@@ -1,6 +1,6 @@
 package com.openrsc.server.event.rsc.impl;
 
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.PrayerDef;
 import com.openrsc.server.model.entity.player.Player;
@@ -9,7 +9,7 @@ import com.openrsc.server.model.world.World;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.PRAYER;
 
 public class PrayerDrainEvent extends GameTickEvent {
 
@@ -38,13 +38,13 @@ public class PrayerDrainEvent extends GameTickEvent {
 				newPrayerStatePoints = currentPrayerStatePoints - pointDrainage;
 				getPlayerOwner().setPrayerStatePoints(newPrayerStatePoints);
 				normPrayer = (int) Math.ceil(newPrayerStatePoints / 120.0);
-				if (normPrayer < getPlayerOwner().getSkills().getLevel(getSkillId(getWorld(), SkillsEnum.PRAYER))) {
-					getPlayerOwner().getSkills().setLevel(getSkillId(getWorld(), SkillsEnum.PRAYER), normPrayer);
+				if (normPrayer < getPlayerOwner().getSkills().getLevel(Skill.of(PRAYER).id())) {
+					getPlayerOwner().getSkills().setLevel(Skill.of(PRAYER).id(), normPrayer);
 				}
 			}
 			else {
 				getPlayerOwner().setPrayerStatePoints(0);
-				getPlayerOwner().getSkills().setLevel(getSkillId(getWorld(), SkillsEnum.PRAYER), 0);
+				getPlayerOwner().getSkills().setLevel(Skill.of(PRAYER).id(), 0);
 				getPlayerOwner().getPrayers().resetPrayers();
 				getPlayerOwner().message("You have run out of prayer points. Return to a church to recharge");
 				activePrayers.clear();

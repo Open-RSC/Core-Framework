@@ -2,15 +2,15 @@ package com.openrsc.server.plugins.authentic.misc;
 
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
+import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class RandomObjects implements OpLocTrigger {
 
@@ -171,7 +171,7 @@ public class RandomObjects implements OpLocTrigger {
 		}
 		if (object.getID() == 400) {
 			player.playerServerMessage(MessageType.QUEST, "The plant takes a bite at you!");
-			player.damage(getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 10 + 2);
+			player.damage(getCurrentLevel(player, Skill.of(HITS).id()) / 10 + 2);
 		}
 	}
 

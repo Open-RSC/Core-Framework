@@ -1,6 +1,6 @@
 package com.openrsc.server.event.rsc.impl;
 
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
@@ -13,7 +13,8 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.HITS;
+import static com.openrsc.server.constants.Skills.PRAYER;
 
 /**
  * Hit restoration event is independent of the other stats
@@ -48,9 +49,10 @@ public class StatRestorationEvent extends GameTickEvent {
 
 		// Add new skills to the restoration cycle
 		for (int skillIndex = 0; skillIndex < numberSkills; skillIndex++) {
-			if (skillIndex != getSkillId(getWorld(), SkillsEnum.PRAYER)) {
-				checkAndStartRestoration(skillIndex);
+			if (skillIndex == Skill.of(PRAYER).id() && !getOwner().getConfig().LACKS_PRAYERS) {
+				continue;
 			}
+			checkAndStartRestoration(skillIndex);
 		}
 
 		// Check for Hits
@@ -64,7 +66,7 @@ public class StatRestorationEvent extends GameTickEvent {
 			}
 			deltaCycles = (System.currentTimeMillis() - this.lastHitRestoration) / delay;
 			if (System.currentTimeMillis() - this.lastHitRestoration > delay && getOwner().isPlayer()) {
-				normalizeLevel(getSkillId(getWorld(), SkillsEnum.HITS));
+				normalizeLevel(Skill.of(HITS).id());
 				restoredHits = true;
 				if (((Player) getOwner()).getParty() != null) {
 					getOwner().getUpdateFlags().setHpUpdate(new HpUpdate(getOwner(), 0));
@@ -77,7 +79,7 @@ public class StatRestorationEvent extends GameTickEvent {
 			} else if (!getOwner().isPlayer() &&
 				(System.currentTimeMillis() - (this.lastHitRestoration + deltaCycles * delay)) / (delay / 100) == 1) {
 				// npc only gets heal cycle sync on (re)spawn
-				normalizeLevel(getSkillId(getWorld(), SkillsEnum.HITS));
+				normalizeLevel(Skill.of(HITS).id());
 			}
 		}
 
@@ -137,7 +139,7 @@ public class StatRestorationEvent extends GameTickEvent {
 
 		cur += diff;
 		if (cur == norm) {
-			if (skill == getSkillId(getWorld(), SkillsEnum.HITS)) {
+			if (skill == Skill.of(HITS).id()) {
 				restoringHits.set(false);
 			} else {
 				restoringStats.put(skill, 0);
@@ -154,7 +156,7 @@ public class StatRestorationEvent extends GameTickEvent {
 	private void checkAndStartRestoration(int id) {
 		boolean toRestore = needsRestore(id);
 
-		if (id == getSkillId(getWorld(), SkillsEnum.HITS)) {
+		if (id == Skill.of(HITS).id()) {
 			if (restoringHits.get()) {
 				return;
 			}
@@ -178,7 +180,7 @@ public class StatRestorationEvent extends GameTickEvent {
 	}
 
 	public void tryResyncHit() {
-		boolean toRestore = needsRestore(getSkillId(getWorld(), SkillsEnum.HITS));
+		boolean toRestore = needsRestore(Skill.of(HITS).id());
 
 		if (!toRestore) {
 			this.lastHitRestoration = System.currentTimeMillis();

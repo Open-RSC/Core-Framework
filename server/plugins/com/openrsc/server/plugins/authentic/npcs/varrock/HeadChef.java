@@ -2,14 +2,14 @@ package com.openrsc.server.plugins.authentic.npcs.varrock;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
+import static com.openrsc.server.constants.Skills.COOKING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class HeadChef implements TalkNpcTrigger {
 
@@ -19,7 +19,7 @@ public class HeadChef implements TalkNpcTrigger {
 			"Only accomplished chefs and cooks are allowed in here",
 			"Feel free to use any of our facilities");
 		if (config().WANT_CUSTOM_QUESTS
-		&& getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.COOKING)) >= 99) {
+		&& getMaxLevel(player, Skill.of(COOKING).id()) >= 99) {
 			npcsay(player, n, "Also for your skill level",
 				"i can offer you cape",
 				"to show all your skill of cooking",

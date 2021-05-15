@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.skills.agility;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -10,8 +10,9 @@ import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
+import static com.openrsc.server.constants.Skills.AGILITY;
+import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class AgilityShortcuts implements OpLocTrigger,
 	UseLocTrigger {
@@ -86,7 +87,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 		int success = 0, damage = 0;
 		switch (obj.getID()) {
 			case SHILO_VILLAGE_BRIDGE_BLOCKADE_JUMP:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 32) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 32) {
 					player.message("You need an agility level of 32 to climb the rocks");
 					return;
 				}
@@ -120,10 +121,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 						player.message("...slip and fall incompetently into the river below!");
 						player.teleport(458, 832);
 						say(player, null, "* Ahhhhhhhhhh! *");
-						player.damage((getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 10));
+						player.damage((getCurrentLevel(player, Skill.of(HITS).id()) / 10));
 						delay();
 						player.teleport(458, 836);
-						player.damage((getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 10));
+						player.damage((getCurrentLevel(player, Skill.of(HITS).id()) / 10));
 						delay(2);
 						say(player, null, "* Gulp! *");
 						delay(3);
@@ -132,14 +133,14 @@ public class AgilityShortcuts implements OpLocTrigger,
 						delay(2);
 						player.message("You just manage to drag your pitiful frame onto the river bank.");
 						say(player, null, "* Gasp! *");
-						player.damage((getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 10));
+						player.damage((getCurrentLevel(player, Skill.of(HITS).id()) / 10));
 						delay(2);
 						player.message("Though you nearly drowned in the river!");
 					}
 				}
 				break;
 			case SHILO_VILLAGE_ROCKS_TO_BRIDGE:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 32) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 32) {
 					player.message("You need an agility level of 32 to climb the rocks");
 					return;
 				}
@@ -166,7 +167,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 						player.teleport(450, 828);
 						mes("You fall and hurt yourself.");
 						delay(3);
-						player.damage((getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 10));
+						player.damage((getCurrentLevel(player, Skill.of(HITS).id()) / 10));
 						delay();
 						player.teleport(449, 828);
 					}
@@ -175,16 +176,16 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				break;
 			case SHORTCUT_FALADOR_HANDHOLD:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 5) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 5) {
 					player.message("You need an agility level of 5 to climb the wall");
 					return;
 				}
 				player.message("You climb over the wall");
 				teleport(player, 338, 555);
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 50, true);
+				player.incExp(Skill.of(AGILITY).id(), 50, true);
 				break;
 			case SHORTCUT_BRIMHAVEN_SWING:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 10) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 10) {
 					player.message("You need an agility level of 10 to attempt to swing on this vine");
 					return;
 				}
@@ -193,10 +194,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 				teleport(player, 511, 669);
 				player.message("You skillfully swing across the stream");
 				say(player, null, "Aaaaahahah");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 20, true);
+				player.incExp(Skill.of(AGILITY).id(), 20, true);
 				break;
 			case SHORTCUT_BRIMHAVEN_BACK_SWING:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 10) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 10) {
 					player.message("You need an agility level of 10 to attempt to swing on this vine");
 					return;
 				}
@@ -205,30 +206,30 @@ public class AgilityShortcuts implements OpLocTrigger,
 				teleport(player, 508, 668);
 				player.message("You skillfully swing across the stream");
 				say(player, null, "Aaaaahahah");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 20, true);
+				player.incExp(Skill.of(AGILITY).id(), 20, true);
 				break;
 			case SHORTCUT_EDGE_DUNGEON_SWING:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 15) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 15) {
 					player.message("You need an agility level of 15 to attempt to swing on this rope");
 					return;
 				}
 				delay(2);
 				teleport(player, 207, 3221);
 				player.message("You skillfully swing across the hole");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 40, true);
+				player.incExp(Skill.of(AGILITY).id(), 40, true);
 				break;
 			case SHORTCUT_EDGE_DUNGEON_BACK_SWING:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 15) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 15) {
 					player.message("You need an agility level of 15 to attempt to swing on this rope");
 					return;
 				}
 				delay(2);
 				teleport(player, 206, 3225);
 				player.message("You skillfully swing across the hole");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 40, true);
+				player.incExp(Skill.of(AGILITY).id(), 40, true);
 				break;
 			case SHORTCUT_WEST_COALTRUCKS_LOG:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 20) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 20) {
 					player.message("You need an agility level of 20 to attempt balancing along this log");
 					return;
 				}
@@ -238,10 +239,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 					delay();
 				}
 				player.message("and you walk across");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 34, true);
+				player.incExp(Skill.of(AGILITY).id(), 34, true);
 				break;
 			case SHORTCUT_EAST_COALTRUCKS_LOG:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 20) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 20) {
 					player.message("You need an agility level of 20 to attempt balancing along this log");
 					return;
 				}
@@ -251,11 +252,11 @@ public class AgilityShortcuts implements OpLocTrigger,
 					delay();
 				}
 				player.message("and you walk across");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 34, true);
+				player.incExp(Skill.of(AGILITY).id(), 34, true);
 				break;
 			// CONTINUE SHORTCUTS.
 			case SHORTCUT_YANILLE_AGILITY_ROPESWING:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 57) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 57) {
 					player.message("You need an agility level of 57 to attempt to swing on this rope");
 					return;
 				}
@@ -275,10 +276,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 				delay(4);
 				teleport(player, 596, 3581);
 				player.message("You skillfully swing across the hole");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 110, true);
+				player.incExp(Skill.of(AGILITY).id(), 110, true);
 				break;
 			case SHORTCUT_YANILLE_AGILITY_ROPESWING_BACK:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 57) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 57) {
 					player.message("You need an agility level of 57 to attempt to swing on this rope");
 					return;
 				}
@@ -298,11 +299,11 @@ public class AgilityShortcuts implements OpLocTrigger,
 				delay(4);
 				teleport(player, 598, 3585);
 				player.message("You skillfully swing across the hole");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 110, true);
+				player.incExp(Skill.of(AGILITY).id(), 110, true);
 				break;
 
 			case SHORTCUT_YANILLE_AGILITY_LEDGE:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 40) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 40) {
 					player.message("You need an agility level of 40 to attempt balancing along this log");
 					return;
 				}
@@ -322,10 +323,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				teleport(player, 601, 3563);
 				player.message("You skillfully balance across the hole");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 90, true);
+				player.incExp(Skill.of(AGILITY).id(), 90, true);
 				break;
 			case SHORTCUT_YANILLE_AGILITY_LEDGE_BACK:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 40) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 40) {
 					player.message("You need an agility level of 40 to attempt balancing along this log");
 					return;
 				}
@@ -345,11 +346,11 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				teleport(player, 601, 3557);
 				player.message("You skillfully balance across the hole");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 90, true);
+				player.incExp(Skill.of(AGILITY).id(), 90, true);
 				break;
 
 			case SHORTCUT_YANILLE_PILE_OF_RUBBLE:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 67) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 67) {
 					player.message("You need an agility level of 67 to attempt to climb down the rubble");
 					return;
 				}
@@ -357,7 +358,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You climb down the pile of rubble");
 				break;
 			case SHORTCUT_YANILLE_PILE_OF_RUBBLE_UP:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 67) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 67) {
 					player.message("You need an agility level of 67 to attempt to climb up the rubble");
 					return;
 				}
@@ -369,11 +370,11 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				teleport(player, 582, 3573);
 				player.message("You climb up the pile of rubble");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 54, true);
+				player.incExp(Skill.of(AGILITY).id(), 54, true);
 				break;
 
 			case SHORTCUT_YANILLE_PIPE:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 49) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 49) {
 					player.message("You need an agility level of 49 to attempt to squeeze through the pipe");
 					return;
 				}
@@ -386,10 +387,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You squeeze through the pipe");
 				delay(4);
 				teleport(player, 608, 3568);
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 30, true);
+				player.incExp(Skill.of(AGILITY).id(), 30, true);
 				break;
 			case SHORTCUT_YANILLE_PIPE_BACK:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 49) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 49) {
 					player.message("You need an agility level of 49 to attempt to squeeze through the pipe");
 					return;
 				}
@@ -402,10 +403,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.message("You squeeze through the pipe");
 				delay(4);
 				teleport(player, 605, 3568);
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 30, true);
+				player.incExp(Skill.of(AGILITY).id(), 30, true);
 				break;
 			case GREW_ISLAND_ROPE_ATTACHED:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 30) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 30) {
 					player.message("You need an agility level of 30 to attempt to swing across the stream");
 					return;
 				}
@@ -413,17 +414,17 @@ public class AgilityShortcuts implements OpLocTrigger,
 				delay(4);
 				teleport(player, 664, 755);
 				player.message("You skillfully swing across the stream");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 50, true);
+				player.incExp(Skill.of(AGILITY).id(), 50, true);
 				break;
 			case GREW_ISLAND_SWING_BACK:
 				player.message("You grab the rope and try and swing across");
 				delay(4);
 				teleport(player, 666, 755);
 				player.message("You skillfully swing across the stream");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 50, true);
+				player.incExp(Skill.of(AGILITY).id(), 50, true);
 				break;
 			case EAST_KARAMJA_LOG:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 32) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 32) {
 					player.message("You need an agility level of 32 to attempt balancing along this log");
 					return;
 				}
@@ -448,10 +449,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 					teleport(player, 366, 781);
 				}
 				player.message("...and make it without any problems!");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 10, true);
+				player.incExp(Skill.of(AGILITY).id(), 10, true);
 				break;
 			case EAST_KARAMJA_STONES:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 32) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 32) {
 					player.message("You need an agility level of 32 to step on these stones");
 					return;
 				}
@@ -473,7 +474,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 						delay(3);
 						mes("After being nearly half drowned");
 						delay(3);
-						player.damage((int) (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) / 4) + 2);
+						player.damage((int) (player.getSkills().getLevel(Skill.of(HITS).id()) / 4) + 2);
 						return;
 					}
 					teleport(player, 346, 808);
@@ -488,13 +489,13 @@ public class AgilityShortcuts implements OpLocTrigger,
 						delay(3);
 						mes("After being nearly half drowned");
 						delay(3);
-						player.damage((int) (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS)) / 4) + 2);
+						player.damage((int) (player.getSkills().getLevel(Skill.of(HITS).id()) / 4) + 2);
 						return;
 					}
 					teleport(player, 347, 805);
 				}
 				player.message("And cross the water without problems.");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 10, true);
+				player.incExp(Skill.of(AGILITY).id(), 10, true);
 				break;
 			case YANILLE_CLIMBING_ROCKS:
 				if (config().WANT_FATIGUE) {
@@ -503,13 +504,13 @@ public class AgilityShortcuts implements OpLocTrigger,
 						return;
 					}
 				}
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 15) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 15) {
 					player.message("You need an agility level of 15 to climb the wall");
 					return;
 				}
 				player.message("You climb over the wall");
 				teleport(player, 624, 741);
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 40, true);
+				player.incExp(Skill.of(AGILITY).id(), 40, true);
 				break;
 			case YANILLE_WATCHTOWER_HANDHOLDS:
 				if (config().WANT_FATIGUE) {
@@ -518,18 +519,18 @@ public class AgilityShortcuts implements OpLocTrigger,
 						return;
 					}
 				}
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 18) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 18) {
 					player.message("You need an agility level of 18 to climb the wall");
 					return;
 				}
 				player.message("You climb up the wall");
 				player.teleport(637, 1680);
 				player.message("And climb in through the window");
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 50, true);
+				player.incExp(Skill.of(AGILITY).id(), 50, true);
 				break;
 
 			case TAVERLY_PIPE_RETURN:
-			if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 70) {
+			if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 70) {
 				player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
 				return;
 			}
@@ -541,11 +542,11 @@ public class AgilityShortcuts implements OpLocTrigger,
 			}
 			player.message("You squeeze through the pipe");
 			teleport(player, 372, 3352);
-			player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 30, true);
+			player.incExp(Skill.of(AGILITY).id(), 30, true);
 			break;
 
 			case TAVERLY_PIPE:
-			if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 70) {
+			if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 70) {
 				player.message("You need an agility level of 70 to attempt to squeeze through the pipe");
 				return;
 			}
@@ -557,10 +558,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 			}
 			player.message("You squeeze through the pipe");
 			teleport(player, 375, 3352);
-			player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 30, true);
+			player.incExp(Skill.of(AGILITY).id(), 30, true);
 			break;
 			case ENTRANA_RUBBLE:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 55) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 55) {
 					player.message("You need an agility level of 55 to climb the rubble");
 					return;
 				}
@@ -573,14 +574,14 @@ public class AgilityShortcuts implements OpLocTrigger,
 				delay();
 				if (player.getLocation().getY() < 550) {
 					teleport(player, 434, 551);
-					player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 15, true);
+					player.incExp(Skill.of(AGILITY).id(), 15, true);
 				} else {
 					teleport(player, 434, 549);
-					player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 15, true);
+					player.incExp(Skill.of(AGILITY).id(), 15, true);
 				}
 				break;
 			case TAVERLY_STEPPING_STONE:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 50) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 50) {
 					player.message("You need an agility level of 50 to use this shortcut");
 					return;
 				}
@@ -602,13 +603,13 @@ public class AgilityShortcuts implements OpLocTrigger,
 				if (success > 10) {
 					teleport(player, 397, 502);
 					player.message("you make it to the shore of Catherby");
-					player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 60, true);
+					player.incExp(Skill.of(AGILITY).id(), 60, true);
 				} else {
 					player.message("and fall into the water!");
-					damage = getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 5;
+					damage = getMaxLevel(player, Skill.of(HITS).id()) / 5;
 
 					//If they are going to die from the hit, put their gear on the Taverly side
-					if (damage >= getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)))
+					if (damage >= getCurrentLevel(player, Skill.of(HITS).id()))
 						player.teleport(394, 502);
 					else
 						player.teleport(388, 522);
@@ -617,7 +618,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				break;
 			case CATHERBY_STEPPING_STONE:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 50) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 50) {
 					player.message("You need an agility level of 50 to use this shortcut");
 					return;
 				}
@@ -639,13 +640,13 @@ public class AgilityShortcuts implements OpLocTrigger,
 				if (success > 10) {
 					teleport(player, 395, 502);
 					player.message("you make it to the shore of Taverly");
-					player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 60, true);
+					player.incExp(Skill.of(AGILITY).id(), 60, true);
 				} else {
 					player.message("and fall into the water!");
-					damage = getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 5;
+					damage = getMaxLevel(player, Skill.of(HITS).id()) / 5;
 
 					//If they are going to die from the hit, put their gear on the Catherby side
-					if (damage >= getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)))
+					if (damage >= getCurrentLevel(player, Skill.of(HITS).id()))
 						player.teleport(397, 501);
 					else
 						player.teleport(388, 522);
@@ -653,16 +654,16 @@ public class AgilityShortcuts implements OpLocTrigger,
 				}
 				break;
 			case FALADOR_MEMBERS_EXIT_HANDHOLDS:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 40) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 40) {
 					player.message("You need an agility level of 40 to climb the wall");
 					return;
 				}
 				player.message("You climb over the wall");
 				teleport(player, 339, 544);
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 80, true);
+				player.incExp(Skill.of(AGILITY).id(), 80, true);
 				break;
 			case KBD_TO_LAVADUNG_STEPPING_STONE:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 67) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 67) {
 					player.message("You need an agility level of 67 to jump to the stone");
 					return;
 				}
@@ -676,7 +677,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.face(274, 3015);
 				player.message("You focus on not slipping...");
 				delay(4);
-				if (Formulae.calcProductionSuccessfulLegacy(19, getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) - 48, false, 58, 26)) {
+				if (Formulae.calcProductionSuccessfulLegacy(19, getCurrentLevel(player, Skill.of(AGILITY).id()) - 48, false, 58, 26)) {
 					player.teleport(278, 3015);
 					delay(3);
 					player.teleport(276, 3015);
@@ -688,17 +689,17 @@ public class AgilityShortcuts implements OpLocTrigger,
 					delay(3);
 					player.teleport(272,3012);
 					player.message("and skillfully cross the lava");
-					player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 160, true);
+					player.incExp(Skill.of(AGILITY).id(), 160, true);
 				} else {
 					player.message("but fall into the lava");
-					int lavaDamage = (int) Math.round((player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS))) * 0.21D);
+					int lavaDamage = (int) Math.round((player.getSkills().getLevel(Skill.of(HITS).id())) * 0.21D);
 					player.teleport(281, 3016);
 					player.damage(lavaDamage);
 				}
 
 				break;
 			case LAVADUNG_TO_KBD_STEPPING_STONE:
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 67) {
+				if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 67) {
 					player.message("You need an agility level of 67 to jump to the stone");
 					return;
 				}
@@ -712,7 +713,7 @@ public class AgilityShortcuts implements OpLocTrigger,
 				player.face(272, 3015);
 				player.message("You focus on not slipping...");
 				delay(4);
-				if (Formulae.calcProductionSuccessfulLegacy(19, getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) - 48, false, 58, 26)) {
+				if (Formulae.calcProductionSuccessfulLegacy(19, getCurrentLevel(player, Skill.of(AGILITY).id()) - 48, false, 58, 26)) {
 					player.teleport(272, 3015);
 					player.face(280, 3015);
 					delay(3);
@@ -724,10 +725,10 @@ public class AgilityShortcuts implements OpLocTrigger,
 					delay(3);
 					player.teleport(281, 3015);
 					player.message("and skillfully cross the lava");
-					player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 160, true);
+					player.incExp(Skill.of(AGILITY).id(), 160, true);
 				} else {
 					player.message("but fall into the lava");
-					int lavaDamage = (int) Math.round((player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS))) * 0.21D);
+					int lavaDamage = (int) Math.round((player.getSkills().getLevel(Skill.of(HITS).id())) * 0.21D);
 					player.teleport(271, 3012);
 					player.damage(lavaDamage);
 				}
@@ -737,11 +738,11 @@ public class AgilityShortcuts implements OpLocTrigger,
 	}
 
 	boolean succeed(Player player, int req) {
-		return Formulae.calcProductionSuccessfulLegacy(req, getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)), false, req + 30);
+		return Formulae.calcProductionSuccessfulLegacy(req, getCurrentLevel(player, Skill.of(AGILITY).id()), false, req + 30);
 	}
 
 	boolean succeed(Player player, int req, int lvlStopFail) {
-		return Formulae.calcProductionSuccessfulLegacy(req, getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)), true, lvlStopFail);
+		return Formulae.calcProductionSuccessfulLegacy(req, getCurrentLevel(player, Skill.of(AGILITY).id()), true, lvlStopFail);
 	}
 
 	@Override

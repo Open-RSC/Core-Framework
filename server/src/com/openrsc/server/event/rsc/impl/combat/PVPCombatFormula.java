@@ -1,27 +1,27 @@
 package com.openrsc.server.event.rsc.impl.combat;
 
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.Prayers;
 import com.openrsc.server.util.rsc.DataConversions;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.*;
 
 public class PVPCombatFormula {
 	/**
 	 * Calulates what one mob should hit on another with meelee
 	 */
 	public static int calcFightHit(Mob attacker, Mob defender) {
-		int max = (int) maxHit(attacker, attacker.getSkills().getLevel(getSkillId(attacker.getWorld(), SkillsEnum.STRENGTH)), attacker.getWeaponPowerPoints(), styleBonus(attacker, 2));
+		int max = (int) maxHit(attacker, attacker.getSkills().getLevel(Skill.of(STRENGTH).id()), attacker.getWeaponPowerPoints(), styleBonus(attacker, 2));
 		int newAtt = (int)
 			(
 				addPrayers(attacker, Prayers.CLARITY_OF_THOUGHT,
 					Prayers.IMPROVED_REFLEXES,
 					Prayers.INCREDIBLE_REFLEXES)
 					*
-					(attacker.getSkills().getLevel(getSkillId(attacker.getWorld(), SkillsEnum.ATTACK)) / 0.8D)
+					(attacker.getSkills().getLevel(Skill.of(ATTACK).id()) / 0.8D)
 					+
 					(
 						(DataConversions.random(0, 4) == 0 ? attacker.getWeaponPowerPoints() : attacker.getWeaponAimPoints()) / 2.5D
@@ -32,7 +32,7 @@ public class PVPCombatFormula {
 					)
 					+
 					(
-						DataConversions.random(0, 100) <= 10 ? (attacker.getSkills().getLevel(getSkillId(attacker.getWorld(), SkillsEnum.STRENGTH)) / 5D) : 0
+						DataConversions.random(0, 100) <= 10 ? (attacker.getSkills().getLevel(Skill.of(STRENGTH).id()) / 5D) : 0
 					)
 					+
 					(
@@ -45,14 +45,14 @@ public class PVPCombatFormula {
 					Prayers.STEEL_SKIN)
 					*
 					(
-						(DataConversions.random(0, 100) <= 5 ? 0 : defender.getSkills().getLevel(getSkillId(defender.getWorld(), SkillsEnum.DEFENSE))) * 1.1D
+						(DataConversions.random(0, 100) <= 5 ? 0 : defender.getSkills().getLevel(Skill.of(DEFENSE).id())) * 1.1D
 					)
 					+
 					(
 						(DataConversions.random(0, 100) <= 5 ? 0 : defender.getArmourPoints()) / 2.75D
 					)
 					+
-					(defender.getSkills().getLevel(getSkillId(defender.getWorld(), SkillsEnum.STRENGTH)) / 4D)
+					(defender.getSkills().getLevel(Skill.of(STRENGTH).id()) / 4D)
 					+
 					(styleBonus(defender, 1) * 2)
 			);
@@ -99,8 +99,8 @@ public class PVPCombatFormula {
 		if (style == Skills.CONTROLLED_MODE) {
 			return 1;
 		}
-		return (skill == getSkillId(mob.getWorld(), SkillsEnum.ATTACK) && style == Skills.ACCURATE_MODE) || (skill == getSkillId(mob.getWorld(), SkillsEnum.DEFENSE) && style == Skills.DEFENSIVE_MODE)
-			|| (skill == getSkillId(mob.getWorld(), SkillsEnum.STRENGTH) && style == Skills.AGGRESSIVE_MODE) ? 3.0D : 0.0D;
+		return (skill == Skill.of(ATTACK).id() && style == Skills.ACCURATE_MODE) || (skill == Skill.of(DEFENSE).id() && style == Skills.DEFENSIVE_MODE)
+			|| (skill == Skill.of(STRENGTH).id() && style == Skills.AGGRESSIVE_MODE) ? 3.0D : 0.0D;
 	}
 
 	private static double addPrayers(Mob source, int prayer1, int prayer2, int prayer3) {

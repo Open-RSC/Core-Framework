@@ -20,10 +20,14 @@ public class Skills {
 
 	public static final int CONTROLLED_MODE = 0, AGGRESSIVE_MODE = 1, ACCURATE_MODE = 2, DEFENSIVE_MODE = 3;
 
+	public static final String NONE = "NONE", ATTACK = "ATTACK", DEFENSE = "DEFENSE", STRENGTH = "STRENGTH", HITS = "HITS", RANGED = "RANGED",
+		PRAYGOOD = "PRAYGOOD", PRAYEVIL = "PRAYEVIL", PRAYER = "PRAYER", GOODMAGIC = "GOODMAGIC", EVILMAGIC = "EVILMAGIC", MAGIC = "MAGIC",
+		COOKING = "COOKING", WOODCUTTING = "WOODCUTTING", FLETCHING = "FLETCHING", FISHING = "FISHING", FIREMAKING = "FIREMAKING",
+		TAILORING = "TAILORING", CRAFTING = "CRAFTING", SMITHING = "SMITHING", MINING = "MINING", HERBLAW = "HERBLAW", AGILITY = "AGILITY",
+		THIEVING = "THIEVING", RUNECRAFT = "RUNECRAFT", HARVESTING = "HARVESTING", CARPENTRY = "CARPENTRY", INFLUENCE = "INFLUENCE";
+
 	public HashMap<SkillDef.EXP_CURVE, int[]> experienceCurves;
 	public ArrayList<SkillDef> skills;
-	public HashMap<SkillsEnum, Integer> skillEnumToId = new HashMap<>();
-	public HashMap<Integer, SkillsEnum> skillIdToEnum = new HashMap<>();
 
 	//private final String[] SKILL_NAME;
 
@@ -48,7 +52,6 @@ public class Skills {
 		int skillIndex = 0;
 
 		if (constants.getServer().getConfig().INFLUENCE_INSTEAD_QP) {
-			// TODO: maybe could be a more specific config for this?
 			skills.add(new SkillDef("Attack", "Attack", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, skillIndex++));
 			skills.add(new SkillDef("Defense", "Defense", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, skillIndex++));
 			skills.add(new SkillDef("Strength", "Strength", 1, 99, SkillDef.EXP_CURVE.ORIGINAL, skillIndex++));
@@ -96,15 +99,8 @@ public class Skills {
 			}
 		}
 
-		int id;
-		for (SkillsEnum skill : SkillsEnum.values()) {
-			id = getSkillIndex(skill.toString());
-			skillEnumToId.put(skill, id);
-			if (id != -1) {
-				skillIdToEnum.put(id, skill);
-			} else {
-				skillIdToEnum.putIfAbsent(-1, SkillsEnum.NONE);
-			}
+		for (int j = 0; j < skills.size(); j++) {
+			Skill.addSkill(skills.get(j).getLongName().toUpperCase(), j);
 		}
 	}
 
@@ -125,14 +121,6 @@ public class Skills {
 			i++;
 		}
 		return -1;
-	}
-
-	public int getSkillId(SkillsEnum skillEnum) {
-		return skillEnumToId.getOrDefault(skillEnum, -1);
-	}
-
-	public SkillsEnum getSkillEnum(int skillId) {
-		return skillIdToEnum.getOrDefault(skillId, SkillsEnum.NONE);
 	}
 
 	public SkillDef getSkill(int index) {

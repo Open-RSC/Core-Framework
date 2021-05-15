@@ -9,6 +9,8 @@ import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.AGILITY;
+import static com.openrsc.server.constants.Skills.ATTACK;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
@@ -34,9 +36,9 @@ public class UndergroundPassKoftik implements QuestInterface, TalkNpcTrigger {
 	@Override
 	public void handleReward(Player player) {
 		player.message("@gre@You haved gained 5 quest points!");
-		Either<Integer, SkillsEnum>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.UNDERGROUND_PASS);
+		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.UNDERGROUND_PASS);
 		//keep order kosher
-		Either<Integer, SkillsEnum>[] skillIDs = new Either[]{Either.right(SkillsEnum.AGILITY), Either.right(SkillsEnum.ATTACK)};
+		Either<Integer, String>[] skillIDs = new Either[]{Either.right(AGILITY), Either.right(ATTACK)};
 		for (int i = 0; i < skillIDs.length; i++) {
 			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
 			incQuestReward(player, questData, i == (skillIDs.length - 1));

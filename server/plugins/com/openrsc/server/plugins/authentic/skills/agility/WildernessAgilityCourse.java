@@ -1,6 +1,6 @@
 package com.openrsc.server.plugins.authentic.skills.agility;
 
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
@@ -11,8 +11,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.openrsc.server.constants.Skills.AGILITY;
+import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class WildernessAgilityCourse implements OpLocTrigger {
 
@@ -36,7 +37,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 	public void onOpLoc(Player player, GameObject obj, String command) {
 		final int failRate = failRate();
 		if (obj.getID() == GATE) {
-			if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)) < 52) {
+			if (getCurrentLevel(player, Skill.of(AGILITY).id()) < 52) {
 				player.message("You need an agility level of 52 to attempt balancing along the ridge");
 				return;
 			}
@@ -56,7 +57,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				mes("You skillfully balance across the ridge");
 				delay(3);
 				teleport(player, 298, 125);
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 50, true);
+				player.incExp(Skill.of(AGILITY).id(), 50, true);
 			}
 			return;
 		} else if (obj.getID() == SECOND_GATE) {
@@ -77,7 +78,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				mes("You skillfully balance across the ridge");
 				delay(3);
 				teleport(player, 298, 134);
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 50, true);
+				player.incExp(Skill.of(AGILITY).id(), 50, true);
 			}
 			return;
 		}
@@ -94,7 +95,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				player.message("You squeeze through the pipe");
 				delay(2);
 				teleport(player, 294, 112);
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 50, true);
+				player.incExp(Skill.of(AGILITY).id(), 50, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
 				return;
 			case WILD_ROPESWING:
@@ -104,7 +105,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 					mes("You skillfully swing across the hole");
 					delay(3);
 					boundaryTeleport(player, Point.location(292, 108));
-					player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 100, true);
+					player.incExp(Skill.of(AGILITY).id(), 100, true);
 					AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
 					return;
 				} else { // 13 damage on 85hp.
@@ -113,7 +114,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 					player.message("Your hands slip and you fall to the level below");
 					delay(2);
 				}
-				int damage = (int) Math.round((player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS))) * 0.15D);
+				int damage = (int) Math.round((player.getSkills().getLevel(Skill.of(HITS).id())) * 0.15D);
 				teleport(player, 293, 2942);
 				player.message("You land painfully on the spikes");
 				say(player, null, "ouch");
@@ -128,7 +129,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				} else {
 					player.message("Your lose your footing and land in the lava");
 					teleport(player, 292, 104);
-					int lavaDamage = (int) Math.round((player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS))) * 0.21D);
+					int lavaDamage = (int) Math.round((player.getSkills().getLevel(Skill.of(HITS).id())) * 0.21D);
 					player.damage(lavaDamage);
 					return ;
 				}
@@ -140,7 +141,7 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				boundaryTeleport(player, Point.location(296, 105));
 				delay();
 				boundaryTeleport(player, Point.location(297, 106));
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 80, true);
+				player.incExp(Skill.of(AGILITY).id(), 80, true);
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
 				return;
 			case LEDGE:
@@ -159,12 +160,12 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 					boundaryTeleport(player, Point.location(300, 111));
 					delay();
 					boundaryTeleport(player, Point.location(301, 111));
-					player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 80, true);
+					player.incExp(Skill.of(AGILITY).id(), 80, true);
 					AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
 				} else {
 					player.message("you lose your footing and fall to the level below");
 					delay(2);
-					int ledgeDamage = (int) Math.round((player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.HITS))) * 0.25D);
+					int ledgeDamage = (int) Math.round((player.getSkills().getLevel(Skill.of(HITS).id())) * 0.25D);
 					teleport(player, 298, 2945);
 					player.message("You land painfully on the spikes");
 					say(player, null, "ouch");
@@ -179,14 +180,14 @@ public class WildernessAgilityCourse implements OpLocTrigger {
 				boundaryTeleport(player, Point.location(304, 119));
 				delay();
 				boundaryTeleport(player, Point.location(304, 120));
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.AGILITY), 80, true); // COMPLETION OF THE COURSE.
+				player.incExp(Skill.of(AGILITY).id(), 80, true); // COMPLETION OF THE COURSE.
 				AgilityUtils.completedObstacle(player, obj.getID(), obstacles, lastObstacle, 1500);
 				return;
 		}
 	}
 
 	private boolean succeed(Player player) {
-		return Formulae.calcProductionSuccessfulLegacy(52, getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.AGILITY)), false, 77, 4);
+		return Formulae.calcProductionSuccessfulLegacy(52, getCurrentLevel(player, Skill.of(AGILITY).id()), false, 77, 4);
 	}
 
 	private int failRate() {

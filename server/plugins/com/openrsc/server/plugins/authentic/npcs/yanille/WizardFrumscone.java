@@ -2,14 +2,14 @@ package com.openrsc.server.plugins.authentic.npcs.yanille;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
+import static com.openrsc.server.constants.Skills.MAGIC;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class WizardFrumscone implements TalkNpcTrigger {
 
@@ -25,7 +25,7 @@ public class WizardFrumscone implements TalkNpcTrigger {
 				"Feel free to kill them",
 				"Theres plenty more where these came from");
 			if (config().WANT_CUSTOM_SPRITES
-				&& getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.MAGIC)) >= 99) {
+				&& getMaxLevel(player, Skill.of(MAGIC).id()) >= 99) {
 				if (multi(player, n, "Does your cape have any magical properties?",
 					"I was going to kill them with or without your permission") == 0) {
 

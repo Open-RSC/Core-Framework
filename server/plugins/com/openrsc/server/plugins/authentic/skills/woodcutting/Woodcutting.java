@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.skills.woodcutting;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.ObjectWoodcuttingDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -13,8 +13,8 @@ import com.openrsc.server.util.rsc.MessageType;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.WOODCUTTING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Woodcutting implements OpLocTrigger {
 
@@ -49,7 +49,7 @@ public class Woodcutting implements OpLocTrigger {
 				return;
 			}
 		}
-		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING)) < def.getReqLevel()) {
+		if (player.getSkills().getLevel(Skill.of(WOODCUTTING).id()) < def.getReqLevel()) {
 			player.message("You need a woodcutting level of " + def.getReqLevel() + " to axe this tree");
 			return;
 		}
@@ -69,7 +69,7 @@ public class Woodcutting implements OpLocTrigger {
 
 		int repeat = 1;
 		if (config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING));
+			repeat = Formulae.getRepeatTimes(player, Skill.of(WOODCUTTING).id());
 		}
 
 		startbatch(repeat);
@@ -89,19 +89,19 @@ public class Woodcutting implements OpLocTrigger {
 				return;
 			}
 		}
-		if (player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING)) < def.getReqLevel()) {
+		if (player.getSkills().getLevel(Skill.of(WOODCUTTING).id()) < def.getReqLevel()) {
 			player.message("You need a woodcutting level of " + def.getReqLevel() + " to axe this tree");
 			return;
 		}
 
-		if (getLog(def, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING)), axeId)) {
+		if (getLog(def, player.getSkills().getLevel(Skill.of(WOODCUTTING).id()), axeId)) {
 			//check if the tree is still up
 			player.getCarriedItems().getInventory().add(log);
 			player.playerServerMessage(MessageType.QUEST, "You get some wood");
 			if (player.getConfig().SCALED_WOODCUT_XP && def.getLogId() == ItemId.LOGS.id()) {
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING), getExp(player.getSkills().getMaxStat(getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING)), 25), true);
+				player.incExp(Skill.of(WOODCUTTING).id(), getExp(player.getSkills().getMaxStat(Skill.of(WOODCUTTING).id()), 25), true);
 			} else {
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.WOODCUTTING), def.getExp(), true);
+				player.incExp(Skill.of(WOODCUTTING).id(), def.getExp(), true);
 			}
 			if (DataConversions.random(1, 100) <= def.getFell()) {
 				GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());

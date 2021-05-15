@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.quests.members.legendsquest.mechanism;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
@@ -10,8 +10,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.CRAFTING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class LegendsQuestMapJungle implements OpInvTrigger {
 
@@ -116,7 +116,7 @@ public class LegendsQuestMapJungle implements OpInvTrigger {
 					canMap = false;
 				}
 				//potentially this check was done earlier?
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.CRAFTING)) < 50) {
+				if (getCurrentLevel(player, Skill.of(CRAFTING).id()) < 50) {
 					player.message("You need a crafting level of 50 to perform this task.");
 					return;
 				}

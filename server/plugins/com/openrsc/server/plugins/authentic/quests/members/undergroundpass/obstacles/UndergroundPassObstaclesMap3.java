@@ -1,9 +1,6 @@
 package com.openrsc.server.plugins.authentic.quests.members.undergroundpass.obstacles;
 
-import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.NpcId;
-import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.*;
 import com.openrsc.server.event.DelayedEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
@@ -21,8 +18,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.HITS;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(UndergroundPassObstaclesMap3.class);
@@ -60,7 +57,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 					if (player.getCarriedItems().getEquipment().hasEquipped(ItemId.KLANKS_GAUNTLETS.id())) {
 						player.message("klanks gaunlett protects you");
 					} else {
-						player.damage(((int) getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 10) + 5);
+						player.damage(((int) getCurrentLevel(player, Skill.of(HITS).id()) / 10) + 5);
 						say(player, null, "aaarrgghh");
 					}
 				}
@@ -91,7 +88,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 					player.message("klanks gaunlett protects you");
 					player.message("but you find find nothing");
 				} else {
-					player.damage(((int) getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS)) / 10) + 5);
+					player.damage(((int) getCurrentLevel(player, Skill.of(HITS).id()) / 10) + 5);
 					say(player, null, "aaarrgghh");
 					player.message("you find nothing");
 				}
@@ -158,7 +155,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 						delay(3);
 						player.message("you are hit by ibans magic bolt");
 						displayTeleportBubble(player, player.getX() + 1, player.getY(), true);
-						player.damage((int)Math.floor(getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.HITS))/10.0) + 4 + DataConversions.random(-1,1));
+						player.damage((int)Math.floor(getCurrentLevel(player, Skill.of(HITS).id())/10.0) + 4 + DataConversions.random(-1,1));
 						say(player, null, "aarrgh");
 						mes("@yel@Iban:die foolish mortal");
 						delay(3);
@@ -193,7 +190,7 @@ public class UndergroundPassObstaclesMap3 implements OpLocTrigger {
 									ActionSender.sendTeleBubble(getOwner(), blastPosition.getX(), blastPosition.getY(), true);
 									if (getOwner().getLocation().withinRange(blastPosition, 1)) {
 										/* Blast hit */
-										getOwner().damage((int)Math.floor(getCurrentLevel(getOwner(), getSkillId(getWorld(), SkillsEnum.HITS))/10.0) + 4 + DataConversions.random(-1,1));
+										getOwner().damage((int)Math.floor(getCurrentLevel(getOwner(), Skill.of(HITS).id())/10.0) + 4 + DataConversions.random(-1,1));
 										getOwner().teleport(795, 3469); // insert the coords
 										getOwner().getUpdateFlags().setChatMessage(new ChatMessage(getOwner(), "aarrgh"));
 										getOwner().message("you're blasted back to the door");

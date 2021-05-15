@@ -3,7 +3,7 @@ package com.openrsc.server.plugins.authentic.quests.members;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -18,8 +18,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
+import static com.openrsc.server.constants.Skills.THIEVING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 	OpLocTrigger,
@@ -393,7 +393,7 @@ public class TribalTotem implements QuestInterface, TalkNpcTrigger,
 		}
 		else if (obj.getID() == 331 && obj.getX() == 563 && obj.getY() == 587) {
 			if (command.equalsIgnoreCase("Search for traps")) {
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.THIEVING)) < 21) {
+				if (getCurrentLevel(player, Skill.of(THIEVING).id()) < 21) {
 					mes("You don't find anything interesting");
 					delay(3);
 				} else {

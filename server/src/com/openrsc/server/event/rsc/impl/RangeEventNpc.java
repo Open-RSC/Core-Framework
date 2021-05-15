@@ -1,7 +1,7 @@
 package com.openrsc.server.event.rsc.impl;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.CombatFormula;
 import com.openrsc.server.model.PathValidation;
@@ -14,7 +14,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 
-import static com.openrsc.server.util.SkillSolver.getSkillId;
+import static com.openrsc.server.constants.Skills.HITS;
 
 public class RangeEventNpc extends GameTickEvent {
 
@@ -83,7 +83,7 @@ public class RangeEventNpc extends GameTickEvent {
 			int targetWildLvl = target.getLocation().wildernessLevel();
 			int myWildLvl = getOwner().getLocation().wildernessLevel();
 			if ((target.isPlayer() && !((Player) target).loggedIn())
-				|| target.getSkills().getLevel(getSkillId(getWorld(), SkillsEnum.HITS)) <= 0
+				|| target.getSkills().getLevel(Skill.of(HITS).id()) <= 0
 				|| !getOwner().withinRange(target)) {
 				getOwner().resetRange();
 				stop();

@@ -1,7 +1,7 @@
 package com.openrsc.server.plugins.authentic.skills.mining;
 
 import com.openrsc.server.constants.ItemId;
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
@@ -11,8 +11,8 @@ import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
 
+import static com.openrsc.server.constants.Skills.MINING;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class GemMining implements OpLocTrigger {
 
@@ -33,7 +33,7 @@ public class GemMining implements OpLocTrigger {
 	private void handleGemRockMining(final GameObject obj, Player player, int click) {
 		final ObjectMiningDef def = player.getWorld().getServer().getEntityHandler().getObjectMiningDef(obj.getID());
 		final int axeId = Mining.getAxe(player);
-		final int mineLvl = player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.MINING));
+		final int mineLvl = player.getSkills().getLevel(Skill.of(MINING).id());
 		int repeat = 1;
 		int reqlvl = 1;
 		switch (ItemId.getById(axeId)) {
@@ -99,7 +99,7 @@ public class GemMining implements OpLocTrigger {
 		}
 
 		if (config().BATCH_PROGRESSION) {
-			repeat = Formulae.getRepeatTimes(player, getSkillId(player.getWorld(), SkillsEnum.MINING));
+			repeat = Formulae.getRepeatTimes(player, Skill.of(MINING).id());
 		}
 
 		startbatch(repeat);
@@ -120,7 +120,7 @@ public class GemMining implements OpLocTrigger {
 				return;
 			}
 		}
-		if (getGem(player, 40, player.getSkills().getLevel(getSkillId(player.getWorld(), SkillsEnum.MINING)), axeId) && mineLvl >= 40) { // always 40 required mining.
+		if (getGem(player, 40, player.getSkills().getLevel(Skill.of(MINING).id()), axeId) && mineLvl >= 40) { // always 40 required mining.
 			Item gem = new Item(getGemFormula(player.getCarriedItems().getEquipment().hasEquipped(ItemId.CHARGED_DRAGONSTONE_AMULET.id())), 1);
 			//check if there is still gem at the rock
 			GameObject object = player.getViewArea().getGameObject(obj.getID(), obj.getX(), obj.getY());
@@ -128,7 +128,7 @@ public class GemMining implements OpLocTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
 			} else {
 				player.message(minedString(gem.getCatalogId()));
-				player.incExp(getSkillId(player.getWorld(), SkillsEnum.MINING), 200, true); // always 50XP
+				player.incExp(Skill.of(MINING).id(), 200, true); // always 50XP
 				player.getCarriedItems().getInventory().add(gem);
 			}
 

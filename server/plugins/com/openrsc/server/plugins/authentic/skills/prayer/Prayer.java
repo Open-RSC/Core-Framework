@@ -1,13 +1,13 @@
 package com.openrsc.server.plugins.authentic.skills.prayer;
 
-import com.openrsc.server.constants.SkillsEnum;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 
+import static com.openrsc.server.constants.Skills.PRAYER;
 import static com.openrsc.server.plugins.Functions.*;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public class Prayer implements OpLocTrigger {
 
@@ -18,15 +18,15 @@ public class Prayer implements OpLocTrigger {
 		if (wantsRecharge && !allowRecharge) {
 			player.message("World does not feature prayers!");
 		} else if (wantsRecharge && allowRecharge) {
-			int maxPray = getMaxLevel(player, getSkillId(player.getWorld(), SkillsEnum.PRAYER)) + (object.getID() == 200 ? 2 : 0);
-			if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.PRAYER)) == maxPray) {
+			int maxPray = getMaxLevel(player, Skill.of(PRAYER).id()) + (object.getID() == 200 ? 2 : 0);
+			if (getCurrentLevel(player, Skill.of(PRAYER).id()) == maxPray) {
 				player.playerServerMessage(MessageType.QUEST, "You already have full prayer points");
 				player.setPrayerStatePoints(maxPray * 120);
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You recharge your prayer points");
 				player.playSound("recharge");
-				if (getCurrentLevel(player, getSkillId(player.getWorld(), SkillsEnum.PRAYER)) < maxPray) {
-					player.getSkills().setLevel(getSkillId(player.getWorld(), SkillsEnum.PRAYER), maxPray);
+				if (getCurrentLevel(player, Skill.of(PRAYER).id()) < maxPray) {
+					player.getSkills().setLevel(Skill.of(PRAYER).id(), maxPray);
 				}
 			}
 		}

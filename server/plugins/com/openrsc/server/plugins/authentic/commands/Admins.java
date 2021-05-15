@@ -2,8 +2,8 @@ package com.openrsc.server.plugins.authentic.commands;
 
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
+import com.openrsc.server.constants.Skill;
 import com.openrsc.server.constants.Skills;
-import com.openrsc.server.constants.SkillsEnum;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
@@ -48,9 +48,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.openrsc.server.constants.Skills.*;
 import static com.openrsc.server.plugins.Functions.config;
 import static com.openrsc.server.plugins.Functions.npcattack;
-import static com.openrsc.server.util.SkillSolver.getSkillId;
 
 public final class Admins implements CommandTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Admins.class);
@@ -880,13 +880,13 @@ public final class Admins implements CommandTrigger {
 				Quests.DRAGON_SLAYER
 			);
 			List<Integer> skillsToLevel = newArrayList(
-				getSkillId(player.getWorld(), SkillsEnum.ATTACK),
-				getSkillId(player.getWorld(), SkillsEnum.STRENGTH),
-				getSkillId(player.getWorld(), SkillsEnum.DEFENSE),
-				getSkillId(player.getWorld(), SkillsEnum.HITS),
-				getSkillId(player.getWorld(), SkillsEnum.PRAYER),
-				getSkillId(player.getWorld(), SkillsEnum.RANGED),
-				getSkillId(player.getWorld(), SkillsEnum.MAGIC)
+				Skill.of(ATTACK).id(),
+				Skill.of(STRENGTH).id(),
+				Skill.of(DEFENSE).id(),
+				Skill.of(HITS).id(),
+				Skill.of(PRAYER).id(),
+				Skill.of(RANGED).id(),
+				Skill.of(MAGIC).id()
 			);
 			for (Integer skill : skillsToLevel) {
 				if (player.getSkills().getMaxStat(skill) < player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT) {
@@ -921,8 +921,8 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(getSkillId(targetPlayer.getWorld(), SkillsEnum.HITS)) - targetPlayer.getSkills().getMaxStat(getSkillId(targetPlayer.getWorld(), SkillsEnum.HITS))));
-		targetPlayer.getSkills().normalize(getSkillId(targetPlayer.getWorld(), SkillsEnum.HITS));
+		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skill.of(HITS).id()) - targetPlayer.getSkills().getMaxStat(Skill.of(HITS).id())));
+		targetPlayer.getSkills().normalize(Skill.of(HITS).id());
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
 			targetPlayer.message(messagePrefix + "You have been healed by an admin");
 		}
@@ -939,7 +939,7 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		targetPlayer.getSkills().normalize(getSkillId(targetPlayer.getWorld(), SkillsEnum.PRAYER));
+		targetPlayer.getSkills().normalize(Skill.of(PRAYER).id());
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
 			targetPlayer.message(messagePrefix + "Your prayer has been recharged by an admin");
 		}
@@ -974,14 +974,14 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		if (newHits > targetPlayer.getSkills().getMaxStat(getSkillId(targetPlayer.getWorld(), SkillsEnum.HITS)))
-			newHits = targetPlayer.getSkills().getMaxStat(getSkillId(targetPlayer.getWorld(), SkillsEnum.HITS));
+		if (newHits > targetPlayer.getSkills().getMaxStat(Skill.of(HITS).id()))
+			newHits = targetPlayer.getSkills().getMaxStat(Skill.of(HITS).id());
 		if (newHits < 0)
 			newHits = 0;
 
-		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(getSkillId(targetPlayer.getWorld(), SkillsEnum.HITS)) - newHits));
-		targetPlayer.getSkills().setLevel(getSkillId(targetPlayer.getWorld(), SkillsEnum.HITS), newHits);
-		if (targetPlayer.getSkills().getLevel(getSkillId(targetPlayer.getWorld(), SkillsEnum.HITS)) <= 0)
+		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skill.of(HITS).id()) - newHits));
+		targetPlayer.getSkills().setLevel(Skill.of(HITS).id(), newHits);
+		if (targetPlayer.getSkills().getLevel(Skill.of(HITS).id()) <= 0)
 			targetPlayer.killedBy(player);
 
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
@@ -1018,12 +1018,12 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		if (newPrayer > targetPlayer.getSkills().getMaxStat(getSkillId(targetPlayer.getWorld(), SkillsEnum.PRAYER)))
-			newPrayer = targetPlayer.getSkills().getMaxStat(getSkillId(targetPlayer.getWorld(), SkillsEnum.PRAYER));
+		if (newPrayer > targetPlayer.getSkills().getMaxStat(Skill.of(PRAYER).id()))
+			newPrayer = targetPlayer.getSkills().getMaxStat(Skill.of(PRAYER).id());
 		if (newPrayer < 0)
 			newPrayer = 0;
 
-		targetPlayer.getSkills().setLevel(getSkillId(targetPlayer.getWorld(), SkillsEnum.PRAYER), newPrayer);
+		targetPlayer.getSkills().setLevel(Skill.of(PRAYER).id(), newPrayer);
 
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
 			targetPlayer.message(messagePrefix + "Your prayer has been set to " + newPrayer + " by an admin");
@@ -1049,8 +1049,8 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
-		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(getSkillId(targetPlayer.getWorld(), SkillsEnum.HITS))));
-		targetPlayer.getSkills().setLevel(getSkillId(targetPlayer.getWorld(), SkillsEnum.HITS), 0);
+		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, targetPlayer.getSkills().getLevel(Skill.of(HITS).id())));
+		targetPlayer.getSkills().setLevel(Skill.of(HITS).id(), 0);
 		targetPlayer.killedBy(player);
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
 			targetPlayer.message(messagePrefix + "You have been killed by an admin");
@@ -1085,8 +1085,8 @@ public final class Admins implements CommandTrigger {
 		}
 
 		targetPlayer.getUpdateFlags().setDamage(new Damage(targetPlayer, damage));
-		targetPlayer.getSkills().subtractLevel(getSkillId(targetPlayer.getWorld(), SkillsEnum.HITS), damage);
-		if (targetPlayer.getSkills().getLevel(getSkillId(targetPlayer.getWorld(), SkillsEnum.HITS)) <= 0)
+		targetPlayer.getSkills().subtractLevel(Skill.of(HITS).id(), damage);
+		if (targetPlayer.getSkills().getLevel(Skill.of(HITS).id()) <= 0)
 			targetPlayer.killedBy(player);
 
 		if (targetPlayer.getUsernameHash() != player.getUsernameHash()) {
@@ -1483,8 +1483,8 @@ public final class Admins implements CommandTrigger {
 		player.getWorld().registerGameObject(sara);
 		player.getWorld().delayedRemoveObject(sara, 600);
 		n.getUpdateFlags().setDamage(new Damage(n, damage));
-		n.getSkills().subtractLevel(getSkillId(n.getWorld(), SkillsEnum.HITS), damage);
-		if (n.getSkills().getLevel(getSkillId(n.getWorld(), SkillsEnum.HITS)) < 1) {
+		n.getSkills().subtractLevel(Skill.of(HITS).id(), damage);
+		if (n.getSkills().getLevel(Skill.of(HITS).id()) < 1) {
 			if (n.killed) {
 				// visible npc but killed flag is true
 				// if ever occurs, reset it for damageNpc to work
@@ -1869,10 +1869,10 @@ public final class Admins implements CommandTrigger {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id]");
 			return;
 		}
-		player.message(j.getSkills().getLevel(getSkillId(j.getWorld(), SkillsEnum.ATTACK)) + " "
-			+ j.getSkills().getLevel(getSkillId(j.getWorld(), SkillsEnum.DEFENSE)) + " "
-			+ j.getSkills().getLevel(getSkillId(j.getWorld(), SkillsEnum.STRENGTH)) + " "
-			+ j.getSkills().getLevel(getSkillId(j.getWorld(), SkillsEnum.HITS)) + " ");
+		player.message(j.getSkills().getLevel(Skill.of(ATTACK).id()) + " "
+			+ j.getSkills().getLevel(Skill.of(DEFENSE).id()) + " "
+			+ j.getSkills().getLevel(Skill.of(STRENGTH).id()) + " "
+			+ j.getSkills().getLevel(Skill.of(HITS).id()) + " ");
 		player.message(j.getCombatLevel() + " cb");
 	}
 
@@ -1897,10 +1897,10 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 		//j.setStrPotEventNpc(new StrPotEventNpc(j));
-		player.message(j.getSkills().getLevel(getSkillId(j.getWorld(), SkillsEnum.ATTACK)) + " "
-			+ j.getSkills().getLevel(getSkillId(j.getWorld(), SkillsEnum.DEFENSE)) + " "
-			+ j.getSkills().getLevel(getSkillId(j.getWorld(), SkillsEnum.STRENGTH)) + " "
-			+ j.getSkills().getLevel(getSkillId(j.getWorld(), SkillsEnum.HITS)) + " ");
+		player.message(j.getSkills().getLevel(Skill.of(ATTACK).id()) + " "
+			+ j.getSkills().getLevel(Skill.of(DEFENSE).id()) + " "
+			+ j.getSkills().getLevel(Skill.of(STRENGTH).id()) + " "
+			+ j.getSkills().getLevel(Skill.of(HITS).id()) + " ");
 		player.message(j.getCombatLevel() + " cb");
 	}
 
@@ -1958,14 +1958,14 @@ public final class Admins implements CommandTrigger {
 			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc id] [att lvl] [def lvl] [str lvl] [hits lvl]");
 			return;
 		}
-		j.getSkills().setLevel(getSkillId(j.getWorld(), SkillsEnum.ATTACK), att);
-		j.getSkills().setLevel(getSkillId(j.getWorld(), SkillsEnum.DEFENSE), def);
-		j.getSkills().setLevel(getSkillId(j.getWorld(), SkillsEnum.STRENGTH), str);
-		j.getSkills().setLevel(getSkillId(j.getWorld(), SkillsEnum.HITS), hp);
-		player.message(j.getSkills().getLevel(getSkillId(j.getWorld(), SkillsEnum.ATTACK)) + " "
-			+ j.getSkills().getLevel(getSkillId(j.getWorld(), SkillsEnum.DEFENSE)) + " "
-			+ j.getSkills().getLevel(getSkillId(j.getWorld(), SkillsEnum.STRENGTH)) + " "
-			+ j.getSkills().getLevel(getSkillId(j.getWorld(), SkillsEnum.HITS)) + " ");
+		j.getSkills().setLevel(Skill.of(ATTACK).id(), att);
+		j.getSkills().setLevel(Skill.of(DEFENSE).id(), def);
+		j.getSkills().setLevel(Skill.of(STRENGTH).id(), str);
+		j.getSkills().setLevel(Skill.of(HITS).id(), hp);
+		player.message(j.getSkills().getLevel(Skill.of(ATTACK).id()) + " "
+			+ j.getSkills().getLevel(Skill.of(DEFENSE).id()) + " "
+			+ j.getSkills().getLevel(Skill.of(STRENGTH).id()) + " "
+			+ j.getSkills().getLevel(Skill.of(HITS).id()) + " ");
 	}
 
 	private void playerSkull(Player player, String command, String[] args) {
