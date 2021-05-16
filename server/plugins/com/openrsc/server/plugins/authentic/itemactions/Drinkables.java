@@ -439,21 +439,20 @@ public class Drinkables implements OpInvTrigger {
 		player.message("You drink some of your " + item.getDef(player.getWorld()).getName().toLowerCase());
 		player.getCarriedItems().remove(item);
 		player.getCarriedItems().getInventory().add(new Item(newItem));
-		for (int i = 0; i < Skill.maxId(); i++) {
-			if (i == Skill.HITS.id() || i == Skill.PRAYER.id()) {
+		// In RSC stat restore potion is only applicable for Attack, Strength, and Defense
+		int[] affectedStats = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
+		for (int i = 0; i < affectedStats.length; i++) {
+			if (player.getSkills().getLevel(affectedStats[i]) > player.getSkills().getMaxStat(affectedStats[i])) {
 				continue;
 			}
-			if (player.getSkills().getLevel(i) > player.getSkills().getMaxStat(i)) {
-				continue;
-			}
-			int newStat = player.getSkills().getLevel(i) + (int) ((player.getSkills().getMaxStat(i) * 0.3) + 10);
-			if (newStat > player.getSkills().getMaxStat(i)) {
-				newStat = player.getSkills().getMaxStat(i);
+			int newStat = player.getSkills().getLevel(affectedStats[i]) + (int) ((player.getSkills().getMaxStat(affectedStats[i]) * 0.3) + 10);
+			if (newStat > player.getSkills().getMaxStat(affectedStats[i])) {
+				newStat = player.getSkills().getMaxStat(affectedStats[i]);
 			}
 			if (newStat < 14) {
-				player.getSkills().setLevel(i, player.getSkills().getMaxStat(i));
+				player.getSkills().setLevel(affectedStats[i], player.getSkills().getMaxStat(affectedStats[i]));
 			} else {
-				player.getSkills().setLevel(i, newStat);
+				player.getSkills().setLevel(affectedStats[i], newStat);
 			}
 		}
 		delay(2);

@@ -103,6 +103,11 @@ public class Skill {
 		nameMap.put(name, new Skill(name, id));
 	}
 
+	/**
+	 * Returns the maximum skill index from skill name set
+	 * @param namedSet
+	 * @return
+	 */
 	public static int maxId(String... namedSet) {
 		int max = -1;
 		for (String name : namedSet) {
@@ -111,7 +116,12 @@ public class Skill {
 		return max;
 	}
 
-	public static int maxId() {
+	/**
+	 * Returns the number of skills that have been added
+	 * @return
+	 */
+	public static int length() {
+		// we start with a NONE element
 		return nameMap.size() - 1;
 	}
 }
