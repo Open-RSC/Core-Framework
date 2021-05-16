@@ -98,7 +98,7 @@ public class Woodcutting implements OpLocTrigger {
 			player.getCarriedItems().getInventory().add(log);
 			player.playerServerMessage(MessageType.QUEST, "You get some wood");
 			if (player.getConfig().SCALED_WOODCUT_XP && def.getLogId() == ItemId.LOGS.id()) {
-				player.incExp(Skill.WOODCUTTING.id(), getExp(player.getSkills().getMaxStat(Skill.WOODCUTTING.id()), 25), true);
+				player.incExp(Skill.WOODCUTTING.id(), getExpRetro(player.getSkills().getMaxStat(Skill.WOODCUTTING.id()), 25), true);
 			} else {
 				player.incExp(Skill.WOODCUTTING.id(), def.getExp(), true);
 			}
@@ -158,7 +158,7 @@ public class Woodcutting implements OpLocTrigger {
 		return def.getRate(woodcutLevel, axeId) > roll;
 	}
 
-	public static int getExp(int level, int baseExp) {
+	public static int getExpRetro(int level, int baseExp) {
 		return (int) ((baseExp + (level * 1.75)) * 4);
 	}
 }

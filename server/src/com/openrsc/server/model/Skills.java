@@ -149,14 +149,6 @@ public class Skills {
 		levels[skill] = lvl;
 		maxStats[skill] = lvl;
 		getMob().getUpdateFlags().setAppearanceChanged(true);
-		if (getMob().isPlayer()) {
-			Player player = (Player) getMob();
-			try {
-				getWorld().getServer().getPlayerService().savePlayerMaxSkill(player.getDatabaseID(), skill, maxStats[skill]);
-			} catch (GameDatabaseException e) {
-				LOGGER.catching(e);
-			}
-		}
 		if (sendUpdate) {
 			sendUpdate(skill);
 		}

@@ -5,7 +5,6 @@ import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpInvTrigger;
-import com.openrsc.server.util.rsc.DataConversions;
 
 import java.util.Optional;
 
@@ -63,30 +62,38 @@ public class Bones implements OpInvTrigger {
 		// TODO: Config for custom sounds.
 		//owner.playSound("takeobject");
 
-		int prayerSkillId;
+		int[] prayerSkillIds;
 		if (player.getConfig().DIVIDED_GOOD_EVIL) {
-			prayerSkillId = DataConversions.random(0, 1) == 0 ? Skill.PRAYGOOD.id() : Skill.PRAYEVIL.id();
+			// per Rab, historically gave same xp to praygood and prayevil
+			// This was also confirmed by Gugge when both skills leveled same time to 5
+			prayerSkillIds = new int[]{Skill.PRAYGOOD.id(), Skill.PRAYEVIL.id()};
 		} else {
-			prayerSkillId = Skill.PRAYER.id();
+			prayerSkillIds = new int[]{Skill.PRAYER.id()};
 		}
 		int factor = player.getConfig().OLD_PRAY_XP ? 3 : 2; // factor to divide by modern is 2 / 2 or 1
 
+		int skillXP = 0;
 		switch (ItemId.getById(item.getCatalogId())) {
 			case BONES:
-				player.incExp(prayerSkillId, 2 * 15 / factor, true); // 3.75
+				skillXP = 2 * 15; // divided by factor below for 3.75
 				break;
 			case BAT_BONES:
-				player.incExp(prayerSkillId, 2 * 18 / factor, true); // 4.5
+				skillXP = 2 * 18; // divided by factor below for 4.5
 				break;
 			case BIG_BONES:
-				player.incExp(prayerSkillId, 2 * 50 / factor, true); // 12.5
+				skillXP = 2 * 50; // divided by factor below for 12.5
 				break;
 			case DRAGON_BONES:
-				player.incExp(prayerSkillId, 2 * 240 / factor, true); // 60
+				skillXP = 2 * 240; // divided by factor below for 60
 				break;
 			default:
 				player.message("Nothing interesting happens");
 				break;
+		}
+		if (skillXP > 0) {
+			for (int praySkillId : prayerSkillIds) {
+				player.incExp(praySkillId, skillXP / factor, true);
+			}
 		}
 	}
 }
