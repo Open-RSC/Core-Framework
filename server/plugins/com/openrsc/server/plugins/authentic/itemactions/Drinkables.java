@@ -8,6 +8,8 @@ import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Drinkables implements OpInvTrigger {
@@ -22,6 +24,9 @@ public class Drinkables implements OpInvTrigger {
 		if (item.getItemStatus().getNoted()) {
 			return;
 		}
+		// act on the last item from inventory
+		item = player.getCarriedItems().getInventory().get(
+			player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false)));
 		int id = item.getCatalogId();
 		if (id == ItemId.GUJUO_POTION.id())
 			handleGujouPotion(player);

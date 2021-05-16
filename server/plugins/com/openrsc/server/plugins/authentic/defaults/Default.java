@@ -145,16 +145,28 @@ public class Default implements DefaultHandler,
 
 		// Get the amount to drop from our temporary item construct.
 		int amountToDrop = item.getAmount();
-		batchDrop(player, item, fromInventory, amountToDrop, amountToDrop);
+		batchDrop(player, item, fromInventory, amountToDrop, amountToDrop, invIndex);
 	}
 
-	private void batchDrop(Player player, Item item, Boolean fromInventory, int amountToDrop, int totalToDrop) {
+	private void batchDrop(Player player, Item item, Boolean fromInventory, int amountToDrop, int totalToDrop, int invIndex) {
 
-		// Grab the last item by the ID we are trying to drop.
+		Item searchItem;
+		boolean found = false;
 		if (fromInventory) {
-			item = player.getCarriedItems().getInventory().get(
-				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted()))
-			);
+			if (invIndex >= 0 && invIndex < player.getCarriedItems().getInventory().size()) {
+				// search inventory using specified index
+				searchItem = player.getCarriedItems().getInventory().get(invIndex);
+				if (searchItem.equals(item)) {
+					item = searchItem;
+					found = true;
+				}
+			}
+			if (!found) {
+				// Grab the last item by the ID we are trying to drop when batching.
+				item = player.getCarriedItems().getInventory().get(
+					player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(item.getNoted()))
+				);
+			}
 		}
 		else {
 			item = player.getCarriedItems().getEquipment().get(
@@ -173,7 +185,11 @@ public class Default implements DefaultHandler,
 			if (item.getAmount() > 1) {
 				removingThisIteration = Math.min(amountToDrop, item.getAmount());
 			}
-			player.getCarriedItems().remove(new Item(item.getCatalogId(), removingThisIteration, item.getNoted()));
+			if (item.getItemId() != -1) {
+				player.getCarriedItems().remove(new Item(item.getCatalogId(), removingThisIteration, item.getNoted(), item.getItemId()));
+			} else {
+				player.getCarriedItems().remove(new Item(item.getCatalogId(), removingThisIteration, item.getNoted()));
+			}
 			amountToDrop -= removingThisIteration;
 		} else {
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(item.getCatalogId());
@@ -215,7 +231,7 @@ public class Default implements DefaultHandler,
 		// Repeat
 		if (!ifinterrupted() && amountToDrop > 0) {
 			delay();
-			batchDrop(player, item, fromInventory, amountToDrop, totalToDrop);
+			batchDrop(player, item, fromInventory, amountToDrop, totalToDrop, -1);
 		}
 	}
 

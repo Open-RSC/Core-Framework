@@ -12,9 +12,7 @@ import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -167,6 +165,9 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 			return -1;
 
 		final String[] names = certerDef.getCertNames();
+		// authentic bug on original rsc - menu to cert was shifted by 2 for fish
+		int shift = certerDef.getType().equalsIgnoreCase("fish") && option == 1 ? 2 : 0;
+		Collections.rotate(Arrays.asList(names), shift);
 		switch(option) {
 			case 0:
 				player.message("what sort of certificate do you wish to trade in?");
@@ -253,11 +254,13 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 		}
 		if (certAmount < 0)
 			return;
-		int certID = certerDef.getCertID(index);
+		int shift = certerDef.getType().equalsIgnoreCase("fish") ? 2 : 0;
+		int useIndex = (index + shift) % names.length;
+		int certID = certerDef.getCertID(useIndex);
 		if (certID < 0) {
 			return;
 		}
-		int itemID = certerDef.getItemID(index);
+		int itemID = certerDef.getItemID(useIndex);
 		if (certAmount == 5) {
 			if (player.isIronMan(IronmanMode.Ultimate.id())) {
 				player.message("As an Ultimate Iron Man. you cannot use certer bank exchange.");
@@ -266,7 +269,7 @@ public class Certer implements TalkNpcTrigger, UseNpcTrigger {
 			certAmount = (int) (player.getBank().countId(itemID) / 5);
 			int itemAmount = certAmount * 5;
 			if (itemAmount <= 0) {
-				player.message("You don't have any " + names[index] + " to cert");
+				player.message("You don't have any " + names[useIndex] + " to cert");
 				return;
 			}
 

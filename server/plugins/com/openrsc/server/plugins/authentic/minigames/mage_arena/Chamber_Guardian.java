@@ -60,6 +60,7 @@ public class Chamber_Guardian extends AbstractShop {
 			int choice = multi(player, n, "what do you have to offer?", "no thanks", "tell me what you know about the charge spell?");
 			if (choice == 0) {
 				npcsay(player, n, "take a look");
+				player.setAccessingShop(shop);
 				ActionSender.showShop(player, shop);
 			} else if (choice == 1) {
 				npcsay(player, n, "well, let me know if you need one");

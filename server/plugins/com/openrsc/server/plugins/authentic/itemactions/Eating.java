@@ -10,6 +10,8 @@ import com.openrsc.server.plugins.triggers.OpInvTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.MessageType;
 
+import java.util.Optional;
+
 import static com.openrsc.server.plugins.Functions.*;
 
 public class Eating implements OpInvTrigger {
@@ -31,7 +33,9 @@ public class Eating implements OpInvTrigger {
 				return;
 			}
 
-			if (player.getCarriedItems().remove(item) == -1) {
+			Item toRemove = player.getCarriedItems().getInventory().get(
+				player.getCarriedItems().getInventory().getLastIndexById(item.getCatalogId(), Optional.of(false)));
+			if (player.getCarriedItems().remove(toRemove) == -1) {
 				return;
 			}
 
