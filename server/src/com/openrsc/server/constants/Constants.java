@@ -165,10 +165,10 @@ public final class Constants {
 		put(Spells.ENCHANT_LVL4_AMULET, 30);
 		put(Spells.WATCHTOWER_TELEPORT, 31);
 		put(Spells.FIRE_BLAST, 32);
-		put(Spells.CHARGE_EARTH_ORB, 33);
-		put(Spells.CLAWS_OF_GUTHIX, 34);
-		put(Spells.SARADOMIN_STRIKE, 35);
-		put(Spells.FLAMES_OF_ZAMORAK, 36);
+		put(Spells.CLAWS_OF_GUTHIX, 33);
+		put(Spells.SARADOMIN_STRIKE, 34);
+		put(Spells.FLAMES_OF_ZAMORAK, 35);
+		put(Spells.CHARGE_EARTH_ORB, 36);
 		put(Spells.WIND_WAVE, 37);
 		put(Spells.CHARGE_FIRE_ORB, 38);
 		put(Spells.WATER_WAVE, 39);
