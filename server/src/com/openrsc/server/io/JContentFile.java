@@ -123,8 +123,10 @@ public class JContentFile {
 				tile.diagonalWalls = (short)wallsDiagonal[index];
 				tile.verticalWall = wallsNorthSouth[index];
 				tile.horizontalWall = wallsEastWest[index];
-				tile.groundOverlay = tileDecoration[index];
 				tile.roofTexture = wallsRoof[index];
+
+				// ??? Not 100% on these
+				tile.groundOverlay = tileDecoration[index];
 				tile.groundTexture = terrainColour[index];
 				s.setTile(x, y, tile);
 			}
