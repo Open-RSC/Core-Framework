@@ -1,7 +1,6 @@
 package com.openrsc.server.io;
 
 import com.openrsc.server.util.BZLib;
-import com.openrsc.server.util.BZip2;
 import com.openrsc.server.util.FileUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,12 +28,9 @@ public class JContent {
             System.arraycopy(m_data, 6, newData, 0, uncompressedLength);
             m_data = newData;
         } else {
-            // Add BZIP2 header to content file before decompressing
-            m_data[2] = 0x42;
-            m_data[3] = 0x5A;
-            m_data[4] = 0x68;
-            m_data[5] = 0x31;
-            m_data = BZip2.decompress(m_data, 2, compressedLength + 4, uncompressedLength);
+			byte newData[] = new byte[uncompressedLength];
+			BZLib.decompress(newData, uncompressedLength, m_data, compressedLength, 0);
+			m_data = newData;
             if (m_data == null)
                 return false;
         }
