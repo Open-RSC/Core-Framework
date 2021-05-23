@@ -24,6 +24,7 @@ public class WorldLoader {
 
 	private static final int[] ALLOWED_WALL_ID_TYPES = {5, 6, 14, 42, 63, 128, 229, 230};
 
+	private JContent jagArchive;
 	private ZipFile tileArchive;
 	private final World world;
 	private final WorldPopulator worldPopulator;
@@ -44,18 +45,29 @@ public class WorldLoader {
 
 	private boolean loadSection(final int sectionX, final int sectionY, final int height, final int bigX, final int bigY) {
 		Sector s = null;
-		try {
-			final String filename = "h" + height + "x" + sectionX + "y" + sectionY;
-			final ZipEntry e = tileArchive.getEntry(filename);
-			if (e == null) {
-				//LOGGER.warn("Ignoring Missing Sector: " + filename);
+
+		if (jagArchive != null) {
+			String mapName = "m" + height + sectionX / 10 + sectionX % 10 + sectionY / 10 + sectionY % 10;
+			JContentFile contentFile = jagArchive.unpack(mapName + ".jm");
+			if (contentFile == null)
 				return false;
+
+			s = contentFile.unpackSector();
+		} else {
+			try {
+				final String filename = "h" + height + "x" + sectionX + "y" + sectionY;
+				final ZipEntry e = tileArchive.getEntry(filename);
+				if (e == null) {
+					//LOGGER.warn("Ignoring Missing Sector: " + filename);
+					return false;
+				}
+				final ByteBuffer data = DataConversions.streamToBuffer(new BufferedInputStream(tileArchive.getInputStream(e)));
+				s = Sector.unpack(data);
+			} catch (final Exception e) {
+				LOGGER.catching(e);
 			}
-			final ByteBuffer data = DataConversions.streamToBuffer(new BufferedInputStream(tileArchive.getInputStream(e)));
-			s = Sector.unpack(data);
-		} catch (final Exception e) {
-			LOGGER.catching(e);
 		}
+
 		for (int y = 0; y < Constants.REGION_SIZE; y++) {
 			for (int x = 0; x < Constants.REGION_SIZE; x++) {
 				final int bx = bigX + x;
@@ -149,18 +161,29 @@ public class WorldLoader {
 
 	public void loadWorld() {
 		final long start = System.currentTimeMillis();
-		try {
-			if (getWorld().getServer().getConfig().MEMBER_WORLD) {
-				if (getWorld().getServer().getConfig().WANT_CUSTOM_LANDSCAPE)
-					tileArchive = new ZipFile(new File("./conf/server/data/Custom_P2PLandscape.orsc")); // Members landscape
-				else
-					tileArchive = new ZipFile(new File("./conf/server/data/Authentic_P2PLandscape.orsc")); // Members landscape
-			} else {
-				tileArchive = new ZipFile(new File("./conf/server/data/F2PLandscape.orsc")); // Free landscape
-			}
-		} catch (final Exception e) {
-			LOGGER.catching(e);
+
+		if (getWorld().getServer().getConfig().BASED_MAP_DATA == 14) {
+			File f = new File("./conf/server/data/maps14.jag");
+			jagArchive = new JContent();
+			if (!jagArchive.open(f.getAbsolutePath()))
+				jagArchive = null;
 		}
+
+		if (jagArchive == null) {
+			try {
+				if (getWorld().getServer().getConfig().MEMBER_WORLD) {
+					if (getWorld().getServer().getConfig().WANT_CUSTOM_LANDSCAPE)
+						tileArchive = new ZipFile(new File("./conf/server/data/Custom_P2PLandscape.orsc")); // Members landscape
+					else
+						tileArchive = new ZipFile(new File("./conf/server/data/Authentic_P2PLandscape.orsc")); // Members landscape
+				} else {
+					tileArchive = new ZipFile(new File("./conf/server/data/F2PLandscape.orsc")); // Free landscape
+				}
+			} catch (final Exception e) {
+				LOGGER.catching(e);
+			}
+		}
+
 		int sectors = 0;
 		for (int lvl = 0; lvl < 4; lvl++) {
 			int wildX = 2304;

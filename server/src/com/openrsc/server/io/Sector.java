@@ -14,7 +14,7 @@ public class Sector {
 	/**
 	 * Creates a new Sector full of blank tiles
 	 */
-	private Sector() {
+	public Sector() {
 		tiles = new Tile[Constants.REGION_SIZE * Constants.REGION_SIZE];
 		for (int i = 0; i < tiles.length; i++) {
 			tiles[i] = new Tile();
