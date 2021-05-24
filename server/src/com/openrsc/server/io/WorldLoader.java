@@ -6,6 +6,7 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
+import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -84,6 +85,7 @@ public class WorldLoader {
 				tile.horizontalWallVal = sectorTile.horizontalWall;
 				tile.verticalWallVal = sectorTile.verticalWall;
 				tile.elevation = sectorTile.groundElevation;
+				tile.traversalMask = 0;
 
 				if ((sectorTile.groundOverlay & 0xff) == 250) {
 					sectorTile.groundOverlay = (byte) 2;
