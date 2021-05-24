@@ -76,7 +76,7 @@ public class Sector {
 	/**
 	 * Sets the Tile at the given index
 	 */
-	private void setTile(int i, Tile t) {
+	public void setTile(int i, Tile t) {
 		tiles[i] = t;
 	}
 
