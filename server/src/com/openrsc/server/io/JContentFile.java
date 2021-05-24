@@ -83,7 +83,7 @@ public class JContentFile {
 
 		int val = 0;
 		for (int i = 0; i < 2304; i++) {
-			val = val + readByte() & 0xff;
+			val = val + readUnsignedByte();
 			terrainHeight[i] = (byte)val;
 		}
 
