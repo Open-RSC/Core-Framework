@@ -14,7 +14,7 @@ public class Tile {
 	/**
 	 * The elevation of this tile
 	 */
-	byte groundElevation = 0; //
+	byte groundElevation = 0;
 	/**
 	 * The overlay texture ID
 	 */
