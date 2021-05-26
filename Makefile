@@ -110,3 +110,9 @@ restore:
 clear-backups:
 	@[ "${days}" ] || ( echo ">> days is not set"; exit 1 )
 	find $(MYSQL_DUMPS_DIR)/*.zip -mtime +${days} -exec rm -f {} \;
+
+# Truncates database log tables that account for backup size bloat on heavy bot worlds
+# Call via "truncate db=uranium"
+truncate:
+	@[ "${db}" ] || ( echo ">> db is not set"; exit 1 )
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "USE ${db}; TRUNCATE `generic_logs`; TRUNCATE `droplogs`; TRUNCATE `chat_logs`; TRUNCATE `logins`; TRUNCATE `trade_logs`;"
