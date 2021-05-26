@@ -1,6 +1,7 @@
 package com.openrsc.server.io;
 
 import com.openrsc.server.util.BZLib;
+import com.openrsc.server.util.BZip2;
 import com.openrsc.server.util.FileUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,8 +14,25 @@ public class JContent {
 	private static final Logger LOGGER = LogManager.getLogger();
 
     private byte m_data[];
+    private boolean m_bzip2;
 
-    public boolean open(String fname) {
+    private void decompress(byte dest[], int uncompressedLength, byte src[], int compressedLength, int offset)
+	{
+		if (!m_bzip2) {
+			BZLib.decompress(dest, uncompressedLength, src, compressedLength, offset);
+			m_data = dest;
+		} else {
+			m_data[2] = 0x42;
+			m_data[3] = 0x5A;
+			m_data[4] = 0x68;
+			m_data[5] = 0x31;
+			m_data = BZip2.decompress(m_data, dest, 2, compressedLength + 4, uncompressedLength);
+		}
+	}
+
+    public boolean open(String fname, boolean useBZip2) {
+		m_bzip2 = useBZip2;
+
         m_data = FileUtil.readFull(new File(fname));
 
         if (m_data == null)
@@ -29,8 +47,7 @@ public class JContent {
             m_data = newData;
         } else {
 			byte newData[] = new byte[uncompressedLength];
-			BZLib.decompress(newData, uncompressedLength, m_data, compressedLength, 0);
-			m_data = newData;
+			decompress(newData, uncompressedLength, m_data, compressedLength, 0);
             if (m_data == null)
                 return false;
         }
@@ -59,8 +76,8 @@ public class JContent {
                 if (uncompressedLength == compressedLength) {
                     System.arraycopy(m_data, offset, data, 0, uncompressedLength);
                 } else {
-					BZLib.decompress(data, uncompressedLength, m_data, compressedLength, offset);
-                    if (data == null)
+					decompress(data, uncompressedLength, m_data, compressedLength, offset);
+                    if (m_data == null)
 						return null;
                 }
                 return new JContentFile(data);
