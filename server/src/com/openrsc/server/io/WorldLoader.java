@@ -6,7 +6,6 @@ import com.openrsc.server.model.world.World;
 import com.openrsc.server.model.world.region.Region;
 import com.openrsc.server.model.world.region.RegionManager;
 import com.openrsc.server.model.world.region.TileValue;
-import com.openrsc.server.util.rsc.CollisionFlag;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +25,9 @@ public class WorldLoader {
 	private static final int[] ALLOWED_WALL_ID_TYPES = {5, 6, 14, 42, 63, 128, 229, 230};
 
 	private JContent jagArchive;
+	private JContent memArchive;
+	private JContent landJagArchive;
+	private JContent landMemArchive;
 	private ZipFile tileArchive;
 	private final World world;
 	private final WorldPopulator worldPopulator;
@@ -44,16 +46,303 @@ public class WorldLoader {
 		return false;
 	}
 
+	private Sector loadJAGSector(final int sectionX, final int sectionY, final int height, boolean altFormat)
+	{
+		String mapName = "m" + height + sectionX / 10 + sectionX % 10 + sectionY / 10 + sectionY % 10;
+
+		int size = Constants.REGION_SIZE * Constants.REGION_SIZE;
+		byte[] terrainHeight = new byte[size];
+		byte[] terrainColour = new byte[size];
+		byte[] wallsEastWest = new byte[size];
+		byte[] wallsNorthSouth = new byte[size];
+		int[] wallsDiagonal = new int[size];
+		byte[] wallsRoof = new byte[size];
+		byte[] tileDecoration = new byte[size];
+		byte[] tileDirection = new byte[size];
+		int lastVal = 0;
+
+		JContentFile jmFile = jagArchive.unpack(mapName + ".jm");
+		JContentFile datFile = jagArchive.unpack(mapName + ".dat");
+		JContentFile heiFile = null;
+		if (landJagArchive != null)
+			heiFile = landJagArchive.unpack(mapName + ".hei");
+		JContentFile locFile = jagArchive.unpack(mapName + ".loc");
+
+		if (memArchive != null && getWorld().getServer().getConfig().MEMBER_WORLD) {
+			JContentFile memberJM = memArchive.unpack(mapName + ".jm");
+			JContentFile memberDat = memArchive.unpack(mapName + ".dat");
+			JContentFile memberHei = null;
+			if (landMemArchive != null)
+				memberHei = landMemArchive.unpack(mapName + ".hei");
+			if (memberDat != null)
+				datFile = memberDat;
+			if (memberJM != null)
+				jmFile = memberJM;
+			if (memberHei != null)
+				heiFile = memberHei;
+		}
+
+		if (jmFile == null && datFile == null)
+			return null;
+
+		if (datFile != null) {
+			if (altFormat) {
+				for (int i = 0; i < size; ) {
+					int val = datFile.readUnsignedByte();
+					if (val < 128) {
+						wallsEastWest[i++] = (byte) val;
+					} else {
+						for (int x = 0; x < val - 128; x++)
+							wallsEastWest[i++] = 0;
+					}
+				}
+
+				for (int i = 0; i < size; ) {
+					int val = datFile.readUnsignedByte();
+					if (val < 128) {
+						wallsNorthSouth[i++] = (byte) val;
+					} else {
+						for (int x = 0; x < val - 128; x++)
+							wallsNorthSouth[i++] = 0;
+					}
+				}
+
+				for (int i = 0; i < size; ) {
+					int val = datFile.readUnsignedByte();
+					if (val < 128) {
+						wallsDiagonal[i++] = val;
+					} else {
+						for (int x = 0; x < val - 128; x++)
+							wallsDiagonal[i++] = 0;
+					}
+				}
+
+				for (int i = 0; i < size; ) {
+					int val = datFile.readUnsignedByte();
+					if (val < 128) {
+						wallsDiagonal[i++] = val + 12000;
+					} else {
+						i += val - 128;
+					}
+				}
+
+				for (int i = 0; i < size; ) {
+					int val = datFile.readUnsignedByte();
+					if (val < 128) {
+						wallsRoof[i++] = (byte)val;
+					} else {
+						for (int x = 0; x < val - 128; x++)
+							wallsRoof[i++] = 0;
+					}
+				}
+
+				for (int i = 0; i < size; ) {
+					int val = datFile.readUnsignedByte();
+					if (val < 128) {
+						tileDecoration[i++] = (byte)val;
+					} else {
+						for (int x = 0; x < val - 128; x++)
+							tileDecoration[i++] = 0;
+					}
+				}
+
+				for (int i = 0; i < size; ) {
+					int val = datFile.readUnsignedByte();
+					if (val < 128) {
+						tileDirection[i++] = (byte)val;
+					} else {
+						for (int x = 0; x < val - 128; x++)
+							tileDirection[i++] = 0;
+					}
+				}
+			} else {
+				for (int i = 0; i < size; i++)
+					wallsEastWest[i] = datFile.readByte();
+				for (int i = 0; i < size; i++)
+					wallsNorthSouth[i] = datFile.readByte();
+				for (int i = 0; i < size; i++)
+					wallsDiagonal[i] = datFile.readUnsignedByte();
+
+				for (int i = 0; i < size; i++) {
+					int val = datFile.readUnsignedByte();
+					if (val > 0)
+						wallsDiagonal[i] = val + 12000;
+				}
+
+				for (int tile = 0; tile < 2304; ) {
+					int val = datFile.readUnsignedByte();
+					if (val < 128) {
+						wallsRoof[tile++] = (byte) val;
+					} else {
+						for (int i = 0; i < val - 128; i++)
+							wallsRoof[tile++] = 0;
+					}
+				}
+
+				lastVal = 0;
+				for (int tile = 0; tile < 2304; ) {
+					int val = datFile.readUnsignedByte();
+					if (val < 128) {
+						tileDecoration[tile++] = (byte) val;
+						lastVal = val;
+					} else {
+						for (int i = 0; i < val - 128; i++)
+							tileDecoration[tile++] = (byte) lastVal;
+					}
+				}
+
+				for (int tile = 0; tile < 2304; ) {
+					int val = datFile.readUnsignedByte();
+					if (val < 128) {
+						tileDirection[tile++] = (byte) val;
+					} else {
+						for (int i = 0; i < val - 128; i++)
+							tileDirection[tile++] = 0;
+					}
+				}
+			}
+		} else {
+			for (int tile = 0; tile < 2304; tile++) {
+				wallsNorthSouth[tile] = 0;
+				wallsEastWest[tile] = 0;
+				wallsDiagonal[tile] = 0;
+				wallsRoof[tile] = 0;
+				tileDecoration[tile] = 0;
+				if (height == 0)
+					tileDecoration[tile] = -6;
+				if (height == 3)
+					tileDecoration[tile] = 8;
+				tileDirection[tile] = 0;
+			}
+
+			if (locFile != null) {
+				for (int tile = 0; tile < size;) {
+					int val = locFile.readUnsignedByte();
+					if (val < 128) {
+						wallsDiagonal[(tile++)] = val + 48000;
+					} else {
+						tile += val - 128;
+					}
+				}
+			}
+		}
+
+		if (heiFile != null) {
+			for (int tile = 0; tile < 2304; ) {
+				int val = heiFile.readUnsignedByte();
+				if (val < 128) {
+					terrainHeight[tile++] = (byte) val;
+					lastVal = val;
+				}
+				if (val >= 128) {
+					for (int i = 0; i < val - 128; i++)
+						terrainHeight[tile++] = (byte) lastVal;
+				}
+			}
+
+			lastVal = 64;
+			for (int tileY = 0; tileY < 48; tileY++) {
+				for (int tileX = 0; tileX < 48; tileX++) {
+					lastVal = terrainHeight[tileX * 48 + tileY] + lastVal & 0x7f;
+					terrainHeight[tileX * 48 + tileY] = (byte) (lastVal * 2);
+				}
+			}
+
+			lastVal = 0;
+			for (int tile = 0; tile < 2304; ) {
+				int val = heiFile.readUnsignedByte();
+				if (val < 128) {
+					terrainColour[tile++] = (byte) val;
+					lastVal = val;
+				}
+				if (val >= 128) {
+					for (int i = 0; i < val - 128; i++)
+						terrainColour[tile++] = (byte) lastVal;
+				}
+			}
+
+			lastVal = 35;
+			for (int tileY = 0; tileY < 48; tileY++) {
+				for (int tileX = 0; tileX < 48; tileX++) {
+					lastVal = terrainColour[tileX * 48 + tileY] + lastVal & 0x7f;
+					terrainColour[tileX * 48 + tileY] = (byte) (lastVal * 2);
+				}
+
+			}
+		} else {
+			for (int tile = 0; tile < 2304; tile++) {
+				terrainHeight[tile] = 0;
+				terrainColour[tile] = 0;
+			}
+		}
+
+		if (jmFile != null)
+		{
+			int val = 0;
+			for (int i = 0; i < size; i++) {
+				val = val + jmFile.readUnsignedByte();
+				terrainHeight[i] = (byte)val;
+			}
+
+			val = 0;
+			for (int i = 0; i < size; i++) {
+				val = val + jmFile.readUnsignedByte();
+				terrainColour[i] = (byte)val;
+			}
+
+			for (int i = 0; i < size; i++)
+				wallsEastWest[i] = jmFile.readByte();
+
+			for (int i = 0; i < size; i++)
+				wallsNorthSouth[i] = jmFile.readByte();
+
+			for (int i = 0; i < size; i++) {
+				wallsDiagonal[i] = jmFile.readUnsignedByte() * 256 + jmFile.readUnsignedByte();
+			}
+
+			for (int i = 0; i < size; i++)
+				wallsRoof[i] = jmFile.readByte();
+
+			for (int i = 0; i < size; i++)
+				tileDecoration[i] = jmFile.readByte();
+
+			for (int i = 0; i < size; i++)
+				tileDirection[i] = jmFile.readByte();
+		}
+
+		Sector s = new Sector();
+		for (int x = 0; x < Constants.REGION_SIZE; x++)
+		{
+			for (int y = 0; y < Constants.REGION_SIZE; y++)
+			{
+				int index = (x * Constants.REGION_SIZE) + y;
+
+				Tile tile = new Tile();
+				tile.groundElevation = terrainHeight[index];
+				tile.diagonalWalls = (short)wallsDiagonal[index];
+				tile.verticalWall = wallsNorthSouth[index];
+				tile.horizontalWall = wallsEastWest[index];
+				tile.roofTexture = wallsRoof[index];
+
+				// ??? Not 100% on these
+				tile.groundOverlay = tileDecoration[index];
+				tile.groundTexture = terrainColour[index];
+				s.setTile(index, tile);
+			}
+		}
+		return s;
+	}
+
 	private boolean loadSection(final int sectionX, final int sectionY, final int height, final int bigX, final int bigY) {
 		Sector s = null;
 
-		if (jagArchive != null) {
-			String mapName = "m" + height + sectionX / 10 + sectionX % 10 + sectionY / 10 + sectionY % 10;
-			JContentFile contentFile = jagArchive.unpack(mapName + ".jm");
-			if (contentFile == null)
+		if (jagArchive != null || memArchive != null || landJagArchive != null || landMemArchive != null) {
+			// Load from members first, if fails, load f2p, if fails, we couldn't load sector.
+			// This is official via client world loader
+			boolean useAltLoader = getWorld().getServer().getConfig().BASED_MAP_DATA >= 28 && getWorld().getServer().getConfig().BASED_MAP_DATA <= 62;
+			s = loadJAGSector(sectionX, sectionY, height, useAltLoader);
+			if (s == null)
 				return false;
-
-			s = contentFile.unpackSector();
 		} else {
 			try {
 				final String filename = "h" + height + "x" + sectionX + "y" + sectionY;
@@ -164,14 +453,44 @@ public class WorldLoader {
 	public void loadWorld() {
 		final long start = System.currentTimeMillis();
 
-		if (getWorld().getServer().getConfig().BASED_MAP_DATA == 14) {
-			File f = new File("./conf/server/data/maps14.jag");
-			jagArchive = new JContent();
-			if (!jagArchive.open(f.getAbsolutePath()))
-				jagArchive = null;
+		if (!getWorld().getServer().getConfig().WANT_CUSTOM_LANDSCAPE) {
+			// Load official map files if found
+			String mapFname = "./conf/server/data/maps/maps" + getWorld().getServer().getConfig().BASED_MAP_DATA;
+			String landFname = "./conf/server/data/maps/land" + getWorld().getServer().getConfig().BASED_MAP_DATA;
+			boolean useBZip2 = getWorld().getServer().getConfig().BASED_MAP_DATA >= 28; // Map versions 28+ use BZip2
+			File fJag = new File(mapFname + ".jag");
+			File fMem = new File(mapFname + ".mem");
+			File fLandJag = new File(landFname + ".jag");
+			File fLandMem = new File(landFname + ".mem");
+			if (fJag.exists()) {
+				jagArchive = new JContent();
+				if (!jagArchive.open(fJag.getAbsolutePath(), useBZip2))
+					jagArchive = null;
+				LOGGER.info("Loading jag: " + jagArchive);
+			}
+			if (fMem.exists()) {
+				memArchive = new JContent();
+				if (!memArchive.open(fMem.getAbsolutePath(), useBZip2))
+					memArchive = null;
+				LOGGER.info("Loading mem: " + memArchive);
+			}
+
+			if (fLandJag.exists()) {
+				landJagArchive = new JContent();
+				if (!landJagArchive.open(fLandJag.getAbsolutePath(), useBZip2))
+					landJagArchive = null;
+				LOGGER.info("Loading land: " + landJagArchive);
+			}
+
+			if (fLandMem.exists()) {
+				landMemArchive = new JContent();
+				if (!landMemArchive.open(fLandMem.getAbsolutePath(), useBZip2))
+					landMemArchive = null;
+				LOGGER.info("Loading member's land: " + landMemArchive);
+			}
 		}
 
-		if (jagArchive == null) {
+		if (jagArchive == null && memArchive == null) {
 			try {
 				if (getWorld().getServer().getConfig().MEMBER_WORLD) {
 					if (getWorld().getServer().getConfig().WANT_CUSTOM_LANDSCAPE)
