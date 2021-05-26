@@ -466,27 +466,23 @@ public class WorldLoader {
 				jagArchive = new JContent();
 				if (!jagArchive.open(fJag.getAbsolutePath(), useBZip2))
 					jagArchive = null;
-				LOGGER.info("Loading jag: " + jagArchive);
 			}
 			if (fMem.exists()) {
 				memArchive = new JContent();
 				if (!memArchive.open(fMem.getAbsolutePath(), useBZip2))
 					memArchive = null;
-				LOGGER.info("Loading mem: " + memArchive);
 			}
 
 			if (fLandJag.exists()) {
 				landJagArchive = new JContent();
 				if (!landJagArchive.open(fLandJag.getAbsolutePath(), useBZip2))
 					landJagArchive = null;
-				LOGGER.info("Loading land: " + landJagArchive);
 			}
 
 			if (fLandMem.exists()) {
 				landMemArchive = new JContent();
 				if (!landMemArchive.open(fLandMem.getAbsolutePath(), useBZip2))
 					landMemArchive = null;
-				LOGGER.info("Loading member's land: " + landMemArchive);
 			}
 		}
 
