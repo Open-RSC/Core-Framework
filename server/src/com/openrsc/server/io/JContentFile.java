@@ -1,7 +1,5 @@
 package com.openrsc.server.io;
 
-import com.openrsc.server.constants.Constants;
-import com.sun.org.apache.bcel.internal.Const;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -35,6 +35,7 @@
             <classpath>
                 <pathelement location="${lib}/commons-lang3-3.12.0.jar"/>
                 <pathelement location="${lib}/commons-codec-1.14.jar"/>
+				<pathelement location="${lib}/commons-compress-1.18.jar"/>
                 <pathelement location="${lib}/netty-all-4.1.33.Final.jar"/>
                 <pathelement location="${lib}/netty-3.4.6.final.jar"/>
                 <pathelement location="${lib}/log4j-api-2.8.jar"/>
