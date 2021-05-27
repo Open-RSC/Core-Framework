@@ -115,4 +115,4 @@ clear-backups:
 # Call via "truncate db=uranium"
 truncate:
 	@[ "${db}" ] || ( echo ">> db is not set"; exit 1 )
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "USE ${db}; TRUNCATE `generic_logs`; TRUNCATE `droplogs`; TRUNCATE `chat_logs`; TRUNCATE `logins`; TRUNCATE `trade_logs`;"
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} -e "USE ${db}; TRUNCATE generic_logs; TRUNCATE droplogs; TRUNCATE chat_logs; TRUNCATE logins; TRUNCATE trade_logs;"
