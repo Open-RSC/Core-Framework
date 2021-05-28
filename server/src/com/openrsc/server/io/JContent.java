@@ -16,17 +16,17 @@ public class JContent {
     private byte m_data[];
     private boolean m_bzip2;
 
-    private void decompress(byte dest[], int uncompressedLength, byte src[], int compressedLength, int offset)
+    private byte[] decompress(byte dest[], int uncompressedLength, byte src[], int compressedLength, int offset)
 	{
 		if (!m_bzip2) {
 			BZLib.decompress(dest, uncompressedLength, src, compressedLength, offset);
-			m_data = dest;
+			return dest;
 		} else {
 			m_data[2] = 0x42;
 			m_data[3] = 0x5A;
 			m_data[4] = 0x68;
 			m_data[5] = 0x31;
-			m_data = BZip2.decompress(m_data, dest, 2, compressedLength + 4, uncompressedLength);
+			return BZip2.decompress(m_data, dest, 2, compressedLength + 4, uncompressedLength);
 		}
 	}
 
@@ -47,9 +47,10 @@ public class JContent {
             m_data = newData;
         } else {
 			byte newData[] = new byte[uncompressedLength];
-			decompress(newData, uncompressedLength, m_data, compressedLength, 0);
-            if (m_data == null)
-                return false;
+			newData = decompress(newData, uncompressedLength, m_data, compressedLength, 0);
+			if (newData == null)
+				return false;
+			m_data = newData;
         }
 
         return true;
@@ -76,8 +77,8 @@ public class JContent {
                 if (uncompressedLength == compressedLength) {
                     System.arraycopy(m_data, offset, data, 0, uncompressedLength);
                 } else {
-					decompress(data, uncompressedLength, m_data, compressedLength, offset);
-                    if (m_data == null)
+					data = decompress(data, uncompressedLength, m_data, compressedLength, offset);
+					if (data == null)
 						return null;
                 }
                 return new JContentFile(data);
