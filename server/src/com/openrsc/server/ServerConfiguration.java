@@ -348,7 +348,7 @@ public class ServerConfiguration {
 		WANT_AUTO_SERVER_SHUTDOWN = tryReadBool("want_auto_server_shutdown").orElse(false);
 		RESTART_HOUR = tryReadInt("restart_hour").orElse(7);
 		WANT_RESET_EVENT = tryReadBool("want_reset_event").orElse(false);
-		BASED_MAP_DATA = tryReadInt("based_map_data").orElse(64);
+		BASED_MAP_DATA = tryReadInt("based_map_data").orElse(100);
 		FEATURES_SLEEP = tryReadBool("features_sleep").orElse(true);
 
 		// Client
