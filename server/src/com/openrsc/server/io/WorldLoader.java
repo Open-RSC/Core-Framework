@@ -454,14 +454,26 @@ public class WorldLoader {
 		final long start = System.currentTimeMillis();
 
 		if (!getWorld().getServer().getConfig().WANT_CUSTOM_LANDSCAPE) {
-			// Load official map files if found
-			String mapFname = "./conf/server/data/maps/maps" + getWorld().getServer().getConfig().BASED_MAP_DATA;
-			String landFname = "./conf/server/data/maps/land" + getWorld().getServer().getConfig().BASED_MAP_DATA;
 			boolean useBZip2 = getWorld().getServer().getConfig().BASED_MAP_DATA >= 28; // Map versions 28+ use BZip2
-			File fJag = new File(mapFname + ".jag");
-			File fMem = new File(mapFname + ".mem");
-			File fLandJag = new File(landFname + ".jag");
-			File fLandMem = new File(landFname + ".mem");
+			File fJag;
+			File fMem;
+			File fLandJag;
+			File fLandMem;
+			// Load official map files if found
+			if (getWorld().getServer().getConfig().BASED_MAP_DATA == 100) {
+				String mapDir = "./conf/server/data/maps/";
+				fJag = new File(mapDir + "content4_ffffffffaaca2b0d"); // maps.jag
+				fMem = new File(mapDir + "content5_6a1d6b00"); // maps.mem
+				fLandJag = new File(mapDir + "content6_ffffffffe997514b"); // land.jag
+				fLandMem = new File(mapDir + "content7_3fc5d9e3"); // land.mem
+			} else {
+				String mapFname = "./conf/server/data/maps/maps" + getWorld().getServer().getConfig().BASED_MAP_DATA;
+				String landFname = "./conf/server/data/maps/land" + getWorld().getServer().getConfig().BASED_MAP_DATA;
+				fJag = new File(mapFname + ".jag");
+				fMem = new File(mapFname + ".mem");
+				fLandJag = new File(landFname + ".jag");
+				fLandMem = new File(landFname + ".mem");
+			}
 			if (fJag.exists()) {
 				jagArchive = new JContent();
 				if (!jagArchive.open(fJag.getAbsolutePath(), useBZip2))
