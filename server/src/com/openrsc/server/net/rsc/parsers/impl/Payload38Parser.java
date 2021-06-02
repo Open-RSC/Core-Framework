@@ -453,10 +453,10 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 				KnownPlayersStruct kp = new KnownPlayersStruct();
 				kp.playerCount = packet.readShort();
 				kp.playerServerIndex = new int[kp.playerCount];
-				kp.playerServerId = new int[kp.playerCount];
+				kp.playerServerAppearanceId = new int[kp.playerCount];
 				for (int i = 0; i < kp.playerCount; i++) {
 					kp.playerServerIndex[i] = packet.readShort();
-					kp.playerServerId[i] = packet.readShort();
+					kp.playerServerAppearanceId[i] = packet.readShort();
 				}
 				result = kp;
 				break;

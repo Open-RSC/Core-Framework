@@ -88,9 +88,9 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 					return;
 				}
 
-				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, affectedPlayer.isUsingAuthenticClient())
+				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, affectedPlayer.isUsingCustomClient())
 					== PlayerSettings.BlockingMode.All.id();
-				boolean blockNonFriends = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, affectedPlayer.isUsingAuthenticClient())
+				boolean blockNonFriends = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, affectedPlayer.isUsingCustomClient())
 					== PlayerSettings.BlockingMode.NonFriends.id();
 				if ((blockAll || (blockNonFriends && !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()))
 					|| affectedPlayer.getSocial().isIgnoring(player.getUsernameHash())) && !player.isMod()) {

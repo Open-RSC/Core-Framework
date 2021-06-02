@@ -40,7 +40,8 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 				return;
 			}
 
-			if (friendName.equalsIgnoreCase("Global$")) {
+			if (friendName.equalsIgnoreCase("Global$") ||
+				(friendName.equalsIgnoreCase("Global") && !player.getConfig().CHAR_NAME_CAN_EQUAL_GLOBAL)) {
 				player.getSocial().addGlobalFriend(player);
 				return;
 			}
@@ -61,9 +62,9 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 			player.getSocial().addFriend(friend, 0, DataConversions.hashToUsername(friend));
 			ActionSender.sendFriendUpdate(player, friend);
 			if (affectedPlayer != null && affectedPlayer.loggedIn()) {
-				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
+				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
 					== PlayerSettings.BlockingMode.All.id();
-				boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
+				boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
 					== PlayerSettings.BlockingMode.None.id();
 				if (!blockAll && affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
 					ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash());
@@ -73,14 +74,15 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 				}
 			}
 		} else if (pID == packetTwo) { // Remove friend
-			if (friendName.equalsIgnoreCase("Global$")) {
+			if (friendName.equalsIgnoreCase("Global$") ||
+				(friendName.equalsIgnoreCase("Global") && !player.getConfig().CHAR_NAME_CAN_EQUAL_GLOBAL)) {
 				player.getSocial().removeGlobalFriend(player);
 				return;
 			}
 
 			player.getSocial().removeFriend(friend);
 			if (affectedPlayer != null && affectedPlayer.loggedIn()) {
-				boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingAuthenticClient())
+				boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient())
 					== PlayerSettings.BlockingMode.All.id();
 				if (!blockAll && affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash())) {
 					ActionSender.sendFriendUpdate(affectedPlayer, player.getUsernameHash());
@@ -143,16 +145,14 @@ public final class FriendHandler implements PayloadProcessor<FriendStruct, Opcod
 			}
 
 			if ((friendName.toLowerCase().startsWith("global$") || friendName.equalsIgnoreCase("global"))
-				&& player.getConfig().WANT_GLOBAL_FRIEND
-			) {
+				&& player.getConfig().WANT_GLOBAL_FRIEND) {
 				player.getWorld().addGlobalMessage(new GlobalMessage(player, message));
 			}
 			else {
 				player.addPrivateMessage(new PrivateMessage(player, message, friend));
 			}
 		} else if (pID == packetSix) {
-			int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS
-				: MAX_FRIENDS;
+			int maxFriends = player.getConfig().MEMBER_WORLD ? MEMBERS_MAX_FRIENDS : MAX_FRIENDS;
 			if (player.getSocial().ignoreCount() >= maxFriends) {
 				player.message("Ignore list full");
 				return;

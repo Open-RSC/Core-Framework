@@ -60,7 +60,7 @@ public final class BankHandler implements PayloadProcessor<BankStruct, OpcodeIn>
 					return;
 				}
 
-				if (!player.isUsingAuthenticClient()) {
+				if (player.isUsingCustomClient()) {
 					if (player.getConfig().WANT_BANK_NOTES) {
 						wantsNotes = payload.noted;
 						if (player.getQolOptOut()) {

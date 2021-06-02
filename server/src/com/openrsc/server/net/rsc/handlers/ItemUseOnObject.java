@@ -101,8 +101,8 @@ public class ItemUseOnObject implements PayloadProcessor<ItemOnObjectStruct, Opc
 			int slotID = payload.slotID;
 			if (player.getConfig().WANT_EQUIPMENT_TAB && slotID == -1)
 			{
-				//they used the item from their equipment slot
-				if (!player.isUsingAuthenticClient()) {
+				// they used an item from their equipment slot
+				if (player.isUsingCustomClient()) {
 					int itemID = payload.itemID;
 					int realSlot = player.getCarriedItems().getEquipment().searchEquipmentForItem(itemID);
 					if (realSlot == -1)
@@ -111,7 +111,7 @@ public class ItemUseOnObject implements PayloadProcessor<ItemOnObjectStruct, Opc
 					if (item == null)
 						return;
 				} else {
-					player.message("authentic client can't use item from non-existent equipment slot.");
+					player.message("only custom clients can use items from the equipment slots.");
 					return;
 				}
 			} else

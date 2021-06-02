@@ -103,6 +103,21 @@ public class PacketBuilder {
 	}
 
 	/**
+	 * Writes an integer if number cannot be contained in a byte
+	 *
+	 * @param value The number
+	 * @return The PacketBuilder instance, for chaining.
+	 */
+	public PacketBuilder writeUnsignedByteInt(int value) {
+		value &= Integer.MAX_VALUE;
+		if (value < 128)
+			writeByte(value);
+		else
+			writeInt(Integer.MIN_VALUE + value);
+		return this;
+	}
+
+	/**
 	 * Writes an integer.
 	 *
 	 * @param i The integer.

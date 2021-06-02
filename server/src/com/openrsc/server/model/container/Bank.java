@@ -486,7 +486,7 @@ public class Bank {
 
 				withdrawItem = new Item(withdrawItem.getCatalogId(), requestedAmount, withdrawNoted, withdrawItem.getItemId());
 
-				if (!player.isUsingAuthenticClient()) {
+				if (player.isUsingCustomClient()) {
 					// Remove the item from the bank (or fail out).
 					if (!remove(withdrawItem, updateClient)) return;
 				} else {
@@ -503,7 +503,7 @@ public class Bank {
 				// TODO: there are safeguards here which might be fine, but it may be better to
 				// implement a way to sort the packets in Player.outgoingPackets instead?
 				// Not sure how Jagex would have done it.
-				if (player.isUsingAuthenticClient()) {
+				if (!player.isUsingCustomClient()) {
 					boolean successfulRemove = false;
 					try {
 						successfulRemove = remove(withdrawItem, updateClient);
@@ -533,7 +533,7 @@ public class Bank {
 				// Ensure they have the item in their inventory.
 				requestedAmount = Math.min(requestedAmount, player.getCarriedItems().getInventory().countId(catalogID));
 				if (requestedAmount <= 0) {
-					if (player.isUsingAuthenticClient() && catalogID == 1030) { //shantay pass placeholder item
+					if (!player.isUsingCustomClient() && catalogID == 1030) { //shantay pass placeholder item
 						player.playerServerMessage(MessageType.QUEST, "Try using the note on the Banker instead.");
 					}
 					return;
@@ -604,13 +604,13 @@ public class Bank {
 			// Add the item to the inventory (or fail and place it back into the bank).
 			if (!player.getCarriedItems().getInventory().add(item, updateClient)) {
 				add(item);
-				if (updateClient && !player.isUsingAuthenticClient()) {
+				if (updateClient && player.isUsingCustomClient()) {
 					ActionSender.sendInventory(player);
 				}
 				return;
 			}
 		}
-		if (updateClient && !player.isUsingAuthenticClient()) {
+		if (updateClient && player.isUsingCustomClient()) {
 			ActionSender.sendInventory(player);
 		}
 	}

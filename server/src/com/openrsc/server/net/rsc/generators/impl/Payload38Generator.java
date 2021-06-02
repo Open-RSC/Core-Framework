@@ -364,7 +364,7 @@ public class Payload38Generator implements PayloadGenerator<OpcodeOut> {
 		return builder != null ? builder.toPacket() : null;
 	}
 
-	public int onlineStatusConverter(int modernStatus) {
+	public static int onlineStatusConverter(int modernStatus) {
 		int onlineStatus = 0;
 		switch ((modernStatus & 0x6) >> 1) {
 			case 3:

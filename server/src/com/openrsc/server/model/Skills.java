@@ -230,10 +230,10 @@ public class Skills {
 
 		if (getMob().isPlayer()) {
 			Player player = (Player) getMob();
-			if (player.isUsingAuthenticClient()) {
-				sendExperience(skill);
-			} else {
+			if (player.isUsingCustomClient()) {
 				sendUpdate(skill);
+			} else {
+				sendExperience(skill);
 			}
 		}
 

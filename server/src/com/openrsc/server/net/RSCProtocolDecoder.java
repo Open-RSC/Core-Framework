@@ -75,11 +75,12 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 									opcode = bufferOrdered.readByte() & 0xFF;
 
 									Packet packet = new Packet(opcode, bufferOrdered);
-									//Packet.printPacket(packet, "Incoming");
+									// Packet.printPacket(packet, "Incoming");
 									addPacketToIncoming(out, att, packet);
 									return;
 								} else {
 									opcode = (buffer.readByte()) & 0xFF;
+
 								}
 							}
 						} else {
@@ -91,7 +92,7 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 						buffer.readBytes(data, length);
 						Packet packet = new Packet(opcode, data);
 						addPacketToIncoming(out, att, packet);
-						//Packet.printPacket(packet, "Incoming");
+						// Packet.printPacket(packet, "Incoming");
 
 					} else {
 						if (buffer.readableBytes() > 0) {
@@ -137,7 +138,7 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 						}
 					}
 				}
-			} else if (authenticClient > 177) {
+			} else if (authenticClient >= 204) {
 				// RSC Client with ISAAC (likely 233+)
 				if (buffer.readableBytes() >= 2) {
 					buffer.markReaderIndex();
@@ -213,8 +214,8 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 						buffer.resetReaderIndex();
 					}
 				}
-			} else if (authenticClient >= 93) {
-				// TODO: ask Logg if read seems reasonable
+			} else if (authenticClient >= 175) {
+				// TODO: implement the actual non-isaac opcode encryption scheme, for now ignored
 				if (buffer.readableBytes() >= 2) {
 					buffer.markReaderIndex();
 					int length = buffer.readUnsignedByte();
@@ -238,7 +239,41 @@ public final class RSCProtocolDecoder extends ByteToMessageDecoder implements At
 							buffer.readBytes(data, length);
 							length -= 1;
 						}
-						int opcode = (buffer.readByte()) & 0xFF;
+						int opcode = (data.readByte()) & 0xFF;
+
+						Packet packet = new Packet(opcode, data);
+						addPacketToIncoming(out, att, packet);
+						// Packet.printPacket(packet, "Incoming");
+					} else {
+						buffer.resetReaderIndex();
+					}
+				}
+
+			} else if (authenticClient >= 93) {
+				if (buffer.readableBytes() >= 2) {
+					buffer.markReaderIndex();
+					int length = buffer.readUnsignedByte();
+					int lengthLength;
+					if (length >= 160) {
+						length = 256 * length - (40960 - buffer.readUnsignedByte());
+						lengthLength = 2;
+					} else {
+						lengthLength = 1;
+					}
+
+					if (buffer.readableBytes() >= length && length > 0) {
+						ByteBuf data;
+						if (lengthLength == 1) {
+							data = Unpooled.buffer(length);
+							byte lastByte = buffer.readByte();
+							buffer.readBytes(data, length - 1);
+							data.writeByte(lastByte);
+						} else {
+							data = Unpooled.buffer(length);
+							buffer.readBytes(data, length);
+							length -= 1;
+						}
+						int opcode = (data.readByte()) & 0xFF;
 
 						Packet packet = new Packet(opcode, data);
 						addPacketToIncoming(out, att, packet);

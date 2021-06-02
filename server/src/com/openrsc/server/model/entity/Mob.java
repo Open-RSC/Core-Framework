@@ -335,7 +335,7 @@ public abstract class Mob extends Entity {
 
 	public boolean withinAuthenticRange(final Player e) {
 		if (e != null) {
-			if (!e.isUsingAuthenticClient() || getWorld().getServer().getConfig().VIEW_DISTANCE <= 2)
+			if (e.isUsingCustomClient() || getWorld().getServer().getConfig().VIEW_DISTANCE <= 2)
 				return true; // don't need additional restraint in these cases
 
 			return getLocation().withinRange(e.getLocation(), 15);

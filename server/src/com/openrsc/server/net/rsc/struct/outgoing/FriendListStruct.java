@@ -9,4 +9,5 @@ public class FriendListStruct extends AbstractStruct<OpcodeOut> {
 	public String[] name;
 	public String[] formerName;
 	public int[] onlineStatus;
+	public int[] worldNumber;
 }

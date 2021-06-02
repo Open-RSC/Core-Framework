@@ -15,4 +15,7 @@ public class ConnectionAttachment {
 
 	public AtomicReference<PcapLogger> pcapLogger = new AtomicReference<PcapLogger>();
 
+	public AtomicReference<Integer> sessionId = new AtomicReference<Integer>();
+	public AtomicReference<Boolean> canSendSessionId = new AtomicReference<Boolean>();
+
 }

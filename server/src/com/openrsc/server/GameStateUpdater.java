@@ -67,7 +67,7 @@ public final class GameStateUpdater {
 	public void sendUpdatePackets(final Player player) {
 		// TODO: Should be private
 		try {
-			if (player.isUsingAuthenticClient()) {
+			if (player.isUsing233CompatibleClient()) {
 				if (player.isChangingAppearance()) {
 					sendAppearanceKeepalive(player);
 				} else {
@@ -229,7 +229,7 @@ public final class GameStateUpdater {
 
 				final byte[] offsets = DataConversions.getMobPositionOffsets(newNPC.getLocation(), playerToUpdate.getLocation());
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getIndex(), 12));
-				boolean forAuthentic = playerToUpdate.isUsingAuthenticClient();
+				boolean forAuthentic = !playerToUpdate.isUsingCustomClient();
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[0], forAuthentic ? 5 : 6));
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[1], forAuthentic ? 5 : 6));
 				mobsUpdate.add(new AbstractMap.SimpleEntry<>(newNPC.getSprite(), 4));
@@ -381,10 +381,13 @@ public final class GameStateUpdater {
 					final byte[] offsets = DataConversions.getMobPositionOffsets(otherPlayer.getLocation(),
 						playerToUpdate.getLocation());
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>(otherPlayer.getIndex(), 11));
-					boolean forAuthentic = playerToUpdate.isUsingAuthenticClient();
+					boolean forAuthentic = !playerToUpdate.isUsingCustomClient();
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[0], forAuthentic ? 5 : 6));
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>((int) offsets[1], forAuthentic ? 5 : 6));
 					mobsUpdate.add(new AbstractMap.SimpleEntry<>(otherPlayer.getSprite(), 4));
+					if (playerToUpdate.isUsing177CompatibleClient()) {
+						mobsUpdate.add(new AbstractMap.SimpleEntry<>(playerToUpdate.isKnownPlayer(otherPlayer.getIndex()) ? 1 : 0, 1));
+					}
 
 					playerToUpdate.getLocalPlayers().add(otherPlayer);
 					if (playerToUpdate.getLocalPlayers().size() >= 255) {
@@ -440,8 +443,10 @@ public final class GameStateUpdater {
 					npcBubblesNeedingDisplayed.add(bubble);
 			}
 		}
-		final int updateSize = npcMessagesNeedingDisplayed.size() + npcsNeedingHitsUpdate.size()
-			+ npcProjectilesNeedingDisplayed.size() + npcSkullsNeedingDisplayed.size() + npcWieldsNeedingDisplayed.size() + npcBubblesNeedingDisplayed.size();
+		int updateSize = npcMessagesNeedingDisplayed.size() + npcsNeedingHitsUpdate.size();
+		if (player.isUsingCustomClient()) {
+			updateSize += npcProjectilesNeedingDisplayed.size() + npcSkullsNeedingDisplayed.size() + npcWieldsNeedingDisplayed.size() + npcBubblesNeedingDisplayed.size();
+		}
 		if (updateSize > 0) {
 			AppearanceUpdateStruct struct = new AppearanceUpdateStruct();
 			List<Object> updates = new ArrayList<>();
@@ -456,7 +461,9 @@ public final class GameStateUpdater {
 				if (player.isRetroClient()) {
 					updates.add((byte) chatMessage.getMessageString().length());
 					updates.add(chatMessage.getMessageString());
-				} else if (player.isUsingAuthenticClient()) {
+				} else if (player.isUsing177CompatibleClient()) {
+					updates.add(new RSCString(chatMessage.getMessageString()));
+				} else if (player.isUsing233CompatibleClient()) {
 					updates.add(new RSCString(chatMessage.getMessageString()));
 				} else {
 					updates.add(chatMessage.getMessageString());
@@ -470,7 +477,7 @@ public final class GameStateUpdater {
 				updates.add((byte) npcNeedingHitsUpdate.getCurHits());
 				updates.add(((byte) npcNeedingHitsUpdate.getMaxHits()));
 			}
-			if (!player.isUsingAuthenticClient() && player.getClientVersion() != 38) {
+			if (player.isUsingCustomClient()) {
 				Projectile projectile;
 				while ((projectile = npcProjectilesNeedingDisplayed.poll()) != null) {
 					Entity victim = projectile.getVictim();
@@ -536,8 +543,22 @@ public final class GameStateUpdater {
 
 		if (player.getUpdateFlags().hasChatMessage()) {
 			ChatMessage chatMessage = player.getUpdateFlags().getChatMessage();
-			if (!chatMessage.getMuted() || player.hasElevatedPriveledges())
-				chatMessagesNeedingDisplayed.add(chatMessage);
+			if (!chatMessage.getMuted() || player.hasElevatedPriveledges()) {
+				// 177 client locally echos player's own chat messages instead of having the server confirm what the player sent
+				if (
+						!(
+							// is a client that echos their own local chat messages
+							player.isUsing177CompatibleClient() &&
+							// is public chat & not quest/private message
+							(chatMessage.getRecipient() == null || chatMessage.getRecipient().isPlayer()) &&
+							// chat sender is chat receiver
+							((Player)chatMessage.getSender()).getUsernameHash() == player.getUsernameHash()
+						)
+					)
+				{
+					chatMessagesNeedingDisplayed.add(chatMessage);
+				}
+			}
 		}
 		if (player.getUpdateFlags().hasTakenDamage()) {
 			Damage damage = player.getUpdateFlags().getDamage().get();
@@ -553,9 +574,9 @@ public final class GameStateUpdater {
 		for (final Player otherPlayer : player.getLocalPlayers()) {
 			final UpdateFlags updateFlags = otherPlayer.getUpdateFlags();
 
-			boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
+			boolean blockAll = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingCustomClient())
 				== PlayerSettings.BlockingMode.All.id();
-			boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient())
+			boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingCustomClient())
 				== PlayerSettings.BlockingMode.None.id();
 
 			if (updateFlags.hasBubble()) {
@@ -606,7 +627,8 @@ public final class GameStateUpdater {
 				AppearanceUpdateStruct mainStruct = new AppearanceUpdateStruct();
 				AppearanceUpdateStruct altStruct = new AppearanceUpdateStruct(); // for early mudclient, appearance update was sent appart;
 				boolean isRetroClient = player.isRetroClient();
-				boolean isCustomClient = !player.isUsingAuthenticClient() && !isRetroClient;
+				boolean isCustomClient = player.isUsingCustomClient();
+				boolean is177Compat = player.isUsing177CompatibleClient();
 
 				List<Object> updatesMain = new ArrayList<>();
 				List<Object> updatesAlt = new ArrayList<>();
@@ -617,7 +639,7 @@ public final class GameStateUpdater {
 					if (playersNeedingAppearanceUpdate.size() > 0) {
 						updatesAlt.add((short) playersNeedingAppearanceUpdate.size());
 					}
-				} else if (player.isUsingAuthenticClient()) {
+				} else if (!player.isUsingCustomClient()) {
 					updatesMain.add((short) updateSize);
 				} else {
 					updatesMain.add((short) (updateSize + playersNeedingHpUpdate.size()));
@@ -668,38 +690,7 @@ public final class GameStateUpdater {
 						}
 					}
 
-					if (!isCustomClient) {
-						String message = cm.getMessageString();
-						if (updateType == 7) {
-							if (player.hasElevatedPriveledges()) {
-								// Just prepend "Muted" to message, could be faked but doesn't matter.
-								message = "(Muted) " + message;
-								if (cm.getRecipient() == null) {
-									updateType = 1;
-								} else {
-									updateType = 6;
-								}
-							}
-						}
-						if (updateType != 7) {
-							updatesMain.add((short) cm.getSender().getIndex());
-							updatesMain.add((byte) (!isRetroClient ? updateType : 1));
-							if (updateType != 6 && !isRetroClient) {
-								updatesMain.add((byte) sender.getIconAuthentic());
-							}
-							if (isRetroClient) {
-								String messageUse = message;
-								if (updateType == 6) messageUse = "@que@" + message;
-								updatesMain.add((byte) messageUse.length());
-								updatesMain.add(messageUse);
-							} else {
-								updatesMain.add(new RSCString(message));
-							}
-						} else {
-							LOGGER.error("extraneous chat update packet will crash the authentic client...!");
-						}
-
-					} else {
+					if (isCustomClient) {
 						// Non Authentic OpenRSC client
 						updatesMain.add((short) cm.getSender().getIndex());
 						updatesMain.add((byte) updateType);
@@ -718,6 +709,36 @@ public final class GameStateUpdater {
 							updatesMain.add(cm.getMessageString());
 						} else {
 							updatesMain.add("");
+						}
+					} else {
+						String message = cm.getMessageString();
+						if (updateType == 7) {
+							if (player.hasElevatedPriveledges()) {
+								// Just prepend "Muted" to message, could be faked but doesn't matter.
+								message = "(Muted) " + message;
+								if (cm.getRecipient() == null) {
+									updateType = 1;
+								} else {
+									updateType = 6;
+								}
+							}
+						}
+						if (updateType != 7) {
+							updatesMain.add((short) cm.getSender().getIndex());
+							updatesMain.add((byte) (!isRetroClient ? updateType : 1));
+							if (updateType != 6 && (isCustomClient || player.isUsing233CompatibleClient())) {
+								updatesMain.add((byte) sender.getIconAuthentic());
+							}
+							if (isRetroClient) {
+								String messageUse = message;
+								if (updateType == 6) messageUse = "@que@" + message;
+								updatesMain.add((byte) messageUse.length());
+								updatesMain.add(messageUse);
+							} else {
+								updatesMain.add(new RSCString(message));
+							}
+						} else {
+							LOGGER.error("extraneous chat update packet will crash the authentic client...!");
 						}
 					}
 				}
@@ -762,11 +783,14 @@ public final class GameStateUpdater {
 					} else {
 						updatesMain.add((short) playerNeedingAppearanceUpdate.getIndex());
 						updatesMain.add((byte) 5);
-						if (player.isUsingAuthenticClient()) {
+						if (player.isUsing233CompatibleClient()) {
 							updatesMain.add((short) player.getAppearanceID());
 							updatesMain.add(playerNeedingAppearanceUpdate.getUsername());
 							updatesMain.add(playerNeedingAppearanceUpdate.getUsername()); // Pretty sure this is unnecessary & always redundant authentically.
-						} else {
+						} else if (is177Compat) {
+							updatesMain.add((short) player.getAppearanceID());
+							updatesMain.add((long) DataConversions.usernameToHash(playerNeedingAppearanceUpdate.getUsername()));
+						} else if (player.isUsingCustomClient()) {
 							updatesMain.add(playerNeedingAppearanceUpdate.getUsername());
 						}
 					}
@@ -853,6 +877,7 @@ public final class GameStateUpdater {
 						}
                         // No Cape
                     } else {
+						// normal appearance update (not invisible)
 						if (isRetroClient) {
 							updatesAlt.add((byte) playerNeedingAppearanceUpdate.getWornItems().length);
 						} else {
@@ -861,7 +886,7 @@ public final class GameStateUpdater {
                         for (int i : playerNeedingAppearanceUpdate.getWornItems()) {
                             if (isRetroClient) {
 								updatesAlt.add((char) (AppearanceRetroConverter.convert(i) & 0xFF));
-							} else if (player.isUsingAuthenticClient()) {
+							} else if (player.isUsing233CompatibleClient() || is177Compat) {
 								updatesMain.add((char) (i & 0xFF));
 							} else {
 								updatesMain.add((short) i);
@@ -960,7 +985,7 @@ public final class GameStateUpdater {
 				newObject.isInvisibleTo(playerToUpdate) ||
 				newObject.getType() != 0 || // not a wallObject
 				playerToUpdate.getLocalGameObjects().contains(newObject);
-			if (playerToUpdate.isUsingAuthenticClient()) {
+			if (!playerToUpdate.isUsingCustomClient()) {
 				// Honestly don't think this does anything because the scenery isn't iterated over in the view anyway
 				// TODO: funny behaviour where if a rock is mined > 16 tiles from you, it can be removed but not replaced until you get closer.
 				skipAdd |= !playerToUpdate.within4GridRange(newObject);
@@ -1045,7 +1070,7 @@ public final class GameStateUpdater {
 				final int offsetX = o.getX() - playerToUpdate.getX();
 				final int offsetY = o.getY() - playerToUpdate.getY();
 				if (offsetX > -128 && offsetY > -128 && offsetX < 128 && offsetY < 128) {
-					if (playerToUpdate.isUsingAuthenticClient()) {
+					if (playerToUpdate.isUsing233CompatibleClient()) {
                         // The authentic server does not really send removals for boundaries.
                         // The client is able to handle having boundaries overwritten by new boundaries, but
                         // it doesn't correctly handle having boundaries outright removed.
@@ -1225,9 +1250,9 @@ public final class GameStateUpdater {
 				if (pm != null) {
 					Player affectedPlayer = getServer().getWorld().getPlayer(pm.getFriend());
 					if (affectedPlayer != null) {
-						boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
+						boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
 							== PlayerSettings.BlockingMode.All.id();
-						boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingAuthenticClient())
+						boolean blockNone = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, affectedPlayer.isUsingCustomClient())
 							== PlayerSettings.BlockingMode.None.id();
 						if (!player.getSocial().isFriendsWith(affectedPlayer.getUsernameHash())) {
 							player.message("Unable to send message - player not on your friendlist.");
@@ -1263,7 +1288,7 @@ public final class GameStateUpdater {
 						ActionSender.sendPrivateMessageSent(gm.getPlayer(), -1L, gm.getMessage(), true);
 					} else {
 						if (!player.getBlockGlobalFriend()) {
-							boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingAuthenticClient())
+							boolean blockNone = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient())
 								== PlayerSettings.BlockingMode.None.id();
 							if (blockNone && !player.getSocial().isIgnoring(gm.getPlayer().getUsernameHash()) || gm.getPlayer().isMod()) {
 								ActionSender.sendPrivateMessageReceived(player, gm.getPlayer(), gm.getMessage(), true);

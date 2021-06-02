@@ -32,6 +32,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.ClientLimitations;
 import com.openrsc.server.net.rsc.PayloadProcessorManager;
 import com.openrsc.server.net.rsc.parsers.PayloadParser;
+import com.openrsc.server.net.rsc.parsers.impl.Payload177Parser;
 import com.openrsc.server.net.rsc.parsers.impl.Payload235Parser;
 import com.openrsc.server.net.rsc.parsers.impl.Payload38Parser;
 import com.openrsc.server.net.rsc.parsers.impl.PayloadCustomParser;
@@ -66,6 +67,7 @@ public final class Player extends Mob {
 	// so everything is multiplied by 2 to avoid decimals
 	private final int KITTEN_ACTIVITY_THRESHOLD = 50;
 	public int bankSize = getWorld().getServer().getConfig().MEMBER_WORLD ? (getConfig().WANT_CUSTOM_BANKS ? ItemId.maxCustom : 192) : 48; //Maximum bank items allowed
+	public int sessionId;
 	private int totalLevel = 0;
 	private Queue<PrivateMessage> privateMessageQueue = new LinkedList<PrivateMessage>();
 	private long lastSave = System.currentTimeMillis();
@@ -126,6 +128,10 @@ public final class Player extends Mob {
 	private boolean certOptOutWarned = false;
 	public boolean speakTongues = false;
 	private ClientLimitations clientLimitations;
+
+	public int knownPlayersCount = 0;
+	public int[] knownPlayerPids = new int[500];
+	public int[] knownPlayerAppearanceIds = new int[500];
 
 	/**
 	 * An atomic reference to the players carried items.
@@ -2146,8 +2152,10 @@ public final class Player extends Mob {
 						PayloadParser<com.openrsc.server.net.rsc.enums.OpcodeIn> parser;
 						if (isRetroClient()) {
 							parser = new Payload38Parser();
-						} else if (isUsingAuthenticClient()) {
+						} else if (isUsing233CompatibleClient()) {
 							parser = new Payload235Parser();
+						} else if (isUsing177CompatibleClient()) {
+							parser = new Payload177Parser();
 						} else {
 							parser = new PayloadCustomParser();
 						}
@@ -3459,14 +3467,21 @@ public final class Player extends Mob {
 	}
 
 	// TODO: needs to be redefined
-	public boolean isUsingAuthenticClient() {
-		return this.clientVersion == 235;
-	}
-
-	// TODO: needs to be redefined
 	public boolean isRetroClient() {
 		// temporary for setversion command to not break if player enters in range
 		return this.clientVersion >= 14 && this.clientVersion < 93;
+	}
+
+	public boolean isUsing177CompatibleClient() {
+		return this.clientVersion == 177;
+	}
+
+	public boolean isUsing233CompatibleClient() {
+		return this.clientVersion >= 233 && this.clientVersion <= 235;
+	}
+
+	public boolean isUsingCustomClient() {
+		return this.clientVersion > 10000;
 	}
 
 	public boolean getQolOptOutWarned() {
@@ -3540,5 +3555,34 @@ public final class Player extends Mob {
 	}
 	public ClientLimitations getClientLimitations() {
 		return this.clientLimitations;
+	}
+
+	public boolean isKnownPlayer(int pid) {
+		for (int i = 0; i < knownPlayersCount; i++) {
+			if (knownPlayerPids[i] == pid) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean skipTutorial() {
+		if (getLocation().onTutorialIsland()) {
+			if (inCombat()) {
+				message("You cannot do that whilst fighting!");
+				return false;
+			}
+			if (isBusy()) {
+				return false;
+			}
+			if (getCache().hasKey("tutorial")) {
+				getCache().remove("tutorial");
+			}
+			teleport(120, 648, false);
+			message("Skipped tutorial, welcome to Lumbridge");
+			ActionSender.sendPlayerOnTutorial(this);
+			return true;
+		}
+		return false;
 	}
 }

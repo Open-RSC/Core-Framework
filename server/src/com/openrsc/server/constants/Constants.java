@@ -131,6 +131,35 @@ public final class Constants {
 		{11, 2, 9, 7, 1, 6, 10, 0, 5, 8, 4, 3}
 	};
 
+	public static final Map<Integer, String> reportReasons = new HashMap<Integer, String>() {{
+		// mudclient 204+ reasons
+		put(1, "Buying or selling an account");
+		put(2, "Encouraging rule-breaking");
+		put(3, "Staff impersonation");
+		put(4, "Macroing or use of bots");
+		put(5, "Scamming");
+		put(6, "Exploiting a bug");
+		put(7, "Seriously offensive language");
+		put(8, "Solicitation");
+		put(9, "Disruptive behaviour");
+		put(10, "Offensive account name");
+		put(11, "Real-life threats");
+		put(12, "Asking for or providing contact information");
+		put(13, "Breaking real-world laws");
+		put(14, "Advertising websites");
+
+		// mudclient 177 reasons
+		put (0 + 64, "Non-vulgar insult such as 'idiot', 'noob', 'loser', etc...");
+		put (1 + 64, "Swearing, profanity, or racial abuse directed at me personally");
+		put (2 + 64, "I overheard the player being abusive to someone else");
+		put (3 + 64, "Trade scam - lied about trade to steal items from me");
+		put (4 + 64, "Asking players for their password / trying to steal accounts");
+		put (5 + 64, "Attempting to buy/sell a RuneScape account");
+		put (6 + 64, "Impersonating Jagex Staff");
+		put (7 + 64, "Advertising scam website");
+		put (8 + 64, "Other");
+	}};
+
 	public static final Map<Spells, Integer> spellMap = new HashMap<Spells, Integer>() {{
 		put(Spells.WIND_STRIKE, 0);
 		put(Spells.CONFUSE, 1);

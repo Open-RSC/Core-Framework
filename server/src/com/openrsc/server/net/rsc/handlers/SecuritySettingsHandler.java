@@ -29,7 +29,7 @@ public class SecuritySettingsHandler implements PayloadProcessor<SecuritySetting
 			LOGGER.info("Change password request from: " + player.getCurrentIP());
 			player.getWorld().getServer().getPacketFilter().shouldAllowLogin(player.getCurrentIP(), true);
 
-			if (player.isUsingAuthenticClient()) {
+			if (!player.isUsingCustomClient()) {
 				if (payload.passwords != null) {
 					PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest(player.getWorld().getServer(), player.getChannel(), player, payload.passwords[0], payload.passwords[1]);
 					player.getWorld().getServer().getLoginExecutor().add(passwordChangeRequest);
@@ -87,7 +87,7 @@ public class SecuritySettingsHandler implements PayloadProcessor<SecuritySetting
 			LOGGER.info("Change recovery questions request from: " + player.getCurrentIP());
 			player.getWorld().getServer().getPacketFilter().shouldAllowLogin(player.getCurrentIP(), true);
 
-			if (player.isUsingAuthenticClient()) {
+			if (!player.isUsingCustomClient()) {
 				if (payload.questions != null && payload.answers != null) {
 					RecoveryChangeRequest recoveryChangeRequest = new RecoveryChangeRequest(player.getWorld().getServer(), player.getChannel(), player, payload.questions, payload.answers);
 					player.getWorld().getServer().getLoginExecutor().add(recoveryChangeRequest);

@@ -48,8 +48,9 @@ public final class RSCProtocolEncoder extends MessageToByteEncoder<Packet> imple
 
 				buffer.writeBytes(message.getBuffer());
 				outBuffer.writeBytes(buffer);
-			} else if (authenticClient > 177) {
+			} else if (authenticClient >= 183) {
 				// Modern Authentic Packet Handling (With ISAAC)
+				// Don't know exactly when ISAAC started getting used, but mudclient 183 from 2004-02-04 uses opcode shuffling
 				int packetLength = message.getBuffer().readableBytes() + 1; // + 1 for opcode
 
 				/* debug info

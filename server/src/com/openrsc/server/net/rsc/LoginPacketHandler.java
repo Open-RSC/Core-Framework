@@ -59,7 +59,7 @@ public class LoginPacketHandler {
 			s.setID(VIRTUAL_OPCODE_SERVER_METADATA);
 			s.writeInt(loginResponse);
 			s.writeInt(loadedPlayer.getClientVersion());
-			s.writeInt(loadedPlayer.isUsingAuthenticClient() ? 1 : 0);
+			s.writeInt(loadedPlayer.isUsingCustomClient() ? 0 : 1);
 			s.writeLong(startTime);
 			s.writeInt(loadedPlayer.getWorld().getServer().getConfig().WORLD_NUMBER);
 			s.writeZeroQuotedString(loadedPlayer.getWorld().getServer().getName());
@@ -131,7 +131,7 @@ public class LoginPacketHandler {
 						loginInfo.reconnecting = info == 1;
 						info3 = packet.readUnsignedByte();
 						valRead = info3;
-						if (valRead !=0 && valRead <= 204) {
+						if (valRead != 0 && valRead <= 204) {
 							clientVersion.set(valRead);
 						} else {
 							clientVersion.set(valRead << 16 | packet.readShort());
@@ -184,7 +184,7 @@ public class LoginPacketHandler {
 
 						ClientLimitations cl = new ClientLimitations(clientVersion.get());
 
-						final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get()) {
+						final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get(), opcode == OpcodeIn.RELOGIN) {
 							@Override
 							public void loginValidated(int response) {
 								loginResponse = response;
@@ -227,6 +227,7 @@ public class LoginPacketHandler {
 						// login block with initial ISAAC
 						// TODO
 					} else if (clientVersion.get() >= 93) {
+						short referId = packet.readShort();
 						long userHash = packet.readLong();
 						final String username = DataConversions.hashToUsername(userHash);
 
@@ -235,7 +236,7 @@ public class LoginPacketHandler {
 						// each blocks having encrypted 7 chars of password
 						int blockLen;
 						byte[] decBlock; // current decrypted block
-						int session = -1; // TODO: should be TCP session to check if request should be processed
+						int session = attachment.sessionId.get() == null ? -1 : attachment.sessionId.get();
 						int receivedSession;
 						boolean errored = false;
 						byte[] passData = new byte[21];
@@ -266,18 +267,19 @@ public class LoginPacketHandler {
 						}
 
 						packet.readInt(); // hashed random.dat associated to user request
+						final int sessionId = session;
 
 						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket()); // not known what this should write
 
 						if (!errored) {
 							ClientLimitations cl = new ClientLimitations(clientVersion.get());
-							final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get()) {
+							final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get(), opcode == OpcodeIn.RELOGIN) {
 								@Override
 								public void loginValidated(int response) {
 									loginResponse = response;
 									Channel channel = getChannel();
 									channel.writeAndFlush(new PacketBuilder().writeByte((byte) response).toPacket());
-									if (response != 0) {
+									if (response != 0 && response != 1) {
 										channel.close();
 									}
 								}
@@ -296,6 +298,7 @@ public class LoginPacketHandler {
 
 									loadedPlayer.setClientVersion((short) getVersion(clientVersion.get(), loadedPlayer));
 									loadedPlayer.setClientLimitations(cl);
+									loadedPlayer.sessionId = sessionId;
 
 									initializePcapLogger(loadedPlayer, attachment);
 
@@ -305,7 +308,7 @@ public class LoginPacketHandler {
 							};
 							server.getLoginExecutor().add(request);
 						} else {
-							channel.writeAndFlush(new PacketBuilder().writeByte((byte) LoginResponse.LOGIN_UNSUCCESSFUL).toPacket());
+							channel.writeAndFlush(new PacketBuilder().writeByte((byte) RegisterLoginResponse.UNSUCCESSFUL).toPacket());
 							channel.close();
 						}
 					} else if (packet.getLength() >= 30) {
@@ -335,13 +338,13 @@ public class LoginPacketHandler {
 
 						ClientLimitations cl = new ClientLimitations(clientVersion.get());
 
-						final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get()) {
+						final LoginRequest request = new LoginRequest(server, channel, username, password, true, clientVersion.get(), opcode == OpcodeIn.RELOGIN) {
 							@Override
 							public void loginValidated(int response) {
 								loginResponse = response;
 								Channel channel = getChannel();
 								channel.writeAndFlush(new PacketBuilder().writeByte((byte) response).toPacket());
-								if (response != 0) {
+								if (response != 0 && response != 1) {
 									channel.close();
 								}
 							}
@@ -411,7 +414,7 @@ public class LoginPacketHandler {
 						cl.mapHash = packet.readString();
 					}
 
-					final LoginRequest request = new LoginRequest(server, channel, username, password, false, clientVersion) {
+					final LoginRequest request = new LoginRequest(server, channel, username, password, false, clientVersion, opcode == OpcodeIn.RELOGIN) {
 						@Override
 						public void loginValidated(int response) {
 							loginResponse = response;
@@ -495,54 +498,108 @@ public class LoginPacketHandler {
 						// mudclients 93+
 						// Handle register packet
 						int clientVersion = packet.readUnsignedShort();
-						long userHash = packet.readLong();
-						final String username = DataConversions.hashToUsername(userHash);
+						if (clientVersion >= 204) { // note that register packet doesn't actually exist in 204+, but this is mostly copied from 127 + utilization of RSA
+							long userHash = packet.readLong();
+							final String username = DataConversions.hashToUsername(userHash);
 
-						// Get encrypted block
-						// password is always 20 characters long, with spaces at the end.
-						// each blocks having encrypted 7 chars of password
-						int blockLen;
-						byte[] decBlock; // current decrypted block
-						int session = -1; // TODO: should be TCP session to check if request should be processed
-						int receivedSession;
-						boolean errored = false;
-						byte[] passData = new byte[21];
-						for (int i = 0; i < 3; i++) {
-							blockLen = packet.readUnsignedByte();
-							decBlock = Crypto.decryptRSA(packet.readBytes(blockLen), 0, blockLen);
-							// TODO: there are ignored nonces at the beginning of the decrypted block
-							receivedSession = ByteBuffer.wrap(Arrays.copyOfRange(decBlock, 4, 8)).getInt();
-							// decrypted packet must be of length 15
-							if (session == -1 && decBlock.length == 15) {
-								session = receivedSession;
-							} else if (session != receivedSession || decBlock.length != 15) {
-								errored = true; // decryption error occurred
+							// Get encrypted block
+							// password is always 20 characters long, with spaces at the end.
+							// each blocks having encrypted 7 chars of password
+							int blockLen;
+							byte[] decBlock; // current decrypted block
+							int session = attachment.sessionId.get() == null ? -1 : attachment.sessionId.get();
+							int receivedSession;
+							boolean errored = false;
+							byte[] passData = new byte[21];
+							for (int i = 0; i < 3; i++) {
+								blockLen = packet.readUnsignedByte();
+								decBlock = Crypto.decryptRSA(packet.readBytes(blockLen), 0, blockLen);
+								// TODO: there are ignored nonces at the beginning of the decrypted block
+								receivedSession = ByteBuffer.wrap(Arrays.copyOfRange(decBlock, 4, 8)).getInt();
+								// decrypted packet must be of length 15
+								if (session == -1 && decBlock.length == 15) {
+									session = receivedSession;
+								} else if (session != receivedSession || decBlock.length != 15) {
+									errored = true; // decryption error occurred
+								}
+
+								if (!errored) {
+									System.arraycopy(decBlock, 8, passData, i * 7, 7);
+								}
 							}
 
-							if (!errored) {
-								System.arraycopy(decBlock, 8, passData, i * 7, 7);
+							String password = "";
+							try {
+								password = new String(passData, "UTF8").trim();
+							} catch (Exception e) {
+								LOGGER.info("error parsing password in login block");
+								errored = true;
+								e.printStackTrace();
 							}
-						}
 
-						String password = "";
-						try {
-							password = new String(passData, "UTF8").trim();
-						} catch (Exception e) {
-							LOGGER.info("error parsing password in register block");
-							errored = true;
-							e.printStackTrace();
-						}
+							packet.readInt(); // hashed random.dat associated to user request
 
-						packet.readInt(); // hashed random.dat associated to user request
+							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket()); // not known what this should write
 
-						channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket()); // not known what this should write
+							if (server.getPacketFilter().shouldAllowLogin(IP, true) && !errored) {
+								CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, username, password, true, clientVersion);
+								server.getLoginExecutor().add(characterCreateRequest);
+							} else {
+								channel.writeAndFlush(new PacketBuilder().writeByte((byte) RegisterLoginResponse.UNSUCCESSFUL).toPacket());
+								channel.close();
+							}
+						} else if (clientVersion <= 177) {
+							long userHash = packet.readLong();
+							final String username = DataConversions.hashToUsername(userHash);
+							int referId = packet.readShort();
 
-						if (server.getPacketFilter().shouldAllowLogin(IP, true) && !errored) {
-							CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, username, password, true, clientVersion);
-							server.getLoginExecutor().add(characterCreateRequest);
-						} else {
-							channel.writeAndFlush(new PacketBuilder().writeByte((byte) RegisterResponse.REGISTER_UNSUCCESSFUL).toPacket());
-							channel.close();
+							// Get encrypted block
+							// password is always 20 characters long, with spaces at the end.
+							// each blocks having encrypted 7 chars of password
+							int blockLen;
+							byte[] decBlock; // current decrypted block
+							int session = attachment.sessionId.get() == null ? -1 : attachment.sessionId.get();
+							int receivedSession;
+							boolean errored = false;
+							byte[] passData = new byte[21];
+							for (int i = 0; i < 3; i++) {
+								blockLen = packet.readUnsignedByte();
+								decBlock = Crypto.decryptRSA(packet.readBytes(blockLen), 0, blockLen);
+								// TODO: there are ignored nonces at the beginning of the decrypted block
+								receivedSession = ByteBuffer.wrap(Arrays.copyOfRange(decBlock, 4, 8)).getInt();
+								// decrypted packet must be of length 15
+								if (session == -1 && decBlock.length == 15) {
+									session = receivedSession;
+								} else if (session != receivedSession || decBlock.length != 15) {
+									errored = true; // decryption error occurred
+								}
+
+								if (!errored) {
+									System.arraycopy(decBlock, 8, passData, i * 7, 7);
+								}
+							}
+
+							String password = "";
+
+							try {
+								password = new String(passData, "UTF8").trim();
+							} catch (Exception e) {
+								LOGGER.info("error parsing password in login block");
+								errored = true;
+								e.printStackTrace();
+							}
+
+							packet.readInt(); // hashed random.dat associated to user request
+
+							channel.writeAndFlush(new PacketBuilder().writeByte((byte) 0).toPacket()); // not known what this should write
+
+							if (server.getPacketFilter().shouldAllowLogin(IP, true) && !errored) {
+								CharacterCreateRequest characterCreateRequest = new CharacterCreateRequest(server, channel, username, password, true, clientVersion);
+								server.getLoginExecutor().add(characterCreateRequest);
+							} else {
+								channel.writeAndFlush(new PacketBuilder().writeByte((byte) RegisterLoginResponse.UNSUCCESSFUL).toPacket());
+								channel.close();
+							}
 						}
 					}
 					break;
@@ -577,7 +634,7 @@ public class LoginPacketHandler {
 
 					try {
 						playerData = server.getDatabase().getPlayerLoginData(username);
-					} catch(Exception e) {
+					} catch (Exception e) {
 						LOGGER.info("error - trying to recover from non existent user");
 						errored = true;
 					}
@@ -586,7 +643,7 @@ public class LoginPacketHandler {
 						int playerID = playerData.id;
 						try {
 							recoveryQuestions = server.getDatabase().getPlayerRecoveryData(playerID);
-						} catch(Exception e) {
+						} catch (Exception e) {
 							LOGGER.info("error - trying to recover from user without questions set");
 							errored = true;
 						}
@@ -691,7 +748,7 @@ public class LoginPacketHandler {
 					// each blocks having encrypted 7 chars of password
 					int blockLen;
 					byte[] decBlock; // current decrypted block
-					int session = -1; // TODO: should be TCP session to check if request should be processed
+					int session = attachment.sessionId.get() == null ? -1 : attachment.sessionId.get();
 					int receivedSession;
 					boolean errored = false;
 					byte[] concatPassData = new byte[42];
@@ -730,7 +787,7 @@ public class LoginPacketHandler {
 					String answers[] = new String[5];
 					for (int i = 0; i < 5; i++) {
 						answerLen = packet.readUnsignedByte();
-						expBlocks = (int)Math.ceil(answerLen / 7.0);
+						expBlocks = (int) Math.ceil(answerLen / 7.0);
 						answerData = new byte[expBlocks * 7];
 						for (int j = 0; j < expBlocks; j++) {
 							blockLen = packet.readUnsignedByte();

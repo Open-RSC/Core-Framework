@@ -143,7 +143,7 @@ public class PlayerService implements IPlayerService {
         player.setGroupID(playerData.groupId);
         player.setUsername(playerData.username);
         player.setTotalLevel(playerData.totalLevel);
-        if (!player.isUsingAuthenticClient()) {
+        if (player.isUsingCustomClient()) {
             player.setCombatStyle((byte) playerData.combatStyle);
         } else {
             // authentically, server does not remember your combat style & can't tell you it.

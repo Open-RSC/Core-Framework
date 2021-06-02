@@ -13,7 +13,7 @@ public final class SleepHandler implements PayloadProcessor<SleepStruct, OpcodeI
 
 	public void process(SleepStruct payload, Player player) throws Exception {
 		String sleepWord;
-		if (player.isUsingAuthenticClient()) {
+		if (player.isUsing233CompatibleClient()) {
 			int sleepDelay = payload.sleepDelay; // TODO: use this somehow
 		}
 		sleepWord = payload.sleepWord.trim();

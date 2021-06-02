@@ -5,6 +5,8 @@ import com.openrsc.server.Server;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.LoginPacketHandler;
+import com.openrsc.server.plugins.Functions;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -33,6 +35,17 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	}
 
 	@Override
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		// Generates random Session ID for 2002-2003 clients.
+		// Sending this random data seems to crash other clients, so if we want to be simultaneously compatible,
+		// we must wait for more modern clients (and ancient clients) to send us data first & cancel out
+		ctx.channel().attr(attachment).get().canSendSessionId.set(true);
+		Thread t = new Thread(new RSCSessionIdSender(ctx));
+		t.start();
+		ctx.fireChannelActive();
+	}
+
+	@Override
 	public void channelInactive(final ChannelHandlerContext ctx) {
 		ctx.channel().close();
 	}
@@ -40,6 +53,7 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 	@Override
 	public void channelRead(final ChannelHandlerContext ctx, final Object message) {
 		final Channel channel = ctx.channel();
+		channel.attr(attachment).get().canSendSessionId.set(false);
 
 		if (message instanceof Packet) {
 
@@ -53,13 +67,12 @@ public class RSCConnectionHandler extends ChannelInboundHandlerAdapter implement
 				if (packet.getID() == 19 && packet.getLength() < 2) {
 					if (!getServer().getPacketFilter().shouldAllowPacket(ctx.channel(), false)) {
 						ctx.channel().close();
-
 						return;
 					}
 
 					ActionSender.sendInitialServerConfigs(getServer(), channel);
 				} else {
-					if (packet.getLength() > 20 || (packet.getID() == 4 && packet.getLength() > 8)) {
+					if (packet.getLength() > 10 || (packet.getID() == 4 && packet.getLength() > 8)) {
 						loginHandler.processLogin(packet, channel, getServer());
 					}
 				}

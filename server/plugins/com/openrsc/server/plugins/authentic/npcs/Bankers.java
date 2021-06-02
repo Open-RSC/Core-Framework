@@ -98,7 +98,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 		} else if (menu == 2 && config().WANT_BANK_PINS) {
 			int bankPinMenu = multi(player, "Set a bank pin", "Change bank pin", "Delete bank pin");
 			if (bankPinMenu == 0) {
-				if (player.isUsingAuthenticClient()) {
+				if (!player.isUsingCustomClient()) {
 					npcsay(player, npc, "ok but i have to warn you that this is going to be pretty annoying.");
 				}
 				setbankpin(player, npc);
@@ -147,14 +147,14 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 
 	@Override
 	public boolean blockUseNpc(Player player, Npc npc, Item item) {
-		return (player.isUsingAuthenticClient() && inArray(npc.getID(), BANKERS) && item.getNoted())
+		return (!player.isUsingCustomClient() && inArray(npc.getID(), BANKERS) && item.getNoted())
 			|| (inArray(npc.getID(), BANKERS) && player.getWorld().getServer().getConfig().RIGHT_CLICK_BANK
 			&& !item.getDef(player.getWorld()).getName().toLowerCase().endsWith("cracker"));
 	}
 
 	@Override
 	public void onUseNpc(Player player, Npc npc, Item item) {
-		if (item.getNoted() && player.isUsingAuthenticClient()) {
+		if (item.getNoted() && !player.isUsingCustomClient()) {
 			npcsay(player, npc, "Is that a Shantay pass?");
 			npcsay(player, npc, "What do you want me to do with this?");
 			say(player, npc, "Yeah it is, but look at the back.");

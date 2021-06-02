@@ -84,9 +84,9 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 					player.getTrade().resetAll();
 					return;
 				}
-				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, affectedPlayer.isUsingAuthenticClient())
+				boolean blockAll = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, affectedPlayer.isUsingCustomClient())
 					== PlayerSettings.BlockingMode.All.id();
-				boolean blockNonFriends = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, affectedPlayer.isUsingAuthenticClient())
+				boolean blockNonFriends = affectedPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, affectedPlayer.isUsingCustomClient())
 					== PlayerSettings.BlockingMode.NonFriends.id();
 				if ((blockAll || (blockNonFriends && !affectedPlayer.getSocial().isFriendsWith(player.getUsernameHash()))
 					|| affectedPlayer.getSocial().isIgnoring(player.getUsernameHash())) && !player.isMod()) {

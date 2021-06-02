@@ -201,7 +201,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 		player.resetAllExceptDueling();
 
-		if (player.isUsingAuthenticClient() || player.getClientVersion() >= 38) {
+		if (!player.isUsingCustomClient()) {
 			//int idx = Constants.spellMap.getOrDefault(payload.spell, 0);
 			SpellDef spell;
 

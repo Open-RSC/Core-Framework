@@ -9,4 +9,5 @@ public class FriendUpdateStruct extends AbstractStruct<OpcodeOut> {
 	public String formerName = "";
 	public int onlineStatus;
 	public String worldName = "";
+	public int worldNumber;
 }

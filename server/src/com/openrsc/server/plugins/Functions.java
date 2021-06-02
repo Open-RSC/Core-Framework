@@ -552,7 +552,7 @@ public class Functions {
 
 	private static String showbankpin(Player player, final Npc n) {
 		String enteredPin = null;
-		if (!player.isUsingAuthenticClient()) {
+		if (player.isUsingCustomClient()) {
 			ActionSender.sendBankPinInterface(player);
 			player.setAttribute("bank_pin_entered", "");
 			while (true) {
@@ -744,7 +744,7 @@ public class Functions {
 			return false;
 		}
 
-		if (player.isUsingAuthenticClient()) {
+		if (!player.isUsingCustomClient()) {
 			npcsay(player, n, "ok now the new one.");
 		}
 

@@ -62,8 +62,10 @@ public class PlayerSettings {
 		}
 	}
 
-	public byte getPrivacySetting(int i, boolean fromAuthentic) {
-		if (fromAuthentic) {
+	public byte getPrivacySetting(int i, boolean customClient) {
+		if (customClient) {
+			return privacySettings[i];
+		} else {
 			if (privacySettings[i] == 0) {
 				return (byte)BlockingMode.None.id();
 			} else {
@@ -73,8 +75,6 @@ public class PlayerSettings {
 					return (byte)BlockingMode.NonFriends.id();
 				}
 			}
-		} else {
-			return privacySettings[i];
 		}
 	}
 

@@ -20,7 +20,7 @@ public class ItemActionHandler implements PayloadProcessor<ItemCommandStruct, Op
 	public void process(ItemCommandStruct payload, Player player) throws Exception {
 		int idx = payload.index;
 		int amount = 1;
-		if (!player.isUsingAuthenticClient()) {
+		if (player.isUsingCustomClient()) {
 			amount = payload.amount;
 		}
 		int commandIndex = 0;
@@ -41,7 +41,7 @@ public class ItemActionHandler implements PayloadProcessor<ItemCommandStruct, Op
 
 
 		//User wants to use the item from equipment tab
-		if (idx == -1 && !player.isUsingAuthenticClient()) {
+		if (idx == -1 && player.isUsingCustomClient()) {
 			idx = payload.realIndex;
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(idx);
 			if (slot != -1) {
@@ -50,7 +50,7 @@ public class ItemActionHandler implements PayloadProcessor<ItemCommandStruct, Op
 			commandIndex = payload.commandIndex;
 		} else {
 			tempitem = player.getCarriedItems().getInventory().get(idx);
-			if (!player.isUsingAuthenticClient()) {
+			if (player.isUsingCustomClient()) {
 				commandIndex = payload.commandIndex;
 			}
 		}

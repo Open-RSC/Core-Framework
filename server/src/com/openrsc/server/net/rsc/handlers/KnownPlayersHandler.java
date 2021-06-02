@@ -8,6 +8,10 @@ import com.openrsc.server.net.rsc.struct.incoming.KnownPlayersStruct;
 public class KnownPlayersHandler implements PayloadProcessor<KnownPlayersStruct, OpcodeIn> {
 	@Override
 	public void process(KnownPlayersStruct payload, Player player) throws Exception {
-
+		player.knownPlayersCount = payload.playerCount;
+		for (int i = 0; i < payload.playerCount; i++) {
+			player.knownPlayerPids[i] = payload.playerServerAppearanceId[i];
+			player.knownPlayerAppearanceIds[i] = payload.playerServerAppearanceId[i];
+		}
 	}
 }

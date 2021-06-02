@@ -770,10 +770,10 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		playerData.muteExpires = player.getMuteExpires();
 		playerData.bankSize = player.getBankSize();
 		playerData.groupId = player.getGroupID();
-		playerData.blockChat = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingAuthenticClient());
-		playerData.blockPrivate = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingAuthenticClient());
-		playerData.blockTrade = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, player.isUsingAuthenticClient());
-		playerData.blockDuel = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, player.isUsingAuthenticClient());
+		playerData.blockChat = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingCustomClient());
+		playerData.blockPrivate = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient());
+		playerData.blockTrade = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, player.isUsingCustomClient());
+		playerData.blockDuel = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_DUEL_REQUESTS, player.isUsingCustomClient());
 		playerData.cameraAuto = player.getSettings().getGameSetting(PlayerSettings.GAME_SETTING_AUTO_CAMERA);
 		playerData.oneMouse = player.getSettings().getGameSetting(PlayerSettings.GAME_SETTING_MOUSE_BUTTONS);
 		playerData.soundOff = player.getSettings().getGameSetting(PlayerSettings.GAME_SETTING_SOUND_EFFECTS);

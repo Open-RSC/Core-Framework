@@ -7,5 +7,5 @@ public class KnownPlayersStruct extends AbstractStruct<OpcodeIn> {
 
 	public int playerCount;
 	public int[] playerServerIndex;
-	public int[] playerServerId;
+	public int[] playerServerAppearanceId;
 }

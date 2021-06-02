@@ -796,6 +796,7 @@ public final class Admins implements CommandTrigger {
 			success = true;
 		} else {
 			// player is offline
+			targetPlayerName = targetPlayerName.replaceAll("\\."," ");
 			List<Item> bank;
 			try {
 				bank = player.getWorld().getServer().getPlayerService().retrievePlayerBank(targetPlayerName);
@@ -1100,8 +1101,10 @@ public final class Admins implements CommandTrigger {
 			return;
 		}
 
+		String targetPlayerName = args[0];
+
 		boolean success = false;
-		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+		Player targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(targetPlayerName));
 		if (targetPlayer != null) {
 			// player is online
 			synchronized (targetPlayer.getCarriedItems().getInventory()) {
@@ -1133,8 +1136,9 @@ public final class Admins implements CommandTrigger {
 		} else {
 			// player is offline
 			List<Item> inventory;
+			targetPlayerName = targetPlayerName.replaceAll("\\."," ");
 			try {
-				inventory = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(args[0]);
+				inventory = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(targetPlayerName);
 			} catch (GameDatabaseException e) {
 				player.message(messagePrefix + "Could not find player; invalid name.");
 				return;
@@ -1142,7 +1146,7 @@ public final class Admins implements CommandTrigger {
 
 			// delete items
 			try {
-				int playerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(args[0]);
+				int playerId = player.getWorld().getServer().getDatabase().playerIdFromUsername(targetPlayerName);
 				if (playerId == -1) {
 					throw new GameDatabaseException(Admins.class, "Could not find player.");
 				}
@@ -1157,7 +1161,7 @@ public final class Admins implements CommandTrigger {
 
 			// verify success
 			try {
-				int sizeAfter = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(args[0]).size();
+				int sizeAfter = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(targetPlayerName).size();
 				if (sizeAfter == 0) {
 					success = true;
 				} else {
@@ -1171,10 +1175,10 @@ public final class Admins implements CommandTrigger {
 		}
 
 		if (success) {
-			player.message(messagePrefix + "Wiped inventory of " + args[0]);
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Successfully wiped the inventory of "+ args[0]));
+			player.message(messagePrefix + "Wiped inventory of " + targetPlayerName);
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Successfully wiped the inventory of "+ targetPlayerName));
 		} else {
-			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully wiped the inventory of "+ args[0]));
+			player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 22, messagePrefix + "Unsuccessfully wiped the inventory of "+ targetPlayerName));
 		}
 	}
 

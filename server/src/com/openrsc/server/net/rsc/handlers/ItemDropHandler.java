@@ -25,7 +25,7 @@ public final class ItemDropHandler implements PayloadProcessor<ItemCommandStruct
 		player.resetAll();
 		int inventorySlot = payload.index;
 		int amount;
-		boolean respectDropX = !player.isUsingAuthenticClient() && player.getWorld().getServer().getConfig().WANT_DROP_X;
+		boolean respectDropX = player.isUsingCustomClient() && player.getWorld().getServer().getConfig().WANT_DROP_X;
 		if (respectDropX) {
 			amount = payload.amount;
 		} else {
@@ -39,7 +39,7 @@ public final class ItemDropHandler implements PayloadProcessor<ItemCommandStruct
 		Item tempitem = null;
 
 		// User wants to drop the item from equipment tab
-		if (inventorySlot == -1 && !player.isUsingAuthenticClient() && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
+		if (inventorySlot == -1 && player.isUsingCustomClient() && player.getWorld().getServer().getConfig().WANT_EQUIPMENT_TAB) {
 			int realid = payload.realIndex;
 			int slot = player.getCarriedItems().getEquipment().searchEquipmentForItem(realid);
 			if (slot != -1) {

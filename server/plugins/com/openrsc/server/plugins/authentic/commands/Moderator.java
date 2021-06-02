@@ -70,7 +70,7 @@ public final class Moderator implements CommandTrigger {
 		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
 		newStr.insert(0, player.getStaffName() + ": @yel@");
 		for (Player playerToUpdate : player.getWorld().getPlayers()) {
-			if (playerToUpdate.isUsingAuthenticClient()) {
+			if (!playerToUpdate.isUsingCustomClient()) {
 				ActionSender.sendMessage(playerToUpdate, null, MessageType.QUEST, newStr.toString(), player.getIcon(), null);
 			} else {
 				ActionSender.sendMessage(playerToUpdate, player, MessageType.GLOBAL_CHAT, newStr.toString(), player.getIcon(), null);
@@ -155,6 +155,7 @@ public final class Moderator implements CommandTrigger {
 		List<Item> inventory;
 		if (targetOffline) {
 			try {
+				username = username.replaceAll("\\.", " ");
 				inventory = player.getWorld().getServer().getPlayerService().retrievePlayerInventory(username);
 			} catch (GameDatabaseException e) {
 				player.message(messagePrefix + "Could not find player; invalid name.");
@@ -204,6 +205,7 @@ public final class Moderator implements CommandTrigger {
 		List<Item> bank;
 		if (targetOffline) {
 			try {
+				username = username.replaceAll("\\.", " ");
 				bank = player.getWorld().getServer().getPlayerService().retrievePlayerBank(username);
 			} catch (GameDatabaseException e) {
 				player.message(messagePrefix + "Could not find player; invalid name.");
@@ -248,7 +250,7 @@ public final class Moderator implements CommandTrigger {
 		player.getWorld().getServer().getGameLogger().addQuery(new StaffLog(player, 13, newStr.toString()));
 
 		for (Player playerToUpdate : player.getWorld().getPlayers()) {
-			if (playerToUpdate.isUsingAuthenticClient()) {
+			if (!playerToUpdate.isUsingCustomClient()) {
 				ActionSender.sendMessage(playerToUpdate, null, MessageType.QUEST, "@ran@ANNOUNCEMENT: @cya@" + player.getStaffName() + ":@yel@ " + newStr.toString(), player.getIconAuthentic(), null);
 			} else {
 				ActionSender.sendMessage(playerToUpdate, player, MessageType.GLOBAL_CHAT, "ANNOUNCEMENT: " + player.getStaffName() + ":@yel@ " + newStr.toString(), player.getIcon(), null);

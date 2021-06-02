@@ -116,7 +116,7 @@ public class Item implements Comparable<Item> {
 		return itemStatus.getCatalogId();
 	}
 
-	// This should only be called if player.isUsingAuthenticClient() has already been checked
+	// This should only be called if player.isUsingCustomClient() has already been checked
 	public final int getCatalogIdAuthenticNoting() {
 		if (getNoted()) {
 			// Unfortunately, noted items will need to appear as some other stackable item.

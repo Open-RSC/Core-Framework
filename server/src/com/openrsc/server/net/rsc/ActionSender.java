@@ -19,6 +19,7 @@ import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.net.Packet;
 import com.openrsc.server.net.rsc.enums.OpcodeOut;
 import com.openrsc.server.net.rsc.generators.PayloadGenerator;
+import com.openrsc.server.net.rsc.generators.impl.Payload177Generator;
 import com.openrsc.server.net.rsc.generators.impl.Payload235Generator;
 import com.openrsc.server.net.rsc.generators.impl.Payload38Generator;
 import com.openrsc.server.net.rsc.generators.impl.PayloadCustomGenerator;
@@ -43,8 +44,6 @@ import java.util.Map.Entry;
 /**
  * Sends corresponding actions for use over the network layer
  * */
-// TODO: inspect calls of isUsingAuthenticClient (or revise it) since should cover
-	// possible original versions of rsc mudclient protocols
 public class ActionSender {
 	/**
 	 * The asynchronous logger.
@@ -58,8 +57,10 @@ public class ActionSender {
 		PayloadGenerator<OpcodeOut> generator;
 		if (player.isRetroClient()) {
 			generator = new Payload38Generator();
-		} else if (player.isUsingAuthenticClient()) {
+		} else if (player.isUsing233CompatibleClient()) {
 			generator = new Payload235Generator();
+		} else if (player.isUsing177CompatibleClient()) {
+			generator = new Payload177Generator();
 		} else {
 			generator = new PayloadCustomGenerator();
 		}
@@ -92,10 +93,10 @@ public class ActionSender {
 	 **/
 	public static int getPrivacySettingValue(Player player, int setting, boolean fromAuthentic) {
 		if (fromAuthentic) {
-			return player.getSettings().getPrivacySetting(setting, true)
+			return player.getSettings().getPrivacySetting(setting, false)
 				!= PlayerSettings.BlockingMode.None.id() ? 1 : 0;
 		} else {
-			return player.getSettings().getPrivacySetting(setting, false);
+			return player.getSettings().getPrivacySetting(setting, true);
 		}
 	}
 
@@ -229,7 +230,7 @@ public class ActionSender {
 			i = 0;
 			for (Item item : with.getDuel().getDuelOffer().getItems()) {
 				struct.opponentCatalogIDs[i] = item.getCatalogId();
-				if (item.getNoted() && player.isUsingAuthenticClient()) {
+				if (item.getNoted() && !player.isUsingCustomClient()) {
 					String itemName = item.getDef(player.getWorld()).getName();
 					player.playerServerMessage(MessageType.QUEST,
 						String.format("@ran@Please Confirm: @whi@Other player is staking @gre@%d @yel@%s", item.getAmount(), itemName));
@@ -314,9 +315,8 @@ public class ActionSender {
 			}
 			int i = 0;
 			for (Item item : items) {
-				struct.catalogIDs[i] = player.isUsingAuthenticClient() ?
-					item.getCatalogIdAuthenticNoting() : item.getCatalogId();
-				if (item.getNoted() && player.isUsingAuthenticClient()) {
+				struct.catalogIDs[i] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
+				if (item.getNoted() && !player.isUsingCustomClient()) {
 					String itemName = item.getDef(player.getWorld()).getName();
 					player.playerServerMessage(MessageType.QUEST,
 						String.format("@whi@Other player is staking @gre@%d @yel@%s", item.getAmount(), itemName));
@@ -399,7 +399,7 @@ public class ActionSender {
 		struct.hidingPoints = player.getHidingPoints();
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_EQUIPMENT_STATS, struct, player);
 
-		if (!player.isUsingAuthenticClient()) {
+		if (player.isUsingCustomClient()) {
             if (player.getConfig().WANT_EQUIPMENT_TAB) {
                 if (slot == -1)
                     sendEquipment(player);
@@ -462,7 +462,7 @@ public class ActionSender {
 	 * @param player
 	 */
 	public static void sendFriendList(Player player) {
-		if (isRetroClient(player)) {
+		if (isRetroClient(player) || player.isUsing177CompatibleClient()) {
 			FriendListStruct struct = new FriendListStruct();
 			int listSize = player.getSocial().getFriendList().size();
 			int i = 0;
@@ -470,18 +470,31 @@ public class ActionSender {
 			struct.name = new String[listSize];
 			struct.formerName = new String[listSize];
 			struct.onlineStatus = new int[listSize];
+			struct.worldNumber = new int[listSize];
 			for (final Map.Entry<Long, Integer> entry : player.getSocial().getFriendList().entrySet()) {
 				long usernameHash = entry.getKey();
 				String username = DataConversions.hashToUsername(usernameHash);
 
 				int onlineStatus = 0; // offline
+				struct.worldNumber[i] = 0;
 				if (usernameHash == Long.MIN_VALUE && player.getConfig().WANT_GLOBAL_FRIEND) {
 					if (player.getBlockGlobalFriend()) continue;
 					onlineStatus = 6; // online and same world
 					username = "Global$";
+					struct.worldNumber[i] = 99;
 				} else if (player.getWorld().getPlayer(usernameHash) != null &&
 					player.getWorld().getPlayer(usernameHash).isLoggedIn()) {
 					onlineStatus = getPlayerOnlineStatus(player, usernameHash);
+					try {
+						// TODO: we won't be able to reach across servers like this if there's more than one server
+						if (onlineStatus == 6) {
+							struct.worldNumber[i] = 99; // same world
+						} else {
+							struct.worldNumber[i] = player.getWorld().getPlayer(usernameHash).getWorld().getServer().getConfig().WORLD_NUMBER;
+						}
+					} catch (Exception e) {
+						struct.worldNumber[i] = 99; // assume same world
+					}
 				}
 
 				struct.name[i] = username;
@@ -508,9 +521,9 @@ public class ActionSender {
 		int onlineStatus = 0;
 
 		Player otherPlayer = player.getWorld().getPlayer(friendHash);
-		boolean blockAll = otherPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, otherPlayer.isUsingAuthenticClient())
+		boolean blockAll = otherPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, otherPlayer.isUsingCustomClient())
 			== PlayerSettings.BlockingMode.All.id();
-		boolean blockNone = otherPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, otherPlayer.isUsingAuthenticClient())
+		boolean blockNone = otherPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, otherPlayer.isUsingCustomClient())
 			== PlayerSettings.BlockingMode.None.id();
 		if (blockNone || (otherPlayer.getSocial().isFriendsWith(player.getUsernameHash()) && !blockAll) || player.isMod()) {
 			onlineStatus |= 4 | 2; // 4 for is online and 2 for on same world. 1 would be if the User's name changed from original
@@ -527,15 +540,27 @@ public class ActionSender {
 	public static void sendFriendUpdate(Player player, long usernameHash) {
 		FriendUpdateStruct struct = new FriendUpdateStruct();
 		int onlineStatus = 0;
+		struct.worldNumber = 0;
 		String username = DataConversions.hashToUsername(usernameHash);
 
 		if (usernameHash == Long.MIN_VALUE && player.getConfig().WANT_GLOBAL_FRIEND) {
 			if (player.getBlockGlobalFriend()) return;
 			onlineStatus = 6;
 			username = "Global$";
+			struct.worldNumber = 99;
 		} else if (player.getWorld().getPlayer(usernameHash) != null &&
 			player.getWorld().getPlayer(usernameHash).isLoggedIn()) {
 			onlineStatus = getPlayerOnlineStatus(player, usernameHash);
+			try {
+				// TODO: we won't be able to reach across servers like this if there's more than one server
+				if (onlineStatus == 6) {
+					struct.worldNumber = 99; // same world
+				} else {
+					struct.worldNumber = player.getWorld().getPlayer(usernameHash).getWorld().getServer().getConfig().WORLD_NUMBER;
+				}
+			} catch (Exception e) {
+				struct.worldNumber = 99; // assume same world
+			}
 		}
 
 		struct.name = username;
@@ -556,7 +581,7 @@ public class ActionSender {
 		struct.playerKiller = player.getPkMode();
 		struct.pkChangesLeft = player.getPkChanges();
 		List<Integer> customOptions = new ArrayList<>();
-		if (!player.isUsingAuthenticClient()) { // custom options
+		if (player.isUsingCustomClient()) { // custom options
 			// keep order same that custom client expects!
 			customOptions.add(player.getCombatStyle());
 			customOptions.add(player.getGlobalBlock());
@@ -833,8 +858,7 @@ public class ActionSender {
 			i = 0;
 			for (Item item : player.getCarriedItems().getInventory().getItems()) {
 				struct.wielded[i] = item.isWielded() ? 1 : 0;
-				struct.catalogIDs[i] = player.isUsingAuthenticClient() ?
-					item.getCatalogIdAuthenticNoting() : item.getCatalogId();
+				struct.catalogIDs[i] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
 				struct.noted[i] = item.getNoted() ? 1 : 0;
 				if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
 					// amount sent only for stackable
@@ -1012,7 +1036,7 @@ public class ActionSender {
 			struct.questId[i] = q.getQuestId();
 			struct.questStage[i] = player.getQuestStage(q);
 			struct.questName[i] = q.getQuestName();
-			struct.questCompleted[q.getQuestId()] = player.getQuestStage(q) < 0 ? 1 : 0; // aray indexed by quest id (original clients)
+			struct.questCompleted[q.getQuestId()] = player.getQuestStage(q) < 0 ? 1 : 0; // array indexed by quest id (original clients)
 			i++;
 		}
 
@@ -1023,7 +1047,7 @@ public class ActionSender {
 	 * Sends quest stage
 	 */
 	public static void sendQuestInfo(Player player, int questID, int stage) {
-		if (player.isUsingAuthenticClient()) {
+		if (!player.isUsingCustomClient()) {
 			// authentic client does not care unless quest is complete.
 			if (stage < 0) {
 				sendQuestInfo(player);
@@ -1051,7 +1075,7 @@ public class ActionSender {
 			struct.optionTexts[i] = options[i];
 		}
 
-		if (player.isUsingAuthenticClient() && numOptions > 5) {
+		if (!player.isUsingCustomClient() && numOptions > 5) {
 			LOGGER.error("Truncated options menu for authentic client! This is an error in programming!");
 			player.playerServerMessage(MessageType.QUEST, "@red@There is a bug in the server which prevented you from seeing all options.");
 			player.playerServerMessage(MessageType.QUEST, "@ran@Please report this! @whi@You are missing these options:");
@@ -1105,7 +1129,7 @@ public class ActionSender {
 
 	public static void sendPrivacySettings(Player player) {
 		PrivacySettingsStruct struct = new PrivacySettingsStruct();
-		boolean fromAuthentic = player.getClientVersion() == 38 || player.isUsingAuthenticClient();
+		boolean fromAuthentic = !player.isUsingCustomClient();
 		struct.blockChat = getPrivacySettingValue(player, PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, fromAuthentic);
 		struct.blockPrivate = getPrivacySettingValue(player, PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, fromAuthentic);
 		struct.blockTrade = getPrivacySettingValue(player, PlayerSettings.PRIVACY_BLOCK_TRADE_REQUESTS, fromAuthentic);
@@ -1129,9 +1153,13 @@ public class ActionSender {
 		if (!isGlobal) {
 			struct.playerName = struct.formerName = sender.getUsername();
 		} else {
-			if (player.isUsingAuthenticClient()) {
+			if (player.isUsing233CompatibleClient()) {
 				struct.playerName = struct.formerName = "Global$";
 				struct.message = "@ora@[@gre@" + sender.getUsername() + "@ora@]:@cya@ " + message;
+			} else if (player.isUsing177CompatibleClient()) {
+				struct.playerName = struct.formerName = "Global";
+				// can't change colour mid line in 177 chat I think...
+				struct.message = "[" + sender.getUsername() + "]: " + message;
 			} else if (isRetroClient(player)) {
 				struct.playerName = struct.formerName = "Global";
 				struct.message = "@ora@[@gre@" + sender.getUsername() + "@ora@]:@cya@ " + message;
@@ -1139,7 +1167,7 @@ public class ActionSender {
 				struct.playerName = struct.formerName = "Global$" + sender.getUsername();
 			}
 		}
-		struct.iconSprite = player.isUsingAuthenticClient() ? sender.getIconAuthentic() : sender.getIcon();
+		struct.iconSprite = player.isUsing233CompatibleClient() ? sender.getIconAuthentic() : sender.getIcon();
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_PRIVATE_MESSAGE, struct, player);
 	}
 
@@ -1505,7 +1533,7 @@ public class ActionSender {
 		i = 0;
 		for (Item item : with.getTrade().getTradeOffer().getItems()) {
 			struct.opponentCatalogIDs[i] = item.getCatalogId();
-			if (item.getNoted() && player.isUsingAuthenticClient()) {
+			if (item.getNoted() && !player.isUsingCustomClient()) {
 				String itemName = item.getDef(player.getWorld()).getName();
 				player.playerServerMessage(MessageType.QUEST,
 					String.format("@ran@Please Confirm: @whi@Other player is offering @gre@%d @yel@%s", item.getAmount(), itemName));
@@ -1586,9 +1614,8 @@ public class ActionSender {
 			}
 			i = 0;
 			for (Item item : items) {
-				struct.opponentCatalogIDs[i] = player.isUsingAuthenticClient() ?
-					item.getCatalogIdAuthenticNoting() : item.getCatalogId();
-				if (item.getNoted() && player.isUsingAuthenticClient()) {
+				struct.opponentCatalogIDs[i] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
+				if (item.getNoted() && !player.isUsingCustomClient()) {
 					String itemName = item.getDef(player.getWorld()).getName();
 					player.playerServerMessage(MessageType.QUEST,
 						String.format("@whi@Other player offered @gre@%d @yel@%s", item.getAmount(), itemName));
@@ -1647,7 +1674,7 @@ public class ActionSender {
 			struct.slot = slot;
 			Item item = player.getCarriedItems().getInventory().get(slot);
 			if (item != null) {
-				struct.catalogID = player.isUsingAuthenticClient() ? item.getCatalogIdAuthenticNoting() : item.getCatalogId();
+				struct.catalogID = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
 				struct.wielded = item.isWielded() ? 1 : 0;
 				struct.noted = item.getNoted() ? 1 : 0;
 				struct.amount = item.getDef(player.getWorld()).isStackable() || item.getNoted() ? item.getAmount() : 0;
@@ -1693,7 +1720,7 @@ public class ActionSender {
 	 */
 	public static void showBank(Player player) {
 		int itemsInBank = player.getBank().size();
-		if (player.isUsingAuthenticClient()) {
+		if (!player.isUsingCustomClient()) {
 			if ((player.getWorld().getServer().getConfig().MEMBER_WORLD && itemsInBank > 192) ||
 				(!player.getWorld().getServer().getConfig().MEMBER_WORLD && itemsInBank > 48)) {
 				sendMessage(player, "Warning: Unable to display all items in bank!");
@@ -1712,8 +1739,7 @@ public class ActionSender {
 		synchronized (player.getBank().getItems()) {
 			int i = 0;
 			for (Item item : player.getBank().getItems()) {
-				struct.catalogIDs[i] = player.isUsingAuthenticClient() ?
-					item.getCatalogIdAuthenticNoting() : item.getCatalogId();
+				struct.catalogIDs[i] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
 				struct.amount[i] = item.getAmount();
 				i++;
 			}
@@ -1723,7 +1749,7 @@ public class ActionSender {
 
 	public static void showBankOther(Player player, List<Item> bank) {
 		int itemsInBank = bank.size();
-		if (player.isUsingAuthenticClient()) {
+		if (!player.isUsingCustomClient()) {
 			if ((player.getWorld().getServer().getConfig().MEMBER_WORLD && itemsInBank > 192) ||
 				(!player.getWorld().getServer().getConfig().MEMBER_WORLD && itemsInBank > 48)) {
 				sendMessage(player, "Warning: Unable to display all items in bank!");
@@ -1742,8 +1768,7 @@ public class ActionSender {
 
 		int i = 0;
 		for (Item item : bank) {
-			struct.catalogIDs[i] = player.isUsingAuthenticClient() ?
-				item.getCatalogIdAuthenticNoting() : item.getCatalogId();
+			struct.catalogIDs[i] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
 			struct.amount[i] = item.getAmount();
 			i++;
 		}
@@ -1767,8 +1792,7 @@ public class ActionSender {
 
 		for (int i = 0; i < shop.getShopSize(); i++) {
 			Item item = shop.getShopItem(i);
-			struct.catalogIDs[i] = player.isUsingAuthenticClient() ?
-				item.getCatalogIdAuthenticNoting() : item.getCatalogId();
+			struct.catalogIDs[i] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
 			struct.amount[i] = item.getAmount();
 			struct.baseAmount[i] = shop.getStock(item.getCatalogId());
 			struct.price[i] = 0; // TODO: get from shop list for early protocols??
@@ -1802,7 +1826,7 @@ public class ActionSender {
 	public static void updateBankItem(Player player, int slot, Item newId, int amount) {
 		BankUpdateStruct struct = new BankUpdateStruct();
 		struct.slot = slot;
-		struct.catalogID = amount != 0 || player.isUsingAuthenticClient() ? newId.getCatalogId() : 0;
+		struct.catalogID = amount == 0 && player.isUsingCustomClient() ? 0 : newId.getCatalogId();
 		struct.amount = amount;
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_BANK_UPDATE, struct, player);
 	}
@@ -1850,8 +1874,8 @@ public class ActionSender {
 	}
 
 	public static void sendInputBox(Player player, String s) {
-		if (player.isUsingAuthenticClient()) {
-			sendMessage(player, "@lre@Input Box not implemented for the authentic client.");
+		if (!player.isUsingCustomClient()) {
+			sendMessage(player, "@lre@Input Box not implemented for authentic clients.");
 			sendMessage(player, "@lre@Server asked the following: @whi@" + s);
 			return;
 		}
@@ -1967,7 +1991,7 @@ public class ActionSender {
 	}
 
 	public static void sendOnlineList(Player player, ArrayList<Player> players, ArrayList<String> locations, int online) {
-	    if (player.isUsingAuthenticClient()) {
+	    if (!player.isUsingCustomClient()) {
 	    	StringBuilder onlinePlayers = new StringBuilder(String.format("@lre@Players online @gre@(%d) %%", online));
 			for (int i = 0; i < players.size(); i++) {
 				onlinePlayers.append("@whi@");

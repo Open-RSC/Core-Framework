@@ -133,6 +133,8 @@ public final class RegularPlayer implements CommandTrigger {
 			ActionSender.sendBox(player, player.getClientLimitations().toString(), true);
 		} else if (command.equalsIgnoreCase("setversion")) {
 			setClientVersion(player, args);
+		} else if (command.equalsIgnoreCase("skiptutorial")) {
+			skipTutorial(player);
 		}
 	}
 
@@ -315,7 +317,7 @@ public final class RegularPlayer implements CommandTrigger {
 				}
 				if (p.getGlobalBlock() != 2) {
 					String header = "";
-					if (p.isUsingAuthenticClient()) {
+					if (!p.isUsingCustomClient()) {
 						ActionSender.sendMessage(p, player, MessageType.PRIVATE_RECIEVE, channelPrefix + "@whi@" + (player.getClan() != null ? "@cla@<" + player.getClan().getClanTag() + "> @whi@" : "") + header + player.getStaffName() + ": "
 							+ (channel == 1 ? "@gr2@" : "@or1@") + newStr, player.getIconAuthentic(), null);
 
@@ -482,7 +484,7 @@ public final class RegularPlayer implements CommandTrigger {
 			}
 		} else {
 			for (Player targetPlayer : player.getWorld().getPlayers()) {
-				byte privacy = targetPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, targetPlayer.isUsingAuthenticClient());
+				byte privacy = targetPlayer.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, targetPlayer.isUsingCustomClient());
 
 				boolean privacyAllows = false;
 				if (privacy == PlayerSettings.BlockingMode.None.id()) {
@@ -837,6 +839,15 @@ public final class RegularPlayer implements CommandTrigger {
 			}
 		} else {
 			player.message("Sorry this command is only for old clients");
+		}
+	}
+
+	private void skipTutorial(Player player) {
+		if (player.getLocation().onTutorialIsland()) {
+			player.setBusy(false);
+			if (!player.skipTutorial()) {
+				player.message("Couldn't skip tutorial.");
+			}
 		}
 	}
 }
