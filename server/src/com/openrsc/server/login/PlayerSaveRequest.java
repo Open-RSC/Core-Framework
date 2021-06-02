@@ -40,6 +40,7 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 			if (success && this.logout)
 				logoutSaveSuccess();
 		} catch (final GameDatabaseException ex) {
+			LOGGER.warn("Error saving the player, phantom player may have extra login count on their IP address now...!");
 			LOGGER.catching(ex);
 		}
 	}

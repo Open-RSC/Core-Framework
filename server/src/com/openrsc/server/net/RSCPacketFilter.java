@@ -432,7 +432,7 @@ public class RSCPacketFilter {
 		return ipBans;
 	}
 
-public int clearAllIpBans() {
+	public int clearAllIpBans() {
 		synchronized(ipBans) {
 				int banListSize = ipBans.size();
 				if (banListSize > 0) {
@@ -441,7 +441,23 @@ public int clearAllIpBans() {
 				}
 		}
 		return 0;
-}
+	}
+
+	public int recalculateLoggedInCounts() {
+		int fixedIps = 0;
+		synchronized (loggedInCount) {
+			for (String hostAddress : loggedInCount.keySet()) {
+				int currentLoginCount = loggedInCount.get(hostAddress);
+				int currentConnectionCount = getConnectionCount(hostAddress);
+				if (currentLoginCount > currentConnectionCount) {
+					loggedInCount.put(hostAddress, currentConnectionCount);
+					++fixedIps;
+					LOGGER.warn("Impossible scenario of more logged in characters than connections corrected for IP: " + hostAddress);
+				}
+			}
+		}
+		return fixedIps;
+	}
 
 	public final Server getServer() {
 		return server;

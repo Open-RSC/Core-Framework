@@ -40,11 +40,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.io.IoBuilder;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -718,6 +715,10 @@ public class Server implements Runnable {
   public final int clearAllIpBans() {
     return packetFilter.clearAllIpBans();
   }
+
+	public final int recalculateLoggedInCounts() {
+		return packetFilter.recalculateLoggedInCounts();
+	}
 
 	public final long getLastIncomingPacketsDuration() {
 		return lastIncomingPacketsDuration;

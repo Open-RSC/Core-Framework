@@ -203,7 +203,6 @@ public class LoginPacketHandler {
 								outgoingCipher.setKeys(loginInfo.keys);
 								attachment.ISAAC.set(new ISAACContainer(incomingCipher, outgoingCipher));
 
-								getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
 								attachment.player.set(loadedPlayer);
 
 								attachment.authenticClient.set((short) clientVersion.get());
@@ -220,6 +219,8 @@ public class LoginPacketHandler {
 
 								server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
 								ActionSender.sendLogin(loadedPlayer);
+
+								getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
 							}
 						};
 						server.getLoginExecutor().add(request);
@@ -286,7 +287,6 @@ public class LoginPacketHandler {
 
 								@Override
 								public void loadingComplete(Player loadedPlayer) {
-									getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
 									attachment.player.set(loadedPlayer);
 
 									attachment.authenticClient.set((short) clientVersion.get());
@@ -304,6 +304,7 @@ public class LoginPacketHandler {
 
 									server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
 									ActionSender.sendLogin(loadedPlayer);
+									getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
 								}
 							};
 							server.getLoginExecutor().add(request);
@@ -351,7 +352,6 @@ public class LoginPacketHandler {
 
 							@Override
 							public void loadingComplete(Player loadedPlayer) {
-								getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
 								attachment.player.set(loadedPlayer);
 
 								attachment.authenticClient.set((short) clientVersion.get());
@@ -368,6 +368,8 @@ public class LoginPacketHandler {
 
 								server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
 								ActionSender.sendLogin(loadedPlayer);
+
+								getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
 							}
 						};
 						server.getLoginExecutor().add(request);
@@ -427,8 +429,6 @@ public class LoginPacketHandler {
 
 						@Override
 						public void loadingComplete(Player loadedPlayer) {
-							getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
-
 							ConnectionAttachment attachment = channel.attr(RSCConnectionHandler.attachment).get();
 							attachment.player.set(loadedPlayer);
 
@@ -447,6 +447,8 @@ public class LoginPacketHandler {
 
 							server.getPluginHandler().handlePlugin(loadedPlayer, "PlayerLogin", new Object[]{loadedPlayer});
 							ActionSender.sendLogin(loadedPlayer);
+
+							getServer().getPacketFilter().addLoggedInPlayer(loadedPlayer.getCurrentIP());
 						}
 					};
 					server.getLoginExecutor().add(request);

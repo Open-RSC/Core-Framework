@@ -154,6 +154,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 			}
 
 			if (getServer().getPacketFilter().isHostIpBanned(getIpAddress()) && !isAdmin) {
+				LOGGER.debug(getIpAddress() + " denied for being host ip banned...!");
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
@@ -181,6 +182,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 			}
 
 			if(getServer().getPacketFilter().getPlayersCount(getIpAddress()) >= getServer().getConfig().MAX_PLAYERS_PER_IP && !isAdmin) {
+				LOGGER.debug(getIpAddress() + " is using " + getServer().getPacketFilter().getPlayersCount(getIpAddress()) + " out of " + getServer().getConfig().MAX_PLAYERS_PER_IP + " allowed sessions.");
 				return (byte) LoginResponse.IP_IN_USE;
 			}
 
@@ -191,6 +193,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 
 			final double timeBanLeft = (double) (banExpires - System.currentTimeMillis());
 			if (timeBanLeft >= 1 && !isAdmin) {
+				LOGGER.debug(getIpAddress() + " denied for being *actually* temp banned...!");
 				return (byte) LoginResponse.ACCOUNT_TEMP_DISABLED;
 			}
 
