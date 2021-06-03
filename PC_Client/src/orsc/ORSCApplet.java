@@ -244,7 +244,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 								C_LAST_ZOOM = newZoom;
 							}
 						}
-					} else if (mudclient.isInFirstPersonView()) {
+					} else if (mudclient.isInFirstPersonView() && mudclient.cameraAllowPitchModification) {
 						mudclient.cameraPitch = (mudclient.cameraPitch + (-distanceY * 2)) & 1023;
 
 						// Limit on the half circled where everything is right side up
