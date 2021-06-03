@@ -196,7 +196,6 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			if (keyCode == KeyEvent.VK_DOWN) mudclient.keyDown = false;
 			if (keyCode == KeyEvent.VK_PAGE_DOWN) mudclient.pageDown = false;
 			if (keyCode == KeyEvent.VK_PAGE_UP) mudclient.pageUp = false;
-			if (keyCode == KeyEvent.VK_F2)
 
 			if (keyCode == KeyEvent.VK_ALT) {
 				mudclient.mouseLastProcessedX = 0;
