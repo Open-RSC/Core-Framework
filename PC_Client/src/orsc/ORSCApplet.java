@@ -143,6 +143,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			if (keyCode == 112) mudclient.interlace = !mudclient.interlace;
 			if (keyCode == 113) Config.C_SIDE_MENU_OVERLAY = !Config.C_SIDE_MENU_OVERLAY;
 			if (keyCode == KeyEvent.VK_F3) C_LAST_ZOOM = 75;
+			if (keyCode == KeyEvent.VK_F4) mudclient.toggleFirstPersonView();
 			if (keyCode == 39) mudclient.keyRight = true;
 			if (keyCode == 37) mudclient.keyLeft = true;
 			if (keyCode == 13 || keyCode == 10) mudclient.enterPressed = true;
@@ -195,6 +196,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 			if (keyCode == KeyEvent.VK_DOWN) mudclient.keyDown = false;
 			if (keyCode == KeyEvent.VK_PAGE_DOWN) mudclient.pageDown = false;
 			if (keyCode == KeyEvent.VK_PAGE_UP) mudclient.pageUp = false;
+			if (keyCode == KeyEvent.VK_F2)
 
 			if (keyCode == KeyEvent.VK_ALT) {
 				mudclient.mouseLastProcessedX = 0;
@@ -235,7 +237,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 				int distanceY = (mudclient.mouseY - mudclient.mouseLastProcessedY)/2;
 
 				if (mudclient.showUiTab == 0) {
-					if ((S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) && !var1.isControlDown()) {
+					if (!mudclient.isInFirstPersonView() && (S_ZOOM_VIEW_TOGGLE || mudclient.getLocalPlayer().isStaff()) && !var1.isControlDown()) {
 						if (osConfig.C_SWIPE_TO_ZOOM) {
 							int newZoom = C_LAST_ZOOM + distanceY;
 							// Keep C_LAST_ZOOM aka the zoom increments on the range of [0, 255]
@@ -243,7 +245,7 @@ public class ORSCApplet extends Applet implements MouseListener, MouseMotionList
 								C_LAST_ZOOM = newZoom;
 							}
 						}
-					} else if (mudclient.cameraAllowPitchModification) {
+					} else if (mudclient.isInFirstPersonView()) {
 						mudclient.cameraPitch = (mudclient.cameraPitch + (-distanceY * 2)) & 1023;
 
 						// Limit on the half circled where everything is right side up

@@ -234,8 +234,10 @@ public final class mudclient implements Runnable {
 	public ArrayList<String> skillGuideChosenTabs;
 	public String clanKickPlayer;
 	public String partyKickPlayer;
-	public boolean cameraAllowPitchModification = false;
-	public int cameraPitch = 912;
+	public boolean cameraAllowPitchModification = true;
+	public boolean isFirstPersonView = false;
+	public final static int DEFAULT_CAMERA_PITCH = 912;
+	public int cameraPitch = DEFAULT_CAMERA_PITCH;
 	public int cameraZoom = 750;
 	public int lastSavedCameraZoom = 0;
 	public int minCameraZoom = 600;
@@ -4883,23 +4885,25 @@ public final class mudclient implements Runnable {
 
 					for (centerX = 0; this.playerCount > centerX; ++centerX) {
 						ORSCharacter var3 = this.players[centerX];
-						if (var3.colourBottom != 255) {
-							int var4 = var3.currentX;
-							int var5 = var3.currentZ;
-							int var6 = -this.world.getElevation(var4, var5);
-							int var7 = this.scene.drawSprite(centerX + 5000, var5, centerX + 10000, var4, var6, 145,
-								220, (byte) 109);
-							++this.spriteCount;
-							if (this.localPlayer == var3) {
-								this.scene.setFaceSpriteLocalPlayer('\u8000', var7);
-							}
+						if (!this.isInFirstPersonView() || var3.accountName != this.localPlayer.accountName) {
+							if (var3.colourBottom != 255) {
+								int var4 = var3.currentX;
+								int var5 = var3.currentZ;
+								int var6 = -this.world.getElevation(var4, var5);
+								int var7 = this.scene.drawSprite(centerX + 5000, var5, centerX + 10000, var4, var6, 145,
+									220, (byte) 109);
+								++this.spriteCount;
+								if (this.localPlayer == var3) {
+									this.scene.setFaceSpriteLocalPlayer('\u8000', var7);
+								}
 
-							if (var3.direction == ORSCharacterDirection.COMBAT_A) {
-								this.scene.setCombatXOffset(var1 + 24, var7, -30);
-							}
+								if (var3.direction == ORSCharacterDirection.COMBAT_A) {
+									this.scene.setCombatXOffset(var1 + 24, var7, -30);
+								}
 
-							if (var3.direction == ORSCharacterDirection.COMBAT_B) {
-								this.scene.setCombatXOffset(var1 ^ 45, var7, 30);
+								if (var3.direction == ORSCharacterDirection.COMBAT_B) {
+									this.scene.setCombatXOffset(var1 ^ 45, var7, 30);
+								}
 							}
 						}
 					}
@@ -5059,15 +5063,15 @@ public final class mudclient implements Runnable {
 
 						centerX = this.cameraPositionX + this.cameraAutoMoveX;
 						centerZ = this.cameraPositionZ + this.cameraAutoMoveZ;
-						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
-							this.cameraRotation * 4, 0, 2000);
+						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ) + 180, centerZ, this.getCameraPitch(),
+							this.cameraRotation * 4, 0, this.isInFirstPersonView() ? 0 : 2000);
 
 						int zoomMultiplier = 0;
 						if (Config.S_ZOOM_VIEW_TOGGLE)
 							zoomMultiplier = Config.C_ZOOM == 0 ? 0 : Config.C_ZOOM == 1 ? +200 : Config.C_ZOOM == 2 ? +400 : -200;
 
-						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
-							this.cameraRotation * 4, 0, (this.cameraZoom + zoomMultiplier) * 2);
+						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ) + 180, centerZ, this.getCameraPitch(),
+							this.cameraRotation * 4, 0, this.isInFirstPersonView() ? 0 : (this.cameraZoom + zoomMultiplier) * 2);
 
 					} else {
 						if (this.optionCameraModeAuto && !this.doCameraZoom) {
@@ -5095,8 +5099,8 @@ public final class mudclient implements Runnable {
 						centerX = this.cameraPositionX + this.cameraAutoMoveX;
 						centerZ = this.cameraPositionZ + this.cameraAutoMoveZ;
 
-						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ), centerZ, cameraPitch,
-							this.cameraRotation * 4, 0, this.cameraZoom * 2);
+						this.scene.setCamera(centerX, -this.world.getElevation(centerX, centerZ) - 180, centerZ, this.getCameraPitch(),
+							this.cameraRotation * 4, 0, this.isInFirstPersonView() ? 0 : this.cameraZoom * 2);
 					}
 
 					this.scene.endScene(-113);
@@ -5269,7 +5273,7 @@ public final class mudclient implements Runnable {
 							i += 14;
 							this.getSurface().drawString("Camera Zoom: " + cameraZoom, 7, i, 0xffffff, 1);
 							i += 14;
-							this.getSurface().drawString("Camera Pitch: " + cameraPitch, 7, i, 0xffffff, 1);
+							this.getSurface().drawString("Camera Pitch: " + this.getCameraPitch(), 7, i, 0xffffff, 1);
 							i += 14;
 							this.getSurface().drawString("Camera Rotation: " + cameraRotation, 7, i, 0xffffff, 1);
 							int cameraX = this.cameraPositionX + this.cameraAutoMoveX;
@@ -17593,6 +17597,21 @@ public final class mudclient implements Runnable {
 
 	public void setPointsOptionId(int pointsOptionId) {
 		this.pointsOptionId = pointsOptionId;
+	}
+
+	public boolean isInFirstPersonView() {
+		return this.isFirstPersonView && this.localPlayer.direction != ORSCharacterDirection.COMBAT_B && this.localPlayer.direction != ORSCharacterDirection.COMBAT_B;
+	}
+
+	public void toggleFirstPersonView() {
+		osConfig.C_LAST_ZOOM = 75;
+		this.isFirstPersonView = !this.isFirstPersonView;
+		this.cameraPitch = this.isInFirstPersonView() ? 0 : DEFAULT_CAMERA_PITCH;
+		this.cameraRotation = this.localPlayer.direction.rotation;
+	}
+
+	public int getCameraPitch() {
+		return this.isInFirstPersonView() ? this.cameraPitch : DEFAULT_CAMERA_PITCH;
 	}
 
 	class XPNotification {
