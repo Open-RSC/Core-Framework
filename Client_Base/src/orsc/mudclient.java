@@ -5046,7 +5046,7 @@ public final class mudclient implements Runnable {
 					this.characterHealthCount = 0;
 					this.characterDialogCount = 0;
 					if (this.cameraAutoAngleDebug) {
-						if (this.optionCameraModeAuto && !this.doCameraZoom) {
+						if (this.optionCameraModeAuto && !this.isInFirstPersonView() && !this.doCameraZoom) {
 							centerX = this.cameraAngle;
 							this.autoRotateCamera((byte) 22);
 							if (centerX != this.cameraAngle) {
@@ -5074,7 +5074,7 @@ public final class mudclient implements Runnable {
 							this.cameraRotation * 4, 0, this.isInFirstPersonView() ? 0 : (this.cameraZoom + zoomMultiplier) * 2);
 
 					} else {
-						if (this.optionCameraModeAuto && !this.doCameraZoom) {
+						if (this.optionCameraModeAuto && !this.isInFirstPersonView() && !this.doCameraZoom) {
 							this.autoRotateCamera((byte) 94);
 						}
 						if (C_HIDE_FOG) {
@@ -11458,7 +11458,7 @@ public final class mudclient implements Runnable {
 						this.cameraPositionZ = this.localPlayer.currentZ;
 					}
 
-					if (this.optionCameraModeAuto) {
+					if (this.optionCameraModeAuto && !this.isInFirstPersonView()) {
 						updateIndex = this.cameraAngle * 32;
 						var10 = updateIndex - this.cameraRotation;
 						byte var12 = 1;
@@ -11662,7 +11662,7 @@ public final class mudclient implements Runnable {
 					}
 					this.scene.setMouseLoc(0, this.mouseX, this.mouseY);
 					this.lastMouseButtonDown = 0;
-					if (this.optionCameraModeAuto) {
+					if (this.optionCameraModeAuto && !this.isInFirstPersonView()) {
 						if (this.m_Wc == 0 || this.cameraAutoAngleDebug) {
 							if (this.keyLeft) {
 								this.keyLeft = false;
