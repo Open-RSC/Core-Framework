@@ -7,6 +7,9 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 
 import java.util.Optional;
@@ -26,6 +29,11 @@ public class SheepShearer implements QuestInterface, TalkNpcTrigger {
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.SHEEP_SHEARER.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
@@ -34,8 +42,11 @@ public class SheepShearer implements QuestInterface, TalkNpcTrigger {
 	public void handleReward(Player player) {
 		player.getCarriedItems().getInventory().add(new Item(ItemId.COINS.id(), 60));
 		player.message("Well done you have completed the sheep shearer quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.SHEEP_SHEARER), true);
-		player.message("@gre@You haved gained 1 quest point!");
+		final QuestReward reward = Quest.SHEEP_SHEARER.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	private void fredDialogue(Player player, Npc n, int cID) {

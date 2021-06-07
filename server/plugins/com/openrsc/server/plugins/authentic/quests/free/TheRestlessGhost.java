@@ -3,14 +3,15 @@ package com.openrsc.server.plugins.authentic.quests.free;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skill;
-import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TakeObjTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
@@ -38,6 +39,11 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.THE_RESTLESS_GHOST.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
@@ -45,17 +51,11 @@ public class TheRestlessGhost implements QuestInterface, TakeObjTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed the restless ghost quest");
-		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.THE_RESTLESS_GHOST);
-		String prayerSkill;
-		if (player.getConfig().DIVIDED_GOOD_EVIL) {
-			prayerSkill = Skill.PRAYGOOD.name();
-		} else {
-			prayerSkill = Skill.PRAYER.name();
+		final QuestReward reward = Quest.THE_RESTLESS_GHOST.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
 		}
-		questData[1] = Either.right(prayerSkill);
-		incQuestReward(player, questData, true);
-		player.message("@gre@You haved gained 1 quest point!");
-
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	private void ghostDialogue(Player player, Npc n, int cID) {

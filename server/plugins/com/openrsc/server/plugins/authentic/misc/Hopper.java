@@ -14,7 +14,7 @@ public class Hopper implements UseLocTrigger, OpLocTrigger {
 
 	@Override
 	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
-		return (obj.getID() == 52 || obj.getID() == 173 || obj.getID() == 246) && item.getCatalogId() == ItemId.GRAIN.id();
+		return (obj.getID() == 52 || obj.getID() == 173 || obj.getID() == 246 || obj.getID() == 343) && item.getCatalogId() == ItemId.GRAIN.id();
 	}
 
 	@Override

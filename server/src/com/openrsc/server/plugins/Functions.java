@@ -900,6 +900,7 @@ public class Functions {
 	 * @param questData - the data, if skill id is < 0 means no exp is applied
 	 * @param applyQP   - apply the quest point increase
 	 */
+	@Deprecated
 	public static void incQuestReward(Player player, Either<Integer, String>[] questData, boolean applyQP) {
 		int qp = questData[0].fromLeft().get();
 		String skill = questData[1].fromRight().get();
@@ -907,10 +908,30 @@ public class Functions {
 		int varXP = questData[3].fromLeft().get();
 		if (skill != Skill.NONE.name() && baseXP > 0 && varXP >= 0) {
 			player.incQuestExp(Skill.of(skill).id(),
-				player.getSkills().getMaxStat(Skill.of(skill).id()) * varXP + baseXP);
+				player.getSkills().getMaxStat(Skill.of(skill).id()) * varXP + baseXP, false);
 		}
 		if (applyQP) {
 			player.incQuestPoints(qp);
+		}
+	}
+
+	public static void incStat(Player player, Integer skillId, Integer baseXP, Integer varXP) {
+		incStat(player, skillId, baseXP, varXP, false);
+	}
+
+	public static void incStat(Player player, Integer skillId, Integer baseXP, Integer varXP, Boolean useFatigue) {
+		if (skillId != Skill.NONE.id() && baseXP > 0 && varXP >= 0) {
+			player.incQuestExp(skillId,
+				player.getSkills().getMaxStat(skillId) * varXP + baseXP, useFatigue);
+		}
+	}
+
+	public static void incQP(Player player, Integer questPoints, boolean showMessage) {
+		if (showMessage) {
+			player.message("@gre@You haved gained " + questPoints + " quest point" + (questPoints > 1 ? "s" : "") + "!");
+		}
+		if (questPoints > 0) {
+			player.incQuestPoints(questPoints);
 		}
 	}
 

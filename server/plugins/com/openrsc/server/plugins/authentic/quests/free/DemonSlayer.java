@@ -10,6 +10,9 @@ import com.openrsc.server.model.entity.GroundItem;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -33,6 +36,11 @@ public class DemonSlayer implements QuestInterface,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.DEMON_SLAYER.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
@@ -40,8 +48,11 @@ public class DemonSlayer implements QuestInterface,
 	@Override
 	public void handleReward(Player player) {
 		player.message("You have completed the demonslayer quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DEMON_SLAYER), true);
-		player.message("@gre@You haved gained 3 quest points!");
+		final QuestReward reward = Quest.DEMON_SLAYER.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.event.SingleEvent;
-import com.openrsc.server.model.Either;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.container.Equipment;
 import com.openrsc.server.model.container.Item;
@@ -13,8 +12,12 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
+import com.openrsc.server.util.rsc.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,6 +72,11 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.TOURIST_TRAP.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -87,8 +95,8 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 		delay();
 		player.message("@gre@***********************************************************");
 		delay();
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TOURIST_TRAP), true);
-		player.message("@gre@You haved gained 2 quest points!");
+		final QuestReward reward = Quest.TOURIST_TRAP.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	@Override
@@ -290,48 +298,21 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 				"I would like to reward you for your bravery and daring.",
 				"I can offer you increased knowledge in one of the following areas.");
 		}
-		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TOURIST_TRAP);
+		final XPReward origXpReward = Quest.TOURIST_TRAP.reward().getXpRewards()[0];
+		XPReward xpReward;
 		int lastRewardMenu = multi(player, n, false, //do not send over
 			"Fletching.",
 			"Agility.",
 			"Smithing.",
 			"Thieving");
 		if (lastRewardMenu == 0) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.FLETCHING.name());
-			incQuestReward(player, questData, false);
-			mes("You advance your stat in Fletching.");
-			delay(3);
-			player.sendQuestComplete(Quests.TOURIST_TRAP);
-			if (player.getCache().hasKey("advanced1")) {
-				player.getCache().remove("advanced1");
-			}
+			skillReward(player, n, Skill.FLETCHING, false);
 		} else if (lastRewardMenu == 1) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.AGILITY.name());
-			incQuestReward(player, questData, false);
-			mes("You advance your stat in Agility.");
-			delay(3);
-			player.sendQuestComplete(Quests.TOURIST_TRAP);
-			if (player.getCache().hasKey("advanced1")) {
-				player.getCache().remove("advanced1");
-			}
+			skillReward(player, n, Skill.AGILITY, false);
 		} else if (lastRewardMenu == 2) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.SMITHING.name());
-			incQuestReward(player, questData, false);
-			mes("You advance your stat in Smithing.");
-			delay(3);
-			player.sendQuestComplete(Quests.TOURIST_TRAP);
-			if (player.getCache().hasKey("advanced1")) {
-				player.getCache().remove("advanced1");
-			}
+			skillReward(player, n, Skill.SMITHING, false);
 		} else if (lastRewardMenu == 3) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.THIEVING.name());
-			incQuestReward(player, questData, false);
-			mes("You advance your stat in Thieving.");
-			delay(3);
-			player.sendQuestComplete(Quests.TOURIST_TRAP);
-			if (player.getCache().hasKey("advanced1")) {
-				player.getCache().remove("advanced1");
-			}
+			skillReward(player, n, Skill.THIEVING, false);
 		}
 	}
 
@@ -340,50 +321,34 @@ public class TouristTrap implements QuestInterface, TalkNpcTrigger, UseNpcTrigge
 			"I'm really very grateful...",
 			"I would like to reward you for your bravery and daring.",
 			"I can offer you increased knowledge in two of the following areas.");
-		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.TOURIST_TRAP);
 		int rewardMenu = multi(player, n, false, //do not send over
 			"Fletching.",
 			"Agility.",
 			"Smithing.",
 			"Thieving");
 		if (rewardMenu == 0) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.FLETCHING.name());
-			incQuestReward(player, questData, false);
-			mes("You advance your stat in Fletching.");
-			delay(3);
-			mes("Ok, now choose your second skil.");
-			delay(3);
-			if (!player.getCache().hasKey("advanced1")) {
-				player.getCache().store("advanced1", true);
-			}
-			lastRewardMenu(player, n, false);
+			skillReward(player, n, Skill.FLETCHING, true);
 		} else if (rewardMenu == 1) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.AGILITY.name());
-			incQuestReward(player, questData, false);
-			mes("You advance your stat in Agility.");
-			delay(3);
-			mes("Ok, now choose your second skil.");
-			delay(3);
-			if (!player.getCache().hasKey("advanced1")) {
-				player.getCache().store("advanced1", true);
-			}
-			lastRewardMenu(player, n, false);
+			skillReward(player, n, Skill.AGILITY, true);
 		} else if (rewardMenu == 2) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.SMITHING.name());
-			incQuestReward(player, questData, false);
-			mes("You advance your stat in Smithing.");
-			delay(3);
-			mes("Ok, now choose your second skil.");
-			delay(3);
-			if (!player.getCache().hasKey("advanced1")) {
-				player.getCache().store("advanced1", true);
-			}
-			lastRewardMenu(player, n, false);
+			skillReward(player, n, Skill.SMITHING, true);
 		} else if (rewardMenu == 3) {
-			questData[Quests.MAPIDX_SKILL] = Either.right(Skill.THIEVING.name());
-			incQuestReward(player, questData, false);
-			mes("You advance your stat in Thieving.");
-			delay(3);
+			skillReward(player, n, Skill.THIEVING, true);
+		}
+	}
+
+	private void skillReward(Player player, Npc n, Skill skill, boolean isFirst) {
+		final XPReward origXpReward = Quest.TOURIST_TRAP.reward().getXpRewards()[0];
+		XPReward xpReward = origXpReward.copyTo(skill);
+		incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		mes("You advance your stat in " + StringUtil.convertToTitleCase(skill.name()) + ".");
+		delay(3);
+		if (!isFirst) {
+			player.sendQuestComplete(Quests.TOURIST_TRAP);
+			if (player.getCache().hasKey("advanced1")) {
+				player.getCache().remove("advanced1");
+			}
+		} else {
 			mes("Ok, now choose your second skil.");
 			delay(3);
 			if (!player.getCache().hasKey("advanced1")) {

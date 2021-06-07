@@ -4,13 +4,15 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skill;
-import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.DataConversions;
 
@@ -59,6 +61,11 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.GRAND_TREE.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -66,20 +73,11 @@ public class GrandTree implements QuestInterface, TalkNpcTrigger, OpLocTrigger, 
 	@Override
 	public void handleReward(Player player) {
 		player.message("well done you have completed the grand tree quest");
-		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.GRAND_TREE);
-		//keep order kosher
-		Either<Integer, String>[] skillIDs = new Either[]{Either.right(Skill.AGILITY.name()), Either.right(Skill.ATTACK.name()), Either.right(Skill.MAGIC.name())};
-		//1600 for agility, 1600 for attack, 600 for magic
-		Either<Integer, String>[] baseAmounts = new Either[]{Either.left(1600), Either.left(1600), Either.left(600)};
-		//1200 for agility, 1200 for attack, 200 for magic
-		Either<Integer, String>[] varAmounts = new Either[]{Either.left(1200), Either.left(1200), Either.left(200)};
-		for (int i = 0; i < skillIDs.length; i++) {
-			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
-			questData[Quests.MAPIDX_BASE] = baseAmounts[i];
-			questData[Quests.MAPIDX_VAR] = varAmounts[i];
-			incQuestReward(player, questData, i == (skillIDs.length - 1));
+		final QuestReward reward = Quest.GRAND_TREE.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
 		}
-		player.message("@gre@You haved gained 5 quest points!");
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 	}
 
 	@Override

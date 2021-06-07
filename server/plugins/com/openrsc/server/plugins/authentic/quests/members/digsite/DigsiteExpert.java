@@ -3,12 +3,13 @@ package com.openrsc.server.plugins.authentic.quests.members.digsite;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Quests;
-import com.openrsc.server.constants.Skill;
-import com.openrsc.server.model.Either;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.MessageType;
@@ -28,6 +29,11 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.DIGSITE.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -35,17 +41,10 @@ public class DigsiteExpert implements QuestInterface, TalkNpcTrigger, UseNpcTrig
 	@Override
 	public void handleReward(Player player) {
 		player.message("Congratulations, you have finished the digsite quest");
-		player.message("@gre@You haved gained 2 quest points!");
-		Either<Integer, String>[] questData = player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.DIGSITE);
-		//keep order kosher
-		Either<Integer, String>[] skillIDs = new Either[]{Either.right(Skill.MINING.name()), Either.right(Skill.HERBLAW.name())};
-		//1200 for mining, 500 for herblaw
-		Either<Integer, String>[] amounts = new Either[]{Either.left(1200), Either.left(500)};
-		for (int i = 0; i < skillIDs.length; i++) {
-			questData[Quests.MAPIDX_SKILL] = skillIDs[i];
-			questData[Quests.MAPIDX_BASE] = amounts[i];
-			questData[Quests.MAPIDX_VAR] = amounts[i];
-			incQuestReward(player, questData, i == (skillIDs.length - 1));
+		final QuestReward reward = Quest.DIGSITE.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
 		}
 		player.getCache().remove("winch_rope_2");
 		player.getCache().remove("winch_rope_1");

@@ -39,7 +39,7 @@ public class UndergroundPassPuzzle implements OpLocTrigger {
 			player.teleport(679, 3447);
 		}
 		else if (obj.getID() == WALK_HERE_ROCK_WEST) {
-			player.walkToEntity(689, 3452);
+			player.teleport(690, 3452);
 		}
 		else if (obj.getID() == LEVER) {
 			mes("you pull on the lever");

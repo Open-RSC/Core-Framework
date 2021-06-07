@@ -9,6 +9,9 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.UseNpcTrigger;
@@ -126,8 +129,11 @@ public class WatchTowerObstacles implements OpLocTrigger, OpBoundTrigger, UseNpc
 				player.getCarriedItems().remove(new Item(ItemId.POWERING_CRYSTAL4.id()));
 				Npc wizard = ifnearvisnpc(player, NpcId.WATCHTOWER_WIZARD.id(), 6);
 				if (wizard != null) {
-					player.message("@gre@You haved gained 4 quest points!");
-					incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.WATCHTOWER), true);
+					final QuestReward reward = Quest.WATCHTOWER.reward();
+					incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+					for (XPReward xpReward : reward.getXpRewards()) {
+						incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+					}
 					npcsay(player, wizard, "Marvellous! it works!",
 						"The town will now be safe",
 						"Your help was invaluable",

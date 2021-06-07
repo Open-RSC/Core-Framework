@@ -18,6 +18,13 @@ public interface QuestInterface {
 	public String getQuestName();
 
 	/**
+	 * Returns the quest points of this quest
+	 *
+	 * @return
+	 */
+	public int getQuestPoints();
+
+	/**
 	 * Returns true if this quest is a members-only quest.
 	 *
 	 * @return

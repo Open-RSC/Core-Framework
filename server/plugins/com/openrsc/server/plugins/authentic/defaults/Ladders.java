@@ -4,6 +4,7 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.model.TelePoint;
+import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -118,6 +119,7 @@ public class Ladders {
 			}
 		} else if (obj.getID() == 776) {
 			if (player.getCarriedItems().hasCatalogID(ItemId.PARAMAYA_REST_TICKET.id(), Optional.of(false))) {
+				player.getCarriedItems().remove(new Item(ItemId.PARAMAYA_REST_TICKET.id()));
 				player.message("The barman takes your ticket and allows you up to");
 				player.message("the dormitory.");
 				player.teleport(395, 2713);

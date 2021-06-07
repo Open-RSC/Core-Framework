@@ -11,7 +11,7 @@
         <delete dir="buildplugins"/>
         <mkdir dir="buildplugins"/>
         <javac srcdir="plugins" destdir="buildplugins" debug="on" includeantruntime="false" target="${javac.target}"
-               source="${javac.source}">
+               source="${javac.source}" encoding="UTF-8">
             <classpath>
                 <pathelement location="core.jar"/>
                 <pathelement path="${java.class.path}/"/>
@@ -31,7 +31,7 @@
         <delete dir="${build}"/>
         <mkdir dir="${build}"/>
         <javac srcdir="${src}" destdir="${build}" debug="on" includeantruntime="false" target="${javac.target}"
-               source="${javac.source}">
+               source="${javac.source}" encoding="UTF-8">
             <classpath>
                 <pathelement location="${lib}/commons-lang3-3.12.0.jar"/>
                 <pathelement location="${lib}/commons-codec-1.14.jar"/>

@@ -9,6 +9,9 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.*;
 import com.openrsc.server.util.rsc.MessageType;
 
@@ -34,6 +37,11 @@ public class PiratesTreasure implements QuestInterface,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.PIRATES_TREASURE.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return false;
 	}
@@ -48,8 +56,11 @@ public class PiratesTreasure implements QuestInterface,
 		give(player, ItemId.EMERALD.id(), 1);
 		give(player, ItemId.COINS.id(), 450);
 		player.message("Well done you have completed the pirate treasure quest");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.PIRATES_TREASURE), true);
-		player.message("@gre@You haved gained 2 quest points!");
+		final QuestReward reward = Quest.PIRATES_TREASURE.reward();
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
 		player.updateQuestStage(this, -1);
 	}
 

@@ -97,7 +97,7 @@ public class Skill {
 
 	private static void addSkill(String name, Integer id) {
 		Skill lookup = of(name);
-		if (name != Skills.NONE && lookup.id() != -1) {
+		if (!name.equals(Skills.NONE) && lookup.id() != -1) {
 			throw new IllegalArgumentException("duplicate name: " + name);
 		}
 		nameMap.put(name, new Skill(name, id));

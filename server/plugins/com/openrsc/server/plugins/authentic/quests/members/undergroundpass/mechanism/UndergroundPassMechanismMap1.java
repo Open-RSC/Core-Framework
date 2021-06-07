@@ -51,7 +51,7 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 		return (item.getCatalogId() == ItemId.ARROW.id() && obj.getID() == 97)
 				|| (item.getCatalogId() == ItemId.LIT_ARROW.id() && obj.getID() == OLD_BRIDGE)
 				|| (item.getCatalogId() == ItemId.ROPE.id() && (obj.getID() == STALACTITE_1 || obj.getID() == STALACTITE_2 || obj.getID() == STALACTITE_2 + 1))
-				|| (item.getCatalogId() == ItemId.ROCKS.id() && obj.getID() == SWAMP_CROSS);
+				|| (item.getCatalogId() == ItemId.ROCKS.id() && (obj.getID() == SWAMP_CROSS || obj.getID() == 795));
 	}
 
 	@Override
@@ -130,6 +130,20 @@ public class UndergroundPassMechanismMap1 implements UseInvTrigger, UseLocTrigge
 				player.teleport(698, 3441);
 				delay(2);
 				player.teleport(695, 3441);
+			}
+		}
+		else if (item.getCatalogId() == ItemId.ROCKS.id() && obj.getID() == 795) {
+			mes("you throw the rocks onto the swamp");
+			delay(3);
+			player.message("and carefully tread from one to another");
+			player.getCarriedItems().remove(new Item(ItemId.ROCKS.id()));
+			GameObject object = new GameObject(player.getWorld(), Point.location(714, 3418), 774, 0, 0);
+			player.getWorld().registerGameObject(object);
+			player.getWorld().delayedRemoveObject(object, 10000);
+			if (player.getY() >= 3418) {
+				player.teleport(715, 3416);
+			} else {
+				player.teleport(713, 3420);
 			}
 		}
 	}

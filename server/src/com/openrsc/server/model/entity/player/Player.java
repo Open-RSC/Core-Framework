@@ -664,8 +664,9 @@ public final class Player extends Mob {
 		return System.currentTimeMillis() - lastReport > 60000;
 	}
 
-	public boolean castTimer() {
-		return System.currentTimeMillis() - lastSpellCast > 1250;
+	public boolean castTimer(boolean allowRapid) {
+		final int holdTimer = allowRapid ? 0 : 1250;
+		return System.currentTimeMillis() - lastSpellCast > holdTimer;
 	}
 
 	public boolean addOwnedPlugin(final PluginTask plugin) {
@@ -1197,11 +1198,9 @@ public final class Player extends Mob {
 
 	public int calculateQuestPoints() {
 		int qps = 0;
-		for (Map.Entry<Integer, Either<Integer, String>[]> quest : getWorld().getServer().getConstants().getQuests().questData.entrySet()) {
-			Integer q = quest.getKey();
-			Either<Integer, String>[] data = quest.getValue();
-			if (this.getQuestStage(q) < 0) {
-				qps += data[0].fromLeft().get();
+		for (QuestInterface quest : getWorld().getQuests()) {
+			if (this.getQuestStage(quest.getQuestId()) < 0) {
+				qps += quest.getQuestPoints();
 			}
 		}
 		this.setQuestPoints(qps);
@@ -1452,7 +1451,7 @@ public final class Player extends Mob {
 		ActionSender.sendFatigue(this);
 	}
 
-	public void incQuestExp(final int i, final int amount) {
+	public void incQuestExp(final int i, final int amount, final boolean useFatigue) {
 		int appliedAmount = amount;
 		if (!isOneXp())
 			appliedAmount = (int) Math.round(getWorld().getServer().getConfig().SKILLING_EXP_RATE * amount);
@@ -1461,7 +1460,7 @@ public final class Player extends Mob {
 				getWorld().getServer().getConstants().getSkills().getSkill(i).getLongName() + " experience because your exp is frozen.");
 			return;
 		}
-		getSkills().addExperience(i, appliedAmount);
+		incExp(i, appliedAmount, useFatigue);
 	}
 
 	/**
@@ -3461,6 +3460,10 @@ public final class Player extends Mob {
 	public boolean isRetroClient() {
 		// temporary for setversion command to not break if player enters in range
 		return this.clientVersion >= 14 && this.clientVersion < 93;
+	}
+
+	public boolean isUsingClientBeforeQP() {
+		return this.clientVersion >= 14 && this.clientVersion <= 38;
 	}
 
 	public boolean isUsing177CompatibleClient() {

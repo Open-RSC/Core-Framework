@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.authentic.npcs.yanille;
 
 import com.openrsc.server.constants.ItemId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -15,7 +16,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class SidneySmith implements TalkNpcTrigger, UseNpcTrigger {
 
-	public static final int SIDNEY_SMITH = 778;
+	public static final int SIDNEY_SMITH = NpcId.SIDNEY_SMITH.id();
 
 	/**
 	 * ITEM UNCERTED

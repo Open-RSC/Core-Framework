@@ -8,6 +8,9 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 import com.openrsc.server.plugins.triggers.TalkNpcTrigger;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
@@ -32,6 +35,11 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 	}
 
 	@Override
+	public int getQuestPoints() {
+		return Quest.JUNGLE_POTION.reward().getQuestPoints();
+	}
+
+	@Override
 	public boolean isMembers() {
 		return true;
 	}
@@ -39,8 +47,11 @@ public class Jungle_Potion implements QuestInterface, OpLocTrigger,
 	@Override
 	public void handleReward(Player player) {
 		player.message("You gain experience in Herblaw !");
-		player.message("@gre@You haved gained 1 quest point!");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.JUNGLE_POTION), true);
+		final QuestReward reward = Quest.JUNGLE_POTION.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
 		player.getCache().store("jungle_completed", true);
 	}
 

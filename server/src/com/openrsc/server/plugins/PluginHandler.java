@@ -212,6 +212,14 @@ public final class PluginHandler {
 				}
 			}
 		}
+		// Call initialization for Registrars
+		for (final Class<?> plugin : loadedClassFiles) {
+			if (AbstractRegistrar.class.isAssignableFrom(plugin)) {
+				final Method m = plugin.getMethod("init", Server.class);
+				final Object instance = plugin.getConstructor().newInstance();
+				m.invoke(instance, getServer());
+			}
+		}
 
 		LOGGER.info("Loaded {}", box(getServer().getWorld().getQuests().size()) + " Quests.");
 		LOGGER.info("Loaded {}", box(getServer().getWorld().getMiniGames().size()) + " MiniGames.");

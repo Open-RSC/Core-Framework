@@ -8,6 +8,9 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
 
@@ -28,6 +31,11 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 	@Override
 	public String getQuestName() {
 		return "Shilo village (members)";
+	}
+
+	@Override
+	public int getQuestPoints() {
+		return Quest.SHILO_VILLAGE.reward().getQuestPoints();
 	}
 
 	@Override
@@ -71,8 +79,11 @@ public class ShiloVillageTombDolmen implements QuestInterface, OpLocTrigger, Use
 		player.message("Well Done!");
 		player.message("You have completed the Shilo Village Quest.");
 		player.message("You gain some experience in crafting.");
-		player.message("@gre@You haved gained 2 quest points!");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.SHILO_VILLAGE), true);
+		final QuestReward reward = Quest.SHILO_VILLAGE.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
 	}
 
 	@Override

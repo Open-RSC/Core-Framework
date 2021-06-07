@@ -6,6 +6,9 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.QuestInterface;
+import com.openrsc.server.plugins.shared.constants.Quest;
+import com.openrsc.server.plugins.shared.model.QuestReward;
+import com.openrsc.server.plugins.shared.model.XPReward;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -19,6 +22,11 @@ public class RuneMysteries implements QuestInterface {
 	@Override
 	public String getQuestName() {
 		return "Rune mysteries (members)";
+	}
+
+	@Override
+	public int getQuestPoints() {
+		return Quest.RUNE_MYSTERIES.reward().getQuestPoints();
 	}
 
 	@Override
@@ -355,8 +363,11 @@ public class RuneMysteries implements QuestInterface {
 	@Override
 	public void handleReward(Player player) {
 		player.message("Well done you have completed the rune mysteries quest");
-		player.message("@gre@You haved gained 1 quest point!");
+		final QuestReward reward = Quest.RUNE_MYSTERIES.reward();
+		incQP(player, reward.getQuestPoints(), !player.isUsingClientBeforeQP());
+		for (XPReward xpReward : reward.getXpRewards()) {
+			incStat(player, xpReward.getSkill().id(), xpReward.getBaseXP(), xpReward.getVarXP());
+		}
 		player.message("You now have access to the Runecraft skill!");
-		incQuestReward(player, player.getWorld().getServer().getConstants().getQuests().questData.get(Quests.RUNE_MYSTERIES), true);
 	}
 }
