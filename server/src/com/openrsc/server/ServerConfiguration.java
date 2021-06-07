@@ -37,6 +37,7 @@ public class ServerConfiguration {
 	public int CLIENT_VERSION;
 	public int MAX_PLAYERS;
 	public int MAX_PLAYERS_PER_IP;
+	public int SESSION_ID_SENDER_TIMER;
 	int SERVER_PORT;
 	int IDLE_TIMER;
 	int AUTO_SAVE;
@@ -313,6 +314,7 @@ public class ServerConfiguration {
 		String SERVER_LOCATION = tryReadString("server_location").orElse("USA");
 		MAX_PLAYERS = tryReadInt("max_players").orElse(2000);
 		MAX_PLAYERS_PER_IP = tryReadInt("max_players_per_ip").orElse(10);
+		SESSION_ID_SENDER_TIMER = tryReadInt("session_id_sender_timer").orElse(640);
 		AVATAR_GENERATOR = tryReadBool("avatar_generator").orElse(false);
 		MEMBER_WORLD = tryReadBool("member_world").orElse(true);
 		WANT_PCAP_LOGGING = tryReadBool("want_pcap_logging").orElse(false);

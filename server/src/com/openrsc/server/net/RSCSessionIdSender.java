@@ -11,15 +11,18 @@ public class RSCSessionIdSender implements Runnable {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
 	private ChannelHandlerContext ctx;
+	private int timer;
 
-	RSCSessionIdSender(ChannelHandlerContext ctx) {
+	RSCSessionIdSender(ChannelHandlerContext ctx, int timer) {
 		this.ctx = ctx;
+		this.timer = timer;
 	}
 
 	@Override
 	public void run() {
 		try {
-			Thread.sleep(150); // wait for clients that do not wait for session ID to send data
+
+			Thread.sleep(this.timer); // wait for clients that do not wait for session ID to send data
 			ConnectionAttachment att = ctx.channel().attr(RSCSessionIdSender.attachment).get();
 			if (att.canSendSessionId.get()) {
 				Integer sessionId = Functions.random(0, Integer.MAX_VALUE - 1);
