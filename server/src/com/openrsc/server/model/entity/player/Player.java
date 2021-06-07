@@ -66,7 +66,6 @@ public final class Player extends Mob {
 	// 1 walked step is +1 activity, 1 5-min warn to move is +25 activity (saved each 30 secs => 2.5 per save)
 	// so everything is multiplied by 2 to avoid decimals
 	private final int KITTEN_ACTIVITY_THRESHOLD = 50;
-	public int bankSize = getWorld().getServer().getConfig().MEMBER_WORLD ? (getConfig().WANT_CUSTOM_BANKS ? ItemId.maxCustom : 192) : 48; //Maximum bank items allowed
 	public int sessionId;
 	private int totalLevel = 0;
 	private Queue<PrivateMessage> privateMessageQueue = new LinkedList<PrivateMessage>();
@@ -977,16 +976,8 @@ public final class Player extends Mob {
 		}
 	}
 
-	public int getBankSize() {
-		return bankSize;
-	}
-
-	public void setBankSize(final int size) {
-		this.bankSize = size;
-	}
-
 	public int getFreeBankSlots() {
-		return bankSize - getBank().size();
+		return getWorld().getMaxBankSize() - getBank().size();
 	}
 
 	public synchronized Bank getBank() {

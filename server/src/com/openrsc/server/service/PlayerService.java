@@ -76,7 +76,7 @@ public class PlayerService implements IPlayerService {
             return loaded;
         } catch (final Exception ex) {
             LOGGER.error(
-                    MessageFormat.format("Unable to load player from database: {}", rq.getUsername()),
+                    MessageFormat.format("Unable to load player from database: {0}", rq.getUsername()),
                     ex
             );
             return null;
@@ -374,7 +374,7 @@ public class PlayerService implements IPlayerService {
     }
 
     private void savePlayerInventory(final Player player) throws GameDatabaseException {
-        database.querySavePlayerInventory(player);
+        database.savePlayerInventory(player);
     }
 
     private void savePlayerEquipment(final Player player) throws GameDatabaseException {
@@ -382,7 +382,7 @@ public class PlayerService implements IPlayerService {
     }
 
     private void savePlayerBank(final Player player) throws GameDatabaseException {
-        database.querySavePlayerBank(player);
+        database.savePlayerBank(player);
     }
 
     private void savePlayerBankPresets(final Player player) throws GameDatabaseException {

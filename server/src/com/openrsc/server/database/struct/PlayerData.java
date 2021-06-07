@@ -37,5 +37,4 @@ public class PlayerData {
 	public String salt;
 	public long banned;
 	public long muteExpires;
-	public int bankSize;
 }

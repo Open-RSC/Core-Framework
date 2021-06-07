@@ -2,10 +2,13 @@ package com.openrsc.server;
 
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.content.achievement.AchievementSystem;
-import com.openrsc.server.database.DatabaseUpgrades;
 import com.openrsc.server.database.GameDatabase;
+import com.openrsc.server.database.JDBCDatabase;
 import com.openrsc.server.database.impl.mysql.MySqlGameDatabase;
 import com.openrsc.server.database.impl.mysql.MySqlGameLogger;
+import com.openrsc.server.database.impl.sqlite.SqliteGameDatabase;
+import com.openrsc.server.database.patches.JDBCPatchApplier;
+import com.openrsc.server.database.patches.PatchApplier;
 import com.openrsc.server.event.custom.DailyShutdownEvent;
 import com.openrsc.server.event.custom.HourlyResetEvent;
 import com.openrsc.server.event.rsc.GameTickEvent;
@@ -226,6 +229,9 @@ public class Server implements Runnable {
 			case MYSQL:
 				database = new MySqlGameDatabase(this);
 				break;
+			case SQLITE:
+				database = new SqliteGameDatabase(this);
+				break;
 			default:
 				database = null;
 				LOGGER.error("No database type");
@@ -291,10 +297,12 @@ public class Server implements Runnable {
 				LOGGER.info("Database Connection Completed");
 
 				LOGGER.info("Checking For Database Structure Changes...");
-				if (DatabaseUpgrades.checkForDatabaseStructureChanges(getDatabase(), getConfig())) {
-					LOGGER.info("Database Structure Changes Good");
-				} else {
-					LOGGER.error("Unable to change database structure!");
+				PatchApplier patchApplier = new JDBCPatchApplier(
+						(JDBCDatabase) getDatabase(),
+						getConfig().DB_TABLE_PREFIX
+				);
+				if (!patchApplier.applyPatches()) {
+					LOGGER.error("Unable to apply database patches");
 					SystemUtil.exit(1);
 				}
 

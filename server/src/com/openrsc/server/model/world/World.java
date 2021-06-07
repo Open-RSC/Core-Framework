@@ -1,7 +1,9 @@
 package com.openrsc.server.model.world;
 
 import com.openrsc.server.Server;
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.avatargenerator.AvatarGenerator;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcDrops;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.content.clan.ClanManager;
@@ -74,6 +76,8 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	private final EntityList<Npc> npcs;
 	private final EntityList<Player> players;
 
+	//Maximum bank items allowed
+	private final int maxBankSize;
 	private final List<QuestInterface> quests;
 	private final List<MiniGameInterface> minigames;
 	private final List<Shop> shops;
@@ -81,16 +85,16 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	private final ClanManager clanManager;
 	private final Market market;
 	private final WorldLoader worldLoader;
-	private HashMap<String, ArrayList<Npc>> npcPositions;
-	private HashMap<Point, Integer> sceneryLocs;
+	private final HashMap<String, ArrayList<Npc>> npcPositions;
+	private final HashMap<Point, Integer> sceneryLocs;
 	private final ConcurrentMap<TrawlerBoat, FishingTrawler> fishingTrawler;
 
-	private ConcurrentMap<Player, Boolean> playerUnderAttackMap;
-	private ConcurrentMap<Npc, Boolean> npcUnderAttackMap;
-	private Queue<GlobalMessage> globalMessageQueue = new LinkedList<>();
+	private final ConcurrentMap<Player, Boolean> playerUnderAttackMap;
+	private final ConcurrentMap<Npc, Boolean> npcUnderAttackMap;
+	private final Queue<GlobalMessage> globalMessageQueue = new LinkedList<>();
 	private PathfindingDebug pathfindingDebug = null;
 	public NpcDrops npcDrops;
-	private Deque<Snapshot> snapshots;
+	private final Deque<Snapshot> snapshots;
 
 	public static final AttributeKey<ConnectionAttachment> attachment = AttributeKey.valueOf("conn-attachment");
 
@@ -109,12 +113,15 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		this.npcUnderAttackMap = new ConcurrentHashMap<>();
 		this.fishingTrawler = new ConcurrentHashMap<>();
 		this.snapshots = new LinkedList<>();
-		this.avatarGenerator = getServer().getConfig().AVATAR_GENERATOR ? new AvatarGenerator(this) : null;
 		this.worldLoader = new WorldLoader(this);
 		this.regionManager = new RegionManager(this);
 		this.clanManager = new ClanManager(this);
 		this.partyManager = new PartyManager(this);
-		this.market = getServer().getConfig().SPAWN_AUCTION_NPCS ? new Market(this) : null;
+
+		final ServerConfiguration config = server.getConfig();
+		this.avatarGenerator = config.AVATAR_GENERATOR ? new AvatarGenerator(this) : null;
+		this.market = config.SPAWN_AUCTION_NPCS ? new Market(this) : null;
+		this.maxBankSize = config.MEMBER_WORLD ? (config.WANT_CUSTOM_BANKS ? ItemId.maxCustom : 192) : 48;
 	}
 
 	/**
@@ -424,8 +431,8 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		if (o.getID() == 1147) {
 			return;
 		}
-		switch (o.getType()) {
-			case 0:
+		switch (o.getGameObjectType()) {
+			case SCENERY:
 				if (o.getGameObjectDef().getType() != 1 && o.getGameObjectDef().getType() != 2) {
 					return;
 				}
@@ -465,7 +472,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 				}
 				break;
 
-			case 1:
+			case BOUNDARY:
 				if (o.getDoorDef().getDoorType() != 1) {
 					return;
 				}
@@ -686,8 +693,8 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public void unregisterGameObject(final GameObject o) {
 		o.remove();
 		final int dir = o.getDirection();
-		switch (o.getType()) {
-			case 0:
+		switch (o.getGameObjectType()) {
+			case SCENERY:
 				if (o.getGameObjectDef().getType() != 1 && o.getGameObjectDef().getType() != 2) {
 					return;
 				}
@@ -719,7 +726,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 					}
 				}
 				break;
-			case 1:
+			case BOUNDARY:
 				if (o.getDoorDef().getDoorType() != 1) {
 					return;
 				}
@@ -963,5 +970,9 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	@Override
 	public void run() {
+	}
+
+	public int getMaxBankSize() {
+		return maxBankSize;
 	}
 }

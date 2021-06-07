@@ -283,7 +283,7 @@ public class ServerConfiguration {
 		notifyDeprecated();
 
 		// Database settings
-		DB_TYPE = DatabaseType.getByType(tryReadInt("db_type").orElse(0));
+		DB_TYPE = DatabaseType.resolveType(tryReadString("db_type").orElse(null));
 		DB_NAME = tryReadString("db_name").orElse("preservation");
 		DB_HOST = tryReadString("db_host").orElse("localhost:3306");
 		DB_USER = tryReadString("db_user").orElse("root");

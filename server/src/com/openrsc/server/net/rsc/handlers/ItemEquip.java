@@ -45,7 +45,7 @@ public final class ItemEquip implements PayloadProcessor<EquipStruct, OpcodeIn> 
 			player.resetAllExceptBank();
 			int bankSlot = payload.slotIndex;
 
-			if (bankSlot < 0 || bankSlot >= player.getBankSize()) {
+			if (bankSlot < 0 || bankSlot >= player.getWorld().getMaxBankSize()) {
 				player.setSuspiciousPlayer(true, "bankSlot < 0 or bankSlot >= bank size");
 				return;
 			}

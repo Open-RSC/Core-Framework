@@ -13,8 +13,9 @@ cd server
 # runs server with the configuration found in "server/default.conf"
 bash ./ant_launcher.sh default
 
-# uncomment to run additional servers with different configulations. Prod use: uncomment all below
+# uncomment to run additional servers with different configurations. Prod use: uncomment all below
 #bash ./ant_launcher.sh openrsc &&  \
 #bash ./ant_launcher.sh rsccabbage && \
 #bash ./ant_launcher.sh uranium && \
-#bash ./ant_launcher.sh rsccoleslaw
+#bash ./ant_launcher.sh rsccoleslaw \
+#bash ./ant_launcher.sh 2001scape

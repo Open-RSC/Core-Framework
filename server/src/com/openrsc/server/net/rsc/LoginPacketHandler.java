@@ -312,7 +312,8 @@ public class LoginPacketHandler {
 							channel.writeAndFlush(new PacketBuilder().writeByte((byte) RegisterLoginResponse.UNSUCCESSFUL).toPacket());
 							channel.close();
 						}
-					} else if (packet.getLength() >= 30) {
+					}
+					else if (packet.getLength() >= 30) {
 						// mudclients between 38 and 93
 						int upperNameHash, lowerNameHash;
 						info3 = packet.readShort();

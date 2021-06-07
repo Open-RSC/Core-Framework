@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS `bankpresets`;
+CREATE TABLE IF NOT EXISTS `bankpresets`
+(
+    `id`        INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    `playerID`  int(10) NOT NULL,
+    `slot`      int(10) NOT NULL,
+    `inventory` blob DEFAULT NULL,
+    `equipment` blob DEFAULT NULL
+);

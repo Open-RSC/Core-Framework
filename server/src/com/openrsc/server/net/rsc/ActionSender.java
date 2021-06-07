@@ -1726,14 +1726,14 @@ public class ActionSender {
 				sendMessage(player, "Warning: Unable to display all items in bank!");
 			}
 			// If bank is filled to page 4 and bank size reports supporting more than 4 pages
-			if (itemsInBank > (192 - 48) && player.getBankSize() > 192) {
+			if (itemsInBank > (192 - 48) && player.getWorld().getMaxBankSize() > 192) {
 				sendMessage(player, "Warning: Bank is unauthentically large. Deposited items may not be visible to be withdrawn!");
 			}
 		}
 
 		BankStruct struct = new BankStruct();
 		struct.itemsStoredSize = itemsInBank;
-		struct.maxBankSize = player.getBankSize();
+		struct.maxBankSize = player.getWorld().getMaxBankSize();
 		struct.catalogIDs = new int[itemsInBank];
 		struct.amount = new int[itemsInBank];
 		synchronized (player.getBank().getItems()) {
@@ -1755,14 +1755,14 @@ public class ActionSender {
 				sendMessage(player, "Warning: Unable to display all items in bank!");
 			}
 			// If bank is filled to page 4 and bank size reports supporting more than 4 pages
-			if (itemsInBank > (192 - 48) && player.getBankSize() > 192) {
+			if (itemsInBank > (192 - 48) && player.getWorld().getMaxBankSize() > 192) {
 				sendMessage(player, "Warning: Bank is unauthentically large. Deposited items may not be visible to be withdrawn!");
 			}
 		}
 
 		BankStruct struct = new BankStruct();
 		struct.itemsStoredSize = itemsInBank;
-		struct.maxBankSize = player.getBankSize();
+		struct.maxBankSize = player.getWorld().getMaxBankSize();
 		struct.catalogIDs = new int[itemsInBank];
 		struct.amount = new int[itemsInBank];
 

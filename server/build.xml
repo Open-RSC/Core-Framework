@@ -33,6 +33,7 @@
         <javac srcdir="${src}" destdir="${build}" debug="on" includeantruntime="false" target="${javac.target}"
                source="${javac.source}">
             <classpath>
+                <pathelement location="${lib}/commons-lang3-3.12.0.jar"/>
                 <pathelement location="${lib}/commons-codec-1.14.jar"/>
                 <pathelement location="${lib}/netty-all-4.1.33.Final.jar"/>
                 <pathelement location="${lib}/netty-3.4.6.final.jar"/>
@@ -42,6 +43,7 @@
                 <pathelement location="${lib}/xpp3-1.1.4c.jar"/>
                 <pathelement location="${lib}/xstream-1.4.9.jar"/>
                 <pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar"/>
+                <pathelement location="${lib}/sqlite-jdbc-3.34.0.jar"/>
                 <pathelement location="${lib}/commons-lang-2.6.jar"/>
                 <pathelement location="${lib}/guava-30.1.1-jre.jar"/>
                 <pathelement location="${lib}/JDA-4.0.0_55-withDependencies.jar"/>

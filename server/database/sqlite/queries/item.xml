@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../sql_queries.xsd">
+    <query key="item.deleteItems">
+        delete from `_PREFIX_itemstatuses` where `itemID` in ({items})
+    </query>
+    <query key="item.deleteItem">
+        delete from `_PREFIX_itemstatuses` where `itemID` = {itemId}
+    </query>
+    <query key="item.createItem">
+        insert into `_PREFIX_itemstatuses` (`itemId`, `catalogID`, `amount`, `noted`, `wielded`, `durability`)
+        values({itemId}, {catalogId}, {amount}, {noted}, {wielded}, {durability})
+    </query>
+</queries>

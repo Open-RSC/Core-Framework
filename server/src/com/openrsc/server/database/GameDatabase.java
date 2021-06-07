@@ -8,6 +8,7 @@ import com.openrsc.server.content.achievement.AchievementTask;
 import com.openrsc.server.content.market.CollectibleItem;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
+import com.openrsc.server.database.patches.PatchApplier;
 import com.openrsc.server.database.struct.*;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
@@ -20,6 +21,7 @@ import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.util.SystemUtil;
+import com.openrsc.server.util.checked.CheckedRunnable;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +31,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-public abstract class GameDatabase extends GameDatabaseQueries {
+public abstract class GameDatabase {
 	/**
 	 * The asynchronous logger.
 	 */
@@ -193,11 +195,11 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 	public abstract void querySavePlayerData(int playerId, PlayerData playerData) throws GameDatabaseException;
 
-	public abstract void querySavePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException;
+	public abstract void savePlayerInventory(int playerId, PlayerInventory[] inventory) throws GameDatabaseException;
 
 	public abstract void querySavePlayerEquipped(int playerId, PlayerEquipped[] equipment) throws GameDatabaseException;
 
-	public abstract void querySavePlayerBank(int playerId, PlayerBank[] bank) throws GameDatabaseException;
+	public abstract void savePlayerBank(int playerId, PlayerBank[] bank) throws GameDatabaseException;
 
 	public abstract void querySavePlayerBankPresets(int playerId, PlayerBankPreset[] bankPreset) throws GameDatabaseException;
 
@@ -232,7 +234,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	//Item and Container operations
 	public abstract int queryItemCreate(Item item) throws GameDatabaseException;
 
-	public abstract void queryItemPurge(Item item) throws GameDatabaseException;
+	public abstract void purgeItem(Item item) throws GameDatabaseException;
 
 	public abstract void queryItemUpdate(Item item) throws GameDatabaseException;
 
@@ -304,13 +306,13 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		}
 	}
 
-	public boolean atomically(Runnable runnable) {
+	public boolean atomically(CheckedRunnable<Exception> runnable) {
 		try {
 			startTransaction();
 			runnable.run();
 			commitTransaction();
 			return true;
-		} catch(GameDatabaseException ex) {
+		} catch(Exception ex) {
 			LOGGER.catching(ex);
 			try {
 				rollbackTransaction();
@@ -480,7 +482,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 	}
 
 	public void itemPurge(final Item item) throws GameDatabaseException {
-		queryItemPurge(item);
+		purgeItem(item);
 	}
 
 	public void itemUpdate(final Item item) throws GameDatabaseException {
@@ -768,7 +770,6 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		playerData.male = player.isMale();
 		playerData.combatStyle = player.getCombatStyle();
 		playerData.muteExpires = player.getMuteExpires();
-		playerData.bankSize = player.getBankSize();
 		playerData.groupId = player.getGroupID();
 		playerData.blockChat = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_CHAT_MESSAGES, player.isUsingCustomClient());
 		playerData.blockPrivate = player.getSettings().getPrivacySetting(PlayerSettings.PRIVACY_BLOCK_PRIVATE_MESSAGES, player.isUsingCustomClient());
@@ -782,7 +783,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 		querySavePlayerData(player.getDatabaseID(), playerData);
 	}
 
-	public void querySavePlayerInventory(Player player) throws GameDatabaseException {
+	public void savePlayerInventory(Player player) throws GameDatabaseException {
 		final int invSize = player.getCarriedItems().getInventory().size();
 		final PlayerInventory[] inventory = new PlayerInventory[invSize];
 
@@ -798,7 +799,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 			inventory[i].durability = 100;
 		}
 
-		querySavePlayerInventory(player.getDatabaseID(), inventory);
+		savePlayerInventory(player.getDatabaseID(), inventory);
 	}
 
 	public void querySavePlayerEquipped(Player player) throws GameDatabaseException {
@@ -811,19 +812,20 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 				final Item item = player.getCarriedItems().getEquipment().get(i);
 				if (item != null) {
 					final PlayerEquipped equipment = new PlayerEquipped();
-					equipment.itemId = player.getCarriedItems().getEquipment().get(i).getItemId();
-					equipment.itemStatus = player.getCarriedItems().getEquipment().get(i).getItemStatus();
+					equipment.playerId = player.getDatabaseID();
+					equipment.itemId = item.getItemId();
+					equipment.itemStatus = item.getItemStatus();
 					list.add(equipment);
 				}
 			}
 
-			final PlayerEquipped[] equippedItems = list.toArray(new PlayerEquipped[list.size()]);
+			final PlayerEquipped[] equippedItems = list.toArray(new PlayerEquipped[0]);
 
 			querySavePlayerEquipped(player.getDatabaseID(), equippedItems);
 		}
 	}
 
-	public void querySavePlayerBank(Player player) throws GameDatabaseException {
+	public void savePlayerBank(Player player) throws GameDatabaseException {
 		final int bankSize = player.getBank().size();
 		final PlayerBank[] bank = new PlayerBank[bankSize];
 
@@ -833,7 +835,7 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 			bank[i].itemStatus = player.getBank().get(i).getItemStatus();
 		}
 
-		querySavePlayerBank(player.getDatabaseID(), bank);
+		savePlayerBank(player.getDatabaseID(), bank);
 	}
 
 	public void querySavePlayerBankPresets(Player player) throws GameDatabaseException {
@@ -881,8 +883,9 @@ public abstract class GameDatabase extends GameDatabaseQueries {
 
 				final PlayerBankPreset[] presets = list.toArray(new PlayerBankPreset[list.size()]);
 
-				if (presets.length > 0)
+				if (presets.length > 0) {
 					querySavePlayerBankPresets(player.getDatabaseID(), presets);
+				}
 			}
 		} catch (final IOException ex) {
 			// Convert SQLException to a general usage exception

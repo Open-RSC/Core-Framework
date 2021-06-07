@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../sql_queries.xsd">
+    <query key="player.getPlayerByUsername">
+        select *
+        from _PREFIX_players
+        left join _PREFIX_ironman on _PREFIX_players.id = _PREFIX_ironman.playerID
+        where username like {username};
+    </query>
+
+    <query key="player.bank.getItemIds">
+        select itemID
+        from `_PREFIX_bank`
+        where `playerID` = {playerId}
+    </query>
+    <query key="player.bank.deleteItems">
+        delete from `_PREFIX_bank`
+        where `playerID` = {playerId}
+        and `itemID` in ({items})
+    </query>
+    <query key="player.inventory.getItemIds">
+        select itemID
+        from `_PREFIX_invitems`
+        where `playerID` = {playerId}
+    </query>
+    <query key="player.inventory.deleteItems">
+        delete from `_PREFIX_invitems`
+        where `playerID` = {playerId}
+        and `itemID` in ({items})
+    </query>
+
+    <!--   EQUIPPED   -->
+
+    <query key="player.equipped.equipItem">
+        insert into `_PREFIX_equipped` (`playerID`, `itemID`)
+        values ({playerId}, {itemId})
+    </query>
+    <query key="player.equipped.getItemIds">
+        select itemID
+        from `_PREFIX_equipped`
+        where `playerID` = {playerId}
+    </query>
+    <query key="player.equipped.deleteItems">
+        delete from `_PREFIX_equipped`
+        where `playerID` = {playerId}
+        and `itemID` in ({items})
+    </query>
+</queries>

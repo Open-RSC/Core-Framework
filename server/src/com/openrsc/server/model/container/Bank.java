@@ -74,7 +74,7 @@ public class Bank {
 			// There is none of this item in the bank yet - create a new stack.
 			if (existingStack == null) {
 				// Make sure they have room in the bank
-				if (list.size() >= player.getBankSize())
+				if (list.size() >= player.getWorld().getMaxBankSize())
 					return false;
 
 				// TODO: Durability
@@ -205,7 +205,7 @@ public class Bank {
 
 	public boolean canHold(Item item) {
 		synchronized(list) {
-			return (getPlayer().getBankSize() - list.size()) >= getRequiredSlots(item);
+			return (getPlayer().getWorld().getMaxBankSize() - list.size()) >= getRequiredSlots(item);
 		}
 	}
 
@@ -229,7 +229,7 @@ public class Bank {
 
 	public boolean full() {
 		synchronized(list) {
-			return list.size() >= getPlayer().getBankSize();
+			return list.size() >= getPlayer().getWorld().getMaxBankSize();
 		}
 	}
 

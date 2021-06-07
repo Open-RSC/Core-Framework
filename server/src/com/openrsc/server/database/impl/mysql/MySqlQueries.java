@@ -10,7 +10,7 @@ public class MySqlQueries {
 	public String updateExperience, updateStats, updateMaxStats, updateMaxStat, updateExpCapped, playerExpCapped, playerExp, playerCurExp, playerMaxExp;
 	public final String createPlayer, recentlyRegistered, initMaxStats, initStats, initExp, initExpCapped;
 	public final String save_AddFriends, save_DeleteFriends, save_AddIgnored, save_DeleteIgnored;
-	public final String playerExists, playerGroupId, playerData, playerInvItems, playerEquipped, playerBankItems, playerBankPresets;
+	public final String playerExists, playerGroupId, playerInvItems, playerEquipped, playerBankItems, playerBankPresets;
 	public final String playerFriends, playerIgnored, playerQuests, playerAchievements, playerCache;
 	public final String max_itemStatus, save_ItemCreate, save_ItemUpdate, save_ItemPurge; //itemstatuses, must be inserted before adding entry on bank, equipment, inventory
 	public final String save_DeleteBank, save_DeleteBankPresets, save_BankAdd, save_BankRemove, save_BankPresetAdd, save_BankPresetRemove;
@@ -27,7 +27,7 @@ public class MySqlQueries {
 	public final String expiredAuction, collectibleItems, collectItem, newAuction, cancelAuction, auctionCount, playerAuctionCount, auctionItem, auctionItems, auctionSellOut, updateAuction;
 	public final String discordIdToPlayerId, playerIdFromPairToken, pairDiscord, deleteTokenFromCache, watchlist, watchlists, updateWatchlist, deleteWatchlist;
 	public final String checkTableExists, checkColumnExists, checkColumnType, addColumn, modifyColumn;
-
+	public final String save_IronMan;
 	private final Server server;
 
 	public final Server getServer() {
@@ -91,15 +91,6 @@ public class MySqlQueries {
 		save_DeleteIgnored = "DELETE FROM `" + PREFIX + "ignores` WHERE `playerID` = ?";
 		playerExists = "SELECT 1 FROM `" + PREFIX + "players` WHERE `id` = ?";
 		playerGroupId = "SELECT `group_id` FROM `" + PREFIX + "players` WHERE `id` = ?";
-		playerData = "SELECT `id`, `group_id`, "
-			+ "`combatstyle`, `login_date`, `login_ip`, `x`, `y`, `fatigue`,  `kills`,"
-			+ "`deaths`, `npc_kills`, "
-			+ (getServer().getConfig().SPAWN_IRON_MAN_NPCS ? "`iron_man`, `iron_man_restriction`,`hc_ironman_death`, " : "")
-			+ "`quest_points`, `block_chat`, `block_private`,"
-			+ "`block_trade`, `block_duel`, `cameraauto`,"
-			+ "`onemouse`, `soundoff`, `haircolour`, `topcolour`,"
-			+ "`trousercolour`, `skincolour`, `headsprite`, `bodysprite`, `male`,"
-			+ "`username`, `pass`, `salt`, `bank_size`, `combat`, `skill_total`, `muted` FROM `" + PREFIX + "players` WHERE `username`=?";
 		playerInvItems = "SELECT i.*,i2.* FROM `" + PREFIX + "invitems` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE i.`playerID`=? ORDER BY `slot` ASC";
 		playerEquipped = "SELECT i.`itemID`,i2.* FROM `" + PREFIX + "equipped` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE i.`playerID`=?";
 		playerBankItems = "SELECT i.`itemID`,i2.* FROM `" + PREFIX + "bank` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE i.`playerID`=? ORDER BY `slot` ASC";
@@ -127,10 +118,10 @@ public class MySqlQueries {
 		save_EquipmentRemove = "DELETE i.*, i2.* FROM `" + PREFIX + "equipped` i JOIN `" + PREFIX + "itemstatuses` i2 ON i.`itemID`=i2.`itemID` WHERE `playerID`=? AND `itemID`=?";
 		save_UpdateBasicInfo = "UPDATE `" + PREFIX + "players` SET `combat`=?, skill_total=?, " +
 			"`x`=?, `y`=?, `fatigue`=?, `kills`=?, `deaths`=?, `npc_kills`=?, " +
-			(getServer().getConfig().SPAWN_IRON_MAN_NPCS ? "`iron_man`=?, `iron_man_restriction`=?,`hc_ironman_death`=?, " : "") +
 			"`quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, " +
-			"`headsprite`=?, `bodysprite`=?, `male`=?, `combatstyle`=?, `muted`=?, `bank_size`=?, `group_id`=?," +
+			"`headsprite`=?, `bodysprite`=?, `male`=?, `combatstyle`=?, `muted`=?, `group_id`=?," +
 			"`block_chat`=?, `block_private`=?, `block_trade`=?, `block_duel`=?, `cameraauto`=?, `onemouse`=?, `soundoff`=? WHERE `id`=?";
+		save_IronMan = "UPDATE `" + PREFIX + "ironman` SET `iron_man`=?, `iron_man_restriction`=?,`hc_ironman_death`=? WHERE `playerID`=?";
 		save_DeleteQuests = "DELETE FROM `" + PREFIX + "quests` WHERE `playerID`=?";
 		save_DeleteAchievements = "DELETE FROM `" + PREFIX + "achievement_status` WHERE `playerID`=?";
 		save_DeleteCache = "DELETE FROM `" + PREFIX + "player_cache` WHERE `playerID`=?";
@@ -143,7 +134,7 @@ public class MySqlQueries {
 		achievements = "SELECT `id`, `name`, `description`, `extra`, `added` FROM `" + PREFIX + "achievements` ORDER BY `id` ASC";
 		rewards = "SELECT `item_id`, `amount`, `guaranteed`, `reward_type` FROM `" + PREFIX + "achievement_reward` WHERE `achievement_id` = ?";
 		tasks = "SELECT `type`, `do_id`, `do_amount` FROM `" + PREFIX + "achievement_task` WHERE `achievement_id` = ?";
-		playerLoginData = "SELECT `id`, `group_id`, `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username`=?";
+		playerLoginData = "SELECT `id`, `group_id`, `pass`, `salt`, `banned` FROM `" + PREFIX + "players` WHERE `username` like ?";
 		playerPendingRecovery = "SELECT `username`, `question1`, `answer1`, `question2`, `answer2`, " +
 			"`question3`, `answer3`, `question4`, `answer4`, `question5`, `answer5`, `date_set`, " +
 			"`ip_set` FROM `" + PREFIX + "player_change_recovery` WHERE `playerID`=?";
@@ -158,7 +149,7 @@ public class MySqlQueries {
 		newContactDetails = "INSERT INTO `" + PREFIX + "player_contact_details` (`playerID`, `username`, `fullname`, `zipCode`, `country`, `email`, `date_modified`, `ip`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		updateContactDetails = "UPDATE `" + PREFIX + "player_contact_details`" +
 			"SET `fullname`=?, `zipCode`=?, `country`=?, `email`=?, `date_modified`=?, `ip`=? WHERE `playerID`=?";
-		userToId = "SELECT DISTINCT `id` FROM `" + PREFIX + "players` WHERE `username`=?";
+		userToId = "SELECT DISTINCT `id` FROM `" + PREFIX + "players` WHERE `username` like ?";
 		idToUser = "SELECT DISTINCT `username` FROM `" + PREFIX + "players` WHERE `player_ID`=?";
 		npcKillSelectAll = "SELECT * FROM `" + PREFIX + "npckills` WHERE playerID = ?";
 		npcKillSelect = "SELECT * FROM `" + PREFIX + "npckills` WHERE npcID = ? AND playerID = ?";
@@ -167,11 +158,11 @@ public class MySqlQueries {
 		dropLogSelect = "SELECT * FROM `" + PREFIX + "droplogs` WHERE itemID = ? AND playerID = ?";
 		dropLogInsert = "INSERT INTO `" + PREFIX + "droplogs`(itemID, playerID, dropAmount, npcId) VALUES (?, ?, ?, ?)";
 		dropLogUpdate = "UPDATE `" + PREFIX + "droplogs` SET dropAmount = ? WHERE itemID = ? AND playerID = ?";
-		renamePlayer = "UPDATE `" + PREFIX + "players` SET `username` = ? WHERE `id` = ?";
+		renamePlayer = "UPDATE `" + PREFIX + "players` SET `username` like ? WHERE `id` = ?";
 		banPlayer = "UPDATE `" + PREFIX + "players` SET `banned`=?, offences = offences + 1 WHERE `username` LIKE ?";
 		unbanPlayer = "UPDATE `" + PREFIX + "players` SET `banned`= 0 WHERE `username` LIKE ?";
 		initializeOnlineUsers = "UPDATE `" + PREFIX + "players` SET `online`='0' WHERE online='1'";
-		fetchLoginIp = "SELECT `login_ip` FROM `" + PREFIX + "players` WHERE `username`=?";
+		fetchLoginIp = "SELECT `login_ip` FROM `" + PREFIX + "players` WHERE `username` like ?";
 		fetchLinkedPlayers = "SELECT `username`, `group_id` FROM `" + PREFIX + "players` WHERE `login_ip` LIKE ?";
 		addNpcSpawn = "INSERT INTO `" + PREFIX + "npclocs`(`id`,`startX`,`minX`,`maxX`,`startY`,`minY`,`maxY`) VALUES(?, ?, ?, ?, ?, ?, ?)";
 		removeNpcSpawn = "DELETE FROM `" + PREFIX + "npclocs` WHERE id=? AND startX=? AND startY=? AND minX=? AND maxX=? AND minY=? AND maxY=?";
@@ -191,7 +182,7 @@ public class MySqlQueries {
 		deleteClan = "DELETE FROM `" + PREFIX + "clan` WHERE `id`=?";
 		deleteClanMembers = "DELETE FROM `" + PREFIX + "clan_players` WHERE `clan_id`=?";
 		updateClan = "UPDATE `" + PREFIX + "clan` SET `name`=?, `tag`=?, `leader`=?, `kick_setting`=?, `invite_setting`=?, `allow_search_join`=?, `clan_points`=? WHERE `id`=?";
-		updateClanMember = "UPDATE `" + PREFIX + "clan_players` SET `rank`=? WHERE `username`=?";
+		updateClanMember = "UPDATE `" + PREFIX + "clan_players` SET `rank`=? WHERE `username` like ?";
 
 		expiredAuction = "INSERT INTO `" + PREFIX + "expired_auctions`(`item_id`, `item_amount`, `time`, `playerID`, `explanation`) VALUES (?,?,?,?,?)";
 		collectibleItems = "SELECT `claim_id`, `item_id`, `item_amount`, `playerID`, `explanation` FROM `" + PREFIX
