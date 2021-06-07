@@ -224,8 +224,7 @@ Choices:
             pause
             start
         fi
-    elif [ "$action" == "8" ]; then # Exits and kills any remaining java processes
-        kill -9 $(ps -ef | pgrep -f "java")
+    elif [ "$action" == "8" ]; then # Exits
         exit
     fi
 }
