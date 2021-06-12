@@ -4,7 +4,6 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcDrops;
 import com.openrsc.server.constants.Skills;
 import com.openrsc.server.content.DropTable;
-import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.external.ObjectFishDef;
 import com.openrsc.server.external.ObjectFishingDef;
 import com.openrsc.server.external.ObjectWoodcuttingDef;
@@ -58,13 +57,13 @@ public final class Development implements CommandTrigger {
 		else if (command.equalsIgnoreCase("rpc") || command.equalsIgnoreCase("rnpc") || command.equalsIgnoreCase("removenpc")){
 			removeNpc(player, command, args);
 		}
-		else if (command.equalsIgnoreCase("removeobject") || command.equalsIgnoreCase("robject")) {
+		else if (command.equalsIgnoreCase("removeobject") || command.equalsIgnoreCase("robject") || command.equalsIgnoreCase("removescenery") || command.equalsIgnoreCase("rscenery")) {
 			removeObject(player, command, args);
 		}
-		else if (command.equalsIgnoreCase("createobject") || command.equalsIgnoreCase("cobject") || command.equalsIgnoreCase("addobject") || command.equalsIgnoreCase("aobject")) {
+		else if (command.equalsIgnoreCase("createobject") || command.equalsIgnoreCase("cobject") || command.equalsIgnoreCase("addobject") || command.equalsIgnoreCase("aobject") || command.equalsIgnoreCase("createscenery") || command.equalsIgnoreCase("cscenery") || command.equalsIgnoreCase("addscenery") || command.equalsIgnoreCase("ascenery")) {
 			createObject(player, command, args);
 		}
-		else if (command.equalsIgnoreCase("rotateobject")) {
+		else if (command.equalsIgnoreCase("rotateobject") || command.equalsIgnoreCase("rotatescenery")) {
 			rotateObject(player, command, args);
 		}
 		else if (command.equalsIgnoreCase("tile")) {
@@ -159,17 +158,9 @@ public final class Development implements CommandTrigger {
 			return;
 		}
 
-		try {
-			player.getWorld().getServer().getDatabase().addNpcSpawn(n.getLoc());
-		} catch (final GameDatabaseException ex) {
-			LOGGER.catching(ex);
-			player.message("Database Error! " + ex.getMessage());
-			return;
-		}
-
 		player.getWorld().registerNpc(n);
 		n.setShouldRespawn(true);
-		player.message(messagePrefix + "Added NPC to database: " + n.getDef().getName() + " at " + npcLoc + " with radius " + radius);
+		player.message(messagePrefix + "Added NPC: " + n.getDef().getName() + " at " + npcLoc + " with radius " + radius);
 	}
 
 	private void removeNpc(Player player, String command, String[] args) {
@@ -194,15 +185,7 @@ public final class Development implements CommandTrigger {
 			return;
 		}
 
-		try {
-			player.getWorld().getServer().getDatabase().removeNpcSpawn(npc.getLoc());
-		} catch (final GameDatabaseException ex) {
-			LOGGER.catching(ex);
-			player.message("Database Error! " + ex.getMessage());
-			return;
-		}
-
-		player.message(messagePrefix + "Removed NPC from database: " + npc.getDef().getName() + " with instance ID " + id);
+		player.message(messagePrefix + "Removed NPC: " + npc.getDef().getName() + " with instance ID " + id);
 		player.getWorld().unregisterNpc(npc);
 	}
 
@@ -247,27 +230,19 @@ public final class Development implements CommandTrigger {
 		final GameObject object = player.getViewArea().getGameObject(objectLoc);
 
 		if (object != null && object.getType() != 1) {
-			player.message("There is already an object in that spot: " + object.getGameObjectDef().getName());
+			player.message("There is already scenery in that spot: " + object.getGameObjectDef().getName());
 			return;
 		}
 
 		if (player.getWorld().getServer().getEntityHandler().getGameObjectDef(id) == null) {
-			player.message(messagePrefix + "Invalid object id");
+			player.message(messagePrefix + "Invalid scenery id");
 			return;
 		}
 
 		final GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), id, 0, 0);
 
-		try {
-			player.getWorld().getServer().getDatabase().addObjectSpawn(newObject.getLoc());
-		} catch (final GameDatabaseException ex) {
-			LOGGER.catching(ex);
-			player.message("Database Error! " + ex.getMessage());
-			return;
-		}
-
 		player.getWorld().registerGameObject(newObject);
-		player.message(messagePrefix + "Added object to database: " + newObject.getGameObjectDef().getName() + " with instance ID " + newObject.getID() + " at " + newObject.getLocation());
+		player.message(messagePrefix + "Added scenery: " + newObject.getGameObjectDef().getName() + " with ID " + newObject.getID() + " at " + newObject.getLocation());
 	}
 
 	private void removeObject(Player player, String command, String[] args) {
@@ -311,19 +286,11 @@ public final class Development implements CommandTrigger {
 
 		if(object == null)
 		{
-			player.message(messagePrefix + "There is no object at coordinates " + objectLocation);
+			player.message(messagePrefix + "There is no scenery at coordinates " + objectLocation);
 			return;
 		}
 
-		try {
-			player.getWorld().getServer().getDatabase().removeObjectSpawn(object.getLoc());
-		} catch (final GameDatabaseException ex) {
-			LOGGER.catching(ex);
-			player.message("Database Error! " + ex.getMessage());
-			return;
-		}
-
-		player.message(messagePrefix + "Removed object from database: " + object.getGameObjectDef().getName() + " with instance ID " + object.getID());
+		player.message(messagePrefix + "Removed scenery: " + object.getGameObjectDef().getName() + " with ID " + object.getID());
 		player.getWorld().unregisterGameObject(object);
 	}
 
@@ -357,6 +324,10 @@ public final class Development implements CommandTrigger {
 			y = player.getY();
 		}
 
+		if (!player.getWorld().getServer().getConfig().WANT_CUSTOM_LANDSCAPE) {
+			player.message(messagePrefix + "@red@Warning: @dre@This function will only work for inauthentic clients!");
+			player.message("@dre@It is not possible to dynamically rotate scenery under any authentic protocol of RuneScape Classic.");
+		}
 
 		if(!player.getWorld().withinWorld(x, y))
 		{
@@ -385,34 +356,15 @@ public final class Development implements CommandTrigger {
 			direction = object.getDirection() + 1;
 		}
 
-		if (direction >= 8) {
-			direction = 0;
-		}
-		if(direction < 0) {
-			direction = 8;
-		}
+		direction %= 8;
+		direction = Math.abs(direction);
 
-		try {
-			player.getWorld().getServer().getDatabase().removeObjectSpawn(object.getLoc());
-		} catch (final GameDatabaseException ex) {
-			LOGGER.catching(ex);
-			player.message("Database Error! " + ex.getMessage());
-			return;
-		}
 		player.getWorld().unregisterGameObject(object);
 
 		GameObject newObject = new GameObject(player.getWorld(), Point.location(x, y), object.getID(), direction, object.getType());
 		player.getWorld().registerGameObject(newObject);
 
-		try {
-			player.getWorld().getServer().getDatabase().addObjectSpawn(newObject.getLoc());
-		} catch (final GameDatabaseException ex) {
-			LOGGER.catching(ex);
-			player.message("Database Error! " + ex.getMessage());
-			return;
-		}
-
-		player.message(messagePrefix + "Rotated object in database: " + newObject.getGameObjectDef().getName() + " to rotation " + newObject.getDirection() + " with instance ID " + newObject.getID() + " at " + newObject.getLocation());
+		player.message(messagePrefix + "Rotated object: " + newObject.getGameObjectDef().getName() + " to rotation " + newObject.getDirection() + " with instance ID " + newObject.getID() + " at " + newObject.getLocation());
 	}
 
 	private void tileInformation(Player player) {

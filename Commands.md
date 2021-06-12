@@ -227,20 +227,21 @@ Developer Commands
 - removenpc
   - Usage: `::removenpc [npc_instance_id]`
   - Alias: `::rnpc` or `::rpc`
-  - Removes the specified NPC permanently from the database.
-- removeobject
-  - Usage: `::removeobject (x) (y)`
-  - Alias: `::robject`
-  - Removes the object permanently from the database at the specified coordinates.
+  - Removes the specified NPC.
+- removescenery
+  - Usage: `::removescenery (x) (y)`
+  - Alias: `::rscenery`, `::robject`, `::removeobject`
+  - Removes the scenery at the specified coordinates.
   - If no coordinates are supplied, then the current player's position is used.
-- createobject
-  - Usage: `::createobject [id] (x) (y)`
-  - Alias: `::cobject` or `::addobject` or `::aobject`
-  - Adds the specified object to the database permanently at the specified coordinates.
+- createscenery
+  - Usage: `::createscenery [id] (x) (y)`
+  - Alias: `::cscenery` or `::ascenery` or `::createobject`or `::cobject` or `::addobject` or `::aobject`
+  - Adds the scenery at the specified coordinates.
   - If no coordinates are supplied, then the current player's position is used.
-- rotateobject
-  - Usage: `::createobject (x) (y) (direction)`
-  - Rotates the object at the specified coordinates permanently in the database.
+- rotatescenery
+  - Usage: `::rotatescenery (x) (y) (direction)`
+  - Alias: `::rotateobject`
+  - Rotates the scenery at the specified coordinates.
   - If no direction is specified, then the next incremental number is used looping from 0 to 8.
   - If no coordinates are supplied, then the current player's position is used.
 - tile
