@@ -103,7 +103,7 @@ public class EntityHandler {
 
 	public static AnimationDef getAnimationDef(int id) {
 		if (id < 0 || id >= animations.size()) {
-			return null;
+			return animations.get(0);
 		}
 		return animations.get(id);
 	}
@@ -2226,16 +2226,12 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Hardcore Iron Man", "A Hardcore Iron Man", "Armour", 0, 0, 0, 0, false, sprites, 11167296, 8, 14, 13415270, 145, 220, 6, 6, 5, i++));
 		sprites = new int[]{309, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Greatwood", "A scary hard slamming tree", "", 255, 245, 400, 300, true, sprites, 0, 0, 0, 0, 345, 410, 11, 11, 30, i++));
-		if (Config.S_WANT_RUNECRAFT) {
-			sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
-			npcs.add(new NPCDef("Wizard Sedridor", "An old wizard", "", 0, 0, 0, 0, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
-			sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63};
-			npcs.add(new NPCDef("Scot Ruth", "A smelly, dirty dwarf", "", 20, 17, 16, 20, false, sprites, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, i++));
-		}
-		if (Config.S_WANT_HARVESTING) {
-			sprites = new int[]{3, 4, 2, -1, -1, -1, -1, 87, -1, -1, -1, -1};
-			npcs.add(new NPCDef("Gardener", "She takes care of the plants around", shopOption, 25, 25, 10, 20, false, sprites, 16753488, 5286432, 10510400, 13415270, 125, 225, 6, 6, 5, i++));
-		}
+		sprites = new int[]{6, 1, 2, -1, -1, 77, 76, 81, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Wizard Sedridor", "An old wizard", "", 0, 0, 0, 0, false, sprites, 16777215, 255, 255, 15523536, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, 63};
+		npcs.add(new NPCDef("Scot Ruth", "A smelly, dirty dwarf", "", 20, 17, 16, 20, false, sprites, 7360576, 3158064, 3158064, 15523536, 121, 176, 6, 6, 5, i++));
+		sprites = new int[]{3, 4, 2, -1, -1, -1, -1, 87, -1, -1, -1, -1};
+		npcs.add(new NPCDef("Gardener", "She takes care of the plants around", shopOption, 25, 25, 10, 20, false, sprites, 16753488, 5286432, 10510400, 13415270, 125, 225, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Gramat", "He looks worried", "", 20, 17, 16, 20, false, sprites, 7360576, 9465888, 13393952, 15523536, 121, 176, 6, 6, 5, i++));
 		sprites = new int[]{6, 1, 2, -1, -1, -1, 45, -1, -1, -1, -1, -1};
@@ -2260,6 +2256,8 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Bunny", "A fluffy bunny", "", 1, 1, 10, 1, false, sprites, 0, 0, 0, 0, 95, 85, 7, 7, 10, i++));
 		sprites = new int[]{473, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Duck", "Definitely not the ugly one", "", 1, 1, 10, 1, false, sprites, 1, 2, 3, 4, 85, 95, 6, 6, 5, i++));
+		sprites = new int[]{0, 1, 2, -1, 52, 8, 87, -1, -1, -1, -1, -1};
+		npcs.add(new NPCDef("PKBOT", "He looks scary.", "", 30, 69, 41, 1, true, sprites, 45167296, 28067296, 33415270, 45523536, 145, 220, 6, 6, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael
@@ -3568,8 +3566,9 @@ public class EntityHandler {
 		//loadNoteDefinitions();
 
 		//Load custom sprites
-		if (Config.S_WANT_CUSTOM_SPRITES)
-			loadCustomItemDefinitions();
+		//if (Config.S_WANT_CUSTOM_SPRITES)
+		//TODO: Maybe it should only load if WANT_CUSTOM_SPRITES but client needs to handle item ID out of bounds better if that's enabled.
+		loadCustomItemDefinitions();
 
 		if (Config.S_SHOW_UNIDENTIFIED_HERB_NAMES) {
 			items.get(165).name = "Unidentified Guam";
@@ -3663,41 +3662,41 @@ public class EntityHandler {
 		 * After id 1289 - Scythe from OG RSC.
 		 */
 
-		if (Config.S_SPAWN_IRON_MAN_NPCS) {
-			// Ironman
-			items.add(new ItemDef("Ironman helm", "For just a rather very independent scaper.", "", 154, -1, "items:6", false, true, 33, 11189164, false, true, true, 1290));
-			items.add(new ItemDef("Ironman platebody", "Take it off and what are you?", "", 560, -1, "items:8", false, true, 322, 11189164, false, true, true, 1291));
-			items.add(new ItemDef("Ironman platelegs", "Take it off and what are you?", "", 280, -1, "items:9", false, true, 644, 11189164, false, true, true, 1292));
 
-			// Ultimate ironman
-			items.add(new ItemDef("Ultimate ironman helm", "For Just A Rather Very Independent Scaper.", "", 154, -1, "items:6", false, true, 33, 16768685, false, true, true, 1293));
-			items.add(new ItemDef("Ultimate ironman platebody", "Take it off and what are you?", "", 560, -1, "items:8", false, true, 322, 16768685, false, true, true, 1294));
-			items.add(new ItemDef("Ultimate ironman platelegs", "Take it off and what are you?", "", 280, -1, "items:9", false, true, 644, 16768685, false, true, true, 1295));
+		// Ironman
+		items.add(new ItemDef("Ironman helm", "For just a rather very independent scaper.", "", 154, -1, "items:6", false, true, 33, 11189164, false, true, true, 1290));
+		items.add(new ItemDef("Ironman platebody", "Take it off and what are you?", "", 560, -1, "items:8", false, true, 322, 11189164, false, true, true, 1291));
+		items.add(new ItemDef("Ironman platelegs", "Take it off and what are you?", "", 280, -1, "items:9", false, true, 644, 11189164, false, true, true, 1292));
 
-			// Hardcore ironman
-			items.add(new ItemDef("Hardcore ironman helm", "For those who stand alone.", "", 154, -1, "items:6", false, true, 33, 10027084, false, true, true, 1296));
-			items.add(new ItemDef("Hardcore ironman platebody", "Take it off and what are you?", "", 560, -1, "items:8", false, true, 322, 10027084, false, true, true, 1297));
-			items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, -1, "items:9", false, true, 644, 10027084, false, true, true, 1298));
-		}
+		// Ultimate ironman
+		items.add(new ItemDef("Ultimate ironman helm", "For Just A Rather Very Independent Scaper.", "", 154, -1, "items:6", false, true, 33, 16768685, false, true, true, 1293));
+		items.add(new ItemDef("Ultimate ironman platebody", "Take it off and what are you?", "", 560, -1, "items:8", false, true, 322, 16768685, false, true, true, 1294));
+		items.add(new ItemDef("Ultimate ironman platelegs", "Take it off and what are you?", "", 280, -1, "items:9", false, true, 644, 16768685, false, true, true, 1295));
 
-		if (Config.S_WANT_RUNECRAFT) {
-			// Runecraft
-			items.add(new ItemDef("Rune stone", "An uncharged runestone", "", 4, -1, "items:443", false, false, 0, 0, false, false, true, 1299));
-			items.add(new ItemDef("Air talisman", "A mysterious power emanates from the talisman...", "Locate", 40, -1, "items:445", false, false, 0, 0, false, false, true, 1300));
-			items.add(new ItemDef("Mind talisman", "A mysterious power emanates from the talisman...", "Locate", 30, -1, "items:464", false, false, 0, 0, false, false, true, 1301));
-			items.add(new ItemDef("Water talisman", "A mysterious power emanates from the talisman...", "Locate", 40, -1, "items:446", false, false, 0, 0, false, false, true, 1302));
-			items.add(new ItemDef("Earth talisman", "A mysterious power emanates from the talisman...", "Locate", 40, -1, "items:448", false, false, 0, 0, false, false, true, 1303));
-			items.add(new ItemDef("Fire talisman", "A mysterious power emanates from the talisman...", "Locate", 40, -1, "items:447", false, false, 0, 0, false, false, true, 1304));
-			items.add(new ItemDef("Body talisman", "A mysterious power emanates from the talisman...", "Locate", 30, -1, "items:444", false, false, 0, 0, false, false, true, 1305));
-			items.add(new ItemDef("Cosmic talisman", "A mysterious power emanates from the talisman...", "Locate", 150, -1, "items:451", false, false, 0, 0, false, false, true, 1306));
-			items.add(new ItemDef("Chaos talisman", "A mysterious power emanates from the talisman...", "Locate", 100, -1, "items:452", false, false, 0, 0, false, false, true, 1307));
-			items.add(new ItemDef("Nature talisman", "A mysterious power emanates from the talisman...", "Locate", 70, -1, "items:449", false, false, 0, 0, false, false, true, 1308));
-			items.add(new ItemDef("Law talisman", "A mysterious power emanates from the talisman...", "Locate", 120, -1, "items:450", false, false, 0, 0, false, false, true, 1309));
-			items.add(new ItemDef("Death talisman", "A mysterious power emanates from the talisman...", "Locate", 200, -1, "items:453", false, false, 0, 0, false, false, true, 1310));
-			items.add(new ItemDef("Blood talisman", "A mysterious power emanates from the talisman...", "Locate", 250, -1, "items:454", false, false, 0, 0, false, false, true, 1311));
-			items.add(new ItemDef("Research package", "This contains some vital research results.", "", 0, -1, "items:330", false, false, 0, 0, true, true, false, 1312));
-			items.add(new ItemDef("Research notes", "These make no sense at all.", "", 0, -1, "items:427", false, false, 0, 0, true, true, false, 1313));
-		}
+		// Hardcore ironman
+		items.add(new ItemDef("Hardcore ironman helm", "For those who stand alone.", "", 154, -1, "items:6", false, true, 33, 10027084, false, true, true, 1296));
+		items.add(new ItemDef("Hardcore ironman platebody", "Take it off and what are you?", "", 560, -1, "items:8", false, true, 322, 10027084, false, true, true, 1297));
+		items.add(new ItemDef("Hardcore ironman platelegs", "Take it off and what are you?", "", 280, -1, "items:9", false, true, 644, 10027084, false, true, true, 1298));
+
+
+
+		// Runecraft
+		items.add(new ItemDef("Rune stone", "An uncharged runestone", "", 4, -1, "items:443", false, false, 0, 0, false, false, true, 1299));
+		items.add(new ItemDef("Air talisman", "A mysterious power emanates from the talisman...", "Locate", 40, -1, "items:445", false, false, 0, 0, false, false, true, 1300));
+		items.add(new ItemDef("Mind talisman", "A mysterious power emanates from the talisman...", "Locate", 30, -1, "items:464", false, false, 0, 0, false, false, true, 1301));
+		items.add(new ItemDef("Water talisman", "A mysterious power emanates from the talisman...", "Locate", 40, -1, "items:446", false, false, 0, 0, false, false, true, 1302));
+		items.add(new ItemDef("Earth talisman", "A mysterious power emanates from the talisman...", "Locate", 40, -1, "items:448", false, false, 0, 0, false, false, true, 1303));
+		items.add(new ItemDef("Fire talisman", "A mysterious power emanates from the talisman...", "Locate", 40, -1, "items:447", false, false, 0, 0, false, false, true, 1304));
+		items.add(new ItemDef("Body talisman", "A mysterious power emanates from the talisman...", "Locate", 30, -1, "items:444", false, false, 0, 0, false, false, true, 1305));
+		items.add(new ItemDef("Cosmic talisman", "A mysterious power emanates from the talisman...", "Locate", 150, -1, "items:451", false, false, 0, 0, false, false, true, 1306));
+		items.add(new ItemDef("Chaos talisman", "A mysterious power emanates from the talisman...", "Locate", 100, -1, "items:452", false, false, 0, 0, false, false, true, 1307));
+		items.add(new ItemDef("Nature talisman", "A mysterious power emanates from the talisman...", "Locate", 70, -1, "items:449", false, false, 0, 0, false, false, true, 1308));
+		items.add(new ItemDef("Law talisman", "A mysterious power emanates from the talisman...", "Locate", 120, -1, "items:450", false, false, 0, 0, false, false, true, 1309));
+		items.add(new ItemDef("Death talisman", "A mysterious power emanates from the talisman...", "Locate", 200, -1, "items:453", false, false, 0, 0, false, false, true, 1310));
+		items.add(new ItemDef("Blood talisman", "A mysterious power emanates from the talisman...", "Locate", 250, -1, "items:454", false, false, 0, 0, false, false, true, 1311));
+		items.add(new ItemDef("Research package", "This contains some vital research results.", "", 0, -1, "items:330", false, false, 0, 0, true, true, false, 1312));
+		items.add(new ItemDef("Research notes", "These make no sense at all.", "", 0, -1, "items:427", false, false, 0, 0, true, true, false, 1313));
+
 
 		// Rings
 		items.add(new ItemDef("Ring of recoil", "An enchanted ring.", "Check,Break", 900, -1, "items:502", false, true, 1200, 19711, true, false, true, 1314));
@@ -3746,23 +3745,23 @@ public class EntityHandler {
 		items.add(new ItemDef("Dragon 2-handed Sword", "A massive sword", "", 5000000, -1, "items:dragon2hander", false, true, 8216, 0, false, false, true, 1346));
 		items.add(new ItemDef("King Black Dragon scale", "Taken from a monstrous beast", "", 2500, 146, "items:kbdscale", false, false, 0, 0, true, false, true, 1347));
 
-		if (Config.S_WANT_HARVESTING) {
-			//Harvesting
-			items.add(new ItemDef("red apple", "Seems tasty!", "eat", 1, -1, "items:534", false, false, 0, 0, false, false, true, 1348));
-			items.add(new ItemDef("grapefruit", "It's very fresh", "eat", 2, -1, "items:526", false, false, 0, 0, true, false, true, 1349));
-			items.add(new ItemDef("papaya", "Seems very tasty!", "eat", 2, -1, "items:527", false, false, 0, 0, true, false, true, 1350));
-			items.add(new ItemDef("coconut", "It can be cut up with a machette", "", 2, -1, "items:535", false, false, 0, 0, true, false, true, 1351));
-			items.add(new ItemDef("Red Cabbage", "Yuck I don't like cabbage", "Eat", 1, -1, "items:529", false, false, 0, 0, false, false, true, 1352));
-			items.add(new ItemDef("Corn", "Some fresh picked corn", "eat", 2, -1, "items:528", false, false, 0, 0, false, false, true, 1353));
-			items.add(new ItemDef("White Pumpkin", "Wonder how it tastes", "eat", 2, -1, "items:536", false, false, 0, 0, true, false, true, 1354));
-			items.add(new ItemDef("Fruit Picker", "Useful for picking trees better", "", 10, -1, "items:530", false, false, 0, 0, false, false, true, 1355));
-			items.add(new ItemDef("Hand Shovel", "This will help get yield from bushes and allotments", "", 15, -1, "items:532", false, false, 0, 0, false, false, true, 1356));
-			items.add(new ItemDef("Herb Clippers", "Useful for picking up herbs out there", "", 25, -1, "items:531", false, false, 0, 0, true, false, true, 1357));
-			items.add(new ItemDef("Watering Can", "It's a watering can", "", 20, -1, "items:557", false, false, 0, 0, false, false, true, 1358));
-			items.add(new ItemDef("grapefruit slices", "It's very fresh", "eat", 2, 291, "items:291", false, false, 0, 15435583, true, false, true, 1359));
-			items.add(new ItemDef("Diced grapefruit", "Fresh chunks of grapefruit", "eat", 2, 293, "items:293", false, false, 0, 15435583, true, false, true, 1360));
-			items.add(new ItemDef("Half coconut", "Looks like some great coconut", "", 2, -1, "items:538", false, false, 0, 0, true, false, true, 1361));
-		}
+
+		//Harvesting
+		items.add(new ItemDef("red apple", "Seems tasty!", "eat", 1, -1, "items:534", false, false, 0, 0, false, false, true, 1348));
+		items.add(new ItemDef("grapefruit", "It's very fresh", "eat", 2, -1, "items:526", false, false, 0, 0, true, false, true, 1349));
+		items.add(new ItemDef("papaya", "Seems very tasty!", "eat", 2, -1, "items:527", false, false, 0, 0, true, false, true, 1350));
+		items.add(new ItemDef("coconut", "It can be cut up with a machette", "", 2, -1, "items:535", false, false, 0, 0, true, false, true, 1351));
+		items.add(new ItemDef("Red Cabbage", "Yuck I don't like cabbage", "Eat", 1, -1, "items:529", false, false, 0, 0, false, false, true, 1352));
+		items.add(new ItemDef("Corn", "Some fresh picked corn", "eat", 2, -1, "items:528", false, false, 0, 0, false, false, true, 1353));
+		items.add(new ItemDef("White Pumpkin", "Wonder how it tastes", "eat", 2, -1, "items:536", false, false, 0, 0, true, false, true, 1354));
+		items.add(new ItemDef("Fruit Picker", "Useful for picking trees better", "", 10, -1, "items:530", false, false, 0, 0, false, false, true, 1355));
+		items.add(new ItemDef("Hand Shovel", "This will help get yield from bushes and allotments", "", 15, -1, "items:532", false, false, 0, 0, false, false, true, 1356));
+		items.add(new ItemDef("Herb Clippers", "Useful for picking up herbs out there", "", 25, -1, "items:531", false, false, 0, 0, true, false, true, 1357));
+		items.add(new ItemDef("Watering Can", "It's a watering can", "", 20, -1, "items:557", false, false, 0, 0, false, false, true, 1358));
+		items.add(new ItemDef("grapefruit slices", "It's very fresh", "eat", 2, 291, "items:291", false, false, 0, 15435583, true, false, true, 1359));
+		items.add(new ItemDef("Diced grapefruit", "Fresh chunks of grapefruit", "eat", 2, 293, "items:293", false, false, 0, 15435583, true, false, true, 1360));
+		items.add(new ItemDef("Half coconut", "Looks like some great coconut", "", 2, -1, "items:538", false, false, 0, 0, true, false, true, 1361));
+
 
 		//Dwarf miniquest & Dragon Scale Mail
 		items.add(new ItemDef("Teddy body", "A fluffy teddy body", "", 1, -1, "items:543", false, false, 0, 16777124, false, true, false, 1362));
@@ -3797,41 +3796,41 @@ public class EntityHandler {
 		items.add(new ItemDef("Smithing cape", "The cape worn by master smiths", "", 99000, -1, "items:494", false, true, 2048, 0, false, false, false, 1383));
 		items.add(new ItemDef("Crafting cape", "The cape worn by master craftworkers", "Teleport", 99000, -1, "items:482", false, true, 2048, 0, false, false, false, 1384));
 
-		if (Config.S_WANT_RUNECRAFT) {
-			// Runecraft Update Items
-			items.add(new ItemDef("Uncharged talisman", "This needs charging to work properly...", "", 4, -1, "items:558", false, false, 0, 0, false, false, true, 1385));
-			items.add(new ItemDef("Cursed air talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:559", false, false, 0, 0, false, true, false, 1386));
-			items.add(new ItemDef("Cursed mind talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:560", false, false, 0, 0, false, true, false, 1387));
-			items.add(new ItemDef("Cursed water talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:561", false, false, 0, 0, false, true, false, 1388));
-			items.add(new ItemDef("Cursed earth talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:562", false, false, 0, 0, false, true, false, 1389));
-			items.add(new ItemDef("Cursed fire talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:563", false, false, 0, 0, false, true, false, 1390));
-			items.add(new ItemDef("Cursed body talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:564", false, false, 0, 0, false, true, false, 1391));
-			items.add(new ItemDef("Cursed cosmic talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:565", false, false, 0, 0, false, true, false, 1392));
-			items.add(new ItemDef("Cursed chaos talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:566", false, false, 0, 0, false, true, false, 1393));
-			items.add(new ItemDef("Cursed nature talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:567", false, false, 0, 0, false, true, false, 1394));
-			items.add(new ItemDef("Cursed law talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:568", false, false, 0, 0, false, true, false, 1395));
-			items.add(new ItemDef("Cursed death talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:569", false, false, 0, 0, false, true, false, 1396));
-			items.add(new ItemDef("Cursed blood talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:570", false, false, 0, 0, false, true, false, 1397));
-			items.add(new ItemDef("Enfeebled air talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:573", false, false, 0, 0, false, true, false, 1398));
-			items.add(new ItemDef("Enfeebled mind talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:574", false, false, 0, 0, false, true, false, 1399));
-			items.add(new ItemDef("Enfeebled water talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:575", false, false, 0, 0, false, true, false, 1400));
-			items.add(new ItemDef("Enfeebled earth talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:576", false, false, 0, 0, false, true, false, 1401));
-			items.add(new ItemDef("Enfeebled fire talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:577", false, false, 0, 0, false, true, false, 1402));
-			items.add(new ItemDef("Enfeebled body talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:578", false, false, 0, 0, false, true, false, 1403));
-			items.add(new ItemDef("Enfeebled cosmic talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:579", false, false, 0, 0, false, true, false, 1404));
-			items.add(new ItemDef("Enfeebled chaos talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:580", false, false, 0, 0, false, true, false, 1405));
-			items.add(new ItemDef("Enfeebled nature talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:581", false, false, 0, 0, false, true, false, 1406));
-			items.add(new ItemDef("Enfeebled law talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:582", false, false, 0, 0, false, true, false, 1407));
-			items.add(new ItemDef("Enfeebled death talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:583", false, false, 0, 0, false, true, false, 1408));
-			items.add(new ItemDef("Enfeebled blood talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:584", false, false, 0, 0, false, true, false, 1409));
-			items.add(new ItemDef("Fish oil", "Good for my heart", "Eat", 1, -1, "items:587", true, false, 0, 0, false, false, false, 1410));
-			items.add(new ItemDef("Runecraft Potion", "3 doses of runecraft potion", "Drink", 200, -1, "items:48", false, false, 0, 7547378, true, false, true, 1411));
-			items.add(new ItemDef("Runecraft Potion", "2 doses of runecraft potion", "Drink", 150, -1, "items:436", false, false, 0, 7547378, true, false, true, 1412));
-			items.add(new ItemDef("Runecraft Potion", "1 dose of runecraft potion", "Drink", 100, -1, "items:437", false, false, 0, 7547378, true, false, true, 1413));
-			items.add(new ItemDef("Super Runecraft Potion", "3 doses of super runecraft potion", "Drink", 400, -1, "items:48", false, false, 0, 10710783, true, false, true, 1414));
-			items.add(new ItemDef("Super Runecraft Potion", "2 doses of super runecraft potion", "Drink", 300, -1, "items:436", false, false, 0, 10710783, true, false, true, 1415));
-			items.add(new ItemDef("Super Runecraft Potion", "1 dose of super runecraft potion", "Drink", 200, -1, "items:437", false, false, 0, 10710783, true, false, true, 1416));
-		}
+
+		// Runecraft Update Items
+		items.add(new ItemDef("Uncharged talisman", "This needs charging to work properly...", "", 4, -1, "items:558", false, false, 0, 0, false, false, true, 1385));
+		items.add(new ItemDef("Cursed air talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:559", false, false, 0, 0, false, true, false, 1386));
+		items.add(new ItemDef("Cursed mind talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:560", false, false, 0, 0, false, true, false, 1387));
+		items.add(new ItemDef("Cursed water talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:561", false, false, 0, 0, false, true, false, 1388));
+		items.add(new ItemDef("Cursed earth talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:562", false, false, 0, 0, false, true, false, 1389));
+		items.add(new ItemDef("Cursed fire talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:563", false, false, 0, 0, false, true, false, 1390));
+		items.add(new ItemDef("Cursed body talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:564", false, false, 0, 0, false, true, false, 1391));
+		items.add(new ItemDef("Cursed cosmic talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:565", false, false, 0, 0, false, true, false, 1392));
+		items.add(new ItemDef("Cursed chaos talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:566", false, false, 0, 0, false, true, false, 1393));
+		items.add(new ItemDef("Cursed nature talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:567", false, false, 0, 0, false, true, false, 1394));
+		items.add(new ItemDef("Cursed law talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:568", false, false, 0, 0, false, true, false, 1395));
+		items.add(new ItemDef("Cursed death talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:569", false, false, 0, 0, false, true, false, 1396));
+		items.add(new ItemDef("Cursed blood talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:570", false, false, 0, 0, false, true, false, 1397));
+		items.add(new ItemDef("Enfeebled air talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:573", false, false, 0, 0, false, true, false, 1398));
+		items.add(new ItemDef("Enfeebled mind talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:574", false, false, 0, 0, false, true, false, 1399));
+		items.add(new ItemDef("Enfeebled water talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:575", false, false, 0, 0, false, true, false, 1400));
+		items.add(new ItemDef("Enfeebled earth talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:576", false, false, 0, 0, false, true, false, 1401));
+		items.add(new ItemDef("Enfeebled fire talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:577", false, false, 0, 0, false, true, false, 1402));
+		items.add(new ItemDef("Enfeebled body talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:578", false, false, 0, 0, false, true, false, 1403));
+		items.add(new ItemDef("Enfeebled cosmic talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:579", false, false, 0, 0, false, true, false, 1404));
+		items.add(new ItemDef("Enfeebled chaos talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:580", false, false, 0, 0, false, true, false, 1405));
+		items.add(new ItemDef("Enfeebled nature talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:581", false, false, 0, 0, false, true, false, 1406));
+		items.add(new ItemDef("Enfeebled law talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:582", false, false, 0, 0, false, true, false, 1407));
+		items.add(new ItemDef("Enfeebled death talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:583", false, false, 0, 0, false, true, false, 1408));
+		items.add(new ItemDef("Enfeebled blood talisman", "A mysterious power emanates from the talisman...", "Locate", 0, -1, "items:584", false, false, 0, 0, false, true, false, 1409));
+		items.add(new ItemDef("Fish oil", "Good for my heart", "Eat", 1, -1, "items:587", true, false, 0, 0, false, false, false, 1410));
+		items.add(new ItemDef("Runecraft Potion", "3 doses of runecraft potion", "Drink", 200, -1, "items:48", false, false, 0, 7547378, true, false, true, 1411));
+		items.add(new ItemDef("Runecraft Potion", "2 doses of runecraft potion", "Drink", 150, -1, "items:436", false, false, 0, 7547378, true, false, true, 1412));
+		items.add(new ItemDef("Runecraft Potion", "1 dose of runecraft potion", "Drink", 100, -1, "items:437", false, false, 0, 7547378, true, false, true, 1413));
+		items.add(new ItemDef("Super Runecraft Potion", "3 doses of super runecraft potion", "Drink", 400, -1, "items:48", false, false, 0, 10710783, true, false, true, 1414));
+		items.add(new ItemDef("Super Runecraft Potion", "2 doses of super runecraft potion", "Drink", 300, -1, "items:436", false, false, 0, 10710783, true, false, true, 1415));
+		items.add(new ItemDef("Super Runecraft Potion", "1 dose of super runecraft potion", "Drink", 200, -1, "items:437", false, false, 0, 10710783, true, false, true, 1416));
+
 
 		items.add(new ItemDef("Pizza Bagel", "I sure wish I could make these on my own", "Eat", 50, -1, "items:589", false, false, 0, 0, false, false, true, 1417));
 
@@ -3876,35 +3875,36 @@ public class EntityHandler {
 		items.add(new ItemDef("Dragon crossbow", "This fires crossbow bolts", "", 300000, -1, "items:dragoncrossbow", false, true, 16, 16711748, 8257536, true, false, true, 1453));
 		items.add(new ItemDef("Dragon longbow", "A nice sturdy bow", "", 300000, 54, "items:54", false, true, 24, 8257536, 16711748, true, false, true, 1454));
 
-		if (Config.S_WANT_HARVESTING) {
-			items.add(new ItemDef("Watering Can", "It's an empty watering can", "", 20, -1, "items:533", false, false, 0, 0, false, false, true, 1455));
-			items.add(new ItemDef("sugar cane", "These can sweeten things up", "", 2, -1, "items:541", false, false, 0, 0, true, false, true, 1456));
-			items.add(new ItemDef("dragonfruit", "A powerful fruit", "", 3, -1, "items:539", false, false, 0, 0, true, false, true, 1457));
-			items.add(new ItemDef("sliced dragonfruit", "Some great dragonfruit ready to be used", "", 3, -1, "items:540", false, false, 0, 0, true, false, true, 1458));
-			items.add(new ItemDef("Sweetened Slices", "Slices of fruit both sweet and sour", "eat", 2, 291, "items:291", true, false, 0, 15106125, true, false, false, 1459));
-			items.add(new ItemDef("Sweetened Chunks", "Chunks of fruit both sweet and sour", "eat", 2, 293, "items:293", true, false, 0, 15106125, true, false, false, 1460));
-			items.add(new ItemDef("Mixing bowl", "For mixing advanced cooking ingredients", "pour", 2, 161, "items:161", false, false, 0, 13553358, true, false, true, 1461));
-			items.add(new ItemDef("Uncooked seaweed soup", "I need to cook this", "", 15, 162, "items:162", false, false, 0, 10066227, true, false, true, 1462));
-			items.add(new ItemDef("Seaweed soup", "It's a seaweed soup", "Eat", 25, 162, "items:162", false, false, 0, 3368499, true, false, true, 1463));
-			items.add(new ItemDef("Burnt seaweed soup", "Eew it's horribly burnt", "", 1, 162, "items:162", false, false, 0, 3158064, true, false, true, 1464));
-			items.add(new ItemDef("grapes of Saradomin", "Strong grapes for a powerful wine", "", 1, 21, "items:21", false, false, 0, 4210783, true, false, true, 1465));
-			items.add(new ItemDef("grapes of Zamorak", "Strong grapes for a powerful wine", "", 1, 21, "items:21", false, false, 0, 12981081, true, false, true, 1466));
-			items.add(new ItemDef("wine of Saradomin", "It's full of wine", "Drink", 1, 65, "items:65", false, false, 0, 12851224, true, false, true, 1467));
-			items.add(new ItemDef("magic Potion", "3 doses of magic potion", "Drink", 288, 48, "items:48", false, false, 0, 11959655, true, false, true, 1468));
-			items.add(new ItemDef("magic Potion", "2 doses of magic potion", "Drink", 216, Config.S_WANT_CUSTOM_SPRITES ? 436 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:436" : "items:48", false, false, 0, 11959655, true, false, true, 1469));
-			items.add(new ItemDef("magic Potion", "1 dose of magic potion", "Drink", 144, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 11959655, true, false, true, 1470));
-			items.add(new ItemDef("Potion of Saradomin", "It looks dauntless", "drink", 25, 48, "items:48", false, false, 0, 14868319, true, false, true, 1471));
-			items.add(new ItemDef("Potion of Saradomin", "It looks dauntless", "drink", 25, Config.S_WANT_CUSTOM_SPRITES ? 436 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:436" : "items:48", false, false, 0, 14868319, true, false, true, 1472));
-			items.add(new ItemDef("Potion of Saradomin", "It looks dauntless", "drink", 25, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 14868319, true, false, true, 1473));
-			items.add(new ItemDef("Super ranging Potion", "3 doses of ranging potion", "Drink", 288, 48, "items:48", false, false, 0, 3192558, true, false, true, 1474));
-			items.add(new ItemDef("Super ranging Potion", "2 doses of ranging potion", "Drink", 216, Config.S_WANT_CUSTOM_SPRITES ? 436 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:436" : "items:48", false, false, 0, 3192558, true, false, true, 1475));
-			items.add(new ItemDef("Super ranging Potion", "1 dose of ranging potion", "Drink", 144, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 3192558, true, false, true, 1476));
-			items.add(new ItemDef("Super magic Potion", "3 doses of magic potion", "Drink", 288, 48, "items:48", false, false, 0, 6130854, true, false, true, 1477));
-			items.add(new ItemDef("Super magic Potion", "2 doses of magic potion", "Drink", 216, Config.S_WANT_CUSTOM_SPRITES ? 436 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:436" : "items:48", false, false, 0, 6130854, true, false, true, 1478));
-			items.add(new ItemDef("Super magic Potion", "1 dose of magic potion", "Drink", 144, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 6130854, true, false, true, 1479));
-		}
+
+		items.add(new ItemDef("Watering Can", "It's an empty watering can", "", 20, -1, "items:533", false, false, 0, 0, false, false, true, 1455));
+		items.add(new ItemDef("sugar cane", "These can sweeten things up", "", 2, -1, "items:541", false, false, 0, 0, true, false, true, 1456));
+		items.add(new ItemDef("dragonfruit", "A powerful fruit", "", 3, -1, "items:539", false, false, 0, 0, true, false, true, 1457));
+		items.add(new ItemDef("sliced dragonfruit", "Some great dragonfruit ready to be used", "", 3, -1, "items:540", false, false, 0, 0, true, false, true, 1458));
+		items.add(new ItemDef("Sweetened Slices", "Slices of fruit both sweet and sour", "eat", 2, 291, "items:291", true, false, 0, 15106125, true, false, false, 1459));
+		items.add(new ItemDef("Sweetened Chunks", "Chunks of fruit both sweet and sour", "eat", 2, 293, "items:293", true, false, 0, 15106125, true, false, false, 1460));
+		items.add(new ItemDef("Mixing bowl", "For mixing advanced cooking ingredients", "pour", 2, 161, "items:161", false, false, 0, 13553358, true, false, true, 1461));
+		items.add(new ItemDef("Uncooked seaweed soup", "I need to cook this", "", 15, 162, "items:162", false, false, 0, 10066227, true, false, true, 1462));
+		items.add(new ItemDef("Seaweed soup", "It's a seaweed soup", "Eat", 25, 162, "items:162", false, false, 0, 3368499, true, false, true, 1463));
+		items.add(new ItemDef("Burnt seaweed soup", "Eew it's horribly burnt", "", 1, 162, "items:162", false, false, 0, 3158064, true, false, true, 1464));
+		items.add(new ItemDef("grapes of Saradomin", "Strong grapes for a powerful wine", "", 1, 21, "items:21", false, false, 0, 4210783, true, false, true, 1465));
+		items.add(new ItemDef("grapes of Zamorak", "Strong grapes for a powerful wine", "", 1, 21, "items:21", false, false, 0, 12981081, true, false, true, 1466));
+		items.add(new ItemDef("wine of Saradomin", "It's full of wine", "Drink", 1, 65, "items:65", false, false, 0, 12851224, true, false, true, 1467));
+		items.add(new ItemDef("magic Potion", "3 doses of magic potion", "Drink", 288, 48, "items:48", false, false, 0, 11959655, true, false, true, 1468));
+		items.add(new ItemDef("magic Potion", "2 doses of magic potion", "Drink", 216, Config.S_WANT_CUSTOM_SPRITES ? 436 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:436" : "items:48", false, false, 0, 11959655, true, false, true, 1469));
+		items.add(new ItemDef("magic Potion", "1 dose of magic potion", "Drink", 144, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 11959655, true, false, true, 1470));
+		items.add(new ItemDef("Potion of Saradomin", "It looks dauntless", "drink", 25, 48, "items:48", false, false, 0, 14868319, true, false, true, 1471));
+		items.add(new ItemDef("Potion of Saradomin", "It looks dauntless", "drink", 25, Config.S_WANT_CUSTOM_SPRITES ? 436 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:436" : "items:48", false, false, 0, 14868319, true, false, true, 1472));
+		items.add(new ItemDef("Potion of Saradomin", "It looks dauntless", "drink", 25, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 14868319, true, false, true, 1473));
+		items.add(new ItemDef("Super ranging Potion", "3 doses of ranging potion", "Drink", 288, 48, "items:48", false, false, 0, 3192558, true, false, true, 1474));
+		items.add(new ItemDef("Super ranging Potion", "2 doses of ranging potion", "Drink", 216, Config.S_WANT_CUSTOM_SPRITES ? 436 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:436" : "items:48", false, false, 0, 3192558, true, false, true, 1475));
+		items.add(new ItemDef("Super ranging Potion", "1 dose of ranging potion", "Drink", 144, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 3192558, true, false, true, 1476));
+		items.add(new ItemDef("Super magic Potion", "3 doses of magic potion", "Drink", 288, 48, "items:48", false, false, 0, 6130854, true, false, true, 1477));
+		items.add(new ItemDef("Super magic Potion", "2 doses of magic potion", "Drink", 216, Config.S_WANT_CUSTOM_SPRITES ? 436 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:436" : "items:48", false, false, 0, 6130854, true, false, true, 1478));
+		items.add(new ItemDef("Super magic Potion", "1 dose of magic potion", "Drink", 144, Config.S_WANT_CUSTOM_SPRITES ? 437 : 48, Config.S_WANT_CUSTOM_SPRITES ? "items:437" : "items:48", false, false, 0, 6130854, true, false, true, 1479));
+
 
 		// Item 1480 is reserved for the Dragon Woodcutting axe.
+		items.add(new ItemDef("Dragon Axe", "A powerful axe", "", 1, -1, "items:12", false, true, 16, 10072780, true, false, true, 1480));
 
 		// Easter 2021
 		items.add(new ItemDef("Rabbit's Foot", "I do feel lucky, punk", "", 0, -1, "items:rabbitsfoot", false, false, 0, 16777215, false, true, false, 1481));
@@ -6485,54 +6485,53 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Vine", "A creepy creeper", "Grab", "Examine", 0, 1, 1, 0, "vinejunction", i++));
 
 		//Runecraft Objects
-		if (Config.S_WANT_RUNECRAFT) {
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Air 1190
-			objects.add(new GameObjectDef("Air Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Air
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Mind
-			objects.add(new GameObjectDef("Mind Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Mind
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Water
-			objects.add(new GameObjectDef("Water Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Water
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Earth
-			objects.add(new GameObjectDef("Earth Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Earth
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Fire
-			objects.add(new GameObjectDef("Fire Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Fire
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Body
-			objects.add(new GameObjectDef("Body Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Body
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Cosmic
-			objects.add(new GameObjectDef("Cosmic Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Cosmic
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Chaos
-			objects.add(new GameObjectDef("Chaos Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Chaos
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Nature 1206
-			objects.add(new GameObjectDef("Nature Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Nature
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Law
-			objects.add(new GameObjectDef("Law Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Law
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Death
-			objects.add(new GameObjectDef("Death Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Death
-			objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Blood
-			objects.add(new GameObjectDef("Blood Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Blood
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//air altar 1214
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//mind altar
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//water altar
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//earth altar
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//fire altar
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//body altar
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//cosmic altar
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//chaos altar
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//nature altar
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//law altar
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//death altar
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//blood altar
-			objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//Runeessence portal
-			objects.add(new GameObjectDef("Raw Essence", "A pile of raw essence", "Mine", "Examine", 1, 8, 8, 0, "essencemine", i++));//rune stone mine1227
-			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal 1228
-			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
-			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
-			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
-			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
-			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
-			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
-			objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
-		}
+		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Air 1190
+		objects.add(new GameObjectDef("Air Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Air
+		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Mind
+		objects.add(new GameObjectDef("Mind Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Mind
+		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Water
+		objects.add(new GameObjectDef("Water Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Water
+		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Earth
+		objects.add(new GameObjectDef("Earth Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Earth
+		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Fire
+		objects.add(new GameObjectDef("Fire Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Fire
+		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Body
+		objects.add(new GameObjectDef("Body Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Body
+		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Cosmic
+		objects.add(new GameObjectDef("Cosmic Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Cosmic
+		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Chaos
+		objects.add(new GameObjectDef("Chaos Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Chaos
+		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Nature 1206
+		objects.add(new GameObjectDef("Nature Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Nature
+		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Law
+		objects.add(new GameObjectDef("Law Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Law
+		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Death
+		objects.add(new GameObjectDef("Death Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Death
+		objects.add(new GameObjectDef("Mysterious Ruins", "A mysterious power eminates from this shrine", "Enter", "Examine", 1, 3, 3, 0, "mysterious ruins", i++));//Blood
+		objects.add(new GameObjectDef("Blood Altar", "A mysterious power eminates from this shrine", "Bind", "Examine", 1, 2, 2, 0, "dolmen", i++));//Blood
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//air altar 1214
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//mind altar
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//water altar
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//earth altar
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//fire altar
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//body altar
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//cosmic altar
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//chaos altar
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//nature altar
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//law altar
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//death altar
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//blood altar
+		objects.add(new GameObjectDef("Portal", "This will lead you out", "Exit", "Examine", 1, 2, 2, 0, "portal", i++));//Runeessence portal
+		objects.add(new GameObjectDef("Raw Essence", "A pile of raw essence", "Mine", "Examine", 1, 8, 8, 0, "essencemine", i++));//rune stone mine1227
+		objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal 1228
+		objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+		objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+		objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+		objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+		objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+		objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+		objects.add(new GameObjectDef("Portal", "This portal helps you navigate the maze.", "Take", "Examine", 1, 1, 1, 0, "portal", i++));//Runeessence portal
+
 
 		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", i = 1236)); //yanille agility shortcut1336
 		objects.add(new GameObjectDef("pipe", "a dirty sewer pipe", "enter", "Examine", 1, 1, 1, 0, "obstical_pipe", ++i)); //yanille agility shortcut
@@ -6544,49 +6543,49 @@ public class EntityHandler {
 		objects.add(new GameObjectDef("Rowboat", "This looks usable", "Travel", "Examine", 1, 2, 2, 0, "rowboat", ++i));
 
 		//Harvesting Objects
-		if (Config.S_WANT_HARVESTING) {
-			objects.add(new GameObjectDef("Lemon Tree", "A tree filled with many ripe lemons", "Harvest", "Examine", 1, 1, 1, 0, "lemontree", i = 1243)); //1243
-			objects.add(new GameObjectDef("Lime Tree", "A tree filled with many ripe limes", "Harvest", "Examine", 1, 1, 1, 0, "limetree", ++i));
-			objects.add(new GameObjectDef("Apple Tree", "A tree filled with many ripe apples", "Harvest", "Examine", 1, 1, 1, 0, "appletree", ++i));
-			objects.add(new GameObjectDef("Orange Tree", "A tree filled with many ripe oranges", "Harvest", "Examine", 1, 1, 1, 0, "orangetree", ++i));
-			objects.add(new GameObjectDef("Grapefruit Tree", "A tree filled with many ripe grapefruits", "Harvest", "Examine", 1, 1, 1, 0, "grapefruittree", ++i));
-			objects.add(new GameObjectDef("Banana Palm", "A palm containing many ripe bananas", "Harvest", "Examine", 1, 1, 1, 0, "bananapalm", ++i));
-			objects.add(new GameObjectDef("Coconut Palm", "A palm containing many ripe coconuts", "Harvest", "Examine", 1, 1, 1, 0, "coconutpalm", ++i));
-			objects.add(new GameObjectDef("Papaya Palm", "A palm containing many ripe papayas", "Harvest", "Examine", 1, 1, 1, 0, "papayapalm", ++i));
-			objects.add(new GameObjectDef("Pineapple Plant", "A plant with many nice ripe pineapples", "Harvest", "Examine", 1, 1, 1, 0, "pineappleplant", ++i));
-			objects.add(new GameObjectDef("Exhausted Tree", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "exhaustedtree", ++i));
-			objects.add(new GameObjectDef("Exhausted Palm", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "exhaustedpalm", ++i));
-			objects.add(new GameObjectDef("Exhausted Palm", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "exhaustedpalm2", ++i));
-			objects.add(new GameObjectDef("Exhausted Plant", "A plant that got its produce taken away", "WalkTo", "Examine", 1, 1, 1, 0, "depletedplant", ++i));
-			objects.add(new GameObjectDef("Redberry Bush", "A bush containing some redberries", "Harvest", "Examine", 1, 1, 1, 0, "redberrybush", ++i)); //1256
-			objects.add(new GameObjectDef("Cadavaberry Bush", "A bush containing some cadavaberries", "Harvest", "Examine", 1, 1, 1, 0, "cadavaberrybush", ++i));
-			objects.add(new GameObjectDef("Dwellberry Bush", "A bush filled with mysterious dwellberries", "Harvest", "Examine", 1, 1, 1, 0, "dwellberrybush", ++i));
-			objects.add(new GameObjectDef("Jangerberry Bush", "A bush having the mysterious jangerberries", "Harvest", "Examine", 1, 1, 1, 0, "jangerberrybush", ++i));
-			objects.add(new GameObjectDef("Whiteberry Bush", "A bush containing some whiteberries", "Harvest", "Examine", 1, 1, 1, 0, "whiteberrybush", ++i));
-			objects.add(new GameObjectDef("Depleted Bush", "A bush that once contained berries", "WalkTo", "Examine", 1, 1, 1, 0, "depletedbush", ++i));
-			objects.add(new GameObjectDef("Cabbage", "Oooh some cabbage", "Harvest", "Examine", 0, 1, 1, 0, "greencabbage", ++i)); //1262
-			objects.add(new GameObjectDef("Red Cabbage", "Oooh some red cabbage", "Harvest", "Examine", 0, 1, 1, 0, "redcabbage", ++i));
-			objects.add(new GameObjectDef("White Pumpkin", "A pumpkin ready for harvest", "Harvest", "Examine", 0, 1, 1, 0, "pumpkinwhite", ++i));
-			objects.add(new GameObjectDef("Potato Plant", "Some nice looking potatoes growing underneath", "Harvest", "Examine", 0, 1, 1, 0, "potatoplant", ++i));
-			objects.add(new GameObjectDef("Onion Plant", "Some nice onions growing underneath", "Harvest", "Examine", 0, 1, 1, 0, "onionplant", ++i));
-			objects.add(new GameObjectDef("Garlic Plant", "Some garlic growing underneath", "Harvest", "Examine", 0, 1, 1, 0, "garlicplant", ++i));
-			objects.add(new GameObjectDef("Tomato Plant", "This plant has some good looking tomatoes", "Harvest", "Examine", 0, 1, 1, 0, "tomatoplant", ++i));
-			objects.add(new GameObjectDef("Corn Plant", "This plant contains ripe corn", "Harvest", "Examine", 0, 1, 1, 0, "cornplant", ++i));
-			objects.add(new GameObjectDef("Damaged Ground", "Disturbed ground left after a harvest", "WalkTo", "Examine", 0, 1, 1, 0, "dugupsoil1", ++i));
-			objects.add(new GameObjectDef("Depleted tomato plant", "A plant that got its produce taken away", "WalkTo", "Examine", 0, 1, 1, 0, "depletedtomato", ++i));
-			objects.add(new GameObjectDef("Depleted corn plant", "A plant that got its produce taken away", "WalkTo", "Examine", 0, 1, 1, 0, "depletedcorn", ++i));
-			objects.add(new GameObjectDef("Snape Grass", "Some interesting snape grass growing here", "Clip", "Examine", 1, 1, 1, 0, "snapegrass", ++i));
-			objects.add(new GameObjectDef("Herb", "I wonder what herb is around", "Clip", "Examine", 1, 1, 1, 0, "herb", ++i));
-			objects.add(new GameObjectDef("Pumpkin", "A pumpkin of autumn", "Collect", "Examine", 0, 1, 1, 0, "pumpkin", ++i));
-			objects.add(new GameObjectDef("Soil Mound", "A pile of very good soil", "WalkTo", "Examine", 1, 1, 1, 0, "soilmound", ++i));
-			objects.add(new GameObjectDef("Barrel of water", "A barrel filled with filtered water", "WalkTo", "Examine", 1, 1, 1, 0, "barrelwater", ++i));
-			objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Open", "Examine", 1, 1, 1, 0, "compostbin", ++i));
-			objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Close", "Examine", 1, 1, 1, 0, "compostbin2", ++i));
-			objects.add(new GameObjectDef("Sea Weed", "Some tall sea weed growing here", "Clip", "Examine", 1, 1, 1, 0, "seaweed", ++i));//1280
-			objects.add(new GameObjectDef("Limpwurt Root", "Some nice limpwurt root around here", "Clip", "Examine", 1, 1, 1, 0, "limpwurtroot", ++i));
-			objects.add(new GameObjectDef("Sugar Cane", "The plant of interesting sugar cane!", "Harvest", "Examine", 0, 1, 1, 0, "sugarcane", ++i));
-			objects.add(new GameObjectDef("Mysterious Grape Vine", "This vine may have more than just grapes", "Harvest", "Examine", 0, 1, 1, 0, "grapevine", ++i));
-		}
+
+		objects.add(new GameObjectDef("Lemon Tree", "A tree filled with many ripe lemons", "Harvest", "Examine", 1, 1, 1, 0, "lemontree", i = 1243)); //1243
+		objects.add(new GameObjectDef("Lime Tree", "A tree filled with many ripe limes", "Harvest", "Examine", 1, 1, 1, 0, "limetree", ++i));
+		objects.add(new GameObjectDef("Apple Tree", "A tree filled with many ripe apples", "Harvest", "Examine", 1, 1, 1, 0, "appletree", ++i));
+		objects.add(new GameObjectDef("Orange Tree", "A tree filled with many ripe oranges", "Harvest", "Examine", 1, 1, 1, 0, "orangetree", ++i));
+		objects.add(new GameObjectDef("Grapefruit Tree", "A tree filled with many ripe grapefruits", "Harvest", "Examine", 1, 1, 1, 0, "grapefruittree", ++i));
+		objects.add(new GameObjectDef("Banana Palm", "A palm containing many ripe bananas", "Harvest", "Examine", 1, 1, 1, 0, "bananapalm", ++i));
+		objects.add(new GameObjectDef("Coconut Palm", "A palm containing many ripe coconuts", "Harvest", "Examine", 1, 1, 1, 0, "coconutpalm", ++i));
+		objects.add(new GameObjectDef("Papaya Palm", "A palm containing many ripe papayas", "Harvest", "Examine", 1, 1, 1, 0, "papayapalm", ++i));
+		objects.add(new GameObjectDef("Pineapple Plant", "A plant with many nice ripe pineapples", "Harvest", "Examine", 1, 1, 1, 0, "pineappleplant", ++i));
+		objects.add(new GameObjectDef("Exhausted Tree", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "exhaustedtree", ++i));
+		objects.add(new GameObjectDef("Exhausted Palm", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "exhaustedpalm", ++i));
+		objects.add(new GameObjectDef("Exhausted Palm", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "exhaustedpalm2", ++i));
+		objects.add(new GameObjectDef("Exhausted Plant", "A plant that got its produce taken away", "WalkTo", "Examine", 1, 1, 1, 0, "depletedplant", ++i));
+		objects.add(new GameObjectDef("Redberry Bush", "A bush containing some redberries", "Harvest", "Examine", 1, 1, 1, 0, "redberrybush", ++i)); //1256
+		objects.add(new GameObjectDef("Cadavaberry Bush", "A bush containing some cadavaberries", "Harvest", "Examine", 1, 1, 1, 0, "cadavaberrybush", ++i));
+		objects.add(new GameObjectDef("Dwellberry Bush", "A bush filled with mysterious dwellberries", "Harvest", "Examine", 1, 1, 1, 0, "dwellberrybush", ++i));
+		objects.add(new GameObjectDef("Jangerberry Bush", "A bush having the mysterious jangerberries", "Harvest", "Examine", 1, 1, 1, 0, "jangerberrybush", ++i));
+		objects.add(new GameObjectDef("Whiteberry Bush", "A bush containing some whiteberries", "Harvest", "Examine", 1, 1, 1, 0, "whiteberrybush", ++i));
+		objects.add(new GameObjectDef("Depleted Bush", "A bush that once contained berries", "WalkTo", "Examine", 1, 1, 1, 0, "depletedbush", ++i));
+		objects.add(new GameObjectDef("Cabbage", "Oooh some cabbage", "Harvest", "Examine", 0, 1, 1, 0, "greencabbage", ++i)); //1262
+		objects.add(new GameObjectDef("Red Cabbage", "Oooh some red cabbage", "Harvest", "Examine", 0, 1, 1, 0, "redcabbage", ++i));
+		objects.add(new GameObjectDef("White Pumpkin", "A pumpkin ready for harvest", "Harvest", "Examine", 0, 1, 1, 0, "pumpkinwhite", ++i));
+		objects.add(new GameObjectDef("Potato Plant", "Some nice looking potatoes growing underneath", "Harvest", "Examine", 0, 1, 1, 0, "potatoplant", ++i));
+		objects.add(new GameObjectDef("Onion Plant", "Some nice onions growing underneath", "Harvest", "Examine", 0, 1, 1, 0, "onionplant", ++i));
+		objects.add(new GameObjectDef("Garlic Plant", "Some garlic growing underneath", "Harvest", "Examine", 0, 1, 1, 0, "garlicplant", ++i));
+		objects.add(new GameObjectDef("Tomato Plant", "This plant has some good looking tomatoes", "Harvest", "Examine", 0, 1, 1, 0, "tomatoplant", ++i));
+		objects.add(new GameObjectDef("Corn Plant", "This plant contains ripe corn", "Harvest", "Examine", 0, 1, 1, 0, "cornplant", ++i));
+		objects.add(new GameObjectDef("Damaged Ground", "Disturbed ground left after a harvest", "WalkTo", "Examine", 0, 1, 1, 0, "dugupsoil1", ++i));
+		objects.add(new GameObjectDef("Depleted tomato plant", "A plant that got its produce taken away", "WalkTo", "Examine", 0, 1, 1, 0, "depletedtomato", ++i));
+		objects.add(new GameObjectDef("Depleted corn plant", "A plant that got its produce taken away", "WalkTo", "Examine", 0, 1, 1, 0, "depletedcorn", ++i));
+		objects.add(new GameObjectDef("Snape Grass", "Some interesting snape grass growing here", "Clip", "Examine", 1, 1, 1, 0, "snapegrass", ++i));
+		objects.add(new GameObjectDef("Herb", "I wonder what herb is around", "Clip", "Examine", 1, 1, 1, 0, "herb", ++i));
+		objects.add(new GameObjectDef("Pumpkin", "A pumpkin of autumn", "Collect", "Examine", 0, 1, 1, 0, "pumpkin", ++i));
+		objects.add(new GameObjectDef("Soil Mound", "A pile of very good soil", "WalkTo", "Examine", 1, 1, 1, 0, "soilmound", ++i));
+		objects.add(new GameObjectDef("Barrel of water", "A barrel filled with filtered water", "WalkTo", "Examine", 1, 1, 1, 0, "barrelwater", ++i));
+		objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Open", "Examine", 1, 1, 1, 0, "compostbin", ++i));
+		objects.add(new GameObjectDef("Compost Bin", "A bin of compost", "Close", "Examine", 1, 1, 1, 0, "compostbin2", ++i));
+		objects.add(new GameObjectDef("Sea Weed", "Some tall sea weed growing here", "Clip", "Examine", 1, 1, 1, 0, "seaweed", ++i));//1280
+		objects.add(new GameObjectDef("Limpwurt Root", "Some nice limpwurt root around here", "Clip", "Examine", 1, 1, 1, 0, "limpwurtroot", ++i));
+		objects.add(new GameObjectDef("Sugar Cane", "The plant of interesting sugar cane!", "Harvest", "Examine", 0, 1, 1, 0, "sugarcane", ++i));
+		objects.add(new GameObjectDef("Mysterious Grape Vine", "This vine may have more than just grapes", "Harvest", "Examine", 0, 1, 1, 0, "grapevine", ++i));
+
 
 		objects.add(new GameObjectDef("Lava Forge", "The latest in dwarven technology", "WalkTo", "Examine", 1, 2, 2, 0, "furnace", ++i));//1284
 		objects.add(new GameObjectDef("anvil", "heavy metal", "WalkTo", "Examine", 1, 1, 1, 0, "anvil", ++i));//1285
@@ -6604,10 +6603,10 @@ public class EntityHandler {
 		//drag->KBD stepping stone
 		objects.add(new GameObjectDef("Stepping Stone", "It looks like I could jump on this", "jump to", "Examine", 1, 1, 1, 0, "stonedisc", ++i)); //1292
 
-		if (Config.S_WANT_HARVESTING) {
-			objects.add(new GameObjectDef("Dragonfruit Tree", "A tree filled with many ripe dragonfruits", "Harvest", "Examine", 1, 1, 1, 0, "dragonfruit", ++i)); //1293
-			objects.add(new GameObjectDef("Exhausted Tree", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "depleteddragonfruit", ++i)); //1294
-		}
+
+		objects.add(new GameObjectDef("Dragonfruit Tree", "A tree filled with many ripe dragonfruits", "Harvest", "Examine", 1, 1, 1, 0, "dragonfruit", ++i)); //1293
+		objects.add(new GameObjectDef("Exhausted Tree", "Someone has taken the last of the produce!", "WalkTo", "Examine", 1, 1, 1, 0, "depleteddragonfruit", ++i)); //1294
+
 	}
 
 	public static void load(boolean loadMembers) {

@@ -821,7 +821,8 @@ public enum NpcId {
 	MUM(812),
 	ESTER(813),
 	BUNNY(814),
-	DUCK(815);
+	DUCK(815),
+	PKBOT(816);
 
 	private int npcId;
 
