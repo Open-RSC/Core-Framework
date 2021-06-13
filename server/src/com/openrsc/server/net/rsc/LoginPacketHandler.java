@@ -176,7 +176,7 @@ public class LoginPacketHandler {
 
 						String username = "";
 						try {
-							username = new String(xteaBlock, 25, xteaBlock.length - 25, "UTF8").trim();
+							username = new String(xteaBlock, 25, xteaBlock.length - 25, "UTF8");
 						} catch (Exception e) {
 							LOGGER.info("error parsing username in xtea block");
 							e.printStackTrace();
@@ -636,7 +636,7 @@ public class LoginPacketHandler {
 					boolean errored = false;
 
 					try {
-						playerData = server.getDatabase().getPlayerLoginData(username);
+						playerData = server.getDatabase().getPlayerLoginData(DataConversions.sanitizeUsername(username));
 					} catch (Exception e) {
 						LOGGER.info("error - trying to recover from non existent user");
 						errored = true;
@@ -688,8 +688,9 @@ public class LoginPacketHandler {
 							return;
 						}
 
-						String user = getString(packet.getBuffer()).trim();
-						user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
+						String user = DataConversions.sanitizeUsername(
+								getString(packet.getBuffer())
+						);
 
 						PlayerLoginData player = server.getDatabase().getPlayerLoginData(user);
 						if (player == null) {
@@ -829,8 +830,9 @@ public class LoginPacketHandler {
 					break;
 				} else {
 					// Inauthentic client
-					String user = getString(packet.getBuffer()).trim();
-					user = user.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ");
+					String user = DataConversions.sanitizeUsername(
+							getString(packet.getBuffer()).trim()
+					);
 					String oldPass = getString(packet.getBuffer()).trim();
 					String newPass = getString(packet.getBuffer()).trim();
 					Long uid = packet.getBuffer().readLong();

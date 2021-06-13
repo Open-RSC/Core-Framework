@@ -32,7 +32,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 	public CharacterCreateRequest(final Server server, final Channel channel, final String username, final String password, final boolean isAuthenticClient, final int clientVersion) {
 		this.server = server;
 		this.setEmail("");
-		this.setUsername(username);
+		this.setUsername(DataConversions.sanitizeUsername(username));
 		this.setPassword(password);
 		this.setAuthenticClient(isAuthenticClient);
 		this.setChannel(channel);
@@ -43,7 +43,7 @@ public class CharacterCreateRequest extends LoginExecutorProcess{
 	public CharacterCreateRequest(final Server server, final Channel channel, final String username, final String password, final String email, final int clientVersion) {
 		this.server = server;
 		this.setEmail(email);
-		this.setUsername(username);
+		this.setUsername(DataConversions.sanitizeUsername(username));
 		this.setPassword(password);
 		this.setAuthenticClient(false);
 		this.setChannel(channel);

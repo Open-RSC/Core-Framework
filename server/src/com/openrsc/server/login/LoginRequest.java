@@ -35,7 +35,7 @@ public abstract class LoginRequest extends LoginExecutorProcess{
 	protected LoginRequest(final Server server, final Channel channel, final String username, final String password, final boolean isAuthenticClient, final int clientVersion, final boolean reconnecting) {
 		this.server = server;
 		this.channel = channel;
-		this.setUsername(username);
+		this.setUsername(DataConversions.sanitizeUsername(username));
 		this.setPassword(password);
 		this.setAuthenticClient(isAuthenticClient);
 		this.setIpAddress(((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress());

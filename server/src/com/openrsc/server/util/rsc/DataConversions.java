@@ -450,6 +450,17 @@ public final class DataConversions {
 	}
 
 	/**
+	 * removes invalid characters and replaces with spaces, then trims the username
+	 * @param username username input
+	 * @return sanitized username
+	 */
+	public static String sanitizeUsername(String username) {
+		return username
+				.replaceAll("[^=,\\da-zA-Z\\s]|(?<!,)\\s", " ")
+				.trim();
+	}
+
+	/**
 	 * Checks if the given int is in the array
 	 */
 	public static boolean inArray(int[] haystack, int needle) {

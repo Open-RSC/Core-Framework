@@ -12,6 +12,7 @@ import com.openrsc.server.database.queries.NamedParameterQuery;
 import com.openrsc.server.database.queries.Queries;
 import com.openrsc.server.database.queries.QueriesManager;
 import com.openrsc.server.database.struct.*;
+import com.openrsc.server.database.utils.SQLUtils;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.external.NPCLoc;
@@ -140,7 +141,7 @@ public class MySqlGameDatabase extends JDBCDatabase {
 	@Override
 	public int queryPlayerIdFromUsername(final String username) throws GameDatabaseException {
 		int pId = -1;
-		try (final PreparedStatement statement = statementFromString(getMySqlQueries().userToId, username);
+		try (final PreparedStatement statement = statementFromString(getMySqlQueries().userToId, SQLUtils.escapeLikeParameter(username));
 			 final ResultSet result = statement.executeQuery()) {
 			if (result.next()) {
 				pId = result.getInt("id");
@@ -186,7 +187,7 @@ public class MySqlGameDatabase extends JDBCDatabase {
 		try (final PreparedStatement statement = getConnection().prepareStatement(query)) {
 			if (bannedForMinutes == -1) {
 				statement.setLong(1, bannedForMinutes);
-				statement.setString(2, userNameToBan);
+				statement.setString(2, SQLUtils.escapeLikeParameter(userNameToBan));
 
 				replyMessage = userNameToBan + " has been banned permanently";
 			} else if (bannedForMinutes == 0) {
@@ -411,7 +412,7 @@ public class MySqlGameDatabase extends JDBCDatabase {
 	public PlayerData queryLoadPlayerData(final Player player) throws GameDatabaseException {
 		final PlayerData playerData = new PlayerData();
 		NamedParameterQuery getPlayerByUsername = queries.GET_PLAYER_BY_USERNAME;
-		String getPlayerByUsernameQuery = getPlayerByUsername.fillParameter("username", player.getUsername());
+		String getPlayerByUsernameQuery = getPlayerByUsername.fillParameter("username", SQLUtils.escapeLikeParameter(player.getUsername()));
 		return withPreparedStatement(
 				getPlayerByUsernameQuery,
 				statement -> {
@@ -1142,7 +1143,7 @@ public class MySqlGameDatabase extends JDBCDatabase {
 	public void queryUpdateClanMember(final ClanMember clanMember) throws GameDatabaseException {
 		try (final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().updateClanMember)) {
 			statement.setInt(1, clanMember.rank);
-			statement.setString(2, clanMember.username);
+			statement.setString(2, SQLUtils.escapeLikeParameter(clanMember.username));
 
 			statement.executeUpdate();
 		} catch (final SQLException e) {
@@ -2087,7 +2088,7 @@ public class MySqlGameDatabase extends JDBCDatabase {
 	public String queryPlayerLoginIp(final String username) throws GameDatabaseException {
 		String ip = null;
 		try (final PreparedStatement statement = getConnection().prepareStatement(getMySqlQueries().fetchLoginIp)) {
-			statement.setString(1, username);
+			statement.setString(1, SQLUtils.escapeLikeParameter(username));
 
 			try (final ResultSet result = statement.executeQuery()) {
 				if (result.next()) {

@@ -2,6 +2,7 @@ package com.openrsc.server.database.queries;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -29,7 +30,7 @@ public class NamedParameterQuery {
     }
 
     public String fillArrayParameter(String parameter, List<?> objects) {
-        List<String> asStrings = objects.stream().map(String::valueOf).collect(Collectors.toList());
+        List<String> asStrings = objects.stream().map(this::resolveValue).collect(Collectors.toList());
         String joined = String.join(",", asStrings);
         return fillFromValue(parameter, joined);
     }
@@ -68,9 +69,9 @@ public class NamedParameterQuery {
                     .map(this::resolveValue)
                     .collect(Collectors.joining(","));
         } else if (value instanceof String) {
-            return "'" + value + "'";
+            return "'" + StringEscapeUtils.escapeSql((String) value) + "'";
         } else {
-            return String.valueOf(value);
+            return StringEscapeUtils.escapeSql(String.valueOf(value));
         }
     }
 
