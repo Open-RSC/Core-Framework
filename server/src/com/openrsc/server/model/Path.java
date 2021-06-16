@@ -215,6 +215,10 @@ public class Path {
 		return waypoints.poll();
 	}
 
+	Point getNextPoint() {
+		return waypoints.getFirst();
+	}
+
 	public Point element() {
 		return waypoints.element();
 	}

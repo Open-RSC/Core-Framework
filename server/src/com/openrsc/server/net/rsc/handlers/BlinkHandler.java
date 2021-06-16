@@ -11,10 +11,14 @@ public class BlinkHandler implements PayloadProcessor<TargetPositionStruct, Opco
 	public void process(TargetPositionStruct payload, Player player) throws Exception {
 		int coordX = payload.coordinate.getX();
 		int coordY = payload.coordinate.getY();
-		if (player.isMod())
+		if (player.isMod()) {
 			player.teleport(coordX, coordY);
-		else
+			if (player.getPossessing() != null) {
+				player.resetFollowing();
+			}
+		} else {
 			player.setSuspiciousPlayer(true, "non mod player tried to blink");
+		}
 	}
 
 }

@@ -8,8 +8,10 @@ import com.openrsc.server.database.struct.LinkedPlayer;
 import com.openrsc.server.event.SingleEvent;
 import com.openrsc.server.model.Point;
 import com.openrsc.server.model.entity.GameObject;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Group;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
@@ -131,6 +133,12 @@ public final class Event implements CommandTrigger {
 		}
 		else if(command.equalsIgnoreCase("currentstat") ||command.equalsIgnoreCase("currentstats") || command.equalsIgnoreCase("setcurrentstat") || command.equalsIgnoreCase("setcurrentstats") || command.equalsIgnoreCase("curstat") ||command.equalsIgnoreCase("curstats") || command.equalsIgnoreCase("setcurstat") || command.equalsIgnoreCase("setcurstats")) {
 			changeCurrentStat(player, command, args);
+		}
+		else if (command.equalsIgnoreCase("possess") || command.equalsIgnoreCase("pos") || command.equalsIgnoreCase("possessnpc") || command.equalsIgnoreCase("pnpc") || command.equalsIgnoreCase("posnpc") || command.equalsIgnoreCase("pr") || command.equalsIgnoreCase("possessrandom")) {
+			possessMob(player, command, args);
+		}
+		else if (command.equalsIgnoreCase("npctalk") || command.equalsIgnoreCase("npcsay")) {
+			npcTalk(player, command, args);
 		}
 	}
 
@@ -264,6 +272,7 @@ public final class Event implements CommandTrigger {
 		}
 
 		targetPlayer.teleport(teleportTo.getX(), teleportTo.getY(), true);
+		targetPlayer.resetFollowing();
 
 		player.message(messagePrefix + "You have teleported " + targetPlayer.getUsername() + " to " + targetPlayer.getLocation() + " from " + originalLocation);
 		if(targetPlayer.getUsernameHash() != player.getUsernameHash() && targetPlayer.getLocation() != originalLocation) {
@@ -306,6 +315,96 @@ public final class Event implements CommandTrigger {
 			+ targetPlayer.getLocation() + " from " + originalLocation);
 		if(targetPlayer.getUsernameHash() != player.getUsernameHash()) {
 			targetPlayer.message(messagePrefix + "You have been returned by " + player.getStaffName());
+		}
+	}
+
+	private void possessMob(Player player, String command, String[] args) {
+		if (command.toLowerCase().contains("npc")) {
+			// possession of monster
+			if (1 > args.length) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [npc instance id]");
+				return;
+			}
+
+			int npcInstanceId;
+			try {
+				npcInstanceId = Integer.parseInt(args[0]);
+			} catch (NumberFormatException e) {
+				player.message(badSyntaxPrefix + command.toUpperCase() + " [npc instance id]");
+				return;
+			}
+
+			Npc targetNpc = player.getWorld().getNpc(npcInstanceId);
+			if (targetNpc == null) {
+				player.message(messagePrefix + "Couldn't find that npc.");
+			} else {
+				player.setCacheInvisible(true);
+				player.setPossessing(targetNpc);
+				player.message(messagePrefix + "Your spirit has entered @mag@" + targetNpc.getDef().getName());
+			}
+		} else {
+			// possession of player
+			Player targetPlayer = null;
+			if (command.equalsIgnoreCase("possessrandom") || command.equalsIgnoreCase("pr")) {
+				if (args.length > 0) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " takes no arguments");
+					return;
+				}
+				int retries = 0;
+				while ((targetPlayer == null || targetPlayer.getUsername().equals(player.getUsername())) && retries++ < 30) {
+					targetPlayer = player.getWorld().getRandomPlayer();
+				}
+				if (targetPlayer == null || targetPlayer.getUsername().equals(player.getUsername())) {
+					player.message(messagePrefix + "Could not find player to possess.");
+					return;
+				}
+			} else {
+				if (1 > args.length) {
+					player.message(badSyntaxPrefix + command.toUpperCase() + " [player name]");
+					return;
+				}
+				targetPlayer = player.getWorld().getPlayer(DataConversions.usernameToHash(args[0]));
+			}
+
+			if (targetPlayer == null) {
+				player.message(messagePrefix + "Invalid name or player is not online.");
+			} else {
+				player.setCacheInvisible(true);
+				player.setPossessing(targetPlayer);
+				player.message(messagePrefix + "Your spirit has entered @mag@" + targetPlayer.getUsername());
+			}
+		}
+	}
+
+	private void npcTalk(Player player, String command, String[] args) {
+		if (args.length < 2) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [msg]");
+			return;
+		}
+
+		try {
+			int npc_id = Integer.parseInt(args[0]);
+
+			StringBuilder msg = new StringBuilder();
+			for (int i = 1; i < args.length; i++)
+				msg.append(args[i]).append(" ");
+			msg.toString().trim();
+
+			final Npc npc = player.getWorld().getNpc(npc_id, player.getX() - 10, player.getX() + 10, player.getY() - 10, player.getY() + 10);
+			String message = DataConversions.upperCaseAllFirst(DataConversions.stripBadCharacters(msg.toString()));
+
+			if (npc != null) {
+				for (Player playerToChat : npc.getViewArea().getPlayersInView()) {
+					player.getWorld().getServer().getGameUpdater().updateNpcAppearances(playerToChat); // First call is to flush any NPC chat that is generated by other server processes
+					npc.getUpdateFlags().setChatMessage(new ChatMessage(npc, message, playerToChat));
+					player.getWorld().getServer().getGameUpdater().updateNpcAppearances(playerToChat);
+					npc.getUpdateFlags().setChatMessage(null);
+				}
+			} else {
+				player.message(messagePrefix + "NPC could not be found");
+			}
+		} catch (NumberFormatException e) {
+			player.message(badSyntaxPrefix + command.toUpperCase() + " [npc_id] [msg]");
 		}
 	}
 

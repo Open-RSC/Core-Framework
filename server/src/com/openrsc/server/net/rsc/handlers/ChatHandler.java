@@ -1,6 +1,7 @@
 package com.openrsc.server.net.rsc.handlers;
 
 import com.openrsc.server.database.impl.mysql.queries.logging.ChatLog;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.update.ChatMessage;
 import com.openrsc.server.model.snapshot.Chatlog;
@@ -37,8 +38,24 @@ public final class ChatHandler implements PayloadProcessor<ChatStruct, OpcodeIn>
 
 		boolean mutedChat = (sender.getLocation().onTutorialIsland() || sender.isMuted()) && !sender.hasElevatedPriveledges();
 
-		ChatMessage chatMessage = new ChatMessage(sender, message, mutedChat);
-		sender.getUpdateFlags().setChatMessage(chatMessage);
+		ChatMessage chatMessage = null;
+
+		// chat messages while possessing another Player/NPC get sent by the entity being possessed
+		if (sender.getPossessing() != null) {
+			if (sender.getPossessing() instanceof Player && sender.isAdmin()) {
+				chatMessage = new ChatMessage((Player)sender.getPossessing(), message, mutedChat);
+				sender.getPossessing().getUpdateFlags().setChatMessage(chatMessage);
+			} else if (sender.getPossessing() instanceof Npc) {
+				chatMessage = new ChatMessage((Npc)sender.getPossessing(), message, null);
+				sender.getPossessing().getUpdateFlags().setChatMessage(chatMessage);
+			}
+		}
+
+		// Normal chat messages
+		if (chatMessage == null) {
+			chatMessage = new ChatMessage(sender, message, mutedChat);
+			sender.getUpdateFlags().setChatMessage(chatMessage);
+		}
 
 		// We do not want muted/tutorial chat to be logged
 		if (mutedChat) {

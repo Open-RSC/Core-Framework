@@ -73,6 +73,19 @@ public class WalkingQueue {
 
 	}
 
+	public Point getNextMovement() {
+		if (path == null || path.isEmpty()) {
+			return mob.getLocation();
+		}
+		Point destPoint = path.getNextPoint();
+		Point curPoint = mob.getLocation();
+		if (!PathValidation.checkAdjacent(mob, curPoint, destPoint)) {
+			return curPoint;
+		} else {
+			return destPoint;
+		}
+	}
+
 	public void reset() {
 		path = null;
 		if (this.mob.isPlayer()) {

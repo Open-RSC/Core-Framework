@@ -282,6 +282,26 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	}
 
 	/**
+	 * Gets a random online player
+	 * @return
+	 */
+	public Player getRandomPlayer() {
+		int playerCount = 0;
+		for (final Player player : getPlayers()) {
+			++playerCount;
+		}
+		int i = 0;
+		int randomPlayer = (int)(Math.random() * playerCount);
+		for (final Player player : getPlayers()) {
+			if (i == randomPlayer) {
+				return player;
+			}
+			i++;
+		}
+		return null;
+	}
+
+	/**
 	 * Finds a specific quest by ID
 	 *
 	 * @param q

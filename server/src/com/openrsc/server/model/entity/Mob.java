@@ -17,6 +17,7 @@ import com.openrsc.server.model.states.CombatState;
 import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.util.rsc.CollisionFlag;
+import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -95,6 +96,22 @@ public abstract class Mob extends Entity {
 	 * Who we are currently following (if anyone)
 	 */
 	private Mob following;
+	/**
+	 * Event to handle possessing
+	 */
+	private GameTickEvent possesionEvent;
+	/**
+	 * Who we are currently possessing (if anyone)
+	 */
+	private Mob possessing;
+	/**
+	 * Name of player we are possessing (if anyone)
+	 */
+	public String possessingUsername;
+	/**
+	 * If the moderator has been alerted that the person they were posessing logged out
+	 */
+	public boolean knowsPossesseeLoggedOut = false;
 	/**
 	 * The related mob (owner, in the case of pets)
 	 */
@@ -388,7 +405,6 @@ public abstract class Mob extends Entity {
 		if (isFollowing()) {
 			resetFollowing();
 		}
-		final Mob me = this;
 		following = mob;
 		followEvent = new GameTickEvent(getWorld(), this, 0, "Mob Following Mob") {
 			public void run() {
@@ -428,6 +444,49 @@ public abstract class Mob extends Entity {
 		getWorld().getServer().getGameEventHandler().add(followEvent);
 	}
 
+	public void setPossessing(final Mob mob) {
+		possessing = mob;
+		if (mob instanceof Player) {
+			possessingUsername = ((Player)mob).getUsername();
+		} else {
+			possessingUsername = ((Npc) possessing).getDef().getName();
+		}
+		possesionEvent = new GameTickEvent(getWorld(), this, 0, "Moderator possessing Mob") {
+			public void run() {
+				setDelayTicks(1);
+				Player moderator = (Player)getOwner();
+				Mob possessee = moderator.getPossessing();
+
+				if (possessee == null || possessee.isRemoved()) {
+					if (possessee instanceof Player) {
+						if (!moderator.knowsPossesseeLoggedOut) {
+							moderator.message("The body you possessed has left this world, but your spirit still searches for them...");
+							moderator.knowsPossesseeLoggedOut = true;
+						}
+						Player targetPlayer = moderator.getWorld().getPlayer(DataConversions.usernameToHash(moderator.possessingUsername));
+						if (targetPlayer == null)
+							return;
+						moderator.message("Your spirit has found @mag@" + possessingUsername + "@whi@ once again.");
+						moderator.knowsPossesseeLoggedOut = false;
+						setPossessing(targetPlayer);
+					} else {
+						if (possessingUsername != null) {
+							moderator.message("Your spirit leaves the @mag@" + possessingUsername + "@whi@ as it dies...");
+							moderator.setCacheInvisible(false);
+							resetFollowing(false);
+						} else {
+							this.stop();
+						}
+						return;
+					}
+				}
+				moderator.setLocation(possessee.getWalkingQueue().getNextMovement(), false);
+			}
+		};
+		getWorld().getServer().getGameEventHandler().add(possesionEvent);
+
+	}
+
 	public void setFollowingAstar(final Mob mob, final int radius) {
 		setFollowingAstar(mob, radius, 20);
 	}
@@ -456,13 +515,34 @@ public abstract class Mob extends Entity {
 		getWorld().getServer().getGameEventHandler().add(followEvent);
 	}
 
-	public void resetFollowing() {
+	public void resetFollowing(boolean tellLeft) {
 		following = null;
 		if (followEvent != null) {
 			followEvent.stop();
 			followEvent = null;
 		}
+
+		if (possesionEvent != null) {
+			if (tellLeft) {
+				if (this instanceof Player) {
+					if (possessing instanceof Player) {
+						((Player) this).message("Your spirit has left @mag@" + possessingUsername + "@whi@ and returned to your body.");
+					} else {
+						((Player) this).message("Your spirit has left @mag@" + ((Npc) possessing).getDef().getName() + "@whi@ and returned to your body.");
+						((Player) this).setCacheInvisible(false);
+					}
+				}
+			}
+			possesionEvent.stop();
+			possesionEvent = null;
+			possessing = null;
+			possessingUsername = null;
+		}
 		resetPath();
+	}
+
+	public void resetFollowing() {
+		resetFollowing(true);
 	}
 
 	public void setLocation(final Point point, boolean teleported) {
@@ -803,6 +883,10 @@ public abstract class Mob extends Entity {
 
 	public Mob getFollowing() {
 		return following;
+	}
+
+	public Mob getPossessing() {
+		return possessing;
 	}
 
 	public int getHitsMade() {

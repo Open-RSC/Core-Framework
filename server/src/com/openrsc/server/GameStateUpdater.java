@@ -794,10 +794,20 @@ public final class GameStateUpdater {
 							updatesMain.add(playerNeedingAppearanceUpdate.getUsername());
 						}
 					}
-                    // Handle Invisibility & Invulnerability in the authentic client
-					if (!isCustomClient &&
+
+					if (playerNeedingAppearanceUpdate.getPossessing() != null) {
+						// while possessing another creature
+						// do not wish to see any sprites of our own character under any circumstance
+						if (isRetroClient) {
+							updatesAlt.add((byte) 0); // Equipment count
+						} else {
+							updatesMain.add((byte) 0); // Equipment count
+						}
+					} else if (!isCustomClient &&
                         (playerNeedingAppearanceUpdate.stateIsInvisible() ||
                             playerNeedingAppearanceUpdate.stateIsInvulnerable())) {
+						// Handle Invisibility & Invulnerability in the authentic client
+
                         int[] wornItems = playerNeedingAppearanceUpdate.getWornItems();
 
                         int bootColour = AppearanceId.SHADOW_WARRIOR_BOOTS.id(); // default

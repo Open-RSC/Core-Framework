@@ -2266,6 +2266,9 @@ public final class Player extends Mob {
 		if (resetFollowing && isFollowing()) {
 			resetFollowing();
 		}
+		if (resetFollowing && getPossessing() != null) {
+			resetFollowing();
+		}
 		if (isRanging()) {
 			resetRange();
 		}

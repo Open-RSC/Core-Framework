@@ -110,9 +110,6 @@ Admin Commands
   - Usage: `::massnpc [id] [amount] (duration_minutes)`
   - Spawn the specified amount of the specified NPCs for the specified amount of time.
   - If no duration is supplied, then 10 minutes is used.
-- npctalk
-  - Usage: `::npctalk [npc_id] [msg]`
-  - Causes the specified NPC to say the specified message to all players in the area.
 - npckills
   - Usage: `::npckills [name]`
   - Shows kill counts for name.
@@ -120,6 +117,7 @@ Admin Commands
   - Usage: `::playertalk [name] [msg]`
   - Causes the specified player to say the specified message to all players in the area.
   - You can not talk as a staff member of equal or greater rank.
+  - A similar effect is possible by using the `::possess` command (but only if you are an admin).
 - smitenpc
   - Usage: `::smitenpc [npc_id] (damage)`
   - Alias: `::damagenpc` or `::dmgnpc`
@@ -406,6 +404,24 @@ Event Commands
   - Turn the specified player invulnerable.
   - If no player is specified, then the current player is turned invulnerable.
   - If no boolean is supplied, then this command works as a toggle.
+- possess
+  - Usage: `::possess [player]`
+  - Sets yourself invisible and constantly at the same coordinates as the player being possessed.
+  - Alias: `::pos`
+- possessnpc
+  - Usage: `::possessnpc [npc instance id]`
+  - Sets yourself invisible and constantly at the same coordinates as the npc being possessed.
+  - Npc instance id can be seen with RSC+ (ctrl-n with extended tooltip on), or by using the ResetCrystal on an npc.
+  - Alias: `::posnpc`or `::pnpc`
+- possessrandom 
+  - Usage: `::possessrandom`
+  - Selects a random player other than yourself to possess.
+  - Alias: `::pr`
+- npctalk
+  - Usage: `::npctalk [npc_id] [msg]`
+  - Causes the specified NPC to say the specified message to all players in the area.
+  - Can use `::possessnpc` & then just chat normally for longer conversations
+  - Alias: `::npcsay`
 - check
   - Usage: `::check (player)`
   - Shows all of the characters that were created by the same IP address.
