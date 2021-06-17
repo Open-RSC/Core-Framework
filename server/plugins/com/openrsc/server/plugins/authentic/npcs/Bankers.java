@@ -293,6 +293,12 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 			"1 gp",
 			"10 gp",
 			"100 gp"); // early on there was no 1000 nor 2500 options
+		// but we will allow those options as well if world is item bank
+		if (!player.getConfig().COIN_BANK) {
+			Collections.addAll(options,
+				"1000 gp",
+				"2500 gp");
+		}
 		String[] finalOptions = new String[options.size()];
 
 		return multi(player, options.toArray(finalOptions));
