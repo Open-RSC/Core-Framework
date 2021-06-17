@@ -1,6 +1,7 @@
 package com.openrsc.server.plugins.authentic.npcs;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.npc.Npc;
@@ -12,6 +13,9 @@ import com.openrsc.server.plugins.triggers.UseNpcTrigger;
 import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 import static com.openrsc.server.plugins.Functions.*;
 
@@ -72,8 +76,13 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				} else {
 					npcsay(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
 				}
-				player.setAccessingBank(true);
-				ActionSender.showBank(player);
+
+				if (!config().COIN_BANK && player.getClientLimitations().supportsItemBank == 1) {
+					player.setAccessingBank(true);
+					ActionSender.showBank(player);
+				} else {
+					showCoinBank(player, npc);
+				}
 			}
 		} else if (menu == 1) {
 			if (npc.getID() == NpcId.GNOME_BANKER.id()) {
@@ -225,6 +234,100 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 				player.setAccessingBank(true);
 				ActionSender.showBank(player);
 			}
+		}
+	}
+
+	private void showCoinBank(Player player, Npc npc) {
+		// Transaction Menu
+		int transactionType = transactionMenu(player, npc);
+		if (transactionType == 0) {
+			player.message("How much would you like to withdraw?");
+		} else if (transactionType == 1) {
+			player.message("How much would you like to deposit?");
+		}
+
+		int amountChoice;
+		int requestedAmount = 0;
+
+		// Amount
+		if (transactionType != 2) {
+			amountChoice = amountMenu(player, npc, transactionType);
+			if (amountChoice < 0)
+				return;
+
+			final int[] possibleAmounts = new int[]{1, 10, 100, 1000, 2500};
+			requestedAmount = possibleAmounts[amountChoice];
+		}
+
+		// Perform transaction
+		switch(transactionType) {
+			case 0: // withdraw
+				withdraw(player, npc, requestedAmount);
+				break;
+			case 1: // deposit
+				deposit(player, npc, requestedAmount);
+				break;
+			case 2: // display balance
+				balance(player, npc);
+				break;
+		}
+	}
+
+	private int transactionMenu(Player player, Npc npc) {
+		ArrayList<String> options = new ArrayList<>();
+		Collections.addAll(options,
+			"I'd like to withdraw some gold",
+			"I'd like to deposit some gold",
+			"I'd like to see my banks balance");
+		String[] finalOptions = new String[options.size()];
+
+		return multi(player, options.toArray(finalOptions));
+	}
+
+	private int amountMenu(Player player, Npc npc, int transactionType) {
+		if (transactionType == -1)
+			return -1;
+
+		ArrayList<String> options = new ArrayList<>();
+		Collections.addAll(options,
+			"1 gp",
+			"10 gp",
+			"100 gp"); // early on there was no 1000 nor 2500 options
+		String[] finalOptions = new String[options.size()];
+
+		return multi(player, options.toArray(finalOptions));
+	}
+
+	private void withdraw(Player player, Npc npc, int amount) {
+		if (player.getBank().countId(ItemId.COINS.id()) >= amount) {
+			player.getBank().remove(ItemId.COINS.id(), amount, false);
+			give(player, ItemId.COINS.id(), amount);
+		} else {
+			player.message("Sorry you don't have enough balance to complete the transaction");
+		}
+		askAnotherTransaction(player, npc);
+	}
+
+	private void deposit(Player player, Npc npc, int amount) {
+		if (ifheld(player, ItemId.COINS.id(), amount)) {
+			player.getCarriedItems().remove(new Item(ItemId.COINS.id(), amount));
+			player.getBank().add(new Item(ItemId.COINS.id(), amount));
+		} else {
+			player.message("Sorry you don't have enough gold to complete the transaction");
+		}
+		askAnotherTransaction(player, npc);
+	}
+
+	private void balance(Player player, Npc npc) {
+		player.message("Your current balance is: " + player.getBank().countId(ItemId.COINS.id()) + " gp");
+		askAnotherTransaction(player, npc);
+	}
+
+	private void askAnotherTransaction(Player player, Npc npc) {
+		player.message("Do you want to perform another transaction?");
+		int response = multi(player, "Yes", "No");
+		if (response == 0) {
+			showCoinBank(player, npc);
 		}
 	}
 }

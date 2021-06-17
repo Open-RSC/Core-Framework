@@ -135,6 +135,8 @@ public final class RegularPlayer implements CommandTrigger {
 			setClientVersion(player, args);
 		} else if (command.equalsIgnoreCase("skiptutorial")) {
 			skipTutorial(player);
+		} else if (command.equalsIgnoreCase("oldtrade")) {
+			setOldTrade(player);
 		}
 	}
 
@@ -849,5 +851,11 @@ public final class RegularPlayer implements CommandTrigger {
 				player.message("Couldn't skip tutorial.");
 			}
 		}
+	}
+
+	private void setOldTrade(Player player) {
+		player.getCache().store("last_noconfirm", System.currentTimeMillis());
+		player.message("You have set trading to not require confirm");
+		player.message("This will last for 5 minutes");
 	}
 }

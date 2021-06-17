@@ -1376,6 +1376,21 @@ public final class Player extends Mob {
 		return Math.min(DataConversions.roundUp((1600 - (System.currentTimeMillis() - lastSpellCast)) / 1000D), 20);
 	}
 
+	public boolean hasNoTradeConfirm() {
+		return hasNoTradeConfirm(0);
+	}
+
+	public boolean hasNoTradeConfirm(int atLeastMinutes) {
+		return System.currentTimeMillis() - getNoTradeConfirmTime() < Math.max(0L, (5L - atLeastMinutes)) * 60000;
+	}
+
+	public long getNoTradeConfirmTime() {
+		if (this.getCache().hasKey("last_noconfirm")) {
+			return this.getCache().getLong("last_noconfirm");
+		}
+		return 0;
+	}
+
 	public String getUsername() {
 		return username;
 	}

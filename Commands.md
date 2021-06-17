@@ -606,6 +606,9 @@ Regular Player Commands
 - commands
   - Usage: `::commands`
   - Shows a list of the Regular Player commands.
+- oldtrade
+  - Usage: `::oldtrade`
+  - Sets the client temporarily to no confirm trade mode. Lasts for 5 minutes.
 - toggleglobalchat
   - Usage: `::toggleglobalchat`
   - Toggles seeing global chat received via Global$ friend.

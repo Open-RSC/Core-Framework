@@ -150,7 +150,7 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 				opcode = OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER;
 				break;
 			case 232:
-				opcode = OpcodeIn.PLAYER_ACCEPTED_TRADE;
+				opcode = OpcodeIn.PLAYER_ACCEPTED_INIT_TRADE_REQUEST;
 				break;
 			case 3:
 				opcode = OpcodeIn.CHAT_MESSAGE;
@@ -427,13 +427,13 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 				break;
 
 			case PLAYER_INIT_TRADE_REQUEST:
-			case PLAYER_ACCEPTED_TRADE:
+			case PLAYER_ACCEPTED_INIT_TRADE_REQUEST:
 			case PLAYER_DECLINED_TRADE:
 			case PLAYER_ADDED_ITEMS_TO_TRADE_OFFER:
 				PlayerTradeStruct pt = new PlayerTradeStruct();
 				if (opcode == OpcodeIn.PLAYER_INIT_TRADE_REQUEST) {
 					pt.targetPlayerID = packet.readShort();
-				} else if (opcode == OpcodeIn.PLAYER_ACCEPTED_TRADE) {
+				} else if (opcode == OpcodeIn.PLAYER_ACCEPTED_INIT_TRADE_REQUEST) {
 					pt.tradeAccepted = packet.readByte();
 				} else if (opcode == OpcodeIn.PLAYER_ADDED_ITEMS_TO_TRADE_OFFER) {
 					pt.tradeCount = packet.readByte();
@@ -487,7 +487,7 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 
 			case CHANGE_PASS:
 				SecuritySettingsStruct sec = new SecuritySettingsStruct();
-				String newPassword = packet.readString(20); // only newPassword sent
+				String newPassword = packet.readString(20).trim(); // only newPassword sent
 				sec.passwords = new String[]{ "", newPassword };
 
 				result = sec;
@@ -678,7 +678,7 @@ public class Payload38Parser implements PayloadParser<OpcodeIn> {
 			// PLAYER_ADDED_ITEMS_TO_TRADE_OFFER
 			case 234:
 				return payloadLength >= 1;
-			// PLAYER_ACCEPTED_TRADE
+			// PLAYER_ACCEPTED_INIT_TRADE_REQUEST
 			case 232:
 				return payloadLength == 1;
 

@@ -10,8 +10,10 @@ public class ClientLimitations {
 		maxProjectileSprite, maxSkinColor, maxHairColor, maxClothingColor, maxQuestId,
 		maxDialogueOptions, maxBankItems;
 	public String mapHash;
-	public int supportsModSprites = NO_SUPPORT;
-	public int numberOfSounds = NO_SUPPORT;
+	int supportsModSprites = NO_SUPPORT;
+	int numberOfSounds = NO_SUPPORT;
+	public int supportsItemBank = NO_SUPPORT;
+	public int supportsConfirmTrade = NO_SUPPORT;
 
 	ClientLimitations(int clientVersion) {
 		setKnownLimitations(clientVersion);
@@ -73,6 +75,13 @@ public class ClientLimitations {
 			maxDialogueOptions = 5;
 			maxBankItems = 48 * 4;
 			numberOfSounds = AUTHENTIC_SOUNDS_ONLY;
+		}
+
+		if (clientVersion >= 72) {
+			supportsItemBank = 1;
+		}
+		if (clientVersion >= 106) {
+			supportsConfirmTrade = 1;
 		}
 	}
 
