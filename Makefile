@@ -83,7 +83,7 @@ create-mariadb:
 # Call via "make import-authentic-mariadb db=preservation"
 import-authentic-mariadb:
 	@[ "${db}" ] || ( echo ">> db is not set"; exit 1 )
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/core.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < server/database/mysql/core.sql
 
 # Imports the core.sqlite file to a specified database
 # Call via "make import-authentic-sqlite db=preservation"
@@ -95,15 +95,14 @@ import-authentic-sqlite:
 # Call via "make import-custom-mariadb db=cabbage"
 import-custom-mariadb:
 	@[ "${db}" ] || ( echo ">> db is not set"; exit 1 )
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/core.sql
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_auctionhouse.sql
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_bank_presets.sql
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_clans.sql
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_equipment_tab.sql
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_harvesting.sql
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_ironman.sql
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_npc_kill_counting.sql
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/Addons/add_runecraft.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < server/database/mysql/core.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < server/database/mysql/addons/add_auctionhouse.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < server/database/mysql/addons/add_bank_presets.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < server/database/mysql/addons/add_clans.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < server/database/mysql/addons/add_equipment_tab.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < server/database/mysql/addons/add_harvesting.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < server/database/mysql/addons/add_npc_kill_counting.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < server/database/mysql/addons/add_runecraft.sql
 
 # Imports the addon sqlite files to a specified database
 # Call via "make import-custom-sqlite db=cabbage"
@@ -120,7 +119,7 @@ import-custom-sqlite:
 # Call via "make import-retro-mariadb db=2001scape"
 import-retro-mariadb:
 	@[ "${db}" ] || ( echo ">> db is not set"; exit 1 )
-	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < Databases/retro.sql
+	docker exec -i mariadb mysql -u${MARIADB_ROOT_USER} -p${MARIADB_ROOT_PASSWORD} ${db} < server/database/mysql/retro.sql
 
 # Imports the retro.sqlite file to a specified database
 # Call via "make import-retro-sqlite db=2001scape"
