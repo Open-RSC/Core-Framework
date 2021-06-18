@@ -480,7 +480,14 @@ public abstract class Mob extends Entity {
 						return;
 					}
 				}
-				moderator.setLocation(possessee.getWalkingQueue().getNextMovement(), false);
+
+				int curY = moderator.getLocation().getY();
+				final Point nextPoint = possessee.getWalkingQueue().getNextMovement();
+				moderator.setLocation(nextPoint, false);
+				if (Math.abs(nextPoint.getY() - curY) >= 16) {
+					// set_floor is necessary if climbing ladder or teleporting
+					ActionSender.sendWorldInfo(moderator);
+				}
 			}
 		};
 		getWorld().getServer().getGameEventHandler().add(possesionEvent);
