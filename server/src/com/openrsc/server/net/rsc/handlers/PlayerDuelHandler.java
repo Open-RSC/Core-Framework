@@ -13,6 +13,7 @@ import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.PayloadProcessor;
 import com.openrsc.server.net.rsc.enums.OpcodeIn;
 import com.openrsc.server.net.rsc.struct.incoming.PlayerDuelStruct;
+import com.openrsc.server.util.rsc.CertUtil;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -339,6 +340,16 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 					}
 					if (tItem.getDef(player.getWorld()).isUntradable()) {
 						player.message("This object cannot be added to a duel offer");
+						ActionSender.sendDuelOpponentItems(player);
+						continue;
+					}
+					if (CertUtil.isCert(tItem.getCatalogId()) && (player.getCertOptOut() || affectedPlayer.getCertOptOut())) {
+						if (player.getCertOptOut()) {
+							player.message("You have opted out of dueling certs with other players");
+						}
+						if (affectedPlayer.getCertOptOut()) {
+							player.message("The other player has opted out of dueling certs with players");
+						}
 						ActionSender.sendDuelOpponentItems(player);
 						continue;
 					}

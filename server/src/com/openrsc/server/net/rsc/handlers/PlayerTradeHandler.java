@@ -195,13 +195,18 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 
 				if (affectedPlayer.getTrade().isTradeAccepted()) {
 					// check perform trade or send confirm screen
-					if (player.getConfig().NO_CONFIRM_TRADES || ((willPlayerNoConfirm == willOtherPlayerNoConfirm) && willPlayerNoConfirm)) {
-						performTrade(player, affectedPlayer);
-					} else if (willPlayerNoConfirm == willOtherPlayerNoConfirm) {
-						// here both players are capable to confirm trade
+					if (!player.getConfig().NO_CONFIRM_TRADES
+						&& player.getClientLimitations().supportsConfirmTrade
+						&& affectedPlayer.getClientLimitations().supportsConfirmTrade) {
+						// world set to confirm and both players are capable of confirm trade
 						ActionSender.sendSecondTradeScreen(player);
 						ActionSender.sendSecondTradeScreen(affectedPlayer);
+					} else if (player.getConfig().NO_CONFIRM_TRADES
+						|| ((willPlayerNoConfirm == willOtherPlayerNoConfirm) && willPlayerNoConfirm)) {
+						// world set to not confirm or both players are capable of no confirm trade
+						performTrade(player, affectedPlayer);
 					} else {
+						// world set to confirm and one of the two players not able to confirm trade
 						player.getTrade().resetAll();
 						affectedPlayer.getTrade().resetAll();
 						player.message("Trade could not complete");
