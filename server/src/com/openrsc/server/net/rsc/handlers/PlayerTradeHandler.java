@@ -121,10 +121,10 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 					ActionSender.sendTradeWindowOpen(affectedPlayer);
 
 					boolean warnPlayerNoConfirm, warnPlayerConfirm, warnOtherPlayerNoConfirm, warnOtherPlayerConfirm;
-					warnPlayerNoConfirm = player.getClientLimitations().supportsConfirmTrade == 1 && player.getConfig().NO_CONFIRM_TRADES;
-					warnPlayerConfirm = player.getClientLimitations().supportsConfirmTrade != 1 && !player.getConfig().NO_CONFIRM_TRADES;
-					warnOtherPlayerNoConfirm = affectedPlayer.getClientLimitations().supportsConfirmTrade == 1 && affectedPlayer.getConfig().NO_CONFIRM_TRADES;
-					warnOtherPlayerConfirm = affectedPlayer.getClientLimitations().supportsConfirmTrade != 1 && !affectedPlayer.getConfig().NO_CONFIRM_TRADES;
+					warnPlayerNoConfirm = player.getClientLimitations().supportsConfirmTrade && player.getConfig().NO_CONFIRM_TRADES;
+					warnPlayerConfirm = !player.getClientLimitations().supportsConfirmTrade && !player.getConfig().NO_CONFIRM_TRADES;
+					warnOtherPlayerNoConfirm = affectedPlayer.getClientLimitations().supportsConfirmTrade && affectedPlayer.getConfig().NO_CONFIRM_TRADES;
+					warnOtherPlayerConfirm = !affectedPlayer.getClientLimitations().supportsConfirmTrade && !affectedPlayer.getConfig().NO_CONFIRM_TRADES;
 					if (player.getConfig().NO_CONFIRM_TRADES) {
 						if (warnPlayerNoConfirm) {
 							ActionSender.sendMessage(player, "Reminder: This world does not support confirm trades");
@@ -186,12 +186,12 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 					player.getTrade().resetAll();
 					return;
 				}
-				boolean ownAccepted = player.getClientLimitations().supportsConfirmTrade == 1 || payload.tradeAccepted == 1;
+				boolean ownAccepted = player.getClientLimitations().supportsConfirmTrade || payload.tradeAccepted == 1;
 				player.getTrade().setTradeAccepted(ownAccepted);
 				ActionSender.sendTradeAcceptUpdate(affectedPlayer);
 
-				boolean willPlayerNoConfirm = player.getClientLimitations().supportsConfirmTrade != 1 || player.hasNoTradeConfirm();
-				boolean willOtherPlayerNoConfirm = affectedPlayer.getClientLimitations().supportsConfirmTrade != 1 || affectedPlayer.hasNoTradeConfirm();
+				boolean willPlayerNoConfirm = !player.getClientLimitations().supportsConfirmTrade || player.hasNoTradeConfirm();
+				boolean willOtherPlayerNoConfirm = !affectedPlayer.getClientLimitations().supportsConfirmTrade || affectedPlayer.hasNoTradeConfirm();
 
 				if (affectedPlayer.getTrade().isTradeAccepted()) {
 					// check perform trade or send confirm screen

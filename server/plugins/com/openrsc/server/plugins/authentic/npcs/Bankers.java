@@ -77,7 +77,7 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 					npcsay(player, npc, "Certainly " + (player.isMale() ? "Sir" : "Miss"));
 				}
 
-				if (!config().COIN_BANK && player.getClientLimitations().supportsItemBank == 1) {
+				if (!config().COIN_BANK && player.getClientLimitations().supportsItemBank) {
 					player.setAccessingBank(true);
 					ActionSender.showBank(player);
 				} else {
@@ -292,8 +292,9 @@ public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 		Collections.addAll(options,
 			"1 gp",
 			"10 gp",
-			"100 gp"); // early on there was no 1000 nor 2500 options
-		// but we will allow those options as well if world is item bank
+			"100 gp"); // early on there was no 1000 nor 2500 options. 1000 option added in 12 June 2001, 2500 unmentioned hidden update
+		// We will allow those options as well if world is item bank
+		// per Leclerc the amounts were like they were
 		if (!player.getConfig().COIN_BANK) {
 			Collections.addAll(options,
 				"1000 gp",

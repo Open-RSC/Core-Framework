@@ -12,8 +12,8 @@ public class ClientLimitations {
 	public String mapHash;
 	int supportsModSprites = NO_SUPPORT;
 	int numberOfSounds = NO_SUPPORT;
-	public int supportsItemBank = NO_SUPPORT;
-	public int supportsConfirmTrade = NO_SUPPORT;
+	public boolean supportsItemBank = false;
+	public boolean supportsConfirmTrade = false;
 
 	ClientLimitations(int clientVersion) {
 		setKnownLimitations(clientVersion);
@@ -78,10 +78,10 @@ public class ClientLimitations {
 		}
 
 		if (clientVersion >= 72) {
-			supportsItemBank = 1;
+			supportsItemBank = true;
 		}
 		if (clientVersion >= 106) {
-			supportsConfirmTrade = 1;
+			supportsConfirmTrade = true;
 		}
 	}
 

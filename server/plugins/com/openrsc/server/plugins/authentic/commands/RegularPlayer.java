@@ -135,7 +135,8 @@ public final class RegularPlayer implements CommandTrigger {
 			setClientVersion(player, args);
 		} else if (command.equalsIgnoreCase("skiptutorial")) {
 			skipTutorial(player);
-		} else if (command.equalsIgnoreCase("oldtrade")) {
+		} else if (command.equalsIgnoreCase("oldtrade")
+			|| command.equalsIgnoreCase("notradeconfirm")) {
 			setOldTrade(player);
 		}
 	}
