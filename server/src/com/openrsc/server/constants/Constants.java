@@ -105,6 +105,12 @@ public final class Constants {
 	 */
 	public final static int AVATAR_HEIGHT = 102;
 	/**
+	 * PK Bot retreat levels.
+	 * This is essentially a second set of "difficulty" levels beyond heal levels.
+	 */
+	public final static int PKBOT_EASY_RETREATS = 20, PKBOT_MEDIUM_RETREATS = 25,
+	PKBOT_HARD_RETREATS = 30, PKBOT_EXPERT_RETREATS = 35, PKBOT_SUPER_EXPERT_RETREATS = 40;
+	/**
 	 * Allowable character skin colours
 	 */
 	public final static int characterSkinColours[] = {0xecded0, 0xccb366, 0xb38c40, 0x997326, 0x906020};

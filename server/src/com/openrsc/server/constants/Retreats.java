@@ -79,7 +79,7 @@ public class Retreats {
 			put(NpcId.STRAVEN.id(), 1);
 			put(NpcId.JONNY_THE_BEARD.id(), 1);
 			put(NpcId.KALRAG.id(), 1);
-			put(NpcId.PKBOT.id(), 30);
+			put(NpcId.PKBOT.id(), Constants.PKBOT_MEDIUM_RETREATS);
 		}};
 	}
 

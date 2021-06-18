@@ -193,6 +193,11 @@ public final class WorldPopulator {
 				&& getWorld().getServer().getConfig().WANT_FIXED_BROKEN_MECHANICS) {
 				loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsDiscontinued.json");
 			}
+			if (getWorld().getServer().getConfig().LOCATION_DATA == 4) {
+				if (getWorld().getServer().getConfig().WANT_PK_BOTS) {
+					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsPkBots.json");
+				}
+			}
 			if (getWorld().getServer().getConfig().LOCATION_DATA == 2) {
 				if (getWorld().getServer().getConfig().WANT_DECORATED_MOD_ROOM) {
 					loadNpcLocs(getWorld().getServer().getConfig().CONFIG_DIR + "/defs/locs/NpcLocsModRoom.json");

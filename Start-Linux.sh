@@ -210,6 +210,7 @@ Choices:
                 make import-authentic-sqlite db=uranium
                 make import-custom-sqlite db=cabbage
                 make import-custom-sqlite db=coleslaw
+                make import-custom-sqlite db=openpk
                 make import-retro-sqlite db=2001scape
             elif [ "$sql" == "2" ]; then
                 make import-authentic-mariadb db=preservation
@@ -217,6 +218,7 @@ Choices:
                 make import-authentic-mariadb db=uranium
                 make import-custom-mariadb db=cabbage
                 make import-custom-mariadb db=coleslaw
+                make import-custom-mariadb db=openpk
                 make import-retro-mariadb db=2001scape
             fi
         else

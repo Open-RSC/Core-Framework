@@ -282,6 +282,7 @@ echo .read ./server/database/sqlite/core.sqlite | %sqlitepath%sqlite3.exe .\serv
 echo .read ./server/database/sqlite/core.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\uranium.db
 echo .read ./server/database/sqlite/core.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\cabbage.db
 echo .read ./server/database/sqlite/core.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\coleslaw.db
+echo .read ./server/database/sqlite/core.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openpk.db
 echo .read ./server/database/sqlite/retro.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\2001scape.db
 echo .read ./server/database/sqlite/addons/add_auctionhouse.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\cabbage.db
 echo .read ./server/database/sqlite/addons/add_bank_presets.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\cabbage.db
@@ -293,6 +294,11 @@ echo .read ./server/database/sqlite/addons/add_bank_presets.sqlite | %sqlitepath
 echo .read ./server/database/sqlite/addons/add_clans.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\coleslaw.db
 echo .read ./server/database/sqlite/addons/add_equipment_tab.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\coleslaw.db
 echo .read ./server/database/sqlite/addons/add_npc_kill_counting.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\coleslaw.db
+echo .read ./server/database/sqlite/addons/add_auctionhouse.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openpk.db
+echo .read ./server/database/sqlite/addons/add_bank_presets.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openpk.db
+echo .read ./server/database/sqlite/addons/add_clans.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openpk.db
+echo .read ./server/database/sqlite/addons/add_equipment_tab.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openpk.db
+echo .read ./server/database/sqlite/addons/add_npc_kill_counting.sqlite | %sqlitepath%sqlite3.exe .\server\inc\sqlite\openpk.db
 echo:
 echo Fresh install complete!
 echo:

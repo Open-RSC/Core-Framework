@@ -2256,8 +2256,8 @@ public class EntityHandler {
 		npcs.add(new NPCDef("Bunny", "A fluffy bunny", "", 1, 1, 10, 1, false, sprites, 0, 0, 0, 0, 95, 85, 7, 7, 10, i++));
 		sprites = new int[]{473, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 		npcs.add(new NPCDef("Duck", "Definitely not the ugly one", "", 1, 1, 10, 1, false, sprites, 1, 2, 3, 4, 85, 95, 6, 6, 5, i++));
-		sprites = new int[]{0, 1, 2, -1, 52, 8, 87, -1, -1, -1, -1, -1};
-		npcs.add(new NPCDef("PKBOT", "He looks scary.", "", 30, 69, 41, 1, true, sprites, 45167296, 28067296, 33415270, 45523536, 145, 220, 6, 6, 5, i++));
+		sprites = new int[]{0, 1, 2, -1, 52, 8, 83, 87, -1, -1, -1, -1};
+		npcs.add(new NPCDef("PKBOT", "He looks scary.", "", 41, 99, 87, 1, true, sprites, 16761440, 8409120, 33415270, 15523536, 145, 220, 6, 6, 5, i++));
 
 		if (Config.S_WANT_CUSTOM_SPRITES) {
 			// Ranael

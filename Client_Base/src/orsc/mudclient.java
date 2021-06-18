@@ -10541,6 +10541,10 @@ public final class mudclient implements Runnable {
 					i++;
 
 					if (i == leftColLength) {
+						//Here we give an extra 10 pixels to the X offset so stats don't overlap.
+						if (Config.S_WANT_OPENPK_POINTS) {
+							xOffset += 10;
+						}
 						xOffset += width / 2 - 10;
 						yOffset = heightMargin;
 					}
@@ -10639,7 +10643,7 @@ public final class mudclient implements Runnable {
 
 
 			// quests menu tab
-			if (this.uiTabPlayerInfoSubTab == 1) {
+			if (this.uiTabPlayerInfoSubTab == 1 && !Config.S_WANT_OPENPK_POINTS) {
 				this.panelQuestInfo.clearList(this.controlQuestInfoPanel);
 				int index = 0, questNum = 0;
 				this.panelQuestInfo.setListEntry(this.controlQuestInfoPanel, index++,
