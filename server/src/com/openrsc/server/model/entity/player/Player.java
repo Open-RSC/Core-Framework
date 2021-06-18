@@ -1870,10 +1870,6 @@ public final class Player extends Mob {
 		maleGender = male;
 	}
 
-	public boolean isMaleGender() {
-		return maleGender;
-	}
-
 	public boolean isMuted() {
 		if (getMuteExpires() == 0)
 			return false;
@@ -3522,6 +3518,7 @@ public final class Player extends Mob {
 	}
 
 	public void exitMorph() {
+		getSettings().getAppearance().restorePlayerAppearance();
 		for (int i = 0; i < 12; i++) {
 			updateWornItems(i, getSettings().getAppearance().getSprite(i));
 		}

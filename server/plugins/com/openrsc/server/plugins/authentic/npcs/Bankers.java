@@ -17,7 +17,7 @@ import static com.openrsc.server.plugins.Functions.*;
 
 public class Bankers implements TalkNpcTrigger, OpNpcTrigger, UseNpcTrigger {
 	private static final Logger LOGGER = LogManager.getLogger(Bankers.class);
-	public static int[] BANKERS = {NpcId.BANKER_GEN1.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_GEN2.id(),
+	public static int[] BANKERS = {NpcId.BANKER.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_ALKHARID.id(),
 		NpcId.GNOME_BANKER.id(), NpcId.JUNGLE_BANKER.id()};
 
 	@Override

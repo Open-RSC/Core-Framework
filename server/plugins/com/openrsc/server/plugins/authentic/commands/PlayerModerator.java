@@ -1,7 +1,10 @@
 package com.openrsc.server.plugins.authentic.commands;
 
 import com.openrsc.server.constants.AppearanceId;
+import com.openrsc.server.constants.NpcId;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
+import com.openrsc.server.external.NPCDef;
+import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.plugins.triggers.CommandTrigger;
@@ -513,12 +516,13 @@ public final class PlayerModerator implements CommandTrigger {
 		}
 
 		switch (npcName) {
-			// TODO: NPCs other than monsters, like Ned.
-
 			case "rat":
 				updateAppearanceToNpc(affectedPlayer, RAT, pos);
 				break;
 			case "demon":
+			case "greaterdemon":
+			case "lesserdemon":
+			case "imp":
 				updateAppearanceToNpc(affectedPlayer, DEMON, pos);
 				break;
 			case "spider":
@@ -679,14 +683,58 @@ public final class PlayerModerator implements CommandTrigger {
 			case "none":
 			case "reset":
 				restoreHumanity(affectedPlayer);
+				break;
+			default:
+				// didn't match any special non-humanoid monsters
+				try {
+					NpcId npcId = NpcId.getByName(npcName);
+					int id = npcId.id();
+					if (npcId == NpcId.NOBODY) {
+						id = Integer.parseInt(npcName);
+					}
+					if (id > player.getClientLimitations().maxNpcId) {
+						player.message("Your client might not support this NPC.");
+					}
+					NPCDef theNpc = new Npc(player.getWorld(), id, 0, 0, 0, 0, 0, 0).getDef();
+					player.message("Transforming into " + theNpc.getName());
+					restoreHumanity(affectedPlayer);
 
+					affectedPlayer.getSettings().getAppearance().setNpcAppearance(theNpc);
+					boolean swapWeaponShield = false;
+					for (int p = 0; p < 12; p++) {
+						if (theNpc.getSprite(p) + 1 >= 0 && theNpc.getSprite(p) <= player.getClientLimitations().maxAnimationId) {
+							// Some NPCs authentically have their weapon & shield sprites in the wrong positions.
+							// We can look up the animation IDs individually to see where they should go
+							int wieldPosition = p;
+							if (p == AppearanceId.SLOT_WEAPON || p == AppearanceId.SLOT_SHIELD) {
+								AppearanceId appearanceId = AppearanceId.getById(theNpc.getSprite(p) + 1);
+								if (appearanceId != NOTHING) {
+									if (appearanceId.getSuggestedWieldPosition() != p) {
+										swapWeaponShield = true;
+										wieldPosition = appearanceId.getSuggestedWieldPosition();
+									}
+								}
+							}
 
+							// update worn items (if not overwriting weapon with shield that doesn't exist)
+							if (!(p == AppearanceId.SLOT_WEAPON && swapWeaponShield && theNpc.getSprite(p) == -1)) {
+								affectedPlayer.updateWornItems(wieldPosition, theNpc.getSprite(p) + 1);
+							}
+						}
+					}
+				} catch (Exception e) {
+					player.message("Could not find an npc named " + npcName);
+				}
 		}
 	}
 
 	private void updateAppearanceToNpc(Player player, AppearanceId appearanceId, int wieldPosition) {
 		if (wieldPosition == SLOT_ANY) {
 			mes("Don't know where to wield it, sorry");
+			return;
+		}
+		if (appearanceId.id() > player.getClientLimitations().maxAnimationId) {
+			mes("Your client doesn't know about that NPC.");
 			return;
 		}
 		if (wieldPosition == SLOT_NPC) {

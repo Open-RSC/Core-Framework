@@ -8,7 +8,6 @@ import com.openrsc.server.content.achievement.AchievementTask;
 import com.openrsc.server.content.market.CollectibleItem;
 import com.openrsc.server.content.market.MarketItem;
 import com.openrsc.server.database.impl.mysql.queries.logging.StaffLog;
-import com.openrsc.server.database.patches.PatchApplier;
 import com.openrsc.server.database.struct.*;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
@@ -761,10 +760,10 @@ public abstract class GameDatabase {
 			playerData.hcIronManDeath = player.getHCIronmanDeath();
 		}
 		playerData.questPoints = player.calculateQuestPoints();
-		playerData.hairColour = player.getSettings().getAppearance().getHairColour();
-		playerData.topColour = player.getSettings().getAppearance().getTopColour();
-		playerData.trouserColour = player.getSettings().getAppearance().getTrouserColour();
-		playerData.skinColour = player.getSettings().getAppearance().getSkinColour();
+		playerData.hairColour = player.getSettings().getAppearance().getHairColourSave();
+		playerData.topColour = player.getSettings().getAppearance().getTopColourSave();
+		playerData.trouserColour = player.getSettings().getAppearance().getTrouserColourSave();
+		playerData.skinColour = player.getSettings().getAppearance().getSkinColourSave();
 		playerData.headSprite = player.getSettings().getAppearance().getHead();
 		playerData.bodySprite = player.getSettings().getAppearance().getBody();
 		playerData.male = player.isMale();

@@ -5,13 +5,13 @@ public class ClientLimitations {
 	private final int MOD_JMOD_SUPPORT = 1;
 	private final int AUTHENTIC_SOUNDS_ONLY = 37;
 
-	int maxAnimationId, maxItemId, maxNpcId, maxSceneryId, maxPrayerId, maxSpellId,
+	public int maxAnimationId, maxItemId, maxNpcId, maxSceneryId, maxPrayerId, maxSpellId,
 		maxSkillId, maxRoofId, maxTextureId, maxTileId, maxBoundaryId, maxTeleBubbleId,
 		maxProjectileSprite, maxSkinColor, maxHairColor, maxClothingColor, maxQuestId,
 		maxDialogueOptions, maxBankItems;
-	String mapHash;
-	int supportsModSprites = NO_SUPPORT;
-	int numberOfSounds = NO_SUPPORT;
+	public String mapHash;
+	public int supportsModSprites = NO_SUPPORT;
+	public int numberOfSounds = NO_SUPPORT;
 
 	ClientLimitations(int clientVersion) {
 		setKnownLimitations(clientVersion);
@@ -73,35 +73,6 @@ public class ClientLimitations {
 			maxDialogueOptions = 5;
 			maxBankItems = 48 * 4;
 			numberOfSounds = AUTHENTIC_SOUNDS_ONLY;
-		}
-
-		// fallback for old custom client (pre May 2021)
-		// TODO: can probably remove this code in a few months if desired to break very out of date clients
-		else if (clientVersion == 8) {
-			// not necessarily what the client is supporting on the server's config at this time
-			// but what the client was capable of accepting with proper config in May 2021
-			maxAnimationId = 482;
-			maxItemId = 1486;
-			maxNpcId = 815;
-			maxSceneryId = 1294;
-			maxPrayerId = 13;
-			maxSpellId = 47;
-			maxSkillId = 19;
-			maxRoofId = 5;
-			maxTextureId = 54;
-			maxTileId = 24;
-			maxBoundaryId = 213;
-			maxTeleBubbleId = 1;
-			maxProjectileSprite = 6;
-			maxSkinColor = 4;
-			maxHairColor = 9;
-			maxClothingColor = 14;
-			maxQuestId = 99;
-			numberOfSounds = 37;
-			supportsModSprites = 4;
-			maxDialogueOptions = 20;
-			maxBankItems = Integer.MAX_VALUE;
-			mapHash = "0dd0a1e47767f7f64b7931688131512f";
 		}
 	}
 

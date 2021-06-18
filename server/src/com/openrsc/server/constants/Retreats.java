@@ -29,7 +29,7 @@ public class Retreats {
 			put(NpcId.GOBLIN_OBSERVATORY.id(), 5);
 			put(NpcId.BEAR_LVL24.id(), 5);
 			put(NpcId.BEAR_LVL26.id(), 5);
-			put(NpcId.THIEF_GENERIC.id(), 5);
+			put(NpcId.THIEF.id(), 5);
 			put(NpcId.THIEF_BLANKET.id(), 5);
 			put(NpcId.HEAD_THIEF.id(), 5);
 			put(NpcId.MONK.id(), 5);

@@ -184,10 +184,10 @@ public class NpcDrops {
 		this.bonelessNpcs.add(NpcId.GIANT_SPIDER_LVL8.id());
 		this.bonelessNpcs.add(NpcId.SPIDER.id());
 		this.bonelessNpcs.add(NpcId.GIANT_BAT.id());
-		this.bonelessNpcs.add(NpcId.GHOST1.id());
+		this.bonelessNpcs.add(NpcId.GHOST.id());
 		this.bonelessNpcs.add(NpcId.SCORPION.id());
 		this.bonelessNpcs.add(NpcId.GIANT_SPIDER_LVL31.id());
-		this.bonelessNpcs.add(NpcId.GHOST2.id());
+		this.bonelessNpcs.add(NpcId.GHOST_DRAYNOR_MANOR.id());
 		this.bonelessNpcs.add(NpcId.COUNT_DRAYNOR.id());
 		this.bonelessNpcs.add(NpcId.DEADLY_RED_SPIDER.id());
 		this.bonelessNpcs.add(NpcId.ICE_SPIDER.id());
@@ -356,15 +356,15 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 1, 1);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 25, 1);
 		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
-		this.npcDrops.put(NpcId.MAN1.id(), currentNpcDrops); // (11)
-		this.npcDrops.put(NpcId.MAN2.id(), currentNpcDrops); // (72)
-		this.npcDrops.put(NpcId.MAN3.id(), currentNpcDrops); // (318)
-		this.npcDrops.put(NpcId.FARMER1.id(), currentNpcDrops); // (63)
-		this.npcDrops.put(NpcId.FARMER2.id(), currentNpcDrops); // (319)
+		this.npcDrops.put(NpcId.MAN.id(), currentNpcDrops); // (11)
+		this.npcDrops.put(NpcId.MAN_ALKHARID.id(), currentNpcDrops); // (72)
+		this.npcDrops.put(NpcId.MAN_ARDOUGNE.id(), currentNpcDrops); // (318)
+		this.npcDrops.put(NpcId.FARMER.id(), currentNpcDrops); // (63)
+		this.npcDrops.put(NpcId.FARMER_ARDOUGNE.id(), currentNpcDrops); // (319)
 		this.npcDrops.put(NpcId.ALKHARID_WARRIOR.id(), currentNpcDrops); // (86)
 		this.npcDrops.put(NpcId.WARRIOR_VARROCK.id(), currentNpcDrops); // (159)
 		this.npcDrops.put(NpcId.WARRIOR_ARDOUGNE.id(), currentNpcDrops); // (320)
-		this.npcDrops.put(NpcId.THIEF_GENERIC.id(), currentNpcDrops); // (64)
+		this.npcDrops.put(NpcId.THIEF.id(), currentNpcDrops); // (64)
 		this.npcDrops.put(NpcId.THIEF_BLANKET.id(), currentNpcDrops); // (351)
 		this.npcDrops.put(NpcId.HEAD_THIEF.id(), currentNpcDrops); // (352)
 		this.npcDrops.put(NpcId.ROGUE.id(), currentNpcDrops); // (342)
@@ -676,7 +676,7 @@ public class NpcDrops {
 		currentNpcDrops.addItemDrop(ItemId.GRAIN.id(), 1, 1);
 		currentNpcDrops.addItemDrop(ItemId.IRON_ORE.id(), 1, 1);
 		currentNpcDrops.addEmptyDrop(128 - currentNpcDrops.getTotalWeight());
-		this.npcDrops.put(NpcId.GUARD1.id(), currentNpcDrops);
+		this.npcDrops.put(NpcId.GUARD.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.GUARD_FORTRESS.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.GUARD_ARDOUGNE.id(), currentNpcDrops);
 		this.npcDrops.put(NpcId.CARNILLEAN_GUARD.id(), currentNpcDrops);

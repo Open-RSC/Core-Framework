@@ -14,9 +14,9 @@ public class Man implements TalkNpcTrigger {
 	@Override
 	public boolean blockTalkNpc(Player player, Npc n) {
 		// Dialogue same between all Man, Farmer, Thief, Rogue, Alkharid Warrior
-		return inArray(n.getID(), NpcId.MAN1.id(), NpcId.MAN2.id(), NpcId.MAN3.id(),
-			NpcId.FARMER1.id(), NpcId.FARMER2.id(),
-			NpcId.THIEF_GENERIC.id(), NpcId.THIEF_BLANKET.id(), NpcId.HEAD_THIEF.id(),
+		return inArray(n.getID(), NpcId.MAN.id(), NpcId.MAN_ALKHARID.id(), NpcId.MAN_ARDOUGNE.id(),
+			NpcId.FARMER.id(), NpcId.FARMER_ARDOUGNE.id(),
+			NpcId.THIEF.id(), NpcId.THIEF_BLANKET.id(), NpcId.HEAD_THIEF.id(),
 			NpcId.ROGUE.id(), NpcId.ALKHARID_WARRIOR.id());
 	}
 

@@ -50,7 +50,7 @@ public class ItemUseOnNpc implements PayloadProcessor<ItemOnMobStruct, OpcodeIn>
 				getPlayer().face(affectedNpc);
 
 				// Lazy bugfix for "notes shouldn't be able to be used on NPCs... except for the bankers!"
-				int[] BANKERS = {NpcId.BANKER_GEN1.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_GEN2.id(),
+				int[] BANKERS = {NpcId.BANKER.id(), NpcId.FAIRY_BANKER.id(), NpcId.BANKER_ALKHARID.id(),
 					NpcId.GNOME_BANKER.id(), NpcId.JUNGLE_BANKER.id()};
 				int[] CERTERS = {NpcId.GILES.id(), NpcId.MILES.id(), NpcId.NILES.id(), NpcId.JINNO.id(),
 					NpcId.WATTO.id(), NpcId.OWEN.id(), NpcId.CHUCK.id(), NpcId.ORVEN.id(),
