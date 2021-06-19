@@ -502,6 +502,15 @@ CREATE TABLE IF NOT EXISTS `itemstatuses`
     `durability` int(5)     NOT NULL DEFAULT 0
 );
 
+DROP TABLE IF EXISTS `ironman`;
+CREATE TABLE `ironman`
+(
+    `playerID`             INTEGER PRIMARY KEY,
+    `iron_man`             tinyint(2) NOT NULL DEFAULT 0,
+    `iron_man_restriction` tinyint(2) NOT NULL DEFAULT 1,
+    `hc_ironman_death`     tinyint(2) NOT NULL DEFAULT 0
+);
+
 DROP TABLE IF EXISTS `_PREFIX_db_patches`;
 CREATE TABLE IF NOT EXISTS `_PREFIX_db_patches`
 (

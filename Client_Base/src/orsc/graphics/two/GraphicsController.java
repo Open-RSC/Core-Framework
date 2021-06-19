@@ -3037,7 +3037,8 @@ public class GraphicsController {
 		try {
 			ZipEntry e = spriteArchive.getEntry(String.valueOf(id));
 			if (e == null) {
-				System.err.println("Missing sprite: " + id + " from package " + packageName);
+				if (Config.DEBUG)
+					System.err.println("Missing sprite: " + id + " from package " + packageName);
 				sprites[id] = Sprite.getUnknownSprite(48, 32);
 				return true;
 			}

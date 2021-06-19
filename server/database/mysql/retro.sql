@@ -574,6 +574,15 @@ CREATE TABLE IF NOT EXISTS `itemstatuses`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS `ironman`;
+CREATE TABLE IF NOT EXISTS `_PREFIX_ironman`
+(
+    `playerID`             int(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `iron_man`             tinyint(2)       NOT NULL DEFAULT 0,
+    `iron_man_restriction` tinyint(2)       NOT NULL DEFAULT 1,
+    `hc_ironman_death`     tinyint(2)       NOT NULL DEFAULT 0
+);
+
 CREATE TABLE IF NOT EXISTS `db_patches` (
     `patchId` varchar(200) NOT NULL PRIMARY KEY
 );
