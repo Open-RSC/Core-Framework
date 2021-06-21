@@ -121,7 +121,7 @@ public class MySqlQueries {
 			"`quest_points`=?, `haircolour`=?, `topcolour`=?, `trousercolour`=?, `skincolour`=?, " +
 			"`headsprite`=?, `bodysprite`=?, `male`=?, `combatstyle`=?, `muted`=?, `group_id`=?," +
 			"`block_chat`=?, `block_private`=?, `block_trade`=?, `block_duel`=?, `cameraauto`=?, `onemouse`=?, `soundoff`=? WHERE `id`=?";
-		save_IronMan = "UPDATE `" + PREFIX + "ironman` SET `iron_man`=?, `iron_man_restriction`=?,`hc_ironman_death`=? WHERE `playerID`=?";
+		save_IronMan = "REPLACE INTO `" + PREFIX + "ironman` (`playerID`, `iron_man`, `iron_man_restriction`, `hc_ironman_death`) VALUES (?, ?, ?, ?)";
 		save_DeleteQuests = "DELETE FROM `" + PREFIX + "quests` WHERE `playerID`=?";
 		save_DeleteAchievements = "DELETE FROM `" + PREFIX + "achievement_status` WHERE `playerID`=?";
 		save_DeleteCache = "DELETE FROM `" + PREFIX + "player_cache` WHERE `playerID`=?";

@@ -1378,7 +1378,7 @@ public class MySqlGameDatabase extends JDBCDatabase {
 			statement.setInt(counter++, playerData.cameraAuto ? 1 : 0);
 			statement.setInt(counter++, playerData.oneMouse ? 1 : 0);
 			statement.setInt(counter++, playerData.soundOff ? 1 : 0);
-			statement.setInt(counter++, playerId);
+			statement.setInt(counter, playerId);
 
 			statement.executeUpdate();
 		} catch (final SQLException ex) {
@@ -1390,10 +1390,10 @@ public class MySqlGameDatabase extends JDBCDatabase {
 			withPreparedStatement(
 					getMySqlQueries().save_IronMan,
 					statement -> {
-						statement.setInt(1, playerData.ironMan);
-						statement.setInt(2, playerData.ironManRestriction);
-						statement.setInt(3, playerData.hcIronManDeath);
-						statement.setInt(4, playerId);
+						statement.setInt(1, playerId);
+						statement.setInt(2, playerData.ironMan);
+						statement.setInt(3, playerData.ironManRestriction);
+						statement.setInt(4, playerData.hcIronManDeath);
 
 						statement.executeUpdate();
 					}
