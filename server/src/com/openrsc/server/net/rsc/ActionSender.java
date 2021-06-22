@@ -862,7 +862,7 @@ public class ActionSender {
 				struct.noted[i] = item.getNoted() ? 1 : 0;
 				if (item.getDef(player.getWorld()).isStackable() || item.getNoted()) {
 					// amount sent only for stackable
-					struct.amount[i] = item.getAmount();
+					struct.amount[i] = displayableStack(player, item.getAmount());
 				}
 				i++;
 			}
@@ -1677,7 +1677,8 @@ public class ActionSender {
 				struct.catalogID = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
 				struct.wielded = item.isWielded() ? 1 : 0;
 				struct.noted = item.getNoted() ? 1 : 0;
-				struct.amount = item.getDef(player.getWorld()).isStackable() || item.getNoted() ? item.getAmount() : 0;
+				struct.amount = item.getDef(player.getWorld()).isStackable() || item.getNoted() ?
+					displayableStack(player, item.getAmount()) : 0;
 			} else {
 				LOGGER.warn(String.format("Null item in %s's inventory! (slot %d)", player.getUsername(), slot ));
 				struct.catalogID = 0;
@@ -1686,6 +1687,11 @@ public class ActionSender {
 			}
 			tryFinalizeAndSendPacket(OpcodeOut.SEND_INVENTORY_UPDATEITEM, struct, player);
 		}
+	}
+
+	private static int displayableStack(Player player, int amount) {
+		final int MAXSTACK = !player.getConfig().SHORT_MAX_STACKS ? Integer.MAX_VALUE : (Short.MAX_VALUE - Short.MIN_VALUE);
+		return Math.min(amount, MAXSTACK);
 	}
 
 	public static void sendWakeUp(Player player, boolean success, boolean silent) {
@@ -1779,8 +1785,11 @@ public class ActionSender {
 
 	public static void showShop(Player player, Shop shop) {
 		ShopStruct struct = new ShopStruct();
-		int shopSize = shop.getShopSize();
-		struct.itemsStockSize = shop.getShopSize();
+		int playerMaxId = player.isUsingCustomClient() ? ItemId.NOTHING.id() : player.getClientLimitations().maxItemId;
+		int worldMaxId = player.getConfig().RESTRICT_ITEM_ID;
+		int maxId = Integer.compareUnsigned(playerMaxId, worldMaxId) <= 0 ? playerMaxId : worldMaxId;
+		int shopSize = shop.getFilteredSize(maxId);
+		struct.itemsStockSize = shopSize;
 		struct.isGeneralStore = shop.isGeneral() ? 1 : 0;
 		struct.sellModifier = shop.getSellModifier();
 		struct.buyModifier = shop.getBuyModifier();
@@ -1790,12 +1799,16 @@ public class ActionSender {
 		struct.baseAmount = new int[shopSize];
 		struct.price = new int[shopSize];
 
+		int idx = 0;
 		for (int i = 0; i < shop.getShopSize(); i++) {
 			Item item = shop.getShopItem(i);
-			struct.catalogIDs[i] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
-			struct.amount[i] = item.getAmount();
-			struct.baseAmount[i] = shop.getStock(item.getCatalogId());
-			struct.price[i] = 0; // TODO: get from shop list for early protocols??
+			if (maxId > ItemId.NOTHING.id() && item.getCatalogId() > maxId)
+				continue;
+			struct.catalogIDs[idx] = player.isUsingCustomClient() ? item.getCatalogId() : item.getCatalogIdAuthenticNoting();
+			struct.amount[idx] = item.getAmount();
+			struct.baseAmount[idx] = shop.getStock(item.getCatalogId());
+			struct.price[idx] = 0; // TODO: get from shop list for early protocols??
+			idx++;
 		}
 		tryFinalizeAndSendPacket(OpcodeOut.SEND_SHOP_OPEN, struct, player);
 	}

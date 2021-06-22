@@ -207,7 +207,9 @@ public class Eating implements OpInvTrigger {
 
 			final boolean heals = player.getSkills().getLevel(Skill.HITS.id()) < player.getSkills().getMaxStat(Skill.HITS.id());
 			if (heals) {
-				int newHp = player.getSkills().getLevel(Skill.HITS.id()) + item.eatingHeals(player.getWorld());
+				int baseHeal = item.eatingHeals(player.getWorld());
+				int extraHeal = item.canLevelDependentHeal(player.getWorld()) ? player.getSkills().getMaxStat(Skill.COOKING.id()) / 15 : 0;
+				int newHp = player.getSkills().getLevel(Skill.HITS.id()) + baseHeal + extraHeal;
 				if (newHp > player.getSkills().getMaxStat(Skill.HITS.id())) {
 					newHp = player.getSkills().getMaxStat(Skill.HITS.id());
 				}

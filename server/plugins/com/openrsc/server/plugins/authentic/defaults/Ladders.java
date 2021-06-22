@@ -180,7 +180,7 @@ public class Ladders {
 			} else {
 				player.teleport(274, 3397, false);
 			}
-		} else if (obj.getID() == 223 && obj.getX() == 312 && obj.getY() == 3348) { // ladder to black hole
+		} else if (obj.getID() == 199) { // ladder to black hole
 			if (!player.getCarriedItems().hasCatalogID(ItemId.DISK_OF_RETURNING.id(), Optional.of(false))) {
 				mes("you seem to be missing a disk to use the ladder");
 				delay(3);

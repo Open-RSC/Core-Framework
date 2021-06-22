@@ -569,7 +569,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
 	public void registerItem(final GroundItem i, final int delayTime) {
 		try {
-			if (i.getLoc() == null) {
+			if (i.getLoc() == null && (getServer().getConfig().RESTRICT_ITEM_ID <= ItemId.NOTHING.id() || i.getID() < getServer().getConfig().RESTRICT_ITEM_ID)) {
 				getServer().getGameEventHandler().add(new SingleEvent(this, null, delayTime, "Register Item") {
 					public void action() {
 						unregisterItem(i);

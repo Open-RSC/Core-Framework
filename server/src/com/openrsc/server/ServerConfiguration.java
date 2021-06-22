@@ -193,6 +193,7 @@ public class ServerConfiguration {
 	//loosened checks
 	public boolean LOOSE_SHALLOW_WATER_CHECK;
 	public boolean FEATURES_SLEEP;
+	public int RESTRICT_ITEM_ID;
 	public int PACKET_LIMIT;
 	//quest-minigame related
 	public boolean WANT_GIANNE_BADGE;
@@ -249,6 +250,8 @@ public class ServerConfiguration {
 	public boolean BLOCK_USE_MAGIC_IN_COMBAT;
 	public boolean RAPID_CAST_SPELLS;
 	public boolean MEAT_HEAL_LEVEL_DEPENDENT;
+	public boolean ONLY_REGULAR_BONES;
+	public boolean SHARED_GATHERING_RESOURCES;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -353,6 +356,7 @@ public class ServerConfiguration {
 		WANT_RESET_EVENT = tryReadBool("want_reset_event").orElse(false);
 		BASED_MAP_DATA = tryReadInt("based_map_data").orElse(100);
 		FEATURES_SLEEP = tryReadBool("features_sleep").orElse(true);
+		RESTRICT_ITEM_ID = tryReadInt("restrict_item_id").orElse(1289);
 
 		// Client
 		VIEW_DISTANCE = tryReadInt("view_distance").orElse(2);
@@ -399,6 +403,8 @@ public class ServerConfiguration {
 		BLOCK_USE_MAGIC_IN_COMBAT = tryReadBool("block_use_magic_in_combat").orElse(false);
 		RAPID_CAST_SPELLS = tryReadBool("rapid_cast_spells").orElse(false);
 		MEAT_HEAL_LEVEL_DEPENDENT = tryReadBool("meat_heal_level_dependent").orElse(false);
+		ONLY_REGULAR_BONES = tryReadBool("only_regular_bones").orElse(false);
+		SHARED_GATHERING_RESOURCES = tryReadBool("shared_gathering_resources").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);

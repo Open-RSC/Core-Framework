@@ -14,6 +14,7 @@ public class ClientLimitations {
 	int numberOfSounds = NO_SUPPORT;
 	public boolean supportsItemBank = false;
 	public boolean supportsConfirmTrade = false;
+	public boolean supportsIntegerStacks = false;
 
 	ClientLimitations(int clientVersion) {
 		setKnownLimitations(clientVersion);
@@ -79,6 +80,9 @@ public class ClientLimitations {
 
 		if (clientVersion >= 72) {
 			supportsItemBank = true;
+		}
+		if (clientVersion >= 105) {
+			supportsIntegerStacks = true;
 		}
 		if (clientVersion >= 106) {
 			supportsConfirmTrade = true;

@@ -85,6 +85,8 @@ public class Inventory {
 
 	public Boolean add(Item itemToAdd, boolean sendInventory) {
 		synchronized (list) {
+			final int MAXSTACK = !player.getConfig().SHORT_MAX_STACKS ? Integer.MAX_VALUE : (Short.MAX_VALUE - Short.MIN_VALUE);
+
 			// Confirm we aren't attempting to add 0 or less of the item.
 			if (itemToAdd.getAmount() <= 0) {
 				return false;
@@ -114,7 +116,7 @@ public class Inventory {
 						continue;
 
 					//Make sure there's room in the stack
-					if (inventoryItem.getAmount() == Integer.MAX_VALUE)
+					if (inventoryItem.getAmount() == MAXSTACK)
 						continue;
 
 					existingStack = inventoryItem;
@@ -156,7 +158,7 @@ public class Inventory {
 			} else {
 
 				// Determine if the existing stack will overflow.
-				int remainingSize = Integer.MAX_VALUE - existingStack.getAmount();
+				int remainingSize = MAXSTACK - existingStack.getAmount();
 
 				// The added items will not overflow the stack, add them to it normally.
 				if (remainingSize >= itemToAdd.getAmount()) {
@@ -188,7 +190,7 @@ public class Inventory {
 					}
 
 					// Update the existing stack amount to max value
-					existingStack.setAmount(Integer.MAX_VALUE);
+					existingStack.setAmount(MAXSTACK);
 					int itemID = player.getWorld().getServer().getDatabase().incrementMaxItemId(player);
 					itemToAdd = new Item(itemToAdd.getCatalogId(), itemToAdd.getAmount(), itemToAdd.getNoted(), itemID);
 
@@ -627,10 +629,12 @@ public class Inventory {
 
 	public int getRequiredSlots(int itemCatalogId, int amount, boolean isNoted) {
 		synchronized(list) {
+			final int MAXSTACK = !player.getConfig().SHORT_MAX_STACKS ? Integer.MAX_VALUE : (Short.MAX_VALUE - Short.MIN_VALUE);
+
 			// Check item definition
 			ItemDefinition itemDef =  player.getWorld().getServer().getEntityHandler().getItemDef(itemCatalogId);
 			if (itemDef == null)
-				return Integer.MAX_VALUE;
+				return MAXSTACK;
 
 			// Check if the item is a stackable
 			if (itemDef.isStackable() || isNoted) {
@@ -645,11 +649,11 @@ public class Inventory {
 						continue;
 
 					// Make sure there's room in the stack
-					if (inventoryItem.getAmount() == Integer.MAX_VALUE)
+					if (inventoryItem.getAmount() == MAXSTACK)
 						continue;
 
 					// Check if all of the stack can fit in the existing stack
-					int remainingSize = Integer.MAX_VALUE - inventoryItem.getAmount();
+					int remainingSize = MAXSTACK - inventoryItem.getAmount();
 					return remainingSize < amount ? 1 : 0;
 				}
 

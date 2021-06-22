@@ -436,15 +436,15 @@ public class Npc extends Mob {
 		int bones = ItemId.NOTHING.id();
 		// Big Bones
 		if (getWorld().npcDrops.isBigBoned(this.getID())) {
-			bones = ItemId.BIG_BONES.id();
+			bones = boneItem(ItemId.BIG_BONES.id());
 		}
 		// Bat
 		else if (getWorld().npcDrops.isBatBoned(this.getID())) {
-			bones = ItemId.BAT_BONES.id();
+			bones = boneItem(ItemId.BAT_BONES.id());
 		}
 		// Dragon
 		else if (getWorld().npcDrops.isDragon(this.getID())) {
-			bones = ItemId.DRAGON_BONES.id();
+			bones = boneItem(ItemId.DRAGON_BONES.id());
 		}
 		// Demon
 		else if (getWorld().npcDrops.isDemon(this.getID())) {
@@ -452,9 +452,13 @@ public class Npc extends Mob {
 		}
 		// Not boneless
 		else if (!getWorld().npcDrops.isBoneless(this.getID())) {
-			bones = ItemId.BONES.id();
+			bones = boneItem(ItemId.BONES.id());
 		}
 		return bones;
+	}
+
+	private int boneItem(int boneId) {
+		return getConfig().ONLY_REGULAR_BONES ? ItemId.BONES.id() : boneId;
 	}
 
 	private void dropStackItem(final int dropID, int amount, Player owner) {
