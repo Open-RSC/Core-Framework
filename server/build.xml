@@ -43,7 +43,7 @@
                 <pathelement location="${lib}/log4j-iostreams-2.14.1.jar"/>
                 <pathelement location="${lib}/xpp3-1.1.4c.jar"/>
                 <pathelement location="${lib}/xstream-1.4.9.jar"/>
-                <pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar"/>
+                <pathelement location="${lib}/mysql-connector-java-8.0.19.jar"/>
                 <pathelement location="${lib}/sqlite-jdbc-3.34.0.jar"/>
                 <pathelement location="${lib}/commons-lang-2.6.jar"/>
                 <pathelement location="${lib}/guava-30.1.1-jre.jar"/>
@@ -82,7 +82,7 @@
                 <pathelement location="${lib}/xpp3_min-1.1.4c.jar"/>
                 <pathelement location="${lib}/xpp3-1.1.4c.jar"/>
                 <pathelement location="${lib}/xstream-1.4.9.jar"/>
-                <pathelement location="${lib}/mysql-connector-java-5.1.40-bin.jar"/>
+                <pathelement location="${lib}/mysql-connector-java-8.0.19.jar"/>
                 <pathelement location="${lib}/disruptor-3.3.5.jar"/>
                 <pathelement location="${lib}/commons-lang-2.6.jar"/>
                 <pathelement location="${lib}/*"/>
