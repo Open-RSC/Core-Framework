@@ -16,7 +16,7 @@ import static com.openrsc.server.plugins.Functions.*;
 public class OziachsRunePlateShop extends AbstractShop {
 
 	private final Shop shop = new Shop(false, 30000, 100, 60, 2, new Item(ItemId.RUNE_PLATE_MAIL_BODY.id(),
-		1));
+		2));
 
 	@Override
 	public boolean blockTalkNpc(final Player player, final Npc n) {
