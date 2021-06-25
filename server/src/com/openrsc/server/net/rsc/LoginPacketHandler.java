@@ -91,7 +91,7 @@ public class LoginPacketHandler {
 
 		Point firstTimeLocation;
 		if (server.getConfig().ARRIVE_LUMBRIDGE) {
-			firstTimeLocation = Point.location(120, 648);
+			firstTimeLocation = Point.location(server.getConfig().RESPAWN_LOCATION_X, server.getConfig().RESPAWN_LOCATION_Y);
 		} else {
 			firstTimeLocation = Point.location(216, 744);
 		}

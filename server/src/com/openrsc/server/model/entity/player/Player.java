@@ -2010,7 +2010,7 @@ public final class Player extends Mob {
 		this.setLastOpponent(null);
 		getWorld().registerItem(new GroundItem(getWorld(), ItemId.BONES.id(), getX(), getY(), 1, player));
 		if ((!getCache().hasKey("death_location_x") && !getCache().hasKey("death_location_y"))) {
-			setLocation(Point.location(120, 648), true);
+			setLocation(Point.location(getConfig().RESPAWN_LOCATION_X, getConfig().RESPAWN_LOCATION_Y), true);
 		} else {
 			setLocation(Point.location(getCache().getInt("death_location_x"), getCache().getInt("death_location_y")), true);
 		}
@@ -3408,7 +3408,7 @@ public final class Player extends Mob {
 				if (hitter.isPlayer()) {
 					((Player) hitter).resetAll();
 				}
-				this.teleport(120, 648, false);
+				this.teleport(getConfig().RESPAWN_LOCATION_X, getConfig().RESPAWN_LOCATION_Y, false);
 				this.message("Your ring of Life shines brightly");
 				getCarriedItems().shatter(new Item(ItemId.RING_OF_LIFE.id()));
 				return true;
@@ -3587,7 +3587,7 @@ public final class Player extends Mob {
 			if (getCache().hasKey("tutorial")) {
 				getCache().remove("tutorial");
 			}
-			teleport(120, 648, false);
+			teleport(getConfig().RESPAWN_LOCATION_X, getConfig().RESPAWN_LOCATION_Y, false);
 			message("Skipped tutorial, welcome to Lumbridge");
 			ActionSender.sendPlayerOnTutorial(this);
 			return true;

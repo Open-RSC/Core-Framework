@@ -163,6 +163,8 @@ public class ServerConfiguration {
 	public boolean WANT_OPENPK_POINTS;
 	public int OPENPK_POINTS_TO_GP_RATIO;
 	public boolean WANT_PK_BOTS;
+	public int RESPAWN_LOCATION_X;
+	public int RESPAWN_LOCATION_Y;
 	public double PARTY_ADDITIONAL_XP_PERCENT_PER_PLAYER;
 	public double PARTY_DISTANCE_PERCENT_DECREASE;
 	public double PARTY_SAVE_XP_FOR_SKILLER_PERCENT;
@@ -467,6 +469,8 @@ public class ServerConfiguration {
 		WANT_OPENPK_POINTS = tryReadBool("want_openpk_points").orElse(false);
 		OPENPK_POINTS_TO_GP_RATIO = tryReadInt("openpk_points_to_gp_ratio").orElse(1);
 		WANT_PK_BOTS = tryReadBool("want_pk_bots").orElse(false);
+		RESPAWN_LOCATION_X = tryReadInt("respawn_location_x").orElse(120);
+		RESPAWN_LOCATION_Y = tryReadInt("respawn_location_y").orElse(648);
 
 		// Party settings
 		WANT_PARTIES = tryReadBool("want_parties").orElse(false);

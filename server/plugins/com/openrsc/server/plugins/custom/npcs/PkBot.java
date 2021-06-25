@@ -36,6 +36,10 @@ public class PkBot implements AttackNpcTrigger, KillNpcTrigger, SpellNpcTrigger,
 				player.message("You must be in the wilderness to attack a PK bot.");
 				return;
 			}
+			if (Math.abs(bot.getDef().combatLevel - player.getCombatLevel()) > bot.getLocation().wildernessLevel()) {
+				player.message("Your combat level difference is too great to attack that PK bot.");
+				return;
+			}
 			//If the PK bot is currently alive, it should heal regardless of current health amount.
 			if (bot.getSkills().getLevel(Skill.HITS.id()) > 0) {
 				int heals = bot.getAttribute("heals", 0);
