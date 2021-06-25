@@ -983,8 +983,8 @@ public class NpcDrops {
 		currentNpcDrops.addTableDrop(herbDropTable, 10);
 		currentNpcDrops.addTableDrop(rareDropTable, 1);
 		currentNpcDrops.addItemDrop(ItemId.COINS.id(), 15, 57);
-		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 1, 10);
-		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 1, 8);
+		currentNpcDrops.addItemDrop(ItemId.NATURE_RUNE.id(), 3, 10);
+		currentNpcDrops.addItemDrop(ItemId.CHAOS_RUNE.id(), 2, 8);
 		currentNpcDrops.addItemDrop(ItemId.LAW_RUNE.id(), 1, 7);
 		currentNpcDrops.addItemDrop(ItemId.COSMIC_RUNE.id(), 1, 5);
 		currentNpcDrops.addItemDrop(ItemId.DEATH_RUNE.id(), 1, 3);
