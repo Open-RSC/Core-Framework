@@ -514,13 +514,16 @@ public class WorldLoader {
 		}
 
 		int sectors = 0;
-		for (int lvl = 0; lvl < 4; lvl++) {
+		int FloorCount = 4;
+		//Reluctant to use FloorHeight without knowing the effects
+		int FloorHeight = Constants.MAX_HEIGHT / FloorCount;
+		for (int lvl = 0; lvl < FloorCount; lvl++) {
 			int wildX = 2304;
 			int wildY = 1776 - (lvl * 944);
-			for (int sx = 0; sx < 944; sx += 48) {
-				for (int sy = 0; sy < 944; sy += 48) {
-					int x = (sx + wildX) / 48;
-					int y = (sy + (lvl * 944) + wildY) / 48;
+			for (int sx = 0; sx <= (Constants.MAX_WIDTH - Constants.REGION_SIZE); sx += Constants.REGION_SIZE) {
+				for (int sy = 0; sy < 944; sy += Constants.REGION_SIZE) {
+					int x = (sx + wildX) / Constants.REGION_SIZE;
+					int y = (sy + (lvl * 944) + wildY) / Constants.REGION_SIZE;
 					if (loadSection(x, y, lvl, sx, sy + (944 * lvl))) {
 						sectors++;
 					}
