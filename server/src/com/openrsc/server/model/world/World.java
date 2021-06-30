@@ -1,5 +1,8 @@
 package com.openrsc.server.model.world;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import com.openrsc.server.Server;
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.avatargenerator.AvatarGenerator;
@@ -43,6 +46,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 
@@ -74,7 +78,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	private final Server server;
 	private final RegionManager regionManager;
 	private final EntityList<Npc> npcs;
-	private final EntityList<Player> players;
+	private final PlayerList players;
 
 	//Maximum bank items allowed
 	private final int maxBankSize;
@@ -85,7 +89,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	private final ClanManager clanManager;
 	private final Market market;
 	private final WorldLoader worldLoader;
-	private final HashMap<String, ArrayList<Npc>> npcPositions;
+	private final Multimap<Point, Npc> npcPositions;
 	private final HashMap<Point, Integer> sceneryLocs;
 	private final ConcurrentMap<TrawlerBoat, FishingTrawler> fishingTrawler;
 
@@ -101,13 +105,13 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public World(final Server server) {
 		this.server = server;
 		this.npcs = new EntityList<>(4000);
-		this.players = new EntityList<>(2000);
-		this.npcPositions = new HashMap<>();
+		this.players = new PlayerList(2000);
+		this.npcPositions = Multimaps.synchronizedMultimap(HashMultimap.create());
 		this.sceneryLocs = new HashMap<>();
 		this.npcDrops = new NpcDrops(this);
-		this.quests = Collections.synchronizedList( new LinkedList<>() );
-		this.minigames = Collections.synchronizedList( new LinkedList<>() );
-		this.shops = Collections.synchronizedList( new ArrayList<>() );
+		this.quests = new CopyOnWriteArrayList<>();
+		this.minigames = new CopyOnWriteArrayList<>();
+		this.shops = new CopyOnWriteArrayList<>();
 		this.wildernessIPTracker = new ThreadSafeIPTracker<>();
 		this.playerUnderAttackMap = new ConcurrentHashMap<>();
 		this.npcUnderAttackMap = new ConcurrentHashMap<>();
@@ -232,25 +236,14 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	 * Gets a Player by their server index
 	 */
 	public Player getPlayer(final int idx) {
-		try {
-			final Player player = getPlayers().get(idx);
-			return player;
-		} catch (Exception e) {
-			return null;
-		}
-
+		return players.get(idx);
 	}
 
 	/**
 	 * Gets a player by their username hash
 	 */
 	public Player getPlayer(final long usernameHash) {
-		for (final Player player : getPlayers()) {
-			if (player.getUsernameHash() == usernameHash) {
-				return player;
-			}
-		}
-		return null;
+		return players.getPlayerByHash(usernameHash);
 	}
 
 	/**
@@ -268,7 +261,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	/**
 	 * Gets a player by their UUID
 	 */
-	public Player getPlayerUUID(final UUID uuid) {
+	public Player getPlayerByUUID(final UUID uuid) {
 		for (final Player player : getPlayers()) {
 			if (player.getUUID().equals(uuid)) {
 				return player;
@@ -278,7 +271,7 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	}
 
 	public EntityList<Player> getPlayers() {
-		return players; // TODO: backfill any open slots, to have authentic PID reassignment
+		return players;
 	}
 
 	/**
@@ -286,17 +279,10 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	 * @return
 	 */
 	public Player getRandomPlayer() {
-		int playerCount = 0;
-		for (final Player player : getPlayers()) {
-			++playerCount;
-		}
-		int i = 0;
-		int randomPlayer = (int)(Math.random() * playerCount);
-		for (final Player player : getPlayers()) {
-			if (i == randomPlayer) {
-				return player;
-			}
-			i++;
+		if(!players.isEmpty()) {
+			List<Integer> indices = new ArrayList<>(players.indices());
+			int randomIndex = (int)(Math.random() * indices.size());
+			return players.get(indices.get(randomIndex));
 		}
 		return null;
 	}
@@ -387,15 +373,15 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 	public void unload() {
 		LOGGER.info("Saving clans for shutdown");
 		if (getServer().getConfig().WANT_CLANS) {
-			getServer().getWorld().getClanManager().saveClans();
+			getClanManager().saveClans();
 		}
 		LOGGER.info("Processing Market for shutdown");
-		if (getServer().getWorld().getMarket() != null) {
+		if (getMarket() != null) {
 			// Finish processing world market.
-			getServer().getWorld().getMarket().run();
+			getMarket().run();
 		}
 		LOGGER.info("Saving players for shutdown...");
-		for (final Player p : getServer().getWorld().getPlayers()) {
+		for (final Player p : getPlayers()) {
 			p.unregister(true, "Server shutting down.");
 		}
 		LOGGER.info("Players saved");
@@ -952,32 +938,18 @@ public final class World implements SimpleSubscriber<FishingTrawler>, Runnable {
 		return globalMessageQueue;
 	}
 
-	public HashMap<String, ArrayList<Npc>> getNpcPositions() {
+	public Multimap<Point, Npc> getNpcPositions() {
 		return npcPositions;
 	}
 
-	public void setNpcPosition(final Npc n) {
-		final String key = n.getX() + "," + n.getY();
-		npcPositions.putIfAbsent(key, new ArrayList<>());
-		npcPositions.get(key).add(n);
+	public void setNpcPosition(final Npc npc) {
+		final Point key = npc.getLocation();
+		npcPositions.put(key, npc);
 	}
 
-	public void removeNpcPosition(final Npc n) {
-		final String key = n.getX() + "," + n.getY();
-		if (npcPositions.containsKey(key)) {
-			final ArrayList<Npc> ar = npcPositions.get(key);
-			if (ar.size() > 1) {
-				for (int i = 0; i < ar.size(); i++) {
-					if (n.getUUID().equals(ar.get(i).getUUID())) {
-						ar.remove(i);
-						break;
-					}
-				}
-			}
-			else {
-				npcPositions.remove(key);
-			}
-		}
+	public void removeNpcPosition(final Npc npc) {
+		final Point key = npc.getLocation();
+		npcPositions.remove(key, npc);
 	}
 
 	public void addSceneryLoc(final Point point, final Integer id) {

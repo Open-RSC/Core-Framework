@@ -268,7 +268,7 @@ public class DropTable {
 		TABLE;
 	}
 
-	public class Accessor {
+	public static class Accessor {
 		int id;
 		int numerator;
 		int denominator;
@@ -287,16 +287,13 @@ public class DropTable {
 				numerator = ringOfWealth ? (RING_OF_WEALTH_BOOST_NUMERATOR * mob.denominator) + (RING_OF_WEALTH_BOOST_DENOMINATOR * mob.numerator) : mob.numerator;
 				denominator = ringOfWealth ? RING_OF_WEALTH_BOOST_DENOMINATOR * mob.denominator : mob.denominator;
 				int hit = DataConversions.random(1, denominator);
-				if (hit <= numerator) {
-					return true;
-				} else
-					return false;
+				return hit <= numerator;
 			}
 		}
 		return false;
 	}
 
-	private class Drop {
+	private static class Drop {
 		DropTable table = null;
 		dropType type;
 		int id = -1;

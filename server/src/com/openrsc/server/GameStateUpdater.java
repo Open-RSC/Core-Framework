@@ -6,16 +6,20 @@ import com.openrsc.server.database.impl.mysql.queries.logging.PMLog;
 import com.openrsc.server.external.GameObjectLoc;
 import com.openrsc.server.external.ItemLoc;
 import com.openrsc.server.model.*;
+import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
+import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
 import com.openrsc.server.model.entity.update.*;
+import com.openrsc.server.model.world.World;
 import com.openrsc.server.net.rsc.ActionSender;
 import com.openrsc.server.net.rsc.enums.OpcodeOut;
 import com.openrsc.server.net.rsc.struct.outgoing.*;
+import com.openrsc.server.util.EntityList;
 import com.openrsc.server.util.rsc.AppearanceRetroConverter;
 import com.openrsc.server.util.rsc.DataConversions;
 import org.apache.logging.log4j.LogManager;
@@ -1177,9 +1181,7 @@ public final class GameStateUpdater {
 	}
 
 	protected final long updateWorld() {
-		return getServer().bench(() -> {
-			getServer().getWorld().run();
-		});
+		return getServer().bench(() -> getServer().getWorld().run());
 	}
 
 	protected final long updateClients() {
@@ -1193,36 +1195,20 @@ public final class GameStateUpdater {
 
 	protected final long doCleanup() {// it can do the teleport at this time.
 		return getServer().bench(() -> {
-			/*
-			 * Reset the update related flags and unregister npcs flagged as
-			 * unregistering
-			 */
-			for (final Npc npc : getServer().getWorld().getNpcs()) {
-				npc.setHasMoved(false);
-				npc.resetSpriteChanged();
-				npc.getUpdateFlags().reset();
-				npc.setTeleporting(false);
-			}
-
-			/*
-			 * Reset the update related flags and unregister players that are
-			 * flagged as unregistered
-			 */
-			for (final Player player : getServer().getWorld().getPlayers()) {
-				player.setTeleporting(false);
-				player.resetSpriteChanged();
-				player.getUpdateFlags().reset();
-				player.setHasMoved(false);
-			}
+			World world = getServer().getWorld();
+			world.getPlayers().forEach(Player::resetAfterUpdate);
+			world.getNpcs().forEach(Npc::resetAfterUpdate);
 		});
 	}
 
 	protected final long executeWalkToActions() {
 		return getServer().bench(() -> {
-			for (final Player player : getServer().getWorld().getPlayers()) {
-				if (player.getWalkToAction() != null) {
-					if (player.getWalkToAction().shouldExecute()) {
-						player.getWalkToAction().execute();
+			final EntityList<Player> players = getServer().getWorld().getPlayers();
+			for (final Player player : players) {
+				final WalkToAction walkToAction = player.getWalkToAction();
+				if (walkToAction != null) {
+					if (walkToAction.shouldExecute()) {
+						walkToAction.execute();
 					}
 				}
 			}
@@ -1231,22 +1217,24 @@ public final class GameStateUpdater {
 
 	protected final long processNpcs() {
 		return getServer().bench(() -> {
-			for (final Npc n : getServer().getWorld().getNpcs()) {
+			final boolean shouldUpdatePosition = !getServer().getConfig().WANT_CUSTOM_WALK_SPEED;
+			final EntityList<Npc> npcs = getServer().getWorld().getNpcs();
+			npcs.parallelStream().forEach(n -> {
 				try {
 					if (n.isUnregistering()) {
 						getServer().getWorld().unregisterNpc(n);
-						continue;
+						return;
 					}
 
 					// Only do the walking tick here if the NPC's walking tick matches the game tick
-					if (!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
+					if (shouldUpdatePosition) {
 						n.updatePosition();
 					}
 				} catch (final Exception e) {
 					LOGGER.error("Error while updating " + n + " at position " + n.getLocation() + " loc: " + n.getLoc());
 					LOGGER.catching(e);
 				}
-			}
+			});
 		});
 	}
 
@@ -1321,6 +1309,7 @@ public final class GameStateUpdater {
 	 * aware of needs updated
 	 */
 	protected final long processPlayers() {
+		final boolean shouldUpdatePosition = !getServer().getConfig().WANT_CUSTOM_WALK_SPEED;
 		return getServer().bench(() -> {
 			for (final Player player : getServer().getWorld().getPlayers()) {
 				// Checking login because we don't want to unregister more than once
@@ -1330,7 +1319,7 @@ public final class GameStateUpdater {
 				}
 
 				// Only do the walking tick here if the Players' walking tick matches the game tick
-				if (!getServer().getConfig().WANT_CUSTOM_WALK_SPEED) {
+				if (shouldUpdatePosition) {
 					player.updatePosition();
 				}
 

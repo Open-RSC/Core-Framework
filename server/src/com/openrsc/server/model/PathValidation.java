@@ -1,5 +1,6 @@
 package com.openrsc.server.model;
 
+import com.google.common.collect.Multimap;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -9,6 +10,7 @@ import com.openrsc.server.model.world.region.TileValue;
 import com.openrsc.server.util.rsc.CollisionFlag;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -566,7 +568,7 @@ public class PathValidation {
 			return false;
 
 		// all npcs on loc, may include dead (not visible) ones
-		ArrayList<Npc> npcsOnLoc = mob.getWorld().getNpcPositions().getOrDefault(x + "," + y,null);
+		Collection<Npc> npcsOnLoc = mob.getWorld().getNpcPositions().get(new Point(x, y));
 		// visible (&alive) npcs
 		List<Npc> visibleNpcsOnLoc = new ArrayList<>();
 		Npc npc = null;

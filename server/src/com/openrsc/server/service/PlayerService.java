@@ -175,8 +175,6 @@ public class PlayerService implements IPlayerService {
         player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_MOUSE_BUTTONS, playerData.oneMouse);
         player.getSettings().setGameSetting(PlayerSettings.GAME_SETTING_SOUND_EFFECTS, playerData.soundOff);
 
-        //player.setBankSize(playerData.bankSize);
-
         PlayerAppearance pa = new PlayerAppearance(
                 playerData.hairColour,
                 playerData.topColour,
@@ -313,8 +311,8 @@ public class PlayerService implements IPlayerService {
     private void loadPlayerQuests(final Player player) throws GameDatabaseException {
         final PlayerQuest[] quests = database.queryLoadPlayerQuests(player);
 
-        for (int i = 0; i < quests.length; i++) {
-            player.setQuestStage(quests[i].questId, quests[i].stage);
+        for (PlayerQuest quest : quests) {
+            player.setQuestStage(quest.questId, quest.stage);
         }
 
         player.setQuestPoints(player.calculateQuestPoints());
@@ -322,8 +320,8 @@ public class PlayerService implements IPlayerService {
 
     private void loadPlayerAchievements(final Player player) throws GameDatabaseException {
         final PlayerAchievement[] achievements = database.queryLoadPlayerAchievements(player);
-        for (int i = 0; i < achievements.length; i++) {
-            player.setAchievementStatus(achievements[i].achievementId, achievements[i].status);
+        for (PlayerAchievement achievement : achievements) {
+            player.setAchievementStatus(achievement.achievementId, achievement.status);
         }
     }
 

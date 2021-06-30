@@ -15,6 +15,7 @@ import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.event.rsc.SingleTickEvent;
 import com.openrsc.server.event.rsc.impl.combat.scripts.CombatScriptLoader;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.world.World;
@@ -531,13 +532,8 @@ public class Server implements Runnable {
 				} else {
 					if (getConfig().WANT_CUSTOM_WALK_SPEED) {
 						World world = getWorld();
-						for (final Player p : world.getPlayers()) {
-							p.updatePosition();
-						}
-						for (final Npc n : world.getNpcs()) {
-							n.updatePosition();
-						}
-
+						world.getPlayers().forEach(Player::updatePosition);
+						world.getNpcs().forEach(Npc::updatePosition);
 						getGameUpdater().executeWalkToActions();
 					}
 				}
@@ -720,7 +716,7 @@ public class Server implements Runnable {
 		return packetFilter;
 	}
 
-  public final int clearAllIpBans() {
+  	public final int clearAllIpBans() {
     return packetFilter.clearAllIpBans();
   }
 

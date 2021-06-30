@@ -284,7 +284,7 @@ public class Npc extends Mob {
 		if (this.killed) return;
 		//this.killed = true; remove() assures everything went fine, and set killed to true
 
-		Player owner = getWorld().getPlayerUUID(mob.getUUID());
+		Player owner = getWorld().getPlayerByUUID(mob.getUUID());
 		if (owner == null) {
 			Npc npcKiller = getWorld().getNpcByUUID(mob.getUUID());
 			if (npcKiller != null && npcKiller.relatedMob instanceof Player)
@@ -312,7 +312,7 @@ public class Npc extends Mob {
 		}
 
 		UUID ownerId = handleXpDistribution(mob);
-		owner = getWorld().getPlayerUUID(ownerId);
+		owner = getWorld().getPlayerByUUID(ownerId);
 
 		if (owner == null) {
 			deathListeners.clear();
@@ -529,7 +529,7 @@ public class Npc extends Mob {
 				currentHighestDamage = damageDoneByPlayer;
 			}
 
-			Player player = getWorld().getPlayerUUID(ID);
+			Player player = getWorld().getPlayerByUUID(ID);
 			if (player != null) {
 				int[] skillsDist = new int[Skill.maxId(Skill.ATTACK.name(), Skill.DEFENSE.name(),
 					Skill.STRENGTH.name(), Skill.HITS.name()) + 1];
@@ -564,7 +564,7 @@ public class Npc extends Mob {
 				currentHighestDamage = damageDoneByPlayer;
 			}
 
-			Player player = getWorld().getPlayerUUID(ID);
+			Player player = getWorld().getPlayerByUUID(ID);
 			if (player != null) {
 				int totalXP = (int) (((double) (totalCombatXP) / (double) (getDef().hits)) * (double) (damageDoneByPlayer));
 				player.incExp(Skill.RANGED.id(), totalXP * 4, true);
@@ -685,24 +685,8 @@ public class Npc extends Mob {
 		getNpcBehavior().setChasing(npc);
 	}
 
-	public Player getChasedPlayer() {
-		return getNpcBehavior().getChasedPlayer();
-	}
-
-	public Npc getChasedNpc() {
-		return getNpcBehavior().getChasedNpc();
-	}
-
 	public NpcBehavior getBehavior() {
 		return getNpcBehavior();
-	}
-
-	public void setBehavior(final NpcBehavior behavior) {
-		this.setNpcBehavior(behavior);
-	}
-
-	public void setNPCLoc(final NPCLoc loc2) {
-		this.loc = loc2;
 	}
 
 	public boolean isRespawning() {

@@ -133,9 +133,7 @@ public class GameEventHandler {
 	}
 
 	public long runGameEvents() {
-		return getServer().bench(() -> {
-			processEvents();
-		});
+		return getServer().bench(this::processEvents);
 	}
 
 	public final String buildProfilingDebugInformation(final boolean forInGame) {

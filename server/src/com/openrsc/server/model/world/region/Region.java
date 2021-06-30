@@ -1,6 +1,6 @@
 package com.openrsc.server.model.world.region;
 
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.openrsc.server.constants.Constants;
@@ -26,22 +26,22 @@ public class Region {
 	/**
 	 * A list of players in this region.
 	 */
-	final private Multimap<Point, Player> players = Multimaps.synchronizedMultimap(HashMultimap.create());
+	final private Multimap<Point, Player> players = Multimaps.synchronizedMultimap(LinkedHashMultimap.create());
 
 	/**
 	 * A list of NPCs in this region.
 	 */
-	final private Multimap<Point, Npc> npcs = Multimaps.synchronizedMultimap(HashMultimap.create());
+	final private Multimap<Point, Npc> npcs = Multimaps.synchronizedMultimap(LinkedHashMultimap.create());
 
 	/**
 	 * A list of objects in this region.
 	 */
-	final private Multimap<Point, GameObject> objects = Multimaps.synchronizedMultimap(HashMultimap.create());
+	final private Multimap<Point, GameObject> objects = Multimaps.synchronizedMultimap(LinkedHashMultimap.create());
 
 	/**
 	 * A list of objects in this region.
 	 */
-	final private Multimap<Point, GroundItem> items = Multimaps.synchronizedMultimap(HashMultimap.create());
+	final private Multimap<Point, GroundItem> items = Multimaps.synchronizedMultimap(LinkedHashMultimap.create());
 
 	/**
 	 * A list of tiles in this region.
@@ -280,5 +280,22 @@ public class Region {
 			tile = tiles[0][0];
 			tiles = null;
 		}
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this) {
+			return true;
+		}
+		if(obj instanceof Region) {
+			Region other = (Region) obj;
+			return other.regionX == regionX && other.regionY == other.getRegionY();
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return new Point(regionX, regionY).hashCode();
 	}
 }

@@ -834,6 +834,16 @@ public abstract class Mob extends Entity {
 	}
 
 	/**
+	 * Resets the update related flags
+	 */
+	public void resetAfterUpdate() {
+		setHasMoved(false);
+		resetSpriteChanged();
+		getUpdateFlags().reset();
+		setTeleporting(false);
+	}
+
+	/**
 	 * SETTERS/GETTERS
 	 */
 	public int getLevel(int skillID) {
@@ -1126,5 +1136,13 @@ public abstract class Mob extends Entity {
 		Player player = (Player) this;
 		radius = player.getProjectileRadius(radius);
 		return player.withinRange(mob, radius);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Mob) {
+			return ((Mob)obj).getUUID().equals(uuid);
+		}
+		return false;
 	}
 }

@@ -1400,8 +1400,9 @@ public final class Player extends Mob {
 	}
 
 	public long getUsernameHash() {
-		if (getAttribute("fakeuser", null) != null)
+		if (getAttribute("fakeuser", null) != null) {
 			return DataConversions.usernameToHash(getAttribute("fakeuser", null));
+		}
 		return usernameHash;
 	}
 
