@@ -2,21 +2,9 @@ package com.openrsc.server.service;
 
 import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.AppearanceId;
-import com.openrsc.server.constants.Skills;
 import com.openrsc.server.database.GameDatabase;
 import com.openrsc.server.database.GameDatabaseException;
-import com.openrsc.server.database.struct.PlayerAchievement;
-import com.openrsc.server.database.struct.PlayerBank;
-import com.openrsc.server.database.struct.PlayerBankPreset;
-import com.openrsc.server.database.struct.PlayerCache;
-import com.openrsc.server.database.struct.PlayerData;
-import com.openrsc.server.database.struct.PlayerEquipped;
-import com.openrsc.server.database.struct.PlayerExperience;
-import com.openrsc.server.database.struct.PlayerInventory;
-import com.openrsc.server.database.struct.PlayerNpcKills;
-import com.openrsc.server.database.struct.PlayerQuest;
-import com.openrsc.server.database.struct.PlayerRecoveryQuestions;
-import com.openrsc.server.database.struct.PlayerSkills;
+import com.openrsc.server.database.struct.*;
 import com.openrsc.server.external.ItemDefinition;
 import com.openrsc.server.login.LoginRequest;
 import com.openrsc.server.model.PlayerAppearance;
@@ -384,7 +372,8 @@ public class PlayerService implements IPlayerService {
     }
 
     private void savePlayerBankPresets(final Player player) throws GameDatabaseException {
-        database.querySavePlayerBankPresets(player);
+    	// TODO: needs to be fixed on save player bank preset
+        /*database.querySavePlayerBankPresets(player);*/
     }
 
     private void savePlayerSocial(final Player player) throws GameDatabaseException {
