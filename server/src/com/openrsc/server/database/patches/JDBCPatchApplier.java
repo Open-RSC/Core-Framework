@@ -45,6 +45,7 @@ public class JDBCPatchApplier extends PatchApplier {
     @Override
     protected void markPatchExecuted(String fileName) {
         try {
+            System.out.println("Marking " + fileName + " as executed...");
             String markPatchExecutedQuery = queries.PATCHES_MARK_PATCH_EXECUTED.fillParameters(
                     Pair.of("patchName", fileName),
                     Pair.of("runDate", LocalDate.now().format(dateTimeFormatter))
@@ -52,6 +53,7 @@ public class JDBCPatchApplier extends PatchApplier {
             PreparedStatement statement = connection.prepareStatement(markPatchExecutedQuery);
             statement.executeUpdate();
         } catch (SQLException ex) {
+            LOGGER.error("Failed to mark " + fileName + " as executed...");
             LOGGER.catching(ex);
         }
     }

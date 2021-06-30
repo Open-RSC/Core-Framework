@@ -18,12 +18,11 @@ CREATE TABLE IF NOT EXISTS `chat_logs`
 (
     `id`      int(10)          NOT NULL AUTO_INCREMENT,
     `sender`  varchar(12)      NOT NULL,
-    `message` varchar(255)     NOT NULL,
+    `message` TEXT     NOT NULL,
     `time`    int(10) UNSIGNED NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     KEY `time` (`time`),
-    KEY `sender` (`sender`),
-    KEY `message` (`message`)
+    KEY `sender` (`sender`)
 ) ENGINE = MyISAM
   DEFAULT CHARSET = utf8;
 
@@ -390,14 +389,13 @@ CREATE TABLE IF NOT EXISTS `private_message_logs`
 (
     `id`       int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     `sender`   varchar(12)      NOT NULL,
-    `message`  varchar(255)     NOT NULL,
+    `message`  TEXT     NOT NULL,
     `reciever` varchar(12)      NOT NULL,
     `time`     int(10) UNSIGNED NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
     KEY `reciever` (`reciever`),
     KEY `time` (`time`),
-    KEY `sender` (`sender`),
-    KEY `message` (`message`)
+    KEY `sender` (`sender`)
 ) ENGINE = MyISAM
   DEFAULT CHARSET = utf8;
 
@@ -572,6 +570,6 @@ CREATE TABLE IF NOT EXISTS `_PREFIX_ironman`
 
 CREATE TABLE IF NOT EXISTS `db_patches`
 (
-    `patchId` varchar(200) NOT NULL PRIMARY KEY
+    `patch_name` varchar(200) NOT NULL PRIMARY KEY,
+    `run_date` date NOT NULL
 );
-  

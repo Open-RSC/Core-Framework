@@ -584,5 +584,6 @@ CREATE TABLE IF NOT EXISTS `_PREFIX_ironman`
 );
 
 CREATE TABLE IF NOT EXISTS `db_patches` (
-    `patchId` varchar(200) NOT NULL PRIMARY KEY
+    `patch_name` varchar(200) NOT NULL PRIMARY KEY,
+    `run_date` date NOT NULL
 );

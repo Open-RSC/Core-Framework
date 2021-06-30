@@ -30,7 +30,7 @@ public class MySQLDatabaseConnection extends JDBCDatabaseConnection {
 		close();
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (final ClassNotFoundException e) {
 			LOGGER.catching(e);
 			System.exit(1);

@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS `auctions`
     KEY `itemID` (`itemID`),
     KEY `seller_username_2` (`seller_username`),
     KEY `time` (`time`),
-    KEY `seller_username` (`seller_username`),
-    KEY `buyer_info` (`buyer_info`)
+    KEY `seller_username` (`seller_username`)
 ) ENGINE = MyISAM
   DEFAULT CHARSET = utf8;
