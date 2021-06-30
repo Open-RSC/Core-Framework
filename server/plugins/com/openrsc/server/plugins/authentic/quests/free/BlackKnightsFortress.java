@@ -82,7 +82,7 @@ public class BlackKnightsFortress implements QuestInterface, TalkNpcTrigger,
 				int menu = multi(player, n, "I seek a quest",
 					"I don't I'm just looking around");
 				if (menu == 0) {
-					if (player.getQuestPoints() < 12) {
+					if (!player.getConfig().INFLUENCE_INSTEAD_QP && player.getQuestPoints() < 12) {
 						npcsay(player, n,
 							"Well I do have a task, but it is very dangerous",
 							"and it's critical to us that no mistakes are made",

@@ -7,6 +7,8 @@ import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpBoundTrigger;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseBoundTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -16,7 +18,7 @@ import java.util.Optional;
 import static com.openrsc.server.plugins.Functions.*;
 
 public class WoodcutJungle implements OpLocTrigger,
-	OpBoundTrigger {
+	OpBoundTrigger, UseLocTrigger, UseBoundTrigger {
 
 	private static int[] JUNGLE_TREES = {1086, 1100, 1099, 1092, 1091};
 
@@ -26,13 +28,7 @@ public class WoodcutJungle implements OpLocTrigger,
 
 	@Override
 	public boolean blockOpLoc(Player player, GameObject obj, String command) {
-		if (inArray(obj.getID(), JUNGLE_TREES)) {
-			return true;
-		}
-		if (obj.getID() == JUNGLE_TREE_STUMP) {
-			return true;
-		}
-		return false;
+		return inArray(obj.getID(), JUNGLE_TREES) || obj.getID() == JUNGLE_TREE_STUMP;
 	}
 
 	@Override
@@ -189,5 +185,41 @@ public class WoodcutJungle implements OpLocTrigger,
 	 */
 	private boolean getLog(int reqLevel, int woodcutLevel, int axeId) {
 		return Formulae.calcGatheringSuccessfulLegacy(reqLevel, woodcutLevel, calcAxeBonus(axeId));
+	}
+
+	@Override
+	public void onUseLoc(Player player, GameObject object, Item item) {
+		if (inArray(item.getCatalogId(), Formulae.woodcuttingAxeIDs)
+			&& (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickWoodcut)) {
+			if (inArray(object.getID(), JUNGLE_TREES)) {
+				handleJungleWoodcut(object, player);
+			}
+			if (object.getID() == JUNGLE_TREE_STUMP) {
+				player.teleport(object.getX(), object.getY());
+			}
+		}
+	}
+
+	@Override
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
+		return inArray(item.getCatalogId(), Formulae.woodcuttingAxeIDs)
+			&& (inArray(obj.getID(), JUNGLE_TREES) || obj.getID() == JUNGLE_TREE_STUMP)
+			&& (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickWoodcut);
+	}
+
+	@Override
+	public void onUseBound(Player player, GameObject object, Item item) {
+		if (inArray(item.getCatalogId(), Formulae.woodcuttingAxeIDs)
+			&& (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickWoodcut)) {
+			if (object.getID() == JUNGLE_VINE) {
+				handleJungleWoodcut(object, player);
+			}
+		}
+	}
+
+	@Override
+	public boolean blockUseBound(Player player, GameObject obj, Item item) {
+		return inArray(item.getCatalogId(), Formulae.woodcuttingAxeIDs) && (obj.getID() == JUNGLE_VINE)
+			&& (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickWoodcut);
 	}
 }

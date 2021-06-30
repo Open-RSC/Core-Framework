@@ -17,6 +17,7 @@
       <name>Confuse (R)</name>
       <description>Reduces your opponent's fighting skills</description>
 	  <members>false</members>
+	  <evil>true</evil>
     </SpellDef>
     <SpellDef>
       <reqLevel>1</reqLevel>
@@ -36,6 +37,7 @@
       <name>Chill bolt</name>
       <description>A strengh 1 missile attack</description>
 	  <members>false</members>
+	  <evil>false</evil>
     </SpellDef>
     <SpellDef>
       <reqLevel>1</reqLevel>
@@ -55,6 +57,7 @@
       <name>Thick skin</name>
       <description>Increases your defence</description>
 	  <members>false</members>
+	  <evil>true</evil>
     </SpellDef>
     <SpellDef>
       <reqLevel>2</reqLevel>
@@ -74,6 +77,7 @@
       <name>Burst of strength</name>
       <description>Increase your strength</description>
 	  <members>false</members>
+	  <evil>false</evil>
     </SpellDef>
     <SpellDef>
       <reqLevel>4</reqLevel>
@@ -93,6 +97,7 @@
       <name>Shock bolt</name>
       <description>A strength 1 missile attack</description>
 	  <members>false</members>
+	  <evil>true</evil>
     </SpellDef>
     <SpellDef>
       <reqLevel>4</reqLevel>
@@ -116,6 +121,7 @@
       <name>Camouflage</name>
       <description>Increasing your hiding skill</description>
 	  <members>false</members>
+	  <evil>false</evil>
     </SpellDef>
     <SpellDef>
       <reqLevel>9</reqLevel>
@@ -143,6 +149,7 @@
       <name>Elemental bolt</name>
       <description>A strength 2 missile attack</description>
 	  <members>false</members>
+	  <evil>true</evil>
     </SpellDef>
     <SpellDef>
       <reqLevel>11</reqLevel>
@@ -162,6 +169,7 @@
       <name>Rock skin</name>
       <description>Increases your defence</description>
 	  <members>false</members>
+	  <evil>false</evil>
     </SpellDef>
     <SpellDef>
       <reqLevel>12</reqLevel>
@@ -181,6 +189,7 @@
       <name>Fear</name>
       <description>Causes some opponents to retreat</description>
 	  <members>false</members>
+	  <evil>true</evil>
     </SpellDef>
     <SpellDef>
       <reqLevel>14</reqLevel>
@@ -200,5 +209,6 @@
       <name>Wind bolt (R)</name>
       <description>A strength 2 missile attack</description>
 	  <members>false</members>
+	  <evil>false</evil>
     </SpellDef>
 </SpellDef-array>

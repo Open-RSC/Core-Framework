@@ -792,12 +792,17 @@ public class DoorAction {
 				if (obj.getX() != 150 && obj.getY() != 554) {// champs guild door
 					return;
 				}
-				if (player.getQuestPoints() < 32) {
+				if ((!player.getConfig().INFLUENCE_INSTEAD_QP && player.getQuestPoints() < 32)
+					|| (player.getConfig().INFLUENCE_INSTEAD_QP && player.getSkills().getLevel(Skill.INFLUENCE.id()) < 20)) {
 					final Npc champy = ifnearvisnpc(player, NpcId.GUILDMASTER.id(), 20);
 					if (champy != null) {
 						npcsay(player, champy,
 							"You have not proven yourself worthy to enter here yet");
-						mes("The door won't open - you need at least 32 quest points");
+						if (!player.getConfig().INFLUENCE_INSTEAD_QP && player.getQuestPoints() < 32) {
+							mes("The door won't open - you need at least 32 quest points");
+						} else {
+							mes("The door won't open - you need the highest available influence");
+						}
 						delay(3);
 					}
 					return;

@@ -153,7 +153,7 @@ public class LegendsQuestGuildGuard implements TalkNpcTrigger, OpLocTrigger {
 							if (player.getQuestStage(Quests.WATERFALL_QUEST) != -1) {
 								npcsay(player, n, "Waterfall Quest.");
 							}
-							if (player.getQuestPoints() < 107) {
+							if (!player.getConfig().INFLUENCE_INSTEAD_QP && player.getQuestPoints() < 107) {
 								npcsay(player, n, "You also need to have 107 Quest Points as well!");
 							}
 							npcsay(player, n, "They don't call it the Legends Guild for nothing you know!",

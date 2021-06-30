@@ -296,7 +296,7 @@ public class HerosQuest implements QuestInterface, TalkNpcTrigger,
 								player.getQuestStage(Quests.SHIELD_OF_ARRAV) == -2 ) &&
 							player.getQuestStage(Quests.MERLINS_CRYSTAL) == -1 &&
 							player.getQuestStage(Quests.DRAGON_SLAYER) == -1)
-							&& player.getQuestPoints() >= 55) {
+							&& (player.getConfig().INFLUENCE_INSTEAD_QP || player.getQuestPoints() >= 55)) {
 							npcsay(player, n, "Ok you may begin the tasks for joining the hero's guild",
 								"You need the feather of an Entrana firebird",
 								"A master thief armband",

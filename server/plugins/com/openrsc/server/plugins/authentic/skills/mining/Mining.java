@@ -4,11 +4,13 @@ import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Quests;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.content.SkillCapes;
+import com.openrsc.server.external.GameObjectDef;
 import com.openrsc.server.external.ObjectMiningDef;
 import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -17,7 +19,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public final class Mining implements OpLocTrigger {
+public final class Mining implements OpLocTrigger, UseLocTrigger {
 
 	public static int getAxe(Player player) {
 		int lvl = player.getSkills().getLevel(Skill.MINING.id());
@@ -36,6 +38,17 @@ public final class Mining implements OpLocTrigger {
 
 	@Override
 	public void onOpLoc(Player player, final GameObject object, String command) {
+		if ((command.equals("mine") || command.equals("prospect"))
+			&& object.getID() != 588 && object.getID() != 1227) {
+			if (command.equals("mine") && player.getConfig().GATHER_TOOL_ON_SCENERY) {
+				player.playerServerMessage(MessageType.QUEST, "You need to use the pickaxe on the rock to mine it");
+				return;
+			}
+			handleMiningEntry(player, object, command);
+		}
+	}
+
+	private void handleMiningEntry(Player player, final GameObject object, String command) {
 		if (object.getID() == 269) {
 			if (command.equalsIgnoreCase("mine")) {
 				if (player.getCarriedItems().hasCatalogID(getAxe(player), Optional.of(false))) {
@@ -194,7 +207,8 @@ public final class Mining implements OpLocTrigger {
 
 	private void batchMining(Player player, GameObject rock, ObjectMiningDef def, int axeId, int mineLvl) {
 		player.playSound("mine");
-		thinkbubble(new Item(ItemId.IRON_PICKAXE.id())); // authentic to only show the original pickaxe sprite
+		int pickBubbleId = player.getClientLimitations().supportsTypedPickaxes ? ItemId.IRON_PICKAXE.id() : ItemId.BRONZE_PICKAXE.id();
+		thinkbubble(new Item(pickBubbleId)); // authentic to only show the original pickaxe sprite
 		player.playerServerMessage(MessageType.QUEST, "You swing your pick at the rock...");
 		delay(3);
 
@@ -216,19 +230,25 @@ public final class Mining implements OpLocTrigger {
 				player.playerServerMessage(MessageType.QUEST, "You just found a" + gem.getDef(player.getWorld()).getName().toLowerCase().replaceAll("uncut", "") + "!");
 				return;
 			} else {
-				// Successful mining attempt
-				// It is authentic to allow multiple players to get the rock if they have already started mining it.
-				// However, if there is no ore in the rock, there will be no retry
-				if (SkillCapes.shouldActivate(player, ItemId.MINING_CAPE)) {
-					thinkbubble(new Item(ItemId.MINING_CAPE.id(), 1));
-					give(player, ore.getCatalogId(), 1);
-					player.playerServerMessage(MessageType.QUEST, "You manage to obtain two " + ore.getDef(player.getWorld()).getName().toLowerCase());
-					player.incExp(Skill.MINING.id(), def.getExp() * 2, true);
-					give(player, ore.getCatalogId(), 1);
+				GameObject obj = player.getViewArea().getGameObject(rock.getID(), rock.getX(), rock.getY());
+				if (!player.getConfig().SHARED_GATHERING_RESOURCES || obj != null) {
+					// Successful mining attempt
+					// It is authentic to allow multiple players to get the rock if they have already started mining it.
+					// In retro mechanic, if other player had depleted it you would not get it
+					// In both cases if there is no ore in the rock, there will be no retry
+					if (SkillCapes.shouldActivate(player, ItemId.MINING_CAPE)) {
+						thinkbubble(new Item(ItemId.MINING_CAPE.id(), 1));
+						give(player, ore.getCatalogId(), 1);
+						player.playerServerMessage(MessageType.QUEST, "You manage to obtain two " + ore.getDef(player.getWorld()).getName().toLowerCase());
+						player.incExp(Skill.MINING.id(), def.getExp() * 2, true);
+						give(player, ore.getCatalogId(), 1);
+					} else {
+						player.getCarriedItems().getInventory().add(ore);
+						player.playerServerMessage(MessageType.QUEST, "You manage to obtain some " + ore.getDef(player.getWorld()).getName().toLowerCase());
+						player.incExp(Skill.MINING.id(), def.getExp(), true);
+					}
 				} else {
-					player.getCarriedItems().getInventory().add(ore);
-					player.playerServerMessage(MessageType.QUEST, "You manage to obtain some " + ore.getDef(player.getWorld()).getName().toLowerCase());
-					player.incExp(Skill.MINING.id(), def.getExp(), true);
+					player.playerServerMessage(MessageType.QUEST, "You only succeed in scratching the rock");
 				}
 				if (rock.getID() == 496 && player.getCache().hasKey("tutorial") && player.getCache().getInt("tutorial") == 51) {
 					player.getCache().set("tutorial", 52);
@@ -274,7 +294,8 @@ public final class Mining implements OpLocTrigger {
 
 	@Override
 	public boolean blockOpLoc(Player player, GameObject obj, String command) {
-		return (command.equals("mine") || command.equals("prospect")) && obj.getID() != 588 && obj.getID() != 1227;
+		return (command.equals("mine") || command.equals("prospect"))
+			&& obj.getID() != 588 && obj.getID() != 1227;
 	}
 
 	/**
@@ -327,5 +348,22 @@ public final class Mining implements OpLocTrigger {
 	 */
 	private boolean getOre(ObjectMiningDef def, int miningLevel, int axeId) {
 		return Formulae.calcGatheringSuccessfulLegacy(def.getReqLevel(), miningLevel, calcAxeBonus(axeId));
+	}
+
+	@Override
+	public void onUseLoc(Player player, GameObject object, Item item) {
+		final GameObjectDef def = player.getWorld().getServer().getEntityHandler().getGameObjectDef(object.getID());
+		if (inArray(item.getCatalogId(), Formulae.miningAxeIDs) && (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickMine)
+			&& def != null && def.command1.equalsIgnoreCase("mine") && object.getID() != 588 && object.getID() != 1227) {
+			player.click = 0;
+			handleMiningEntry(player, object, "mine");
+		}
+	}
+
+	@Override
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
+		final GameObjectDef def = player.getWorld().getServer().getEntityHandler().getGameObjectDef(obj.getID());
+		return (inArray(item.getCatalogId(), Formulae.miningAxeIDs) && (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickMine)
+			&& def != null && def.command1.equalsIgnoreCase("mine") && obj.getID() != 588 && obj.getID() != 1227);
 	}
 }

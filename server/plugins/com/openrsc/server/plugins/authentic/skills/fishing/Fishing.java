@@ -3,6 +3,7 @@ package com.openrsc.server.plugins.authentic.skills.fishing;
 import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.constants.Skill;
 import com.openrsc.server.external.EntityHandler;
+import com.openrsc.server.external.GameObjectDef;
 import com.openrsc.server.external.ObjectFishDef;
 import com.openrsc.server.external.ObjectFishingDef;
 import com.openrsc.server.model.container.Inventory;
@@ -10,6 +11,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -22,7 +24,7 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Fishing implements OpLocTrigger {
+public class Fishing implements OpLocTrigger, UseLocTrigger {
 
 	private static final Logger LOGGER = LogManager.getLogger(Fishing.class);
 	public static final int TUTORIAL_FISH_ID = 493;
@@ -35,12 +37,16 @@ public class Fishing implements OpLocTrigger {
 	@Override
 	public void onOpLoc(Player player, final GameObject object, String command) {
 		if (
-				command.equals("lure")
-						|| command.equals("bait")
-						|| command.equals("net")
-						|| command.equals("harpoon")
-						|| command.equals("cage")
+			command.equals("lure")
+				|| command.equals("bait")
+				|| command.equals("net")
+				|| command.equals("harpoon")
+				|| command.equals("cage")
 		) {
+			if (player.getConfig().GATHER_TOOL_ON_SCENERY) {
+				player.playerServerMessage(MessageType.QUEST, "You need to use the appropriate tool on the spot to " + command + " the fish");
+				return;
+			}
 			handleFishing(object, player, player.click, command);
 		}
 	}
@@ -221,7 +227,7 @@ public class Fishing implements OpLocTrigger {
 			int fishRolls = doBigNetFishingRoll(fishLst, bigNet, player.getSkills().getLevel(Skill.FISHING.id()));
 
 			//check if the spot is still active
-			if (obj == null) {
+			if (player.getConfig().SHARED_GATHERING_RESOURCES && obj == null) {
 				player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
 				return;
 			}
@@ -293,6 +299,12 @@ public class Fishing implements OpLocTrigger {
 					}
 				}
 			} else {
+				//check if the spot is still active
+				if (player.getConfig().SHARED_GATHERING_RESOURCES && obj == null) {
+					player.playerServerMessage(MessageType.QUEST, "You fail to catch anything");
+					return;
+				}
+
 				// Award the fish
 				Item fish = new Item(fishLst.get(0).getId());
 
@@ -397,8 +409,8 @@ public class Fishing implements OpLocTrigger {
 		//special hemenster fishing spots
 		if (obj.getID() == 351 || obj.getID() == 352 || obj.getID() == 353 || obj.getID() == 354)
 			return false;
-		if (command.equals("lure") || command.equals("bait") || command.equals("net") || command.equals("harpoon")
-			|| command.equals("cage")) {
+		if (command.equals("lure") || command.equals("bait")
+			|| command.equals("net") || command.equals("harpoon") || command.equals("cage")) {
 			return true;
 		}
 		return false;
@@ -449,6 +461,45 @@ public class Fishing implements OpLocTrigger {
 				player.playerServerMessage(MessageType.QUEST,"You are too tired to catch this fish");
 				return true;
 			}
+		}
+		return false;
+	}
+
+	@Override
+	public void onUseLoc(Player player, GameObject object, Item item) {
+		final GameObjectDef def = player.getWorld().getServer().getEntityHandler().getGameObjectDef(object.getID());
+		if (inArray(item.getCatalogId(), Formulae.fishingToolIDs) && (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickFish) && def != null &&
+			inArray(new String[]{def.command1.toLowerCase(), def.command2.toLowerCase()}, "lure", "bait", "net", "harpoon", "cage")) {
+			String command = "";
+			if (item.getCatalogId() == ItemId.NET.id() || item.getCatalogId() == ItemId.BIG_NET.id()) {
+				command = "net";
+			} else if (item.getCatalogId() == ItemId.FISHING_ROD.id() || item.getCatalogId() == ItemId.OILY_FISHING_ROD.id()) {
+				command = "bait";
+			} else if (item.getCatalogId() == ItemId.FLY_FISHING_ROD.id()) {
+				command = "lure";
+			} else if (item.getCatalogId() == ItemId.LOBSTER_POT.id()) {
+				command = "cage";
+			} else if (item.getCatalogId() == ItemId.HARPOON.id()) {
+				command = "harpoon";
+			}
+			if (inArray(command, def.command1.toLowerCase(), def.command2.toLowerCase())) {
+				player.click = command.equalsIgnoreCase(def.command1) ? 0 : 1;
+				handleFishing(object, player, player.click, command);
+			} else {
+				player.message("Nothing interesting happens");
+			}
+		}
+	}
+
+	@Override
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
+		//special hemenster fishing spots
+		if (obj.getID() == 351 || obj.getID() == 352 || obj.getID() == 353 || obj.getID() == 354)
+			return false;
+		final GameObjectDef def = player.getWorld().getServer().getEntityHandler().getGameObjectDef(obj.getID());
+		if (inArray(item.getCatalogId(), Formulae.fishingToolIDs) && (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickFish) && def != null &&
+			inArray(new String[]{def.command1.toLowerCase(), def.command2.toLowerCase()}, "lure", "bait", "net", "harpoon", "cage")) {
+			return true;
 		}
 		return false;
 	}

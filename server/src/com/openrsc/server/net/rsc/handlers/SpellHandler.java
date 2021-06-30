@@ -68,6 +68,18 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		elementalRunes[3] = ItemId.FIRE_RUNE.id();
 	}
 
+	private static int getMagicId(Player player, SpellDef spell) {
+		if (!player.getConfig().DIVIDED_GOOD_EVIL) {
+			return Skill.MAGIC.id();
+		} else {
+			if (spell.isEvil()) {
+				return Skill.EVILMAGIC.id();
+			} else {
+				return Skill.GOODMAGIC.id();
+			}
+		}
+	}
+
 	private static boolean canCast(Player player) {
 		// Retro RSC mechanic, could rapid cast spells
 		if (!player.castTimer(player.getConfig().RAPID_CAST_SPELLS)) {
@@ -153,7 +165,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		// player.getLocation()));
 
 		// Check player's magic level prior to allowing cast.
-		if (player.getSkills().getLevel(Skill.MAGIC.id()) < spell.getReqLevel()) {
+		if (player.getSkills().getLevel(getMagicId(player, spell)) < spell.getReqLevel()) {
 			player.setSuspiciousPlayer(true, "player magic ability not high enough");
 			player.message("Your magic ability is not high enough for this spell.");
 			player.resetPath();
@@ -176,7 +188,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 	private boolean spellSuccessCheck(Player player, SpellDef spell) {
 		// Check for failed spell.
-		if (!Formulae.castSpell(spell, player.getSkills().getLevel(Skill.MAGIC.id()), player.getMagicPoints())) {
+		if (!Formulae.castSpell(spell, player.getSkills().getLevel(getMagicId(player, spell)), player.getMagicPoints())) {
 			player.message("The spell fails! You may try again in 20 seconds");
 			player.playSound("spellfail");
 			player.setSpellFail();
@@ -215,8 +227,11 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						return;
 					}
 
-					if (spell.getSpellType() == 0) {
+					if (spell.getSpellType() == 0 && !isBoostSpell(player, payload.spell)) {
 						handleTeleport(player, spell, payload.spell);
+						return;
+					} else if (isBoostSpell(player, payload.spell)) {
+						handleBoost(player, spell, payload.spell);
 						return;
 					}
 					handleGroundCast(player, spell, payload.spell);
@@ -392,8 +407,11 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 			switch (opcode) {
 				case CAST_ON_SELF:
-					if (spell.getSpellType() == 0) {
+					if (spell.getSpellType() == 0 && !isBoostSpell(player, payload.spell)) {
 						handleTeleport(player, spell, payload.spell);
+						return;
+					} else if (isBoostSpell(player, payload.spell)) {
+						handleBoost(player, spell, payload.spell);
 						return;
 					}
 					handleGroundCast(player, spell, payload.spell);
@@ -567,7 +585,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		if (message != null) {
 			player.playerServerMessage(MessageType.QUEST, message.trim().isEmpty() ? "Cast spell successfully" : message);
 		}
-		player.incExp(Skill.MAGIC.id(), spell.getExp(), true);
+		player.incExp(getMagicId(player, spell), spell.getExp(), true);
 		player.setCastTimer();
 	}
 
@@ -1298,10 +1316,78 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 						setChasing = false;
 						getPlayer().setAttribute("maged_kolodion", true);
 					}
+					if (spellEnum == Spells.FEAR) {
+						setChasing = false;
+					}
 
 				}
 				getPlayer().resetAllExceptDueling();
 				switch (spellEnum) {
+					case FEAR:
+						if (!getPlayer().getConfig().HAS_FEAR_SPELL) {
+							getPlayer().playerServerMessage(MessageType.QUEST, "This world does not support fear spell");
+							return;
+						}
+						if (!affectedMob.isNpc() || !affectedMob.inCombat() || affectedMob.getHitsMade() < 2) {
+							getPlayer().playerServerMessage(MessageType.QUEST, "This spell can only be used on monsters engaged in combat");
+							return;
+						}
+
+						if (!checkAndRemoveRunes(getPlayer(), spell)) {
+							return;
+						}
+
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, 1, setChasing) {
+							@Override
+							public void doSpell() {
+								affectedMob.getOpponent().resetCombatEvent();
+								affectedMob.resetCombatEvent();
+								getPlayer().message("Your opponent is retreating");
+							}
+						});
+
+						finalizeSpell(getPlayer(), spell, DEFAULT);
+						break;
+
+					case CONFUSE_R:
+						double reduceBy = 0.02; // to date not known effect, but possible
+						int[] stats = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
+						int lowerAmt, newLvl, maxLower;
+						for (int affectedStat : stats) {
+							lowerAmt = (int) Math.ceil((affectedMob.getSkills().getLevel(affectedStat) * reduceBy));
+							/* New current level */
+							newLvl = affectedMob.getSkills().getLevel(affectedStat) - lowerAmt;
+							/* Lowest stat you can weaken to with this spell */
+							maxLower = affectedMob.getSkills().getMaxStat(affectedStat)
+								- (int) Math.ceil((affectedMob.getSkills().getLevel(affectedStat) * reduceBy));
+							if (newLvl < maxLower || (affectedMob.getSkills().getLevel(affectedStat)
+								< affectedMob.getSkills().getMaxStat(affectedStat) && player.getConfig().WAIT_TO_REBOOST)) {
+								getPlayer().playerServerMessage(MessageType.QUEST, "Your opponent already has weakened stats");
+								return;
+							}
+						}
+
+						if (!checkAndRemoveRunes(getPlayer(), spell)) {
+							return;
+						}
+
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new CustomProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, 1, setChasing) {
+							@Override
+							public void doSpell() {
+								for (int stat : stats) {
+									int lowerBy = (int) Math.ceil((affectedMob.getSkills().getLevel(stat) * reduceBy));
+									int newStat = affectedMob.getSkills().getLevel(stat) - lowerBy;
+									affectedMob.getSkills().setLevel(stat, newStat);
+								}
+
+								if (affectedMob.isPlayer()) {
+									((Player) affectedMob).message("You have been weakened");
+								}
+							}
+						});
+						finalizeSpell(getPlayer(), spell, DEFAULT);
+						return;
+
 					/*
 					 * Confuse, reduces attack by 5% Weaken, reduces strength by 5%
 					 * Curse reduces defense by 5%
@@ -1465,6 +1551,28 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 
 						finalizeSpell(getPlayer(), spell, DEFAULT);
 						break;
+
+					case CHILL_BOLT:
+					case SHOCK_BOLT:
+					case ELEMENTAL_BOLT:
+					case WIND_BOLT_R:
+						if (!checkAndRemoveRunes(getPlayer(), spell)) {
+							return;
+						}
+						int maxR = -1;
+						if (spellEnum == Spells.CHILL_BOLT || spellEnum == Spells.SHOCK_BOLT) {
+							maxR = 1;
+						} else if (spellEnum == Spells.ELEMENTAL_BOLT || spellEnum == Spells.WIND_BOLT_R) {
+							maxR = 2;
+						}
+
+						int damageR = CombatFormula.calculateMagicDamage(maxR + 1) - 1;
+
+						getPlayer().getWorld().getServer().getGameEventHandler().add(new ProjectileEvent(getPlayer().getWorld(), getPlayer(), affectedMob, damageR, 1, setChasing));
+						getPlayer().setKillType(1);
+						finalizeSpell(getPlayer(), spell, DEFAULT);
+						break;
+
 					default:
 						if (spell.getReqLevel() == 62 || spell.getReqLevel() == 65 || spell.getReqLevel() == 70
 							|| spell.getReqLevel() == 75) {
@@ -1548,6 +1656,11 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		});
 	}
 
+	private boolean isBoostSpell(Player player, Spells spellEnum) {
+		return spellEnum == Spells.THICK_SKIN || spellEnum == Spells.BURST_OF_STRENGTH
+			|| spellEnum == Spells.CAMOUFLAGE || spellEnum == Spells.ROCK_SKIN;
+	}
+
 	private boolean canTeleport(Player player, SpellDef spell, Spells spellEnum) {
 		boolean canTeleport = true;
 		if (player.getLocation().wildernessLevel() >= 20 || player.getLocation().isInFisherKingRealm()
@@ -1628,6 +1741,48 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		finalizeSpellNoMessage(player, spell);
 	}
 
+	private void handleBoost(Player player, SpellDef spell, Spells spellEnum) {
+		switch (spellEnum) {
+			case BURST_OF_STRENGTH:
+			case CAMOUFLAGE:
+			case ROCK_SKIN:
+			case THICK_SKIN:
+				double raisesBy = 0.0;
+				int affectedStat = -1;
+				if (spellEnum == Spells.BURST_OF_STRENGTH) {
+					raisesBy = 0.05;
+					affectedStat = Skill.STRENGTH.id();
+				} else if (spellEnum == Spells.THICK_SKIN) {
+					raisesBy = 0.05;
+					affectedStat = Skill.DEFENSE.id();
+				} else if (spellEnum == Spells.ROCK_SKIN) {
+					raisesBy = 0.10;
+					affectedStat = Skill.DEFENSE.id();
+				} else if (spellEnum == Spells.CAMOUFLAGE) {
+					affectedStat = Skill.NONE.id();
+				}
+
+				if (!checkAndRemoveRunes(player, spell)) {
+					return;
+				}
+				if (affectedStat != Skill.NONE.id()) {
+					/* How much to boost the stat */
+					int baseStat = player.getSkills().getLevel(affectedStat) > player.getSkills().getMaxStat(affectedStat) ? player.getSkills().getMaxStat(affectedStat) : player.getSkills().getLevel(affectedStat);
+					if (player.getConfig().WAIT_TO_REBOOST && !isNormalLevel(player, affectedStat)) {
+						player.playerServerMessage(MessageType.QUEST, "You already have boosted " + player.getWorld().getServer().getConstants().getSkills().getSkillName(affectedStat));
+						return;
+					}
+					int newStat = baseStat
+						+ DataConversions.roundUp(player.getSkills().getMaxStat(affectedStat) * raisesBy);
+					if (newStat > player.getSkills().getLevel(affectedStat)) {
+						player.getSkills().setLevel(affectedStat, newStat);
+					}
+				}
+				finalizeSpell(player, spell, DEFAULT);
+				return;
+		}
+	}
+
 	private void handleChargeOrb(Player player, GameObject gameObject, Spells spellEnum, SpellDef spell) {
 		int chargedOrb = ItemId.NOTHING.id();
 		switch (spellEnum) {
@@ -1671,7 +1826,7 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 		player.lastCast = System.currentTimeMillis();
 		player.playSound("spellok");
 		player.playerServerMessage(MessageType.QUEST, "You succesfully charge the orb");
-		player.incExp(Skill.MAGIC.id(), spell.getExp(), true);
+		player.incExp(getMagicId(player, spell), spell.getExp(), true);
 		player.setCastTimer();
 	}
 

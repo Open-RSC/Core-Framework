@@ -15,6 +15,10 @@ public class ClientLimitations {
 	public boolean supportsItemBank = false;
 	public boolean supportsConfirmTrade = false;
 	public boolean supportsIntegerStacks = false;
+	public boolean supportsClickMine = false;
+	public boolean supportsClickWoodcut = false;
+	public boolean supportsClickFish = false;
+	public boolean supportsTypedPickaxes = false;
 
 	ClientLimitations(int clientVersion) {
 		setKnownLimitations(clientVersion);
@@ -86,6 +90,16 @@ public class ClientLimitations {
 		}
 		if (clientVersion >= 106) {
 			supportsConfirmTrade = true;
+		}
+		if (clientVersion >= 124) {
+			supportsClickMine = true;
+			supportsClickFish = true;
+		}
+		if (clientVersion >= 128) {
+			supportsClickWoodcut = true;
+		}
+		if (clientVersion >= 170) {
+			supportsTypedPickaxes = true;
 		}
 	}
 

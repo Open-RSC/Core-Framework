@@ -1,6 +1,7 @@
 package com.openrsc.server.model.entity;
 
 import com.openrsc.server.constants.IronmanMode;
+import com.openrsc.server.constants.ItemId;
 import com.openrsc.server.content.party.PartyPlayer;
 import com.openrsc.server.event.rsc.GameTickEvent;
 import com.openrsc.server.external.ItemDefinition;
@@ -63,7 +64,7 @@ public class GroundItem extends Entity {
 		setAmount(amount);
 		this.ownerUsernameHash = owner == null ? 0 : owner.getUsernameHash();
 		spawnedTime = spawnTime;
-		setLocation(Point.location(x, y));
+		trySetLocation(Point.location(x, y));
 		if (owner != null) {
 			if (owner.getIronMan() == IronmanMode.Transfer.id()) {
 				// disallow everyone from picking up transfer ironman items
@@ -78,7 +79,7 @@ public class GroundItem extends Entity {
 		setID(loc.id);
 		setAmount(loc.amount);
 		spawnedTime = System.currentTimeMillis();
-		setLocation(Point.location(loc.x, loc.y));
+		trySetLocation(Point.location(loc.x, loc.y));
 	}
 
 	public boolean equals(final Entity o) {
@@ -90,6 +91,13 @@ public class GroundItem extends Entity {
 				&& item.getLocation().equals(getLocation());
 		}
 		return false;
+	}
+
+	public void trySetLocation(Point point) {
+		if (getWorld().getServer().getConfig().RESTRICT_ITEM_ID <= ItemId.NOTHING.id()
+			|| this.getID() < getWorld().getServer().getConfig().RESTRICT_ITEM_ID) {
+			setLocation(point);
+		}
 	}
 
 	public boolean isOn(final int x, final int y) {
@@ -111,15 +119,18 @@ public class GroundItem extends Entity {
 	}
 
 	public void remove() {
-		if (!isRemoved() && loc != null && loc.getRespawnTime() > 0) {
-			getWorld().getServer().getGameEventHandler().add(new GameTickEvent(getWorld(), null, loc.getRespawnTime(), "Respawn Ground Item") {
-				public void run() {
-					getWorld().registerItem(new GroundItem(getWorld(), loc));
-					stop();
-				}
-			});
+		if (getWorld().getServer().getConfig().RESTRICT_ITEM_ID <= ItemId.NOTHING.id()
+			|| this.getID() < getWorld().getServer().getConfig().RESTRICT_ITEM_ID) {
+			if (!isRemoved() && loc != null && loc.getRespawnTime() > 0) {
+				getWorld().getServer().getGameEventHandler().add(new GameTickEvent(getWorld(), null, loc.getRespawnTime(), "Respawn Ground Item") {
+					public void run() {
+						getWorld().registerItem(new GroundItem(getWorld(), loc));
+						stop();
+					}
+				});
+			}
+			super.remove();
 		}
-		super.remove();
 	}
 
 	public boolean isInvisibleTo(final Player player) {

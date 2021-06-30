@@ -54,6 +54,9 @@ public final class Formulae {
 		ItemId.POISONED_STEEL_SPEAR.id(), ItemId.POISONED_MITHRIL_SPEAR.id(), ItemId.POISONED_ADAMANTITE_SPEAR.id(),
 		ItemId.POISONED_RUNE_SPEAR.id()};
 
+	public static final int[] fishingToolIDs = {ItemId.OILY_FISHING_ROD.id(), ItemId.LOBSTER_POT.id(), ItemId.HARPOON.id(),
+		ItemId.FLY_FISHING_ROD.id(), ItemId.BIG_NET.id(), ItemId.FISHING_ROD.id(), ItemId.NET.id()};
+
 	/**
 	 * Cubic P2P boundaries. MinX, MinY - MaxX, MaxY
 	 */

@@ -27,6 +27,7 @@ import com.openrsc.server.util.rsc.MessageType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.Array;
 import java.util.Optional;
 
 /** Functions.java
@@ -862,6 +863,48 @@ public class Functions {
 		return message.length() >= 65 ? 4 : 3;
 	}
 
+	/**
+	 * Concats two arrays to one
+	 * @param array1 the first array
+	 * @param array2 the second array
+	 * @return the combined array
+	 */
+	public static <T> T concat(T array1, T array2) {
+		if (!array1.getClass().isArray() || !array2.getClass().isArray()) {
+			throw new IllegalArgumentException("Only arrays are accepted.");
+		}
+
+		Class<?> compType1 = array1.getClass().getComponentType();
+		Class<?> compType2 = array2.getClass().getComponentType();
+
+		if (!compType1.equals(compType2)) {
+			throw new IllegalArgumentException("Two arrays have different types.");
+		}
+
+		int len1 = Array.getLength(array1);
+		int len2 = Array.getLength(array2);
+
+		@SuppressWarnings("unchecked")
+		//the cast is safe due to the previous checks
+		T result = (T) Array.newInstance(compType1, len1 + len2);
+
+		System.arraycopy(array1, 0, result, 0, len1);
+		System.arraycopy(array2, 0, result, len1, len2);
+
+		return result;
+	}
+
+	public static boolean inArray(Object[] os, Object... oArray) {
+		boolean found = false;
+		for (Object o : os) {
+			if (inArray(o, oArray)) {
+				found = true;
+				break;
+			}
+		}
+		return found;
+	}
+
 	public static boolean inArray(Object o, Object... oArray) {
 		for (Object object : oArray) {
 			if (o == object || o.equals(object)) {
@@ -988,6 +1031,10 @@ public class Functions {
 	 */
 	public static boolean atQuestStage(Player player, QuestInterface quest, int stage) {
 		return getQuestStage(player, quest) == stage;
+	}
+
+	public static boolean isNormalLevel(Player player, int i) {
+		return getCurrentLevel(player, i) == getMaxLevel(player, i);
 	}
 
 	public static int getCurrentLevel(Player player, int i) {

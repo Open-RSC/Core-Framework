@@ -7,6 +7,7 @@ import com.openrsc.server.model.container.Item;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.plugins.triggers.OpLocTrigger;
+import com.openrsc.server.plugins.triggers.UseLocTrigger;
 import com.openrsc.server.util.rsc.DataConversions;
 import com.openrsc.server.util.rsc.Formulae;
 import com.openrsc.server.util.rsc.MessageType;
@@ -15,13 +16,13 @@ import java.util.Optional;
 
 import static com.openrsc.server.plugins.Functions.*;
 
-public class Woodcutting implements OpLocTrigger {
+public class Woodcutting implements OpLocTrigger, UseLocTrigger {
 
 	@Override
 	public boolean blockOpLoc(final Player player, final GameObject obj,
 							  final String command) {
 		final ObjectWoodcuttingDef def = player.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(obj.getID());
-		return (command.equals("chop") && def != null && obj.getID() != 245 && obj.getID() != 204);
+		return (command.equals("chop") && def != null && obj.getID() != 245);
 	}
 
 	private void handleWoodcutting(final GameObject object, final Player player,
@@ -95,15 +96,19 @@ public class Woodcutting implements OpLocTrigger {
 
 		if (getLog(def, player.getSkills().getLevel(Skill.WOODCUTTING.id()), axeId)) {
 			//check if the tree is still up
-			player.getCarriedItems().getInventory().add(log);
-			player.playerServerMessage(MessageType.QUEST, "You get some wood");
-			if (player.getConfig().SCALED_WOODCUT_XP && def.getLogId() == ItemId.LOGS.id()) {
-				player.incExp(Skill.WOODCUTTING.id(), getExpRetro(player.getSkills().getMaxStat(Skill.WOODCUTTING.id()), 25), true);
+			GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
+			if (!player.getConfig().SHARED_GATHERING_RESOURCES || obj != null) {
+				player.getCarriedItems().getInventory().add(log);
+				player.playerServerMessage(MessageType.QUEST, "You get some wood");
+				if (player.getConfig().SCALED_WOODCUT_XP && def.getLogId() == ItemId.LOGS.id()) {
+					player.incExp(Skill.WOODCUTTING.id(), getExpRetro(player.getSkills().getMaxStat(Skill.WOODCUTTING.id()), 25), true);
+				} else {
+					player.incExp(Skill.WOODCUTTING.id(), def.getExp(), true);
+				}
 			} else {
-				player.incExp(Skill.WOODCUTTING.id(), def.getExp(), true);
+				player.playerServerMessage(MessageType.QUEST, "You slip and fail to hit the tree");
 			}
 			if (DataConversions.random(1, 100) <= def.getFell()) {
-				GameObject obj = player.getViewArea().getGameObject(object.getID(), object.getX(), object.getY());
 				int stumpId;
 				if (def.getLogId() == ItemId.LOGS.id() || def.getLogId() == ItemId.MAGIC_LOGS.id()) {
 					stumpId = 4; //narrow tree stump
@@ -145,7 +150,11 @@ public class Woodcutting implements OpLocTrigger {
 	@Override
 	public void onOpLoc(final Player player, final GameObject object, final String command) {
 		final ObjectWoodcuttingDef def = player.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(object.getID());
-		if (command.equals("chop") && def != null && object.getID() != 245 && object.getID() != 204) {
+		if (command.equals("chop") && def != null && object.getID() != 245) {
+			if (player.getConfig().GATHER_TOOL_ON_SCENERY) {
+				player.playerServerMessage(MessageType.QUEST, "You need to use the axe on the tree to chop it");
+				return;
+			}
 			handleWoodcutting(object, player, player.click);
 		}
 	}
@@ -160,5 +169,21 @@ public class Woodcutting implements OpLocTrigger {
 
 	public static int getExpRetro(int level, int baseExp) {
 		return (int) ((baseExp + (level * 1.75)) * 4);
+	}
+
+	@Override
+	public void onUseLoc(Player player, GameObject object, Item item) {
+		final ObjectWoodcuttingDef def = player.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(object.getID());
+		if (inArray(item.getCatalogId(), Formulae.woodcuttingAxeIDs) && (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickWoodcut)
+			&& def != null && object.getID() != 245) {
+			handleWoodcutting(object, player, 0);
+		}
+	}
+
+	@Override
+	public boolean blockUseLoc(Player player, GameObject obj, Item item) {
+		final ObjectWoodcuttingDef def = player.getWorld().getServer().getEntityHandler().getObjectWoodcuttingDef(obj.getID());
+		return (inArray(item.getCatalogId(), Formulae.woodcuttingAxeIDs) && (player.getConfig().GATHER_TOOL_ON_SCENERY || !player.getClientLimitations().supportsClickWoodcut)
+			&& def != null && obj.getID() != 245);
 	}
 }
