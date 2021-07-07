@@ -142,6 +142,8 @@ public class GroundItem extends Entity {
 			return true;
 		if (!belongsTo(player) && this.getAttribute("killerHash", -1L) == player.getUsernameHash())
 			return false;
+		if (this.getID() > player.getClientLimitations().maxItemId)
+			return true;
 		// should be visible to everyone else after a time, just not lootable for ironmen
 		// if (!belongsTo(player) && player.getIronMan() != IronmanMode.None.id())
 		//	return true;

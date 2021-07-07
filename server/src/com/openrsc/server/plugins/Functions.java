@@ -28,7 +28,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /** Functions.java
  *
@@ -903,6 +906,43 @@ public class Functions {
 			}
 		}
 		return found;
+	}
+
+	/**
+	 * Returns an object of type T made from the base object and patched by diff
+	 * @param base The base object
+	 * @param diff The object containing attributes to patch
+	 * @return
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
+	public static <T> T patchObject(T base, T diff) throws InstantiationException, IllegalAccessException{
+		if (!diff.getClass().equals(base.getClass())) {
+			throw new IllegalArgumentException("Two objects have different types.");
+		}
+
+		@SuppressWarnings("unchecked")
+		T result = (T) base.getClass().newInstance();
+		Object[] fields = Arrays.stream(base.getClass().getDeclaredFields()).filter(f -> !f.getName().equals("serialVersionUID")).collect(Collectors.toList()).toArray();
+		boolean accessibleChange = false;
+		for (Object fieldObj : fields) {
+			Field field = (Field) fieldObj;
+			if (!field.isAccessible()) {
+				field.setAccessible(true);
+				accessibleChange = true;
+			}
+			boolean isPrimitive = field.getType().isPrimitive();
+			field.set(result, !isPrimitive ? (field.get(diff) != null ? field.get(diff) : field.get(base)) : (
+				!field.get(diff).toString().equals("0") && !field.get(diff).toString().equals("0.0")
+					&& !field.get(diff).toString().equals("false") && !field.get(diff).toString().equals("")
+					? field.get(diff) : field.get(base)
+				));
+			if (accessibleChange) {
+				accessibleChange = false;
+				field.setAccessible(false);
+			}
+		}
+		return result;
 	}
 
 	public static boolean inArray(Object o, Object... oArray) {

@@ -343,6 +343,11 @@ public class PlayerDuelHandler implements PayloadProcessor<PlayerDuelStruct, Opc
 						ActionSender.sendDuelOpponentItems(player);
 						continue;
 					}
+					if (tItem.getCatalogId() > affectedPlayer.getClientLimitations().maxItemId) {
+						player.message("The other player is unable to receive the staked object");
+						ActionSender.sendDuelOpponentItems(player);
+						continue;
+					}
 					if (CertUtil.isCert(tItem.getCatalogId()) && (player.getCertOptOut() || affectedPlayer.getCertOptOut())) {
 						if (player.getCertOptOut()) {
 							player.message("You have opted out of dueling certs with other players");

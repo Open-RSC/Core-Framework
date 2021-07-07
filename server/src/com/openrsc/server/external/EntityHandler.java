@@ -12,10 +12,13 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static com.openrsc.server.plugins.Functions.patchObject;
 
 /**
  * This class handles the loading of entities from the conf files, and provides
@@ -33,6 +36,7 @@ public final class EntityHandler {
 	private final PersistenceManager persistenceManager;
 
 	public ArrayList<ItemDefinition> items;
+	public ArrayList<ItemDefinition> itemsPatch;
 	public ArrayList<NPCDef> npcs;
 	public SpellDef[] spells;
 	private HashMap<Integer, ItemArrowHeadDef> arrowHeads;
@@ -106,6 +110,7 @@ public final class EntityHandler {
 	public void unload() {
 		npcs = null;
 		items = null;
+		itemsPatch = null;
 
 		doors = null;
 		gameObjects = null;
@@ -147,9 +152,11 @@ public final class EntityHandler {
 		LOGGER.info("Loaded " + npcs.size() + " npc definitions");
 
 		items = new ArrayList<>();
+		itemsPatch = new ArrayList<>();
 		LOGGER.info("Loading item definitions...");
 		loadItems(getServer().getConfig().CONFIG_DIR + "/defs/ItemDefs.json");
 		loadItems(getServer().getConfig().CONFIG_DIR + "/defs/ItemDefsCustom.json");
+		patchItems();
 		customItemConditions();
 		LOGGER.info("Loaded " + items.size() + " item definitions");
 
@@ -304,6 +311,49 @@ public final class EntityHandler {
 		}
 		catch (Exception e) {
 			LOGGER.error(e);
+		}
+	}
+
+	private void loadPatchItems(String filename) {
+		try {
+			JSONObject object = new JSONObject(new String(Files.readAllBytes(Paths.get(filename))));
+			JSONArray itemPatchDefs = object.getJSONArray(JSONObject.getNames(object)[0]);
+			for (int i = 0; i < itemPatchDefs.length(); i++) {
+				JSONObject item = itemPatchDefs.getJSONObject(i);
+				ItemDefinition toAdd =
+					new ItemDefinition.ItemDefinitionBuilder(item.getInt("id"), item.getString("name"))
+						.description(item.getString("description"))
+						.command(item.getString("command").split(","))
+						.isStackable(item.getInt("isStackable") == 1)
+						.defaultPrice(item.getInt("basePrice"))
+						.build();
+				if (toAdd.getCommand().length == 1 && "".equals(toAdd.getCommand()[0])) {
+					toAdd.nullCommand();
+				}
+				itemsPatch.add(toAdd);
+			}
+		}
+		catch (Exception e) {
+			LOGGER.error(e);
+		}
+	}
+
+	private void patchItems() {
+		File file;
+		if (getServer().getConfig().BASED_CONFIG_DATA < 85) {
+			String filePath = getServer().getConfig().CONFIG_DIR + "/defs/ItemDefsPatch" + getServer().getConfig().BASED_CONFIG_DATA + ".json";
+			file = new File(filePath);
+			if (file.exists()) {
+				LOGGER.info("Patching item definitions...");
+				loadPatchItems(filePath);
+				try {
+					for (int i = 0; i < itemsPatch.size(); i++) {
+						items.set(i, patchObject(items.get(i), itemsPatch.get(i)));
+					}
+				} catch (Exception e) {
+					LOGGER.error(e);
+				}
+			}
 		}
 	}
 

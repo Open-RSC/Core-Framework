@@ -858,6 +858,7 @@ public final class Admins implements CommandTrigger {
 			player.message("Need at least one free inventory space.");
 		} else {
 			List<Item> bisList;
+			boolean forRetroConfig = false;
 			if (config().WANT_CUSTOM_SPRITES) {
 				bisList = newArrayList(
 					new Item(ItemId.LARGE_DRAGON_HELMET.id()),
@@ -869,30 +870,66 @@ public final class Admins implements CommandTrigger {
 					new Item(ItemId.DRAGON_2_HANDED_SWORD.id())
 				);
 			} else {
-				bisList = newArrayList(
-					new Item(ItemId.DRAGON_MEDIUM_HELMET.id()),
-					player.isMale() ? new Item(ItemId.RUNE_PLATE_MAIL_BODY.id()) : new Item(ItemId.RUNE_PLATE_MAIL_TOP.id()),
-					player.isMale() ? new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id()) : new Item(ItemId.RUNE_SKIRT.id()),
-					new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()),
-					new Item(ItemId.CAPE_OF_LEGENDS.id()),
-					new Item(ItemId.DRAGON_AXE.id()),
-					new Item(ItemId.DRAGON_SQUARE_SHIELD.id())
-				);
+				if (!player.getConfig().INFLUENCE_INSTEAD_QP) {
+					bisList = newArrayList(
+						new Item(ItemId.DRAGON_MEDIUM_HELMET.id()),
+						player.isMale() ? new Item(ItemId.RUNE_PLATE_MAIL_BODY.id()) : new Item(ItemId.RUNE_PLATE_MAIL_TOP.id()),
+						player.isMale() ? new Item(ItemId.RUNE_PLATE_MAIL_LEGS.id()) : new Item(ItemId.RUNE_SKIRT.id()),
+						new Item(ItemId.CHARGED_DRAGONSTONE_AMULET.id()),
+						new Item(ItemId.CAPE_OF_LEGENDS.id()),
+						new Item(ItemId.DRAGON_AXE.id()),
+						new Item(ItemId.DRAGON_SQUARE_SHIELD.id())
+					);
+				} else {
+					forRetroConfig = true;
+					boolean supportsPlateTops = (player.getConfig().RESTRICT_ITEM_ID >= 313 || player.getConfig().RESTRICT_ITEM_ID == -1)
+						&& player.getClientLimitations().maxItemId >= 313;
+					////
+					// assumption clients will be able to support metal skirts
+					// probably safe because was the case since Feb 2001 clients
+					////
+					boolean supportsEnchantedAmulets = (player.getConfig().RESTRICT_ITEM_ID >= 317 || player.getConfig().RESTRICT_ITEM_ID == -1)
+						&& player.getClientLimitations().maxItemId >= 317;
+					bisList = newArrayList(
+						new Item(ItemId.LARGE_RUNE_HELMET.id()),
+						(player.isMale() || !supportsPlateTops) ? new Item(ItemId.ADAMANTITE_PLATE_MAIL_BODY.id()) : new Item(ItemId.ADAMANTITE_PLATE_MAIL_TOP.id()),
+						player.isMale() ? new Item(ItemId.ADAMANTITE_PLATE_MAIL_LEGS.id()) : new Item(ItemId.ADAMANTITE_PLATED_SKIRT.id()),
+						supportsEnchantedAmulets ? new Item(ItemId.DIAMOND_AMULET_OF_POWER.id()) : new Item(ItemId.AMULET_OF_ACCURACY.id()),
+						new Item(ItemId.BLUE_CAPE.id()),
+						new Item(ItemId.RUNE_BATTLE_AXE.id()),
+						new Item(ItemId.ADAMANTITE_KITE_SHIELD.id())
+					);
+				}
 			}
-			List<Integer> questsToComplete = newArrayList(
-				Quests.LEGENDS_QUEST,
-				Quests.HEROS_QUEST,
-				Quests.DRAGON_SLAYER
-			);
-			List<Integer> skillsToLevel = newArrayList(
+			List<Integer> questsToComplete = new ArrayList<>();
+			List<Integer> skillsToLevel = new ArrayList<>();
+			if (!forRetroConfig) {
+				questsToComplete.addAll(Arrays.asList(
+					Quests.LEGENDS_QUEST,
+					Quests.HEROS_QUEST,
+					Quests.DRAGON_SLAYER
+				));
+			}
+			skillsToLevel.addAll(Arrays.asList(
 				Skill.ATTACK.id(),
-				Skill.STRENGTH.id(),
 				Skill.DEFENSE.id(),
+				Skill.STRENGTH.id(),
 				Skill.HITS.id(),
-				Skill.PRAYER.id(),
-				Skill.RANGED.id(),
-				Skill.MAGIC.id()
-			);
+				Skill.RANGED.id()
+			));
+			if (!player.getConfig().DIVIDED_GOOD_EVIL) {
+				skillsToLevel.addAll(Arrays.asList(
+					Skill.PRAYER.id(),
+					Skill.MAGIC.id()
+				));
+			} else {
+				skillsToLevel.addAll(Arrays.asList(
+					Skill.PRAYGOOD.id(),
+					Skill.PRAYEVIL.id(),
+					Skill.GOODMAGIC.id(),
+					Skill.EVILMAGIC.id()
+				));
+			}
 			for (Integer skill : skillsToLevel) {
 				if (player.getSkills().getMaxStat(skill) < player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT) {
 					player.getSkills().setLevelTo(skill, player.getWorld().getServer().getConfig().PLAYER_LEVEL_LIMIT);

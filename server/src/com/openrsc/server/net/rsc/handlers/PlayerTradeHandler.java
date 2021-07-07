@@ -260,6 +260,11 @@ public class PlayerTradeHandler implements PayloadProcessor<PlayerTradeStruct, O
 						player.setRequiresOfferUpdate(true);
 						continue;
 					}
+					if (tItem.getCatalogId() > affectedPlayer.getClientLimitations().maxItemId) {
+						player.message("The other player is unable to receive the offered object");
+						player.setRequiresOfferUpdate(true);
+						continue;
+					}
 					if (tItem.getDef(player.getWorld()).isMembersOnly() && !player.getConfig().MEMBER_WORLD) {
 						player.setRequiresOfferUpdate(true);
 						continue;

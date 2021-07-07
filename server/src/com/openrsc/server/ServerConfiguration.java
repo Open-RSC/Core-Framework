@@ -230,6 +230,7 @@ public class ServerConfiguration {
 	public boolean WANT_RANGED_FACE_PLAYER = false;
 	public boolean ESTERS_BUNNIES_EVENT = false;
 	public int BASED_MAP_DATA = 64;
+	public int BASED_CONFIG_DATA = 85;
 
 	public boolean GATHER_TOOL_ON_SCENERY;
 	public boolean COIN_BANK;
@@ -357,6 +358,7 @@ public class ServerConfiguration {
 		RESTART_HOUR = tryReadInt("restart_hour").orElse(7);
 		WANT_RESET_EVENT = tryReadBool("want_reset_event").orElse(false);
 		BASED_MAP_DATA = tryReadInt("based_map_data").orElse(100);
+		BASED_CONFIG_DATA = tryReadInt("based_config_data").orElse(85);
 		FEATURES_SLEEP = tryReadBool("features_sleep").orElse(true);
 		RESTRICT_ITEM_ID = tryReadInt("restrict_item_id").orElse(1289);
 

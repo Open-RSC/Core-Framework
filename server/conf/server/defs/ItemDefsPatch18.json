@@ -1,0 +1,2459 @@
+{
+	"item": [{
+			"id": 0,
+			"name": "Iron Mace",
+			"description": "A spikey mace",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 63
+		},
+		{
+			"id": 1,
+			"name": "Iron Short Sword",
+			"description": "A razor sharp sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 91
+		},
+		{
+			"id": 2,
+			"name": "Iron Kite Shield",
+			"description": "A large metal shield",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 238
+		},
+		{
+			"id": 3,
+			"name": "Iron Square Shield",
+			"description": "A medium metal shield",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 168
+		},
+		{
+			"id": 4,
+			"name": "Wooden Shield",
+			"description": "A solid wooden shield",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 20
+		},
+		{
+			"id": 5,
+			"name": "Medium Iron Helmet",
+			"description": "A medium sized helmet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 84
+		},
+		{
+			"id": 6,
+			"name": "Large Iron Helmet",
+			"description": "A full face helmet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 154
+		},
+		{
+			"id": 7,
+			"name": "Iron Chain Mail Body",
+			"description": "A series of connected metal rings",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 210
+		},
+		{
+			"id": 8,
+			"name": "Iron Plate Mail Body",
+			"description": "Provides excellent protection",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 560
+		},
+		{
+			"id": 9,
+			"name": "Iron Plate Mail Legs",
+			"description": "These look pretty heavy",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 280
+		},
+		{
+			"id": 10,
+			"name": "Coins",
+			"description": "Lovely money!",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 11,
+			"name": "Arrows",
+			"description": "Hand crafted arrows",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 2
+		},
+		{
+			"id": 12,
+			"name": "Iron Axe",
+			"description": "A woodcutters axe",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 56
+		},
+		{
+			"id": 13,
+			"name": "Knife",
+			"description": "A dangerous looking knife",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 6
+		},
+		{
+			"id": 14,
+			"name": "Logs",
+			"description": "A number of wooden logs",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 4
+		},
+		{
+			"id": 15,
+			"name": "Leather Armour",
+			"description": "Better than no armour!",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 21
+		},
+		{
+			"id": 16,
+			"name": "Leather Gloves",
+			"description": "These will keep my hands warm!",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 6
+		},
+		{
+			"id": 17,
+			"name": "Boots",
+			"description": "Comfortable leather boots",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 6
+		},
+		{
+			"id": 18,
+			"name": "Cabbage",
+			"description": "Yuck I don't like cabbage",
+			"command": "Eat",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 19,
+			"name": "Egg",
+			"description": "A nice fresh egg",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 4
+		},
+		{
+			"id": 20,
+			"name": "Bones",
+			"description": "Ew it's a pile of bones",
+			"command": "Bury",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 21,
+			"name": "Bucket",
+			"description": "It's a wooden bucket",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 22,
+			"name": "Milk",
+			"description": "It's a bucket of milk",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 6
+		},
+		{
+			"id": 23,
+			"name": "Flour",
+			"description": "A little heap of flour",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 24,
+			"name": "Amulet of GhostSpeak",
+			"description": "It lets me talk to ghosts",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 35
+		},
+		{
+			"id": 25,
+			"name": "Silverlight key 1",
+			"description": "A key given to me by Wizard Traiborn",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 26,
+			"name": "Silverlight key 2",
+			"description": "A key given to me by Captain Rovin",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 27,
+			"name": "skull",
+			"description": "A spooky looking skull",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 28,
+			"name": "Iron dagger",
+			"description": "Short but pointy",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 35
+		},
+		{
+			"id": 29,
+			"name": "grain",
+			"description": "Some wheat heads",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 30,
+			"name": "Book",
+			"description": "na",
+			"command": "read",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 31,
+			"name": "Fire-Rune",
+			"description": "One of the basic runes of magic",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 4
+		},
+		{
+			"id": 32,
+			"name": "Water-Rune",
+			"description": "One of the basic runes of magic",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 4
+		},
+		{
+			"id": 33,
+			"name": "Air-Rune",
+			"description": "One of the basic runes of magic",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 4
+		},
+		{
+			"id": 34,
+			"name": "Earth-Rune",
+			"description": "One of the basic runes of magic",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 4
+		},
+		{
+			"id": 35,
+			"name": "Mind-Rune",
+			"description": "One of the basic runes of magic",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 3
+		},
+		{
+			"id": 36,
+			"name": "Body-Rune",
+			"description": "One of the basic runes of magic",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 3
+		},
+		{
+			"id": 37,
+			"name": "Life-Rune",
+			"description": "One of the advanced runes of magic",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 38,
+			"name": "Death-Rune",
+			"description": "One of the advanced runes of magic",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 39,
+			"name": "Illusion-Rune",
+			"description": "One of the advanced runes of magic",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 40,
+			"name": "Nature-Rune",
+			"description": "One of the advanced runes of magic",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 41,
+			"name": "Chaos-Rune",
+			"description": "One of the advanced runes of magic",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 42,
+			"name": "Law-Rune",
+			"description": "One of the advanced runes of magic",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 43,
+			"name": "Time-Rune",
+			"description": "An incredibly rare master rune!",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 44,
+			"name": "Soul-Rune",
+			"description": "An incredibly rare master rune!",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 45,
+			"name": "Reality-Rune",
+			"description": "An incredibly rare master rune!",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 46,
+			"name": "Cosmic-Rune",
+			"description": "An incredibly rare master rune!",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 47,
+			"name": "key",
+			"description": "The key to get into the phoenix gang",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 48,
+			"name": "key",
+			"description": "The key to the phoenix gang's weopons store",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 49,
+			"name": "scroll",
+			"description": "An intelligence Report",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 5
+		},
+		{
+			"id": 50,
+			"name": "Water",
+			"description": "It's a bucket of water",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 4
+		},
+		{
+			"id": 51,
+			"name": "Silverlight key 3",
+			"description": "A key I found in a drain",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 52,
+			"name": "Silverlight",
+			"description": "A magic sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 50
+		},
+		{
+			"id": 53,
+			"name": "Broken shield",
+			"description": "Half of the shield of Arrav",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 54,
+			"name": "Broken shield",
+			"description": "Half of the shield of Arrav",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 55,
+			"name": "Cadavaberries",
+			"description": "Poisonous berries",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 56,
+			"name": "message",
+			"description": "A message from Juliet to Romeo",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 57,
+			"name": "Cadava",
+			"description": "I'm meant to give this to Juliet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 58,
+			"name": "potion",
+			"description": "this is meant to be good for spots",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 59,
+			"name": "Phoenix Crossbow",
+			"description": "Former property of the phoenix gang",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 4
+		},
+		{
+			"id": 60,
+			"name": "Crossbow",
+			"description": "This fires crossbow bolts",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 70
+		},
+		{
+			"id": 61,
+			"name": "Certificate",
+			"description": "I can use this to claim a reward from the king",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 62,
+			"name": "bronze dagger",
+			"description": "Short but pointy",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 10
+		},
+		{
+			"id": 63,
+			"name": "Steel dagger",
+			"description": "Short but pointy",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 125
+		},
+		{
+			"id": 64,
+			"name": "Mithril dagger",
+			"description": "Short but pointy",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 325
+		},
+		{
+			"id": 65,
+			"name": "Adamantite dagger",
+			"description": "Short but pointy",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 800
+		},
+		{
+			"id": 66,
+			"name": "Bronze Short Sword",
+			"description": "A razor sharp sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 26
+		},
+		{
+			"id": 67,
+			"name": "Steel Short Sword",
+			"description": "A razor sharp sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 325
+		},
+		{
+			"id": 68,
+			"name": "Mithril Short Sword",
+			"description": "A razor sharp sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 845
+		},
+		{
+			"id": 69,
+			"name": "Adamantite Short Sword",
+			"description": "A razor sharp sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2080
+		},
+		{
+			"id": 70,
+			"name": "Bronze Long Sword",
+			"description": "A razor sharp sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 40
+		},
+		{
+			"id": 71,
+			"name": "Iron Long Sword",
+			"description": "A razor sharp sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 140
+		},
+		{
+			"id": 72,
+			"name": "Steel Long Sword",
+			"description": "A razor sharp sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 500
+		},
+		{
+			"id": 73,
+			"name": "Mithril Long Sword",
+			"description": "A razor sharp sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1300
+		},
+		{
+			"id": 74,
+			"name": "Adamantite Long Sword",
+			"description": "A razor sharp sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3200
+		},
+		{
+			"id": 75,
+			"name": "Long Rune Sword",
+			"description": "A razor sharp sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 10000
+		},
+		{
+			"id": 76,
+			"name": "Bronze 2-handed Sword",
+			"description": "A very large sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 80
+		},
+		{
+			"id": 77,
+			"name": "Iron 2-handed Sword",
+			"description": "A very large sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 280
+		},
+		{
+			"id": 78,
+			"name": "Steel 2-handed Sword",
+			"description": "A very large sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1000
+		},
+		{
+			"id": 79,
+			"name": "Mithril 2-handed Sword",
+			"description": "A very large sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2600
+		},
+		{
+			"id": 80,
+			"name": "Adamantite 2-handed Sword",
+			"description": "A very large sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 6400
+		},
+		{
+			"id": 81,
+			"name": "2-handed Rune Sword",
+			"description": "A very large sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 20000
+		},
+		{
+			"id": 82,
+			"name": "Bronze Scimitar",
+			"description": "A vicious curved sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 32
+		},
+		{
+			"id": 83,
+			"name": "Iron Scimitar",
+			"description": "A vicious curved sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 112
+		},
+		{
+			"id": 84,
+			"name": "Steel Scimitar",
+			"description": "A vicious curved sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 400
+		},
+		{
+			"id": 85,
+			"name": "Mithril Scimitar",
+			"description": "A vicious curved sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1040
+		},
+		{
+			"id": 86,
+			"name": "Adamantite Scimitar",
+			"description": "A vicious curved sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2560
+		},
+		{
+			"id": 87,
+			"name": "bronze Axe",
+			"description": "A woodcutters axe",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 16
+		},
+		{
+			"id": 88,
+			"name": "Steel Axe",
+			"description": "A woodcutters axe",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 200
+		},
+		{
+			"id": 89,
+			"name": "Iron battle Axe",
+			"description": "A vicious looking axe",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 182
+		},
+		{
+			"id": 90,
+			"name": "Steel battle Axe",
+			"description": "A vicious looking axe",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 650
+		},
+		{
+			"id": 91,
+			"name": "Mithril battle Axe",
+			"description": "A vicious looking axe",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1690
+		},
+		{
+			"id": 92,
+			"name": "Adamantite battle Axe",
+			"description": "A vicious looking axe",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 4160
+		},
+		{
+			"id": 93,
+			"name": "Runed battle Axe",
+			"description": "A vicious looking axe",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 13000
+		},
+		{
+			"id": 94,
+			"name": "Bronze Mace",
+			"description": "A spikey mace",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 18
+		},
+		{
+			"id": 95,
+			"name": "Steel Mace",
+			"description": "A spikey mace",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 225
+		},
+		{
+			"id": 96,
+			"name": "Mithril Mace",
+			"description": "A spikey mace",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 585
+		},
+		{
+			"id": 97,
+			"name": "Adamantite Mace",
+			"description": "A spikey mace",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1440
+		},
+		{
+			"id": 98,
+			"name": "Runed Mace",
+			"description": "A spikey mace",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 4500
+		},
+		{
+			"id": 99,
+			"name": "Brass key",
+			"description": "I wonder what this is the key to",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 100,
+			"name": "staff",
+			"description": "It's a slightly magical stick",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 15
+		},
+		{
+			"id": 101,
+			"name": "Staff of Air",
+			"description": "A Magical staff",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1500
+		},
+		{
+			"id": 102,
+			"name": "Staff of water",
+			"description": "A Magical staff",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1500
+		},
+		{
+			"id": 103,
+			"name": "Staff of earth",
+			"description": "A Magical staff",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1500
+		},
+		{
+			"id": 104,
+			"name": "Medium Bronze Helmet",
+			"description": "A medium sized helmet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 24
+		},
+		{
+			"id": 105,
+			"name": "Medium Steel Helmet",
+			"description": "A medium sized helmet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 300
+		},
+		{
+			"id": 106,
+			"name": "Medium Mithril Helmet",
+			"description": "A medium sized helmet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 780
+		},
+		{
+			"id": 107,
+			"name": "Medium Adamantite Helmet",
+			"description": "A medium sized helmet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1920
+		},
+		{
+			"id": 108,
+			"name": "Large Bronze Helmet",
+			"description": "A full face helmet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 44
+		},
+		{
+			"id": 109,
+			"name": "Large Steel Helmet",
+			"description": "A full face helmet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 550
+		},
+		{
+			"id": 110,
+			"name": "Large Mithril Helmet",
+			"description": "A full face helmet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1430
+		},
+		{
+			"id": 111,
+			"name": "Large Adamantite Helmet",
+			"description": "A full face helmet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3520
+		},
+		{
+			"id": 112,
+			"name": "Large Rune Helmet",
+			"description": "A full face helmet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 11000
+		},
+		{
+			"id": 113,
+			"name": "Bronze Chain Mail Body",
+			"description": "A series of connected metal rings",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 60
+		},
+		{
+			"id": 114,
+			"name": "Steel Chain Mail Body",
+			"description": "A series of connected metal rings",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 750
+		},
+		{
+			"id": 115,
+			"name": "Mithril Chain Mail Body",
+			"description": "A series of connected metal rings",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1950
+		},
+		{
+			"id": 116,
+			"name": "Adamantite Chain Mail Body",
+			"description": "A series of connected metal rings",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 4800
+		},
+		{
+			"id": 117,
+			"name": "Bronze Plate Mail Body",
+			"description": "Provides excellent protection",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 160
+		},
+		{
+			"id": 118,
+			"name": "Steel Plate Mail Body",
+			"description": "Provides excellent protection",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2000
+		},
+		{
+			"id": 119,
+			"name": "Mithril Plate Mail Body",
+			"description": "Provides excellent protection",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 5200
+		},
+		{
+			"id": 120,
+			"name": "Adamantite Plate Mail Body",
+			"description": "Provides excellent protection",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 30800
+		},
+		{
+			"id": 121,
+			"name": "Steel Plate Mail Legs",
+			"description": "These look pretty heavy",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1000
+		},
+		{
+			"id": 122,
+			"name": "Mithril Plate Mail Legs",
+			"description": "These look pretty heavy",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2600
+		},
+		{
+			"id": 123,
+			"name": "Adamantite Plate Mail Legs",
+			"description": "These look pretty heavy",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 6400
+		},
+		{
+			"id": 124,
+			"name": "Bronze Square Shield",
+			"description": "A medium metal shield",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 48
+		},
+		{
+			"id": 125,
+			"name": "Steel Square Shield",
+			"description": "A medium metal shield",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 600
+		},
+		{
+			"id": 126,
+			"name": "Mithril Square Shield",
+			"description": "A medium metal shield",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1560
+		},
+		{
+			"id": 127,
+			"name": "Adamantite Square Shield",
+			"description": "A medium metal shield",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3840
+		},
+		{
+			"id": 128,
+			"name": "Bronze Kite Shield",
+			"description": "A large metal shield",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 68
+		},
+		{
+			"id": 129,
+			"name": "Steel Kite Shield",
+			"description": "A large metal shield",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 850
+		},
+		{
+			"id": 130,
+			"name": "Mithril Kite Shield",
+			"description": "A large metal shield",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2210
+		},
+		{
+			"id": 131,
+			"name": "Adamantite Kite Shield",
+			"description": "A large metal shield",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 5440
+		},
+		{
+			"id": 132,
+			"name": "cookedmeat",
+			"description": "Mmm this looks tasty",
+			"command": "Eat",
+			"isStackable": 0,
+			"basePrice": 4
+		},
+		{
+			"id": 133,
+			"name": "rawmeat",
+			"description": "I need to cook this first",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 134,
+			"name": "burntmeat",
+			"description": "Oh dear",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 135,
+			"name": "pot",
+			"description": "This pot is empty",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 136,
+			"name": "flour",
+			"description": "There is flour in this pot",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 10
+		},
+		{
+			"id": 137,
+			"name": "bread dough",
+			"description": "Some uncooked dough",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 138,
+			"name": "bread",
+			"description": "Nice crispy bread",
+			"command": "Eat",
+			"isStackable": 0,
+			"basePrice": 12
+		},
+		{
+			"id": 139,
+			"name": "burntbread",
+			"description": "This bread is ruined!",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 140,
+			"name": "jug",
+			"description": "This jug is empty",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 141,
+			"name": "water",
+			"description": "It's full of water",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 142,
+			"name": "wine",
+			"description": "It's full of wine",
+			"command": "Drink",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 143,
+			"name": "grapes",
+			"description": "Good grapes for wine making",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 144,
+			"name": "shears",
+			"description": "For shearing sheep",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 145,
+			"name": "wool",
+			"description": "I think this came from a sheep",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 146,
+			"name": "fur",
+			"description": "This would make warm clothing",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 147,
+			"name": "cow hide",
+			"description": "I should take this to the tannery",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 148,
+			"name": "leather",
+			"description": "It's a piece of leather",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 149,
+			"name": "clay",
+			"description": "Some hard dry clay",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 150,
+			"name": "copper ore",
+			"description": "this needs refining",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 151,
+			"name": "iron ore",
+			"description": "this needs refining",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 17
+		},
+		{
+			"id": 152,
+			"name": "gold",
+			"description": "this needs refining",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 150
+		},
+		{
+			"id": 153,
+			"name": "mithril ore",
+			"description": "this needs refining",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 162
+		},
+		{
+			"id": 154,
+			"name": "adamantite ore",
+			"description": "this needs refining",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 400
+		},
+		{
+			"id": 155,
+			"name": "coal",
+			"description": "hmm a non-renewable energy source!",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 45
+		},
+		{
+			"id": 156,
+			"name": "pickaxe",
+			"description": "Used for mining",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 157,
+			"name": "uncut diamond",
+			"description": "this would be worth more cut",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 200
+		},
+		{
+			"id": 158,
+			"name": "uncut ruby",
+			"description": "this would be worth more cut",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 100
+		},
+		{
+			"id": 159,
+			"name": "uncut emerald",
+			"description": "this would be worth more cut",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 50
+		},
+		{
+			"id": 160,
+			"name": "uncut sapphire",
+			"description": "this would be worth more cut",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 25
+		},
+		{
+			"id": 161,
+			"name": "diamond",
+			"description": "this looks valuable",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2000
+		},
+		{
+			"id": 162,
+			"name": "ruby",
+			"description": "this looks valuable",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1000
+		},
+		{
+			"id": 163,
+			"name": "emerald",
+			"description": "this looks valuable",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 500
+		},
+		{
+			"id": 164,
+			"name": "sapphire",
+			"description": "this looks valuable",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 250
+		},
+		{
+			"id": 165,
+			"name": "herb",
+			"description": "I need a closer look to identify this",
+			"command": "identify",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 166,
+			"name": "tinderbox",
+			"description": "useful for lighting a fire",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 167,
+			"name": "chisel",
+			"description": "good for detailed crafting",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 168,
+			"name": "hammer",
+			"description": "good for hitting things!",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 169,
+			"name": "bronze bar",
+			"description": "it's a bar of bronze",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 8
+		},
+		{
+			"id": 170,
+			"name": "iron bar",
+			"description": "it's a bar of iron",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 28
+		},
+		{
+			"id": 171,
+			"name": "steel bar",
+			"description": "it's a bar of steel",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 100
+		},
+		{
+			"id": 172,
+			"name": "gold bar",
+			"description": "this looks valuable",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 300
+		},
+		{
+			"id": 173,
+			"name": "mithril bar",
+			"description": "it's a bar of mithral",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 300
+		},
+		{
+			"id": 174,
+			"name": "adamantite bar",
+			"description": "it's a bar of adamantite",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 640
+		},
+		{
+			"id": 175,
+			"name": "Pressure gauge",
+			"description": "It looks like part of a machine",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 176,
+			"name": "Fish Food",
+			"description": "Keeps  your pet fish strong and healthy",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 177,
+			"name": "Poison",
+			"description": "This stuff looks nasty",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 178,
+			"name": "Poisoned fish food",
+			"description": "Doesn't seem very nice to the poor fishes",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 179,
+			"name": "spinach roll",
+			"description": "A home made spinach thing",
+			"command": "Eat",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 180,
+			"name": "unfermented wine",
+			"description": "Its not ready to drink yet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 181,
+			"name": "Ashes",
+			"description": "A heap of ashes",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 182,
+			"name": "Apron",
+			"description": "A mostly clean apron",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 183,
+			"name": "Cape",
+			"description": "A bright red cape",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 184,
+			"name": "Wizards robe",
+			"description": "I can do magic better in this",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 15
+		},
+		{
+			"id": 185,
+			"name": "wizardshat",
+			"description": "A silly pointed hat",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 186,
+			"name": "Brass necklace",
+			"description": "I'd prefer a gold one",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 30
+		},
+		{
+			"id": 187,
+			"name": "skirt",
+			"description": "A ladies skirt",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 188,
+			"name": "Longbow",
+			"description": "A Nice sturdy bow",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 180
+		},
+		{
+			"id": 189,
+			"name": "Shortbow",
+			"description": "Short but effective",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 70
+		},
+		{
+			"id": 190,
+			"name": "Crossbow bolts",
+			"description": "Good if you have a crossbow!",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 3
+		},
+		{
+			"id": 191,
+			"name": "Apron",
+			"description": "this will help keep my clothes clean",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 192,
+			"name": "Chef's hat",
+			"description": "What a silly hat",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 193,
+			"name": "Beer",
+			"description": "A glass of frothy ale",
+			"command": "drink",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 194,
+			"name": "skirt",
+			"description": "A ladies skirt",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 195,
+			"name": "skirt",
+			"description": "A ladies skirt",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 196,
+			"name": "Black Plate Mail Body",
+			"description": "Provides excellent protection",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 4550
+		},
+		{
+			"id": 197,
+			"name": "Staff of fire",
+			"description": "A Magical staff",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1500
+		},
+		{
+			"id": 198,
+			"name": "Magic Staff",
+			"description": "A Magical staff",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 200
+		},
+		{
+			"id": 199,
+			"name": "wizardshat",
+			"description": "A silly pointed hat",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 200,
+			"name": "silk",
+			"description": "It's a sheet of silk",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 30
+		},
+		{
+			"id": 201,
+			"name": "flier",
+			"description": "Get your axes from Bob's axes",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 202,
+			"name": "tin ore",
+			"description": "this needs refining",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 203,
+			"name": "Mithril Axe",
+			"description": "A powerful axe",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 520
+		},
+		{
+			"id": 204,
+			"name": "Adamantite Axe",
+			"description": "A powerful axe",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1280
+		},
+		{
+			"id": 205,
+			"name": "bronze battle Axe",
+			"description": "A vicious looking axe",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 52
+		},
+		{
+			"id": 206,
+			"name": "Bronze Plate Mail Legs",
+			"description": "These look pretty heavy",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 80
+		},
+		{
+			"id": 207,
+			"name": "Ball of wool",
+			"description": "Spun from sheeps wool",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 208,
+			"name": "Oil can",
+			"description": "Its pretty full",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 209,
+			"name": "Cape",
+			"description": "A warm black cape",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 7
+		},
+		{
+			"id": 210,
+			"name": "Kebab",
+			"description": "A meaty Kebab",
+			"command": "eat",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 211,
+			"name": "Spade",
+			"description": "A fairly small spade",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 212,
+			"name": "Closet Key",
+			"description": "A slightly smelly key",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 213,
+			"name": "rubber tube",
+			"description": "Its slightly charred",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 214,
+			"name": "Bronze Plated Skirt",
+			"description": "Designer leg protection",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 80
+		},
+		{
+			"id": 215,
+			"name": "Iron Plated Skirt",
+			"description": "Designer leg protection",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 280
+		},
+		{
+			"id": 216,
+			"name": "Black robe",
+			"description": "I can do magic better in this",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 13
+		},
+		{
+			"id": 217,
+			"name": "stake",
+			"description": "A very pointy stick",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 8
+		},
+		{
+			"id": 218,
+			"name": "Garlic",
+			"description": "A clove of garlic",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 219,
+			"name": "Red spiders eggs",
+			"description": "eewww",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 7
+		},
+		{
+			"id": 220,
+			"name": "Limpwurt root",
+			"description": "the root of a limpwurt plant",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 7
+		},
+		{
+			"id": 221,
+			"name": "Strength Potion",
+			"description": "4 doses of strength potion",
+			"command": "Drink",
+			"isStackable": 0,
+			"basePrice": 14
+		},
+		{
+			"id": 222,
+			"name": "Strength Potion",
+			"description": "3 doses of strength potion",
+			"command": "Drink",
+			"isStackable": 0,
+			"basePrice": 13
+		},
+		{
+			"id": 223,
+			"name": "Strength Potion",
+			"description": "2 doses of strength potion",
+			"command": "Drink",
+			"isStackable": 0,
+			"basePrice": 13
+		},
+		{
+			"id": 224,
+			"name": "Strength Potion",
+			"description": "1 dose of strength potion",
+			"command": "Drink",
+			"isStackable": 0,
+			"basePrice": 11
+		},
+		{
+			"id": 225,
+			"name": "Steel Plated skirt",
+			"description": "designer leg protection",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1000
+		},
+		{
+			"id": 226,
+			"name": "Mithril Plated skirt",
+			"description": "Designer Leg protection",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2600
+		},
+		{
+			"id": 227,
+			"name": "Adamantite Plated skirt",
+			"description": "Designer leg protection",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 6400
+		},
+		{
+			"id": 228,
+			"name": "Cabbage",
+			"description": "Yuck I don't like cabbage",
+			"command": "Eat",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 229,
+			"name": "Cape",
+			"description": "A thick blue cape",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 32
+		},
+		{
+			"id": 230,
+			"name": "Large Black Helmet",
+			"description": "A full face helmet",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1238
+		},
+		{
+			"id": 231,
+			"name": "Red Bead",
+			"description": "A small round red bead",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 4
+		},
+		{
+			"id": 232,
+			"name": "Yellow Bead",
+			"description": "A small round yellow bead",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 4
+		},
+		{
+			"id": 233,
+			"name": "Black Bead",
+			"description": "A small round black bead",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 4
+		},
+		{
+			"id": 234,
+			"name": "White Bead",
+			"description": "A small round white bead",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 4
+		},
+		{
+			"id": 235,
+			"name": "Amulet of accuracy",
+			"description": "It increases my aim",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 100
+		},
+		{
+			"id": 236,
+			"name": "Redberries",
+			"description": "Very bright red berries",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 237,
+			"name": "Rope",
+			"description": "A Coil of rope",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 15
+		},
+		{
+			"id": 238,
+			"name": "Reddye",
+			"description": "A little bottle of dye",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 5
+		},
+		{
+			"id": 239,
+			"name": "Yellowdye",
+			"description": "A little bottle of dye",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 5
+		},
+		{
+			"id": 240,
+			"name": "Paste",
+			"description": "A bottle off skin coloured paste",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 5
+		},
+		{
+			"id": 241,
+			"name": "Onion",
+			"description": "A strong smelling onion",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 242,
+			"name": "Bronze key",
+			"description": "A heavy key",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 243,
+			"name": "Soft Clay",
+			"description": "Clay that's ready to be used",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 244,
+			"name": "wig",
+			"description": "A blonde wig",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 245,
+			"name": "wig",
+			"description": "A wig made from wool",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 246,
+			"name": "Half full wine jug",
+			"description": "It's half full of wine",
+			"command": "Drink",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 247,
+			"name": "Keyprint",
+			"description": "An imprint of a key in a lump of clay",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 248,
+			"name": "Black Plate Mail Legs",
+			"description": "These look pretty heavy",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2275
+		},
+		{
+			"id": 249,
+			"name": "banana",
+			"description": "Mmm this looks tasty",
+			"command": "Eat",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 250,
+			"name": "pastry dough",
+			"description": "Some uncooked dough",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 251,
+			"name": "Pie dish",
+			"description": "For making pies in",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 252,
+			"name": "cooking apple",
+			"description": "I wonder what i can make with this",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 253,
+			"name": "pie shell",
+			"description": "I need to find a filling for this pie",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 254,
+			"name": "Uncooked apple pie",
+			"description": "I need to cook this first",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 255,
+			"name": "Uncooked meat pie",
+			"description": "I need to cook this first",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 256,
+			"name": "Uncooked redberry pie",
+			"description": "I need to cook this first",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 257,
+			"name": "apple pie",
+			"description": "Mmm Apple pie",
+			"command": "eat",
+			"isStackable": 0,
+			"basePrice": 30
+		},
+		{
+			"id": 258,
+			"name": "Redberry pie",
+			"description": "Looks tasty",
+			"command": "eat",
+			"isStackable": 0,
+			"basePrice": 12
+		},
+		{
+			"id": 259,
+			"name": "meat pie",
+			"description": "Mighty and meaty",
+			"command": "eat",
+			"isStackable": 0,
+			"basePrice": 15
+		},
+		{
+			"id": 260,
+			"name": "burntpie",
+			"description": "Oops",
+			"command": "empty dish",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 261,
+			"name": "Half a meat pie",
+			"description": "Mighty and meaty",
+			"command": "eat",
+			"isStackable": 0,
+			"basePrice": 10
+		},
+		{
+			"id": 262,
+			"name": "Half a Redberry pie",
+			"description": "Looks tasty",
+			"command": "eat",
+			"isStackable": 0,
+			"basePrice": 4
+		},
+		{
+			"id": 263,
+			"name": "Half an apple pie",
+			"description": "Mmm Apple pie",
+			"command": "eat",
+			"isStackable": 0,
+			"basePrice": 5
+		},
+		{
+			"id": 264,
+			"name": "Portrait",
+			"description": "It's a picture of a knight",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 265,
+			"name": "Faladian Knight's sword",
+			"description": "A razor sharp sword",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 200
+		},
+		{
+			"id": 266,
+			"name": "blurite ore",
+			"description": "What Strange stuff",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 267,
+			"name": "Asgarnian Ale",
+			"description": "A glass of frothy ale",
+			"command": "drink",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 268,
+			"name": "Wizard's Mind Bomb",
+			"description": "It's got strange bubbles in it",
+			"command": "drink",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 269,
+			"name": "Dwarven Stout",
+			"description": "A Pint of thick dark beer",
+			"command": "drink",
+			"isStackable": 0,
+			"basePrice": 2
+		},
+		{
+			"id": 270,
+			"name": "Eye of newt",
+			"description": "It seems to be looking at me",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 271,
+			"name": "Rat's tail",
+			"description": "A bit of rat",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 272,
+			"name": "Bluedye",
+			"description": "A little bottle of dye",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 5
+		},
+		{
+			"id": 273,
+			"name": "Goblin Armour",
+			"description": "Armour Designed to fit Goblins",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 40
+		},
+		{
+			"id": 274,
+			"name": "Goblin Armour",
+			"description": "Armour Designed to fit Goblins",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 40
+		},
+		{
+			"id": 275,
+			"name": "Goblin Armour",
+			"description": "Armour Designed to fit Goblins",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 40
+		},
+		{
+			"id": 276,
+			"name": "unstrung Longbow",
+			"description": "I need to find a string for this",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 60
+		},
+		{
+			"id": 277,
+			"name": "unstrung shortbow",
+			"description": "I need to find a string for this",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 23
+		},
+		{
+			"id": 278,
+			"name": "Unfired Pie dish",
+			"description": "I need to put this in a pottery oven",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3
+		},
+		{
+			"id": 279,
+			"name": "unfired pot",
+			"description": "I need to put this in a pottery oven",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1
+		},
+		{
+			"id": 280,
+			"name": "arrow shafts",
+			"description": "Wooden shafts with no arrows tip attached",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 281,
+			"name": "Woad Leaf",
+			"description": "slightly bluish leaves",
+			"command": "",
+			"isStackable": 1,
+			"basePrice": 1
+		},
+		{
+			"id": 282,
+			"name": "Orangedye",
+			"description": "A little bottle of dye",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 5
+		},
+		{
+			"id": 283,
+			"name": "Gold ring",
+			"description": "A valuable ring",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 350
+		},
+		{
+			"id": 284,
+			"name": "Sapphire ring",
+			"description": "A valuable ring",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 900
+		},
+		{
+			"id": 285,
+			"name": "Emerald ring",
+			"description": "A valuable ring",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1275
+		},
+		{
+			"id": 286,
+			"name": "Ruby ring",
+			"description": "A valuable ring",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2025
+		},
+		{
+			"id": 287,
+			"name": "Diamond ring",
+			"description": "A valuable ring",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3525
+		},
+		{
+			"id": 288,
+			"name": "Gold necklace",
+			"description": "I wonder if this is valuable",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 450
+		},
+		{
+			"id": 289,
+			"name": "Sapphire necklace",
+			"description": "I wonder if this is valuable",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1050
+		},
+		{
+			"id": 290,
+			"name": "Emerald necklace",
+			"description": "I wonder if this is valuable",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1425
+		},
+		{
+			"id": 291,
+			"name": "Ruby necklace",
+			"description": "I wonder if this is valuable",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2175
+		},
+		{
+			"id": 292,
+			"name": "Diamond necklace",
+			"description": "I wonder if this is valuable",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3675
+		},
+		{
+			"id": 293,
+			"name": "ring mould",
+			"description": "Used to make gold rings",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 5
+		},
+		{
+			"id": 294,
+			"name": "Amulet mould",
+			"description": "Used to make gold rings",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 5
+		},
+		{
+			"id": 295,
+			"name": "Necklace mould",
+			"description": "Used to make gold rings",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 5
+		},
+		{
+			"id": 296,
+			"name": "Gold Amulet",
+			"description": "It needs a string so I can wear it",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 350
+		},
+		{
+			"id": 297,
+			"name": "Sapphire Amulet",
+			"description": "It needs a string so I can wear it",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 900
+		},
+		{
+			"id": 298,
+			"name": "Emerald Amulet",
+			"description": "It needs a string so I can wear it",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1275
+		},
+		{
+			"id": 299,
+			"name": "Ruby Amulet",
+			"description": "It needs a string so I can make wear it",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2025
+		},
+		{
+			"id": 300,
+			"name": "Diamond Amulet",
+			"description": "It needs a string so I can wear it",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3525
+		},
+		{
+			"id": 301,
+			"name": "Gold Amulet",
+			"description": "I wonder if I can get this enchanted",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 350
+		},
+		{
+			"id": 302,
+			"name": "Sapphire Amulet",
+			"description": "I wonder if I can get this enchanted",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 900
+		},
+		{
+			"id": 303,
+			"name": "Emerald Amulet",
+			"description": "I wonder if I can get this enchanted",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 1275
+		},
+		{
+			"id": 304,
+			"name": "Ruby Amulet",
+			"description": "I wonder if I can get this enchanted",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 2025
+		},
+		{
+			"id": 305,
+			"name": "Diamond Amulet",
+			"description": "I wonder if I can get this enchanted",
+			"command": "",
+			"isStackable": 0,
+			"basePrice": 3525
+		},
+		{
+			"id": 306,
+			"name": "superchisel",
+			"description": "I wonder if I can get this enchanted",
+			"command": "twiddle",
+			"isStackable": 0,
+			"basePrice": 3525
+		}
+	]
+}
