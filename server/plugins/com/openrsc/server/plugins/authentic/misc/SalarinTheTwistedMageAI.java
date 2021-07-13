@@ -28,8 +28,12 @@ public class SalarinTheTwistedMageAI implements SpellNpcTrigger {
 			n.getUpdateFlags().setChatMessage(new ChatMessage(n, "Amshalaraz Nithcosh dimarilo", player));
 			delay();
 			player.message("You suddenly feel much weaker");
-			player.getSkills().setLevel(Skill.ATTACK.id(), 0);
-			player.getSkills().setLevel(Skill.STRENGTH.id(), 0);
+			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
+			player.getSkills().setLevel(Skill.ATTACK.id(), 0, sendUpdate);
+			player.getSkills().setLevel(Skill.STRENGTH.id(), 0, sendUpdate);
+			if (!sendUpdate) {
+				player.getSkills().sendUpdateAll();
+			}
 		}
 	}
 }

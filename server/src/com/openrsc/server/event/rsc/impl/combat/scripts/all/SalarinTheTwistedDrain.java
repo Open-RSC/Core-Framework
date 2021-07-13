@@ -34,12 +34,16 @@ public class SalarinTheTwistedDrain implements CombatAggroScript, OnCombatStartS
 			player.message("You suddenly feel much weaker");
 
 			int[] stats = {Skill.ATTACK.id(), Skill.STRENGTH.id()};
+			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 			for(int affectedStat : stats) {
 				/* How much to lower the stat */
 				int lowerBy = (int) Math.floor(((player.getSkills().getLevel(affectedStat) + 20) * 0.5));
 				/* New current level */
 				final int newStat = Math.max(0, player.getSkills().getLevel(affectedStat) - lowerBy);
-				player.getSkills().setLevel(affectedStat, newStat);
+				player.getSkills().setLevel(affectedStat, newStat, sendUpdate);
+			}
+			if (!sendUpdate) {
+				player.getSkills().sendUpdateAll();
 			}
 		}
 	}

@@ -165,7 +165,11 @@ public class GrapeEmpowerment implements UseInvTrigger {
 
 		player.message(processString);
 		player.getCarriedItems().remove(grapes);
-		player.getSkills().setLevel(Skill.PRAYER.id(), player.getSkills().getLevel(Skill.PRAYER.id()) - 1);
+		boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
+		player.getSkills().setLevel(Skill.PRAYER.id(), player.getSkills().getLevel(Skill.PRAYER.id()) - 1, sendUpdate);
+		if (!sendUpdate) {
+			player.getSkills().sendUpdateAll();
+		}
 		give(player, poweredGrapesId, 1);
 		delay();
 

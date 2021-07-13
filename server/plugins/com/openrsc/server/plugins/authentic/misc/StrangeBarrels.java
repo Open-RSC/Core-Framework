@@ -165,8 +165,12 @@ public class StrangeBarrels implements OpLocTrigger {
 						mes("You're heavily jarred from the vibrations of the blow.");
 						delay(2);
 						int reduceAttack = DataConversions.random(1, 3);
+						boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 						player.message("Your attack is reduced by " + reduceAttack + ".");
-						player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - reduceAttack);
+						player.getSkills().setLevel(Skill.ATTACK.id(), player.getSkills().getLevel(Skill.ATTACK.id()) - reduceAttack, sendUpdate);
+						if (!sendUpdate) {
+							player.getSkills().sendUpdateAll();
+						}
 					} else {
 						player.message("You were unable to smash this barrel open.");
 					}

@@ -28,6 +28,9 @@ public class PrayerDrainEvent extends GameTickEvent {
 
 		refreshActivePrayers();
 
+		boolean sendUpdate = getPlayerOwner().getClientLimitations().supportsSkillUpdate;
+		boolean updatedPrayer = false;
+
 		if (pointDrainage > 0) {
 			int currentPrayerStatePoints = getPlayerOwner().getPrayerStatePoints();
 			int newPrayerStatePoints;
@@ -37,16 +40,21 @@ public class PrayerDrainEvent extends GameTickEvent {
 				getPlayerOwner().setPrayerStatePoints(newPrayerStatePoints);
 				normPrayer = (int) Math.ceil(newPrayerStatePoints / 120.0);
 				if (normPrayer < getPlayerOwner().getSkills().getLevel(Skill.PRAYER.id())) {
-					getPlayerOwner().getSkills().setLevel(Skill.PRAYER.id(), normPrayer);
+					getPlayerOwner().getSkills().setLevel(Skill.PRAYER.id(), normPrayer, sendUpdate);
+					updatedPrayer = true;
 				}
 			}
 			else {
 				getPlayerOwner().setPrayerStatePoints(0);
-				getPlayerOwner().getSkills().setLevel(Skill.PRAYER.id(), 0);
+				getPlayerOwner().getSkills().setLevel(Skill.PRAYER.id(), 0, sendUpdate);
+				updatedPrayer = true;
 				getPlayerOwner().getPrayers().resetPrayers();
 				getPlayerOwner().message("You have run out of prayer points. Return to a church to recharge");
 				activePrayers.clear();
 			}
+		}
+		if (!sendUpdate && updatedPrayer) {
+			getOwner().getSkills().sendUpdateAll();
 		}
 	}
 

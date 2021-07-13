@@ -241,9 +241,13 @@ public class MageArena implements MiniGameInterface, TalkNpcTrigger, KillNpcTrig
 					getOwner().setAttribute("maged_kolodion", false);
 					return;
 				}
+				boolean sendUpdate = getOwner().getClientLimitations().supportsSkillUpdate;
 				if (getOwner().getSkills().getLevel(Skill.ATTACK.id()) > 0 || getOwner().getSkills().getLevel(Skill.STRENGTH.id()) > 0) {
-					getOwner().getSkills().setLevel(Skill.ATTACK.id(), 0);
-					getOwner().getSkills().setLevel(Skill.STRENGTH.id(), 0);
+					getOwner().getSkills().setLevel(Skill.ATTACK.id(), 0, sendUpdate);
+					getOwner().getSkills().setLevel(Skill.STRENGTH.id(), 0, sendUpdate);
+					if (!sendUpdate) {
+						getOwner().getSkills().sendUpdateAll();
+					}
 				}
 				Npc Guthix = ifnearvisnpc(player, NpcId.BATTLE_MAGE_GUTHIX.id(), 2);
 				Npc Zamorak = ifnearvisnpc(player, NpcId.BATTLE_MAGE_ZAMORAK.id(), 2);

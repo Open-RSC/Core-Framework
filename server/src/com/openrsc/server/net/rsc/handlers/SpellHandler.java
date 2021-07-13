@@ -1774,8 +1774,12 @@ public class SpellHandler implements PayloadProcessor<SpellStruct, OpcodeIn> {
 					}
 					int newStat = baseStat
 						+ DataConversions.roundUp(player.getSkills().getMaxStat(affectedStat) * raisesBy);
+					boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 					if (newStat > player.getSkills().getLevel(affectedStat)) {
-						player.getSkills().setLevel(affectedStat, newStat);
+						player.getSkills().setLevel(affectedStat, newStat, sendUpdate);
+						if (!sendUpdate) {
+							player.getSkills().sendUpdateAll();
+						}
 					}
 				}
 				finalizeSpell(player, spell, DEFAULT);

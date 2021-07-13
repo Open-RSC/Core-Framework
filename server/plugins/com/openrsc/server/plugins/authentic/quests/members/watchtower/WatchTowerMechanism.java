@@ -367,8 +367,12 @@ public class WatchTowerMechanism implements UseLocTrigger, UseInvTrigger, UseNpc
 				mes("The force renews your magic level");
 				delay(3);
 				int maxMagic = getMaxLevel(player, Skill.MAGIC.id());
+				boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 				if (getCurrentLevel(player, Skill.MAGIC.id()) < maxMagic) {
-					player.getSkills().setLevel(Skill.MAGIC.id(), maxMagic);
+					player.getSkills().setLevel(Skill.MAGIC.id(), maxMagic, sendUpdate);
+					if (!sendUpdate) {
+						player.getSkills().sendUpdateAll();
+					}
 				}
 			} else {
 				player.message("You take the crystal");

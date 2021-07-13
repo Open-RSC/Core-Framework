@@ -22,10 +22,14 @@ public class MonkHealer implements TalkNpcTrigger {
 			mes("You feel a little better");
 			delay(3);
 			int newHp = getCurrentLevel(player, Skill.HITS.id()) + 5;
+			boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 			if (newHp > getMaxLevel(player, Skill.HITS.id())) {
 				newHp = getMaxLevel(player, Skill.HITS.id());
 			}
-			player.getSkills().setLevel(Skill.HITS.id(), newHp);
+			player.getSkills().setLevel(Skill.HITS.id(), newHp, sendUpdate);
+			if (!sendUpdate) {
+				player.getSkills().sendUpdateAll();
+			}
 		} else if (option == 1) {
 			say(player, n, "Isn't this place built a bit out the way?");
 			npcsay(player, n, "We like it that way",

@@ -24,8 +24,12 @@ public class Prayer implements OpLocTrigger {
 			} else {
 				player.playerServerMessage(MessageType.QUEST, "You recharge your prayer points");
 				player.playSound("recharge");
+				boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 				if (getCurrentLevel(player, Skill.PRAYER.id()) < maxPray) {
-					player.getSkills().setLevel(Skill.PRAYER.id(), maxPray);
+					player.getSkills().setLevel(Skill.PRAYER.id(), maxPray, sendUpdate);
+					if (!sendUpdate) {
+						player.getSkills().sendUpdateAll();
+					}
 				}
 			}
 		}

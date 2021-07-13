@@ -76,12 +76,16 @@ public class Zamorak implements TalkNpcTrigger, TakeObjTrigger, AttackNpcTrigger
 		int dmg = (int) Math.ceil(((player.getSkills().getMaxStat(Skill.HITS.id()) + 20) * 0.05));
 		player.damage(dmg);
 		int[] stats = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
+		boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 		for(int affectedStat : stats) {
 			/* How much to lower the stat */
 			int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) + 20) * 0.05));
 			/* New current level */
 			final int newStat = Math.max(0, player.getSkills().getLevel(affectedStat) - lowerBy);
-			player.getSkills().setLevel(affectedStat, newStat);
+			player.getSkills().setLevel(affectedStat, newStat, sendUpdate);
+		}
+		if (!sendUpdate) {
+			player.getSkills().sendUpdateAll();
 		}
 		delay();
 		zam.setChasing(player);

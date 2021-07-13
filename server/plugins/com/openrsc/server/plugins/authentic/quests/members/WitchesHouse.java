@@ -445,12 +445,16 @@ public class WitchesHouse implements QuestInterface, TalkNpcTrigger,
 		//delay of about 2 ticks
 		player.message("You feel slightly weakened");
 		int[] stats = {Skill.ATTACK.id(), Skill.DEFENSE.id(), Skill.STRENGTH.id()};
+		boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 		for(int affectedStat : stats) {
 			/* How much to lower the stat */
 			int lowerBy = (int) Math.ceil(((player.getSkills().getMaxStat(affectedStat) - 4) / 15.0));
 			/* New current level */
 			final int newStat = Math.max(0, player.getSkills().getLevel(affectedStat) - lowerBy);
-			player.getSkills().setLevel(affectedStat, newStat);
+			player.getSkills().setLevel(affectedStat, newStat, sendUpdate);
+		}
+		if (!sendUpdate) {
+			player.getSkills().sendUpdateAll();
 		}
 	}
 

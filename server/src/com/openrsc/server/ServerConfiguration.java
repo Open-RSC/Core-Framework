@@ -255,6 +255,7 @@ public class ServerConfiguration {
 	public boolean MEAT_HEAL_LEVEL_DEPENDENT;
 	public boolean ONLY_REGULAR_BONES;
 	public boolean SHARED_GATHERING_RESOURCES;
+	public boolean HAS_PLAYER_OWNED_HOUSES;
 
 	public ImmutableList<String> IGNORED_NETWORK_EXCEPTIONS =
 		ImmutableList.of("An existing connection was forcibly closed by the remote host",
@@ -409,6 +410,7 @@ public class ServerConfiguration {
 		MEAT_HEAL_LEVEL_DEPENDENT = tryReadBool("meat_heal_level_dependent").orElse(false);
 		ONLY_REGULAR_BONES = tryReadBool("only_regular_bones").orElse(false);
 		SHARED_GATHERING_RESOURCES = tryReadBool("shared_gathering_resources").orElse(false);
+		HAS_PLAYER_OWNED_HOUSES = tryReadBool("has_player_owned_houses").orElse(false);
 
 		// Custom features
 		WANT_CUSTOM_SPRITES = tryReadBool("custom_sprites").orElse(false);

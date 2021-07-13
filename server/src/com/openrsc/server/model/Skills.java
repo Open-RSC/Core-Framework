@@ -103,12 +103,14 @@ public class Skills {
 		sendUpdate(skill);
 	}
 
-	public void setLevel(int skill, int level, boolean fromRestoreEvent) {
+	public void setLevel(int skill, int level, boolean sendUpdate, boolean fromRestoreEvent) {
 		levels[skill] = level;
 		if (levels[skill] <= 0) {
 			levels[skill] = 0;
 		}
-		sendUpdate(skill);
+		if (sendUpdate) {
+			sendUpdate(skill);
+		}
 		if (skill != Skill.PRAYER.id()
 			&& skill != Skill.HITS.id()
 			&& !fromRestoreEvent) {
@@ -119,8 +121,12 @@ public class Skills {
 		}
 	}
 
+	public void setLevel(int skill, int level, boolean sendUpdate) {
+		setLevel(skill, level, sendUpdate, false);
+	}
+
 	public void setLevel(int skill, int level) {
-		setLevel(skill, level, false);
+		setLevel(skill, level, true);
 	}
 
 	public void setExperience(int skill, int exp) {
@@ -278,7 +284,11 @@ public class Skills {
 	private void sendUpdate(int skill) {
 		if (getMob().isPlayer()) {
 			Player player = (Player) getMob();
-			ActionSender.sendStat(player, skill);
+			if (player.getClientLimitations().supportsSkillUpdate) {
+				ActionSender.sendStat(player, skill);
+			} else {
+				ActionSender.sendStats(player);
+			}
 		}
 	}
 

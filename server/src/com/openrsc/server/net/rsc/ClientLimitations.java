@@ -19,6 +19,7 @@ public class ClientLimitations {
 	public boolean supportsClickWoodcut = false;
 	public boolean supportsClickFish = false;
 	public boolean supportsTypedPickaxes = false;
+	public boolean supportsSkillUpdate = false;
 
 	ClientLimitations(int clientVersion) {
 		setKnownLimitations(clientVersion);
@@ -90,6 +91,9 @@ public class ClientLimitations {
 		}
 		if (clientVersion >= 106) {
 			supportsConfirmTrade = true;
+		}
+		if (clientVersion >= 110) {
+			supportsSkillUpdate = true;
 		}
 		if (clientVersion >= 124) {
 			supportsClickMine = true;

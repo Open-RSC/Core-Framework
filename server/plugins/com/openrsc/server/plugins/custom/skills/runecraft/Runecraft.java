@@ -355,9 +355,13 @@ public class Runecraft implements OpLocTrigger, UseLocTrigger, UseInvTrigger {
 					player.message("You feel strange");
 
 					int subtractLevel = (int)Math.round(player.getSkills().getLevel(Skill.RUNECRAFT.id()) * 0.15D);
+					boolean sendUpdate = player.getClientLimitations().supportsSkillUpdate;
 					player.getSkills().setLevel(Skill.RUNECRAFT.id(),
-						(player.getSkills().getLevel(Skill.RUNECRAFT.id()) - subtractLevel));
+						(player.getSkills().getLevel(Skill.RUNECRAFT.id()) - subtractLevel), sendUpdate);
 					player.damage(3);
+					if (!sendUpdate) {
+						player.getSkills().sendUpdateAll();
+					}
 					say(player, "ouch");
 				}
 			}

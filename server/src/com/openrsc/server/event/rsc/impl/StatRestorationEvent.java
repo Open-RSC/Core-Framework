@@ -52,6 +52,8 @@ public class StatRestorationEvent extends GameTickEvent {
 			checkAndStartRestoration(skillIndex);
 		}
 
+		boolean sendUpdate = !getOwner().isPlayer() || ((Player)getOwner()).getClientLimitations().supportsSkillUpdate;
+
 		// Check for Hits
 		if (restoringHits.get()) {
 			long delay = 100 * getWorld().getServer().getConfig().GAME_TICK; // 64 seconds in authentic rate
@@ -63,7 +65,7 @@ public class StatRestorationEvent extends GameTickEvent {
 			}
 			deltaCycles = (System.currentTimeMillis() - this.lastHitRestoration) / delay;
 			if (System.currentTimeMillis() - this.lastHitRestoration > delay && getOwner().isPlayer()) {
-				normalizeLevel(Skill.HITS.id());
+				normalizeLevel(Skill.HITS.id(), sendUpdate);
 				restoredHits = true;
 				if (((Player) getOwner()).getParty() != null) {
 					getOwner().getUpdateFlags().setHpUpdate(new HpUpdate(getOwner(), 0));
@@ -76,7 +78,7 @@ public class StatRestorationEvent extends GameTickEvent {
 			} else if (!getOwner().isPlayer() &&
 				(System.currentTimeMillis() - (this.lastHitRestoration + deltaCycles * delay)) / (delay / 100) == 1) {
 				// npc only gets heal cycle sync on (re)spawn
-				normalizeLevel(Skill.HITS.id());
+				normalizeLevel(Skill.HITS.id(), true);
 			}
 		}
 
@@ -95,7 +97,7 @@ public class StatRestorationEvent extends GameTickEvent {
 				}
 			}
 			if (System.currentTimeMillis() - this.lastStatRestoration > delay) {
-				normalizeLevel(stat);
+				normalizeLevel(stat, sendUpdate);
 				restoredStats = true;
 				if (restoringStats.get(stat) == 0) {
 					it.remove();
@@ -113,6 +115,9 @@ public class StatRestorationEvent extends GameTickEvent {
 		if (restoredStats) {
 			this.lastStatRestoration = System.currentTimeMillis();
 		}
+		if (!sendUpdate && (restoredHits || restoredStats)) {
+			getOwner().getSkills().sendUpdateAll();
+		}
 	}
 
 	/**
@@ -121,16 +126,16 @@ public class StatRestorationEvent extends GameTickEvent {
 	 * @param skill
 	 * @return true if action done, false if skill is already normal
 	 */
-	private void normalizeLevel(int skill) {
+	private void normalizeLevel(int skill, boolean sendUpdate) {
 		int cur = getOwner().getSkills().getLevel(skill);
 		int norm = getOwner().getSkills().getMaxStat(skill);
 		int diff = 0;
 
 		if (cur > norm) {
-			getOwner().getSkills().setLevel(skill, cur - 1, true);
+			getOwner().getSkills().setLevel(skill, cur - 1, sendUpdate, true);
 			diff = -1;
 		} else if (cur < norm) {
-			getOwner().getSkills().setLevel(skill, cur + 1, true);
+			getOwner().getSkills().setLevel(skill, cur + 1, sendUpdate, true);
 			diff = 1;
 		}
 

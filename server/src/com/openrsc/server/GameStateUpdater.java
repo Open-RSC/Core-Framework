@@ -10,7 +10,6 @@ import com.openrsc.server.model.action.WalkToAction;
 import com.openrsc.server.model.entity.Entity;
 import com.openrsc.server.model.entity.GameObject;
 import com.openrsc.server.model.entity.GroundItem;
-import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
 import com.openrsc.server.model.entity.player.PlayerSettings;
@@ -440,7 +439,9 @@ public final class GameStateUpdater {
 			}
 			if (updateFlags.hasFiredProjectile()) {
 				Projectile projectileFired = updateFlags.getProjectile().get();
-				npcProjectilesNeedingDisplayed.add(projectileFired);
+				if (projectileFired.getCaster().getIndex() != -1 && projectileFired.getVictim().getIndex() != -1) {
+					npcProjectilesNeedingDisplayed.add(projectileFired);
+				}
 			}
 			if (updateFlags.hasBubbleNpc()) {
 					BubbleNpc bubble = updateFlags.getActionBubbleNpc().get();
@@ -542,7 +543,9 @@ public final class GameStateUpdater {
 		}
 		if (player.getUpdateFlags().hasFiredProjectile()) {
 			Projectile projectileFired = player.getUpdateFlags().getProjectile().get();
-			projectilesNeedingDisplayed.add(projectileFired);
+			if (projectileFired.getCaster().getIndex() != -1 && projectileFired.getVictim().getIndex() != -1) {
+				projectilesNeedingDisplayed.add(projectileFired);
+			}
 		}
 
 		if (player.getUpdateFlags().hasChatMessage()) {
