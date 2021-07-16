@@ -78,7 +78,7 @@ public class EntityList<T extends Entity> extends AbstractCollection<T> {
     private int indexOf(final T entity) {
         // Check if the entity at the index provided by the entity matches first
         final int candidateIndex = entity.getIndex();
-        if (candidateIndex > 0 && candidateIndex < capacity) {
+        if (candidateIndex >= 0 && candidateIndex < capacity) {
             if (entity.equals(entities[candidateIndex])) {
                 return candidateIndex;
             }
@@ -104,21 +104,24 @@ public class EntityList<T extends Entity> extends AbstractCollection<T> {
 
     @SuppressWarnings("unchecked")
     public synchronized T remove(final int index) {
-        T entity = (T) entities[index];
-        if (entity != null) {
-            entity.setIndex(-1);
+        if(index >= 0) {
+            T entity = (T) entities[index];
+            if (entity != null) {
+                entity.setIndex(-1);
+            }
+            entities[index] = null;
+            occupiedIndices.remove(index);
+            priorityIdPool.offer(index);
+            return entity;
         }
-        entities[index] = null;
-        occupiedIndices.remove(index);
-        priorityIdPool.offer(index);
-        return entity;
+        return null;
     }
 
     public synchronized void remove(final T entity) {
         final int index = entity.getIndex();
         remove(index);
     }
-    
+
     private ConcurrentHashMap.KeySetView<Integer, Object> getOccupiedIndices() {
         return occupiedIndices.keySet();
     }

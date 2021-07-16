@@ -10,10 +10,10 @@ import java.io.FileOutputStream;
 public class JContentFile {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-    private byte m_data[];
+    private byte[] m_data;
     private int m_position;
 
-    public JContentFile(byte data[]) {
+    public JContentFile(byte[] data) {
         m_data = data;
         m_position = 0;
     }

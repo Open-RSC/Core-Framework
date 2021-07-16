@@ -1219,7 +1219,7 @@ public final class GameStateUpdater {
 		return getServer().bench(() -> {
 			final boolean shouldUpdatePosition = !getServer().getConfig().WANT_CUSTOM_WALK_SPEED;
 			final EntityList<Npc> npcs = getServer().getWorld().getNpcs();
-			npcs.parallelStream().forEach(n -> {
+			npcs.forEach(n -> {
 				try {
 					if (n.isUnregistering()) {
 						getServer().getWorld().unregisterNpc(n);

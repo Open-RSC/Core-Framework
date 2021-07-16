@@ -1,6 +1,7 @@
 package com.openrsc.server.model;
 
 import com.google.common.collect.Multimap;
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.model.entity.Mob;
 import com.openrsc.server.model.entity.npc.Npc;
 import com.openrsc.server.model.entity.player.Player;
@@ -564,38 +565,35 @@ public class PathValidation {
 	}
 
 	public static boolean isMobBlocking(Mob mob, int x, int y) {
-		if (mob.getX() == x && mob.getY() == y)
+		if (mob.getX() == x && mob.getY() == y) {
 			return false;
+		}
 
 		// all npcs on loc, may include dead (not visible) ones
-		Collection<Npc> npcsOnLoc = mob.getWorld().getNpcPositions().get(new Point(x, y));
+		Collection<Npc> npcsOnLoc = new ArrayList<>(mob.getWorld().getNpcPositions().get(new Point(x, y)));
 		// visible (&alive) npcs
-		List<Npc> visibleNpcsOnLoc = new ArrayList<>();
-		Npc npc = null;
-		if (npcsOnLoc != null) {
-			visibleNpcsOnLoc = npcsOnLoc.stream().filter(n -> !n.isRemoved() && !n.killed).collect(Collectors.toList());
-		}
-		npc = visibleNpcsOnLoc.size() > 0 ? visibleNpcsOnLoc.get(0) : null;
+		Npc npc = npcsOnLoc.stream()
+					.filter(n -> !n.isRemoved() && !n.killed)
+					.findFirst()
+					.orElse(null);
 
 		/*
 		 * NPC blocking config controlled
 		 */
 		if (npc != null) {
-			if (mob.getConfig().NPC_BLOCKING == 0) { // No NPC blocks
+			final int npcBlocking = mob.getConfig().NPC_BLOCKING;
+			if (npcBlocking == 0) { // No NPC blocks
 				return false;
-			} else if (mob.getConfig().NPC_BLOCKING == 1) { // 2 * combat level + 1 blocks AND aggressive
-				if (mob.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1) && npc.getDef().isAggressive()) {
-					return true;
-				}
-			} else if (mob.getConfig().NPC_BLOCKING == 2) { // Any aggressive NPC blocks
-				if (npc.getDef().isAggressive()) {
-					return true;
-				}
-			} else if (mob.getConfig().NPC_BLOCKING == 3) { // Any attackable NPC blocks
-				if (npc.getDef().isAttackable()) {
-					return true;
-				}
-			} else if (mob.getConfig().NPC_BLOCKING == 4) { // All NPCs block
+			} else if (npcBlocking == 1) { // 2 * combat level + 1 blocks AND aggressive
+				final boolean combatLvlMoreThanDouble = mob.getCombatLevel() < ((npc.getNPCCombatLevel() * 2) + 1);
+
+				return combatLvlMoreThanDouble
+						&& npc.getDef().isAggressive();
+			} else if (npcBlocking == 2) { // Any aggressive NPC blocks
+				return npc.getDef().isAggressive();
+			} else if (npcBlocking == 3) { // Any attackable NPC blocks
+				return npc.getDef().isAttackable();
+			} else if (npcBlocking == 4) { // All NPCs block
 				return true;
 			}
 		}

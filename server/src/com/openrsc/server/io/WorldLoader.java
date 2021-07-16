@@ -1,5 +1,6 @@
 package com.openrsc.server.io;
 
+import com.openrsc.server.ServerConfiguration;
 import com.openrsc.server.constants.Constants;
 import com.openrsc.server.database.WorldPopulator;
 import com.openrsc.server.model.world.World;
@@ -382,17 +383,14 @@ public class WorldLoader {
 
 				final byte groundOverlay = sectorTile.groundOverlay;
 				if (groundOverlay > 0
-					&& getWorld().getServer().getEntityHandler().getTileDef(groundOverlay - 1)
-					.getObjectType() != 0) {
+					&& getWorld().getServer().getEntityHandler().getTileDef(groundOverlay - 1).getObjectType() != 0) {
 					tile.traversalMask |= 0x40; // 64
 				}
 
 				final int verticalWall = sectorTile.verticalWall & 0xFF;
 				if (verticalWall > 0
-					&& getWorld().getServer().getEntityHandler().getDoorDef(verticalWall - 1)
-					.getUnknown() == 0
-					&& getWorld().getServer().getEntityHandler().getDoorDef(verticalWall - 1)
-					.getDoorType() != 0) {
+					&& getWorld().getServer().getEntityHandler().getDoorDef(verticalWall - 1).getUnknown() == 0
+					&& getWorld().getServer().getEntityHandler().getDoorDef(verticalWall - 1).getDoorType() != 0) {
 					getWorld().getTile(bx, by).traversalMask |= 1; // 1
 					getWorld().getTile(bx, by - 1).traversalMask |= 4; // 4
 
@@ -404,10 +402,8 @@ public class WorldLoader {
 
 				final int horizontalWall = sectorTile.horizontalWall & 0xFF;
 				if (horizontalWall > 0
-					&& getWorld().getServer().getEntityHandler().getDoorDef(horizontalWall - 1)
-					.getUnknown() == 0
-					&& getWorld().getServer().getEntityHandler().getDoorDef(horizontalWall - 1)
-					.getDoorType() != 0) {
+					&& getWorld().getServer().getEntityHandler().getDoorDef(horizontalWall - 1).getUnknown() == 0
+					&& getWorld().getServer().getEntityHandler().getDoorDef(horizontalWall - 1).getDoorType() != 0) {
 					tile.traversalMask |= 2; // 2
 					getWorld().getTile(bx - 1, by).traversalMask |= 8; // 8
 					if (projectileClipAllowed(horizontalWall)) {
@@ -419,10 +415,8 @@ public class WorldLoader {
 				final int diagonalWalls = sectorTile.diagonalWalls;
 				if (diagonalWalls > 0
 					&& diagonalWalls < 12000
-					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 1)
-					.getUnknown() == 0
-					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 1)
-					.getDoorType() != 0) {
+					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 1).getUnknown() == 0
+					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 1).getDoorType() != 0) {
 					tile.traversalMask |= 0x20; // 32
 					if (projectileClipAllowed(diagonalWalls)) {
 						tile.projectileAllowed = true;
@@ -430,10 +424,8 @@ public class WorldLoader {
 				}
 				if (diagonalWalls > 12000
 					&& diagonalWalls < 24000
-					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 12001)
-					.getUnknown() == 0
-					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 12001)
-					.getDoorType() != 0) {
+					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 12001).getUnknown() == 0
+					&& getWorld().getServer().getEntityHandler().getDoorDef(diagonalWalls - 12001).getDoorType() != 0) {
 					tile.traversalMask |= 0x10; // 16
 
 					if (projectileClipAllowed(diagonalWalls)) {
@@ -452,23 +444,24 @@ public class WorldLoader {
 
 	public void loadWorld() {
 		final long start = System.currentTimeMillis();
+		final ServerConfiguration config = getWorld().getServer().getConfig();
 
-		if (!getWorld().getServer().getConfig().WANT_CUSTOM_LANDSCAPE) {
-			boolean useBZip2 = getWorld().getServer().getConfig().BASED_MAP_DATA >= 28; // Map versions 28+ use BZip2
+		if (!config.WANT_CUSTOM_LANDSCAPE) {
+			boolean useBZip2 = config.BASED_MAP_DATA >= 28; // Map versions 28+ use BZip2
 			File fJag;
 			File fMem;
 			File fLandJag;
 			File fLandMem;
 			// Load official map files if found
-			if (getWorld().getServer().getConfig().BASED_MAP_DATA == 100) {
+			if (config.BASED_MAP_DATA == 100) {
 				String mapDir = "./conf/server/data/maps/";
 				fJag = new File(mapDir + "content4_ffffffffaaca2b0d"); // maps.jag
 				fMem = new File(mapDir + "content5_6a1d6b00"); // maps.mem
 				fLandJag = new File(mapDir + "content6_ffffffffe997514b"); // land.jag
 				fLandMem = new File(mapDir + "content7_3fc5d9e3"); // land.mem
 			} else {
-				String mapFname = "./conf/server/data/maps/maps" + getWorld().getServer().getConfig().BASED_MAP_DATA;
-				String landFname = "./conf/server/data/maps/land" + getWorld().getServer().getConfig().BASED_MAP_DATA;
+				String mapFname = "./conf/server/data/maps/maps" + config.BASED_MAP_DATA;
+				String landFname = "./conf/server/data/maps/land" + config.BASED_MAP_DATA;
 				fJag = new File(mapFname + ".jag");
 				fMem = new File(mapFname + ".mem");
 				fLandJag = new File(landFname + ".jag");
@@ -500,14 +493,18 @@ public class WorldLoader {
 
 		if (jagArchive == null && memArchive == null) {
 			try {
-				if (getWorld().getServer().getConfig().MEMBER_WORLD) {
-					if (getWorld().getServer().getConfig().WANT_CUSTOM_LANDSCAPE)
-						tileArchive = new ZipFile(new File("./conf/server/data/Custom_P2PLandscape.orsc")); // Members landscape
-					else
-						tileArchive = new ZipFile(new File("./conf/server/data/Authentic_P2PLandscape.orsc")); // Members landscape
+				File archiveFile;
+				if (config.MEMBER_WORLD) {
+					if (config.WANT_CUSTOM_LANDSCAPE) {
+						archiveFile = new File("./conf/server/data/Custom_P2PLandscape.orsc");
+					} else {
+						archiveFile = new File("./conf/server/data/Authentic_P2PLandscape.orsc"); // Members landscape
+					}
 				} else {
-					tileArchive = new ZipFile(new File("./conf/server/data/F2PLandscape.orsc")); // Free landscape
+					archiveFile = new File("./conf/server/data/F2PLandscape.orsc"); // Free landscape
 				}
+				tileArchive = new ZipFile(archiveFile);
+				LOGGER.info("Loading landscape from " + archiveFile.getAbsolutePath());
 			} catch (final Exception e) {
 				LOGGER.catching(e);
 			}

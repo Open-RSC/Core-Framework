@@ -9,7 +9,7 @@ public class Sector {
 	/**
 	 * An array containing all the tiles within this Sector
 	 */
-	private Tile[] tiles;
+	private final Tile[] tiles;
 
 	/**
 	 * Creates a new Sector full of blank tiles

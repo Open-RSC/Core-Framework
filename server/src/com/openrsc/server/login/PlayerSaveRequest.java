@@ -3,6 +3,7 @@ package com.openrsc.server.login;
 import com.openrsc.server.Server;
 import com.openrsc.server.database.GameDatabaseException;
 import com.openrsc.server.model.entity.player.Player;
+import com.openrsc.server.model.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,12 +56,13 @@ public class PlayerSaveRequest extends LoginExecutorProcess {
 			wildernessIPTracker.remove(player.getCurrentIP());
 		}*/
 
-		for (Player other : getPlayer().getWorld().getPlayers()) {
+		final World world = getPlayer().getWorld();
+		for (Player other : world.getPlayers()) {
 			other.getSocial().alertOfLogout(getPlayer());
 		}
 
-		getPlayer().getWorld().getClanManager().checkAndUnattachFromClan(getPlayer());
-		getPlayer().getWorld().getPartyManager().checkAndUnattachFromParty(getPlayer());
+		world.getClanManager().checkAndUnattachFromClan(getPlayer());
+		world.getPartyManager().checkAndUnattachFromParty(getPlayer());
 
 		getServer().getPacketFilter().removeLoggedInPlayer(getPlayer().getCurrentIP());
 

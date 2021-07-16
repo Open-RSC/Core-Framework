@@ -13,10 +13,10 @@ import java.io.FileOutputStream;
 public class JContent {
 	private static final Logger LOGGER = LogManager.getLogger();
 
-    private byte m_data[];
+    private byte[] m_data;
     private boolean m_bzip2;
 
-    private byte[] decompress(byte dest[], int uncompressedLength, byte src[], int compressedLength, int offset)
+    private byte[] decompress(byte[] dest, int uncompressedLength, byte[] src, int compressedLength, int offset)
 	{
 		if (!m_bzip2) {
 			BZLib.decompress(dest, uncompressedLength, src, compressedLength, offset);
@@ -42,11 +42,11 @@ public class JContent {
         int compressedLength = ((m_data[3] & 0xFF) << 16) | ((m_data[4] & 0xFF) << 8) | (m_data[5] & 0xFF);
 
         if (uncompressedLength == compressedLength) {
-            byte newData[] = new byte[uncompressedLength];
+            byte[] newData = new byte[uncompressedLength];
             System.arraycopy(m_data, 6, newData, 0, uncompressedLength);
             m_data = newData;
         } else {
-			byte newData[] = new byte[uncompressedLength];
+			byte[] newData = new byte[uncompressedLength];
 			newData = decompress(newData, uncompressedLength, m_data, compressedLength, 0);
 			if (newData == null)
 				return false;
@@ -73,7 +73,7 @@ public class JContent {
             int compressedLength = ((m_data[9 + entryOffset] & 0xFF) << 16) | ((m_data[10 + entryOffset] & 0xFF) << 8) | (m_data[11 + entryOffset] & 0xFF);
 
             if (hash == entryHash) {
-                byte data[] = new byte[uncompressedLength];
+                byte[] data = new byte[uncompressedLength];
                 if (uncompressedLength == compressedLength) {
                     System.arraycopy(m_data, offset, data, 0, uncompressedLength);
                 } else {
