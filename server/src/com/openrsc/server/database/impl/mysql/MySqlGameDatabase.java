@@ -1544,8 +1544,8 @@ public class MySqlGameDatabase extends JDBCDatabase {
 				for (final PlayerBankPreset playerBankPreset : bankPreset) {
 					statement.setInt(1, playerId);
 					statement.setInt(2, playerBankPreset.slot);
-					statement.setBlob(3, new javax.sql.rowset.serial.SerialBlob(playerBankPreset.inventory));
-					statement.setBlob(4, new javax.sql.rowset.serial.SerialBlob(playerBankPreset.equipment));
+					statement.setBytes(3, playerBankPreset.inventory);
+					statement.setBytes(4, playerBankPreset.equipment);
 					statement.addBatch();
 				}
 				statement.executeBatch();

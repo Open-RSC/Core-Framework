@@ -1,4 +1,4 @@
 ALTER TABLE `curstats`
-    DROP IF EXISTS `harvesting`;
+    DROP `harvesting`;
 ALTER TABLE `experience`
-    DROP IF EXISTS `harvesting`;
+    DROP `harvesting`;

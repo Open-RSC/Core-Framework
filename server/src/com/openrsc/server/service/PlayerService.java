@@ -372,8 +372,7 @@ public class PlayerService implements IPlayerService {
     }
 
     private void savePlayerBankPresets(final Player player) throws GameDatabaseException {
-    	// TODO: needs to be fixed on save player bank preset
-        /*database.querySavePlayerBankPresets(player);*/
+        database.querySavePlayerBankPresets(player);
     }
 
     private void savePlayerSocial(final Player player) throws GameDatabaseException {

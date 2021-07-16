@@ -1,4 +1,4 @@
 ALTER TABLE `curstats`
-    DROP IF EXISTS `runecraft`;
+    DROP `runecraft`;
 ALTER TABLE `experience`
-    DROP IF EXISTS `runecraft`;
+    DROP `runecraft`;
